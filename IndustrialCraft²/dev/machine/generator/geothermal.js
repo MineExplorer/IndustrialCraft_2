@@ -25,15 +25,16 @@ var guiGeothermalGenerator = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "bitmap", x: 650, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
+		{type: "bitmap", x: 675, y: 106, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
 		{type: "bitmap", x: 450, y: 150, bitmap: "geotermal_liquid_slot", scale: GUI_BAR_STANDART_SCALE}
 	],
 	
 	elements: {
-		"energyScale": {type: "scale", x: 650 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
+		"energyScale": {type: "scale", x: 675 + GUI_BAR_STANDART_SCALE * 4, y: 106, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"liquidScale": {type: "scale", x: 450 + GUI_BAR_STANDART_SCALE, y: 150 + GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "geotermal_empty_liquid_slot", overlay: "geotermal_liquid_slot_overlay", overlayOffset: {x: -GUI_BAR_STANDART_SCALE, y: -GUI_BAR_STANDART_SCALE}, scale: GUI_BAR_STANDART_SCALE},
 		"slot1": {type: "slot", x: 441, y: 75},
 		"slot2": {type: "slot", x: 441, y: 212},
+		"slotEnergy": {type: "slot", x: 694, y: 181},
 		"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
 		"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
 	}
@@ -70,12 +71,14 @@ MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
 				this.container.validateAll();
 			}
 		}
-		if(this.liquidStorage.getLiquid("lava", 0.001) > 0){
+		if(this.liquidStorage.getAmount("lava") >= 0.001){
 			if(this.data.energy <= energyStorage - 20){
 				this.data.energy += 20;
-				this.liquidStorage.addLiquid("lava", 0.001);
+				this.liquidStorage.addLiquid("lava", -0.001);
 			}
 		}
+		
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), this.data.energy, 32, 0);
 		
 		this.container.setText("textInfo1", parseInt(this.liquidStorage.getAmount("lava") * 1000) + "/");
 		this.liquidStorage.updateUiScale("liquidScale", "lava");

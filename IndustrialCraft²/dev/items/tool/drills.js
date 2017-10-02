@@ -81,8 +81,7 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
                     }
                 }
             }
-            tile = Unlimited.API.GetReal(block.id, block.data).id;
-            Block.setTempDestroyTime(tile, destroyTime/24);
+            Block.setTempDestroyTime(block.id, destroyTime/24);
         }
     },
     destroyBlock: function(coords, side, item, block){

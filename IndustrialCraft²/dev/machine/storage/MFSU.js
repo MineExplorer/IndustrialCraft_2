@@ -58,7 +58,7 @@ MachineRegistry.registerPrototype(BlockID.storageMFSU, {
 	},
 	
 	getEnergyStorage: function(){
-		return 60000000;
+		return 40000000;
 	},
 	
 	energyTick: function(type, src){

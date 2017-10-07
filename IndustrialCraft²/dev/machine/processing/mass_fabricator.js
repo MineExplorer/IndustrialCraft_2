@@ -1,11 +1,11 @@
 IDRegistry.genBlockID("massFabricator");
 Block.createBlockWithRotation("massFabricator", [
-	{name: "Mass Fabricator", texture: [["machine_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 1], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
+	{name: "Mass Fabricator", texture: [["machine_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
 ]);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.massFabricator);
 
 Block.registerDropFunction("massFabricator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockAdvanced);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
 Callback.addCallback("PostLoaded", function(){

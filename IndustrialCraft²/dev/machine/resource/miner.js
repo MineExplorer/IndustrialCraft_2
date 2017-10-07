@@ -4,7 +4,7 @@ Block.createBlockWithRotation("miner", [
 ]);
 
 Block.registerDropFunction("miner", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 var guiMiner = new UI.StandartWindow({

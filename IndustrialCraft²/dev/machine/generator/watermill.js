@@ -4,7 +4,7 @@ Block.createBlockWithRotation("genWatermill", [
 ]);
 
 Block.registerDropFunction("genWatermill", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.primalGenerator);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
 });
 
 Callback.addCallback("PostLoaded", function(){

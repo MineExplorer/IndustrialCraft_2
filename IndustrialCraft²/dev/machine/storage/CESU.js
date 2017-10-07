@@ -3,6 +3,10 @@ Block.createBlockWithRotation("storageCESU", [
 	{name: "CESU", texture: [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]], inCreative: true}
 ]);
 
+Block.registerDropFunction("storageCESU", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
+
 Callback.addCallback("PostLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageCESU, count: 1, data: 0}, [
 		"bxb",

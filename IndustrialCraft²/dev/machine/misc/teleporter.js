@@ -5,7 +5,7 @@ Block.createBlock("teleporter", [
 ]);
 
 Block.registerDropFunction("teleporter", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockAdvanced);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
 var friendlyMobs = [EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityType.MUSHROOM_COW, EntityType.OCELOT, EntityType.PIG, EntityType.RABBIT, EntityType.SHEEP, EntityType.SNOW_GOLEM, EntityType.SQUID, EntityType.VILLAGER, EntityType.WOLF, 23, 24, 25, 26, 27];

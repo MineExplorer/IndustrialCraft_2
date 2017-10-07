@@ -175,6 +175,8 @@ Translation.addTranslation("§bQuantum Leggings", {ru: "§bКвантовые ш
 Translation.addTranslation("§bQuantum Boots", {ru: "§bКвантовые ботинки", es: "§bBotas de Traje Cuántico", zh: "§b量子靴子"});
 Translation.addTranslation("Jetpack", {ru: "Реактивный ранец", es: "Jetpack Eléctrico", zh: "电力喷气背包"});
 Translation.addTranslation("Batpack", {ru: "Аккумуляторный ранец", es: "Mochila de Baterías", zh: "电池背包"});
+Translation.addTranslation("Advanced Batpack", {ru: "Продвинутый аккумуляторный ранец", es: "Mochila de Baterías Avanzada", zh: "高级电池背包"});
+Translation.addTranslation("Energy Pack", {ru: "Энергетический ранец", es: "Pack de Energía", zh: "能量水晶储电背包"});
 Translation.addTranslation("Lappack", {ru: "Лазуротроновый ранец", es: "Mochila de Baterías Avanzada", zh: "兰波顿储电背包"});
 
 // Tools

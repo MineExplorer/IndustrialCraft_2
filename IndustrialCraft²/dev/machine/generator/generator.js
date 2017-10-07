@@ -4,6 +4,10 @@ Block.createBlockWithRotation("primalGenerator", [
 ]);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.primalGenerator);
 
+Block.registerDropFunction("primalGenerator", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
+
 Callback.addCallback("PostLoaded", function(){
 	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
 		" x ",

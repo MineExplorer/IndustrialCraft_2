@@ -40,7 +40,7 @@ var MachineRegistry = {
 	},
 
 	// standart functions
-	getMachineDrop: function(coords, blockID, standartDrop){ //level
+	getMachineDrop: function(coords, blockID, level, standartDrop){
 		var item = Player.getCarriedItem();
 		if(item.id==ItemID.wrench){
 			ToolAPI.breakCarriedTool(10);
@@ -53,10 +53,10 @@ var MachineRegistry = {
 			World.setBlock(coords.x, coords.y, coords.z, 0);
 			return [[blockID, 1, 0]];
 		}
-		//if(level > 0){
+		if(level > 0){
 			return [[standartDrop || blockID, 1, 0]];
-		//}
-		//return [];
+		}
+		return [];
 	},
 	
 	basicEnergyReceiveFunc: function(type, src){

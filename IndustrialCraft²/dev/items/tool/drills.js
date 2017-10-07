@@ -19,7 +19,7 @@ ToolType.drill = {
     onAttack: function(item, mob){
         item.data = Math.min(item.data + this.toolMaterial.energyConsumption, Item.getMaxDamage(item.id));
     },
-    calcDestroyTime: function(item, block, params, destroyTime, enchant){
+    calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
         if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
             return destroyTime;
         }
@@ -48,44 +48,43 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
     onAttack: function(item, mob){
         item.data = Math.min(item.data + this.toolMaterial.energyConsumption, Item.getMaxDamage(item.id));
     },
-    calcDestroyTime: function(item, block, params, destroyTime, enchant){
+    calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
         if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
+			var material = ToolAPI.getBlockMaterial(block.id) || {};
+			material = material.name;
+			if(IDrillMode > 1 && (material == "dirt" || material == "stone")){
+				destroyTime = 0;
+				var side = coords.side;
+				var X = 1;
+				var Y = 1;
+				var Z = 1;
+				if(side==BlockSide.EAST || side==BlockSide.WEST){
+				X = 0;}
+				if(side==BlockSide.UP || side==BlockSide.DOWN){
+				Y = 0;}
+				if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
+				Z = 0;}
+				for(var xx = coords.x - X; xx <= coords.x + X; xx++){
+					for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
+						for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
+							var blockID = World.getBlockID(xx, yy, zz);
+							var material = ToolAPI.getBlockMaterial(blockID) || {};
+							if(material.name == "dirt" || material.name == "stone"){
+								destroyTime += Block.getDestroyTime(blockID) / material.multiplier * 1.5;
+							}
+						}
+					}
+				}
+				destroyTime /= 24;
+			}
             return destroyTime;
         }
         else{
             return params.base;
         }
     },
-    startDestroyBlock: function(coords, side, item, block){
-        var material = ToolAPI.getBlockMaterial(block.id) || {};
-        material = material.name;
-        if(item.data < Item.getMaxDamage(item.id) && IDrillMode > 1 && (material == "dirt" || material == "stone")){
-            var destroyTime = 0;
-            var X = 1;
-            var Y = 1;
-            var Z = 1;
-            if(side==BlockSide.EAST || side==BlockSide.WEST){
-            X = 0;}
-            if(side==BlockSide.UP || side==BlockSide.DOWN){
-            Y = 0;}
-            if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-            Z = 0;}
-            for(var xx = coords.x - X; xx <= coords.x + X; xx++){
-                for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
-                    for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-                        var tile = World.getBlock(xx, yy, zz);
-                        var material = ToolAPI.getBlockMaterial(tile.id) || {};
-                        if(material.name == "dirt" || material.name == "stone"){
-                            destroyTime += Block.getDestroyTime(tile.id) / material.multiplier * 1.5;
-                        }
-                    }
-                }
-            }
-            Block.setTempDestroyTime(block.id, destroyTime/24);
-        }
-    },
     destroyBlock: function(coords, side, item, block){
-        if(item.data < Item.getMaxDamage(item.id) && IDrillMode > 1){
+        if(IDrillMode > 1 && item.data + 800 <= Item.getMaxDamage(item.id)){
             var X = 1;
             var Y = 1;
             var Z = 1;
@@ -98,14 +97,14 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
             for(var xx = coords.x - X; xx <= coords.x + X; xx++){
                 for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
                     for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-                        block = World.getBlock(xx, yy, zz);
-                        var material = ToolAPI.getBlockMaterial(block.id) || {};
+                        blockID = World.getBlockID(xx, yy, zz);
+                        var material = ToolAPI.getBlockMaterial(blockID) || {};
                         if(material.name == "dirt" || material.name == "stone"){
-                            item.data++;
+                            item.data += 800;
                             if(IDrillMode==3 || material == "stone"){
                                 World.destroyBlock(xx, yy, zz, true);
                             }else{
-                                drop = dirtBlocksDrop[block.id];
+                                drop = dirtBlocksDrop[blockID];
                                 if(drop){
                                     World.destroyBlock(xx, yy, zz, false);
                                     World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
@@ -113,7 +112,7 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
                                 else{World.destroyBlock(xx, yy, zz, true);}
                             }
                         }
-                        if(item.data == Item.getMaxDamage(item.id)){
+                        if(item.data + 800 >= Item.getMaxDamage(item.id)){
                             Player.setCarriedItem(item.id, 1, item.data, item.enchant);
                             return;
                         }

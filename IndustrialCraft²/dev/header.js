@@ -18,9 +18,6 @@ var MobEffect = Native.PotionEffect;
 var Enchantment = Native.Enchantment;
 var BlockSide = Native.BlockSide;
 var EntityType = Native.EntityType;
-Entity.setPosition = ModAPI.requireGlobal("Entity.setPosition");
-Block.setTempDestroyTime = ModAPI.requireGlobal("Block.setTempDestroyTime");
-Block.getDestroyTime = ModAPI.requireGlobal("Block.getDestroyTime");
 
 // square lava texture for geothermal generator ui.
 LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");

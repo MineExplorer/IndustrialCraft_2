@@ -1,7 +1,7 @@
 var ChargeItemRegistry = {
 	chargeData: {},
 	
-	registerItem: function(item, energy, level, preventUncharge, EPD, isTool){
+	registerItem: function(item, energy, level, preventUncharge, isTool){
 		Item.setMaxDamage(item, energy + 1);
 		this.chargeData[item] = {
 			type: "normal",

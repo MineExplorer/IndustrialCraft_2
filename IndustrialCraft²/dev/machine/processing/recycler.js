@@ -5,7 +5,7 @@ Block.createBlockWithRotation("recycler", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.recycler);
 
 Block.registerDropFunction("recycler", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){

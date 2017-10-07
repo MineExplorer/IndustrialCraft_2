@@ -1,6 +1,12 @@
 var currentUIscreen;
 Callback.addCallback("NativeGuiChanged", function(screenName){
 	currentUIscreen = screenName;
+	if(screenName != "hud_screen" && screenName != "in_game_play_screen"){
+		if(UIbuttons.container){
+			UIbuttons.container.close();
+			UIbuttons.container = null;
+		}
+	}
 });
 
 var UIbuttons = {
@@ -135,11 +141,4 @@ Callback.addCallback("tick", function(){
 		}
 	}
 	UIbuttons.isEnabled = false;
-});
-
-Callback.addCallback("LevelLeft", function(){
-	if(UIbuttons.container){
-		UIbuttons.container.close();
-		UIbuttons.container = null;
-	}
 });

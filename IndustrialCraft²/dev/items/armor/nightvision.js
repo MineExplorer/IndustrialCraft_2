@@ -13,17 +13,19 @@ Callback.addCallback("PostLoaded", function(){
 UIbuttons.setButton(ItemID.nightvisionGoggles, "button_nightvision");
 
 Armor.registerFuncs("nightvisionGoggles", {
-	maxDamage: Item.getMaxDamage(ItemID.nightvisionGoggles),
-	tick: function(slot, inventory){
-		if(UIbuttons.nightvision){
+	hurt: function(){
+		return false;
+	},
+	tick: function(slot, index, maxDamage){
+		if(UIbuttons.nightvision && slot.data < maxDamage){
 			var coords = Player.getPosition();
 			if(World.getLightLevel(coords.x, coords.y, coords.z)==15){
 				Entity.addEffect(player, MobEffect.blindness, 1, 25);
 			}
 			Entity.addEffect(player, MobEffect.nightVision, 1, 225);
 			if(World.getThreadTime()%20==0){
-				//slot.data = Math.min(slot.data+20, this.maxDamage);
-				//return true;
+				slot.data = Math.min(slot.data+20, maxDamage);
+				return true;
 			}
 		}
 		return false;

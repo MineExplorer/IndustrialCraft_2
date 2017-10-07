@@ -1,16 +1,16 @@
 {
+  "enabled":true,
   "rubber_tree_gen":{
-    "jungle":true,
     "forest_and_plains":true,
+    "jungle":true,
     "swamp":true
   },
-  "enabled":true,
+  "show_resource_errors":true,
   "ore_gen":{
     "tin_ore":true,
-    "uranium_ore":true,
     "copper_ore":true,
+    "uranium_ore":true,
     "iridium_ore":true,
     "lead_ore":true
-  },
-  "show_resource_errors":true
+  }
 }

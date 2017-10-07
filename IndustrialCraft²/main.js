@@ -29,8 +29,6 @@ var MobEffect = Native.PotionEffect;
 var Enchantment = Native.Enchantment;
 var BlockSide = Native.BlockSide;
 var EntityType = Native.EntityType;
-Entity.setPosition = ModAPI.requireGlobal("Entity.setPosition");
-Block.setTempDestroyTime = ModAPI.requireGlobal("Block.setTempDestroyTime");
 
 // square lava texture for geothermal generator ui.
 LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
@@ -243,6 +241,8 @@ Translation.addTranslation("§bQuantum Leggings", {ru: "§bКвантовые ш
 Translation.addTranslation("§bQuantum Boots", {ru: "§bКвантовые ботинки", es: "§bBotas de Traje Cuántico", zh: "§b量子靴子"});
 Translation.addTranslation("Jetpack", {ru: "Реактивный ранец", es: "Jetpack Eléctrico", zh: "电力喷气背包"});
 Translation.addTranslation("Batpack", {ru: "Аккумуляторный ранец", es: "Mochila de Baterías", zh: "电池背包"});
+Translation.addTranslation("Advanced Batpack", {ru: "Продвинутый аккумуляторный ранец", es: "Mochila de Baterías Avanzada", zh: "高级电池背包"});
+Translation.addTranslation("Energy Pack", {ru: "Энергетический ранец", es: "Pack de Energía", zh: "能量水晶储电背包"});
 Translation.addTranslation("Lappack", {ru: "Лазуротроновый ранец", es: "Mochila de Baterías Avanzada", zh: "兰波顿储电背包"});
 
 // Tools
@@ -313,7 +313,7 @@ var MachineRegistry = {
 	},
 
 	// standart functions
-	getMachineDrop: function(coords, blockID, standartDrop){ //level
+	getMachineDrop: function(coords, blockID, level, standartDrop){
 		var item = Player.getCarriedItem();
 		if(item.id==ItemID.wrench){
 			ToolAPI.breakCarriedTool(10);
@@ -326,10 +326,10 @@ var MachineRegistry = {
 			World.setBlock(coords.x, coords.y, coords.z, 0);
 			return [[blockID, 1, 0]];
 		}
-		//if(level > 0){
+		if(level > 0){
 			return [[standartDrop || blockID, 1, 0]];
-		//}
-		//return [];
+		}
+		return [];
 	},
 	
 	basicEnergyReceiveFunc: function(type, src){
@@ -752,9 +752,9 @@ var OreGenerator = {
 		for(var i = 1; i < random(1, maxCount); i++){
 			this.setOre(x+random(-1,1), y+random(-1,1), z+random(-1,1), id, data);
 		}
-	}
+	},
 	setOre: function(x, y, z, id, data){
-		if(World.getBlock(x, y, z) == 1){
+		if(World.getBlockID(x, y, z) == 1){
 		World.setBlock(x, y, z, id, data);}
 	}
 }
@@ -1331,7 +1331,7 @@ Block.createBlockWithRotation("electricFurnace", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.electricFurnace);
 
 Block.registerDropFunction("electricFurnace", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.ironFurnace);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.ironFurnace);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -1443,7 +1443,7 @@ Block.createBlockWithRotation("inductionFurnace", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.inductionFurnace);
 
 Block.registerDropFunction("inductionFurnace", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockAdvanced);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -1593,7 +1593,7 @@ Block.createBlockWithRotation("macerator", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.macerator);
 
 Block.registerDropFunction("macerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -1748,7 +1748,7 @@ Block.createBlockWithRotation("recycler", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.recycler);
 
 Block.registerDropFunction("recycler", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -1861,7 +1861,7 @@ Block.createBlockWithRotation("compressor", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.compressor);
 
 Block.registerDropFunction("compressor", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -1989,7 +1989,7 @@ Block.createBlockWithRotation("extractor", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.extractor);
 
 Block.registerDropFunction("extractor", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -2108,7 +2108,7 @@ Block.createBlockWithRotation("metalFormer", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.metalFormer);
 
 Block.registerDropFunction("metalFormer", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -2261,12 +2261,12 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 
 IDRegistry.genBlockID("massFabricator");
 Block.createBlockWithRotation("massFabricator", [
-	{name: "Mass Fabricator", texture: [["machine_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 1], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
+	{name: "Mass Fabricator", texture: [["machine_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
 ]);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.massFabricator);
 
 Block.registerDropFunction("massFabricator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockAdvanced);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -2375,6 +2375,10 @@ Block.createBlockWithRotation("primalGenerator", [
 	{name: "Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ]);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.primalGenerator);
+
+Block.registerDropFunction("primalGenerator", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
 
 Callback.addCallback("PostLoaded", function(){
 	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
@@ -2499,7 +2503,7 @@ Block.createBlockWithRotation("geothermalGenerator", [
 //ICRenderLib.addConnectionBlock("bc-fluid", BlockID.geothermalGenerator);
 
 Block.registerDropFunction("geothermalGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.primalGenerator);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -2518,15 +2522,16 @@ var guiGeothermalGenerator = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "bitmap", x: 650, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
+		{type: "bitmap", x: 675, y: 106, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
 		{type: "bitmap", x: 450, y: 150, bitmap: "geotermal_liquid_slot", scale: GUI_BAR_STANDART_SCALE}
 	],
 	
 	elements: {
-		"energyScale": {type: "scale", x: 650 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
+		"energyScale": {type: "scale", x: 675 + GUI_BAR_STANDART_SCALE * 4, y: 106, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"liquidScale": {type: "scale", x: 450 + GUI_BAR_STANDART_SCALE, y: 150 + GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "geotermal_empty_liquid_slot", overlay: "geotermal_liquid_slot_overlay", overlayOffset: {x: -GUI_BAR_STANDART_SCALE, y: -GUI_BAR_STANDART_SCALE}, scale: GUI_BAR_STANDART_SCALE},
 		"slot1": {type: "slot", x: 441, y: 75},
 		"slot2": {type: "slot", x: 441, y: 212},
+		"slotEnergy": {type: "slot", x: 695, y: 181},
 		"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
 		"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
 	}
@@ -2563,12 +2568,14 @@ MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
 				this.container.validateAll();
 			}
 		}
-		if(this.liquidStorage.getLiquid("lava", 0.001) > 0){
+		if(this.liquidStorage.getAmount("lava") >= 0.001){
 			if(this.data.energy <= energyStorage - 20){
 				this.data.energy += 20;
-				this.liquidStorage.addLiquid("lava", 0.001);
+				this.liquidStorage.addLiquid("lava", -0.001);
 			}
 		}
+		
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), this.data.energy, 32, 0);
 		
 		this.container.setText("textInfo1", parseInt(this.liquidStorage.getAmount("lava") * 1000) + "/");
 		this.liquidStorage.updateUiScale("liquidScale", "lava");
@@ -2600,7 +2607,7 @@ Block.createBlock("solarPanel", [
 ]);
 
 Block.registerDropFunction("solarPanel", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -2634,7 +2641,7 @@ Block.createBlockWithRotation("genWindmill", [
 ]);
 
 Block.registerDropFunction("genWindmill", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.primalGenerator);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -2681,7 +2688,7 @@ Block.createBlockWithRotation("genWatermill", [
 ]);
 
 Block.registerDropFunction("genWatermill", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.primalGenerator);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -2743,7 +2750,7 @@ MachineRegistry.registerPrototype(BlockID.genWatermill, {
 var ChargeItemRegistry = {
 	chargeData: {},
 	
-	registerItem: function(item, energy, level, preventUncharge, EPD, isTool){
+	registerItem: function(item, energy, level, preventUncharge, isTool){
 		Item.setMaxDamage(item, energy + 1);
 		this.chargeData[item] = {
 			type: "normal",
@@ -2911,6 +2918,10 @@ Block.createBlockWithRotation("storageCESU", [
 	{name: "CESU", texture: [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]], inCreative: true}
 ]);
 
+Block.registerDropFunction("storageCESU", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
+
 Callback.addCallback("PostLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageCESU, count: 1, data: 0}, [
 		"bxb",
@@ -2984,7 +2995,7 @@ Block.createBlockWithRotation("storageMFE", [
 ]);
 
 Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -3060,7 +3071,7 @@ Block.createBlockWithRotation("storageMFSU", [
 ]);
 
 Block.registerDropFunction("storageMFSU", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockAdvanced);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -3140,7 +3151,7 @@ Block.createBlockWithRotation("miner", [
 ]);
 
 Block.registerDropFunction("miner", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 var guiMiner = new UI.StandartWindow({
@@ -3274,7 +3285,7 @@ Block.createBlock("advancedMiner", [
 ]);
 
 Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockAdvanced);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
 Callback.addCallback("PostLoaded", function(){
@@ -3298,7 +3309,7 @@ Block.createBlock("teleporter", [
 ]);
 
 Block.registerDropFunction("teleporter", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockAdvanced);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
 var friendlyMobs = [EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityType.MUSHROOM_COW, EntityType.OCELOT, EntityType.PIG, EntityType.RABBIT, EntityType.SHEEP, EntityType.SNOW_GOLEM, EntityType.SQUID, EntityType.VILLAGER, EntityType.WOLF, 23, 24, 25, 26, 27];
@@ -4678,6 +4689,12 @@ Recipes.addShaped({id: ItemID.compositeBoots, count: 1, data: 0}, [
 var currentUIscreen;
 Callback.addCallback("NativeGuiChanged", function(screenName){
 	currentUIscreen = screenName;
+	if(screenName != "hud_screen" && screenName != "in_game_play_screen"){
+		if(UIbuttons.container){
+			UIbuttons.container.close();
+			UIbuttons.container = null;
+		}
+	}
 });
 
 var UIbuttons = {
@@ -4814,13 +4831,6 @@ Callback.addCallback("tick", function(){
 	UIbuttons.isEnabled = false;
 });
 
-Callback.addCallback("LevelLeft", function(){
-	if(UIbuttons.container){
-		UIbuttons.container.close();
-		UIbuttons.container = null;
-	}
-});
-
 
 
 
@@ -4841,17 +4851,19 @@ Callback.addCallback("PostLoaded", function(){
 UIbuttons.setButton(ItemID.nightvisionGoggles, "button_nightvision");
 
 Armor.registerFuncs("nightvisionGoggles", {
-	maxDamage: Item.getMaxDamage(ItemID.nightvisionGoggles),
-	tick: function(slot, inventory){
-		if(UIbuttons.nightvision){
+	hurt: function(){
+		return false;
+	},
+	tick: function(slot, index, maxDamage){
+		if(UIbuttons.nightvision && slot.data < maxDamage){
 			var coords = Player.getPosition();
 			if(World.getLightLevel(coords.x, coords.y, coords.z)==15){
 				Entity.addEffect(player, MobEffect.blindness, 1, 25);
 			}
 			Entity.addEffect(player, MobEffect.nightVision, 1, 225);
 			if(World.getThreadTime()%20==0){
-				//slot.data = Math.min(slot.data+20, this.maxDamage);
-				//return true;
+				slot.data = Math.min(slot.data+20, maxDamage);
+				return true;
 			}
 		}
 		return false;
@@ -4909,33 +4921,41 @@ UIbuttons.setButton(ItemID.nanoHelmet, "button_nightvision");
 
 var NANO_ARMOR_FUNCS_CHARGED = {
 	maxDamage: Item.getMaxDamage(ItemID.nanoHelmet),
-	/*
-	hurt: function(params, item, index, info){
-		energy = hurt.damage * 40;
-		item.data = Math.min(item.data + energy, this.maxDamage);
+	
+	hurt: function(params, item, index, maxDamage){
+		var type = params.type;
+		if(type==2 || type==3 || type==11){
+			var energy = params.damage * 30;
+			item.data = Math.min(item.data + energy, maxDamage);
+		}
+		if(type==5 && index==3 && item.data +500 <= maxDamage){
+			var damage = Math.min(9, Math.floor((maxDamage - item.data)/500));
+			if(params.damage > damage){
+				Entity.setHealth(player, Entity.getHealth(player) + damage);
+			}
+			else{
+				Game.prevent();
+			}
+			item.data = Math.min(item.data + damage * 500, maxDamage);
+		}
+		return true;
 	},
-	*/
-	tick: function(slot, inventory, index){
+	
+	tick: function(slot, index, maxDamage){
 		var armor = MachineRecipeRegistry.getRecipeResult("nano-armor-charge", slot.id);
-		if(slot.data >= this.maxDamage){
+		if(slot.data >= maxDamage){
 			slot.id = armor.uncharged;
 		}
 		else{
-			if(slot.id==ItemID.nanoHelmet && UIbuttons.nightvision){
+			if(index==0 && UIbuttons.nightvision){
 				var coords = Player.getPosition();
 				if(World.getLightLevel(coords.x, coords.y, coords.z)==15){
 					Entity.addEffect(player, MobEffect.blindness, 1, 25);
 				}
 				Entity.addEffect(player, MobEffect.nightVision, 1, 225);
 				if(World.getThreadTime()%20==0){
-					//slot.data = Math.min(slot.data+20, this.maxDamage);
-					//return true;
-				}
-			}
-			if(slot.id==ItemID.nanoBoots){
-				var vel = Player.getVelocity();
-				if(vel.y < -0.226){
-					Entity.addEffect(player, MobEffect.jump, 12, 2);
+					slot.data = Math.min(slot.data+20, maxDamage);
+					return true;
 				}
 			}
 			if(slot.id != armor.charged){
@@ -5030,26 +5050,39 @@ UIbuttons.setButton(ItemID.quantumHelmet, "button_nightvision");
 UIbuttons.setButton(ItemID.quantumChestplate, "button_fly");
 UIbuttons.setButton(ItemID.quantumBoots, "button_jump");
 
+var runTime = 0;
+
 var QUANTUM_ARMOR_FUNCS_CHARGED = {
-	maxDamage: Item.getMaxDamage(ItemID.quantumHelmet),
-	runTime: 0,
-	/*
-	hurt: function(params, item, index, info){
-		energy = hurt.damage * 30;
-		item.data = Math.min(item.data + energy, this.maxDamage);
+	hurt: function(params, item, index, maxDamage){
+		var type = params.type;
+		if(type==2 || type==3 || type==11){
+			var energy = params.damage * 30;
+			item.data = Math.min(item.data + energy, maxDamage);
+		}
+		if(type==5 && index==3 && item.data + 900 <= maxDamage){
+			var damage = Math.min(params.damage, Math.floor((maxDamage - item.data)/900));
+			if(params.damage > damage){
+				Entity.setHealth(player, Entity.getHealth(player) + damage);
+			}
+			else{
+				Game.prevent();
+			}
+			item.data = Math.min(item.data + damage*900, maxDamage);
+		}
+		return true;
 	},
-	*/
-	tick: function(slot, inventory, index){
+	
+	tick: function(slot, index, maxDamage){
 		var armor = MachineRecipeRegistry.getRecipeResult("quantum-armor-charge", slot.id);
-		if(slot.data >= this.maxDamage){
+		if(slot.data >= maxDamage){
 			slot.id = armor.uncharged;
 		}
 		else{
 			if(slot.id != armor.charged){
 				slot.id = armor.charged;
 			}
-			switch (slot.id){
-			case ItemID.quantumHelmet:
+			switch (index){
+			case 0:
 				Entity.clearEffect(player, MobEffect.poison);
 				Entity.clearEffect(player, MobEffect.wither);
 				if(UIbuttons.nightvision){
@@ -5059,33 +5092,27 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 					}
 					Entity.addEffect(player, MobEffect.nightVision, 1, 225);
 					if(World.getThreadTime()%20==0){
-						//slot.data = Math.min(slot.data+20, this.maxDamage);
-						//return true;
+						slot.data = Math.min(slot.data+20, maxDamage);
+						return true;
 					}
 				}
 			break;
-			case ItemID.quantumChestplate:
+			case 1:
 				Entity.addEffect(player, MobEffect.fireResistance, 1, 2);
 			break;
-			case ItemID.quantumLeggings:
+			case 2:
 				var vel = Player.getVelocity();
 				var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z)
 				if(horizontalVel > 0.15){
-					if(Math.abs(vel.y+0.078) < 0.001){this.runTime++;}
+					if(Math.abs(vel.y+0.078) < 0.001){runTime++;}
 				}
-				else{this.runTime = 0;}
-				if(this.runTime > 2 && !Player.getFlying()){
+				else{runTime = 0;}
+				if(runTime > 2 && !Player.getFlying()){
 					if(World.getThreadTime()%10==0){
-						//slot.data = Math.min(slot.data + Math.floor(horizontalVel*1200), this.maxDamage);
-						//return true;
+						slot.data = Math.min(slot.data + Math.floor(horizontalVel*1200), maxDamage);
+						return true;
 					}
 					Entity.addEffect(player, MobEffect.movementSpeed, 5, 3);
-				}
-			break;
-			case ItemID.quantumBoots:
-				var vel = Player.getVelocity();
-				if(vel.y < -0.2){
-					Entity.addEffect(player, MobEffect.jump, 255, 2);
 				}
 			break;
 			}
@@ -5146,14 +5173,18 @@ Recipes.addShaped({id: ItemID.jetpack, count: 1, data: Item.getMaxDamage(ItemID.
 UIbuttons.setButton(ItemID.jetpack, "button_fly");
 
 Armor.registerFuncs("jetpack", {
-	maxDamage: Item.getMaxDamage(ItemID.jetpack),
-	tick: function(slot, inventory){
-		var vel = Player.getVelocity();
-		if(vel.y < -0.226 && vel.y > -0.9){
-			Entity.addEffect(player, MobEffect.jump, 255, 2, false, false);
+	hurt: function(params, item, index, maxDamage){
+		if(params.type==5){
+			var vel = Player.getVelocity();
+			if(vel.y < -0.226 && vel.y > -0.9){
+				Game.prevent();
+			}
 		}
 		return false;
-	}
+	},
+	tick: function(){
+		return false;
+	},
 });
 
 
@@ -5162,43 +5193,75 @@ Armor.registerFuncs("jetpack", {
 // file: items/armor/energy_packs.js
 
 IDRegistry.genItemID("batpack");
+IDRegistry.genItemID("advBatpack");
+IDRegistry.genItemID("energypack");
 IDRegistry.genItemID("lappack");
 Item.createArmorItem("batpack", "Batpack", {name: "armor_batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: false});
-Item.createArmorItem("lappack", "Lappack", {name: "armor_lappack"}, {type: "chestplate", armor: 3, durability: 300000, texture: "armor/lappack_1.png", isTech: false});
+Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "armor_adv_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: false});
+Item.createArmorItem("energypack", "Energy Pack", {name: "armor_energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
+Item.createArmorItem("lappack", "Lappack", {name: "armor_lappack"}, {type: "chestplate", armor: 3, durability: 1000000, texture: "armor/lappack_1.png", isTech: false});
 ChargeItemRegistry.registerItem(ItemID.batpack, 60000, 0);
-ChargeItemRegistry.registerItem(ItemID.lappack, 300000, 1);
+ChargeItemRegistry.registerItem(ItemID.advBatpack, 600000, 1);
+ChargeItemRegistry.registerItem(ItemID.energypack, 2000000, 2);
+ChargeItemRegistry.registerItem(ItemID.lappack, 10000000, 3);
 
-Recipes.addShaped({id: ItemID.batpack, count: 1, data: 60001}, [
+Recipes.addShaped({id: ItemID.batpack, count: 1, data: Item.getMaxDamage(ItemID.batpack)}, [
     "bcb",
     "bab",
     "b b"
-], ['a', ItemID.plateIron, 0, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
+], ['a', 5, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
 
-Recipes.addShaped({id: ItemID.lappack, count: 1, data: 300001}, [
+Recipes.addShaped({id: ItemID.advBatpack, count: 1, data: Item.getMaxDamage(ItemID.advBatpack)}, [
     "bcb",
     "bab",
     "b b"
-], ['a', ItemID.batpack, -1, 'b', 22, 0, 'c', ItemID.circuitAdvanced, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
+], ['a', ItemID.plateBronze, 0, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitBasic, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
+
+Recipes.addShaped({id: ItemID.energypack, count: 1, data: Item.getMaxDamage(ItemID.energypack)}, [
+    "cbc",
+    "aba",
+    "b b"
+], ['a', ItemID.storageCrystal, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
+
+Recipes.addShaped({id: ItemID.lappack, count: 1, data: Item.getMaxDamage(ItemID.lappack)}, [
+    "bcb",
+    "bab",
+    "b b"
+], ['a', ItemID.energypack, -1, 'b', 22, 0, 'c', ItemID.circuitAdvanced, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
 
 
-var ENERGY_PACK_TICK = function(slot){
-    var item = Player.getCarriedItem();
-    var data = ChargeItemRegistry.getItemData(item.id);
-    if(!data || !data.isTool || data.level > this.level || item.data <= 1){
-        return false;
-    }
-    
-    var energyAdd = Math.min(item.data - 1, Math.min(this.transfer, this.maxDamage - slot.data));
-    Game.message(energyAdd);
-    if(energyAdd > 0){
-        slot.data += energyAdd;
-        Player.setCarriedItem(item.id, 1, item.data - energyAdd);
-        return true;
+function registerStoragePack(id, level, tranfer){
+	Armor.registerFuncs(id, {
+		hurt: function(){
+			return false;
+		},
+		tick: function(slot, index, maxDamage){
+			return ENERGY_PACK_TICK(slot, maxDamage, level, tranfer);
+		}
+	});
+}
+
+var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
+	if(World.getThreadTime()%20==0){
+	    var item = Player.getCarriedItem();
+	    var data = ChargeItemRegistry.getItemData(item.id);
+	    if(!data || !data.isTool || data.level > level || item.data <= 1){
+	        return false;
+	    }
+	    var energyAdd = Math.min(item.data - 1, Math.min(transfer, maxDamage - slot.data));
+	    Game.message(energyAdd);
+	    if(energyAdd > 0){
+	        slot.data += energyAdd;
+	        Player.setCarriedItem(item.id, 1, item.data - energyAdd);
+	        return true;
+		}
     }
 }
 
-Armor.registerFuncs("batpack", {maxDamage: 60001, level: 0, transfer: 32, tick: ENERGY_PACK_TICK});
-Armor.registerFuncs("lappack", {maxDamage: 300001, level: 1, transfer: 128, tick: ENERGY_PACK_TICK});
+registerStoragePack("batpack", 0, 32);
+registerStoragePack("advBatpack", 1, 256);
+registerStoragePack("energypack", 2, 1024);
+registerStoragePack("lappack", 3, 4096);
 
 
 
@@ -5511,7 +5574,7 @@ ToolType.drill = {
     onAttack: function(item, mob){
         item.data = Math.min(item.data + this.toolMaterial.energyConsumption, Item.getMaxDamage(item.id));
     },
-    calcDestroyTime: function(item, block, params, destroyTime, enchant){
+    calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
         if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
             return destroyTime;
         }
@@ -5540,45 +5603,43 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
     onAttack: function(item, mob){
         item.data = Math.min(item.data + this.toolMaterial.energyConsumption, Item.getMaxDamage(item.id));
     },
-    calcDestroyTime: function(item, block, params, destroyTime, enchant){
+    calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
         if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
+			var material = ToolAPI.getBlockMaterial(block.id) || {};
+			material = material.name;
+			if(IDrillMode > 1 && (material == "dirt" || material == "stone")){
+				destroyTime = 0;
+				var side = coords.side;
+				var X = 1;
+				var Y = 1;
+				var Z = 1;
+				if(side==BlockSide.EAST || side==BlockSide.WEST){
+				X = 0;}
+				if(side==BlockSide.UP || side==BlockSide.DOWN){
+				Y = 0;}
+				if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
+				Z = 0;}
+				for(var xx = coords.x - X; xx <= coords.x + X; xx++){
+					for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
+						for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
+							var blockID = World.getBlockID(xx, yy, zz);
+							var material = ToolAPI.getBlockMaterial(blockID) || {};
+							if(material.name == "dirt" || material.name == "stone"){
+								destroyTime += Block.getDestroyTime(blockID) / material.multiplier * 1.5;
+							}
+						}
+					}
+				}
+				destroyTime /= 24;
+			}
             return destroyTime;
         }
         else{
             return params.base;
         }
     },
-    startDestroyBlock: function(coords, side, item, block){
-        var material = ToolAPI.getBlockMaterial(block.id) || {};
-        material = material.name;
-        if(item.data < Item.getMaxDamage(item.id) && IDrillMode > 1 && (material == "dirt" || material == "stone")){
-            var destroyTime = 0;
-            var X = 1;
-            var Y = 1;
-            var Z = 1;
-            if(side==BlockSide.EAST || side==BlockSide.WEST){
-            X = 0;}
-            if(side==BlockSide.UP || side==BlockSide.DOWN){
-            Y = 0;}
-            if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-            Z = 0;}
-            for(var xx = coords.x - X; xx <= coords.x + X; xx++){
-                for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
-                    for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-                        var tile = World.getBlock(xx, yy, zz);
-                        var material = ToolAPI.getBlockMaterial(tile.id) || {};
-                        if(material.name == "dirt" || material.name == "stone"){
-                            destroyTime += Block.getDestroyTime(tile.id) / material.multiplier * 1.5;
-                        }
-                    }
-                }
-            }
-            tile = Unlimited.API.GetReal(block.id, block.data).id;
-            Block.setTempDestroyTime(tile, destroyTime/24);
-        }
-    },
     destroyBlock: function(coords, side, item, block){
-        if(item.data < Item.getMaxDamage(item.id) && IDrillMode > 1){
+        if(IDrillMode > 1 && item.data + 800 <= Item.getMaxDamage(item.id)){
             var X = 1;
             var Y = 1;
             var Z = 1;
@@ -5591,14 +5652,14 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
             for(var xx = coords.x - X; xx <= coords.x + X; xx++){
                 for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
                     for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-                        block = World.getBlock(xx, yy, zz);
-                        var material = ToolAPI.getBlockMaterial(block.id) || {};
+                        blockID = World.getBlockID(xx, yy, zz);
+                        var material = ToolAPI.getBlockMaterial(blockID) || {};
                         if(material.name == "dirt" || material.name == "stone"){
-                            item.data++;
+                            item.data += 800;
                             if(IDrillMode==3 || material == "stone"){
                                 World.destroyBlock(xx, yy, zz, true);
                             }else{
-                                drop = dirtBlocksDrop[block.id];
+                                drop = dirtBlocksDrop[blockID];
                                 if(drop){
                                     World.destroyBlock(xx, yy, zz, false);
                                     World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
@@ -5606,7 +5667,7 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
                                 else{World.destroyBlock(xx, yy, zz, true);}
                             }
                         }
-                        if(item.data == Item.getMaxDamage(item.id)){
+                        if(item.data + 800 >= Item.getMaxDamage(item.id)){
                             Player.setCarriedItem(item.id, 1, item.data, item.enchant);
                             return;
                         }

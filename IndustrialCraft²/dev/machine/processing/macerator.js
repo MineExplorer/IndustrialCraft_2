@@ -5,7 +5,7 @@ Block.createBlockWithRotation("macerator", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.macerator);
 
 Block.registerDropFunction("macerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){

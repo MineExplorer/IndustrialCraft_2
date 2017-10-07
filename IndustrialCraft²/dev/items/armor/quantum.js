@@ -44,26 +44,39 @@ UIbuttons.setButton(ItemID.quantumHelmet, "button_nightvision");
 UIbuttons.setButton(ItemID.quantumChestplate, "button_fly");
 UIbuttons.setButton(ItemID.quantumBoots, "button_jump");
 
+var runTime = 0;
+
 var QUANTUM_ARMOR_FUNCS_CHARGED = {
-	maxDamage: Item.getMaxDamage(ItemID.quantumHelmet),
-	runTime: 0,
-	/*
-	hurt: function(params, item, index, info){
-		energy = hurt.damage * 30;
-		item.data = Math.min(item.data + energy, this.maxDamage);
+	hurt: function(params, item, index, maxDamage){
+		var type = params.type;
+		if(type==2 || type==3 || type==11){
+			var energy = params.damage * 30;
+			item.data = Math.min(item.data + energy, maxDamage);
+		}
+		if(type==5 && index==3 && item.data + 900 <= maxDamage){
+			var damage = Math.min(params.damage, Math.floor((maxDamage - item.data)/900));
+			if(params.damage > damage){
+				Entity.setHealth(player, Entity.getHealth(player) + damage);
+			}
+			else{
+				Game.prevent();
+			}
+			item.data = Math.min(item.data + damage*900, maxDamage);
+		}
+		return true;
 	},
-	*/
-	tick: function(slot, inventory, index){
+	
+	tick: function(slot, index, maxDamage){
 		var armor = MachineRecipeRegistry.getRecipeResult("quantum-armor-charge", slot.id);
-		if(slot.data >= this.maxDamage){
+		if(slot.data >= maxDamage){
 			slot.id = armor.uncharged;
 		}
 		else{
 			if(slot.id != armor.charged){
 				slot.id = armor.charged;
 			}
-			switch (slot.id){
-			case ItemID.quantumHelmet:
+			switch (index){
+			case 0:
 				Entity.clearEffect(player, MobEffect.poison);
 				Entity.clearEffect(player, MobEffect.wither);
 				if(UIbuttons.nightvision){
@@ -73,33 +86,27 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 					}
 					Entity.addEffect(player, MobEffect.nightVision, 1, 225);
 					if(World.getThreadTime()%20==0){
-						//slot.data = Math.min(slot.data+20, this.maxDamage);
-						//return true;
+						slot.data = Math.min(slot.data+20, maxDamage);
+						return true;
 					}
 				}
 			break;
-			case ItemID.quantumChestplate:
+			case 1:
 				Entity.addEffect(player, MobEffect.fireResistance, 1, 2);
 			break;
-			case ItemID.quantumLeggings:
+			case 2:
 				var vel = Player.getVelocity();
 				var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z)
 				if(horizontalVel > 0.15){
-					if(Math.abs(vel.y+0.078) < 0.001){this.runTime++;}
+					if(Math.abs(vel.y+0.078) < 0.001){runTime++;}
 				}
-				else{this.runTime = 0;}
-				if(this.runTime > 2 && !Player.getFlying()){
+				else{runTime = 0;}
+				if(runTime > 2 && !Player.getFlying()){
 					if(World.getThreadTime()%10==0){
-						//slot.data = Math.min(slot.data + Math.floor(horizontalVel*1200), this.maxDamage);
-						//return true;
+						slot.data = Math.min(slot.data + Math.floor(horizontalVel*1200), maxDamage);
+						return true;
 					}
 					Entity.addEffect(player, MobEffect.movementSpeed, 5, 3);
-				}
-			break;
-			case ItemID.quantumBoots:
-				var vel = Player.getVelocity();
-				if(vel.y < -0.2){
-					Entity.addEffect(player, MobEffect.jump, 255, 2);
 				}
 			break;
 			}

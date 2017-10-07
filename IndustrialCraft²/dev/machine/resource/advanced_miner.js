@@ -4,7 +4,7 @@ Block.createBlock("advancedMiner", [
 ]);
 
 Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockAdvanced);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
 Callback.addCallback("PostLoaded", function(){

@@ -5,7 +5,7 @@ Block.createBlockWithRotation("extractor", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.extractor);
 
 Block.registerDropFunction("extractor", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){

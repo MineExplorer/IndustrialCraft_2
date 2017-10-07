@@ -5,7 +5,7 @@ var ToolType = {
 		damage: 4,
 		blockTypes: ["fibre", "plant"],
 		onAttack: function(item, mob){ },
-		calcDestroyTime: function(item, block, params, destroyTime, enchant){
+		calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
 			if(block.id==30){return 0.08;}
 			if(block.id==35){return 0.05;}
 			var material = ToolAPI.getBlockMaterial(block.id).name
@@ -63,11 +63,6 @@ ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){
 	Item.setToolRender(id, true);
 	toolMaterial = ToolAPI.toolMaterials[toolMaterial] || toolMaterial;
 	if(toolType.blockTypes){
-		if(!toolType.calcDestroyTime){
-			toolType.calcDestroyTime = function(item, block, params, destroyTime, enchant){
-				return destroyTime*1.5;
-			}
-		}
 		toolProperties = {brokenId: brokenId || 0};
 		for(var i in toolType){
 		toolProperties[i] = toolType[i];}
@@ -85,15 +80,6 @@ ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){
 	}
 	if(toolType.useItem){
 		Item.registerUseFunctionForID(id, toolType.useItem);
-	}
-
-	if(toolType.startDestroyBlock){
-		Callback.addCallback("DestroyBlockStart", function(coords, block, player){
-			var item = Player.getCarriedItem(true);
-			if(item.id == id){
-				toolType.startDestroyBlock(coords, coords.side, item, block);
-			}
-		});
 	}
 	if(toolType.destroyBlock){
 		Callback.addCallback("DestroyBlock", function(coords, block, player){

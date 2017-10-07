@@ -5,7 +5,7 @@ Block.createBlockWithRotation("inductionFurnace", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.inductionFurnace);
 
 Block.registerDropFunction("inductionFurnace", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockAdvanced);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
 Callback.addCallback("PostLoaded", function(){

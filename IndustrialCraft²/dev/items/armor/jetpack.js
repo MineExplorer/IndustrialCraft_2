@@ -11,12 +11,16 @@ Recipes.addShaped({id: ItemID.jetpack, count: 1, data: Item.getMaxDamage(ItemID.
 UIbuttons.setButton(ItemID.jetpack, "button_fly");
 
 Armor.registerFuncs("jetpack", {
-	maxDamage: Item.getMaxDamage(ItemID.jetpack),
-	tick: function(slot, inventory){
-		var vel = Player.getVelocity();
-		if(vel.y < -0.226 && vel.y > -0.9){
-			Entity.addEffect(player, MobEffect.jump, 255, 2);
+	hurt: function(params, item, index, maxDamage){
+		if(params.type==5){
+			var vel = Player.getVelocity();
+			if(vel.y < -0.226 && vel.y > -0.9){
+				Game.prevent();
+			}
 		}
 		return false;
-	}
+	},
+	tick: function(){
+		return false;
+	},
 });

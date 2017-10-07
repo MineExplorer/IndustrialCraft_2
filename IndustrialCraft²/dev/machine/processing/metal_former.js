@@ -5,7 +5,7 @@ Block.createBlockWithRotation("metalFormer", [
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.metalFormer);
 
 Block.registerDropFunction("metalFormer", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockBasic);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PostLoaded", function(){

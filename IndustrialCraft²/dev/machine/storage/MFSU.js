@@ -4,7 +4,7 @@ Block.createBlockWithRotation("storageMFSU", [
 ]);
 
 Block.registerDropFunction("storageMFSU", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, BlockID.machineBlockAdvanced);
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
 Callback.addCallback("PostLoaded", function(){

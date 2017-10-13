@@ -5,6 +5,9 @@ Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner_advanced", meta
 ChargeItemRegistry.registerItem(ItemID.scanner, 10000, 0, true, true);
 ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, 10000, 0, true, true);
 
+Item.registerNameOverrideFunction(ItemID.scanner, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.scannerAdvanced, ENERGY_ITEM_NAME);
+
 Recipes.addShaped({id: ItemID.scanner, count: 1, data: 250}, [
 	" a ",
 	"cbc",

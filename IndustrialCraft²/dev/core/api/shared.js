@@ -2,7 +2,7 @@ ModAPI.registerAPI("ICore", {
 	Machine: MachineRegistry,
 	Recipe: MachineRecipeRegistry,
 	ChargeRegistry: ChargeItemRegistry,
-	UpgradeAPI: UpgradeAPI,
+	Upgrade: UpgradeAPI,
 	UI: UIbuttons,
 	
 	requireGlobal: function(command){

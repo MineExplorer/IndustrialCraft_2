@@ -1,9 +1,11 @@
 IDRegistry.genItemID("nanoSaber");
 Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.nanoSaber, 100000, 2, true, true);
+ChargeItemRegistry.registerItem(ItemID.nanoSaber, 1000000, 2, true, true);
 Item.setToolRender(ItemID.nanoSaber, true);
 
-var NANO_SABER_DURABILITY = 100000;
+Item.registerNameOverrideFunction(ItemID.nanoSaber, ENERGY_ITEM_NAME);
+
+var NANO_SABER_DURABILITY = 1000001;
 
 Recipes.addShaped({id: ItemID.nanoSaber, count: 1, data: NANO_SABER_DURABILITY}, [
 	"ca ",
@@ -18,16 +20,16 @@ ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: NANO_SABER_DURABI
 		return true;
 	},
 	onAttack: function(item, mob){
-		item.data -= 2;
 		this.damage = item.data < NANO_SABER_DURABILITY ? 16 : 0;
+		return false;
 	}
 });
 
 Callback.addCallback("tick", function(){
-	if(World.getThreadTime() % 10 == 0){
+	if(World.getThreadTime() % 20 == 0){
 		var item = Player.getCarriedItem()
 		if(item.id == ItemID.nanoSaber){
-			item.data = Math.min(item.data+10, NANO_SABER_DURABILITY);
+			item.data = Math.min(item.data+20, NANO_SABER_DURABILITY);
 			Player.setCarriedItem(item.id, 1, item.data);
 		}
 	}

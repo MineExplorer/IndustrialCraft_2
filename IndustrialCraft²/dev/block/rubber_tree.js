@@ -102,11 +102,9 @@ var RubberTreeGenerationHelper = {
 				World.setFullBlock(x, y + ys, z, log);
 			}
 		}
-		
-		GenerationUtils.lockInBlock(leaves.id, leaves.data);
 		if(params.pike){
 			for(var ys = 0; ys < params.pike; ys++){
-				GenerationUtils.setLockedBlock(x, y + ys + height, z);
+				World.setFullBlock(x, y + ys + height, z, leaves);
 			}
 		}
 		
@@ -120,7 +118,7 @@ var RubberTreeGenerationHelper = {
 					var d = Math.sqrt(xs*xs + zs*zs) + (Math.random()*0.5 + 0.5) * Math.pow(Math.abs(leavesMiddle - ys) / leavesLen, 1.5) * 1.2;
 					var blockID = World.getBlockID(x + xs, y + ys, z + zs);
 					if(d <= params.radius + 0.5 && (blockID==0 || blockID==106)){
-						GenerationUtils.setLockedBlock(x + xs, y + ys, z + zs);
+						World.setFullBlock(x + xs, y + ys, z + zs, leaves);
 					}
 				}
 			}
@@ -174,7 +172,7 @@ if(__config__.access("rubber_tree_gen.swamp")){
 
 Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
 	if(Math.random() < RUBBER_TREE_BIOME_DATA[World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)]){
-		for(var i = 0; i < 1 + Math.random() * 4; i++){
+		for(var i = 0; i < 1 + Math.random() * 5; i++){
 			var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
 			coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
 			if(World.getBlockID(coords.x, coords.y, coords.z) == 2){

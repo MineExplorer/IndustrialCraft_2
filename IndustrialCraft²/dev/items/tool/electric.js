@@ -6,6 +6,9 @@ ChargeItemRegistry.registerItem(ItemID.electricHoe, 10000, 0, true, true);
 ChargeItemRegistry.registerItem(ItemID.electricTreetap, 10000, 0, true, true);
 Item.setToolRender(ItemID.electricHoe, true);
 
+Item.registerNameOverrideFunction(ItemID.electricHoe, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.electricTreetap, ENERGY_ITEM_NAME);
+
 Recipes.addShaped({id: ItemID.electricHoe, count: 1, data: Item.getMaxDamage(ItemID.electricHoe)}, [
 	"pp",
 	" p",

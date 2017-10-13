@@ -3,30 +3,40 @@ IDRegistry.genItemID("nanoChestplate");
 IDRegistry.genItemID("nanoLeggings");
 IDRegistry.genItemID("nanoBoots");
 
-Item.createArmorItem("nanoHelmet", "Nano Helmet", {name: "armor_nano_helmet"}, {type: "helmet", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
-Item.createArmorItem("nanoChestplate", "Nano Chestplate", {name: "armor_nano_chestplate"}, {type: "chestplate", armor: 8, durability: 625, texture: "armor/nano_1.png", isTech: false});
-Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "armor_nano_leggings"}, {type: "leggings", armor: 6, durability: 625, texture: "armor/nano_2.png", isTech: false});
-Item.createArmorItem("nanoBoots", "Nano Boots", {name: "armor_nano_boots"}, {type: "boots", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
+Item.createArmorItem("nanoHelmet", "Nano Helmet", {name: "nano_helmet"}, {type: "helmet", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
+Item.createArmorItem("nanoChestplate", "Nano Chestplate", {name: "nano_chestplate"}, {type: "chestplate", armor: 8, durability: 625, texture: "armor/nano_1.png", isTech: false});
+Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 6, durability: 625, texture: "armor/nano_2.png", isTech: false});
+Item.createArmorItem("nanoBoots", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
 
 ChargeItemRegistry.registerItem(ItemID.nanoHelmet, 1000000, 1, true);
 ChargeItemRegistry.registerItem(ItemID.nanoChestplate, 1000000, 1, true);
 ChargeItemRegistry.registerItem(ItemID.nanoLeggings, 1000000, 1, true);
 ChargeItemRegistry.registerItem(ItemID.nanoBoots, 1000000, 1, true);
 
+Item.registerNameOverrideFunction(ItemID.nanoHelmet, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoChestplate, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoLeggings, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoBoots, ENERGY_ITEM_NAME);
+
 IDRegistry.genItemID("nanoHelmetUncharged");
 IDRegistry.genItemID("nanoChestplateUncharged");
 IDRegistry.genItemID("nanoLeggingsUncharged");
 IDRegistry.genItemID("nanoBootsUncharged");
 
-Item.createArmorItem("nanoHelmetUncharged", "Nano Helmet", {name: "armor_nano_helmet"}, {type: "helmet", armor: 2, durability: 625, texture: "armor/nano_1.png", isTech: true});
-Item.createArmorItem("nanoChestplateUncharged", "Nano Chestplate", {name: "armor_nano_chestplate"}, {type: "chestplate", armor: 6, durability: 625, texture: "armor/nano_1.png", isTech: true});
-Item.createArmorItem("nanoLeggingsUncharged", "Nano Leggings", {name: "armor_nano_leggings"}, {type: "leggings", armor: 3, durability: 625, texture: "armor/nano_2.png", isTech: true});
-Item.createArmorItem("nanoBootsUncharged", "Nano Boots", {name: "armor_nano_boots"}, {type: "boots", armor: 2, durability: 625, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoHelmetUncharged", "Nano Helmet", {name: "nano_helmet"}, {type: "helmet", armor: 2, durability: 625, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoChestplateUncharged", "Nano Chestplate", {name: "nano_chestplate"}, {type: "chestplate", armor: 6, durability: 625, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoLeggingsUncharged", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 3, durability: 625, texture: "armor/nano_2.png", isTech: true});
+Item.createArmorItem("nanoBootsUncharged", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 2, durability: 625, texture: "armor/nano_1.png", isTech: true});
 
 ChargeItemRegistry.registerItem(ItemID.nanoHelmetUncharged, 1000000, 2, true);
 ChargeItemRegistry.registerItem(ItemID.nanoChestplateUncharged, 1000000, 2, true);
 ChargeItemRegistry.registerItem(ItemID.nanoLeggingsUncharged, 1000000, 2, true);
 ChargeItemRegistry.registerItem(ItemID.nanoBootsUncharged, 1000000, 2, true);
+
+Item.registerNameOverrideFunction(ItemID.nanoHelmetUncharged, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoChestplateUncharged, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoLeggingsUncharged, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoBootsUncharged, ENERGY_ITEM_NAME);
 
 
 MachineRecipeRegistry.registerRecipesFor("nano-armor-charge", {

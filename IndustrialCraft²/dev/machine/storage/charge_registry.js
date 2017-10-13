@@ -86,3 +86,11 @@ var ChargeItemRegistry = {
 }
 
 ChargeItemRegistry.registerFlashItem(331, 500, 0); // redstone
+
+Callback.addCallback("tick", function(){
+	var item = Player.getCarriedItem();
+	var data = ChargeItemRegistry.getItemData(item.id);
+	if(item.data==0 && data && data.type != "flash"){
+		Player.setCarriedItem(item.id, 1, 1);
+	}
+});

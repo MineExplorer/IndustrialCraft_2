@@ -1,11 +1,11 @@
 {
   "enabled":true,
+  "debug_mode":true,
   "rubber_tree_gen":{
     "forest_and_plains":true,
     "jungle":true,
     "swamp":true
   },
-  "show_resource_errors":true,
   "ore_gen":{
     "tin_ore":true,
     "copper_ore":true,

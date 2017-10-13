@@ -3,11 +3,34 @@ IDRegistry.genItemID("diamondDrill");
 IDRegistry.genItemID("iridiumDrill");
 Item.createItem("drill", "Mining Drill", {name: "drill", meta: 0}, {stack: 1});
 Item.createItem("diamondDrill", "Diamond Drill", {name: "drill", meta: 1}, {stack: 1});
-Item.createItem("iridiumDrill", "§bIridium Drill", {name: "drill", meta: 2}, {stack: 1});
+Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill", meta: 2}, {stack: 1});
 //Item.setGlint(ItemID.iridiumDrill, true);
 ChargeItemRegistry.registerItem(ItemID.drill, 30000, 0, true, true);
 ChargeItemRegistry.registerItem(ItemID.diamondDrill, 30000, 0, true, true);
 ChargeItemRegistry.registerItem(ItemID.iridiumDrill, 1000000, 2, true, true);
+
+Item.registerNameOverrideFunction(ItemID.drill, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.diamondDrill, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
+	var energyStorage = Item.getMaxDamage(item.id) - 1;
+	var energyStored = Math.min(energyStorage - item.data + 1, energyStorage);
+	name = "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
+	switch(IDrillMode){
+		case 0:
+			name += "\nFortune III mode";
+		break;
+		case 1:
+			name += "\nSilk Touch mode";
+		break;
+		case 2:
+			name += "\nc3x3 Fortune III mode";
+		break;
+		case 3:
+			name += "\n3x3 Silk Touch mode";
+		break;
+	}
+	return name;
+});
 
 ToolType.drill = {
     damage: 0,

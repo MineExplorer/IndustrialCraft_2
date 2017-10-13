@@ -8,7 +8,8 @@ var ToolType = {
 		calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
 			if(block.id==30){return 0.08;}
 			if(block.id==35){return 0.05;}
-			var material = ToolAPI.getBlockMaterial(block.id).name
+			var material = ToolAPI.getBlockMaterial(block.id) || {};
+			material = material.name;
 			if(material=="fibre" || material=="plant"){return params.base/1.5;}
 			return destroyTime;
 		}

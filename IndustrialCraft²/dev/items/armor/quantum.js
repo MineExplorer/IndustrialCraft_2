@@ -3,30 +3,40 @@ IDRegistry.genItemID("quantumChestplate");
 IDRegistry.genItemID("quantumLeggings");
 IDRegistry.genItemID("quantumBoots");
 
-Item.createArmorItem("quantumHelmet", "§bQuantum Helmet", {name: "armor_quantum_helmet"}, {type: "helmet", armor: 5, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
-Item.createArmorItem("quantumChestplate", "§bQuantum Chestplate", {name: "armor_quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
-Item.createArmorItem("quantumLeggings", "§bQuantum Leggings", {name: "armor_quantum_leggings"}, {type: "leggings", armor: 7, durability: 8333, texture: "armor/quantum_2.png", isTech: false});
-Item.createArmorItem("quantumBoots", "§bQuantum Boots", {name: "armor_quantum_boots"}, {type: "boots", armor: 4, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
+Item.createArmorItem("quantumHelmet", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 5, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
+Item.createArmorItem("quantumChestplate", "Quantum Chestplate", {name: "quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
+Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 8333, texture: "armor/quantum_2.png", isTech: false});
+Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
 
 ChargeItemRegistry.registerItem(ItemID.quantumHelmet, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumChestplate, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumLeggings, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumBoots, 10000000, 3, true);
 
+Item.registerNameOverrideFunction(ItemID.quantumHelmet, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumChestplate, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumLeggings, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumBoots, RARE_ENERGY_ITEM_NAME);
+
 IDRegistry.genItemID("quantumHelmetUncharged");
 IDRegistry.genItemID("quantumChestplateUncharged");
 IDRegistry.genItemID("quantumLeggingsUncharged");
 IDRegistry.genItemID("quantumBootsUncharged");
 
-Item.createArmorItem("quantumHelmetUncharged", "§bQuantum Helmet", {name: "armor_quantum_helmet"}, {type: "helmet", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumChestplateUncharged", "§bQuantum Chestplate", {name: "armor_quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumLeggingsUncharged", "§bQuantum Leggings", {name: "armor_quantum_leggings"}, {type: "leggings", armor: 3, durability: 8333, texture: "armor/quantum_2.png", isTech: true});
-Item.createArmorItem("quantumBootsUncharged", "§bQuantum Boots", {name: "armor_quantum_boots"}, {type: "boots", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumHelmetUncharged", "Quantum Helmet", {name: "armor_quantum_helmet"}, {type: "helmet", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumChestplateUncharged", "Quantum Chestplate", {name: "armor_quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "armor_quantum_leggings"}, {type: "leggings", armor: 3, durability: 8333, texture: "armor/quantum_2.png", isTech: true});
+Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "armor_quantum_boots"}, {type: "boots", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
 
 ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 3, true);
+
+Item.registerNameOverrideFunction(ItemID.quantumHelmetUncharged, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumChestplateUncharged, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumLeggingsUncharged, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumBootsUncharged, RARE_ENERGY_ITEM_NAME);
 
 
 MachineRecipeRegistry.registerRecipesFor("quantum-armor-charge", {

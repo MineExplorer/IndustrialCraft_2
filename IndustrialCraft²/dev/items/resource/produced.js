@@ -1,8 +1,10 @@
 IDRegistry.genItemID("matter");
-Item.createItem("matter", "§bUU-Matter", {name: "uu_matter"});
+Item.createItem("matter", "UU-Matter", {name: "uu_matter"});
+Item.registerNameOverrideFunction(ItemID.matter, RARE_ITEM_NAME);
 
 IDRegistry.genItemID("plateReinforcedIridium");
-Item.createItem("plateReinforcedIridium", "§bIridium Reinforced Plate", {name: "plate_reinforced_iridium"});
+Item.createItem("plateReinforcedIridium", "Iridium Reinforced Plate", {name: "plate_reinforced_iridium"});
+Item.registerNameOverrideFunction(ItemID.plateReinforcedIridium, RARE_ITEM_NAME);
 
 IDRegistry.genItemID("ingotAlloy");
 Item.createItem("ingotAlloy", "Alloy Ingot", {name: "ingot_alloy"});

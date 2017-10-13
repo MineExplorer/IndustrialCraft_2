@@ -2,14 +2,21 @@ IDRegistry.genItemID("batpack");
 IDRegistry.genItemID("advBatpack");
 IDRegistry.genItemID("energypack");
 IDRegistry.genItemID("lappack");
-Item.createArmorItem("batpack", "Batpack", {name: "armor_batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: false});
-Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "armor_adv_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: false});
-Item.createArmorItem("energypack", "Energy Pack", {name: "armor_energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
-Item.createArmorItem("lappack", "Lappack", {name: "armor_lappack"}, {type: "chestplate", armor: 3, durability: 1000000, texture: "armor/lappack_1.png", isTech: false});
+
+Item.createArmorItem("batpack", "Batpack", {name: "batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: false});
+Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: false});
+Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
+Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 1000000, texture: "armor/lappack_1.png", isTech: false});
+
 ChargeItemRegistry.registerItem(ItemID.batpack, 60000, 0);
 ChargeItemRegistry.registerItem(ItemID.advBatpack, 600000, 1);
 ChargeItemRegistry.registerItem(ItemID.energypack, 2000000, 2);
 ChargeItemRegistry.registerItem(ItemID.lappack, 10000000, 3);
+
+Item.registerNameOverrideFunction(ItemID.batpack, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.advBatpack, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.energypack, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.lappack, ENERGY_ITEM_NAME);
 
 Recipes.addShaped({id: ItemID.batpack, count: 1, data: Item.getMaxDamage(ItemID.batpack)}, [
     "bcb",
@@ -55,7 +62,6 @@ var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	        return false;
 	    }
 	    var energyAdd = Math.min(item.data - 1, Math.min(transfer, maxDamage - slot.data));
-	    Game.message(energyAdd);
 	    if(energyAdd > 0){
 	        slot.data += energyAdd;
 	        Player.setCarriedItem(item.id, 1, item.data - energyAdd);

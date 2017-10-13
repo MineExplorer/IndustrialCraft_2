@@ -14,17 +14,6 @@ block/mining_pipe.js
 block/reinforced.js
 block/rubber_tree.js
 
-
-machine/processing/iron_furnace.js
-machine/processing/electric_furnace.js
-machine/processing/induction_furnace.js
-machine/processing/macerator.js
-machine/processing/recycler.js
-machine/processing/compressor.js
-machine/processing/extractor.js
-machine/processing/metal_former.js
-machine/processing/mass_fabricator.js
-
 machine/generator/generator.js
 machine/generator/geothermal.js
 machine/generator/solar.js
@@ -36,6 +25,16 @@ machine/storage/bat_box.js
 machine/storage/CESU.js
 machine/storage/MFE.js
 machine/storage/MFSU.js
+
+machine/processing/iron_furnace.js
+machine/processing/electric_furnace.js
+machine/processing/induction_furnace.js
+machine/processing/macerator.js
+machine/processing/recycler.js
+machine/processing/compressor.js
+machine/processing/extractor.js
+machine/processing/metal_former.js
+machine/processing/mass_fabricator.js
 
 machine/resource/pump.js
 machine/resource/miner.js
@@ -55,10 +54,11 @@ items/resource/rubber.js
 items/resource/scrap.js
 items/resource/produced.js
 
-items/interactive/cable.js
 items/interactive/cells.js
+items/interactive/cable.js
 
-items/other/energy_element.js
+items/other/components.js
+items/other/battery.js
 items/other/upgrades.js
 
 items/armor/bronze.js
@@ -72,8 +72,10 @@ items/armor/energy_packs.js
 
 items/tool/transmitter.js
 items/tool/scanner.js
+items/tool/debug_item.js
 items/tool/treetap.js
 items/tool/crafting_tools.js
+items/tool/tool_box.js
 items/tool/bronze.js
 items/tool/wrench.js
 items/tool/electric.js

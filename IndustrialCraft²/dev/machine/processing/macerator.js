@@ -1,6 +1,6 @@
 ﻿IDRegistry.genBlockID("macerator");
 Block.createBlockWithRotation("macerator", [
-    {name: "Macerator", texture: [["machine_bottom", 1], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+    {name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ]);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.macerator);
 

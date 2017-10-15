@@ -14,7 +14,7 @@ Callback.addCallback("PostLoaded", function(){
 		"xax",
 		"xax",
 		"b#b"
-	], ['#', BlockID.primalGenerator, -1, 'a', ItemID.cellEmpty, 0, 'b', ItemID.casingIron, 0, 'x', 20, 0]);
+	], ['#', BlockID.primalGenerator, -1, 'a', ItemID.cellEmpty, -1, 'b', ItemID.casingIron, -1, 'x', 20, -1]);
 });
 
 var guiGeothermalGenerator = new UI.StandartWindow({

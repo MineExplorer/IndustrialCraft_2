@@ -30,14 +30,14 @@ ToolType.chainsaw = {
 			material.damage = 0;
 		}
 	},
-	calcDestroyTime: function(item, block, params, destroyTime, enchant){
-		if(item.data < Item.getMaxDamage(item.id)){
-			return destroyTime;
-		}
-		else{
-			return params.base;
-		}
-	}
+	calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
+        if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
+            return destroyTime;
+        }
+        else{
+            return params.base;
+        }
+    }
 }
 
 ToolAPI.setTool(ItemID.chainsaw, {energyConsumption: 50, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);

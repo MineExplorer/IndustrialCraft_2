@@ -9,7 +9,7 @@ LiquidRegistry.registerItem("water", {id: ItemID.cellEmpty, data: 0}, {id: ItemI
 LiquidRegistry.registerItem("lava", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellLava, data: 0});
 
 Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: ItemID.cellEmpty, count: 2, data: 1}, [
+	Recipes.addShaped({id: ItemID.cellEmpty, count: 2, data: 0}, [
 		" x ",
 		"x x",
 		" x "

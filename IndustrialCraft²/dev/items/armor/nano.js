@@ -58,18 +58,18 @@ var NANO_ARMOR_FUNCS_CHARGED = {
 	hurt: function(params, item, index, maxDamage){
 		var type = params.type;
 		if(type==2 || type==3 || type==11){
-			var energy = params.damage * 30;
+			var energy = params.damage * 800;
 			item.data = Math.min(item.data + energy, maxDamage);
 		}
-		if(type==5 && index==3 && item.data +500 <= maxDamage){
-			var damage = Math.min(9, Math.floor((maxDamage - item.data)/500));
+		if(type==5 && index==3 && item.data +800 <= maxDamage){
+			var damage = Math.min(9, Math.floor((maxDamage - item.data)/800));
 			if(params.damage > damage){
 				Entity.setHealth(player, Entity.getHealth(player) + damage);
 			}
 			else{
 				Game.prevent();
 			}
-			item.data = Math.min(item.data + damage * 500, maxDamage);
+			item.data = Math.min(item.data + damage * 800, maxDamage);
 		}
 		return true;
 	},

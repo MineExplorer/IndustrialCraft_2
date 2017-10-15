@@ -29,7 +29,7 @@ Callback.addCallback("tick", function(){
 	if(World.getThreadTime() % 20 == 0){
 		var item = Player.getCarriedItem()
 		if(item.id == ItemID.nanoSaber){
-			item.data = Math.min(item.data+20, NANO_SABER_DURABILITY);
+			item.data = Math.min(item.data+1280, NANO_SABER_DURABILITY);
 			Player.setCarriedItem(item.id, 1, item.data);
 		}
 	}

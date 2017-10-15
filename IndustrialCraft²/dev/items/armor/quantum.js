@@ -60,7 +60,7 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 	hurt: function(params, item, index, maxDamage){
 		var type = params.type;
 		if(type==2 || type==3 || type==11){
-			var energy = params.damage * 30;
+			var energy = params.damage * 900;
 			item.data = Math.min(item.data + energy, maxDamage);
 		}
 		if(type==5 && index==3 && item.data + 900 <= maxDamage){

@@ -19,7 +19,7 @@ Recipes.addShapeless({id: ItemID.electricTreetap, count: 1, data: Item.getMaxDam
 
 
 Item.registerUseFunction("electricHoe", function(coords, item, block){
-	if(item.data + 50 <= Item.getMaxDamage(ItemID.electricHoe) && (block.id==2 || block.id==3 || block.id==110) && coords.side==1){ 
+	if(item.data + 50 <= Item.getMaxDamage(ItemID.electricHoe) && (block.id==2 || block.id==3 || block.id==110 || block.id==243) && coords.side==1){ 
 		World.setBlock(coords.x, coords.y, coords.z, 60);
 		World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.75);
 		Player.setCarriedItem(item.id, 1, item.data + 50);

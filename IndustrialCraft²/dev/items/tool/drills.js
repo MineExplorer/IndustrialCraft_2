@@ -14,6 +14,7 @@ Item.registerNameOverrideFunction(ItemID.diamondDrill, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
 	var energyStorage = Item.getMaxDamage(item.id) - 1;
 	var energyStored = Math.min(energyStorage - item.data + 1, energyStorage);
+	if(energyStored==0){return "§b" + name;}
 	name = "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
 	switch(IDrillMode){
 		case 0:

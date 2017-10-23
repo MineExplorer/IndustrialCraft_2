@@ -2,7 +2,7 @@
 BUILD INFO:
   dir: dev
   target: main.js
-  files: 69
+  files: 71
 */
 
 
@@ -23,6 +23,7 @@ BUILD INFO:
 
 // constants
 var GUI_BAR_STANDART_SCALE = 3.2;
+var debugMode = __config__.access("debug_mode");
 
 // import values, that work faster
 var MobEffect = Native.PotionEffect;
@@ -48,6 +49,7 @@ function random(min, max){
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 
+// API
 function addShapelessRecipe(result, source){
 	var ingredients = [];
 	for(var i in source){
@@ -57,6 +59,25 @@ function addShapelessRecipe(result, source){
 		}
 	}
 	Recipes.addShapeless(result, ingredients);
+}
+
+
+var RARE_ITEM_NAME = function(item, name){
+	return "§b" + name;
+}
+
+var ENERGY_ITEM_NAME = function(item, name){
+	var energyStorage = Item.getMaxDamage(item.id) - 1;
+	var energyStored = Math.min(energyStorage - item.data + 1, energyStorage);
+	if(energyStored==0){return name;}
+	return name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
+}
+
+var RARE_ENERGY_ITEM_NAME = function(item, name){
+	var energyStorage = Item.getMaxDamage(item.id) - 1;
+	var energyStored = Math.min(energyStorage - item.data + 1, energyStorage);
+	if(energyStored==0){return "§b" + name;}
+	return "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
 }
 
 
@@ -71,7 +92,7 @@ Translation.addTranslation("Copper Ore", {ru: "Медная руда", es: "Mine
 Translation.addTranslation("Tin Ore", {ru: "Оловянная руда", es: "Mineral de Estaño", zh: "锡矿石"});
 Translation.addTranslation("Lead Ore", {ru: "Свинцовая руда", es: "Mineral de Plomo", zh: "铅矿石"});
 Translation.addTranslation("Uranium Ore", {ru: "Урановая руда", es: "Mineral de Uranium", zh: "铀矿石"});
-Translation.addTranslation("Iridium Ore", {ru: "Иридиевая руда"}); //TODO: es and zh translation
+Translation.addTranslation("Iridium Ore", {ru: "Иридиевая руда", zh:"铱矿石"}); //TODO: es translation
 Translation.addTranslation("Copper Block", {ru: "Медный блок", es: "Bloque de Cobre", zh: "铜块"});
 Translation.addTranslation("Tin Block", {ru: "Оловянный блок", es: "Bloque de Estaño", zh: "锡矿石"});
 Translation.addTranslation("Bronze Block", {ru: "Бронзовый блок", es: "Bloque de Bronce", zh: "青铜块"});
@@ -107,19 +128,19 @@ Translation.addTranslation("Mass Fabricator", {ru: "Генератор мате�
 
 // Energy storage
 Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", zh: "储电盒"});
-Translation.addTranslation("CESU", {ru: "МЭХ", es: "Unidad CESU", zh: "CESU(充电座)"});
-Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", zh: "MFE(充电座)"});
-Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", zh: "MFSU(充电座)"});
+Translation.addTranslation("CESU", {ru: "МЭХ", es: "Unidad CESU", zh: "CESU充电座"});
+Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", zh: "MFE充电座"});
+Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", zh: "MFSU充电座"});
 
 
 // ITEMS
 Translation.addTranslation("Uranium", {ru: "Уран", es: "Bloque de Uranio", zh: "铀"});
-Translation.addTranslation("§bIridium", {ru: "§bИридий", es: "§bMineral de Iridio", zh: "§b铱碎片"});
+Translation.addTranslation("Iridium", {ru: "Иридий", es: "Mineral de Iridio", zh: "铱碎片"});
 Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", zh: "胶乳"});
 Translation.addTranslation("Rubber", {ru: "Резина", es: "Rubber", zh: "橡胶"});
 Translation.addTranslation("Scrap", {ru: "Утильсырьё", es: "Chatarra", zh: "废料"});
 Translation.addTranslation("Scrap Box", {ru: "Коробка утильсырья", es: "Caja de Chatarra", zh: "废料盒"});
-Translation.addTranslation("§bUU-Matter", {ru: "§bМатерия", es: "§bMateria", zh: "§b物质"});
+Translation.addTranslation("UU-Matter", {ru: "Материя", es: "Materia", zh: "物质"});
 Translation.addTranslation("Coal Ball", {ru: "Угольный шарик", es: "Bola de Carbón", zh: "煤球"});
 Translation.addTranslation("Coal Block", {ru: "Сжатый угольный шарик", es: "Bola de Carbón Compactada", zh: "压缩煤球"});
 Translation.addTranslation("Coal Chunk", {ru: "Угольная глыба", es: "Carbono Bruto", zh: "煤块"});
@@ -127,7 +148,7 @@ Translation.addTranslation("Carbon Fibre", {ru: "Углеволокно", es: "F
 Translation.addTranslation("Carbon Mesh", {ru: "Углеткань", es: "Malla de Carbono Básica", zh: "粗制碳板"});
 Translation.addTranslation("Carbon Plate", {ru: "Углепластик", es: "Placa de Carbono", zh: "碳板"});
 Translation.addTranslation("Alloy Plate", {ru: "Композит", es: "Compuesto Avanzado", zh: "高级合金"});
-Translation.addTranslation("§bIridium Reinforced Plate", {ru: "§bИридиевый композит", es: "§bPlaca de Iridio", zh: "§b强化铱板"});
+Translation.addTranslation("Iridium Reinforced Plate", {ru: "Иридиевый композит", es: "Placa de Iridio", zh: "强化铱板"});
 Translation.addTranslation("Tool Box", {ru: "Ящик для инструментов", es: "Caja de Herramientas", zh: "工具盒"});
 
 // Electric
@@ -235,10 +256,10 @@ Translation.addTranslation("Nano Helmet", {ru: "Нано-шлем", es: "Casco d
 Translation.addTranslation("Nano Chestplate", {ru: "Нано-нагрудник", es: "Chaleco de Nanotraje", zh: "纳米胸甲"});
 Translation.addTranslation("Nano Leggings", {ru: "Нано-штаны", es: "Pantalones de Nanotraje", zh: "纳米护腿"});
 Translation.addTranslation("Nano Boots", {ru: "Нано-ботинки", es: "Botas de Nanotraje", zh: "纳米靴子"});
-Translation.addTranslation("§bQuantum Helmet", {ru: "§bКвантовый шлем", es: "§bCasco de Traje Cuántico", zh: "§b量子头盔"});
-Translation.addTranslation("§bQuantum Chestplate", {ru: "§bКвантовый нагрудник", es: "§bChaleco de Traje Cuántico", zh: "§b量子护甲"});
-Translation.addTranslation("§bQuantum Leggings", {ru: "§bКвантовые штаны", es: "§bPantalones de Traje Cuántico", zh: "§b量子护腿"});
-Translation.addTranslation("§bQuantum Boots", {ru: "§bКвантовые ботинки", es: "§bBotas de Traje Cuántico", zh: "§b量子靴子"});
+Translation.addTranslation("Quantum Helmet", {ru: "Квантовый шлем", es: "Casco de Traje Cuántico", zh: "量子头盔"});
+Translation.addTranslation("Quantum Chestplate", {ru: "Квантовый нагрудник", es: "Chaleco de Traje Cuántico", zh: "量子护甲"});
+Translation.addTranslation("Quantum Leggings", {ru: "Квантовые штаны", es: "Pantalones de Traje Cuántico", zh: "量子护腿"});
+Translation.addTranslation("Quantum Boots", {ru: "Квантовые ботинки", es: "Botas de Traje Cuántico", zh: "量子靴子"});
 Translation.addTranslation("Jetpack", {ru: "Реактивный ранец", es: "Jetpack Eléctrico", zh: "电力喷气背包"});
 Translation.addTranslation("Batpack", {ru: "Аккумуляторный ранец", es: "Mochila de Baterías", zh: "电池背包"});
 Translation.addTranslation("Advanced Batpack", {ru: "Продвинутый аккумуляторный ранец", es: "Mochila de Baterías Avanzada", zh: "高级电池背包"});
@@ -247,6 +268,8 @@ Translation.addTranslation("Lappack", {ru: "Лазуротроновый ран�
 
 // Tools
 Translation.addTranslation("Frequency Transmitter", {ru: "Частотный связыватель", es: "Transmisor de Frecuencias", zh: "传送频率遥控器"});
+Translation.addTranslation("OD Scanner", {ru: "Сканер КР", es: "Escaner de Densidad", zh: "OD扫描器"});
+Translation.addTranslation("OV Scanner", {ru: "Сканер ЦР", es: "Escaner de Riqueza", zh: "OV扫描器"});
 Translation.addTranslation("Treetap", {ru: "Краник", es: "Grifo para Resina", zh: "木龙头"});
 Translation.addTranslation("Forge Hammer", {ru: "Кузнечный молот", es: "Martillo para Forja", zh: "锻造锤"});
 Translation.addTranslation("Cutter", {ru: "Кусачки", es: "Pelacables Universal", zh: "板材切割剪刀"});
@@ -262,7 +285,7 @@ Translation.addTranslation("Electric Treetap", {ru: "Электрокраник"
 Translation.addTranslation("Chainsaw", {ru: "Электропила", es: "Motosierra", zh: "链锯"});
 Translation.addTranslation("Mining Drill", {ru: "Шахтёрский бур", es: "Taladro", zh: "采矿钻头"});
 Translation.addTranslation("Diamond Drill", {ru: "Алмазный бур", es: "Taladro de Diamante", zh: "钻石钻头"});
-Translation.addTranslation("§bIridium Drill", {ru: "§bИридиевый бур", es: "§bTaladro de Iridio", zh: "§b铱钻头"});
+Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es: "Taladro de Iridio", zh: "铱钻头"});
 Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-Sable", zh: "纳米剑"});
 Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", zh: "采矿镭射枪"});
 
@@ -486,7 +509,7 @@ function addItemsToContainers(items, containers){
 					slot.id = item.id;
 					slot.data = item.data;
 					if(!container.slots){
-						container.setSlot(i, slot.id, slot.count, slot.data)
+						container.setSlot(i, slot.id, slot.count, slot.data);
 					}
 				}
 			}
@@ -532,12 +555,12 @@ function getItemsFrom(items, containers){
 					item.count += add;
 					item.id = slot.id;
 					item.data = slot.data;
+					if(slot.count==0) slot.id = slot.data = 0;
 					if(!container.slots){
-						container.setSlot(i, slot.id, slot.count, slot.data)
+						container.setSlot(i, slot.id, slot.count, slot.data);
 					}
 				}
 			}
-			container.validateAll();
 			if(item.count==64){break;}
 		}
 	}
@@ -1108,11 +1131,9 @@ var RubberTreeGenerationHelper = {
 				World.setFullBlock(x, y + ys, z, log);
 			}
 		}
-		
-		GenerationUtils.lockInBlock(leaves.id, leaves.data);
 		if(params.pike){
 			for(var ys = 0; ys < params.pike; ys++){
-				GenerationUtils.setLockedBlock(x, y + ys + height, z);
+				World.setFullBlock(x, y + ys + height, z, leaves);
 			}
 		}
 		
@@ -1126,7 +1147,7 @@ var RubberTreeGenerationHelper = {
 					var d = Math.sqrt(xs*xs + zs*zs) + (Math.random()*0.5 + 0.5) * Math.pow(Math.abs(leavesMiddle - ys) / leavesLen, 1.5) * 1.2;
 					var blockID = World.getBlockID(x + xs, y + ys, z + zs);
 					if(d <= params.radius + 0.5 && (blockID==0 || blockID==106)){
-						GenerationUtils.setLockedBlock(x + xs, y + ys, z + zs);
+						World.setFullBlock(x + xs, y + ys, z + zs, leaves);
 					}
 				}
 			}
@@ -1180,7 +1201,7 @@ if(__config__.access("rubber_tree_gen.swamp")){
 
 Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
 	if(Math.random() < RUBBER_TREE_BIOME_DATA[World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)]){
-		for(var i = 0; i < 1 + Math.random() * 4; i++){
+		for(var i = 0; i < 1 + Math.random() * 5; i++){
 			var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
 			coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
 			if(World.getBlockID(coords.x, coords.y, coords.z) == 2){
@@ -1188,6 +1209,783 @@ Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
 				RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y, coords.z, false);
 			}
 		}
+	}
+});
+
+
+
+
+// file: machine/generator/generator.js
+
+IDRegistry.genBlockID("primalGenerator");
+Block.createBlockWithRotation("primalGenerator", [
+	{name: "Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+]);
+//ICRenderLib.addConnectionBlock("bc-container", BlockID.primalGenerator);
+
+Block.registerDropFunction("primalGenerator", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
+		" x ",
+		" # ",
+		" a "
+	], ['#', BlockID.machineBlockBasic, 0, 'a', 61, 0, 'x', ItemID.storageBattery, -1]);
+	
+	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
+		" x ",
+		"###",
+		" a "
+	], ['#', ItemID.plateIron, 0, 'a', BlockID.ironFurnace, -1, 'x', ItemID.storageBattery, -1]);
+});
+
+
+
+var guiGenerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: "Generator"}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
+		{type: "bitmap", x: 450, y: 150, bitmap: "fire_background", scale: GUI_BAR_STANDART_SCALE},
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
+		"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_BAR_STANDART_SCALE},
+		"slotEnergy": {type: "slot", x: 441, y: 75},
+		"slotFuel": {type: "slot", x: 441, y: 212},
+		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
+	}
+});
+
+
+
+
+MachineRegistry.registerPrototype(BlockID.primalGenerator, {
+	defaultValues: {
+		burn: 0,
+		burnMax: 0
+	},
+	
+	getGuiScreen: function(){
+		return guiGenerator;
+	},
+	
+	getTransportSlots: function(){
+		return {input: ["slotFuel"]};
+	},
+	
+	tick: function(){
+		var sourceSlot = this.container.getSlot("slotSource");
+		var energyStorage = this.getEnergyStorage();
+		
+		if(this.data.burn > 0){
+			if(this.data.energy < energyStorage){
+				this.data.energy = Math.min(this.data.energy + 10, energyStorage);
+				this.data.burn--;
+			}
+		}
+		else {
+			this.data.burn = this.data.burnMax = this.getFuel("slotFuel") / 4;
+		}
+		
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), this.data.energy, 32, 0);
+		
+		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", this.data.energy + "/");
+		this.container.setText("textInfo2", energyStorage + "");
+	},
+	
+	getFuel: function(slotName){
+		var fuelSlot = this.container.getSlot(slotName);
+		if (fuelSlot.id > 0){
+			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
+			if (burn){
+				fuelSlot.count--;
+				this.container.validateSlot(slotName);
+				return burn;
+			}
+			if (LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data) == "lava"){
+				var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
+				fuelSlot.id = empty.id;
+				fuelSlot.data = empty.data;
+				return 20000;
+			}
+		}
+		return 0;
+	},
+	
+	isGenerator: function() {
+		return true;
+	},
+	
+	getEnergyStorage: function(){
+		return 10000;
+	},
+	
+	energyTick: function(type, src){
+		var output = Math.min(32, this.data.energy);
+		this.data.energy += src.add(output) - output;
+	}
+});
+
+
+
+
+// file: machine/generator/geothermal.js
+
+IDRegistry.genBlockID("geothermalGenerator");
+Block.createBlockWithRotation("geothermalGenerator", [
+	{name: "Geothermal Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+]);
+//ICRenderLib.addConnectionBlock("bc-container", BlockID.geothermalGenerator);
+//ICRenderLib.addConnectionBlock("bc-fluid", BlockID.geothermalGenerator);
+
+Block.registerDropFunction("geothermalGenerator", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
+});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: BlockID.geothermalGenerator, count: 1, data: 0}, [
+		"xax",
+		"xax",
+		"b#b"
+	], ['#', BlockID.primalGenerator, -1, 'a', ItemID.cellEmpty, -1, 'b', ItemID.casingIron, -1, 'x', 20, -1]);
+});
+
+var guiGeothermalGenerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: "Geothermal Generator"}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 675, y: 106, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
+		{type: "bitmap", x: 450, y: 150, bitmap: "geotermal_liquid_slot", scale: GUI_BAR_STANDART_SCALE}
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 675 + GUI_BAR_STANDART_SCALE * 4, y: 106, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
+		"liquidScale": {type: "scale", x: 450 + GUI_BAR_STANDART_SCALE, y: 150 + GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "geotermal_empty_liquid_slot", overlay: "geotermal_liquid_slot_overlay", overlayOffset: {x: -GUI_BAR_STANDART_SCALE, y: -GUI_BAR_STANDART_SCALE}, scale: GUI_BAR_STANDART_SCALE},
+		"slot1": {type: "slot", x: 441, y: 75},
+		"slot2": {type: "slot", x: 441, y: 212},
+		"slotEnergy": {type: "slot", x: 695, y: 181},
+		"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
+	}
+});
+
+
+
+
+MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
+	getGuiScreen: function(){
+		return guiGeothermalGenerator;
+	},
+	
+	init: function(){
+		this.liquidStorage.setLimit("lava", 8);
+	},
+	
+	getTransportSlots: function(){
+		return {input: ["slot1"], output: ["slot2"]};
+	},
+	
+	tick: function(){
+		var energyStorage = this.getEnergyStorage();
+		var slot1 = this.container.getSlot("slot1");
+		var slot2 = this.container.getSlot("slot2");
+		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
+		if(empty && empty.liquid == "lava"){
+			if(this.liquidStorage.getAmount("lava") <= 7 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
+				this.liquidStorage.addLiquid("lava", 1);
+				slot1.count--;
+				slot2.id = empty.id;
+				slot2.data = empty.data;
+				slot2.count++;
+				this.container.validateAll();
+			}
+		}
+		if(this.liquidStorage.getAmount("lava") >= 0.001){
+			if(this.data.energy <= energyStorage - 20){
+				this.data.energy += 20;
+				this.liquidStorage.addLiquid("lava", -0.001);
+			}
+		}
+		
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), this.data.energy, 32, 0);
+		
+		this.container.setText("textInfo1", parseInt(this.liquidStorage.getAmount("lava") * 1000) + "/");
+		this.liquidStorage.updateUiScale("liquidScale", "lava");
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+	},
+	
+	isGenerator: function() {
+		return true;
+	},
+	
+	getEnergyStorage: function(){
+		return 10000;
+	},
+	
+	energyTick: function(type, src){
+		var output = Math.min(32, this.data.energy);
+		this.data.energy += src.add(output) - output;
+	}
+});
+
+
+
+
+// file: machine/generator/solar.js
+
+IDRegistry.genBlockID("solarPanel");
+Block.createBlock("solarPanel", [
+	{name: "Solar Panel", texture: [["machine_bottom", 0], ["solar_panel", 0], ["machine", 0], ["machine", 0], ["machine", 0], ["machine", 0]], inCreative: true}
+]);
+
+Block.registerDropFunction("solarPanel", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
+});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
+		"aaa",
+		"xxx",
+		"b#b"
+	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, 0]);
+});
+
+MachineRegistry.registerPrototype(BlockID.solarPanel, {
+	isGenerator: function() {
+		return true;
+	},
+
+	energyTick: function(type, src){
+		if(World.getLightLevel(this.x, this.y + 1, this.z) == 15){
+			src.add(1);
+		}
+	}
+});
+
+
+
+
+// file: machine/generator/windmill.js
+
+IDRegistry.genBlockID("genWindmill");
+Block.createBlockWithRotation("genWindmill", [
+	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+]);
+
+Block.registerDropFunction("genWindmill", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
+});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: BlockID.genWindmill, count: 1, data: 0}, [
+		"x x",
+		" # ",
+		"x x"
+	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0]);
+});
+
+MachineRegistry.registerPrototype(BlockID.genWindmill, {
+	isGenerator: function() {
+		return true;
+	},
+
+	energyTick: function(type, src){
+		if(World.getThreadTime()%20 == 0){
+			var height = Math.max(0, Math.min(this.y-64, 96)) / 64;
+			var output = height * 140;
+			var wether = World.getWeather();
+			if(wether.thunder){output *= 5;}
+			else if(wether.rain){output *= 1.5;}
+			var radius = 4;
+			if(World.getBlockID(
+					this.x - random(-radius, radius),
+					this.y - random(-radius, radius),
+					this.z - random(-radius, radius)
+				) == 0){
+				src.addAll(Math.round(output));
+			}
+		}
+	}
+});
+
+
+
+
+
+// file: machine/generator/watermill.js
+
+IDRegistry.genBlockID("genWatermill");
+Block.createBlockWithRotation("genWatermill", [
+	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill", 2], ["watermill", 0], ["watermill", 1], ["watermill", 1]], inCreative: true}
+]);
+
+Block.registerDropFunction("genWatermill", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
+});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: BlockID.genWatermill, count: 1, data: 0}, [
+		"axa",
+		"x#x",
+		"axa"
+	], ['#', BlockID.primalGenerator, -1, 'x', 5, -1, 'a', 280, 0]);
+});
+
+
+MachineRegistry.registerPrototype(BlockID.genWatermill, {
+	isGenerator: function() {
+		return true;
+	},
+
+	biomeCheck: function(x, z){
+		var coords = [[x, z], [x-7, z], [x+7, z], [x, z-7], [x, z+7]];
+		for(var c in coords){
+			var biome = World.getBiome(c[0], c[1]);
+			if(biome==0 || biome==24){return "ocean";}
+			if(biome==7){return "river";}
+		}
+		return 0;
+	},
+
+	energyTick: function(type, src){
+		if(World.getThreadTime()%20 == 0){
+			var biome = this.biomeCheck(this.x, this.z);
+			if(biome && this.y >= 32 && this.y < 64){
+				var output = 50;
+				var radius = 1;
+				var wether = World.getWeather();
+				if(wether.thunder && wether.rain){
+					if(wether.thunder){output *= 2;}
+					else{output *= 1.5;}
+				}
+				else if(biome=="ocean"){
+					output *= 1.5*Math.sin(World.getWorldTime()%6000/(6000/Math.PI));
+				}
+				var tile = World.getBlockID(
+					this.x - random(-radius, radius),
+					this.y - random(-radius, radius),
+					this.z - random(-radius, radius)
+				);
+				if(tile == 8 || tile == 9){
+					src.addAll(Math.round(output));
+				}
+			}
+		}
+	}
+});
+
+
+
+
+// file: machine/storage/charge_registry.js
+
+var ChargeItemRegistry = {
+	chargeData: {},
+	
+	registerItem: function(item, energy, level, preventUncharge, isTool){
+		Item.setMaxDamage(item, energy + 1);
+		this.chargeData[item] = {
+			type: "normal",
+			id: item,
+			level: level || 0,
+			maxDamage: energy + 1,
+			maxCharge: energy,
+			preventUncharge: preventUncharge,
+			isTool: isTool
+		};
+	},
+	
+	registerFlashItem: function(item, energy, level){
+		this.chargeData[item] = {
+			type: "flash",
+			id: item,
+			level: level || 0,
+			energy: energy,
+		};
+	},
+	
+	getItemData: function(id){
+		return this.chargeData[id];
+	},
+	
+	isFlashStorage: function(id){
+		var data = this.getItemData(id);
+		return data && data.type == "flash";
+	},
+	
+	getEnergyFrom: function(item, amount, level, getFromAll){
+		if(item.id==ItemID.debugItem){
+			return amount;
+		}
+		
+		level = level || 0;
+		var data = this.getItemData(item.id);
+		if(!data || data.level > level || !getFromAll && data.preventUncharge){
+			return 0;
+		}
+		if(data.type == "flash"){
+			if(amount < 1){
+				return 0;
+			}
+			item.count--;
+			if(item.count < 1){
+				item.id = item.data = 0;
+			}
+			return data.energy;
+		}
+		if(item.data < 1){
+			item.data = 1;
+		}
+		
+		var energyGot = Math.min(amount, data.maxDamage - item.data);
+		item.data += energyGot;
+		return energyGot;
+	},
+	
+	addEnergyTo: function(item, energy, transf, level){
+		level = level || 0;
+		var data = this.getItemData(item.id);
+		if(!data || data.type == "flash" || data.level > level){
+			return 0;
+		}
+		
+		var energyAdd = Math.min(item.data - 1, transf);
+		if(energy >= energyAdd){
+			item.data -= energyAdd;
+			return energyAdd;
+		}
+		return 0;
+	},
+	
+	getEnergyStored: function(item){
+		var data = this.getItemData(item.id);
+		if(!data){
+			return 0;
+		}
+		return data.maxDamage - item.data;
+	}
+}
+
+ChargeItemRegistry.registerFlashItem(331, 500, 0); // redstone
+
+Callback.addCallback("tick", function(){
+	var item = Player.getCarriedItem();
+	var data = ChargeItemRegistry.getItemData(item.id);
+	if(item.data==0 && data && data.type != "flash"){
+		Player.setCarriedItem(item.id, 1, 1);
+	}
+});
+
+
+
+
+// file: machine/storage/bat_box.js
+
+IDRegistry.genBlockID("storageBatBox");
+Block.createBlockWithRotation("storageBatBox", [
+	{name: "BatBox", texture: [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_side", 1], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]], inCreative: true}
+]);
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: BlockID.storageBatBox, count: 1, data: 0}, [
+		"xax",
+		"bbb",
+		"xxx"
+	], ['a', ItemID.cableTin1, 0, 'x', 5, -1, 'b', ItemID.storageBattery, -1]);
+});
+
+
+var guiBatBox = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: "Bat-Box"}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
+		"slot1": {type: "slot", x: 441, y: 75},
+		"slot2": {type: "slot", x: 441, y: 212},
+		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "10000"}
+	}
+});
+
+
+
+
+MachineRegistry.registerPrototype(BlockID.storageBatBox, {
+	isStorage: true,
+	
+	getGuiScreen: function(){
+		return guiBatBox;
+	},
+	
+	tick: function(){
+		var energyStorage = this.getEnergyStorage();
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
+		this.container.setText("textInfo2", energyStorage);
+		
+		var TRANSFER = 32;
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), Math.min(TRANSFER, energyStorage - this.data.energy), 0);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), this.data.energy, TRANSFER, 0);
+	},
+	
+	getEnergyStorage: function(){
+		return 40000;
+	},
+	
+	energyTick: function(type, src){
+		var TRANSFER = 32;
+		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
+	}
+});
+
+ToolAPI.registerBlockMaterial(BlockID.storageBatBox, "wood");
+
+
+
+
+// file: machine/storage/CESU.js
+
+IDRegistry.genBlockID("storageCESU");
+Block.createBlockWithRotation("storageCESU", [
+	{name: "CESU", texture: [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]], inCreative: true}
+]);
+
+Block.registerDropFunction("storageCESU", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: BlockID.storageCESU, count: 1, data: 0}, [
+		"bxb",
+		"aaa",
+		"bbb"
+	], ['x', ItemID.cableCopper1, 0, 'a', ItemID.storageAdvBattery, -1, 'b', ItemID.plateBronze, 0]);
+});
+
+
+var guiCESU = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: "CESU"}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
+		"slot1": {type: "slot", x: 441, y: 75},
+		"slot2": {type: "slot", x: 441, y: 212},
+		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
+	}
+});
+
+
+
+
+
+
+MachineRegistry.registerPrototype(BlockID.storageCESU, {
+	isStorage: true,
+	
+	getGuiScreen: function(){
+		return guiCESU;
+	},
+	
+	tick: function(){
+		var energyStorage = this.getEnergyStorage();
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
+		this.container.setText("textInfo2", energyStorage + "");
+		
+		var TRANSFER = 256;
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), Math.min(TRANSFER, energyStorage - this.data.energy), 1);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), this.data.energy, TRANSFER, 1);
+	},
+	
+	getEnergyStorage: function(){
+		return 300000;
+	},
+	
+	energyTick: function(type, src){
+		var TRANSFER = 128;
+		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
+	}
+});
+
+
+
+
+// file: machine/storage/MFE.js
+
+IDRegistry.genBlockID("storageMFE");
+Block.createBlockWithRotation("storageMFE", [
+	{name: "MFE", texture: [["machine_top", 0], ["machine_top", 0], ["mfe", 2], ["mfe", 0], ["mfe", 1], ["mfe", 1]], inCreative: true}
+]);
+
+Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
+});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: BlockID.storageMFE, count: 1, data: 0}, [
+		"bab",
+		"axa",
+		"bab"
+	], ['x', BlockID.machineBlockBasic, 0, 'a', ItemID.storageCrystal, -1, 'b', ItemID.cableGold2, 0]);
+});
+
+
+var guiMFE = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: "MFE"}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
+		"slot1": {type: "slot", x: 441, y: 75},
+		"slot2": {type: "slot", x: 441, y: 212},
+		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
+	}
+});
+
+
+
+
+
+
+MachineRegistry.registerPrototype(BlockID.storageMFE, {
+	isStorage: true,
+	
+	getGuiScreen: function(){
+		return guiMFE;
+	},
+	
+	tick: function(){
+		var energyStorage = this.getEnergyStorage();
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
+		this.container.setText("textInfo2", energyStorage + "");
+		
+		var TRANSFER = 2048;
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), Math.min(TRANSFER, energyStorage - this.data.energy), 2);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), this.data.energy, TRANSFER, 2);
+	},
+	
+	getEnergyStorage: function(){
+		return 4000000;
+	},
+	
+	energyTick: function(type, src){
+		var TRANSFER = 512;
+		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
+	}
+});
+
+
+
+
+// file: machine/storage/MFSU.js
+
+IDRegistry.genBlockID("storageMFSU");
+Block.createBlockWithRotation("storageMFSU", [
+	{name: "MFSU", texture: [["mfsu", 0], ["mfsu", 1], ["mfsu", 1], ["mfsu", 2], ["mfsu", 1], ["mfsu", 1]], inCreative: true}
+]);
+
+Block.registerDropFunction("storageMFSU", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
+});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: BlockID.storageMFSU, count: 1, data: 0}, [
+		"aca",
+		"axa",
+		"aba"
+	], ['b', BlockID.storageMFE, -1, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, 0]);
+});
+
+
+var guiMFSU = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: "MFSU"}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
+		"slot1": {type: "slot", x: 441, y: 75},
+		"slot2": {type: "slot", x: 441, y: 212},
+		"textInfo1": {type: "text", x: 642, y: 142, width: 350, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "10000"}
+	}
+});
+
+
+
+
+MachineRegistry.registerPrototype(BlockID.storageMFSU, {
+	isStorage: true,
+	
+	getGuiScreen: function(){
+		return guiMFSU;
+	},
+	
+	tick: function(){
+		var energyStorage = this.getEnergyStorage();
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
+		this.container.setText("textInfo2", energyStorage + "");
+		
+		var TRANSFER = 8192;
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), Math.min(TRANSFER, energyStorage - this.data.energy), 3);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), this.data.energy, TRANSFER, 3);
+	},
+	
+	getEnergyStorage: function(){
+		return 40000000;
+	},
+	
+	energyTick: function(type, src){
+		var TRANSFER = 2048;
+		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
 	}
 });
 
@@ -1246,7 +2044,7 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 	
 	addTransportedItem: function(self, item, direction){
 		var fuelSlot = this.container.getSlot("slotFuel");
-		if(FURNACE_FUEL_MAP[item.id] && (fuelSlot.id==0 || fuelSlot.id==item.id && fuelSlot.data==item.data && fuelSlot.count < 64)){
+		if(Recipes.getFuelBurnDuration(item.id, item.data) && (fuelSlot.id==0 || fuelSlot.id==item.id && fuelSlot.data==item.data && fuelSlot.count < 64)){
 			var add = Math.min(item.count, 64 - slotFuel.count);
 			item.count -= add;
 			fuelSlot.id = item.id;
@@ -1304,15 +2102,15 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		if(fuelSlot.id > 0){
 			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 			if(burn){
+				if(LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data) == "lava"){
+					var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
+					fuelSlot.id = empty.id;
+					fuelSlot.data = empty.data;
+					return burn;
+				}
 				fuelSlot.count--;
 				this.container.validateSlot(slotName);
 				return burn;
-			}
-			if(LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data) == "lava"){
-				var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
-				fuelSlot.id = empty.id;
-				fuelSlot.data = empty.data;
-				return 20000;
 			}
 		}
 		return 0;
@@ -1588,7 +2386,7 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 
 ﻿IDRegistry.genBlockID("macerator");
 Block.createBlockWithRotation("macerator", [
-    {name: "Macerator", texture: [["machine_bottom", 1], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+    {name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ]);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.macerator);
 
@@ -2261,7 +3059,7 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 
 IDRegistry.genBlockID("massFabricator");
 Block.createBlockWithRotation("massFabricator", [
-	{name: "Mass Fabricator", texture: [["machine_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
+	{name: "Mass Fabricator", texture: [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
 ]);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.massFabricator);
 
@@ -2363,775 +3161,6 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	},
 	
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
-});
-
-
-
-
-// file: machine/generator/generator.js
-
-IDRegistry.genBlockID("primalGenerator");
-Block.createBlockWithRotation("primalGenerator", [
-	{name: "Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.primalGenerator);
-
-Block.registerDropFunction("primalGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
-		" x ",
-		" # ",
-		" a "
-	], ['#', BlockID.machineBlockBasic, 0, 'a', 61, 0, 'x', ItemID.storageBattery, -1]);
-	
-	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
-		" x ",
-		"###",
-		" a "
-	], ['#', ItemID.plateIron, 0, 'a', BlockID.ironFurnace, -1, 'x', ItemID.storageBattery, -1]);
-});
-
-
-
-var guiGenerator = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Generator"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
-		{type: "bitmap", x: 450, y: 150, bitmap: "fire_background", scale: GUI_BAR_STANDART_SCALE},
-	],
-	
-	elements: {
-		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
-		"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slotEnergy": {type: "slot", x: 441, y: 75},
-		"slotFuel": {type: "slot", x: 441, y: 212},
-		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
-	}
-});
-
-
-
-
-MachineRegistry.registerPrototype(BlockID.primalGenerator, {
-	defaultValues: {
-		burn: 0,
-		burnMax: 0
-	},
-	
-	getGuiScreen: function(){
-		return guiGenerator;
-	},
-	
-	getTransportSlots: function(){
-		return {input: ["slotFuel"]};
-	},
-	
-	tick: function(){
-		var sourceSlot = this.container.getSlot("slotSource");
-		var energyStorage = this.getEnergyStorage();
-		
-		if(this.data.burn > 0){
-			if(this.data.energy < energyStorage){
-				this.data.energy = Math.min(this.data.energy + 10, energyStorage);
-				this.data.burn--;
-			}
-		}
-		else {
-			this.data.burn = this.data.burnMax = this.getFuel("slotFuel") / 4;
-		}
-		
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), this.data.energy, 32, 0);
-		
-		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", this.data.energy + "/");
-		this.container.setText("textInfo2", energyStorage + "");
-	},
-	
-	getFuel: function(slotName){
-		var fuelSlot = this.container.getSlot(slotName);
-		if (fuelSlot.id > 0){
-			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
-			if (burn){
-				fuelSlot.count--;
-				this.container.validateSlot(slotName);
-				return burn;
-			}
-			if (LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data) == "lava"){
-				var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
-				fuelSlot.id = empty.id;
-				fuelSlot.data = empty.data;
-				return 20000;
-			}
-		}
-		return 0;
-	},
-	
-	isGenerator: function() {
-		return true;
-	},
-	
-	getEnergyStorage: function(){
-		return 10000;
-	},
-	
-	energyTick: function(type, src){
-		var output = Math.min(32, this.data.energy);
-		this.data.energy += src.add(output) - output;
-	}
-});
-
-
-
-
-// file: machine/generator/geothermal.js
-
-IDRegistry.genBlockID("geothermalGenerator");
-Block.createBlockWithRotation("geothermalGenerator", [
-	{name: "Geothermal Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.geothermalGenerator);
-//ICRenderLib.addConnectionBlock("bc-fluid", BlockID.geothermalGenerator);
-
-Block.registerDropFunction("geothermalGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
-});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.geothermalGenerator, count: 1, data: 0}, [
-		"xax",
-		"xax",
-		"b#b"
-	], ['#', BlockID.primalGenerator, -1, 'a', ItemID.cellEmpty, 0, 'b', ItemID.casingIron, 0, 'x', 20, 0]);
-});
-
-var guiGeothermalGenerator = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Geothermal Generator"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 675, y: 106, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
-		{type: "bitmap", x: 450, y: 150, bitmap: "geotermal_liquid_slot", scale: GUI_BAR_STANDART_SCALE}
-	],
-	
-	elements: {
-		"energyScale": {type: "scale", x: 675 + GUI_BAR_STANDART_SCALE * 4, y: 106, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
-		"liquidScale": {type: "scale", x: 450 + GUI_BAR_STANDART_SCALE, y: 150 + GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "geotermal_empty_liquid_slot", overlay: "geotermal_liquid_slot_overlay", overlayOffset: {x: -GUI_BAR_STANDART_SCALE, y: -GUI_BAR_STANDART_SCALE}, scale: GUI_BAR_STANDART_SCALE},
-		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
-		"slotEnergy": {type: "slot", x: 695, y: 181},
-		"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
-	}
-});
-
-
-
-
-MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
-	getGuiScreen: function(){
-		return guiGeothermalGenerator;
-	},
-	
-	init: function(){
-		this.liquidStorage.setLimit("lava", 8);
-	},
-	
-	getTransportSlots: function(){
-		return {input: ["slot1"], output: ["slot2"]};
-	},
-	
-	tick: function(){
-		var energyStorage = this.getEnergyStorage();
-		var slot1 = this.container.getSlot("slot1");
-		var slot2 = this.container.getSlot("slot2");
-		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
-		if(empty && empty.liquid == "lava"){
-			if(this.liquidStorage.getAmount("lava") <= 7 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
-				this.liquidStorage.addLiquid("lava", 1);
-				slot1.count--;
-				slot2.id = empty.id;
-				slot2.data = empty.data;
-				slot2.count++;
-				this.container.validateAll();
-			}
-		}
-		if(this.liquidStorage.getAmount("lava") >= 0.001){
-			if(this.data.energy <= energyStorage - 20){
-				this.data.energy += 20;
-				this.liquidStorage.addLiquid("lava", -0.001);
-			}
-		}
-		
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), this.data.energy, 32, 0);
-		
-		this.container.setText("textInfo1", parseInt(this.liquidStorage.getAmount("lava") * 1000) + "/");
-		this.liquidStorage.updateUiScale("liquidScale", "lava");
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-	},
-	
-	isGenerator: function() {
-		return true;
-	},
-	
-	getEnergyStorage: function(){
-		return 10000;
-	},
-	
-	energyTick: function(type, src){
-		var output = Math.min(32, this.data.energy);
-		this.data.energy += src.add(output) - output;
-	}
-});
-
-
-
-
-// file: machine/generator/solar.js
-
-IDRegistry.genBlockID("solarPanel");
-Block.createBlock("solarPanel", [
-	{name: "Solar Panel", texture: [["machine_bottom", 0], ["solar_panel", 0], ["machine", 0], ["machine", 0], ["machine", 0], ["machine", 0]], inCreative: true}
-]);
-
-Block.registerDropFunction("solarPanel", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
-		"aaa",
-		"xxx",
-		"b#b"
-	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, 0]);
-});
-
-MachineRegistry.registerPrototype(BlockID.solarPanel, {
-	isGenerator: function() {
-		return true;
-	},
-
-	energyTick: function(type, src){
-		if(World.getLightLevel(this.x, this.y + 1, this.z) == 15){
-			src.add(1);
-		}
-	}
-});
-
-
-
-
-// file: machine/generator/windmill.js
-
-IDRegistry.genBlockID("genWindmill");
-Block.createBlockWithRotation("genWindmill", [
-	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
-
-Block.registerDropFunction("genWindmill", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
-});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.genWindmill, count: 1, data: 0}, [
-		"x x",
-		" # ",
-		"x x"
-	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0]);
-});
-
-MachineRegistry.registerPrototype(BlockID.genWindmill, {
-	isGenerator: function() {
-		return true;
-	},
-
-	energyTick: function(type, src){
-		if(World.getThreadTime()%20 == 0){
-			var height = Math.max(0, Math.min(this.y-64, 96)) / 64;
-			var output = height * 140;
-			var wether = World.getWeather();
-			if(wether.thunder){output *= 5;}
-			else if(wether.rain){output *= 1.5;}
-			var radius = 4;
-			if(World.getBlockID(
-					this.x - random(-radius, radius),
-					this.y - random(-radius, radius),
-					this.z - random(-radius, radius)
-				) == 0){
-				src.addAll(Math.round(output));
-			}
-		}
-	}
-});
-
-
-
-
-
-// file: machine/generator/watermill.js
-
-IDRegistry.genBlockID("genWatermill");
-Block.createBlockWithRotation("genWatermill", [
-	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill", 2], ["watermill", 0], ["watermill", 1], ["watermill", 1]], inCreative: true}
-]);
-
-Block.registerDropFunction("genWatermill", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
-});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.genWatermill, count: 1, data: 0}, [
-		"axa",
-		"x#x",
-		"axa"
-	], ['#', BlockID.primalGenerator, -1, 'x', 5, -1, 'a', 280, 0]);
-});
-
-
-MachineRegistry.registerPrototype(BlockID.genWatermill, {
-	isGenerator: function() {
-		return true;
-	},
-
-	biomeCheck: function(x, z){
-		var coords = [[x, z], [x-7, z], [x+7, z], [x, z-7], [x, z+7]];
-		for(var c in coords){
-			var biome = World.getBiome(c[0], c[1]);
-			if(biome==0 || biome==24){return "ocean";}
-			if(biome==7){return "river";}
-		}
-		return 0;
-	},
-
-	energyTick: function(type, src){
-		if(World.getThreadTime()%20 == 0){
-			var biome = this.biomeCheck(this.x, this.z);
-			if(biome && this.y >= 32 && this.y < 64){
-				var output = 50;
-				var radius = 1;
-				var wether = World.getWeather();
-				if(wether.thunder && wether.rain){
-					if(wether.thunder){output *= 2;}
-					else{output *= 1.5;}
-				}
-				else if(biome=="ocean"){
-					output *= 1.5*Math.sin(World.getWorldTime()%6000/(6000/Math.PI));
-				}
-				var tile = World.getBlockID(
-					this.x - random(-radius, radius),
-					this.y - random(-radius, radius),
-					this.z - random(-radius, radius)
-				);
-				if(tile == 8 || tile == 9){
-					src.addAll(Math.round(output));
-				}
-			}
-		}
-	}
-});
-
-
-
-
-// file: machine/storage/charge_registry.js
-
-var ChargeItemRegistry = {
-	chargeData: {},
-	
-	registerItem: function(item, energy, level, preventUncharge, isTool){
-		Item.setMaxDamage(item, energy + 1);
-		this.chargeData[item] = {
-			type: "normal",
-			id: item,
-			level: level || 0,
-			maxDamage: energy + 1,
-			maxCharge: energy,
-			preventUncharge: preventUncharge,
-			isTool: isTool
-		};
-	},
-	
-	registerFlashItem: function(item, energy, level){
-		this.chargeData[item] = {
-			type: "flash",
-			id: item,
-			level: level || 0,
-			energy: energy,
-		};
-	},
-	
-	getItemData: function(id){
-		return this.chargeData[id];
-	},
-	
-	isFlashStorage: function(id){
-		var data = this.getItemData(id);
-		return data && data.type == "flash";
-	},
-	
-	getEnergyFrom: function(item, amount, level, getFromAll){
-		if(item.id==ItemID.debugItem){
-			return amount;
-		}
-		
-		level = level || 0;
-		var data = this.getItemData(item.id);
-		if(!data || data.level > level || !getFromAll && data.preventUncharge){
-			return 0;
-		}
-		if(data.type == "flash"){
-			if(amount < 1){
-				return 0;
-			}
-			item.count--;
-			if(item.count < 1){
-				item.id = item.data = 0;
-			}
-			return data.energy;
-		}
-		if(item.data < 1){
-			item.data = 1;
-		}
-		
-		var energyGot = Math.min(amount, data.maxDamage - item.data);
-		item.data += energyGot;
-		return energyGot;
-	},
-	
-	addEnergyTo: function(item, energy, transf, level){
-		level = level || 0;
-		var data = this.getItemData(item.id);
-		if(!data || data.type == "flash" || data.level > level){
-			return 0;
-		}
-		
-		var energyAdd = Math.min(item.data - 1, transf);
-		if(energy >= energyAdd){
-			item.data -= energyAdd;
-			return energyAdd;
-		}
-		return 0;
-	},
-	
-	getEnergyStored: function(item){
-		var data = this.getItemData(item.id);
-		if(!data){
-			return 0;
-		}
-		return data.maxDamage - item.data;
-	}
-}
-
-ChargeItemRegistry.registerFlashItem(331, 500, 0); // redstone
-
-
-
-
-// file: machine/storage/bat_box.js
-
-IDRegistry.genBlockID("storageBatBox");
-Block.createBlockWithRotation("storageBatBox", [
-	{name: "BatBox", texture: [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_side", 1], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]], inCreative: true}
-]);
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.storageBatBox, count: 1, data: 0}, [
-		"xax",
-		"bbb",
-		"xxx"
-	], ['a', ItemID.cableTin1, 0, 'x', 5, -1, 'b', ItemID.storageBattery, -1]);
-});
-
-
-var guiBatBox = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Bat-Box"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
-	],
-	
-	elements: {
-		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
-		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "10000"}
-	}
-});
-
-
-
-
-MachineRegistry.registerPrototype(BlockID.storageBatBox, {
-	isStorage: true,
-	
-	getGuiScreen: function(){
-		return guiBatBox;
-	},
-	
-	tick: function(){
-		var energyStorage = this.getEnergyStorage();
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-		this.container.setText("textInfo2", energyStorage);
-		
-		var TRANSFER = 32;
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), Math.min(TRANSFER, energyStorage - this.data.energy), 0);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), this.data.energy, TRANSFER, 0);
-	},
-	
-	getEnergyStorage: function(){
-		return 40000;
-	},
-	
-	energyTick: function(type, src){
-		var TRANSFER = 32;
-		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
-	}
-});
-
-ToolAPI.registerBlockMaterial(BlockID.storageBatBox, "wood");
-
-
-
-
-// file: machine/storage/CESU.js
-
-IDRegistry.genBlockID("storageCESU");
-Block.createBlockWithRotation("storageCESU", [
-	{name: "CESU", texture: [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]], inCreative: true}
-]);
-
-Block.registerDropFunction("storageCESU", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.storageCESU, count: 1, data: 0}, [
-		"bxb",
-		"aaa",
-		"bbb"
-	], ['x', ItemID.cableCopper1, 0, 'a', ItemID.storageAdvBattery, -1, 'b', ItemID.plateBronze, 0]);
-});
-
-
-var guiCESU = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "CESU"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
-	],
-	
-	elements: {
-		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
-		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
-	}
-});
-
-
-
-
-
-
-MachineRegistry.registerPrototype(BlockID.storageCESU, {
-	isStorage: true,
-	
-	getGuiScreen: function(){
-		return guiCESU;
-	},
-	
-	tick: function(){
-		var energyStorage = this.getEnergyStorage();
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-		this.container.setText("textInfo2", energyStorage + "");
-		
-		var TRANSFER = 256;
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), Math.min(TRANSFER, energyStorage - this.data.energy), 1);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), this.data.energy, TRANSFER, 1);
-	},
-	
-	getEnergyStorage: function(){
-		return 300000;
-	},
-	
-	energyTick: function(type, src){
-		var TRANSFER = 128;
-		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
-	}
-});
-
-
-
-
-// file: machine/storage/MFE.js
-
-IDRegistry.genBlockID("storageMFE");
-Block.createBlockWithRotation("storageMFE", [
-	{name: "MFE", texture: [["machine_top", 0], ["machine_top", 0], ["mfe", 2], ["mfe", 0], ["mfe", 1], ["mfe", 1]], inCreative: true}
-]);
-
-Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.storageMFE, count: 1, data: 0}, [
-		"bab",
-		"axa",
-		"bab"
-	], ['x', BlockID.machineBlockBasic, 0, 'a', ItemID.storageCrystal, -1, 'b', ItemID.cableGold2, 0]);
-});
-
-
-var guiMFE = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "MFE"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
-	],
-	
-	elements: {
-		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
-		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
-	}
-});
-
-
-
-
-
-
-MachineRegistry.registerPrototype(BlockID.storageMFE, {
-	isStorage: true,
-	
-	getGuiScreen: function(){
-		return guiMFE;
-	},
-	
-	tick: function(){
-		var energyStorage = this.getEnergyStorage();
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-		this.container.setText("textInfo2", energyStorage + "");
-		
-		var TRANSFER = 2048;
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), Math.min(TRANSFER, energyStorage - this.data.energy), 2);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), this.data.energy, TRANSFER, 2);
-	},
-	
-	getEnergyStorage: function(){
-		return 4000000;
-	},
-	
-	energyTick: function(type, src){
-		var TRANSFER = 512;
-		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
-	}
-});
-
-
-
-
-// file: machine/storage/MFSU.js
-
-IDRegistry.genBlockID("storageMFSU");
-Block.createBlockWithRotation("storageMFSU", [
-	{name: "MFSU", texture: [["mfsu", 0], ["mfsu", 1], ["mfsu", 1], ["mfsu", 2], ["mfsu", 1], ["mfsu", 1]], inCreative: true}
-]);
-
-Block.registerDropFunction("storageMFSU", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
-});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.storageMFSU, count: 1, data: 0}, [
-		"aca",
-		"axa",
-		"aba"
-	], ['b', BlockID.storageMFE, -1, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, 0]);
-});
-
-
-var guiMFSU = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "MFSU"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
-	],
-	
-	elements: {
-		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
-		"textInfo1": {type: "text", x: 642, y: 142, width: 350, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "10000"}
-	}
-});
-
-
-
-
-MachineRegistry.registerPrototype(BlockID.storageMFSU, {
-	isStorage: true,
-	
-	getGuiScreen: function(){
-		return guiMFSU;
-	},
-	
-	tick: function(){
-		var energyStorage = this.getEnergyStorage();
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-		this.container.setText("textInfo2", energyStorage + "");
-		
-		var TRANSFER = 8192;
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), Math.min(TRANSFER, energyStorage - this.data.energy), 3);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), this.data.energy, TRANSFER, 3);
-	},
-	
-	getEnergyStorage: function(){
-		return 40000000;
-	},
-	
-	energyTick: function(type, src){
-		var TRANSFER = 2048;
-		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
-	}
 });
 
 
@@ -3369,7 +3398,7 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 						var weight = this.getWeight(ent);
 						if(weight){
 							var energyNeed = weight * receive.energy;
-							Debug.m(energyNeed);
+							if(debugMode){Debug.m(energyNeed);}
 							if(energyNeed < energyAvailable){
 								for(var i in storages){
 									var data = storages[i].data;
@@ -3574,7 +3603,8 @@ IDRegistry.genItemID("uraniumChunk");
 Item.createItem("uraniumChunk", "Uranium", {name: "uranium"});
 
 IDRegistry.genItemID("iridiumChunk");
-Item.createItem("iridiumChunk", "�bIridium", {name: "iridium"});
+Item.createItem("iridiumChunk", "Iridium", {name: "iridium"});
+Item.registerNameOverrideFunction(ItemID.iridiumChunk, RARE_ITEM_NAME);
 
 
 
@@ -3754,19 +3784,6 @@ Callback.addCallback("PostLoaded", function(){
 
 
 
-// file: items/resource/rubber.js
-
-IDRegistry.genItemID("latex");
-Item.createItem("latex", "Latex", {name: "latex", data: 0});
-
-IDRegistry.genItemID("rubber");
-Item.createItem("rubber", "Rubber", {name: "rubber", data: 0});
-
-Recipes.addFurnace(ItemID.latex, ItemID.rubber, 0);
-
-
-
-
 // file: items/resource/scrap.js
 
 IDRegistry.genItemID("scrap");
@@ -3869,10 +3886,12 @@ function getScrapDropItem(){
 // file: items/resource/produced.js
 
 IDRegistry.genItemID("matter");
-Item.createItem("matter", "§bUU-Matter", {name: "uu_matter"});
+Item.createItem("matter", "UU-Matter", {name: "uu_matter"});
+Item.registerNameOverrideFunction(ItemID.matter, RARE_ITEM_NAME);
 
 IDRegistry.genItemID("plateReinforcedIridium");
-Item.createItem("plateReinforcedIridium", "§bIridium Reinforced Plate", {name: "plate_reinforced_iridium"});
+Item.createItem("plateReinforcedIridium", "Iridium Reinforced Plate", {name: "plate_reinforced_iridium"});
+Item.registerNameOverrideFunction(ItemID.plateReinforcedIridium, RARE_ITEM_NAME);
 
 IDRegistry.genItemID("ingotAlloy");
 Item.createItem("ingotAlloy", "Alloy Ingot", {name: "ingot_alloy"});
@@ -4113,7 +4132,20 @@ Callback.addCallback("PostLoaded", function(){
 
 
 
-// file: items/interactive/cable.js
+// file: items/resource/rubber.js
+
+IDRegistry.genItemID("latex");
+Item.createItem("latex", "Latex", {name: "latex", data: 0});
+
+IDRegistry.genItemID("rubber");
+Item.createItem("rubber", "Rubber", {name: "rubber", data: 0});
+
+Recipes.addFurnace(ItemID.latex, ItemID.rubber, 0);
+
+
+
+
+// file: items/energy/cable.js
 
 IDRegistry.genItemID("cableTin0");
 IDRegistry.genItemID("cableTin1");
@@ -4207,80 +4239,7 @@ Item.registerUseFunction("cableOptic", function(coords, item, block){
 
 
 
-// file: items/interactive/cells.js
-
-IDRegistry.genItemID("cellEmpty");
-IDRegistry.genItemID("cellWater");
-IDRegistry.genItemID("cellLava");
-Item.createItem("cellEmpty", "Cell", {name: "cell_empty"});
-Item.createItem("cellWater", "Water Cell", {name: "cell_water"});
-Item.createItem("cellLava", "Lava Cell", {name: "cell_lava"});
-Item.setLiquidClip(ItemID.cellEmpty, true);
-LiquidRegistry.registerItem("water", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellWater, data: 0});
-LiquidRegistry.registerItem("lava", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellLava, data: 0});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: ItemID.cellEmpty, count: 2, data: 1}, [
-		" x ",
-		"x x",
-		" x "
-	], ['x', ItemID.casingTin, 0]);
-});
-
-Item.registerUseFunction("cellEmpty", function(coords, item, block){
-	if(block.id==9 || block.id==11){
-		World.setBlock(coords.x, coords.y, coords.z, 0);
-		var item = Player.getCarriedItem();
-		item.count--;
-		if(!item.count){item.id = 0;}
-		Player.setCarriedItem(item.id, item.count, 1);
-		if(block.id==9){Player.addItemToInventory(ItemID.cellWater, 1);}
-		else{Player.addItemToInventory(ItemID.cellLava, 1);}
-	}
-});
-/*
-Callback.addCallback("ItemUse", function(coords, item, block){
-	if(item.id==ItemID.cellWater || item.id==ItemID.cellLava){
-		var x = coords.relative.x
-		var y = coords.relative.y
-		var z = coords.relative.z
-		var block = World.getBlockID(x,y,z)
-		if(block==0){
-			if(item.id==ItemID.cellWater){World.setBlock(x, y, z, 9);}
-			else{World.setBlock(x, y, z, 11);}
-			var item = Player.getCarriedItem();
-			item.count--;
-			if(!item.count) item.id = 0;
-			Player.setCarriedItem(item.id, item.count, item.data);
-			Player.addItemToInventory(ItemID.cellEmpty, 1);
-		}
-	}
-});
-*/
-
-
-
-
-// file: items/other/energy_element.js
-
-IDRegistry.genItemID("storageBattery");
-Item.createItem("storageBattery", "Battery", {name: "re_battery", meta: 4}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageBattery, 10000, 0);
-
-IDRegistry.genItemID("storageAdvBattery");
-Item.createItem("storageAdvBattery", "Advanced Battery", {name: "adv_re_battery", meta: 4}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, 100000, 1);
-
-IDRegistry.genItemID("storageCrystal");
-Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 2}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageCrystal, 1000000, 2);
-
-IDRegistry.genItemID("storageLapotronCrystal");
-Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, 10000000, 3);
-
-IDRegistry.genItemID("debugItem");
-Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0});
+// file: items/energy/components.js
 
 IDRegistry.genItemID("circuitBasic");
 IDRegistry.genItemID("circuitAdvanced");
@@ -4296,41 +4255,7 @@ Item.createItem("electricMotor", "Electric Motor", {name: "motor", meta: 0});
 Item.createItem("powerUnit", "Power Unit", {name: "power_unit", meta: 0});
 Item.createItem("powerUnitSmall", "Small Power Unit", {name: "power_unit_small", meta: 0});
 
-IDRegistry.genItemID("toolbox");
-Item.createItem("toolbox", "Tool Box", {name: "toolbox", meta: 0});
-
-
-var RECIPE_FUNC_TRANSPORT_ENERGY = function(api, field, result){
-	var energy = 0;
-	for(var i in field){
-		if(!ChargeItemRegistry.isFlashStorage(field[i].id)){
-			energy += ChargeItemRegistry.getEnergyFrom(field[i], 10000000, 3, true);
-		}
-		api.decreaseFieldSlot(i);
-	}
-	ChargeItemRegistry.addEnergyTo(result, energy, energy, 3);
-}
-
 Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: ItemID.storageBattery, count: 1, data: Item.getMaxDamage(ItemID.storageBattery)}, [
-		" x ",
-		"a#a",
-		"a#a"
-	], ['x', ItemID.cableTin1, 0, 'a', ItemID.casingTin, 0, '#', 331, 0]);
-	
-	Recipes.addShaped({id: ItemID.storageAdvBattery, count: 1, data: Item.getMaxDamage(ItemID.storageAdvBattery)}, [
-		"xbx",
-		"bab",
-		"bcb"
-	], ['x', ItemID.cableCopper1, 0, 'a', ItemID.dustSulfur, 0, 'b', ItemID.casingBronze, 0, 'c', ItemID.dustLead, 0]);
-
-	Recipes.addShaped({id: ItemID.storageLapotronCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageLapotronCrystal)}, [
-		"x#x",
-		"xax",
-		"x#x"
-	], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
-
-
 	Recipes.addShaped({id: ItemID.circuitBasic, count: 1, data: 0}, [
 		"xxx",
 		"a#a",
@@ -4376,11 +4301,67 @@ Callback.addCallback("PostLoaded", function(){
 		"axe",
 		" cs"
 	], ["x", ItemID.circuitBasic, 0, 'e', ItemID.electricMotor, 0,  "a", ItemID.storageBattery, -1, "s", ItemID.casingIron, 0, "c", ItemID.cableCopper0, 0]);
+});
 
-	Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
-		"axa",
-		"aaa",
-	], ['x', 54, 0, 'a', ItemID.casingBronze, 0]);
+
+
+
+// file: items/energy/storage.js
+
+IDRegistry.genItemID("storageBattery");
+Item.createItem("storageBattery", "Battery", {name: "re_battery", meta: 4}, {stack: 1});
+ChargeItemRegistry.registerItem(ItemID.storageBattery, 10000, 0);
+
+IDRegistry.genItemID("storageAdvBattery");
+Item.createItem("storageAdvBattery", "Advanced Battery", {name: "adv_re_battery", meta: 4}, {stack: 1});
+ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, 100000, 1);
+
+IDRegistry.genItemID("storageCrystal");
+Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 2}, {stack: 1});
+ChargeItemRegistry.registerItem(ItemID.storageCrystal, 1000000, 2);
+
+IDRegistry.genItemID("storageLapotronCrystal");
+Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1});
+ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, 10000000, 3);
+
+IDRegistry.genItemID("debugItem");
+Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: debugMode});
+
+Item.registerNameOverrideFunction(ItemID.storageBattery, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.storageAdvBattery, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.storageCrystal, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.storageLapotronCrystal, ENERGY_ITEM_NAME);
+
+
+var RECIPE_FUNC_TRANSPORT_ENERGY = function(api, field, result){
+	var energy = 0;
+	for(var i in field){
+		if(!ChargeItemRegistry.isFlashStorage(field[i].id)){
+			energy += ChargeItemRegistry.getEnergyFrom(field[i], 10000000, 3, true);
+		}
+		api.decreaseFieldSlot(i);
+	}
+	ChargeItemRegistry.addEnergyTo(result, energy, energy, 3);
+}
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: ItemID.storageBattery, count: 1, data: Item.getMaxDamage(ItemID.storageBattery)}, [
+		" x ",
+		"a#a",
+		"a#a"
+	], ['x', ItemID.cableTin1, 0, 'a', ItemID.casingTin, 0, '#', 331, 0]);
+	
+	Recipes.addShaped({id: ItemID.storageAdvBattery, count: 1, data: Item.getMaxDamage(ItemID.storageAdvBattery)}, [
+		"xbx",
+		"bab",
+		"bcb"
+	], ['x', ItemID.cableCopper1, 0, 'a', ItemID.dustSulfur, 0, 'b', ItemID.casingBronze, 0, 'c', ItemID.dustLead, 0]);
+
+	Recipes.addShaped({id: ItemID.storageLapotronCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageLapotronCrystal)}, [
+		"x#x",
+		"xax",
+		"x#x"
+	], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
 });
 
 Item.registerUseFunction("debugItem", function(coords, item, block){
@@ -4390,13 +4371,67 @@ Item.registerUseFunction("debugItem", function(coords, item, block){
 		for(var i in machine.data){
 			if(i != "energy_storage"){
 				if(i == "energy"){
-				Game.message(i + ": " + machine.data[i] + "/" + machine.getEnergyStorage());}
+				Game.message("energy: " + machine.data[i] + "/" + machine.getEnergyStorage());}
 				else{
 				Game.message(i + ": " + machine.data[i]);}
 			}
 		}
 	}
 });
+
+
+
+
+// file: items/other/cells.js
+
+IDRegistry.genItemID("cellEmpty");
+IDRegistry.genItemID("cellWater");
+IDRegistry.genItemID("cellLava");
+Item.createItem("cellEmpty", "Cell", {name: "cell_empty"});
+Item.createItem("cellWater", "Water Cell", {name: "cell_water"});
+Item.createItem("cellLava", "Lava Cell", {name: "cell_lava"});
+Item.setLiquidClip(ItemID.cellEmpty, true);
+LiquidRegistry.registerItem("water", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellWater, data: 0});
+LiquidRegistry.registerItem("lava", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellLava, data: 0});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: ItemID.cellEmpty, count: 2, data: 0}, [
+		" x ",
+		"x x",
+		" x "
+	], ['x', ItemID.casingTin, 0]);
+});
+
+Item.registerUseFunction("cellEmpty", function(coords, item, block){
+	if(block.id==9 || block.id==11){
+		World.setBlock(coords.x, coords.y, coords.z, 0);
+		var item = Player.getCarriedItem();
+		item.count--;
+		if(!item.count){item.id = 0;}
+		Player.setCarriedItem(item.id, item.count, 1);
+		if(block.id==9){Player.addItemToInventory(ItemID.cellWater, 1);}
+		else{Player.addItemToInventory(ItemID.cellLava, 1);}
+	}
+});
+/*
+Callback.addCallback("ItemUse", function(coords, item, block){
+	if(item.id==ItemID.cellWater || item.id==ItemID.cellLava){
+		var x = coords.relative.x
+		var y = coords.relative.y
+		var z = coords.relative.z
+		var block = World.getBlockID(x,y,z)
+		if(block==0){
+			if(item.id==ItemID.cellWater){World.setBlock(x, y, z, 9);}
+			else{World.setBlock(x, y, z, 11);}
+			var item = Player.getCarriedItem();
+			item.count--;
+			if(!item.count) item.id = 0;
+			Player.setCarriedItem(item.id, item.count, item.data);
+			Player.addItemToInventory(ItemID.cellEmpty, 1);
+		}
+	}
+});
+*/
 
 
 
@@ -4617,10 +4652,10 @@ IDRegistry.genItemID("bronzeChestplate");
 IDRegistry.genItemID("bronzeLeggings");
 IDRegistry.genItemID("bronzeBoots");
 
-Item.createArmorItem("bronzeHelmet", "Bronze Helmet", {name: "armor_bronze_helmet"}, {type: "helmet", armor: 2, durability: 149, texture: "armor/bronze_1.png"});
-Item.createArmorItem("bronzeChestplate", "Bronze Chestplate", {name: "armor_bronze_chestplate"}, {type: "chestplate", armor: 6, durability: 216, texture: "armor/bronze_1.png"});
-Item.createArmorItem("bronzeLeggings", "Bronze Leggings", {name: "armor_bronze_leggings"}, {type: "leggings", armor: 5, durability: 203, texture: "armor/bronze_2.png"});
-Item.createArmorItem("bronzeBoots", "Bronze Boots", {name: "armor_bronze_boots"}, {type: "boots", armor: 2, durability: 176, texture: "armor/bronze_1.png"});
+Item.createArmorItem("bronzeHelmet", "Bronze Helmet", {name: "bronze_helmet"}, {type: "helmet", armor: 2, durability: 149, texture: "armor/bronze_1.png"});
+Item.createArmorItem("bronzeChestplate", "Bronze Chestplate", {name: "bronze_chestplate"}, {type: "chestplate", armor: 6, durability: 216, texture: "armor/bronze_1.png"});
+Item.createArmorItem("bronzeLeggings", "Bronze Leggings", {name: "bronze_leggings"}, {type: "leggings", armor: 5, durability: 203, texture: "armor/bronze_2.png"});
+Item.createArmorItem("bronzeBoots", "Bronze Boots", {name: "bronze_boots"}, {type: "boots", armor: 2, durability: 176, texture: "armor/bronze_1.png"});
 
 Recipes.addShaped({id: ItemID.bronzeHelmet, count: 1, data: 0}, [
 	"xxx",
@@ -4654,10 +4689,10 @@ IDRegistry.genItemID("compositeChestplate");
 IDRegistry.genItemID("compositeLeggings");
 IDRegistry.genItemID("compositeBoots");
 
-Item.createArmorItem("compositeHelmet", "Composite Helmet", {name: "armor_composite_helmet"}, {type: "helmet", armor: 3, durability: 330, texture: "armor/composite_1.png"});
-Item.createArmorItem("compositeChestplate", "Composite Chestplate", {name: "armor_composite_chestplate"}, {type: "chestplate", armor: 8, durability: 480, texture: "armor/composite_1.png"});
-Item.createArmorItem("compositeLeggings", "Composite Leggings", {name: "armor_composite_leggings"}, {type: "leggings", armor: 6, durability: 450, texture: "armor/composite_2.png"});
-Item.createArmorItem("compositeBoots", "Composite Boots", {name: "armor_composite_boots"}, {type: "boots", armor: 3, durability: 390, texture: "armor/composite_1.png"});
+Item.createArmorItem("compositeHelmet", "Composite Helmet", {name: "composite_helmet"}, {type: "helmet", armor: 3, durability: 330, texture: "armor/composite_1.png"});
+Item.createArmorItem("compositeChestplate", "Composite Chestplate", {name: "composite_chestplate"}, {type: "chestplate", armor: 8, durability: 480, texture: "armor/composite_1.png"});
+Item.createArmorItem("compositeLeggings", "Composite Leggings", {name: "composite_leggings"}, {type: "leggings", armor: 6, durability: 450, texture: "armor/composite_2.png"});
+Item.createArmorItem("compositeBoots", "Composite Boots", {name: "composite_boots"}, {type: "boots", armor: 3, durability: 390, texture: "armor/composite_1.png"});
 
 Recipes.addShaped({id: ItemID.compositeHelmet, count: 1, data: 0}, [
 	"xxx",
@@ -4837,8 +4872,9 @@ Callback.addCallback("tick", function(){
 // file: items/armor/nightvision.js
 
 IDRegistry.genItemID("nightvisionGoggles");
-Item.createArmorItem("nightvisionGoggles", "Nightvision Goggles", {name: "armor_nightvision"}, {type: "helmet", armor: 1, durability: 100000, texture: "armor/nightvision_1.png", isTech: false});
+Item.createArmorItem("nightvisionGoggles", "Nightvision Goggles", {name: "nightvision"}, {type: "helmet", armor: 1, durability: 100000, texture: "armor/nightvision_1.png", isTech: false});
 ChargeItemRegistry.registerItem(ItemID.nightvisionGoggles, 100000, 0, true);
+Item.registerNameOverrideFunction(ItemID.nightvisionGoggles, ENERGY_ITEM_NAME);
 
 Callback.addCallback("PostLoaded", function(){
 	Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: Item.getMaxDamage(ItemID.nightvisionGoggles)}, [
@@ -4880,30 +4916,40 @@ IDRegistry.genItemID("nanoChestplate");
 IDRegistry.genItemID("nanoLeggings");
 IDRegistry.genItemID("nanoBoots");
 
-Item.createArmorItem("nanoHelmet", "Nano Helmet", {name: "armor_nano_helmet"}, {type: "helmet", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
-Item.createArmorItem("nanoChestplate", "Nano Chestplate", {name: "armor_nano_chestplate"}, {type: "chestplate", armor: 8, durability: 625, texture: "armor/nano_1.png", isTech: false});
-Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "armor_nano_leggings"}, {type: "leggings", armor: 6, durability: 625, texture: "armor/nano_2.png", isTech: false});
-Item.createArmorItem("nanoBoots", "Nano Boots", {name: "armor_nano_boots"}, {type: "boots", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
+Item.createArmorItem("nanoHelmet", "Nano Helmet", {name: "nano_helmet"}, {type: "helmet", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
+Item.createArmorItem("nanoChestplate", "Nano Chestplate", {name: "nano_chestplate"}, {type: "chestplate", armor: 8, durability: 625, texture: "armor/nano_1.png", isTech: false});
+Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 6, durability: 625, texture: "armor/nano_2.png", isTech: false});
+Item.createArmorItem("nanoBoots", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
 
 ChargeItemRegistry.registerItem(ItemID.nanoHelmet, 1000000, 1, true);
 ChargeItemRegistry.registerItem(ItemID.nanoChestplate, 1000000, 1, true);
 ChargeItemRegistry.registerItem(ItemID.nanoLeggings, 1000000, 1, true);
 ChargeItemRegistry.registerItem(ItemID.nanoBoots, 1000000, 1, true);
 
+Item.registerNameOverrideFunction(ItemID.nanoHelmet, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoChestplate, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoLeggings, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoBoots, ENERGY_ITEM_NAME);
+
 IDRegistry.genItemID("nanoHelmetUncharged");
 IDRegistry.genItemID("nanoChestplateUncharged");
 IDRegistry.genItemID("nanoLeggingsUncharged");
 IDRegistry.genItemID("nanoBootsUncharged");
 
-Item.createArmorItem("nanoHelmetUncharged", "Nano Helmet", {name: "armor_nano_helmet"}, {type: "helmet", armor: 2, durability: 625, texture: "armor/nano_1.png", isTech: true});
-Item.createArmorItem("nanoChestplateUncharged", "Nano Chestplate", {name: "armor_nano_chestplate"}, {type: "chestplate", armor: 6, durability: 625, texture: "armor/nano_1.png", isTech: true});
-Item.createArmorItem("nanoLeggingsUncharged", "Nano Leggings", {name: "armor_nano_leggings"}, {type: "leggings", armor: 3, durability: 625, texture: "armor/nano_2.png", isTech: true});
-Item.createArmorItem("nanoBootsUncharged", "Nano Boots", {name: "armor_nano_boots"}, {type: "boots", armor: 2, durability: 625, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoHelmetUncharged", "Nano Helmet", {name: "nano_helmet"}, {type: "helmet", armor: 2, durability: 625, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoChestplateUncharged", "Nano Chestplate", {name: "nano_chestplate"}, {type: "chestplate", armor: 6, durability: 625, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoLeggingsUncharged", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 3, durability: 625, texture: "armor/nano_2.png", isTech: true});
+Item.createArmorItem("nanoBootsUncharged", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 2, durability: 625, texture: "armor/nano_1.png", isTech: true});
 
 ChargeItemRegistry.registerItem(ItemID.nanoHelmetUncharged, 1000000, 2, true);
 ChargeItemRegistry.registerItem(ItemID.nanoChestplateUncharged, 1000000, 2, true);
 ChargeItemRegistry.registerItem(ItemID.nanoLeggingsUncharged, 1000000, 2, true);
 ChargeItemRegistry.registerItem(ItemID.nanoBootsUncharged, 1000000, 2, true);
+
+Item.registerNameOverrideFunction(ItemID.nanoHelmetUncharged, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoChestplateUncharged, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoLeggingsUncharged, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoBootsUncharged, ENERGY_ITEM_NAME);
 
 
 MachineRecipeRegistry.registerRecipesFor("nano-armor-charge", {
@@ -4925,18 +4971,18 @@ var NANO_ARMOR_FUNCS_CHARGED = {
 	hurt: function(params, item, index, maxDamage){
 		var type = params.type;
 		if(type==2 || type==3 || type==11){
-			var energy = params.damage * 30;
+			var energy = params.damage * 800;
 			item.data = Math.min(item.data + energy, maxDamage);
 		}
-		if(type==5 && index==3 && item.data +500 <= maxDamage){
-			var damage = Math.min(9, Math.floor((maxDamage - item.data)/500));
+		if(type==5 && index==3 && item.data +800 <= maxDamage){
+			var damage = Math.min(9, Math.floor((maxDamage - item.data)/800));
 			if(params.damage > damage){
 				Entity.setHealth(player, Entity.getHealth(player) + damage);
 			}
 			else{
 				Game.prevent();
 			}
-			item.data = Math.min(item.data + damage * 500, maxDamage);
+			item.data = Math.min(item.data + damage * 800, maxDamage);
 		}
 		return true;
 	},
@@ -4945,6 +4991,7 @@ var NANO_ARMOR_FUNCS_CHARGED = {
 		var armor = MachineRecipeRegistry.getRecipeResult("nano-armor-charge", slot.id);
 		if(slot.data >= maxDamage){
 			slot.id = armor.uncharged;
+			return true;
 		}
 		else{
 			if(index==0 && UIbuttons.nightvision){
@@ -5009,30 +5056,40 @@ IDRegistry.genItemID("quantumChestplate");
 IDRegistry.genItemID("quantumLeggings");
 IDRegistry.genItemID("quantumBoots");
 
-Item.createArmorItem("quantumHelmet", "§bQuantum Helmet", {name: "armor_quantum_helmet"}, {type: "helmet", armor: 5, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
-Item.createArmorItem("quantumChestplate", "§bQuantum Chestplate", {name: "armor_quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
-Item.createArmorItem("quantumLeggings", "§bQuantum Leggings", {name: "armor_quantum_leggings"}, {type: "leggings", armor: 7, durability: 8333, texture: "armor/quantum_2.png", isTech: false});
-Item.createArmorItem("quantumBoots", "§bQuantum Boots", {name: "armor_quantum_boots"}, {type: "boots", armor: 4, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
+Item.createArmorItem("quantumHelmet", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 5, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
+Item.createArmorItem("quantumChestplate", "Quantum Chestplate", {name: "quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
+Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 8333, texture: "armor/quantum_2.png", isTech: false});
+Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
 
 ChargeItemRegistry.registerItem(ItemID.quantumHelmet, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumChestplate, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumLeggings, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumBoots, 10000000, 3, true);
 
+Item.registerNameOverrideFunction(ItemID.quantumHelmet, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumChestplate, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumLeggings, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumBoots, RARE_ENERGY_ITEM_NAME);
+
 IDRegistry.genItemID("quantumHelmetUncharged");
 IDRegistry.genItemID("quantumChestplateUncharged");
 IDRegistry.genItemID("quantumLeggingsUncharged");
 IDRegistry.genItemID("quantumBootsUncharged");
 
-Item.createArmorItem("quantumHelmetUncharged", "§bQuantum Helmet", {name: "armor_quantum_helmet"}, {type: "helmet", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumChestplateUncharged", "§bQuantum Chestplate", {name: "armor_quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumLeggingsUncharged", "§bQuantum Leggings", {name: "armor_quantum_leggings"}, {type: "leggings", armor: 3, durability: 8333, texture: "armor/quantum_2.png", isTech: true});
-Item.createArmorItem("quantumBootsUncharged", "§bQuantum Boots", {name: "armor_quantum_boots"}, {type: "boots", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumHelmetUncharged", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumChestplateUncharged", "Quantum Chestplate", {name: "quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 8333, texture: "armor/quantum_2.png", isTech: true});
+Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
 
 ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 3, true);
+
+Item.registerNameOverrideFunction(ItemID.quantumHelmetUncharged, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumChestplateUncharged, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumLeggingsUncharged, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumBootsUncharged, RARE_ENERGY_ITEM_NAME);
 
 
 MachineRecipeRegistry.registerRecipesFor("quantum-armor-charge", {
@@ -5056,7 +5113,7 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 	hurt: function(params, item, index, maxDamage){
 		var type = params.type;
 		if(type==2 || type==3 || type==11){
-			var energy = params.damage * 30;
+			var energy = params.damage * 900;
 			item.data = Math.min(item.data + energy, maxDamage);
 		}
 		if(type==5 && index==3 && item.data + 900 <= maxDamage){
@@ -5076,6 +5133,7 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 		var armor = MachineRecipeRegistry.getRecipeResult("quantum-armor-charge", slot.id);
 		if(slot.data >= maxDamage){
 			slot.id = armor.uncharged;
+			return true;
 		}
 		else{
 			if(slot.id != armor.charged){
@@ -5161,8 +5219,9 @@ Callback.addCallback("PostLoaded", function(){
 // file: items/armor/jetpack.js
 
 IDRegistry.genItemID("jetpack");
-Item.createArmorItem("jetpack", "Jetpack", {name: "armor_jetpack"}, {type: "chestplate", armor: 3, durability: 30000, texture: "armor/jetpack_1.png", isTech: false});
+Item.createArmorItem("jetpack", "Jetpack", {name: "jetpack"}, {type: "chestplate", armor: 3, durability: 30000, texture: "armor/jetpack_1.png", isTech: false});
 ChargeItemRegistry.registerItem(ItemID.jetpack, 30000, 0, true);
+Item.registerNameOverrideFunction(ItemID.jetpack, ENERGY_ITEM_NAME);
 
 Recipes.addShaped({id: ItemID.jetpack, count: 1, data: Item.getMaxDamage(ItemID.jetpack)}, [
 	"bcb",
@@ -5196,14 +5255,21 @@ IDRegistry.genItemID("batpack");
 IDRegistry.genItemID("advBatpack");
 IDRegistry.genItemID("energypack");
 IDRegistry.genItemID("lappack");
-Item.createArmorItem("batpack", "Batpack", {name: "armor_batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: false});
-Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "armor_adv_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: false});
-Item.createArmorItem("energypack", "Energy Pack", {name: "armor_energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
-Item.createArmorItem("lappack", "Lappack", {name: "armor_lappack"}, {type: "chestplate", armor: 3, durability: 1000000, texture: "armor/lappack_1.png", isTech: false});
+
+Item.createArmorItem("batpack", "Batpack", {name: "batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: false});
+Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: false});
+Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
+Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 1000000, texture: "armor/lappack_1.png", isTech: false});
+
 ChargeItemRegistry.registerItem(ItemID.batpack, 60000, 0);
 ChargeItemRegistry.registerItem(ItemID.advBatpack, 600000, 1);
 ChargeItemRegistry.registerItem(ItemID.energypack, 2000000, 2);
 ChargeItemRegistry.registerItem(ItemID.lappack, 10000000, 3);
+
+Item.registerNameOverrideFunction(ItemID.batpack, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.advBatpack, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.energypack, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.lappack, ENERGY_ITEM_NAME);
 
 Recipes.addShaped({id: ItemID.batpack, count: 1, data: Item.getMaxDamage(ItemID.batpack)}, [
     "bcb",
@@ -5249,12 +5315,12 @@ var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	        return false;
 	    }
 	    var energyAdd = Math.min(item.data - 1, Math.min(transfer, maxDamage - slot.data));
-	    Game.message(energyAdd);
 	    if(energyAdd > 0){
 	        slot.data += energyAdd;
 	        Player.setCarriedItem(item.id, 1, item.data - energyAdd);
 	        return true;
 		}
+		return false;
     }
 }
 
@@ -5320,6 +5386,9 @@ Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner_advanced", meta
 ChargeItemRegistry.registerItem(ItemID.scanner, 10000, 0, true, true);
 ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, 10000, 0, true, true);
 
+Item.registerNameOverrideFunction(ItemID.scanner, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.scannerAdvanced, ENERGY_ITEM_NAME);
+
 Recipes.addShaped({id: ItemID.scanner, count: 1, data: 250}, [
 	" a ",
 	"cbc",
@@ -5377,15 +5446,15 @@ Recipes.addShaped({id: ItemID.treetap, count: 1, data: 0}, [
 
 // file: items/tool/crafting_tools.js
 
-var CRAFTING_TOOL_ITEM_MAX_DAMAGE = 96;
+var CRAFTING_TOOL_MAX_DAMAGE = 96;
 
 IDRegistry.genItemID("craftingHammer");
 Item.createItem("craftingHammer", "Forge Hammer", {name: "crafting_hammer"}, {stack: 1});
-Item.setMaxDamage(ItemID.craftingHammer, CRAFTING_TOOL_ITEM_MAX_DAMAGE);
+Item.setMaxDamage(ItemID.craftingHammer, CRAFTING_TOOL_MAX_DAMAGE);
 
 IDRegistry.genItemID("craftingCutter");
 Item.createItem("craftingCutter", "Cutter", {name: "crafting_cutter"}, {stack: 1});
-Item.setMaxDamage(ItemID.craftingCutter, CRAFTING_TOOL_ITEM_MAX_DAMAGE);
+Item.setMaxDamage(ItemID.craftingCutter, CRAFTING_TOOL_MAX_DAMAGE);
 
 function addRecipeWithCraftingTool(result, data, tool){
 	data.push({id: tool, data: -1});
@@ -5393,7 +5462,7 @@ function addRecipeWithCraftingTool(result, data, tool){
 		for (var i in field){
 			if (field[i].id == tool){
 				field[i].data++;
-				if (field[i].data >= CRAFTING_TOOL_ITEM_MAX_DAMAGE){
+				if (field[i].data >= CRAFTING_TOOL_MAX_DAMAGE){
 					field[i].id = field[i].count = field[i].data = 0;
 				}
 			}
@@ -5415,6 +5484,19 @@ Recipes.addShaped({id: ItemID.craftingCutter, count: 1, data: 0}, [
 	" x ",
 	"a a"
 ], ['a', 265, 0, 'x', ItemID.plateIron, 0]);
+
+
+
+
+// file: items/tool/tool_box.js
+
+IDRegistry.genItemID("toolbox");
+Item.createItem("toolbox", "Tool Box", {name: "tool_box", meta: 0});
+
+Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
+	"axa",
+	"aaa",
+], ['x', 54, 0, 'a', ItemID.casingBronze, 0]);
 
 
 
@@ -5514,6 +5596,9 @@ ChargeItemRegistry.registerItem(ItemID.electricHoe, 10000, 0, true, true);
 ChargeItemRegistry.registerItem(ItemID.electricTreetap, 10000, 0, true, true);
 Item.setToolRender(ItemID.electricHoe, true);
 
+Item.registerNameOverrideFunction(ItemID.electricHoe, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.electricTreetap, ENERGY_ITEM_NAME);
+
 Recipes.addShaped({id: ItemID.electricHoe, count: 1, data: Item.getMaxDamage(ItemID.electricHoe)}, [
 	"pp",
 	" p",
@@ -5524,7 +5609,7 @@ Recipes.addShapeless({id: ItemID.electricTreetap, count: 1, data: Item.getMaxDam
 
 
 Item.registerUseFunction("electricHoe", function(coords, item, block){
-	if(item.data + 50 <= Item.getMaxDamage(ItemID.electricHoe) && (block.id==2 || block.id==3 || block.id==110) && coords.side==1){ 
+	if(item.data + 50 <= Item.getMaxDamage(ItemID.electricHoe) && (block.id==2 || block.id==3 || block.id==110 || block.id==243) && coords.side==1){ 
 		World.setBlock(coords.x, coords.y, coords.z, 60);
 		World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.75);
 		Player.setCarriedItem(item.id, 1, item.data + 50);
@@ -5558,11 +5643,35 @@ IDRegistry.genItemID("diamondDrill");
 IDRegistry.genItemID("iridiumDrill");
 Item.createItem("drill", "Mining Drill", {name: "drill", meta: 0}, {stack: 1});
 Item.createItem("diamondDrill", "Diamond Drill", {name: "drill", meta: 1}, {stack: 1});
-Item.createItem("iridiumDrill", "§bIridium Drill", {name: "drill", meta: 2}, {stack: 1});
+Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill", meta: 2}, {stack: 1});
 //Item.setGlint(ItemID.iridiumDrill, true);
 ChargeItemRegistry.registerItem(ItemID.drill, 30000, 0, true, true);
 ChargeItemRegistry.registerItem(ItemID.diamondDrill, 30000, 0, true, true);
 ChargeItemRegistry.registerItem(ItemID.iridiumDrill, 1000000, 2, true, true);
+
+Item.registerNameOverrideFunction(ItemID.drill, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.diamondDrill, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
+	var energyStorage = Item.getMaxDamage(item.id) - 1;
+	var energyStored = Math.min(energyStorage - item.data + 1, energyStorage);
+	if(energyStored==0){return "§b" + name;}
+	name = "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
+	switch(IDrillMode){
+		case 0:
+			name += "\nFortune III mode";
+		break;
+		case 1:
+			name += "\nSilk Touch mode";
+		break;
+		case 2:
+			name += "\nc3x3 Fortune III mode";
+		break;
+		case 3:
+			name += "\n3x3 Silk Touch mode";
+		break;
+	}
+	return name;
+});
 
 ToolType.drill = {
     damage: 0,
@@ -5759,14 +5868,14 @@ ToolType.chainsaw = {
 			material.damage = 0;
 		}
 	},
-	calcDestroyTime: function(item, block, params, destroyTime, enchant){
-		if(item.data < Item.getMaxDamage(item.id)){
-			return destroyTime;
-		}
-		else{
-			return params.base;
-		}
-	}
+	calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
+        if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
+            return destroyTime;
+        }
+        else{
+            return params.base;
+        }
+    }
 }
 
 ToolAPI.setTool(ItemID.chainsaw, {energyConsumption: 50, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
@@ -5778,10 +5887,12 @@ ToolAPI.setTool(ItemID.chainsaw, {energyConsumption: 50, level: 3, efficiency: 1
 
 IDRegistry.genItemID("nanoSaber");
 Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.nanoSaber, 100000, 2, true, true);
+ChargeItemRegistry.registerItem(ItemID.nanoSaber, 1000000, 2, true, true);
 Item.setToolRender(ItemID.nanoSaber, true);
 
-var NANO_SABER_DURABILITY = 100000;
+Item.registerNameOverrideFunction(ItemID.nanoSaber, ENERGY_ITEM_NAME);
+
+var NANO_SABER_DURABILITY = 1000001;
 
 Recipes.addShaped({id: ItemID.nanoSaber, count: 1, data: NANO_SABER_DURABILITY}, [
 	"ca ",
@@ -5796,16 +5907,16 @@ ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: NANO_SABER_DURABI
 		return true;
 	},
 	onAttack: function(item, mob){
-		item.data -= 2;
 		this.damage = item.data < NANO_SABER_DURABILITY ? 16 : 0;
+		return false;
 	}
 });
 
 Callback.addCallback("tick", function(){
-	if(World.getThreadTime() % 10 == 0){
+	if(World.getThreadTime() % 20 == 0){
 		var item = Player.getCarriedItem()
 		if(item.id == ItemID.nanoSaber){
-			item.data = Math.min(item.data+10, NANO_SABER_DURABILITY);
+			item.data = Math.min(item.data+1280, NANO_SABER_DURABILITY);
 			Player.setCarriedItem(item.id, 1, item.data);
 		}
 	}
@@ -5820,6 +5931,8 @@ Callback.addCallback("tick", function(){
 Item.setElectricItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0});
 ChargeItemRegistry.registerItem(ItemID.miningLaser, 1000000, 2, true, true);
 Item.setToolRender(ItemID.miningLaser, true);
+
+Item.registerNameOverrideFunction(ItemID.miningLaser, ENERGY_ITEM_NAME);
 
 Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: Item.getMaxDamage(ItemID.miningLaser)}, [
 	"ccx",
@@ -5837,7 +5950,7 @@ ModAPI.registerAPI("ICore", {
 	Machine: MachineRegistry,
 	Recipe: MachineRecipeRegistry,
 	ChargeRegistry: ChargeItemRegistry,
-	UpgradeAPI: UpgradeAPI,
+	Upgrade: UpgradeAPI,
 	UI: UIbuttons,
 	
 	requireGlobal: function(command){

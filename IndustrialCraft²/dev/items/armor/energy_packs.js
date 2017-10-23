@@ -67,6 +67,7 @@ var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	        Player.setCarriedItem(item.id, 1, item.data - energyAdd);
 	        return true;
 		}
+		return false;
     }
 }
 

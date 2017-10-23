@@ -50,6 +50,7 @@ function addShapelessRecipe(result, source){
 	Recipes.addShapeless(result, ingredients);
 }
 
+
 var RARE_ITEM_NAME = function(item, name){
 	return "§b" + name;
 }
@@ -57,11 +58,13 @@ var RARE_ITEM_NAME = function(item, name){
 var ENERGY_ITEM_NAME = function(item, name){
 	var energyStorage = Item.getMaxDamage(item.id) - 1;
 	var energyStored = Math.min(energyStorage - item.data + 1, energyStorage);
+	if(energyStored==0){return name;}
 	return name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
 }
 
 var RARE_ENERGY_ITEM_NAME = function(item, name){
 	var energyStorage = Item.getMaxDamage(item.id) - 1;
 	var energyStored = Math.min(energyStorage - item.data + 1, energyStorage);
+	if(energyStored==0){return "§b" + name;}
 	return "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
 }

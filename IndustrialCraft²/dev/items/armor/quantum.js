@@ -23,10 +23,10 @@ IDRegistry.genItemID("quantumChestplateUncharged");
 IDRegistry.genItemID("quantumLeggingsUncharged");
 IDRegistry.genItemID("quantumBootsUncharged");
 
-Item.createArmorItem("quantumHelmetUncharged", "Quantum Helmet", {name: "armor_quantum_helmet"}, {type: "helmet", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumChestplateUncharged", "Quantum Chestplate", {name: "armor_quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "armor_quantum_leggings"}, {type: "leggings", armor: 3, durability: 8333, texture: "armor/quantum_2.png", isTech: true});
-Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "armor_quantum_boots"}, {type: "boots", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumHelmetUncharged", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumChestplateUncharged", "Quantum Chestplate", {name: "quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 8333, texture: "armor/quantum_2.png", isTech: true});
+Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
 
 ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 3, true);
 ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 3, true);
@@ -80,6 +80,7 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 		var armor = MachineRecipeRegistry.getRecipeResult("quantum-armor-charge", slot.id);
 		if(slot.data >= maxDamage){
 			slot.id = armor.uncharged;
+			return true;
 		}
 		else{
 			if(slot.id != armor.charged){

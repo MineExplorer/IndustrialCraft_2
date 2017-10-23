@@ -14,6 +14,9 @@ IDRegistry.genItemID("storageLapotronCrystal");
 Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1});
 ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, 10000000, 3);
 
+IDRegistry.genItemID("debugItem");
+Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: debugMode});
+
 Item.registerNameOverrideFunction(ItemID.storageBattery, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.storageAdvBattery, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.storageCrystal, ENERGY_ITEM_NAME);
@@ -31,20 +34,37 @@ var RECIPE_FUNC_TRANSPORT_ENERGY = function(api, field, result){
 	ChargeItemRegistry.addEnergyTo(result, energy, energy, 3);
 }
 
-Recipes.addShaped({id: ItemID.storageBattery, count: 1, data: Item.getMaxDamage(ItemID.storageBattery)}, [
-	" x ",
-	"a#a",
-	"a#a"
-], ['x', ItemID.cableTin1, 0, 'a', ItemID.casingTin, 0, '#', 331, 0]);
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: ItemID.storageBattery, count: 1, data: Item.getMaxDamage(ItemID.storageBattery)}, [
+		" x ",
+		"a#a",
+		"a#a"
+	], ['x', ItemID.cableTin1, 0, 'a', ItemID.casingTin, 0, '#', 331, 0]);
 	
-Recipes.addShaped({id: ItemID.storageAdvBattery, count: 1, data: Item.getMaxDamage(ItemID.storageAdvBattery)}, [
-	"xbx",
-	"bab",
-	"bcb"
-], ['x', ItemID.cableCopper1, 0, 'a', ItemID.dustSulfur, 0, 'b', ItemID.casingBronze, 0, 'c', ItemID.dustLead, 0]);
+	Recipes.addShaped({id: ItemID.storageAdvBattery, count: 1, data: Item.getMaxDamage(ItemID.storageAdvBattery)}, [
+		"xbx",
+		"bab",
+		"bcb"
+	], ['x', ItemID.cableCopper1, 0, 'a', ItemID.dustSulfur, 0, 'b', ItemID.casingBronze, 0, 'c', ItemID.dustLead, 0]);
 
-Recipes.addShaped({id: ItemID.storageLapotronCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageLapotronCrystal)}, [
-	"x#x",
-	"xax",
-	"x#x"
-], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
+	Recipes.addShaped({id: ItemID.storageLapotronCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageLapotronCrystal)}, [
+		"x#x",
+		"xax",
+		"x#x"
+	], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
+});
+
+Item.registerUseFunction("debugItem", function(coords, item, block){
+	Game.message(block.id+":"+block.data);
+	var machine = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z);
+	if(machine){
+		for(var i in machine.data){
+			if(i != "energy_storage"){
+				if(i == "energy"){
+				Game.message("energy: " + machine.data[i] + "/" + machine.getEnergyStorage());}
+				else{
+				Game.message(i + ": " + machine.data[i]);}
+			}
+		}
+	}
+});

@@ -78,6 +78,7 @@ var NANO_ARMOR_FUNCS_CHARGED = {
 		var armor = MachineRecipeRegistry.getRecipeResult("nano-armor-charge", slot.id);
 		if(slot.data >= maxDamage){
 			slot.id = armor.uncharged;
+			return true;
 		}
 		else{
 			if(index==0 && UIbuttons.nightvision){

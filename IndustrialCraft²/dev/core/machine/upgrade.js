@@ -99,7 +99,7 @@ function addItemsToContainers(items, containers){
 					slot.id = item.id;
 					slot.data = item.data;
 					if(!container.slots){
-						container.setSlot(i, slot.id, slot.count, slot.data)
+						container.setSlot(i, slot.id, slot.count, slot.data);
 					}
 				}
 			}
@@ -145,12 +145,12 @@ function getItemsFrom(items, containers){
 					item.count += add;
 					item.id = slot.id;
 					item.data = slot.data;
+					if(slot.count==0) slot.id = slot.data = 0;
 					if(!container.slots){
-						container.setSlot(i, slot.id, slot.count, slot.data)
+						container.setSlot(i, slot.id, slot.count, slot.data);
 					}
 				}
 			}
-			container.validateAll();
 			if(item.count==64){break;}
 		}
 	}

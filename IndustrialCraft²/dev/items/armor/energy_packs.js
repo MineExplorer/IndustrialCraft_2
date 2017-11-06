@@ -61,17 +61,17 @@ var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	    if(!data || !data.isTool || data.level > level || item.data <= 1){
 	        return false;
 	    }
-	    var energyAdd = Math.min(item.data - 1, Math.min(transfer, maxDamage - slot.data));
+	    var energyAdd = Math.min(item.data - 1, Math.min(transfer*20, maxDamage - slot.data));
 	    if(energyAdd > 0){
 	        slot.data += energyAdd;
 	        Player.setCarriedItem(item.id, 1, item.data - energyAdd);
 	        return true;
 		}
-		return false;
     }
+    return false;
 }
 
 registerStoragePack("batpack", 0, 32);
 registerStoragePack("advBatpack", 1, 256);
-registerStoragePack("energypack", 2, 1024);
-registerStoragePack("lappack", 3, 4096);
+registerStoragePack("energypack", 2, 2048);
+registerStoragePack("lappack", 3, 8192);

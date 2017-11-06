@@ -4,9 +4,9 @@ var BLOCK_TYPE_LEAVES = Block.createSpecialType({
 });
 
 
-function destroyLeaves(x,y,z){
+function destroyLeaves(x, y, z){
 	var max = 0;
-	if(World.getBlockID(x, y+1, z)==BlockID.rubberTreeLeaves){max = 4;}
+	while(World.getBlockID(x, y+max+1, z)==BlockID.rubberTreeLeaves){max++;}
 	for(var yy = y; yy <= y+max; yy++){
 		for(var xx = x-2; xx <= x+2; xx++){
 			for(var zz = z-2; zz <= z+2; zz++){

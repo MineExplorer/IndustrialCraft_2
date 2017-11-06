@@ -83,9 +83,6 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 			return true;
 		}
 		else{
-			if(slot.id != armor.charged){
-				slot.id = armor.charged;
-			}
 			switch (index){
 			case 0:
 				Entity.clearEffect(player, MobEffect.poison);
@@ -120,6 +117,10 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 					Entity.addEffect(player, MobEffect.movementSpeed, 5, 3);
 				}
 			break;
+			}
+			if(slot.id != armor.charged){
+				slot.id = armor.charged;
+				return true;
 			}
 		}
 		return false;

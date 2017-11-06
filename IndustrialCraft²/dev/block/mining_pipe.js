@@ -18,5 +18,5 @@ Callback.addCallback("PostLoaded", function(){
 		"p p",
 		"p p",
 		"pxp",
-	], ['x', 54, 0, 'a', ItemID.plateIron, 0]);
+	], ['x', 54, 0, 'p', ItemID.plateIron, 0]);
 });

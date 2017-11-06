@@ -85,6 +85,8 @@ var buttonContent = {
 	}
 }
 
+UIbuttons.Window.setAsGameOverlay(true);
+
 function updateUIbuttons(){
 	var elements = UIbuttons.Window.content.elements;
 	for(var name in buttonMap){

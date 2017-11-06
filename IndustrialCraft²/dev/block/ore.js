@@ -96,7 +96,6 @@ var OreGenerator = {
 		}
 	},
 	genOreTiny: function(x, y, z, maxCount, id, data){
-		GenerationUtils.setLockedBlock(x,y,z);
 		for(var i = 1; i < random(1, maxCount); i++){
 			this.setOre(x+random(-1,1), y+random(-1,1), z+random(-1,1), id, data);
 		}

@@ -50,7 +50,23 @@ ToolType.drill = {
         else{
             return params.base;
         }
-    }
+    },
+    useItem: function(coords, item, block){
+    	coords = coords.relative;
+    	block = World.getBlockID(coords.x, coords.y, coords.z);
+    	if(GenerationUtils.isTransparentBlock(block)){
+	    	for(var i = 0; i < 36; i++){
+				var slot = Player.getInventorySlot(i);
+				if(slot.id==50){
+					slot.count--;
+					if(!slot.count) slot.id = 0;
+					Player.setInventorySlot(i, slot.id, slot.count, 0);
+					World.setBlock(coords.x, coords.y, coords.z, 50);
+					break;
+				}
+			}
+	    }
+   }
 }
 
 var IDrillMode = 0;
@@ -170,6 +186,22 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
             //Player.setCarriedItem(item.id, 1, item.data, enchant);
             Player.setCarriedItem(item.id, 1, item.data);
         }
+        else{
+    		coords = coords.relative;
+    		block = World.getBlockID(coords.x, coords.y, coords.z);
+    		if(GenerationUtils.isTransparentBlock(block)){
+	    		for(var i = 0; i < 36; i++){
+					var slot = Player.getInventorySlot(i);
+					if(slot.id==50){
+						slot.count--;
+						if(!slot.count) slot.id = 0;
+						Player.setInventorySlot(i, slot.id, slot.count, 0);
+						World.setBlock(coords.x, coords.y, coords.z, 50);
+						break;
+					}
+				}
+	    	}
+		}
     }
 });
 

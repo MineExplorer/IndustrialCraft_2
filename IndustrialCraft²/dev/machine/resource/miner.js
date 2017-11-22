@@ -11,7 +11,12 @@ var guiMiner = new UI.StandartWindow({
 	standart: {
 		header: {text: {text: "Miner"}},
 		inventory: {standart: true},
-		background: {standart: true}
+		background: {bitmap: "machine_background"}
+	},
+	
+	params: {       
+		slot: "default_slot",
+		invSlot: "default_slot"              
 	},
 	
 	drawing: [
@@ -20,9 +25,9 @@ var guiMiner = new UI.StandartWindow({
 	
 	elements: {
 		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slotDrill": {type: "slot", x: 441, y: 75},
+		"slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill"},
 		"slotPipe": {type: "slot", x: 541, y: 75},
-		"slotScanner": {type: "slot", x: 641, y: 75},
+		"slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner"},
 		"slotEnergy": {type: "slot", x: 541, y: 212}
 	}
 });

@@ -2,6 +2,7 @@ header.js
 translation.js
 
 core/machine/define.js
+core/machine/animation.js
 core/machine/recipe.js
 core/machine/upgrade.js
 

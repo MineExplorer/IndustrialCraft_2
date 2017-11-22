@@ -68,3 +68,12 @@ var RARE_ENERGY_ITEM_NAME = function(item, name){
 	if(energyStored==0){return "§b" + name;}
 	return "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
 }
+
+Block.setDestroyLevel = function(id, lvl){
+	Block.registerDropFunction(id, function(coords, blockID, blockData, level, enchant){
+		if(level > lvl){
+			return [[blockID, 1, 0]];
+		}
+		return [];
+	}, lvl);
+}

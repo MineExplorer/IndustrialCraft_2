@@ -6,6 +6,8 @@ IDRegistry.genItemID("electricWrench");
 Item.createItem("electricWrench", "Electric Wrench", {name: "electric_wrench", meta: 0}, {stack: 1});
 ChargeItemRegistry.registerItem(ItemID.electricWrench, 10000, 0, true, true);
 
+Item.registerNameOverrideFunction(ItemID.electricWrench, ENERGY_ITEM_NAME);
+
 Recipes.addShaped({id: ItemID.wrench, count: 1, data: 0}, [
 	"a a",
 	"aaa",

@@ -41,7 +41,7 @@ ToolType.drill = {
     },
     onBroke: function(item){return true;},
     onAttack: function(item, mob){
-        item.data = Math.min(item.data + this.toolMaterial.energyConsumption, Item.getMaxDamage(item.id));
+        item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 2, Item.getMaxDamage(item.id));
     },
     calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
         if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
@@ -52,16 +52,17 @@ ToolType.drill = {
         }
     },
     useItem: function(coords, item, block){
+    	var side = coords.side;
     	coords = coords.relative;
     	block = World.getBlockID(coords.x, coords.y, coords.z);
-    	if(GenerationUtils.isTransparentBlock(block)){
+    	if(block==0){
 	    	for(var i = 0; i < 36; i++){
 				var slot = Player.getInventorySlot(i);
 				if(slot.id==50){
 					slot.count--;
 					if(!slot.count) slot.id = 0;
 					Player.setInventorySlot(i, slot.id, slot.count, 0);
-					World.setBlock(coords.x, coords.y, coords.z, 50);
+					World.setBlock(coords.x, coords.y, coords.z, 50, side > 1 ? 6 - side : 0);
 					break;
 				}
 			}
@@ -86,10 +87,10 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
     },
     onBroke: function(item){return true;},
     onAttack: function(item, mob){
-        item.data = Math.min(item.data + this.toolMaterial.energyConsumption, Item.getMaxDamage(item.id));
+        item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 2, Item.getMaxDamage(item.id));
     },
     calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
-        if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
+        if(item.data + 800 <= Item.getMaxDamage(item.id)){
 			var material = ToolAPI.getBlockMaterial(block.id) || {};
 			material = material.name;
 			if(IDrillMode > 1 && (material == "dirt" || material == "stone")){
@@ -187,16 +188,17 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
             Player.setCarriedItem(item.id, 1, item.data);
         }
         else{
+        	var side  = coords.side;
     		coords = coords.relative;
     		block = World.getBlockID(coords.x, coords.y, coords.z);
-    		if(GenerationUtils.isTransparentBlock(block)){
+    		if(block==0){
 	    		for(var i = 0; i < 36; i++){
 					var slot = Player.getInventorySlot(i);
 					if(slot.id==50){
 						slot.count--;
 						if(!slot.count) slot.id = 0;
 						Player.setInventorySlot(i, slot.id, slot.count, 0);
-						World.setBlock(coords.x, coords.y, coords.z, 50);
+						World.setBlock(coords.x, coords.y, coords.z, 50, side > 1 ? 6 - side : 0);
 						break;
 					}
 				}

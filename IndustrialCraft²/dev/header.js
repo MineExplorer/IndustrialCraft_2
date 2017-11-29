@@ -77,3 +77,5 @@ Block.setDestroyLevel = function(id, lvl){
 		return [];
 	}, lvl);
 }
+
+Recipes.addFurnaceFuel(325, 10, 2000);

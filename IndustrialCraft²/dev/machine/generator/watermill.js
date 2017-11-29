@@ -17,6 +17,10 @@ Callback.addCallback("PostLoaded", function(){
 
 
 MachineRegistry.registerPrototype(BlockID.genWatermill, {
+	defaultValues: {
+		output: 0
+	},
+	
 	isGenerator: function() {
 		return true;
 	},
@@ -33,6 +37,7 @@ MachineRegistry.registerPrototype(BlockID.genWatermill, {
 
 	energyTick: function(type, src){
 		if(World.getThreadTime()%20 == 0){
+			this.data.output = 0;
 			var biome = this.biomeCheck(this.x, this.z);
 			if(biome && this.y >= 32 && this.y < 64){
 				var output = 50;
@@ -51,9 +56,10 @@ MachineRegistry.registerPrototype(BlockID.genWatermill, {
 					this.z - random(-radius, radius)
 				);
 				if(tile == 8 || tile == 9){
-					src.addAll(Math.round(output));
+					this.data.output = Math.round(output)/20;
 				}
 			}
 		}
+		src.add(this.data.output);
 	}
 });

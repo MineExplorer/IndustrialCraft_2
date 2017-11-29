@@ -106,7 +106,7 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		if(fuelSlot.id > 0){
 			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 			if(burn){
-				if(LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data) == "lava"){
+				if(LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)){
 					var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
 					fuelSlot.id = empty.id;
 					fuelSlot.data = empty.data;

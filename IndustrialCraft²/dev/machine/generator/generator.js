@@ -89,16 +89,10 @@ MachineRegistry.registerPrototype(BlockID.primalGenerator, {
 		var fuelSlot = this.container.getSlot(slotName);
 		if (fuelSlot.id > 0){
 			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
-			if (burn){
+			if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)){
 				fuelSlot.count--;
 				this.container.validateSlot(slotName);
 				return burn;
-			}
-			if (LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data) == "lava"){
-				var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
-				fuelSlot.id = empty.id;
-				fuelSlot.data = empty.data;
-				return 20000;
 			}
 		}
 		return 0;

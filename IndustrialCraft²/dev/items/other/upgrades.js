@@ -1,3 +1,6 @@
+IDRegistry.genItemID("upgradeMFSU");
+Item.createItem("upgradeMFSU", "MFSU Upgrade Kit", {name: "mfsu_upgrade", meta: 0});
+
 IDRegistry.genItemID("upgradeOverclocker");
 Item.createItem("upgradeOverclocker", "Overclocker Upgrade", {name: "upgrade_overclocker", meta: 0}, {stack: 16});
 
@@ -56,6 +59,12 @@ Item.createItem("upgradeFluidEjector5", "Fluid Ejector Upgrade", {name: "upgrade
 Item.createItem("upgradeFluidEjector6", "Fluid Ejector Upgrade", {name: "upgrade_fluid_ejector", meta: 6}, {isTech: true});
 
 
+Recipes.addShaped({id: ItemID.upgradeMFSU, count: 1, data: 0}, [
+	"aca",
+	"axa",
+	"aba"
+], ['b', ItemID.wrench, 0, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, 0]);
+
 Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 1, data: 0}, [
 	"aaa",
 	"x#x",
@@ -89,6 +98,20 @@ Recipes.addShaped({id: ItemID.upgradeFluidEjector, count: 1, data: 0}, [
 	"x x",
 ], ['x', ItemID.plateTin, 0, '#', ItemID.electricMotor, 0]);
 
+
+Item.registerUseFunction("upgradeMFSU", function(coords, item, block){
+	if(block.id==BlockID.storageMFE){
+		var tile = World.getTileEntity(coords.x ,coords.y, coords.z);
+		var data = tile.data;
+		tile.selfDestroy();
+		World.setBlock(coords.x ,coords.y, coords.z, BlockID.storageMFSU, block.data);
+		block = World.addTileEntity(coords.x ,coords.y, coords.z);
+		block.data = data;
+		item.count--;
+		if(!item.count){item.id = 0;}
+		Player.setCarriedItem(item.id, item.count, 1);
+	}
+});
 
 function PULLING_UPGRADE_FUNC(machine, container, data, coords, direction){
 	if(World.getThreadTime()%20 == 0){

@@ -16,6 +16,10 @@ Callback.addCallback("PostLoaded", function(){
 });
 
 MachineRegistry.registerPrototype(BlockID.genWindmill, {
+	defaultValues: {
+		output: 0
+	},
+	
 	isGenerator: function() {
 		return true;
 	},
@@ -33,9 +37,10 @@ MachineRegistry.registerPrototype(BlockID.genWindmill, {
 					this.y - random(-radius, radius),
 					this.z - random(-radius, radius)
 				) == 0){
-				src.addAll(Math.round(output));
-			}
+				this.data.output = Math.round(output)/20;
+			}else{this.data.output = 0;}
 		}
+		src.add(this.data.output);
 	}
 });
 

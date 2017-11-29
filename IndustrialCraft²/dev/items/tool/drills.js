@@ -62,7 +62,7 @@ ToolType.drill = {
 					slot.count--;
 					if(!slot.count) slot.id = 0;
 					Player.setInventorySlot(i, slot.id, slot.count, 0);
-					World.setBlock(coords.x, coords.y, coords.z, 50, side > 1 ? 6 - side : 0);
+					World.setBlock(coords.x, coords.y, coords.z, 50, (6 - side)%6);
 					break;
 				}
 			}
@@ -75,9 +75,9 @@ var dirtBlocksDrop = {13:318, 60:3, 110:3, 198:3, 243:3};
 ToolAPI.setTool(ItemID.drill, {energyConsumption: 50, level: 3, efficiency: 8, damage: 3},  ToolType.drill);
 ToolAPI.setTool(ItemID.diamondDrill, {energyConsumption: 80, level: 4, efficiency: 16, damage: 4}, ToolType.drill);
 ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficiency: 24, damage: 5}, {
-    enchantType: Native.EnchantType.pickaxe,
     damage: 0,
     blockTypes: ["stone", "dirt"],
+    
 	modifyEnchant: function(enchant){
 		if(IDrillMode%2){enchant.silk = 1;}
 		else{enchant.fortune = 3;}
@@ -198,7 +198,7 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 						slot.count--;
 						if(!slot.count) slot.id = 0;
 						Player.setInventorySlot(i, slot.id, slot.count, 0);
-						World.setBlock(coords.x, coords.y, coords.z, 50, side > 1 ? 6 - side : 0);
+						World.setBlock(coords.x, coords.y, coords.z, 50, (6 - side)%6);
 						break;
 					}
 				}

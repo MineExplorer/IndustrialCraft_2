@@ -1,8 +1,10 @@
 IDRegistry.genItemID("scrap");
 Item.createItem("scrap", "Scrap", {name: "scrap"});
+Recipes.addFurnaceFuel(ItemID.scrap, 0, 348);
 
 IDRegistry.genItemID("scrapBox");
 Item.createItem("scrapBox", "Scrap Box", {name: "scrap_box"});
+Recipes.addFurnaceFuel(ItemID.scrapBox, 0, 3148);
 
 Recipes.addShaped({id: ItemID.scrapBox, count: 1, data: 0}, [
 		"xxx",

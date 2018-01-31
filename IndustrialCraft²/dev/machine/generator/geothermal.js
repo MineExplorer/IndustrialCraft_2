@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("geothermalGenerator");
 Block.createBlockWithRotation("geothermalGenerator", [
-	{name: "Geothermal Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
+	{name: "Geothermal Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.geothermalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.geothermalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.geothermalGenerator);
 //ICRenderLib.addConnectionBlock("bc-fluid", BlockID.geothermalGenerator);
 
@@ -26,12 +28,12 @@ var guiGeothermalGenerator = new UI.StandartWindow({
 	
 	drawing: [
 		{type: "bitmap", x: 675, y: 106, bitmap: "energy_bar_background", scale: GUI_BAR_STANDART_SCALE},
-		{type: "bitmap", x: 450, y: 150, bitmap: "geotermal_liquid_slot", scale: GUI_BAR_STANDART_SCALE}
+		{type: "bitmap", x: 450, y: 150, bitmap: "geothermal_liquid_slot", scale: GUI_BAR_STANDART_SCALE}
 	],
 	
 	elements: {
 		"energyScale": {type: "scale", x: 675 + GUI_BAR_STANDART_SCALE * 4, y: 106, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
-		"liquidScale": {type: "scale", x: 450 + GUI_BAR_STANDART_SCALE, y: 150 + GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "geotermal_empty_liquid_slot", overlay: "geotermal_liquid_slot_overlay", overlayOffset: {x: -GUI_BAR_STANDART_SCALE, y: -GUI_BAR_STANDART_SCALE}, scale: GUI_BAR_STANDART_SCALE},
+		"liquidScale": {type: "scale", x: 450 + GUI_BAR_STANDART_SCALE, y: 150 + GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "geothermal_empty_liquid_slot", overlay: "geothermal_liquid_slot_overlay", overlayOffset: {x: -GUI_BAR_STANDART_SCALE, y: -GUI_BAR_STANDART_SCALE}, scale: GUI_BAR_STANDART_SCALE},
 		"slot1": {type: "slot", x: 441, y: 75},
 		"slot2": {type: "slot", x: 441, y: 212},
 		"slotEnergy": {type: "slot", x: 695, y: 181},
@@ -44,17 +46,27 @@ var guiGeothermalGenerator = new UI.StandartWindow({
 
 
 MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
-	getGuiScreen: function(){
-		return guiGeothermalGenerator;
+	defaultValues: {
+		isActive: false
 	},
 	
-	init: function(){
-		this.liquidStorage.setLimit("lava", 8);
+	getGuiScreen: function(){
+		return guiGeothermalGenerator;
 	},
 	
 	getTransportSlots: function(){
 		return {input: ["slot1"], output: ["slot2"]};
 	},
+	
+	init: function(){
+		this.liquidStorage.setLimit("lava", 16);
+		if(this.data.isActive){
+			var block = World.getBlock(this.x, this.y, this.z);
+			MachineRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
+		}
+	},
+	
+	destroy: this.deactivate,
 	
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
@@ -62,7 +74,7 @@ MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
 		var slot2 = this.container.getSlot("slot2");
 		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
 		if(empty && empty.liquid == "lava"){
-			if(this.liquidStorage.getAmount("lava") <= 7 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
+			if(this.liquidStorage.getAmount("lava") <= 15 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
 				this.liquidStorage.addLiquid("lava", 1);
 				slot1.count--;
 				slot2.id = empty.id;
@@ -75,7 +87,13 @@ MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
 			if(this.data.energy <= energyStorage - 20){
 				this.data.energy += 20;
 				this.liquidStorage.addLiquid("lava", -0.001);
+				this.activate();
+			}else{
+				this.deactivate();
 			}
+		}
+		else{
+			this.deactivate();
 		}
 		
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), this.data.energy, 32, 0);
@@ -96,5 +114,8 @@ MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
 	energyTick: function(type, src){
 		var output = Math.min(32, this.data.energy);
 		this.data.energy += src.add(output) - output;
-	}
+	},
+	
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
 });

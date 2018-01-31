@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("miner");
 Block.createBlockWithRotation("miner", [
 	{name: "Miner", texture: [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
-]);
+], "opaque");
 
 Block.registerDropFunction("miner", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);

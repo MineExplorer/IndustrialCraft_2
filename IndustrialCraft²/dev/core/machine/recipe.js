@@ -9,7 +9,8 @@ var MachineRecipeRegistry = {
 				if(key.split(":").length < 2){
 					newKey = eval(key);
 				}
-				newData[newKey] = data[key];
+				if(newKey){
+				newData[newKey] = data[key];}
 			}
 			data = newData;
 		}

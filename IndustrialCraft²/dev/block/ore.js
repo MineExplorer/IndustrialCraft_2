@@ -1,56 +1,45 @@
-var BLOCK_TYPE_STONE = Block.createSpecialType({
-	base: 1,
-	solid: true,
-	destroytime: 3,
-	explosionres: 3
-}, "stone");
-
 IDRegistry.genBlockID("oreCopper");
 Block.createBlock("oreCopper", [
 	{name: "Copper Ore", texture: [["ore_copper", 0]], inCreative: true}
-], BLOCK_TYPE_STONE);
+], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.oreCopper, "stone", 2, true);
-Block.setDestroyLevel("oreCopper", 2);
+Block.setDestroyTime(BlockID.oreCopper, 3);
+Block.setDestroyLevel("oreCopper", 1);
 
 
 IDRegistry.genBlockID("oreTin");
 Block.createBlock("oreTin", [
 	{name: "Tin Ore", texture: [["ore_tin", 0]], inCreative: true}
-], BLOCK_TYPE_STONE);
+], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.oreTin, "stone", 2, true);
-Block.setDestroyLevel("oreTin", 2);
+Block.setDestroyTime(BlockID.oreTin, 3);
+Block.setDestroyLevel("oreTin", 1);
 
 
 IDRegistry.genBlockID("oreLead");
 Block.createBlock("oreLead", [
 	{name: "Lead Ore", texture: [["ore_lead", 0]], inCreative: true}
-], BLOCK_TYPE_STONE);
+], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.oreLead, "stone", 2, true);
-Block.setDestroyLevel("oreLead", 2);
+Block.setDestroyTime(BlockID.oreLead, 3);
+Block.setDestroyLevel("oreLead", 1);
 
 
 IDRegistry.genBlockID("oreUranium");
 Block.createBlock("oreUranium", [
 	{name: "Uranium Ore", texture: [["ore_uranium", 0]], inCreative: true}
-], BLOCK_TYPE_STONE);
+], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.oreUranium, "stone", 3, true);
-Block.registerDropFunction("oreUranium", function(coords, blockID, blockData, level, enchant){
-	if(level > 2){
-		if(enchant.silk){
-			return [[blockID, 1, 0]];
-		}
-		ToolAPI.dropOreExp(coords, 3, 7, enchant.experience);
-		return [[ItemID.uraniumChunk, 1, 0]]
-	}
-	return [];
-}, 3);
+Block.setDestroyTime(BlockID.oreIridium, 3);
+Block.setDestroyLevel("oreUranium", 2);
+
 
 IDRegistry.genBlockID("oreIridium");
 Block.createBlock("oreIridium", [
 	{name: "Iridium Ore", texture: [["ore_iridium", 0]], inCreative: true}
-], BLOCK_TYPE_STONE);
+], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.oreIridium, "stone", 4, true);
-//Block.setDestroyTime(BlockID.oreIridium, 5);
+Block.setDestroyTime(BlockID.oreIridium, 3);
 Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, level, enchant){
 	if(level > 3){
 		if(enchant.silk){

@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("electricFurnace");
 Block.createBlockWithRotation("electricFurnace", [
 	{name: "Electric Furnace", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.electricFurnace, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.electricFurnace, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.electricFurnace);
 
 Block.registerDropFunction("electricFurnace", function(coords, blockID, blockData, level){
@@ -47,6 +49,7 @@ MachineRegistry.registerPrototype(BlockID.electricFurnace, {
 		energy_consumption: 3,
 		work_time: 130,
 		progress: 0,
+		isActive: false
 	},
 	
 	getGuiScreen: function(){
@@ -68,26 +71,29 @@ MachineRegistry.registerPrototype(BlockID.electricFurnace, {
 		UpgradeAPI.executeAll(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
+		var resultSlot = this.container.getSlot("slotResult");
 		var result = Recipes.getFurnaceRecipeResult(sourceSlot.id, "iron");
-		if(result){
-			var resultSlot = this.container.getSlot("slotResult");
-			if(resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0){
-				if(this.data.energy >= this.data.energy_consumption){
-					this.data.energy -= this.data.energy_consumption;
-					this.data.progress += 1/this.data.work_time;
-				}
-				if(this.data.progress >= 1){
-					sourceSlot.count--;
-					resultSlot.id = result.id;
-					resultSlot.data = result.data;
-					resultSlot.count++;
-					this.container.validateAll();
-					this.data.progress = 0;
-				}
+		if(result && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0)){
+			if(this.data.energy >= this.data.energy_consumption){
+				this.data.energy -= this.data.energy_consumption;
+				this.data.progress += 1/this.data.work_time;
+				this.activate();
+			}
+			else{
+				this.deactivate();
+			}
+			if(this.data.progress >= 1){
+				sourceSlot.count--;
+				resultSlot.id = result.id;
+				resultSlot.data = result.data;
+				resultSlot.count++;
+				this.container.validateAll();
+				this.data.progress = 0;
 			}
 		}
 		else {
 			this.data.progress = 0;
+			this.deactivate();
 		}
 		
 		var energyStorage = this.getEnergyStorage();
@@ -102,5 +108,9 @@ MachineRegistry.registerPrototype(BlockID.electricFurnace, {
 		return this.data.energy_storage;
 	},
 	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });

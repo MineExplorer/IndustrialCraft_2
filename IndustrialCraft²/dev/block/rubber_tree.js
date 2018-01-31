@@ -1,9 +1,3 @@
-var BLOCK_TYPE_LEAVES = Block.createSpecialType({
-	base: 18,
-	destroytime: 0.2,
-});
-
-
 function destroyLeaves(x, y, z){
 	var max = 0;
 	while(World.getBlockID(x, y+max+1, z)==BlockID.rubberTreeLeaves){max++;}
@@ -24,7 +18,7 @@ function destroyLeaves(x, y, z){
 IDRegistry.genBlockID("rubberTreeLog");
 Block.createBlock("rubberTreeLog", [
 	{name: "Rubber Tree Log", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false}
-]);
+], "opaque");
 Block.registerDropFunction("rubberTreeLog", function(coords, blockID){
 	destroyLeaves(coords.x, coords.y, coords.z);
 	return [[blockID, 1, 0]];
@@ -38,7 +32,7 @@ Block.createBlock("rubberTreeLogLatex", [
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 2], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false},
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 2], ["rubber_tree_log", 0]], inCreative: false},
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 2]], inCreative: false}
-]);
+], "opaque");
 Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID){
 	destroyLeaves(coords.x, coords.y, coords.z);
 	return [[BlockID.rubberTreeLog, 1, 0], [ItemID.latex, 1, 0]];
@@ -49,7 +43,7 @@ ToolAPI.registerBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
 IDRegistry.genBlockID("rubberTreeLeaves");
 Block.createBlock("rubberTreeLeaves", [
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false}
-], BLOCK_TYPE_LEAVES);
+]);
 Block.registerDropFunction("rubberTreeLeaves", function(){
 	if(Math.random() < .075){
 		return [[ItemID.rubberSapling, 1, 0]]
@@ -58,6 +52,7 @@ Block.registerDropFunction("rubberTreeLeaves", function(){
 		return [];
 	}
 });
+Block.setDestroyTime(BlockID.rubberTreeLog, 0.2);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLeaves, "plant");
 
 Recipes.addShaped({id: 5, count: 3, data: 3}, ["x"], ['x', BlockID.rubberTreeLog, -1]);
@@ -172,7 +167,7 @@ if(__config__.access("rubber_tree_gen.swamp")){
 
 Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
 	if(Math.random() < RUBBER_TREE_BIOME_DATA[World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)]){
-		for(var i = 0; i < 1 + Math.random() * 5; i++){
+		for(var i = 0; i < 1 + Math.random() * 6; i++){
 			var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
 			coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
 			if(World.getBlockID(coords.x, coords.y, coords.z) == 2){

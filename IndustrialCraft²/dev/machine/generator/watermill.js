@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("genWatermill");
 Block.createBlockWithRotation("genWatermill", [
 	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill", 2], ["watermill", 0], ["watermill", 1], ["watermill", 1]], inCreative: true}
-]);
+], "opaque");
 
 Block.registerDropFunction("genWatermill", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);

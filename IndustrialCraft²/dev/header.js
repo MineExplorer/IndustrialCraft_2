@@ -79,3 +79,19 @@ Block.setDestroyLevel = function(id, lvl){
 }
 
 Recipes.addFurnaceFuel(325, 10, 2000);
+
+if(debugMode){
+	var lasttime = -1
+	var frame = 0
+
+	Callback.addCallback("tick", function(){
+	var t = java.lang.System.currentTimeMillis()
+	if (frame++ % 20 == 0){
+	if (lasttime != -1){
+	tps = 1000 / (t - lasttime) * 20
+	Game.tipMessage(Math.round(tps * 10) / 10 + "tps")
+	}
+	lasttime = t
+	}
+	});
+}

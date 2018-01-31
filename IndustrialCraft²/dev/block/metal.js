@@ -1,42 +1,55 @@
 IDRegistry.genBlockID("blockCopper");
 Block.createBlock("blockCopper", [
 	{name: "Copper Block", texture: [["block_copper", 0]], inCreative: true}
-], BLOCK_TYPE_STONE);
+], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockCopper, "stone", 2, true);
-Block.setDestroyLevel("blockCopper", 2);
 Block.setDestroyTime(BlockID.blockCopper, 5);
+Block.setDestroyLevel("blockCopper", 1);
+
 
 IDRegistry.genBlockID("blockTin");
 Block.createBlock("blockTin", [
 	{name: "Tin Block", texture: [["block_tin", 0]], inCreative: true}
-], BLOCK_TYPE_STONE);
+], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockTin, "stone", 2, true);
-Block.setDestroyLevel("blockTin", 2);
 Block.setDestroyTime(BlockID.blockTin, 5);
+Block.setDestroyLevel("blockTin", 1);
+
 
 IDRegistry.genBlockID("blockBronze");
 Block.createBlock("blockBronze", [
 	{name: "Bronze Block", texture: [["block_bronze", 0]], inCreative: true}
-], BLOCK_TYPE_STONE);
+], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockBronze, "stone", 2, true);
-Block.setDestroyLevel("blockBronze", 2);
 Block.setDestroyTime(BlockID.blockBronze, 5);
+Block.setDestroyLevel("blockBronze", 1);
+
 
 IDRegistry.genBlockID("blockLead");
 Block.createBlock("blockLead", [
 	{name: "Lead Block", texture: [["block_lead", 0]], inCreative: true}
-], BLOCK_TYPE_STONE);
+], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockLead, "stone", 2, true);
-Block.setDestroyLevel("blockLead", 2);
 Block.setDestroyTime(BlockID.blockLead, 5);
+Block.setDestroyLevel("blockLead", 1);
+
 
 IDRegistry.genBlockID("blockSteel");
 Block.createBlock("blockSteel", [
 	{name: "Steel Block", texture: [["block_steel", 0]], inCreative: true}
-], BLOCK_TYPE_STONE);
+], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockSteel, "stone", 2, true);
-Block.setDestroyLevel("blockSteel", 2);
 Block.setDestroyTime(BlockID.blockSteel, 5);
+Block.setDestroyLevel("blockSteel", 1);
+
+
+IDRegistry.genBlockID("blockSilver");
+Block.createBlock("blockSilver", [
+	{name: "Silver Block", texture: [["block_silver", 0]], inCreative: true}
+], "opaque");
+ToolAPI.registerBlockMaterial(BlockID.blockSilver, "stone", 3, true);
+Block.setDestroyTime(BlockID.blockSilver, 5);
+Block.setDestroyLevel("blockSilver", 2);
 
 
 Callback.addCallback("PostLoaded", function(){
@@ -70,9 +83,16 @@ Callback.addCallback("PostLoaded", function(){
 		"xxx"
 	], ['x', ItemID.ingotSteel, 0]);
 	
-	Recipes.addShaped({id: ItemID.ingotCopper, count: 9, data: 0}, ["x"], ['x', BlockID.blockCopper, 0]);
-	Recipes.addShaped({id: ItemID.ingotTin, count: 9, data: 0}, ["x"], ['x', BlockID.blockTin, 0]);
-	Recipes.addShaped({id: ItemID.ingotBronze, count: 9, data: 0}, ["x"], ['x', BlockID.blockBronze, 0]);
-	Recipes.addShaped({id: ItemID.ingotLead, count: 9, data: 0}, ["x"], ['x', BlockID.blockLead, 0]);
-	Recipes.addShaped({id: ItemID.ingotSteel, count: 9, data: 0}, ["x"], ['x', BlockID.blockSteel, 0]);
+	Recipes.addShaped({id: BlockID.blockSilver, count: 1, data: 0}, [
+		"xxx",
+		"xxx",
+		"xxx"
+	], ['x', ItemID.ingotSilver, 0]);
+	
+	Recipes.addShapeless({id: ItemID.ingotCopper, count: 9, data: 0}, [{id: BlockID.blockCopper, data: 0}]);
+	Recipes.addShapeless({id: ItemID.ingotTin, count: 9, data: 0}, [{id: BlockID.blockTin, data: 0}]);
+	Recipes.addShapeless({id: ItemID.ingotBronze, count: 9, data: 0}, [{id: BlockID.blockBronze, data: 0}]);
+	Recipes.addShapeless({id: ItemID.ingotLead, count: 9, data: 0}, [{id: BlockID.blockLead, data: 0}]);
+	Recipes.addShapeless({id: ItemID.ingotSteel, count: 9, data: 0}, [{id: BlockID.blockSteel, data: 0}]);
+	Recipes.addShapeless({id: ItemID.ingotSilver, count: 9, data: 0}, [{id: BlockID.blockSilver, data: 0}]);
 });

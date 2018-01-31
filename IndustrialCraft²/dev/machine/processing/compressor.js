@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("compressor");
 Block.createBlockWithRotation("compressor", [
 	{name: "Compressor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.compressor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.compressor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 1], ["machine_side", 0], ["machine_side", 0]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.compressor);
 
 Block.registerDropFunction("compressor", function(coords, blockID, blockData, level){
@@ -45,15 +47,32 @@ var guiCompressor = new UI.StandartWindow({
 
 Callback.addCallback("PreLoaded", function(){
 	MachineRecipeRegistry.registerRecipesFor("compressor", {
+		// Items
 		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), ingredientCount: 9},
-		87: {id: 112, count: 1, data: 0, ingredientCount: 3},
-		80: {id: 79, count: 1, data: 0},
-		12: {id: 24, count: 1, data: 0, ingredientCount: 4},
 		"ItemID.dustLapis": {id: ItemID.plateLapis, count: 1, data: 0},
 		"ItemID.ingotAlloy": {id: ItemID.plateAlloy, count: 1, data: 0},
 		"ItemID.carbonMesh": {id: ItemID.carbonPlate, count: 1, data: 0},
 		"ItemID.coalBall": {id: ItemID.coalBlock, count: 1, data: 0},
-		"ItemID.coalChunk": {id: 264, count: 1, data: 0}
+		"ItemID.coalChunk": {id: 264, count: 1, data: 0},
+		
+		// Blocks
+		265: {id: 42, count: 1, data: 0, ingredientCount: 9},
+		266: {id: 41, count: 1, data: 0, ingredientCount: 9},
+		"ItemID.ingotCopper": {id: BlockID.blockCopper, count: 1, data: 0, ingredientCount: 9},
+		"ItemID.ingotTin": {id: BlockID.blockTin, count: 1, data: 0, ingredientCount: 9},
+		"ItemID.ingotLead": {id: BlockID.blockLead, count: 1, data: 0, ingredientCount: 9},
+		"ItemID.ingotSteel": {id: BlockID.blockSteel, count: 1, data: 0, ingredientCount: 9},
+		"ItemID.ingotBronze": {id: BlockID.blockBronze, count: 1, data: 0, ingredientCount: 9},
+		80: {id: 79, count: 1, data: 0},
+		12: {id: 24, count: 1, data: 0, ingredientCount: 4},
+		336: {id: 45, count: 1, data: 0, ingredientCount: 4},
+		405: {id: 112, count: 1, data: 0, ingredientCount: 4},
+		348: {id: 89, count: 1, data: 0, ingredientCount: 4},
+		406: {id: 155, count: 1, data: 0, ingredientCount: 4},
+		331: {id: 152, count: 1, data: 0, ingredientCount: 9},
+		"351:4": {id: 22, count: 1, data: 0, ingredientCount: 9},
+		//264: {id: 57, count: 1, data: 0, ingredientCount: 9},
+		//388: {id: 133, count: 1, data: 0, ingredientCount: 9},
 	}, true);
 });
 
@@ -63,6 +82,7 @@ MachineRegistry.registerPrototype(BlockID.compressor, {
 		energy_consumption: 2,
 		work_time: 400,
 		progress: 0,
+		isActive: false
 	},
 	
 	getGuiScreen: function(){
@@ -84,13 +104,17 @@ MachineRegistry.registerPrototype(BlockID.compressor, {
 		UpgradeAPI.executeAll(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
-		var result = MachineRecipeRegistry.getRecipeResult("compressor", sourceSlot.id);
+		var result = MachineRecipeRegistry.getRecipeResult("compressor", sourceSlot.id, sourceSlot.data);
 		if(result && (sourceSlot.count >= result.ingredientCount || !result.ingredientCount)){
 			var resultSlot = this.container.getSlot("slotResult");
 			if(resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= Item.getMaxStack(result.id) - result.count || resultSlot.id == 0){
 				if(this.data.energy >= this.data.energy_consumption){
 					this.data.energy -= this.data.energy_consumption;
 					this.data.progress += 1/this.data.work_time;
+					this.activate();
+				}
+				else{
+					this.deactivate();
 				}
 				if(this.data.progress >= 1){
 					sourceSlot.count -= result.ingredientCount || 1;
@@ -100,10 +124,13 @@ MachineRegistry.registerPrototype(BlockID.compressor, {
 					this.container.validateAll();
 					this.data.progress = 0;
 				}
+			}else{
+				this.deactivate();
 			}
 		}
 		else {
 			this.data.progress = 0;
+			this.deactivate();
 		}
 		
 		var energyStorage = this.getEnergyStorage();
@@ -118,5 +145,9 @@ MachineRegistry.registerPrototype(BlockID.compressor, {
 		return this.data.energy_storage;
 	},
 	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });

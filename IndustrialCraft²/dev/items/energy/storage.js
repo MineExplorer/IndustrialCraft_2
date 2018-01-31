@@ -15,7 +15,7 @@ Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_c
 ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, 10000000, 3);
 
 IDRegistry.genItemID("debugItem");
-Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: debugMode});
+Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: !debugMode});
 
 Item.registerNameOverrideFunction(ItemID.storageBattery, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.storageAdvBattery, ENERGY_ITEM_NAME);

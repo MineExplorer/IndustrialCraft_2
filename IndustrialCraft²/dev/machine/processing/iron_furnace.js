@@ -1,8 +1,14 @@
 IDRegistry.genBlockID("ironFurnace");
 Block.createBlockWithRotation("ironFurnace", [
 	{name: "Iron Furnace", texture: [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], inCreative: true}
-]);
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.ironFurnace, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.ironFurnace, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 1], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.ironFurnace);
+
+Block.registerDropFunction("ironFurnace", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
 
 Callback.addCallback("PostLoaded", function(){
 	Recipes.addShaped({id: BlockID.ironFurnace, count: 1, data: 0}, [
@@ -39,7 +45,8 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 	defaultValues: {
 		progress: 0,
 		burn: 0,
-		burnMax: 0
+		burnMax: 0,
+		isActive: false
 	},
 	
 	getGuiScreen: function(){
@@ -75,6 +82,14 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 	tick: function(){
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = Recipes.getFurnaceRecipeResult(sourceSlot.id, "iron");
+		
+		if(this.data.burn > 0){
+			this.data.burn--;
+		}
+		if(this.data.burn==0 && result){
+			this.data.burn = this.data.burnMax = this.getFuel("slotFuel");
+		}
+		
 		if(result && this.data.burn > 0){
 			var resultSlot = this.container.getSlot("slotResult");
 			if((resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0) && this.data.progress++ >= 160){
@@ -86,15 +101,14 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 				this.data.progress = 0;
 			}
 		}
-		else {
+		else{
 			this.data.progress = 0;
 		}
 		
 		if(this.data.burn > 0){
-			this.data.burn--;
-		}
-		else if(result){
-			this.data.burn = this.data.burnMax = this.getFuel("slotFuel");
+			this.activate();
+		}else{
+			this.deactivate();
 		}
 		
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
@@ -118,5 +132,10 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 			}
 		}
 		return 0;
-	}
+	},
+	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
 });

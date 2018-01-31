@@ -1,7 +1,9 @@
 ﻿IDRegistry.genBlockID("macerator");
 Block.createBlockWithRotation("macerator", [
-    {name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
+    {name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.macerator, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.macerator, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 1], ["machine_side", 0], ["machine_side", 0]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.macerator);
 
 Block.registerDropFunction("macerator", function(coords, blockID, blockData, level){
@@ -42,46 +44,52 @@ var guiMacerator = new UI.StandartWindow({
 });
 
 Callback.addCallback("PreLoaded", function(){
-    MachineRecipeRegistry.registerRecipesFor("macerator", {
-        // ores
-        14: {id: ItemID.dustGold, count: 2, data: 0},
-        15: {id: ItemID.dustIron, count: 2, data: 0},
-        "BlockID.oreCopper": {id: ItemID.dustCopper, count: 2, data: 0},
-        "BlockID.oreTin": {id: ItemID.dustTin, count: 2, data: 0},
-        "BlockID.oreLead": {id: ItemID.dustLead, count: 2, data: 0},
-        // ingots
-        265: {id: ItemID.dustIron, count: 1, data: 0},
-        266: {id: ItemID.dustGold, count: 1, data: 0},
-        "ItemID.ingotCopper": {id: ItemID.dustCopper, count: 1, data: 0},
-        "ItemID.ingotTin": {id: ItemID.dustTin, count: 1, data: 0},
-        "ItemID.ingotLead": {id: ItemID.dustLead, count: 1, data: 0},
-        "ItemID.ingotSteel": {id: ItemID.dustIron, count: 1, data: 0},
-        "ItemID.ingotBronze": {id: ItemID.dustBronze, count: 1, data: 0},
-        // plates
-        "ItemID.plateIron": {id: ItemID.dustIron, count: 1, data: 0},
-        "ItemID.plateGold": {id: ItemID.dustGold, count: 1, data: 0},
-        "ItemID.plateCopper": {id: ItemID.dustCopper, count: 1, data: 0},
-        "ItemID.plateTin": {id: ItemID.dustTin, count: 1, data: 0},
-        "ItemID.plateLead": {id: ItemID.dustLead, count: 1, data: 0},
-        "ItemID.plateSteel": {id: ItemID.dustIron, count: 1, data: 0},
-        "ItemID.plateBronze": {id: ItemID.dustBronze, count: 1, data: 0},
-        // other resources
-        22: {id: ItemID.dustLapis, count: 9, data: 0},
-        173: {id: ItemID.dustCoal, count: 9, data: 0},
-        "263:0": {id: ItemID.dustCoal, count: 1, data: 0},
-        264: {id: ItemID.dustDiamond, count: 1, data: 0},
-        "351:4": {id: ItemID.dustLapis, count: 1, data: 0},
-        // other materials
-        1: {id: 4, count: 1, data: 0},
-        4: {id: 12, count: 1, data: 0},
-        13: {id: 318, count: 1, data: 0},
+	MachineRecipeRegistry.registerRecipesFor("macerator", {
+		// ores
+		14: {id: ItemID.crushedGold, count: 2, data: 0},
+		15: {id: ItemID.crushedIron, count: 2, data: 0},
+		"BlockID.oreCopper": {id: ItemID.crushedCopper, count: 2, data: 0},
+		"BlockID.oreTin": {id: ItemID.crushedTin, count: 2, data: 0},
+		"BlockID.oreLead": {id: ItemID.crushedLead, count: 2, data: 0},
+		"BlockID.oreSilver": {id: ItemID.crushedSilver, count: 2, data: 0},
+		"BlockID.oreUranium": {id: ItemID.crushedUranium, count: 2, data: 0},
+		// ingots
+		265: {id: ItemID.dustIron, count: 1, data: 0},
+		266: {id: ItemID.dustGold, count: 1, data: 0},
+		"ItemID.ingotCopper": {id: ItemID.dustCopper, count: 1, data: 0},
+		"ItemID.ingotTin": {id: ItemID.dustTin, count: 1, data: 0},
+		"ItemID.ingotBronze": {id: ItemID.dustBronze, count: 1, data: 0},
+		"ItemID.ingotSteel": {id: ItemID.dustIron, count: 1, data: 0},
+		"ItemID.ingotLead": {id: ItemID.dustLead, count: 1, data: 0},
+		"ItemID.ingotSilver": {id: ItemID.dustSilver, count: 1, data: 0},
+		// plates
+		"ItemID.plateIron": {id: ItemID.dustIron, count: 1, data: 0},
+		"ItemID.plateGold": {id: ItemID.dustGold, count: 1, data: 0},
+		"ItemID.plateCopper": {id: ItemID.dustCopper, count: 1, data: 0},
+		"ItemID.plateTin": {id: ItemID.dustTin, count: 1, data: 0},
+		"ItemID.plateBronze": {id: ItemID.dustBronze, count: 1, data: 0},
+		"ItemID.plateSteel": {id: ItemID.dustIron, count: 1, data: 0},
+		"ItemID.plateLead": {id: ItemID.dustLead, count: 1, data: 0},
+		"ItemID.plateLapis": {id: ItemID.dustLapis, count: 1, data: 0},
+		// other resources
+		22: {id: ItemID.dustLapis, count: 9, data: 0},
+		173: {id: ItemID.dustCoal, count: 9, data: 0},
+		"263:0": {id: ItemID.dustCoal, count: 1, data: 0},
+		264: {id: ItemID.dustDiamond, count: 1, data: 0},
+		"351:4": {id: ItemID.dustLapis, count: 1, data: 0},
+		// other materials
+		1: {id: 4, count: 1, data: 0},
+		4: {id: 12, count: 1, data: 0},
+		13: {id: 318, count: 1, data: 0},
 		35: {id: 287, count: 2, data: 0},
+		79: {id: 332, count: 4, data: 0},
 		89: {id: 348, count: 4, data: 0},
-        152: {id: 406, count: 4, data: 0},
-        156: {id: 406, count: 6, data: 0},
-        352: {id: 351, count: 5, data: 15}, 
+		152: {id: 331, count: 9, data: 0},
+		155: {id: 406, count: 4, data: 0},
+		156: {id: 406, count: 6, data: 0},
+		352: {id: 351, count: 5, data: 15}, 
 		369: {id: 377, count: 5, data: 0}
-    }, true);
+	}, true);
 });
 
 MachineRegistry.registerPrototype(BlockID.macerator, {
@@ -90,6 +98,7 @@ MachineRegistry.registerPrototype(BlockID.macerator, {
 		energy_consumption: 2,
 		work_time: 300,
 		progress: 0,
+		isActive: false
     },
     
     getGuiScreen: function(){
@@ -111,26 +120,29 @@ MachineRegistry.registerPrototype(BlockID.macerator, {
 		UpgradeAPI.executeAll(this);
 		
         var sourceSlot = this.container.getSlot("slotSource");
+        var resultSlot = this.container.getSlot("slotResult");
         var result = MachineRecipeRegistry.getRecipeResult("macerator", sourceSlot.id, sourceSlot.data);
-        if(result && (sourceSlot.data == result.ingredientData || !result.ingredientData)){
-			var resultSlot = this.container.getSlot("slotResult");
-			if(resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0){
-				if(this.data.energy >= this.data.energy_consumption){
-					this.data.energy -= this.data.energy_consumption;
-					this.data.progress += 1/this.data.work_time;
-				}
-				if(this.data.progress >= 1){
-                    sourceSlot.count--;
-                    resultSlot.id = result.id;
-                    resultSlot.data = result.data;
-                    resultSlot.count += result.count;
-                    this.container.validateAll();
-                    this.data.progress = 0;
-                }
-            }
+        if(result && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)){
+			if(this.data.energy >= this.data.energy_consumption){
+				this.data.energy -= this.data.energy_consumption;
+				this.data.progress += 1/this.data.work_time;
+				this.activate();
+			}
+			else{
+				this.deactivate();
+			}
+			if(this.data.progress >= 1){
+				sourceSlot.count--;
+				resultSlot.id = result.id;
+				resultSlot.data = result.data;
+				resultSlot.count += result.count;
+				this.container.validateAll();
+				this.data.progress = 0;
+			}
         }
         else {
             this.data.progress = 0;
+            this.deactivate();
         }
         
         var energyStorage = this.getEnergyStorage();
@@ -145,5 +157,9 @@ MachineRegistry.registerPrototype(BlockID.macerator, {
         return this.data.energy_storage;
     },
     
+    init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
     energyTick: MachineRegistry.basicEnergyReceiveFunc
 });

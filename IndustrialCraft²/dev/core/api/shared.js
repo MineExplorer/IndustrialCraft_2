@@ -1,5 +1,6 @@
 ModAPI.registerAPI("ICore", {
 	Machine: MachineRegistry,
+	Render: MachineRenderer,
 	Recipe: MachineRecipeRegistry,
 	ChargeRegistry: ChargeItemRegistry,
 	Upgrade: UpgradeAPI,

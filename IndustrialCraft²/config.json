@@ -9,8 +9,8 @@
   "ore_gen":{
     "tin_ore":true,
     "copper_ore":true,
+	"lead_ore":true,
     "uranium_ore":true,
-    "iridium_ore":true,
-    "lead_ore":true
+    "iridium_ore":true
   }
 }

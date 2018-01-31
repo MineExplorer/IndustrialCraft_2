@@ -1,8 +1,9 @@
 IDRegistry.genBlockID("teleporter");
 Block.createBlock("teleporter", [
 	{name: "Teleporter", texture: [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]], inCreative: true},
-	{name: "tile.teleporter.name", texture: [["machine_advanced_bottom", 0], ["teleporter_top", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1]], inCreative: false}
-]);
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.teleporter, [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]]);
+MachineRenderer.registerRenderModel(BlockID.teleporter, [["machine_advanced_bottom", 0], ["teleporter_top", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1]]);
 
 Block.registerDropFunction("teleporter", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
@@ -85,8 +86,16 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 	
 	redstone: function(signal){
 		this.data.isActive = signal.power > 0;
-		World.setBlock(this.x, this.y, this.z, BlockID.teleporter, this.data.isActive?1:0);
-	}
+		if(this.data.isActive){
+			MachineRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.teleporter, 0);
+		}
+		else{
+			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+		}
+	},
+	
+	init: MachineRegistry.initModel,
+	destroy: this.deactivate
 });
 
 Callback.addCallback("PostLoaded", function(){

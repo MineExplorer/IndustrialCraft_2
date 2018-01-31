@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("storageMFE");
 Block.createBlockWithRotation("storageMFE", [
 	{name: "MFE", texture: [["machine_top", 0], ["machine_top", 0], ["mfe", 2], ["mfe", 0], ["mfe", 1], ["mfe", 1]], inCreative: true}
-]);
+], "opaque");
 
 Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);

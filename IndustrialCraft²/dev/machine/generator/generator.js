@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("primalGenerator");
 Block.createBlockWithRotation("primalGenerator", [
-	{name: "Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
+	{name: "Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.primalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.primalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.primalGenerator);
 
 Block.registerDropFunction("primalGenerator", function(coords, blockID, blockData, level){
@@ -47,42 +49,19 @@ var guiGenerator = new UI.StandartWindow({
 });
 
 
-
-
 MachineRegistry.registerPrototype(BlockID.primalGenerator, {
-	defaultValues: {
+    defaultValues: {
 		burn: 0,
-		burnMax: 0
+		burnMax: 0,
+		isActive: false
 	},
-	
+    
 	getGuiScreen: function(){
 		return guiGenerator;
 	},
 	
 	getTransportSlots: function(){
 		return {input: ["slotFuel"]};
-	},
-	
-	tick: function(){
-		var sourceSlot = this.container.getSlot("slotSource");
-		var energyStorage = this.getEnergyStorage();
-		
-		if(this.data.burn > 0){
-			if(this.data.energy < energyStorage){
-				this.data.energy = Math.min(this.data.energy + 10, energyStorage);
-				this.data.burn--;
-			}
-		}
-		else {
-			this.data.burn = this.data.burnMax = this.getFuel("slotFuel") / 4;
-		}
-		
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), this.data.energy, 32, 0);
-		
-		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", this.data.energy + "/");
-		this.container.setText("textInfo2", energyStorage + "");
 	},
 	
 	getFuel: function(slotName){
@@ -92,10 +71,31 @@ MachineRegistry.registerPrototype(BlockID.primalGenerator, {
 			if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)){
 				fuelSlot.count--;
 				this.container.validateSlot(slotName);
+				this.activate();
 				return burn;
 			}
 		}
+		this.deactivate();
 		return 0;
+	},
+	
+	tick: function(){
+		var energyStorage = this.getEnergyStorage();
+		
+		if(this.data.burn <= 0){
+			this.data.burn = this.data.burnMax = this.getFuel("slotFuel") / 4;
+		}
+		if(this.data.burn > 0 && this.data.energy < energyStorage){
+			this.data.energy = Math.min(this.data.energy + 10, energyStorage);
+			this.data.burn--;
+		}
+		
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), this.data.energy, 32, 0);
+		
+		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", this.data.energy + "/");
+		this.container.setText("textInfo2", energyStorage + "");
 	},
 	
 	isGenerator: function() {
@@ -109,5 +109,10 @@ MachineRegistry.registerPrototype(BlockID.primalGenerator, {
 	energyTick: function(type, src){
 		var output = Math.min(32, this.data.energy);
 		this.data.energy += src.add(output) - output;
-	}
+	},
+	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
 });

@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("genWindmill");
 Block.createBlockWithRotation("genWindmill", [
 	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
+], "opaque");
 
 Block.registerDropFunction("genWindmill", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);

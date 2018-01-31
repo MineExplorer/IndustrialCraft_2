@@ -1,5 +1,5 @@
-/*var MachineRenderer = {
-	models: {},
+var MachineRenderer = {
+	data: {},
 	setStandartModel: function(id, texture, rotation){
 		if(rotation){
 			var textures = [
@@ -21,9 +21,10 @@
 			BlockRenderer.enableCoordMapping(id, -1, render);
 		}
 	},
+	
 	registerRenderModel: function(id, texture, rotation){
 		if(rotation){
-			this.models[id] = [];
+			this.data[id] = [];
 			var textures = [
 				[texture[0], texture[1], texture[2], texture[3], texture[4], texture[5]],
 				[texture[0], texture[1], texture[3], texture[2], texture[5], texture[4]],
@@ -34,17 +35,28 @@
 				var render = new ICRender.Model();
 				var model = BlockRenderer.createTexturedBlock(textures[i]);
 				render.addEntry(model);
-				this.models[id].push(render);
+				this.data[id].push(render);
 			}
 		}else{
 			var render = new ICRender.Model();
 			var model = BlockRenderer.createTexturedBlock(texture);
 			render.addEntry(model);
-			this.models[id] = [render];
+			this.data[id] = [render];
 		}
 	},
+	
 	getRenderModel: function(id, data){
-		return this.models[id][data];
+		var models = this.data[id];
+		if(models){
+			return models[data];
+		}
+		return 0;
+	},
+	
+	mapAtCoords: function(x, y, z, id, data){
+		var model = this.getRenderModel(id, data);
+		if(model){
+			BlockRenderer.mapAtCoords(x, y, z, model);
+		}
 	}
 }
-*/

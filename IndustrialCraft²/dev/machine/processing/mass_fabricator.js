@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("massFabricator");
 Block.createBlockWithRotation("massFabricator", [
 	{name: "Mass Fabricator", texture: [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
-]);
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.massFabricator);
 
 Block.registerDropFunction("massFabricator", function(coords, blockID, blockData, level){
@@ -15,6 +17,9 @@ Callback.addCallback("PostLoaded", function(){
 		"xax"
 	], ['b', BlockID.machineBlockAdvanced, 0, 'x', 348, 0, 'a', ItemID.circuitAdvanced, 0, '#', ItemID.storageLapotronCrystal, -1]);
 });
+
+
+var ENERGY_PER_MATTER = 1000000;
 
 var guiMassFabricator = new UI.StandartWindow({
 	standart: {
@@ -43,7 +48,8 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	defaultValues: {
 		progress: 0,
 		catalyser: 0,
-		catalyserRatio: 0
+		catalyserRatio: 0,
+		isActive: false
 	},
 	
 	getGuiScreen: function(){
@@ -55,45 +61,49 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	},
 	
 	tick: function(){
-		var ENERGY_PER_MATTER = 1000000;
 		this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 		this.container.setText("textInfo2", parseInt(100 * this.data.progress / ENERGY_PER_MATTER) + "%");
 		
-		if (this.data.catalyser > 0){
-			this.container.setText("textInfo3", "Catalyser:");
-			this.container.setText("textInfo4", parseInt(this.data.catalyser));
-			var transfer = Math.min(this.data.catalyser, this.data.energy);
-			this.data.progress += transfer * (this.data.catalyserRatio || 0);
-			this.data.energy -= transfer;
-			this.data.catalyser -= transfer;
-		}
-		else{
-			this.container.setText("textInfo3", "");
-			this.container.setText("textInfo4", "");
-			var transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
-			this.data.progress += transfer;
-			this.data.energy -= transfer;
-			
-			var catalyserSlot = this.container.getSlot("catalyserSlot");
-			var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
-			if (catalyserData){
-				this.data.catalyser = catalyserData.input;
-				this.data.catalyserRatio = catalyserData.output / catalyserData.input;
-				catalyserSlot.count--;
-				this.container.validateAll();
+		if(this.data.energy > 0){
+			this.activate();
+			if(this.data.catalyser <= 0){
+				var catalyserSlot = this.container.getSlot("catalyserSlot");
+				var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
+				if(catalyserData){
+					this.data.catalyser = catalyserData.input;
+					this.data.catalyserRatio = catalyserData.output / catalyserData.input;
+					catalyserSlot.count--;
+					this.container.validateAll();
+				}
 			}
-		}
-		
-		if (this.data.progress >= ENERGY_PER_MATTER){
-			var matterSlot = this.container.getSlot("matterSlot");
-			if (matterSlot.id == ItemID.matter && matterSlot.count < 64 || matterSlot.id == 0){
-				matterSlot.id = ItemID.matter;
-				matterSlot.count++;
-				this.data.progress = 0;
+			if(this.data.catalyser > 0){
+				this.container.setText("textInfo3", "Catalyser:");
+				this.container.setText("textInfo4", parseInt(this.data.catalyser));
+				var transfer = Math.min((ENERGY_PER_MATTER - this.data.progress) / this.data.catalyserRatio, this.data.energy);
+				transfer = Math.min(this.data.catalyser, transfer);
+				this.data.progress += transfer * this.data.catalyserRatio;
+				this.data.energy -= transfer;
+				this.data.catalyser -= transfer;
 			}
 			else{
-				this.data.progress = ENERGY_PER_MATTER;
+				this.container.setText("textInfo3", "");
+				this.container.setText("textInfo4", "");
+				var transfer =Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
+				this.data.progress += transfer;
+				this.data.energy -= transfer;
 			}
+			
+			if(this.data.progress >= ENERGY_PER_MATTER){
+				var matterSlot = this.container.getSlot("matterSlot");
+				if(matterSlot.id == ItemID.matter && matterSlot.count < 64 || matterSlot.id == 0){
+					matterSlot.id = ItemID.matter;
+					matterSlot.count++;
+					this.data.progress = 0;
+				}
+			}
+		}
+		else{
+			this.deactivate();
 		}
 	},
 	
@@ -101,5 +111,9 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 		return 8192;
 	},
 	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });

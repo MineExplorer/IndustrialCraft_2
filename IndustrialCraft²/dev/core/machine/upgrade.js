@@ -116,6 +116,7 @@ function addItemsToContainers(items, containers){
 function getItemsFrom(items, containers){
 	for(var i in items){
 		var item = items[i];
+		var maxStack = Item.getMaxStack(item.id);
 		for(var c in containers){
 			var container = containers[c];
 			var tileEntity = container.tileEntity;
@@ -140,7 +141,7 @@ function getItemsFrom(items, containers){
 			for(var i in slots){
 				var slot = container.getSlot(slots[i]);
 				if(slot.id > 0 && (item.id == 0 || item.id == slot.id && item.data == slot.data)){
-					var add = Math.min(64 - item.count, slot.count);
+					var add = Math.min(maxStack - item.count, slot.count);
 					slot.count -= add;
 					item.count += add;
 					item.id = slot.id;
@@ -151,7 +152,7 @@ function getItemsFrom(items, containers){
 					}
 				}
 			}
-			if(item.count==64){break;}
+			if(item.count == maxStack){break;}
 		}
 	}
 }

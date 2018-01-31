@@ -13,8 +13,8 @@ Item.createItem("ingotSteel", "Steel Ingot", {name: "ingot_steel"});
 IDRegistry.genItemID("ingotLead");
 Item.createItem("ingotLead", "Lead Ingot", {name: "ingot_lead"});
 
-//IDRegistry.genItemID("ingotSilver");
-//Item.createItem("ingotSilver", "Silver Ingot", {name: "ingot_silver"});
+IDRegistry.genItemID("ingotSilver");
+Item.createItem("ingotSilver", "Silver Ingot", {name: "ingot_silver"});
 
 Callback.addCallback("PreLoaded", function(){
 	// steel
@@ -24,9 +24,19 @@ Callback.addCallback("PreLoaded", function(){
 	Recipes.addFurnace(BlockID.oreTin, ItemID.ingotTin, 0);
 	Recipes.addFurnace(BlockID.oreLead, ItemID.ingotLead, 0);
 	// from crushed ore
-	/*Recipes.addFurnace(ItemID.oreCrushedCopper, ItemID.ingotCopper, 0);
-	Recipes.addFurnace(ItemID.oreCrushedTin, ItemID.ingotTin, 0);
-	Recipes.addFurnace(ItemID.oreCrushedLead, ItemID.ingotLead, 0);*/
+	Recipes.addFurnace(ItemID.crushedIron, 265, 0);
+	Recipes.addFurnace(ItemID.crushedGold, 266, 0);
+	Recipes.addFurnace(ItemID.crushedCopper, ItemID.ingotCopper, 0);
+	Recipes.addFurnace(ItemID.crushedTin, ItemID.ingotTin, 0);
+	Recipes.addFurnace(ItemID.crushedLead, ItemID.ingotLead, 0);
+	Recipes.addFurnace(ItemID.crushedSilver, ItemID.ingotSilver, 0);
+	// from purified ore
+	Recipes.addFurnace(ItemID.crushedPurifiedIron, 265, 0);
+	Recipes.addFurnace(ItemID.crushedPurifiedGold, 266, 0);
+	Recipes.addFurnace(ItemID.crushedPurifiedCopper, ItemID.ingotCopper, 0);
+	Recipes.addFurnace(ItemID.crushedPurifiedTin, ItemID.ingotTin, 0);
+	Recipes.addFurnace(ItemID.crushedPurifiedLead, ItemID.ingotLead, 0);
+	Recipes.addFurnace(ItemID.crushedPurifiedSilver, ItemID.ingotSilver, 0);
 	// from dust
 	Recipes.addFurnace(ItemID.dustCopper, ItemID.ingotCopper, 0);
 	Recipes.addFurnace(ItemID.dustTin, ItemID.ingotTin, 0);
@@ -34,12 +44,12 @@ Callback.addCallback("PreLoaded", function(){
 	Recipes.addFurnace(ItemID.dustBronze, ItemID.ingotBronze, 0);
 	Recipes.addFurnace(ItemID.dustIron, 265, 0);
 	Recipes.addFurnace(ItemID.dustGold, 266, 0);
-	//Recipes.addFurnace(ItemID.dustSilver, ItemID.ingotSilver, 0);
+	Recipes.addFurnace(ItemID.dustSilver, ItemID.ingotSilver, 0);
 	// from plates
 	Recipes.addFurnace(ItemID.plateCopper, ItemID.ingotCopper, 0);
 	Recipes.addFurnace(ItemID.plateTin, ItemID.ingotTin, 0);
-	Recipes.addFurnace(ItemID.plateLead, ItemID.ingotLead, 0);
 	Recipes.addFurnace(ItemID.plateBronze, ItemID.ingotBronze, 0);
 	Recipes.addFurnace(ItemID.plateIron, 265, 0);
 	Recipes.addFurnace(ItemID.plateGold, 266, 0);
+	Recipes.addFurnace(ItemID.plateLead, ItemID.ingotLead, 0);
 });

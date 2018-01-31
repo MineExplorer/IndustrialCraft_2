@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("recycler");
 Block.createBlockWithRotation("recycler", [
-	{name: "Recycler", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 1], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
+	{name: "Recycler", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.recycler, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.recycler, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["recycler_front", 1], ["machine_side", 0], ["machine_side", 0]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.recycler);
 
 Block.registerDropFunction("recycler", function(coords, blockID, blockData, level){
@@ -48,6 +50,7 @@ MachineRegistry.registerPrototype(BlockID.recycler, {
 		energy_consumption: 1,
 		work_time: 45,
 		progress: 0,
+		isActive: false
 	},
 	
 	getGuiScreen: function(){
@@ -69,26 +72,29 @@ MachineRegistry.registerPrototype(BlockID.recycler, {
 		UpgradeAPI.executeAll(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
-		if(sourceSlot.id > 0){
-			var resultSlot = this.container.getSlot("slotResult");
-			if(resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0){
-				if(this.data.energy >= this.data.energy_consumption){
-					this.data.energy -= this.data.energy_consumption;
-					this.data.progress += 1/this.data.work_time;
+		var resultSlot = this.container.getSlot("slotResult");
+		if(sourceSlot.id > 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)){
+			if(this.data.energy >= this.data.energy_consumption){
+				this.data.energy -= this.data.energy_consumption;
+				this.data.progress += 1/this.data.work_time;
+				this.activate();
+			}
+			else{
+				this.deactivate();
+			}
+			if(this.data.progress >= 1){
+				sourceSlot.count--;
+				if(Math.random() < 0.125){
+					resultSlot.id = ItemID.scrap;
+					resultSlot.count++;
 				}
-				if(this.data.progress >= 1){
-					sourceSlot.count--;
-					if(Math.random() < 0.125){
-						resultSlot.id = ItemID.scrap;
-						resultSlot.count++;
-					}
-					this.container.validateAll();
-					this.data.progress = 0;
-				}
+				this.container.validateAll();
+				this.data.progress = 0;
 			}
 		}
 		else {
 			this.data.progress = 0;
+			this.deactivate();
 		}
 		
 		var energyStorage = this.getEnergyStorage();
@@ -103,5 +109,9 @@ MachineRegistry.registerPrototype(BlockID.recycler, {
 		return this.data.energy_storage;
 	},
 	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });

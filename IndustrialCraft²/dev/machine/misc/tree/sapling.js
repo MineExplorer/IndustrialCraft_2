@@ -22,7 +22,7 @@ Item.registerUseFunction("rubberSapling", function(coords, item, tile){
 IDRegistry.genBlockID("rubberTreeSapling");
 Block.createBlock("rubberTreeSapling", [
 	{name: "Rubber Tree Sapling", texture: [["empty", 0], ["empty", 0], ["empty", 0], ["empty", 0], ["empty", 0], ["empty", 0]], inCreative: false}
-], BLOCK_TYPE_LEAVES);
+]);
 
 Block.setBlockShape(BlockID.rubberTreeSapling, {x: 0.001, y: 0.001, z: 0.001}, {x: 0.999, y: 0.1, z: 0.999});
 Block.registerDropFunction("rubberTreeSapling", function(){

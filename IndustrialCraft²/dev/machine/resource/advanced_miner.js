@@ -1,7 +1,7 @@
 /*IDRegistry.genBlockID("advancedMiner");
 Block.createBlock("advancedMiner", [
 	{name: "Advanced Miner", texture: [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
-]);
+], "opaque");
 
 Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);

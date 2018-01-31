@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("metalFormer");
 Block.createBlockWithRotation("metalFormer", [
 	{name: "Metal Former", texture: [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-]);
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.metalFormer, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.metalFormer, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.metalFormer);
 
 Block.registerDropFunction("metalFormer", function(coords, blockID, blockData, level){
@@ -49,6 +51,7 @@ var guiMetalFormer = new UI.StandartWindow({
 
 
 Callback.addCallback("PreLoaded", function(){
+	// rolling
 	MachineRecipeRegistry.registerRecipesFor("metalFormer0", {
 		// ingots
 		265: {id: ItemID.plateIron, count: 1},
@@ -67,14 +70,14 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.plateSteel": {id: ItemID.casingSteel, count: 2},
 		"ItemID.plateLead": {id: ItemID.casingLead, count: 2}
 	}, true);
-
+	// cutting
 	MachineRecipeRegistry.registerRecipesFor("metalFormer1", {
 		"ItemID.plateTin": {id: ItemID.cableTin0, count: 4},
 		"ItemID.plateCopper": {id: ItemID.cableCopper0, count: 4},
 		"ItemID.plateGold": {id: ItemID.cableGold0, count: 4},
 		"ItemID.plateIron": {id: ItemID.cableIron0, count: 4},
 	}, true);
-		
+	// extruding
 	MachineRecipeRegistry.registerRecipesFor("metalFormer2", {
 		"ItemID.ingotTin": {id: ItemID.cableTin0, count: 3},
 		"ItemID.ingotCopper": {id: ItemID.cableCopper0, count: 3},
@@ -89,7 +92,8 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 		energy_consumption: 10,
 		work_time: 200,
 		progress: 0,
-		mode: 0
+		mode: 0,
+		isActive: false
 	},
 	
 	getGuiScreen: function(){
@@ -115,25 +119,27 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 		UpgradeAPI.executeAll(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
+		var resultSlot = this.container.getSlot("slotResult");
 		var result = MachineRecipeRegistry.getRecipeResult("metalFormer" + this.data.mode, sourceSlot.id)
-		if(result){
-			var resultSlot = this.container.getSlot("slotResult");
-			if(resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0){
-				if(this.data.energy >= this.data.energy_consumption){
-					this.data.energy -= this.data.energy_consumption;
-					this.data.progress += 1/this.data.work_time;
-				}
-				if(this.data.progress >= 1){
-					sourceSlot.count -= 1;
-					resultSlot.id = result.id;
-					resultSlot.count += result.count;
-					this.container.validateAll();
-					this.data.progress = 0;
-				}
+		if(result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)){
+			if(this.data.energy >= this.data.energy_consumption){
+				this.data.energy -= this.data.energy_consumption;
+				this.data.progress += 1/this.data.work_time;
+				this.activate();
+			}else{
+				this.deactivate();
+			}
+			if(this.data.progress >= 1){
+				sourceSlot.count -= 1;
+				resultSlot.id = result.id;
+				resultSlot.count += result.count;
+				this.container.validateAll();
+				this.data.progress = 0;
 			}
 		}
 		else {
 			this.data.progress = 0;
+			this.deactivate();
 		}
 		
 		var energyStorage = this.getEnergyStorage();
@@ -148,5 +154,9 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 		return this.data.energy_storage;
 	},
 	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });

@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("extractor");
 Block.createBlockWithRotation("extractor", [
 	{name: "Extractor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], inCreative: true}
-]);
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.extractor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.extractor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 1], ["extractor_side", 1], ["extractor_side", 1]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.extractor);
 
 Block.registerDropFunction("extractor", function(coords, blockID, blockData, level){
@@ -43,7 +45,9 @@ var guiExtractor = new UI.StandartWindow({
 Callback.addCallback("PreLoaded", function(){
 	MachineRecipeRegistry.registerRecipesFor("extractor", {
 		"ItemID.latex": {id: ItemID.rubber, count: 3, data: 0},
+		"ItemID.rubberSapling": {id: ItemID.rubber, count: 1, data: 0},
 		"BlockID.rubberTreeLog": {id: ItemID.rubber, count: 1, data: 0},
+		35: {id: 35, count: 1, data: 0},
 		289: {id: ItemID.dustSulfur, count: 1, data: 0},
 	}, true);
 });
@@ -54,6 +58,7 @@ MachineRegistry.registerPrototype(BlockID.extractor, {
 		energy_consumption: 2,
 		work_time: 400,
 		progress: 0,
+		isActive: false
 	},
 	
 	getGuiScreen: function(){
@@ -75,26 +80,29 @@ MachineRegistry.registerPrototype(BlockID.extractor, {
 		UpgradeAPI.executeAll(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
+		var resultSlot = this.container.getSlot("slotResult");
 		var result = MachineRecipeRegistry.getRecipeResult("extractor", sourceSlot.id);
-		if(result){
-			var resultSlot = this.container.getSlot("slotResult");
-			if(resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0){
-				if(this.data.energy >= this.data.energy_consumption){
-					this.data.energy -= this.data.energy_consumption;
-					this.data.progress += 1/this.data.work_time;
-				}
-				if(this.data.progress >= 1){
-					sourceSlot.count--;
-					resultSlot.id = result.id;
-					resultSlot.data = result.data;
-					resultSlot.count += result.count;
-					this.container.validateAll();
-					this.data.progress = 0;
-				}
+		if(result && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)){
+			if(this.data.energy >= this.data.energy_consumption){
+				this.data.energy -= this.data.energy_consumption;
+				this.data.progress += 1/this.data.work_time;
+				this.activate();
+			}
+			else{
+				this.deactivate();
+			}
+			if(this.data.progress >= 1){
+				sourceSlot.count--;
+				resultSlot.id = result.id;
+				resultSlot.data = result.data;
+				resultSlot.count += result.count;
+				this.container.validateAll();
+				this.data.progress = 0;
 			}
 		}
 		else {
 			this.data.progress = 0;
+			this.deactivate();
 		}
 		
 		var energyStorage = this.getEnergyStorage();
@@ -109,5 +117,9 @@ MachineRegistry.registerPrototype(BlockID.extractor, {
 		return this.data.energy_storage;
 	},
 	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });

@@ -1,10 +1,10 @@
-/*IDRegistry.genItemID("miningLaser");
-Item.setElectricItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0});
+IDRegistry.genItemID("miningLaser");
+Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0});
 ChargeItemRegistry.registerItem(ItemID.miningLaser, 1000000, 2, true, true);
 Item.setToolRender(ItemID.miningLaser, true);
 
 Item.registerNameOverrideFunction(ItemID.miningLaser, ENERGY_ITEM_NAME);
-
+/*
 Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: Item.getMaxDamage(ItemID.miningLaser)}, [
 	"ccx",
 	"aa#",

@@ -59,44 +59,46 @@ Item.createItem("upgradeFluidEjector5", "Fluid Ejector Upgrade", {name: "upgrade
 Item.createItem("upgradeFluidEjector6", "Fluid Ejector Upgrade", {name: "upgrade_fluid_ejector", meta: 6}, {isTech: true});
 
 
-Recipes.addShaped({id: ItemID.upgradeMFSU, count: 1, data: 0}, [
-	"aca",
-	"axa",
-	"aba"
-], ['b', ItemID.wrench, 0, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, 0]);
-
-Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 1, data: 0}, [
-	"aaa",
-	"x#x",
-], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', ItemID.cellWater, 0]);
-
-Recipes.addShaped({id: ItemID.upgradeEnergyStorage, count: 1, data: 0}, [
-	"aaa",
-	"x#x",
-	"aca"
-], ['#', ItemID.storageBattery, -1, 'x', ItemID.cableCopper1, 0, 'a', 5, -1, 'c', ItemID.circuitBasic, 0]);
-
-Recipes.addShaped({id: ItemID.upgradeRedstone, count: 1, data: 0}, [
-	"x x",
-	" # ",
-	"x x",
-], ['x', ItemID.plateTin, 0, '#', 69, -1]);
-
-Recipes.addShaped({id: ItemID.upgradePulling, count: 1, data: 0}, [
-	"aba",
-	"x#x",
-], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', 29, -1, 'b', 410, 0]);
-
-Recipes.addShaped({id: ItemID.upgradeEjector, count: 1, data: 0}, [
-	"aba",
-	"x#x",
-], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', 33, -1, 'b', 410, 0]);
-
-Recipes.addShaped({id: ItemID.upgradeFluidEjector, count: 1, data: 0}, [
-	"x x",
-	" # ",
-	"x x",
-], ['x', ItemID.plateTin, 0, '#', ItemID.electricMotor, 0]);
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: ItemID.upgradeMFSU, count: 1, data: 0}, [
+		"aca",
+		"axa",
+		"aba"
+	], ['b', ItemID.wrench, 0, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, 0]);
+	
+	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 1, data: 0}, [
+		"aaa",
+		"x#x",
+	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', ItemID.cellWater, 0]);
+	
+	Recipes.addShaped({id: ItemID.upgradeEnergyStorage, count: 1, data: 0}, [
+		"aaa",
+		"x#x",
+		"aca"
+	], ['#', ItemID.storageBattery, -1, 'x', ItemID.cableCopper1, 0, 'a', 5, -1, 'c', ItemID.circuitBasic, 0]);
+	
+	Recipes.addShaped({id: ItemID.upgradeRedstone, count: 1, data: 0}, [
+		"x x",
+		" # ",
+		"x x",
+	], ['x', ItemID.plateTin, 0, '#', 69, -1]);
+	
+	Recipes.addShaped({id: ItemID.upgradePulling, count: 1, data: 0}, [
+		"aba",
+		"x#x",
+	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', 29, -1, 'b', 410, 0]);
+	
+	Recipes.addShaped({id: ItemID.upgradeEjector, count: 1, data: 0}, [
+		"aba",
+		"x#x",
+	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', 33, -1, 'b', 410, 0]);
+	
+	Recipes.addShaped({id: ItemID.upgradeFluidEjector, count: 1, data: 0}, [
+		"x x",
+		" # ",
+		"x x",
+	], ['x', ItemID.plateTin, 0, '#', ItemID.electricMotor, 0]);
+});
 
 
 Item.registerUseFunction("upgradeMFSU", function(coords, item, block){
@@ -119,7 +121,7 @@ function PULLING_UPGRADE_FUNC(machine, container, data, coords, direction){
 		for(var slotName in container.slots){
 			if(slotName.match(/Source/)){
 				var item = container.getSlot(slotName);
-				if(item.count < 64){items.push(item);}
+				if(item.count < Item.getMaxStack(item.id)){items.push(item);}
 			}
 		}
 		if(items.length){

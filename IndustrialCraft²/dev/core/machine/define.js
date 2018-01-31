@@ -41,6 +41,7 @@ var MachineRegistry = {
 
 	// standart functions
 	getMachineDrop: function(coords, blockID, level, standartDrop){
+		BlockRenderer.unmapAtCoords(coords.x, coords.y, coords.z);
 		var item = Player.getCarriedItem();
 		if(item.id==ItemID.wrench){
 			ToolAPI.breakCarriedTool(10);
@@ -57,6 +58,28 @@ var MachineRegistry = {
 			return [[standartDrop || blockID, 1, 0]];
 		}
 		return [];
+	},
+	
+	initModel: function(){
+		if(this.data.isActive){
+			var block = World.getBlock(this.x, this.y, this.z);
+			MachineRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
+		}
+	},
+	
+	activateMachine: function(){
+		if(!this.data.isActive){
+			this.data.isActive = true;
+			var block = World.getBlock(this.x, this.y, this.z);
+			MachineRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
+		}
+	},
+	
+	deactivateMachine: function(){
+		if(this.data.isActive){
+			this.data.isActive = false;
+			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+		}
 	},
 	
 	basicEnergyReceiveFunc: function(type, src){

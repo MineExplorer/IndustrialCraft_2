@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("inductionFurnace");
 Block.createBlockWithRotation("inductionFurnace", [
-	{name: "Induction Furnace", texture: [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], inCreative: true}
-]);
+	{name: "Induction Furnace", texture: [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true}
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);
+MachineRenderer.registerRenderModel(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], true);
 //ICRenderLib.addConnectionBlock("bc-container", BlockID.inductionFurnace);
 
 Block.registerDropFunction("inductionFurnace", function(coords, blockID, blockData, level){
@@ -77,13 +79,12 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	},
 	
 	putResult: function(result, sourceSlot, resultSlot){
-		if(result && sourceSlot && resultSlot){
+		if(result){
 			if(resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0){
 				sourceSlot.count--;
 				resultSlot.id = result.id;
 				resultSlot.data = result.data;
 				resultSlot.count++;
-				this.container.validateAll();
 				return true;
 			}
 		}
@@ -95,21 +96,27 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 		
 		var result = this.getResult();
 		if(result){
-			if(this.data.energy > 15){
+			if(this.data.energy > 15 && this.data.progress < 1){
 				this.data.energy -= 16;
 				if(this.data.heat < 5000){this.data.heat++;}
 				this.data.progress += this.data.heat/60000;
+				this.activate();
+			}
+			else{
+				this.deactivate();
 			}
 			if(this.data.progress >= 1){
 				var put1 = this.putResult(result.result1, this.container.getSlot("slotSource1"), this.container.getSlot("slotResult1"));
 				var put2 = this.putResult(result.result2, this.container.getSlot("slotSource2"), this.container.getSlot("slotResult2"));
 				if(put1 || put2){
+					this.container.validateAll();
 					this.data.progress = 0;
 				}
 			}
 		}
 		else {
 			this.data.progress = 0;
+			this.deactivate();
 			if(this.data.isHeating && this.data.energy > 0){
 				if(this.data.heat < 5000){this.data.heat++;}
 				this.data.energy--;
@@ -119,7 +126,6 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 			}
 		}
 		
-
 		
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), Math.min(32, energyStorage - this.data.energy), 1);
@@ -140,5 +146,9 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 		return this.data.energy_storage;
 	},
 	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });

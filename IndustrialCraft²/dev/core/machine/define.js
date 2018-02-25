@@ -33,7 +33,7 @@ var MachineRegistry = {
 		}
 		*/
 		
-		ToolAPI.registerBlockMaterial(id, "stone");
+		ToolAPI.registerBlockMaterial(id, "stone", 1);
 		Block.setDestroyTime(id, 3);
 		TileEntity.registerPrototype(id, Prototype);
 		EnergyTileRegistry.addEnergyTypeForId(id, EU);
@@ -54,7 +54,7 @@ var MachineRegistry = {
 			World.setBlock(coords.x, coords.y, coords.z, 0);
 			return [[blockID, 1, 0]];
 		}
-		if(level > 0){
+		if(level >= ToolAPI.getBlockDestroyLevel(blockID)){
 			return [[standartDrop || blockID, 1, 0]];
 		}
 		return [];

@@ -4,7 +4,7 @@ Block.createBlock("blockCopper", [
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockCopper, "stone", 2, true);
 Block.setDestroyTime(BlockID.blockCopper, 5);
-Block.setDestroyLevel("blockCopper", 1);
+Block.setDestroyLevel("blockCopper", 2);
 
 
 IDRegistry.genBlockID("blockTin");
@@ -13,7 +13,7 @@ Block.createBlock("blockTin", [
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockTin, "stone", 2, true);
 Block.setDestroyTime(BlockID.blockTin, 5);
-Block.setDestroyLevel("blockTin", 1);
+Block.setDestroyLevel("blockTin", 2);
 
 
 IDRegistry.genBlockID("blockBronze");
@@ -22,7 +22,7 @@ Block.createBlock("blockBronze", [
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockBronze, "stone", 2, true);
 Block.setDestroyTime(BlockID.blockBronze, 5);
-Block.setDestroyLevel("blockBronze", 1);
+Block.setDestroyLevel("blockBronze", 2);
 
 
 IDRegistry.genBlockID("blockLead");
@@ -31,7 +31,7 @@ Block.createBlock("blockLead", [
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockLead, "stone", 2, true);
 Block.setDestroyTime(BlockID.blockLead, 5);
-Block.setDestroyLevel("blockLead", 1);
+Block.setDestroyLevel("blockLead", 2);
 
 
 IDRegistry.genBlockID("blockSteel");
@@ -40,7 +40,7 @@ Block.createBlock("blockSteel", [
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockSteel, "stone", 2, true);
 Block.setDestroyTime(BlockID.blockSteel, 5);
-Block.setDestroyLevel("blockSteel", 1);
+Block.setDestroyLevel("blockSteel", 2);
 
 
 IDRegistry.genBlockID("blockSilver");
@@ -49,7 +49,7 @@ Block.createBlock("blockSilver", [
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.blockSilver, "stone", 3, true);
 Block.setDestroyTime(BlockID.blockSilver, 5);
-Block.setDestroyLevel("blockSilver", 2);
+Block.setDestroyLevel("blockSilver", 3);
 
 
 Callback.addCallback("PostLoaded", function(){

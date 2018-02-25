@@ -4,13 +4,18 @@ var ToolType = {
 		enchantType: Native.EnchantType.weapon,
 		damage: 4,
 		blockTypes: ["fibre", "plant"],
-		onAttack: function(item, mob){ },
-		calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
+		onAttack: function(item){
+			if(item.data > Item.getMaxDamage(item.id)){
+				item.id = item.data = item.count = 0;
+			}
+		},
+		calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
 			if(block.id==30){return 0.08;}
 			if(block.id==35){return 0.05;}
 			var material = ToolAPI.getBlockMaterial(block.id) || {};
-			material = material.name;
-			if(material=="fibre" || material=="plant"){return params.base/1.5;}
+			if(material.name=="fibre" || material.name=="plant"){
+				return params.base/1.5;
+			}
 			return destroyTime;
 		}
 	},
@@ -19,6 +24,11 @@ var ToolType = {
 		enchantType: Native.EnchantType.shovel,
 		damage: 2,
 		blockTypes: ["dirt"],
+		onAttack: function(item){
+			if(item.data > Item.getMaxDamage(item.id)){
+				item.id = item.data = item.count = 0;
+			}
+		},
 		useItem: function(coords, item, block){
 			if(block.id==2&&coords.side==1){ 
 				World.setBlock(coords.x, coords.y, coords.z, 198);
@@ -31,13 +41,23 @@ var ToolType = {
 	pickaxe: {
 		enchantType: Native.EnchantType.pickaxe,
 		damage: 2,
-		blockTypes: ["stone"]
+		blockTypes: ["stone"],
+		onAttack: function(item){
+			if(item.data > Item.getMaxDamage(item.id)){
+				item.id = item.data = item.count = 0;
+			}
+		}
 	},
 	
 	axe: {
 		enchantType: Native.EnchantType.axe,
 		damage: 3,
-		blockTypes: ["wood"]
+		blockTypes: ["wood"],
+		onAttack: function(item){
+			if(item.data > Item.getMaxDamage(item.id)){
+				item.id = item.data = item.count = 0;
+			}
+		}
 	},
 	
 	hoe: {

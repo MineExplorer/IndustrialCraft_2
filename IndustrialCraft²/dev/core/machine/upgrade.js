@@ -53,21 +53,57 @@ var UpgradeAPI = {
 			}
 		}
 		return containers;
-	}
+	},
+	
+	findNearestLiquidStorages: function(coords, direction){
+		var directions = {
+			up: {x: 0, y: 1, z: 0},
+			down: {x: 0, y: -1, z: 0},
+			east: {x: 1, y: 0, z: 0},
+			west: {x: -1, y: 0, z: 0},
+			south: {x: 0, y: 0, z: 1},
+			north: {x: 0, y: 0, z: -1},
+		}
+		var storages = [];
+		if(direction){
+			dir = directions[direction]
+			var tileEntity = World.getTileEntity(coords.x + dir.x, coords.y + dir.y, coords.z + dir.z);
+			if(tileEntity && tileEntity.liquidStorage){
+				storages.push(tileEntity.liquidStorage);
+			}
+		}
+		else{
+			for(var i in directions){
+				var dir = directions[i];
+				var tileEntity = World.getTileEntity(coords.x + dir.x, coords.y + dir.y, coords.z + dir.z);
+				if(tileEntity && tileEntity.liquidStorage){
+					storages.push(tileEntity.liquidStorage);
+				}
+			}
+		}
+		return storages;
+	},
 }
 
-function addItemsToContainers(items, containers){
+
+function addItemsToContainers(items, containers, tile){
 	for(var i in items){
+		var item = items[i];
 		for(var c in containers){
+			if(item.count==0){
+				item.id = 0;
+				item.data = 0;
+				break;
+			}
+			
 			var container = containers[c];
-			var item = items[i];
 			var tileEntity = container.tileEntity;
 			var slots = [];
 			var slotsInitialized = false;
 			
 			if(tileEntity){
 				if(tileEntity.addTransportedItem){
-					tileEntity.addTransportedItem({}, item, {});
+					tileEntity.addTransportedItem({}, item, {x: tile.x, y: tile.y, z: tile.z});
 					continue;
 				}
 				if(tileEntity.getTransportSlots){
@@ -81,13 +117,13 @@ function addItemsToContainers(items, containers){
 						slots.push(name);
 					}
 				}else{
-					for(var i = 0; i < container.getSize(); i++){
-						slots.push(i);
+					for(var s = 0; s < container.getSize(); s++){
+						slots.push(s);
 					}
 				}
 			}
-			for(var i in slots){
-				var slot = container.getSlot(slots[i]);
+			for(var s in slots){
+				var slot = container.getSlot(slots[s]);
 				if(item.count <= 0){
 					break;
 				}
@@ -99,24 +135,19 @@ function addItemsToContainers(items, containers){
 					slot.id = item.id;
 					slot.data = item.data;
 					if(!container.slots){
-						container.setSlot(i, slot.id, slot.count, slot.data);
+						container.setSlot(s, slot.id, slot.count, slot.data);
 					}
 				}
-			}
-			
-			if(item.count==0){
-				item.id = 0;
-				item.data = 0;
-				break;
 			}
 		}
 	}
 }
 
-function getItemsFrom(items, containers){
+function getItemsFrom(items, containers, tile){
 	for(var i in items){
 		var item = items[i];
-		var maxStack = Item.getMaxStack(item.id);
+		var maxStack = 64;
+		var stop = false;
 		for(var c in containers){
 			var container = containers[c];
 			var tileEntity = container.tileEntity;
@@ -133,26 +164,50 @@ function getItemsFrom(items, containers){
 						slots.push(name);
 					}
 				}else{
-					for(var i = 0; i < container.getSize(); i++){
-						slots.push(i);
+					for(var s = 0; s < container.getSize(); s++){
+						slots.push(s);
 					}
 				}
 			}
-			for(var i in slots){
-				var slot = container.getSlot(slots[i]);
-				if(slot.id > 0 && (item.id == 0 || item.id == slot.id && item.data == slot.data)){
-					var add = Math.min(maxStack - item.count, slot.count);
-					slot.count -= add;
-					item.count += add;
-					item.id = slot.id;
-					item.data = slot.data;
-					if(slot.count==0) slot.id = slot.data = 0;
-					if(!container.slots){
-						container.setSlot(i, slot.id, slot.count, slot.data);
+			for(var s in slots){
+				var slot = container.getSlot(slots[s]);
+				if(slot.id > 0){
+					if(tile.addTransportedItem){
+						stop = tile.addTransportedItem({}, slot, {});
+						if(!container.slots){
+							container.setSlot(s, slot.id, slot.count, slot.data);
+						}
+						if(stop) break;
+					}
+					else if(item.id == slot.id && item.data == slot.data || item.id == 0){
+						maxStack = Item.getMaxStack(slot.id);
+						var add = Math.min(maxStack - item.count, slot.count);
+						slot.count -= add;
+						item.count += add;
+						item.id = slot.id;
+						item.data = slot.data;
+						if(slot.count==0) slot.id = slot.data = 0;
+						if(!container.slots){
+							container.setSlot(s, slot.id, slot.count, slot.data);
+						}
+						if(item.count == maxStack){break;}
 					}
 				}
 			}
-			if(item.count == maxStack){break;}
+			if(stop || !tile.addTransportedItem &&  item.count == maxStack){break;}
+		}
+		if(tile.addTransportedItem){return;}
+	}
+}
+
+
+function addLiquidToStorages(liquid, output, input){
+	var amount = output.getLiquid(liquid, 1);
+	if(amount){
+		for(var i in input){
+			var storage = input[i];
+			amount = storage.addLiquid(liquid, amount);
 		}
 	}
+	output.addLiquid(liquid, amount);
 }

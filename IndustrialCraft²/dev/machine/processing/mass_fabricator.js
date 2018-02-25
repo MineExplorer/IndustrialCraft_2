@@ -49,6 +49,7 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 		progress: 0,
 		catalyser: 0,
 		catalyserRatio: 0,
+		isEnabled: true,
 		isActive: false
 	},
 	
@@ -64,9 +65,9 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 		this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 		this.container.setText("textInfo2", parseInt(100 * this.data.progress / ENERGY_PER_MATTER) + "%");
 		
-		if(this.data.energy > 0){
+		if(this.data.isEnabled && this.data.energy > 0){
 			this.activate();
-			if(this.data.catalyser <= 0){
+			if(this.data.catalyser <= 1000){
 				var catalyserSlot = this.container.getSlot("catalyserSlot");
 				var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
 				if(catalyserData){
@@ -105,6 +106,13 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 		else{
 			this.deactivate();
 		}
+	},
+	
+	redstone: function(signal){
+		this.data.isEnabled = (signal.power == 0);
+		/*if(this.data.upgrades[ItemID.upgradeRedstone]){
+			this.data.isEnabled = !this.data.isEnabled;
+		}*/
 	},
 	
 	getEnergyStorage: function(){

@@ -34,7 +34,7 @@ var guiOreWasher = new UI.StandartWindow({
 	standart: {
 		header: {text: {text: "Ore Washing Plant"}},
 		inventory: {standart: true},
-		background: {bitmap: "machine_background"}
+		background: {standart: true},
 	},
 	
 	params: {       
@@ -43,6 +43,7 @@ var guiOreWasher = new UI.StandartWindow({
 	},
 	
 	drawing: [
+		{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
 		{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_BAR_STANDART_SCALE},
 		{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_BAR_STANDART_SCALE}
 	],
@@ -80,7 +81,7 @@ MachineRegistry.registerPrototype(BlockID.oreWasher, {
 	},
 		
 	getTransportSlots: function(){
-		return {input: ["slotSource1", "slotSource2"], output: ["slotResult1", "slotResult2"]};
+		return {input: ["slotSource"], output: ["slotLiquid2", "slotResult1", "slotResult2", "slotResult3"]};
 	},
 	
 	setDefaultValues: function(){
@@ -90,7 +91,7 @@ MachineRegistry.registerPrototype(BlockID.oreWasher, {
 	},
 	
 	init: function(){
-		this.liquidStorage.setLimit("water", 16);
+		this.liquidStorage.setLimit("water", 8);
 		if(this.data.isActive){
 			var block = World.getBlock(this.x, this.y, this.z);
 			MachineRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
@@ -102,15 +103,16 @@ MachineRegistry.registerPrototype(BlockID.oreWasher, {
 			var id = result[(i-1)*2];
 			var count = result[(i-1)*2+1];
 			var resultSlot = this.container.getSlot("slotResult"+i);
-			if(resultSlot.id == id && resultSlot.count + count <= 64 || resultSlot.id == 0 || !id){
-				return true;
+			if((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0){
+				return false;
 			}
 		}
+		return true;
 	},
 	
 	putResult: function(result, sourceSlot){
 		sourceSlot.count--;
-		this.liquidStorage.addLiquid("water", -1);
+		this.liquidStorage.getLiquid("water", 1);
 		for(var i = 1; i < 4; i++){
 			var id = result[(i-1)*2];
 			var count = result[(i-1)*2+1];
@@ -130,7 +132,7 @@ MachineRegistry.registerPrototype(BlockID.oreWasher, {
 		var slot2 = this.container.getSlot("slotLiquid2");
 		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
 		if(empty && empty.liquid == "water"){
-			if(this.liquidStorage.getAmount("water") <= 15 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
+			if(this.liquidStorage.getAmount("water") <= 7 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
 				this.liquidStorage.addLiquid("water", 1);
 				slot1.count--;
 				slot2.id = empty.id;

@@ -68,12 +68,9 @@ var ChargeItemRegistry = {
 			return 0;
 		}
 		
-		var energyAdd = Math.min(item.data - 1, transf);
-		if(energy >= energyAdd){
-			item.data -= energyAdd;
-			return energyAdd;
-		}
-		return 0;
+		var energyAdd = Math.min(energy, Math.min(item.data - 1, transf));
+		item.data -= energyAdd;
+		return energyAdd;
 	},
 	
 	getEnergyStored: function(item){

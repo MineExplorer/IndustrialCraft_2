@@ -23,9 +23,9 @@ Item.createItem("cableOptic", "Glass Fibre Cable", {name: "cable_optic", meta: 0
 
 Recipes.addShaped({id: ItemID.cableOptic, count: 4, data: 0}, [
 	"aaa",
-	"xxx",
+	"x#x",
 	"aaa"
-], ['x', ItemID.dustEnergium, 0, 'a', 20, 0]);
+], ['#', ItemID.dustSilver, 0, 'x', ItemID.dustEnergium, 0, 'a', 20, 0]);
 
 Callback.addCallback("PostLoaded", function(){
 	// cutting recipes

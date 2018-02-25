@@ -17,17 +17,17 @@ Callback.addCallback("PostLoaded", function(){
 });
 
 Item.registerUseFunction("cellEmpty", function(coords, item, block){
-	if(block.id==9 || block.id==11){
+	if(block.id >= 8 && block.id <= 11 && block.data == 0){
 		World.setBlock(coords.x, coords.y, coords.z, 0);
 		var item = Player.getCarriedItem();
 		item.count--;
 		if(!item.count){item.id = 0;}
 		Player.setCarriedItem(item.id, item.count, 1);
-		if(block.id==9){Player.addItemToInventory(ItemID.cellWater, 1);}
+		if(block.id==8 || block.id==9){Player.addItemToInventory(ItemID.cellWater, 1);}
 		else{Player.addItemToInventory(ItemID.cellLava, 1);}
 	}
 });
-/*
+
 Callback.addCallback("ItemUse", function(coords, item, block){
 	if(item.id==ItemID.cellWater || item.id==ItemID.cellLava){
 		var x = coords.relative.x
@@ -35,8 +35,8 @@ Callback.addCallback("ItemUse", function(coords, item, block){
 		var z = coords.relative.z
 		var block = World.getBlockID(x,y,z)
 		if(block==0){
-			if(item.id==ItemID.cellWater){World.setBlock(x, y, z, 9);}
-			else{World.setBlock(x, y, z, 11);}
+			if(item.id==ItemID.cellWater){World.setBlock(x, y, z, 8);}
+			else{World.setBlock(x, y, z, 10);}
 			var item = Player.getCarriedItem();
 			item.count--;
 			if(!item.count) item.id = 0;
@@ -45,4 +45,3 @@ Callback.addCallback("ItemUse", function(coords, item, block){
 		}
 	}
 });
-*/

@@ -3,6 +3,10 @@ Block.createBlockWithRotation("storageBatBox", [
 	{name: "BatBox", texture: [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_side", 1], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]], inCreative: true}
 ], "opaque");
 
+Block.registerDropFunction("storageBatBox", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
+
 Callback.addCallback("PostLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageBatBox, count: 1, data: 0}, [
 		"xax",

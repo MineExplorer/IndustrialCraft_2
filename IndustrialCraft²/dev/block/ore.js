@@ -4,7 +4,7 @@ Block.createBlock("oreCopper", [
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.oreCopper, "stone", 2, true);
 Block.setDestroyTime(BlockID.oreCopper, 3);
-Block.setDestroyLevel("oreCopper", 1);
+Block.setDestroyLevel("oreCopper", 2);
 
 
 IDRegistry.genBlockID("oreTin");
@@ -13,7 +13,7 @@ Block.createBlock("oreTin", [
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.oreTin, "stone", 2, true);
 Block.setDestroyTime(BlockID.oreTin, 3);
-Block.setDestroyLevel("oreTin", 1);
+Block.setDestroyLevel("oreTin", 2);
 
 
 IDRegistry.genBlockID("oreLead");
@@ -22,7 +22,7 @@ Block.createBlock("oreLead", [
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.oreLead, "stone", 2, true);
 Block.setDestroyTime(BlockID.oreLead, 3);
-Block.setDestroyLevel("oreLead", 1);
+Block.setDestroyLevel("oreLead", 2);
 
 
 IDRegistry.genBlockID("oreUranium");
@@ -31,7 +31,7 @@ Block.createBlock("oreUranium", [
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.oreUranium, "stone", 3, true);
 Block.setDestroyTime(BlockID.oreIridium, 3);
-Block.setDestroyLevel("oreUranium", 2);
+Block.setDestroyLevel("oreUranium", 3);
 
 
 IDRegistry.genBlockID("oreIridium");
@@ -72,15 +72,15 @@ Callback.addCallback("PostLoaded", function(){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
 			for(var i = 0; i < 10; i++){
 				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 10, 70);
-				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreCopper, 0, random(8, 12));
+				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreCopper, 0, random(6, 15));
 			}
 		});
 	}
 	if(OreGenerator.tin_ore){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
-			for(var i = 0; i < 8; i++){
+			for(var i = 0; i < 10; i++){
 				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 52);
-				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreTin, 0, random(6, 10));
+				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreTin, 0, random(4, 10));
 			}
 		});
 	}

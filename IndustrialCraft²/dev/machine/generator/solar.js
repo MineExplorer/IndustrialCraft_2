@@ -15,14 +15,60 @@ Callback.addCallback("PostLoaded", function(){
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, 0]);
 });
 
+
+var guiSolar = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: "Solar Panel"}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	params: {       
+		slot: "default_slot",
+		invSlot: "default_slot"              
+	},
+	
+	drawing: [
+		{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
+	],
+	
+	elements: {
+		"slotEnergy": {type: "slot", x: 600, y: 130},
+		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_BAR_STANDART_SCALE}
+	}
+});
+
 MachineRegistry.registerPrototype(BlockID.solarPanel, {
 	isGenerator: function() {
 		return true;
 	},
-
-	energyTick: function(type, src){
+	
+	getGuiScreen: function(){
+		return guiSolar;
+	},
+	
+	tick: function(){
+		var content = this.container.getGuiContent();
 		if(World.getLightLevel(this.x, this.y + 1, this.z) == 15){
+			this.data.energy = 1;
+			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), 1, 32, 0);
+			if(content){ 
+				content.elements["sun"].bitmap = "sun_on";
+			}
+		}
+		else if(content){ 
+			content.elements["sun"].bitmap = "sun_off";
+		}
+	},
+	
+	getEnergyStorage: function(){
+		return 1;
+	},
+	
+	energyTick: function(type, src){
+		if(this.data.energy){
 			src.add(1);
+			this.data.energy = 0;
 		}
 	}
 });

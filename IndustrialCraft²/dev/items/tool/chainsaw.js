@@ -14,6 +14,7 @@ ToolAPI.addBlockMaterial("wool", 1.5);
 ToolAPI.registerBlockMaterial(35, "wool");
 
 ToolType.chainsaw = {
+	isWeapon: true,
 	damage: 3,
 	baseDamage: 0,
 	blockTypes: ["wood", "wool", "fibre", "plant"],
@@ -25,14 +26,14 @@ ToolType.chainsaw = {
 		var material = this.toolMaterial;
 		if(!this.baseDamage) this.baseDamage = material.damage;
 		if(item.data + material.energyConsumption <= Item.getMaxDamage(item.id)){
-			item.data += material.energyConsumption;
+			item.data += material.energyConsumption - 1;
 			material.damage = this.baseDamage;
 		}
 		else{
 			material.damage = 0;
 		}
 	},
-	calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
+	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
         if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
             return destroyTime;
         }

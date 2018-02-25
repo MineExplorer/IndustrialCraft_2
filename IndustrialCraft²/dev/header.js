@@ -71,7 +71,7 @@ var RARE_ENERGY_ITEM_NAME = function(item, name){
 
 Block.setDestroyLevel = function(id, lvl){
 	Block.registerDropFunction(id, function(coords, blockID, blockData, level, enchant){
-		if(level > lvl){
+		if(level >= lvl){
 			return [[blockID, 1, 0]];
 		}
 		return [];
@@ -80,7 +80,7 @@ Block.setDestroyLevel = function(id, lvl){
 
 Recipes.addFurnaceFuel(325, 10, 2000);
 
-if(debugMode){
+if(debugMode == true){
 	var lasttime = -1
 	var frame = 0
 

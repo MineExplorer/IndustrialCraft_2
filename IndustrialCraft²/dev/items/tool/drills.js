@@ -43,7 +43,7 @@ ToolType.drill = {
     onAttack: function(item, mob){
         item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 2, Item.getMaxDamage(item.id));
     },
-    calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
+    calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
         if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
             return destroyTime;
         }
@@ -89,7 +89,7 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
     onAttack: function(item, mob){
         item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 2, Item.getMaxDamage(item.id));
     },
-    calcDestroyTime: function(item, block, coords, params, destroyTime, enchant){
+    calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
         if(item.data + 800 <= Item.getMaxDamage(item.id)){
 			var material = ToolAPI.getBlockMaterial(block.id) || {};
 			material = material.name;

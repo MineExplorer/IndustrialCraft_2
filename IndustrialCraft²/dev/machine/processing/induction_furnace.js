@@ -51,9 +51,10 @@ var guiInductionFurnace = new UI.StandartWindow({
 MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	defaultValues: {
 		energy_storage: 10000,
+		progress: 0,
+		isActive: false,
 		isHeating: false,
 		heat: 0,
-		progress: 0,
 		upgrades: {}
 	},
 	

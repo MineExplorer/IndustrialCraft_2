@@ -32,6 +32,14 @@ var ChargeItemRegistry = {
 		return data && data.type == "flash";
 	},
 	
+	isEnergyStorage: function(id){
+		var data = ChargeItemRegistry.getItemData(id);
+		if(data && !data.preventUncharge || item.id == ItemID.debugItem){
+			return true;
+		}
+		return false;
+	},
+	
 	getEnergyFrom: function(item, amount, level, getFromAll){
 		if(item.id==ItemID.debugItem){
 			return amount;
@@ -82,7 +90,7 @@ var ChargeItemRegistry = {
 	}
 }
 
-ChargeItemRegistry.registerFlashItem(331, 500, 0); // redstone
+ChargeItemRegistry.registerFlashItem(331, 800, 0); // redstone
 
 Callback.addCallback("tick", function(){
 	var item = Player.getCarriedItem();

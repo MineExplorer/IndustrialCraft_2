@@ -25,7 +25,7 @@ Recipes.addShaped({id: ItemID.cableOptic, count: 4, data: 0}, [
 	"aaa",
 	"x#x",
 	"aaa"
-], ['#', ItemID.dustSilver, 0, 'x', ItemID.dustEnergium, 0, 'a', 20, 0]);
+], ['#', ItemID.dustSilver, 0, 'x', ItemID.dustEnergium, 0, 'a', 20, -1]);
 
 Callback.addCallback("PostLoaded", function(){
 	// cutting recipes

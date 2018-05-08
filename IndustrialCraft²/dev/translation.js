@@ -28,6 +28,7 @@ Translation.addTranslation("Wind Mill", {ru: "Ветрогенератор", es:
 
 // Machines
 Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", zh: "铁炉"});
+Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", zh: "日光灯"});
 Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", zh: "感应炉"});
 Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", zh: "感应炉"});
 Translation.addTranslation("Macerator", {ru: "Дробитель", es: "Trituradora", zh: "打粉机"});

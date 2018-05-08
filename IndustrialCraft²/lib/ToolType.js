@@ -1,3 +1,10 @@
+LIBRARY({
+	name: "ToolType",
+	version: 1,
+	shared: true,
+	api: "CoreEngine"
+});
+	
 var ToolType = {
 	sword: {
 		isWeapon: true,
@@ -71,6 +78,8 @@ var ToolType = {
 	}
 }
 
+Player.getCarriedItem = ModAPI.requireGlobal("Player.getCarriedItem");
+
 ToolAPI.breakCarriedTool = function(damage){
 	var item = Player.getCarriedItem(true);
 	item.data += damage;
@@ -104,7 +113,7 @@ ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){
 	}
 	if(toolType.destroyBlock){
 		Callback.addCallback("DestroyBlock", function(coords, block, player){
-			var item = Player.getCarriedItem(true);
+			var item = Player.getCarriedItem();
 			if(item.id == id){
 				toolType.destroyBlock(coords, coords.side, item, block);
 			}
@@ -112,4 +121,4 @@ ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){
 	}
 }
 
-registerAPIUnit("ToolType", ToolType);
+EXPORT("ToolType", ToolType);

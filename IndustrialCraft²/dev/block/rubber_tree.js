@@ -17,17 +17,18 @@ function destroyLeaves(x, y, z){
 
 IDRegistry.genBlockID("rubberTreeLog");
 Block.createBlock("rubberTreeLog", [
-	{name: "Rubber Tree Log", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false}
+	{name: "Rubber Tree Log", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: true}
 ], "opaque");
 Block.registerDropFunction("rubberTreeLog", function(coords, blockID){
 	destroyLeaves(coords.x, coords.y, coords.z);
 	return [[blockID, 1, 0]];
 });
-Block.setDestroyTime(BlockID.rubberTreeLog, 2);
+Block.setDestroyTime(BlockID.rubberTreeLog, 0.4);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
 
 IDRegistry.genBlockID("rubberTreeLogLatex");
 Block.createBlock("rubberTreeLogLatex", [
+	{name: "tile.rubberTreeLog.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false},
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 2], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false},
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 2], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false},
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 2], ["rubber_tree_log", 0]], inCreative: false},
@@ -37,22 +38,28 @@ Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID){
 	destroyLeaves(coords.x, coords.y, coords.z);
 	return [[BlockID.rubberTreeLog, 1, 0], [ItemID.latex, 1, 0]];
 });
-Block.setDestroyTime(BlockID.rubberTreeLogLatex, 2);
+Block.setDestroyTime(BlockID.rubberTreeLogLatex, 0.4);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
+Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, data){
+	if(data==0 && Math.random() < 0.1){
+		World.setBlock(x, y, z, id, parseInt(Math.random()*4 + 1));
+	}
+});
+
 
 IDRegistry.genBlockID("rubberTreeLeaves");
 Block.createBlock("rubberTreeLeaves", [
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false}
 ]);
 Block.registerDropFunction("rubberTreeLeaves", function(){
-	if(Math.random() < .075){
+	if(Math.random() < .05){
 		return [[ItemID.rubberSapling, 1, 0]]
 	}
 	else {
 		return [];
 	}
 });
-Block.setDestroyTime(BlockID.rubberTreeLog, 0.2);
+Block.setDestroyTime(BlockID.rubberTreeLeaves, 0.2);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLeaves, "plant");
 
 Recipes.addShaped({id: 5, count: 3, data: 3}, ["x"], ['x', BlockID.rubberTreeLog, -1]);
@@ -85,13 +92,11 @@ var RubberTreeGenerationHelper = {
 		var log = params.log;
 		
 		var height = parseInt(Math.random() * (0.5 + params.height.max - params.height.min) + params.height.min);
-		var resinHeight = -1;
-		if(log.resin){
-			resinHeight = parseInt(Math.random() * (height - 2)) + 1;
-		}
+		var k = 0.25;
 		for(var ys = 0; ys < height; ys++){
-			if(ys == resinHeight){
-				World.setBlock(x, y + ys, z, log.resin, parseInt(Math.random()*4));
+			if(log.resin && Math.random() < k){
+				World.setBlock(x, y + ys, z, log.resin, parseInt(Math.random()*4 + 1));
+				k -= 0.1;
 			}
 			else{
 				World.setFullBlock(x, y + ys, z, log);
@@ -120,7 +125,7 @@ var RubberTreeGenerationHelper = {
 		}
 	},
 
-	generateRubberTree: function(x, y, z, activateTileEntity){
+	generateRubberTree: function(x, y, z){
 		RubberTreeGenerationHelper.generateCustomTree(x, y, z, {
 			log: {
 				id: BlockID.rubberTreeLog,
@@ -132,16 +137,13 @@ var RubberTreeGenerationHelper = {
 				data: 0
 			},
 			height: {
-				min: 5,
-				max: 7,
+				min: 4,
+				max: 8,
 				start: 2 + parseInt(Math.random() * 2)
 			},
 			pike: 2 + parseInt(Math.random() * 1.5),
 			radius: 2
 		});
-		if(activateTileEntity){
-			return World.addTileEntity(x, y, z);
-		}
 	}
 }
 
@@ -172,7 +174,7 @@ Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
 			coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
 			if(World.getBlockID(coords.x, coords.y, coords.z) == 2){
 				coords.y++;
-				RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y, coords.z, false);
+				RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y, coords.z);
 			}
 		}
 	}

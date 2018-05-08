@@ -9,30 +9,38 @@ Callback.addCallback("NativeGuiChanged", function(screenName){
 	}
 });
 
+var button_scale = __config__.access("button_scale");
 var UIbuttons = {
+	data: {},
 	isEnabled: false,
-	nightvision: false,
 	container: null,
 	Window: new UI.Window({
 		location: {
-			x: 925,
-			y: UI.getScreenHeight()/2-75,
-			width: 75,
-			height: 300
+			x: 1000 - button_scale,
+			y: UI.getScreenHeight()/2 - button_scale*1.5,
+			width: button_scale,
+			height: button_scale*4
 		},
 		drawing: [{type: "background", color: 0}],
 		elements: {}
 	}),
 	
 	setButton: function(id, name){
-		armorData[id] = name;
+		if(!this.data[id]){
+			this.data[id] = [name]
+		}else{
+			this.data[id].push(name);
+		}
 	},
+	
+	getButtons: function(id){
+		return this.data[id];
+	},
+	
 	registerButton: function(name, properties){
 		buttonContent[name] = properties;
 	}
 }
-
-var armorData = {};
 
 var buttonMap = {
 	button_nightvision: false,
@@ -49,14 +57,24 @@ var buttonContent = {
 		scale: 50,
 		clicker: {
 			onClick: function(){
-				if(UIbuttons.nightvision){
-					UIbuttons.nightvision = false;
+				var armor = Player.getArmorSlot(0);
+				var extra = armor.extra;
+				if(extra){
+					var nightvision = extra.getBoolean("nv");
+				}
+				else{
+					var nightvision = false;
+					extra = new ItemExtraData();
+				}
+				if(nightvision){
+					extra.putBoolean("nv", false);
 					Game.message("§4Nightvision mode disabled");
 				}
 				else{
-					UIbuttons.nightvision = true;
+					extra.putBoolean("nv", true);
 					Game.message("§2Nightvision mode enabled");
 				}
+				Player.setArmorSlot(0, armor.id, 1, armor.data, extra);
 			}
 		}
 	},
@@ -67,8 +85,36 @@ var buttonContent = {
 		bitmap2: "button_fly_off",
 		scale: 50
 	},
-	button_jump: {
+	button_hover: {
 		y: 2000,
+		type: "button",
+		bitmap: "button_hover_off",
+		scale: 50,
+		clicker: {
+			onClick: function(){
+				var armor = Player.getArmorSlot(1);
+				var extra = armor.extra;
+				if(extra){
+					var hover = extra.getBoolean("hover");
+				}
+				else{
+					var hover = false;
+					extra = new ItemExtraData();
+				}
+				if(hover){
+					extra.putBoolean("hover", false);
+					Game.message("§4Hover mode disabled");
+				}
+				else{
+					extra.putBoolean("hover", true);
+					Game.message("§2Hover mode enabled");
+				}
+				Player.setArmorSlot(1, armor.id, 1, armor.data, extra);
+			}
+		}
+	},
+	button_jump: {
+		y: 3000,
 		type: "button",
 		bitmap: "button_jump_on",
 		bitmap2: "button_jump_off",
@@ -94,7 +140,20 @@ function updateUIbuttons(){
 			if(!elements[name]){
 				elements[name] = buttonContent[name];
 			}
-			elements[name].x = 0;
+			var element = elements[name];
+			if(name == "button_hover"){
+				var armor = Player.getArmorSlot(1);
+				var extra = armor.extra;
+				if(extra){
+					var hover = extra.getBoolean("hover");
+				}
+				if(hover){
+					element.bitmap = "button_hover_on";
+				}else{
+					element.bitmap = "button_hover_off";
+				}
+			}
+			element.x = 0;
 			buttonMap[name] = false;
 		}
 		else{
@@ -108,9 +167,9 @@ Callback.addCallback("tick", function(){
 	var armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
 	activeButtons = [];
 	for(var i in armor){
-		var button = armorData[armor[i].id];
-		if(button){
-			buttonMap[button] = true;
+		var buttons = UIbuttons.getButtons(armor[i].id);
+		for(var i in buttons){
+			buttonMap[buttons[i]] = true;
 			UIbuttons.isEnabled = true;
 		}
 	}
@@ -122,16 +181,32 @@ Callback.addCallback("tick", function(){
 		}
 		if(UIbuttons.container.isElementTouched("button_fly")){
 			var armor = armor[1];
+			var extra = armor.extra;
+			if(extra){
+				var hover = extra.getBoolean("hover");
+			}
 			var y = Player.getPosition().y
 			var maxDmg = Item.getMaxDamage(armor.id)
-			if(armor.data < maxDmg && y < 256){ 
-				if(World.getThreadTime() % 10 == 0){
-					Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+50, maxDmg));
+			if(armor.data < maxDmg && y < 256){
+				if(hover){
+					if(World.getThreadTime() % 5 == 0){
+						Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+20, maxDmg), extra);
+					}
+					var vel = Player.getVelocity();
+					var vy = Math.min(32, 264-y) / 160;
+					if(vel.y < 0.2){
+						Player.addVelocity(0, Math.min(vy, 0.2-vel.y), 0);
+					}
 				}
-				var vel = Player.getVelocity();
-				var vy = Math.min(32, 264-y) / 160;
-				if(vel.y < 0.67){
-					Player.addVelocity(0, Math.min(vy, 0.67-vel.y), 0);
+				else{
+					if(World.getThreadTime() % 5 == 0){
+						Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+35, maxDmg), extra);
+					}
+					var vel = Player.getVelocity();
+					var vy = Math.min(32, 264-y) / 160;
+					if(vel.y < 0.67){
+						Player.addVelocity(0, Math.min(vy, 0.67-vel.y), 0);
+					}
 				}
 			}
 		}

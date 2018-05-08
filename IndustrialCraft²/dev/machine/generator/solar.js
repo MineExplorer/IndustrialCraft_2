@@ -49,7 +49,7 @@ MachineRegistry.registerPrototype(BlockID.solarPanel, {
 	
 	tick: function(){
 		var content = this.container.getGuiContent();
-		if(World.getLightLevel(this.x, this.y + 1, this.z) == 15){
+		if(World.canSeeSky(this.x, this.y + 1, this.z) && World.getLightLevel(this.x, this.y + 1, this.z) == 15){
 			this.data.energy = 1;
 			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), 1, 32, 0);
 			if(content){ 

@@ -36,12 +36,12 @@ var guiInductionFurnace = new UI.StandartWindow({
 		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slotSource1": {type: "slot", x: 511, y: 75},
 		"slotSource2": {type: "slot", x: 571, y: 75},
-		"slotEnergy": {type: "slot", x: 541, y: 212},
+		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotResult1": {type: "slot", x: 725, y: 142},
 		"slotResult2": {type: "slot", x: 785, y: 142},
-		"slotUpgrade1": {type: "slot", x: 900, y: 80},
-		"slotUpgrade2": {type: "slot", x: 900, y: 144},
-		"slotUpgrade3": {type: "slot", x: 900, y: 208},
+		"slotUpgrade1": {type: "slot", x: 900, y: 80, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 900, y: 144, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 900, y: 208, isValid: UpgradeAPI.isUpgrade},
 		"textInfo1": {type: "text", x: 402, y: 143, width: 100, height: 30, text: "Heat:"},
 		"textInfo2": {type: "text", x: 402, y: 173, width: 100, height: 30, text: "0%"},
 	}
@@ -55,7 +55,7 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 		isActive: false,
 		isHeating: false,
 		heat: 0,
-		upgrades: {}
+		signal: 0
 	},
 	
 	getGuiScreen: function(){
@@ -93,7 +93,8 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	
 	tick: function(){
 		this.data.energy_storage = 10000;
-		this.data.upgrades = UpgradeAPI.executeAll(this);
+		this.data.isHeating = this.data.signal > 0;
+		UpgradeAPI.executeUpgades("tick", this);
 		
 		var result = this.getResult();
 		if(result){
@@ -137,10 +138,7 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	},
 	
 	redstone: function(signal){
-		this.data.isHeating = signal.power > 0;
-		if(this.data.upgrades[ItemID.upgradeRedstone]){
-			this.data.isHeating = !this.data.isHeating;
-		}
+		this.data.signal = signal.power;
 	},
 	
 	getEnergyStorage: function(){

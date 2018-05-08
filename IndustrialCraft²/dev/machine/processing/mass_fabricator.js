@@ -110,9 +110,6 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	
 	redstone: function(signal){
 		this.data.isEnabled = (signal.power == 0);
-		/*if(this.data.upgrades[ItemID.upgradeRedstone]){
-			this.data.isEnabled = !this.data.isEnabled;
-		}*/
 	},
 	
 	getEnergyStorage: function(){

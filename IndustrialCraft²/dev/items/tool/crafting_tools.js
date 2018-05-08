@@ -26,9 +26,9 @@ function addRecipeWithCraftingTool(result, data, tool){
 }
 
 Recipes.addShaped({id: ItemID.craftingHammer, count: 1, data: 0}, [
-	"xxx",
-	"x#x",
-	" # "
+	"xx ",
+	"x##",
+	"xx "
 ], ['x', 265, 0, '#', 280, 0]);
 
 Recipes.addShaped({id: ItemID.craftingCutter, count: 1, data: 0}, [

@@ -1,17 +1,27 @@
 var UpgradeAPI = {
-	_elements: {},
+	upgrades: {},
+	calbacks: {},
 
-	registerUpgrade: function(id, upgrade){
-		UpgradeAPI._elements[id] = upgrade;
+	isUpgrade: function(id){
+		return UpgradeAPI.upgrades[id];
 	},
 
-	executeUpgrade: function(item, machine, container, data, coords){
-		if(UpgradeAPI._elements[item.id]){
-			UpgradeAPI._elements[item.id](item.count, machine, container, data, coords);
+	addUpgradeCallback: function(id, name, func){
+		this.upgrades[id] = true;
+		if(!this.calbacks[name]){
+			this.calbacks[name] = {};
+		}
+		this.calbacks[name][id] = func;
+	},
+
+	callUpgrade: function(name, item, machine, container, data, coords){
+		var callback = this.calbacks[name];
+		if(callback && callback[item.id]){
+			callback[item.id](item.count, machine, container, data, coords);
 		}
 	},
 
-	executeAll: function(machine){
+	executeUpgades: function(name, machine){
 		var container = machine.container;
 		var data = machine.data;
 		var coords = {x: machine.x, y: machine.y, z: machine.z};
@@ -20,14 +30,14 @@ var UpgradeAPI = {
 		for(var slotName in container.slots){
 			if(slotName.match(/Upgrade/)){
 				var slot = container.getSlot(slotName);
-				if(!upgrades[slot.id]){upgrades[slot.id] = slot.count;}
-				else{upgrades[slot.id] += slot.count;}
+				if(slot.id){
+					upgrades[slot.id] = upgrades[slot.id] + slot.count;
+				}
 			}
 		}
 		for(var upgrade in upgrades){
-			UpgradeAPI.executeUpgrade({id: upgrade, count: upgrades[upgrade]}, machine, container, data, coords);
+			this.callUpgrade(name, {id: upgrade, count: upgrades[upgrade]}, machine, container, data, coords);
 		}
-		return upgrades;
 	},
 	
 	findNearestContainers: function(coords, direction){
@@ -206,7 +216,8 @@ function addLiquidToStorages(liquid, output, input){
 	if(amount){
 		for(var i in input){
 			var storage = input[i];
-			amount = storage.addLiquid(liquid, amount);
+			if(storage.getLimit(liquid) < 99999999){
+			amount = storage.addLiquid(liquid, amount);}
 		}
 	}
 	output.addLiquid(liquid, amount);

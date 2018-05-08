@@ -52,6 +52,7 @@ MachineRecipeRegistry.registerRecipesFor("quantum-armor-charge", {
 
 UIbuttons.setButton(ItemID.quantumHelmet, "button_nightvision");
 UIbuttons.setButton(ItemID.quantumChestplate, "button_fly");
+UIbuttons.setButton(ItemID.quantumChestplate, "button_hover");
 UIbuttons.setButton(ItemID.quantumBoots, "button_jump");
 
 var runTime = 0;
@@ -73,7 +74,8 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 			}
 			item.data = Math.min(item.data + damage*900, maxDamage);
 		}
-		return true;
+		Player.setArmorSlot(index, item.id, 1, item.count, item.extra);
+		return false;
 	},
 	
 	tick: function(slot, index, maxDamage){
@@ -87,9 +89,15 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 			case 0:
 				Entity.clearEffect(player, MobEffect.poison);
 				Entity.clearEffect(player, MobEffect.wither);
-				if(UIbuttons.nightvision){
+				
+				var extra = slot.extra;
+				if(extra){
+					var nightvision = extra.getBoolean("nv");
+				}
+				if(nightvision){
 					var coords = Player.getPosition();
-					if(World.getLightLevel(coords.x, coords.y, coords.z)==15){
+					var time = World.getWorldTime()%24000;
+					if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time >= 0 && time <= 12000){
 						Entity.addEffect(player, MobEffect.blindness, 1, 25);
 					}
 					Entity.addEffect(player, MobEffect.nightVision, 1, 225);
@@ -100,7 +108,21 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 				}
 			break;
 			case 1:
-				Entity.addEffect(player, MobEffect.fireResistance, 1, 2);
+				var extra = slot.extra;
+				if(extra){
+					var hover = extra.getBoolean("hover");
+				}
+				if(hover && slot.data < maxDamage){
+					var vel = Player.getVelocity();
+					if(vel.y < -0.1){
+						Player.setVelocity(vel.x, -0.1, vel.z);
+						if(World.getThreadTime() % 5 == 0){
+							slot.data = Math.min(slot.data+20, maxDamage);
+							return true;
+						}
+					}
+				}
+				//Entity.addEffect(player, MobEffect.fireResistance, 1, 2);
 			break;
 			case 2:
 				var vel = Player.getVelocity();
@@ -110,11 +132,11 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 				}
 				else{runTime = 0;}
 				if(runTime > 2 && !Player.getFlying()){
-					if(World.getThreadTime()%10==0){
-						slot.data = Math.min(slot.data + Math.floor(horizontalVel*1200), maxDamage);
+					Entity.addEffect(player, MobEffect.movementSpeed, 6, 5);
+					if(World.getThreadTime()%5==0){
+						slot.data = Math.min(slot.data + Math.floor(horizontalVel*600), maxDamage);
 						return true;
 					}
-					Entity.addEffect(player, MobEffect.movementSpeed, 5, 3);
 				}
 			break;
 			}

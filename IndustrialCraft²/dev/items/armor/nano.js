@@ -8,10 +8,10 @@ Item.createArmorItem("nanoChestplate", "Nano Chestplate", {name: "nano_chestplat
 Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 6, durability: 625, texture: "armor/nano_2.png", isTech: false});
 Item.createArmorItem("nanoBoots", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
 
-ChargeItemRegistry.registerItem(ItemID.nanoHelmet, 1000000, 1, true);
-ChargeItemRegistry.registerItem(ItemID.nanoChestplate, 1000000, 1, true);
-ChargeItemRegistry.registerItem(ItemID.nanoLeggings, 1000000, 1, true);
-ChargeItemRegistry.registerItem(ItemID.nanoBoots, 1000000, 1, true);
+ChargeItemRegistry.registerItem(ItemID.nanoHelmet, 1000000, 2, true);
+ChargeItemRegistry.registerItem(ItemID.nanoChestplate, 1000000, 2, true);
+ChargeItemRegistry.registerItem(ItemID.nanoLeggings, 1000000, 2, true);
+ChargeItemRegistry.registerItem(ItemID.nanoBoots, 1000000, 2, true);
 
 Item.registerNameOverrideFunction(ItemID.nanoHelmet, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.nanoChestplate, ENERGY_ITEM_NAME);
@@ -71,7 +71,8 @@ var NANO_ARMOR_FUNCS_CHARGED = {
 			}
 			item.data = Math.min(item.data + damage * 800, maxDamage);
 		}
-		return true;
+		Player.setArmorSlot(index, item.id, 1, item.count, item.extra);
+		return false;
 	},
 	
 	tick: function(slot, index, maxDamage){
@@ -81,15 +82,22 @@ var NANO_ARMOR_FUNCS_CHARGED = {
 			return true;
 		}
 		else{
-			if(index==0 && UIbuttons.nightvision){
-				var coords = Player.getPosition();
-				if(World.getLightLevel(coords.x, coords.y, coords.z)==15){
-					Entity.addEffect(player, MobEffect.blindness, 1, 25);
+			if(index==0){
+				var extra = slot.extra;
+				if(extra){
+					var nightvision = extra.getBoolean("nv");
 				}
-				Entity.addEffect(player, MobEffect.nightVision, 1, 225);
-				if(World.getThreadTime()%20==0){
-					slot.data = Math.min(slot.data+20, maxDamage);
-					return true;
+				if(nightvision){
+					var coords = Player.getPosition();
+					var time = World.getWorldTime()%24000;
+					if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time >= 0 && time <= 12000){
+						Entity.addEffect(player, MobEffect.blindness, 1, 25);
+					}
+					Entity.addEffect(player, MobEffect.nightVision, 1, 225);
+					if(World.getThreadTime()%20==0){
+						slot.data = Math.min(slot.data+20, maxDamage);
+						return true;
+					}
 				}
 			}
 			if(slot.id != armor.charged){

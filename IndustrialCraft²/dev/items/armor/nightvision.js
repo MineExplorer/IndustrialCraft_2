@@ -6,9 +6,9 @@ Item.registerNameOverrideFunction(ItemID.nightvisionGoggles, ENERGY_ITEM_NAME);
 Callback.addCallback("PostLoaded", function(){
 	Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: Item.getMaxDamage(ItemID.nightvisionGoggles)}, [
 		"ibi",
-		"aca",
-		"r r"
-	], ['a', 102, 0, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, "i", ItemID.casingIron, 0, "r", ItemID.rubber, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
+		"aga",
+		"rcr"
+	], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'g', 20, 0, 'i', ItemID.casingIron, 0, 'r', ItemID.rubber, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
 });
 
 UIbuttons.setButton(ItemID.nightvisionGoggles, "button_nightvision");
@@ -18,9 +18,14 @@ Armor.registerFuncs("nightvisionGoggles", {
 		return false;
 	},
 	tick: function(slot, index, maxDamage){
-		if(UIbuttons.nightvision && slot.data < maxDamage){
+		var extra = slot.extra;
+		if(extra){
+			var nightvision = extra.getBoolean("nv");
+		}
+		if(nightvision && slot.data < maxDamage){
 			var coords = Player.getPosition();
-			if(World.getLightLevel(coords.x, coords.y, coords.z)==15){
+			var time = World.getWorldTime()%24000;
+			if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time >= 23950 && time <= 12050){
 				Entity.addEffect(player, MobEffect.blindness, 1, 25);
 			}
 			Entity.addEffect(player, MobEffect.nightVision, 1, 225);

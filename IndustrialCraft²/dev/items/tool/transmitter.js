@@ -1,5 +1,5 @@
 IDRegistry.genItemID("freqTransmitter");
-Item.createItem("freqTransmitter", "Frequency Transmitter", {name: "frequency_transmitter"});
+Item.createItem("freqTransmitter", "Frequency Transmitter", {name: "frequency_transmitter"}, {stack: 1});
 
 Recipes.addShaped({id: ItemID.freqTransmitter, count: 1, data: 0}, [
 	"x",
@@ -7,33 +7,62 @@ Recipes.addShaped({id: ItemID.freqTransmitter, count: 1, data: 0}, [
 	"b"
 ], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'b', ItemID.casingIron, 0]);
 
-var teleporterFrequency;
+Item.registerNameOverrideFunction(ItemID.freqTransmitter, function(item, name){
+	var carried = Player.getCarriedItem();
+	if(carried.id == item.id){
+		var extra = carried.extra;
+		if(extra){
+			var x = extra.getInt("x");
+			var y = extra.getInt("y");
+			var z = extra.getInt("z");
+			name += "\n§7x: " + x + ", y: " + y + ", z: " + z;
+		}
+	}
+	return name;
+});
+
 Item.registerUseFunction("freqTransmitter", function(coords, item, block){
-	if(block.id==BlockID.teleporter){
-		if(!teleporterFrequency){
-			teleporterFrequency = coords;
+	var receiver;
+	var extra = item.extra;
+	if(!extra){
+		extra = new ItemExtraData();
+		item.extra = extra;
+	}else{
+		var x = extra.getInt("x");
+		var y = extra.getInt("y");
+		var z = extra.getInt("z");
+		receiver = {x: x, z: z, y: y};
+	}
+	if(block.id == BlockID.teleporter){
+		if(!receiver){
+			extra.putInt("x", coords.x);
+			extra.putInt("y", coords.y);
+			extra.putInt("z", coords.z);
+			Player.setCarriedItem(item.id, 1, item.data, extra);
 			Game.message("Frequency Transmitter linked to Teleporter");
 		}
 		else{
-			if(teleporterFrequency == coords){
+			if(x == coords.x && y == coords.y && z == coords.z){
 				Game.message("Can`t link Teleporter to itself");
 			}
 			else{
-				var receiver = teleporterFrequency;
 				var data = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z).data;
 				var distance = Entity.getDistanceBetweenCoords(coords, receiver);
 				var basicTeleportationCost = Math.floor(5 * Math.pow((distance+10), 0.7));
 				data.frequency = receiver;
 				data.frequency.energy = basicTeleportationCost;
-				data = EnergyTileRegistry.accessMachineAtCoords(receiver.x, receiver.y, receiver.z).data;
-				data.frequency = coords;
-				data.frequency.energy = basicTeleportationCost;
-				Game.message("Teleportation link established");
+				receiver = EnergyTileRegistry.accessMachineAtCoords(x, y, z);
+				if(receiver){
+					data = receiver.data;
+					data.frequency = coords;
+					data.frequency.energy = basicTeleportationCost;
+					Game.message("Teleportation link established");
+				}
 			}
 		}
 	}
-	else if(teleporterFrequency){
-		teleporterFrequency = null;
+	else if(receiver){
+		Player.setCarriedItem(item.id, 1, item.data);
 		Game.message("Frequency Transmitter unlinked");
 	}
 });

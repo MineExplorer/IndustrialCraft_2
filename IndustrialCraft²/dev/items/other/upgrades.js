@@ -146,89 +146,92 @@ function EJECTOR_UPGRADE_FUNC(machine, container, coords, direction){
 }
 
 function FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, direction){
-	var liquidStor = machine.liquidStorage
-	if(liquidStor){
+	var mstorage = machine.liquidStorage
+	var liquid = mstorage.getLiquidStored();
+	if(liquid){
 		var storages = UpgradeAPI.findNearestLiquidStorages(coords, direction);
-		addLiquidToStorages("water", liquidStor, storages);
-		addLiquidToStorages("lava", liquidStor, storages);
-		addLiquidToStorages("milk", liquidStor, storages);
+		addLiquidToStorages(liquid, mstorage, storages);
 	}
 }
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeOverclocker, "tick", function(count, machine, container, data, coords){
 	if(data.work_time){
 		data.energy_consumption = Math.round(data.energy_consumption * Math.pow(1.6, count));
 		data.work_time = Math.round(data.work_time * Math.pow(0.7, count));
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEnergyStorage, "tick", function(count, machine, container, data, coords){
 	data.energy_storage += 10000 * count;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeRedstone, "tick", function(count, machine, container, data, coords){
+	data.isHeating = !data.isHeating;
+});
+
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords);
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling1, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling1, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "down");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling2, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling2, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "up");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling3, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling3, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "north");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling4, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling4, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "south");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling5, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling5, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "west");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling6, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling6, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "east");
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords);
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector1, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector1, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "down");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector2, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector2, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "up");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector3, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector3, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "north");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector4, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector4, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "south");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector5, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector5, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "west");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector6, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector6, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "east");
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords);
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector1, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector1, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "down");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector2, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector2, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "up");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector3, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector3, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "north");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector4, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector4, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "south");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector5, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector5, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "west");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector6, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector6, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "east");
 });
 

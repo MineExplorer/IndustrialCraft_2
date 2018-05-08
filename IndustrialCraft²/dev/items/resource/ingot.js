@@ -52,4 +52,17 @@ Callback.addCallback("PreLoaded", function(){
 	Recipes.addFurnace(ItemID.plateIron, 265, 0);
 	Recipes.addFurnace(ItemID.plateGold, 266, 0);
 	Recipes.addFurnace(ItemID.plateLead, ItemID.ingotLead, 0);
+	
+	// alternative
+	Recipes.addShaped({id: 66, count: 12, data: 0}, [
+		"a a",
+		"axa",
+		"a a"
+	], ['x', 280, 0, 'a', ItemID.ingotBronze, 0]);
+	
+	Recipes.addShaped({id: 33, count: 12, data: 0}, [
+		"ppp",
+		"cbc",
+		"cxc"
+	], ['x', 331, 0, 'b', ItemID.ingotBronze, 0, 'c', 4, -1, 'p', 5, -1]);
 });

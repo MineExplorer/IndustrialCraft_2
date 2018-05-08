@@ -35,12 +35,12 @@ var guiMetalFormer = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 530, y: 146, direction: 0, value: 0.5, bitmap: "metalformer_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 75},
-		"slotEnergy": {type: "slot", x: 441, y: 212},
+		"slotEnergy": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotResult": {type: "slot", x: 715, y: 142},
-		"slotUpgrade1": {type: "slot", x: 820, y: 48},
-		"slotUpgrade2": {type: "slot", x: 820, y: 112},
-		"slotUpgrade3": {type: "slot", x: 820, y: 176},
-		"slotUpgrade4": {type: "slot", x: 820, y: 240},
+		"slotUpgrade1": {type: "slot", x: 820, y: 48, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 112, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 176, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 240, isValid: UpgradeAPI.isUpgrade},
 		"button": {type: "button", x: 575, y: 210, bitmap: "button_slot", scale: GUI_BAR_STANDART_SCALE, clicker: {
 			onClick: function(container, tileEntity){
 				tileEntity.data.mode = (tileEntity.data.mode + 1) % 3;
@@ -116,7 +116,7 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 			content.elements.button.bitmap = "metal_former_button_" + this.data.mode;
 		}
 		this.setDefaultValues();
-		UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");

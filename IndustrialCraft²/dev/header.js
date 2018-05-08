@@ -12,9 +12,11 @@
 
 // constants
 var GUI_BAR_STANDART_SCALE = 3.2;
-var debugMode = __config__.access("debug_mode");
+var debugMode = __config__.getBool("debug_mode");
 
 // import values, that work faster
+Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
+Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 var MobEffect = Native.PotionEffect;
 var Enchantment = Native.Enchantment;
 var BlockSide = Native.BlockSide;
@@ -23,11 +25,12 @@ var EntityType = Native.EntityType;
 // square lava texture for geothermal generator ui.
 LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
 
-importLib("ToolType", "*");
-importLib("energylib", "*");
+IMPORT("ToolType");
+IMPORT("energylib");
 
 var player;
 Callback.addCallback("LevelLoaded", function(){
+	debugMode = __config__.getBool("debug_mode");
 	player = Player.get();
 });
 
@@ -80,18 +83,19 @@ Block.setDestroyLevel = function(id, lvl){
 
 Recipes.addFurnaceFuel(325, 10, 2000);
 
-if(debugMode == true){
-	var lasttime = -1
-	var frame = 0
 
-	Callback.addCallback("tick", function(){
-	var t = java.lang.System.currentTimeMillis()
-	if (frame++ % 20 == 0){
-	if (lasttime != -1){
-	tps = 1000 / (t - lasttime) * 20
-	Game.tipMessage(Math.round(tps * 10) / 10 + "tps")
+var lasttime = -1
+var frame = 0
+
+Callback.addCallback("tick", function(){
+	if(debugMode){
+		var t = java.lang.System.currentTimeMillis()
+		if (frame++ % 20 == 0){
+		if (lasttime != -1){
+		tps = 1000 / (t - lasttime) * 20
+		Game.tipMessage(Math.round(tps * 10) / 10 + "tps")
+		}
+		lasttime = t
+		}
 	}
-	lasttime = t
-	}
-	});
-}
+});

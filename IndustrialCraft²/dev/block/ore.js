@@ -30,7 +30,7 @@ Block.createBlock("oreUranium", [
 	{name: "Uranium Ore", texture: [["ore_uranium", 0]], inCreative: true}
 ], "opaque");
 ToolAPI.registerBlockMaterial(BlockID.oreUranium, "stone", 3, true);
-Block.setDestroyTime(BlockID.oreIridium, 3);
+Block.setDestroyTime(BlockID.oreUranium, 3);
 Block.setDestroyLevel("oreUranium", 3);
 
 
@@ -55,11 +55,11 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 
 
 var OreGenerator = {
-	"copper_ore": __config__.access("ore_gen.copper_ore"),
-	"tin_ore": __config__.access("ore_gen.tin_ore"),
-	"lead_ore": __config__.access("ore_gen.lead_ore"),
-	"uranium_ore": __config__.access("ore_gen.uranium_ore"),
-	"iridium_ore": __config__.access("ore_gen.iridium_ore"),
+	"copper_ore": __config__.getBool("ore_gen.copper_ore"),
+	"tin_ore": __config__.getBool("ore_gen.tin_ore"),
+	"lead_ore": __config__.getBool("ore_gen.lead_ore"),
+	"uranium_ore": __config__.getBool("ore_gen.uranium_ore"),
+	"iridium_ore": __config__.getBool("ore_gen.iridium_ore"),
 	
 	setOre: function(x, y, z, id, data){
 		if(World.getBlockID(x, y, z) == 1){
@@ -94,9 +94,9 @@ Callback.addCallback("PostLoaded", function(){
 	}
 	if(OreGenerator.uranium_ore){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
-			for(var i = 0; i < 3; i++){
+			for(var i = 0; i < 8; i++){
 				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 48);
-				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreUranium, 0, random(1, 4));
+				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreUranium, 0, random(1, 3));
 			}
 		});
 	}

@@ -14,7 +14,7 @@ Callback.addCallback("PostLoaded", function(){
 		"cmc",
 		"a#a",
 		"axa"
-	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.electricMotor, 0, 'a', 265, 0, 'm', ItemID.miningLaser, 0, 'c', ItemID.coil, 0]);
+	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.electricMotor, 0, 'a', 265, 0, 'm', ItemID.miningLaser, -1, 'c', ItemID.coil, 0]);
 });
 
 Callback.addCallback("PreLoaded", function(){
@@ -58,15 +58,15 @@ var guiCentrifuge = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 400 + 80*GUI_BAR_STANDART_SCALE, y: 50 + 21*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "thermal_centrifuge_scale", scale: GUI_BAR_STANDART_SCALE},
 		"heatScale": {type: "scale", x: 400 + 64*GUI_BAR_STANDART_SCALE, y: 50 + 62*GUI_BAR_STANDART_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 400 + 8*GUI_BAR_STANDART_SCALE, y: 50 + 38*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 6*GUI_BAR_STANDART_SCALE, y: 50 + 55*GUI_BAR_STANDART_SCALE},
+		"slotEnergy": {type: "slot", x: 400 + 6*GUI_BAR_STANDART_SCALE, y: 50 + 55*GUI_BAR_STANDART_SCALE, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotSource": {type: "slot", x: 400 + 6*GUI_BAR_STANDART_SCALE, y: 50 + 16*GUI_BAR_STANDART_SCALE},
 		"slotResult1": {type: "slot", x: 400 + 119*GUI_BAR_STANDART_SCALE, y: 50 + 13*GUI_BAR_STANDART_SCALE},
 		"slotResult2": {type: "slot", x: 400 + 119*GUI_BAR_STANDART_SCALE, y: 50 + 31*GUI_BAR_STANDART_SCALE},
 		"slotResult3": {type: "slot", x: 400 + 119*GUI_BAR_STANDART_SCALE, y: 50 + 49*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade1": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 4*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade2": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 22*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade3": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 40*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade4": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
+		"slotUpgrade1": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 4*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 22*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 40*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
 		"indicator": {type: "image", x: 400 + 88*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, bitmap: "indicator_red", scale: GUI_BAR_STANDART_SCALE}
 	}
 });
@@ -82,7 +82,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 		isHeating: false,
 		heat: 0,
 		maxHeat: 5000,
-		upgrades: {}
+		signal: 0
 	},
 
 	getGuiScreen: function(){
@@ -97,6 +97,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
 		this.data.work_time = this.defaultValues.work_time;
+		this.data.isHeating = this.data.signal > 0;
 	},
 
 	checkResult: function(result){
@@ -104,10 +105,11 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 			var id = result[(i-1)*2];
 			var count = result[(i-1)*2+1];
 			var resultSlot = this.container.getSlot("slotResult"+i);
-			if(resultSlot.id == id && resultSlot.count + count <= 64 || resultSlot.id == 0 || !id){
-				return true;
+			if((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0){
+				return false;
 			}
 		}
+		return true;
 	},
 
 	putResult: function(result, sourceSlot){
@@ -125,7 +127,10 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 
 	tick: function(){
 		this.setDefaultValues();
-		this.data.upgrades = UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
+		if(this.data.isHeating){
+			this.data.maxHeat = 5000;
+		}
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", sourceSlot.id, sourceSlot.data);
@@ -179,13 +184,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 	},
 
 	redstone: function(signal){
-		this.data.isHeating = signal.power > 0;
-		if(this.data.upgrades[ItemID.upgradeRedstone]){
-			this.data.isHeating = !this.data.isHeating;
-		}
-		if(this.data.isHeating){
-			this.data.maxHeat = 5000;
-		}
+		this.data.signal = signal.power > 0;
 	},
 
 	getEnergyStorage: function(){

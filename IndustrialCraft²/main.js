@@ -2,7 +2,7 @@
 BUILD INFO:
   dir: dev
   target: main.js
-  files: 75
+  files: 74
 */
 
 
@@ -23,7 +23,7 @@ BUILD INFO:
 
 // constants
 var GUI_BAR_STANDART_SCALE = 3.2;
-var debugMode = __config__.access("debug_mode");
+var debugMode = __config__.getBool("debug_mode");
 
 // import values, that work faster
 var MobEffect = Native.PotionEffect;
@@ -91,19 +91,19 @@ Block.setDestroyLevel = function(id, lvl){
 
 Recipes.addFurnaceFuel(325, 10, 2000);
 
-if(debugMode == true){
+if(debugMode){
 	var lasttime = -1
 	var frame = 0
 
 	Callback.addCallback("tick", function(){
-	var t = java.lang.System.currentTimeMillis()
-	if (frame++ % 20 == 0){
-	if (lasttime != -1){
-	tps = 1000 / (t - lasttime) * 20
-	Game.tipMessage(Math.round(tps * 10) / 10 + "tps")
-	}
-	lasttime = t
-	}
+		var t = java.lang.System.currentTimeMillis()
+		if (frame++ % 20 == 0){
+		if (lasttime != -1){
+		tps = 1000 / (t - lasttime) * 20
+		Game.tipMessage(Math.round(tps * 10) / 10 + "tps")
+		}
+		lasttime = t
+		}
 	});
 }
 
@@ -548,19 +548,29 @@ var MachineRecipeRegistry = {
 // file: core/machine/upgrade.js
 
 var UpgradeAPI = {
-	_elements: {},
+	upgrades: {},
+	calbacks: {},
 
-	registerUpgrade: function(id, upgrade){
-		UpgradeAPI._elements[id] = upgrade;
+	isUpgrade: function(id){
+		return UpgradeAPI.upgrades[id];
 	},
 
-	executeUpgrade: function(item, machine, container, data, coords){
-		if(UpgradeAPI._elements[item.id]){
-			UpgradeAPI._elements[item.id](item.count, machine, container, data, coords);
+	addUpgradeCallback: function(id, name, func){
+		this.upgrades[id] = true;
+		if(!this.calbacks[name]){
+			this.calbacks[name] = {};
+		}
+		this.calbacks[name][id] = func;
+	},
+
+	callUpgrade: function(name, item, machine, container, data, coords){
+		var callback = this.calbacks[name];
+		if(callback && callback[item.id]){
+			callback[item.id](item.count, machine, container, data, coords);
 		}
 	},
 
-	executeAll: function(machine){
+	executeUpgades: function(name, machine){
 		var container = machine.container;
 		var data = machine.data;
 		var coords = {x: machine.x, y: machine.y, z: machine.z};
@@ -569,14 +579,14 @@ var UpgradeAPI = {
 		for(var slotName in container.slots){
 			if(slotName.match(/Upgrade/)){
 				var slot = container.getSlot(slotName);
-				if(!upgrades[slot.id]){upgrades[slot.id] = slot.count;}
-				else{upgrades[slot.id] += slot.count;}
+				if(slot.id){
+					upgrades[slot.id] = upgrades[slot.id] + slot.count;
+				}
 			}
 		}
 		for(var upgrade in upgrades){
-			UpgradeAPI.executeUpgrade({id: upgrade, count: upgrades[upgrade]}, machine, container, data, coords);
+			this.callUpgrade(name, {id: upgrade, count: upgrades[upgrade]}, machine, container, data, coords);
 		}
-		return upgrades;
 	},
 	
 	findNearestContainers: function(coords, direction){
@@ -755,7 +765,8 @@ function addLiquidToStorages(liquid, output, input){
 	if(amount){
 		for(var i in input){
 			var storage = input[i];
-			amount = storage.addLiquid(liquid, amount);
+			//if(storage.getLimit(liquid)){
+			amount = storage.addLiquid(liquid, amount);//}
 		}
 	}
 	output.addLiquid(liquid, amount);
@@ -823,11 +834,11 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 
 
 var OreGenerator = {
-	"copper_ore": __config__.access("ore_gen.copper_ore"),
-	"tin_ore": __config__.access("ore_gen.tin_ore"),
-	"lead_ore": __config__.access("ore_gen.lead_ore"),
-	"uranium_ore": __config__.access("ore_gen.uranium_ore"),
-	"iridium_ore": __config__.access("ore_gen.iridium_ore"),
+	"copper_ore": __config__.getBool("ore_gen.copper_ore"),
+	"tin_ore": __config__.getBool("ore_gen.tin_ore"),
+	"lead_ore": __config__.getBool("ore_gen.lead_ore"),
+	"uranium_ore": __config__.getBool("ore_gen.uranium_ore"),
+	"iridium_ore": __config__.getBool("ore_gen.iridium_ore"),
 	
 	setOre: function(x, y, z, id, data){
 		if(World.getBlockID(x, y, z) == 1){
@@ -1216,7 +1227,7 @@ function destroyLeaves(x, y, z){
 
 IDRegistry.genBlockID("rubberTreeLog");
 Block.createBlock("rubberTreeLog", [
-	{name: "Rubber Tree Log", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false}
+	{name: "Rubber Tree Log", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: true}
 ], "opaque");
 Block.registerDropFunction("rubberTreeLog", function(coords, blockID){
 	destroyLeaves(coords.x, coords.y, coords.z);
@@ -1227,6 +1238,7 @@ ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
 
 IDRegistry.genBlockID("rubberTreeLogLatex");
 Block.createBlock("rubberTreeLogLatex", [
+	{name: "tile.rubberTreeLog.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false},
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 2], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false},
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 2], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false},
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 2], ["rubber_tree_log", 0]], inCreative: false},
@@ -1238,13 +1250,19 @@ Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID){
 });
 Block.setDestroyTime(BlockID.rubberTreeLogLatex, 2);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
+Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, data){
+	if(data==0){
+		World.setBlock(x, y, z, id, (3*x + 7*y + 11*z)%4 + 1);
+	}
+});
+
 
 IDRegistry.genBlockID("rubberTreeLeaves");
 Block.createBlock("rubberTreeLeaves", [
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false}
 ]);
 Block.registerDropFunction("rubberTreeLeaves", function(){
-	if(Math.random() < .075){
+	if(Math.random() < .05){
 		return [[ItemID.rubberSapling, 1, 0]]
 	}
 	else {
@@ -1284,13 +1302,11 @@ var RubberTreeGenerationHelper = {
 		var log = params.log;
 		
 		var height = parseInt(Math.random() * (0.5 + params.height.max - params.height.min) + params.height.min);
-		var resinHeight = -1;
-		if(log.resin){
-			resinHeight = parseInt(Math.random() * (height - 2)) + 1;
-		}
+		var k = 0.25;
 		for(var ys = 0; ys < height; ys++){
-			if(ys == resinHeight){
-				World.setBlock(x, y + ys, z, log.resin, parseInt(Math.random()*4));
+			if(log.resin && Math.random() < k){
+				World.setBlock(x, y + ys, z, log.resin, (3*x + 7*y + 11*z)%4 + 1);
+				k -= 0.1;
 			}
 			else{
 				World.setFullBlock(x, y + ys, z, log);
@@ -1319,7 +1335,7 @@ var RubberTreeGenerationHelper = {
 		}
 	},
 
-	generateRubberTree: function(x, y, z, activateTileEntity){
+	generateRubberTree: function(x, y, z){
 		RubberTreeGenerationHelper.generateCustomTree(x, y, z, {
 			log: {
 				id: BlockID.rubberTreeLog,
@@ -1327,20 +1343,17 @@ var RubberTreeGenerationHelper = {
 				resin: BlockID.rubberTreeLogLatex
 			},
 			leaves: {
-				id: BlockID.rubberTreeLeaves,
+				id: 0,//BlockID.rubberTreeLeaves,
 				data: 0
 			},
 			height: {
-				min: 5,
-				max: 7,
+				min: 4,
+				max: 8,
 				start: 2 + parseInt(Math.random() * 2)
 			},
 			pike: 2 + parseInt(Math.random() * 1.5),
 			radius: 2
 		});
-		if(activateTileEntity){
-			return World.addTileEntity(x, y, z);
-		}
 	}
 }
 
@@ -1371,7 +1384,7 @@ Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
 			coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
 			if(World.getBlockID(coords.x, coords.y, coords.z) == 2){
 				coords.y++;
-				RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y, coords.z, false);
+				RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y, coords.z);
 			}
 		}
 	}
@@ -1870,6 +1883,14 @@ var ChargeItemRegistry = {
 		return data && data.type == "flash";
 	},
 	
+	isEnergyStorage: function(id){
+		var data = ChargeItemRegistry.getItemData(id);
+		if((!data || data.preventUncharge) && item.id != ItemID.debugItem){
+			return false;
+		}
+		return true;
+	},
+	
 	getEnergyFrom: function(item, amount, level, getFromAll){
 		if(item.id==ItemID.debugItem){
 			return amount;
@@ -1926,7 +1947,13 @@ Callback.addCallback("tick", function(){
 	var item = Player.getCarriedItem();
 	var data = ChargeItemRegistry.getItemData(item.id);
 	if(item.data==0 && data && data.type != "flash"){
-		Player.setCarriedItem(item.id, 1, 1);
+		if(item.id == ItemID.iridiumDrill){
+			var extra = new ItemExtraData();
+			extra.putInt("mode", 0);
+			extra.addEnchant(Enchantment.FORTUNE, 3);
+			Player.setCarriedItem(item.id, 1, 1, extra);
+		}else{
+		Player.setCarriedItem(item.id, 1, 1);}
 	}
 });
 
@@ -1967,7 +1994,7 @@ var guiBatBox = new UI.StandartWindow({
 	elements: {
 		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
+		"slot2": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
 		"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "10000"}
 	}
@@ -2043,7 +2070,7 @@ var guiCESU = new UI.StandartWindow({
 	elements: {
 		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
+		"slot2": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
 		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
 	}
@@ -2119,7 +2146,7 @@ var guiMFE = new UI.StandartWindow({
 	elements: {
 		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
+		"slot2": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
 		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
 	}
@@ -2195,7 +2222,7 @@ var guiMFSU = new UI.StandartWindow({
 	elements: {
 		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
+		"slot2": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"textInfo1": {type: "text", x: 642, y: 142, width: 350, height: 30, text: "0/"},
 		"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "10000"}
 	}
@@ -2419,12 +2446,12 @@ var guiElectricFurnace = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 530, y: 146, direction: 0, value: 0.5, bitmap: "furnace_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 75},
-		"slotEnergy": {type: "slot", x: 441, y: 212},
+		"slotEnergy": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotResult": {type: "slot", x: 625, y: 142},
-		"slotUpgrade1": {type: "slot", x: 820, y: 48},
-		"slotUpgrade2": {type: "slot", x: 820, y: 112},
-		"slotUpgrade3": {type: "slot", x: 820, y: 176},
-		"slotUpgrade4": {type: "slot", x: 820, y: 240}
+		"slotUpgrade1": {type: "slot", x: 820, y: 48, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 112, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 176, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 240, isValid: UpgradeAPI.isUpgrade},
 	}
 });
 
@@ -2454,7 +2481,7 @@ MachineRegistry.registerPrototype(BlockID.electricFurnace, {
 	
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
@@ -2544,12 +2571,12 @@ var guiInductionFurnace = new UI.StandartWindow({
 		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slotSource1": {type: "slot", x: 511, y: 75},
 		"slotSource2": {type: "slot", x: 571, y: 75},
-		"slotEnergy": {type: "slot", x: 541, y: 212},
+		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotResult1": {type: "slot", x: 725, y: 142},
 		"slotResult2": {type: "slot", x: 785, y: 142},
-		"slotUpgrade1": {type: "slot", x: 900, y: 80},
-		"slotUpgrade2": {type: "slot", x: 900, y: 144},
-		"slotUpgrade3": {type: "slot", x: 900, y: 208},
+		"slotUpgrade1": {type: "slot", x: 900, y: 80, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 900, y: 144, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 900, y: 208, isValid: UpgradeAPI.isUpgrade},
 		"textInfo1": {type: "text", x: 402, y: 143, width: 100, height: 30, text: "Heat:"},
 		"textInfo2": {type: "text", x: 402, y: 173, width: 100, height: 30, text: "0%"},
 	}
@@ -2563,7 +2590,7 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 		isActive: false,
 		isHeating: false,
 		heat: 0,
-		upgrades: {}
+		signal: 0
 	},
 	
 	getGuiScreen: function(){
@@ -2601,7 +2628,8 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	
 	tick: function(){
 		this.data.energy_storage = 10000;
-		this.data.upgrades = UpgradeAPI.executeAll(this);
+		this.data.isHeating = this.data.signal > 0;
+		UpgradeAPI.executeUpgades("tick", this);
 		
 		var result = this.getResult();
 		if(result){
@@ -2645,10 +2673,7 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	},
 	
 	redstone: function(signal){
-		this.data.isHeating = signal.power > 0;
-		if(this.data.upgrades[ItemID.upgradeRedstone]){
-			this.data.isHeating = !this.data.isHeating;
-		}
+		this.data.signal = signal.power;
 	},
 	
 	getEnergyStorage: function(){
@@ -2703,12 +2728,12 @@ var guiMacerator = new UI.StandartWindow({
         "progressScale": {type: "scale", x: 530, y: 146, direction: 0, value: 0.5, bitmap: "macerator_bar_scale", scale: GUI_BAR_STANDART_SCALE},
         "energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
         "slotSource": {type: "slot", x: 441, y: 75},
-        "slotEnergy": {type: "slot", x: 441, y: 212},
+        "slotEnergy": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
         "slotResult": {type: "slot", x: 625, y: 142},
-		"slotUpgrade1": {type: "slot", x: 820, y: 48},
-		"slotUpgrade2": {type: "slot", x: 820, y: 112},
-		"slotUpgrade3": {type: "slot", x: 820, y: 176},
-		"slotUpgrade4": {type: "slot", x: 820, y: 240}
+		"slotUpgrade1": {type: "slot", x: 820, y: 48, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 112, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 176, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 240, isValid: UpgradeAPI.isUpgrade},
     }
 });
 
@@ -2786,7 +2811,7 @@ MachineRegistry.registerPrototype(BlockID.macerator, {
 	
     tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
 		
         var sourceSlot = this.container.getSlot("slotSource");
         var resultSlot = this.container.getSlot("slotResult");
@@ -2874,12 +2899,12 @@ var guiRecycler = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 530, y: 146, direction: 0, value: 0.5, bitmap: "recycler_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 75},
-		"slotEnergy": {type: "slot", x: 441, y: 212},
+		"slotEnergy": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotResult": {type: "slot", x: 625, y: 142},
-		"slotUpgrade1": {type: "slot", x: 820, y: 48},
-		"slotUpgrade2": {type: "slot", x: 820, y: 112},
-		"slotUpgrade3": {type: "slot", x: 820, y: 176},
-		"slotUpgrade4": {type: "slot", x: 820, y: 240}
+		"slotUpgrade1": {type: "slot", x: 820, y: 48, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 112, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 176, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 240, isValid: UpgradeAPI.isUpgrade},
 	}
 });
 
@@ -2909,7 +2934,7 @@ MachineRegistry.registerPrototype(BlockID.recycler, {
 	
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
@@ -2998,12 +3023,12 @@ var guiCompressor = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 530, y: 146, direction: 0, value: 0.5, bitmap: "compressor_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 75},
-		"slotEnergy": {type: "slot", x: 441, y: 212},
+		"slotEnergy": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotResult": {type: "slot", x: 625, y: 142},
-		"slotUpgrade1": {type: "slot", x: 820, y: 48},
-		"slotUpgrade2": {type: "slot", x: 820, y: 112},
-		"slotUpgrade3": {type: "slot", x: 820, y: 176},
-		"slotUpgrade4": {type: "slot", x: 820, y: 240}
+		"slotUpgrade1": {type: "slot", x: 820, y: 48, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 112, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 176, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 240, isValid: UpgradeAPI.isUpgrade},
 	}
 });
 
@@ -3064,7 +3089,7 @@ MachineRegistry.registerPrototype(BlockID.compressor, {
 	
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = MachineRecipeRegistry.getRecipeResult("compressor", sourceSlot.id, sourceSlot.data);
@@ -3155,12 +3180,12 @@ var guiExtractor = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 530, y: 146, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 75},
-		"slotEnergy": {type: "slot", x: 441, y: 212},
+		"slotEnergy": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotResult": {type: "slot", x: 625, y: 142},
-		"slotUpgrade1": {type: "slot", x: 820, y: 48},
-		"slotUpgrade2": {type: "slot", x: 820, y: 112},
-		"slotUpgrade3": {type: "slot", x: 820, y: 176},
-		"slotUpgrade4": {type: "slot", x: 820, y: 240}
+		"slotUpgrade1": {type: "slot", x: 820, y: 48, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 112, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 176, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 240, isValid: UpgradeAPI.isUpgrade},
 	}
 });
 
@@ -3199,7 +3224,7 @@ MachineRegistry.registerPrototype(BlockID.extractor, {
 	
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
@@ -3288,12 +3313,12 @@ var guiMetalFormer = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 530, y: 146, direction: 0, value: 0.5, bitmap: "metalformer_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 75},
-		"slotEnergy": {type: "slot", x: 441, y: 212},
+		"slotEnergy": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotResult": {type: "slot", x: 715, y: 142},
-		"slotUpgrade1": {type: "slot", x: 820, y: 48},
-		"slotUpgrade2": {type: "slot", x: 820, y: 112},
-		"slotUpgrade3": {type: "slot", x: 820, y: 176},
-		"slotUpgrade4": {type: "slot", x: 820, y: 240},
+		"slotUpgrade1": {type: "slot", x: 820, y: 48, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 112, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 176, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 240, isValid: UpgradeAPI.isUpgrade},
 		"button": {type: "button", x: 575, y: 210, bitmap: "button_slot", scale: GUI_BAR_STANDART_SCALE, clicker: {
 			onClick: function(container, tileEntity){
 				tileEntity.data.mode = (tileEntity.data.mode + 1) % 3;
@@ -3369,7 +3394,7 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 			content.elements.button.bitmap = "metal_former_button_" + this.data.mode;
 		}
 		this.setDefaultValues();
-		UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
@@ -3473,17 +3498,17 @@ var guiOreWasher = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 400 + 98*GUI_BAR_STANDART_SCALE, y: 50 + 35*GUI_BAR_STANDART_SCALE, direction: 0, value: 0.5, bitmap: "ore_washer_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"liquidScale": {type: "scale", x: 400 + 60*GUI_BAR_STANDART_SCALE, y: 50 + 21*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_BAR_STANDART_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 3*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
+		"slotEnergy": {type: "slot", x: 400 + 3*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_BAR_STANDART_SCALE, y: 50 + 13*GUI_BAR_STANDART_SCALE},
 		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
 		"slotSource": {type: "slot", x: 400 + 99*GUI_BAR_STANDART_SCALE, y: 50 + 13*GUI_BAR_STANDART_SCALE},
 		"slotResult1": {type: "slot", x: 400 + 81*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
 		"slotResult2": {type: "slot", x: 400 + 99*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
 		"slotResult3": {type: "slot", x: 400 + 117*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade1": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 4*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade2": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 22*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade3": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 40*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade4": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
+		"slotUpgrade1": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 4*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 22*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 40*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
 	}
 });
 
@@ -3547,7 +3572,7 @@ MachineRegistry.registerPrototype(BlockID.oreWasher, {
 	
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
 		
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");
@@ -3669,15 +3694,15 @@ var guiCentrifuge = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 400 + 80*GUI_BAR_STANDART_SCALE, y: 50 + 21*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "thermal_centrifuge_scale", scale: GUI_BAR_STANDART_SCALE},
 		"heatScale": {type: "scale", x: 400 + 64*GUI_BAR_STANDART_SCALE, y: 50 + 62*GUI_BAR_STANDART_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 400 + 8*GUI_BAR_STANDART_SCALE, y: 50 + 38*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 6*GUI_BAR_STANDART_SCALE, y: 50 + 55*GUI_BAR_STANDART_SCALE},
+		"slotEnergy": {type: "slot", x: 400 + 6*GUI_BAR_STANDART_SCALE, y: 50 + 55*GUI_BAR_STANDART_SCALE, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotSource": {type: "slot", x: 400 + 6*GUI_BAR_STANDART_SCALE, y: 50 + 16*GUI_BAR_STANDART_SCALE},
 		"slotResult1": {type: "slot", x: 400 + 119*GUI_BAR_STANDART_SCALE, y: 50 + 13*GUI_BAR_STANDART_SCALE},
 		"slotResult2": {type: "slot", x: 400 + 119*GUI_BAR_STANDART_SCALE, y: 50 + 31*GUI_BAR_STANDART_SCALE},
 		"slotResult3": {type: "slot", x: 400 + 119*GUI_BAR_STANDART_SCALE, y: 50 + 49*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade1": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 4*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade2": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 22*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade3": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 40*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade4": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
+		"slotUpgrade1": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 4*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 22*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 40*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
 		"indicator": {type: "image", x: 400 + 88*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, bitmap: "indicator_red", scale: GUI_BAR_STANDART_SCALE}
 	}
 });
@@ -3693,7 +3718,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 		isHeating: false,
 		heat: 0,
 		maxHeat: 5000,
-		upgrades: {}
+		signal: 0
 	},
 
 	getGuiScreen: function(){
@@ -3708,6 +3733,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
 		this.data.work_time = this.defaultValues.work_time;
+		this.data.isHeating = this.data.signal > 0;
 	},
 
 	checkResult: function(result){
@@ -3736,7 +3762,10 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 
 	tick: function(){
 		this.setDefaultValues();
-		this.data.upgrades = UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
+		if(this.data.isHeating){
+			this.data.maxHeat = 5000;
+		}
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", sourceSlot.id, sourceSlot.data);
@@ -3790,13 +3819,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 	},
 
 	redstone: function(signal){
-		this.data.isHeating = signal.power > 0;
-		if(this.data.upgrades[ItemID.upgradeRedstone]){
-			this.data.isHeating = !this.data.isHeating;
-		}
-		if(this.data.isHeating){
-			this.data.maxHeat = 5000;
-		}
+		this.data.signal = signal.power > 0;
 	},
 
 	getEnergyStorage: function(){
@@ -3927,9 +3950,6 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	
 	redstone: function(signal){
 		this.data.isEnabled = (signal.power == 0);
-		/*if(this.data.upgrades[ItemID.upgradeRedstone]){
-			this.data.isEnabled = !this.data.isEnabled;
-		}*/
 	},
 	
 	getEnergyStorage: function(){
@@ -3986,13 +4006,13 @@ var guiPump = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 502, y: 149, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 416, y: 127, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"liquidScale": {type: "scale", x: 400 + 70*GUI_BAR_STANDART_SCALE, y: 50 + 16*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_BAR_STANDART_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 3*GUI_BAR_STANDART_SCALE, y: 50 + 39*GUI_BAR_STANDART_SCALE},
+		"slotEnergy": {type: "slot", x: 400 + 3*GUI_BAR_STANDART_SCALE, y: 50 + 39*GUI_BAR_STANDART_SCALE, isValid: ChargeItemRegistry.isEnergyStorage},
 		"slotLiquid1": {type: "slot", x: 400 + 94*GUI_BAR_STANDART_SCALE, y: 50 + 12*GUI_BAR_STANDART_SCALE},
 		"slotLiquid2": {type: "slot", x: 400 + 128*GUI_BAR_STANDART_SCALE, y: 50 + 29*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade1": {type: "slot", x: 880, y: 50 + 4*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade2": {type: "slot", x: 880, y: 50 + 22*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade4": {type: "slot", x: 880, y: 50 + 58*GUI_BAR_STANDART_SCALE},
+		"slotUpgrade1": {type: "slot", x: 880, y: 50 + 4*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 880, y: 50 + 22*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 880, y: 50 + 58*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
 	}
 });
 
@@ -4045,7 +4065,7 @@ MachineRegistry.registerPrototype(BlockID.pump, {
 	
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeAll(this);
+		UpgradeAPI.executeUpgades("tick", this);
 		
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");
@@ -4378,48 +4398,7 @@ Callback.addCallback("PostLoaded", function(){
 
 
 
-// file: machine/misc/tree/root.js
-
-TileEntity.registerPrototype(BlockID.rubberTreeLog, {	
-	addLatex: function(){
-		var possibleYs = [];
-		var checkY = this.y + 1;
-		while (true){
-			var block = World.getBlock(this.x, checkY, this.z);
-			if (block.id == BlockID.rubberTreeLog){
-				possibleYs.push(checkY);
-			}
-			else if (block.id != BlockID.rubberTreeLogLatex){
-				break;
-			}
-			checkY++;
-		}
-		
-		var randomY = possibleYs[parseInt(Math.random() * possibleYs.length)];
-		World.setBlock(this.x, randomY, this.z, BlockID.rubberTreeLogLatex, parseInt(Math.random() * 4));
-	},
-	
-	checkLog: function(){
-		var block = World.getBlock(this.x, this.y - 1, this.z);
-		if (block.id == BlockID.rubberTreeLog || block.id == BlockID.rubberTreeLogLatex){
-			this.selfDestroy();
-		}
-	},
-	
-	tick: function(){
-		if (World.getThreadTime() % 100 == 0){
-			if (Math.random() < .125){
-				this.addLatex();
-			}
-			this.checkLog();
-		}
-	}
-});
-
-
-
-
-// file: machine/misc/tree/sapling.js
+// file: machine/misc/sapling.js
 
 var RUBBER_SAPLING_GROUND_TILES = {
 	2: true,
@@ -5665,89 +5644,92 @@ function EJECTOR_UPGRADE_FUNC(machine, container, coords, direction){
 }
 
 function FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, direction){
-	var liquidStor = machine.liquidStorage
-	if(liquidStor){
+	var mstorage = machine.liquidStorage
+	var liquid = mstorage.getLiquidStored();
+	if(liquid){
 		var storages = UpgradeAPI.findNearestLiquidStorages(coords, direction);
-		addLiquidToStorages("water", liquidStor, storages);
-		addLiquidToStorages("lava", liquidStor, storages);
-		addLiquidToStorages("milk", liquidStor, storages);
+		addLiquidToStorages(liquid, mstorage, storages);
 	}
 }
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeOverclocker, "tick", function(count, machine, container, data, coords){
 	if(data.work_time){
 		data.energy_consumption = Math.round(data.energy_consumption * Math.pow(1.6, count));
 		data.work_time = Math.round(data.work_time * Math.pow(0.7, count));
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEnergyStorage, "tick", function(count, machine, container, data, coords){
 	data.energy_storage += 10000 * count;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeRedstone, "tick", function(count, machine, container, data, coords){
+	data.isHeating = !data.isHeating;
+});
+
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords);
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling1, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling1, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "down");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling2, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling2, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "up");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling3, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling3, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "north");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling4, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling4, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "south");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling5, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling5, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "west");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling6, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradePulling6, "tick", function(count, machine, container, data, coords){
 	PULLING_UPGRADE_FUNC(machine, container, coords, "east");
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords);
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector1, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector1, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "down");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector2, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector2, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "up");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector3, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector3, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "north");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector4, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector4, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "south");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector5, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector5, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "west");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector6, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeEjector6, "tick", function(count, machine, container, data, coords){
 	EJECTOR_UPGRADE_FUNC(machine, container, coords, "east");
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords);
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector1, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector1, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "down");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector2, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector2, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "up");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector3, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector3, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "north");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector4, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector4, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "south");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector5, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector5, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "west");
 });
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector6, function(count, machine, container, data, coords){
+UpgradeAPI.addUpgradeCallback(ItemID.upgradeFluidEjector6, "tick", function(count, machine, container, data, coords){
 	FLUID_EJECTOR_UPGRADE_FUNC(machine, container, coords, "east");
 });
 
@@ -6306,7 +6288,7 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 						slot.data = Math.min(slot.data + Math.floor(horizontalVel*1200), maxDamage);
 						return true;
 					}
-					Entity.addEffect(player, MobEffect.movementSpeed, 5, 3);
+					Entity.addEffect(player, MobEffect.movementSpeed, 5, 4);
 				}
 			break;
 			}
@@ -6475,41 +6457,64 @@ registerStoragePack("lappack", 3, 8192);
 // file: items/tool/transmitter.js
 
 IDRegistry.genItemID("freqTransmitter");
-Item.createItem("freqTransmitter", "Frequency Transmitter", {name: "frequency_transmitter"});
+Item.createItem("freqTransmitter", "Frequency Transmitter", {name: "frequency_transmitter"}, {stack: 1});
 
 Recipes.addShaped({id: ItemID.freqTransmitter, count: 1, data: 0}, [
 	"x",
 	"#",
 	"b"
 ], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'b', ItemID.casingIron, 0]);
-
-var teleporterFrequency;
+/*
+Item.registerNameOverrideFunction(ItemID.freqTransmitter, function(item, name){
+	var extra = item.extra;
+	if(extra){
+		var x = extra.getInt("x");
+		var y = extra.getInt("y");
+		var z = extra.getInt("z");
+		name += "\n§7x: " + ", y: " + y + ", z: " + z;
+	}	
+	return name;
+});
+*/
 Item.registerUseFunction("freqTransmitter", function(coords, item, block){
-	if(block.id==BlockID.teleporter){
-		if(!teleporterFrequency){
-			teleporterFrequency = coords;
+	var receiver;
+	var extra = item.extra;
+	if(!extra){
+		extra = new ItemExtraData();
+		item.extra = extra;
+	}else{
+		var x = extra.getInt("x");
+		var y = extra.getInt("y");
+		var z = extra.getInt("z");
+		receiver = {x: x, z: z, y: y};
+	}
+	if(block.id == BlockID.teleporter){
+		if(!receiver){
+			extra.putInt("x", coords.x);
+			extra.putInt("y", coords.y);
+			extra.putInt("z", coords.z);
+			Player.setCarriedItem(item.id, 1, item.data, extra);
 			Game.message("Frequency Transmitter linked to Teleporter");
 		}
 		else{
-			if(teleporterFrequency == coords){
+			if(receiver == coords){
 				Game.message("Can`t link Teleporter to itself");
 			}
 			else{
-				var receiver = teleporterFrequency;
 				var data = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z).data;
 				var distance = Entity.getDistanceBetweenCoords(coords, receiver);
 				var basicTeleportationCost = Math.floor(5 * Math.pow((distance+10), 0.7));
 				data.frequency = receiver;
 				data.frequency.energy = basicTeleportationCost;
-				data = EnergyTileRegistry.accessMachineAtCoords(receiver.x, receiver.y, receiver.z).data;
+				data = EnergyTileRegistry.accessMachineAtCoords(x, y, z).data;
 				data.frequency = coords;
 				data.frequency.energy = basicTeleportationCost;
 				Game.message("Teleportation link established");
 			}
 		}
 	}
-	else if(teleporterFrequency){
-		teleporterFrequency = null;
+	else if(receiver){
+		Player.setCarriedItem(item.id, 1, item.data);
 		Game.message("Frequency Transmitter unlinked");
 	}
 });
@@ -6558,8 +6563,8 @@ Item.createItem("treetap", "Treetap", {name: "treetap", data: 0}, {stack: 1});
 Item.setMaxDamage(ItemID.treetap, 17);
 
 Item.registerUseFunction("treetap", function(coords, item, block){
-	if(block.id == BlockID.rubberTreeLogLatex && block.data == coords.side - 2){
-		World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLog);
+	if(block.id == BlockID.rubberTreeLogLatex && block.data == coords.side - 1){
+		World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLogLatex, 0);
 		Player.setCarriedItem(item.id, ++item.data < 17 ? item.count : 0, item.data);
 		Entity.setVelocity(
 			World.drop(
@@ -6758,8 +6763,8 @@ Item.registerUseFunction("electricHoe", function(coords, item, block){
 	}
 });
 Item.registerUseFunction("electricTreetap", function(coords, item, block){
-	if(item.data + 50 <= Item.getMaxDamage(ItemID.electricTreetap) && block.id == BlockID.rubberTreeLogLatex && block.data == coords.side - 2){
-		World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLog);
+	if(item.data + 50 <= Item.getMaxDamage(ItemID.electricTreetap) && block.id == BlockID.rubberTreeLogLatex && block.data == coords.side - 1){
+		World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLogLatex, 0);
 		Player.setCarriedItem(item.id, 1, item.data + 50);
 		Entity.setVelocity(
 			World.drop(
@@ -6786,7 +6791,7 @@ IDRegistry.genItemID("iridiumDrill");
 Item.createItem("drill", "Mining Drill", {name: "drill", meta: 0}, {stack: 1});
 Item.createItem("diamondDrill", "Diamond Drill", {name: "drill", meta: 1}, {stack: 1});
 Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill", meta: 2}, {stack: 1});
-//Item.setGlint(ItemID.iridiumDrill, true);
+Item.setGlint(ItemID.iridiumDrill, true);
 ChargeItemRegistry.registerItem(ItemID.drill, 30000, 0, true, true);
 ChargeItemRegistry.registerItem(ItemID.diamondDrill, 30000, 0, true, true);
 ChargeItemRegistry.registerItem(ItemID.iridiumDrill, 1000000, 2, true, true);
@@ -6798,7 +6803,12 @@ Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
 	var energyStored = Math.min(energyStorage - item.data + 1, energyStorage);
 	if(energyStored==0){return "§b" + name;}
 	name = "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
-	switch(IDrillMode){
+	/*
+	var mode = 0;
+	var extra = item.extra;
+	if(extra){
+	mode = extra.getInt("mode");}
+	switch(mode){
 		case 0:
 			name += "\nFortune III mode";
 		break;
@@ -6812,6 +6822,7 @@ Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
 			name += "\n3x3 Silk Touch mode";
 		break;
 	}
+	*/
 	return name;
 });
 
@@ -6852,30 +6863,40 @@ ToolType.drill = {
    }
 }
 
-var IDrillMode = 0;
 var dirtBlocksDrop = {13:318, 60:3, 110:3, 198:3, 243:3};
 ToolAPI.setTool(ItemID.drill, {energyConsumption: 50, level: 3, efficiency: 8, damage: 3},  ToolType.drill);
 ToolAPI.setTool(ItemID.diamondDrill, {energyConsumption: 80, level: 4, efficiency: 16, damage: 4}, ToolType.drill);
 ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficiency: 24, damage: 5}, {
-    damage: 0,
-    blockTypes: ["stone", "dirt"],
-    
-	modifyEnchant: function(enchant){
-		if(IDrillMode%2){enchant.silk = 1;}
-		else{enchant.fortune = 3;}
+	damage: 0,
+	blockTypes: ["stone", "dirt"],
+
+	modifyEnchant: function(enchant, item){
+		var mode = 0;
+		var extra = item.extra;
+		if(extra){
+		mode = extra.getInt("mode");}
+		
+		if(mode%2){
+		enchant.silk = 1;}
+		else{
+		enchant.fortune = 3;}
 	},
 	onDestroy: function(item){
-        item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 1, Item.getMaxDamage(item.id));
-    },
-    onBroke: function(item){return true;},
-    onAttack: function(item, mob){
-        item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 2, Item.getMaxDamage(item.id));
-    },
-    calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
-        if(item.data + 800 <= Item.getMaxDamage(item.id)){
+		item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 1, Item.getMaxDamage(item.id));
+	},
+	onBroke: function(item){return true;},
+	onAttack: function(item, mob){
+		item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 2, Item.getMaxDamage(item.id));
+	},
+	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
+		if(item.data + 800 <= Item.getMaxDamage(item.id)){
+			var mode = 0;
+			var extra = item.extra;
+			if(extra){
+			mode = extra.getInt("mode");}
 			var material = ToolAPI.getBlockMaterial(block.id) || {};
 			material = material.name;
-			if(IDrillMode > 1 && (material == "dirt" || material == "stone")){
+			if(mode > 1 && (material == "dirt" || material == "stone")){
 				destroyTime = 0;
 				var side = coords.side;
 				var X = 1;
@@ -6900,81 +6921,91 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 				}
 				destroyTime /= 24;
 			}
-            return destroyTime;
-        }
-        else{
-            return params.base;
-        }
-    },
-    destroyBlock: function(coords, side, item, block){
-        if(IDrillMode > 1 && item.data + 800 <= Item.getMaxDamage(item.id)){
-            var X = 1;
-            var Y = 1;
-            var Z = 1;
-            if(side==BlockSide.EAST || side==BlockSide.WEST){
-            X = 0;}
-            if(side==BlockSide.UP || side==BlockSide.DOWN){
-            Y = 0;}
-            if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-            Z = 0;}
-            for(var xx = coords.x - X; xx <= coords.x + X; xx++){
-                for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
-                    for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-                        blockID = World.getBlockID(xx, yy, zz);
-                        var material = ToolAPI.getBlockMaterial(blockID) || {};
-                        if(material.name == "dirt" || material.name == "stone"){
-                            item.data += 800;
-                            if(IDrillMode==3 || material == "stone"){
-                                World.destroyBlock(xx, yy, zz, true);
-                            }else{
-                                drop = dirtBlocksDrop[blockID];
-                                if(drop){
-                                    World.destroyBlock(xx, yy, zz, false);
-                                    World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
-                                }
-                                else{World.destroyBlock(xx, yy, zz, true);}
-                            }
-                        }
-                        if(item.data + 800 >= Item.getMaxDamage(item.id)){
-                            Player.setCarriedItem(item.id, 1, item.data, item.enchant);
-                            return;
-                        }
-                    }
-                }
-            }
-            Player.setCarriedItem(item.id, 1, item.data, item.enchant);
-        }
-    },
-    useItem: function(coords, item, block){
-        if(Entity.getSneaking(player)){
-            IDrillMode = (IDrillMode+1)%4;
-            switch(IDrillMode){
-            case 0:
-                //var enchant = {type: Enchantment.FORTUNE, level: 3};
-                Game.message("§eFortune III mode");
-            break;
-            case 1:
-                //var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
-                Game.message("§9Silk Touch mode");
-            break;
-            case 2:
-                //var enchant = {type: Enchantment.FORTUNE, level: 3};
-                Game.message("§c3x3 Fortune III mode");
-            break;
-            case 3:
-                //var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
-                Game.message("§23x3 Silk Touch mode");
-            break;
-            }
-            //Player.setCarriedItem(item.id, 1, item.data, enchant);
-            Player.setCarriedItem(item.id, 1, item.data);
-        }
-        else{
-        	var side  = coords.side;
-    		coords = coords.relative;
-    		block = World.getBlockID(coords.x, coords.y, coords.z);
-    		if(block==0){
-	    		for(var i = 0; i < 36; i++){
+			return destroyTime;
+		}
+		else{
+			return params.base;
+		}
+	},
+	destroyBlock: function(coords, side, item, block){
+		var mode = 0;
+		var extra = item.extra;
+		if(extra){
+		mode = extra.getInt("mode");}
+		if(mode > 1 && item.data + 800 <= Item.getMaxDamage(item.id)){
+			var X = 1;
+			var Y = 1;
+			var Z = 1;
+			if(side==BlockSide.EAST || side==BlockSide.WEST){
+			X = 0;}
+			if(side==BlockSide.UP || side==BlockSide.DOWN){
+			Y = 0;}
+			if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
+			Z = 0;}
+			for(var xx = coords.x - X; xx <= coords.x + X; xx++){
+				for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
+					for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
+						blockID = World.getBlockID(xx, yy, zz);
+						var material = ToolAPI.getBlockMaterial(blockID) || {};
+						if(material.name == "dirt" || material.name == "stone"){
+							item.data += 800;
+							if(mode == 3 || material == "stone"){
+								World.destroyBlock(xx, yy, zz, true);
+							}else{
+								drop = dirtBlocksDrop[blockID];
+								if(drop){
+									World.destroyBlock(xx, yy, zz, false);
+									World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
+								}
+								else{World.destroyBlock(xx, yy, zz, true);}
+							}
+						}
+						if(item.data + 800 >= Item.getMaxDamage(item.id)){
+							Player.setCarriedItem(item.id, 1, item.data, extra);
+							return;
+						}
+					}
+				}
+			}
+			Player.setCarriedItem(item.id, 1, item.data, extra);
+		}
+	},
+	useItem: function(coords, item, block){
+		if(Entity.getSneaking(player)){
+			var extra = item.extra;
+			if(!extra){
+				extra = new ItemExtraData();
+			}
+			var mode = (extra.getInt("mode")+1)%4;
+			extra.putInt("mode", mode);
+			switch(mode){
+			case 0:
+				var enchant = {type: Enchantment.FORTUNE, level: 3};
+				Game.message("§eFortune III mode");
+			break;
+			case 1:
+				var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
+				Game.message("§9Silk Touch mode");
+			break;
+			case 2:
+				var enchant = {type: Enchantment.FORTUNE, level: 3};
+				Game.message("§c3x3 Fortune III mode");
+			break;
+			case 3:
+				var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
+				Game.message("§23x3 Silk Touch mode");
+			break;
+			}
+			extra.removeAllEnchants();
+			extra.addEnchant(enchant.type, enchant.level);
+			Player.setCarriedItem(item.id, 1, item.data, extra);
+		}
+		else{
+			var side  = coords.side;
+			coords = coords.relative;
+			block = World.getBlockID(coords.x, coords.y, coords.z);
+			if(block==0){
+				for(var i = 0; i < 36; i++){
 					var slot = Player.getInventorySlot(i);
 					if(slot.id==50){
 						slot.count--;
@@ -6984,9 +7015,9 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 						break;
 					}
 				}
-	    	}
+			}
 		}
-    }
+	}
 });
 
 

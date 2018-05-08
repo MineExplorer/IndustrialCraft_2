@@ -1,13 +1,13 @@
 IDRegistry.genItemID("storageBattery");
-Item.createItem("storageBattery", "Battery", {name: "re_battery", meta: 4}, {stack: 1});
+Item.createItem("storageBattery", "Battery", {name: "re_battery", meta: 0}, {stack: 1});
 ChargeItemRegistry.registerItem(ItemID.storageBattery, 10000, 0);
 
 IDRegistry.genItemID("storageAdvBattery");
-Item.createItem("storageAdvBattery", "Advanced Battery", {name: "adv_re_battery", meta: 4}, {stack: 1});
+Item.createItem("storageAdvBattery", "Advanced Battery", {name: "adv_re_battery", meta: 0}, {stack: 1});
 ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, 100000, 1);
 
 IDRegistry.genItemID("storageCrystal");
-Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 2}, {stack: 1});
+Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 0}, {stack: 1});
 ChargeItemRegistry.registerItem(ItemID.storageCrystal, 1000000, 2);
 
 IDRegistry.genItemID("storageLapotronCrystal");
@@ -21,6 +21,30 @@ Item.registerNameOverrideFunction(ItemID.storageBattery, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.storageAdvBattery, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.storageCrystal, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.storageLapotronCrystal, ENERGY_ITEM_NAME);
+
+Item.registerIconOverrideFunction(ItemID.storageBattery, function(item, name){
+	var energyStorage = Item.getMaxDamage(item.id) - 1;
+	var energyStored = energyStorage - item.data + 1;
+	return {name: "re_battery", meta: Math.round(energyStored/energyStorage * 4)}
+});
+
+Item.registerIconOverrideFunction(ItemID.storageAdvBattery, function(item, name){
+	var energyStorage = Item.getMaxDamage(item.id) - 1;
+	var energyStored = energyStorage - item.data + 1;
+	return {name: "adv_re_battery", meta: Math.round(energyStored/energyStorage * 4)}
+});
+
+Item.registerIconOverrideFunction(ItemID.storageCrystal, function(item, name){
+	var energyStorage = Item.getMaxDamage(item.id) - 1;
+	var energyStored = energyStorage - item.data + 1;
+	return {name: "energy_crystal", meta: Math.round(energyStored/energyStorage * 4)}
+});
+
+Item.registerIconOverrideFunction(ItemID.storageLapotronCrystal, function(item, name){
+	var energyStorage = Item.getMaxDamage(item.id) - 1;
+	var energyStored = energyStorage - item.data + 1;
+	return {name: "lapotron_crystal", meta: Math.round(energyStored/energyStorage * 4)}
+});
 
 
 var RECIPE_FUNC_TRANSPORT_ENERGY = function(api, field, result){

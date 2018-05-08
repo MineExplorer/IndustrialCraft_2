@@ -7,13 +7,14 @@ core/machine/recipe.js
 core/machine/upgrade.js
 
 
+block/rubber_tree.js
 block/ore.js
 block/metal.js
 block/basic.js
 block/reinforced.js
 block/cable.js
+block/lump.js
 block/mining_pipe.js
-block/rubber_tree.js
 
 machine/generator/generator.js
 machine/generator/geothermal.js
@@ -44,8 +45,7 @@ machine/resource/miner.js
 machine/resource/advanced_miner.js
 
 machine/misc/teleporter.js
-machine/misc/tree/root.js
-machine/misc/tree/sapling.js
+machine/misc/sapling.js
 
 
 items/resource/ore_drop.js

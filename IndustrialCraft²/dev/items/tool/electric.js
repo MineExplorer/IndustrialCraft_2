@@ -26,8 +26,8 @@ Item.registerUseFunction("electricHoe", function(coords, item, block){
 	}
 });
 Item.registerUseFunction("electricTreetap", function(coords, item, block){
-	if(item.data + 50 <= Item.getMaxDamage(ItemID.electricTreetap) && block.id == BlockID.rubberTreeLogLatex && block.data == coords.side - 2){
-		World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLog);
+	if(item.data + 50 <= Item.getMaxDamage(ItemID.electricTreetap) && block.id == BlockID.rubberTreeLogLatex && block.data == coords.side - 1){
+		World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLogLatex, 0);
 		Player.setCarriedItem(item.id, 1, item.data + 50);
 		Entity.setVelocity(
 			World.drop(

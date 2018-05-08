@@ -112,3 +112,16 @@ Recipes.addShaped({id: ItemID.dustSulfur, count: 1, data: 0}, [
 	"xxx",
 	"xxx",
 ], ['x', ItemID.dustSmallSulfur, 0]);
+
+// alternative
+Recipes.addShaped({id: 348, count: 1, data: 0}, [
+	"xax",
+	"axa",
+	"xax",
+], ['x', 331, 0, 'a', ItemID.dustGold, 0]);
+
+Recipes.addShaped({id: 289, count: 3, data: 0}, [
+	"xax",
+	"axa",
+	"xax",
+], ['x', 331, 0, 'a', ItemID.dustCoal, 0]);

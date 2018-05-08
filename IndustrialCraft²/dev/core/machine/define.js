@@ -84,6 +84,6 @@ var MachineRegistry = {
 	
 	basicEnergyReceiveFunc: function(type, src){
 		var energyNeed = this.getEnergyStorage() - this.data.energy;
-		this.data.energy += src.getAll(energyNeed);
+		this.data.energy += src.get(energyNeed);
 	}
 }

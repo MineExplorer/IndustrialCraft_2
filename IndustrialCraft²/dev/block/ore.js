@@ -55,20 +55,20 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 
 
 var OreGenerator = {
-	"copper_ore": __config__.getBool("ore_gen.copper_ore"),
-	"tin_ore": __config__.getBool("ore_gen.tin_ore"),
-	"lead_ore": __config__.getBool("ore_gen.lead_ore"),
-	"uranium_ore": __config__.getBool("ore_gen.uranium_ore"),
-	"iridium_ore": __config__.getBool("ore_gen.iridium_ore"),
-	
-	setOre: function(x, y, z, id, data){
-		if(World.getBlockID(x, y, z) == 1){
-		World.setBlock(x, y, z, id, data);}
-	}
+	oreGenCopper: __config__.getBool("ore_gen.copper"),
+	oreGenTin: __config__.getBool("ore_gen.tin"),
+	oreGenLead: __config__.getBool("ore_gen.lead"),
+	oreGenUranium: __config__.getBool("ore_gen.uranium"),
+	oreGenIridium: __config__.getBool("ore_gen.iridium"),
 }
 
 Callback.addCallback("PostLoaded", function(){
-	if(OreGenerator.copper_ore){
+	for(var flag in OreGenerator){
+		if(OreGenerator[flag]){
+			OreGenerator[flag] = !Flags.addFlag(flag);
+		}
+	}
+	if(OreGenerator.oreGenCopper){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
 			for(var i = 0; i < 10; i++){
 				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 10, 70);
@@ -76,35 +76,36 @@ Callback.addCallback("PostLoaded", function(){
 			}
 		});
 	}
-	if(OreGenerator.tin_ore){
+	if(OreGenerator.oreGenTin){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
 			for(var i = 0; i < 10; i++){
-				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 52);
+				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 56);
 				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreTin, 0, random(4, 10));
 			}
 		});
 	}
-	if(OreGenerator.lead_ore){
+	if(OreGenerator.oreGenLead){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
-			for(var i = 0; i < 8; i++){
-				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 48);
-				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreLead, 0, random(1, 4));
+			for(var i = 0; i < 10; i++){
+				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 40);
+				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreLead, 0, random(2, 5));
 			}
 		});
 	}
-	if(OreGenerator.uranium_ore){
+	if(OreGenerator.oreGenUranium){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
-			for(var i = 0; i < 8; i++){
+			for(var i = 0; i < 10; i++){
 				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 48);
-				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreUranium, 0, random(1, 3));
+				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreUranium, 0, random(1, 4));
 			}
 		});
 	}
-	if(OreGenerator.iridium_ore){
+	if(OreGenerator.oreGenIridium){
 		Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
 			if(Math.random() < 0.2){
 				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 100);
-				OreGenerator.setOre(coords.x, coords.y, coords.z, BlockID.oreIridium);
+				if(World.getBlockID(coords.x, coords.y, coords.z) == 1){
+				World.setBlock(coords.x, coords.y, coords.z, BlockID.oreIridium);}
 			}
 		});
 	}

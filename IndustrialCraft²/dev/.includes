@@ -2,7 +2,6 @@ header.js
 translation.js
 
 core/machine/define.js
-core/machine/render.js
 core/machine/recipe.js
 core/machine/upgrade.js
 
@@ -13,7 +12,6 @@ block/metal.js
 block/basic.js
 block/reinforced.js
 block/cable.js
-block/lump.js
 block/mining_pipe.js
 
 machine/generator/generator.js
@@ -22,7 +20,6 @@ machine/generator/solar.js
 machine/generator/windmill.js
 machine/generator/watermill.js
 
-machine/storage/charge_registry.js
 machine/storage/bat_box.js
 machine/storage/CESU.js
 machine/storage/MFE.js
@@ -40,11 +37,15 @@ machine/processing/ore_washer.js
 machine/processing/thermal_centrifuge.js
 machine/processing/mass_fabricator.js
 
-machine/resource/pump.js
+machine/fluid/pump.js
+machine/fluid/fluid_distributor.js
+machine/fluid/tank.js
+
 machine/resource/miner.js
 machine/resource/advanced_miner.js
 
 machine/misc/teleporter.js
+machine/misc/lamp.js
 machine/misc/sapling.js
 
 

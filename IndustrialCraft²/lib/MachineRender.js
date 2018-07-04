@@ -1,3 +1,10 @@
+LIBRARY({
+	name: "MachineRender",
+	version: 1,
+	shared: true,
+	api: "CoreEngine"
+});
+
 var MachineRenderer = {
 	data: {},
 	setStandartModel: function(id, texture, rotation){
@@ -60,3 +67,6 @@ var MachineRenderer = {
 		}
 	}
 }
+
+
+EXPORT("MachineRenderer", MachineRenderer);

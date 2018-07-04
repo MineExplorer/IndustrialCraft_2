@@ -15,7 +15,7 @@ Block.createBlock("luminator", [
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false}
-]);
+], "part");
 
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 15/16, z: 0}, {x: 1, y: 1, z: 1}, 0);
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1, y: 1/16, z: 1}, 1);
@@ -131,9 +131,9 @@ Block.registerPlaceFunction("luminator", function(coords, item, block){
 	var x = coords.relative.x
 	var y = coords.relative.y
 	var z = coords.relative.z
-	var block = World.getBlockID(x,y,z)
+	block = World.getBlockID(x, y, z)
 	if(GenerationUtils.isTransparentBlock(block)){
-		World.setBlock(x, y, z, BlockID.luminator, coords.side);
+		World.setBlock(x, y, z, item.id, coords.side);
 		World.addTileEntity(x, y, z);
 	}
 });

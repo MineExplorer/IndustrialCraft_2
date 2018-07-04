@@ -17,6 +17,7 @@ Callback.addCallback("PostLoaded", function(){
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.electricMotor, 0, 'a', ItemID.plateIron, 0, 'b', 325, 0, 'c', ItemID.circuitBasic, 0]);
 });
 
+
 Callback.addCallback("PreLoaded", function(){
 	MachineRecipeRegistry.registerRecipesFor("oreWasher", {
 		"ItemID.crushedCopper": [ItemID.crushedPurifiedCopper, 1, ItemID.dustSmallCopper, 2, ItemID.dustStone, 1],
@@ -29,6 +30,7 @@ Callback.addCallback("PreLoaded", function(){
 		//13: [ItemID.dustStone, 1]
 	}, true);
 });
+
 
 var guiOreWasher = new UI.StandartWindow({
 	standart: {
@@ -52,7 +54,7 @@ var guiOreWasher = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 400 + 98*GUI_BAR_STANDART_SCALE, y: 50 + 35*GUI_BAR_STANDART_SCALE, direction: 0, value: 0.5, bitmap: "ore_washer_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"liquidScale": {type: "scale", x: 400 + 60*GUI_BAR_STANDART_SCALE, y: 50 + 21*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_BAR_STANDART_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 3*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, isValid: ChargeItemRegistry.isEnergyStorage},
+		"slotEnergy": {type: "slot", x: 400 + 3*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, isValid: function(id){return ChargeItemRegistry.isValidStorage(id, "Eu", 0);}},
 		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_BAR_STANDART_SCALE, y: 50 + 13*GUI_BAR_STANDART_SCALE},
 		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
 		"slotSource": {type: "slot", x: 400 + 99*GUI_BAR_STANDART_SCALE, y: 50 + 13*GUI_BAR_STANDART_SCALE},
@@ -65,7 +67,6 @@ var guiOreWasher = new UI.StandartWindow({
 		"slotUpgrade4": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
 	}
 });
-
 
 MachineRegistry.registerPrototype(BlockID.oreWasher, {
 	defaultValues: {
@@ -126,7 +127,7 @@ MachineRegistry.registerPrototype(BlockID.oreWasher, {
 	
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeUpgades("tick", this);
+		UpgradeAPI.executeUpgrades(this);
 		
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");
@@ -166,7 +167,7 @@ MachineRegistry.registerPrototype(BlockID.oreWasher, {
         
         var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), Math.min(32, energyStorage - this.data.energy), 0);
+        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 32, 0);
         
         this.container.setScale("progressScale", this.data.progress);
 		this.liquidStorage.updateUiScale("liquidScale", "water");

@@ -1,27 +1,35 @@
+Block.createSpecialType({
+	destroytime: 2,
+	explosionres: 0.5,
+	opaque: false,
+	lightopacity: 0,
+	renderlayer: 3,
+}, "part");
+
 IDRegistry.genBlockID("cableTin");
 Block.createBlock("cableTin", [
 	{name: "tile.cableTin.name", texture: [["cable_block_tin", 0]], inCreative: false}
-]);
+], "part");
 
 IDRegistry.genBlockID("cableCopper");
 Block.createBlock("cableCopper", [
 	{name: "tile.cableCopper.name", texture: [["cable_block_copper", 0]], inCreative: false}
-]);
+], "part");
 
 IDRegistry.genBlockID("cableGold");
 Block.createBlock("cableGold", [
 	{name: "tile.cableGold.name", texture: [["cable_block_gold", 0]], inCreative: false}
-]);
+], "part");
 
 IDRegistry.genBlockID("cableIron");
 Block.createBlock("cableIron", [
 	{name: "tile.cableIron.name", texture: [["cable_block_iron", 0]], inCreative: false}
-]);
+], "part");
 
 IDRegistry.genBlockID("cableOptic");
 Block.createBlock("cableOptic", [
 	{name: "tile.cableOptic.name", texture: [["cable_block_optic", 0]], inCreative: false}
-]);
+], "part");
 
 function setupWireRender(id, width, groupName, preventSelfAdd) {
     var render = new ICRender.Model();

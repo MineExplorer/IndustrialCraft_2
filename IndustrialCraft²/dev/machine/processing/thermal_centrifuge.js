@@ -17,6 +17,7 @@ Callback.addCallback("PostLoaded", function(){
 	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.electricMotor, 0, 'a', 265, 0, 'm', ItemID.miningLaser, -1, 'c', ItemID.coil, 0]);
 });
 
+
 Callback.addCallback("PreLoaded", function(){
 	MachineRecipeRegistry.registerRecipesFor("thermalCentrifuge", {
 		//4: {result: [ItemID.dustStone, 1], heat: 100},
@@ -58,7 +59,7 @@ var guiCentrifuge = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 400 + 80*GUI_BAR_STANDART_SCALE, y: 50 + 21*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "thermal_centrifuge_scale", scale: GUI_BAR_STANDART_SCALE},
 		"heatScale": {type: "scale", x: 400 + 64*GUI_BAR_STANDART_SCALE, y: 50 + 62*GUI_BAR_STANDART_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 400 + 8*GUI_BAR_STANDART_SCALE, y: 50 + 38*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 6*GUI_BAR_STANDART_SCALE, y: 50 + 55*GUI_BAR_STANDART_SCALE, isValid: ChargeItemRegistry.isEnergyStorage},
+		"slotEnergy": {type: "slot", x: 400 + 6*GUI_BAR_STANDART_SCALE, y: 50 + 55*GUI_BAR_STANDART_SCALE, isValid: function(id){return ChargeItemRegistry.isValidStorage(id, "Eu", 1);}},
 		"slotSource": {type: "slot", x: 400 + 6*GUI_BAR_STANDART_SCALE, y: 50 + 16*GUI_BAR_STANDART_SCALE},
 		"slotResult1": {type: "slot", x: 400 + 119*GUI_BAR_STANDART_SCALE, y: 50 + 13*GUI_BAR_STANDART_SCALE},
 		"slotResult2": {type: "slot", x: 400 + 119*GUI_BAR_STANDART_SCALE, y: 50 + 31*GUI_BAR_STANDART_SCALE},
@@ -127,7 +128,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeUpgades("tick", this);
+		UpgradeAPI.executeUpgrades(this);
 		if(this.data.isHeating){
 			this.data.maxHeat = 5000;
 		}
@@ -169,7 +170,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 		
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), Math.min(128, energyStorage - this.data.energy), 1);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 128, 1);
 		
 		var content = this.container.getGuiContent();
 		if(content){

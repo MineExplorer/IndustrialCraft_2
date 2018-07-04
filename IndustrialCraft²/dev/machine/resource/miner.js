@@ -7,6 +7,7 @@ Block.registerDropFunction("miner", function(coords, blockID, blockData, level){
     return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
+
 var guiMiner = new UI.StandartWindow({
     standart: {
         header: {text: {text: "Miner"}},
@@ -29,7 +30,7 @@ var guiMiner = new UI.StandartWindow({
         "slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill"},
         "slotPipe": {type: "slot", x: 541, y: 75},
         "slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner"},
-        "slotEnergy": {type: "slot", x: 541, y: 212}
+        "slotEnergy": {type: "slot", x: 541, y: 212, isValid: function(id){return ChargeItemRegistry.isValidStorage(id, "Eu", 0);}}
     }
 });
 
@@ -114,7 +115,7 @@ MachineRegistry.registerPrototype(BlockID.miner, {
         }
         
         var energyStorage = this.getEnergyStorage();
-        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), Math.min(32, energyStorage - this.data.energy), 0);
+        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 32, 0);
         this.container.setScale("energyScale", this.data.energy / energyStorage);
     },
     

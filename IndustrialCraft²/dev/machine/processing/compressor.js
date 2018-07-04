@@ -19,32 +19,6 @@ Callback.addCallback("PostLoaded", function(){
 });
 
 
-var guiCompressor = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Compressor"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 530, y: 146, bitmap: "compressor_bar_background", scale: GUI_BAR_STANDART_SCALE},
-		{type: "bitmap", x: 450, y: 150, bitmap: "energy_small_background", scale: GUI_BAR_STANDART_SCALE},
-	],
-	
-	elements: {
-		"progressScale": {type: "scale", x: 530, y: 146, direction: 0, value: 0.5, bitmap: "compressor_bar_scale", scale: GUI_BAR_STANDART_SCALE},
-		"energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slotSource": {type: "slot", x: 441, y: 75},
-		"slotEnergy": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
-		"slotResult": {type: "slot", x: 625, y: 142},
-		"slotUpgrade1": {type: "slot", x: 820, y: 48, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 820, y: 112, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 820, y: 176, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 820, y: 240, isValid: UpgradeAPI.isUpgrade},
-	}
-});
-
-
 Callback.addCallback("PreLoaded", function(){
 	MachineRecipeRegistry.registerRecipesFor("compressor", {
 		// Items
@@ -76,6 +50,32 @@ Callback.addCallback("PreLoaded", function(){
 	}, true);
 });
 
+
+var guiCompressor = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: "Compressor"}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 146, bitmap: "compressor_bar_background", scale: GUI_BAR_STANDART_SCALE},
+		{type: "bitmap", x: 450, y: 150, bitmap: "energy_small_background", scale: GUI_BAR_STANDART_SCALE},
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 146, direction: 0, value: 0.5, bitmap: "compressor_bar_scale", scale: GUI_BAR_STANDART_SCALE},
+		"energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
+		"slotSource": {type: "slot", x: 441, y: 75},
+		"slotEnergy": {type: "slot", x: 441, y: 212, isValid: function(id){return ChargeItemRegistry.isValidStorage(id, "Eu", 0);}},
+		"slotResult": {type: "slot", x: 625, y: 142},
+		"slotUpgrade1": {type: "slot", x: 820, y: 48, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 112, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 176, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 240, isValid: UpgradeAPI.isUpgrade},
+	}
+});
+
 MachineRegistry.registerPrototype(BlockID.compressor, {
 	defaultValues: {
 		energy_storage: 2000,
@@ -101,7 +101,7 @@ MachineRegistry.registerPrototype(BlockID.compressor, {
 	
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeUpgades("tick", this);
+		UpgradeAPI.executeUpgrades(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = MachineRecipeRegistry.getRecipeResult("compressor", sourceSlot.id, sourceSlot.data);
@@ -135,7 +135,7 @@ MachineRegistry.registerPrototype(BlockID.compressor, {
 		
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), Math.min(32, energyStorage - this.data.energy), 0);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 32, 0);
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);

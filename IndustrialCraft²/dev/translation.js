@@ -46,7 +46,7 @@ Translation.addTranslation("Mass Fabricator", {ru: "Производитель �
 
 // Energy storage
 Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", zh: "储电盒"});
-Translation.addTranslation("CESU", {ru: "МЭХ", es: "Unidad CESU", zh: "CESU充电座"});
+Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", zh: "CESU充电座"});
 Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", zh: "MFE充电座"});
 Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", zh: "MFSU充电座"});
 
@@ -87,11 +87,12 @@ Translation.addTranslation("Overclocker Upgrade", {ru: "Улучшение «У�
 Translation.addTranslation("Energy Storage Upgrade", {ru: "Улучшение «Энергохранитель»", es: "Mejora de Almacenador de Energía", zh: "储能升级"});
 Translation.addTranslation("Redstone Signal Inverter Upgrade", {ru: "Улучшение «Инвертор сигнала красного камня»", es: "Majora de Invesor de señal Redstone", zh: "红石信号反转升级"});
 Translation.addTranslation("Ejector Upgrade", {ru: "Улучшение «Выталкиватель»", es: "Mejora Expulsora", zh: "弹出升级"});
+Translation.addTranslation("Pulling Upgrade", {ru: "Улучшение «Загрузчик»", es: "Mejora de Traccion", zh: "抽入升级"});
 Translation.addTranslation("Fluid Ejector Upgrade", {ru: "Улучшение «Выталкиватель жидкости»", es: "Mejora Expulsora de Líquidos", zh: "流体弹出升级"});
-Translation.addTranslation("Pulling Upgrade", {ru: "Улучшение «Загрузчик»", es: "Mejora de traccion", zh: "抽入升级"});
+Translation.addTranslation("Fluid Pulling Upgrade", {ru: "Улучшение «Загрузчик жидкости»", es: "Mejora Traccion de Líquidos", zh: "流体抽入升级"});
 
 // Crushed Ore
-Translation.addTranslation("Crushed Copper Ore", {ru: "Измельченная медная руда", es: "Mineral de Cobre Triturado", zh: "粉碎铜矿石"});
+Translation.addTranslation("Crushed Copper Ore", {ru: "Измельчённая медная руда", es: "Mineral de Cobre Triturado", zh: "粉碎铜矿石"});
 Translation.addTranslation("Crushed Tin Ore", {ru: "Измельчённая оловянная руда", es: "Mineral de Estaño Triturado", zh: "粉碎锡矿石"});
 Translation.addTranslation("Crushed Iron Ore", {ru: "Измельчённая железная руда", es: "Mineral de Hierro Triturado", zh: "粉碎铁矿石"});
 Translation.addTranslation("Crushed Lead Ore", {ru: "Измельчённая свинцовая руда", es: "Mineral de Plomo Triturado", zh: "粉碎铅矿石"});

@@ -41,7 +41,7 @@ var guiGenerator = new UI.StandartWindow({
 	elements: {
 		"energyScale": {type: "scale", x: 530 + GUI_BAR_STANDART_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slotEnergy": {type: "slot", x: 441, y: 75},
+		"slotEnergy": {type: "slot", x: 441, y: 75, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
 		"slotFuel": {type: "slot", x: 441, y: 212},
 		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
 		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
@@ -90,7 +90,7 @@ MachineRegistry.registerPrototype(BlockID.primalGenerator, {
 			this.data.burn--;
 		}
 		
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), this.data.energy, 32, 0);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 0);
 		
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);

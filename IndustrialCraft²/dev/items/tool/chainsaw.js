@@ -1,6 +1,6 @@
 IDRegistry.genItemID("chainsaw");
 Item.createItem("chainsaw", "Chainsaw", {name: "chainsaw", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chainsaw, 30000, 0, true, true);
+ChargeItemRegistry.registerItem(ItemID.chainsaw, "Eu", 30000, 0);
 
 Item.registerNameOverrideFunction(ItemID.chainsaw, ENERGY_ITEM_NAME);
 

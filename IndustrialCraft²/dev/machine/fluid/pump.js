@@ -36,7 +36,7 @@ var guiPump = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 502, y: 149, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 416, y: 127, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"liquidScale": {type: "scale", x: 400 + 70*GUI_BAR_STANDART_SCALE, y: 50 + 16*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_BAR_STANDART_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 3*GUI_BAR_STANDART_SCALE, y: 50 + 39*GUI_BAR_STANDART_SCALE, isValid: ChargeItemRegistry.isEnergyStorage},
+		"slotEnergy": {type: "slot", x: 400 + 3*GUI_BAR_STANDART_SCALE, y: 50 + 39*GUI_BAR_STANDART_SCALE, isValid: function(id){return ChargeItemRegistry.isValidStorage(id, "Eu", 0);}},
 		"slotLiquid1": {type: "slot", x: 400 + 94*GUI_BAR_STANDART_SCALE, y: 50 + 12*GUI_BAR_STANDART_SCALE},
 		"slotLiquid2": {type: "slot", x: 400 + 128*GUI_BAR_STANDART_SCALE, y: 50 + 29*GUI_BAR_STANDART_SCALE},
 		"slotUpgrade1": {type: "slot", x: 880, y: 50 + 4*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
@@ -55,22 +55,21 @@ MachineRegistry.registerPrototype(BlockID.pump, {
 		progress: 0,
 		isActive: false
     },
-	/*
+	
 	addTransportedItem: function(self, item, direction){
 		var slot = this.container.getSlot("slotLiquid1");
 		var full = LiquidRegistry.getFullItem(item.id, item.data, "water");
 		if(full && (slot.id == item.id && slot.data == item.data || slot.id == 0)){
 			var maxStack = Item.getMaxStack(slot.id);
 			var add = Math.min(maxStack - item.count, slot.count);
-			slot.count -= add;
-			item.count += add;
-			item.id = slot.id;
-			item.data = slot.data;
-			if(slot.count==0) slot.id = slot.data = 0;
-			if(item.count == maxStack) return true;
+			item.count -= add;
+			slot.count += add;
+			slot.id = item.id;
+			slot.data = item.data;
+			//if(item.count == maxStack) return true;
 		}
 	},
-	*/
+	
 	getGuiScreen: function(){
 		return guiPump;
 	},
@@ -87,6 +86,7 @@ MachineRegistry.registerPrototype(BlockID.pump, {
 	
 	init: function(){
 		this.liquidStorage.setLimit("water", 8);
+		this.liquidStorage.setLimit("lava", 8);
 		if(this.data.isActive){
 			var block = World.getBlock(this.x, this.y, this.z);
 			MachineRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
@@ -95,7 +95,7 @@ MachineRegistry.registerPrototype(BlockID.pump, {
 	
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeUpgades("tick", this);
+		UpgradeAPI.executeUpgrades(this);
 		
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");
@@ -132,7 +132,7 @@ MachineRegistry.registerPrototype(BlockID.pump, {
         
         var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), Math.min(32, energyStorage - this.data.energy), 0);
+        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 32, 0);
         
         this.container.setScale("progressScale", this.data.progress);
 		this.liquidStorage.updateUiScale("liquidScale", "water");

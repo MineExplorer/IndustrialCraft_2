@@ -1,6 +1,6 @@
 IDRegistry.genBlockID("electricFurnace");
 Block.createBlockWithRotation("electricFurnace", [
-	{name: "Electric Furnace", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+	{name: "Electric Furnace", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.electricFurnace, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], true);
 MachineRenderer.registerRenderModel(BlockID.electricFurnace, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]], true);
@@ -16,6 +16,7 @@ Callback.addCallback("PostLoaded", function(){
 		"x#x"
 	], ['#', BlockID.ironFurnace, -1, 'x', 331, 0, 'a', ItemID.circuitBasic, 0]);
 });
+
 
 var guiElectricFurnace = new UI.StandartWindow({
 	standart: {
@@ -33,7 +34,7 @@ var guiElectricFurnace = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 530, y: 146, direction: 0, value: 0.5, bitmap: "furnace_bar_scale", scale: GUI_BAR_STANDART_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 75},
-		"slotEnergy": {type: "slot", x: 441, y: 212, isValid: ChargeItemRegistry.isEnergyStorage},
+		"slotEnergy": {type: "slot", x: 441, y: 212, isValid: function(id){return ChargeItemRegistry.isValidStorage(id, "Eu", 0);}},
 		"slotResult": {type: "slot", x: 625, y: 142},
 		"slotUpgrade1": {type: "slot", x: 820, y: 48, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade2": {type: "slot", x: 820, y: 112, isValid: UpgradeAPI.isUpgrade},
@@ -41,7 +42,6 @@ var guiElectricFurnace = new UI.StandartWindow({
 		"slotUpgrade4": {type: "slot", x: 820, y: 240, isValid: UpgradeAPI.isUpgrade},
 	}
 });
-
 
 MachineRegistry.registerPrototype(BlockID.electricFurnace, {
 	defaultValues: {
@@ -68,7 +68,7 @@ MachineRegistry.registerPrototype(BlockID.electricFurnace, {
 	
 	tick: function(){
 		this.setDefaultValues();
-		UpgradeAPI.executeUpgades("tick", this);
+		UpgradeAPI.executeUpgrades(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
@@ -98,7 +98,7 @@ MachineRegistry.registerPrototype(BlockID.electricFurnace, {
 		
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), Math.min(32, energyStorage - this.data.energy), 0);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 32, 0);
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);

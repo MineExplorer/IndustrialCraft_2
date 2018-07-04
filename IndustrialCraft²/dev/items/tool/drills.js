@@ -5,16 +5,16 @@ Item.createItem("drill", "Mining Drill", {name: "drill", meta: 0}, {stack: 1});
 Item.createItem("diamondDrill", "Diamond Drill", {name: "drill", meta: 1}, {stack: 1});
 Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill", meta: 2}, {stack: 1});
 Item.setGlint(ItemID.iridiumDrill, true);
-ChargeItemRegistry.registerItem(ItemID.drill, 30000, 0, true, true);
-ChargeItemRegistry.registerItem(ItemID.diamondDrill, 30000, 0, true, true);
-ChargeItemRegistry.registerItem(ItemID.iridiumDrill, 1000000, 2, true, true);
+ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 0);
+ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 0);
+ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 2);
 
 Item.registerNameOverrideFunction(ItemID.drill, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.diamondDrill, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
 	var energyStorage = Item.getMaxDamage(item.id) - 1;
 	var energyStored = Math.min(energyStorage - item.data + 1, energyStorage);
-	if(energyStored==0){return "§b" + name;}
+	if(energyStored==0){return name;}
 	name = "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
 	
 	var mode = 0;
@@ -244,10 +244,10 @@ Recipes.addShaped({id: ItemID.drill, count: 1, data: Item.getMaxDamage(ItemID.dr
 Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: Item.getMaxDamage(ItemID.diamondDrill)}, [
     " a ",
     "ada"
-], ['d', ItemID.drill, -1, 'a', 264, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
+], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transportEnergy);
 
 Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(ItemID.iridiumDrill)}, [
     " a ",
     "ada",
     " e "
-], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
+], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transportEnergy);

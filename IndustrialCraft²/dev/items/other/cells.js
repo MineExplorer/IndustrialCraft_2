@@ -26,7 +26,7 @@ Item.registerUseFunction("cellEmpty", function(coords, item, block){
 		World.setBlock(coords.x, coords.y, coords.z, 0);
 		item.count--;
 		if(!item.count){item.id = 0;}
-		Player.setCarriedItem(item.id, item.count, 1);
+		Player.setCarriedItem(item.id, item.count);
 		if(block.id==8 || block.id==9){Player.addItemToInventory(ItemID.cellWater, 1);}
 		else{Player.addItemToInventory(ItemID.cellLava, 1);}
 	}

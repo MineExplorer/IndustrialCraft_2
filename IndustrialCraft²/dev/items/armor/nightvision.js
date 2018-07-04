@@ -8,7 +8,7 @@ Callback.addCallback("PostLoaded", function(){
 		"ibi",
 		"aga",
 		"rcr"
-	], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'g', 20, 0, 'i', ItemID.casingIron, 0, 'r', ItemID.rubber, 0], RECIPE_FUNC_TRANSPORT_ENERGY);
+	], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'g', 20, 0, 'i', ItemID.casingIron, 0, 'r', ItemID.rubber, 0], ChargeItemRegistry.transportEnergy);
 });
 
 UIbuttons.setButton(ItemID.nightvisionGoggles, "button_nightvision");

@@ -54,16 +54,6 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 	},
 	
 	addTransportedItem: function(self, item, direction){
-		var fuelSlot = this.container.getSlot("slotFuel");
-		if(Recipes.getFuelBurnDuration(item.id, item.data) && (fuelSlot.id==0 || fuelSlot.id==item.id && fuelSlot.data==item.data && fuelSlot.count < 64)){
-			var add = Math.min(item.count, 64 - slotFuel.count);
-			item.count -= add;
-			fuelSlot.id = item.id;
-			fuelSlot.data = item.data;
-			fuelSlot.count += add;
-			if(!item.count){return;}
-		}
-		
 		var sourceSlot = this.container.getSlot("slotSource");
 		if(sourceSlot.id==0 || sourceSlot.id==item.id && sourceSlot.data==item.data && sourceSlot.count < 64){
 			var add = Math.min(item.count, 64 - sourceSlot.count);
@@ -72,6 +62,15 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 			sourceSlot.data = item.data;
 			sourceSlot.count += add;
 			if(!item.count){return;}
+		}
+		
+		var fuelSlot = this.container.getSlot("slotFuel");
+		if(Recipes.getFuelBurnDuration(item.id, item.data) && (fuelSlot.id==0 || fuelSlot.id==item.id && fuelSlot.data==item.data && fuelSlot.count < 64)){
+			var add = Math.min(item.count, 64 - slotFuel.count);
+			item.count -= add;
+			fuelSlot.id = item.id;
+			fuelSlot.data = item.data;
+			fuelSlot.count += add;
 		}
 	},
 	
@@ -137,5 +136,5 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 	init: MachineRegistry.initModel,
 	activate: MachineRegistry.activateMachine,
 	deactivate: MachineRegistry.deactivateMachine,
-	destroy: this.deactivate,
-});
+	destroy: function(){this.deactivate()}, 
+}, true);

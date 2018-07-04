@@ -1,27 +1,24 @@
 var UpgradeAPI = {
 	upgrades: {},
-	calbacks: {},
+	data: {},
 
 	isUpgrade: function(id){
 		return UpgradeAPI.upgrades[id];
 	},
 
-	addUpgradeCallback: function(id, name, func){
+	registerUpgrade: function(id, func){
 		this.upgrades[id] = true;
-		if(!this.calbacks[name]){
-			this.calbacks[name] = {};
-		}
-		this.calbacks[name][id] = func;
+		this.data[id] = func;
 	},
 
-	callUpgrade: function(name, item, machine, container, data, coords){
-		var callback = this.calbacks[name];
-		if(callback && callback[item.id]){
-			callback[item.id](item.count, machine, container, data, coords);
+	callUpgrade: function(item, machine, container, data, coords){
+		var callback = this.data[item.id];
+		if(callback){
+			callback(item.count, machine, container, data, coords);
 		}
 	},
 
-	executeUpgades: function(name, machine){
+	executeUpgrades: function(machine){
 		var container = machine.container;
 		var data = machine.data;
 		var coords = {x: machine.x, y: machine.y, z: machine.z};
@@ -31,12 +28,13 @@ var UpgradeAPI = {
 			if(slotName.match(/Upgrade/)){
 				var slot = container.getSlot(slotName);
 				if(slot.id){
-					upgrades[slot.id] = upgrades[slot.id] + slot.count;
+					upgrades[slot.id] = upgrades[slot.id] || 0;
+					upgrades[slot.id] += slot.count;
 				}
 			}
 		}
 		for(var upgrade in upgrades){
-			this.callUpgrade(name, {id: upgrade, count: upgrades[upgrade]}, machine, container, data, coords);
+			this.callUpgrade({id: upgrade, count: upgrades[upgrade]}, machine, container, data, coords);
 		}
 	},
 	
@@ -150,6 +148,10 @@ function addItemsToContainers(items, containers, tile){
 				}
 			}
 		}
+		if(item.count==0){
+			item.id = 0;
+			item.data = 0;
+		}
 	}
 }
 
@@ -219,6 +221,26 @@ function addLiquidToStorages(liquid, output, input){
 			if(storage.getLimit(liquid) < 99999999){
 			amount = storage.addLiquid(liquid, amount);}
 		}
+		output.addLiquid(liquid, amount);
 	}
-	output.addLiquid(liquid, amount);
+}
+
+function getLiquidFromStorages(liquid, input, output){
+	var amount;
+	for(var i in output){
+		var storage = output[i];
+		if(!liquid){
+			liquid = storage.getLiquidStored();
+			var limit = input.getLimit(liquid);
+			if(limit == 99999999){liquid = undefined;}
+		}
+		if(liquid){
+			if(!amount) amount = Math.min(limit - storage.getAmount(liquid), 1);
+			if(limit < 99999999){
+				amount = storage.getLiquid(liquid, amount);
+				input.addLiquid(liquid, amount);
+			}
+			if(storage.isFull(liquid)) return;
+		}
+	}
 }

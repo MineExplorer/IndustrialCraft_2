@@ -1,16 +1,17 @@
 {
   "enabled":true,
-  "debug_mode":true,
+  "debug_mode":false,
+  "button_scale":60,
   "rubber_tree_gen":{
     "forest_and_plains":true,
     "jungle":true,
     "swamp":true
   },
   "ore_gen":{
-    "tin_ore":true,
-    "copper_ore":true,
-	"lead_ore":true,
-    "uranium_ore":true,
-    "iridium_ore":true
+    "copper":true,
+    "tin":true,
+    "lead":true,
+    "uranium":true,
+    "iridium":true
   }
 }

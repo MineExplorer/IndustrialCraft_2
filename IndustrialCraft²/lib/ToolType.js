@@ -4,7 +4,7 @@ LIBRARY({
 	shared: true,
 	api: "CoreEngine"
 });
-	
+
 var ToolType = {
 	sword: {
 		isWeapon: true,

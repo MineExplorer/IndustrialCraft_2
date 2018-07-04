@@ -1,23 +1,33 @@
-var BLOCK_TYPE_REINFORCED_BLOCK = Block.createSpecialType({
+Block.createSpecialType({
 	base: 1,
 	solid: true,
 	destroytime: 5,
 	explosionres: 30,
 	opaque: false,
-	lightopacity: 0
+	lightopacity: 0,
+	renderlayer: 3,
 }, "reinforced_block");
+
+Block.createSpecialType({
+	base: 1,
+	destroytime: 5,
+	explosionres: 30,
+	opaque: false,
+	lightopacity: 0,
+	renderlayer: 9,
+}, "reinforced_glass");
 
 IDRegistry.genBlockID("reinforcedStone");
 Block.createBlock("reinforcedStone", [
 	{name: "Reinforced Stone", texture: [["reinforced_block", 0]], inCreative: true}
-], BLOCK_TYPE_REINFORCED_BLOCK);
+], "reinforced_block");
 ToolAPI.registerBlockMaterial(BlockID.reinforcedStone, "stone", 2, true);
 Block.setDestroyLevel("reinforcedStone", 2);
 
 IDRegistry.genBlockID("reinforcedGlass");
 Block.createBlock("reinforcedGlass", [
 	{name: "Reinforced Glass", texture: [["reinforced_glass", 0]], inCreative: true}
-], BLOCK_TYPE_REINFORCED_BLOCK);
+], "reinforced_glass");
 ToolAPI.registerBlockMaterial(BlockID.reinforcedGlass, "stone", 2, true);
 Block.setDestroyLevel("reinforcedGlass", 2);
 

@@ -3,8 +3,7 @@ Block.createBlockWithRotation("massFabricator", [
 	{name: "Mass Fabricator", texture: [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.massFabricator);
+MachineRenderer.registerModelWithRotation(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 
 Block.registerDropFunction("massFabricator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
@@ -29,11 +28,11 @@ var guiMassFabricator = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_BAR_STANDART_SCALE}
+		{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
 	
 	elements: {
-		"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
+		"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"matterSlot": {type: "slot", x: 821, y: 75, size: 100},
 		"catalyserSlot": {type: "slot", x: 841, y: 252},
 		"textInfo1": {type: "text", x: 542, y: 142, width: 200, height: 30, text: "Progress:"},
@@ -62,7 +61,7 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	},
 	
 	tick: function(){
-		this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+		this.container.setScale("energyScale", this.data.progress / ENERGY_PER_MATTER);
 		this.container.setText("textInfo2", parseInt(100 * this.data.progress / ENERGY_PER_MATTER) + "%");
 		
 		if(this.data.isEnabled && this.data.energy > 0){

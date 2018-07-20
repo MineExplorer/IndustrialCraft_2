@@ -3,7 +3,7 @@ Block.createBlockWithRotation("oreWasher", [
     {name: "Ore Washing Plant", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.oreWasher, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.oreWasher, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 1], ["ore_washer_side", 1], ["ore_washer_side", 1]], true);
+MachineRenderer.registerModelWithRotation(BlockID.oreWasher, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 1], ["ore_washer_side", 1], ["ore_washer_side", 1]]);
 
 Block.registerDropFunction("oreWasher", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.crushedSilver": [ItemID.crushedPurifiedSilver, 1, ItemID.dustSmallSilver, 2, ItemID.dustStone, 1],
 		"ItemID.crushedLead": [ItemID.crushedPurifiedLead, 1, ItemID.dustSmallSulfur, 3, ItemID.dustStone, 1],
 		"ItemID.crushedUranium": [ItemID.crushedPurifiedUranium, 1, ItemID.dustSmallLead, 2, ItemID.dustStone, 1],
-		//13: [ItemID.dustStone, 1]
+		//13: [318, 1, ItemID.dustStone, 1]
 	}, true);
 });
 
@@ -46,32 +46,33 @@ var guiOreWasher = new UI.StandartWindow({
 	
 	drawing: [
 		{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-		{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_BAR_STANDART_SCALE},
-		{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_BAR_STANDART_SCALE}
+		{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
 	
 	elements: {
-		"progressScale": {type: "scale", x: 400 + 98*GUI_BAR_STANDART_SCALE, y: 50 + 35*GUI_BAR_STANDART_SCALE, direction: 0, value: 0.5, bitmap: "ore_washer_bar_scale", scale: GUI_BAR_STANDART_SCALE},
-		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
-		"liquidScale": {type: "scale", x: 400 + 60*GUI_BAR_STANDART_SCALE, y: 50 + 21*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_BAR_STANDART_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 3*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, isValid: function(id){return ChargeItemRegistry.isValidStorage(id, "Eu", 0);}},
-		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_BAR_STANDART_SCALE, y: 50 + 13*GUI_BAR_STANDART_SCALE},
-		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
-		"slotSource": {type: "slot", x: 400 + 99*GUI_BAR_STANDART_SCALE, y: 50 + 13*GUI_BAR_STANDART_SCALE},
-		"slotResult1": {type: "slot", x: 400 + 81*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
-		"slotResult2": {type: "slot", x: 400 + 99*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
-		"slotResult3": {type: "slot", x: 400 + 117*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade1": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 4*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 22*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 40*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 400 + 147*GUI_BAR_STANDART_SCALE, y: 50 + 58*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"progressScale": {type: "scale", x: 400 + 98*GUI_SCALE, y: 50 + 35*GUI_SCALE, direction: 0, value: 0.5, bitmap: "ore_washer_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"liquidScale": {type: "scale", x: 592, y: 50 + 21*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
+		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 13*GUI_SCALE},
+		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 58*GUI_SCALE},
+		"slotSource": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 13*GUI_SCALE},
+		"slotResult1": {type: "slot", x: 400 + 81*GUI_SCALE, y: 50 + 58*GUI_SCALE},
+		"slotResult2": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 58*GUI_SCALE},
+		"slotResult3": {type: "slot", x: 400 + 117*GUI_SCALE, y: 50 + 58*GUI_SCALE},
+		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
 	}
 });
 
 MachineRegistry.registerPrototype(BlockID.oreWasher, {
 	defaultValues: {
+		power_tier: 1,
 		energy_storage: 10000,
-		energy_consumption: 8,
+		energy_consumption: 16,
 		work_time: 500,
 		progress: 0,
 		isActive: false
@@ -166,9 +167,10 @@ MachineRegistry.registerPrototype(BlockID.oreWasher, {
         }
         
         var energyStorage = this.getEnergyStorage();
+		var tier = this.data.power_tier;
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 32, 0);
-        
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		
         this.container.setScale("progressScale", this.data.progress);
 		this.liquidStorage.updateUiScale("liquidScale", "water");
         this.container.setScale("energyScale", this.data.energy / energyStorage);

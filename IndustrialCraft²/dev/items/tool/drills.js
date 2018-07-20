@@ -1,9 +1,9 @@
 IDRegistry.genItemID("drill");
 IDRegistry.genItemID("diamondDrill");
 IDRegistry.genItemID("iridiumDrill");
-Item.createItem("drill", "Mining Drill", {name: "drill", meta: 0}, {stack: 1});
-Item.createItem("diamondDrill", "Diamond Drill", {name: "drill", meta: 1}, {stack: 1});
-Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill", meta: 2}, {stack: 1});
+Item.createItem("drill", "Mining Drill", {name: "drill"}, {stack: 1});
+Item.createItem("diamondDrill", "Diamond Drill", {name: "drill_diamond"}, {stack: 1});
+Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill_iridium"}, {stack: 1});
 Item.setGlint(ItemID.iridiumDrill, true);
 ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 0);
 ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 0);

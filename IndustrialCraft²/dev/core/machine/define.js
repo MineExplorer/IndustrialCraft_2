@@ -64,7 +64,24 @@ var MachineRegistry = {
 		}
 		return [];
 	},
-	
+	/*
+	create6sidesRender: function(id, texture){
+		this.data[id] = {};
+		if(texture.length == 2){
+			var textures = [
+				[texture[1], texture[0], texture[0], texture[0], texture[0], texture[0]],
+				[texture[0], texture[1], texture[0], texture[0], texture[0], texture[0]],
+				[texture[0], texture[0], texture[1], texture[0], texture[0], texture[0]],
+				[texture[0], texture[0], texture[0], texture[1], texture[0], texture[0]],
+				[texture[0], texture[0], texture[0], texture[0], texture[1], texture[0]],
+				[texture[0], texture[0], texture[0], texture[0], texture[0], texture[1]]
+			]
+		}
+		for(var i = 0; i < 5; i++){
+			this.registerRenderModel(id, i, textures[i])
+		}
+	},
+	*/
 	initModel: function(){
 		if(this.data.isActive){
 			var block = World.getBlock(this.x, this.y, this.z);
@@ -90,5 +107,22 @@ var MachineRegistry = {
 	basicEnergyReceiveFunc: function(type, src){
 		var energyNeed = this.getEnergyStorage() - this.data.energy;
 		this.data.energy += src.getAll(energyNeed);
-	}
+	},
+	
+	isValidEUItem: function(id, count, data, container){
+		var level = container.tileEntity.data.power_tier || 0;
+		return ChargeItemRegistry.isValidItem(id, "Eu",  level);
+	},
+	
+	isValidEUStorage: function(id, count, data, container){
+		var level = container.tileEntity.data.power_tier || 0;
+		return ChargeItemRegistry.isValidStorage(id, "Eu",  level);
+	},
+}
+
+var transferByTier = {
+	0: 32,
+	1:  256,
+	2: 2048,
+	3: 8192
 }

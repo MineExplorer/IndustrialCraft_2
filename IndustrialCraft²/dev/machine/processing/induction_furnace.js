@@ -3,8 +3,7 @@ Block.createBlockWithRotation("inductionFurnace", [
 	{name: "Induction Furnace", texture: [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.inductionFurnace);
+MachineRenderer.registerModelWithRotation(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
 
 Block.registerDropFunction("inductionFurnace", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
@@ -27,16 +26,16 @@ var guiInductionFurnace = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "bitmap", x: 630, y: 146, bitmap: "furnace_bar_background", scale: GUI_BAR_STANDART_SCALE},
-		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_BAR_STANDART_SCALE}
+		{type: "bitmap", x: 630, y: 146, bitmap: "arrow_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
 	
 	elements: {
-		"progressScale": {type: "scale", x: 630, y: 146, direction: 0, value: 0.5, bitmap: "furnace_bar_scale", scale: GUI_BAR_STANDART_SCALE},
-		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_BAR_STANDART_SCALE},
+		"progressScale": {type: "scale", x: 630, y: 146, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotSource1": {type: "slot", x: 511, y: 75},
 		"slotSource2": {type: "slot", x: 571, y: 75},
-		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: function(id){return ChargeItemRegistry.isValidStorage(id, "Eu", 0);}},
+		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
 		"slotResult1": {type: "slot", x: 725, y: 142},
 		"slotResult2": {type: "slot", x: 785, y: 142},
 		"slotUpgrade1": {type: "slot", x: 900, y: 80, isValid: UpgradeAPI.isUpgrade},
@@ -49,6 +48,7 @@ var guiInductionFurnace = new UI.StandartWindow({
 
 MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	defaultValues: {
+		power_tier: 1,
 		energy_storage: 10000,
 		progress: 0,
 		isActive: false,
@@ -93,7 +93,7 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	tick: function(){
 		this.data.energy_storage = 10000;
 		this.data.isHeating = this.data.signal > 0;
-		UpgradeAPI.executeUpgades(this);
+		UpgradeAPI.executeUpgrades(this);
 		
 		var result = this.getResult();
 		if(result){
@@ -129,7 +129,9 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 		
 		
 		var energyStorage = this.getEnergyStorage();
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 128, 1);
+		var tier = this.data.power_tier;
+		this.data.energy = Math.min(this.data.energy, energyStorage);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);

@@ -9,27 +9,27 @@ Block.createSpecialType({
 IDRegistry.genBlockID("cableTin");
 Block.createBlock("cableTin", [
 	{name: "tile.cableTin.name", texture: [["cable_block_tin", 0]], inCreative: false}
-], "part");
+]);
 
 IDRegistry.genBlockID("cableCopper");
 Block.createBlock("cableCopper", [
 	{name: "tile.cableCopper.name", texture: [["cable_block_copper", 0]], inCreative: false}
-], "part");
+]);
 
 IDRegistry.genBlockID("cableGold");
 Block.createBlock("cableGold", [
 	{name: "tile.cableGold.name", texture: [["cable_block_gold", 0]], inCreative: false}
-], "part");
+]);
 
 IDRegistry.genBlockID("cableIron");
 Block.createBlock("cableIron", [
 	{name: "tile.cableIron.name", texture: [["cable_block_iron", 0]], inCreative: false}
-], "part");
+]);
 
 IDRegistry.genBlockID("cableOptic");
 Block.createBlock("cableOptic", [
 	{name: "tile.cableOptic.name", texture: [["cable_block_optic", 0]], inCreative: false}
-], "part");
+]);
 
 function setupWireRender(id, width, groupName, preventSelfAdd) {
     var render = new ICRender.Model();
@@ -66,15 +66,11 @@ function setupWireRender(id, width, groupName, preventSelfAdd) {
     Block.setBlockShape(id, {x: 0.5 - width/2, y: 0.5 - width/2, z: 0.5 - width/2}, {x: 0.5 + width/2, y: 0.5 + width/2, z: 0.5 + width/2});
 }
 
-function setupBlockAsWire(id) {
-	EU.registerWire(id);
-}
-
-setupBlockAsWire(BlockID.cableTin);
-setupBlockAsWire(BlockID.cableCopper);
-setupBlockAsWire(BlockID.cableGold);
-setupBlockAsWire(BlockID.cableIron);
-setupBlockAsWire(BlockID.cableOptic);
+EU.registerWire(BlockID.cableTin);
+EU.registerWire(BlockID.cableCopper);
+EU.registerWire(BlockID.cableGold);
+EU.registerWire(BlockID.cableIron);
+EU.registerWire(BlockID.cableOptic);
 
 setupWireRender(BlockID.cableTin, 3/8, "ic-wire");
 setupWireRender(BlockID.cableCopper, 3/8, "ic-wire");

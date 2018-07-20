@@ -11,15 +11,17 @@
 */
 
 // constants
-var GUI_BAR_STANDART_SCALE = 3.2;
+var GUI_SCALE = 3.2;
+var fallVelocity = -0.0785;
 var debugMode = __config__.getBool("debug_mode");
 
 // square lava texture for geothermal generator ui.
 LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
 
 // import values
-Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
-Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
+//Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
+//Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
+var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var MobEffect = Native.PotionEffect;
 var Enchantment = Native.Enchantment;
 var BlockSide = Native.BlockSide;

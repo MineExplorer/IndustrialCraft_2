@@ -122,7 +122,7 @@ var buttonContent = {
 		clicker: {
 			onClick: function(){
 				var armor = Player.getArmorSlot(3);
-				if(Item.getMaxDamage(armor.id) - armor.data >= 1000 && Math.abs(Player.getVelocity().y + 0.078) < 0.01){
+				if(Item.getMaxDamage(armor.id) - armor.data >= 1000 && Math.abs(Player.getVelocity().y - fallVelocity) < 0.001){
 					Player.addVelocity(0, 1.4, 0);
 					Player.setArmorSlot(3, armor.id, 1, armor.data+1000);
 				}
@@ -188,12 +188,12 @@ Callback.addCallback("tick", function(){
 			var y = Player.getPosition().y
 			var maxDmg = Item.getMaxDamage(armor.id)
 			if(armor.data < maxDmg && y < 256){
+				var vel = Player.getVelocity();
+				var vy = Math.min(32, 264-y) / 160;
 				if(hover){
 					if(World.getThreadTime() % 5 == 0){
 						Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+20, maxDmg), extra);
 					}
-					var vel = Player.getVelocity();
-					var vy = Math.min(32, 264-y) / 160;
 					if(vel.y < 0.2){
 						Player.addVelocity(0, Math.min(vy, 0.2-vel.y), 0);
 					}
@@ -202,8 +202,6 @@ Callback.addCallback("tick", function(){
 					if(World.getThreadTime() % 5 == 0){
 						Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+35, maxDmg), extra);
 					}
-					var vel = Player.getVelocity();
-					var vy = Math.min(32, 264-y) / 160;
 					if(vel.y < 0.67){
 						Player.addVelocity(0, Math.min(vy, 0.67-vel.y), 0);
 					}

@@ -1,14 +1,14 @@
 IDRegistry.genItemID("circuitBasic");
 IDRegistry.genItemID("circuitAdvanced");
-Item.createItem("circuitBasic", "Circuit", {name: "circuit", meta: 0});
-Item.createItem("circuitAdvanced", "Advanced Circuit", {name: "circuit", meta: 1});
+Item.createItem("circuitBasic", "Circuit", {name: "circuit_basic", meta: 0});
+Item.createItem("circuitAdvanced", "Advanced Circuit", {name: "circuit_advanced", meta: 0});
 
 IDRegistry.genItemID("coil");
 IDRegistry.genItemID("electricMotor");
 IDRegistry.genItemID("powerUnit");
 IDRegistry.genItemID("powerUnitSmall");
 Item.createItem("coil", "Coil", {name: "coil", meta: 0});
-Item.createItem("electricMotor", "Electric Motor", {name: "motor", meta: 0});
+Item.createItem("electricMotor", "Electric Motor", {name: "electric_motor", meta: 0});
 Item.createItem("powerUnit", "Power Unit", {name: "power_unit", meta: 0});
 Item.createItem("powerUnitSmall", "Small Power Unit", {name: "power_unit_small", meta: 0});
 

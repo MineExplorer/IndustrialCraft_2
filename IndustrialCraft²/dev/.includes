@@ -32,6 +32,7 @@ machine/processing/macerator.js
 machine/processing/recycler.js
 machine/processing/compressor.js
 machine/processing/extractor.js
+machine/processing/conserver.js
 machine/processing/metal_former.js
 machine/processing/ore_washer.js
 machine/processing/thermal_centrifuge.js
@@ -49,22 +50,24 @@ machine/misc/lamp.js
 machine/misc/sapling.js
 
 
-items/resource/ore_drop.js
 items/resource/crushed.js
 items/resource/dust.js
 items/resource/ingot.js
 items/resource/plates.js
 items/resource/casing.js
+items/resource/nuclear.js
 items/resource/scrap.js
 items/resource/produced.js
 items/resource/rubber.js
+items/resource/cells.js
 
-items/energy/cable.js
-items/energy/components.js
-items/energy/storage.js
+items/can.js
 
-items/other/cells.js
-items/other/upgrades.js
+items/mechanical/cable.js
+items/mechanical/components.js
+items/mechanical/storage.js
+items/mechanical/reactor.js
+items/mechanical/upgrades.js
 
 items/armor/bronze.js
 items/armor/composite.js

@@ -1,17 +1,43 @@
 {
   "enabled":true,
-  "debug_mode":false,
+  "debug_mode":true,
   "button_scale":60,
   "rubber_tree_gen":{
     "forest_and_plains":true,
     "jungle":true,
     "swamp":true
   },
-  "ore_gen":{
-    "copper":true,
-    "tin":true,
-    "lead":true,
-    "uranium":true,
-    "iridium":true
+  "copper_ore":{
+    "enabled":true,
+    "count":15,
+    "size":10,
+    "minHeight":0,
+    "maxHeight":68
+  },
+  "tin_ore":{
+    "enabled":true,
+    "count":25,
+    "size":6,
+    "minHeight":0,
+    "maxHeight":56
+  },
+  "lead_ore":{
+    "enabled":true,
+    "count":8,
+    "size":4,
+    "minHeight":0,
+    "maxHeight":40
+  },
+  "uranium_ore":{
+    "enabled":true,
+    "count":20,
+    "size":3,
+    "minHeight":0,
+    "maxHeight":64
+  },
+  "iridium":{
+    "chance":0.2,
+    "minHeight":1,
+    "maxHeight":100
   }
 }

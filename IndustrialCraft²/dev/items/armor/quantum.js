@@ -64,17 +64,39 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 			var energy = params.damage * 900;
 			item.data = Math.min(item.data + energy, maxDamage);
 		}
-		if(type==5 && index==3 && item.data + 900 <= maxDamage){
-			var damage = Math.min(params.damage, Math.floor((maxDamage - item.data)/900));
-			if(params.damage > damage){
-				Entity.setHealth(player, Entity.getHealth(player) + damage);
+		if(type==5 && (index==1 || index==3)){
+			var damage = 0;
+			var vel = Player.getVelocity().y;
+			var time = vel / -0.06;
+			var height = 0.06 * time*time / 2;
+			if(height < 22){
+				if(height < 17){
+					var damage = Math.floor(height) - 3;
+				}else{
+					var damage = Math.ceil(height)- 3;
+				}
 			}
-			else{
-				Game.prevent();
+			if(index==1){
+				if(damage <= 0 && height < 22){
+					Game.prevent();
+				}
+				else if(params.damage > damage){
+					Entity.setHealth(player, Entity.getHealth(player) + params.damage - damage);
+				}
 			}
-			item.data = Math.min(item.data + damage*900, maxDamage);
+			if(index==3 && item.data + 900 <= maxDamage && (damage > 0 || height >= 22)){
+				params.damage = damage;
+				damage = Math.min(params.damage, Math.floor((maxDamage - item.data)/900));
+				if(params.damage > damage){
+					Entity.setHealth(player, Entity.getHealth(player) + damage);
+				}
+				else{
+					Game.prevent();
+				}
+				item.data = Math.min(item.data + damage*900, maxDamage);
+			}
 		}
-		Player.setArmorSlot(index, item.id, 1, item.count, item.extra);
+		Player.setArmorSlot(index, item.id, 1, item.data, item.extra);
 		return false;
 	},
 	
@@ -122,13 +144,25 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 						}
 					}
 				}
+				var hunger = Player.getHunger();
+				if(hunger < 20){
+					for(var i = 0; i < 36; i++){
+						var slot = Player.getInventorySlot(i);
+						if(slot.id == ItemID.tinCanFull){
+							Player.setInventorySlot(i, slot.id, slot.count - 1, 0);
+							Player.setHunger(hunger + 1);
+							Player.addItemToInventory(ItemID.tinCanEmpty, 1, 0);
+							break;
+						}
+					}
+				}
 				//Entity.addEffect(player, MobEffect.fireResistance, 1, 2);
 			break;
 			case 2:
 				var vel = Player.getVelocity();
 				var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z)
 				if(horizontalVel > 0.15){
-					if(Math.abs(vel.y+0.078) < 0.001){runTime++;}
+					if(Math.abs(vel.y - fallVelocity) < 0.001){runTime++;}
 				}
 				else{runTime = 0;}
 				if(runTime > 2 && !Player.getFlying()){

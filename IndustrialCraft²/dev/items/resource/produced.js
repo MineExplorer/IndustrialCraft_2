@@ -2,6 +2,10 @@ IDRegistry.genItemID("matter");
 Item.createItem("matter", "UU-Matter", {name: "uu_matter"});
 Item.registerNameOverrideFunction(ItemID.matter, RARE_ITEM_NAME);
 
+IDRegistry.genItemID("iridiumChunk");
+Item.createItem("iridiumChunk", "Iridium", {name: "iridium"});
+Item.registerNameOverrideFunction(ItemID.iridiumChunk, RARE_ITEM_NAME);
+
 IDRegistry.genItemID("plateReinforcedIridium");
 Item.createItem("plateReinforcedIridium", "Iridium Reinforced Plate", {name: "plate_reinforced_iridium"});
 Item.registerNameOverrideFunction(ItemID.plateReinforcedIridium, RARE_ITEM_NAME);

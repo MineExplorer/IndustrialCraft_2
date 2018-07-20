@@ -1,7 +1,7 @@
 IDRegistry.genItemID("scanner");
 IDRegistry.genItemID("scannerAdvanced");
 Item.createItem("scanner", "OD Scanner", {name: "scanner", meta: 0}, {stack: 1});
-Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner_advanced", meta: 0}, {stack: 1});
+Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner", meta: 1}, {stack: 1});
 ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 0);
 ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 10000, 0);
 

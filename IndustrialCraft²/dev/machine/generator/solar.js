@@ -12,11 +12,11 @@ Callback.addCallback("PostLoaded", function(){
 		"aaa",
 		"xxx",
 		"b#b"
-	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, 0]);
+	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
 });
 
 
-var guiSolar = new UI.StandartWindow({
+var guiSolarPanel = new UI.StandartWindow({
 	standart: {
 		header: {text: {text: "Solar Panel"}},
 		inventory: {standart: true},
@@ -34,7 +34,7 @@ var guiSolar = new UI.StandartWindow({
 	
 	elements: {
 		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
-		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_BAR_STANDART_SCALE}
+		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
 	}
 });
 
@@ -44,7 +44,7 @@ MachineRegistry.registerPrototype(BlockID.solarPanel, {
 	},
 	
 	getGuiScreen: function(){
-		return guiSolar;
+		return guiSolarPanel;
 	},
 	
 	tick: function(){

@@ -55,55 +55,89 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 
 
 var OreGenerator = {
-	oreGenCopper: __config__.getBool("ore_gen.copper"),
-	oreGenTin: __config__.getBool("ore_gen.tin"),
-	oreGenLead: __config__.getBool("ore_gen.lead"),
-	oreGenUranium: __config__.getBool("ore_gen.uranium"),
-	oreGenIridium: __config__.getBool("ore_gen.iridium"),
-}
-
-Callback.addCallback("PostLoaded", function(){
-	for(var flag in OreGenerator){
-		if(OreGenerator[flag]){
-			OreGenerator[flag] = !Flags.addFlag(flag);
+	copper: {
+		enabled: __config__.getBool("copper_ore.enabled"),
+		count: __config__.getNumber("copper_ore.count"),
+		size: __config__.getNumber("copper_ore.size"),
+		minHeight: __config__.getNumber("copper_ore.minHeight"),
+		maxHeight: __config__.getNumber("copper_ore.maxHeight")
+	},
+	tin: {
+		enabled: __config__.getBool("tin_ore.enabled"),
+		count: __config__.getNumber("tin_ore.count"),
+		size: __config__.getNumber("tin_ore.size"),
+		minHeight: __config__.getNumber("tin_ore.minHeight"),
+		maxHeight: __config__.getNumber("tin_ore.maxHeight")
+	},
+	lead: {
+		enabled: __config__.getBool("lead_ore.enabled"),
+		count: __config__.getNumber("lead_ore.count"),
+		size: __config__.getNumber("lead_ore.size"),
+		minHeight: __config__.getNumber("lead_ore.minHeight"),
+		maxHeight: __config__.getNumber("lead_ore.maxHeight")
+	},
+	uranium: {
+		enabled: __config__.getBool("uranium_ore.enabled"),
+		count: __config__.getNumber("uranium_ore.count"),
+		size: __config__.getNumber("uranium_ore.size"),
+		minHeight: __config__.getNumber("uranium_ore.minHeight"),
+		maxHeight: __config__.getNumber("uranium_ore.maxHeight")
+	},
+	iridium: {
+		chance: __config__.getNumber("iridium_ore.chance"),
+		minHeight: __config__.getNumber("iridium_ore.minHeight"),
+		maxHeight: __config__.getNumber("iridium_ore.maxHeight")
+	},
+	
+	addFlag: function(name, flag){
+		if(OreGenerator[name].enabled){
+			OreGenerator[name].enabled = !Flags.addFlag(flag);
 		}
 	}
-	if(OreGenerator.oreGenCopper){
+}
+
+OreGenerator.addFlag("copper", "oreGenCopper");
+OreGenerator.addFlag("tin", "oreGenTin");
+OreGenerator.addFlag("lead", "oreGenLead");
+OreGenerator.addFlag("uranium", "oreGenUranium");
+
+Callback.addCallback("PostLoaded", function(){
+	if(OreGenerator.copper.enabled){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
-			for(var i = 0; i < 10; i++){
-				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 10, 70);
-				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreCopper, 0, random(6, 15));
+			for(var i = 0; i < OreGenerator.copper.count; i++){
+				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, OreGenerator.copper.minHeight, OreGenerator.copper.maxHeight);
+				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreCopper, 0, OreGenerator.copper.size);
 			}
 		});
 	}
-	if(OreGenerator.oreGenTin){
+	if(OreGenerator.tin.enabled){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
-			for(var i = 0; i < 10; i++){
-				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 56);
-				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreTin, 0, random(4, 10));
+			for(var i = 0; i < OreGenerator.tin.count; i++){
+				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, OreGenerator.tin.minHeight, OreGenerator.tin.maxHeight);
+				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreTin, 0, OreGenerator.tin.size);
 			}
 		});
 	}
-	if(OreGenerator.oreGenLead){
+	if(OreGenerator.lead.enabled){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
-			for(var i = 0; i < 10; i++){
-				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 40);
-				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreLead, 0, random(2, 5));
+			for(var i = 0; i < OreGenerator.lead.count; i++){
+				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, OreGenerator.lead.minHeight, OreGenerator.lead.maxHeight);
+				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreLead, 0, OreGenerator.lead.size);
 			}
 		});
 	}
-	if(OreGenerator.oreGenUranium){
+	if(OreGenerator.uranium.enabled){
 		Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ){
-			for(var i = 0; i < 10; i++){
-				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 48);
-				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreUranium, 0, random(1, 4));
+			for(var i = 0; i < OreGenerator.uranium.count; i++){
+				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, OreGenerator.uranium.minHeight, OreGenerator.uranium.maxHeight);
+				GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreUranium, 0, OreGenerator.uranium.size);
 			}
 		});
 	}
-	if(OreGenerator.oreGenIridium){
+	if(OreGenerator.iridium.chance > 0){
 		Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
-			if(Math.random() < 0.2){
-				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 1, 100);
+			if(Math.random() < OreGenerator.iridium.chance){
+				var coords = GenerationUtils.randomCoords(chunkX, chunkZ, OreGenerator.iridium.minHeight, OreGenerator.iridium.maxHeight);
 				if(World.getBlockID(coords.x, coords.y, coords.z) == 1){
 				World.setBlock(coords.x, coords.y, coords.z, BlockID.oreIridium);}
 			}

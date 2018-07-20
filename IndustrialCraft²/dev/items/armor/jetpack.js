@@ -11,13 +11,26 @@ Recipes.addShaped({id: ItemID.jetpack, count: 1, data: Item.getMaxDamage(ItemID.
 
 UIbuttons.setButton(ItemID.jetpack, "button_fly");
 UIbuttons.setButton(ItemID.jetpack, "button_hover");
-
+var t = 0, lastvel = 0;
 Armor.registerFuncs("jetpack", {
 	hurt: function(params, item, index, maxDamage){
 		if(params.type==5){
-			var vel = Player.getVelocity();
-			if(vel.y < -0.226 && vel.y > -0.9){
+			var vel = Player.getVelocity().y;
+			var time = vel / -0.06;
+			var height = 0.06 * time*time / 2;
+			if(height < 22){
+				if(height < 17){
+					var damage = Math.floor(height) - 3;
+				}else{
+					var damage = Math.ceil(height)- 3;
+				}
+			}
+			//Game.message(height + ", "+damage+", "+params.damage)
+			if(damage <= 0 && height < 22){
 				Game.prevent();
+			}
+			else if(params.damage > damage){
+				Entity.setHealth(player, Entity.getHealth(player) + params.damage - damage);
 			}
 		}
 		return false;

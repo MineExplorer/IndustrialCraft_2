@@ -61,17 +61,31 @@ var NANO_ARMOR_FUNCS_CHARGED = {
 			var energy = params.damage * 800;
 			item.data = Math.min(item.data + energy, maxDamage);
 		}
-		if(type==5 && index==3 && item.data +800 <= maxDamage){
-			var damage = Math.min(9, Math.floor((maxDamage - item.data)/800));
-			if(params.damage > damage){
-				Entity.setHealth(player, Entity.getHealth(player) + damage);
+		if(type==5 && index==3 && item.data + 800 <= maxDamage){
+			var damage = 0;
+			var vel = Player.getVelocity().y;
+			var time = vel / -0.06;
+			var height = 0.06 * time*time / 2;
+			if(height < 22){
+				if(height < 17){
+					var damage = Math.floor(height) - 3;
+				}else{
+					var damage = Math.ceil(height)- 3;
+				}
 			}
-			else{
-				Game.prevent();
+			if(damage > 0 || height >= 22){
+				params.damage = damage;
+				damage = Math.min(Math.min(params.damage, 9), Math.floor((maxDamage - item.data)/800));
+				if(params.damage > damage){
+					Entity.setHealth(player, Entity.getHealth(player) + damage);
+				}
+				else{
+					Game.prevent();
+				}
+				item.data = Math.min(item.data + damage * 800, maxDamage);
 			}
-			item.data = Math.min(item.data + damage * 800, maxDamage);
 		}
-		Player.setArmorSlot(index, item.id, 1, item.count, item.extra);
+		Player.setArmorSlot(index, item.id, 1, item.data, item.extra);
 		return false;
 	},
 	

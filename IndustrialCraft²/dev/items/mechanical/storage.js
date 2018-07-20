@@ -1,9 +1,9 @@
 IDRegistry.genItemID("storageBattery");
-Item.createItem("storageBattery", "Battery", {name: "re_battery", meta: 0}, {stack: 1});
+Item.createItem("storageBattery", "RE-Battery", {name: "re_battery", meta: 0}, {stack: 1});
 ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 0, true);
 
 IDRegistry.genItemID("storageAdvBattery");
-Item.createItem("storageAdvBattery", "Advanced Battery", {name: "adv_re_battery", meta: 0}, {stack: 1});
+Item.createItem("storageAdvBattery", "Advanced RE-Battery", {name: "adv_re_battery", meta: 0}, {stack: 1});
 ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 1, true);
 
 IDRegistry.genItemID("storageCrystal");
@@ -69,14 +69,18 @@ Callback.addCallback("PostLoaded", function(){
 
 Item.registerUseFunction("debugItem", function(coords, item, block){
 	Game.message(block.id+":"+block.data);
-	var machine = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z);
-	if(machine){
-		for(var i in machine.data){
+	var tile = World.getTileEntity(coords.x, coords.y, coords.z);
+	if(tile){
+		var liquid = tile.liquidStorage.getLiquidStored();
+		if(liquid){
+			Game.message(liquid + " - " + tile.liquidStorage.getAmount(liquid)*1000 + "mB");
+		}
+		for(var i in tile.data){
 			if(i != "energy_storage"){
 				if(i == "energy"){
-				Game.message("energy: " + machine.data[i] + "/" + machine.getEnergyStorage());}
+				Game.message("energy: " + tile.data[i] + "/" + tile.getEnergyStorage());}
 				else{
-				Game.message(i + ": " + machine.data[i]);}
+				Game.message(i + ": " + tile.data[i]);}
 			}
 		}
 	}

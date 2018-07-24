@@ -9,7 +9,7 @@ Block.registerDropFunction("massFabricator", function(coords, blockID, blockData
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.massFabricator, count: 1, data: 0}, [
 		"xax",
 		"b#b",

@@ -51,7 +51,7 @@ Block.registerDropFunction("luminator_on", function(coords, blockID, blockData, 
 });
 
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.luminator, count: 8, data: 1}, [
 		"cxc",
 		"aba",

@@ -20,7 +20,7 @@ IDRegistry.genItemID("casingLead");
 Item.createItem("casingLead", "Lead Casing", {name: "casing_lead"});
 
 // recipes
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	addRecipeWithCraftingTool({id: ItemID.casingCopper, count: 2, data: 0}, [{id: ItemID.plateCopper, data: 0}], ItemID.craftingHammer);
 	addRecipeWithCraftingTool({id: ItemID.casingTin, count: 2, data: 0}, [{id: ItemID.plateTin, data: 0}], ItemID.craftingHammer);
 	addRecipeWithCraftingTool({id: ItemID.casingBronze, count: 2, data: 0}, [{id: ItemID.plateBronze, data: 0}], ItemID.craftingHammer);

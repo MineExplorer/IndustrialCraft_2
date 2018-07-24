@@ -1,18 +1,18 @@
 IDRegistry.genBlockID("genWatermill");
 Block.createBlockWithRotation("genWatermill", [
-	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill", 2], ["watermill", 0], ["watermill", 1], ["watermill", 1]], inCreative: true}
+	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]], inCreative: true}
 ], "opaque");
 
 Block.registerDropFunction("genWatermill", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.genWatermill, count: 1, data: 0}, [
-		"axa",
-		"x#x",
-		"axa"
-	], ['#', BlockID.primalGenerator, -1, 'x', 5, -1, 'a', 280, 0]);
+		"x x",
+		"a#a",
+		"xcx"
+	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0, 'a', ItemID.casingSteel, 0, 'c', ItemID.coil, 0]);
 });
 
 

@@ -23,7 +23,7 @@ IDRegistry.genItemID("plateLapis");
 Item.createItem("plateLapis", "Lapis Plate", {name: "plate_lapis"});
 
 // recipes
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	addRecipeWithCraftingTool({id: ItemID.plateCopper, count: 1, data: 0}, [{id: ItemID.ingotCopper, data: 0}], ItemID.craftingHammer);
 	addRecipeWithCraftingTool({id: ItemID.plateTin, count: 1, data: 0}, [{id: ItemID.ingotTin, data: 0}], ItemID.craftingHammer);
 	addRecipeWithCraftingTool({id: ItemID.plateBronze, count: 1, data: 0}, [{id: ItemID.ingotBronze, data: 0}], ItemID.craftingHammer);
@@ -32,4 +32,3 @@ Callback.addCallback("PostLoaded", function(){
 	addRecipeWithCraftingTool({id: ItemID.plateGold, count: 1, data: 0}, [{id: 266, data: 0}], ItemID.craftingHammer);
 	addRecipeWithCraftingTool({id: ItemID.plateLead, count: 1, data: 0}, [{id: ItemID.ingotLead, data: 0}], ItemID.craftingHammer);
 });
-

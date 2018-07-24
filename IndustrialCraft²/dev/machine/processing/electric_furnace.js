@@ -9,7 +9,7 @@ Block.registerDropFunction("electricFurnace", function(coords, blockID, blockDat
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.ironFurnace);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.electricFurnace, count: 1, data: 0}, [
 		" a ",
 		"x#x"

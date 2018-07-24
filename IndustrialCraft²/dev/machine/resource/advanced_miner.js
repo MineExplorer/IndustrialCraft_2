@@ -7,7 +7,7 @@ Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData,
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.advancedMiner, count: 1, data: 0}, [
 		"pmp",
 		"e#a",

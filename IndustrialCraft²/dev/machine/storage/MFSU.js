@@ -11,12 +11,12 @@ Item.registerNameOverrideFunction(BlockID.storageMFSU, function(item, name){
 	item = Player.getCarriedItem();
 	if(item.extra){
 		var energyStored = item.extra.getInt("Eu");
-		return name + "\n§7" + energyStored + "/" + 60000000 + " Eu";
+		return name + "\nÂ§7" + energyStored + "/" + 60000000 + " Eu";
 	}
 	return name;
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageMFSU, count: 1, data: 0}, [
 		"aca",
 		"axa",
@@ -85,8 +85,8 @@ MachineRegistry.registerPrototype(BlockID.storageMFSU, {
 		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID)
 		var drop = MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 		if(drop.length > 0){
-			if(drop[0][0] == blockID){
-				extra = new ItemExtraData();
+			if(drop[0][0] == blockID && this.data.energy > 0){
+				var extra = new ItemExtraData();
 				extra.putInt("Eu", this.data.energy);
 				nativeDropItem(coords.x, coords.y, coords.z, 0, blockID, 1, 0, extra);
 			}

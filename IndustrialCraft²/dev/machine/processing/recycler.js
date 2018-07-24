@@ -9,7 +9,7 @@ Block.registerDropFunction("recycler", function(coords, blockID, blockData, leve
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.recycler, count: 1, data: 0}, [
 		" a ",
 		"x#x",

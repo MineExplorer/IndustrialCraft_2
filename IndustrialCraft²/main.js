@@ -2,7 +2,7 @@
 BUILD INFO:
   dir: dev
   target: main.js
-  files: 78
+  files: 79
 */
 
 
@@ -30,8 +30,9 @@ var debugMode = __config__.getBool("debug_mode");
 LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
 
 // import values
-Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
-Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
+//Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
+//Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
+var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var MobEffect = Native.PotionEffect;
 var Enchantment = Native.Enchantment;
 var BlockSide = Native.BlockSide;
@@ -124,8 +125,9 @@ Callback.addCallback("tick", function(){
 // file: translation.js
 
 ﻿// BLOCKS
-Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", zh: "基础机械外壳"});
-Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", zh: "基础机械外壳"});
+Translation.addTranslation("Rubber Tree Log", {ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", zh: "橡胶树原木"});
+Translation.addTranslation("Rubber Tree Leaves", {ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", zh: "橡胶树树叶"});
+Translation.addTranslation("Rubber Tree Sapling", {ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", zh: "橡胶树树苗"});
 Translation.addTranslation("Copper Ore", {ru: "Медная руда", es: "Mineral de Cobre", zh: "铜矿石"});
 Translation.addTranslation("Tin Ore", {ru: "Оловянная руда", es: "Mineral de Estaño", zh: "锡矿石"});
 Translation.addTranslation("Lead Ore", {ru: "Свинцовая руда", es: "Mineral de Plomo", zh: "铅矿石"});
@@ -140,9 +142,8 @@ Translation.addTranslation("Silver Block", {ru: "Серебряный блок",
 Translation.addTranslation("Mining Pipe", {ru: "Буровая труба", es: "Tubo Minero", zh: "采矿管道"});
 Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", zh: "防爆石"});
 Translation.addTranslation("Reinforced Glass", {ru: "Укреплённое стекло", es: "Cristal Reforzado", zh: "防爆玻璃"});
-Translation.addTranslation("Rubber Tree Log", {ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", zh: "橡胶树原木"});
-Translation.addTranslation("Rubber Tree Leaves", {ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", zh: "橡胶树树叶"});
-Translation.addTranslation("Rubber Tree Sapling", {ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", zh: "橡胶树树苗"});
+Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", zh: "基础机械外壳"});
+Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", zh: "基础机械外壳"});
 
 // Generators
 Translation.addTranslation("Generator", {ru: "Генератор", es: "Generador", zh: "火力发电机"});
@@ -151,9 +152,16 @@ Translation.addTranslation("Solar Panel", {ru: "Солнечная панель"
 Translation.addTranslation("Water Mill", {ru: "Гидрогенератор", es: "Molino de Agua", zh: "水力发电机"});
 Translation.addTranslation("Wind Mill", {ru: "Ветрогенератор", es: "Molino de Viento", zh: "风力发电机"});
 
+// Energy storage
+Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", zh: "储电盒"});
+Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", zh: "CESU充电座"});
+Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", zh: "MFE充电座"});
+Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", zh: "MFSU充电座"});
+
 // Machines
 Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", zh: "铁炉"});
 Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", zh: "日光灯"});
+Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм"}); // To Do
 Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", zh: "感应炉"});
 Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", zh: "感应炉"});
 Translation.addTranslation("Macerator", {ru: "Дробитель", es: "Trituradora", zh: "打粉机"});
@@ -161,21 +169,17 @@ Translation.addTranslation("Compressor", {ru: "Компрессор", es: "Compr
 Translation.addTranslation("Extractor", {ru: "Экстрактор", es: "Extractor", zh: "提取机"});
 Translation.addTranslation("Recycler", {ru: "Утилизатор", es: "Reciclador", zh: "回收机"});
 Translation.addTranslation("Metal Former", {ru: "Металлоформовщик", es: "Arqueador de Metal", zh: "金属成型机"});
-Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм"}); // To Do
 Translation.addTranslation("Ore Washing Plant", {ru: "Рудопромывочная машина", es: "Planta de Lavado de Minerales", zh: "洗矿机"});
 Translation.addTranslation("Thermal Centrifuge", {ru: "Термальная центрифуга", es: "Centrífuga Térmica", zh: "热能离心机"});
-Translation.addTranslation("Pump", {ru: "Помпа", es: "Bomba Extractora", zh: "泵"});
 Translation.addTranslation("Miner", {ru: "Буровая установка", es: "Perforadora", zh: "采矿机"});
 Translation.addTranslation("Advanced Miner", {ru: "Продвинутая буровая установка", es: "Minero Avanzado", zh: "高级采矿机"});
 Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Teletransportador", zh: "传送机"});
 Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", zh: "物质生成机"});
 
-// Energy storage
-Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", zh: "储电盒"});
-Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", zh: "CESU充电座"});
-Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", zh: "MFE充电座"});
-Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", zh: "MFSU充电座"});
-
+// Fluid
+Translation.addTranslation("Pump", {ru: "Помпа", es: "Bomba Extractora", zh: "泵"});
+Translation.addTranslation("Fluid Distributor", {ru: "Жидкостный распределитель", pt: "Distribuidor de Fluidos", zh: "流体分配机"});
+Translation.addTranslation("Tank", {ru: "Бак", pt: "Tanque", zh: "流体储存器"});
 
 // ITEMS
 Translation.addTranslation("Iridium", {ru: "Иридий", es: "Mineral de Iridio", zh: "铱碎片"});
@@ -293,16 +297,17 @@ Translation.addTranslation("Bronze Casing", {ru: "Бронзовая оболо�
 Translation.addTranslation("Steel Casing", {ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", zh: "钢质外壳а"});
 Translation.addTranslation("Gold Casing", {ru: "Золотая оболочка", es: "Carcasa para Objetos de Oro", zh: "黄金外壳"});
 Translation.addTranslation("Lead Casing", {ru: "Свинцовая оболочка", es: "Carcasa para Objetos de Plomo", zh: "铅质外壳"});
-// To Do
+
 // Cans
-Translation.addTranslation("Tin Can Empty", {ru: "Пустая консервная банка"});
-Translation.addTranslation("Tin Can Full", {ru: "Заполненная консервная банка"});
+Translation.addTranslation("Tin Can", {ru: "Консервная банка", pt: "Lata de Estanho", zh: "锡罐(空)"});
+Translation.addTranslation("Filled Tin Can", {ru: "Заполненная консервная банка", pt: "Lata de Estanho (Cheia)", zh: "锡罐(满)"});
 Translation.addTranslation("This looks bad...", {ru: "Это выглядит несъедобно…"});
 
 // Cells
 Translation.addTranslation("Cell", {ru: "Капсула", es: "Celda Vacía", zh: "空单元"});
 Translation.addTranslation("Water Cell", {ru: "Капсула с водой", es: "Celda de Agua", zh: "水单元"});
 Translation.addTranslation("Lava Cell", {ru: "Капсула с лавой", es: "Celda de Lava", zh: "岩浆单元"});
+Translation.addTranslation("Compressed Air Cell", {ru: "Капсула со сжатым воздухом", pt: "Célula com Ar Comprimido", zh: "压缩空气单元"});
 
 // Wires
 Translation.addTranslation("Tin Cable", {ru: "Оловянный провод", es: "Cable de Ultra-Baja Tensión", zh: "锡质导线"});
@@ -333,6 +338,10 @@ Translation.addTranslation("Quantum Helmet", {ru: "Квантовый шлем",
 Translation.addTranslation("Quantum Chestplate", {ru: "Квантовый нагрудник", es: "Chaleco de Traje Cuántico", zh: "量子护甲"});
 Translation.addTranslation("Quantum Leggings", {ru: "Квантовые штаны", es: "Pantalones de Traje Cuántico", zh: "量子护腿"});
 Translation.addTranslation("Quantum Boots", {ru: "Квантовые ботинки", es: "Botas de Traje Cuántico", zh: "量子靴子"});
+Translation.addTranslation("Scuba Helmet", {ru: "Шлем-акваланг", pt: "Máscara de Mergulho", zh: "防化头盔"});
+Translation.addTranslation("Hazmat Suit", {ru: "Защитная куртка", pt: "Roupa Anti-Radiação", zh: "防化服"});
+Translation.addTranslation("Hazmat Suit Leggings", {ru: "Защитные штаны", pt: "Calças Anti-Radiação", zh: "防化裤"});
+Translation.addTranslation("Rubber Boots", {ru: "Резиновые ботинки", pt: "Botas de Borracha", zh: "橡胶靴"});
 Translation.addTranslation("Jetpack", {ru: "Реактивный ранец", es: "Jetpack Eléctrico", zh: "电力喷气背包"});
 Translation.addTranslation("Batpack", {ru: "Аккумуляторный ранец", es: "Mochila de Baterías", zh: "电池背包"});
 Translation.addTranslation("Advanced Batpack", {ru: "Продвинутый аккумуляторный ранец", es: "Mochila de Baterías Avanzada", zh: "高级电池背包"});
@@ -433,6 +442,22 @@ var MachineRegistry = {
 			return [[standartDrop || blockID, 1, 0]];
 		}
 		return [];
+	},
+	
+	create6sidesRender: function(id, texture){
+		if(texture.length == 2){
+			var textures = [
+				[texture[1], texture[0], texture[0], texture[0], texture[0], texture[0]],
+				[texture[0], texture[1], texture[0], texture[0], texture[0], texture[0]],
+				[texture[0], texture[0], texture[1], texture[0], texture[0], texture[0]],
+				[texture[0], texture[0], texture[0], texture[1], texture[0], texture[0]],
+				[texture[0], texture[0], texture[0], texture[0], texture[1], texture[0]],
+				[texture[0], texture[0], texture[0], texture[0], texture[0], texture[1]]
+			]
+		}
+		for(var i = 0; i < 5; i++){
+			MachineRenderer.registerRenderModel(id, i, textures[i])
+		}
 	},
 	
 	initModel: function(){
@@ -565,7 +590,10 @@ var UpgradeAPI = {
 							item.count += slot.count;
 						}
 					}
-					if(!find) upgrades.push(slot);
+					if(!find){
+						item = {id: slot.id, count: slot.count, data: slot.data};
+						upgrades.push(item);
+					}
 				}
 			}
 		}
@@ -1181,7 +1209,7 @@ Block.setDestroyTime(BlockID.blockSilver, 5);
 Block.setDestroyLevel("blockSilver", 3);
 
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.blockCopper, count: 1, data: 0}, [
 		"xxx",
 		"xxx",
@@ -1248,7 +1276,7 @@ Block.setDestroyLevel("machineBlockAdvanced", 1);
 Block.setDestroyTime(BlockID.machineBlockAdvanced, 3);
 
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.machineBlockBasic, count: 1, data: 0}, [
 		"xxx",
 		"x x",
@@ -1302,7 +1330,7 @@ Block.createBlock("reinforcedGlass", [
 ToolAPI.registerBlockMaterial(BlockID.reinforcedGlass, "stone", 2, true);
 Block.setDestroyLevel("reinforcedGlass", 2);
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.reinforcedStone, count: 8, data: 0}, [
 		"aaa",
 		"axa",
@@ -1314,6 +1342,7 @@ Callback.addCallback("PostLoaded", function(){
 		"aaa",
 		"axa"
 	], ['x', ItemID.plateAlloy, 0, 'a', 20, 0]);
+	
 	Recipes.addShaped({id: BlockID.reinforcedGlass, count: 7, data: 0}, [
 		"aaa",
 		"xax",
@@ -1442,7 +1471,7 @@ Block.setDestroyTime(BlockID.miningPipe, 2);
 Block.setBlockShape(BlockID.miningPipe, {x: 5/16, y: 0, z: 5/16}, {x: 11/16, y: 1, z: 11/16}, 0);
 Block.setDestroyLevel("miningPipe", 1);
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.miningPipe, count: 8, data: 0}, [
 		"p p",
 		"p p",
@@ -1460,14 +1489,13 @@ Block.createBlockWithRotation("primalGenerator", [
 	{name: "Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.primalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.primalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.primalGenerator);
+MachineRenderer.registerModelWithRotation(BlockID.primalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 Block.registerDropFunction("primalGenerator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
 		" x ",
 		" # ",
@@ -1584,15 +1612,13 @@ Block.createBlockWithRotation("geothermalGenerator", [
 	{name: "Geothermal Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.geothermalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.geothermalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.geothermalGenerator);
-//ICRenderLib.addConnectionBlock("bc-fluid", BlockID.geothermalGenerator);
+MachineRenderer.registerModelWithRotation(BlockID.geothermalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 Block.registerDropFunction("geothermalGenerator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.geothermalGenerator, count: 1, data: 0}, [
 		"xax",
 		"xax",
@@ -1715,7 +1741,7 @@ Block.registerDropFunction("solarPanel", function(coords, blockID, blockData, le
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
 		"aaa",
 		"xxx",
@@ -1795,12 +1821,12 @@ Block.registerDropFunction("genWindmill", function(coords, blockID, blockData, l
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.genWindmill, count: 1, data: 0}, [
 		"x x",
 		" # ",
-		"x x"
-	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0]);
+		"xcx"
+	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0, 'c', ItemID.coil, 0]);
 });
 
 MachineRegistry.registerPrototype(BlockID.genWindmill, {
@@ -1840,19 +1866,19 @@ MachineRegistry.registerPrototype(BlockID.genWindmill, {
 
 IDRegistry.genBlockID("genWatermill");
 Block.createBlockWithRotation("genWatermill", [
-	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill", 2], ["watermill", 0], ["watermill", 1], ["watermill", 1]], inCreative: true}
+	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]], inCreative: true}
 ], "opaque");
 
 Block.registerDropFunction("genWatermill", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.genWatermill, count: 1, data: 0}, [
-		"axa",
-		"x#x",
-		"axa"
-	], ['#', BlockID.primalGenerator, -1, 'x', 5, -1, 'a', 280, 0]);
+		"x x",
+		"a#a",
+		"xcx"
+	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0, 'a', ItemID.casingSteel, 0, 'c', ItemID.coil, 0]);
 });
 
 
@@ -1915,10 +1941,20 @@ Block.createBlockWithRotation("storageBatBox", [
 ], "opaque");
 
 Block.registerDropFunction("storageBatBox", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
+	MachineRegistry.getMachineDrop(coords, blockID, level);
+	return [];
 });
 
-Callback.addCallback("PostLoaded", function(){
+Item.registerNameOverrideFunction(BlockID.storageBatBox, function(item, name){
+	item = Player.getCarriedItem();
+	if(item.extra){
+		var energyStored = item.extra.getInt("Eu");
+		return name + "\n§7" + energyStored + "/" + 40000 + " Eu";
+	}
+	return name;
+});
+
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageBatBox, count: 1, data: 0}, [
 		"xax",
 		"bbb",
@@ -1979,10 +2015,34 @@ MachineRegistry.registerPrototype(BlockID.storageBatBox, {
 	energyTick: function(type, src){
 		var TRANSFER = 32;
 		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
+	},
+	
+	destroyBlock: function(coords, player){
+		var extra;
+		if(this.data.energy > 0){
+			extra = new ItemExtraData();
+			extra.putInt("Eu", this.data.energy);
+		}
+		nativeDropItem(coords.x, coords.y, coords.z, 0, BlockID.storageBatBox, 1, 0, extra);
 	}
 });
 
 ToolAPI.registerBlockMaterial(BlockID.storageBatBox, "wood");
+
+Block.registerPlaceFunction("storageBatBox", function(coords, item, block){
+	Game.prevent();
+	var x = coords.relative.x
+	var y = coords.relative.y
+	var z = coords.relative.z
+	block = World.getBlockID(x, y, z)
+	if(GenerationUtils.isTransparentBlock(block)){
+		World.setBlock(x, y, z, item.id, 0);
+		var tile = World.addTileEntity(x, y, z);
+		if(item.extra){
+			tile.data.energy = item.extra.getInt("Eu") + 16;
+		}
+	}
+});
 
 
 
@@ -1995,10 +2055,19 @@ Block.createBlockWithRotation("storageCESU", [
 ], "opaque");
 
 Block.registerDropFunction("storageCESU", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
+	return [];
 });
 
-Callback.addCallback("PostLoaded", function(){
+Item.registerNameOverrideFunction(BlockID.storageCESU, function(item, name){
+	item = Player.getCarriedItem();
+	if(item.extra){
+		var energyStored = item.extra.getInt("Eu");
+		return name + "\n§7" + energyStored + "/" + 300000 + " Eu";
+	}
+	return name;
+});
+
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageCESU, count: 1, data: 0}, [
 		"bxb",
 		"aaa",
@@ -2061,6 +2130,36 @@ MachineRegistry.registerPrototype(BlockID.storageCESU, {
 	energyTick: function(type, src){
 		var TRANSFER = 128;
 		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
+	},
+	
+	destroyBlock: function(coords, player){
+		var itemID = Player.getCarriedItem().id;
+		var blockID = BlockID.storageCESU;
+		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID)
+		var drop = MachineRegistry.getMachineDrop(coords, blockID, level);
+		if(drop.length > 0 && drop[0][0] == blockID){
+			var extra;
+			if(this.data.energy > 0){
+				extra = new ItemExtraData();
+				extra.putInt("Eu", this.data.energy);
+			}
+			nativeDropItem(coords.x, coords.y, coords.z, 0, blockID, 1, 0, extra);
+		}
+	}
+});
+
+Block.registerPlaceFunction("storageCESU", function(coords, item, block){
+	Game.prevent();
+	var x = coords.relative.x
+	var y = coords.relative.y
+	var z = coords.relative.z
+	block = World.getBlockID(x, y, z)
+	if(GenerationUtils.isTransparentBlock(block)){
+		World.setBlock(x, y, z, item.id, 0);
+		var tile = World.addTileEntity(x, y, z);
+		if(item.extra){
+			tile.data.energy = item.extra.getInt("Eu") + 16;
+		}
 	}
 });
 
@@ -2075,10 +2174,20 @@ Block.createBlockWithRotation("storageMFE", [
 ], "opaque");
 
 Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
+	return [];
 });
 
-Callback.addCallback("PostLoaded", function(){
+Item.registerNameOverrideFunction(BlockID.storageMFE, function(item, name){
+	item = Player.getCarriedItem();
+	if(item.extra){
+		var energyStored = item.extra.getInt("Eu");
+		return name + "\n§7" + energyStored + "/" + 4000000 + " Eu";
+	}
+	return name;
+});
+
+
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageMFE, count: 1, data: 0}, [
 		"bab",
 		"axa",
@@ -2141,6 +2250,38 @@ MachineRegistry.registerPrototype(BlockID.storageMFE, {
 	energyTick: function(type, src){
 		var TRANSFER = 512;
 		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
+	},
+	
+	destroyBlock: function(coords, player){
+		var itemID = Player.getCarriedItem().id;
+		var blockID = BlockID.storageMFE;
+		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID)
+		var drop = MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
+		if(drop.length > 0 && this.data.energy > 0){
+			if(drop[0][0] == blockID){
+				var extra = new ItemExtraData();
+				extra.putInt("Eu", this.data.energy);
+				nativeDropItem(coords.x, coords.y, coords.z, 0, blockID, 1, 0, extra);
+			}
+			else{
+				World.drop(coords.x, coords.y, coords.z, drop[0][0], drop[0][1], drop[0][2]);
+			}
+		}
+	}
+});
+
+Block.registerPlaceFunction("storageMFE", function(coords, item, block){
+	Game.prevent();
+	var x = coords.relative.x
+	var y = coords.relative.y
+	var z = coords.relative.z
+	block = World.getBlockID(x, y, z)
+	if(GenerationUtils.isTransparentBlock(block)){
+		World.setBlock(x, y, z, item.id, 0);
+		var tile = World.addTileEntity(x, y, z);
+		if(item.extra){
+			tile.data.energy = item.extra.getInt("Eu") + 16;
+		}
 	}
 });
 
@@ -2155,10 +2296,19 @@ Block.createBlockWithRotation("storageMFSU", [
 ], "opaque");
 
 Block.registerDropFunction("storageMFSU", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
+	return [];
 });
 
-Callback.addCallback("PostLoaded", function(){
+Item.registerNameOverrideFunction(BlockID.storageMFSU, function(item, name){
+	item = Player.getCarriedItem();
+	if(item.extra){
+		var energyStored = item.extra.getInt("Eu");
+		return name + "\n§7" + energyStored + "/" + 60000000 + " Eu";
+	}
+	return name;
+});
+
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageMFSU, count: 1, data: 0}, [
 		"aca",
 		"axa",
@@ -2219,6 +2369,38 @@ MachineRegistry.registerPrototype(BlockID.storageMFSU, {
 	energyTick: function(type, src){
 		var TRANSFER = 2048;
 		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
+	},
+	
+	destroyBlock: function(coords, player){
+		var itemID = Player.getCarriedItem().id;
+		var blockID = BlockID.storageMFSU;
+		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID)
+		var drop = MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
+		if(drop.length > 0){
+			if(drop[0][0] == blockID && this.data.energy > 0){
+				var extra = new ItemExtraData();
+				extra.putInt("Eu", this.data.energy);
+				nativeDropItem(coords.x, coords.y, coords.z, 0, blockID, 1, 0, extra);
+			}
+			else{
+				World.drop(coords.x, coords.y, coords.z, drop[0][0], drop[0][1], drop[0][2]);
+			}
+		}
+	}
+});
+
+Block.registerPlaceFunction("storageMFSU", function(coords, item, block){
+	Game.prevent();
+	var x = coords.relative.x
+	var y = coords.relative.y
+	var z = coords.relative.z
+	block = World.getBlockID(x, y, z)
+	if(GenerationUtils.isTransparentBlock(block)){
+		World.setBlock(x, y, z, item.id, 0);
+		var tile = World.addTileEntity(x, y, z);
+		if(item.extra){
+			tile.data.energy = item.extra.getInt("Eu") + 16;
+		}
 	}
 });
 
@@ -2232,14 +2414,13 @@ Block.createBlockWithRotation("ironFurnace", [
 	{name: "Iron Furnace", texture: [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.ironFurnace, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.ironFurnace, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 1], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.ironFurnace);
+MachineRenderer.registerModelWithRotation(BlockID.ironFurnace, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 1], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
 
 Block.registerDropFunction("ironFurnace", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.ironFurnace, count: 1, data: 0}, [
 		" x ",
 		"x x",
@@ -2378,14 +2559,13 @@ Block.createBlockWithRotation("electricFurnace", [
 	{name: "Electric Furnace", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.electricFurnace, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.electricFurnace, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.electricFurnace);
+MachineRenderer.registerModelWithRotation(BlockID.electricFurnace, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 Block.registerDropFunction("electricFurnace", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.ironFurnace);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.electricFurnace, count: 1, data: 0}, [
 		" a ",
 		"x#x"
@@ -2502,14 +2682,13 @@ Block.createBlockWithRotation("inductionFurnace", [
 	{name: "Induction Furnace", texture: [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.inductionFurnace);
+MachineRenderer.registerModelWithRotation(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
 
 Block.registerDropFunction("inductionFurnace", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.inductionFurnace, count: 1, data: 0}, [
 		"xxx",
 		"x#x",
@@ -2663,14 +2842,13 @@ Block.createBlockWithRotation("macerator", [
     {name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.macerator, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.macerator, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 1], ["machine_side", 0], ["machine_side", 0]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.macerator);
+MachineRenderer.registerModelWithRotation(BlockID.macerator, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 Block.registerDropFunction("macerator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
     Recipes.addShaped({id: BlockID.macerator, count: 1, data: 0}, [
         "xxx",
         "b#b",
@@ -2831,134 +3009,6 @@ MachineRegistry.registerPrototype(BlockID.macerator, {
 
 
 
-// file: machine/processing/recycler.js
-
-IDRegistry.genBlockID("recycler");
-Block.createBlockWithRotation("recycler", [
-	{name: "Recycler", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "opaque");
-MachineRenderer.setStandartModel(BlockID.recycler, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.recycler, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["recycler_front", 1], ["machine_side", 0], ["machine_side", 0]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.recycler);
-
-Block.registerDropFunction("recycler", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.recycler, count: 1, data: 0}, [
-		" a ",
-		"x#x",
-		"bxb"
-	], ['#', BlockID.compressor, -1, 'x', 3, -1, 'a', 348, 0, 'b', ItemID.ingotSteel, 0]);
-});
-
-
-var recyclerBlacklist = [102, 280, 78, 80, 332];
-
-var guiRecycler = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Recycler"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 530, y: 155, bitmap: "recycler_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
-	],
-	
-	elements: {
-		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "recycler_bar_scale", scale: GUI_SCALE},
-		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-        "slotSource": {type: "slot", x: 441, y: 79},
-        "slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-        "slotResult": {type: "slot", x: 625, y: 148},
-		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
-	}
-});
-
-
-MachineRegistry.registerPrototype(BlockID.recycler, {
-	defaultValues: {
-		power_tier: 0,
-		energy_storage: 1200,
-		energy_consumption: 1,
-		work_time: 45,
-		progress: 0,
-		isActive: false
-	},
-	
-	getGuiScreen: function(){
-		return guiRecycler;
-	},
-	
-	getTransportSlots: function(){
-		return {input: ["slotSource"], output: ["slotResult"]};
-	},
-	
-	setDefaultValues: function(){
-		this.data.energy_storage = this.defaultValues.energy_storage;
-		this.data.energy_consumption = this.defaultValues.energy_consumption;
-		this.data.work_time = this.defaultValues.work_time;
-	},
-	
-	tick: function(){
-		this.setDefaultValues();
-		UpgradeAPI.executeUpgrades(this);
-		
-		var sourceSlot = this.container.getSlot("slotSource");
-		var resultSlot = this.container.getSlot("slotResult");
-		if(sourceSlot.id > 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)){
-			if(this.data.energy >= this.data.energy_consumption){
-				this.data.energy -= this.data.energy_consumption;
-				this.data.progress += 1/this.data.work_time;
-				this.activate();
-			}
-			else{
-				this.deactivate();
-			}
-			if(this.data.progress >= 1){
-				sourceSlot.count--;
-				if(Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1){
-					resultSlot.id = ItemID.scrap;
-					resultSlot.count++;
-				}
-				this.container.validateAll();
-				this.data.progress = 0;
-			}
-		}
-		else {
-			this.data.progress = 0;
-			this.deactivate();
-		}
-		
-		var energyStorage = this.getEnergyStorage();
-		var tier = this.data.power_tier;
-		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
-		
-		this.container.setScale("progressScale", this.data.progress);
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-	},
-	
-	getEnergyStorage: function(){
-		return this.data.energy_storage;
-	},
-	
-	init: MachineRegistry.initModel,
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy: this.deactivate,
-	energyTick: MachineRegistry.basicEnergyReceiveFunc
-});
-
-
-
-
 // file: machine/processing/compressor.js
 
 IDRegistry.genBlockID("compressor");
@@ -2966,14 +3016,13 @@ Block.createBlockWithRotation("compressor", [
 	{name: "Compressor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.compressor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.compressor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 1], ["machine_side", 0], ["machine_side", 0]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.compressor);
+MachineRenderer.registerModelWithRotation(BlockID.compressor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 Block.registerDropFunction("compressor", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
 		"x x",
 		"x#x",
@@ -2991,6 +3040,7 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.carbonMesh": {id: ItemID.carbonPlate, count: 1, data: 0},
 		"ItemID.coalBall": {id: ItemID.coalBlock, count: 1, data: 0},
 		"ItemID.coalChunk": {id: 264, count: 1, data: 0},
+		"ItemID.cellEmpty": {id: ItemID.cellAir, count: 1, data: 0},
 		
 		// Blocks
 		265: {id: 42, count: 1, data: 0, ingredientCount: 9},
@@ -3127,14 +3177,13 @@ Block.createBlockWithRotation("extractor", [
 	{name: "Extractor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.extractor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.extractor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 1], ["extractor_side", 1], ["extractor_side", 1]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.extractor);
+MachineRenderer.registerModelWithRotation(BlockID.extractor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 1], ["extractor_side", 1], ["extractor_side", 1]]);
 
 Block.registerDropFunction("extractor", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.extractor, count: 1, data: 0}, [
 		"x#x",
 		"xax"
@@ -3262,7 +3311,7 @@ Block.createBlockWithRotation("conserver", [
 	{name: "Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.conserver, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.conserver, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 1], ["machine_side", 0], ["machine_side", 0]], true);
+MachineRenderer.registerModelWithRotation(BlockID.conserver, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 Block.registerDropFunction("conserver", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
@@ -3336,7 +3385,7 @@ var guiConserver = new UI.StandartWindow({
 MachineRegistry.registerPrototype(BlockID.conserver, {
 	defaultValues: {
 		power_tier: 0,
-		energy_storage: 1200,
+		energy_storage: 800,
 		energy_consumption: 1,
 		work_time: 150,
 		progress: 0,
@@ -3413,6 +3462,133 @@ MachineRegistry.registerPrototype(BlockID.conserver, {
 
 
 
+// file: machine/processing/recycler.js
+
+IDRegistry.genBlockID("recycler");
+Block.createBlockWithRotation("recycler", [
+	{name: "Recycler", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.recycler, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], true);
+MachineRenderer.registerModelWithRotation(BlockID.recycler, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["recycler_front", 1], ["machine_side", 0], ["machine_side", 0]]);
+
+Block.registerDropFunction("recycler", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
+});
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.recycler, count: 1, data: 0}, [
+		" a ",
+		"x#x",
+		"bxb"
+	], ['#', BlockID.compressor, -1, 'x', 3, -1, 'a', 348, 0, 'b', ItemID.ingotSteel, 0]);
+});
+
+
+var recyclerBlacklist = [102, 280, 78, 80, 332];
+
+var guiRecycler = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: "Recycler"}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 155, bitmap: "recycler_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "recycler_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+        "slotSource": {type: "slot", x: 441, y: 79},
+        "slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+        "slotResult": {type: "slot", x: 625, y: 148},
+		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
+	}
+});
+
+
+MachineRegistry.registerPrototype(BlockID.recycler, {
+	defaultValues: {
+		power_tier: 0,
+		energy_storage: 800,
+		energy_consumption: 1,
+		work_time: 45,
+		progress: 0,
+		isActive: false
+	},
+	
+	getGuiScreen: function(){
+		return guiRecycler;
+	},
+	
+	getTransportSlots: function(){
+		return {input: ["slotSource"], output: ["slotResult"]};
+	},
+	
+	setDefaultValues: function(){
+		this.data.energy_storage = this.defaultValues.energy_storage;
+		this.data.energy_consumption = this.defaultValues.energy_consumption;
+		this.data.work_time = this.defaultValues.work_time;
+	},
+	
+	tick: function(){
+		this.setDefaultValues();
+		UpgradeAPI.executeUpgrades(this);
+		
+		var sourceSlot = this.container.getSlot("slotSource");
+		var resultSlot = this.container.getSlot("slotResult");
+		if(sourceSlot.id > 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)){
+			if(this.data.energy >= this.data.energy_consumption){
+				this.data.energy -= this.data.energy_consumption;
+				this.data.progress += 1/this.data.work_time;
+				this.activate();
+			}
+			else{
+				this.deactivate();
+			}
+			if(this.data.progress >= 1){
+				sourceSlot.count--;
+				if(Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1){
+					resultSlot.id = ItemID.scrap;
+					resultSlot.count++;
+				}
+				this.container.validateAll();
+				this.data.progress = 0;
+			}
+		}
+		else {
+			this.data.progress = 0;
+			this.deactivate();
+		}
+		
+		var energyStorage = this.getEnergyStorage();
+		var tier = this.data.power_tier;
+		this.data.energy = Math.min(this.data.energy, energyStorage);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		
+		this.container.setScale("progressScale", this.data.progress);
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+	},
+	
+	getEnergyStorage: function(){
+		return this.data.energy_storage;
+	},
+	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
+	energyTick: MachineRegistry.basicEnergyReceiveFunc
+});
+
+
+
+
 // file: machine/processing/metal_former.js
 
 IDRegistry.genBlockID("metalFormer");
@@ -3420,14 +3596,13 @@ Block.createBlockWithRotation("metalFormer", [
 	{name: "Metal Former", texture: [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.metalFormer, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.metalFormer, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.metalFormer);
+MachineRenderer.registerModelWithRotation(BlockID.metalFormer, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 Block.registerDropFunction("metalFormer", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.metalFormer, count: 1, data: 0}, [
 		" x ",
 		"b#b",
@@ -3592,13 +3767,13 @@ Block.createBlockWithRotation("oreWasher", [
     {name: "Ore Washing Plant", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.oreWasher, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.oreWasher, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 1], ["ore_washer_side", 1], ["ore_washer_side", 1]], true);
+MachineRenderer.registerModelWithRotation(BlockID.oreWasher, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 1], ["ore_washer_side", 1], ["ore_washer_side", 1]]);
 
 Block.registerDropFunction("oreWasher", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.oreWasher, count: 1, data: 0}, [
 		"aaa",
 		"b#b",
@@ -3782,16 +3957,16 @@ MachineRegistry.registerPrototype(BlockID.oreWasher, {
 
 IDRegistry.genBlockID("thermalCentrifuge");
 Block.createBlockWithRotation("thermalCentrifuge", [
-	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
+	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.thermalCentrifuge, [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.thermalCentrifuge, [["machine_advanced", 0], ["thermal_centrifuge_top", 1], ["machine_side", 0], ["thermal_centrifuge_front", 1], ["thermal_centrifuge_side", 1], ["thermal_centrifuge_side", 1]], true);
+MachineRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, [["machine_advanced", 0], ["thermal_centrifuge_top", 1], ["machine_side", 0], ["thermal_centrifuge_front", 1], ["thermal_centrifuge_side", 1], ["thermal_centrifuge_side", 1]]);
 
 Block.registerDropFunction("thermalCentrifuge", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.thermalCentrifuge, count: 1, data: 0}, [
 		"cmc",
 		"a#a",
@@ -3848,10 +4023,10 @@ var guiCentrifuge = new UI.StandartWindow({
 		"slotResult1": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 14*GUI_SCALE},
 		"slotResult2": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 32*GUI_SCALE},
 		"slotResult3": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 50*GUI_SCALE},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade1": {type: "slot", x: 880, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 880, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 880, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
 		"indicator": {type: "image", x: 400 + 88*GUI_SCALE, y: 50 + 59*GUI_SCALE, bitmap: "indicator_red", scale: GUI_SCALE}
 	}
 });
@@ -3995,14 +4170,13 @@ Block.createBlockWithRotation("massFabricator", [
 	{name: "Mass Fabricator", texture: [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], true);
-//ICRenderLib.addConnectionBlock("bc-container", BlockID.massFabricator);
+MachineRenderer.registerModelWithRotation(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 
 Block.registerDropFunction("massFabricator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.massFabricator, count: 1, data: 0}, [
 		"xax",
 		"b#b",
@@ -4125,13 +4299,13 @@ Block.createBlockWithRotation("pump", [
 	{name: "Pump", texture: [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.pump, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.pump, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 1], ["pump_side", 1], ["pump_side", 1]], true);
+MachineRenderer.registerModelWithRotation(BlockID.pump, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 1], ["pump_side", 1], ["pump_side", 1]]);
 
 Block.registerDropFunction("pump", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.pump, count: 1, data: 0}, [
 		"cxc",
 		"c#c",
@@ -4173,7 +4347,7 @@ var guiPump = new UI.StandartWindow({
 MachineRegistry.registerPrototype(BlockID.pump, {
 	defaultValues: {
 		power_tier: 0,
-		energy_storage: 1200,
+		energy_storage: 800,
 		energy_consumption: 1,
 		work_time: 20,
 		progress: 0,
@@ -4291,6 +4465,46 @@ MachineRegistry.registerPrototype(BlockID.pump, {
 
 // file: machine/fluid/fluid_distributor.js
 
+/*
+IDRegistry.genBlockID("fluidDistributor");
+Block.createBlock("fluidDistributor", [
+	{name: "Fluid Distributor", texture: [["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1]], inCreative: true}
+], "opaque");
+MachineRenderer.setStandartModel(BlockID.fluidDistributor, [["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1]]);
+MachineRegistry.create6sidesRender(BlockID.fluidDistributor, [["fluid_distributor", 0], ["fluid_distributor", 1]]);
+
+Block.registerDropFunction("fluidDistributor", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
+});
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.fluidDistributor, count: 1, data: 0}, [
+		"aaa",
+		"a#a",
+		"ccc"
+	], ['#', BlockID.machineBlockBasic, 0, 'a', ItemID.upgradeFluidPulling, 0, 'c', ItemID.cellEmpty, 0]);
+});
+
+
+
+MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
+	defaultValues: {
+		rotation: 0,
+    },
+}, true);
+
+Block.registerPlaceFunction("fluidDistributor", function(coords, item, block){
+	Game.prevent();
+	var x = coords.relative.x
+	var y = coords.relative.y
+	var z = coords.relative.z
+	block = World.getBlockID(x, y, z)
+	if(GenerationUtils.isTransparentBlock(block)){
+		World.setBlock(x, y, z, item.id, 0);
+		var tile = World.addTileEntity(x, y, z);
+	}
+});
+*/
 
 
 
@@ -4306,7 +4520,7 @@ Block.registerDropFunction("tank", function(coords, blockID, blockData, level){
     return MachineRegistry.getMachineDrop(coords, blockID, level);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.tank, count: 1, data: 0}, [
 		"ccc",
 		"c#c",
@@ -4398,7 +4612,7 @@ Block.registerDropFunction("miner", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.miner, count: 1, data: 0}, [
 		"x#x",
 		" b ",
@@ -4541,7 +4755,7 @@ Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData,
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.advancedMiner, count: 1, data: 0}, [
 		"pmp",
 		"e#a",
@@ -4560,10 +4774,18 @@ Block.createBlock("teleporter", [
 	{name: "Teleporter", texture: [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]], inCreative: true},
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.teleporter, [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]]);
-MachineRenderer.registerRenderModel(BlockID.teleporter, [["machine_advanced_bottom", 0], ["teleporter_top", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1]]);
+MachineRenderer.registerRenderModel(BlockID.teleporter, 0, [["machine_advanced_bottom", 0], ["teleporter_top", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1]]);
 
 Block.registerDropFunction("teleporter", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
+});
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.teleporter, count: 1, data: 0}, [
+		"xax",
+		"c#c",
+		"xdx"
+	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.circuitAdvanced, 0, 'a', ItemID.freqTransmitter, 0, 'c', ItemID.cableOptic, 0, 'd', 264, 0]);
 });
 
 var friendlyMobs = [EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityType.MUSHROOM_COW, EntityType.OCELOT, EntityType.PIG, EntityType.RABBIT, EntityType.SHEEP, EntityType.SNOW_GOLEM, EntityType.SQUID, EntityType.VILLAGER, EntityType.WOLF, 23, 24, 25, 26, 27];
@@ -4655,14 +4877,6 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 	destroy: this.deactivate
 });
 
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.teleporter, count: 1, data: 0}, [
-		"xax",
-		"c#c",
-		"xdx"
-	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.circuitAdvanced, 0, 'a', ItemID.freqTransmitter, 0, 'c', ItemID.cableOptic, 0, 'd', 264, 0]);
-});
-
 
 
 
@@ -4721,7 +4935,7 @@ Block.registerDropFunction("luminator_on", function(coords, blockID, blockData, 
 });
 
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.luminator, count: 8, data: 1}, [
 		"cxc",
 		"aba",
@@ -5217,7 +5431,7 @@ IDRegistry.genItemID("plateLapis");
 Item.createItem("plateLapis", "Lapis Plate", {name: "plate_lapis"});
 
 // recipes
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	addRecipeWithCraftingTool({id: ItemID.plateCopper, count: 1, data: 0}, [{id: ItemID.ingotCopper, data: 0}], ItemID.craftingHammer);
 	addRecipeWithCraftingTool({id: ItemID.plateTin, count: 1, data: 0}, [{id: ItemID.ingotTin, data: 0}], ItemID.craftingHammer);
 	addRecipeWithCraftingTool({id: ItemID.plateBronze, count: 1, data: 0}, [{id: ItemID.ingotBronze, data: 0}], ItemID.craftingHammer);
@@ -5226,7 +5440,6 @@ Callback.addCallback("PostLoaded", function(){
 	addRecipeWithCraftingTool({id: ItemID.plateGold, count: 1, data: 0}, [{id: 266, data: 0}], ItemID.craftingHammer);
 	addRecipeWithCraftingTool({id: ItemID.plateLead, count: 1, data: 0}, [{id: ItemID.ingotLead, data: 0}], ItemID.craftingHammer);
 });
-
 
 
 
@@ -5255,7 +5468,7 @@ IDRegistry.genItemID("casingLead");
 Item.createItem("casingLead", "Lead Casing", {name: "casing_lead"});
 
 // recipes
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	addRecipeWithCraftingTool({id: ItemID.casingCopper, count: 2, data: 0}, [{id: ItemID.plateCopper, data: 0}], ItemID.craftingHammer);
 	addRecipeWithCraftingTool({id: ItemID.casingTin, count: 2, data: 0}, [{id: ItemID.plateTin, data: 0}], ItemID.craftingHammer);
 	addRecipeWithCraftingTool({id: ItemID.casingBronze, count: 2, data: 0}, [{id: ItemID.plateBronze, data: 0}], ItemID.craftingHammer);
@@ -5383,6 +5596,7 @@ var SCRAP_BOX_RANDOM_DROP = [
 	{chance: 1, id: BlockID.oreLead, data: 0},
 	{chance: 2, id: ItemID.rubber, data: 0},
 	{chance: 2, id: ItemID.latex, data: 0},
+	{chance: 2.5, id: ItemID.tinCanFull, data: 0},
 ];
 
 function getScrapDropItem(){
@@ -5390,7 +5604,7 @@ function getScrapDropItem(){
 	for (var i in SCRAP_BOX_RANDOM_DROP){
 		total += SCRAP_BOX_RANDOM_DROP[i].chance;
 	}
-	var random = Math.random() * total * 1.4;
+	var random = Math.random() * total * 1.35;
 	var current = 0;
 	for (var i in SCRAP_BOX_RANDOM_DROP){
 		var drop = SCRAP_BOX_RANDOM_DROP[i];
@@ -5450,7 +5664,7 @@ Item.createItem("coalBlock", "Coal Block", {name: "coal_block"});
 IDRegistry.genItemID("coalChunk");
 Item.createItem("coalChunk", "Coal Chunk", {name: "coal_chunk"});
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.ingotAlloy, count: 2, data: 0}, [
 		"aaa",
 		"bbb",
@@ -5493,6 +5707,12 @@ Callback.addCallback("PostLoaded", function(){
 		"xxx"
 	], ['x', ItemID.matter, -1]);
 	
+	Recipes.addShaped({id: 264, count: 1, data: 0}, [
+		"xxx",
+		"xxx",
+		"xxx"
+	], ['x', ItemID.matter, -1]);
+	
 	Recipes.addShaped({id: 17, count: 8, data: 0}, [
 		" x ",
 		"   ",
@@ -5505,16 +5725,52 @@ Callback.addCallback("PostLoaded", function(){
 		"   "
 	], ['x', ItemID.matter, -1]);
 	
-	Recipes.addShaped({id: 80, count: 16, data: 0}, [
+	Recipes.addShaped({id: 2, count: 16, data: 0}, [
+		"   ",
+		"x  ",
+		"x  "
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 80, count: 4, data: 0}, [
 		"x x",
 		"   ",
 		"   "
 	], ['x', ItemID.matter, -1]);
 	
-	Recipes.addShaped({id: 2, count: 16, data: 0}, [
+	Recipes.addShaped({id: 8, count: 1, data: 0}, [
 		"   ",
+		" x ",
+		" x "
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 10, count: 1, data: 0}, [
+		" x ",
+		" x ",
+		" x "
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 35, count: 12, data: 0}, [
+		"x x",
+		"   ",
+		" x "
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 106, count: 24, data: 0}, [
+		"x  ",
 		"x  ",
 		"x  "
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 332, count: 24, data: 0}, [
+		"   ",
+		"   ",
+		"xxx"
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 20, count: 32, data: 0}, [
+		" x ",
+		"x x",
+		" x "
 	], ['x', ItemID.matter, -1]);
 	
 	Recipes.addShaped({id: 49, count: 12, data: 0}, [
@@ -5523,9 +5779,15 @@ Callback.addCallback("PostLoaded", function(){
 		"   "
 	], ['x', ItemID.matter, -1]);
 	
-	Recipes.addShaped({id: 20, count: 32, data: 0}, [
+	Recipes.addShaped({id: 288, count: 32, data: 0}, [
 		" x ",
-		"x x",
+		" x ",
+		"x x"
+	], ['x', ItemID.matter, -1]);
+
+	Recipes.addShaped({id: 351, count: 48, data: 0}, [
+		" xx",
+		" xx",
 		" x "
 	], ['x', ItemID.matter, -1]);
 	
@@ -5535,7 +5797,37 @@ Callback.addCallback("PostLoaded", function(){
 		"xx "
 	], ['x', ItemID.matter, -1]);
 	
-	Recipes.addShaped({id: 348, count: 32, data: 0}, [
+	Recipes.addShaped({id: 351, count: 9, data: 4}, [
+		" x ",
+		" x ",
+		" xx"
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 337, count: 48, data: 0}, [
+		"xx ",
+		"x  ",
+		"xx "
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 110, count: 24, data: 0}, [
+		"   ",
+		"x x",
+		"xxx"
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 318, count: 32, data: 0}, [
+		" x ",
+		"xx ",
+		"xx "
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 98, count: 48, data: 0}, [
+		"xx ",
+		"xx ",
+		"x  "
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 89, count: 8, data: 0}, [
 		" x ",
 		"x x",
 		"xxx"
@@ -5553,57 +5845,33 @@ Callback.addCallback("PostLoaded", function(){
 		"x x"
 	], ['x', ItemID.matter, -1]);
 	
-	Recipes.addShaped({id: 106, count: 24, data: 0}, [
-		"x  ",
-		"x  ",
-		"x  "
-	], ['x', ItemID.matter, -1]);
-	
-	Recipes.addShaped({id: 332, count: 48, data: 0}, [
-		"   ",
-		"   ",
-		"xxx"
-	], ['x', ItemID.matter, -1]);
-	
-	Recipes.addShaped({id: 337, count: 48, data: 0}, [
-		"xx ",
-		"x  ",
-		"xx "
-	], ['x', ItemID.matter, -1]);
-	
-	Recipes.addShaped({id: 111, count: 64, data: 0}, [
-		"x x",
-		" x ",
-		" x "
-	], ['x', ItemID.matter, -1]);
-	
 	Recipes.addShaped({id: 289, count: 16, data: 0}, [
 		"xxx",
 		"x  ",
 		"xxx"
 	], ['x', ItemID.matter, -1]);
-	
-	Recipes.addShaped({id: 288, count: 32, data: 0}, [
-		" x ",
-		" x ",
-		"x x"
+
+	Recipes.addShaped({id: 263, count: 20, data: 0}, [
+		"  x",
+		"x  ",
+		"  x"
 	], ['x', ItemID.matter, -1]);
 	
-	Recipes.addShaped({id: 351, count: 48, data: 0}, [
-		" xx",
-		" xx",
+	Recipes.addShaped({id: 331, count: 24, data: 0}, [
+		"   ",
+		" x ",
+		"xxx"
+	], ['x', ItemID.matter, -1]);
+	
+	Recipes.addShaped({id: 388, count: 2, data: 0}, [
+		"xxx",
+		"xxx",
 		" x "
 	], ['x', ItemID.matter, -1]);
 	
-	Recipes.addShaped({id: 263, count: 5, data: 0}, [
-		"x  ",
-		"  x",
-		"x  "
-	], ['x', ItemID.matter, -1]);
-	
-	Recipes.addShaped({id: 15, count: 2, data: 0}, [
+	Recipes.addShaped({id: ItemID.latex, count: 21, data: 0}, [
 		"x x",
-		" x ",
+		"   ",
 		"x x"
 	], ['x', ItemID.matter, -1]);
 	
@@ -5613,49 +5881,19 @@ Callback.addCallback("PostLoaded", function(){
 		" x "
 	], ['x', ItemID.matter, -1]);
 	
-	Recipes.addShaped({id: 331, count: 24, data: 0}, [
-		"   ",
-		" x ",
-		"xxx"
-	], ['x', ItemID.matter, -1]);
-	
-	Recipes.addShaped({id: 351, count: 9, data: 4}, [
-		" x ",
-		" x ",
-		" xx"
-	], ['x', ItemID.matter, -1]);
-	
-	Recipes.addShaped({id: 1, count: 16, data: 0}, [
-		"   ",
-		" x ",
-		"   "
-	], ['x', ItemID.matter, -1]);
-	
-	Recipes.addShaped({id: 388, count: 2, data: 0}, [
-		"xxx",
-		"xxx",
-		" x "
-	], ['x', ItemID.matter, -1]);
-	
-	Recipes.addShaped({id: 264, count: 1, data: 0}, [
-		"xxx",
-		"xxx",
-		"xxx"
-	], ['x', ItemID.matter, -1]);
-	
-	Recipes.addShaped({id: ItemID.latex, count: 21, data: 0}, [
+	Recipes.addShaped({id: 15, count: 2, data: 0}, [
 		"x x",
-		"   ",
+		" x ",
 		"x x"
 	], ['x', ItemID.matter, -1]);
 	
-	Recipes.addShaped({id: ItemID.dustCopper, count: 10, data: 0}, [
+	Recipes.addShaped({id: BlockID.oreCopper, count: 5, data: 0}, [
 		"  x",
 		"x x",
 		"   "
 	], ['x', ItemID.matter, -1]);
 	
-	Recipes.addShaped({id: ItemID.dustTin, count: 10, data: 0}, [
+	Recipes.addShaped({id: BlockID.oreTin, count: 5, data: 0}, [
 		"   ",
 		"x x",
 		"  x"
@@ -5693,25 +5931,26 @@ Recipes.addShaped({id: 29, count: 1, data: 0}, [
 IDRegistry.genItemID("cellEmpty");
 IDRegistry.genItemID("cellWater");
 IDRegistry.genItemID("cellLava");
+IDRegistry.genItemID("cellAir");
 Item.createItem("cellEmpty", "Cell", {name: "cell_empty"});
 Item.createItem("cellWater", "Water Cell", {name: "cell_water"});
 Item.createItem("cellLava", "Lava Cell", {name: "cell_lava"});
+Item.createItem("cellAir", "Compressed Air Cell", {name: "cell_air"});
 Item.setLiquidClip(ItemID.cellEmpty, true);
 LiquidRegistry.registerItem("water", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellWater, data: 0});
 LiquidRegistry.registerItem("lava", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellLava, data: 0});
 
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: ItemID.cellEmpty, count: 2, data: 0}, [
-		" x ",
-		"x x",
-		" x "
-	], ['x', ItemID.casingTin, 0]);
-	
-	Recipes.addShaped({id: 49, count: 1, data: 0}, [
-		"aa",
-		"bb"
-	], ['a', ItemID.cellLava, 0, 'b', ItemID.cellWater, 0]);
-});
+Recipes.addShaped({id: ItemID.cellEmpty, count: 2, data: 0}, [
+	" x ",
+	"x x",
+	" x "
+], ['x', ItemID.casingTin, 0]);
+
+Recipes.addShaped({id: 49, count: 1, data: 0}, [
+	"aa",
+	"bb"
+], ['a', ItemID.cellLava, 0, 'b', ItemID.cellWater, 0]);
+
 
 Item.registerUseFunction("cellEmpty", function(coords, item, block){
 	if(block.id > 7 && block.id < 12 && block.data == 0){
@@ -5754,10 +5993,10 @@ Item.registerUseFunction("cellLava", function(coords, item, block){
 // file: items/can.js
 
 IDRegistry.genItemID("tinCanEmpty");
-Item.createItem("tinCanEmpty", "Tin Can Empty", {name: "can", meta: 0});
+Item.createItem("tinCanEmpty", "Tin Can", {name: "tin_can", meta: 0});
 
 IDRegistry.genItemID("tinCanFull");
-Item.createFoodItem("tinCanFull", "Tin Can Full", {name: "can", meta: 1},{food:1});
+Item.createItem("tinCanFull", "Filled Tin Can", {name: "tin_can", meta: 1});
 
 Item.registerNameOverrideFunction(ItemID.tinCanFull, function(item, name){
 	if(item.data > 0){
@@ -5766,31 +6005,19 @@ Item.registerNameOverrideFunction(ItemID.tinCanFull, function(item, name){
 	return name;
 });
 
-var decreaseCount = 0;
-
-Callback.addCallback("FoodEaten", function(heal, satRatio){
+Item.registerNoTargetUseFunction("tinCanFull", function(){
 	var item = Player.getCarriedItem();
-	if(item.id = ItemID.tinCanFull){
-		var hunger = Player.getHunger();
-		var count = Math.min(20 - hunger, item.count) - 1;
-		Player.setHunger(hunger + count);
-		if(item.data == 1 && Math.random() < 0.2*count){
-			Entity.addEffect(player, MobEffect.hunger, 1, 600);
-		}
-		if(item.data == 2){
-			Entity.addEffect(player, MobEffect.poison, 1, 80);
-		}
-		Player.addItemToInventory(ItemID.tinCanEmpty, count+1, 0);
-		decreaseCount += count;
+	var hunger = Player.getHunger();
+	var count = Math.min(20 - hunger, item.count);
+	Player.setHunger(hunger + count);
+	if(item.data == 1 && Math.random() < 0.2*count){
+		Entity.addEffect(player, MobEffect.hunger, 1, 600);
 	}
-});
-
-Callback.addCallback("tick", function(){
-	var item = Player.getCarriedItem();
-	if(decreaseCount){
-		Player.setCarriedItem(item.id, item.count - decreaseCount, 0);
-		decreaseCount = 0;
+	if(item.data == 2){
+		Entity.addEffect(player, MobEffect.poison, 1, 80);
 	}
+	Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+	Player.setCarriedItem(item.id, item.count - count, 0);
 });
 
 
@@ -5827,7 +6054,7 @@ Recipes.addShaped({id: ItemID.cableOptic, count: 4, data: 0}, [
 	"aaa"
 ], ['#', ItemID.dustSilver, 0, 'x', ItemID.dustEnergium, 0, 'a', 20, -1]);
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	// cutting recipes
 	addRecipeWithCraftingTool({id: ItemID.cableTin0, count: 3, data: 0}, [{id: ItemID.plateTin, data: 0}], ItemID.craftingCutter);
 	addRecipeWithCraftingTool({id: ItemID.cableCopper0, count: 3, data: 0}, [{id: ItemID.plateCopper, data: 0}], ItemID.craftingCutter);
@@ -5894,24 +6121,25 @@ Item.registerUseFunction("cableOptic", function(coords, item, block){
 
 IDRegistry.genItemID("circuitBasic");
 IDRegistry.genItemID("circuitAdvanced");
-Item.createItem("circuitBasic", "Circuit", {name: "circuit", meta: 0});
-Item.createItem("circuitAdvanced", "Advanced Circuit", {name: "circuit", meta: 1});
+Item.createItem("circuitBasic", "Circuit", {name: "circuit_basic", meta: 0});
+Item.createItem("circuitAdvanced", "Advanced Circuit", {name: "circuit_advanced", meta: 0});
 
 IDRegistry.genItemID("coil");
 IDRegistry.genItemID("electricMotor");
 IDRegistry.genItemID("powerUnit");
 IDRegistry.genItemID("powerUnitSmall");
 Item.createItem("coil", "Coil", {name: "coil", meta: 0});
-Item.createItem("electricMotor", "Electric Motor", {name: "motor", meta: 0});
+Item.createItem("electricMotor", "Electric Motor", {name: "electric_motor", meta: 0});
 Item.createItem("powerUnit", "Power Unit", {name: "power_unit", meta: 0});
 Item.createItem("powerUnitSmall", "Small Power Unit", {name: "power_unit_small", meta: 0});
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.circuitBasic, count: 1, data: 0}, [
 		"xxx",
 		"a#a",
 		"xxx"
 	], ['x', ItemID.cableCopper1, 0, 'a', 331, 0, '#', ItemID.plateIron, 0]);
+
 	Recipes.addShaped({id: ItemID.circuitBasic, count: 1, data: 0}, [
 		"xax",
 		"x#x",
@@ -5923,12 +6151,12 @@ Callback.addCallback("PostLoaded", function(){
 		"a#a",
 		"xbx"
 	], ['x', 331, 0, 'a', 348, 0, 'b', ItemID.dustLapis, 0, '#', ItemID.circuitBasic, 0]);
+
 	Recipes.addShaped({id: ItemID.circuitAdvanced, count: 1, data: 0}, [
 		"xax",
 		"b#b",
 		"xax"
 	], ['x', 331, 0, 'a', 348, 0, 'b', ItemID.dustLapis, 0, '#', ItemID.circuitBasic, 0]);
-
 
 	Recipes.addShaped({id: ItemID.coil, count: 1, data: 0}, [
 		"aaa",
@@ -5947,6 +6175,7 @@ Callback.addCallback("PostLoaded", function(){
 		"axe",
 		"acs"
 	], ["x", ItemID.circuitBasic, 0, 'e', ItemID.electricMotor, 0,  "a", ItemID.storageBattery, -1, "s", ItemID.casingIron, 0, "c", ItemID.cableCopper0, 0]);
+
 	Recipes.addShaped({id: ItemID.powerUnitSmall, count: 1, data: 0}, [
 		" cs",
 		"axe",
@@ -5977,6 +6206,7 @@ ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 3
 
 IDRegistry.genItemID("debugItem");
 Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: !debugMode});
+ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, 0, true);
 
 Item.registerNameOverrideFunction(ItemID.storageBattery, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.storageAdvBattery, ENERGY_ITEM_NAME);
@@ -6007,14 +6237,13 @@ Item.registerIconOverrideFunction(ItemID.storageLapotronCrystal, function(item, 
 	return {name: "lapotron_crystal", meta: Math.round(energyStored/energyStorage * 4)}
 });
 
-
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.storageBattery, count: 1, data: Item.getMaxDamage(ItemID.storageBattery)}, [
 		" x ",
-		"a#a",
-		"a#a"
-	], ['x', ItemID.cableTin1, 0, 'a', ItemID.casingTin, 0, '#', 331, 0]);
-	
+		"c#c",
+		"c#c"
+	], ['x', ItemID.cableTin1, 0, 'c', ItemID.casingTin, 0, '#', 331, 0]);
+
 	Recipes.addShaped({id: ItemID.storageAdvBattery, count: 1, data: Item.getMaxDamage(ItemID.storageAdvBattery)}, [
 		"xbx",
 		"bab",
@@ -6026,6 +6255,14 @@ Callback.addCallback("PostLoaded", function(){
 		"xax",
 		"x#x"
 	], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+});
+
+ChargeItemRegistry.registerChargeFunction(ItemID.debugItem, function(item, amount, transf, level){
+	return amount;
+});
+
+ChargeItemRegistry.registerDischargeFunction(ItemID.debugItem, function(item, amount, transf, level){
+	return amount;
 });
 
 Item.registerUseFunction("debugItem", function(coords, item, block){
@@ -6276,6 +6513,98 @@ Item.registerUseFunction("upgradeFluidPulling", function(coords, item, block){
 		Player.setCarriedItem(ItemID.upgradeFluidPulling, item.count, 0);
 	}
 });
+
+
+
+
+// file: items/armor/hazmat.js
+
+IDRegistry.genItemID("hazmatHelmet");
+IDRegistry.genItemID("hazmatChestplate");
+IDRegistry.genItemID("hazmatLeggings");
+IDRegistry.genItemID("rubberBoots");
+
+Item.createArmorItem("hazmatHelmet", "Scuba Helmet", {name: "hazmat_helmet"}, {type: "helmet", armor: 3, durability: 64, texture: "armor/hazmat_1.png"});
+Item.createArmorItem("hazmatChestplate", "Hazmat Suit", {name: "hazmat_chestplate"}, {type: "chestplate", armor: 8, durability: 64, texture: "armor/hazmat_1.png"});
+Item.createArmorItem("hazmatLeggings", "Hazmat Suit Leggings", {name: "hazmat_leggins"}, {type: "leggings", armor: 6, durability: 64, texture: "armor/hazmat_2.png"});
+Item.createArmorItem("rubberBoots", "Rubber Boots", {name: "rubber_boots"}, {type: "boots", armor: 3, durability: 64, texture: "armor/rubber_1.png"});
+
+Recipes.addShaped({id: ItemID.hazmatHelmet, count: 1, data: 0}, [
+	" d ",
+	"xax",
+	"x#x"
+], ['x', ItemID.rubber, 0, 'a', 20, -1, 'd', 351, 14, '#', 101, -1]);
+
+Recipes.addShaped({id: ItemID.hazmatChestplate, count: 1, data: 0}, [
+	"x x",
+	"xdx",
+	"xdx"
+], ['x', ItemID.rubber, 0, 'd', 351, 14]);
+
+Recipes.addShaped({id: ItemID.hazmatLeggings, count: 1, data: 0}, [
+	"xdx",
+	"x x",
+	"x x"
+], ['x', ItemID.rubber, 0, 'd', 351, 14]);
+
+Recipes.addShaped({id: ItemID.rubberBoots, count: 1, data: 0}, [
+	"x x",
+	"x x",
+	"xwx"
+], ['x', ItemID.rubber, 0, 'w', 35, -1]);
+
+
+var RUBBER_ARMOR_FUNC = {
+	hurt: function(params, item, index, maxDamage){
+		var type = params.type;
+		if(type==2 || type==3 || type==11){
+			item.data += params.damage;
+			if(item.data >= maxDamage){
+				item.id = item.count = 0;
+			}
+			return true;
+		}
+		if(type==9 && index==0){
+			for(var i = 0; i < 36; i++){
+				var slot = Player.getInventorySlot(i);
+				if(slot.id==ItemID.cellAir){
+					Game.prevent();
+					Entity.addEffect(player, MobEffect.waterBreathing, 1, 2);
+					Player.setInventorySlot(i, slot.count > 1 ? slot.id : 0, slot.count - 1, 0);
+					Player.addItemToInventory(ItemID.cellEmpty, 1, 0);
+					break;
+				}
+			}
+		}
+		if(type==5 && index==3){
+			var Dp = Math.floor(params.damage/8);
+			var Db = Math.floor(params.damage*7/16);
+			if(Dp < 1){
+				Game.prevent();
+			}else{
+				Entity.setHealth(player, Entity.getHealth(player) + params.damage - Dp);
+			}
+			item.data += Db;
+			if(item.data >= maxDamage){
+				item.id = item.count = 0;
+			}
+			return true;
+		}
+		return false;
+	},
+	tick: function(slot, index, maxDamage){
+		if(index==0 && Player.getArmorSlot(1).id==ItemID.hazmatChestplate && Player.getArmorSlot(2).id==ItemID.hazmatLeggings && Player.getArmorSlot(3).id==ItemID.rubberBoots){
+			Entity.clearEffect(player, MobEffect.poison);
+			Entity.clearEffect(player, MobEffect.wither);
+		}
+		return false;
+	}
+};
+
+Armor.registerFuncs("hazmatHelmet", RUBBER_ARMOR_FUNC);
+Armor.registerFuncs("hazmatChestplate", RUBBER_ARMOR_FUNC);
+Armor.registerFuncs("hazmatLeggings", RUBBER_ARMOR_FUNC);
+Armor.registerFuncs("rubberBoots", RUBBER_ARMOR_FUNC);
 
 
 
@@ -6583,16 +6912,14 @@ Callback.addCallback("tick", function(){
 
 IDRegistry.genItemID("nightvisionGoggles");
 Item.createArmorItem("nightvisionGoggles", "Nightvision Goggles", {name: "nightvision"}, {type: "helmet", armor: 1, durability: 100000, texture: "armor/nightvision_1.png", isTech: false});
-ChargeItemRegistry.registerItem(ItemID.nightvisionGoggles, 100000, 0, true);
+ChargeItemRegistry.registerItem(ItemID.nightvisionGoggles, "Eu", 100000, 1);
 Item.registerNameOverrideFunction(ItemID.nightvisionGoggles, ENERGY_ITEM_NAME);
 
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: Item.getMaxDamage(ItemID.nightvisionGoggles)}, [
-		"ibi",
-		"aga",
-		"rcr"
-	], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'g', 20, 0, 'i', ItemID.casingIron, 0, 'r', ItemID.rubber, 0], ChargeItemRegistry.transportEnergy);
-});
+Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: Item.getMaxDamage(ItemID.nightvisionGoggles)}, [
+	"ibi",
+	"aga",
+	"rcr"
+], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'g', 20, 0, 'i', ItemID.casingIron, 0, 'r', ItemID.rubber, 0], ChargeItemRegistry.transportEnergy);
 
 UIbuttons.setButton(ItemID.nightvisionGoggles, "button_nightvision");
 
@@ -6608,7 +6935,7 @@ Armor.registerFuncs("nightvisionGoggles", {
 		if(nightvision && slot.data < maxDamage){
 			var coords = Player.getPosition();
 			var time = World.getWorldTime()%24000;
-			if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time >= 23950 && time <= 12050){
+			if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time >= 0 && time <= 12000){
 				Entity.addEffect(player, MobEffect.blindness, 1, 25);
 			}
 			Entity.addEffect(player, MobEffect.nightVision, 1, 225);
@@ -6883,8 +7210,13 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 				else{
 					Game.prevent();
 				}
-				item.data = Math.min(item.data + damage*900, maxDamage);
+				item.data = item.data + damage*900;
 			}
+		}
+		if(type==9 && index==0 && item.data + 1000 <= maxDamage){
+			Game.prevent();
+			Entity.addEffect(player, MobEffect.waterBreathing, 1, 2);
+			item.data = item.data + 1000;
 		}
 		Player.setArmorSlot(index, item.id, 1, item.data, item.extra);
 		return false;
@@ -6901,6 +7233,21 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 			case 0:
 				Entity.clearEffect(player, MobEffect.poison);
 				Entity.clearEffect(player, MobEffect.wither);
+				
+				var hunger = Player.getHunger();
+				if(hunger < 20){
+					for(var i = 0; i < 36; i++){
+						var slot = Player.getInventorySlot(i);
+						if(slot.id == ItemID.tinCanFull){
+							var count = Math.min(20 - hunger, slot.count);
+							Player.setHunger(hunger + count);
+							slot.count -= count;
+							Player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data);
+							Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+							break;
+						}
+					}
+				}
 				
 				var extra = slot.extra;
 				if(extra){
@@ -6931,18 +7278,6 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 						if(World.getThreadTime() % 5 == 0){
 							slot.data = Math.min(slot.data+20, maxDamage);
 							return true;
-						}
-					}
-				}
-				var hunger = Player.getHunger();
-				if(hunger < 20){
-					for(var i = 0; i < 36; i++){
-						var slot = Player.getInventorySlot(i);
-						if(slot.id == ItemID.tinCanFull){
-							Player.setInventorySlot(i, slot.id, slot.count - 1, 0);
-							Player.setHunger(hunger + 1);
-							Player.addItemToInventory(ItemID.tinCanEmpty, 1, 0);
-							break;
 						}
 					}
 				}
@@ -6983,7 +7318,7 @@ Armor.registerFuncs("quantumBoots", QUANTUM_ARMOR_FUNCS_CHARGED);
 Armor.registerFuncs("quantumBootsUncharged", QUANTUM_ARMOR_FUNCS_CHARGED);
 
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.quantumHelmet, count: 1, data: Item.getMaxDamage(ItemID.quantumHelmet)}, [
 		"a#a",
 		"bxb"
@@ -7004,7 +7339,7 @@ Callback.addCallback("PostLoaded", function(){
 	Recipes.addShaped({id: ItemID.quantumBoots, count: 1, data: Item.getMaxDamage(ItemID.quantumBoots)}, [
 		"axa",
 		"b#b"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoBoots, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.plateAlloy, 0], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoBoots, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.rubberBoots, 0], ChargeItemRegistry.transportEnergy);
 });
 
 
@@ -7013,7 +7348,7 @@ Callback.addCallback("PostLoaded", function(){
 // file: items/armor/jetpack.js
 
 IDRegistry.genItemID("jetpack");
-Item.createArmorItem("jetpack", "Jetpack", {name: "jetpack"}, {type: "chestplate", armor: 3, durability: 30000, texture: "armor/jetpack_1.png", isTech: false});
+Item.createArmorItem("jetpack", "Jetpack", {name: "jetpack"}, {type: "chestplate", armor: 3, durability: 30000, texture: "armor/jetpack_1.png"});
 ChargeItemRegistry.registerItem(ItemID.jetpack, "Eu", 30000, 0);
 Item.registerNameOverrideFunction(ItemID.jetpack, ENERGY_ITEM_NAME);
 
@@ -7025,7 +7360,7 @@ Recipes.addShaped({id: ItemID.jetpack, count: 1, data: Item.getMaxDamage(ItemID.
 
 UIbuttons.setButton(ItemID.jetpack, "button_fly");
 UIbuttons.setButton(ItemID.jetpack, "button_hover");
-var t = 0, lastvel = 0;
+
 Armor.registerFuncs("jetpack", {
 	hurt: function(params, item, index, maxDamage){
 		if(params.type==5){
@@ -7080,7 +7415,7 @@ IDRegistry.genItemID("lappack");
 Item.createArmorItem("batpack", "Batpack", {name: "batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: false});
 Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: false});
 Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
-Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 1000000, texture: "armor/lappack_1.png", isTech: false});
+Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 10000000, texture: "armor/lappack_1.png", isTech: false});
 
 ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 0, true);
 ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 1, true);
@@ -7131,13 +7466,10 @@ function registerStoragePack(id, level, tranfer){
 var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	if(World.getThreadTime()%20==0){
 	    var item = Player.getCarriedItem();
-	    if(!ChargeItemRegistry.isValidItem(item.id, "Eu", level)){
-	        return false;
-	    }
-	    var energyAdd = Math.min(item.data - 1, Math.min(transfer*20, maxDamage - slot.data));
+	    var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", item.data - 1, transfer*20, level);
 	    if(energyAdd > 0){
 	        slot.data += energyAdd;
-	        Player.setCarriedItem(item.id, 1, item.data - energyAdd, item.extra);
+	        Player.setCarriedItem(item.id, 1, item.data, item.extra);
 	        return true;
 		}
     }
@@ -7805,8 +8137,47 @@ Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack
 ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 2);
 Item.setToolRender(ItemID.nanoSaber, true);
 
-Item.registerNameOverrideFunction(ItemID.nanoSaber, ENERGY_ITEM_NAME);
+//Item.registerNameOverrideFunction(ItemID.nanoSaber, ENERGY_ITEM_NAME);
 
-var NANO_SABER_DURABILITY = Item.getMaxDamage(ItemID.nanoSaber);
+var NANO_SABER_ENERGY_STORAGE = 1000000;
 
-Recipes.addShaped({id: Ite
+Recipes.addShaped({id: ItemID.nanoSaber, count: 1, data: 22}, [
+	"ca ",
+	"ca ",
+	"bxb"
+], ['x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, 'b', ItemID.carbonPlate, 0, "c", 348, 0], ChargeItemRegistry.transportEnergy);
+
+ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: 22, damage: 4}, {
+	damage: 0,
+	onBroke: function(item){
+		item.data = Math.min(item.data, 22);
+		return true;
+	},
+	onAttack: function(item, mob){
+		this.damage = item.data < 22 ? 16 : 0;
+		return false;
+	}
+});
+
+
+Item.registerIconOverrideFunction(ItemID.nanoSaber, function(item, name){
+	var active = 0;
+	if(item.extra){
+		active = parseInt(item.extra.getBoolean("active"));
+	}
+	return {name: "nano_saber", meta: active};
+});
+
+Item.registerNoTargetUseFunction("nanoSaber", function(){
+	var item = Player.getCarriedItem();
+	var extra = item.extra;
+	if(!extra){
+		extra = new ItemExtraData();
+		var active = true;
+	}else{
+		var active = !extra.getBoolean("active");
+	}
+	extra.putBoolean("active", active);
+});
+
+ChargeItemRegistry.registerChargeFu

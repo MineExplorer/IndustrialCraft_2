@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ChargeItem",
-	version: 2,
+	version: 3,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -32,6 +32,14 @@ var ChargeItemRegistry = {
 		};
 	},
 	
+	registerChargeFunction: function(id, func){
+		this.chargeData[id].chargeFunction = func;
+	},
+	
+	registerDischargeFunction: function(id, func){
+		this.chargeData[id].dischargeFunction = func;
+	},
+	
 	getItemData: function(id){
 		return this.chargeData[id];
 	},
@@ -41,29 +49,25 @@ var ChargeItemRegistry = {
 		return (data && data.type == "flash");
 	},
 	
-	isValidItem: function(id, energy, level){
+	isValidItem: function(id, energyType, level){
 		var data = this.getItemData(id);
-		return (data && data.type == "normal" && data.energy == energy && data.level <= level || id == ItemID.debugItem);
+		return (data && data.type == "normal" && data.energy == energyType && data.level <= level);
 	},
 	
-	isValidStorage: function(id, energy, level){
+	isValidStorage: function(id, energyType, level){
 		var data = this.getItemData(id);
-		return (data && data.isEnergyStorage && data.energy == energy && data.level <= level || id == ItemID.debugItem);
+		return (data && data.isEnergyStorage && data.energy == energyType && data.level <= level);
 	},
 	
-	getEnergyStored: function(item, energy){
+	getEnergyStored: function(item, energyType){
 		var data = this.getItemData(item.id);
-		if(!data || energy && data.energy != energy){
+		if(!data || energyType && data.energy != energyType){
 			return 0;
 		}
 		return Math.min(data.maxDamage - item.data, data.maxCharge);
 	},
 	
 	getEnergyFrom: function(item, energyType, amount, transf, level, getFromAll){
-		if(item.id==ItemID.debugItem){
-			return amount;
-		}
-		
 		level = level || 0;
 		var data = this.getItemData(item.id);
 		if(!data || data.energy != energyType || data.level > level || !getFromAll && !data.isEnergyStorage){
@@ -80,28 +84,35 @@ var ChargeItemRegistry = {
 			return data.amount;
 		}
 		
-		if(item.data < 1){
-			item.data = 1;
+		if(data.dischargeFunction){
+			return data.dischargeFunction(item, amount, transf, level);
 		}
-		
-		var energyGot = Math.min(amount, Math.min(data.maxDamage - item.data, transf));
-		item.data += energyGot;
-		return energyGot;
+		else{
+			if(item.data < 1){
+				item.data = 1;
+			}
+			
+			var energyGot = Math.min(amount, Math.min(data.maxDamage - item.data, transf));
+			item.data += energyGot;
+			return energyGot;
+		}
 	},
 	
 	addEnergyTo: function(item, energyType, amount, transf, level){
-		if(item.id==ItemID.debugItem){
-			return amount;
-		}
-		
 		level = level || 0;
 		if(!this.isValidItem(item.id, energyType, level)){
 			return 0;
 		}
 		
-		var energyAdd = Math.min(amount, Math.min(item.data - 1, transf));
-		item.data -= energyAdd;
-		return energyAdd;
+		var data = this.getItemData(item.id);
+		if(data.chargeFunction){
+			return data.chargeFunction(item, amount, transf, level);
+		}
+		else{
+			var energyAdd = Math.min(amount, Math.min(item.data - 1, transf));
+			item.data -= energyAdd;
+			return energyAdd;
+		}
 	},
 	
 	transportEnergy: function(api, field, result){

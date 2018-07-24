@@ -1,15 +1,16 @@
-/*IDRegistry.genBlockID("fluidDistributor");
+/*
+IDRegistry.genBlockID("fluidDistributor");
 Block.createBlock("fluidDistributor", [
 	{name: "Fluid Distributor", texture: [["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.fluidDistributor, [["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1]]);
-MachineRegistry.create6sidesRender(BlockID.fluidDistributor, [["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1]]);
+MachineRegistry.create6sidesRender(BlockID.fluidDistributor, [["fluid_distributor", 0], ["fluid_distributor", 1]]);
 
 Block.registerDropFunction("fluidDistributor", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.fluidDistributor, count: 1, data: 0}, [
 		"aaa",
 		"a#a",

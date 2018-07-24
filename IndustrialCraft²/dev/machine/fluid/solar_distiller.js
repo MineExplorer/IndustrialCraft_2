@@ -7,12 +7,12 @@ Block.registerDropFunction("solarDistiller", function(coords, blockID, blockData
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.solarDistiller, count: 1, data: 0}, [
 		"aaa",
 		"a a",
 		"c#c"
-	], ['#', BlockID.machineBlockBasic, 0, 'a', 20, -1, 'b', ItemID.cellEmpty, 0]);
+	], ['#', BlockID.machineBlockBasic, 0, 'a', 20, -1, 'c', ItemID.cellEmpty, 0]);
 });
 
 

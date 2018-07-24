@@ -64,9 +64,8 @@ var MachineRegistry = {
 		}
 		return [];
 	},
-	/*
+	
 	create6sidesRender: function(id, texture){
-		this.data[id] = {};
 		if(texture.length == 2){
 			var textures = [
 				[texture[1], texture[0], texture[0], texture[0], texture[0], texture[0]],
@@ -78,10 +77,10 @@ var MachineRegistry = {
 			]
 		}
 		for(var i = 0; i < 5; i++){
-			this.registerRenderModel(id, i, textures[i])
+			MachineRenderer.registerRenderModel(id, i, textures[i])
 		}
 	},
-	*/
+	
 	initModel: function(){
 		if(this.data.isActive){
 			var block = World.getBlock(this.x, this.y, this.z);

@@ -7,12 +7,12 @@ Block.registerDropFunction("genWindmill", function(coords, blockID, blockData, l
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.genWindmill, count: 1, data: 0}, [
 		"x x",
 		" # ",
-		"x x"
-	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0]);
+		"xcx"
+	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0, 'c', ItemID.coil, 0]);
 });
 
 MachineRegistry.registerPrototype(BlockID.genWindmill, {

@@ -31,7 +31,7 @@ Block.createBlock("reinforcedGlass", [
 ToolAPI.registerBlockMaterial(BlockID.reinforcedGlass, "stone", 2, true);
 Block.setDestroyLevel("reinforcedGlass", 2);
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.reinforcedStone, count: 8, data: 0}, [
 		"aaa",
 		"axa",
@@ -43,6 +43,7 @@ Callback.addCallback("PostLoaded", function(){
 		"aaa",
 		"axa"
 	], ['x', ItemID.plateAlloy, 0, 'a', 20, 0]);
+	
 	Recipes.addShaped({id: BlockID.reinforcedGlass, count: 7, data: 0}, [
 		"aaa",
 		"xax",

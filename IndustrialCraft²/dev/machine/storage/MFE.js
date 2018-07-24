@@ -11,13 +11,13 @@ Item.registerNameOverrideFunction(BlockID.storageMFE, function(item, name){
 	item = Player.getCarriedItem();
 	if(item.extra){
 		var energyStored = item.extra.getInt("Eu");
-		return name + "\n§7" + energyStored + "/" + 4000000 + " Eu";
+		return name + "\nÂ§7" + energyStored + "/" + 4000000 + " Eu";
 	}
 	return name;
 });
 
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageMFE, count: 1, data: 0}, [
 		"bab",
 		"axa",
@@ -87,9 +87,9 @@ MachineRegistry.registerPrototype(BlockID.storageMFE, {
 		var blockID = BlockID.storageMFE;
 		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID)
 		var drop = MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-		if(drop.length > 0){
+		if(drop.length > 0 && this.data.energy > 0){
 			if(drop[0][0] == blockID){
-				extra = new ItemExtraData();
+				var extra = new ItemExtraData();
 				extra.putInt("Eu", this.data.energy);
 				nativeDropItem(coords.x, coords.y, coords.z, 0, blockID, 1, 0, extra);
 			}

@@ -9,6 +9,14 @@ Block.registerDropFunction("teleporter", function(coords, blockID, blockData, le
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.teleporter, count: 1, data: 0}, [
+		"xax",
+		"c#c",
+		"xdx"
+	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.circuitAdvanced, 0, 'a', ItemID.freqTransmitter, 0, 'c', ItemID.cableOptic, 0, 'd', 264, 0]);
+});
+
 var friendlyMobs = [EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityType.MUSHROOM_COW, EntityType.OCELOT, EntityType.PIG, EntityType.RABBIT, EntityType.SHEEP, EntityType.SNOW_GOLEM, EntityType.SQUID, EntityType.VILLAGER, EntityType.WOLF, 23, 24, 25, 26, 27];
 var evilMobs = [EntityType.BLAZE, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.ENDERMAN, EntityType.GHAST, EntityType.IRON_GOLEM, EntityType.LAVA_SLIME, EntityType.PIG_ZOMBIE, EntityType.SILVERFISH, EntityType.SKELETON, EntityType.SLIME, EntityType.SPIDER, EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER, 45, 46, 47, 48, 49, 55];
 
@@ -96,12 +104,4 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 	
 	init: MachineRegistry.initModel,
 	destroy: this.deactivate
-});
-
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: BlockID.teleporter, count: 1, data: 0}, [
-		"xax",
-		"c#c",
-		"xdx"
-	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.circuitAdvanced, 0, 'a', ItemID.freqTransmitter, 0, 'c', ItemID.cableOptic, 0, 'd', 264, 0]);
 });

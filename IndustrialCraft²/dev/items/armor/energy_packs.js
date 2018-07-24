@@ -6,7 +6,7 @@ IDRegistry.genItemID("lappack");
 Item.createArmorItem("batpack", "Batpack", {name: "batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: false});
 Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: false});
 Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
-Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 1000000, texture: "armor/lappack_1.png", isTech: false});
+Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 10000000, texture: "armor/lappack_1.png", isTech: false});
 
 ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 0, true);
 ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 1, true);
@@ -57,13 +57,10 @@ function registerStoragePack(id, level, tranfer){
 var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	if(World.getThreadTime()%20==0){
 	    var item = Player.getCarriedItem();
-	    if(!ChargeItemRegistry.isValidItem(item.id, "Eu", level)){
-	        return false;
-	    }
-	    var energyAdd = Math.min(item.data - 1, Math.min(transfer*20, maxDamage - slot.data));
+	    var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", item.data - 1, transfer*20, level);
 	    if(energyAdd > 0){
 	        slot.data += energyAdd;
-	        Player.setCarriedItem(item.id, 1, item.data - energyAdd, item.extra);
+	        Player.setCarriedItem(item.id, 1, item.data, item.extra);
 	        return true;
 		}
     }

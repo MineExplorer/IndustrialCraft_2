@@ -9,7 +9,7 @@ Block.registerDropFunction("geothermalGenerator", function(coords, blockID, bloc
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.geothermalGenerator, count: 1, data: 0}, [
 		"xax",
 		"xax",

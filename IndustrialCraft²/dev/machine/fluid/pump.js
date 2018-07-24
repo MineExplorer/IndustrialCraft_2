@@ -9,7 +9,7 @@ Block.registerDropFunction("pump", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.pump, count: 1, data: 0}, [
 		"cxc",
 		"c#c",

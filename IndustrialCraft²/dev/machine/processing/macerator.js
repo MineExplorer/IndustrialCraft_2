@@ -9,7 +9,7 @@ Block.registerDropFunction("macerator", function(coords, blockID, blockData, lev
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
     Recipes.addShaped({id: BlockID.macerator, count: 1, data: 0}, [
         "xxx",
         "b#b",

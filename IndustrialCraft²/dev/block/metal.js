@@ -52,7 +52,7 @@ Block.setDestroyTime(BlockID.blockSilver, 5);
 Block.setDestroyLevel("blockSilver", 3);
 
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.blockCopper, count: 1, data: 0}, [
 		"xxx",
 		"xxx",

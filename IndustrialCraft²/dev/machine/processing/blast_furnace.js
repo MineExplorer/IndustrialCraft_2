@@ -23,7 +23,7 @@ Callback.addCallback("ItemUse", function(coords,item,block){
 	}
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.blastFurnace, count: 1, data: 0}, [
 		"aaa",
 		"asa",

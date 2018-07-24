@@ -16,6 +16,7 @@ ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 3
 
 IDRegistry.genItemID("debugItem");
 Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: !debugMode});
+ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, 0, true);
 
 Item.registerNameOverrideFunction(ItemID.storageBattery, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.storageAdvBattery, ENERGY_ITEM_NAME);
@@ -46,14 +47,13 @@ Item.registerIconOverrideFunction(ItemID.storageLapotronCrystal, function(item, 
 	return {name: "lapotron_crystal", meta: Math.round(energyStored/energyStorage * 4)}
 });
 
-
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.storageBattery, count: 1, data: Item.getMaxDamage(ItemID.storageBattery)}, [
 		" x ",
-		"a#a",
-		"a#a"
-	], ['x', ItemID.cableTin1, 0, 'a', ItemID.casingTin, 0, '#', 331, 0]);
-	
+		"c#c",
+		"c#c"
+	], ['x', ItemID.cableTin1, 0, 'c', ItemID.casingTin, 0, '#', 331, 0]);
+
 	Recipes.addShaped({id: ItemID.storageAdvBattery, count: 1, data: Item.getMaxDamage(ItemID.storageAdvBattery)}, [
 		"xbx",
 		"bab",
@@ -65,6 +65,14 @@ Callback.addCallback("PostLoaded", function(){
 		"xax",
 		"x#x"
 	], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+});
+
+ChargeItemRegistry.registerChargeFunction(ItemID.debugItem, function(item, amount, transf, level){
+	return amount;
+});
+
+ChargeItemRegistry.registerDischargeFunction(ItemID.debugItem, function(item, amount, transf, level){
+	return amount;
 });
 
 Item.registerUseFunction("debugItem", function(coords, item, block){

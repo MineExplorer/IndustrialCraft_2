@@ -9,7 +9,7 @@ Block.registerDropFunction("extractor", function(coords, blockID, blockData, lev
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.extractor, count: 1, data: 0}, [
 		"x#x",
 		"xax"

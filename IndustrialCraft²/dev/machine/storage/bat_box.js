@@ -17,7 +17,7 @@ Item.registerNameOverrideFunction(BlockID.storageBatBox, function(item, name){
 	return name;
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageBatBox, count: 1, data: 0}, [
 		"xax",
 		"bbb",
@@ -81,8 +81,11 @@ MachineRegistry.registerPrototype(BlockID.storageBatBox, {
 	},
 	
 	destroyBlock: function(coords, player){
-		extra = new ItemExtraData();
-		extra.putInt("Eu", this.data.energy);
+		var extra;
+		if(this.data.energy > 0){
+			extra = new ItemExtraData();
+			extra.putInt("Eu", this.data.energy);
+		}
 		nativeDropItem(coords.x, coords.y, coords.z, 0, BlockID.storageBatBox, 1, 0, extra);
 	}
 });

@@ -36,7 +36,10 @@ var UpgradeAPI = {
 							item.count += slot.count;
 						}
 					}
-					if(!find) upgrades.push(slot);
+					if(!find){
+						item = {id: slot.id, count: slot.count, data: slot.data};
+						upgrades.push(item);
+					}
 				}
 			}
 		}

@@ -9,7 +9,7 @@ Block.registerDropFunction("compressor", function(coords, blockID, blockData, le
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
 		"x x",
 		"x#x",
@@ -27,6 +27,7 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.carbonMesh": {id: ItemID.carbonPlate, count: 1, data: 0},
 		"ItemID.coalBall": {id: ItemID.coalBlock, count: 1, data: 0},
 		"ItemID.coalChunk": {id: 264, count: 1, data: 0},
+		"ItemID.cellEmpty": {id: ItemID.cellAir, count: 1, data: 0},
 		
 		// Blocks
 		265: {id: 42, count: 1, data: 0, ingredientCount: 9},

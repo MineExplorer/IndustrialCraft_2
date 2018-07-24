@@ -93,8 +93,13 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 				else{
 					Game.prevent();
 				}
-				item.data = Math.min(item.data + damage*900, maxDamage);
+				item.data = item.data + damage*900;
 			}
+		}
+		if(type==9 && index==0 && item.data + 1000 <= maxDamage){
+			Game.prevent();
+			Entity.addEffect(player, MobEffect.waterBreathing, 1, 2);
+			item.data = item.data + 1000;
 		}
 		Player.setArmorSlot(index, item.id, 1, item.data, item.extra);
 		return false;
@@ -111,6 +116,21 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 			case 0:
 				Entity.clearEffect(player, MobEffect.poison);
 				Entity.clearEffect(player, MobEffect.wither);
+				
+				var hunger = Player.getHunger();
+				if(hunger < 20){
+					for(var i = 0; i < 36; i++){
+						var slot = Player.getInventorySlot(i);
+						if(slot.id == ItemID.tinCanFull){
+							var count = Math.min(20 - hunger, slot.count);
+							Player.setHunger(hunger + count);
+							slot.count -= count;
+							Player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data);
+							Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+							break;
+						}
+					}
+				}
 				
 				var extra = slot.extra;
 				if(extra){
@@ -141,18 +161,6 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 						if(World.getThreadTime() % 5 == 0){
 							slot.data = Math.min(slot.data+20, maxDamage);
 							return true;
-						}
-					}
-				}
-				var hunger = Player.getHunger();
-				if(hunger < 20){
-					for(var i = 0; i < 36; i++){
-						var slot = Player.getInventorySlot(i);
-						if(slot.id == ItemID.tinCanFull){
-							Player.setInventorySlot(i, slot.id, slot.count - 1, 0);
-							Player.setHunger(hunger + 1);
-							Player.addItemToInventory(ItemID.tinCanEmpty, 1, 0);
-							break;
 						}
 					}
 				}
@@ -193,7 +201,7 @@ Armor.registerFuncs("quantumBoots", QUANTUM_ARMOR_FUNCS_CHARGED);
 Armor.registerFuncs("quantumBootsUncharged", QUANTUM_ARMOR_FUNCS_CHARGED);
 
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.quantumHelmet, count: 1, data: Item.getMaxDamage(ItemID.quantumHelmet)}, [
 		"a#a",
 		"bxb"
@@ -214,5 +222,5 @@ Callback.addCallback("PostLoaded", function(){
 	Recipes.addShaped({id: ItemID.quantumBoots, count: 1, data: Item.getMaxDamage(ItemID.quantumBoots)}, [
 		"axa",
 		"b#b"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoBoots, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.plateAlloy, 0], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoBoots, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.rubberBoots, 0], ChargeItemRegistry.transportEnergy);
 });

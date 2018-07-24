@@ -7,7 +7,7 @@ Block.registerDropFunction("solarPanel", function(coords, blockID, blockData, le
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
 		"aaa",
 		"xxx",

@@ -29,10 +29,10 @@ machine/processing/iron_furnace.js
 machine/processing/electric_furnace.js
 machine/processing/induction_furnace.js
 machine/processing/macerator.js
-machine/processing/recycler.js
 machine/processing/compressor.js
 machine/processing/extractor.js
 machine/processing/conserver.js
+machine/processing/recycler.js
 machine/processing/metal_former.js
 machine/processing/ore_washer.js
 machine/processing/thermal_centrifuge.js
@@ -69,6 +69,7 @@ items/mechanical/storage.js
 items/mechanical/reactor.js
 items/mechanical/upgrades.js
 
+items/armor/hazmat.js
 items/armor/bronze.js
 items/armor/composite.js
 items/armor/armor_buttons.js

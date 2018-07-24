@@ -9,7 +9,7 @@ Block.registerDropFunction("inductionFurnace", function(coords, blockID, blockDa
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
 
-Callback.addCallback("PostLoaded", function(){
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.inductionFurnace, count: 1, data: 0}, [
 		"xxx",
 		"x#x",

@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "MachineRender",
-	version: 2,
+	version: 3,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -39,7 +39,6 @@ var MachineRenderer = {
 	},
 	
 	registerModelWithRotation: function(id, texture){
-		this.data[id] = {};
 		var textures = [
 			[texture[0], texture[1], texture[2], texture[3], texture[4], texture[5]],
 			[texture[0], texture[1], texture[3], texture[2], texture[5], texture[4]],

@@ -48,7 +48,7 @@ var MachineRegistry = {
 	getMachineDrop: function(coords, blockID, level, standartDrop){
 		BlockRenderer.unmapAtCoords(coords.x, coords.y, coords.z);
 		var item = Player.getCarriedItem();
-		if(item.id==ItemID.wrench){
+		if(item.id==ItemID.wrenchBronze){
 			ToolAPI.breakCarriedTool(10);
 			World.setBlock(coords.x, coords.y, coords.z, 0);
 			if(Math.random() < 0.8){return [[blockID, 1, 0]];}

@@ -170,7 +170,7 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 				var vel = Player.getVelocity();
 				var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z)
 				if(horizontalVel > 0.15){
-					if(Math.abs(vel.y - fallVelocity) < 0.001){runTime++;}
+					if(Math.abs(vel.y - fallVelocity) < 0.0001){runTime++;}
 				}
 				else{runTime = 0;}
 				if(runTime > 2 && !Player.getFlying()){

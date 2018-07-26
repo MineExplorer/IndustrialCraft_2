@@ -12,7 +12,7 @@
 
 // constants
 var GUI_SCALE = 3.2;
-var fallVelocity = -0.0785;
+var fallVelocity = -0.0784;
 var debugMode = __config__.getBool("debug_mode");
 
 // square lava texture for geothermal generator ui.

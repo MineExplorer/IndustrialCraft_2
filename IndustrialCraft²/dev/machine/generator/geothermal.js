@@ -34,7 +34,7 @@ var guiGeothermalGenerator = new UI.StandartWindow({
 		"liquidScale": {type: "scale", x: 450 + GUI_SCALE, y: 150 + GUI_SCALE, direction: 1, value: 0.5, bitmap: "geothermal_empty_liquid_slot", overlay: "geothermal_liquid_slot_overlay", overlayOffset: {x: -GUI_SCALE, y: -GUI_SCALE}, scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 441, y: 75},
 		"slot2": {type: "slot", x: 441, y: 212},
-		"slotEnergy": {type: "slot", x: 695, y: 181, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
+		"slotEnergy": {type: "slot", x: 695, y: 181, isValid: MachineRegistry.isValidEUItem},
 		"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
 		"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
 	}

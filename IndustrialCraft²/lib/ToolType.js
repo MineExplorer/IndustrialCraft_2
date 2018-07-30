@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ToolType",
-	version: 1,
+	version: 2,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -78,15 +78,14 @@ var ToolType = {
 	}
 }
 
-Player.getCarriedItem = ModAPI.requireGlobal("Player.getCarriedItem");
 
 ToolAPI.breakCarriedTool = function(damage){
-	var item = Player.getCarriedItem(true);
+	var item = Player.getCarriedItem();
 	item.data += damage;
 	if(item.data > Item.getMaxDamage(item.id)){
-		item.id = 0;
+		item.id = item.data = item.count = 0;
 	}
-	Player.setCarriedItem(item.id, item.count, item.data, item.enchant);
+	Player.setCarriedItem(item.id, item.count, item.data, item.extra);
 }
 
 ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){

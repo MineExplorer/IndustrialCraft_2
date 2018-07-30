@@ -61,13 +61,14 @@ MachineRegistry.registerPrototype(BlockID.storageMFSU, {
 	
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-		this.container.setText("textInfo2", energyStorage + "");
 		
 		var TRANSFER = transferByTier[3];
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, 3);
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, 3);
+		
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
+		this.container.setText("textInfo2", energyStorage + "");
 	},
 	
 	getEnergyStorage: function(){

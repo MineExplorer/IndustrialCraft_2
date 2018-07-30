@@ -146,43 +146,48 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 		var extra = extraData;
 		if(extra){
 		mode = extra.getInt("mode");}
-		if(mode > 1 && item.data + 800 <= Item.getMaxDamage(item.id)){
-			var X = 1;
-			var Y = 1;
-			var Z = 1;
-			if(side==BlockSide.EAST || side==BlockSide.WEST){
-			X = 0;}
-			if(side==BlockSide.UP || side==BlockSide.DOWN){
-			Y = 0;}
-			if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-			Z = 0;}
-			for(var xx = coords.x - X; xx <= coords.x + X; xx++){
-				for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
-					for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-						blockID = World.getBlockID(xx, yy, zz);
-						var material = ToolAPI.getBlockMaterial(blockID) || {};
-						if(material.name == "dirt" || material.name == "stone"){
-							item.data += 800;
-							if(mode == 3 || material == "stone"){
-								World.destroyBlock(xx, yy, zz, true);
-							}else{
-								drop = dirtBlocksDrop[blockID];
-								if(drop){
-									World.destroyBlock(xx, yy, zz, false);
-									World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
+		if(item.data + 800 <= Item.getMaxDamage(item.id)){
+			if(mode < 2){
+				item.data += 800;
+			}
+			else{
+				var X = 1;
+				var Y = 1;
+				var Z = 1;
+				if(side==BlockSide.EAST || side==BlockSide.WEST){
+				X = 0;}
+				if(side==BlockSide.UP || side==BlockSide.DOWN){
+				Y = 0;}
+				if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
+				Z = 0;}
+				for(var xx = coords.x - X; xx <= coords.x + X; xx++){
+					for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
+						for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
+							blockID = World.getBlockID(xx, yy, zz);
+							var material = ToolAPI.getBlockMaterial(blockID) || {};
+							if(material.name == "dirt" || material.name == "stone"){
+								item.data += 800;
+								if(mode == 3 || material == "stone"){
+									World.destroyBlock(xx, yy, zz, true);
+								}else{
+									drop = dirtBlocksDrop[blockID];
+									if(drop){
+										World.destroyBlock(xx, yy, zz, false);
+										World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
+									}
+									else{World.destroyBlock(xx, yy, zz, true);}
 								}
-								else{World.destroyBlock(xx, yy, zz, true);}
 							}
-						}
-						if(item.data + 800 >= Item.getMaxDamage(item.id)){
-							Player.setCarriedItem(item.id, 1, item.data, extra);
-							return;
+							if(item.data + 800 >= Item.getMaxDamage(item.id)){
+								Player.setCarriedItem(item.id, 1, item.data, extra);
+								return;
+							}
 						}
 					}
 				}
 			}
-			Player.setCarriedItem(item.id, 1, item.data, extra);
 		}
+		Player.setCarriedItem(item.id, 1, item.data, extra);
 	},
 	useItem: function(coords, item, block){
 		if(Entity.getSneaking(player)){

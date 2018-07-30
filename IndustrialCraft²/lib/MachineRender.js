@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "MachineRender",
-	version: 3,
+	version: 4,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -34,7 +34,7 @@ var MachineRenderer = {
 		var render = new ICRender.Model();
 		var model = BlockRenderer.createTexturedBlock(texture);
 		render.addEntry(model);
-		this.data[id] = {};
+		if(!this.data[id]) this.data[id] = {};
 		this.data[id][data] = render;
 	},
 	

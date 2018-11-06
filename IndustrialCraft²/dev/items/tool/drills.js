@@ -39,6 +39,25 @@ Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
 	return name;
 });
 
+
+Recipes.addShaped({id: ItemID.drill, count: 1, data: Item.getMaxDamage(ItemID.drill)}, [
+    " p ",
+    "ppp",
+    "pxp"
+], ['x', ItemID.powerUnit, 0, 'p', ItemID.plateIron, 0]);
+
+Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: Item.getMaxDamage(ItemID.diamondDrill)}, [
+    " a ",
+    "ada"
+], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transportEnergy);
+
+Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(ItemID.iridiumDrill)}, [
+    " a ",
+    "ada",
+    " e "
+], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transportEnergy);
+
+
 ToolType.drill = {
     damage: 0,
     blockTypes: ["stone", "dirt"],
@@ -238,21 +257,3 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 		}
 	}
 });
-
-
-Recipes.addShaped({id: ItemID.drill, count: 1, data: Item.getMaxDamage(ItemID.drill)}, [
-    " p ",
-    "ppp",
-    "pxp"
-], ['x', ItemID.powerUnit, 0, 'p', ItemID.plateIron, 0]);
-
-Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: Item.getMaxDamage(ItemID.diamondDrill)}, [
-    " a ",
-    "ada"
-], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transportEnergy);
-
-Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(ItemID.iridiumDrill)}, [
-    " a ",
-    "ada",
-    " e "
-], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transportEnergy);

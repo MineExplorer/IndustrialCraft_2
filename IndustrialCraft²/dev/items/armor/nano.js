@@ -52,7 +52,7 @@ MachineRecipeRegistry.registerRecipesFor("nano-armor-charge", {
 
 UIbuttons.setButton(ItemID.nanoHelmet, "button_nightvision");
 
-var NANO_ARMOR_FUNCS_CHARGED = {
+var NANO_ARMOR_FUNCS = {
 	maxDamage: Item.getMaxDamage(ItemID.nanoHelmet),
 	
 	hurt: function(params, item, index, maxDamage){
@@ -123,14 +123,14 @@ var NANO_ARMOR_FUNCS_CHARGED = {
 	}
 };
 
-Armor.registerFuncs("nanoHelmet", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoHelmetUncharged", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoChestplate", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoChestplateUncharged", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoLeggings", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoLeggingsUncharged", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoBoots", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoBootsUncharged", NANO_ARMOR_FUNCS_CHARGED);
+Armor.registerFuncs("nanoHelmet", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoHelmetUncharged", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoChestplate", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoChestplateUncharged", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoLeggings", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoLeggingsUncharged", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoBoots", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoBootsUncharged", NANO_ARMOR_FUNCS);
 
 
 Recipes.addShaped({id: ItemID.nanoHelmet, count: 1, data: Item.getMaxDamage(ItemID.nanoHelmet)}, [

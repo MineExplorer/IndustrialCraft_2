@@ -57,7 +57,7 @@ UIbuttons.setButton(ItemID.quantumBoots, "button_jump");
 
 var runTime = 0;
 
-var QUANTUM_ARMOR_FUNCS_CHARGED = {
+var QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params, item, index, maxDamage){
 		var type = params.type;
 		if(type==2 || type==3 || type==11){
@@ -119,16 +119,15 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 				
 				var hunger = Player.getHunger();
 				if(hunger < 20){
-					for(var i = 0; i < 36; i++){
-						var slot = Player.getInventorySlot(i);
-						if(slot.id == ItemID.tinCanFull){
-							var count = Math.min(20 - hunger, slot.count);
-							Player.setHunger(hunger + count);
-							slot.count -= count;
-							Player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data);
-							Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
-							break;
-						}
+					var index = World.getThreadTime%36+9;
+					var slot = Player.getInventorySlot(index);
+					if(slot.id == ItemID.tinCanFull){
+						var count = Math.min(20 - hunger, slot.count);
+						Player.setHunger(hunger + count);
+						slot.count -= count;
+						Player.setInventorySlot(index, slot.count ? slot.id : 0, slot.count, slot.data);
+						Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+						break;
 					}
 				}
 				
@@ -164,7 +163,7 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 						}
 					}
 				}
-				//Entity.addEffect(player, MobEffect.fireResistance, 1, 2);
+				Entity.setFire(player, 0, true);
 			break;
 			case 2:
 				var vel = Player.getVelocity();
@@ -191,21 +190,22 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 	}
 };
 
-Armor.registerFuncs("quantumHelmet", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumHelmetUncharged", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumChestplate", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumChestplateUncharged", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumLeggings", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumLeggingsUncharged", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumBoots", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumBootsUncharged", QUANTUM_ARMOR_FUNCS_CHARGED);
+Armor.registerFuncs("quantumHelmet", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumHelmetUncharged", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumChestplate", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumChestplateUncharged", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumLeggings", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumLeggingsUncharged", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumBoots", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumBootsUncharged", QUANTUM_ARMOR_FUNCS);
 
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.quantumHelmet, count: 1, data: Item.getMaxDamage(ItemID.quantumHelmet)}, [
 		"a#a",
-		"bxb"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoHelmet, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', BlockID.reinforcedGlass, 0], ChargeItemRegistry.transportEnergy);
+		"bxb",
+		"cqc"
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoHelmet, -1, 'q', ItemID.hazmatHelmet, 0, 'a', ItemID.plateReinforcedIridium, 0, 'b', BlockID.reinforcedGlass, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
 	
 	Recipes.addShaped({id: ItemID.quantumChestplate, count: 1, data: Item.getMaxDamage(ItemID.quantumChestplate)}, [
 		"bxb",

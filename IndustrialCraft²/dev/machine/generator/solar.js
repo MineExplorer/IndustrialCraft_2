@@ -33,7 +33,7 @@ var guiSolarPanel = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: MachineRegistry.isValidEUItem},
+		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
 		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
 	}
 });

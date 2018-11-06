@@ -15,7 +15,7 @@ ToolAPI.registerBlockMaterial(35, "wool");
 
 ToolType.chainsaw = {
 	isWeapon: true,
-	damage: 3,
+	damage: 4,
 	baseDamage: 0,
 	blockTypes: ["wood", "wool", "fibre", "plant"],
 	onDestroy: function(item){

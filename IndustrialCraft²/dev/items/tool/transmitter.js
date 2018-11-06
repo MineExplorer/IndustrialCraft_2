@@ -22,7 +22,7 @@ Item.registerNameOverrideFunction(ItemID.freqTransmitter, function(item, name){
 });
 
 Item.registerUseFunction("freqTransmitter", function(coords, item, block){
-	var receiver;
+	var receiveCoords;
 	var extra = item.extra;
 	if(!extra){
 		extra = new ItemExtraData();
@@ -31,10 +31,10 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 		var x = extra.getInt("x");
 		var y = extra.getInt("y");
 		var z = extra.getInt("z");
-		receiver = {x: x, z: z, y: y};
+		receiveCoords = {x: x, z: z, y: y};
 	}
 	if(block.id == BlockID.teleporter){
-		if(!receiver){
+		if(!receiveCoords){
 			extra.putInt("x", coords.x);
 			extra.putInt("y", coords.y);
 			extra.putInt("z", coords.z);
@@ -46,13 +46,13 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 				Game.message("Can`t link Teleporter to itself");
 			}
 			else{
-				var data = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z).data;
-				var distance = Entity.getDistanceBetweenCoords(coords, receiver);
+				var data = World.getTileEntity(coords.x, coords.y, coords.z).data;
+				var distance = Entity.getDistanceBetweenCoords(coords, receiveCoords);
 				var basicTeleportationCost = Math.floor(5 * Math.pow((distance+10), 0.7));
-				data.frequency = receiver;
-				data.frequency.energy = basicTeleportationCost;
-				receiver = EnergyTileRegistry.accessMachineAtCoords(x, y, z);
+				receiver = World.getTileEntity(x, y, z);
 				if(receiver){
+					data.frequency = receiveCoords;
+					data.frequency.energy = basicTeleportationCost;
 					data = receiver.data;
 					data.frequency = coords;
 					data.frequency.energy = basicTeleportationCost;
@@ -61,7 +61,7 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 			}
 		}
 	}
-	else if(receiver){
+	else if(receiveCoords){
 		Player.setCarriedItem(item.id, 1, item.data);
 		Game.message("Frequency Transmitter unlinked");
 	}

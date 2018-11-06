@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ToolType",
-	version: 2,
+	version: 3,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -119,5 +119,70 @@ ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){
 		});
 	}
 }
+
+// bug fixes
+Block.setDestroyLevel = function(id, lvl){
+	Block.registerDropFunction(id, function(coords, blockID, blockData, level, enchant){
+		if(level >= lvl){
+			return [[blockID, 1, blockData]];
+		}
+		return [];
+	}, lvl);
+}
+function registerStandardDrop(id, lvl){
+	Block.registerDropFunctionForID(id, function(coords, blockID, blockData, level){
+		if(level >= lvl) return [[id, 1, 0]];
+		return [];
+	}, lvl);
+}
+ToolAPI.registerBlockMaterial(79, "stone");
+ToolAPI.registerBlockMaterial(82, "dirt");
+ToolAPI.registerBlockMaterial(120, "unbreaking");
+ToolAPI.registerBlockMaterial(138, "stone");
+ToolAPI.registerBlockMaterial(159, "stone");
+ToolAPI.registerBlockMaterial(174, "stone");
+
+Block.setDestroyLevelForID(24, 1);
+registerStandardDrop(61, 1);
+registerStandardDrop(67, 1);
+registerStandardDrop(70, 1);
+registerStandardDrop(108, 1);
+registerStandardDrop(109, 1);
+registerStandardDrop(114, 1);
+registerStandardDrop(125, 1);
+registerStandardDrop(128, 1);
+registerStandardDrop(147, 2);
+registerStandardDrop(148, 2);
+registerStandardDrop(156, 1);
+registerStandardDrop(167, 2);
+registerStandardDrop(180, 1);
+registerStandardDrop(203, 1);
+registerStandardDrop(251, 1);
+
+Block.registerDropFunctionForID(44, function(coords, id, data, level, enchant){
+	if(level > 0){
+		return [[id, 1, data%8]];
+	}
+	return [];
+}, 1);
+Block.registerDropFunctionForID(182, function(coords, id, data, level, enchant){
+	if(level > 0){
+		return [[id, 1, data%8]];
+	}
+	return [];
+}, 1);
+
+Block.registerDropFunctionForID(79, function(coords, id, data, level, enchant){
+	if(level > 0 && enchant.silk){
+		return [[id, 1, data]];
+	}
+	return [];
+}, 1);
+Block.registerDropFunctionForID(174, function(coords, id, data, level, enchant){
+	if(level > 0 && enchant.silk){
+		return [[id, 1, data]];
+	}
+	return [];
+}, 1);
 
 EXPORT("ToolType", ToolType);

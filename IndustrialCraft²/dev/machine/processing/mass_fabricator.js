@@ -112,7 +112,7 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	},
 	
 	getEnergyStorage: function(){
-		return 8192;
+		return 32768;
 	},
 	
 	init: MachineRegistry.initModel,

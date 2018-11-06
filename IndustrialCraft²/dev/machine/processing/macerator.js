@@ -56,12 +56,16 @@ Callback.addCallback("PreLoaded", function(){
 		1: {id: 4, count: 1, data: 0},
 		4: {id: 12, count: 1, data: 0},
 		13: {id: 318, count: 1, data: 0},
+		24: {id: 12, count: 2, data: 0},
 		35: {id: 287, count: 2, data: 0},
 		79: {id: 332, count: 4, data: 0},
 		89: {id: 348, count: 4, data: 0},
+		128: {id: 12, count: 3, data: 0},
 		152: {id: 331, count: 9, data: 0},
 		155: {id: 406, count: 4, data: 0},
 		156: {id: 406, count: 6, data: 0},
+		179: {id: 12, count: 2, data: 1},
+		180: {id: 12, count: 3, data: 1},
 		352: {id: 351, count: 5, data: 15}, 
 		369: {id: 377, count: 5, data: 0}
 	}, true);

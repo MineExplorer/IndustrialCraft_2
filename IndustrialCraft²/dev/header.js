@@ -10,6 +10,13 @@
  This code is a copyright, do not distribute.
 */
 
+// libraries
+IMPORT("flags");
+IMPORT("ToolType");
+IMPORT("energylib");
+IMPORT("ChargeItem");
+IMPORT("MachineRender");
+
 // constants
 var GUI_SCALE = 3.2;
 var fallVelocity = -0.0784;
@@ -19,20 +26,13 @@ var debugMode = __config__.getBool("debug_mode");
 LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
 
 // import values
-//Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
-//Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
+Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
+Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var MobEffect = Native.PotionEffect;
 var Enchantment = Native.Enchantment;
 var BlockSide = Native.BlockSide;
 var EntityType = Native.EntityType;
-
-// libraries
-IMPORT("flags");
-IMPORT("ToolType");
-IMPORT("energylib");
-IMPORT("ChargeItem");
-IMPORT("MachineRender");
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
@@ -76,15 +76,6 @@ var RARE_ENERGY_ITEM_NAME = function(item, name){
 	var energyStored = ChargeItemRegistry.getEnergyStored(item);
 	if(energyStored==0){return name;}
 	return "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
-}
-
-Block.setDestroyLevel = function(id, lvl){
-	Block.registerDropFunction(id, function(coords, blockID, blockData, level, enchant){
-		if(level >= lvl){
-			return [[blockID, 1, 0]];
-		}
-		return [];
-	}, lvl);
 }
 
 // vanilla items

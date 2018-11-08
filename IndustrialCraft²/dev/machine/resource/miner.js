@@ -67,6 +67,7 @@ function getBlockDrop(coords, id, data, level){
 	if(dirtBlocksDrop[id]){
 		return [[dirtBlocksDrop[id], 1, 0]];
 	}
+	// TO DO: other blocks
 	return [[id, 1, data]];
 }
 
@@ -91,23 +92,18 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 	},
 	
 	findOre: function(level){
-		var x = this.data.x;
-		var y = this.data.scanY;
-		var z = this.data.z;
 		var r = this.data.scanR;
 		while (1){
-			if(x > this.x+r){
-				x = this.x-r;
-				z++;
+			if(this.data.x > this.x+r){
+				this.data.x = this.x-r;
+				this.data.z++;
 			}
-			if(z > this.z+r) break;
-			var blockID = World.getBlockID(x, y, z);
+			if(this.data.z > this.z+r) break;
+			var blockID = World.getBlockID(this.data.x, this.data.scanY, this.data.z);
 			if(ore_blocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)){
-				this.data.x = x;
-				this.data.z = z;
 				return true;
 			}
-			x++;
+			this.data.x++;
 		}
 		return false;
 	},
@@ -168,9 +164,8 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 			World.setBlock(this.x, y, this.z, BlockID.miningPipe, 0);
 		World.setBlock(this.x, y-1, this.z, BlockID.miningPipe, 1);
 		slot.count--;
-		if(!slot.count)slot.id = 0;
+		if(!slot.count) slot.id = 0;
 		this.data.progress = 0;
-		this.data.y--;
 	},
 	
 	drop: function(items){
@@ -279,7 +274,6 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 					}
 					else{World.setBlock(this.x, this.data.y, this.z, 0);}
 					this.data.progress = 0;
-					this.data.y--;
 				}
 			}
 		}

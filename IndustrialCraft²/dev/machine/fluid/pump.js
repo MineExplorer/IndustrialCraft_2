@@ -56,7 +56,7 @@ MachineRegistry.registerPrototype(BlockID.pump, {
 		work_time: 20,
 		progress: 0,
 		isActive: false
-    },
+	},
 	
 	addTransportedItem: function(self, item, direction){
 		var slot = this.container.getSlot("slotLiquid1");
@@ -126,12 +126,12 @@ MachineRegistry.registerPrototype(BlockID.pump, {
 				this.data.progress = 0;
 			}
 		}
-        else {
-            this.data.progress = 0;
-            this.deactivate();
-        }
-        
-        liquid = this.liquidStorage.getLiquidStored();
+		else {
+			this.data.progress = 0;
+			this.deactivate();
+		}
+		
+		liquid = this.liquidStorage.getLiquidStored();
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");
 		var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, liquid);
@@ -143,23 +143,23 @@ MachineRegistry.registerPrototype(BlockID.pump, {
 			slot2.count++;
 			this.container.validateAll();
 		}
-        
-        var energyStorage = this.getEnergyStorage();
-        var tier = this.data.power_tier;
+		
+		var energyStorage = this.getEnergyStorage();
+		var tier = this.data.power_tier;
 		this.data.energy = Math.min(this.data.energy, energyStorage);
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
 		
-        this.container.setScale("progressScale", this.data.progress);
+		this.container.setScale("progressScale", this.data.progress);
 		this.liquidStorage.updateUiScale("liquidScale", liquid);
-        this.container.setScale("energyScale", this.data.energy / energyStorage);
-    },
-    
-    getEnergyStorage: function(){
-        return this.data.energy_storage;
-    },
-    
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+	},
+	
+	getEnergyStorage: function(){
+		return this.data.energy_storage;
+	},
+	
 	activate: MachineRegistry.activateMachine,
 	deactivate: MachineRegistry.deactivateMachine,
 	destroy: this.deactivate,
-    energyTick: MachineRegistry.basicEnergyReceiveFunc
+	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });

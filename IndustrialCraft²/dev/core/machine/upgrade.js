@@ -17,12 +17,8 @@ var UpgradeAPI = {
 			callback(item, machine, container, data, coords);
 		}
 	},
-
-	executeUpgrades: function(machine){
-		var container = machine.container;
-		var data = machine.data;
-		var coords = {x: machine.x, y: machine.y, z: machine.z};
-		
+	
+	getUpgrades: function(machine, container){
 		var upgrades = [];
 		for(var slotName in container.slots){
 			if(slotName.match(/Upgrade/)){
@@ -43,12 +39,20 @@ var UpgradeAPI = {
 				}
 			}
 		}
+		return upgrades;
+	},
+
+	executeUpgrades: function(machine){
+		var container = machine.container;
+		var data = machine.data;
+		var coords = {x: machine.x, y: machine.y, z: machine.z};
+		var upgrades = this.getUpgrades(machine, container);
 		for(var i in upgrades){
 			this.callUpgrade(upgrades[i], machine, container, data, coords);
 		}
 	},
 	
-	findNearestContainers: function(coords, direction){
+	findNearestContainers: function(coords, direction, dirExcluded){
 		var directions = {
 			up: {x: 0, y: 1, z: 0},
 			down: {x: 0, y: -1, z: 0},
@@ -58,7 +62,7 @@ var UpgradeAPI = {
 			north: {x: 0, y: 0, z: -1},
 		}
 		var containers = [];
-		if(direction){
+		if(direction && !dirExcluded){
 			dir = directions[direction]
 			var container = World.getContainer(coords.x + dir.x, coords.y + dir.y, coords.z + dir.z);
 			if(container){containers.push(container);}
@@ -66,6 +70,7 @@ var UpgradeAPI = {
 		else{
 			for(var i in directions){
 				var dir = directions[i];
+				if(dirExcluded && dir == direction) continue;
 				var container = World.getContainer(coords.x + dir.x, coords.y + dir.y, coords.z + dir.z);
 				if(container){containers.push(container);}
 			}
@@ -73,7 +78,7 @@ var UpgradeAPI = {
 		return containers;
 	},
 	
-	findNearestLiquidStorages: function(coords, direction){
+	findNearestLiquidStorages: function(coords, direction, dirExcluded){
 		var directions = {
 			up: {x: 0, y: 1, z: 0},
 			down: {x: 0, y: -1, z: 0},
@@ -83,7 +88,7 @@ var UpgradeAPI = {
 			north: {x: 0, y: 0, z: -1},
 		}
 		var storages = [];
-		if(direction){
+		if(direction && !dirExcluded){
 			dir = directions[direction]
 			var tileEntity = World.getTileEntity(coords.x + dir.x, coords.y + dir.y, coords.z + dir.z);
 			if(tileEntity && tileEntity.liquidStorage){
@@ -93,6 +98,7 @@ var UpgradeAPI = {
 		else{
 			for(var i in directions){
 				var dir = directions[i];
+				if(dirExcluded && dir == direction) continue;
 				var tileEntity = World.getTileEntity(coords.x + dir.x, coords.y + dir.y, coords.z + dir.z);
 				if(tileEntity && tileEntity.liquidStorage){
 					storages.push(tileEntity.liquidStorage);

@@ -59,16 +59,40 @@ var guiMiner = new UI.StandartWindow({
 	}
 });
 
-function getBlockDrop(coords, id, data, level){
+var dropData0 = [3, 25, 39, 40, 46, 50, 53, 54, 58, 65, 72, 96, 107, 134, 135, 136, 143, 146, 163, 164, 165, 170, 183, 184, 185, 186, 187];
+
+function getBlockDrop(coords, id, data, level, enchant){
 	var dropFunc = Block.dropFunctions[id];
 	if(dropFunc){
-		return dropFunc(coords, id, data, level, {});
+		return dropFunc(coords, id, data, level, enchant||{});
 	}
 	if(dirtBlocksDrop[id]){
 		return [[dirtBlocksDrop[id], 1, 0]];
 	}
-	// TO DO: other blocks
-	return [[id, 1, data]];
+	if(id==5 || id == 19 || id==35 || id==85 || id==144 || id==171) return [[id, 1, data]];
+	if(id == 17 || id == 162) return [[id, 1, data%4]];
+	if(id == 26) return [[355, 1, 0]];
+	if(id == 47) return [[340, 3, 0]]; //silk
+	if(id == 55) return [[331, 1, 0]];
+	if(id == 63 || id == 68) return [[338, 1, 0]];
+	if(id == 64) return [[324, 1, 0]];
+	if(id == 75 || id == 76) return [[76, 1, 0]];
+	if(id == 79 || id == 174){
+		World.setBlock(coords.x, coords.y, coords.z, 8);
+		return [];
+	}
+	if(id == 93 || id == 94) return [[356, 1, 0]];
+	if(id == 149 || id == 150) return [[404, 1, 0]];
+	if(id == 151 || id == 178) return [[151, 1, 0]];
+	if(id == 158) return [[158, 1, data%8]];
+	if(id == 193) return [[427, 1, 0]];
+	if(id == 194) return [[428, 1, 0]];
+	if(id == 195) return [[429, 1, 0]];
+	if(id == 196) return [[430, 1, 0]];
+	if(id == 197) return [[431, 1, 0]];
+	if(dropData0.indexOf(id) != -1) return [[id, 1, 0]];
+	// no drop 6, 18, 20, 30, 31, 32, 59, 81, 83, 86, 91!, 92, 99, 100, 102, 103 - 106, 111, 115, 127, 131, 132, 140-142, 161, 175, 244
+	return [];
 }
 
 MachineRegistry.registerPrototype(BlockID.miner, {
@@ -79,7 +103,8 @@ MachineRegistry.registerPrototype(BlockID.miner, {
         z: 0,
 		scanY: 0,
         scanR: 0,
-		progress: 0
+		progress: 0,
+		isActive: false
 	},
 
 	getGuiScreen: function(){
@@ -93,7 +118,7 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 	
 	findOre: function(level){
 		var r = this.data.scanR;
-		while (1){
+		while (r){
 			if(this.data.x > this.x+r){
 				this.data.x = this.x-r;
 				this.data.z++;
@@ -159,7 +184,7 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 		this.data.progress = 0;
 	},
 	
-	setPipe: function(x, y, z, slot){
+	setPipe: function(y, slot){
 		if(y < this.y)
 			World.setBlock(this.x, y, this.z, BlockID.miningPipe, 0);
 		World.setBlock(this.x, y-1, this.z, BlockID.miningPipe, 1);
@@ -169,14 +194,14 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 	},
 	
 	drop: function(items){
-		var container = World.getContainer(this.x, this.y+1, this.z);
-		if(container){
-			addItemsToContainers(items, [container]);
+		var containers = UpgradeAPI.findNearestContainers(this, "down", true);
+		if(containers){
+			addItemsToContainers(items, containers);
 		}
 		for(var i in items){
 			var item = items[i]
 			if(item.count > 0){
-				World.drop(this.x+0.5, this.y+1, this.z+0.5, item.id, item.count, item.data);
+				nativeDropItem(this.x+0.5, this.y+1, this.z+0.5, 1, item.id, item.count, item.data);
 			}
 		}
 	},
@@ -241,19 +266,19 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 						this.data.energy -= 3;
 					}
 					if(this.data.progress >= 20){
-						this.setPipe(this.data.x, this.data.y, this.data.z, pipeSlot);
+						this.setPipe(this.data.y, pipeSlot);
 					}
 				}
 				else if(this.canBeDestroyed(block.id, level)){
-					var block = World.getBlock(this.data.x, this.data.y-1, this.data.z);
+					var block = World.getBlock(this.x, this.data.y-1, this.z);
 					var params = this.getMiningValues(drillSlot);
 					if(this.data.energy >= params.energy){
 						this.data.energy -= params.energy;
 						this.data.progress++;
 					}
 					if(this.data.progress >= params.time){
-						this.mineBlock(this.data.x, this.data.y-1, this.data.z, block, level);
-						this.setPipe(this.data.x, this.data.y, this.data.z, pipeSlot);
+						this.mineBlock(this.x, this.data.y-1, this.z, block, level);
+						this.setPipe(this.data.y, pipeSlot);
 					}
 				}
 			}

@@ -66,6 +66,7 @@ var MachineRegistry = {
 	},
 	
 	create6sidesRender: function(id, texture){
+		/*
 		if(texture.length == 2){
 			var textures = [
 				[texture[1], texture[0], texture[0], texture[0], texture[0], texture[0]],
@@ -76,8 +77,14 @@ var MachineRegistry = {
 				[texture[0], texture[0], texture[0], texture[0], texture[0], texture[1]]
 			]
 		}
+		*/
 		for(var i = 0; i < 5; i++){
-			MachineRenderer.registerRenderModel(id, i, textures[i])
+			var textures = [];
+			for(var j = 0; j < 5; j++){
+				if(j == i) textures.push(texture[1]);
+				else textures.push(texture[0]);
+			}
+			MachineRenderer.registerRenderModel(id, i, textures);
 		}
 	},
 	
@@ -121,7 +128,7 @@ var MachineRegistry = {
 
 var transferByTier = {
 	0: 32,
-	1:  256,
+	1: 256,
 	2: 2048,
 	3: 8192
 }

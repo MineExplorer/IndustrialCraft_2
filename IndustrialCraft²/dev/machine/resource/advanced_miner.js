@@ -45,43 +45,43 @@ var guiAdvancedMiner = new UI.StandartWindow({
 
 	drawing: [
 		{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-		{type: "bitmap", x: 416, y: 50 + 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 400 + 31*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},
-		{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 50 + 98*GUI_SCALE, bitmap: "miner_info", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},
+		{type: "bitmap", x: 400, y: 50 + 98*GUI_SCALE, bitmap: "miner_info", scale: GUI_SCALE},
 	],
 
 	elements: {
-		"energyScale": {type: "scale", x: 416, y: 50 + 49*GUI_SCALE, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotScanner": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 19*GUI_SCALE, bitmap: "slot_scanner", 
+		"energyScale": {type: "scale", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotScanner": {type: "slot", x: 400, y: 50 + 19*GUI_SCALE, bitmap: "slot_scanner", 
 			isValid: function(id){
 				if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
 				return false;
 			}
 		},
-		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 290, isValid: MachineRegistry.isValidEUStorage},
-		"slot1": {type: "slot", x: 400 + 31*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-		"slot2": {type: "slot", x: 400 + 50*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-		"slot3": {type: "slot", x: 400 + 69*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-		"slot4": {type: "slot", x: 400 + 88*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-		"slot5": {type: "slot", x: 400 + 107*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-		"slot6": {type: "slot", x: 400 + 31*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-		"slot7": {type: "slot", x: 400 + 50*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-		"slot8": {type: "slot", x: 400 + 69*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-		"slot9": {type: "slot", x: 400 + 88*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-		"slot10": {type: "slot", x: 400 + 107*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-		"slot11": {type: "slot", x: 400 + 31*GUI_SCALE, y: 290},
-		"slot12": {type: "slot", x: 400 + 50*GUI_SCALE, y: 290},
-		"slot13": {type: "slot", x: 400 + 69*GUI_SCALE, y: 290},
-		"slot14": {type: "slot", x: 400 + 88*GUI_SCALE, y: 290},
-		"slot15": {type: "slot", x: 400 + 107*GUI_SCALE, y: 290},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 37*GUI_SCALE, isValid: isValidMinerUpgrade},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 56*GUI_SCALE, isValid: isValidMinerUpgrade},
-		"button_switch": {type: "button", x: 400 + 119*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
+		"slotEnergy": {type: "slot", x: 400, y: 290, isValid: MachineRegistry.isValidEUStorage},
+		"slot1": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot2": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot3": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot4": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot5": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot6": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot7": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot8": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot9": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot10": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot11": {type: "slot", x: 400 + 28*GUI_SCALE, y: 290},
+		"slot12": {type: "slot", x: 400 + 47*GUI_SCALE, y: 290},
+		"slot13": {type: "slot", x: 400 + 66*GUI_SCALE, y: 290},
+		"slot14": {type: "slot", x: 400 + 85*GUI_SCALE, y: 290},
+		"slot15": {type: "slot", x: 400 + 104*GUI_SCALE, y: 290},
+		"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE, isValid: isValidMinerUpgrade},
+		"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE, isValid: isValidMinerUpgrade},
+		"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
 			onClick: function(container, tileEntity){
 				tileEntity.data.whitelist = !tileEntity.data.whitelist;
 			}
 		}},
-		"button_restart": {type: "button", x: 400 + 128*GUI_SCALE, y: 50 + 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
+		"button_restart": {type: "button", x: 400 + 125*GUI_SCALE, y: 50 + 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
 			onClick: function(container, tileEntity){
 				tileEntity.data.x = tileEntity.data.y = tileEntity.data.z =  0;
 			}
@@ -91,8 +91,8 @@ var guiAdvancedMiner = new UI.StandartWindow({
 				tileEntity.data.silk_touch = (tileEntity.data.silk_touch+1)%2;
 			}
 		}},
-		"textInfoMode": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 34*GUI_SCALE, y: 50+25*GUI_SCALE, width: 256, height: 42, text: "Mode: Blacklist"},
-		"textInfoXYZ": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 6*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
+		"textInfoMode": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 31*GUI_SCALE, y: 50+25*GUI_SCALE, width: 256, height: 42, text: "Mode: Blacklist"},
+		"textInfoXYZ": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 3*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
 		//"textInfoY": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 6*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: "Y: -1"},
 		//"textInfoZ": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 6*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: "Z: 0"},
 	}

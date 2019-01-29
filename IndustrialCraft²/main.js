@@ -21,29 +21,29 @@ BUILD INFO:
  This code is a copyright, do not distribute.
 */
 
-// constants
-var GUI_SCALE = 3.2;
-var fallVelocity = -0.0785;
-var debugMode = __config__.getBool("debug_mode");
-
-// square lava texture for geothermal generator ui.
-LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
-
-// import values
-//Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
-//Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
-var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
-var MobEffect = Native.PotionEffect;
-var Enchantment = Native.Enchantment;
-var BlockSide = Native.BlockSide;
-var EntityType = Native.EntityType;
-
 // libraries
 IMPORT("flags");
 IMPORT("ToolType");
 IMPORT("energylib");
 IMPORT("ChargeItem");
 IMPORT("MachineRender");
+
+// constants
+var GUI_SCALE = 3.2;
+var fallVelocity = -0.0784;
+var debugMode = __config__.getBool("debug_mode");
+
+// square lava texture for geothermal generator ui.
+LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
+
+// import values
+Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
+Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
+var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
+var MobEffect = Native.PotionEffect;
+var Enchantment = Native.Enchantment;
+var BlockSide = Native.BlockSide;
+var EntityType = Native.EntityType;
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
@@ -89,15 +89,6 @@ var RARE_ENERGY_ITEM_NAME = function(item, name){
 	return "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
 }
 
-Block.setDestroyLevel = function(id, lvl){
-	Block.registerDropFunction(id, function(coords, blockID, blockData, level, enchant){
-		if(level >= lvl){
-			return [[blockID, 1, 0]];
-		}
-		return [];
-	}, lvl);
-}
-
 // vanilla items
 Recipes.addFurnaceFuel(325, 10, 2000);
 ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone
@@ -125,178 +116,178 @@ Callback.addCallback("tick", function(){
 // file: translation.js
 
 ﻿// BLOCKS
-Translation.addTranslation("Rubber Tree Log", {ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", zh: "橡胶树原木"});
-Translation.addTranslation("Rubber Tree Leaves", {ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", zh: "橡胶树树叶"});
-Translation.addTranslation("Rubber Tree Sapling", {ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", zh: "橡胶树树苗"});
-Translation.addTranslation("Copper Ore", {ru: "Медная руда", es: "Mineral de Cobre", zh: "铜矿石"});
-Translation.addTranslation("Tin Ore", {ru: "Оловянная руда", es: "Mineral de Estaño", zh: "锡矿石"});
-Translation.addTranslation("Lead Ore", {ru: "Свинцовая руда", es: "Mineral de Plomo", zh: "铅矿石"});
-Translation.addTranslation("Uranium Ore", {ru: "Урановая руда", es: "Mineral de Uranium", zh: "铀矿石"});
-Translation.addTranslation("Iridium Ore", {ru: "Иридиевая руда",  es: "Mineral de Iridio", zh:"铱矿石"});
-Translation.addTranslation("Copper Block", {ru: "Медный блок", es: "Bloque de Cobre", zh: "铜块"});
-Translation.addTranslation("Tin Block", {ru: "Оловянный блок", es: "Bloque de Estaño", zh: "锡矿石"});
-Translation.addTranslation("Bronze Block", {ru: "Бронзовый блок", es: "Bloque de Bronce", zh: "青铜块"});
-Translation.addTranslation("Lead Block", {ru: "Свинцовый блок", es: "Bloque de Plomo", zh: "铅块"});
-Translation.addTranslation("Steel Block", {ru: "Стальной блок", es: "Bloque de Hierro Refinado", zh: "钢块"});
-Translation.addTranslation("Silver Block", {ru: "Серебряный блок", es: "Bloque de Plata", zh: "银块"});
-Translation.addTranslation("Mining Pipe", {ru: "Буровая труба", es: "Tubo Minero", zh: "采矿管道"});
-Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", zh: "防爆石"});
-Translation.addTranslation("Reinforced Glass", {ru: "Укреплённое стекло", es: "Cristal Reforzado", zh: "防爆玻璃"});
-Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", zh: "基础机械外壳"});
-Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", zh: "基础机械外壳"});
+Translation.addTranslation("Rubber Tree Log", {ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", zh: "橡胶树原木", pt: "Madeira de Seringueira"});
+Translation.addTranslation("Rubber Tree Leaves", {ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", zh: "橡胶树树叶", pt: "Folhas de Seringueira"});
+Translation.addTranslation("Rubber Tree Sapling", {ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", zh: "橡胶树树苗", pt: "Muda de Seringueira"});
+Translation.addTranslation("Copper Ore", {ru: "Медная руда", es: "Mineral de Cobre", zh: "铜矿石", pt: "Minério de Cobre"});
+Translation.addTranslation("Tin Ore", {ru: "Оловянная руда", es: "Mineral de Estaño", zh: "锡矿石", pt: "Minério de Estanho"});
+Translation.addTranslation("Lead Ore", {ru: "Свинцовая руда", es: "Mineral de Plomo", zh: "铅矿石", pt: " Minério de Chumbo"});
+Translation.addTranslation("Uranium Ore", {ru: "Урановая руда", es: "Mineral de Uranium", zh: "铀矿石", pt: "Minério de Urânio"});
+Translation.addTranslation("Iridium Ore", {ru: "Иридиевая руда",  es: "Mineral de Iridio", zh: "铱矿石", pt: " Minério de Irídio"});
+Translation.addTranslation("Copper Block", {ru: "Медный блок", es: "Bloque de Cobre", zh: "铜块", pt: "Bloco de Cobre"});
+Translation.addTranslation("Tin Block", {ru: "Оловянный блок", es: "Bloque de Estaño", zh: "锡矿石", pt: "bloco de Estanho"});
+Translation.addTranslation("Bronze Block", {ru: "Бронзовый блок", es: "Bloque de Bronce", zh: "青铜块", pt: "Bloco de Bronze"});
+Translation.addTranslation("Lead Block", {ru: "Свинцовый блок", es: "Bloque de Plomo", zh: "铅块", pt: "Bloco de Chumbo"});
+Translation.addTranslation("Steel Block", {ru: "Стальной блок", es: "Bloque de Hierro Refinado", zh: "钢块", pt: "Bloco de Aço"});
+Translation.addTranslation("Silver Block", {ru: "Серебряный блок", es: "Bloque de Plata", zh: "银块", pt: "Bloco de Prata"});
+Translation.addTranslation("Mining Pipe", {ru: "Буровая труба", es: "Tubo Minero", zh: "采矿管道", pt: "Tubo de Mineração"});
+Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", zh: "防爆石", pt: "Vidro Reforçado"});
+Translation.addTranslation("Reinforced Glass", {ru: "Укреплённое стекло", es: "Cristal Reforzado", zh: "防爆玻璃", pt: "Vidro Reforçado"});
+Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", zh: "基础机械外壳", pt: "Estrutura de Máquina Básica"});
+Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", zh: "基础机械外壳", pt: "Estrutura de Máquina Avançada"});
 
 // Generators
-Translation.addTranslation("Generator", {ru: "Генератор", es: "Generador", zh: "火力发电机"});
-Translation.addTranslation("Geothermal Generator", {ru: "Геотермальный генератор", es: "Generador Geotérmico", zh: "地热发电机"});
-Translation.addTranslation("Solar Panel", {ru: "Солнечная панель", es: "Panel Solar", zh: "太阳能发电机"});
-Translation.addTranslation("Water Mill", {ru: "Гидрогенератор", es: "Molino de Agua", zh: "水力发电机"});
-Translation.addTranslation("Wind Mill", {ru: "Ветрогенератор", es: "Molino de Viento", zh: "风力发电机"});
+Translation.addTranslation("Generator", {ru: "Генератор", es: "Generador", zh: "火力发电机", pt: "Gerador"});
+Translation.addTranslation("Geothermal Generator", {ru: "Геотермальный генератор", es: "Generador Geotérmico", zh: "地热发电机", pt: "Gerador Geotérmico"});
+Translation.addTranslation("Solar Panel", {ru: "Солнечная панель", es: "Panel Solar", zh: "太阳能发电机", pt: " Painel Solar"});
+Translation.addTranslation("Water Mill", {ru: "Гидрогенератор", es: "Molino de Agua", zh: "水力发电机", pt: "Gerador Aquático"});
+Translation.addTranslation("Wind Mill", {ru: "Ветрогенератор", es: "Molino de Viento", zh: "风力发电机", pt: "Cata-vento"});
 
 // Energy storage
-Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", zh: "储电盒"});
-Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", zh: "CESU充电座"});
-Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", zh: "MFE充电座"});
-Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", zh: "MFSU充电座"});
+Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", zh: "储电盒", pt: "Caixa de Baterias"});
+Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", zh: "CESU充电座", pt: "Unidade de Armazenamento de Energia"});
+Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", zh: "MFE充电座", pt: "Transmissor de Energia Multi-funcional"});
+Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", zh: "MFSU充电座", pt: "Unidade de Armazenamento Multi-funcional"});
 
 // Machines
-Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", zh: "铁炉"});
-Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", zh: "日光灯"});
+Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", zh: "铁炉", pt: "Coletar Experiência"});
+Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", zh: "日光灯", pt: "Iluminador"});
 Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм"}); // To Do
-Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", zh: "感应炉"});
-Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", zh: "感应炉"});
-Translation.addTranslation("Macerator", {ru: "Дробитель", es: "Trituradora", zh: "打粉机"});
-Translation.addTranslation("Compressor", {ru: "Компрессор", es: "Compresor", zh: "压缩机"});
-Translation.addTranslation("Extractor", {ru: "Экстрактор", es: "Extractor", zh: "提取机"});
-Translation.addTranslation("Recycler", {ru: "Утилизатор", es: "Reciclador", zh: "回收机"});
-Translation.addTranslation("Metal Former", {ru: "Металлоформовщик", es: "Arqueador de Metal", zh: "金属成型机"});
-Translation.addTranslation("Ore Washing Plant", {ru: "Рудопромывочная машина", es: "Planta de Lavado de Minerales", zh: "洗矿机"});
-Translation.addTranslation("Thermal Centrifuge", {ru: "Термальная центрифуга", es: "Centrífuga Térmica", zh: "热能离心机"});
-Translation.addTranslation("Miner", {ru: "Буровая установка", es: "Perforadora", zh: "采矿机"});
-Translation.addTranslation("Advanced Miner", {ru: "Продвинутая буровая установка", es: "Minero Avanzado", zh: "高级采矿机"});
-Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Teletransportador", zh: "传送机"});
-Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", zh: "物质生成机"});
+Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", zh: "感应炉", pt: "Fornalha Elétrica"});
+Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", zh: "感应炉", pt: "Fornalha de Indução"});
+Translation.addTranslation("Macerator", {ru: "Дробитель", es: "Trituradora", zh: "打粉机", pt: "Macerador"});
+Translation.addTranslation("Compressor", {ru: "Компрессор", es: "Compresor", zh: "压缩机", pt: "Compactador"});
+Translation.addTranslation("Extractor", {ru: "Экстрактор", es: "Extractor", zh: "提取机", pt: "Extrator"});
+Translation.addTranslation("Recycler", {ru: "Утилизатор", es: "Reciclador", zh: "回收机", pt: "Recicladora"});
+Translation.addTranslation("Metal Former", {ru: "Металлоформовщик", es: "Arqueador de Metal", zh: "金属成型机", pt: "Moldelador de Metais"});
+Translation.addTranslation("Ore Washing Plant", {ru: "Рудопромывочная машина", es: "Planta de Lavado de Minerales", zh: "洗矿机", pt: "Estação de Lavagem de Minérios"});
+Translation.addTranslation("Thermal Centrifuge", {ru: "Термальная центрифуга", es: "Centrífuga Térmica", zh: "热能离心机", pt: "Centrífuga Térmica"});
+Translation.addTranslation("Miner", {ru: "Буровая установка", es: "Perforadora", zh: "采矿机", pt: "Minerador"});
+Translation.addTranslation("Advanced Miner", {ru: "Продвинутая буровая установка", es: "Minero Avanzado", zh: "高级采矿机", pt: "Minerador Avançado"});
+Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Teletransportador", zh: "传送机", pt: "Teletransportador"});
+Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", zh: "物质生成机", pt: "Fabricador de Massa"});
 
 // Fluid
-Translation.addTranslation("Pump", {ru: "Помпа", es: "Bomba Extractora", zh: "泵"});
-Translation.addTranslation("Fluid Distributor", {ru: "Жидкостный распределитель", pt: "Distribuidor de Fluidos", zh: "流体分配机"});
-Translation.addTranslation("Tank", {ru: "Бак", pt: "Tanque", zh: "流体储存器"});
+Translation.addTranslation("Pump", {ru: "Помпа", es: "Bomba Extractora", zh: "泵", pt: "Bomba"});
+Translation.addTranslation("Fluid Distributor", {ru: "Жидкостный распределитель", pt: "Distribuidor de Fluidos", zh: "流体分配机", pt: "Distribuidor de Fluidos"});
+Translation.addTranslation("Tank", {ru: "Бак", pt: "Tanque", zh: "流体储存器", pt: "Tanque"});
 
 // ITEMS
-Translation.addTranslation("Iridium", {ru: "Иридий", es: "Mineral de Iridio", zh: "铱碎片"});
-Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", zh: "胶乳"});
-Translation.addTranslation("Rubber", {ru: "Резина", es: "Rubber", zh: "橡胶"});
-Translation.addTranslation("Scrap", {ru: "Утильсырьё", es: "Chatarra", zh: "废料"});
-Translation.addTranslation("Scrap Box", {ru: "Коробка утильсырья", es: "Caja de Chatarra", zh: "废料盒"});
-Translation.addTranslation("UU-Matter", {ru: "Материя", es: "Materia", zh: "物质"});
-Translation.addTranslation("Coal Ball", {ru: "Угольный шарик", es: "Bola de Carbón", zh: "煤球"});
-Translation.addTranslation("Coal Block", {ru: "Сжатый угольный шарик", es: "Bola de Carbón Compactada", zh: "压缩煤球"});
-Translation.addTranslation("Coal Chunk", {ru: "Угольная глыба", es: "Carbono Bruto", zh: "煤块"});
-Translation.addTranslation("Carbon Fibre", {ru: "Углеволокно", es: "Fibra de Carbono Básica", zh: "粗制碳网"});
-Translation.addTranslation("Carbon Mesh", {ru: "Углеткань", es: "Malla de Carbono Básica", zh: "粗制碳板"});
-Translation.addTranslation("Carbon Plate", {ru: "Углепластик", es: "Placa de Carbono", zh: "碳板"});
-Translation.addTranslation("Alloy Plate", {ru: "Композит", es: "Compuesto Avanzado", zh: "高级合金"});
-Translation.addTranslation("Iridium Reinforced Plate", {ru: "Иридиевый композит", es: "Placa de Iridio", zh: "强化铱板"});
+Translation.addTranslation("Iridium", {ru: "Иридий", es: "Mineral de Iridio", zh: "铱碎片", pt: "Minério de Irídio"});
+Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", zh: "胶乳", pt: "Latex"});
+Translation.addTranslation("Rubber", {ru: "Резина", es: "Rubber", zh: "橡胶", pt: "Borracha"});
+Translation.addTranslation("Scrap", {ru: "Утильсырьё", es: "Chatarra", zh: "废料", pt: "Sucata"});
+Translation.addTranslation("Scrap Box", {ru: "Коробка утильсырья", es: "Caja de Chatarra", zh: "废料盒", pt: "Caixa de Sucata"});
+Translation.addTranslation("UU-matter", {ru: "Материя", es: "Materia", zh: "物质", pt: "Metéria UU"});
+Translation.addTranslation("Coal Ball", {ru: "Угольный шарик", es: "Bola de Carbón", zh: "煤球", pt: "Bola de Carvão"});
+Translation.addTranslation("Coal Block", {ru: "Сжатый угольный шарик", es: "Bola de Carbón Compactada", zh: "压缩煤球", pt: "Bola de Carvão Comprimido"});
+Translation.addTranslation("Coal Chunk", {ru: "Угольная глыба", es: "Carbono Bruto", zh: "煤块", pt: "Pedaço de Carvão"});
+Translation.addTranslation("Carbon Fibre", {ru: "Углеволокно", es: "Fibra de Carbono Básica", zh: "粗制碳网", pt: "Fibra de Carbono Bruto"});
+Translation.addTranslation("Carbon Mesh", {ru: "Углеткань", es: "Malla de Carbono Básica", zh: "粗制碳板", pt: "Malha de Carbono"});
+Translation.addTranslation("Carbon Plate", {ru: "Углепластик", es: "Placa de Carbono", zh: "碳板", pt: "Placa de Carbono"});
+Translation.addTranslation("Alloy Plate", {ru: "Композит", es: "Compuesto Avanzado", zh: "高级合金", pt: "Liga Avançada"});
+Translation.addTranslation("Iridium Reinforced Plate", {ru: "Иридиевый композит", es: "Placa de Iridio", zh: "强化铱板", pt: "Placa Reforçada com Irídio"});
 
 // Nuclear
 Translation.addTranslation("Enriched Uranium", {ru: "Обогащённый уран", pt: "Urânio Enriquecido", zh: "浓缩铀"});
 Translation.addTranslation("Uranium 235", {ru: "Уран-235", pt: "Urânio 235", zh: "铀-235"});
 Translation.addTranslation("Piece of Uranium 235", {ru: "Кусочек урана-235", pt: "Pedaço de Urânio 235", zh: "小撮铀-235"});
 Translation.addTranslation("Uranium 238", {ru: "Уран-238", pt: "Urânio 238", zh: "铀-238"});
-Translation.addTranslation("Piece of Uranium 238", {ru: "Кусочек урана-238", es: "Pedaço de Urânio 238", zh: "小撮铀-238"});
+Translation.addTranslation("Piece of Uranium 238", {ru: "Кусочек урана-238", es: "Pedaço de Urânio 238", zh: "小撮铀-238", pt: "Pequena Pilha de Urânio 238"});
 Translation.addTranslation("Plutonium", {ru: "Плутоний", pt: "Plutônio", zh: "钚"});
-Translation.addTranslation("Piece of Plutonium", {ru: "Кусочек плутония", es: "Pedaço de Plutônio", zh: "小撮钚"});
+Translation.addTranslation("Piece of Plutonium", {ru: "Кусочек плутония", es: "Pedaço de Plutônio", zh: "小撮钚", pt: "Pequena Pilha de Plutônio"});
 
 // Electric
-Translation.addTranslation("Circuit", {ru: "Электросхема", es: "Circuito Electrónico", zh: "电路板"});
-Translation.addTranslation("Advanced Circuit", {ru: "Улучшенная электросхема", es: "Circuito Avanzado", zh: "高级电路板"});
-Translation.addTranslation("Coil", {ru: "Катушка", es: "Bobina", zh: "线圈"});
-Translation.addTranslation("Electric Motor", {ru: "Электромотор", es: "Motor Eléctrico", zh: "电动马达"});
-Translation.addTranslation("Power Unit", {ru: "Силовой агрегат", es: "Unidad de Potencia", zh: "驱动把手"});
-Translation.addTranslation("Small Power Unit", {ru: "Малый силовой агрегат", es: "Pequeña Unidad de Potencia", zh: "小型驱动把手"});
-Translation.addTranslation("RE-Battery", {ru: "Аккумулятор", es: "Batería Recargable", zh: "充电电池"});
-Translation.addTranslation("Advanced RE-Battery", {ru: "Продвинутый аккумулятор", es: "Bateria Recargable Avanzada", zh: "强化充电电池"});
-Translation.addTranslation("Energy Crystal", {ru: "Энергетический кристалл", es: "Cristal de Energía", zh: "能量水晶"});
-Translation.addTranslation("Lapotron Crystal", {ru: "Лазуротроновый кристалл", es: "Cristal Lapotron", zh: "兰波顿水晶"});
+Translation.addTranslation("Circuit", {ru: "Электросхема", es: "Circuito Electrónico", zh: "电路板", pt: "Eletrônico"});
+Translation.addTranslation("Advanced Circuit", {ru: "Улучшенная электросхема", es: "Circuito Avanzado", zh: "高级电路板", pt: "Avançado"});
+Translation.addTranslation("Coil", {ru: "Катушка", es: "Bobina", zh: "线圈", pt: " Bobina Tesla"});
+Translation.addTranslation("Electric Motor", {ru: "Электромотор", es: "Motor Eléctrico", zh: "电动马达", pt: "Motor Elétrico"});
+Translation.addTranslation("Power Unit", {ru: "Силовой агрегат", es: "Unidad de Potencia", zh: "驱动把手", pt: "Motor"});
+Translation.addTranslation("Small Power Unit", {ru: "Малый силовой агрегат", es: "Pequeña Unidad de Potencia", zh: "小型驱动把手", pt: "Motor Pequeno"});
+Translation.addTranslation("RE-Battery", {ru: "Аккумулятор", es: "Batería Recargable", zh: "充电电池", pt: "Bateria Reutilizável"});
+Translation.addTranslation("Advanced RE-Battery", {ru: "Продвинутый аккумулятор", es: "Bateria Recargable Avanzada", zh: "强化充电电池", pt: "Bateria Reutilizável Avançada"});
+Translation.addTranslation("Energy Crystal", {ru: "Энергетический кристалл", es: "Cristal de Energía", zh: "能量水晶", pt: "Cristal de Energia"});
+Translation.addTranslation("Lapotron Crystal", {ru: "Лазуротроновый кристалл", es: "Cristal Lapotron", zh: "兰波顿水晶", pt: "Cristal Lapotrônico"});
 
 // Upgrades
-Translation.addTranslation("MFSU Upgrade Kit", {ru: "Набор улучшения МФСУ", es: "Kit de Actualización MFSU", zh: "MFSU升级组件"});
-Translation.addTranslation("Overclocker Upgrade", {ru: "Улучшение «Ускоритель»", es: "Mejora de Sobreproducción", zh: "超频升级"});
-Translation.addTranslation("Energy Storage Upgrade", {ru: "Улучшение «Энергохранитель»", es: "Mejora de Almacenador de Energía", zh: "储能升级"});
-Translation.addTranslation("Redstone Signal Inverter Upgrade", {ru: "Улучшение «Инвертор сигнала красного камня»", es: "Majora de Invesor de señal Redstone", zh: "红石信号反转升级"});
-Translation.addTranslation("Ejector Upgrade", {ru: "Улучшение «Выталкиватель»", es: "Mejora Expulsora", zh: "弹出升级"});
-Translation.addTranslation("Pulling Upgrade", {ru: "Улучшение «Загрузчик»", es: "Mejora de Traccion", zh: "抽入升级"});
-Translation.addTranslation("Fluid Ejector Upgrade", {ru: "Улучшение «Выталкиватель жидкости»", es: "Mejora Expulsora de Líquidos", zh: "流体弹出升级"});
-Translation.addTranslation("Fluid Pulling Upgrade", {ru: "Улучшение «Загрузчик жидкости»", es: "Mejora Traccion de Líquidos", zh: "流体抽入升级"});
+Translation.addTranslation("MFSU Upgrade Kit", {ru: "Набор улучшения МФСУ", es: "Kit de Actualización MFSU", zh: "MFSU升级组件", pt: "Kit de Melhoria UAMF"});
+Translation.addTranslation("Overclocker Upgrade", {ru: "Улучшение «Ускоритель»", es: "Mejora de Sobreproducción", zh: "超频升级", pt: " Melhoria: Overclock"});
+Translation.addTranslation("Energy Storage Upgrade", {ru: "Улучшение «Энергохранитель»", es: "Mejora de Almacenador de Energía", zh: "储能升级", pt: "Armazenamento de Energia"});
+Translation.addTranslation("Redstone Signal Inverter Upgrade", {ru: "Улучшение «Инвертор сигнала красного камня»", es: "Majora de Invesor de señal Redstone", zh: "红石信号反转升级", pt: "Inverte o sinal de redstone atual"});
+Translation.addTranslation("Ejector Upgrade", {ru: "Улучшение «Выталкиватель»", es: "Mejora Expulsora", zh: "弹出升级", pt: "Melhoria: Ejetor"});
+Translation.addTranslation("Pulling Upgrade", {ru: "Улучшение «Загрузчик»", es: "Mejora de Traccion", zh: "抽入升级", pt: "Melhoria: Sucção"});
+Translation.addTranslation("Fluid Ejector Upgrade", {ru: "Улучшение «Выталкиватель жидкости»", es: "Mejora Expulsora de Líquidos", zh: "流体弹出升级", pt: "Ejetor de Fluidos"});
+Translation.addTranslation("Fluid Pulling Upgrade", {ru: "Улучшение «Загрузчик жидкости»", es: "Mejora Traccion de Líquidos", zh: "流体抽入升级", pt: "Melhoria: Injeção de Fluidos Avançada"});
 
 // Crushed Ore
-Translation.addTranslation("Crushed Copper Ore", {ru: "Измельчённая медная руда", es: "Mineral de Cobre Triturado", zh: "粉碎铜矿石"});
-Translation.addTranslation("Crushed Tin Ore", {ru: "Измельчённая оловянная руда", es: "Mineral de Estaño Triturado", zh: "粉碎锡矿石"});
-Translation.addTranslation("Crushed Iron Ore", {ru: "Измельчённая железная руда", es: "Mineral de Hierro Triturado", zh: "粉碎铁矿石"});
-Translation.addTranslation("Crushed Lead Ore", {ru: "Измельчённая свинцовая руда", es: "Mineral de Plomo Triturado", zh: "粉碎铅矿石"});
-Translation.addTranslation("Crushed Gold Ore", {ru: "Измельчённая золотая руда", es: "Mineral de Oro Triturado", zh: "粉碎金矿石"});
-Translation.addTranslation("Crushed Silver Ore", {ru: "Измельчённая серебряная руда", es: "Mineral de Plata Triturado", zh: "粉碎银矿石"});
-Translation.addTranslation("Crushed Uranium Ore", {ru: "Измельчённая урановая руда", es: "Mineral de Uranio Triturado", zh: "粉碎铀矿石"});
+Translation.addTranslation("Crushed Copper Ore", {ru: "Измельчённая медная руда", es: "Mineral de Cobre Triturado", zh: "粉碎铜矿石", pt: "Minério de Cobre Triturado"});
+Translation.addTranslation("Crushed Tin Ore", {ru: "Измельчённая оловянная руда", es: "Mineral de Estaño Triturado", zh: "粉碎锡矿石", pt: "Minério de Estanho Triturado"});
+Translation.addTranslation("Crushed Iron Ore", {ru: "Измельчённая железная руда", es: "Mineral de Hierro Triturado", zh: "粉碎铁矿石", pt: " Minério de Ferro Triturado"});
+Translation.addTranslation("Crushed Lead Ore", {ru: "Измельчённая свинцовая руда", es: "Mineral de Plomo Triturado", zh: "粉碎铅矿石", pt: "Minério de Chumbo Triturado"});
+Translation.addTranslation("Crushed Gold Ore", {ru: "Измельчённая золотая руда", es: "Mineral de Oro Triturado", zh: "粉碎金矿石", pt: "Minério de Ouro Triturado"});
+Translation.addTranslation("Crushed Silver Ore", {ru: "Измельчённая серебряная руда", es: "Mineral de Plata Triturado", zh: "粉碎银矿石", pt: "Minério de Prata Triturado"});
+Translation.addTranslation("Crushed Uranium Ore", {ru: "Измельчённая урановая руда", es: "Mineral de Uranio Triturado", zh: "粉碎铀矿石", pt: "Minério de Urânio Triturado"});
 
 // Purified Ore
-Translation.addTranslation("Purified Crushed Copper Ore", {ru: "Очищенная измельчённая медная руда", es: "Mineral de Cobre Triturado y Purificado", zh: "纯净的粉碎铜矿石"});
-Translation.addTranslation("Purified Crushed Tin Ore", {ru: "Очищенная измельчённая оловянная руда", es: "Mineral de Estaño Triturado y Purificado", zh: "纯净的粉碎锡矿石"});
-Translation.addTranslation("Purified Crushed Iron Ore", {ru: "Очищенная измельчённая железная руда", es: "Mineral de Hierro Triturado y Purificado", zh: "纯净的粉碎铁矿石"});
-Translation.addTranslation("Purified Crushed Lead Ore", {ru: "Очищенная измельчённая свинцовая руда", es: "Mineral de Plomo Triturado y Purificado", zh: "纯净的粉碎铅矿石"});
-Translation.addTranslation("Purified Crushed Gold Ore", {ru: "Очищенная измельчённая золотая руда", es: "Mineral de Oro Triturado y Purificado", zh: "纯净的粉碎金矿石"});
-Translation.addTranslation("Purified Crushed Silver Ore", {ru: "Очищенная измельчённая серебряная руда", es: "Mineral de Plata Triturado y Purificado", zh: "纯净的粉碎银矿石"});
-Translation.addTranslation("Purified Crushed Uranium Ore", {ru: "Очищенная измельчённая урановая руда", es: "Mineral de Uranio Triturado y Purificado", zh: "纯净的粉碎铀矿石"});
+Translation.addTranslation("Purified Crushed Copper Ore", {ru: "Очищенная измельчённая медная руда", es: "Mineral de Cobre Triturado y Purificado", zh: "纯净的粉碎铜矿石", pt: "Minério Purificado de Cobre Triturado"});
+Translation.addTranslation("Purified Crushed Tin Ore", {ru: "Очищенная измельчённая оловянная руда", es: "Mineral de Estaño Triturado y Purificado", zh: "纯净的粉碎锡矿石", pt: "Minério Purificado de Estanho Triturado"});
+Translation.addTranslation("Purified Crushed Iron Ore", {ru: "Очищенная измельчённая железная руда", es: "Mineral de Hierro Triturado y Purificado", zh: "纯净的粉碎铁矿石", pt: "Minério Purificado de Ferro Triturado"});
+Translation.addTranslation("Purified Crushed Lead Ore", {ru: "Очищенная измельчённая свинцовая руда", es: "Mineral de Plomo Triturado y Purificado", zh: "纯净的粉碎铅矿石", pt: "Minério Purificado de Chumbo Triturado"});
+Translation.addTranslation("Purified Crushed Gold Ore", {ru: "Очищенная измельчённая золотая руда", es: "Mineral de Oro Triturado y Purificado", zh: "纯净的粉碎金矿石", pt: "Minério Purificado de Ouro Triturado"});
+Translation.addTranslation("Purified Crushed Silver Ore", {ru: "Очищенная измельчённая серебряная руда", es: "Mineral de Plata Triturado y Purificado", zh: "纯净的粉碎银矿石", pt: "Minério Purificado de Prata Triturada"});
+Translation.addTranslation("Purified Crushed Uranium Ore", {ru: "Очищенная измельчённая урановая руда", es: "Mineral de Uranio Triturado y Purificado", zh: "纯净的粉碎铀矿石", pt: "Minério Purificado de Urânio Triturado"});
 
 // Dusts
-Translation.addTranslation("Copper Dust", {ru: "Медная пыль", es: "Polvo de Cobre", zh: "铜粉"});
-Translation.addTranslation("Tin Dust", {ru: "Оловянная пыль", es: "Polvo de Estaño", zh: "锡粉"});
-Translation.addTranslation("Bronze Dust", {ru: "Бронзовая пыль", es: "Polvo de Bronce", zh: "青铜粉"});
-Translation.addTranslation("Iron Dust", {ru: "Железная пыль", es: "Polvo de Hierro", zh: "铁粉"});
-Translation.addTranslation("Lead Dust", {ru: "Свинцовая пыль", es: "Polvo de Plomo", zh: "铅粉"});
-Translation.addTranslation("Gold Dust", {ru: "Золотая пыль", es: "Polvo de Oro", zh: "金粉"});
-Translation.addTranslation("Silver Dust", {ru: "Серебряная пыль", es: "Polvo de Plata", zh: "银粉"});
-Translation.addTranslation("Stone Dust", {ru: "Каменная пыль", es: "Polvo de Piedra", zh: "石粉"});
-Translation.addTranslation("Coal Dust", {ru: "Угольная пыль", es: "Polvo de Carbón", zh: "煤粉"});
-Translation.addTranslation("Sulfur Dust", {ru: "Серная пыль", es: "Polvo de Sulfuro", zh: "硫粉"});
-Translation.addTranslation("Lapis Dust", {ru: "Лазуритовая пыль", es: "Polvo de Lapislázuli", zh: "青金石粉"});
-Translation.addTranslation("Diamond Dust", {ru: "Алмазная пыль", es: "Polvo de Diamante", zh: "钻石粉"});
-Translation.addTranslation("Energium Dust", {ru: "Энергетическая пыль", es: "Polvo de Energium", zh: "能量水晶粉"});
+Translation.addTranslation("Copper Dust", {ru: "Медная пыль", es: "Polvo de Cobre", zh: "铜粉", pt: "ó de Cobre"});
+Translation.addTranslation("Tin Dust", {ru: "Оловянная пыль", es: "Polvo de Estaño", zh: "锡粉", pt: "Pó de Estanho"});
+Translation.addTranslation("Bronze Dust", {ru: "Бронзовая пыль", es: "Polvo de Bronce", zh: "青铜粉", pt: "Pó de Bronze"});
+Translation.addTranslation("Iron Dust", {ru: "Железная пыль", es: "Polvo de Hierro", zh: "铁粉", pt: "Pó de Ferro"});
+Translation.addTranslation("Lead Dust", {ru: "Свинцовая пыль", es: "Polvo de Plomo", zh: "铅粉", pt: "Pó de Chumbo"});
+Translation.addTranslation("Gold Dust", {ru: "Золотая пыль", es: "Polvo de Oro", zh: "金粉", pt: "Pó de Ouro"});
+Translation.addTranslation("Silver Dust", {ru: "Серебряная пыль", es: "Polvo de Plata", zh: "银粉", pt: "Pó de Prata"});
+Translation.addTranslation("Stone Dust", {ru: "Каменная пыль", es: "Polvo de Piedra", zh: "石粉", pt: "Pó de Pedra"});
+Translation.addTranslation("Coal Dust", {ru: "Угольная пыль", es: "Polvo de Carbón", zh: "煤粉", pt: "Pó de Carvão"});
+Translation.addTranslation("Sulfur Dust", {ru: "Серная пыль", es: "Polvo de Sulfuro", zh: "硫粉", pt: "Pó de Enxofre"});
+Translation.addTranslation("Lapis Dust", {ru: "Лазуритовая пыль", es: "Polvo de Lapislázuli", zh: "青金石粉", pt: "Pó de Lápis-Lazúli"});
+Translation.addTranslation("Diamond Dust", {ru: "Алмазная пыль", es: "Polvo de Diamante", zh: "钻石粉", pt: "Pó de Diamante"});
+Translation.addTranslation("Energium Dust", {ru: "Энергетическая пыль", es: "Polvo de Energium", zh: "能量水晶粉", pt: " Pó de Enérgio"});
 
 // Small Dusts
-Translation.addTranslation("Tiny Pile of Copper Dust", {ru: "Небольшая кучка медной пыли", es: "Diminuta Pila de Polvo de Cobre", zh: "小撮铜粉"});
-Translation.addTranslation("Tiny Pile of Tin Dust", {ru: "Небольшая кучка оловянной пыли", es: "Diminuta Pila de Polvo de Estaño", zh: "小撮锡粉"});
-Translation.addTranslation("Tiny Pile of Iron Dust", {ru: "Небольшая кучка железной пыли", es: "Diminuta Pila de Polvo de Hierro", zh: "小撮铁粉"});
-Translation.addTranslation("Tiny Pile of Gold Dust", {ru: "Небольшая кучка золотой пыли", es: "Diminuta Pila de Polvo de Oro", zh: "小撮金粉"});
-Translation.addTranslation("Tiny Pile of Lead Dust", {ru: "Небольшая кучка свинцовой пыли", es: "Diminuta Pila de Polvo de Plomo", zh: "小撮铅粉"});
-Translation.addTranslation("Tiny Pile of Silver Dust", {ru: "Небольшая кучка серебряной пыли", es: "Diminuta Pila de Polvo de Plata", zh: "小撮银粉"});
-Translation.addTranslation("Tiny Pile of Sulfur Dust", {ru: "Небольшая кучка серной пыли", es: "Diminuta Pila de Polvo de Sulfuro", zh: "小撮硫粉"});
+Translation.addTranslation("Tiny Pile of Copper Dust", {ru: "Небольшая кучка медной пыли", es: "Diminuta Pila de Polvo de Cobre", zh: "小撮铜粉", pt: "Pequena Pilha de Pó de Cobre"});
+Translation.addTranslation("Tiny Pile of Tin Dust", {ru: "Небольшая кучка оловянной пыли", es: "Diminuta Pila de Polvo de Estaño", zh: "小撮锡粉", pt: "Pequena Pilha de Pó de Estanho"});
+Translation.addTranslation("Tiny Pile of Iron Dust", {ru: "Небольшая кучка железной пыли", es: "Diminuta Pila de Polvo de Hierro", zh: "小撮铁粉", pt: "Pequena Pilha de Pó de Ferro"});
+Translation.addTranslation("Tiny Pile of Gold Dust", {ru: "Небольшая кучка золотой пыли", es: "Diminuta Pila de Polvo de Oro", zh: "小撮金粉", pt: "Pequena Pilha de Pó de Ouro"});
+Translation.addTranslation("Tiny Pile of Lead Dust", {ru: "Небольшая кучка свинцовой пыли", es: "Diminuta Pila de Polvo de Plomo", zh: "小撮铅粉", pt: "Pequena Pilha de Pó de Chumbo"});
+Translation.addTranslation("Tiny Pile of Silver Dust", {ru: "Небольшая кучка серебряной пыли", es: "Diminuta Pila de Polvo de Plata", zh: "小撮银粉", pt: "Pequena Pilha de Pó de Prata"});
+Translation.addTranslation("Tiny Pile of Sulfur Dust", {ru: "Небольшая кучка серной пыли", es: "Diminuta Pila de Polvo de Sulfuro", zh: "小撮硫粉", pt: "Pequena Pilha de Pó de Enxofre"});
 
 // Ingots
-Translation.addTranslation("Copper Ingot", {ru: "Медный слиток", es: "Lingote de Cobre", zh: "铜锭"});
-Translation.addTranslation("Tin Ingot", {ru: "Оловянный слиток", es: "Lingote de Estaño", zh: "锡锭"});
-Translation.addTranslation("Bronze Ingot", {ru: "Бронзовый слиток", es: "Lingote de Bronce", zh: "青铜锭"});
-Translation.addTranslation("Steel Ingot", {ru: "Стальной слиток", es: "Lingote de Hierro Refinado", zh: "钢锭"});
-Translation.addTranslation("Lead Ingot", {ru: "Свинцовый слиток", es: "Lingote de Plomo", zh: "铅锭"});
-Translation.addTranslation("Silver Ingot", {ru: "Серебрянный слиток", es: "Lingote de Plata", zh: "银锭"});
-Translation.addTranslation("Alloy Ingot", {ru: "Композитный слиток", es: "Lingote de Metal Compuesto", zh: "合金锭"})
+Translation.addTranslation("Copper Ingot", {ru: "Медный слиток", es: "Lingote de Cobre", zh: "铜锭", pt: "Lingote de Cobre"});
+Translation.addTranslation("Tin Ingot", {ru: "Оловянный слиток", es: "Lingote de Estaño", zh: "锡锭", pt: "Lingote de Estanho"});
+Translation.addTranslation("Bronze Ingot", {ru: "Бронзовый слиток", es: "Lingote de Bronce", zh: "青铜锭", pt: "Lingote de Bronze"});
+Translation.addTranslation("Steel Ingot", {ru: "Стальной слиток", es: "Lingote de Hierro Refinado", zh: "钢锭", pt: "Lingote de Aço"});
+Translation.addTranslation("Lead Ingot", {ru: "Свинцовый слиток", es: "Lingote de Plomo", zh: "铅锭", pt: "Lingote de Chumbo"});
+Translation.addTranslation("Silver Ingot", {ru: "Серебрянный слиток", es: "Lingote de Plata", zh: "银锭", pt: "Lingote de Prata"});
+Translation.addTranslation("Alloy Ingot", {ru: "Композитный слиток", es: "Lingote de Metal Compuesto", zh: "合金锭", pt: "Lingote de Liga Metálica"});
 
 // Plates
-Translation.addTranslation("Copper Plate", {ru: "Медная пластина", es: "Placa de Cobre", zh: "铜板"});
-Translation.addTranslation("Tin Plate", {ru: "Оловянная пластина", es: "Placa de Estaño", zh: "锡板"});
-Translation.addTranslation("Iron Plate", {ru: "Железная пластина", es: "Placa de Hierro", zh: "铁板"});
-Translation.addTranslation("Bronze Plate", {ru: "Бронзовая пластина", es: "Placa de Bronce", zh: "青铜板"});
-Translation.addTranslation("Steel Plate", {ru: "Стальная пластина", es: "Placa de Hierro Refinado", zh: "钢板"});
-Translation.addTranslation("Gold Plate", {ru: "Золотая пластина", es: "Placa de Oro", zh: "金板"});
-Translation.addTranslation("Lapis Plate", {ru: "Лазуритовая пластина", es: "Placa de Lapislázuli", zh: "青金石板"});
-Translation.addTranslation("Lead Plate", {ru: "Свинцовая пластина", es: "Placa de Plomo", zh: "铅板"});
+Translation.addTranslation("Copper Plate", {ru: "Медная пластина", es: "Placa de Cobre", zh: "铜板", pt: "Placa de Cobre"});
+Translation.addTranslation("Tin Plate", {ru: "Оловянная пластина", es: "Placa de Estaño", zh: "锡板", pt: "Placa de Estanho"});
+Translation.addTranslation("Iron Plate", {ru: "Железная пластина", es: "Placa de Hierro", zh: "铁板", pt: "Placa de Ferro"});
+Translation.addTranslation("Bronze Plate", {ru: "Бронзовая пластина", es: "Placa de Bronce", zh: "青铜板", pt: "Placa de Bronze"});
+Translation.addTranslation("Steel Plate", {ru: "Стальная пластина", es: "Placa de Hierro Refinado", zh: "钢板", pt: "Placa de Aço"});
+Translation.addTranslation("Gold Plate", {ru: "Золотая пластина", es: "Placa de Oro", zh: "金板", pt: "Placa de Ouro"});
+Translation.addTranslation("Lapis Plate", {ru: "Лазуритовая пластина", es: "Placa de Lapislázuli", zh: "青金石板", pt: "Placa de Lápis-Lazuli"});
+Translation.addTranslation("Lead Plate", {ru: "Свинцовая пластина", es: "Placa de Plomo", zh: "铅板", pt: "Placa de Chumbo"});
 
 // Casings
-Translation.addTranslation("Copper Casing", {ru: "Медная оболочка", es: "Carcasa para Objetos de Cobre", zh: "铜质外壳"});
-Translation.addTranslation("Tin Casing", {ru: "Оловянная оболочка", es: "Carcasa para Objetos de Estaño", zh: "锡质外壳"});
-Translation.addTranslation("Iron Casing", {ru: "Железная оболочка", es: "Carcasa para Objetos de Hierro", zh: "铁质外壳"});
-Translation.addTranslation("Bronze Casing", {ru: "Бронзовая оболочка", es: "Carcasa para Objetos de Bronce", zh: "青铜外壳"});
-Translation.addTranslation("Steel Casing", {ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", zh: "钢质外壳а"});
-Translation.addTranslation("Gold Casing", {ru: "Золотая оболочка", es: "Carcasa para Objetos de Oro", zh: "黄金外壳"});
-Translation.addTranslation("Lead Casing", {ru: "Свинцовая оболочка", es: "Carcasa para Objetos de Plomo", zh: "铅质外壳"});
+Translation.addTranslation("Copper Casing", {ru: "Медная оболочка", es: "Carcasa para Objetos de Cobre", zh: "铜质外壳", pt: "Invólucro de Cobre"});
+Translation.addTranslation("Tin Casing", {ru: "Оловянная оболочка", es: "Carcasa para Objetos de Estaño", zh: "锡质外壳", pt: "Invólucro de Estanho"});
+Translation.addTranslation("Iron Casing", {ru: "Железная оболочка", es: "Carcasa para Objetos de Hierro", zh: "铁质外壳", pt: "Invólucro de Ferro"});
+Translation.addTranslation("Bronze Casing", {ru: "Бронзовая оболочка", es: "Carcasa para Objetos de Bronce", zh: "青铜外壳", pt: "Invólucro de Bronze"});
+Translation.addTranslation("Steel Casing", {ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", zh: "钢质外壳а", pt: "Invólucro de Aço"});
+Translation.addTranslation("Gold Casing", {ru: "Золотая оболочка", es: "Carcasa para Objetos de Oro", zh: "黄金外壳", pt: "Invólucro de Ouro"});
+Translation.addTranslation("Lead Casing", {ru: "Свинцовая оболочка", es: "Carcasa para Objetos de Plomo", zh: "铅质外壳", pt: "Invólucro de Chumbo"});
 
 // Cans
 Translation.addTranslation("Tin Can", {ru: "Консервная банка", pt: "Lata de Estanho", zh: "锡罐(空)"});
@@ -304,73 +295,73 @@ Translation.addTranslation("Filled Tin Can", {ru: "Заполненная кон
 Translation.addTranslation("This looks bad...", {ru: "Это выглядит несъедобно…"});
 
 // Cells
-Translation.addTranslation("Cell", {ru: "Капсула", es: "Celda Vacía", zh: "空单元"});
-Translation.addTranslation("Water Cell", {ru: "Капсула с водой", es: "Celda de Agua", zh: "水单元"});
-Translation.addTranslation("Lava Cell", {ru: "Капсула с лавой", es: "Celda de Lava", zh: "岩浆单元"});
+Translation.addTranslation("Cell", {ru: "Капсула", es: "Celda Vacía", zh: "空单元", pt: "Célula Universal de Fluidos"});
+Translation.addTranslation("Water Cell", {ru: "Капсула с водой", es: "Celda de Agua", zh: "水单元", pt: "Célula com Água"});
+Translation.addTranslation("Lava Cell", {ru: "Капсула с лавой", es: "Celda de Lava", zh: "岩浆单元", pt: "Célula com Lava "});
 Translation.addTranslation("Compressed Air Cell", {ru: "Капсула со сжатым воздухом", pt: "Célula com Ar Comprimido", zh: "压缩空气单元"});
 
 // Wires
-Translation.addTranslation("Tin Cable", {ru: "Оловянный провод", es: "Cable de Ultra-Baja Tensión", zh: "锡质导线"});
-Translation.addTranslation("Insulated Tin Cable", {ru: "Изолированный оловянный провод", es: "Cable de Estaño Aislado", zh: "绝缘锡质导线"});
-Translation.addTranslation("Copper Cable", {ru: "Медный провод", es: "Cable de Cobre", zh: "铜质导线"});
-Translation.addTranslation("Insulated Copper Cable", {ru: "Изолированный медный провод", es: "Cable de Cobre Aislado", zh: "绝缘质铜导线"});
-Translation.addTranslation("Gold Cable", {ru: "Золотой провод", es: "Cable de Oro", zh: "金质导线"});
-Translation.addTranslation("Insulated Gold Cable", {ru: "Изолированный золотой провод", es: "Cable de Oro Aislado", zh: "绝缘金质导线"});
-Translation.addTranslation("HV Cable", {ru: "Высоковольтный провод", es: "Cable de Alta Tensión", zh: "高压导线"});
-Translation.addTranslation("Insulated HV Cable", {ru: "Изолированный высоковольтный провод", es: "Cable de Alta Tensión Aislado", zh: "绝缘高压导线"});
-Translation.addTranslation("Glass Fibre Cable", {ru: "Стекловолоконный провод", es: "Cable de Alta Tensión", zh: "玻璃纤维导线"});
+Translation.addTranslation("Tin Cable", {ru: "Оловянный провод", es: "Cable de Ultra-Baja Tensión", zh: "锡质导线", pt: " Cabo de Estanho"});
+Translation.addTranslation("Insulated Tin Cable", {ru: "Изолированный оловянный провод", es: "Cable de Estaño Aislado", zh: "绝缘锡质导线", pt: "Cabo de Estanho Isolado"});
+Translation.addTranslation("Copper Cable", {ru: "Медный провод", es: "Cable de Cobre", zh: "铜质导线", pt: "Cabo de Cobre"});
+Translation.addTranslation("Insulated Copper Cable", {ru: "Изолированный медный провод", es: "Cable de Cobre Aislado", zh: "绝缘质铜导线", pt: "Cabo de Cobre Isolado"});
+Translation.addTranslation("Gold Cable", {ru: "Золотой провод", es: "Cable de Oro", zh: "金质导线", pt: "Cabo de Ouro"});
+Translation.addTranslation("Insulated Gold Cable", {ru: "Изолированный золотой провод", es: "Cable de Oro Aislado", zh: "绝缘金质导线", pt: "Cabo de Ouro Isolado"});
+Translation.addTranslation("HV Cable", {ru: "Высоковольтный провод", es: "Cable de Alta Tensión", zh: "高压导线", pt: "Cabo de Alta Tensão"});
+Translation.addTranslation("Insulated HV Cable", {ru: "Изолированный высоковольтный провод", es: "Cable de Alta Tensión Aislado", zh: "绝缘高压导线", pt: "Cabo de Alta Tensão Isolado"});
+Translation.addTranslation("Glass Fibre Cable", {ru: "Стекловолоконный провод", es: "Cable de Alta Tensión", zh: "玻璃纤维导线", pt: "Cabo de Fibra de Vidro"});
 
 // Armor
-Translation.addTranslation("Bronze Helmet", {ru: "Бронзовый шлем", es: "Casco de Bronce", zh: "青铜头盔"});
-Translation.addTranslation("Bronze Chestplate", {ru: "Бронзовый нагрудник", es: "Chaleco de Bronce", zh: "青铜胸甲"});
-Translation.addTranslation("Bronze Leggings", {ru: "Бронзовые поножи", es: "Pantalones de Bronce", zh: "青铜护腿"});
-Translation.addTranslation("Bronze Boots", {ru: "Бронзовые ботинки", es: "Botas de Bronce", zh: "青铜靴子"});
-Translation.addTranslation("Composite Helmet", {ru: "Композитный шлем", es: "Casco de Compuesto", zh: "复合头盔"});
-Translation.addTranslation("Composite Chestplate", {ru: "Композитный нагрудник", es: "Chaleco de Compuesto", zh: "复合胸甲"});
-Translation.addTranslation("Composite Leggings", {ru: "Композитные поножи", es: "Pantalones de Compuesto", zh: "复合护腿"});
-Translation.addTranslation("Composite Boots", {ru: "Композитные ботинки", es: "Botas de Compuesto", zh: "复合靴子"});
-Translation.addTranslation("Nightvision Goggles", {ru: "Прибор ночного зрения", es: "Gafas de Vision Nocturna", zh: "夜视镜"});
-Translation.addTranslation("Nano Helmet", {ru: "Нано-шлем", es: "Casco de Nanotraje", zh: "纳米头盔"});
-Translation.addTranslation("Nano Chestplate", {ru: "Нано-нагрудник", es: "Chaleco de Nanotraje", zh: "纳米胸甲"});
-Translation.addTranslation("Nano Leggings", {ru: "Нано-штаны", es: "Pantalones de Nanotraje", zh: "纳米护腿"});
-Translation.addTranslation("Nano Boots", {ru: "Нано-ботинки", es: "Botas de Nanotraje", zh: "纳米靴子"});
-Translation.addTranslation("Quantum Helmet", {ru: "Квантовый шлем", es: "Casco de Traje Cuántico", zh: "量子头盔"});
-Translation.addTranslation("Quantum Chestplate", {ru: "Квантовый нагрудник", es: "Chaleco de Traje Cuántico", zh: "量子护甲"});
-Translation.addTranslation("Quantum Leggings", {ru: "Квантовые штаны", es: "Pantalones de Traje Cuántico", zh: "量子护腿"});
-Translation.addTranslation("Quantum Boots", {ru: "Квантовые ботинки", es: "Botas de Traje Cuántico", zh: "量子靴子"});
-Translation.addTranslation("Scuba Helmet", {ru: "Шлем-акваланг", pt: "Máscara de Mergulho", zh: "防化头盔"});
-Translation.addTranslation("Hazmat Suit", {ru: "Защитная куртка", pt: "Roupa Anti-Radiação", zh: "防化服"});
-Translation.addTranslation("Hazmat Suit Leggings", {ru: "Защитные штаны", pt: "Calças Anti-Radiação", zh: "防化裤"});
-Translation.addTranslation("Rubber Boots", {ru: "Резиновые ботинки", pt: "Botas de Borracha", zh: "橡胶靴"});
-Translation.addTranslation("Jetpack", {ru: "Реактивный ранец", es: "Jetpack Eléctrico", zh: "电力喷气背包"});
-Translation.addTranslation("Batpack", {ru: "Аккумуляторный ранец", es: "Mochila de Baterías", zh: "电池背包"});
-Translation.addTranslation("Advanced Batpack", {ru: "Продвинутый аккумуляторный ранец", es: "Mochila de Baterías Avanzada", zh: "高级电池背包"});
-Translation.addTranslation("Energy Pack", {ru: "Энергетический ранец", es: "Pack de Energía", zh: "能量水晶储电背包"});
-Translation.addTranslation("Lappack", {ru: "Лазуротроновый ранец", es: "Mochila de Baterías Avanzada", zh: "兰波顿储电背包"});
+Translation.addTranslation("Bronze Helmet", {ru: "Бронзовый шлем", es: "Casco de Bronce", zh: "青铜头盔", pt: "Elmo de Bronze"});
+Translation.addTranslation("Bronze Chestplate", {ru: "Бронзовый нагрудник", es: "Chaleco de Bronce", zh: "青铜胸甲", pt: "Armadura de Bronze"});
+Translation.addTranslation("Bronze Leggings", {ru: "Бронзовые поножи", es: "Pantalones de Bronce", zh: "青铜护腿", pt: "Perneiras de Bronze"});
+Translation.addTranslation("Bronze Boots", {ru: "Бронзовые ботинки", es: "Botas de Bronce", zh: "青铜靴子", pt: "Botas de Bronze"});
+Translation.addTranslation("Composite Helmet", {ru: "Композитный шлем", es: "Casco de Compuesto", zh: "复合头盔", pt: "Capacete Composto"});
+Translation.addTranslation("Composite Chestplate", {ru: "Композитный нагрудник", es: "Chaleco de Compuesto", zh: "复合胸甲", pt: "Colete Composto"});
+Translation.addTranslation("Composite Leggings", {ru: "Композитные поножи", es: "Pantalones de Compuesto", zh: "复合护腿", pt: "Perneiras compostas"});
+Translation.addTranslation("Composite Boots", {ru: "Композитные ботинки", es: "Botas de Compuesto", zh: "复合靴子", pt: "Botas compostas"});
+Translation.addTranslation("Nightvision Goggles", {ru: "Прибор ночного зрения", es: "Gafas de Vision Nocturna", zh: "夜视镜", pt: "Óculos de Visão"});
+Translation.addTranslation("Nano Helmet", {ru: "Нано-шлем", es: "Casco de Nanotraje", zh: "纳米头盔", pt: "Elmo de Nanotecnologia"});
+Translation.addTranslation("Nano Chestplate", {ru: "Нано-нагрудник", es: "Chaleco de Nanotraje", zh: "纳米胸甲", pt: "Armadura de Nanotecnologia"});
+Translation.addTranslation("Nano Leggings", {ru: "Нано-штаны", es: "Pantalones de Nanotraje", zh: "纳米护腿", pt: "Calça de Nanotecnologia"});
+Translation.addTranslation("Nano Boots", {ru: "Нано-ботинки", es: "Botas de Nanotraje", zh: "纳米靴子", pt: "Botas de Nanotecnologia"});
+Translation.addTranslation("Quantum Helmet", {ru: "Квантовый шлем", es: "Casco de Traje Cuántico", zh: "量子头盔", pt: "Elmo Quântico"});
+Translation.addTranslation("Quantum Chestplate", {ru: "Квантовый нагрудник", es: "Chaleco de Traje Cuántico", zh: "量子护甲", pt: "Armadura Quântica"});
+Translation.addTranslation("Quantum Leggings", {ru: "Квантовые штаны", es: "Pantalones de Traje Cuántico", zh: "量子护腿", pt: "Calças Quânticas"});
+Translation.addTranslation("Quantum Boots", {ru: "Квантовые ботинки", es: "Botas de Traje Cuántico", zh: "量子靴子", pt: "Botas Quânticas"});
+Translation.addTranslation("Scuba Helmet", {ru: "Шлем-акваланг", pt: "Máscara de Mergulho", zh: "防化头盔", pt: "Máscara de Mergulho"});
+Translation.addTranslation("Hazmat Suit", {ru: "Защитная куртка", pt: "Roupa Anti-Radiação", zh: "防化服", pt: "Anti-Radiação"});
+Translation.addTranslation("Hazmat Suit Leggings", {ru: "Защитные штаны", pt: "Calças Anti-Radiação", zh: "防化裤", pt: "Calças Anti-Radiação"});
+Translation.addTranslation("Rubber Boots", {ru: "Резиновые ботинки", pt: "Botas de Borracha", zh: "橡胶靴", pt: "Botas de Borracha"});
+Translation.addTranslation("Jetpack", {ru: "Реактивный ранец", es: "Jetpack Eléctrico", zh: "电力喷气背包", pt: "Mochila à Jato"});
+Translation.addTranslation("Batpack", {ru: "Аккумуляторный ранец", es: "Mochila de Baterías", zh: "电池背包", pt: "Mochila de Baterias"});
+Translation.addTranslation("Advanced Batpack", {ru: "Продвинутый аккумуляторный ранец", es: "Mochila de Baterías Avanzada", zh: "高级电池背包", pt: "Mochila de Baterias Avançada"});
+Translation.addTranslation("Energy Pack", {ru: "Энергетический ранец", es: "Pack de Energía", zh: "能量水晶储电背包", pt: "Mochila de Energia"});
+Translation.addTranslation("Lappack", {ru: "Лазуротроновый ранец", es: "Mochila de Baterías Avanzada", zh: "兰波顿储电背包", pt: "Mochila Lapotrônica"});
 
 // Tools
-Translation.addTranslation("Tool Box", {ru: "Ящик для инструментов", es: "Caja de Herramientas", zh: "工具盒"});
-Translation.addTranslation("Frequency Transmitter", {ru: "Частотный связыватель", es: "Transmisor de Frecuencias", zh: "传送频率遥控器"});
+Translation.addTranslation("Tool Box", {ru: "Ящик для инструментов", es: "Caja de Herramientas", zh: "工具盒", pt: "Caixa de Ferramentas"});
+Translation.addTranslation("Frequency Transmitter", {ru: "Частотный связыватель", es: "Transmisor de Frecuencias", zh: "传送频率遥控器", pt: "Transmissor de Frequência"});
 Translation.addTranslation("OD Scanner", {ru: "Сканер КР", es: "Escaner de Densidad", zh: "OD扫描器"});
 Translation.addTranslation("OV Scanner", {ru: "Сканер ЦР", es: "Escaner de Riqueza", zh: "OV扫描器"});
-Translation.addTranslation("Treetap", {ru: "Краник", es: "Grifo para Resina", zh: "木龙头"});
-Translation.addTranslation("Forge Hammer", {ru: "Кузнечный молот", es: "Martillo para Forja", zh: "锻造锤"});
-Translation.addTranslation("Cutter", {ru: "Кусачки", es: "Pelacables Universal", zh: "板材切割剪刀"});
-Translation.addTranslation("Bronze Sword", {ru: "Бронзовый меч", es: "Espada de Bronce", zh: "青铜剑"});
-Translation.addTranslation("Bronze Shovel", {ru: "Бронзовая лопата", es: "Pala de Bronce", zh: "青铜铲"});
-Translation.addTranslation("Bronze Pickaxe", {ru: "Бронзовая кирка", es: "Pico de Bronce", zh: "青铜镐"});
-Translation.addTranslation("Bronze Axe", {ru: "Бронзовый топор", es: "Hacha de Bronce", zh: "青铜斧"});
-Translation.addTranslation("Bronze Hoe", {ru: "Бронзовая мотыга", es: "Azada de Bronce", zh: "青铜锄"});
-Translation.addTranslation("Wrench", {ru: "Гаечный ключ", es: "Llave Inglesa", zh: "扳手"});
-Translation.addTranslation("Electric Wrench", {ru: "Электроключ", es: "Llave Inglesa Eléctrica", zh: "电动扳手"});
-Translation.addTranslation("Electric Hoe", {ru: "Электромотыга", es: "Azada Eléctrica", zh: "电动锄"});
-Translation.addTranslation("Electric Treetap", {ru: "Электрокраник", es: "Grifo para Resina Eléctrico", zh: "电动树脂提取器"});
-Translation.addTranslation("Chainsaw", {ru: "Электропила", es: "Motosierra", zh: "链锯"});
-Translation.addTranslation("Mining Drill", {ru: "Шахтёрский бур", es: "Taladro", zh: "采矿钻头"});
-Translation.addTranslation("Diamond Drill", {ru: "Алмазный бур", es: "Taladro de Diamante", zh: "钻石钻头"});
-Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es: "Taladro de Iridio", zh: "铱钻头"});
-Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-Sable", zh: "纳米剑"});
-Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", zh: "采矿镭射枪"});
+Translation.addTranslation("Treetap", {ru: "Краник", es: "Grifo para Resina", zh: "木龙头", pt: "Drenador"});
+Translation.addTranslation("Forge Hammer", {ru: "Кузнечный молот", es: "Martillo para Forja", zh: "锻造锤", pt: "Martelo de Forja"});
+Translation.addTranslation("Cutter", {ru: "Кусачки", es: "Pelacables Universal", zh: "板材切割剪刀", pt: "Alicate"});
+Translation.addTranslation("Bronze Sword", {ru: "Бронзовый меч", es: "Espada de Bronce", zh: "青铜剑", pt: "Espada de Bronze"});
+Translation.addTranslation("Bronze Shovel", {ru: "Бронзовая лопата", es: "Pala de Bronce", zh: "青铜铲", pt: "Pá de Bronze"});
+Translation.addTranslation("Bronze Pickaxe", {ru: "Бронзовая кирка", es: "Pico de Bronce", zh: "青铜镐", pt: "Picareta de Bronze"});
+Translation.addTranslation("Bronze Axe", {ru: "Бронзовый топор", es: "Hacha de Bronce", zh: "青铜斧", pt: "Machado de Bronze"});
+Translation.addTranslation("Bronze Hoe", {ru: "Бронзовая мотыга", es: "Azada de Bronce", zh: "青铜锄", pt: "Machado de Bronze"});
+Translation.addTranslation("Wrench", {ru: "Гаечный ключ", es: "Llave Inglesa", zh: "扳手", pt: "Chave de Grifo"});
+Translation.addTranslation("Electric Wrench", {ru: "Электроключ", es: "Llave Inglesa Eléctrica", zh: "电动扳手", pt: "Laser de Mineração"});
+Translation.addTranslation("Electric Hoe", {ru: "Электромотыга", es: "Azada Eléctrica", zh: "电动锄", pt: "Enxada Elétrica"});
+Translation.addTranslation("Electric Treetap", {ru: "Электрокраник", es: "Grifo para Resina Eléctrico", zh: "电动树脂提取器", pt: "Chave de Grifo Elétrica"});
+Translation.addTranslation("Chainsaw", {ru: "Электропила", es: "Motosierra", zh: "链锯", pt: "Serra Elétrica"});
+Translation.addTranslation("Mining Drill", {ru: "Шахтёрский бур", es: "Taladro", zh: "采矿钻头", pt: "Broca de Mineração"});
+Translation.addTranslation("Diamond Drill", {ru: "Алмазный бур", es: "Taladro de Diamante", zh: "钻石钻头", pt: "Broca de Diamante"});
+Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es: "Taladro de Iridio", zh: "铱钻头", pt: "Broca de Irídio"});
+Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-Sable", zh: "纳米剑", pt: "Sabre Nano"});
+Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", zh: "采矿镭射枪", pt: "Laser de Mineração"});
 
 
 
@@ -427,7 +418,7 @@ var MachineRegistry = {
 	getMachineDrop: function(coords, blockID, level, standartDrop){
 		BlockRenderer.unmapAtCoords(coords.x, coords.y, coords.z);
 		var item = Player.getCarriedItem();
-		if(item.id==ItemID.wrench){
+		if(item.id==ItemID.wrenchBronze){
 			ToolAPI.breakCarriedTool(10);
 			World.setBlock(coords.x, coords.y, coords.z, 0);
 			if(Math.random() < 0.8){return [[blockID, 1, 0]];}
@@ -445,6 +436,7 @@ var MachineRegistry = {
 	},
 	
 	create6sidesRender: function(id, texture){
+		/*
 		if(texture.length == 2){
 			var textures = [
 				[texture[1], texture[0], texture[0], texture[0], texture[0], texture[0]],
@@ -455,8 +447,14 @@ var MachineRegistry = {
 				[texture[0], texture[0], texture[0], texture[0], texture[0], texture[1]]
 			]
 		}
+		*/
 		for(var i = 0; i < 5; i++){
-			MachineRenderer.registerRenderModel(id, i, textures[i])
+			var textures = [];
+			for(var j = 0; j < 5; j++){
+				if(j == i) textures.push(texture[1]);
+				else textures.push(texture[0]);
+			}
+			MachineRenderer.registerRenderModel(id, i, textures);
 		}
 	},
 	
@@ -500,7 +498,7 @@ var MachineRegistry = {
 
 var transferByTier = {
 	0: 32,
-	1:  256,
+	1: 256,
 	2: 2048,
 	3: 8192
 }
@@ -571,12 +569,8 @@ var UpgradeAPI = {
 			callback(item, machine, container, data, coords);
 		}
 	},
-
-	executeUpgrades: function(machine){
-		var container = machine.container;
-		var data = machine.data;
-		var coords = {x: machine.x, y: machine.y, z: machine.z};
-		
+	
+	getUpgrades: function(machine, container){
 		var upgrades = [];
 		for(var slotName in container.slots){
 			if(slotName.match(/Upgrade/)){
@@ -597,12 +591,20 @@ var UpgradeAPI = {
 				}
 			}
 		}
+		return upgrades;
+	},
+
+	executeUpgrades: function(machine){
+		var container = machine.container;
+		var data = machine.data;
+		var coords = {x: machine.x, y: machine.y, z: machine.z};
+		var upgrades = this.getUpgrades(machine, container);
 		for(var i in upgrades){
 			this.callUpgrade(upgrades[i], machine, container, data, coords);
 		}
 	},
 	
-	findNearestContainers: function(coords, direction){
+	findNearestContainers: function(coords, direction, dirExcluded){
 		var directions = {
 			up: {x: 0, y: 1, z: 0},
 			down: {x: 0, y: -1, z: 0},
@@ -612,7 +614,7 @@ var UpgradeAPI = {
 			north: {x: 0, y: 0, z: -1},
 		}
 		var containers = [];
-		if(direction){
+		if(direction && !dirExcluded){
 			dir = directions[direction]
 			var container = World.getContainer(coords.x + dir.x, coords.y + dir.y, coords.z + dir.z);
 			if(container){containers.push(container);}
@@ -620,6 +622,7 @@ var UpgradeAPI = {
 		else{
 			for(var i in directions){
 				var dir = directions[i];
+				if(dirExcluded && dir == direction) continue;
 				var container = World.getContainer(coords.x + dir.x, coords.y + dir.y, coords.z + dir.z);
 				if(container){containers.push(container);}
 			}
@@ -627,7 +630,7 @@ var UpgradeAPI = {
 		return containers;
 	},
 	
-	findNearestLiquidStorages: function(coords, direction){
+	findNearestLiquidStorages: function(coords, direction, dirExcluded){
 		var directions = {
 			up: {x: 0, y: 1, z: 0},
 			down: {x: 0, y: -1, z: 0},
@@ -637,7 +640,7 @@ var UpgradeAPI = {
 			north: {x: 0, y: 0, z: -1},
 		}
 		var storages = [];
-		if(direction){
+		if(direction && !dirExcluded){
 			dir = directions[direction]
 			var tileEntity = World.getTileEntity(coords.x + dir.x, coords.y + dir.y, coords.z + dir.z);
 			if(tileEntity && tileEntity.liquidStorage){
@@ -647,6 +650,7 @@ var UpgradeAPI = {
 		else{
 			for(var i in directions){
 				var dir = directions[i];
+				if(dirExcluded && dir == direction) continue;
 				var tileEntity = World.getTileEntity(coords.x + dir.x, coords.y + dir.y, coords.z + dir.z);
 				if(tileEntity && tileEntity.liquidStorage){
 					storages.push(tileEntity.liquidStorage);
@@ -1281,13 +1285,13 @@ Callback.addCallback("PreLoaded", function(){
 		"xxx",
 		"x x",
 		"xxx"
-	], ['x', ItemID.plateIron, 0]);
+	], ['x', ItemID.plateIron, -1]);
 	
 	Recipes.addShaped({id: BlockID.machineBlockAdvanced, count: 1, data: 0}, [
 		" x ",
 		"a#a",
 		" x "
-	], ['x', ItemID.carbonPlate, 0, 'a', ItemID.plateAlloy, 0, '#', BlockID.machineBlockBasic, 0]);
+	], ['x', ItemID.carbonPlate, -1, 'a', ItemID.plateAlloy, -1, '#', BlockID.machineBlockBasic, 0]);
 	
 	Recipes.addShapeless({id: ItemID.plateIron, count: 8, data: 0}, [{id: BlockID.machineBlockBasic, data: 0}]);
 });
@@ -1999,13 +2003,13 @@ MachineRegistry.registerPrototype(BlockID.storageBatBox, {
 	
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-		this.container.setText("textInfo2", energyStorage);
-		
 		var TRANSFER = transferByTier[0];
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, 0);
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, 0);
+		
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
+		this.container.setText("textInfo2", energyStorage);
 	},
 	
 	getEnergyStorage: function(){
@@ -2114,13 +2118,13 @@ MachineRegistry.registerPrototype(BlockID.storageCESU, {
 	
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-		this.container.setText("textInfo2", energyStorage + "");
-		
 		var TRANSFER = transferByTier[1];
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, 1);
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, 1);
+		
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
+		this.container.setText("textInfo2", energyStorage + "");
 	},
 	
 	getEnergyStorage: function(){
@@ -2234,13 +2238,13 @@ MachineRegistry.registerPrototype(BlockID.storageMFE, {
 	
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-		this.container.setText("textInfo2", energyStorage + "");
-		
 		var TRANSFER = transferByTier[2];
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, 2);
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, 2);
+		
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
+		this.container.setText("textInfo2", energyStorage + "");
 	},
 	
 	getEnergyStorage: function(){
@@ -2353,13 +2357,13 @@ MachineRegistry.registerPrototype(BlockID.storageMFSU, {
 	
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-		this.container.setText("textInfo2", energyStorage + "");
-		
 		var TRANSFER = transferByTier[3];
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, 3);
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, 3);
+		
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
+		this.container.setText("textInfo2", energyStorage + "");
 	},
 	
 	getEnergyStorage: function(){
@@ -2895,12 +2899,16 @@ Callback.addCallback("PreLoaded", function(){
 		1: {id: 4, count: 1, data: 0},
 		4: {id: 12, count: 1, data: 0},
 		13: {id: 318, count: 1, data: 0},
+		24: {id: 12, count: 2, data: 0},
 		35: {id: 287, count: 2, data: 0},
 		79: {id: 332, count: 4, data: 0},
 		89: {id: 348, count: 4, data: 0},
+		128: {id: 12, count: 3, data: 0},
 		152: {id: 331, count: 9, data: 0},
 		155: {id: 406, count: 4, data: 0},
 		156: {id: 406, count: 6, data: 0},
+		179: {id: 12, count: 2, data: 1},
+		180: {id: 12, count: 3, data: 1},
 		352: {id: 351, count: 5, data: 15}, 
 		369: {id: 377, count: 5, data: 0}
 	}, true);
@@ -3329,29 +3337,38 @@ Callback.addCallback("PreLoaded", function(){
 MachineRecipeRegistry.registerRecipesFor("canner", {
 	//"ItemID.uranium": {storage: [ItemID.fuelRod, 1], result: [ItemID.fuelRodUranium, 1, 0]},
 	//"ItemID.mox": {storage: [ItemID.fuelRod, 1], result: [ItemID.fuelRodMOX, 1, 0]},
-	354: {storage: [ItemID.tinCanEmpty, 12], result: [ItemID.tinCanFull, 1, 0]},
+	354: {storage: [ItemID.tinCanEmpty, 14], result: [ItemID.tinCanFull, 14, 0]},
+	413: {storage: [ItemID.tinCanEmpty, 10], result: [ItemID.tinCanFull, 10, 0]},
 	320: {storage: [ItemID.tinCanEmpty, 8], result: [ItemID.tinCanFull, 8, 0]},
 	364: {storage: [ItemID.tinCanEmpty, 8], result: [ItemID.tinCanFull, 8, 0]},
+	400: {storage: [ItemID.tinCanEmpty, 8], result: [ItemID.tinCanFull, 8, 0]},
+	282: {storage: [ItemID.tinCanEmpty, 6], result: [ItemID.tinCanFull, 6, 0]},
 	366: {storage: [ItemID.tinCanEmpty, 6], result: [ItemID.tinCanFull, 6, 0]},
 	396: {storage: [ItemID.tinCanEmpty, 6], result: [ItemID.tinCanFull, 6, 0]},
-	282: {storage: [ItemID.tinCanEmpty, 6], result: [ItemID.tinCanFull, 6, 0]},
+	424: {storage: [ItemID.tinCanEmpty, 6], result: [ItemID.tinCanFull, 6, 0]},
+	459: {storage: [ItemID.tinCanEmpty, 6], result: [ItemID.tinCanFull, 6, 0]},
 	463: {storage: [ItemID.tinCanEmpty, 6], result: [ItemID.tinCanFull, 6, 0]},
 	297: {storage: [ItemID.tinCanEmpty, 5], result: [ItemID.tinCanFull, 5, 0]},
 	350: {storage: [ItemID.tinCanEmpty, 5], result: [ItemID.tinCanFull, 5, 0]},
+	393: {storage: [ItemID.tinCanEmpty, 5], result: [ItemID.tinCanFull, 5, 0]},
+	412: {storage: [ItemID.tinCanEmpty, 5], result: [ItemID.tinCanFull, 5, 0]},
 	367: {storage: [ItemID.tinCanEmpty, 4], result: [ItemID.tinCanFull, 4, 1]},
 	260: {storage: [ItemID.tinCanEmpty, 4], result: [ItemID.tinCanFull, 4, 0]},
 	319: {storage: [ItemID.tinCanEmpty, 3], result: [ItemID.tinCanFull, 3, 0]},
 	363: {storage: [ItemID.tinCanEmpty, 3], result: [ItemID.tinCanFull, 3, 0]},
+	391: {storage: [ItemID.tinCanEmpty, 3], result: [ItemID.tinCanFull, 3, 0]},
+	411: {storage: [ItemID.tinCanEmpty, 3], result: [ItemID.tinCanFull, 3, 0]},
 	357: {storage: [ItemID.tinCanEmpty, 2], result: [ItemID.tinCanFull, 2, 0]},
 	360: {storage: [ItemID.tinCanEmpty, 2], result: [ItemID.tinCanFull, 2, 0]},
 	365: {storage: [ItemID.tinCanEmpty, 2], result: [ItemID.tinCanFull, 2, 1]},
 	375: {storage: [ItemID.tinCanEmpty, 2], result: [ItemID.tinCanFull, 2, 2]},
 	349: {storage: [ItemID.tinCanEmpty, 2], result: [ItemID.tinCanFull, 2, 0]},
 	394: {storage: [ItemID.tinCanEmpty, 2], result: [ItemID.tinCanFull, 2, 2]},
+	423: {storage: [ItemID.tinCanEmpty, 2], result: [ItemID.tinCanFull, 2, 0]},
 	460: {storage: [ItemID.tinCanEmpty, 2], result: [ItemID.tinCanFull, 2, 0]},
 	392: {storage: [ItemID.tinCanEmpty, 1], result: [ItemID.tinCanFull, 1, 0]},
+	457: {storage: [ItemID.tinCanEmpty, 1], result: [ItemID.tinCanFull, 1, 0]},
 	461: {storage: [ItemID.tinCanEmpty, 1], result: [ItemID.tinCanFull, 1, 0]},
-	462: {storage: [ItemID.tinCanEmpty, 1], result: [ItemID.tinCanFull, 1, 0]},
 }, true);
 
 
@@ -3819,15 +3836,15 @@ var guiOreWasher = new UI.StandartWindow({
 		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"liquidScale": {type: "scale", x: 592, y: 50 + 21*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
-		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 13*GUI_SCALE},
+		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 12*GUI_SCALE},
 		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 58*GUI_SCALE},
-		"slotSource": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 13*GUI_SCALE},
-		"slotResult1": {type: "slot", x: 400 + 81*GUI_SCALE, y: 50 + 58*GUI_SCALE},
+		"slotSource": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 12*GUI_SCALE},
+		"slotResult1": {type: "slot", x: 400 + 80*GUI_SCALE, y: 50 + 58*GUI_SCALE},
 		"slotResult2": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 58*GUI_SCALE},
-		"slotResult3": {type: "slot", x: 400 + 117*GUI_SCALE, y: 50 + 58*GUI_SCALE},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotResult3": {type: "slot", x: 400 + 118*GUI_SCALE, y: 50 + 58*GUI_SCALE},
+		"slotUpgrade1": {type: "slot", x: 870, y: 50 + GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 20*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 39*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
 	}
 });
@@ -4011,22 +4028,22 @@ var guiCentrifuge = new UI.StandartWindow({
 	drawing: [
 		{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
 		{type: "bitmap", x: 400, y: 50, bitmap: "thermal_centrifuge_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 400 + 8*GUI_SCALE, y: 50 + 39*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE}
+		{type: "bitmap", x: 400 + 8*GUI_SCALE, y: 50 + 38*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
 
 	elements: {
 		"progressScale": {type: "scale", x: 656, y: 50 + 22*GUI_SCALE, direction: 1, value: 0.5, bitmap: "thermal_centrifuge_scale", scale: GUI_SCALE},
 		"heatScale": {type: "scale", x: 400 + 64*GUI_SCALE, y: 50 + 63*GUI_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE},
-		"energyScale": {type: "scale", x: 400 + 8*GUI_SCALE, y: 50 + 39*GUI_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 400 + 8*GUI_SCALE, y: 50 + 38*GUI_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotEnergy": {type: "slot", x: 400 + 6*GUI_SCALE, y: 50 + 56*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
-		"slotSource": {type: "slot", x: 400 + 6*GUI_SCALE, y: 50 + 17*GUI_SCALE},
-		"slotResult1": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 14*GUI_SCALE},
+		"slotSource": {type: "slot", x: 400 + 6*GUI_SCALE, y: 50 + 16*GUI_SCALE},
+		"slotResult1": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 13*GUI_SCALE},
 		"slotResult2": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 32*GUI_SCALE},
-		"slotResult3": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 50*GUI_SCALE},
-		"slotUpgrade1": {type: "slot", x: 880, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 880, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 880, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotResult3": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 51*GUI_SCALE},
+		"slotUpgrade1": {type: "slot", x: 874, y: 50 + 2*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 874, y: 50 + 21*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 874, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 874, y: 50 + 59*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
 		"indicator": {type: "image", x: 400 + 88*GUI_SCALE, y: 50 + 59*GUI_SCALE, bitmap: "indicator_red", scale: GUI_SCALE}
 	}
 });
@@ -4279,7 +4296,7 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	},
 	
 	getEnergyStorage: function(){
-		return 8192;
+		return 32768;
 	},
 	
 	init: MachineRegistry.initModel,
@@ -4296,157 +4313,157 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 
 IDRegistry.genBlockID("pump");
 Block.createBlockWithRotation("pump", [
-	{name: "Pump", texture: [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]], inCreative: true}
+    {name: "Pump", texture: [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]], inCreative: true}
 ], "opaque");
 MachineRenderer.setStandartModel(BlockID.pump, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]], true);
 MachineRenderer.registerModelWithRotation(BlockID.pump, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 1], ["pump_side", 1], ["pump_side", 1]]);
 
 Block.registerDropFunction("pump", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
+    return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
 
 Callback.addCallback("PreLoaded", function(){
-	Recipes.addShaped({id: BlockID.pump, count: 1, data: 0}, [
-		"cxc",
-		"c#c",
-		"bab"
-	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'a', ItemID.treetap, 0, 'b', BlockID.miningPipe, 0, 'c', ItemID.cellEmpty, 0]);
+    Recipes.addShaped({id: BlockID.pump, count: 1, data: 0}, [
+        "cxc",
+        "c#c",
+        "bab"
+    ], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'a', ItemID.treetap, 0, 'b', BlockID.miningPipe, 0, 'c', ItemID.cellEmpty, 0]);
 });
 
 
 var guiPump = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Pump"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 502, y: 149, bitmap: "extractor_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 416, y: 127, bitmap: "energy_small_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 611, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
-		{type: "bitmap", x: 684, y: 152, bitmap: "pump_arrow", scale: GUI_SCALE},
-	],
-	
-	elements: {
-		"progressScale": {type: "scale", x: 502, y: 149, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
-		"energyScale": {type: "scale", x: 416, y: 127, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"liquidScale": {type: "scale", x: 400 + 70*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 39*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
-		"slotLiquid1": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 12*GUI_SCALE},
-		"slotLiquid2": {type: "slot", x: 400 + 128*GUI_SCALE, y: 50 + 29*GUI_SCALE},
-		"slotPipe": {type: "slot", x: 400 + 94*GUI_SCALE, y: 160 + 12*GUI_SCALE},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-	}
+    standart: {
+        header: {text: {text: "Pump"}},
+        inventory: {standart: true},
+        background: {standart: true}
+    },
+    
+    drawing: [
+        {type: "bitmap", x: 493, y: 149, bitmap: "extractor_bar_background", scale: GUI_SCALE},
+        {type: "bitmap", x: 407, y: 127, bitmap: "energy_small_background", scale: GUI_SCALE},
+        {type: "bitmap", x: 602, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
+        {type: "bitmap", x: 675, y: 152, bitmap: "pump_arrow", scale: GUI_SCALE},
+    ],
+    
+    elements: {
+        "progressScale": {type: "scale", x: 493, y: 149, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
+        "energyScale": {type: "scale", x: 407, y: 127, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+        "liquidScale": {type: "scale", x: 400 + 67*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+        "slotEnergy": {type: "slot", x: 400, y: 50 + 39*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
+        "slotLiquid1": {type: "slot", x: 400 + 91*GUI_SCALE, y: 50 + 12*GUI_SCALE},
+        "slotLiquid2": {type: "slot", x: 400 + 125*GUI_SCALE, y: 50 + 29*GUI_SCALE},
+        "slotPipe": {type: "slot", x: 400 + 91*GUI_SCALE, y: 160 + 12*GUI_SCALE},
+        "slotUpgrade1": {type: "slot", x: 870, y: 50 + 2*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+        "slotUpgrade2": {type: "slot", x: 870, y: 50 + 21*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+        "slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+        "slotUpgrade4": {type: "slot", x: 870, y: 50 + 59*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+    }
 });
 
 
 MachineRegistry.registerPrototype(BlockID.pump, {
-	defaultValues: {
-		power_tier: 0,
-		energy_storage: 800,
-		energy_consumption: 1,
-		work_time: 20,
-		progress: 0,
-		isActive: false
+    defaultValues: {
+        power_tier: 0,
+        energy_storage: 800,
+        energy_consumption: 1,
+        work_time: 20,
+        progress: 0,
+        isActive: false
     },
-	
-	addTransportedItem: function(self, item, direction){
-		var slot = this.container.getSlot("slotLiquid1");
-		var full = LiquidRegistry.getFullItem(item.id, item.data, "water");
-		if(full && (slot.id == item.id && slot.data == item.data || slot.id == 0)){
-			var maxStack = Item.getMaxStack(slot.id);
-			var add = Math.min(maxStack - item.count, slot.count);
-			item.count -= add;
-			slot.count += add;
-			slot.id = item.id;
-			slot.data = item.data;
-			//if(item.count == maxStack) return true;
-		}
-	},
-	
-	getGuiScreen: function(){
-		return guiPump;
-	},
-	
-	getTransportSlots: function(){
-		return {input: ["slotLiquid1"], output: ["slotLiquid2"]};
-	},
-	
-	setDefaultValues: function(){
-		this.data.energy_storage = this.defaultValues.energy_storage;
-		this.data.energy_consumption = this.defaultValues.energy_consumption;
-		this.data.work_time = this.defaultValues.work_time;
-	},
-	
-	getLiquidType: function(liquid, block){
-		if((!liquid || liquid=="water") && (block.id == 8 || block.id == 9) && block.data == 0){
-			return "water";
-		}
-		if((!liquid || liquid=="lava") && (block.id == 10 || block.id == 11) && block.data == 0){
-			return "lava";
-		}
-	},
-	
-	init: function(){
-		this.liquidStorage.setLimit("water", 8);
-		this.liquidStorage.setLimit("lava", 8);
-		if(this.data.isActive){
-			var block = World.getBlock(this.x, this.y, this.z);
-			MachineRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
-		}
-	},
-	
-	tick: function(){
-		this.setDefaultValues();
-		UpgradeAPI.executeUpgrades(this);
-		
-		var liquid = this.liquidStorage.getLiquidStored();
-		var block = World.getBlock(this.x, this.y-1, this.z);
-		liquid = this.getLiquidType(liquid, block);
-		if(liquid && this.liquidStorage.getAmount(liquid) <= 7){
-			if(this.data.energy >= this.data.energy_consumption){
-				this.data.energy -= this.data.energy_consumption;
-				this.data.progress += 1/this.data.work_time;
-				this.activate();
-			}
-			else{
-				this.deactivate();
-			}
-			if(this.data.progress >= 1){
-				World.setBlock(this.x, this.y-1, this.z, 0);
-				this.liquidStorage.addLiquid(liquid, 1);
-				this.data.progress = 0;
-			}
-		}
+    
+    addTransportedItem: function(self, item, direction){
+        var slot = this.container.getSlot("slotLiquid1");
+        var full = LiquidRegistry.getFullItem(item.id, item.data, "water");
+        if(full && (slot.id == item.id && slot.data == item.data || slot.id == 0)){
+            var maxStack = Item.getMaxStack(slot.id);
+            var add = Math.min(maxStack - item.count, slot.count);
+            item.count -= add;
+            slot.count += add;
+            slot.id = item.id;
+            slot.data = item.data;
+            //if(item.count == maxStack) return true;
+        }
+    },
+    
+    getGuiScreen: function(){
+        return guiPump;
+    },
+    
+    getTransportSlots: function(){
+        return {input: ["slotLiquid1"], output: ["slotLiquid2"]};
+    },
+    
+    setDefaultValues: function(){
+        this.data.energy_storage = this.defaultValues.energy_storage;
+        this.data.energy_consumption = this.defaultValues.energy_consumption;
+        this.data.work_time = this.defaultValues.work_time;
+    },
+    
+    getLiquidType: function(liquid, block){
+        if((!liquid || liquid=="water") && (block.id == 8 || block.id == 9) && block.data == 0){
+            return "water";
+        }
+        if((!liquid || liquid=="lava") && (block.id == 10 || block.id == 11) && block.data == 0){
+            return "lava";
+        }
+    },
+    
+    init: function(){
+        this.liquidStorage.setLimit("water", 8);
+        this.liquidStorage.setLimit("lava", 8);
+        if(this.data.isActive){
+            var block = World.getBlock(this.x, this.y, this.z);
+            MachineRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
+        }
+    },
+    
+    tick: function(){
+        this.setDefaultValues();
+        UpgradeAPI.executeUpgrades(this);
+        
+        var liquid = this.liquidStorage.getLiquidStored();
+        var block = World.getBlock(this.x, this.y-1, this.z);
+        liquid = this.getLiquidType(liquid, block);
+        if(liquid && this.liquidStorage.getAmount(liquid) <= 7){
+            if(this.data.energy >= this.data.energy_consumption){
+                this.data.energy -= this.data.energy_consumption;
+                this.data.progress += 1/this.data.work_time;
+                this.activate();
+            }
+            else{
+                this.deactivate();
+            }
+            if(this.data.progress >= 1){
+                World.setBlock(this.x, this.y-1, this.z, 0);
+                this.liquidStorage.addLiquid(liquid, 1);
+                this.data.progress = 0;
+            }
+        }
         else {
             this.data.progress = 0;
             this.deactivate();
         }
         
         liquid = this.liquidStorage.getLiquidStored();
-		var slot1 = this.container.getSlot("slotLiquid1");
-		var slot2 = this.container.getSlot("slotLiquid2");
-		var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, liquid);
-		if(full && this.liquidStorage.getAmount(liquid) >= 1 && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id, full.data) || slot2.id == 0)){
-			this.liquidStorage.getLiquid(liquid, 1);
-			slot1.count--;
-			slot2.id = full.id;
-			slot2.data = full.data;
-			slot2.count++;
-			this.container.validateAll();
-		}
+        var slot1 = this.container.getSlot("slotLiquid1");
+        var slot2 = this.container.getSlot("slotLiquid2");
+        var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, liquid);
+        if(full && this.liquidStorage.getAmount(liquid) >= 1 && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id, full.data) || slot2.id == 0)){
+            this.liquidStorage.getLiquid(liquid, 1);
+            slot1.count--;
+            slot2.id = full.id;
+            slot2.data = full.data;
+            slot2.count++;
+            this.container.validateAll();
+        }
         
         var energyStorage = this.getEnergyStorage();
         var tier = this.data.power_tier;
-		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
-		
+        this.data.energy = Math.min(this.data.energy, energyStorage);
+        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+        
         this.container.setScale("progressScale", this.data.progress);
-		this.liquidStorage.updateUiScale("liquidScale", liquid);
+        this.liquidStorage.updateUiScale("liquidScale", liquid);
         this.container.setScale("energyScale", this.data.energy / energyStorage);
     },
     
@@ -4454,9 +4471,9 @@ MachineRegistry.registerPrototype(BlockID.pump, {
         return this.data.energy_storage;
     },
     
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy: this.deactivate,
+    activate: MachineRegistry.activateMachine,
+    deactivate: MachineRegistry.deactivateMachine,
+    destroy: this.deactivate,
     energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
 
@@ -4607,6 +4624,8 @@ IDRegistry.genBlockID("miner");
 Block.createBlockWithRotation("miner", [
 	{name: "Miner", texture: [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "opaque");
+MachineRenderer.setStandartModel(BlockID.miner, [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]], true);
+MachineRenderer.registerModelWithRotation(BlockID.miner, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 1], ["miner_side", 0], ["miner_side", 1]]);
 
 Block.registerDropFunction("miner", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
@@ -4640,104 +4659,292 @@ var guiMiner = new UI.StandartWindow({
 
 	elements: {
 		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill"},
-		"slotPipe": {type: "slot", x: 541, y: 75},
-		"slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner"},
+		"slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill", 
+			isValid: function(id){
+				if(id == ItemID.drill || id == ItemID.diamondDrill) return true;
+				return false;
+			}
+		},
+		"slotPipe": {type: "slot", x: 541, y: 75,
+			isValid: function(id){
+				if(id < 256 || id >= 8192) return true;
+				return false;
+			}
+		},
+		"slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner", 
+			isValid: function(id){
+				if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
+				return false;
+			}
+		},
 		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
 	}
 });
 
-function getBlockDrop(coords, id, data, level){
+var dropData0 = [3, 25, 39, 40, 46, 50, 53, 54, 58, 65, 72, 96, 107, 134, 135, 136, 143, 146, 163, 164, 165, 170, 183, 184, 185, 186, 187];
+
+function getBlockDrop(coords, id, data, level, enchant){
 	var dropFunc = Block.dropFunctions[id];
 	if(dropFunc){
-		return dropFunc(coords, id, data, level, {});
+		return dropFunc(coords, id, data, level, enchant||{});
 	}
 	if(dirtBlocksDrop[id]){
 		return [[dirtBlocksDrop[id], 1, 0]];
 	}
-	return [[id, 1, data]];
+	if(id==5 || id == 19 || id==35 || id==85 || id==144 || id==171) return [[id, 1, data]];
+	if(id == 17 || id == 162) return [[id, 1, data%4]];
+	if(id == 26) return [[355, 1, 0]];
+	if(id == 47) return [[340, 3, 0]]; //silk
+	if(id == 55) return [[331, 1, 0]];
+	if(id == 63 || id == 68) return [[338, 1, 0]];
+	if(id == 64) return [[324, 1, 0]];
+	if(id == 75 || id == 76) return [[76, 1, 0]];
+	if(id == 79 || id == 174){
+		World.setBlock(coords.x, coords.y, coords.z, 8);
+		return [];
+	}
+	if(id == 93 || id == 94) return [[356, 1, 0]];
+	if(id == 149 || id == 150) return [[404, 1, 0]];
+	if(id == 151 || id == 178) return [[151, 1, 0]];
+	if(id == 158) return [[158, 1, data%8]];
+	if(id == 193) return [[427, 1, 0]];
+	if(id == 194) return [[428, 1, 0]];
+	if(id == 195) return [[429, 1, 0]];
+	if(id == 196) return [[430, 1, 0]];
+	if(id == 197) return [[431, 1, 0]];
+	if(dropData0.indexOf(id) != -1) return [[id, 1, 0]];
+	// no drop 6, 18, 20, 30, 31, 32, 59, 81, 83, 86, 91!, 92, 99, 100, 102, 103 - 106, 111, 115, 127, 131, 132, 140-142, 161, 175, 244
+	return [];
 }
 
 MachineRegistry.registerPrototype(BlockID.miner, {
 	defaultValues: {
-		power_tier: 0,
-		y: -1,
-		progress: 0
+	    power_tier: 1,
+        x: 0,
+        y: 0,
+        z: 0,
+		scanY: 0,
+        scanR: 0,
+		progress: 0,
+		isActive: false
 	},
 
 	getGuiScreen: function(){
 		return guiMiner;
 	},
+	
+	getMiningValues: function(slot){
+		if(slot.id == ItemID.drill) return {energy: 6, time: 100}
+		return {energy: 20, time: 50}
+	},
+	
+	findOre: function(level){
+		var r = this.data.scanR;
+		while (r){
+			if(this.data.x > this.x+r){
+				this.data.x = this.x-r;
+				this.data.z++;
+			}
+			if(this.data.z > this.z+r) break;
+			var blockID = World.getBlockID(this.data.x, this.data.scanY, this.data.z);
+			if(ore_blocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)){
+				return true;
+			}
+			this.data.x++;
+		}
+		return false;
+	},
+	
+	isValid: function(block){
+		if(block.id == 0 || block.id > 7 && block.id < 12 && block.data > 0) return true;
+		return false;
+	},
 
+	canBeDestroyed: function(blockID, level){
+		var material = ToolAPI.getBlockMaterial(blockID);
+		if(!material || material.name != "unbreaking" && level >= ToolAPI.getBlockDestroyLevel(blockID)){
+			return true;
+		}
+		return false;
+	},
+	
+	findPath: function(x, y, z, sprc, level){
+		var block = World.getBlock(x, y, z);
+		if(block.id==BlockID.miningPipe || this.isValid(block)){
+			var dx = this.data.x - x;
+			var dz = this.data.z - z;
+			if(Math.abs(dx) == Math.abs(dz)){
+				var prc = sprc;
+			}else if(Math.abs(dx) > Math.abs(dz)){
+				var prc = 0;
+			}else{
+				var prc = 1;
+			}
+			if(prc == 0){
+				if(dx > 0) x++;
+				else x--;
+			}else{
+				if(dz > 0) z++;
+				else z--;
+			}
+			return this.findPath(x, y, z, sprc, level);
+		}else if(this.canBeDestroyed(block.id, level)){
+			return {x: x, y: y, z: z};
+		}
+		this.data.x++;
+		return;
+	},
+	
+	mineBlock: function(x, y, z, block, level){
+		World.setBlock(x, y, z, 0);
+		var drop = getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, level);
+		var items = [];
+		for(var i in drop){
+			items.push({id: drop[i][0], count: drop[i][1], data: drop[i][2]});
+		}
+		this.drop(items);
+		this.data.progress = 0;
+	},
+	
+	setPipe: function(y, slot){
+		if(y < this.y)
+			World.setBlock(this.x, y, this.z, BlockID.miningPipe, 0);
+		World.setBlock(this.x, y-1, this.z, BlockID.miningPipe, 1);
+		slot.count--;
+		if(!slot.count) slot.id = 0;
+		this.data.progress = 0;
+	},
+	
 	drop: function(items){
-		var container = World.getContainer(this.x, this.y+1, this.z);
-		if(container){
-			addItemsToContainers(items, [container]);
+		var containers = UpgradeAPI.findNearestContainers(this, "down", true);
+		if(containers){
+			addItemsToContainers(items, containers);
 		}
 		for(var i in items){
 			var item = items[i]
 			if(item.count > 0){
-				World.drop(this.x+0.5, this.y+1, this.z+0.5, item.id, item.count, item.data);
+				nativeDropItem(this.x+0.5, this.y+1, this.z+0.5, 1, item.id, item.count, item.data);
 			}
 		}
 	},
-
+	
 	tick: function(){
-		if(World.getThreadTime()%20==0){
-			this.data.y = this.y - 1;
-			while(World.getBlockID(this.x, this.data.y, this.z) == BlockID.miningPipe){
-				this.data.y--;
+		if(this.data.progress == 0){
+			var y = this.y;
+			while(World.getBlockID(this.x, y-1, this.z) == BlockID.miningPipe){
+				y--;
 			}
-			var drillSlot = this.container.getSlot("slotDrill");
-			if(drillSlot.id == ItemID.drill || drillSlot.id == ItemID.diamondDrill){
-				var block = World.getBlock(this.x, this.data.y, this.z);
-				if(block.id==0 || (drillSlot.id == ItemID.drill && World.getThreadTime()%80==0 || drillSlot.id == ItemID.diamondDrill && World.getThreadTime()%40==0) && this.data.energy >= 250 && block.id != 7 && block.id != 8 && block.id != 10 && block.id != 120){
-					if(block.id > 0){
-						World.setBlock(this.x, this.data.y, this.z, 0);
-						var coords = {x: this.x, y: this.data.y, z: this.z};
-						var drop = getBlockDrop(coords, block.id, block.data, ToolAPI.getToolLevel(drillSlot.id));
-						var items = [];
-						for(var i in drop){
-							items.push({id: drop[i][0], count: drop[i][1], data: drop[i][2]});
-						}
-						this.drop(items);
-						this.data.energy -= 250;
+			this.data.y = y;
+		}
+		
+		var lastProgress = this.data.progress;
+		var drillSlot = this.container.getSlot("slotDrill");
+		var pipeSlot = this.container.getSlot("slotPipe");
+		if(drillSlot.id == ItemID.drill || drillSlot.id == ItemID.diamondDrill){
+			if(this.data.y < this.y && this.data.scanY != this.data.y){
+				var r = 0;
+				var scanner = this.container.getSlot("slotScanner");
+				if(scanner.id == ItemID.scanner && scanner.data + 50 <= Item.getMaxDamage(scanner.id)){
+					scanner.data += 50;
+					r = scan_radius;
+				}else if(scanner.id == ItemID.scannerAdvanced && scanner.data + 250 <= Item.getMaxDamage(scanner.id)){
+					scanner.data += 250;
+					r = adv_scan_radius;
+				}
+				this.data.x = this.x - r;
+				this.data.z = this.z - r;
+				this.data.scanY = this.data.y;
+				this.data.scanR = r;
+			}
+			var level = ToolAPI.getToolLevel(drillSlot.id);
+			if(this.data.y < this.y && this.findOre(level)){
+				var dx = this.data.x - this.x;
+				var dz = this.data.z - this.z;
+				var prc = 0;
+				if(Math.abs(dx) > Math.abs(dz)){
+					prc = 1;
+				}
+				var coords  = this.findPath(this.x, this.data.y, this.z, prc, level);
+				if(coords){
+					var block = World.getBlock(coords.x, coords.y, coords.z);
+					var params = this.getMiningValues(drillSlot);
+					if(this.data.energy >= params.energy){
+						this.data.energy -= params.energy;
+						this.data.progress++;
+						this.activate();
+					}else{
+						this.deactivate();
 					}
-					var pipeSlot = this.container.getSlot("slotPipe");
-					if(pipeSlot.id == BlockID.miningPipe && this.data.energy >= 60){
-						if(this.data.y+1 < this.y){
-						World.setBlock(this.x, this.data.y+1, this.z, BlockID.miningPipe, 0);}
-						World.setBlock(this.x, this.data.y, this.z, BlockID.miningPipe, 1);
-						pipeSlot.count--;
-						if(!pipeSlot.count) pipeSlot.id = 0;
-						this.data.energy -= 60;
-						this.data.y--;
+					if(this.data.progress >= params.time){
+						this.mineBlock(coords.x, coords.y, coords.z, block, level);
 					}
 				}
 			}
-			else if(this.data.y < this.y - 1){
-				if(World.getBlockID(this.x, this.data.y+1, this.z) == BlockID.miningPipe){
-					this.drop([{id: BlockID.miningPipe, count: 1, data: 0}]);
-					var pipeSlot = this.container.getSlot("slotPipe");
-					if(pipeSlot.id < 256 && pipeSlot.id > 0 || pipeSlot.id >= 8192 && pipeSlot.id != BlockID.miningPipe){
-						World.setBlock(this.x, this.data.y+1, this.z, pipeSlot.id, pipeSlot.data);
-						pipeSlot.count--;
-						if(!pipeSlot.count) pipeSlot.id = 0;
+			else if(this.data.y > 0 && pipeSlot.id == BlockID.miningPipe){
+				var block = World.getBlock(this.x, this.data.y-1, this.z);
+				if(this.isValid(block)){
+					if(this.data.energy >= 3){
+						this.data.progress++;
+						this.data.energy -= 3;
 					}
-					else{World.setBlock(this.x, this.data.y+1, this.z, 0);}
+					if(this.data.progress >= 20){
+						this.setPipe(this.data.y, pipeSlot);
+					}
+				}
+				else if(this.canBeDestroyed(block.id, level)){
+					var block = World.getBlock(this.x, this.data.y-1, this.z);
+					var params = this.getMiningValues(drillSlot);
+					if(this.data.energy >= params.energy){
+						this.data.energy -= params.energy;
+						this.data.progress++;
+					}
+					if(this.data.progress >= params.time){
+						this.mineBlock(this.x, this.data.y-1, this.z, block, level);
+						this.setPipe(this.data.y, pipeSlot);
+					}
 				}
 			}
 		}
+		else {
+			if(World.getBlockID(this.x, this.data.y, this.z) == BlockID.miningPipe){
+				if(this.data.energy >= 3){
+					this.data.progress++;
+					this.data.energy -= 3;
+				}
+				if(this.data.progress >= 20){
+					this.drop([{id: BlockID.miningPipe, count: 1, data: 0}]);
+					var pipeSlot = this.container.getSlot("slotPipe");
+					if(pipeSlot.id < 256 && pipeSlot.id > 0 || pipeSlot.id >= 8192 && pipeSlot.id != BlockID.miningPipe){
+						World.setBlock(this.x, this.data.y, this.z, pipeSlot.id, pipeSlot.data);
+						pipeSlot.count--;
+						if(!pipeSlot.count) pipeSlot.id = 0;
+					}
+					else{World.setBlock(this.x, this.data.y, this.z, 0);}
+					this.data.progress = 0;
+				}
+			}
+		}
+		if(lastProgress != this.data.progress){
+			this.activate();
+		}else{
+			this.deactivate();
+		}
 		
 		var energyStorage = this.getEnergyStorage();
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 32, 0);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotDrill"), "Eu", this.data.energy, 128, 1);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 128, 1);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 128, 1);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 
 	getEnergyStorage: function(){
 		return 10000;
 	},
-
+	
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
 
@@ -4746,23 +4953,286 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 
 // file: machine/resource/advanced_miner.js
 
-/*IDRegistry.genBlockID("advancedMiner");
+IDRegistry.genBlockID("advancedMiner");
 Block.createBlock("advancedMiner", [
 	{name: "Advanced Miner", texture: [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "opaque");
+MachineRenderer.setStandartModel(BlockID.advancedMiner, [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], true);
+MachineRenderer.registerModelWithRotation(BlockID.advancedMiner, [["advanced_miner_bottom", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
 
 Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
+	return [];
+});
+
+Item.registerNameOverrideFunction(BlockID.storageBatBox, function(item, name){
+	item = Player.getCarriedItem();
+	if(item.extra){
+		var energyStored = item.extra.getInt("Eu");
+		return name + "\n§7" + energyStored + "/" + 4000000 + " Eu";
+	}
+	return name;
 });
 
 Callback.addCallback("PreLoaded", function(){
-	Recipes.addShaped({id: BlockID.advancedMiner, count: 1, data: 0}, [
-		"pmp",
-		"e#a",
-		"pmp"
-	], ['#', BlockID.machineBlockAdvanced, 0, 'a', BlockID.teleporter, 0, 'e', BlockID.storageMFE, -1, 'm', BlockID.miner, -1, 'p', ItemID.plateAlloy, 0]);
+    Recipes.addShaped({id: BlockID.advancedMiner, count: 1, data: 0}, [
+        "pmp",
+        "e#a",
+        "pmp"
+    ], ['#', BlockID.machineBlockAdvanced, 0, 'a', BlockID.teleporter, 0, 'e', BlockID.storageMFE, -1, 'm', BlockID.miner, -1, 'p', ItemID.plateAlloy, 0]);
 });
-*/
+
+function isValidMinerUpgrade(id){
+	if(ItemID.upgradeOverclocker) return true;
+	return false;
+}
+
+var guiAdvancedMiner = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: "Advanced Miner"}},
+		inventory: {standart: true},
+		background: {standart: true},
+	},
+
+	params: {       
+		slot: "default_slot",
+		invSlot: "default_slot"              
+	},
+
+	drawing: [
+		{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
+		{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},
+		{type: "bitmap", x: 400, y: 50 + 98*GUI_SCALE, bitmap: "miner_info", scale: GUI_SCALE},
+	],
+
+	elements: {
+		"energyScale": {type: "scale", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotScanner": {type: "slot", x: 400, y: 50 + 19*GUI_SCALE, bitmap: "slot_scanner", 
+			isValid: function(id){
+				if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
+				return false;
+			}
+		},
+		"slotEnergy": {type: "slot", x: 400, y: 290, isValid: MachineRegistry.isValidEUStorage},
+		"slot1": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot2": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot3": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot4": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot5": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot6": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot7": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot8": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot9": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot10": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot11": {type: "slot", x: 400 + 28*GUI_SCALE, y: 290},
+		"slot12": {type: "slot", x: 400 + 47*GUI_SCALE, y: 290},
+		"slot13": {type: "slot", x: 400 + 66*GUI_SCALE, y: 290},
+		"slot14": {type: "slot", x: 400 + 85*GUI_SCALE, y: 290},
+		"slot15": {type: "slot", x: 400 + 104*GUI_SCALE, y: 290},
+		"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE, isValid: isValidMinerUpgrade},
+		"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE, isValid: isValidMinerUpgrade},
+		"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tileEntity){
+				tileEntity.data.whitelist = !tileEntity.data.whitelist;
+			}
+		}},
+		"button_restart": {type: "button", x: 400 + 125*GUI_SCALE, y: 50 + 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tileEntity){
+				tileEntity.data.x = tileEntity.data.y = tileEntity.data.z =  0;
+			}
+		}},
+		"button_silk": {type: "button", x: 400 + 126*GUI_SCALE, y: 50 + 41*GUI_SCALE, bitmap: "miner_button_silk_0", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tileEntity){
+				tileEntity.data.silk_touch = (tileEntity.data.silk_touch+1)%2;
+			}
+		}},
+		"textInfoMode": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 31*GUI_SCALE, y: 50+25*GUI_SCALE, width: 256, height: 42, text: "Mode: Blacklist"},
+		"textInfoXYZ": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 3*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
+		//"textInfoY": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 6*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: "Y: -1"},
+		//"textInfoZ": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 6*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: "Z: 0"},
+	}
+});
+
+MachineRegistry.registerPrototype(BlockID.advancedMiner, {
+	defaultValues: {
+		power_tier: 2,
+		x: 0,
+		y: 0,
+		z: 0,
+		whitelist: false,
+		silk_touch: 0,
+		isEnabled: true,
+		isActive: false
+	},
+	
+	getTransportSlots: function(){
+		return {input: []};
+	},
+	
+	getGuiScreen: function(){
+		return guiAdvancedMiner;
+	},
+	
+	isValidBlock: function(id, data){
+		var material = ToolAPI.getBlockMaterial(id);
+		if(id > 0 && (!material || material.name != "unbreaking")){
+			return true;
+		}
+		return false;
+	},
+	
+	hasInvalidDrop: function(drop){
+		if(drop.length == 0) return true;
+		for(var i in drop){
+			for(var j = 0; j < 16; j++){
+				var slot = this.container.getSlot("slot"+j);
+				if(slot.id == drop[i][0] && slot.data == drop[i][1]){return !this.data.whitelist;}
+			}
+		}
+		return this.data.whitelist;
+	},
+	
+	harvestBlock: function(x, y, z, block){
+		var drop = getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, 100, {silk: this.data.silk_touch});
+		if(this.hasInvalidDrop(drop)) return false;
+		World.setBlock(x, y, z, 0);
+		var items = [];
+		for(var i in drop){
+			items.push({id: drop[i][0], count: drop[i][1], data: drop[i][2]});
+		}
+		this.drop(items);
+		this.data.energy -= 512;
+		return true;
+	},
+
+	drop: function(items){
+		var containers = UpgradeAPI.findNearestContainers(this, "down", true);
+		if(containers){
+			addItemsToContainers(items, containers);
+		}
+		for(var i in items){
+			var item = items[i]
+			if(item.count > 0){
+				nativeDropItem(this.x+0.5, this.y+1, this.z+0.5, 1, item.id, item.count, item.data);
+			}
+		}
+	},
+
+	tick: function(){
+		var content = this.container.getGuiContent();
+		if(content){
+			content.elements.button_silk.bitmap = "miner_button_silk_" + this.data.silk_touch;
+		}
+		
+		if(this.data.whitelist)
+			this.container.setText("textInfoMode", "Mode: Whitelist");
+		else
+			this.container.setText("textInfoMode", "Mode: Blacklist");
+		
+		var max_scan_count = 5;
+		var upgrades = UpgradeAPI.getUpgrades(this, this.container);
+		for(var i in upgrades){
+			var item = upgrades[i];
+			if(item.id == ItemID.upgradeOverclocker){
+				max_scan_count *= item.count+1;
+			}
+		}
+		
+		var scanR = 0;
+		if(this.data.isEnabled && this.y + this.data.y >= 0 && this.data.energy >= 512){
+			var scanner = this.container.getSlot("slotScanner");
+			if(scanner.id == ItemID.scanner) scanR = 16;
+			if(scanner.id == ItemID.scannerAdvanced) scanR = 32;
+		}
+		if(scanR > 0 && scanner.data + 64 <= Item.getMaxDamage(scanner.id)){
+			if(World.getThreadTime()%20==0){
+				if(this.data.y == 0){
+					this.data.x = -scanR;
+					this.data.y = -1;
+					this.data.z = -scanR;
+				}
+				for(var i = 0; i < max_scan_count; i++){
+					if(this.data.x > scanR){
+						this.data.x = -scanR;
+						this.data.z++;
+					}
+					if(this.data.z > scanR){
+						this.data.z = -scanR;
+						this.data.y--;
+					}
+					scanner.data += 64;
+					var x = this.x + this.data.x, y = this.y + this.data.y, z = this.z + this.data.z;
+					this.data.x++;
+					var block = World.getBlock(x, y, z);
+					if(this.isValidBlock(block.id, block.data)){
+						if(this.harvestBlock(x, y, z, block))
+						break;
+					}
+					if(scanner.data + 64 > Item.getMaxDamage(scanner.id)) break;
+				}
+			}
+			this.activate();
+		}else{
+			this.deactivate();
+		}
+		
+		if(this.data.y < 0)
+			this.container.setText("textInfoXYZ", "X: "+ this.data.x + ", Y: "+ Math.min(this.data.y, -1) + ", Z: "+ this.data.z);
+		else
+			this.container.setText("textInfoXYZ", "");
+		
+		var energyStorage = this.getEnergyStorage();
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 512, 2);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 512, 2);
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+	},
+
+	destroyBlock: function(coords, player){
+		var itemID = Player.getCarriedItem().id;
+		var blockID = BlockID.advancedMiner;
+		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID)
+		var drop = MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
+		if(drop.length > 0){
+			if(drop[0][0] == blockID && this.data.energy > 0){
+				var extra = new ItemExtraData();
+				extra.putInt("Eu", this.data.energy);
+				nativeDropItem(coords.x, coords.y, coords.z, 0, blockID, 1, 0, extra);
+			}
+			else{
+				World.drop(coords.x, coords.y, coords.z, drop[0][0], drop[0][1], drop[0][2]);
+			}
+		}
+	},
+	
+	redstone: function(signal){
+		this.data.isEnabled = (signal.power == 0);
+	},
+	
+	getEnergyStorage: function(){
+		return 4000000;
+	},
+
+	init: MachineRegistry.initModel,
+	activate: MachineRegistry.activateMachine,
+	deactivate: MachineRegistry.deactivateMachine,
+	destroy: this.deactivate,
+	energyTick: MachineRegistry.basicEnergyReceiveFunc
+});
+
+Block.registerPlaceFunction("advancedMiner", function(coords, item, block){
+	Game.prevent();
+	var x = coords.relative.x
+	var y = coords.relative.y
+	var z = coords.relative.z
+	block = World.getBlockID(x, y, z)
+	if(GenerationUtils.isTransparentBlock(block)){
+		World.setBlock(x, y, z, item.id, 0);
+		var tile = World.addTileEntity(x, y, z);
+		if(item.extra){
+			tile.data.energy = item.extra.getInt("Eu") + 16;
+		}
+	}
+});
 
 
 
@@ -6008,16 +6478,22 @@ Item.registerNameOverrideFunction(ItemID.tinCanFull, function(item, name){
 Item.registerNoTargetUseFunction("tinCanFull", function(){
 	var item = Player.getCarriedItem();
 	var hunger = Player.getHunger();
+	var saturation = Player.getSaturation();
 	var count = Math.min(20 - hunger, item.count);
 	Player.setHunger(hunger + count);
+	Player.setSaturation(Math.min(20, saturation + count*0.6));
 	if(item.data == 1 && Math.random() < 0.2*count){
 		Entity.addEffect(player, MobEffect.hunger, 1, 600);
 	}
 	if(item.data == 2){
 		Entity.addEffect(player, MobEffect.poison, 1, 80);
 	}
-	Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
-	Player.setCarriedItem(item.id, item.count - count, 0);
+	if(item.count == count){
+		Player.setCarriedItem(ItemID.tinCanEmpty, count, 0);
+	}else{
+		Player.setCarriedItem(item.id, item.count - count, item.data);
+		Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+	}
 });
 
 
@@ -6809,7 +7285,7 @@ var buttonContent = {
 		clicker: {
 			onClick: function(){
 				var armor = Player.getArmorSlot(3);
-				if(Item.getMaxDamage(armor.id) - armor.data >= 1000 && Math.abs(Player.getVelocity().y - fallVelocity) < 0.001){
+				if(Item.getMaxDamage(armor.id) - armor.data >= 1000 && Math.abs(Player.getVelocity().y - fallVelocity) < 0.0001){
 					Player.addVelocity(0, 1.4, 0);
 					Player.setArmorSlot(3, armor.id, 1, armor.data+1000);
 				}
@@ -6935,7 +7411,7 @@ Armor.registerFuncs("nightvisionGoggles", {
 		if(nightvision && slot.data < maxDamage){
 			var coords = Player.getPosition();
 			var time = World.getWorldTime()%24000;
-			if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time >= 0 && time <= 12000){
+			if(World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time >= 0 && time <= 12000){
 				Entity.addEffect(player, MobEffect.blindness, 1, 25);
 			}
 			Entity.addEffect(player, MobEffect.nightVision, 1, 225);
@@ -7007,7 +7483,7 @@ MachineRecipeRegistry.registerRecipesFor("nano-armor-charge", {
 
 UIbuttons.setButton(ItemID.nanoHelmet, "button_nightvision");
 
-var NANO_ARMOR_FUNCS_CHARGED = {
+var NANO_ARMOR_FUNCS = {
 	maxDamage: Item.getMaxDamage(ItemID.nanoHelmet),
 	
 	hurt: function(params, item, index, maxDamage){
@@ -7078,14 +7554,14 @@ var NANO_ARMOR_FUNCS_CHARGED = {
 	}
 };
 
-Armor.registerFuncs("nanoHelmet", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoHelmetUncharged", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoChestplate", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoChestplateUncharged", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoLeggings", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoLeggingsUncharged", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoBoots", NANO_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("nanoBootsUncharged", NANO_ARMOR_FUNCS_CHARGED);
+Armor.registerFuncs("nanoHelmet", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoHelmetUncharged", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoChestplate", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoChestplateUncharged", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoLeggings", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoLeggingsUncharged", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoBoots", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoBootsUncharged", NANO_ARMOR_FUNCS);
 
 
 Recipes.addShaped({id: ItemID.nanoHelmet, count: 1, data: Item.getMaxDamage(ItemID.nanoHelmet)}, [
@@ -7174,7 +7650,7 @@ UIbuttons.setButton(ItemID.quantumBoots, "button_jump");
 
 var runTime = 0;
 
-var QUANTUM_ARMOR_FUNCS_CHARGED = {
+var QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params, item, index, maxDamage){
 		var type = params.type;
 		if(type==2 || type==3 || type==11){
@@ -7236,16 +7712,15 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 				
 				var hunger = Player.getHunger();
 				if(hunger < 20){
-					for(var i = 0; i < 36; i++){
-						var slot = Player.getInventorySlot(i);
-						if(slot.id == ItemID.tinCanFull){
-							var count = Math.min(20 - hunger, slot.count);
-							Player.setHunger(hunger + count);
-							slot.count -= count;
-							Player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data);
-							Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
-							break;
-						}
+					var index = World.getThreadTime%36+9;
+					var slot = Player.getInventorySlot(index);
+					if(slot.id == ItemID.tinCanFull){
+						var count = Math.min(20 - hunger, slot.count);
+						Player.setHunger(hunger + count);
+						slot.count -= count;
+						Player.setInventorySlot(index, slot.count ? slot.id : 0, slot.count, slot.data);
+						Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+						break;
 					}
 				}
 				
@@ -7281,13 +7756,13 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 						}
 					}
 				}
-				//Entity.addEffect(player, MobEffect.fireResistance, 1, 2);
+				Entity.setFire(player, 0, true);
 			break;
 			case 2:
 				var vel = Player.getVelocity();
 				var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z)
 				if(horizontalVel > 0.15){
-					if(Math.abs(vel.y - fallVelocity) < 0.001){runTime++;}
+					if(Math.abs(vel.y - fallVelocity) < 0.0001){runTime++;}
 				}
 				else{runTime = 0;}
 				if(runTime > 2 && !Player.getFlying()){
@@ -7308,21 +7783,22 @@ var QUANTUM_ARMOR_FUNCS_CHARGED = {
 	}
 };
 
-Armor.registerFuncs("quantumHelmet", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumHelmetUncharged", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumChestplate", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumChestplateUncharged", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumLeggings", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumLeggingsUncharged", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumBoots", QUANTUM_ARMOR_FUNCS_CHARGED);
-Armor.registerFuncs("quantumBootsUncharged", QUANTUM_ARMOR_FUNCS_CHARGED);
+Armor.registerFuncs("quantumHelmet", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumHelmetUncharged", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumChestplate", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumChestplateUncharged", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumLeggings", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumLeggingsUncharged", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumBoots", QUANTUM_ARMOR_FUNCS);
+Armor.registerFuncs("quantumBootsUncharged", QUANTUM_ARMOR_FUNCS);
 
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.quantumHelmet, count: 1, data: Item.getMaxDamage(ItemID.quantumHelmet)}, [
 		"a#a",
-		"bxb"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoHelmet, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', BlockID.reinforcedGlass, 0], ChargeItemRegistry.transportEnergy);
+		"bxb",
+		"cqc"
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoHelmet, -1, 'q', ItemID.hazmatHelmet, 0, 'a', ItemID.plateReinforcedIridium, 0, 'b', BlockID.reinforcedGlass, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
 	
 	Recipes.addShaped({id: ItemID.quantumChestplate, count: 1, data: Item.getMaxDamage(ItemID.quantumChestplate)}, [
 		"bxb",
@@ -7510,7 +7986,7 @@ Item.registerNameOverrideFunction(ItemID.freqTransmitter, function(item, name){
 });
 
 Item.registerUseFunction("freqTransmitter", function(coords, item, block){
-	var receiver;
+	var receiveCoords;
 	var extra = item.extra;
 	if(!extra){
 		extra = new ItemExtraData();
@@ -7519,10 +7995,10 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 		var x = extra.getInt("x");
 		var y = extra.getInt("y");
 		var z = extra.getInt("z");
-		receiver = {x: x, z: z, y: y};
+		receiveCoords = {x: x, z: z, y: y};
 	}
 	if(block.id == BlockID.teleporter){
-		if(!receiver){
+		if(!receiveCoords){
 			extra.putInt("x", coords.x);
 			extra.putInt("y", coords.y);
 			extra.putInt("z", coords.z);
@@ -7534,13 +8010,13 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 				Game.message("Can`t link Teleporter to itself");
 			}
 			else{
-				var data = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z).data;
-				var distance = Entity.getDistanceBetweenCoords(coords, receiver);
+				var data = World.getTileEntity(coords.x, coords.y, coords.z).data;
+				var distance = Entity.getDistanceBetweenCoords(coords, receiveCoords);
 				var basicTeleportationCost = Math.floor(5 * Math.pow((distance+10), 0.7));
-				data.frequency = receiver;
-				data.frequency.energy = basicTeleportationCost;
-				receiver = EnergyTileRegistry.accessMachineAtCoords(x, y, z);
+				receiver = World.getTileEntity(x, y, z);
 				if(receiver){
+					data.frequency = receiveCoords;
+					data.frequency.energy = basicTeleportationCost;
 					data = receiver.data;
 					data.frequency = coords;
 					data.frequency.energy = basicTeleportationCost;
@@ -7549,7 +8025,7 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 			}
 		}
 	}
-	else if(receiver){
+	else if(receiveCoords){
 		Player.setCarriedItem(item.id, 1, item.data);
 		Game.message("Frequency Transmitter unlinked");
 	}
@@ -7565,29 +8041,85 @@ IDRegistry.genItemID("scannerAdvanced");
 Item.createItem("scanner", "OD Scanner", {name: "scanner", meta: 0}, {stack: 1});
 Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner", meta: 1}, {stack: 1});
 ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 0);
-ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 10000, 0);
+ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 1);
 
 Item.registerNameOverrideFunction(ItemID.scanner, ENERGY_ITEM_NAME);
 Item.registerNameOverrideFunction(ItemID.scannerAdvanced, ENERGY_ITEM_NAME);
 
-Recipes.addShaped({id: ItemID.scanner, count: 1, data: 250}, [
-	" a ",
+Recipes.addShaped({id: ItemID.scanner, count: 1, data: Item.getMaxDamage(ItemID.scanner)}, [
+	"gdg",
 	"cbc",
 	"xxx"
-], ['x', ItemID.cableCopper1, 0, 'a', 348, 0, "b", ItemID.storageBattery, -1, "c", ItemID.circuitBasic, 0], ChargeItemRegistry.transportEnergy);
+], ['x', ItemID.cableCopper1, 0, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, 0, 'd', 348, 0, 'g', ItemID.casingGold, 0], ChargeItemRegistry.transportEnergy);
 
-Recipes.addShaped({id: ItemID.scannerAdvanced, count: 1, data: 40}, [
-	" a ",
-	"asa",
-	"xxx"
-], ['x', ItemID.cableGold2, 0, 'a', 348, 0, "s", ItemID.scanner, -1], ChargeItemRegistry.transportEnergy);
-/*
-Item.registerUseFunction("scanner", function(coords, item, block){
-	if(item.data < Item.getMaxDamage(item.id)){
-		Player.setCarriedItem(item.id, 1, item.data-1);
+Recipes.addShaped({id: ItemID.scannerAdvanced, count: 1, data: Item.getMaxDamage(ItemID.scannerAdvanced)}, [
+	"gbg",
+	"dcd",
+	"xsx"
+], ['x', ItemID.cableGold2, 0, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'd', 348, 0, 'g', ItemID.casingGold, 0], ChargeItemRegistry.transportEnergy);
+
+
+var scan_radius = 3;
+var adv_scan_radius = 6;
+var ore_blocks = [14, 15, 16, 21, 73, 74, 56, 129, 153];
+
+ModAPI.addAPICallback("GTCore", function(api){
+	ore_blocks = [];
+});
+
+Callback.addCallback("PreLoaded", function(coords, item, block){
+	for(var id in BlockID){
+		if(id[0]=='o' && id[1]=='r' && id[2]=='e' && !TileEntity.isTileEntityBlock(Block[id])){
+			var name = "";
+			for(var i = 3; i < id.length; i++){
+				name += id[i];
+			}
+			ore_blocks.push(BlockID[id]);
+		}
 	}
 });
-*/
+
+Item.registerUseFunction("scanner", function(coords, item, block){
+	if(item.data + 50 < Item.getMaxDamage(item.id)){
+		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
+		Player.setCarriedItem(item.id, 1, item.data + 50);
+		var ores = {};
+		for(var x = coords.x - scan_radius; x <= coords.x + scan_radius; x++){
+			for(var y = coords.y - scan_radius; y <= coords.y + scan_radius; y++){
+				for(var z = coords.z - scan_radius; z <= coords.z + scan_radius; z++){
+					var blockID = World.getBlockID(x, y, z);
+					if(ore_blocks.indexOf(blockID) != -1){
+						ores[blockID] = ores[blockID]+1 || 1;
+					}
+				}
+			}
+		}
+		for(var id in ores){
+			Game.message(Item.getName(id) + " - " + ores[id]);
+		}
+	}
+});
+
+Item.registerUseFunction("scannerAdvanced", function(coords, item, block){
+	if(item.data + 200 < Item.getMaxDamage(item.id)){
+		Player.setCarriedItem(item.id, 1, item.data + 200);
+		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
+		var ores = {};
+		for(var x = coords.x - adv_scan_radius; x <= coords.x + adv_scan_radius; x++){
+			for(var y = coords.y - adv_scan_radius; y <= coords.y + adv_scan_radius; y++){
+				for(var z = coords.z - adv_scan_radius; z <= coords.z + adv_scan_radius; z++){
+					var blockID = World.getBlockID(x, y, z);
+					if(ore_blocks.indexOf(blockID) != -1){
+						ores[blockID] = ores[blockID]+1 || 1;
+					}
+				}
+			}
+		}
+		for(var id in ores){
+			Game.message(Item.getName(id) + " - " + ores[id]);
+		}
+	}
+});
 
 
 
@@ -7862,6 +8394,25 @@ Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
 	return name;
 });
 
+
+Recipes.addShaped({id: ItemID.drill, count: 1, data: Item.getMaxDamage(ItemID.drill)}, [
+    " p ",
+    "ppp",
+    "pxp"
+], ['x', ItemID.powerUnit, 0, 'p', ItemID.plateIron, 0]);
+
+Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: Item.getMaxDamage(ItemID.diamondDrill)}, [
+    " a ",
+    "ada"
+], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transportEnergy);
+
+Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(ItemID.iridiumDrill)}, [
+    " a ",
+    "ada",
+    " e "
+], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transportEnergy);
+
+
 ToolType.drill = {
     damage: 0,
     blockTypes: ["stone", "dirt"],
@@ -7969,43 +8520,48 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 		var extra = extraData;
 		if(extra){
 		mode = extra.getInt("mode");}
-		if(mode > 1 && item.data + 800 <= Item.getMaxDamage(item.id)){
-			var X = 1;
-			var Y = 1;
-			var Z = 1;
-			if(side==BlockSide.EAST || side==BlockSide.WEST){
-			X = 0;}
-			if(side==BlockSide.UP || side==BlockSide.DOWN){
-			Y = 0;}
-			if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-			Z = 0;}
-			for(var xx = coords.x - X; xx <= coords.x + X; xx++){
-				for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
-					for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-						blockID = World.getBlockID(xx, yy, zz);
-						var material = ToolAPI.getBlockMaterial(blockID) || {};
-						if(material.name == "dirt" || material.name == "stone"){
-							item.data += 800;
-							if(mode == 3 || material == "stone"){
-								World.destroyBlock(xx, yy, zz, true);
-							}else{
-								drop = dirtBlocksDrop[blockID];
-								if(drop){
-									World.destroyBlock(xx, yy, zz, false);
-									World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
+		if(item.data + 800 <= Item.getMaxDamage(item.id)){
+			if(mode < 2){
+				item.data += 800;
+			}
+			else{
+				var X = 1;
+				var Y = 1;
+				var Z = 1;
+				if(side==BlockSide.EAST || side==BlockSide.WEST){
+				X = 0;}
+				if(side==BlockSide.UP || side==BlockSide.DOWN){
+				Y = 0;}
+				if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
+				Z = 0;}
+				for(var xx = coords.x - X; xx <= coords.x + X; xx++){
+					for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
+						for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
+							blockID = World.getBlockID(xx, yy, zz);
+							var material = ToolAPI.getBlockMaterial(blockID) || {};
+							if(material.name == "dirt" || material.name == "stone"){
+								item.data += 800;
+								if(mode == 3 || material == "stone"){
+									World.destroyBlock(xx, yy, zz, true);
+								}else{
+									drop = dirtBlocksDrop[blockID];
+									if(drop){
+										World.destroyBlock(xx, yy, zz, false);
+										World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
+									}
+									else{World.destroyBlock(xx, yy, zz, true);}
 								}
-								else{World.destroyBlock(xx, yy, zz, true);}
 							}
-						}
-						if(item.data + 800 >= Item.getMaxDamage(item.id)){
-							Player.setCarriedItem(item.id, 1, item.data, extra);
-							return;
+							if(item.data + 800 >= Item.getMaxDamage(item.id)){
+								Player.setCarriedItem(item.id, 1, item.data, extra);
+								return;
+							}
 						}
 					}
 				}
 			}
-			Player.setCarriedItem(item.id, 1, item.data, extra);
 		}
+		Player.setCarriedItem(item.id, 1, item.data, extra);
 	},
 	useItem: function(coords, item, block){
 		if(Entity.getSneaking(player)){
@@ -8058,24 +8614,6 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 });
 
 
-Recipes.addShaped({id: ItemID.drill, count: 1, data: Item.getMaxDamage(ItemID.drill)}, [
-    " p ",
-    "ppp",
-    "pxp"
-], ['x', ItemID.powerUnit, 0, 'p', ItemID.plateIron, 0]);
-
-Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: Item.getMaxDamage(ItemID.diamondDrill)}, [
-    " a ",
-    "ada"
-], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transportEnergy);
-
-Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(ItemID.iridiumDrill)}, [
-    " a ",
-    "ada",
-    " e "
-], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transportEnergy);
-
-
 
 
 // file: items/tool/chainsaw.js
@@ -8097,7 +8635,7 @@ ToolAPI.registerBlockMaterial(35, "wool");
 
 ToolType.chainsaw = {
 	isWeapon: true,
-	damage: 3,
+	damage: 4,
 	baseDamage: 0,
 	blockTypes: ["wood", "wool", "fibre", "plant"],
 	onDestroy: function(item){
@@ -8137,47 +8675,77 @@ Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack
 ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 2);
 Item.setToolRender(ItemID.nanoSaber, true);
 
-//Item.registerNameOverrideFunction(ItemID.nanoSaber, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoSaber, ENERGY_ITEM_NAME);
 
-var NANO_SABER_ENERGY_STORAGE = 1000000;
+var NANO_SABER_DURABILITY = Item.getMaxDamage(ItemID.nanoSaber);
 
-Recipes.addShaped({id: ItemID.nanoSaber, count: 1, data: 22}, [
+Recipes.addShaped({id: ItemID.nanoSaber, count: 1, data: NANO_SABER_DURABILITY}, [
 	"ca ",
 	"ca ",
 	"bxb"
 ], ['x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, 'b', ItemID.carbonPlate, 0, "c", 348, 0], ChargeItemRegistry.transportEnergy);
 
-ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: 22, damage: 4}, {
+ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: NANO_SABER_DURABILITY, damage: 4}, {
 	damage: 0,
 	onBroke: function(item){
-		item.data = Math.min(item.data, 22);
+		item.data = Math.min(item.data, NANO_SABER_DURABILITY);
 		return true;
 	},
 	onAttack: function(item, mob){
-		this.damage = item.data < 22 ? 16 : 0;
+		this.damage = item.data < NANO_SABER_DURABILITY ? 16 : 0;
 		return false;
 	}
 });
 
-
-Item.registerIconOverrideFunction(ItemID.nanoSaber, function(item, name){
-	var active = 0;
-	if(item.extra){
-		active = parseInt(item.extra.getBoolean("active"));
+Callback.addCallback("tick", function(){
+	if(World.getThreadTime() % 20 == 0){
+		var item = Player.getCarriedItem()
+		if(item.id == ItemID.nanoSaber){
+			item.data = Math.min(item.data+1280, NANO_SABER_DURABILITY);
+			Player.setCarriedItem(item.id, 1, item.data);
+		}
 	}
-	return {name: "nano_saber", meta: active};
 });
 
-Item.registerNoTargetUseFunction("nanoSaber", function(){
-	var item = Player.getCarriedItem();
-	var extra = item.extra;
-	if(!extra){
-		extra = new ItemExtraData();
-		var active = true;
-	}else{
-		var active = !extra.getBoolean("active");
+
+
+
+// file: items/tool/mining_laser.js
+
+IDRegistry.genItemID("miningLaser");
+Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0});
+ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 2);
+Item.setToolRender(ItemID.miningLaser, true);
+
+Item.registerNameOverrideFunction(ItemID.miningLaser, ENERGY_ITEM_NAME);
+
+Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: Item.getMaxDamage(ItemID.miningLaser)}, [
+	"ccx",
+	"aa#",
+	" aa"
+], ['#', ItemID.circuitAdvanced, 0, 'x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, "c", 331, 0], ChargeItemRegistry.transportEnergy);
+
+
+
+
+// file: core/api/shared.js
+
+ModAPI.registerAPI("ICore", {
+	Machine: MachineRegistry,
+	Render: MachineRenderer,
+	Recipe: MachineRecipeRegistry,
+	ChargeRegistry: ChargeItemRegistry,
+	Upgrade: UpgradeAPI,
+	UI: UIbuttons,
+	Ore: OreGenerator,
+	
+	requireGlobal: function(command){
+		return eval(command);
 	}
-	extra.putBoolean("active", active);
 });
 
-ChargeItemRegistry.registerChargeFu
+Logger.Log("Industrial Core API shared with name ICore.", "API");
+
+
+
+

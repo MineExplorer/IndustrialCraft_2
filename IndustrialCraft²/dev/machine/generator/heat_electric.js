@@ -1,5 +1,5 @@
 IDRegistry.genBlockID("electricHeatGenerator");
-Block.createBlockWithRotation("electricHeatGenerator", [
+Block.createBlock("electricHeatGenerator", [
 	{name: "Electric Heat Generator", texture: [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
 ], "opaque");
 TileRenderer.setStandartModel(BlockID.electricHeatGenerator, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);

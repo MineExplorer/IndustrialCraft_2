@@ -20,6 +20,7 @@ Callback.addCallback("PreLoaded", function(){
 
 Callback.addCallback("PreLoaded", function(){
 	MachineRecipeRegistry.registerRecipesFor("blastFrunace", {
+		15: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		265: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"ItemID.dustIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"ItemID.crushedPurifiedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
@@ -195,7 +196,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
     },
 	
 	getMaxHeat: function(){
-		return 45000;
+		return 47500;
 	},
 	
 	redstone: function(signal){

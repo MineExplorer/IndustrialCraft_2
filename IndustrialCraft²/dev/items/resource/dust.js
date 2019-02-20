@@ -11,6 +11,9 @@ Item.createItem("dustBronze", "Bronze Dust", {name: "dust_bronze"});
 IDRegistry.genItemID("dustIron");
 Item.createItem("dustIron", "Iron Dust", {name: "dust_iron"});
 
+IDRegistry.genItemID("dustSteel");
+Item.createItem("dustSteel", "Steel Dust", {name: "dust_steel"});
+
 IDRegistry.genItemID("dustLead");
 Item.createItem("dustLead", "Lead Dust", {name: "dust_lead"});
 

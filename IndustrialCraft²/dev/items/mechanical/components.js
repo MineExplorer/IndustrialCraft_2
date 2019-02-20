@@ -12,6 +12,9 @@ Item.createItem("electricMotor", "Electric Motor", {name: "electric_motor", meta
 Item.createItem("powerUnit", "Power Unit", {name: "power_unit", meta: 0});
 Item.createItem("powerUnitSmall", "Small Power Unit", {name: "power_unit_small", meta: 0});
 
+IDRegistry.genItemID("heatConductor");
+Item.createItem("heatConductor", "Heat Conductor", {name: "heat_conductor", meta: 0});
+
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.circuitBasic, count: 1, data: 0}, [
 		"xxx",
@@ -60,4 +63,10 @@ Callback.addCallback("PreLoaded", function(){
 		"axe",
 		" cs"
 	], ["x", ItemID.circuitBasic, 0, 'e', ItemID.electricMotor, 0,  "a", ItemID.storageBattery, -1, "s", ItemID.casingIron, 0, "c", ItemID.cableCopper0, 0]);
+	
+	Recipes.addShaped({id: ItemID.heatConductor, count: 1, data: 0}, [
+		"aсa",
+		"aсa",
+		"aсa"
+	], ['с', ItemID.casingCopper, 0,'a', ItemID.latex, 0]);
 });

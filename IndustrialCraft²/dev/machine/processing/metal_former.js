@@ -1,9 +1,10 @@
 IDRegistry.genBlockID("metalFormer");
-Block.createBlockWithRotation("metalFormer", [
+Block.createBlock("metalFormer", [
 	{name: "Metal Former", texture: [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
-MachineRenderer.setStandartModel(BlockID.metalFormer, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], true);
-MachineRenderer.registerModelWithRotation(BlockID.metalFormer, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandartModel(BlockID.metalFormer, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.metalFormer, 0, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.metalFormer, 4, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 Block.registerDropFunction("metalFormer", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
@@ -71,18 +72,18 @@ var guiMetalFormer = new UI.StandartWindow({
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 164, direction: 0, value: 0.5, bitmap: "metalformer_bar_scale", scale: GUI_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-        "slotSource": {type: "slot", x: 441, y: 79},
-        "slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-        "slotResult": {type: "slot", x: 717, y: 148},
+		"slotSource": {type: "slot", x: 441, y: 79}},
+		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult": {type: "slot", x: 717, y: 148, isValid: function(){return false;}},
 		"slotUpgrade1": {type: "slot", x: 870, y: 60, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade2": {type: "slot", x: 870, y: 119, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade3": {type: "slot", x: 870, y: 178, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade4": {type: "slot", x: 870, y: 237, isValid: UpgradeAPI.isUpgrade},
 		"button": {type: "button", x: 572, y: 210, bitmap: "metal_former_button_0", scale: GUI_SCALE, clicker: {
-			onClick: function(container, tileEntity){
-				tileEntity.data.mode = (tileEntity.data.mode + 1) % 3;
+			onClick: function(container, tile){
+				tile.data.mode = (tile.data.mode + 1) % 3;
 			}
-		}}
+		}
 	}
 });
 
@@ -92,6 +93,7 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 		energy_storage: 4000,
 		energy_consumption: 10,
 		work_time: 200,
+		meta: 0,
 		progress: 0,
 		mode: 0,
 		isActive: false
@@ -131,7 +133,7 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 			}else{
 				this.deactivate();
 			}
-			if(this.data.progress >= 1){
+			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count -= 1;
 				resultSlot.id = result.id;
 				resultSlot.count += result.count;
@@ -157,9 +159,8 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 		return this.data.energy_storage;
 	},
 	
-	init: MachineRegistry.initModel,
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy: this.deactivate,
+	init: MachineRegistry.updateMachine,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
+
+TileRenderer.setRotationPlaceFunction(BlockID.metalFormer);

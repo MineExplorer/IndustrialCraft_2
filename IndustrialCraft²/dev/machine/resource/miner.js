@@ -1,9 +1,10 @@
 IDRegistry.genBlockID("miner");
-Block.createBlockWithRotation("miner", [
+Block.createBlock("miner", [
 	{name: "Miner", texture: [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "opaque");
-MachineRenderer.setStandartModel(BlockID.miner, [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]], true);
-MachineRenderer.registerModelWithRotation(BlockID.miner, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 1], ["miner_side", 0], ["miner_side", 1]]);
+TileRenderer.setStandartModel(BlockID.miner, [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.miner, 0, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.miner, 4, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 1], ["miner_side", 1], ["miner_side", 1]]);
 
 Block.registerDropFunction("miner", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
@@ -25,9 +26,9 @@ var guiMiner = new UI.StandartWindow({
 		background: {standart: true},
 	},
 
-	params: {       
+	params: {
 		slot: "default_slot",
-		invSlot: "default_slot"              
+		invSlot: "default_slot"
 	},
 
 	drawing: [
@@ -72,7 +73,10 @@ function getBlockDrop(coords, id, data, level, enchant){
 	if(id==5 || id == 19 || id==35 || id==85 || id==144 || id==171) return [[id, 1, data]];
 	if(id == 17 || id == 162) return [[id, 1, data%4]];
 	if(id == 26) return [[355, 1, 0]];
-	if(id == 47) return [[340, 3, 0]]; //silk
+	if(id == 47){
+		if(enchant.silk) return [[47, 1, 0]];
+		return [[340, 3, 0]];
+	}
 	if(id == 55) return [[331, 1, 0]];
 	if(id == 63 || id == 68) return [[338, 1, 0]];
 	if(id == 64) return [[324, 1, 0]];
@@ -91,18 +95,19 @@ function getBlockDrop(coords, id, data, level, enchant){
 	if(id == 196) return [[430, 1, 0]];
 	if(id == 197) return [[431, 1, 0]];
 	if(dropData0.indexOf(id) != -1) return [[id, 1, 0]];
-	// no drop 6, 18, 20, 30, 31, 32, 59, 81, 83, 86, 91!, 92, 99, 100, 102, 103 - 106, 111, 115, 127, 131, 132, 140-142, 161, 175, 244
+	// no drop 6, 18, 20, 30, 31, 32, 59, 81, 83, 86, 92, 99, 100, 102, 103 - 106, 111, 115, 127, 131, 132, 140-142, 161, 175, 244
 	return [];
 }
 
 MachineRegistry.registerPrototype(BlockID.miner, {
 	defaultValues: {
-	    power_tier: 1,
-        x: 0,
-        y: 0,
-        z: 0,
+		power_tier: 1,
+		meta: 0,
+		x: 0,
+		y: 0,
+		z: 0,
 		scanY: 0,
-        scanR: 0,
+		scanR: 0,
 		progress: 0,
 		isActive: false
 	},
@@ -174,12 +179,27 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 	},
 	
 	mineBlock: function(x, y, z, block, level){
-		World.setBlock(x, y, z, 0);
 		var drop = getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, level);
 		var items = [];
 		for(var i in drop){
 			items.push({id: drop[i][0], count: drop[i][1], data: drop[i][2]});
 		}
+		var container = World.getContainer(x, y, z);
+		if(container){
+			slots = StorageInterface.getContainerSlots(container);
+			for(var i in slots){
+				var slot = container.getSlot(slots[i]);
+				if(slot.id > 0){
+					items.push({id: slot.id, count: slot.count, data: slot.data, extra: slot.extra});
+					if(container.slots){
+						slot.id = slot.count = slot.data = 0;
+					}else{
+						container.setSlot(i, 0, 0, 0);
+					}
+				}
+			}
+		}
+		World.setBlock(x, y, z, 0);
 		this.drop(items);
 		this.data.progress = 0;
 	},
@@ -194,14 +214,14 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 	},
 	
 	drop: function(items){
-		var containers = UpgradeAPI.findNearestContainers(this, "down", true);
+		var containers = StorageInterface.getNearestContainers(this, 0, true);
 		if(containers){
-			addItemsToContainers(items, containers);
+			StorageInterface.putItems(items, containers);
 		}
 		for(var i in items){
 			var item = items[i]
 			if(item.count > 0){
-				nativeDropItem(this.x+0.5, this.y+1, this.z+0.5, 1, item.id, item.count, item.data);
+				nativeDropItem(this.x+0.5, this.y+1, this.z+0.5, 2, item.id, item.count, item.data, item.extra);
 			}
 		}
 	},
@@ -319,9 +339,8 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 		return 10000;
 	},
 	
-	init: MachineRegistry.initModel,
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy: this.deactivate,
+	init: MachineRegistry.updateMachine,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
+
+TileRenderer.setRotationPlaceFunction(BlockID.miner);

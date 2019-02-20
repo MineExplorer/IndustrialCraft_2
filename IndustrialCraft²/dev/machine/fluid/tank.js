@@ -4,7 +4,7 @@ Block.createBlock("tank", [
 ], "opaque");
 
 Block.registerDropFunction("tank", function(coords, blockID, blockData, level){
-    return MachineRegistry.getMachineDrop(coords, blockID, level);
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
 });
 
 Callback.addCallback("PreLoaded", function(){
@@ -30,7 +30,7 @@ var guiTank = new UI.StandartWindow({
 	elements: {
 		"liquidScale": {type: "scale", x: 400 + 70*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slotLiquid1": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 12*GUI_SCALE},
-		"slotLiquid2": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 36*GUI_SCALE},
+		"slotLiquid2": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 36*GUI_SCALE, isValid: function(){return false;}},
 		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
@@ -72,7 +72,7 @@ MachineRegistry.registerPrototype(BlockID.tank, {
 		}
 		if(liquid){
 			var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, liquid);
-			if(full && storage.getAmount(liquid) >= 1 && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id, full.data) || slot2.id == 0)){
+			if(full && storage.getAmount(liquid) >= 1 && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)){
 				storage.getLiquid(liquid, 1);
 				slot1.count--;
 				slot2.id = full.id;

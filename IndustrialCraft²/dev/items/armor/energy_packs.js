@@ -57,7 +57,7 @@ function registerStoragePack(id, level, tranfer){
 var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	if(World.getThreadTime()%20==0){
 	    var item = Player.getCarriedItem();
-	    var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", item.data - 1, transfer*20, level);
+	    var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", maxDamage - slot.data, transfer*20, level);
 	    if(energyAdd > 0){
 	        slot.data += energyAdd;
 	        Player.setCarriedItem(item.id, 1, item.data, item.extra);

@@ -1,7 +1,11 @@
 IDRegistry.genBlockID("storageCESU");
-Block.createBlockWithRotation("storageCESU", [
+Block.createBlock("storageCESU", [
 	{name: "CESU", texture: [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]], inCreative: true}
 ], "opaque");
+TileRenderer.setStandartModel(BlockID.storageCESU, [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.storageCESU, 0, [["cesu_front", 0], ["cesu_back", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);
+TileRenderer.registerRenderModel(BlockID.storageCESU, 1, [["cesu_back", 0], ["cesu_front", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);
+TileRenderer.registerRotationModel(BlockID.storageCESU, 2, [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]]);
 
 Block.registerDropFunction("storageCESU", function(coords, blockID, blockData, level){
 	return [];
@@ -52,13 +56,23 @@ var guiCESU = new UI.StandartWindow({
 
 MachineRegistry.registerPrototype(BlockID.storageCESU, {
 	defaultValues: {
-		power_tier: 1
+		power_tier: 1,
+		meta: 0
 	},
 	
 	isStorage: true,
 	
 	getGuiScreen: function(){
 		return guiCESU;
+	},
+	
+	wrenchClick: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
+		}else{
+			this.data.meta = coords.side;
+		}
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.storageCESU, this.data.meta);
 	},
 	
 	tick: function(){
@@ -94,20 +108,12 @@ MachineRegistry.registerPrototype(BlockID.storageCESU, {
 			}
 			nativeDropItem(coords.x, coords.y, coords.z, 0, blockID, 1, 0, extra);
 		}
-	}
+	},
+	
+	init: MachineRegistry.updateMachine,
+	destroy: function(){
+		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+	},
 });
 
-Block.registerPlaceFunction("storageCESU", function(coords, item, block){
-	Game.prevent();
-	var x = coords.relative.x
-	var y = coords.relative.y
-	var z = coords.relative.z
-	block = World.getBlockID(x, y, z)
-	if(GenerationUtils.isTransparentBlock(block)){
-		World.setBlock(x, y, z, item.id, 0);
-		var tile = World.addTileEntity(x, y, z);
-		if(item.extra){
-			tile.data.energy = item.extra.getInt("Eu") + 16;
-		}
-	}
-});
+MachineRegistry.setStoragePlaceFunction("storageCESU");

@@ -1,7 +1,14 @@
 IDRegistry.genBlockID("storageBatBox");
-Block.createBlockWithRotation("storageBatBox", [
-	{name: "BatBox", texture: [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_side", 1], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]], inCreative: true}
+Block.createBlock("storageBatBox", [
+	{name: "BatBox", texture: [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_back", 0], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]], inCreative: true}
 ], "opaque");
+TileRenderer.setStandartModel(BlockID.storageBatBox, [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_back", 0], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.storageBatBox, 0, [["batbox_front", 0], ["batbox_back", 0], ["batbox_top", 0], ["batbox_bottom", 0], ["batbox_side", 1], ["batbox_side", 2]]);
+TileRenderer.registerRenderModel(BlockID.storageBatBox, 1, [["batbox_back", 0], ["batbox_front", 0], ["batbox_top", 0], ["batbox_bottom", 0], ["batbox_side", 1], ["batbox_side", 2]]);
+TileRenderer.registerRenderModel(BlockID.storageBatBox, 2, [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_front", 0], ["batbox_back", 0], ["batbox_side", 0], ["batbox_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.storageBatBox, 3, [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_back", 0], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.storageBatBox, 4, [["batbox_bottom", 0], ["batbox_top", 1], ["batbox_side", 0], ["batbox_side", 0], ["batbox_front", 0], ["batbox_back", 0]]);
+TileRenderer.registerRenderModel(BlockID.storageBatBox, 5, [["batbox_bottom", 0], ["batbox_top", 1], ["batbox_side", 0], ["batbox_side", 0], ["batbox_back", 0], ["batbox_front", 0]]);
 
 Block.registerDropFunction("storageBatBox", function(coords, blockID, blockData, level){
 	MachineRegistry.getMachineDrop(coords, blockID, level);
@@ -51,13 +58,23 @@ var guiBatBox = new UI.StandartWindow({
 
 MachineRegistry.registerPrototype(BlockID.storageBatBox, {
 	defaultValues: {
-		power_tier: 0
+		power_tier: 0,
+		meta: 0
 	},
 	
 	isStorage: true,
 	
 	getGuiScreen: function(){
 		return guiBatBox;
+	},
+	
+	wrenchClick: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
+		}else{
+			this.data.meta = coords.side;
+		}
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.storageBatBox, this.data.meta);
 	},
 	
 	tick: function(){
@@ -87,22 +104,13 @@ MachineRegistry.registerPrototype(BlockID.storageBatBox, {
 			extra.putInt("Eu", this.data.energy);
 		}
 		nativeDropItem(coords.x, coords.y, coords.z, 0, BlockID.storageBatBox, 1, 0, extra);
-	}
+	},
+	
+	init: MachineRegistry.updateMachine,
+	destroy: function(){
+		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+	},
 });
 
+MachineRegistry.setStoragePlaceFunction("storageBatBox");
 ToolAPI.registerBlockMaterial(BlockID.storageBatBox, "wood");
-
-Block.registerPlaceFunction("storageBatBox", function(coords, item, block){
-	Game.prevent();
-	var x = coords.relative.x
-	var y = coords.relative.y
-	var z = coords.relative.z
-	block = World.getBlockID(x, y, z)
-	if(GenerationUtils.isTransparentBlock(block)){
-		World.setBlock(x, y, z, item.id, 0);
-		var tile = World.addTileEntity(x, y, z);
-		if(item.extra){
-			tile.data.energy = item.extra.getInt("Eu") + 16;
-		}
-	}
-});

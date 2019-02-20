@@ -15,7 +15,8 @@ IMPORT("flags");
 IMPORT("ToolType");
 IMPORT("energylib");
 IMPORT("ChargeItem");
-IMPORT("MachineRender");
+IMPORT("TileRender");
+IMPORT("StorageInterface");
 
 // constants
 var GUI_SCALE = 3.2;
@@ -45,7 +46,7 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 function random(min, max){
-	return Math.floor(Math.random() * (max - min + 1)) + min;
+	return Math.ceil(Math.random() * (max - min)) + min;
 }
 
 function addShapelessRecipe(result, source){
@@ -86,8 +87,8 @@ ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone
 var lasttime = -1
 var frame = 0
 
-Callback.addCallback("tick", function(){
-	if(debugMode){
+if(debugMode){
+	Callback.addCallback("tick", function(){
 		var t = java.lang.System.currentTimeMillis()
 		if(frame++ % 20 == 0){
 			if(lasttime != -1){
@@ -96,5 +97,5 @@ Callback.addCallback("tick", function(){
 			}
 			lasttime = t
 		}
-	}
-});
+	});
+}

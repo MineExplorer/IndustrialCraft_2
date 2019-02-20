@@ -10,16 +10,16 @@ Item.createItem("upgradeEnergyStorage", "Energy Storage Upgrade", {name: "upgrad
 IDRegistry.genItemID("upgradeRedstone");
 Item.createItem("upgradeRedstone", "Redstone Signal Inverter Upgrade", {name: "upgrade_redstone_inv", meta: 0});
 
-IDRegistry.genItemID("upgradePulling");
-Item.createItem("upgradePulling", "Pulling Upgrade", {name: "upgrade_pulling", meta: 0});
-Item.registerIconOverrideFunction(ItemID.upgradePulling, function(item, name){
-	return {name: "upgrade_pulling", meta: item.data}
-});
-
 IDRegistry.genItemID("upgradeEjector");
 Item.createItem("upgradeEjector", "Ejector Upgrade", {name: "upgrade_ejector", meta: 0});
 Item.registerIconOverrideFunction(ItemID.upgradeEjector, function(item, name){
 	return {name: "upgrade_ejector", meta: item.data}
+});
+
+IDRegistry.genItemID("upgradePulling");
+Item.createItem("upgradePulling", "Pulling Upgrade", {name: "upgrade_pulling", meta: 0});
+Item.registerIconOverrideFunction(ItemID.upgradePulling, function(item, name){
+	return {name: "upgrade_pulling", meta: item.data}
 });
 
 IDRegistry.genItemID("upgradeFluidEjector");
@@ -56,15 +56,15 @@ Callback.addCallback("PreLoaded", function(){
 		"x x",
 	], ['x', ItemID.plateTin, 0, '#', 69, -1]);
 	
-	Recipes.addShaped({id: ItemID.upgradePulling, count: 1, data: 0}, [
-		"aba",
-		"x#x",
-	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', 29, -1, 'b', 410, 0]);
-	
 	Recipes.addShaped({id: ItemID.upgradeEjector, count: 1, data: 0}, [
 		"aba",
 		"x#x",
 	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', 33, -1, 'b', 410, 0]);
+	
+	Recipes.addShaped({id: ItemID.upgradePulling, count: 1, data: 0}, [
+		"aba",
+		"x#x",
+	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', 29, -1, 'b', 410, 0]);
 	
 	Recipes.addShaped({id: ItemID.upgradeFluidEjector, count: 1, data: 0}, [
 		"x x",
@@ -85,7 +85,7 @@ Callback.addCallback("PreLoaded", function(){
 	], ['b', ItemID.wrenchBronze, 0, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, 0]);
 });
 
-
+/*
 var directionByData = {
 	1: "down",
 	2: "up",
@@ -94,6 +94,7 @@ var directionByData = {
 	5: "west",
 	6: "east"
 }
+*/
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, function(item, machine, container, data, coords){
 	if(data.work_time){
@@ -110,6 +111,19 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, function(item, machine, conta
 	data.isHeating = !data.isHeating;
 });
 
+UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, function(item, machine, container, data, coords){
+	var items = [];
+	var slots = machine.getTransportSlots().output;
+	for(var i in slots){
+		var slot = container.getSlot(slots[i]);
+		if(slot.id){items.push(slot);}
+	}
+	if(items.length){
+		var containers = StorageInterface.getNearestContainers(coords, item.data-1);
+		StorageInterface.putItems(items, containers, machine);
+	}
+});
+
 UpgradeAPI.registerUpgrade(ItemID.upgradePulling, function(item, machine, container, data, coords){
 	if(World.getThreadTime()%20 == 0){
 		var items = [];
@@ -121,31 +135,18 @@ UpgradeAPI.registerUpgrade(ItemID.upgradePulling, function(item, machine, contai
 			}
 		}
 		if(items.length){
-			var containers = UpgradeAPI.findNearestContainers(coords, directionByData[item.data]);
-			getItemsFrom(items, containers, machine);
+			var containers = StorageInterface.getNearestContainers(coords, item.data-1);
+			StorageInterface.extractItems(items, containers, machine);
 		}
-	}
-});
-
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, function(item, machine, container, data, coords){
-	var items = [];
-	var slots = machine.getTransportSlots().output;
-	for(var i in slots){
-		var slot = container.getSlot(slots[i]);
-		if(slot.id){items.push(slot);}
-	}
-	if(items.length){
-		var containers = UpgradeAPI.findNearestContainers(coords, directionByData[item.data]);
-		addItemsToContainers(items, containers, machine);
 	}
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, function(item, machine, container, data, coords){
 	var storage = machine.liquidStorage;
 	var liquid = storage.getLiquidStored();
-	if(liquid && storage.getAmount(liquid) > 0){
-		var storages = UpgradeAPI.findNearestLiquidStorages(coords, directionByData[item.data]);
-		addLiquidToStorages(liquid, storage, storages);
+	if(liquid){
+		var storages = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
+		StorageInterface.transportLiquid(liquid, 0.25, storage, storages);
 	}
 });
 
@@ -153,8 +154,8 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, function(item, machine, c
 	var storage = machine.liquidStorage;
 	var liquid = storage.getLiquidStored();
 	if(!liquid || !storage.isFull(liquid)){
-		var storages = UpgradeAPI.findNearestLiquidStorages(coords, directionByData[item.data]);
-		getLiquidFromStorages(liquid, storage, storages);
+		var storages = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
+		StorageInterface.extractLiquid(liquid, 0.25, storage, storages);
 	}
 });
 
@@ -164,9 +165,10 @@ Item.registerUseFunction("upgradeMFSU", function(coords, item, block){
 		var tile = World.getTileEntity(coords.x ,coords.y, coords.z);
 		var data = tile.data;
 		tile.selfDestroy();
-		World.setBlock(coords.x ,coords.y, coords.z, BlockID.storageMFSU, block.data);
+		World.setBlock(coords.x ,coords.y, coords.z, BlockID.storageMFSU, 0);
 		block = World.addTileEntity(coords.x ,coords.y, coords.z);
 		block.data = data;
+		TileRenderer.mapAtCoords(coords.x, coords.y, coords.z, BlockID.storageMFSU, data.meta);
 		Player.decreaseCarriedItem(1);
 	}
 });

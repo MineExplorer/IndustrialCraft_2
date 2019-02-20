@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("genWatermill");
-Block.createBlockWithRotation("genWatermill", [
+Block.createBlock("genWatermill", [
 	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]], inCreative: true}
 ], "opaque");
+TileRenderer.setStandartModel(BlockID.genWatermill, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]]);
+TileRenderer.registerRotationModel(BlockID.genWatermill, 0, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]]);
 
 Block.registerDropFunction("genWatermill", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
@@ -18,13 +20,14 @@ Callback.addCallback("PreLoaded", function(){
 
 MachineRegistry.registerPrototype(BlockID.genWatermill, {
 	defaultValues: {
+		meta: 0,
 		output: 0
 	},
 	
 	isGenerator: function() {
 		return true;
 	},
-
+	
 	biomeCheck: function(x, z){
 		var coords = [[x, z], [x-7, z], [x+7, z], [x, z-7], [x, z+7]];
 		for(var c in coords){
@@ -61,5 +64,12 @@ MachineRegistry.registerPrototype(BlockID.genWatermill, {
 			}
 		}
 		src.add(this.data.output);
-	}
+	},
+	
+	init: MachineRegistry.updateMachine,
+	destroy: function(){
+		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+	},
 });
+
+TileRenderer.setRotationPlaceFunction(BlockID.genWatermill);

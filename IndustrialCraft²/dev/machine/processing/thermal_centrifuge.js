@@ -1,9 +1,10 @@
 IDRegistry.genBlockID("thermalCentrifuge");
-Block.createBlockWithRotation("thermalCentrifuge", [
+Block.createBlock("thermalCentrifuge", [
 	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
 ], "opaque");
-MachineRenderer.setStandartModel(BlockID.thermalCentrifuge, [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], true);
-MachineRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, [["machine_advanced", 0], ["thermal_centrifuge_top", 1], ["machine_side", 0], ["thermal_centrifuge_front", 1], ["thermal_centrifuge_side", 1], ["thermal_centrifuge_side", 1]]);
+TileRenderer.setStandartModel(BlockID.thermalCentrifuge, [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.thermalCentrifuge, 0, [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.thermalCentrifuge, 4, [["machine_advanced", 0], ["thermal_centrifuge_top", 1], ["machine_side", 0], ["thermal_centrifuge_front", 1], ["thermal_centrifuge_side", 1], ["thermal_centrifuge_side", 1]]);
 
 Block.registerDropFunction("thermalCentrifuge", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
@@ -33,8 +34,9 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.crushedPurifiedIron": {result: [ItemID.dustSmallGold, 1, ItemID.dustIron, 1], heat: 1500},
 		"ItemID.crushedPurifiedSilver": {result: [ItemID.dustSmallLead, 1, ItemID.dustSilver, 1], heat: 2000},
 		"ItemID.crushedPurifiedGold": {result: [ItemID.dustSmallSilver, 1, ItemID.dustGold, 1], heat: 2000},
-		"ItemID.crushedPurifiedLead": {result: [ItemID.dustSmallCopper, 1, ItemID.dustLead, 1], heat: 2000},
-		"ItemID.crushedPurifiedUranium": {result: [ItemID.smallUranium235, 2, ItemID.uranium238, 5], heat: 3000}
+		"ItemID.crushedPurifiedLead": {result: [ItemID.dustSmallSilver, 1, ItemID.dustLead, 1], heat: 2000},
+		"ItemID.crushedPurifiedUranium": {result: [ItemID.smallUranium235, 2, ItemID.uranium238, 5], heat: 3000},
+		"ItemID.slag": {result: [ItemID.dustSmallGold, 1, ItemID.dustCoal, 1], heat: 1500}
 	}, true);
 });
 
@@ -46,9 +48,9 @@ var guiCentrifuge = new UI.StandartWindow({
 		background: {standart: true},
 	},
 
-	params: {       
+	params: {
 		slot: "default_slot",
-		invSlot: "default_slot"              
+		invSlot: "default_slot"
 	},
 
 	drawing: [
@@ -63,9 +65,9 @@ var guiCentrifuge = new UI.StandartWindow({
 		"energyScale": {type: "scale", x: 400 + 8*GUI_SCALE, y: 50 + 38*GUI_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotEnergy": {type: "slot", x: 400 + 6*GUI_SCALE, y: 50 + 56*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
 		"slotSource": {type: "slot", x: 400 + 6*GUI_SCALE, y: 50 + 16*GUI_SCALE},
-		"slotResult1": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 13*GUI_SCALE},
-		"slotResult2": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 32*GUI_SCALE},
-		"slotResult3": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 51*GUI_SCALE},
+		"slotResult1": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 13*GUI_SCALE, isValid: function(){return false;}},
+		"slotResult2": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 32*GUI_SCALE, isValid: function(){return false;}},
+		"slotResult3": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 51*GUI_SCALE, isValid: function(){return false;}},
 		"slotUpgrade1": {type: "slot", x: 874, y: 50 + 2*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade2": {type: "slot", x: 874, y: 50 + 21*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade3": {type: "slot", x: 874, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
@@ -81,6 +83,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 		energy_storage: 30000,
 		energy_consumption: 48,
 		work_time: 500,
+		meta: 0,
 		progress: 0,
 		isActive: false,
 		isHeating: false,
@@ -96,7 +99,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 	getTransportSlots: function(){
 		return {input: ["slotSource"], output: ["slotResult1", "slotResult2", "slotResult3"]};
 	},
-
+	
 	setDefaultValues: function(){
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -116,8 +119,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 		return true;
 	},
 
-	putResult: function(result, sourceSlot){
-		sourceSlot.count--;
+	putResult: function(result){
 		for(var i = 1; i < 4; i++){
 			var id = result[(i-1)*2];
 			var count = result[(i-1)*2+1];
@@ -137,7 +139,7 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 		}
 		
 		var sourceSlot = this.container.getSlot("slotSource");
-		var result = MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", sourceSlot.id, sourceSlot.data);
+		var result = MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", sourceSlot.id);
 		if(result && this.checkResult(result.result) && this.data.energy > 0){
 			this.data.maxHeat = result.heat;
 			if(this.data.heat < result.heat){
@@ -152,8 +154,9 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 			else{
 				this.deactivate();
 			}
-			if(this.data.progress >= 1){
-				this.putResult(result.result, sourceSlot);
+			if(this.data.progress.toFixed(3) >= 1){
+				sourceSlot.count--;
+				this.putResult(result.result);
 				this.container.validateAll();
 				this.data.progress = 0;
 			}
@@ -196,9 +199,8 @@ MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, {
 		return this.data.energy_storage;
 	},
 
-	init: MachineRegistry.initModel,
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy: this.deactivate,
+	init: MachineRegistry.updateMachine,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
+
+TileRenderer.setRotationPlaceFunction(BlockID.thermalCentrifuge);

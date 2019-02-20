@@ -19,9 +19,9 @@ ToolType.chainsaw = {
 	baseDamage: 0,
 	blockTypes: ["wood", "wool", "fibre", "plant"],
 	onDestroy: function(item){
-        item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 1, Item.getMaxDamage(item.id));
-    },
-    onBroke: function(item){return true;},
+		item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 1, Item.getMaxDamage(item.id));
+	},
+	onBroke: function(item){return true;},
 	onAttack: function(item, mob){
 		var material = this.toolMaterial;
 		if(!this.baseDamage) this.baseDamage = material.damage;
@@ -34,13 +34,13 @@ ToolType.chainsaw = {
 		}
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
-        if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
-            return destroyTime;
-        }
-        else{
-            return params.base;
-        }
-    }
+		if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
+			return destroyTime;
+		}
+		else{
+			return params.base;
+		}
+	}
 }
 
 ToolAPI.setTool(ItemID.chainsaw, {energyConsumption: 50, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);

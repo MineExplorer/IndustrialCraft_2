@@ -1,9 +1,10 @@
 IDRegistry.genBlockID("inductionFurnace");
-Block.createBlockWithRotation("inductionFurnace", [
+Block.createBlock("inductionFurnace", [
 	{name: "Induction Furnace", texture: [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true}
 ], "opaque");
-MachineRenderer.setStandartModel(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);
-MachineRenderer.registerModelWithRotation(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
+TileRenderer.setStandartModel(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.inductionFurnace, 0, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.inductionFurnace, 4, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
 
 Block.registerDropFunction("inductionFurnace", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
@@ -36,8 +37,8 @@ var guiInductionFurnace = new UI.StandartWindow({
 		"slotSource1": {type: "slot", x: 511, y: 75},
 		"slotSource2": {type: "slot", x: 571, y: 75},
 		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
-		"slotResult1": {type: "slot", x: 725, y: 142},
-		"slotResult2": {type: "slot", x: 785, y: 142},
+		"slotResult1": {type: "slot", x: 725, y: 142, isValid: function(){return false;}},
+		"slotResult2": {type: "slot", x: 785, y: 142, isValid: function(){return false;}},
 		"slotUpgrade1": {type: "slot", x: 900, y: 80, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade2": {type: "slot", x: 900, y: 144, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade3": {type: "slot", x: 900, y: 208, isValid: UpgradeAPI.isUpgrade},
@@ -50,6 +51,7 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	defaultValues: {
 		power_tier: 1,
 		energy_storage: 10000,
+		meta: 0,
 		progress: 0,
 		isActive: false,
 		isHeating: false,
@@ -71,10 +73,7 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 		var result1 = Recipes.getFurnaceRecipeResult(sourceSlot1.id, "iron");
 		var result2 = Recipes.getFurnaceRecipeResult(sourceSlot2.id, "iron");
 		if(result1 || result2){
-			return {
-				result1: result1,
-				result2: result2
-			};
+			return [result1, result2];
 		}
 	},
 	
@@ -107,8 +106,8 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 				this.deactivate();
 			}
 			if(this.data.progress >= 1){
-				var put1 = this.putResult(result.result1, this.container.getSlot("slotSource1"), this.container.getSlot("slotResult1"));
-				var put2 = this.putResult(result.result2, this.container.getSlot("slotSource2"), this.container.getSlot("slotResult2"));
+				var put1 = this.putResult(result[0], this.container.getSlot("slotSource1"), this.container.getSlot("slotResult1"));
+				var put2 = this.putResult(result[1], this.container.getSlot("slotSource2"), this.container.getSlot("slotResult2"));
 				if(put1 || put2){
 					this.container.validateAll();
 					this.data.progress = 0;
@@ -146,9 +145,8 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 		return this.data.energy_storage;
 	},
 	
-	init: MachineRegistry.initModel,
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy: this.deactivate,
+	init: MachineRegistry.updateMachine,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
+
+TileRenderer.setRotationPlaceFunction(BlockID.inductionFurnace);

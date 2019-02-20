@@ -23,9 +23,9 @@ var guiSolarPanel = new UI.StandartWindow({
 		background: {standart: true}
 	},
 	
-	params: {       
+	params: {
 		slot: "default_slot",
-		invSlot: "default_slot"              
+		invSlot: "default_slot"
 	},
 	
 	drawing: [

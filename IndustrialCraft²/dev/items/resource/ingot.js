@@ -17,8 +17,6 @@ IDRegistry.genItemID("ingotSilver");
 Item.createItem("ingotSilver", "Silver Ingot", {name: "ingot_silver"});
 
 Callback.addCallback("PreLoaded", function(){
-	// steel
-	Recipes.addFurnace(265, ItemID.ingotSteel, 0);
 	// from ore
 	Recipes.addFurnace(BlockID.oreCopper, ItemID.ingotCopper, 0);
 	Recipes.addFurnace(BlockID.oreTin, ItemID.ingotTin, 0);
@@ -42,6 +40,7 @@ Callback.addCallback("PreLoaded", function(){
 	Recipes.addFurnace(ItemID.dustTin, ItemID.ingotTin, 0);
 	Recipes.addFurnace(ItemID.dustLead, ItemID.ingotLead, 0);
 	Recipes.addFurnace(ItemID.dustBronze, ItemID.ingotBronze, 0);
+	Recipes.addFurnace(ItemID.dustSteel, ItemID.ingotSteel, 0);
 	Recipes.addFurnace(ItemID.dustIron, 265, 0);
 	Recipes.addFurnace(ItemID.dustGold, 266, 0);
 	Recipes.addFurnace(ItemID.dustSilver, ItemID.ingotSilver, 0);

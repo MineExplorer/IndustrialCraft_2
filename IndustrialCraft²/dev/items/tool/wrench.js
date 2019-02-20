@@ -14,8 +14,9 @@ Recipes.addShaped({id: ItemID.wrenchBronze, count: 1, data: 0}, [
 	" a "
 ], ['a', ItemID.ingotBronze, 0]);
 
-Recipes.addShapeless({id: ItemID.electricWrench, count: 1, data: Item.getMaxDamage(ItemID.electricWrench)}, [{id: ItemID.wrenchBronze, data: 0}, {id: ItemID.powerUnitSmall, data: 0}]);
-
+Recipes.addShapeless({id: ItemID.electricWrench, count: 1, data: Item.getMaxDamage(ItemID.electricWrench)}, [
+	{id: ItemID.wrenchBronze, data: 0}, {id: ItemID.powerUnitSmall, data: 0}
+]);
 
 Callback.addCallback("DestroyBlockStart", function(coords, block){
 	if(MachineRegistry.machineIDs[block.id]){

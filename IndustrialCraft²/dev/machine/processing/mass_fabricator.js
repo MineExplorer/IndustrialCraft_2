@@ -1,9 +1,10 @@
 IDRegistry.genBlockID("massFabricator");
-Block.createBlockWithRotation("massFabricator", [
+Block.createBlock("massFabricator", [
 	{name: "Mass Fabricator", texture: [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
 ], "opaque");
-MachineRenderer.setStandartModel(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], true);
-MachineRenderer.registerModelWithRotation(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
+TileRenderer.setStandartModel(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.massFabricator, 0, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.massFabricator, 4, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 
 Block.registerDropFunction("massFabricator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
@@ -33,7 +34,7 @@ var guiMassFabricator = new UI.StandartWindow({
 	
 	elements: {
 		"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"matterSlot": {type: "slot", x: 821, y: 75, size: 100},
+		"matterSlot": {type: "slot", x: 821, y: 75, size: 100, isValid: function(){return false;}},
 		"catalyserSlot": {type: "slot", x: 841, y: 252},
 		"textInfo1": {type: "text", x: 542, y: 142, width: 200, height: 30, text: "Progress:"},
 		"textInfo2": {type: "text", x: 542, y: 177, width: 200, height: 30, text: "0%"},
@@ -45,6 +46,7 @@ var guiMassFabricator = new UI.StandartWindow({
 
 MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	defaultValues: {
+		meta: 0,
 		progress: 0,
 		catalyser: 0,
 		catalyserRatio: 0,
@@ -88,7 +90,7 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 			else{
 				this.container.setText("textInfo3", "");
 				this.container.setText("textInfo4", "");
-				var transfer =Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
+				var transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
 				this.data.progress += transfer;
 				this.data.energy -= transfer;
 			}
@@ -115,9 +117,8 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 		return 32768;
 	},
 	
-	init: MachineRegistry.initModel,
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy: this.deactivate,
+	init: MachineRegistry.updateMachine,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
+
+TileRenderer.setRotationPlaceFunction(BlockID.massFabricator);

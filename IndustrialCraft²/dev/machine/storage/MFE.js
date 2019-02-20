@@ -1,7 +1,11 @@
 IDRegistry.genBlockID("storageMFE");
-Block.createBlockWithRotation("storageMFE", [
-	{name: "MFE", texture: [["machine_top", 0], ["machine_top", 0], ["mfe", 2], ["mfe", 0], ["mfe", 1], ["mfe", 1]], inCreative: true}
+Block.createBlock("storageMFE", [
+	{name: "MFE", texture: [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]], inCreative: true}
 ], "opaque");
+TileRenderer.setStandartModel(BlockID.storageMFE, [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.storageMFE, 0, [["mfe_front", 0], ["mfe_back", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
+TileRenderer.registerRenderModel(BlockID.storageMFE, 1, [["mfe_back", 0], ["mfe_front", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
+TileRenderer.registerRotationModel(BlockID.storageMFE, 2, [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
 
 Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, level){
 	return [];
@@ -53,13 +57,23 @@ var guiMFE = new UI.StandartWindow({
 
 MachineRegistry.registerPrototype(BlockID.storageMFE, {
 	defaultValues: {
-		power_tier: 2
+		power_tier: 2,
+		meta: 0
 	},
 	
 	isStorage: true,
 	
 	getGuiScreen: function(){
 		return guiMFE;
+	},
+	
+	wrenchClick: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
+		}else{
+			this.data.meta = coords.side;
+		}
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.storageMFE, this.data.meta);
 	},
 	
 	tick: function(){
@@ -97,20 +111,12 @@ MachineRegistry.registerPrototype(BlockID.storageMFE, {
 				World.drop(coords.x, coords.y, coords.z, drop[0][0], drop[0][1], drop[0][2]);
 			}
 		}
-	}
+	},
+	
+	init: MachineRegistry.updateMachine,
+	destroy: function(){
+		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+	},
 });
 
-Block.registerPlaceFunction("storageMFE", function(coords, item, block){
-	Game.prevent();
-	var x = coords.relative.x
-	var y = coords.relative.y
-	var z = coords.relative.z
-	block = World.getBlockID(x, y, z)
-	if(GenerationUtils.isTransparentBlock(block)){
-		World.setBlock(x, y, z, item.id, 0);
-		var tile = World.addTileEntity(x, y, z);
-		if(item.extra){
-			tile.data.energy = item.extra.getInt("Eu") + 16;
-		}
-	}
-});
+MachineRegistry.setStoragePlaceFunction("storageMFE");

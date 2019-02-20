@@ -2,8 +2,8 @@ IDRegistry.genBlockID("teleporter");
 Block.createBlock("teleporter", [
 	{name: "Teleporter", texture: [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]], inCreative: true},
 ], "opaque");
-MachineRenderer.setStandartModel(BlockID.teleporter, [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]]);
-MachineRenderer.registerRenderModel(BlockID.teleporter, 0, [["machine_advanced_bottom", 0], ["teleporter_top", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1]]);
+TileRenderer.setStandartModel(BlockID.teleporter, [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.teleporter, 0, [["machine_advanced_bottom", 0], ["teleporter_top", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1]]);
 
 Block.registerDropFunction("teleporter", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
@@ -21,14 +21,7 @@ var friendlyMobs = [EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityTy
 var evilMobs = [EntityType.BLAZE, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.ENDERMAN, EntityType.GHAST, EntityType.IRON_GOLEM, EntityType.LAVA_SLIME, EntityType.PIG_ZOMBIE, EntityType.SILVERFISH, EntityType.SKELETON, EntityType.SLIME, EntityType.SPIDER, EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER, 45, 46, 47, 48, 49, 55];
 
 function getNearestStorages(x, y, z){
-	var directions = [
-		{x: 0, y: 1, z: 0},
-		{x: 0, y: -1, z: 0},
-		{x: 1, y: 0, z: 0},
-		{x: -1, y: 0, z: 0},
-		{x: 0, y: 0, z: 1},
-		{x: 0, y: 0, z: -1},
-	];
+	var directions = StorageInterface.directionsBySide;
 	var storages = [];
 	for(var i in directions){
 		dir = directions[i]
@@ -95,13 +88,15 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 	redstone: function(signal){
 		this.data.isActive = signal.power > 0;
 		if(this.data.isActive){
-			MachineRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.teleporter, 0);
+			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, 0);
 		}
 		else{
 			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 		}
 	},
 	
-	init: MachineRegistry.initModel,
-	destroy: this.deactivate
+	init: function(){
+		if(this.data.isActive){
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, 0);}
+	},
 });

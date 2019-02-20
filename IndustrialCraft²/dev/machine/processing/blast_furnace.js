@@ -1,26 +1,13 @@
 IDRegistry.genBlockID("blastFurnace");
-Block.createBlockWithRotation("blastFurnace", [
-	{name: "Blast Furnace", texture: [["ind_furnace_side", 0], ["ind_furnace_side", 0], ["machine_bottom", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
-	{name: "Blast Furnace", texture: [["machine_bottom", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: false},
-	{name: "Blast Furnace", texture: [["heat_pipe", 0], ["machine_bottom", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: false}
+Block.createBlock("blastFurnace", [
+	{name: "Blast Furnace", texture: [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
 ], "opaque");
-
-MachineRenderer.setStandartModel(BlockID.blastFurnace, [["ind_furnace_side", 0], ["ind_furnace_side", 0], ["machine_bottom", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);
-MachineRenderer.registerRenderModel(BlockID.blastFurnace, [["ind_furnace_side", 1], ["ind_furnace_side", 1], ["machine_bottom", 0], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], true);
+TileRenderer.setStandartModel(BlockID.blastFurnace, [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
+TileRenderer.registerFullRotationModel(BlockID.blastFurnace, 0, [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
+TileRenderer.registerFullRotationModel(BlockID.blastFurnace, 6, [["machine_advanced", 0], ["ind_furnace_side", 1], ["machine_back", 0], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
 
 Block.registerDropFunction("blastFurnace", function(coords, blockID, blockData, level, enchant){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
-
-Callback.addCallback("ItemUse", function(coords,item,block){
-	if(item.id==BlockID.blastFurnace){
-		var pitch = Entity.getLookAngle(Player.get()).pitch;
-		if(pitch>VIEW_CONST){
-			World.setBlock(coords.relative.x,coords.relative.y,coords.relative.z,BlockID.blastFurnace,8);
-		}else if(pitch<-VIEW_CONST){
-			World.setBlock(coords.relative.x,coords.relative.y,coords.relative.z,BlockID.blastFurnace,4);
-		}
-	}
 });
 
 Callback.addCallback("PreLoaded", function(){
@@ -33,10 +20,10 @@ Callback.addCallback("PreLoaded", function(){
 
 Callback.addCallback("PreLoaded", function(){
 	MachineRecipeRegistry.registerRecipesFor("blastFrunace", {
-		265: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1]},
-		"ItemID.dustIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1]},
-		"ItemID.crushedPurifiedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1]},
-		"ItemID.crushedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1]}
+		265: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
+		"ItemID.dustIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
+		"ItemID.crushedPurifiedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
+		"ItemID.crushedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000}
 	}, true);
 });
 
@@ -54,31 +41,30 @@ var guiBlastFurnace = new UI.StandartWindow({
 	
 	drawing: [
 		{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-		{type: "bitmap", x: 400, y: 50, bitmap: "blast_furnace_background", scale: GUI_BAR_STANDART_SCALE},
-		{type: "bitmap", x: 540 + 6*GUI_BAR_STANDART_SCALE, y: 110 + 8*GUI_BAR_STANDART_SCALE, bitmap: "progress_scale_background", scale: GUI_BAR_STANDART_SCALE*1.01}
+		{type: "bitmap", x: 400, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, bitmap: "progress_scale_background", scale: GUI_SCALE*1.01}
 	],
 	
 	elements: {
-		"progressScale": {type: "scale", x: 540 + 6*GUI_BAR_STANDART_SCALE, y: 110 + 8*GUI_BAR_STANDART_SCALE, direction: 1, value: 0.5, bitmap: "progress_scale", scale: GUI_BAR_STANDART_SCALE*1.01},
-		"heatScale": {type: "scale", x: 336 + 66*GUI_BAR_STANDART_SCALE, y: 47 + 64*GUI_BAR_STANDART_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_BAR_STANDART_SCALE},
-		"slotSource": {type: "slot", x: 400 + 6*GUI_BAR_STANDART_SCALE, y: 70 + 16*GUI_BAR_STANDART_SCALE},
-		"slotResult1": {type: "slot", x: 340 + 124*GUI_BAR_STANDART_SCALE, y: 140 + 20*GUI_BAR_STANDART_SCALE},
-		"slotResult2": {type: "slot", x: 400 + 124*GUI_BAR_STANDART_SCALE, y: 140 + 20*GUI_BAR_STANDART_SCALE},
-		"slotAir1": {type: "slot", x: 20 + 118*GUI_BAR_STANDART_SCALE, y: 170 + 10*GUI_BAR_STANDART_SCALE},
-		"slotAir2": {type: "slot", x: 80 + 118*GUI_BAR_STANDART_SCALE, y: 170 + 10*GUI_BAR_STANDART_SCALE},
-		"slotUpgrade1": {type: "slot", x: 330 + 145*GUI_BAR_STANDART_SCALE, y: 50 + 4*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 330 + 145*GUI_BAR_STANDART_SCALE, y: 50 + 22*GUI_BAR_STANDART_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"indicator": {type: "image", x: 344 + 88*GUI_BAR_STANDART_SCALE, y: 53 + 58*GUI_BAR_STANDART_SCALE, bitmap: "indicator_red", scale: GUI_BAR_STANDART_SCALE}
+		"progressScale": {type: "scale", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, direction: 1, value: 0.5, bitmap: "progress_scale", scale: GUI_SCALE*1.01},
+		"heatScale": {type: "scale", x: 336 + 66*GUI_SCALE, y: 47 + 64*GUI_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 400 + 6*GUI_SCALE, y: 70 + 16*GUI_SCALE},
+		"slotResult1": {type: "slot", x: 340 + 124*GUI_SCALE, y: 140 + 20*GUI_SCALE, isValid: function(){return false;}},
+		"slotResult2": {type: "slot", x: 400 + 124*GUI_SCALE, y: 140 + 20*GUI_SCALE, isValid: function(){return false;}},
+		"slotAir1": {type: "slot", x: 20 + 118*GUI_SCALE, y: 170 + 10*GUI_SCALE},
+		"slotAir2": {type: "slot", x: 80 + 118*GUI_SCALE, y: 170 + 10*GUI_SCALE, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 330 + 145*GUI_SCALE, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 330 + 145*GUI_SCALE, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"indicator": {type: "image", x: 344 + 88*GUI_SCALE, y: 53 + 58*GUI_SCALE, bitmap: "indicator_red", scale: GUI_SCALE}
 	}
 });
 
 MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 	defaultValues:{
+		meta: 0,
 		progress: 0,
-		temp: 0,
-		airCell:0,
-		hasRecipe:false,
-		work_time: 6000,
+		air: 0,
+		sourceID: 0,
 		isActive: false,
 		isHeating: false,
 		heat: 0,
@@ -93,9 +79,13 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		return {input: ["slotAir1","slotSource"],output:["slotAir2","slotResult2","slotResult1"]};
 	},
 	
-	setDefaultValues: function(){		
-		this.data.work_time = this.defaultValues.work_time;
-		this.data.isHeating = this.data.signal > 0;
+	wrenchClick: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
+		}else{
+			this.data.meta = coords.side;
+		}
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.blastFurnace, this.data.meta + 6*this.data.isActive);
 	},
 	
 	checkResult: function(result){
@@ -110,8 +100,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		return true;
 	},
 	
-	putResult: function(result, sourceSlot){
-		sourceSlot.count--;
+	putResult: function(result){
 		for(var i = 1; i < 3; i++){
 			var id = result[(i-1)*2];
 			var count = result[(i-1)*2+1];
@@ -124,117 +113,106 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 	},
 	
 	controlAir:function(){
-		var avaribleProgress = this.data.airCell * 18;       
-		var numerlicProgress = parseInt(this.data.progress*100);
-		var inputSlot = this.container.getSlot("slotAir1");
-		var outputSlot = this.container.getSlot("slotAir2");
-		if(numerlicProgress<=avaribleProgress){
-			return true;
-		}else if((outputSlot.id==0||(outputSlot.id==ItemID.cellEmpty&&outputSlot.count<64))&&inputSlot.id==ItemID.cellAir){
-			if(outputSlot.id!=0){
-				outputSlot.count++;
-			}else{
-				outputSlot.id=ItemID.cellEmpty;
-				outputSlot.count = 1;
+		var slot1 = this.container.getSlot("slotAir1");
+		var slot2 = this.container.getSlot("slotAir2");
+		if(this.data.air == 0){
+			if(slot1.id==ItemID.cellAir && (slot2.id==0 || slot2.id==ItemID.cellEmpty && slot2.count < 64)){
+				slot1.count--;
+				slot2.id = ItemID.cellEmpty;
+				slot2.count++;
+				this.data.air = 1000;
 			}
-			inputSlot.count--;
-			this.data.airCell++;
-			this.container.validateAll();
+		}
+		if(this.data.air > 0){
+			this.data.air--;
 			return true;
 		}
-		return false
+		return false;
 	},
 	
-	controlAirImage:function(content,set){
+	controlAirImage: function(content, set){
 		if(content){
-			if(set){			
-				content.elements["indicatorAir"] = null;
-			}else{
-				content.elements["indicatorAir"] = {type: "image", x: 344 + 110*GUI_BAR_STANDART_SCALE, y: 53 + 20*GUI_BAR_STANDART_SCALE, bitmap: "no_air_image", scale: GUI_BAR_STANDART_SCALE};
-			}
-		}	
+			if(set)		
+			content.elements["indicatorAir"] = null;
+			else
+			content.elements["indicatorAir"] = {type: "image", x: 344 + 110*GUI_SCALE, y: 53 + 20*GUI_SCALE, bitmap: "no_air_image", scale: GUI_SCALE};
+		}
 	},
 	
-	setInducator:function(content,set){
-		if(content){	
-			if(set){
-			content.elements["indicator"].bitmap = "indicator_green";}
-			else{
-			content.elements["indicator"].bitmap = "indicator_red";}
-		};
-	},
-	
-	checkRecipe:function(){
-		if(!this.data.hasRecipe){
-			var sourceSlot = this.container.getSlot("slotSource");
-			if(MachineRecipeRegistry.getRecipeResult("blastFrunace", sourceSlot.id, sourceSlot.data)){
-				this.data.hasRecipe = MachineRecipeRegistry.getRecipeResult("blastFrunace", sourceSlot.id, sourceSlot.data);
-				sourceSlot.count--;
-				this.container.validateAll();
-				this.usingTemp = true;
-			}
-			
+	setIndicator: function(content,set){
+		if(content){
+			if(set)
+			content.elements["indicator"].bitmap = "indicator_green";
+			else
+			content.elements["indicator"].bitmap = "indicator_red";
 		}
 	},
 	
     tick: function(){
-		this.setDefaultValues();
+		this.data.isHeating = this.data.signal > 0;
 		UpgradeAPI.executeUpgrades(this);
 		
-		var sourceSlot = this.container.getSlot("slotSource");
+		var maxHeat = this.getMaxHeat();
+		this.container.setScale("heatScale", this.data.heat / maxHeat);
 		var content = this.container.getGuiContent();
 		
-		if(this.data.hasRecipe&&this.checkResult(this.data.hasRecipe.result)){
-			if(Math.round((this.data.temp/this.getTempStorage())*100)>99){
+		if(this.data.heat >= maxHeat){
+			this.setIndicator(content, true);
+			var sourceSlot = this.container.getSlot("slotSource");
+			var source = this.data.sourceID || sourceSlot.id;
+			var result = MachineRecipeRegistry.getRecipeResult("blastFrunace", source);
+			if(result && this.checkResult(result.result)){
 				if(this.controlAir()){
-					this.controlAirImage(content,true);
-					this.data.progress += 1/this.data.work_time;
-				}else{
-					this.controlAirImage(content,false);
-				}
-				
-				if(this.data.progress >= 1){
-					this.putResult(this.data.hasRecipe.result, sourceSlot);
-					this.data.progress = 0;
-					this.data.airCell = 0;
-					this.data.hasRecipe = 0;
+					this.controlAirImage(content, true);
+					this.data.progress++;
+					this.container.setScale("progressScale", this.data.progress / result.duration);
+					this.activate();
+					
+					if(!this.data.sourceID){
+						this.data.sourceID = source;
+						sourceSlot.count--;
+					}
+					
+					if(this.data.progress >= result.duration){
+						sourceSlot.count--;
+						this.putResult(result.result);
+						this.data.progress = 0;
+						this.data.sourceID = 0;
+					}
 					this.container.validateAll();
-					this.usingTemp = false;
 				}
-				this.activate();
-				this.setInducator(content,true);
-			}else{
-				this.setInducator(content,false);
-				this.deactivate();
+				else this.controlAirImage(content, false);
 			}
 		}else{
-			this.setInducator(content,false);
-			this.checkRecipe();
+			this.setIndicator(content, false);
 			this.deactivate();
 		}
 		
-		this.tempTick(.1);
-		this.container.setScale("progressScale", this.data.progress);
-		this.container.setScale("heatScale", this.data.temp / this.getTempStorage()||0);
+		this.data.heat = Math.max(this.data.heat - 1, 0);
+		if(this.data.sourceID == 0){
+			this.container.setScale("progressScale", 0);
+		}
     },
 	
-	getTempStorage:function(){
-		return 50000;
+	getMaxHeat: function(){
+		return 45000;
 	},
-	
-	tempTick:function(amount){
-		if(this.data.temp){
-			this.data.temp-=amount;
-		}
-	},
-	
-	usingTemp:false,
 	
 	redstone: function(signal){
 		this.data.signal = signal.power > 0;
 	},
-	init: MachineRegistry.initModel,
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy:  function(){this.deactivate()}, 
-},true);
+	
+	heatReceiveFunction: function(amount){
+		var slot = this.container.getSlot("slotSource");
+		if(this.data.isHeating || this.data.sourceID > 0 || MachineRecipeRegistry.getRecipeResult("blastFrunace", slot.id)){
+			amount = Math.min(this.getMaxHeat() - this.data.heat, Math.min(amount, 20));
+			this.data.heat += amount;
+			return amount;
+		}
+		return 0;
+	},
+	
+	hasFullRotation: true,
+}, true);
+
+TileRenderer.setRotationPlaceFunction(BlockID.blastFurnace, true);

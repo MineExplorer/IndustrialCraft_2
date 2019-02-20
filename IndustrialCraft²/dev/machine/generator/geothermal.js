@@ -1,9 +1,10 @@
 IDRegistry.genBlockID("geothermalGenerator");
-Block.createBlockWithRotation("geothermalGenerator", [
+Block.createBlock("geothermalGenerator", [
 	{name: "Geothermal Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
-MachineRenderer.setStandartModel(BlockID.geothermalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]], true);
-MachineRenderer.registerModelWithRotation(BlockID.geothermalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandartModel(BlockID.geothermalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.geothermalGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.geothermalGenerator, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 Block.registerDropFunction("geothermalGenerator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
@@ -16,6 +17,7 @@ Callback.addCallback("PreLoaded", function(){
 		"b#b"
 	], ['#', BlockID.primalGenerator, -1, 'a', ItemID.cellEmpty, 0, 'b', ItemID.casingIron, 0, 'x', 20, -1]);
 });
+
 
 var guiGeothermalGenerator = new UI.StandartWindow({
 	standart: {
@@ -32,8 +34,12 @@ var guiGeothermalGenerator = new UI.StandartWindow({
 	elements: {
 		"energyScale": {type: "scale", x: 675 + GUI_SCALE * 4, y: 106, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
 		"liquidScale": {type: "scale", x: 450 + GUI_SCALE, y: 150 + GUI_SCALE, direction: 1, value: 0.5, bitmap: "geothermal_empty_liquid_slot", overlay: "geothermal_liquid_slot_overlay", overlayOffset: {x: -GUI_SCALE, y: -GUI_SCALE}, scale: GUI_SCALE},
-		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
+		"slot1": {type: "slot", x: 441, y: 75,
+			isValid: function(id, count, data){
+				return LiquidRegistry.getItemLiquid(id, data) == "lava";
+			}
+		},
+		"slot2": {type: "slot", x: 441, y: 212, isValid: function(){return false;}},
 		"slotEnergy": {type: "slot", x: 695, y: 181, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
 		"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
 		"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
@@ -41,11 +47,10 @@ var guiGeothermalGenerator = new UI.StandartWindow({
 });
 
 
-
-
 MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
 	defaultValues: {
-		isActive: false
+		meta: 0,
+		isActive: false,
 	},
 	
 	getGuiScreen: function(){
@@ -56,15 +61,12 @@ MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
 		return {input: ["slot1"], output: ["slot2"]};
 	},
 	
+	updateMachine: MachineRegistry.updateMachine,
+	
 	init: function(){
 		this.liquidStorage.setLimit("lava", 8);
-		if(this.data.isActive){
-			var block = World.getBlock(this.x, this.y, this.z);
-			MachineRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
-		}
+		this.updateMachine();
 	},
-	
-	destroy: this.deactivate,
 	
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
@@ -113,7 +115,6 @@ MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
 		var output = Math.min(32, this.data.energy);
 		this.data.energy += src.add(output) - output;
 	},
-	
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
 });
+
+TileRenderer.setRotationPlaceFunction(BlockID.geothermalGenerator);

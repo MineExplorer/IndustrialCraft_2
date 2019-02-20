@@ -1,7 +1,11 @@
 IDRegistry.genBlockID("storageMFSU");
-Block.createBlockWithRotation("storageMFSU", [
-	{name: "MFSU", texture: [["mfsu", 0], ["mfsu", 1], ["mfsu", 1], ["mfsu", 2], ["mfsu", 1], ["mfsu", 1]], inCreative: true}
+Block.createBlock("storageMFSU", [
+	{name: "MFSU", texture: [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]], inCreative: true}
 ], "opaque");
+TileRenderer.setStandartModel(BlockID.storageMFSU, [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.storageMFSU, 0, [["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 1], ["mfsu_side", 1]]);
+TileRenderer.registerRenderModel(BlockID.storageMFSU, 1, [["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 1], ["mfsu_side", 1]]);
+TileRenderer.registerRotationModel(BlockID.storageMFSU, 2, [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]]);
 
 Block.registerDropFunction("storageMFSU", function(coords, blockID, blockData, level){
 	return [];
@@ -50,13 +54,23 @@ var guiMFSU = new UI.StandartWindow({
 
 MachineRegistry.registerPrototype(BlockID.storageMFSU, {
 	defaultValues: {
-		power_tier: 3
+		power_tier: 3,
+		meta: 0
 	},
 	
 	isStorage: true,
 	
 	getGuiScreen: function(){
 		return guiMFSU;
+	},
+	
+	wrenchClick: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
+		}else{
+			this.data.meta = coords.side;
+		}
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.storageMFSU, this.data.meta);
 	},
 	
 	tick: function(){
@@ -94,20 +108,12 @@ MachineRegistry.registerPrototype(BlockID.storageMFSU, {
 				World.drop(coords.x, coords.y, coords.z, drop[0][0], drop[0][1], drop[0][2]);
 			}
 		}
-	}
+	},
+	
+	init: MachineRegistry.updateMachine,
+	destroy: function(){
+		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+	},
 });
 
-Block.registerPlaceFunction("storageMFSU", function(coords, item, block){
-	Game.prevent();
-	var x = coords.relative.x
-	var y = coords.relative.y
-	var z = coords.relative.z
-	block = World.getBlockID(x, y, z)
-	if(GenerationUtils.isTransparentBlock(block)){
-		World.setBlock(x, y, z, item.id, 0);
-		var tile = World.addTileEntity(x, y, z);
-		if(item.extra){
-			tile.data.energy = item.extra.getInt("Eu") + 16;
-		}
-	}
-});
+MachineRegistry.setStoragePlaceFunction("storageMFSU");

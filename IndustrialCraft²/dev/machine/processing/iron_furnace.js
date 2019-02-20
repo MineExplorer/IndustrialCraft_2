@@ -1,9 +1,10 @@
 IDRegistry.genBlockID("ironFurnace");
-Block.createBlockWithRotation("ironFurnace", [
+Block.createBlock("ironFurnace", [
 	{name: "Iron Furnace", texture: [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], inCreative: true}
 ], "opaque");
-MachineRenderer.setStandartModel(BlockID.ironFurnace, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], true);
-MachineRenderer.registerModelWithRotation(BlockID.ironFurnace, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 1], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
+TileRenderer.setStandartModel(BlockID.ironFurnace, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.ironFurnace, 0, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.ironFurnace, 4, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 1], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
 
 Block.registerDropFunction("ironFurnace", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level);
@@ -34,14 +35,19 @@ var guiIronFurnace = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
 		"burningScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 79},
-		"slotFuel": {type: "slot", x: 441, y: 218},
-		"slotResult": {type: "slot", x: 625, y: 148},
+		"slotFuel": {type: "slot", x: 441, y: 218,
+			isValid: function(id, count, data){
+				return Recipes.getFuelBurnDuration(id, data) > 0;
+			}
+		},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
 	}
 });
 
 
 MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 	defaultValues: {
+		meta: 0,
 		progress: 0,
 		burn: 0,
 		burnMax: 0,
@@ -53,23 +59,23 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 	},
 	
 	addTransportedItem: function(self, item, direction){
-		var sourceSlot = this.container.getSlot("slotSource");
-		if(sourceSlot.id==0 || sourceSlot.id==item.id && sourceSlot.data==item.data && sourceSlot.count < 64){
-			var add = Math.min(item.count, 64 - sourceSlot.count);
+		var slot = this.container.getSlot("slotSource");
+		if(slot.id==0 || slot.id==item.id && slot.data==item.data && slot.count < 64){
+			var add = Math.min(item.count, 64 - slot.count);
 			item.count -= add;
-			sourceSlot.id = item.id;
-			sourceSlot.data = item.data;
-			sourceSlot.count += add;
+			slot.id = item.id;
+			slot.data = item.data;
+			slot.count += add;
 			if(!item.count){return;}
 		}
 		
-		var fuelSlot = this.container.getSlot("slotFuel");
-		if(Recipes.getFuelBurnDuration(item.id, item.data) && (fuelSlot.id==0 || fuelSlot.id==item.id && fuelSlot.data==item.data && fuelSlot.count < 64)){
-			var add = Math.min(item.count, 64 - slotFuel.count);
+		var slot = this.container.getSlot("slotFuel");
+		if(Recipes.getFuelBurnDuration(item.id, item.data) && (slot.id==0 || slot.id==item.id && slot.data==item.data && slot.count < 64)){
+			var add = Math.min(item.count, 64 - slot.count);
 			item.count -= add;
-			fuelSlot.id = item.id;
-			fuelSlot.data = item.data;
-			fuelSlot.count += add;
+			slot.id = item.id;
+			slot.data = item.data;
+			slot.count += add;
 		}
 	},
 	
@@ -81,14 +87,11 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = Recipes.getFurnaceRecipeResult(sourceSlot.id, "iron");
 		
-		if(this.data.burn > 0){
-			this.data.burn--;
-		}
-		if(this.data.burn==0 && result){
+		if(this.data.burn == 0 && result){
 			this.data.burn = this.data.burnMax = this.getFuel("slotFuel");
 		}
 		
-		if(result && this.data.burn > 0){
+		if(this.data.burn > 0 && result){
 			var resultSlot = this.container.getSlot("slotResult");
 			if((resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0) && this.data.progress++ >= 160){
 				sourceSlot.count--;
@@ -104,6 +107,7 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		}
 		
 		if(this.data.burn > 0){
+			this.data.burn--;
 			this.activate();
 		}else{
 			this.deactivate();
@@ -132,8 +136,7 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		return 0;
 	},
 	
-	init: MachineRegistry.initModel,
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy: function(){this.deactivate()}, 
+	init: MachineRegistry.updateMachine,
 }, true);
+
+TileRenderer.setRotationPlaceFunction(BlockID.ironFurnace);

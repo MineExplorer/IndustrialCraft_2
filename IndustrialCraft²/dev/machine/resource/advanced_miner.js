@@ -2,8 +2,9 @@ IDRegistry.genBlockID("advancedMiner");
 Block.createBlock("advancedMiner", [
 	{name: "Advanced Miner", texture: [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "opaque");
-MachineRenderer.setStandartModel(BlockID.advancedMiner, [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], true);
-MachineRenderer.registerModelWithRotation(BlockID.advancedMiner, [["advanced_miner_bottom", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
+TileRenderer.setStandartModel(BlockID.advancedMiner, [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], true);
+TileRenderer.registerRotationModel(BlockID.advancedMiner, 0, [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.advancedMiner, 4, [["advanced_miner_bottom", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
 
 Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData, level){
 	return [];
@@ -19,11 +20,11 @@ Item.registerNameOverrideFunction(BlockID.storageBatBox, function(item, name){
 });
 
 Callback.addCallback("PreLoaded", function(){
-    Recipes.addShaped({id: BlockID.advancedMiner, count: 1, data: 0}, [
-        "pmp",
-        "e#a",
-        "pmp"
-    ], ['#', BlockID.machineBlockAdvanced, 0, 'a', BlockID.teleporter, 0, 'e', BlockID.storageMFE, -1, 'm', BlockID.miner, -1, 'p', ItemID.plateAlloy, 0]);
+	Recipes.addShaped({id: BlockID.advancedMiner, count: 1, data: 0}, [
+		"pmp",
+		"e#a",
+		"pmp"
+	], ['#', BlockID.machineBlockAdvanced, 0, 'a', BlockID.teleporter, 0, 'e', BlockID.storageMFE, -1, 'm', BlockID.miner, -1, 'p', ItemID.plateAlloy, 0]);
 });
 
 function isValidMinerUpgrade(id){
@@ -38,9 +39,9 @@ var guiAdvancedMiner = new UI.StandartWindow({
 		background: {standart: true},
 	},
 
-	params: {       
+	params: {
 		slot: "default_slot",
-		invSlot: "default_slot"              
+		invSlot: "default_slot"
 	},
 
 	drawing: [
@@ -77,30 +78,29 @@ var guiAdvancedMiner = new UI.StandartWindow({
 		"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE, isValid: isValidMinerUpgrade},
 		"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE, isValid: isValidMinerUpgrade},
 		"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
-			onClick: function(container, tileEntity){
-				tileEntity.data.whitelist = !tileEntity.data.whitelist;
+			onClick: function(container, tile){
+				tile.data.whitelist = !tile.data.whitelist;
 			}
 		}},
 		"button_restart": {type: "button", x: 400 + 125*GUI_SCALE, y: 50 + 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
-			onClick: function(container, tileEntity){
-				tileEntity.data.x = tileEntity.data.y = tileEntity.data.z =  0;
+			onClick: function(container, tile){
+				tile.data.x = tile.data.y = tile.data.z =  0;
 			}
 		}},
 		"button_silk": {type: "button", x: 400 + 126*GUI_SCALE, y: 50 + 41*GUI_SCALE, bitmap: "miner_button_silk_0", scale: GUI_SCALE, clicker: {
-			onClick: function(container, tileEntity){
-				tileEntity.data.silk_touch = (tileEntity.data.silk_touch+1)%2;
+			onClick: function(container, tile){
+				tile.data.silk_touch = (tile.data.silk_touch+1)%2;
 			}
 		}},
-		"textInfoMode": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 31*GUI_SCALE, y: 50+25*GUI_SCALE, width: 256, height: 42, text: "Mode: Blacklist"},
-		"textInfoXYZ": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 3*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
-		//"textInfoY": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 6*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: "Y: -1"},
-		//"textInfoZ": {font: {color: android.graphics.Color.GREEN}, type: "text", x: 400 + 6*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: "Z: 0"},
+		"textInfoMode": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 32*GUI_SCALE, y: 50+24*GUI_SCALE, width: 256, height: 42, text: "Mode: Blacklist"},
+		"textInfoXYZ": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 4*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
 	}
 });
 
 MachineRegistry.registerPrototype(BlockID.advancedMiner, {
 	defaultValues: {
 		power_tier: 2,
+		meta: 0,
 		x: 0,
 		y: 0,
 		z: 0,
@@ -126,7 +126,7 @@ MachineRegistry.registerPrototype(BlockID.advancedMiner, {
 		return false;
 	},
 	
-	hasInvalidDrop: function(drop){
+	checkDrop: function(drop){
 		if(drop.length == 0) return true;
 		for(var i in drop){
 			for(var j = 0; j < 16; j++){
@@ -139,7 +139,7 @@ MachineRegistry.registerPrototype(BlockID.advancedMiner, {
 	
 	harvestBlock: function(x, y, z, block){
 		var drop = getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, 100, {silk: this.data.silk_touch});
-		if(this.hasInvalidDrop(drop)) return false;
+		if(this.checkDrop(drop)) return false;
 		World.setBlock(x, y, z, 0);
 		var items = [];
 		for(var i in drop){
@@ -151,9 +151,9 @@ MachineRegistry.registerPrototype(BlockID.advancedMiner, {
 	},
 
 	drop: function(items){
-		var containers = UpgradeAPI.findNearestContainers(this, "down", true);
+		var containers = StorageInterface.getNearestContainers(this, 0, true);
 		if(containers){
-			addItemsToContainers(items, containers);
+			StorageInterface.putItems(items, containers);
 		}
 		for(var i in items){
 			var item = items[i]
@@ -264,17 +264,4 @@ MachineRegistry.registerPrototype(BlockID.advancedMiner, {
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
 
-Block.registerPlaceFunction("advancedMiner", function(coords, item, block){
-	Game.prevent();
-	var x = coords.relative.x
-	var y = coords.relative.y
-	var z = coords.relative.z
-	block = World.getBlockID(x, y, z)
-	if(GenerationUtils.isTransparentBlock(block)){
-		World.setBlock(x, y, z, item.id, 0);
-		var tile = World.addTileEntity(x, y, z);
-		if(item.extra){
-			tile.data.energy = item.extra.getInt("Eu") + 16;
-		}
-	}
-});
+MachineRegistry.setStoragePlaceFunction("advancedMiner");

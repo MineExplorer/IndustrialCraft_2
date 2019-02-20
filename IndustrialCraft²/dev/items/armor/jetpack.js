@@ -1,5 +1,5 @@
 IDRegistry.genItemID("jetpack");
-Item.createArmorItem("jetpack", "Jetpack", {name: "jetpack"}, {type: "chestplate", armor: 3, durability: 30000, texture: "armor/jetpack_1.png"});
+Item.createArmorItem("jetpack", "Jetpack", {name: "electric_jetpack"}, {type: "chestplate", armor: 3, durability: 30000, texture: "armor/jetpack_1.png"});
 ChargeItemRegistry.registerItem(ItemID.jetpack, "Eu", 30000, 0);
 Item.registerNameOverrideFunction(ItemID.jetpack, ENERGY_ITEM_NAME);
 

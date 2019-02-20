@@ -17,7 +17,7 @@ function destroyLeaves(x, y, z){
 
 IDRegistry.genBlockID("rubberTreeLog");
 Block.createBlock("rubberTreeLog", [
-	{name: "Rubber Tree Log", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: true}
+	{name: "Rubber Tree Log", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: true}
 ], "opaque");
 Block.registerDropFunction("rubberTreeLog", function(coords, blockID){
 	destroyLeaves(coords.x, coords.y, coords.z);
@@ -27,12 +27,9 @@ Block.setDestroyTime(BlockID.rubberTreeLog, 0.4);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
 
 IDRegistry.genBlockID("rubberTreeLogLatex");
-Block.createBlock("rubberTreeLogLatex", [
-	{name: "tile.rubberTreeLog.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false},
-	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 2], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false},
-	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 2], ["rubber_tree_log", 0], ["rubber_tree_log", 0]], inCreative: false},
-	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 2], ["rubber_tree_log", 0]], inCreative: false},
-	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_tree_log", 1], ["rubber_tree_log", 1], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 0], ["rubber_tree_log", 2]], inCreative: false}
+Block.createBlockWithRotation("rubberTreeLogLatex", [
+	{name: "tile.rubberTreeLog.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_with_latex", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
+	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_with_latex", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
 ], "opaque");
 Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID){
 	destroyLeaves(coords.x, coords.y, coords.z);
@@ -41,8 +38,8 @@ Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID){
 Block.setDestroyTime(BlockID.rubberTreeLogLatex, 0.4);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
 Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, data){
-	if(data==0 && Math.random() < 0.1){
-		World.setBlock(x, y, z, id, parseInt(Math.random()*4 + 1));
+	if(data < 4 && Math.random() < 0.1){
+		World.setBlock(x, y, z, id, data + 4);
 	}
 });
 
@@ -95,7 +92,7 @@ var RubberTreeGenerationHelper = {
 		var k = 0.25;
 		for(var ys = 0; ys < height; ys++){
 			if(log.resin && Math.random() < k){
-				World.setBlock(x, y + ys, z, log.resin, parseInt(Math.random()*4 + 1));
+				World.setBlock(x, y + ys, z, log.resin, parseInt(Math.random()*4) + 4);
 				k -= 0.1;
 			}
 			else{

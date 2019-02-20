@@ -1,7 +1,9 @@
 IDRegistry.genBlockID("genWindmill");
-Block.createBlockWithRotation("genWindmill", [
+Block.createBlock("genWindmill", [
 	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
+TileRenderer.setStandartModel(BlockID.genWindmill, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.genWindmill, 0, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
 
 Block.registerDropFunction("genWindmill", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
@@ -17,13 +19,14 @@ Callback.addCallback("PreLoaded", function(){
 
 MachineRegistry.registerPrototype(BlockID.genWindmill, {
 	defaultValues: {
+		meta: 0,
 		output: 0
 	},
 	
 	isGenerator: function() {
 		return true;
 	},
-
+	
 	energyTick: function(type, src){
 		if(World.getThreadTime()%20 == 0){
 			var height = Math.max(0, Math.min(this.y-64, 96)) / 64;
@@ -41,6 +44,12 @@ MachineRegistry.registerPrototype(BlockID.genWindmill, {
 			}else{this.data.output = 0;}
 		}
 		src.add(this.data.output);
-	}
+	},
+	
+	init: MachineRegistry.updateMachine,
+	destroy: function(){
+		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+	},
 });
 
+TileRenderer.setRotationPlaceFunction(BlockID.genWindmill);

@@ -1,9 +1,10 @@
 IDRegistry.genBlockID("extractor");
-Block.createBlockWithRotation("extractor", [
+Block.createBlock("extractor", [
 	{name: "Extractor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], inCreative: true}
 ], "opaque");
-MachineRenderer.setStandartModel(BlockID.extractor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], true);
-MachineRenderer.registerModelWithRotation(BlockID.extractor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 1], ["extractor_side", 1], ["extractor_side", 1]]);
+TileRenderer.setStandartModel(BlockID.extractor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], true);
+TileRenderer.registerRotationModel(BlockID.extractor, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.extractor, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 1], ["extractor_side", 1], ["extractor_side", 1]]);
 
 Block.registerDropFunction("extractor", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
@@ -43,9 +44,9 @@ var guiExtractor = new UI.StandartWindow({
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-        "slotSource": {type: "slot", x: 441, y: 79},
-        "slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-        "slotResult": {type: "slot", x: 625, y: 148},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
 		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
 		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
@@ -59,6 +60,7 @@ MachineRegistry.registerPrototype(BlockID.extractor, {
 		energy_storage: 1200,
 		energy_consumption: 2,
 		work_time: 400,
+		meta: 0,
 		progress: 0,
 		isActive: false
 	},
@@ -93,7 +95,7 @@ MachineRegistry.registerPrototype(BlockID.extractor, {
 			else{
 				this.deactivate();
 			}
-			if(this.data.progress >= 1){
+			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
 				resultSlot.id = result.id;
 				resultSlot.data = result.data;
@@ -120,9 +122,8 @@ MachineRegistry.registerPrototype(BlockID.extractor, {
 		return this.data.energy_storage;
 	},
 	
-	init: MachineRegistry.initModel,
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy: this.deactivate,
+	init: MachineRegistry.updateMachine,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
+
+TileRenderer.setRotationPlaceFunction(BlockID.extractor);

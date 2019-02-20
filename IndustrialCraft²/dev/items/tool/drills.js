@@ -41,47 +41,47 @@ Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
 
 
 Recipes.addShaped({id: ItemID.drill, count: 1, data: Item.getMaxDamage(ItemID.drill)}, [
-    " p ",
-    "ppp",
-    "pxp"
+	" p ",
+	"ppp",
+	"pxp"
 ], ['x', ItemID.powerUnit, 0, 'p', ItemID.plateIron, 0]);
 
 Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: Item.getMaxDamage(ItemID.diamondDrill)}, [
-    " a ",
-    "ada"
+	" a ",
+	"ada"
 ], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transportEnergy);
 
 Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(ItemID.iridiumDrill)}, [
-    " a ",
-    "ada",
-    " e "
+	" a ",
+	"ada",
+	" e "
 ], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transportEnergy);
 
 
 ToolType.drill = {
-    damage: 0,
-    blockTypes: ["stone", "dirt"],
-    onDestroy: function(item){
-        item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 1, Item.getMaxDamage(item.id));
-    },
-    onBroke: function(item){return true;},
-    onAttack: function(item, mob){
-        item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 2, Item.getMaxDamage(item.id));
-    },
-    calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
-        if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
-            return destroyTime;
-        }
-        else{
-            return params.base;
-        }
-    },
-    useItem: function(coords, item, block){
-    	var side = coords.side;
-    	coords = coords.relative;
-    	block = World.getBlockID(coords.x, coords.y, coords.z);
-    	if(block==0){
-	    	for(var i = 0; i < 36; i++){
+	damage: 0,
+	blockTypes: ["stone", "dirt"],
+	onDestroy: function(item){
+		item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 1, Item.getMaxDamage(item.id));
+	},
+	onBroke: function(item){return true;},
+	onAttack: function(item, mob){
+		item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 2, Item.getMaxDamage(item.id));
+	},
+	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
+		if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
+			return destroyTime;
+		}
+		else{
+			return params.base;
+		}
+	},
+	useItem: function(coords, item, block){
+		var side = coords.side;
+		coords = coords.relative;
+		block = World.getBlockID(coords.x, coords.y, coords.z);
+		if(block==0){
+			for(var i = 0; i < 36; i++){
 				var slot = Player.getInventorySlot(i);
 				if(slot.id==50){
 					slot.count--;
@@ -91,8 +91,8 @@ ToolType.drill = {
 					break;
 				}
 			}
-	    }
-   }
+		}
+	}
 }
 var extraData;
 var dirtBlocksDrop = {13:318, 60:3, 110:3, 198:3, 243:3};

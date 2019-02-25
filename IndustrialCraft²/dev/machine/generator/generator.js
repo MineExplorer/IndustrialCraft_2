@@ -118,4 +118,4 @@ MachineRegistry.registerPrototype(BlockID.primalGenerator, {
 	init: MachineRegistry.updateMachine,
 });
 
-TileRenderer.setRotationPlaceFunction(BlockID.generator);
+TileRenderer.setRotationPlaceFunction(BlockID.primalGenerator);

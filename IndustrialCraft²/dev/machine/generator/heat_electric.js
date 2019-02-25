@@ -132,6 +132,8 @@ MachineRegistry.registerPrototype(BlockID.electricHeatGenerator, {
 	},
 	
 	hasFullRotation: true,
+	
+	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.electricHeatGenerator, true);

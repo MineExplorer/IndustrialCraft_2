@@ -257,10 +257,6 @@ MachineRegistry.registerPrototype(BlockID.advancedMiner, {
 		return 4000000;
 	},
 
-	init: MachineRegistry.initModel,
-	activate: MachineRegistry.activateMachine,
-	deactivate: MachineRegistry.deactivateMachine,
-	destroy: this.deactivate,
 	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
 

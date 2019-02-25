@@ -20,11 +20,11 @@ Callback.addCallback("PreLoaded", function(){
 
 Callback.addCallback("PreLoaded", function(){
 	MachineRecipeRegistry.registerRecipesFor("extractor", {
-		"ItemID.latex": {id: ItemID.rubber, count: 3, data: 0},
-		"ItemID.rubberSapling": {id: ItemID.rubber, count: 1, data: 0},
-		"BlockID.rubberTreeLog": {id: ItemID.rubber, count: 1, data: 0},
-		35: {id: 35, count: 1, data: 0},
-		289: {id: ItemID.dustSulfur, count: 1, data: 0},
+		"ItemID.latex": {id: ItemID.rubber, count: 3},
+		"ItemID.rubberSapling": {id: ItemID.rubber, count: 1},
+		"BlockID.rubberTreeLog": {id: ItemID.rubber, count: 1},
+		35: {id: 35, count: 1},
+		289: {id: ItemID.dustSulfur, count: 1},
 	}, true);
 });
 
@@ -86,7 +86,7 @@ MachineRegistry.registerPrototype(BlockID.extractor, {
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
 		var result = MachineRecipeRegistry.getRecipeResult("extractor", sourceSlot.id);
-		if(result && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)){
+		if(result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)){
 			if(this.data.energy >= this.data.energy_consumption){
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
@@ -98,7 +98,6 @@ MachineRegistry.registerPrototype(BlockID.extractor, {
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
 				resultSlot.id = result.id;
-				resultSlot.data = result.data;
 				resultSlot.count += result.count;
 				this.container.validateAll();
 				this.data.progress = 0;

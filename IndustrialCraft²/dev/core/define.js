@@ -127,7 +127,7 @@ var MachineRegistry = {
 	
 	initModel: function(){
 		var index = this.hasFullRotation? 6 : 4;
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + index*this.data.isActive);
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + (this.data.isActive? index : 0));
 	},
 	
 	activateMachine: function(){
@@ -152,7 +152,7 @@ var MachineRegistry = {
 			World.setBlock(this.x, this.y, this.z, this.id, 0);
 			this.data.meta = 0;
 		}
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + (4*this.data.isActive || 0));
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + (this.data.isActive? 4 : 0));
 	},
 	
 	basicEnergyReceiveFunc: function(type, src){

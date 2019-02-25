@@ -85,16 +85,6 @@ Callback.addCallback("PreLoaded", function(){
 	], ['b', ItemID.wrenchBronze, 0, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, 0]);
 });
 
-/*
-var directionByData = {
-	1: "down",
-	2: "up",
-	3: "north",
-	4: "south",
-	5: "west",
-	6: "east"
-}
-*/
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, function(item, machine, container, data, coords){
 	if(data.work_time){

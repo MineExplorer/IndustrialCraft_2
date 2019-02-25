@@ -68,5 +68,5 @@ Callback.addCallback("PreLoaded", function(){
 		"aсa",
 		"aсa",
 		"aсa"
-	], ['с', ItemID.casingCopper, 0,'a', ItemID.latex, 0]);
+	], ['с', ItemID.plateCopper, 0,'a', ItemID.latex, 0]);
 });

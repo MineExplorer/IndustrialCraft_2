@@ -48,6 +48,7 @@ Callback.addCallback("PreLoaded", function(){
 	Recipes.addFurnace(ItemID.plateCopper, ItemID.ingotCopper, 0);
 	Recipes.addFurnace(ItemID.plateTin, ItemID.ingotTin, 0);
 	Recipes.addFurnace(ItemID.plateBronze, ItemID.ingotBronze, 0);
+	Recipes.addFurnace(ItemID.plateSteel, ItemID.ingotSteel, 0);
 	Recipes.addFurnace(ItemID.plateIron, 265, 0);
 	Recipes.addFurnace(ItemID.plateGold, 266, 0);
 	Recipes.addFurnace(ItemID.plateLead, ItemID.ingotLead, 0);

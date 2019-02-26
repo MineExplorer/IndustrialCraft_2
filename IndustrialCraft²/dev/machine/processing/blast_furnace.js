@@ -175,7 +175,6 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 					}
 					
 					if(this.data.progress >= result.duration){
-						sourceSlot.count--;
 						this.putResult(result.result);
 						this.data.progress = 0;
 						this.data.sourceID = 0;

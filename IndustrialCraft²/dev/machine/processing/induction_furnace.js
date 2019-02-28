@@ -19,33 +19,37 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiInductionFurnace = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Induction Furnace"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 630, y: 146, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
-	],
-	
-	elements: {
-		"progressScale": {type: "scale", x: 630, y: 146, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
-		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotSource1": {type: "slot", x: 511, y: 75},
-		"slotSource2": {type: "slot", x: 571, y: 75},
-		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
-		"slotResult1": {type: "slot", x: 725, y: 142, isValid: function(){return false;}},
-		"slotResult2": {type: "slot", x: 785, y: 142, isValid: function(){return false;}},
-		"slotUpgrade1": {type: "slot", x: 900, y: 80, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 900, y: 144, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 900, y: 208, isValid: UpgradeAPI.isUpgrade},
-		"textInfo1": {type: "text", x: 402, y: 143, width: 100, height: 30, text: "Heat:"},
-		"textInfo2": {type: "text", x: 402, y: 173, width: 100, height: 30, text: "0%"},
-	}
+var guiInductionFurnace = null;
+Callback.addCallback("LevelLoaded", function(){
+	guiInductionFurnace = new UI.StandartWindow({
+		standart: {
+			header: {text: {text: Translation.translate("Induction Furnace")}},
+			inventory: {standart: true},
+			background: {standart: true}
+		},
+		
+		drawing: [
+			{type: "bitmap", x: 630, y: 146, bitmap: "arrow_bar_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
+		],
+		
+		elements: {
+			"progressScale": {type: "scale", x: 630, y: 146, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
+			"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+			"slotSource1": {type: "slot", x: 511, y: 75},
+			"slotSource2": {type: "slot", x: 571, y: 75},
+			"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
+			"slotResult1": {type: "slot", x: 725, y: 142, isValid: function(){return false;}},
+			"slotResult2": {type: "slot", x: 785, y: 142, isValid: function(){return false;}},
+			"slotUpgrade1": {type: "slot", x: 900, y: 80, isValid: UpgradeAPI.isUpgrade},
+			"slotUpgrade2": {type: "slot", x: 900, y: 144, isValid: UpgradeAPI.isUpgrade},
+			"slotUpgrade3": {type: "slot", x: 900, y: 208, isValid: UpgradeAPI.isUpgrade},
+			"textInfo1": {type: "text", x: 402, y: 143, width: 100, height: 30, text: "Heat:"},
+			"textInfo2": {type: "text", x: 402, y: 173, width: 100, height: 30, text: "0%"},
+		}
+	});
 });
+
 
 MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	defaultValues: {

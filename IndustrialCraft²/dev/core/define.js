@@ -85,7 +85,7 @@ var MachineRegistry = {
 	},
 	
 	// standart functions
-	setStoragePlaceFunction: function(id){
+	setStoragePlaceFunction: function(id, fullRotation){
 		Block.registerPlaceFunction(BlockID[id], function(coords, item, block){
 			Game.prevent();
 			var x = coords.relative.x
@@ -94,7 +94,7 @@ var MachineRegistry = {
 			block = World.getBlockID(x, y, z)
 			if(GenerationUtils.isTransparentBlock(block)){
 				World.setBlock(x, y, z, item.id, 0);
-				var rotation = TileRenderer.getBlockRotation(true);
+				var rotation = TileRenderer.getBlockRotation(fullRotation);
 				var tile = World.addTileEntity(x, y, z);
 				tile.data.meta = rotation;
 				TileRenderer.mapAtCoords(x, y, z, item.id, rotation);

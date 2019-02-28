@@ -21,26 +21,29 @@ Callback.addCallback("PreLoaded", function(){
 
 var ENERGY_PER_MATTER = 1000000;
 
-var guiMassFabricator = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Mass Fabricator"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_SCALE}
-	],
-	
-	elements: {
-		"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"matterSlot": {type: "slot", x: 821, y: 75, size: 100, isValid: function(){return false;}},
-		"catalyserSlot": {type: "slot", x: 841, y: 252},
-		"textInfo1": {type: "text", x: 542, y: 142, width: 200, height: 30, text: "Progress:"},
-		"textInfo2": {type: "text", x: 542, y: 177, width: 200, height: 30, text: "0%"},
-		"textInfo3": {type: "text", x: 542, y: 212, width: 200, height: 30, text: " "},
-		"textInfo4": {type: "text", x: 542, y: 239, width: 200, height: 30, text: " "},
-	}
+var guiMassFabricator = null;
+Callback.addCallback("LevelLoaded", function(){
+	guiMassFabricator = new UI.StandartWindow({
+		standart: {
+			header: {text: {text: Translation.translate("Mass Fabricator")}},
+			inventory: {standart: true},
+			background: {standart: true}
+		},
+		
+		drawing: [
+			{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_SCALE}
+		],
+		
+		elements: {
+			"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+			"matterSlot": {type: "slot", x: 821, y: 75, size: 100, isValid: function(){return false;}},
+			"catalyserSlot": {type: "slot", x: 841, y: 252},
+			"textInfo1": {type: "text", x: 542, y: 142, width: 200, height: 30, text: "Progress:"},
+			"textInfo2": {type: "text", x: 542, y: 177, width: 200, height: 30, text: "0%"},
+			"textInfo3": {type: "text", x: 542, y: 212, width: 200, height: 30, text: " "},
+			"textInfo4": {type: "text", x: 542, y: 239, width: 200, height: 30, text: " "},
+		}
+	});
 });
 
 

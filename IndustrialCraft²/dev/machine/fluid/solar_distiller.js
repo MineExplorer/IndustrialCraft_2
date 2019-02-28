@@ -16,27 +16,31 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiSolarDistiller = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Solar Distiller"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	params: {       
-		slot: "default_slot",
-		invSlot: "default_slot"              
-	},
-	
-	drawing: [
-		{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-	],
-	
-	elements: {
-		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
-		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
-	}
+var guiSolarDistiller = null;
+Callback.addCallback("LevelLoaded", function(){
+	guiSolarDistiller = new UI.StandartWindow({
+		standart: {
+			header: {text: {text: Translation.translate("Solar Distiller")}},
+			inventory: {standart: true},
+			background: {standart: true}
+		},
+		
+		params: {       
+			slot: "default_slot",
+			invSlot: "default_slot"              
+		},
+		
+		drawing: [
+			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
+		],
+		
+		elements: {
+			"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
+			"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
+		}
+	});
 });
+
 
 MachineRegistry.registerPrototype(BlockID.solarDistiller, {
 	getGuiScreen: function(){

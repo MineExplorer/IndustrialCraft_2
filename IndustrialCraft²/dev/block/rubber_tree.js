@@ -59,7 +59,7 @@ Block.registerDropFunction("rubberTreeLeaves", function(){
 Block.setDestroyTime(BlockID.rubberTreeLeaves, 0.2);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLeaves, "plant");
 
-Recipes.addShaped({id: 5, count: 3, data: 3}, ["x"], ['x', BlockID.rubberTreeLog, -1]);
+Recipes.addShapeless({id: 5, count: 3, data: 3}, [{id: BlockID.rubberTreeLog, data: -1}]);
 
 
 

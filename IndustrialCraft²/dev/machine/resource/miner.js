@@ -19,46 +19,50 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiMiner = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Miner"}},
-		inventory: {standart: true},
-		background: {standart: true},
-	},
-
-	params: {
-		slot: "default_slot",
-		invSlot: "default_slot"
-	},
-
-	drawing: [
-		{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill", 
-			isValid: function(id){
-				if(id == ItemID.drill || id == ItemID.diamondDrill) return true;
-				return false;
-			}
+var guiMiner = null;
+Callback.addCallback("LevelLoaded", function(){
+	guiMiner = new UI.StandartWindow({
+		standart: {
+			header: {text: {text: Translation.translate("Miner")}},
+			inventory: {standart: true},
+			background: {standart: true},
 		},
-		"slotPipe": {type: "slot", x: 541, y: 75,
-			isValid: function(id){
-				if(id < 256 || id >= 8192) return true;
-				return false;
-			}
+
+		params: {
+			slot: "default_slot",
+			invSlot: "default_slot"
 		},
-		"slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner", 
-			isValid: function(id){
-				if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
-				return false;
-			}
-		},
-		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
-	}
+
+		drawing: [
+			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
+			{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
+		],
+
+		elements: {
+			"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
+			"slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill", 
+				isValid: function(id){
+					if(id == ItemID.drill || id == ItemID.diamondDrill) return true;
+					return false;
+				}
+			},
+			"slotPipe": {type: "slot", x: 541, y: 75,
+				isValid: function(id){
+					if(id < 256 || id >= 8192) return true;
+					return false;
+				}
+			},
+			"slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner", 
+				isValid: function(id){
+					if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
+					return false;
+				}
+			},
+			"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
+		}
+	});
 });
+
 
 var dropData0 = [3, 25, 39, 40, 46, 50, 53, 54, 58, 65, 72, 96, 107, 134, 135, 136, 143, 146, 163, 164, 165, 170, 183, 184, 185, 186, 187];
 

@@ -25,30 +25,33 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiGenerator = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Generator"}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	
-	drawing: [
-		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 450, y: 150, bitmap: "fire_background", scale: GUI_SCALE},
-	],
-	
-	elements: {
-		"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-		"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-		"slotEnergy": {type: "slot", x: 441, y: 75, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
-		"slotFuel": {type: "slot", x: 441, y: 212,
-			isValid: function(id, count, data){
-				return Recipes.getFuelBurnDuration(id, data) > 0;
-			}
+var guiGenerator = null;
+Callback.addCallback("LevelLoaded", function(){
+	guiGenerator = new UI.StandartWindow({
+		standart: {
+			header: {text: {text: Translation.translate("Generator")}},
+			inventory: {standart: true},
+			background: {standart: true}
 		},
-		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
-	}
+		
+		drawing: [
+			{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 450, y: 150, bitmap: "fire_background", scale: GUI_SCALE},
+		],
+		
+		elements: {
+			"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+			"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
+			"slotEnergy": {type: "slot", x: 441, y: 75, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
+			"slotFuel": {type: "slot", x: 441, y: 212,
+				isValid: function(id, count, data){
+					return Recipes.getFuelBurnDuration(id, data) > 0;
+				}
+			},
+			"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
+			"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
+		}
+	});
 });
 
 

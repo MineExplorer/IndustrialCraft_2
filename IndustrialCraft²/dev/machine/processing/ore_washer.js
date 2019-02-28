@@ -16,10 +16,8 @@ Callback.addCallback("PreLoaded", function(){
 		"b#b",
 		"xcx"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.electricMotor, 0, 'a', ItemID.plateIron, 0, 'b', 325, 0, 'c', ItemID.circuitBasic, 0]);
-});
-
-
-Callback.addCallback("PreLoaded", function(){
+	
+	
 	MachineRecipeRegistry.registerRecipesFor("oreWasher", {
 		"ItemID.crushedCopper": [ItemID.crushedPurifiedCopper, 1, ItemID.dustSmallCopper, 2, ItemID.dustStone, 1],
 		"ItemID.crushedTin": [ItemID.crushedPurifiedTin, 1, ItemID.dustSmallTin, 2, ItemID.dustStone, 1],
@@ -33,45 +31,49 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiOreWasher = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: "Ore Washing Plant"}},
-		inventory: {standart: true},
-		background: {standart: true},
-	},
-	
-	params: {
-		slot: "default_slot",
-		invSlot: "default_slot"
-	},
-	
-	drawing: [
-		{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-		{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
-	],
-	
-	elements: {
-		"progressScale": {type: "scale", x: 400 + 98*GUI_SCALE, y: 50 + 35*GUI_SCALE, direction: 0, value: 0.5, bitmap: "ore_washer_bar_scale", scale: GUI_SCALE},
-		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"liquidScale": {type: "scale", x: 592, y: 50 + 21*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
-		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 12*GUI_SCALE,
-			isValid: function(id, count, data){
-				return LiquidRegistry.getItemLiquid(id, data) == "water";
-			}
+var guiOreWasher = null;
+Callback.addCallback("LevelLoaded", function(){
+	guiOreWasher = new UI.StandartWindow({
+		standart: {
+			header: {text: {text: Translation.translate("Ore Washing Plant")}},
+			inventory: {standart: true},
+			background: {standart: true},
 		},
-		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
-		"slotSource": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 12*GUI_SCALE},
-		"slotResult1": {type: "slot", x: 400 + 80*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
-		"slotResult2": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
-		"slotResult3": {type: "slot", x: 400 + 118*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 20*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 39*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-	}
+		
+		params: {
+			slot: "default_slot",
+			invSlot: "default_slot"
+		},
+		
+		drawing: [
+			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
+			{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
+		],
+		
+		elements: {
+			"progressScale": {type: "scale", x: 400 + 98*GUI_SCALE, y: 50 + 35*GUI_SCALE, direction: 0, value: 0.5, bitmap: "ore_washer_bar_scale", scale: GUI_SCALE},
+			"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+			"liquidScale": {type: "scale", x: 592, y: 50 + 21*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+			"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
+			"slotLiquid1": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 12*GUI_SCALE,
+				isValid: function(id, count, data){
+					return LiquidRegistry.getItemLiquid(id, data) == "water";
+				}
+			},
+			"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
+			"slotSource": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 12*GUI_SCALE},
+			"slotResult1": {type: "slot", x: 400 + 80*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
+			"slotResult2": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
+			"slotResult3": {type: "slot", x: 400 + 118*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
+			"slotUpgrade1": {type: "slot", x: 870, y: 50 + GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+			"slotUpgrade2": {type: "slot", x: 870, y: 50 + 20*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+			"slotUpgrade3": {type: "slot", x: 870, y: 50 + 39*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+			"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		}
+	});
 });
+
 
 MachineRegistry.registerPrototype(BlockID.oreWasher, {
 	defaultValues: {

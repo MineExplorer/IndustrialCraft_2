@@ -51,6 +51,14 @@ ToolAPI.registerBlockMaterial(BlockID.blockSilver, "stone", 3, true);
 Block.setDestroyTime(BlockID.blockSilver, 5);
 Block.setDestroyLevel("blockSilver", 3);
 
+IDRegistry.genBlockID("blockUranium");
+Block.createBlock("blockUranium", [
+	{name: "Uranium Block", texture: [["block_uranium", 0], ["block_uranium", 0], ["block_uranium", 1]], inCreative: true}
+], "opaque");
+ToolAPI.registerBlockMaterial(BlockID.blockUranium, "stone", 3, true);
+Block.setDestroyTime(BlockID.blockUranium, 5);
+Block.setDestroyLevel("blockUranium", 3);
+
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.blockCopper, count: 1, data: 0}, [
@@ -89,10 +97,17 @@ Callback.addCallback("PreLoaded", function(){
 		"xxx"
 	], ['x', ItemID.ingotSilver, 0]);
 	
+	Recipes.addShaped({id: BlockID.blockUranium, count: 1, data: 0}, [
+		"xxx",
+		"xxx",
+		"xxx"
+	], ['x', ItemID.uranium238, 0]);
+	
 	Recipes.addShapeless({id: ItemID.ingotCopper, count: 9, data: 0}, [{id: BlockID.blockCopper, data: 0}]);
 	Recipes.addShapeless({id: ItemID.ingotTin, count: 9, data: 0}, [{id: BlockID.blockTin, data: 0}]);
 	Recipes.addShapeless({id: ItemID.ingotBronze, count: 9, data: 0}, [{id: BlockID.blockBronze, data: 0}]);
 	Recipes.addShapeless({id: ItemID.ingotLead, count: 9, data: 0}, [{id: BlockID.blockLead, data: 0}]);
 	Recipes.addShapeless({id: ItemID.ingotSteel, count: 9, data: 0}, [{id: BlockID.blockSteel, data: 0}]);
 	Recipes.addShapeless({id: ItemID.ingotSilver, count: 9, data: 0}, [{id: BlockID.blockSilver, data: 0}]);
+	Recipes.addShapeless({id: ItemID.uranium238, count: 9, data: 0}, [{id: BlockID.blockUranium, data: 0}]);
 });

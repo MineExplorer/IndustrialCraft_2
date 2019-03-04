@@ -134,7 +134,7 @@ MachineRegistry.registerPrototype(BlockID.advancedMiner, {
 		for(var i in drop){
 			for(var j = 0; j < 16; j++){
 				var slot = this.container.getSlot("slot"+j);
-				if(slot.id == drop[i][0] && slot.data == drop[i][1]){return !this.data.whitelist;}
+				if(slot.id == drop[i][0] && slot.data == drop[i][2]){return !this.data.whitelist;}
 			}
 		}
 		return this.data.whitelist;

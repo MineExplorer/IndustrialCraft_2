@@ -46,7 +46,7 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 function random(min, max){
-	return Math.ceil(Math.random() * (max - min)) + min;
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function addShapelessRecipe(result, source){

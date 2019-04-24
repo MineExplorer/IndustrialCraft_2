@@ -50,7 +50,7 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
+MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 	defaultValues: {
 		meta: 0,
 		isActive: false,
@@ -104,10 +104,6 @@ MachineRegistry.registerPrototype(BlockID.geothermalGenerator, {
 		this.container.setText("textInfo1", parseInt(this.liquidStorage.getAmount("lava") * 1000) + "/");
 		this.liquidStorage.updateUiScale("liquidScale", "lava");
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
-	},
-	
-	isGenerator: function() {
-		return true;
 	},
 	
 	getEnergyStorage: function(){

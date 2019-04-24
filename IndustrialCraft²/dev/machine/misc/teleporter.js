@@ -17,27 +17,21 @@ Callback.addCallback("PreLoaded", function(){
 	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.circuitAdvanced, 0, 'a', ItemID.freqTransmitter, 0, 'c', ItemID.cableOptic, 0, 'd', 264, 0]);
 });
 
-var friendlyMobs = [EntityType.BAT, EntityType.CHICKEN, EntityType.COW, EntityType.MUSHROOM_COW, EntityType.OCELOT, EntityType.PIG, EntityType.RABBIT, EntityType.SHEEP, EntityType.SNOW_GOLEM, EntityType.SQUID, EntityType.VILLAGER, EntityType.WOLF, 23, 24, 25, 26, 27];
-var evilMobs = [EntityType.BLAZE, EntityType.CAVE_SPIDER, EntityType.CREEPER, EntityType.ENDERMAN, EntityType.GHAST, EntityType.IRON_GOLEM, EntityType.LAVA_SLIME, EntityType.PIG_ZOMBIE, EntityType.SILVERFISH, EntityType.SKELETON, EntityType.SLIME, EntityType.SPIDER, EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER, 45, 46, 47, 48, 49, 55];
-
-function getNearestStorages(x, y, z){
-	var directions = StorageInterface.directionsBySide;
-	var storages = [];
-	for(var i in directions){
-		dir = directions[i]
-		var machine = EnergyTileRegistry.accessMachineAtCoords(x + dir.x, y + dir.y, z + dir.z);
-		if(machine && machine.isStorage){
-			storages.push(machine);
-		}
-	}
-	return storages;
-}
 
 MachineRegistry.registerPrototype(BlockID.teleporter, {
-	defaultValues: {
-		isActive: false,
+	getNearestStorages: function(x, y, z){
+		var directions = StorageInterface.directionsBySide;
+		var storages = [];
+		for(var i in directions){
+			dir = directions[i];
+			var machine = EnergyTileRegistry.accessMachineAtCoords(x + dir.x, y + dir.y, z + dir.z);
+			if(machine && machine.isTeleporterCompatible){
+				storages.push(machine);
+			}
+		}
+		return storages;
 	},
-	
+
 	getWeight: function(ent){
 		var type = Entity.getType(ent);
 		if(ent==player || type==EntityType.MINECART) return 1000;
@@ -48,9 +42,9 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 	},
 	
 	tick: function(){
-		if(World.getThreadTime()%11==0 && this.data.isActive && this.data.frequency){
+		if(World.getThreadTime()%11 == 0 && this.data.isActive && this.data.frequency){
 			var entities = Entity.getAll();
-			var storages = getNearestStorages(this.x, this.y, this.z);
+			var storages = this.getNearestStorages(this.x, this.y, this.z);
 			var energyAvailable = 0;
 			for(var i in storages){
 				energyAvailable += storages[i].data.energy;

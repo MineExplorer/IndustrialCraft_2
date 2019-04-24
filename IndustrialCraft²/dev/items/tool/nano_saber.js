@@ -1,9 +1,9 @@
 IDRegistry.genItemID("nanoSaber");
 Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 2);
+ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 3);
 Item.setToolRender(ItemID.nanoSaber, true);
 
-Item.registerNameOverrideFunction(ItemID.nanoSaber, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.nanoSaber, NameOverrides.showItemStorage);
 
 var NANO_SABER_DURABILITY = Item.getMaxDamage(ItemID.nanoSaber);
 

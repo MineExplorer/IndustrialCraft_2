@@ -4,6 +4,7 @@ ModAPI.registerAPI("ICore", {
 	Render: TileRenderer,
 	ChargeRegistry: ChargeItemRegistry,
 	Upgrade: UpgradeAPI,
+	ItemName: NameOverrides,
 	UI: UIbuttons,
 	Ore: OreGenerator,
 	

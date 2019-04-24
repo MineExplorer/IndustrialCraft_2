@@ -1,0 +1,44 @@
+IDRegistry.genItemID("heatVent");
+Item.createItem("heatVent", "Heat Vent", {name: "heat_vent"});
+
+IDRegistry.genItemID("heatVentAdv");
+Item.createItem("heatVentAdv", "Advanced Heat Vent", {name: "heat_vent_advanced"});
+
+IDRegistry.genItemID("heatVentComponent");
+Item.createItem("heatVentComponent", "Component Heat Vent", {name: "heat_vent_component"});
+
+IDRegistry.genItemID("heatVentReactor");
+Item.createItem("heatVentReactor", "Reactor Heat Vent", {name: "heat_vent_reactor"});
+
+IDRegistry.genItemID("heatVentOverclocked");
+Item.createItem("heatVentOverclocked", "Overclocked Heat Vent", {name: "heat_vent_overclocked"});
+
+Recipes.addShaped({id: ItemID.heatVent, count: 1, data: 0}, [
+	"bab",
+	"axa",
+	"bab"
+], ['x', ItemID.electricMotor, 0, 'a', ItemID.plateIron, 0, 'b', 101, -1]);
+
+Recipes.addShaped({id: ItemID.heatVentAdv, count: 1, data: 0}, [
+	"bxb",
+	"bdb",
+	"bxb"
+], ['x', ItemID.heatVent, 0, 'd', 264, 0, 'b', 101, -1]);
+
+Recipes.addShaped({id: ItemID.heatVentComponent, count: 1, data: 0}, [
+	"bab",
+	"axa",
+	"bab"
+], ['x', ItemID.heatVent, 0, 'a', ItemID.plateTin, 0, 'b', 101, -1]);
+
+Recipes.addShaped({id: ItemID.heatVentReactor, count: 1, data: 0}, [
+	"a",
+	"x",
+	"a"
+], ['x', ItemID.heatVent, 0, 'a', ItemID.plateCopper, 0]); // dense copper plate
+
+Recipes.addShaped({id: ItemID.heatVentOverclocked, count: 1, data: 0}, [
+	"a",
+	'x',
+	"a"
+], ['x', ItemID.heatVentReactor, 0, 'a', ItemID.plateGold, 0]);

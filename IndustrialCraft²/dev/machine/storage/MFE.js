@@ -11,15 +11,7 @@ Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, le
 	return [];
 });
 
-Item.registerNameOverrideFunction(BlockID.storageMFE, function(item, name){
-	item = Player.getCarriedItem();
-	if(item.extra){
-		var energyStored = item.extra.getInt("Eu");
-		return name + "\n§7" + energyStored + "/" + 4000000 + " Eu";
-	}
-	return name;
-});
-
+NameOverrides.addStorageBlockTooltip("storageMFE", 3, "4M");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageMFE, count: 1, data: 0}, [
@@ -54,54 +46,60 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-MachineRegistry.registerPrototype(BlockID.storageMFE, {
+MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 	defaultValues: {
-		power_tier: 2,
 		meta: 0
 	},
-	
-	isStorage: true,
 	
 	getGuiScreen: function(){
 		return guiMFE;
 	},
 	
-	wrenchClick: function(id, count, data, coords){
-		if(Entity.getSneaking(player)){
-			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
-		}else{
-			this.data.meta = coords.side;
-		}
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.storageMFE, this.data.meta);
+	getTier: function(){
+		return 3;
 	},
+	
+	wrenchClick: function(id, count, data, coords){
+		if(this.setFacing(coords)){
+			EnergyNetBuilder.rebuildTileNet(this);
+			return true;
+		}
+		return false;
+	},
+		
+	setFacing: MachineRegistry.setFacing,
 	
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
-		var TRANSFER = transferByTier[2];
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, 2);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, 2);
+		var tier = this.getTier();
+		var TRANSFER = transferByTier[tier];
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, tier);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, tier);
 		
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-		this.container.setText("textInfo2", energyStorage + "");
+		this.container.setText("textInfo2", energyStorage);
 	},
 	
 	getEnergyStorage: function(){
 		return 4000000;
 	},
 	
-	energyTick: function(type, src){
-		var TRANSFER = 512;
-		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
+	canReceiveEnergy: function(side){
+		return side != this.data.meta;
+	},
+	
+	canExtractEnergy: function(side){
+		return side == this.data.meta;
 	},
 	
 	destroyBlock: function(coords, player){
 		var itemID = Player.getCarriedItem().id;
 		var blockID = BlockID.storageMFE;
-		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID)
+		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID);
 		var drop = MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-		if(drop.length > 0 && this.data.energy > 0){
-			if(drop[0][0] == blockID){
+		if(drop.length > 0 ){
+			if(drop[0][0] == blockID && this.data.energy > 0){
 				var extra = new ItemExtraData();
 				extra.putInt("Eu", this.data.energy);
 				nativeDropItem(coords.x, coords.y, coords.z, 0, blockID, 1, 0, extra);

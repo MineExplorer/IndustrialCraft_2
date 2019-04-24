@@ -13,15 +13,15 @@
 // libraries
 IMPORT("flags");
 IMPORT("ToolType");
-IMPORT("energylib");
+IMPORT("EnergyNet");
 IMPORT("ChargeItem");
 IMPORT("TileRender");
 IMPORT("StorageInterface");
 
 // constants
-var GUI_SCALE = 3.2;
-var fallVelocity = -0.0784;
-var debugMode = __config__.getBool("debug_mode");
+const GUI_SCALE = 3.2;
+const fallVelocity = -0.0784;
+var player;
 
 // square lava texture for geothermal generator ui.
 LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
@@ -38,13 +38,18 @@ var EntityType = Native.EntityType;
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 
-// API
-var player;
+// config
+var debugMode = __config__.getBool("debug_mode");
+var voltageEnabled = __config__.getBool("voltage_enabled");
+var wireDamageEnabled = __config__.getBool("wire_damage_enabled");
 Callback.addCallback("LevelLoaded", function(){
 	debugMode = __config__.getBool("debug_mode");
+	voltageEnabled = __config__.getBool("voltage_enabled");
+	wireDamageEnabled = __config__.getBool("wire_damage_enabled");
 	player = Player.get();
 });
 
+// API
 function random(min, max){
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -61,34 +66,18 @@ function addShapelessRecipe(result, source){
 }
 
 
-var RARE_ITEM_NAME = function(item, name){
-	return "§b" + name;
-}
-
-var ENERGY_ITEM_NAME = function(item, name){
-	var energyStorage = Item.getMaxDamage(item.id) - 1;
-	var energyStored = ChargeItemRegistry.getEnergyStored(item);
-	if(energyStored==0){return name;}
-	return name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
-}
-
-var RARE_ENERGY_ITEM_NAME = function(item, name){
-	var energyStorage = Item.getMaxDamage(item.id) - 1;
-	var energyStored = ChargeItemRegistry.getEnergyStored(item);
-	if(energyStored==0){return name;}
-	return "§b" + name + "\n§7" + energyStored + "/" + energyStorage + " Eu";
-}
-
 // vanilla items
-Recipes.addFurnaceFuel(325, 10, 2000);
+Recipes.removeFurnaceRecipe(81);
+Recipes.addFurnace(81, 351, 2);
+Recipes.addFurnaceFuel(325, 10, 2000); // lava bucket
 ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone
 
 // debug
 var lasttime = -1
 var frame = 0
 
-if(debugMode){
-	Callback.addCallback("tick", function(){
+Callback.addCallback("tick", function(){
+	if(debugMode){
 		var t = java.lang.System.currentTimeMillis()
 		if(frame++ % 20 == 0){
 			if(lasttime != -1){
@@ -97,5 +86,5 @@ if(debugMode){
 			}
 			lasttime = t
 		}
-	});
-}
+	}
+});

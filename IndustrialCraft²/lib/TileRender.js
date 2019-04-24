@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "TileRender",
-	version: 5,
+	version: 6,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -123,6 +123,55 @@ var TileRenderer = {
 			}
 		});
 	},
+	
+	
+	setupWireModel: function(id, data, width, groupName, preventSelfAdd) {
+		var render = new ICRender.Model();
+		var shape = new ICRender.CollisionShape();
+
+		var group = ICRender.getGroup(groupName);
+		if (!preventSelfAdd) {
+			group.add(id, data);
+		}
+		
+		// connections
+		width /= 2;
+		var boxes = [
+			{side: [1, 0, 0], box: [0.5 + width, 0.5 - width, 0.5 - width, 1, 0.5 + width, 0.5 + width]},
+			{side: [-1, 0, 0], box: [0, 0.5 - width, 0.5 - width, 0.5 - width, 0.5 + width, 0.5 + width]},
+			{side: [0, 1, 0], box: [0.5 - width, 0.5 + width, 0.5 - width, 0.5 + width, 1, 0.5 + width]},
+			{side: [0, -1, 0], box: [0.5 - width, 0, 0.5 - width, 0.5 + width, 0.5 - width, 0.5 + width]},
+			{side: [0, 0, 1], box: [0.5 - width, 0.5 - width, 0.5 + width, 0.5 + width, 0.5 + width, 1]},
+			{side: [0, 0, -1], box: [0.5 - width, 0.5 - width, 0, 0.5 + width, 0.5 + width, 0.5 - width]},
+		]
+		
+		for (var i in boxes) {
+			var box = boxes[i];
+			// render
+			var model = BlockRenderer.createModel();
+			model.addBox(box.box[0], box.box[1], box.box[2], box.box[3], box.box[4], box.box[5], id, data);
+			var condition = ICRender.BLOCK(box.side[0], box.side[1], box.side[2], group, false);
+			render.addEntry(model).setCondition(condition);
+			// collision shape
+			var entry = shape.addEntry();
+			entry.addBox(box.box[0], box.box[1], box.box[2], box.box[3], box.box[4], box.box[5]);
+			entry.setCondition(condition);
+		}
+		
+		// central box
+		var model = BlockRenderer.createModel();
+		model.addBox(0.5 - width, 0.5 - width, 0.5 - width, 0.5 + width, 0.5 + width, 0.5 + width, id, data);
+		render.addEntry(model);
+		
+		var entry = shape.addEntry();
+		entry.addBox(0.5 - width, 0.5 - width, 0.5 - width, 0.5 + width, 0.5 + width, 0.5 + width);
+		
+		width = Math.max(width, 0.25);
+		Block.setShape(id, 0.5 - width, 0.5 - width, 0.5 - width, 0.5 + width, 0.5 + width, 0.5 + width, data);
+		
+		BlockRenderer.setStaticICRender(id, data, render);
+		BlockRenderer.setCustomCollisionShape(id, data, shape);
+	}
 }
 
 

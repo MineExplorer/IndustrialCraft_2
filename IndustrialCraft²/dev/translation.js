@@ -27,6 +27,11 @@ Translation.addTranslation("Geothermal Generator", {ru: "Геотермальн�
 Translation.addTranslation("Solar Panel", {ru: "Солнечная панель", es: "Panel Solar", pt: "Painel Solar", zh: "太阳能发电机"});
 Translation.addTranslation("Water Mill", {ru: "Гидрогенератор", es: "Molino de Agua", pt: "Gerador Aquático", zh: "水力发电机"});
 Translation.addTranslation("Wind Mill", {ru: "Ветрогенератор", es: "Molino de Viento", pt: "Cata-vento", zh: "风力发电机"});
+
+Translation.addTranslation("Nuclear Reactor", {ru: "Ядерный реактор", es: "Reactor Nuclear", pt: "Reactor Nuclear", zh: "核反应堆"});
+Translation.addTranslation("Reactor Chamber", {ru: "Реакторная камера", es: "Cámara del Reactor", pt: "Câmara de Reator", zh: "核反应仓"});
+
+// Heat Generators
 Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor à Combustível Sólido", zh: "固体的热发生器"});
 Translation.addTranslation("Electric Heat Generator", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电热发生器"});
 
@@ -35,6 +40,12 @@ Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: 
 Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", pt: "Unidade de Armazenamento de Energia", zh: "CESU充电座"});
 Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", pt: "Transmissor de Energia Multi-funcional", zh: "MFE充电座"});
 Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", pt: "Unidade de Armazenamento Multi-funcional", zh: "MFSU充电座"});
+
+// Transformer
+Translation.addTranslation("LV Transformer", {ru: "Трансформатор НН"});
+Translation.addTranslation("MV Transformer", {ru: "Трансформатор СН"});
+Translation.addTranslation("HV Transformer", {ru: "Трансформатор ВН"});
+Translation.addTranslation("EV Transformer", {ru: "Трансформатор СВН"});
 
 // Machines
 Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Coletar Experiência", zh: "铁炉"});
@@ -52,6 +63,7 @@ Translation.addTranslation("Thermal Centrifuge", {ru: "Термальная це
 Translation.addTranslation("Blast Furnace", {ru: "Доменная печь", es: "Alto Horno", pt: "Fornalha de Aquecimento", zh: "鼓风炉"});
 Translation.addTranslation("Miner", {ru: "Буровая установка", es: "Perforadora", pt: "Minerador", zh: "采矿机"});
 Translation.addTranslation("Advanced Miner", {ru: "Продвинутая буровая установка", es: "Minero Avanzado", pt: "Minerador Avançado", zh: "高级采矿机"});
+Translation.addTranslation("Tesla Coil", {ru: "Катушка теслы", es: "Bobina de Tesla", pt: "Bobina Tesla", zh: "特斯拉线圈"});
 Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Teletransportador", pt: "Teletransportador", zh: "传送机"});
 Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", pt: "Fabricador de Massa", zh: "物质生成机"});
 
@@ -88,6 +100,12 @@ Translation.addTranslation("Piece of Uranium 238", {ru: "Кусочек уран
 Translation.addTranslation("Plutonium", {ru: "Плутоний", es: "Plutonio", pt: "Plutônio", zh: "钚"});
 Translation.addTranslation("Piece of Plutonium", {ru: "Кусочек плутония", es: "Diminuta Pila de Plutonio", pt: "Pequena Pilha de Plutônio", zh: "小撮钚"});
 
+// Reactor
+Translation.addTranslation("10k Coolant Cell", {ru: "Охлаждающая капсула 10к", es: "Celda Refrigerante 10k", pt: "Célula Refrigerante de 10k", zh: "10k冷却单元"});
+Translation.addTranslation("30k Coolant Cell", {ru: "Охлаждающая капсула 30к", es: "Celda Refrigerante 30k", pt: "Célula Refrigerante de 30k", zh: "30k冷却单元"});
+Translation.addTranslation("60k Coolant Cell", {ru: "Охлаждающая капсула 60к", es: "Celda Refrigerante 60k", pt: "Célula Refrigerante de 60k", zh: "60k冷却单元"});
+
+
 // Electric
 Translation.addTranslation("Circuit", {ru: "Электросхема", es: "Circuito Electrónico", pt: "Eletrônico", zh: "电路板"});
 Translation.addTranslation("Advanced Circuit", {ru: "Улучшенная электросхема", es: "Circuito Avanzado", pt: "Avançado", zh: "高级电路板"});
@@ -103,11 +121,12 @@ Translation.addTranslation("Lapotron Crystal", {ru: "Лазуротроновы�
 // Upgrades
 Translation.addTranslation("MFSU Upgrade Kit", {ru: "Набор улучшения МФСУ", es: "Kit de Actualización MFSU", pt: "Kit de Melhoria UAMF", zh: "MFSU升级组件"});
 Translation.addTranslation("Overclocker Upgrade", {ru: "Улучшение «Ускоритель»", es: "Mejora de Sobreproducción", pt: "Melhoria: Overclock", zh: "超频升级"});
-Translation.addTranslation("Energy Storage Upgrade", {ru: "Улучшение «Энергохранитель»", es: "Mejora de Almacenador de Energía", pt: "Armazenamento de Energia", zh: "储能升级"});
-Translation.addTranslation("Redstone Signal Inverter Upgrade", {ru: "Улучшение «Инвертор сигнала редстоуна»", es: "Majora de Invesor de señal Redstone", pt: "Inverte o sinal de redstone atual", zh: "红石信号反转升级"});
+Translation.addTranslation("Transformer Upgrade", {ru: "Улучшение «Трансформатор»", es: "Mejora de Transformador", pt: " Melhoria: Transformador Interno", zh: "高压升级"});
+Translation.addTranslation("Energy Storage Upgrade", {ru: "Улучшение «Энергохранитель»", es: "Mejora de Almacenador de Energía", pt: "Melhoria: Armazenamento de Energia", zh: "储能升级"});
+Translation.addTranslation("Redstone Signal Inverter Upgrade", {ru: "Улучшение «Инвертор сигнала редстоуна»", es: "Majora de Invesor de señal Redstone", pt: "Melhoria: Inversor de Sinal de Redstone", zh: "红石信号反转升级"});
 Translation.addTranslation("Ejector Upgrade", {ru: "Улучшение «Выталкиватель»", es: "Mejora Expulsora", pt: "Melhoria: Ejetor", zh: "弹出升级"});
 Translation.addTranslation("Pulling Upgrade", {ru: "Улучшение «Загрузчик»", es: "Mejora de Traccion", pt: "Melhoria: Sucção", zh: "抽入升级"});
-Translation.addTranslation("Fluid Ejector Upgrade", {ru: "Улучшение «Выталкиватель жидкости»", es: "Mejora Expulsora de Líquidos", pt: "Ejetor de Fluidos", zh: "流体弹出升级"});
+Translation.addTranslation("Fluid Ejector Upgrade", {ru: "Улучшение «Выталкиватель жидкости»", es: "Mejora Expulsora de Líquidos", pt: "Melhoria: Ejetor de Fluidos", zh: "流体弹出升级"});
 Translation.addTranslation("Fluid Pulling Upgrade", {ru: "Улучшение «Загрузчик жидкости»", es: "Mejora Traccion de Líquidos", pt: "Melhoria: Injeção de Fluidos Avançada", zh: "流体抽入升级"});
 
 // Crushed Ore
@@ -192,15 +211,18 @@ Translation.addTranslation("Water Cell", {ru: "Капсула с водой", es
 Translation.addTranslation("Lava Cell", {ru: "Капсула с лавой", es: "Celda de Lava", pt: "Célula com Lava", zh: "岩浆单元"});
 Translation.addTranslation("Compressed Air Cell", {ru: "Капсула со сжатым воздухом", es: "Celda de Aire Comprimida", pt: "Célula com Ar Comprimido", zh: "压缩空气单元"});
 
-// Wires
+// Cables
 Translation.addTranslation("Tin Cable", {ru: "Оловянный провод", es: "Cable de Ultra-Baja Tensión", pt: "Cabo de Estanho", zh: "锡质导线"});
-Translation.addTranslation("Insulated Tin Cable", {ru: "Изолированный оловянный провод", es: "Cable de Estaño Aislado", pt: "Cabo de Estanho Isolado", zh: "绝缘锡质导线"});
+Translation.addTranslation("Insulated Tin Cable", {ru: "Оловянный провод с изоляцией", es: "Cable de Estaño Aislado", pt: "Cabo de Estanho Isolado", zh: "绝缘锡质导线"});
 Translation.addTranslation("Copper Cable", {ru: "Медный провод", es: "Cable de Cobre", pt: "Cabo de Cobre", zh: "铜质导线"});
-Translation.addTranslation("Insulated Copper Cable", {ru: "Изолированный медный провод", es: "Cable de Cobre Aislado", pt: "Cabo de Cobre Isolado", zh: "绝缘质铜导线"});
+Translation.addTranslation("Insulated Copper Cable", {ru: "Медный провод с изоляцией", es: "Cable de Cobre Aislado", pt: "Cabo de Cobre Isolado", zh: "绝缘质铜导线"});
 Translation.addTranslation("Gold Cable", {ru: "Золотой провод", es: "Cable de Oro", pt: "Cabo de Ouro", zh: "金质导线"});
-Translation.addTranslation("Insulated Gold Cable", {ru: "Изолированный золотой провод", es: "Cable de Oro Aislado", pt: "Cabo de Ouro Isolado", zh: "绝缘金质导线"});
+Translation.addTranslation("Insulated Gold Cable", {ru: "Золотой провод с изоляцией", es: "Cable de Oro Aislado", pt: "Cabo de Ouro Isolado", zh: "绝缘金质导线"});
+Translation.addTranslation("2x Ins. Gold Cable", {ru: "Золотой провод с 2x изоляцией", es: "Cable de Oro Aislado x2", pt: "Cabo de Ouro Isolado x2", zh: "2x绝缘金质导线"});
 Translation.addTranslation("HV Cable", {ru: "Высоковольтный провод", es: "Cable de Alta Tensión", pt: "Cabo de Alta Tensão", zh: "高压导线"});
-Translation.addTranslation("Insulated HV Cable", {ru: "Изолированный высоковольтный провод", es: "Cable de Alta Tensión Aislado", pt: "Cabo de Alta Tensão Isolado", zh: "绝缘高压导线"});
+Translation.addTranslation("Insulated HV Cable", {ru: "Высоковольтный провод с изоляцией", es: "Cable de Alta Tensión Aislado", pt: "Cabo de Alta Tensão Isolado", zh: "绝缘高压导线"});
+Translation.addTranslation("2x Ins. HV Cable", {ru: "Высоковольтный провод с 2x изоляцией", es: "Cable de Alta Tensión Aislado x2", pt: "Cabo de Alta Tensão Isolado x2", zh: "2x绝缘高压导线"});
+Translation.addTranslation("3x Ins. HV Cable", {ru: "Высоковольтный провод с 3x изоляцией", es: "Cable de Alta Tensión Aislado x3", pt: "Cabo de Alta Tensão Isolado x3", zh: "3x绝缘高压导线"});
 Translation.addTranslation("Glass Fibre Cable", {ru: "Стекловолоконный провод", es: "Cable de Alta Tensión", pt: "Cabo de Fibra de Vidro", zh: "玻璃纤维导线"});
 
 // Armor
@@ -254,6 +276,7 @@ Translation.addTranslation("Diamond Drill", {ru: "Алмазный бур", es: 
 Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es: "Taladro de Iridio", pt: "Broca de Irídio", zh: "铱钻头"});
 Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-Sable", pt: "Sabre Nano", zh: "纳米剑"});
 Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", pt: "Laser de Mineração", zh: "采矿镭射枪"});
+Translation.addTranslation("Thermometer", {ru: "Термометр"});
 
 // GUI
 // Fluid Distributor
@@ -263,3 +286,6 @@ Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "con
 // Advanced Miner
 Translation.addTranslation("Mode: Blacklist", {ru: "Чёрный список", es: "Modo: lista negra", pt: "Modo: Lst Negra", zh: "模式:黑名单"});
 Translation.addTranslation("Mode: Whitelist", {ru: "Белый список", es: "Modo: lista blanca", pt: "Modo: Lst Branca", zh: "模式:白名单"});
+
+// Tooltips
+Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: "});

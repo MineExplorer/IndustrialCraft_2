@@ -89,7 +89,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		}else{
 			this.data.meta = coords.side;
 		}
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.blastFurnace, this.data.meta + 6*this.data.isActive);
+		this.initModel();
 	},
 	
 	checkResult: function(result){
@@ -216,6 +216,6 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 	},
 	
 	hasFullRotation: true,
-}, true);
+});
 
 TileRenderer.setRotationPlaceFunction(BlockID.blastFurnace, true);

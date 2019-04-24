@@ -6,17 +6,10 @@ TileRenderer.setStandartModel(BlockID.advancedMiner, [["advanced_miner_bottom", 
 TileRenderer.registerRotationModel(BlockID.advancedMiner, 0, [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.advancedMiner, 4, [["advanced_miner_bottom", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
 
+NameOverrides.addStorageBlockTooltip("advancedMiner", 3, "4M");
+
 Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData, level){
 	return [];
-});
-
-Item.registerNameOverrideFunction(BlockID.storageBatBox, function(item, name){
-	item = Player.getCarriedItem();
-	if(item.extra){
-		var energyStored = item.extra.getInt("Eu");
-		return name + "\n§7" + energyStored + "/" + 4000000 + " Eu";
-	}
-	return name;
 });
 
 Callback.addCallback("PreLoaded", function(){
@@ -28,7 +21,7 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 function isValidMinerUpgrade(id){
-	if(ItemID.upgradeOverclocker) return true;
+	if(ItemID.upgradeOverclocker || ItemID.upgradeTransformer) return true;
 	return false;
 }
 
@@ -100,9 +93,9 @@ Callback.addCallback("LevelLoaded", function(){
 	});
 });
 
-MachineRegistry.registerPrototype(BlockID.advancedMiner, {
+MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 	defaultValues: {
-		power_tier: 2,
+		power_tier: 3,
 		meta: 0,
 		x: 0,
 		y: 0,
@@ -177,12 +170,16 @@ MachineRegistry.registerPrototype(BlockID.advancedMiner, {
 		else
 			this.container.setText("textInfoMode", Translation.translate("Mode: Blacklist"));
 		
+		this.data.power_tier = this.defaultValues.power_tier;
 		var max_scan_count = 5;
 		var upgrades = UpgradeAPI.getUpgrades(this, this.container);
 		for(var i in upgrades){
 			var item = upgrades[i];
 			if(item.id == ItemID.upgradeOverclocker){
 				max_scan_count *= item.count+1;
+			}
+			if(item.id == ItemID.upgradeTransformer){
+				this.data.power_tier += item.count;
 			}
 		}
 		
@@ -229,9 +226,10 @@ MachineRegistry.registerPrototype(BlockID.advancedMiner, {
 		else
 			this.container.setText("textInfoXYZ", "");
 		
+		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 512, 2);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 512, 2);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 
@@ -256,11 +254,15 @@ MachineRegistry.registerPrototype(BlockID.advancedMiner, {
 		this.data.isEnabled = (signal.power == 0);
 	},
 	
+	getTier: function(){
+		return this.data.power_tier;
+	},
+	
 	getEnergyStorage: function(){
 		return 4000000;
 	},
-
-	energyTick: MachineRegistry.basicEnergyReceiveFunc
+	
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 
 MachineRegistry.setStoragePlaceFunction("advancedMiner");

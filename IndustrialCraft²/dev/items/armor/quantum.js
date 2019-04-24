@@ -8,15 +8,15 @@ Item.createArmorItem("quantumChestplate", "Quantum Chestplate", {name: "quantum_
 Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 8333, texture: "armor/quantum_2.png", isTech: false});
 Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 8333, texture: "armor/quantum_1.png", isTech: false});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 3);
-ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 3);
-ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 3);
-ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 3);
+ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 4);
+ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 4);
+ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 4);
+ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 4);
 
-Item.registerNameOverrideFunction(ItemID.quantumHelmet, RARE_ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.quantumChestplate, RARE_ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.quantumLeggings, RARE_ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.quantumBoots, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumHelmet, NameOverrides.showRareItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumChestplate, NameOverrides.showRareItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumLeggings, NameOverrides.showRareItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumBoots, NameOverrides.showRareItemStorage);
 
 IDRegistry.genItemID("quantumHelmetUncharged");
 IDRegistry.genItemID("quantumChestplateUncharged");
@@ -28,15 +28,15 @@ Item.createArmorItem("quantumChestplateUncharged", "Quantum Chestplate", {name: 
 Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 8333, texture: "armor/quantum_2.png", isTech: true});
 Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 8333, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 3, true);
-ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 3, true);
-ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 3, true);
-ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 3, true);
+ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 4, true);
+ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 4, true);
+ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 4, true);
+ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 4, true);
 
-Item.registerNameOverrideFunction(ItemID.quantumHelmetUncharged, RARE_ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.quantumChestplateUncharged, RARE_ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.quantumLeggingsUncharged, RARE_ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.quantumBootsUncharged, RARE_ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.quantumHelmetUncharged, NameOverrides.showRareItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumChestplateUncharged, NameOverrides.showRareItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumLeggingsUncharged, NameOverrides.showRareItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumBootsUncharged, NameOverrides.showRareItemStorage);
 
 
 MachineRecipeRegistry.registerRecipesFor("quantum-armor-charge", {
@@ -60,6 +60,7 @@ var runTime = 0;
 var QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params, item, index, maxDamage){
 		var type = params.type;
+		Game.message(type);
 		if(type==2 || type==3 || type==11){
 			var energy = params.damage * 900;
 			item.data = Math.min(item.data + energy, maxDamage);

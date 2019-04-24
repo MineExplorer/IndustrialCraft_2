@@ -1,8 +1,8 @@
 IDRegistry.genItemID("chainsaw");
 Item.createItem("chainsaw", "Chainsaw", {name: "chainsaw", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chainsaw, "Eu", 30000, 0);
+ChargeItemRegistry.registerItem(ItemID.chainsaw, "Eu", 30000, 1);
 
-Item.registerNameOverrideFunction(ItemID.chainsaw, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.chainsaw, NameOverrides.showItemStorage);
 
 Recipes.addShaped({id: ItemID.chainsaw, count: 1, data: Item.getMaxDamage(ItemID.chainsaw)}, [
 	" pp",

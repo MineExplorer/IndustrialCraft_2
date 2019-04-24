@@ -6,6 +6,8 @@ TileRenderer.setStandartModel(BlockID.pump, [["pump_bottom", 0], ["machine_top",
 TileRenderer.registerRotationModel(BlockID.pump, 0, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.pump, 4, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 1], ["pump_side", 1], ["pump_side", 1]]);
 
+NameOverrides.addTierTooltip("pump", 1);
+
 Block.registerDropFunction("pump", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
@@ -56,9 +58,9 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-MachineRegistry.registerPrototype(BlockID.pump, {
+MachineRegistry.registerElectricMachine(BlockID.pump, {
 	defaultValues: {
-		power_tier: 0,
+		power_tier: 1,
 		energy_storage: 800,
 		energy_consumption: 1,
 		work_time: 20,
@@ -88,7 +90,12 @@ MachineRegistry.registerPrototype(BlockID.pump, {
         }
     },
 	
+	getTier: function(){
+		return this.data.power_tier;
+	},
+	
 	setDefaultValues: function(){
+		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
 		this.data.work_time = this.defaultValues.work_time;
@@ -172,8 +179,8 @@ MachineRegistry.registerPrototype(BlockID.pump, {
 			this.container.validateAll();
 		}
 		
+		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
-		var tier = this.data.power_tier;
 		this.data.energy = Math.min(this.data.energy, energyStorage);
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
 		
@@ -186,7 +193,6 @@ MachineRegistry.registerPrototype(BlockID.pump, {
 		return this.data.energy_storage;
 	},
 
-	energyTick: MachineRegistry.basicEnergyReceiveFunc
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.pump);

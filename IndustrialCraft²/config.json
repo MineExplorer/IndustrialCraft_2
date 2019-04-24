@@ -1,6 +1,8 @@
 {
   "enabled":true,
-  "debug_mode":true,
+  "debug_mode":false,
+  "voltage_enabled":true,
+  "wire_damage_enabled":false,
   "button_scale":60,
   "rubber_tree_gen":{
     "forest_and_plains":true,

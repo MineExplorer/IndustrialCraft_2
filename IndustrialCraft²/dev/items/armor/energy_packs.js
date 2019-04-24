@@ -8,15 +8,15 @@ Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"
 Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
 Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 10000000, texture: "armor/lappack_1.png", isTech: false});
 
-ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 0, true);
-ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 1, true);
-ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 2, true);
-ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 3, true);
+ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 1, true);
+ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 2, true);
+ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 3, true);
+ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 4, true);
 
-Item.registerNameOverrideFunction(ItemID.batpack, ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.advBatpack, ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.energypack, ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.lappack, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.batpack, NameOverrides.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.advBatpack, NameOverrides.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.energypack, NameOverrides.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.lappack, NameOverrides.showItemStorage);
 
 Recipes.addShaped({id: ItemID.batpack, count: 1, data: Item.getMaxDamage(ItemID.batpack)}, [
     "bcb",
@@ -37,10 +37,10 @@ Recipes.addShaped({id: ItemID.energypack, count: 1, data: Item.getMaxDamage(Item
 ], ['a', ItemID.storageCrystal, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
 
 Recipes.addShaped({id: ItemID.lappack, count: 1, data: Item.getMaxDamage(ItemID.lappack)}, [
-    "bcb",
-    "bab",
-    "b b"
-], ['a', ItemID.energypack, -1, 'b', 22, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+    "e",
+    "c",
+    "a"
+], ['e', ItemID.energypack, -1, 'a', ItemID.storageLapotronCrystal, -1, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
 
 
 function registerStoragePack(id, level, tranfer){

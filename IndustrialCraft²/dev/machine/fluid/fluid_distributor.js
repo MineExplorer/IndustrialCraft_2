@@ -106,12 +106,12 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 		}else{
 			this.data.meta = coords.side;
 		}
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.fluidDistributor, this.data.meta + 6*this.data.inverted);
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + 6*this.data.inverted);
 	},
 
 	destroy: function(){
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	},
-}, true);
+});
 
 TileRenderer.setRotationPlaceFunction("fluidDistributor", true);

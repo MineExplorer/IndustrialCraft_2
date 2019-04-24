@@ -55,7 +55,7 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-MachineRegistry.registerPrototype(BlockID.primalGenerator, {
+MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 	defaultValues: {
 		meta: 0,
 		burn: 0,
@@ -105,12 +105,8 @@ MachineRegistry.registerPrototype(BlockID.primalGenerator, {
 		this.container.setText("textInfo2", energyStorage + "");
 	},
 	
-	isGenerator: function() {
-		return true;
-	},
-	
 	getEnergyStorage: function(){
-		return 8000;
+		return 10000;
 	},
 	
 	energyTick: function(type, src){

@@ -6,6 +6,8 @@ TileRenderer.setStandartModel(BlockID.inductionFurnace, [["machine_advanced", 0]
 TileRenderer.registerRotationModel(BlockID.inductionFurnace, 0, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.inductionFurnace, 4, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
 
+NameOverrides.addTierTooltip("inductionFurnace", 2);
+
 Block.registerDropFunction("inductionFurnace", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
@@ -51,9 +53,9 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
+MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 	defaultValues: {
-		power_tier: 1,
+		power_tier: 2,
 		energy_storage: 10000,
 		meta: 0,
 		progress: 0,
@@ -93,9 +95,18 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 		}
 	},
 	
-	tick: function(){
-		this.data.energy_storage = 10000;
+	getTier: function(){
+		return this.data.power_tier;
+	},
+	
+	setDefaultValues: function(){
+		this.data.power_tier = this.defaultValues.power_tier;
+		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.isHeating = this.data.signal > 0;
+	},
+	
+	tick: function(){
+		this.setDefaultValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var result = this.getResult();
@@ -130,9 +141,8 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 			}
 		}
 		
-		
+		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
-		var tier = this.data.power_tier;
 		this.data.energy = Math.min(this.data.energy, energyStorage);
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
 		
@@ -150,7 +160,7 @@ MachineRegistry.registerPrototype(BlockID.inductionFurnace, {
 	},
 	
 	init: MachineRegistry.updateMachine,
-	energyTick: MachineRegistry.basicEnergyReceiveFunc
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.inductionFurnace);

@@ -59,4 +59,4 @@ MachineRegistry.registerPrototype(BlockID.solarDistiller, {
 			content.elements["sun"].bitmap = "sun_off";
 		}
 	}
-}, true);
+});

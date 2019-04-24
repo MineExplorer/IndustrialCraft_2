@@ -2,11 +2,11 @@ IDRegistry.genItemID("scanner");
 IDRegistry.genItemID("scannerAdvanced");
 Item.createItem("scanner", "OD Scanner", {name: "scanner", meta: 0}, {stack: 1});
 Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner", meta: 1}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 0);
-ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 1);
+ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 1);
+ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 2);
 
-Item.registerNameOverrideFunction(ItemID.scanner, ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.scannerAdvanced, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.scanner, NameOverrides.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.scannerAdvanced, NameOverrides.showItemStorage);
 
 Recipes.addShaped({id: ItemID.scanner, count: 1, data: Item.getMaxDamage(ItemID.scanner)}, [
 	"gdg",

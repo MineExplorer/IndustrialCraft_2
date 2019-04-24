@@ -6,6 +6,8 @@ TileRenderer.setStandartModel(BlockID.miner, [["miner_bottom", 0], ["machine_top
 TileRenderer.registerRotationModel(BlockID.miner, 0, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.miner, 4, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 1], ["miner_side", 1], ["miner_side", 1]]);
 
+NameOverrides.addTierTooltip("miner", 2);
+
 Block.registerDropFunction("miner", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
@@ -103,9 +105,9 @@ function getBlockDrop(coords, id, data, level, enchant){
 	return [];
 }
 
-MachineRegistry.registerPrototype(BlockID.miner, {
+MachineRegistry.registerElectricMachine(BlockID.miner, {
 	defaultValues: {
-		power_tier: 1,
+		power_tier: 2,
 		meta: 0,
 		x: 0,
 		y: 0,
@@ -344,7 +346,7 @@ MachineRegistry.registerPrototype(BlockID.miner, {
 	},
 	
 	init: MachineRegistry.updateMachine,
-	energyTick: MachineRegistry.basicEnergyReceiveFunc
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.miner);

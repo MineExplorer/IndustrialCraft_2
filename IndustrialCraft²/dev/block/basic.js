@@ -2,7 +2,7 @@ IDRegistry.genBlockID("machineBlockBasic");
 Block.createBlock("machineBlockBasic", [
 	{name: "Machine Block", texture: [["machine_top", 0]], inCreative: true}
 ], "opaque");
-ToolAPI.registerBlockMaterial(BlockID.machineBlockBasic, "stone", 1, true);
+ToolAPI.registerBlockMaterial(BlockID.machineBlockBasic, "stone", 1);
 Block.setDestroyLevel("machineBlockBasic", 1);
 Block.setDestroyTime(BlockID.machineBlockBasic, 3);
 
@@ -10,7 +10,7 @@ IDRegistry.genBlockID("machineBlockAdvanced");
 Block.createBlock("machineBlockAdvanced", [
 	{name: "Advanced Machine Block", texture: [["machine_advanced", 0]], inCreative: true}
 ], "opaque");
-ToolAPI.registerBlockMaterial(BlockID.machineBlockAdvanced, "stone", 1, true);
+ToolAPI.registerBlockMaterial(BlockID.machineBlockAdvanced, "stone", 1);
 Block.setDestroyLevel("machineBlockAdvanced", 1);
 Block.setDestroyTime(BlockID.machineBlockAdvanced, 3);
 

@@ -87,4 +87,4 @@ MachineRegistry.registerPrototype(BlockID.tank, {
 		}
 		storage.updateUiScale("liquidScale", liquid);
 	}
-}, true);
+});

@@ -2,12 +2,12 @@ IDRegistry.genItemID("electricHoe");
 IDRegistry.genItemID("electricTreetap");
 Item.createItem("electricHoe", "Electric Hoe", {name: "electric_hoe", meta: 0}, {stack: 1});
 Item.createItem("electricTreetap", "Electric Treetap", {name: "electric_treetap", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.electricHoe, "Eu", 10000, 0);
-ChargeItemRegistry.registerItem(ItemID.electricTreetap, "Eu", 10000, 0);
+ChargeItemRegistry.registerItem(ItemID.electricHoe, "Eu", 10000, 1);
+ChargeItemRegistry.registerItem(ItemID.electricTreetap, "Eu", 10000, 1);
 Item.setToolRender(ItemID.electricHoe, true);
 
-Item.registerNameOverrideFunction(ItemID.electricHoe, ENERGY_ITEM_NAME);
-Item.registerNameOverrideFunction(ItemID.electricTreetap, ENERGY_ITEM_NAME);
+Item.registerNameOverrideFunction(ItemID.electricHoe, NameOverrides.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.electricTreetap, NameOverrides.showItemStorage);
 
 Recipes.addShaped({id: ItemID.electricHoe, count: 1, data: Item.getMaxDamage(ItemID.electricHoe)}, [
 	"pp",

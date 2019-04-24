@@ -6,6 +6,8 @@ TileRenderer.setStandartModel(BlockID.recycler, [["machine_bottom", 0], ["macera
 TileRenderer.registerRotationModel(BlockID.recycler, 0, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.recycler, 4, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["recycler_front", 1], ["machine_side", 0], ["machine_side", 0]]);
 
+NameOverrides.addTierTooltip("recycler", 1);
+
 Block.registerDropFunction("recycler", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
@@ -50,9 +52,9 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-MachineRegistry.registerPrototype(BlockID.recycler, {
+MachineRegistry.registerElectricMachine(BlockID.recycler, {
 	defaultValues: {
-		power_tier: 0,
+		power_tier: 1,
 		energy_storage: 800,
 		energy_consumption: 1,
 		work_time: 45,
@@ -69,7 +71,12 @@ MachineRegistry.registerPrototype(BlockID.recycler, {
 		return {input: ["slotSource"], output: ["slotResult"]};
 	},
 	
+	getTier: function(){
+		return this.data.power_tier;
+	},
+	
 	setDefaultValues: function(){
+		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
 		this.data.work_time = this.defaultValues.work_time;
@@ -105,8 +112,8 @@ MachineRegistry.registerPrototype(BlockID.recycler, {
 			this.deactivate();
 		}
 		
+		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
-		var tier = this.data.power_tier;
 		this.data.energy = Math.min(this.data.energy, energyStorage);
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
 		
@@ -119,7 +126,7 @@ MachineRegistry.registerPrototype(BlockID.recycler, {
 	},
 	
 	init: MachineRegistry.updateMachine,
-	energyTick: MachineRegistry.basicEnergyReceiveFunc
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.recycler);

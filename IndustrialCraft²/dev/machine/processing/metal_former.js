@@ -6,6 +6,8 @@ TileRenderer.setStandartModel(BlockID.metalFormer, [["machine_bottom", 0], ["met
 TileRenderer.registerRotationModel(BlockID.metalFormer, 0, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.metalFormer, 4, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
 
+NameOverrides.addTierTooltip("metalFormer", 1);
+
 Block.registerDropFunction("metalFormer", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
 });
@@ -88,9 +90,9 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-MachineRegistry.registerPrototype(BlockID.metalFormer, {
+MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 	defaultValues: {
-		power_tier: 0,
+		power_tier: 1,
 		energy_storage: 4000,
 		energy_consumption: 10,
 		work_time: 200,
@@ -106,6 +108,10 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 	
 	getTransportSlots: function(){
 		return {input: ["slotSource"], output: ["slotResult"]};
+	},
+	
+	getTier: function(){
+		return this.data.power_tier;
 	},
 	
 	setDefaultValues: function(){
@@ -147,8 +153,8 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 			this.deactivate();
 		}
 		
+		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
-		var tier = this.data.power_tier;
 		this.data.energy = Math.min(this.data.energy, energyStorage);
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
 		
@@ -161,7 +167,7 @@ MachineRegistry.registerPrototype(BlockID.metalFormer, {
 	},
 	
 	init: MachineRegistry.updateMachine,
-	energyTick: MachineRegistry.basicEnergyReceiveFunc
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.metalFormer);

@@ -6,6 +6,8 @@ TileRenderer.setStandartModel(BlockID.electricHeatGenerator, [["machine_bottom",
 TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 6, [["machine_bottom", 0], ["ind_furnace_side", 1], ["heat_generator_side", 1], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
 
+NameOverrides.addTierTooltip("electricHeatGenerator", 4);
+
 Block.registerDropFunction("electricHeatGenerator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.electricHeatGenerator);
 });
@@ -70,7 +72,7 @@ function checkCoilSlot(i, id, count, data, container){
 }
 
 
-MachineRegistry.registerPrototype(BlockID.electricHeatGenerator, {
+MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
     defaultValues: {
 		meta: 0,
 		energy_storage: 2000,
@@ -81,8 +83,8 @@ MachineRegistry.registerPrototype(BlockID.electricHeatGenerator, {
 		return guiElectricHeatGenerator;
 	},
 	
-	isGenerator: function() {
-		return true;
+	getTier: function(){
+		return 4;
 	},
 	
 	wrenchClick: function(id, count, data, coords){
@@ -91,7 +93,7 @@ MachineRegistry.registerPrototype(BlockID.electricHeatGenerator, {
 		}else{
 			this.data.meta = coords.side;
 		}
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.electricHeatGenerator, this.data.meta + 6*this.data.isActive);
+		this.initModel();
 	},
 	
 	calcOutput:function(){
@@ -136,7 +138,7 @@ MachineRegistry.registerPrototype(BlockID.electricHeatGenerator, {
 		return 2000;
 	},
 	
-	energyTick: MachineRegistry.basicEnergyReceiveFunc,
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc,
 	
 	hasFullRotation: true,
 });

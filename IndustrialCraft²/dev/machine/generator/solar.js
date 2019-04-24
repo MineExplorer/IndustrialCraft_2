@@ -41,11 +41,7 @@ Callback.addCallback("LevelLoaded", function(){
 	});
 });
 
-MachineRegistry.registerPrototype(BlockID.solarPanel, {
-	isGenerator: function() {
-		return true;
-	},
-	
+MachineRegistry.registerGenerator(BlockID.solarPanel, {
 	getGuiScreen: function(){
 		return guiSolarPanel;
 	},
@@ -70,7 +66,7 @@ MachineRegistry.registerPrototype(BlockID.solarPanel, {
 	
 	energyTick: function(type, src){
 		if(this.data.energy){
-			src.add(1);
+			src.addAll(1);
 			this.data.energy = 0;
 		}
 	}

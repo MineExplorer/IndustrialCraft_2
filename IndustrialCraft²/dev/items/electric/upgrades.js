@@ -1,11 +1,11 @@
 IDRegistry.genItemID("upgradeOverclocker");
 Item.createItem("upgradeOverclocker", "Overclocker Upgrade", {name: "upgrade_overclocker", meta: 0}, {stack: 16});
 
+IDRegistry.genItemID("upgradeTransformer");
+Item.createItem("upgradeTransformer", "Transformer Upgrade", {name: "upgrade_transformer", meta: 0});
+
 IDRegistry.genItemID("upgradeEnergyStorage");
 Item.createItem("upgradeEnergyStorage", "Energy Storage Upgrade", {name: "upgrade_energy_storage", meta: 0});
-
-//IDRegistry.genItemID("upgradeTransformer");
-//Item.createItem("upgradeTransformer", "Transformer Upgrade", {name: "upgrade_transformer", meta: 0});
 
 IDRegistry.genItemID("upgradeRedstone");
 Item.createItem("upgradeRedstone", "Redstone Signal Inverter Upgrade", {name: "upgrade_redstone_inv", meta: 0});
@@ -43,6 +43,20 @@ Callback.addCallback("PreLoaded", function(){
 		"aaa",
 		"x#x",
 	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', ItemID.coolantCell, 0]);
+	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 3, data: 0}, [
+		"aaa",
+		"x#x",
+	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', ItemID.coolantCell3, 0]);
+	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 6, data: 0}, [
+		"aaa",
+		"x#x",
+	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'a', ItemID.coolantCell6, 0]);
+	
+	Recipes.addShaped({id: ItemID.upgradeTransformer, count: 1, data: 0}, [
+		"aaa",
+		"x#x",
+		"aca"
+	], ['#', BlockID.transformerMV, 0, 'x', ItemID.cableGold2, 0, 'a', 20, -1, 'c', ItemID.circuitBasic, 0]);
 	
 	Recipes.addShaped({id: ItemID.upgradeEnergyStorage, count: 1, data: 0}, [
 		"aaa",
@@ -91,6 +105,10 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, function(item, machine, co
 		data.energy_consumption = Math.round(data.energy_consumption * Math.pow(1.6, item.count));
 		data.work_time = Math.round(data.work_time * Math.pow(0.7, item.count));
 	}
+});
+
+UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, function(item, machine, container, data, coords){
+	data.power_tier += item.count;
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, function(item, machine, container, data, coords){

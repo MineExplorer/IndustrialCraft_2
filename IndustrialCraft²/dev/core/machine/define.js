@@ -4,8 +4,9 @@ var MachineRegistry = {
 	isMachine: function(id){
 		return this.machineIDs[id];
 	},
-
-	registerPrototype: function(id, Prototype, notUseEU){
+	
+	// Machine Base
+	registerPrototype: function(id, Prototype){
 		// register ID
 		this.machineIDs[id] = true;
 		Prototype.id = id;
@@ -25,12 +26,12 @@ var MachineRegistry = {
 		if(Prototype.wrenchClick){
 			Prototype.click = function(id, count, data, coords){
 				if(id == ItemID.wrenchBronze){
-					this.wrenchClick(id, count, data, coords);
+					if(this.wrenchClick(id, count, data, coords))
 					ToolAPI.breakCarriedTool(1);
 					return true;
 				}
 				if(id == ItemID.electricWrench && data + 50 <= Item.getMaxDamage(id)){
-					this.wrenchClick(id, count, data, coords);
+					if(this.wrenchClick(id, count, data, coords))
 					Player.setCarriedItem(id, 1, data + 50);
 					return true;
 				}
@@ -38,9 +39,13 @@ var MachineRegistry = {
 			};
 		}
 		
+		if(!Prototype.initModel){
+			Prototype.initModel = this.initModel;
+		}
+		
 		if(Prototype.defaultValues && Prototype.defaultValues.isActive !== undefined){
 			if(!Prototype.init){
-				Prototype.init = this.initModel;
+				Prototype.init = Prototype.initModel;
 			}
 			if(!Prototype.activate){
 				Prototype.activate = this.activateMachine;
@@ -55,33 +60,72 @@ var MachineRegistry = {
 			}
 		}
 		
-		if(!notUseEU){
-			// wire connection
-			ICRender.getGroup("ic-wire").add(id, -1);
-			// setup energy value
-			if(Prototype.defaultValues){
-				Prototype.defaultValues.energy = 0;
-			}
-			else{
-				Prototype.defaultValues = {
-					energy: 0
-				};
-			}
-			// copy functions
-			if(!Prototype.getEnergyStorage){
-				Prototype.getEnergyStorage = function(){
-					return 0;
-				};
-			}
-		}
 		ToolAPI.registerBlockMaterial(id, "stone", 1);
 		Block.setDestroyTime(id, 3);
 		TileEntity.registerPrototype(id, Prototype);
-		
-		if(!notUseEU){
-			// register for energy net
-			EnergyTileRegistry.addEnergyTypeForId(id, EU);
+	},
+	
+	// EU machines
+	registerElectricMachine: function(id, Prototype){
+		// wire connection
+		ICRender.getGroup("ic-wire").add(id, -1);
+		// setup energy value
+		if (Prototype.defaultValues){
+			Prototype.defaultValues.energy = 0;
 		}
+		else{
+			Prototype.defaultValues = {
+				energy: 0
+			};
+		}
+		
+		Prototype.getTier = Prototype.getTier || function(){
+			return 1;
+		}
+		
+		if(!Prototype.getEnergyStorage){
+			Prototype.getEnergyStorage = function(){
+				return 0;
+			};
+		}
+		
+		if (!Prototype.getMaxPacketSize) {
+			Prototype.getMaxPacketSize = function(tier){
+				return Math.pow(2, 3 + this.getTier()*2);
+			}
+		}
+		
+		this.registerPrototype(id, Prototype);
+		// register for energy net
+		EnergyTileRegistry.addEnergyTypeForId(id, EU);
+	},
+	
+	registerGenerator(id, Prototype){
+		Prototype.canReceiveEnergy = function(){
+			return false;
+		},
+	
+		Prototype.isEnergySource = function(){
+			return true;
+		},
+		
+		Prototype.energyTick = Prototype.energyTick || this.basicEnergyOutFunc;
+		
+		this.registerElectricMachine(id, Prototype);
+	},
+	
+	registerEUStorage(id, Prototype){
+		Prototype.isEnergySource = function(){
+			return true;
+		},
+		
+		Prototype.energyReceive = Prototype.energyReceive || this.basicEnergyReceiveFunc;
+		
+		Prototype.energyTick = Prototype.energyTick || this.basicEnergyOutFunc;
+		
+		Prototype.isTeleporterCompatible = true;
+		
+		this.registerElectricMachine(id, Prototype);
 	},
 	
 	// standart functions
@@ -99,7 +143,7 @@ var MachineRegistry = {
 				tile.data.meta = rotation;
 				TileRenderer.mapAtCoords(x, y, z, item.id, rotation);
 				if(item.extra){
-					tile.data.energy = item.extra.getInt("Eu") + 16;
+					tile.data.energy = item.extra.getInt("Eu");
 				}
 			}
 		});
@@ -123,6 +167,20 @@ var MachineRegistry = {
 			return [[standartDrop || blockID, 1, 0]];
 		}
 		return [];
+	},
+	
+	setFacing: function(coords){
+		if(Entity.getSneaking(player)){
+			var facing = coords.side + Math.pow(-1, coords.side);
+		}else{
+			var facing = coords.side;
+		}
+		if(facing != this.data.meta){
+			this.data.meta = facing;
+			this.initModel();
+			return true;
+		}
+		return false;
 	},
 	
 	initModel: function(){
@@ -152,28 +210,46 @@ var MachineRegistry = {
 			World.setBlock(this.x, this.y, this.z, this.id, 0);
 			this.data.meta = 0;
 		}
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + (this.data.isActive? 4 : 0));
+		this.initModel();
 	},
 	
-	basicEnergyReceiveFunc: function(type, src){
-		var energyNeed = this.getEnergyStorage() - this.data.energy;
-		this.data.energy += src.getAll(energyNeed);
+	basicEnergyOutFunc: function(type, src){
+		var output = this.getMaxPacketSize();
+		if(this.data.energy >= output){
+			this.data.energy += src.add(output) - output;
+		}
+	},
+	
+	basicEnergyReceiveFunc: function(type, amount, voltage) {
+		var maxVoltage = this.getMaxPacketSize();
+		if(voltage > maxVoltage){
+			if(voltageEnabled){
+				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
+				this.selfDestroy();
+				return 0;
+			}
+			var add = Math.min(maxVoltage, this.getEnergyStorage() - this.data.energy);
+		}else{
+			var add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
+		}
+		this.data.energy += add;
+		return add;
 	},
 	
 	isValidEUItem: function(id, count, data, container){
-		var level = container.tileEntity.data.power_tier || 0;
+		var level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidItem(id, "Eu",  level);
 	},
 	
 	isValidEUStorage: function(id, count, data, container){
-		var level = container.tileEntity.data.power_tier || 0;
+		var level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidStorage(id, "Eu",  level);
 	},
 }
 
 var transferByTier = {
-	0: 32,
-	1: 256,
-	2: 2048,
-	3: 8192
+	1: 32,
+	2: 256,
+	3: 2048,
+	4: 8192
 }

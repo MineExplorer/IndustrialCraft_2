@@ -140,6 +140,6 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 	},
 	
 	init: MachineRegistry.updateMachine,
-}, true);
+});
 
 TileRenderer.setRotationPlaceFunction(BlockID.ironFurnace);

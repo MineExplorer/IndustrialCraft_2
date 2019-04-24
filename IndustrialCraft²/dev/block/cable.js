@@ -1,5 +1,5 @@
 Block.createSpecialType({
-	destroytime: 2,
+	destroytime: 0.5,
 	explosionres: 0.5,
 	opaque: false,
 	lightopacity: 0,
@@ -8,93 +8,94 @@ Block.createSpecialType({
 
 IDRegistry.genBlockID("cableTin");
 Block.createBlock("cableTin", [
-	{name: "tile.cableTin.name", texture: [["cable_block_tin", 0]], inCreative: false}
-]);
+	{name: "tile.cableTin.name", texture: [["tin_cable", 0]], inCreative: false},
+	{name: "tile.cableTin.name", texture: [["tin_cable", 1]], inCreative: false}
+], "part");
+ToolAPI.registerBlockMaterial(BlockID.cableTin, "stone");
+Block.setDestroyTime(BlockID.cableTin, 0.05);
 
 IDRegistry.genBlockID("cableCopper");
 Block.createBlock("cableCopper", [
-	{name: "tile.cableCopper.name", texture: [["cable_block_copper", 0]], inCreative: false}
-]);
+	{name: "tile.cableCopper.name", texture: [["copper_cable", 0]], inCreative: false},
+	{name: "tile.cableCopper.name", texture: [["copper_cable", 1]], inCreative: false}
+], "part");
+ToolAPI.registerBlockMaterial(BlockID.cableCopper, "stone");
+Block.setDestroyTime(BlockID.cableCopper, 0.05);
 
 IDRegistry.genBlockID("cableGold");
 Block.createBlock("cableGold", [
-	{name: "tile.cableGold.name", texture: [["cable_block_gold", 0]], inCreative: false}
-]);
+	{name: "tile.cableGold.name", texture: [["gold_cable", 0]], inCreative: false},
+	{name: "tile.cableGold.name", texture: [["gold_cable", 1]], inCreative: false},
+	{name: "tile.cableGold.name", texture: [["gold_cable", 2]], inCreative: false}
+], "part");
+ToolAPI.registerBlockMaterial(BlockID.cableGold, "stone");
+Block.setDestroyTime(BlockID.cableGold, 0.05);
 
 IDRegistry.genBlockID("cableIron");
 Block.createBlock("cableIron", [
-	{name: "tile.cableIron.name", texture: [["cable_block_iron", 0]], inCreative: false}
-]);
+	{name: "tile.cableIron.name", texture: [["iron_cable", 0]], inCreative: false},
+	{name: "tile.cableIron.name", texture: [["iron_cable", 1]], inCreative: false},
+	{name: "tile.cableIron.name", texture: [["iron_cable", 2]], inCreative: false},
+	{name: "tile.cableIron.name", texture: [["iron_cable", 3]], inCreative: false}
+], "part");
+ToolAPI.registerBlockMaterial(BlockID.cableIron, "stone");
+Block.setDestroyTime(BlockID.cableIron, 0.05);
 
 IDRegistry.genBlockID("cableOptic");
 Block.createBlock("cableOptic", [
-	{name: "tile.cableOptic.name", texture: [["cable_block_optic", 0]], inCreative: false}
+	{name: "tile.cableOptic.name", texture: [["glass_cable", 0]], inCreative: false}
 ]);
+ToolAPI.registerBlockMaterial(BlockID.cableOptic, "stone");
+Block.setDestroyTime(BlockID.cableOptic, 0.05);
 
-function setupWireRender(id, width, groupName, preventSelfAdd) {
-	var render = new ICRender.Model();
-	BlockRenderer.setStaticICRender(id, 0, render);
-
-	var boxes = [
-		{side: [1, 0, 0], box: [0.5 + width / 2, 0.5 - width / 2, 0.5 - width / 2, 1, 0.5 + width / 2, 0.5 + width / 2]},
-		{side: [-1, 0, 0], box: [0, 0.5 - width / 2, 0.5 - width / 2, 0.5 - width / 2, 0.5 + width / 2, 0.5 + width / 2]},
-		{side: [0, 1, 0], box: [0.5 - width / 2, 0.5 + width / 2, 0.5 - width / 2, 0.5 + width / 2, 1, 0.5 + width / 2]},
-		{side: [0, -1, 0], box: [0.5 - width / 2, 0, 0.5 - width / 2, 0.5 + width / 2, 0.5 - width / 2, 0.5 + width / 2]},
-		{side: [0, 0, 1], box: [0.5 - width / 2, 0.5 - width / 2, 0.5 + width / 2, 0.5 + width / 2, 0.5 + width / 2, 1]},
-		{side: [0, 0, -1], box: [0.5 - width / 2, 0.5 - width / 2, 0, 0.5 + width / 2, 0.5 + width / 2, 0.5 - width / 2]},
-	]
-
-	var group = ICRender.getGroup(groupName);
-	if (!preventSelfAdd) {
-		group.add(id, -1);
-	}
-
-	for (var i in boxes) {
-		var box = boxes[i];
-	   
-		var model = BlockRenderer.createModel();
-		model.addBox(box.box[0], box.box[1], box.box[2], box.box[3], box.box[4], box.box[5], id, 0);
-	   
-		render.addEntry(model).asCondition(box.side[0], box.side[1], box.side[2], group, 0);
-	}
-
-	var model = BlockRenderer.createModel();
-	model.addBox(0.5 - width / 2, 0.5 - width / 2, 0.5 - width / 2, 0.5 + width / 2, 0.5 + width / 2, 0.5 + width / 2, id, 0);
-	render.addEntry(model);
-
-	width = Math.max(width, 0.5);
-	Block.setBlockShape(id, {x: 0.5 - width/2, y: 0.5 - width/2, z: 0.5 - width/2}, {x: 0.5 + width/2, y: 0.5 + width/2, z: 0.5 + width/2});
+var IC_WIRES = {};
+function setupBlockAsWire(id, maxVoltage, isolationLevels){
+	EU.registerWire(id, maxVoltage);
+	IC_WIRES[id] = isolationLevels || 0;
 }
 
-EU.registerWire(BlockID.cableTin);
-EU.registerWire(BlockID.cableCopper);
-EU.registerWire(BlockID.cableGold);
-EU.registerWire(BlockID.cableIron);
-EU.registerWire(BlockID.cableOptic);
+// energy net
+setupBlockAsWire(BlockID.cableTin, 32, 1);
+setupBlockAsWire(BlockID.cableCopper, 128, 1);
+setupBlockAsWire(BlockID.cableGold, 512, 2);
+setupBlockAsWire(BlockID.cableIron, 2048, 3);
+setupBlockAsWire(BlockID.cableOptic, 8192);
 
-setupWireRender(BlockID.cableTin, 3/8, "ic-wire");
-setupWireRender(BlockID.cableCopper, 3/8, "ic-wire");
-setupWireRender(BlockID.cableGold, 1/2, "ic-wire");
-setupWireRender(BlockID.cableIron, 5/8, "ic-wire");
-setupWireRender(BlockID.cableOptic, 1/4, "ic-wire");
+// block model
+TileRenderer.setupWireModel(BlockID.cableTin, 0, 4/16, "ic-wire");
+TileRenderer.setupWireModel(BlockID.cableTin, 1, 6/16, "ic-wire");
+
+TileRenderer.setupWireModel(BlockID.cableCopper, 0, 4/16, "ic-wire");
+TileRenderer.setupWireModel(BlockID.cableCopper, 1, 6/16, "ic-wire");
+
+TileRenderer.setupWireModel(BlockID.cableGold, 0, 3/16, "ic-wire");
+TileRenderer.setupWireModel(BlockID.cableGold, 1, 5/16, "ic-wire");
+TileRenderer.setupWireModel(BlockID.cableGold, 2, 7/16, "ic-wire");
+
+TileRenderer.setupWireModel(BlockID.cableIron, 0, 6/16, "ic-wire");
+TileRenderer.setupWireModel(BlockID.cableIron, 1, 8/16, "ic-wire");
+TileRenderer.setupWireModel(BlockID.cableIron, 2, 10/16, "ic-wire");
+TileRenderer.setupWireModel(BlockID.cableIron, 3, 12/16, "ic-wire");
+
+TileRenderer.setupWireModel(BlockID.cableOptic, 0, 1/4, "ic-wire");
 
 // drop 
-Block.registerDropFunction("cableTin", function(){
-	return [[ItemID.cableTin1, 1, 0]];
+Block.registerDropFunction("cableTin", function(coords, id, data){
+	return [[ItemID["cableTin" + data], 1, 0]];
 });
 
-Block.registerDropFunction("cableCopper", function(){
-	return [[ItemID.cableCopper1, 1, 0]];
+Block.registerDropFunction("cableCopper", function(coords, id, data){
+	return [[ItemID["cableCopper" + data], 1, 0]];
 });
 
-Block.registerDropFunction("cableGold", function(){
-	return [[ItemID.cableGold2, 1, 0]];
+Block.registerDropFunction("cableGold", function(coords, id, data){
+	return [[ItemID["cableGold" + data], 1, 0]];
 });
 
-Block.registerDropFunction("cableIron", function(){
-	return [[ItemID.cableIron3, 1, 0]];
+Block.registerDropFunction("cableIron", function(coords, id, data){
+	return [[ItemID["cableIron" + data], 1, 0]];
 });
 
-Block.registerDropFunction("cableOptic", function(){
+Block.registerDropFunction("cableOptic", function(coords, id, data){
 	return [[ItemID.cableOptic, 1, 0]];;
 });

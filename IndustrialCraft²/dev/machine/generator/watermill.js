@@ -18,14 +18,10 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-MachineRegistry.registerPrototype(BlockID.genWatermill, {
+MachineRegistry.registerGenerator(BlockID.genWatermill, {
 	defaultValues: {
 		meta: 0,
 		output: 0
-	},
-	
-	isGenerator: function() {
-		return true;
 	},
 	
 	biomeCheck: function(x, z){
@@ -61,9 +57,12 @@ MachineRegistry.registerPrototype(BlockID.genWatermill, {
 				if(tile == 8 || tile == 9){
 					this.data.output = Math.round(output)/20;
 				}
+				else{
+					this.data.output = 0;
+				}
 			}
 		}
-		src.add(this.data.output);
+		src.addAll(this.data.output);
 	},
 	
 	init: MachineRegistry.updateMachine,

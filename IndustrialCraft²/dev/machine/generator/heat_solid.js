@@ -74,7 +74,7 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 		}else{
 			this.data.meta = coords.side;
 		}
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.solidHeatGenerator, this.data.meta + 6*this.data.isActive);
+		this.initModel();
 	},
 	
 	getFuel: function(fuelSlot){
@@ -126,6 +126,6 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
     },
 	
 	hasFullRotation: true,
-}, true);
+});
 
 TileRenderer.setRotationPlaceFunction(BlockID.solidHeatGenerator, true);

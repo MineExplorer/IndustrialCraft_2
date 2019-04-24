@@ -48,14 +48,14 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 			else{
 				var data = World.getTileEntity(coords.x, coords.y, coords.z).data;
 				var distance = Entity.getDistanceBetweenCoords(coords, receiveCoords);
-				var basicTeleportationCost = Math.floor(5 * Math.pow((distance+10), 0.7));
+				var basicTeleportCost = Math.floor(5 * Math.pow((distance+10), 0.7));
 				receiver = World.getTileEntity(x, y, z);
 				if(receiver){
 					data.frequency = receiveCoords;
-					data.frequency.energy = basicTeleportationCost;
+					data.frequency.energy = basicTeleportCost;
 					data = receiver.data;
 					data.frequency = coords;
-					data.frequency.energy = basicTeleportationCost;
+					data.frequency.energy = basicTeleportCost;
 					Game.message("Teleportation link established");
 				}
 			}

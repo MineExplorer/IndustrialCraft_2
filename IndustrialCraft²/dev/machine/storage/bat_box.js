@@ -15,14 +15,7 @@ Block.registerDropFunction("storageBatBox", function(coords, blockID, blockData,
 	return [];
 });
 
-Item.registerNameOverrideFunction(BlockID.storageBatBox, function(item, name){
-	item = Player.getCarriedItem();
-	if(item.extra){
-		var energyStored = item.extra.getInt("Eu");
-		return name + "\n§7" + energyStored + "/" + 40000 + " Eu";
-	}
-	return name;
-});
+NameOverrides.addStorageBlockTooltip("storageBatBox", 1, "40K");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageBatBox, count: 1, data: 0}, [
@@ -57,32 +50,35 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-MachineRegistry.registerPrototype(BlockID.storageBatBox, {
+MachineRegistry.registerEUStorage(BlockID.storageBatBox, {
 	defaultValues: {
-		power_tier: 0,
 		meta: 0
 	},
-	
-	isStorage: true,
 	
 	getGuiScreen: function(){
 		return guiBatBox;
 	},
 	
-	wrenchClick: function(id, count, data, coords){
-		if(Entity.getSneaking(player)){
-			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
-		}else{
-			this.data.meta = coords.side;
-		}
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.storageBatBox, this.data.meta);
+	getTier: function(){
+		return 1;
 	},
+	
+	wrenchClick: function(id, count, data, coords){
+		if(this.setFacing(coords)){
+			EnergyNetBuilder.rebuildTileNet(this);
+			return true;
+		}
+		return false;
+	},
+		
+	setFacing: MachineRegistry.setFacing,
 	
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
-		var TRANSFER = transferByTier[0];
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, 0);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, 0);
+		var tier = this.getTier();
+		var TRANSFER = transferByTier[tier];
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, tier);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, tier);
 		
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
@@ -93,9 +89,12 @@ MachineRegistry.registerPrototype(BlockID.storageBatBox, {
 		return 40000;
 	},
 	
-	energyTick: function(type, src){
-		var TRANSFER = 32;
-		this.data.energy += src.storage(Math.min(TRANSFER*4, this.getEnergyStorage() - this.data.energy), Math.min(TRANSFER, this.data.energy));
+	canReceiveEnergy: function(side, type){
+		return side != this.data.meta;
+	},
+	
+	canExtractEnergy: function(side, type){
+		return side == this.data.meta;
 	},
 	
 	destroyBlock: function(coords, player){

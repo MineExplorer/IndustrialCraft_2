@@ -21,14 +21,14 @@ IDRegistry.genBlockID("reinforcedStone");
 Block.createBlock("reinforcedStone", [
 	{name: "Reinforced Stone", texture: [["reinforced_block", 0]], inCreative: true}
 ], "reinforced_block");
-ToolAPI.registerBlockMaterial(BlockID.reinforcedStone, "stone", 2, true);
+ToolAPI.registerBlockMaterial(BlockID.reinforcedStone, "stone", 2);
 Block.setDestroyLevel("reinforcedStone", 2);
 
 IDRegistry.genBlockID("reinforcedGlass");
 Block.createBlock("reinforcedGlass", [
 	{name: "Reinforced Glass", texture: [["reinforced_glass", 0]], inCreative: true}
 ], "reinforced_glass");
-ToolAPI.registerBlockMaterial(BlockID.reinforcedGlass, "stone", 2, true);
+ToolAPI.registerBlockMaterial(BlockID.reinforcedGlass, "stone", 2);
 Block.setDestroyLevel("reinforcedGlass", 2);
 
 Callback.addCallback("PreLoaded", function(){

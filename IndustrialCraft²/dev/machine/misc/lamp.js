@@ -25,7 +25,7 @@ Block.setBlockShape(BlockID.luminator, {x: 15/16, y: 0, z: 0}, {x: 1, y: 1, z: 1
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1/16, y: 1, z: 1}, 5);
 
 Block.registerDropFunction("luminator", function(coords, blockID, blockData, level, enchant){
-	return [[BlockID.luminator, 1, 1]];
+	return [[blockID, 1, 1]];
 });
 
 
@@ -61,13 +61,13 @@ Callback.addCallback("PreLoaded", function(){
 
 
 
-MachineRegistry.registerPrototype(BlockID.luminator, {
+MachineRegistry.registerElectricMachine(BlockID.luminator, {
 	defaultValues: {
 		isActive: false
 	},
 	
 	getEnergyStorage: function(){
-		return 5000;
+		return 100;
 	},
 	
 	click: function(id, count, data, coords){
@@ -75,33 +75,33 @@ MachineRegistry.registerPrototype(BlockID.luminator, {
 		return true;
 	},
 	
-	energyTick: function(type, src){
-		var energyNeed = Math.min(32, this.getEnergyStorage() - this.data.energy);
-		this.data.energy += src.get(energyNeed);
+	tick: function(type, src){
 		if(this.data.isActive && this.data.energy >= 0.25){
 			var x = this.x, y = this.y, z = this.z;
 			var blockData = World.getBlock(x, y, z).data;
 			var data = this.data;
 			this.selfDestroy();
 			World.setBlock(x, y, z, BlockID.luminator_on, blockData);
-			tile = World.addTileEntity(x, y, z);
+			var tile = World.addTileEntity(x, y, z);
 			tile.data = data;
 		}
-	}
+	},
+	
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 
-MachineRegistry.registerPrototype(BlockID.luminator_on, {
+MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 	defaultValues: {
 		isActive: true
 	},
 	
 	getEnergyStorage: function(){
-		return 5000;
+		return 100;
 	},
 	
 	disable: function(){
 		var x = this.x, y = this.y, z = this.z;
-		var blockData = World.getBlockData(x, y, z);
+		var blockData = World.getBlock(x, y, z).data;
 		var data = this.data;
 		this.selfDestroy();
 		World.setBlock(x, y, z, BlockID.luminator, blockData);
@@ -115,15 +115,15 @@ MachineRegistry.registerPrototype(BlockID.luminator_on, {
 		return true;
 	},
 	
-	energyTick: function(type, src){
-		var energyNeed = Math.min(32, this.getEnergyStorage() - this.data.energy);
-		this.data.energy += src.get(energyNeed);
+	tick: function(type, src){
 		if(this.data.energy < 0.25){
 			this.disable();
 		}else{
 			this.data.energy -= 0.25;
 		}
-	}
+	},
+	
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 
 Block.registerPlaceFunction("luminator", function(coords, item, block){

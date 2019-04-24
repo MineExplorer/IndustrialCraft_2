@@ -6,6 +6,8 @@ TileRenderer.setStandartModel(BlockID.massFabricator, [["machine_advanced_bottom
 TileRenderer.registerRotationModel(BlockID.massFabricator, 0, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.massFabricator, 4, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 
+NameOverrides.addTierTooltip("massFabricator", 5);
+
 Block.registerDropFunction("massFabricator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 });
@@ -47,7 +49,7 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-MachineRegistry.registerPrototype(BlockID.massFabricator, {
+MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	defaultValues: {
 		meta: 0,
 		progress: 0,
@@ -62,7 +64,11 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	},
 		
 	getTransportSlots: function(){
-		return {input: ["catalyserSlot"], output: ["matterSlot"]};
+		return {input: ["catalyserSlot"], output: ["madtterSlot"]};
+	},
+	
+	getTier: function(){
+		return 5;
 	},
 	
 	tick: function(){
@@ -121,7 +127,7 @@ MachineRegistry.registerPrototype(BlockID.massFabricator, {
 	},
 	
 	init: MachineRegistry.updateMachine,
-	energyTick: MachineRegistry.basicEnergyReceiveFunc
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc // To Do: infinite energy receive
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.massFabricator);

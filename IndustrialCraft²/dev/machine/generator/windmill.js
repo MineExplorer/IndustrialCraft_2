@@ -17,14 +17,10 @@ Callback.addCallback("PreLoaded", function(){
 	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0, 'c', ItemID.coil, 0]);
 });
 
-MachineRegistry.registerPrototype(BlockID.genWindmill, {
+MachineRegistry.registerGenerator(BlockID.genWindmill, {
 	defaultValues: {
 		meta: 0,
 		output: 0
-	},
-	
-	isGenerator: function() {
-		return true;
 	},
 	
 	energyTick: function(type, src){
@@ -41,9 +37,10 @@ MachineRegistry.registerPrototype(BlockID.genWindmill, {
 					this.z - random(-radius, radius)
 				) == 0){
 				this.data.output = Math.round(output)/20;
-			}else{this.data.output = 0;}
+			}
+			else this.data.output = 0;
 		}
-		src.add(this.data.output);
+		src.addAll(this.data.output);
 	},
 	
 	init: MachineRegistry.updateMachine,

@@ -1,7 +1,7 @@
 IDRegistry.genItemID("jetpack");
 Item.createArmorItem("jetpack", "Jetpack", {name: "electric_jetpack"}, {type: "chestplate", armor: 3, durability: 30000, texture: "armor/jetpack_1.png"});
-ChargeItemRegistry.registerItem(ItemID.jetpack, "Eu", 30000, 0);
-Item.registerNameOverrideFunction(ItemID.jetpack, ENERGY_ITEM_NAME);
+ChargeItemRegistry.registerItem(ItemID.jetpack, "Eu", 30000, 1);
+Item.registerNameOverrideFunction(ItemID.jetpack, NameOverrides.showItemStorage);
 
 Recipes.addShaped({id: ItemID.jetpack, count: 1, data: Item.getMaxDamage(ItemID.jetpack)}, [
 	"bcb",

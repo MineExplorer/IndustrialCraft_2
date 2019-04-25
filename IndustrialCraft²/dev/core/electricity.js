@@ -39,7 +39,7 @@ function isMob(ent){
 	return false;
 }
 
-var isolationMaxVolt = {
+var insulationMaxVolt = {
 	0: 5,
 	1: 128,
 	2: 512
@@ -62,9 +62,9 @@ Callback.addCallback("tick", function(){
 					for(var xx = x-1; xx < x+2; xx++){
 						for(var zz = z-1; zz < z+2; zz++){
 							var block = World.getBlock(xx, yy, zz);
-							if(IC_WIRES[block.id]){
+							if(block.data < IC_WIRES[block.id]){
 								var net = EnergyNetBuilder.getNetOnCoords(xx, yy, zz);
-								if(net && net.energyName == "Eu" && block.data < IC_WIRES[block.id] && net.lastVoltage > isolationMaxVolt[block.data]){
+								if(net && net.energyName == "Eu" && net.lastVoltage > insulationMaxVolt[block.data]){
 									var damage = Math.ceil(net.lastVoltage / 32);
 									Entity.damageEntity(ent, damage);
 									break;

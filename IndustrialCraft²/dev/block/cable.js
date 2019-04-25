@@ -49,9 +49,9 @@ ToolAPI.registerBlockMaterial(BlockID.cableOptic, "stone");
 Block.setDestroyTime(BlockID.cableOptic, 0.05);
 
 var IC_WIRES = {};
-function setupBlockAsWire(id, maxVoltage, isolationLevels){
+function setupBlockAsWire(id, maxVoltage, insulationLevels){
 	EU.registerWire(id, maxVoltage);
-	IC_WIRES[id] = isolationLevels || 0;
+	IC_WIRES[id] = insulationLevels || 0;
 }
 
 // energy net

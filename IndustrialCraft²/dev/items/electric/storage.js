@@ -92,4 +92,14 @@ Item.registerUseFunction("debugItem", function(coords, item, block){
 			}
 		}
 	}
+	tile = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z);
+	if(tile){
+		for (var i in tile.__energyNets){
+			var net = tile.__energyNets[i];
+			if(net) Game.message(net.toString());
+		}
+	}else{
+		var net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
+		if(net) Game.message(net.toString());
+	}
 });

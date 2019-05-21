@@ -20,7 +20,7 @@ Callback.addCallback("PreLoaded", function(){
 		" b ",
 		"cxa",
 		" b "
-	], ['x', BlockID.transformerMV, 0, 'a', ItemID.storageAdvBattery, -1, 'b', ItemID.cableGold2, 0, 'c', ItemID.circuitBasic, 0]);
+	], ['x', BlockID.transformerMV, 0, 'a', ItemID.storageAdvBattery, -1, 'b', ItemID.cableGold2, -1, 'c', ItemID.circuitBasic, -1]);
 });
 
 MachineRegistry.registerTransformer(BlockID.transformerHV, 4);

@@ -13,7 +13,7 @@ var MachineRegistry = {
 		
 		// click fix
 		Prototype.onItemClick = function(id, count, data, coords){
-			if (id == ItemID.debugItem) return false;
+			if (id == ItemID.debugItem || id == ItemID.EUMeter) return false;
 			if (this.click(id, count, data, coords)) return true;
 			if (Entity.getSneaking(player)) return false;
 			var gui = this.getGuiScreen();
@@ -72,10 +72,18 @@ var MachineRegistry = {
 		// setup energy value
 		if (Prototype.defaultValues){
 			Prototype.defaultValues.energy = 0;
+			Prototype.defaultValues.energy_receive = 0;
+			Prototype.defaultValues.last_energy_receive = 0;
+			Prototype.defaultValues.voltage = 0;
+			Prototype.defaultValues.last_voltage = 0;
 		}
 		else{
 			Prototype.defaultValues = {
-				energy: 0
+				energy: 0,
+				energy_receive: 0,
+				last_energy_receive: 0,
+				voltage: 0,
+				last_voltage: 0
 			};
 		}
 		
@@ -86,6 +94,15 @@ var MachineRegistry = {
 		if(!Prototype.getEnergyStorage){
 			Prototype.getEnergyStorage = function(){
 				return 0;
+			};
+		}
+		
+		if(!Prototype.energyTick){
+			Prototype.energyTick = function(){
+				this.data.last_energy_receive = this.data.energy_receive;
+				this.data.energy_receive = 0;
+				this.data.last_voltage = this.data.voltage;
+				this.data.voltage = 0;
 			};
 		}
 		
@@ -214,6 +231,10 @@ var MachineRegistry = {
 	},
 	
 	basicEnergyOutFunc: function(type, src){
+		this.data.last_energy_receive = this.data.energy_receive;
+		this.data.energy_receive = 0;
+		this.data.last_voltage = this.data.voltage;
+		this.data.voltage = 0;
 		var output = this.getMaxPacketSize();
 		if(this.data.energy >= output){
 			this.data.energy += src.add(output) - output;
@@ -233,6 +254,8 @@ var MachineRegistry = {
 			var add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
 		}
 		this.data.energy += add;
+		this.data.energy_receive += add;
+		this.data.voltage = Math.max(this.data.voltage, voltage);
 		return add;
 	},
 	

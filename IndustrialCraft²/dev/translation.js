@@ -42,10 +42,10 @@ Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", pt: "Transmis
 Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", pt: "Unidade de Armazenamento Multi-funcional", zh: "MFSU充电座"});
 
 // Transformer
-Translation.addTranslation("LV Transformer", {ru: "Трансформатор НН"});
-Translation.addTranslation("MV Transformer", {ru: "Трансформатор СН"});
-Translation.addTranslation("HV Transformer", {ru: "Трансформатор ВН"});
-Translation.addTranslation("EV Transformer", {ru: "Трансформатор СВН"});
+Translation.addTranslation("LV Transformer", {ru: "Трансформатор НН", zh: "低压变压器"});
+Translation.addTranslation("MV Transformer", {ru: "Трансформатор СН", zh: "中压变压器"});
+Translation.addTranslation("HV Transformer", {ru: "Трансформатор ВН", zh: "高压变压器"});
+Translation.addTranslation("EV Transformer", {ru: "Трансформатор СВН", zh: "超高压变压器"});
 
 // Machines
 Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Coletar Experiência", zh: "铁炉"});
@@ -276,7 +276,7 @@ Translation.addTranslation("Diamond Drill", {ru: "Алмазный бур", es: 
 Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es: "Taladro de Iridio", pt: "Broca de Irídio", zh: "铱钻头"});
 Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-Sable", pt: "Sabre Nano", zh: "纳米剑"});
 Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", pt: "Laser de Mineração", zh: "采矿镭射枪"});
-Translation.addTranslation("Thermometer", {ru: "Термометр"});
+Translation.addTranslation("EU Meter", {ru: "Энергометр", pt: "Leitor de EU", zh: "EU电表"});
 
 // GUI
 // Fluid Distributor
@@ -286,6 +286,14 @@ Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "con
 // Advanced Miner
 Translation.addTranslation("Mode: Blacklist", {ru: "Чёрный список", es: "Modo: lista negra", pt: "Modo: Lst Negra", zh: "模式:黑名单"});
 Translation.addTranslation("Mode: Whitelist", {ru: "Белый список", es: "Modo: lista blanca", pt: "Modo: Lst Branca", zh: "模式:白名单"});
+// EU Meter
+Translation.addTranslation("EnergyIn", {ru: "Вход энергии", zh: "能量流入"});
+Translation.addTranslation("EnergyOut", {ru: "Выход энергии", zh: "能量流出"});
+Translation.addTranslation("Voltage", {ru: "Напряжение", es: "Voltaje", pt: "Voltagem", zh: "电压"});
+Translation.addTranslation("Avg:", {ru: "Средн.:", es: "Promedio:", pt: "Méd:", zh: "平均:"});
+Translation.addTranslation("Max/Min", {ru: "Макс./Мин.", zh: "最大/最小"});
+Translation.addTranslation("Cycle: ", {ru: "Цикл: ", es: "Ciclo: ", pt: "Cíclo: ", zh: "周期: "});
+Translation.addTranslation("Reset", {ru: "Сброс", pt: "Resetar", zh: "重置"});
 
 // Tooltips
 Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: "});

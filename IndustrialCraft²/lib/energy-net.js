@@ -9,7 +9,7 @@
 
 LIBRARY({
 	name: "EnergyNet",
-	version: 1,
+	version: 2,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -30,7 +30,7 @@ function EnergyType(name) {
         this.wireData[id] = value;
         EnergyRegistry.wireData[id] = {type: this.name, value: value};
 		
-		Item.registerUseFunctionForID(id, function(coords, item, block){
+		Block.registerPlaceFunction(id, function(coords, item, block){
 			var place = coords.relative;
 			if(World.getBlockID(place.x, place.y, place.z) == 0){
 				World.setBlock(place.x, place.y, place.z, item.id, item.data);
@@ -136,12 +136,6 @@ var EnergyRegistry = {
 	}
 }
 
-Callback.addCallback("ItemUse", function(coords, item, block) {
-    if (EnergyRegistry.isWire(item.id)) {
-        EnergyRegistry.onWirePlaced(coords.relative.x, coords.relative.y, coords.relative.z);
-    }
-});
-
 Callback.addCallback("DestroyBlock", function(coords, block) {
     if (EnergyRegistry.isWire(block.id)) {
         EnergyRegistry.onWireDestroyed(coords.x, coords.y, coords.z, block.id);
@@ -181,6 +175,12 @@ var TileEntityRegistry = {
 		Prototype.__tick = Prototype.tick || function() {};
 		Prototype.__destroy = Prototype.destroy || function() {};
 		
+		if (!Prototype.energyTick) {
+			Prototype.energyTick = function(type, src) {
+				// called for each energy type
+			}
+		}
+		
 		Prototype.energyReceive = Prototype.energyReceive || function() {
 			return 0;
 		}
@@ -192,11 +192,6 @@ var TileEntityRegistry = {
 		if (Prototype.isEnergySource) {
 			Prototype.canExtractEnergy = Prototype.canExtractEnergy || function() {
 				return true;
-			}
-			if (!Prototype.energyTick) {
-				Prototype.energyTick = function(type, src) {
-					// called for each energy net
-				}
 			}
 		}
 		else {
@@ -242,6 +237,8 @@ var TileEntityRegistry = {
 					}
 					var src = net.source;
 					this.energyTick(name, src);
+				}else{
+					this.energyTick(name, null);
 				}
 			}
 		}
@@ -538,7 +535,7 @@ var GLOBAL_WEB_ID = 0;
 function EnergyNet(energyType, maxPacketSize) {
 	this.energyType = energyType;
 	this.energyName = energyType.name;
-	this.maxPacketSize = maxPacketSize || 10e9;
+	this.maxPacketSize = maxPacketSize || 2e9;
 	
 	this.netId = GLOBAL_WEB_ID++;
 	
@@ -651,7 +648,7 @@ function EnergyNet(energyType, maxPacketSize) {
 	}
 
 	this.toString = function() {
-		var r = function(x) {return Math.round(x * 10) / 10};
+		var r = function(x) {return Math.round(x * 100) / 100};
 		return "[EnergyNet id=" + this.netId + " type=" + this.energyName + "| stored =" + this.lastStore + "| connections=" + this.connectionsCount + " units=" + this.tileEntities.length + " | transfered=" + r(this.lastTransfered) + " | voltage=" + r(this.lastVoltage) + "]";
 	}
 

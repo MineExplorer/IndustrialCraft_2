@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function(){
 		"bab",
 		"axa",
 		"bab"
-	], ['x', BlockID.machineBlockBasic, 0, 'a', ItemID.storageCrystal, -1, 'b', ItemID.cableGold2, 0]);
+	], ['x', BlockID.machineBlockBasic, 0, 'a', ItemID.storageCrystal, -1, 'b', ItemID.cableGold2, -1]);
 });
 
 

@@ -16,6 +16,11 @@ MachineRegistry.registerTransformer = function(id, tier){
 		energyReceive: MachineRegistry.basicEnergyReceiveFunc,
 		
 		energyTick: function(type, src){
+			this.data.last_energy_receive = this.data.energy_receive;
+			this.data.energy_receive = 0;
+			this.data.last_voltage = this.data.voltage;
+			this.data.voltage = 0;
+		
 			var maxVoltage = this.getMaxPacketSize();
 			if(this.data.energy >= maxVoltage){
 				var output = maxVoltage;

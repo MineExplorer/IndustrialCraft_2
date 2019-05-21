@@ -2,7 +2,7 @@ if(voltageEnabled){
 	EU.onNetOverload = function(voltage) {
 		for(var key in this.wireMap){
 			var coords = key.split(':');
-			var x = parseInt(coords[0]), y = parseInt(coords[1]), z = parseInt(coords[2]);
+			var x = Math.floor(coords[0]), y = Math.floor(coords[1]), z = Math.floor(coords[2]);
 			World.setBlock(x, y, z, 0);
 			addBurnParticles(x, y, z);
 		}
@@ -39,6 +39,24 @@ function isMob(ent){
 	return false;
 }
 
+function damageEntityInR(x, y, z, ent){
+	for(var yy = y-2; yy < y+2; yy++){
+		for(var xx = x-1; xx < x+2; xx++){
+			for(var zz = z-1; zz < z+2; zz++){
+				var block = World.getBlock(xx, yy, zz);
+				if(block.data < IC_WIRES[block.id]){
+					var net = EnergyNetBuilder.getNetOnCoords(xx, yy, zz);
+					if(net && net.energyName == "Eu" && net.lastVoltage > insulationMaxVolt[block.data]){
+						var damage = Math.ceil(net.lastVoltage / 32);
+						Entity.damageEntity(ent, damage);
+						return;
+					}
+				}
+			}
+		}
+	}
+}
+
 var insulationMaxVolt = {
 	0: 5,
 	1: 128,
@@ -57,22 +75,7 @@ Callback.addCallback("tick", function(){
 			var ent = entities[i];
 			if(isMob(ent) && Entity.getHealth(ent) > 0){
 				var coords = Entity.getPosition(ent);
-				var x = parseInt(coords.x), y = parseInt(coords.y), z = parseInt(coords.z);
-				for(var yy = y-2; yy < y+2; yy++){
-					for(var xx = x-1; xx < x+2; xx++){
-						for(var zz = z-1; zz < z+2; zz++){
-							var block = World.getBlock(xx, yy, zz);
-							if(block.data < IC_WIRES[block.id]){
-								var net = EnergyNetBuilder.getNetOnCoords(xx, yy, zz);
-								if(net && net.energyName == "Eu" && net.lastVoltage > insulationMaxVolt[block.data]){
-									var damage = Math.ceil(net.lastVoltage / 32);
-									Entity.damageEntity(ent, damage);
-									break;
-								}
-							}
-						}
-					}
-				}
+				damageEntityInR(Math.floor(coords.x), Math.floor(coords.y), Math.floor(coords.z), ent);
 			}
 		}
 	}

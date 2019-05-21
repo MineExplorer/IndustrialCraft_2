@@ -12,13 +12,13 @@ Recipes.addShaped({id: ItemID.scanner, count: 1, data: Item.getMaxDamage(ItemID.
 	"gdg",
 	"cbc",
 	"xxx"
-], ['x', ItemID.cableCopper1, 0, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, 0, 'd', 348, 0, 'g', ItemID.casingGold, 0], ChargeItemRegistry.transportEnergy);
+], ['x', ItemID.cableCopper1, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transportEnergy);
 
 Recipes.addShaped({id: ItemID.scannerAdvanced, count: 1, data: Item.getMaxDamage(ItemID.scannerAdvanced)}, [
 	"gbg",
 	"dcd",
 	"xsx"
-], ['x', ItemID.cableGold2, 0, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'd', 348, 0, 'g', ItemID.casingGold, 0], ChargeItemRegistry.transportEnergy);
+], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transportEnergy);
 
 
 var scan_radius = 3;

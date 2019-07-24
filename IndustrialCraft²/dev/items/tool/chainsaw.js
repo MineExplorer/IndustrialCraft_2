@@ -43,4 +43,4 @@ ToolType.chainsaw = {
 	}
 }
 
-ToolAPI.setTool(ItemID.chainsaw, {energyConsumption: 50, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
+ToolAPI.setTool(ItemID.chainsaw, {energyConsumption: 60, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);

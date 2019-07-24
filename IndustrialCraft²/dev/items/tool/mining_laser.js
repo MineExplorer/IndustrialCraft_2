@@ -11,23 +11,10 @@ Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: Item.getMaxDamage(Ite
 	" aa"
 ], ['#', ItemID.circuitAdvanced, 0, 'x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, "c", 331, 0], ChargeItemRegistry.transportEnergy);
 
-var laserEnergy = 0;
-
-Callback.addCallback("tick", function(){
-	var item = Player.getCarriedItem()
-	if(item.id == ItemID.miningLaser){
-		laserEnergy = Math.min(laserEnergy+5, 100);
-		Game.tipMessage(laserEnergy+"/100")
-	}
-	else{
-		laserEnergy = 0;
-	}
-});
 
 Item.registerUseFunction("miningLaser", function(coords, item, block){
 	var c = Player.getPosition();
-	if(laserEnergy >= 100 && item.data < Item.getMaxDamage(item.id)-2000){
-		laserEnergy = 0;
+	if(item.data + 2000 <= Item.getMaxDamage(item.id)){
 		Player.setCarriedItem(item.id, 1, item.data + 2000);
 		for(var t = 0; t < 20; t += 0.1){
 			x = (coords.x - c.x)*t +c.x;

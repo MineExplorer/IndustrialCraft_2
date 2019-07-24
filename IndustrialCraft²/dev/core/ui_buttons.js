@@ -12,24 +12,36 @@ Callback.addCallback("NativeGuiChanged", function(screenName){
 var button_scale = __config__.access("button_scale");
 var UIbuttons = {
 	data: {},
+	onSwitch: {},
+	onUpdate: {},
 	isEnabled: false,
 	container: null,
 	Window: new UI.Window({
 		location: {
 			x: 1000 - button_scale,
-			y: UI.getScreenHeight()/2 - button_scale*1.5,
+			y: UI.getScreenHeight()/2 - button_scale*2,
 			width: button_scale,
-			height: button_scale*4
+			height: button_scale*5
 		},
 		drawing: [{type: "background", color: 0}],
 		elements: {}
 	}),
 	
-	setButton: function(id, name){
+	setArmorButton: function(id, name){
+		var data = {type: 0, name: name};
 		if(!this.data[id]){
-			this.data[id] = [name]
+			this.data[id] = [data]
 		}else{
-			this.data[id].push(name);
+			this.data[id].push(data);
+		}
+	},
+	
+	setToolButton: function(id, name){
+		var data = {type: 1, name: name};
+		if(!this.data[id]){
+			this.data[id] = [data]
+		}else{
+			this.data[id].push(data);
 		}
 	},
 	
@@ -39,6 +51,14 @@ var UIbuttons = {
 	
 	registerButton: function(name, properties){
 		buttonContent[name] = properties;
+	},
+	
+	registerSwitchFunction: function(id, func){
+		this.onSwitch[id] = func;
+	},
+	
+	onButtonUpdate: function(name, func){
+		this.onUpdate[name] = func;
 	}
 }
 
@@ -68,11 +88,11 @@ var buttonContent = {
 				}
 				if(nightvision){
 					extra.putBoolean("nv", false);
-					Game.message("§4Nightvision mode disabled");
+					Game.message("§4" + Translation.translate("Nightvision mode disabled"));
 				}
 				else{
 					extra.putBoolean("nv", true);
-					Game.message("§2Nightvision mode enabled");
+					Game.message("§2" + Translation.translate("Nightvision mode enabled"));
 				}
 				Player.setArmorSlot(0, armor.id, 1, armor.data, extra);
 			}
@@ -103,11 +123,11 @@ var buttonContent = {
 				}
 				if(hover){
 					extra.putBoolean("hover", false);
-					Game.message("§4Hover mode disabled");
+					Game.message("§4" + Translation.translate("Hover mode disabled"));
 				}
 				else{
 					extra.putBoolean("hover", true);
-					Game.message("§2Hover mode enabled");
+					Game.message("§2" + Translation.translate("Hover mode enabled"));
 				}
 				Player.setArmorSlot(1, armor.id, 1, armor.data, extra);
 			}
@@ -128,10 +148,35 @@ var buttonContent = {
 				}
 			}
 		}
+	},
+	button_switch: {
+		y: 4000,
+		type: "button",
+		bitmap: "button_switch",
+		bitmap2: "button_switch_touched",
+		scale: 25,
+		clicker: {
+			onClick: function(){
+				var item = Player.getCarriedItem();
+				if(UIbuttons.onSwitch[item.id]){
+					UIbuttons.onSwitch[item.id](item);
+				}
+			}
+		}
 	}
 }
 
 UIbuttons.Window.setAsGameOverlay(true);
+
+UIbuttons.onButtonUpdate("button_hover", function(element){
+	var armor = Player.getArmorSlot(1);
+	var extra = armor.extra;
+	if(extra && extra.getBoolean("hover")){
+		element.bitmap = "button_hover_on";
+	}else{
+		element.bitmap = "button_hover_off";
+	}
+});
 
 function updateUIbuttons(){
 	var elements = UIbuttons.Window.content.elements;
@@ -141,18 +186,8 @@ function updateUIbuttons(){
 				elements[name] = buttonContent[name];
 			}
 			var element = elements[name];
-			if(name == "button_hover"){
-				var armor = Player.getArmorSlot(1);
-				var extra = armor.extra;
-				if(extra){
-					var hover = extra.getBoolean("hover");
-				}
-				if(hover){
-					element.bitmap = "button_hover_on";
-				}else{
-					element.bitmap = "button_hover_off";
-				}
-			}
+			var func = UIbuttons.onUpdate[name];
+			if(func) func(element);
 			element.x = 0;
 			buttonMap[name] = false;
 		}
@@ -162,14 +197,25 @@ function updateUIbuttons(){
 	}
 }
 
-
 Callback.addCallback("tick", function(){
 	var armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
 	activeButtons = [];
 	for(var i in armor){
 		var buttons = UIbuttons.getButtons(armor[i].id);
 		for(var i in buttons){
-			buttonMap[buttons[i]] = true;
+			var button = buttons[i];
+			if(button.type == 0){
+				buttonMap[button.name] = true;
+				UIbuttons.isEnabled = true;
+			}
+		}
+	}
+	var item = Player.getCarriedItem();
+	var buttons = UIbuttons.getButtons(item.id);
+	for(var i in buttons){
+		var button = buttons[i];
+		if(button.type == 1){
+			buttonMap[button.name] = true;
 			UIbuttons.isEnabled = true;
 		}
 	}

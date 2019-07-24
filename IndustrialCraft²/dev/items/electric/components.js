@@ -1,6 +1,6 @@
 IDRegistry.genItemID("circuitBasic");
 IDRegistry.genItemID("circuitAdvanced");
-Item.createItem("circuitBasic", "Circuit", {name: "circuit_basic", meta: 0});
+Item.createItem("circuitBasic", "Electronic Circuit", {name: "circuit_basic", meta: 0});
 Item.createItem("circuitAdvanced", "Advanced Circuit", {name: "circuit_advanced", meta: 0});
 
 IDRegistry.genItemID("coil");

@@ -13,4 +13,4 @@ Recipes.addShaped({id: ItemID.reactorPlatingHeat, count: 1, data: 0}, [
 	"aaa",
 	"axa",
 	"aaa"
-], ["x", ItemID.reactorPlatingContainment, 0, 'a', ItemID.plateCopper, 0]);
+], ["x", ItemID.reactorPlating, 0, 'a', ItemID.plateCopper, 0]);

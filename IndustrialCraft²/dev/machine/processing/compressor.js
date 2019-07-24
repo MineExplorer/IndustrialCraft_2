@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function(){
 		"x x",
 		"x#x",
 		"xax"
-	], ['#', BlockID.machineBlockBasic, 0, 'x', 1, 0, 'a', ItemID.circuitBasic, 0]);
+	], ['#', BlockID.machineBlockBasic, 0, 'x', 1, -1, 'a', ItemID.circuitBasic, 0]);
 	
 	
 	MachineRecipeRegistry.registerRecipesFor("compressor", {

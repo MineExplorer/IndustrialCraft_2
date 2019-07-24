@@ -27,7 +27,7 @@ Item.createItem("cableIron3", "3x Ins. HV Cable", {name: "cable_iron", meta: 3})
 IDRegistry.genItemID("cableOptic");
 Item.createItem("cableOptic", "Glass Fibre Cable", {name: "cable_optic", meta: 0});
 
-Recipes.addShaped({id: ItemID.cableOptic, count: 3, data: 0}, [
+Recipes.addShaped({id: ItemID.cableOptic, count: 6, data: 0}, [
 	"aaa",
 	"x#x",
 	"aaa"
@@ -35,9 +35,9 @@ Recipes.addShaped({id: ItemID.cableOptic, count: 3, data: 0}, [
 
 Callback.addCallback("PreLoaded", function(){
 	// cutting recipes
-	addRecipeWithCraftingTool({id: ItemID.cableTin0, count: 3, data: 0}, [{id: ItemID.plateTin, data: 0}], ItemID.cutter);
-	addRecipeWithCraftingTool({id: ItemID.cableCopper0, count: 3, data: 0}, [{id: ItemID.plateCopper, data: 0}], ItemID.cutter);
-	addRecipeWithCraftingTool({id: ItemID.cableGold0, count: 4, data: 0}, [{id: ItemID.plateGold, data: 0}], ItemID.cutter);
+	ICTool.addRecipe({id: ItemID.cableTin0, count: 2, data: 0}, [{id: ItemID.plateTin, data: 0}], ItemID.cutter);
+	ICTool.addRecipe({id: ItemID.cableCopper0, count: 2, data: 0}, [{id: ItemID.plateCopper, data: 0}], ItemID.cutter);
+	ICTool.addRecipe({id: ItemID.cableGold0, count: 3, data: 0}, [{id: ItemID.plateGold, data: 0}], ItemID.cutter);
 
 	// isolation recipes
 	Recipes.addShapeless({id: ItemID.cableTin1, count: 1, data: 0}, [{id: ItemID.cableTin0, data: 0}, {id: ItemID.rubber, data: 0}]);
@@ -54,7 +54,6 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-// place funcs
 function registerCablePlaceFunc(nameID, blockID, blockData){
 	Item.registerUseFunction(nameID, function(coords, item, block){
 		var place = coords.relative;
@@ -66,19 +65,35 @@ function registerCablePlaceFunc(nameID, blockID, blockData){
 	});
 }
 
-registerCablePlaceFunc("cableTin0", BlockID.cableTin, 0);
-registerCablePlaceFunc("cableTin1", BlockID.cableTin, 1);
+for(var i = 0; i < 2; i++){
+	registerCablePlaceFunc("cableTin"+i, BlockID.cableTin, i);
+	Item.registerNameOverrideFunction(ItemID["cableTin"+i], function(item, name){
+		return name + "\n§7" + Translation.translate("Max voltage: ") + "32 EU/t";
+	});
+}
 
-registerCablePlaceFunc("cableCopper0", BlockID.cableCopper, 0);
-registerCablePlaceFunc("cableCopper1", BlockID.cableCopper, 1);
+for(var i = 0; i < 2; i++){
+	registerCablePlaceFunc("cableCopper"+i, BlockID.cableCopper, i);
+	Item.registerNameOverrideFunction(ItemID["cableCopper"+i], function(item, name){
+		return name + "\n§7" + Translation.translate("Max voltage: ") + "128 EU/t";
+	});
+}
 
-registerCablePlaceFunc("cableGold0", BlockID.cableGold, 0);
-registerCablePlaceFunc("cableGold1", BlockID.cableGold, 1);
-registerCablePlaceFunc("cableGold2", BlockID.cableGold, 2);
+for(var i = 0; i < 3; i++){
+	registerCablePlaceFunc("cableGold"+i, BlockID.cableGold, i);
+	Item.registerNameOverrideFunction(ItemID["cableGold"+i], function(item, name){
+		return name + "\n§7" + Translation.translate("Max voltage: ") + "512 EU/t";
+	});
+}
 
-registerCablePlaceFunc("cableIron0", BlockID.cableIron, 0);
-registerCablePlaceFunc("cableIron1", BlockID.cableIron, 1);
-registerCablePlaceFunc("cableIron2", BlockID.cableIron, 2);
-registerCablePlaceFunc("cableIron3", BlockID.cableIron, 3);
+for(var i = 0; i < 4; i++){
+	registerCablePlaceFunc("cableIron"+i, BlockID.cableIron, i);
+	Item.registerNameOverrideFunction(ItemID["cableIron"+i], function(item, name){
+		return name + "\n§7" + Translation.translate("Max voltage: ") + "2048 EU/t";
+	});
+}
 
 registerCablePlaceFunc("cableOptic", BlockID.cableOptic, 0);
+Item.registerNameOverrideFunction(ItemID.cableOptic, function(item, name){
+	return name + "\n§7" + Translation.translate("Max voltage: ") + "8192 EU/t";
+});

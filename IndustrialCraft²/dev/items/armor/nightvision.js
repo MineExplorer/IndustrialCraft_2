@@ -4,12 +4,12 @@ ChargeItemRegistry.registerItem(ItemID.nightvisionGoggles, "Eu", 100000, 2);
 Item.registerNameOverrideFunction(ItemID.nightvisionGoggles, NameOverrides.showItemStorage);
 
 Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: Item.getMaxDamage(ItemID.nightvisionGoggles)}, [
-	"ibi",
+	"xbx",
 	"aga",
 	"rcr"
-], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'g', 20, 0, 'i', ItemID.casingIron, 0, 'r', ItemID.rubber, 0], ChargeItemRegistry.transportEnergy);
+], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'x', ItemID.heatExchangerAdv, 0, 'g', 20, 0,'r', ItemID.rubber, 0], ChargeItemRegistry.transportEnergy);
 
-UIbuttons.setButton(ItemID.nightvisionGoggles, "button_nightvision");
+UIbuttons.setArmorButton(ItemID.nightvisionGoggles, "button_nightvision");
 
 Armor.registerFuncs("nightvisionGoggles", {
 	hurt: function(){
@@ -17,9 +17,7 @@ Armor.registerFuncs("nightvisionGoggles", {
 	},
 	tick: function(slot, index, maxDamage){
 		var extra = slot.extra;
-		if(extra){
-			var nightvision = extra.getBoolean("nv");
-		}
+		var nightvision = extra? extra.getBoolean("nv") : false;
 		if(nightvision && slot.data < maxDamage){
 			var coords = Player.getPosition();
 			var time = World.getWorldTime()%24000;

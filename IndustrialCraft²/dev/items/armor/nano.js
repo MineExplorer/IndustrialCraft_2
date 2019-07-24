@@ -3,10 +3,10 @@ IDRegistry.genItemID("nanoChestplate");
 IDRegistry.genItemID("nanoLeggings");
 IDRegistry.genItemID("nanoBoots");
 
-Item.createArmorItem("nanoHelmet", "Nano Helmet", {name: "nano_helmet"}, {type: "helmet", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
-Item.createArmorItem("nanoChestplate", "Nano Chestplate", {name: "nano_chestplate"}, {type: "chestplate", armor: 8, durability: 625, texture: "armor/nano_1.png", isTech: false});
-Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 6, durability: 625, texture: "armor/nano_2.png", isTech: false});
-Item.createArmorItem("nanoBoots", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 4, durability: 625, texture: "armor/nano_1.png", isTech: false});
+Item.createArmorItem("nanoHelmet", "Nano Helmet", {name: "nano_helmet"}, {type: "helmet", armor: 4, durability: 1250, texture: "armor/nano_1.png", isTech: false});
+Item.createArmorItem("nanoChestplate", "Nano Bodyarmor", {name: "nano_chestplate"}, {type: "chestplate", armor: 8, durability: 1250, texture: "armor/nano_1.png", isTech: false});
+Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 6, durability: 1250, texture: "armor/nano_2.png", isTech: false});
+Item.createArmorItem("nanoBoots", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 4, durability: 1250, texture: "armor/nano_1.png", isTech: false});
 
 ChargeItemRegistry.registerItem(ItemID.nanoHelmet, "Eu",1000000, 3);
 ChargeItemRegistry.registerItem(ItemID.nanoChestplate, "Eu", 1000000, 3);
@@ -23,10 +23,10 @@ IDRegistry.genItemID("nanoChestplateUncharged");
 IDRegistry.genItemID("nanoLeggingsUncharged");
 IDRegistry.genItemID("nanoBootsUncharged");
 
-Item.createArmorItem("nanoHelmetUncharged", "Nano Helmet", {name: "nano_helmet"}, {type: "helmet", armor: 2, durability: 625, texture: "armor/nano_1.png", isTech: true});
-Item.createArmorItem("nanoChestplateUncharged", "Nano Chestplate", {name: "nano_chestplate"}, {type: "chestplate", armor: 6, durability: 625, texture: "armor/nano_1.png", isTech: true});
-Item.createArmorItem("nanoLeggingsUncharged", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 3, durability: 625, texture: "armor/nano_2.png", isTech: true});
-Item.createArmorItem("nanoBootsUncharged", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 2, durability: 625, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoHelmetUncharged", "Nano Helmet", {name: "nano_helmet"}, {type: "helmet", armor: 2, durability: 1250, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoChestplateUncharged", "Nano Bodyarmor", {name: "nano_chestplate"}, {type: "chestplate", armor: 6, durability: 1250, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoLeggingsUncharged", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 3, durability: 1250, texture: "armor/nano_2.png", isTech: true});
+Item.createArmorItem("nanoBootsUncharged", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 2, durability: 1250, texture: "armor/nano_1.png", isTech: true});
 
 ChargeItemRegistry.registerItem(ItemID.nanoHelmetUncharged, "Eu", 1000000, 3);
 ChargeItemRegistry.registerItem(ItemID.nanoChestplateUncharged, "Eu", 1000000, 3);
@@ -37,101 +37,6 @@ Item.registerNameOverrideFunction(ItemID.nanoHelmetUncharged, NameOverrides.show
 Item.registerNameOverrideFunction(ItemID.nanoChestplateUncharged, NameOverrides.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.nanoLeggingsUncharged, NameOverrides.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.nanoBootsUncharged, NameOverrides.showItemStorage);
-
-
-MachineRecipeRegistry.registerRecipesFor("nano-armor-charge", {
-	"ItemID.nanoHelmet": {charged: ItemID.nanoHelmet, uncharged: ItemID.nanoHelmetUncharged},
-	"ItemID.nanoHelmetUncharged": {charged: ItemID.nanoHelmet, uncharged: ItemID.nanoHelmetUncharged},
-	"ItemID.nanoChestplate": {charged: ItemID.nanoChestplate, uncharged: ItemID.nanoChestplateUncharged},
-	"ItemID.nanoChestplateUncharged": {charged: ItemID.nanoChestplate, uncharged: ItemID.nanoChestplateUncharged},
-	"ItemID.nanoLeggings": {charged: ItemID.nanoLeggings, uncharged: ItemID.nanoLeggingsUncharged},
-	"ItemID.nanoLeggingsUncharged": {charged: ItemID.nanoLeggings, uncharged: ItemID.nanoLeggingsUncharged},
-	"ItemID.nanoBoots": {charged: ItemID.nanoBoots, uncharged: ItemID.nanoBootsUncharged},
-	"ItemID.nanoBootsUncharged": {charged: ItemID.nanoBoots, uncharged: ItemID.nanoBootsUncharged},
-}, true);
-
-UIbuttons.setButton(ItemID.nanoHelmet, "button_nightvision");
-
-var NANO_ARMOR_FUNCS = {
-	maxDamage: Item.getMaxDamage(ItemID.nanoHelmet),
-	
-	hurt: function(params, item, index, maxDamage){
-		var type = params.type;
-		if(type==2 || type==3 || type==11){
-			var energy = params.damage * 800;
-			item.data = Math.min(item.data + energy, maxDamage);
-		}
-		if(type==5 && index==3 && item.data + 800 <= maxDamage){
-			var damage = 0;
-			var vel = Player.getVelocity().y;
-			var time = vel / -0.06;
-			var height = 0.06 * time*time / 2;
-			if(height < 22){
-				if(height < 17){
-					var damage = Math.floor(height) - 3;
-				}else{
-					var damage = Math.ceil(height)- 3;
-				}
-			}
-			if(damage > 0 || height >= 22){
-				params.damage = damage;
-				damage = Math.min(Math.min(params.damage, 9), Math.floor((maxDamage - item.data)/800));
-				if(params.damage > damage){
-					Entity.setHealth(player, Entity.getHealth(player) + damage);
-				}
-				else{
-					Game.prevent();
-				}
-				item.data = Math.min(item.data + damage * 800, maxDamage);
-			}
-		}
-		Player.setArmorSlot(index, item.id, 1, item.data, item.extra);
-		return false;
-	},
-	
-	tick: function(slot, index, maxDamage){
-		var armor = MachineRecipeRegistry.getRecipeResult("nano-armor-charge", slot.id);
-		if(slot.data >= maxDamage){
-			slot.id = armor.uncharged;
-			return true;
-		}
-		else{
-			if(index==0){
-				var extra = slot.extra;
-				if(extra){
-					var nightvision = extra.getBoolean("nv");
-				}
-				if(nightvision){
-					var coords = Player.getPosition();
-					var time = World.getWorldTime()%24000;
-					if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time >= 0 && time <= 12000){
-						Entity.addEffect(player, MobEffect.blindness, 1, 25);
-					}
-					Entity.addEffect(player, MobEffect.nightVision, 1, 225);
-					if(World.getThreadTime()%20==0){
-						slot.data = Math.min(slot.data+20, maxDamage);
-						return true;
-					}
-				}
-			}
-			if(slot.id != armor.charged){
-				slot.id = armor.charged;
-				return true;
-			}
-		}
-		return false;
-	}
-};
-
-Armor.registerFuncs("nanoHelmet", NANO_ARMOR_FUNCS);
-Armor.registerFuncs("nanoHelmetUncharged", NANO_ARMOR_FUNCS);
-Armor.registerFuncs("nanoChestplate", NANO_ARMOR_FUNCS);
-Armor.registerFuncs("nanoChestplateUncharged", NANO_ARMOR_FUNCS);
-Armor.registerFuncs("nanoLeggings", NANO_ARMOR_FUNCS);
-Armor.registerFuncs("nanoLeggingsUncharged", NANO_ARMOR_FUNCS);
-Armor.registerFuncs("nanoBoots", NANO_ARMOR_FUNCS);
-Armor.registerFuncs("nanoBootsUncharged", NANO_ARMOR_FUNCS);
-
 
 Recipes.addShaped({id: ItemID.nanoHelmet, count: 1, data: Item.getMaxDamage(ItemID.nanoHelmet)}, [
 	"x#x",
@@ -154,3 +59,93 @@ Recipes.addShaped({id: ItemID.nanoBoots, count: 1, data: Item.getMaxDamage(ItemI
 	"x x",
 	"x#x"
 ], ['#', ItemID.storageCrystal, -1, 'x', ItemID.carbonPlate, 0], ChargeItemRegistry.transportEnergy);
+
+
+MachineRecipeRegistry.registerRecipesFor("nano-armor-charge", {
+	"ItemID.nanoHelmet": {charged: ItemID.nanoHelmet, uncharged: ItemID.nanoHelmetUncharged},
+	"ItemID.nanoHelmetUncharged": {charged: ItemID.nanoHelmet, uncharged: ItemID.nanoHelmetUncharged},
+	"ItemID.nanoChestplate": {charged: ItemID.nanoChestplate, uncharged: ItemID.nanoChestplateUncharged},
+	"ItemID.nanoChestplateUncharged": {charged: ItemID.nanoChestplate, uncharged: ItemID.nanoChestplateUncharged},
+	"ItemID.nanoLeggings": {charged: ItemID.nanoLeggings, uncharged: ItemID.nanoLeggingsUncharged},
+	"ItemID.nanoLeggingsUncharged": {charged: ItemID.nanoLeggings, uncharged: ItemID.nanoLeggingsUncharged},
+	"ItemID.nanoBoots": {charged: ItemID.nanoBoots, uncharged: ItemID.nanoBootsUncharged},
+	"ItemID.nanoBootsUncharged": {charged: ItemID.nanoBoots, uncharged: ItemID.nanoBootsUncharged},
+}, true);
+
+UIbuttons.setArmorButton(ItemID.nanoHelmet, "button_nightvision");
+
+var NANO_ARMOR_FUNCS = {
+	hurt: function(params, slot, index, maxDamage){
+		var type = params.type;
+		if(type==2 || type==3 || type==11){
+			var energy = params.damage * 2000;
+			slot.data = Math.min(slot.data + energy, maxDamage);
+		}
+		if(type==5 && index==3 && slot.data + 2000 <= maxDamage){
+			var damage = 0;
+			var vel = Player.getVelocity().y;
+			var time = vel / -0.06;
+			var height = 0.06 * time*time / 2;
+			if(height < 22){
+				if(height < 17){
+					var damage = Math.floor(height) - 3;
+				}else{
+					var damage = Math.ceil(height)- 3;
+				}
+			}
+			if(damage > 0 || height >= 22){
+				params.damage = damage;
+				damage = Math.min(Math.min(params.damage, 9), Math.floor((maxDamage - slot.data)/2000));
+				if(params.damage > damage){
+					Entity.setHealth(player, Entity.getHealth(player) + damage);
+				}
+				else{
+					Game.prevent();
+				}
+				slot.data = Math.min(slot.data + damage * 2000, maxDamage);
+			}
+		}
+		Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+		return false;
+	},
+	
+	tick: function(slot, index, maxDamage){
+		var armor = MachineRecipeRegistry.getRecipeResult("nano-armor-charge", slot.id);
+		if(slot.data >= maxDamage){
+			slot.id = armor.uncharged;
+			Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+		}
+		else{
+			if(index==0){
+				var extra = slot.extra;
+				var nightvision = extra? extra.getBoolean("nv") : false;
+				if(nightvision){
+					var coords = Player.getPosition();
+					var time = World.getWorldTime()%24000;
+					if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time >= 0 && time <= 12000){
+						Entity.addEffect(player, MobEffect.blindness, 1, 25);
+					}
+					Entity.addEffect(player, MobEffect.nightVision, 1, 225);
+					if(World.getThreadTime()%20==0){
+						slot.data = Math.min(slot.data+20, maxDamage);
+						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+					}
+				}
+			}
+			if(slot.id != armor.charged){
+				slot.id = armor.charged;
+				Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+			}
+		}
+		return false;
+	}
+};
+
+Armor.registerFuncs("nanoHelmet", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoHelmetUncharged", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoChestplate", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoChestplateUncharged", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoLeggings", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoLeggingsUncharged", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoBoots", NANO_ARMOR_FUNCS);
+Armor.registerFuncs("nanoBootsUncharged", NANO_ARMOR_FUNCS);

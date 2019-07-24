@@ -42,7 +42,7 @@ Callback.addCallback("LevelLoaded", function(){
 				}
 			},
 			"slot2": {type: "slot", x: 441, y: 212, isValid: function(){return false;}},
-			"slotEnergy": {type: "slot", x: 695, y: 181, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
+			"slotEnergy": {type: "slot", x: 695, y: 181, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
 			"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
 			"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
 		}
@@ -99,7 +99,7 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 			this.deactivate();
 		}
 		
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 0);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);
 		
 		this.container.setText("textInfo1", parseInt(this.liquidStorage.getAmount("lava") * 1000) + "/");
 		this.liquidStorage.updateUiScale("liquidScale", "lava");

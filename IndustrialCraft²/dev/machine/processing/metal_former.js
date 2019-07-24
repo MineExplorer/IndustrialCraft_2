@@ -40,8 +40,8 @@ Callback.addCallback("PreLoaded", function(){
 	}, true);
 	// cutting
 	MachineRecipeRegistry.registerRecipesFor("metalFormer1", {
-		"ItemID.plateTin": {id: ItemID.cableTin0, count: 4},
-		"ItemID.plateCopper": {id: ItemID.cableCopper0, count: 4},
+		"ItemID.plateTin": {id: ItemID.cableTin0, count: 3},
+		"ItemID.plateCopper": {id: ItemID.cableCopper0, count: 3},
 		"ItemID.plateGold": {id: ItemID.cableGold0, count: 4},
 		"ItemID.plateIron": {id: ItemID.cableIron0, count: 4},
 	}, true);

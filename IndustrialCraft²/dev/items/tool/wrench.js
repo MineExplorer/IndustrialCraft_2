@@ -18,11 +18,5 @@ Recipes.addShapeless({id: ItemID.electricWrench, count: 1, data: Item.getMaxDama
 	{id: ItemID.wrenchBronze, data: 0}, {id: ItemID.powerUnitSmall, data: 0}
 ]);
 
-Callback.addCallback("DestroyBlockStart", function(coords, block){
-	if(MachineRegistry.machineIDs[block.id]){
-		var item = Player.getCarriedItem();
-		if(item.id==ItemID.wrenchBronze || item.id==ItemID.electricWrench && item.data + 500 <= Item.getMaxDamage(item.id)){
-			Block.setTempDestroyTime(block.id, 0);
-		}
-	}
-});
+ICTool.registerWrench(ItemID.wrenchBronze, 0.8);
+ICTool.registerWrench(ItemID.electricWrench, 1, 50);

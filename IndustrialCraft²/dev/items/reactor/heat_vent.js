@@ -1,17 +1,17 @@
 IDRegistry.genItemID("heatVent");
-Item.createItem("heatVent", "Heat Vent", {name: "heat_vent"});
+Item.createItem("heatVent", "Heat Vent", {name: "heat_vent", meta: 0});
 
 IDRegistry.genItemID("heatVentAdv");
-Item.createItem("heatVentAdv", "Advanced Heat Vent", {name: "heat_vent_advanced"});
+Item.createItem("heatVentAdv", "Advanced Heat Vent", {name: "heat_vent", meta: 1});
 
 IDRegistry.genItemID("heatVentComponent");
-Item.createItem("heatVentComponent", "Component Heat Vent", {name: "heat_vent_component"});
+Item.createItem("heatVentComponent", "Component Heat Vent", {name: "heat_vent", meta: 2});
 
 IDRegistry.genItemID("heatVentReactor");
-Item.createItem("heatVentReactor", "Reactor Heat Vent", {name: "heat_vent_reactor"});
+Item.createItem("heatVentReactor", "Reactor Heat Vent", {name: "heat_vent", meta: 3});
 
 IDRegistry.genItemID("heatVentOverclocked");
-Item.createItem("heatVentOverclocked", "Overclocked Heat Vent", {name: "heat_vent_overclocked"});
+Item.createItem("heatVentOverclocked", "Overclocked Heat Vent", {name: "heat_vent", meta: 4});
 
 Recipes.addShaped({id: ItemID.heatVent, count: 1, data: 0}, [
 	"bab",

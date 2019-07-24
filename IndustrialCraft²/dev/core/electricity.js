@@ -15,8 +15,7 @@ var addBurnParticles = function(x, y, z){
 		var px = x + Math.random();
 		var pz = z + Math.random();
 		var py = y + Math.random();
-		var type = Native.ParticleType.smoke;
-		Particles.addFarParticle(type, px, py, pz, 0, 0.01, 0);
+		Particles.addFarParticle(Native.ParticleType.smoke, px, py, pz, 0, 0.01, 0);
 	}
 }
 

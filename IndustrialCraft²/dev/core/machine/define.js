@@ -25,14 +25,9 @@ var MachineRegistry = {
 		
 		if(Prototype.wrenchClick){
 			Prototype.click = function(id, count, data, coords){
-				if(id == ItemID.wrenchBronze){
+				if(ICTool.isValidWrench(id, data, 10)){
 					if(this.wrenchClick(id, count, data, coords))
-					ToolAPI.breakCarriedTool(1);
-					return true;
-				}
-				if(id == ItemID.electricWrench && data + 50 <= Item.getMaxDamage(id)){
-					if(this.wrenchClick(id, count, data, coords))
-					Player.setCarriedItem(id, 1, data + 50);
+					ICTool.useWrench(id, data, 10);
 					return true;
 				}
 				return false;
@@ -166,22 +161,18 @@ var MachineRegistry = {
 		});
 	},
 	
-	getMachineDrop: function(coords, blockID, level, standartDrop){
+	getMachineDrop: function(coords, blockID, level, basicDrop){
 		BlockRenderer.unmapAtCoords(coords.x, coords.y, coords.z);
 		var item = Player.getCarriedItem();
-		if(item.id==ItemID.wrenchBronze){
+		if(ICTool.isValidWrench(item.id, item.data, 10)){
+			ICTool.useWrench(item.id, item.data, 10);
 			World.setBlock(coords.x, coords.y, coords.z, 0);
-			ToolAPI.breakCarriedTool(10);
-			if(Math.random() < 0.8){return [[blockID, 1, 0]];}
-			return [[standartDrop || blockID, 1, 0]];
-		}
-		if(item.id==ItemID.electricWrench && item.data + 500 <= Item.getMaxDamage(item.id)){
-			World.setBlock(coords.x, coords.y, coords.z, 0);
-			Player.setCarriedItem(item.id, 1, item.data + 500);
-			return [[blockID, 1, 0]];
+			var chance = ICTool.getWrenchData(item.id).chance;
+			if(Math.random() < chance){return [[blockID, 1, 0]];}
+			return [[basicDrop || blockID, 1, 0]];
 		}
 		if(level >= ToolAPI.getBlockDestroyLevel(blockID)){
-			return [[standartDrop || blockID, 1, 0]];
+			return [[basicDrop || blockID, 1, 0]];
 		}
 		return [];
 	},

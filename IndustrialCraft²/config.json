@@ -1,45 +1,46 @@
 {
-  "enabled":true,
-  "debug_mode":false,
-  "voltage_enabled":true,
-  "wire_damage_enabled":false,
-  "button_scale":60,
-  "rubber_tree_gen":{
-    "forest_and_plains":true,
-    "jungle":true,
-    "swamp":true
-  },
-  "copper_ore":{
-    "enabled":true,
-    "count":15,
-    "size":10,
-    "minHeight":0,
-    "maxHeight":68
-  },
   "tin_ore":{
+    "maxHeight":56,
     "enabled":true,
-    "count":25,
-    "size":6,
     "minHeight":0,
-    "maxHeight":56
+    "count":25,
+    "size":6
+  },
+  "enabled":true,
+  "copper_ore":{
+    "maxHeight":68,
+    "enabled":true,
+    "minHeight":0,
+    "count":15,
+    "size":10
+  },
+  "wire_damage_enabled":false,
+  "rubber_tree_gen":{
+    "jungle":7,
+    "swamp":6,
+    "forest":3,
+    "plains":0.5
+  },
+  "voltage_enabled":true,
+  "debug_mode":false,
+  "uranium_ore":{
+    "maxHeight":64,
+    "enabled":true,
+    "minHeight":0,
+    "count":20,
+    "size":3
+  },
+  "button_scale":60,
+  "iridium":{
+    "maxHeight":100,
+    "minHeight":1,
+    "chance":0.2
   },
   "lead_ore":{
+    "maxHeight":40,
     "enabled":true,
+    "minHeight":0,
     "count":8,
-    "size":4,
-    "minHeight":0,
-    "maxHeight":40
-  },
-  "uranium_ore":{
-    "enabled":true,
-    "count":20,
-    "size":3,
-    "minHeight":0,
-    "maxHeight":64
-  },
-  "iridium":{
-    "chance":0.2,
-    "minHeight":1,
-    "maxHeight":100
+    "size":4
   }
 }

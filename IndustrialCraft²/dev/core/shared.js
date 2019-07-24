@@ -4,10 +4,12 @@ ModAPI.registerAPI("ICore", {
 	Render: TileRenderer,
 	ChargeRegistry: ChargeItemRegistry,
 	Upgrade: UpgradeAPI,
+	Tool: ICTool,
 	ItemName: NameOverrides,
 	UI: UIbuttons,
 	Ore: OreGenerator,
 	
+	registerEnergyPack: registerStoragePack,
 	requireGlobal: function(command){
 		return eval(command);
 	}

@@ -49,25 +49,27 @@ function registerStoragePack(id, level, tranfer){
 			return false;
 		},
 		tick: function(slot, index, maxDamage){
-			return ENERGY_PACK_TICK(slot, maxDamage, level, tranfer);
+			ENERGY_PACK_TICK(slot, maxDamage, level, tranfer);
+			return false;
 		}
 	});
 }
 
 var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	if(World.getThreadTime()%20==0){
-	    var item = Player.getCarriedItem();
-	    var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", maxDamage - slot.data, transfer*20, level);
-	    if(energyAdd > 0){
-	        slot.data += energyAdd;
-	        Player.setCarriedItem(item.id, 1, item.data, item.extra);
-	        return true;
+		var item = Player.getCarriedItem();
+		if(!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)){
+			var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", maxDamage - slot.data, transfer*20, level);
+			if(energyAdd > 0){
+				slot.data += energyAdd;
+				Player.setCarriedItem(item.id, 1, item.data, item.extra);
+				Player.setArmorSlot(1, slot.id, 1, slot.data, slot.extra);
+			}
 		}
-    }
-    return false;
+	}
 }
 
-registerStoragePack("batpack", 0, 32);
-registerStoragePack("advBatpack", 1, 256);
-registerStoragePack("energypack", 2, 2048);
-registerStoragePack("lappack", 3, 8192);
+registerStoragePack("batpack", 1, 32);
+registerStoragePack("advBatpack", 2, 256);
+registerStoragePack("energypack", 3, 2048);
+registerStoragePack("lappack", 4, 8192);

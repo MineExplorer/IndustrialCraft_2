@@ -12,7 +12,7 @@
 
 // libraries
 IMPORT("flags");
-IMPORT("ToolType");
+IMPORT("ToolLib");
 IMPORT("EnergyNet");
 IMPORT("ChargeItem");
 IMPORT("TileRender");
@@ -29,6 +29,7 @@ LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
 // import values
 Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
 Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
+Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var MobEffect = Native.PotionEffect;
 var Enchantment = Native.Enchantment;
@@ -68,7 +69,7 @@ function addShapelessRecipe(result, source){
 
 // vanilla items
 Recipes.removeFurnaceRecipe(81);
-Recipes.addFurnace(81, 351, 2);
+Recipes.addFurnace(81, 351, 2); // cactus fix
 Recipes.addFurnaceFuel(325, 10, 2000); // lava bucket
 ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone
 

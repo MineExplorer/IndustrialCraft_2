@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "TileRender",
-	version: 6,
+	version: 7,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -171,6 +171,18 @@ var TileRenderer = {
 		
 		BlockRenderer.setStaticICRender(id, data, render);
 		BlockRenderer.setCustomCollisionShape(id, data, shape);
+	},
+	
+	setPlantModel: function(id){
+		var shape = new ICRender.CollisionShape();
+		shape.addEntry().addBox(7/8, 7/8, 7/8, 1/8, 1/8, 1/8);
+		BlockRenderer.setCustomCollisionShape(id, 0, shape);
+		var render = new ICRender.Model();
+		var model = BlockRenderer.createModel();
+		model.addBox(0.5, 0, 0, 0.5, 1, 1, id, 0);
+		model.addBox(0, 0, 0.5, 1, 1, 0.5, id, 0);
+		render.addEntry(model);
+		BlockRenderer.setStaticICRender(id, 0, render);	
 	}
 }
 

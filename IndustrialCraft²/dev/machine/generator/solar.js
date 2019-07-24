@@ -35,7 +35,7 @@ Callback.addCallback("LevelLoaded", function(){
 		],
 		
 		elements: {
-			"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
+			"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
 			"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
 		}
 	});
@@ -50,7 +50,7 @@ MachineRegistry.registerGenerator(BlockID.solarPanel, {
 		var content = this.container.getGuiContent();
 		if(World.getBlockID(this.x, this.y + 1, this.z) != BlockID.luminator && World.getLightLevel(this.x, this.y + 1, this.z) == 15){
 			this.data.energy = 1;
-			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", 1, 32, 0);
+			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", 1, 32, 1);
 			if(content){ 
 				content.elements["sun"].bitmap = "sun_on";
 			}

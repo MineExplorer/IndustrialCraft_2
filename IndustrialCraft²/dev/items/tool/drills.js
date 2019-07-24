@@ -13,11 +13,7 @@ Item.registerNameOverrideFunction(ItemID.drill, NameOverrides.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.diamondDrill, NameOverrides.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
 	name = NameOverrides.showRareItemStorage(item, name);
-	
-	var mode = 0;
-	var extra = item.extra;
-	if(extra){
-	mode = extra.getInt("mode");}
+	var mode = item.extra? item.extra.getInt("mode") : 0;
 	switch(mode){
 		case 0:
 			name += "\nFortune III mode";
@@ -54,6 +50,37 @@ Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(It
 	" e "
 ], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transportEnergy);
 
+UIbuttons.setToolButton(ItemID.iridiumDrill, "button_switch");
+
+UIbuttons.registerSwitchFunction(ItemID.iridiumDrill, function(item){
+	var extra = item.extra;
+	if(!extra){
+		extra = new ItemExtraData();
+	}
+	var mode = (extra.getInt("mode")+1)%4;
+	extra.putInt("mode", mode);
+	switch(mode){
+	case 0:
+		//var enchant = {type: Enchantment.FORTUNE, level: 3};
+		Game.message("§eFortune III mode");
+	break;
+	case 1:
+		//var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
+		Game.message("§9Silk Touch mode");
+	break;
+	case 2:
+		//var enchant = {type: Enchantment.FORTUNE, level: 3};
+		Game.message("§c3x3 Fortune III mode");
+	break;
+	case 3:
+		//var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
+		Game.message("§23x3 Silk Touch mode");
+	break;
+	}
+	//extra.removeAllEnchants();
+	//extra.addEnchant(enchant.type, enchant.level);
+	Player.setCarriedItem(item.id, 1, item.data, extra);
+});
 
 ToolType.drill = {
 	damage: 0,
@@ -69,15 +96,13 @@ ToolType.drill = {
 		if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
 			return destroyTime;
 		}
-		else{
-			return params.base;
-		}
+		return params.base;
 	},
 	useItem: function(coords, item, block){
-		var side = coords.side;
+		var side  = coords.side;
 		coords = coords.relative;
 		block = World.getBlockID(coords.x, coords.y, coords.z);
-		if(block==0){
+		if(GenerationUtils.isTransparentBlock(block)){
 			for(var i = 0; i < 36; i++){
 				var slot = Player.getInventorySlot(i);
 				if(slot.id==50){
@@ -91,6 +116,7 @@ ToolType.drill = {
 		}
 	}
 }
+
 var extraData;
 var dirtBlocksDrop = {13:318, 60:3, 110:3, 198:3, 243:3};
 ToolAPI.setTool(ItemID.drill, {energyConsumption: 50, level: 3, efficiency: 8, damage: 3},  ToolType.drill);
@@ -106,7 +132,7 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 		mode = extra.getInt("mode");}
 		
 		if(mode%2){
-		enchant.silk = 1;}
+		enchant.silk = true;}
 		else{
 		enchant.fortune = 3;}
 	},
@@ -119,15 +145,12 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime){
 		if(item.data + 800 <= Item.getMaxDamage(item.id)){
-			var mode = 0;
 			var extra = item.extra;
 			extraData = extra;
-			if(extra){
-			mode = extra.getInt("mode");}
+			var mode = extra? extra.getInt("mode") : 0;
 			var material = ToolAPI.getBlockMaterial(block.id) || {};
 			material = material.name;
 			if(mode > 1 && (material == "dirt" || material == "stone")){
-				destroyTime = 0;
 				var side = coords.side;
 				var X = 1;
 				var Y = 1;
@@ -144,24 +167,20 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 							var blockID = World.getBlockID(xx, yy, zz);
 							var material = ToolAPI.getBlockMaterial(blockID) || {};
 							if(material.name == "dirt" || material.name == "stone"){
-								destroyTime += Block.getDestroyTime(blockID) / material.multiplier * 1.5;
+								destroyTime = Math.max(destroyTime, Block.getDestroyTime(blockID) / material.multiplier / 24);
 							}
 						}
 					}
 				}
-				destroyTime /= 24;
 			}
+			Game.message(destroyTime);
 			return destroyTime;
 		}
-		else{
-			return params.base;
-		}
+		return params.base;
 	},
 	destroyBlock: function(coords, side, item, block){
-		var mode = 0;
 		var extra = extraData;
-		if(extra){
-		mode = extra.getInt("mode");}
+		var mode = extra? extra.getInt("mode") : 0;
 		if(item.data + 800 <= Item.getMaxDamage(item.id)){
 			if(mode < 2){
 				item.data += 800;
@@ -206,49 +225,18 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 		Player.setCarriedItem(item.id, 1, item.data, extra);
 	},
 	useItem: function(coords, item, block){
-		if(Entity.getSneaking(player)){
-			var extra = item.extra;
-			if(!extra){
-				extra = new ItemExtraData();
-			}
-			var mode = (extra.getInt("mode")+1)%4;
-			extra.putInt("mode", mode);
-			switch(mode){
-			case 0:
-				//var enchant = {type: Enchantment.FORTUNE, level: 3};
-				Game.message("§eFortune III mode");
-			break;
-			case 1:
-				//var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
-				Game.message("§9Silk Touch mode");
-			break;
-			case 2:
-				//var enchant = {type: Enchantment.FORTUNE, level: 3};
-				Game.message("§c3x3 Fortune III mode");
-			break;
-			case 3:
-				//var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
-				Game.message("§23x3 Silk Touch mode");
-			break;
-			}
-			//extra.removeAllEnchants();
-			//extra.addEnchant(enchant.type, enchant.level);
-			Player.setCarriedItem(item.id, 1, item.data, extra);
-		}
-		else{
-			var side  = coords.side;
-			coords = coords.relative;
-			block = World.getBlockID(coords.x, coords.y, coords.z);
-			if(block==0){
-				for(var i = 0; i < 36; i++){
-					var slot = Player.getInventorySlot(i);
-					if(slot.id==50){
-						slot.count--;
-						if(!slot.count) slot.id = 0;
-						Player.setInventorySlot(i, slot.id, slot.count, 0);
-						World.setBlock(coords.x, coords.y, coords.z, 50, (6 - side)%6);
-						break;
-					}
+		var side  = coords.side;
+		coords = coords.relative;
+		block = World.getBlockID(coords.x, coords.y, coords.z);
+		if(GenerationUtils.isTransparentBlock(block)){
+			for(var i = 0; i < 36; i++){
+				var slot = Player.getInventorySlot(i);
+				if(slot.id==50){
+					slot.count--;
+					if(!slot.count) slot.id = 0;
+					Player.setInventorySlot(i, slot.id, slot.count, 0);
+					World.setBlock(coords.x, coords.y, coords.z, 50, (6 - side)%6);
+					break;
 				}
 			}
 		}

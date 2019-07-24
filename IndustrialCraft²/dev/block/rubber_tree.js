@@ -149,24 +149,28 @@ var ForestBiomeIDs = [4, 18, 27, 28];
 var JungleBiomeIDs = [21, 22, 23, 149, 151];
 var SwampBiomeIDs = [6, 134];
 
-var RUBBER_TREE_BIOME_DATA = { };
-if(__config__.access("rubber_tree_gen.forest_and_plains")){
-	RUBBER_TREE_BIOME_DATA[1] = 0.005;
+var RUBBER_TREE_BIOME_DATA = {
+	1: __config__.getNumber("rubber_tree_gen.plains")/100
+}
+var chance = __config__.getNumber("rubber_tree_gen.forest")/100;
+if(chance){
 	for(var id in ForestBiomeIDs){
-	RUBBER_TREE_BIOME_DATA[ForestBiomeIDs[id]] = 0.025;}
+	RUBBER_TREE_BIOME_DATA[ForestBiomeIDs[id]] = chance;}
 }
-if(__config__.access("rubber_tree_gen.jungle")){
+chance = __config__.getNumber("rubber_tree_gen.jungle")/100;
+if(chance){
 	for(var id in JungleBiomeIDs){
-	RUBBER_TREE_BIOME_DATA[JungleBiomeIDs[id]] = 0.06;}
+	RUBBER_TREE_BIOME_DATA[JungleBiomeIDs[id]] = chance;}
 }
-if(__config__.access("rubber_tree_gen.swamp")){
+chance = __config__.getNumber("rubber_tree_gen.swamp")/100;
+if(chance){
 	for(var id in SwampBiomeIDs){
-	RUBBER_TREE_BIOME_DATA[SwampBiomeIDs[id]] = 0.05;}
+	RUBBER_TREE_BIOME_DATA[SwampBiomeIDs[id]] = chance;}
 }
 
 Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
 	if(Math.random() < RUBBER_TREE_BIOME_DATA[World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)]){
-		for(var i = 0; i < 1 + Math.random() * 6; i++){
+		for(var i = 0; i < 1 + Math.random() * 5; i++){
 			var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
 			coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
 			if(World.getBlockID(coords.x, coords.y, coords.z) == 2){

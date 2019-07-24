@@ -7,10 +7,10 @@ Recipes.addShaped({id: ItemID.jetpack, count: 1, data: Item.getMaxDamage(ItemID.
 	"bcb",
 	"bab",
 	"d d"
-], ['a', BlockID.storageBatBox, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0, "d", 348, 0]);
+], ['a', BlockID.storageBatBox, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0, 'd', 348, 0]);
 
-UIbuttons.setButton(ItemID.jetpack, "button_fly");
-UIbuttons.setButton(ItemID.jetpack, "button_hover");
+UIbuttons.setArmorButton(ItemID.jetpack, "button_fly");
+UIbuttons.setArmorButton(ItemID.jetpack, "button_hover");
 
 Armor.registerFuncs("jetpack", {
 	hurt: function(params, item, index, maxDamage){
@@ -22,7 +22,7 @@ Armor.registerFuncs("jetpack", {
 				if(height < 17){
 					var damage = Math.floor(height) - 3;
 				}else{
-					var damage = Math.ceil(height)- 3;
+					var damage = Math.ceil(height) - 3;
 				}
 			}
 			//Game.message(height + ", "+damage+", "+params.damage)

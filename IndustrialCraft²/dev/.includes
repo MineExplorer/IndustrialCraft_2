@@ -5,10 +5,12 @@ core/machine/define.js
 core/machine/recipe.js
 core/machine/upgrade.js
 
+core/tool.js
 core/electricity.js
 core/name_override.js
+core/ui_buttons.js
 
-
+block/sapling.js
 block/rubber_tree.js
 block/ore.js
 block/metal.js
@@ -80,25 +82,26 @@ items/can.js
 items/electric/cable.js
 items/electric/components.js
 items/electric/storage.js
+items/electric/charging.js
 items/electric/upgrades.js
 
 items/reactor/coolant.js
+items/reactor/heat_exchanger.js
 
 items/armor/hazmat.js
 items/armor/bronze.js
 items/armor/composite.js
-items/armor/armor_buttons.js
 items/armor/nightvision.js
 items/armor/nano.js
 items/armor/quantum.js
 items/armor/jetpack.js
 items/armor/energy_packs.js
 
+items/tool/eu-meter.js
 items/tool/transmitter.js
 items/tool/scanner.js
 items/tool/treetap.js
-items/tool/crafting_hammer.js
-items/tool/cutter.js
+items/tool/crafting.js
 items/tool/tool_box.js
 items/tool/bronze.js
 items/tool/wrench.js
@@ -107,6 +110,5 @@ items/tool/drills.js
 items/tool/chainsaw.js
 items/tool/nano_saber.js
 items/tool/mining_laser.js
-items/tool/eu-meter.js
 
 core/shared.js

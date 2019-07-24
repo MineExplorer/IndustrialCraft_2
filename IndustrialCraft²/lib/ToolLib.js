@@ -1,6 +1,6 @@
 LIBRARY({
-	name: "ToolType",
-	version: 3,
+	name: "ToolLib",
+	version: 4,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -11,11 +11,6 @@ var ToolType = {
 		enchantType: Native.EnchantType.weapon,
 		damage: 4,
 		blockTypes: ["fibre", "plant"],
-		onAttack: function(item){
-			if(item.data > Item.getMaxDamage(item.id)){
-				item.id = item.data = item.count = 0;
-			}
-		},
 		calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
 			if(block.id==30){return 0.08;}
 			if(block.id==35){return 0.05;}
@@ -31,11 +26,6 @@ var ToolType = {
 		enchantType: Native.EnchantType.shovel,
 		damage: 2,
 		blockTypes: ["dirt"],
-		onAttack: function(item){
-			if(item.data > Item.getMaxDamage(item.id)){
-				item.id = item.data = item.count = 0;
-			}
-		},
 		useItem: function(coords, item, block){
 			if(block.id==2&&coords.side==1){ 
 				World.setBlock(coords.x, coords.y, coords.z, 198);
@@ -49,22 +39,12 @@ var ToolType = {
 		enchantType: Native.EnchantType.pickaxe,
 		damage: 2,
 		blockTypes: ["stone"],
-		onAttack: function(item){
-			if(item.data > Item.getMaxDamage(item.id)){
-				item.id = item.data = item.count = 0;
-			}
-		}
 	},
 	
 	axe: {
 		enchantType: Native.EnchantType.axe,
 		damage: 3,
 		blockTypes: ["wood"],
-		onAttack: function(item){
-			if(item.data > Item.getMaxDamage(item.id)){
-				item.id = item.data = item.count = 0;
-			}
-		}
 	},
 	
 	hoe: {
@@ -81,29 +61,36 @@ var ToolType = {
 
 ToolAPI.breakCarriedTool = function(damage){
 	var item = Player.getCarriedItem();
-	item.data += damage;
-	if(item.data > Item.getMaxDamage(item.id)){
-		item.id = item.data = item.count = 0;
+	var tool = this.getToolData(item.id);
+	var enchant = this.getEnchantExtraData(item.extra);
+	if(Math.random() < 1 / (enchant.unbreaking + 1)){
+		item.data += damage;
+	}
+	if(item.data >= Item.getMaxDamage(item.id)){
+		item.id = tool.brokenId;
+		item.count = 1;
+		item.data = 0;
 	}
 	Player.setCarriedItem(item.id, item.count, item.data, item.extra);
 }
 
 ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){
 	Item.setToolRender(id, true);
-	toolMaterial = ToolAPI.toolMaterials[toolMaterial] || toolMaterial;
-	if(toolType.blockTypes){
-		toolProperties = {brokenId: brokenId || 0};
-		for(var i in toolType){
-		toolProperties[i] = toolType[i];}
-		if(!toolMaterial.durability){
-			var maxDmg = Item.getMaxDamage(id)
-			toolMaterial.durability = maxDmg;
-		}
-		ToolAPI.registerTool(id, toolMaterial, toolType.blockTypes, toolProperties);
+	if(typeof toolMaterial == "string"){
+	toolMaterial = ToolAPI.toolMaterials[toolMaterial];}
+	toolData = {brokenId: brokenId || 0};
+	for(var i in toolType){
+		toolData[i] = toolType[i];
 	}
-	else{
+	if(!toolMaterial.durability){
+		var maxDmg = Item.getMaxDamage(id);
+		toolMaterial.durability = maxDmg;
+	}
+	if(!toolType.blockTypes){
+		toolData.isNative = true;
 		Item.setMaxDamage(id, toolMaterial.durability);
 	}
+	ToolAPI.registerTool(id, toolMaterial, toolType.blockTypes, toolData);
 	if(toolType.enchantType){
 		Item.setEnchantType(id, toolType.enchantType, toolMaterial.enchantability);
 	}
@@ -121,8 +108,70 @@ ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){
 }
 
 // bug fixes
+ToolAPI.playerAttackHook = function(attacker, mob, item) {
+	var tool = this.getToolData(item.id);
+	var enchant = this.getEnchantExtraData(item.extra);
+	var time = World.getThreadTime();
+	if(this.LastAttackTime + 10 < time && tool && !tool.isNative && Entity.getHealth(mob) > 0) {
+		if(tool.modifyEnchant){
+			tool.modifyEnchant(enchant, item);
+		}
+		if(Math.random() < 1 / (enchant.unbreaking + 1)){
+			item.data++;
+			if(!tool.isWeapon) item.data++;
+		}
+		if (tool.onAttack){
+			tool.onAttack(item, mob);
+		}
+		if(item.data >= Item.getMaxDamage(item.id)){
+			if(tool.onBroke){
+				tool.onBroke(item);
+			}
+			else{
+				item.id = tool.brokenId; item.count = 1; item.data = 0;
+			}
+		}
+		var damage = tool.damage + tool.toolMaterial.damage;
+		damage = Math.floor(damage) + (Math.random() < damage - Math.floor(damage) ? 1 : 0);
+		Entity.damageEntity(mob, damage, 2, {attacker: Player.get(), bool1: true});
+		Player.setCarriedItem(item.id, item.count, item.data, item.enchant, item.name);
+		this.LastAttackTime = time;
+	}
+}
+
+ToolAPI.getEnchantExtraData = function(extra){
+	var enchant = {
+		silk: false,
+		fortune: 0,
+		efficiency: 0,
+		unbreaking: 0,
+		experience: 0
+	}
+	if(!extra){
+		extra = Player.getCarriedItem().extra;
+	}
+	if(extra){
+		var enchants = extra.getEnchants();
+		for(var i in enchants){
+			if(i == 15){
+				enchant.efficiency = enchants[i];
+			}
+			if(i == 16){
+				enchant.silk = true;
+			}
+			if(i == 17){
+				enchant.unbreaking = enchants[i];
+			}
+			if(i == 18){
+				enchant.fortune = enchants[i];
+			}
+		}
+	}
+	return enchant;
+}
+
 Block.setDestroyLevel = function(id, lvl){
-	Block.registerDropFunction(id, function(coords, blockID, blockData, level, enchant){
+	Block.registerDropFunction(id, function(coords, blockID, blockData, level){
 		if(level >= lvl){
 			return [[blockID, 1, blockData]];
 		}
@@ -135,6 +184,14 @@ function registerStandardDrop(id, lvl){
 		return [];
 	}, lvl);
 }
+
+// Material multipliers fix
+ToolAPI.blockMaterials["stone"].multiplier = 10/3;
+ToolAPI.blockMaterials["wood"].multiplier = 1;
+ToolAPI.blockMaterials["dirt"].multiplier = 1;
+ToolAPI.blockMaterials["plant"].multiplier = 1;
+ToolAPI.blockMaterials["fibre"].multiplier = 1;
+
 ToolAPI.registerBlockMaterial(79, "stone");
 ToolAPI.registerBlockMaterial(82, "dirt");
 ToolAPI.registerBlockMaterial(120, "unbreaking");

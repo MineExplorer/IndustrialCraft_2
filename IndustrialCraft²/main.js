@@ -2,7 +2,7 @@
 BUILD INFO:
   dir: dev
   target: main.js
-  files: 96
+  files: 99
 */
 
 
@@ -156,9 +156,9 @@ Translation.addTranslation("HV Transformer", {ru: "Трансформатор В
 Translation.addTranslation("EV Transformer", {ru: "Трансформатор СВН", zh: "超高压变压器"});
 
 // Machines
-Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Coletar Experiência", zh: "铁炉"});
 Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", pt: "Iluminador", zh: "日光灯"});
 Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм"}); // To Do
+Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Fornalha de Ferro", zh: "铁炉"});
 Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", pt: "Fornalha Elétrica", zh: "感应炉"});
 Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", pt: "Fornalha de Indução", zh: "感应炉"});
 Translation.addTranslation("Macerator", {ru: "Дробитель", es: "Trituradora", pt: "Macerador", zh: "打粉机"});
@@ -493,7 +493,7 @@ var MachineRegistry = {
 	registerElectricMachine: function(id, Prototype){
 		// wire connection
 		ICRender.getGroup("ic-wire").add(id, -1);
-		// setup energy value
+		// setup energy values
 		if (Prototype.defaultValues){
 			Prototype.defaultValues.energy = 0;
 			Prototype.defaultValues.energy_receive = 0;
@@ -667,7 +667,7 @@ var MachineRegistry = {
 			if(voltageEnabled){
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
 				this.selfDestroy();
-				return 0;
+				return 1;
 			}
 			var add = Math.min(maxVoltage, this.getEnergyStorage() - this.data.energy);
 		}else{
@@ -688,6 +688,11 @@ var MachineRegistry = {
 		var level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidStorage(id, "Eu",  level);
 	},
+	
+	updateGuiHeader: function(gui, text){
+		var header = gui.getWindow("header");
+		header.contentProvider.drawing[1].text = Translation.translate(text);
+	}
 }
 
 var transferByTier = {
@@ -862,8 +867,9 @@ Callback.addCallback("DestroyBlockStart", function(coords, block){
 
 // file: core/electricity.js
 
+var wireBurnoutFunc = function(){};
 if(voltageEnabled){
-	EU.onNetOverload = function(voltage) {
+	wireBurnoutFunc = function(voltage){
 		for(var key in this.wireMap){
 			var coords = key.split(':');
 			var x = Math.floor(coords[0]), y = Math.floor(coords[1]), z = Math.floor(coords[2]);
@@ -874,7 +880,7 @@ if(voltageEnabled){
 	}
 }
 
-var addBurnParticles = function(x, y, z){
+function addBurnParticles(x, y, z){
 	for(var i = 0; i < 32; i++){
 		var px = x + Math.random();
 		var pz = z + Math.random();
@@ -957,7 +963,7 @@ NameOverrides = {
 	addTierTooltip: function(id, tier){
 		Item.registerNameOverrideFunction(BlockID[id], function(item, name){
 			var tooltip = Translation.translate("Power Tier: ") + tier;
-			return name + NameOverrides.getTooltip(name, tooltip);
+			return name + "§7" + NameOverrides.getTooltip(name, tooltip);
 		});
 	},
 	
@@ -1018,11 +1024,13 @@ NameOverrides = {
 	},
 	
 	displayEnergy: function(energy){
-		if(energy >= 1e6){
-			return Math.floor(energy / 1e5) / 10 + "M";
-		}
-		if(energy >= 1000){
-			return Math.floor(energy / 100) / 10 + "K";
+		if(!debugMode){
+			if(energy >= 1e6){
+				return Math.floor(energy / 1e5) / 10 + "M";
+			}
+			if(energy >= 1000){
+				return Math.floor(energy / 100) / 10 + "K";
+			}
 		}
 		return energy;
 	}
@@ -1086,6 +1094,7 @@ var UIbuttons = {
 	
 	registerButton: function(name, properties){
 		buttonContent[name] = properties;
+		buttonMap[name] = false;
 	},
 	
 	registerSwitchFunction: function(id, func){
@@ -1100,6 +1109,7 @@ var UIbuttons = {
 var buttonMap = {
 	button_nightvision: false,
 	button_fly: false,
+	button_hover: false,
 	button_jump: false,
 }
 
@@ -1234,7 +1244,6 @@ function updateUIbuttons(){
 
 Callback.addCallback("tick", function(){
 	var armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
-	activeButtons = [];
 	for(var i in armor){
 		var buttons = UIbuttons.getButtons(armor[i].id);
 		for(var i in buttons){
@@ -1263,9 +1272,7 @@ Callback.addCallback("tick", function(){
 		if(UIbuttons.container.isElementTouched("button_fly")){
 			var armor = armor[1];
 			var extra = armor.extra;
-			if(extra){
-				var hover = extra.getBoolean("hover");
-			}
+			var hover = extra? extra.getBoolean("hover") : false;
 			var y = Player.getPosition().y
 			var maxDmg = Item.getMaxDamage(armor.id)
 			if(armor.data < maxDmg && y < 256){
@@ -1290,11 +1297,9 @@ Callback.addCallback("tick", function(){
 			}
 		}
 	}
-	else{
-		if(UIbuttons.container){
-			UIbuttons.container.close();
-			UIbuttons.container = null;
-		}
+	else if(UIbuttons.container){
+		UIbuttons.container.close();
+		UIbuttons.container = null;
 	}
 	UIbuttons.isEnabled = false;
 });
@@ -1983,7 +1988,7 @@ Block.setDestroyTime(BlockID.cableOptic, 0.05);
 
 var IC_WIRES = {};
 function setupBlockAsWire(id, maxVoltage, insulationLevels){
-	EU.registerWire(id, maxVoltage);
+	EU.registerWire(id, maxVoltage, wireBurnoutFunc);
 	IC_WIRES[id] = insulationLevels || 0;
 }
 
@@ -2088,35 +2093,35 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiGenerator = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiGenerator = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Generator")}},
-			inventory: {standart: true},
-			background: {standart: true}
+var guiGenerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Generator")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 150, bitmap: "fire_background", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+		"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
+		"slotEnergy": {type: "slot", x: 441, y: 75, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
+		"slotFuel": {type: "slot", x: 441, y: 212,
+			isValid: function(id, count, data){
+				return Recipes.getFuelBurnDuration(id, data) > 0;
+			}
 		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 150, bitmap: "fire_background", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-			"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-			"slotEnergy": {type: "slot", x: 441, y: 75, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
-			"slotFuel": {type: "slot", x: 441, y: 212,
-				isValid: function(id, count, data){
-					return Recipes.getFuelBurnDuration(id, data) > 0;
-				}
-			},
-			"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-			"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
-		}
-	});
+		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "10000"}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiGenerator, "Generator");
+});
 
 MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 	defaultValues: {
@@ -2208,36 +2213,36 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiGeothermalGenerator = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiGeothermalGenerator = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Geothermal Generator")}},
-			inventory: {standart: true},
-			background: {standart: true}
+var guiGeothermalGenerator = guiGeothermalGenerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Geothermal Generator")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 675, y: 106, bitmap: "energy_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 150, bitmap: "geothermal_liquid_slot", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 675 + GUI_SCALE * 4, y: 106, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+		"liquidScale": {type: "scale", x: 450 + GUI_SCALE, y: 150 + GUI_SCALE, direction: 1, value: 0.5, bitmap: "geothermal_empty_liquid_slot", overlay: "geothermal_liquid_slot_overlay", overlayOffset: {x: -GUI_SCALE, y: -GUI_SCALE}, scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 441, y: 75,
+			isValid: function(id, count, data){
+				return LiquidRegistry.getItemLiquid(id, data) == "lava";
+			}
 		},
-		
-		drawing: [
-			{type: "bitmap", x: 675, y: 106, bitmap: "energy_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 150, bitmap: "geothermal_liquid_slot", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"energyScale": {type: "scale", x: 675 + GUI_SCALE * 4, y: 106, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-			"liquidScale": {type: "scale", x: 450 + GUI_SCALE, y: 150 + GUI_SCALE, direction: 1, value: 0.5, bitmap: "geothermal_empty_liquid_slot", overlay: "geothermal_liquid_slot_overlay", overlayOffset: {x: -GUI_SCALE, y: -GUI_SCALE}, scale: GUI_SCALE},
-			"slot1": {type: "slot", x: 441, y: 75,
-				isValid: function(id, count, data){
-					return LiquidRegistry.getItemLiquid(id, data) == "lava";
-				}
-			},
-			"slot2": {type: "slot", x: 441, y: 212, isValid: function(){return false;}},
-			"slotEnergy": {type: "slot", x: 695, y: 181, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
-			"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
-			"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
-		}
-	});
+		"slot2": {type: "slot", x: 441, y: 212, isValid: function(){return false;}},
+		"slotEnergy": {type: "slot", x: 695, y: 181, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
+		"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiGeothermalGenerator, "Geothermal Generator");
+});
 
 MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 	defaultValues: {
@@ -2330,39 +2335,52 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiSolarPanel = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiSolarPanel = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Solar Panel")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		params: {
-			slot: "default_slot",
-			invSlot: "default_slot"
-		},
-		
-		drawing: [
-			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-		],
-		
-		elements: {
-			"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
-			"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
-		}
-	});
+var guiSolarPanel = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Solar Panel")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+	
+	drawing: [
+		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+	],
+	
+	elements: {
+		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
+		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiSolarPanel, "Solar Panel");
+});
+
+
 MachineRegistry.registerGenerator(BlockID.solarPanel, {
+	defaultValues: {
+		canSeeSky: false
+	},
+	
 	getGuiScreen: function(){
 		return guiSolarPanel;
 	},
 	
+	init: function(){
+		this.data.canSeeSky = GenerationUtils.canSeeSky(this.x, this.y + 1, this.z);
+	},
+	
 	tick: function(){
 		var content = this.container.getGuiContent();
-		if(World.getBlockID(this.x, this.y + 1, this.z) != BlockID.luminator && World.getLightLevel(this.x, this.y + 1, this.z) == 15){
+		if(World.getThreadTime()%100 == 0){
+			this.data.canSeeSky = GenerationUtils.canSeeSky(this.x, this.y + 1, this.z);
+		}
+		if(this.data.canSeeSky && World.getLightLevel(this.x, this.y + 1, this.z) == 15){
 			this.data.energy = 1;
 			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", 1, 32, 1);
 			if(content){ 
@@ -2556,31 +2574,31 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiSolidHeatGenerator = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiSolidHeatGenerator = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Solid Fuel Firebox")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},
-			{type: "bitmap", x: 441, y: 330, bitmap: "black_line", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"slotFuel": {type: "slot", x: 441, y: 212},
-			"slotAshes": {type: "slot", x: 591, y: 212, isValid: function(){return false;}},
-			"burningScale": {type: "scale", x: 450, y: 160, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-			"textInfo1": {type: "text", font: {size: 24, color: android.graphics.Color.rgb(87, 196, 218)}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
-			"textInfo2": {type: "text", font: {size: 24, color: android.graphics.Color.rgb(87, 196, 218)}, x: 600, y: 344, width: 300, height: 30, text: "20"}
-		}
-	});
+var guiSolidHeatGenerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Solid Fuel Firebox")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},
+		{type: "bitmap", x: 441, y: 330, bitmap: "black_line", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"slotFuel": {type: "slot", x: 441, y: 212},
+		"slotAshes": {type: "slot", x: 591, y: 212, isValid: function(){return false;}},
+		"burningScale": {type: "scale", x: 450, y: 160, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
+		"textInfo1": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
+		"textInfo2": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 600, y: 344, width: 300, height: 30, text: "20"}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiSolidHeatGenerator, "Solid Fuel Firebox");
+});
 
 MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 	defaultValues:{
@@ -2689,38 +2707,39 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiElectricHeatGenerator = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiElectricHeatGenerator = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Electric Heat Generator")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 342, y: 110, bitmap: "energy_small_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 461, y: 250, bitmap: "black_line", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"slot0": {type: "slot", x: 440, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(0, id, c, d, cont)}},
-			"slot1": {type: "slot", x: 500, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(1, id, c, d, cont)}},
-			"slot2": {type: "slot", x: 560, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(2, id, c, d, cont)}},
-			"slot3": {type: "slot", x: 620, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(3, id, c, d, cont)}},
-			"slot4": {type: "slot", x: 680, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(4, id, c, d, cont)}},
-			"slot5": {type: "slot", x: 440, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(5, id, c, d, cont)}},
-			"slot6": {type: "slot", x: 500, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(6, id, c, d, cont)}},
-			"slot7": {type: "slot", x: 560, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(7, id, c, d, cont)}},
-			"slot8": {type: "slot", x: 620, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(8, id, c, d, cont)}},
-			"slot9": {type: "slot", x: 680, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(9, id, c, d, cont)}},
+var guiElectricHeatGenerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Electric Heat Generator")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 342, y: 110, bitmap: "energy_small_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 461, y: 250, bitmap: "black_line", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"slot0": {type: "slot", x: 440, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(0, id, c, d, cont)}},
+		"slot1": {type: "slot", x: 500, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(1, id, c, d, cont)}},
+		"slot2": {type: "slot", x: 560, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(2, id, c, d, cont)}},
+		"slot3": {type: "slot", x: 620, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(3, id, c, d, cont)}},
+		"slot4": {type: "slot", x: 680, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(4, id, c, d, cont)}},
+		"slot5": {type: "slot", x: 440, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(5, id, c, d, cont)}},
+		"slot6": {type: "slot", x: 500, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(6, id, c, d, cont)}},
+		"slot7": {type: "slot", x: 560, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(7, id, c, d, cont)}},
+		"slot8": {type: "slot", x: 620, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(8, id, c, d, cont)}},
+		"slot9": {type: "slot", x: 680, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(9, id, c, d, cont)}},
 
-			"slotEnergy": {type: "slot", x: 340, y: 180},
-			"energyScale": {type: "scale", x: 342, y: 110, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"textInfo1": {type: "text", font: {size: 24, color: android.graphics.Color.rgb(87, 196, 218)}, x: 530, y: 264, width: 300, height: 30, text: "0    /"},
-			"textInfo2": {type: "text", font: {size: 24, color: android.graphics.Color.rgb(87, 196, 218)}, x: 630, y: 264, width: 300, height: 30, text: "0"}
-		}
-	});
+		"slotEnergy": {type: "slot", x: 340, y: 180},
+		"energyScale": {type: "scale", x: 342, y: 110, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"textInfo1": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 530, y: 264, width: 300, height: 30, text: "0    /"},
+		"textInfo2": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 630, y: 264, width: 300, height: 30, text: "0"}
+	}
+});
+
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiElectricHeatGenerator, "Electric Heat Generator");
 });
 
 function checkCoilSlot(i, id, count, data, container){
@@ -2846,29 +2865,29 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiBatBox = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiBatBox = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("BatBox")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-			"slot1": {type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem},
-			"slot2": {type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage},
-			"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-			"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "40000"}
-		}
-	});
+var guiBatBox = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("BatBox")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem},
+		"slot2": {type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage},
+		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "40000"}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiBatBox, "BatBox");
+});
 
 MachineRegistry.registerEUStorage(BlockID.storageBatBox, {
 	defaultValues: {
@@ -2964,29 +2983,29 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiCESU = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiCESU = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("CESU")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-			"slot1": {type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem},
-			"slot2": {type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage},
-			"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-			"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "300000"}
-		}
-	});
+var guiCESU = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("CESU")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem},
+		"slot2": {type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage},
+		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "300000"}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiCESU, "CESU");
+});
 
 MachineRegistry.registerEUStorage(BlockID.storageCESU, {
 	defaultValues: {
@@ -3087,29 +3106,29 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiMFE = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiMFE = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("MFE")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-			"slot1": {type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem},
-			"slot2": {type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage},
-			"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-			"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "4000000"}
-		}
-	});
+var guiMFE = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("MFE")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem},
+		"slot2": {type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage},
+		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "4000000"}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiMFE, "MFE");
+});
 
 MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 	defaultValues: {
@@ -3212,29 +3231,29 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiMFSU = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiMFSU = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("MFSU")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-			"slot1": {type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem},
-			"slot2": {type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage},
-			"textInfo1": {type: "text", x: 642, y: 142, width: 350, height: 30, text: "0/"},
-			"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "40000000"}
-		}
-	});
+var guiMFSU = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("MFSU")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem},
+		"slot2": {type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage},
+		"textInfo1": {type: "text", x: 642, y: 142, width: 350, height: 30, text: "0/"},
+		"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "40000000"}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiMFSU, "MFSU");
+});
 
 MachineRegistry.registerEUStorage(BlockID.storageMFSU, {
 	getGuiScreen: function(){
@@ -3333,10 +3352,16 @@ MachineRegistry.registerTransformer = function(id, tier){
 			this.data.voltage = 0;
 		
 			var maxVoltage = this.getMaxPacketSize();
-			if(this.data.energy >= maxVoltage){
-				var output = maxVoltage;
-				if(!this.data.increaseMode) maxVoltage /= 4;
-				this.data.energy += src.add(output, maxVoltage) - output;
+			if(this.data.increaseMode){
+				if(this.data.energy >= maxVoltage){
+					this.data.energy += src.add(maxVoltage, maxVoltage) - maxVoltage;
+				}
+			}
+			else{
+				if(this.data.energy >= maxVoltage/4){
+					var output = this.data.energy;
+					this.data.energy += src.add(output, maxVoltage/4) - output;
+				}
 			}
 		},
 		
@@ -3541,34 +3566,34 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiIronFurnace = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiIronFurnace = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Iron Furnace")}},
-			inventory: {standart: true},
-			background: {standart: true}
+var guiIronFurnace = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Iron Furnace")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 155, bitmap: "arrow_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 155, bitmap: "fire_background", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
+		"burningScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotFuel": {type: "slot", x: 441, y: 218,
+			isValid: function(id, count, data){
+				return Recipes.getFuelBurnDuration(id, data) > 0;
+			}
 		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 155, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 155, bitmap: "fire_background", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
-			"burningScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-			"slotSource": {type: "slot", x: 441, y: 79},
-			"slotFuel": {type: "slot", x: 441, y: 218,
-				isValid: function(id, count, data){
-					return Recipes.getFuelBurnDuration(id, data) > 0;
-				}
-			},
-			"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
-		}
-	});
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiIronFurnace, "Iron Furnace");
+});
 
 MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 	defaultValues: {
@@ -3693,34 +3718,34 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiElectricFurnace = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiElectricFurnace = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Electric Furnace")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 155, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotSource": {type: "slot", x: 441, y: 79},
-			"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-			"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
-		}
-	});
+var guiElectricFurnace = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Electric Furnace")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 155, bitmap: "arrow_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiElectricFurnace, "Electric Furnace");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 	defaultValues: {
@@ -3829,37 +3854,37 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiInductionFurnace = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiInductionFurnace = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Induction Furnace")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 630, y: 146, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"progressScale": {type: "scale", x: 630, y: 146, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotSource1": {type: "slot", x: 511, y: 75},
-			"slotSource2": {type: "slot", x: 571, y: 75},
-			"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
-			"slotResult1": {type: "slot", x: 725, y: 142, isValid: function(){return false;}},
-			"slotResult2": {type: "slot", x: 785, y: 142, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 900, y: 80, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 900, y: 144, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 900, y: 208, isValid: UpgradeAPI.isUpgrade},
-			"textInfo1": {type: "text", x: 402, y: 143, width: 100, height: 30, text: "Heat:"},
-			"textInfo2": {type: "text", x: 402, y: 173, width: 100, height: 30, text: "0%"},
-		}
-	});
+var guiInductionFurnace = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Induction Furnace")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 630, y: 146, bitmap: "arrow_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 630, y: 146, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotSource1": {type: "slot", x: 511, y: 75},
+		"slotSource2": {type: "slot", x: 571, y: 75},
+		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult1": {type: "slot", x: 725, y: 142, isValid: function(){return false;}},
+		"slotResult2": {type: "slot", x: 785, y: 142, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 900, y: 80, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 900, y: 144, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 900, y: 208, isValid: UpgradeAPI.isUpgrade},
+		"textInfo1": {type: "text", x: 402, y: 143, width: 100, height: 30, text: "Heat:"},
+		"textInfo2": {type: "text", x: 402, y: 173, width: 100, height: 30, text: "0%"},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiInductionFurnace, "Induction Furnace");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 	defaultValues: {
@@ -4053,32 +4078,33 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiMacerator = null;
+var guiMacerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Macerator")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+
+	drawing: [
+		{type: "bitmap", x: 530, y: 155, bitmap: "macerator_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "macerator_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
+	}
+});
+
 Callback.addCallback("LevelLoaded", function(){
-	guiMacerator = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Macerator")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-
-		drawing: [
-			{type: "bitmap", x: 530, y: 155, bitmap: "macerator_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
-
-		elements: {
-			"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "macerator_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotSource": {type: "slot", x: 441, y: 79},
-			"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-			"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
-		}
-	});
+	MachineRegistry.updateGuiHeader(guiMacerator, "Macerator");
 });
 
 MachineRegistry.registerElectricMachine(BlockID.macerator, {
@@ -4219,34 +4245,34 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiCompressor = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiCompressor = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Compressor")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 155, bitmap: "compressor_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "compressor_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotSource": {type: "slot", x: 441, y: 79},
-			"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-			"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
-		}
-	});
+var guiCompressor = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Compressor")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 155, bitmap: "compressor_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "compressor_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiCompressor, "Compressor");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.compressor, {
 	defaultValues: {
@@ -4366,34 +4392,34 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiExtractor = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiExtractor = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Extractor")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 155, bitmap: "extractor_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotSource": {type: "slot", x: 441, y: 79},
-			"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-			"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
-		}
-	});
+var guiExtractor = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Extractor")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 155, bitmap: "extractor_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiExtractor, "Extractor");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.extractor, {
 	defaultValues: {
@@ -4539,36 +4565,36 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiConserver = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiConserver = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Canning Machine")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
+var guiConserver = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Canning Machine")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
 
-		drawing: [
-			{type: "bitmap", x: 400 + 52*GUI_SCALE, y: 50 + 33*GUI_SCALE, bitmap: "canner_arrow", scale: GUI_SCALE},
-			{type: "bitmap", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
+	drawing: [
+		{type: "bitmap", x: 400 + 52*GUI_SCALE, y: 50 + 33*GUI_SCALE, bitmap: "canner_arrow", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, bitmap: "arrow_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
 
-		elements: {
-			"progressScale": {type: "scale", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
-			"slotSource": {type: "slot", x: 400 + 32*GUI_SCALE, y: 50 + 32*GUI_SCALE},
-			"slotCan": {type: "slot", x: 400 + 63*GUI_SCALE, y: 50 + 32*GUI_SCALE},
-			"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE, y: 50 + 32*GUI_SCALE, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		}
-	});
+	elements: {
+		"progressScale": {type: "scale", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
+		"slotSource": {type: "slot", x: 400 + 32*GUI_SCALE, y: 50 + 32*GUI_SCALE},
+		"slotCan": {type: "slot", x: 400 + 63*GUI_SCALE, y: 50 + 32*GUI_SCALE},
+		"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE, y: 50 + 32*GUI_SCALE, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiConserver, "Canning Machine");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.conserver, {
 	defaultValues: {
@@ -4682,34 +4708,34 @@ Callback.addCallback("PreLoaded", function(){
 
 var recyclerBlacklist = [102, 280, 78, 80, 332];
 
-var guiRecycler = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiRecycler = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Recycler")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
+var guiRecycler = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Recycler")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
 
-		drawing: [
-			{type: "bitmap", x: 530, y: 155, bitmap: "recycler_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
+	drawing: [
+		{type: "bitmap", x: 530, y: 155, bitmap: "recycler_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
 
-		elements: {
-			"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "recycler_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotSource": {type: "slot", x: 441, y: 79},
-			"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-			"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
-		}
-	});
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "recycler_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiRecycler, "Recycler");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.recycler, {
 	defaultValues: {
@@ -4853,39 +4879,39 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiMetalFormer = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiMetalFormer = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Metal Former")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 164, bitmap: "metalformer_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"progressScale": {type: "scale", x: 530, y: 164, direction: 0, value: 0.5, bitmap: "metalformer_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotSource": {type: "slot", x: 441, y: 79},
-			"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-			"slotResult": {type: "slot", x: 717, y: 148, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 870, y: 60, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 870, y: 119, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 870, y: 178, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 870, y: 237, isValid: UpgradeAPI.isUpgrade},
-			"button": {type: "button", x: 572, y: 210, bitmap: "metal_former_button_0", scale: GUI_SCALE, clicker: {
-				onClick: function(container, tile){
-					tile.data.mode = (tile.data.mode + 1) % 3;
-				}
-			}}
-		}
-	});
+var guiMetalFormer = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Metal Former")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 164, bitmap: "metalformer_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 164, direction: 0, value: 0.5, bitmap: "metalformer_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult": {type: "slot", x: 717, y: 148, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 870, y: 60, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 870, y: 119, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 870, y: 178, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 870, y: 237, isValid: UpgradeAPI.isUpgrade},
+		"button": {type: "button", x: 572, y: 210, bitmap: "metal_former_button_0", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				tile.data.mode = (tile.data.mode + 1) % 3;
+			}
+		}}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiMetalFormer, "Metal Former");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 	defaultValues: {
@@ -5009,49 +5035,49 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiOreWasher = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiOreWasher = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Ore Washing Plant")}},
-			inventory: {standart: true},
-			background: {standart: true},
+var guiOreWasher = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Ore Washing Plant")}},
+		inventory: {standart: true},
+		background: {standart: true},
+	},
+	
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+	
+	drawing: [
+		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 400 + 98*GUI_SCALE, y: 50 + 35*GUI_SCALE, direction: 0, value: 0.5, bitmap: "ore_washer_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"liquidScale": {type: "scale", x: 592, y: 50 + 21*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
+		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 12*GUI_SCALE,
+			isValid: function(id, count, data){
+				return LiquidRegistry.getItemLiquid(id, data) == "water";
+			}
 		},
-		
-		params: {
-			slot: "default_slot",
-			invSlot: "default_slot"
-		},
-		
-		drawing: [
-			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-			{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"progressScale": {type: "scale", x: 400 + 98*GUI_SCALE, y: 50 + 35*GUI_SCALE, direction: 0, value: 0.5, bitmap: "ore_washer_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"liquidScale": {type: "scale", x: 592, y: 50 + 21*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-			"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
-			"slotLiquid1": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 12*GUI_SCALE,
-				isValid: function(id, count, data){
-					return LiquidRegistry.getItemLiquid(id, data) == "water";
-				}
-			},
-			"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
-			"slotSource": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 12*GUI_SCALE},
-			"slotResult1": {type: "slot", x: 400 + 80*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
-			"slotResult2": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
-			"slotResult3": {type: "slot", x: 400 + 118*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 870, y: 50 + GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 870, y: 50 + 20*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 870, y: 50 + 39*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		}
-	});
+		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
+		"slotSource": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 12*GUI_SCALE},
+		"slotResult1": {type: "slot", x: 400 + 80*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
+		"slotResult2": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
+		"slotResult3": {type: "slot", x: 400 + 118*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 870, y: 50 + GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 20*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 39*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiOreWasher, "Ore Washing Plant");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 	defaultValues: {
@@ -5223,44 +5249,44 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiCentrifuge = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiCentrifuge = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Thermal Centrifuge")}},
-			inventory: {standart: true},
-			background: {standart: true},
-		},
+var guiCentrifuge = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Thermal Centrifuge")}},
+		inventory: {standart: true},
+		background: {standart: true},
+	},
 
-		params: {
-			slot: "default_slot",
-			invSlot: "default_slot"
-		},
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
 
-		drawing: [
-			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-			{type: "bitmap", x: 400, y: 50, bitmap: "thermal_centrifuge_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 400 + 8*GUI_SCALE, y: 50 + 38*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
+	drawing: [
+		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 400, y: 50, bitmap: "thermal_centrifuge_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 8*GUI_SCALE, y: 50 + 38*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
 
-		elements: {
-			"progressScale": {type: "scale", x: 656, y: 50 + 22*GUI_SCALE, direction: 1, value: 0.5, bitmap: "thermal_centrifuge_scale", scale: GUI_SCALE},
-			"heatScale": {type: "scale", x: 400 + 64*GUI_SCALE, y: 50 + 63*GUI_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 400 + 8*GUI_SCALE, y: 50 + 38*GUI_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotEnergy": {type: "slot", x: 400 + 6*GUI_SCALE, y: 50 + 56*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
-			"slotSource": {type: "slot", x: 400 + 6*GUI_SCALE, y: 50 + 16*GUI_SCALE},
-			"slotResult1": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 13*GUI_SCALE, isValid: function(){return false;}},
-			"slotResult2": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 32*GUI_SCALE, isValid: function(){return false;}},
-			"slotResult3": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 51*GUI_SCALE, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 874, y: 50 + 2*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 874, y: 50 + 21*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 874, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 874, y: 50 + 59*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"indicator": {type: "image", x: 400 + 88*GUI_SCALE, y: 50 + 59*GUI_SCALE, bitmap: "indicator_red", scale: GUI_SCALE}
-		}
-	});
+	elements: {
+		"progressScale": {type: "scale", x: 656, y: 50 + 22*GUI_SCALE, direction: 1, value: 0.5, bitmap: "thermal_centrifuge_scale", scale: GUI_SCALE},
+		"heatScale": {type: "scale", x: 400 + 64*GUI_SCALE, y: 50 + 63*GUI_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 400 + 8*GUI_SCALE, y: 50 + 38*GUI_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotEnergy": {type: "slot", x: 400 + 6*GUI_SCALE, y: 50 + 56*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
+		"slotSource": {type: "slot", x: 400 + 6*GUI_SCALE, y: 50 + 16*GUI_SCALE},
+		"slotResult1": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 13*GUI_SCALE, isValid: function(){return false;}},
+		"slotResult2": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 32*GUI_SCALE, isValid: function(){return false;}},
+		"slotResult3": {type: "slot", x: 400 + 119*GUI_SCALE, y: 50 + 51*GUI_SCALE, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 874, y: 50 + 2*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 874, y: 50 + 21*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 874, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 874, y: 50 + 59*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"indicator": {type: "image", x: 400 + 88*GUI_SCALE, y: 50 + 59*GUI_SCALE, bitmap: "indicator_red", scale: GUI_SCALE}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiCentrifuge, "Thermal Centrifuge");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 	defaultValues: {
@@ -5429,41 +5455,41 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiBlastFurnace = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiBlastFurnace = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Blast Furnace")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		params: {       
-			slot: "default_slot",
-			invSlot: "default_slot"              
-		},
-		
-		drawing: [
-			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-			{type: "bitmap", x: 400, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, bitmap: "progress_scale_background", scale: GUI_SCALE*1.01}
-		],
-		
-		elements: {
-			"progressScale": {type: "scale", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, direction: 1, value: 0.5, bitmap: "progress_scale", scale: GUI_SCALE*1.01},
-			"heatScale": {type: "scale", x: 336 + 66*GUI_SCALE, y: 47 + 64*GUI_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE},
-			"slotSource": {type: "slot", x: 400 + 6*GUI_SCALE, y: 70 + 16*GUI_SCALE},
-			"slotResult1": {type: "slot", x: 340 + 124*GUI_SCALE, y: 140 + 20*GUI_SCALE, isValid: function(){return false;}},
-			"slotResult2": {type: "slot", x: 400 + 124*GUI_SCALE, y: 140 + 20*GUI_SCALE, isValid: function(){return false;}},
-			"slotAir1": {type: "slot", x: 20 + 118*GUI_SCALE, y: 170 + 10*GUI_SCALE},
-			"slotAir2": {type: "slot", x: 80 + 118*GUI_SCALE, y: 170 + 10*GUI_SCALE, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 330 + 145*GUI_SCALE, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 330 + 145*GUI_SCALE, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"indicator": {type: "image", x: 344 + 88*GUI_SCALE, y: 53 + 58*GUI_SCALE, bitmap: "indicator_red", scale: GUI_SCALE}
-		}
-	});
+var guiBlastFurnace = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Blast Furnace")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	params: {       
+		slot: "default_slot",
+		invSlot: "default_slot"              
+	},
+	
+	drawing: [
+		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 400, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, bitmap: "progress_scale_background", scale: GUI_SCALE*1.01}
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, direction: 1, value: 0.5, bitmap: "progress_scale", scale: GUI_SCALE*1.01},
+		"heatScale": {type: "scale", x: 336 + 66*GUI_SCALE, y: 47 + 64*GUI_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 400 + 6*GUI_SCALE, y: 70 + 16*GUI_SCALE},
+		"slotResult1": {type: "slot", x: 340 + 124*GUI_SCALE, y: 140 + 20*GUI_SCALE, isValid: function(){return false;}},
+		"slotResult2": {type: "slot", x: 400 + 124*GUI_SCALE, y: 140 + 20*GUI_SCALE, isValid: function(){return false;}},
+		"slotAir1": {type: "slot", x: 20 + 118*GUI_SCALE, y: 170 + 10*GUI_SCALE},
+		"slotAir2": {type: "slot", x: 80 + 118*GUI_SCALE, y: 170 + 10*GUI_SCALE, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 330 + 145*GUI_SCALE, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 330 + 145*GUI_SCALE, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"indicator": {type: "image", x: 344 + 88*GUI_SCALE, y: 53 + 58*GUI_SCALE, bitmap: "indicator_red", scale: GUI_SCALE}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiBlastFurnace, "Blast Furnace");
+});
 
 MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 	defaultValues:{
@@ -5625,7 +5651,7 @@ TileRenderer.setRotationPlaceFunction(BlockID.blastFurnace, true);
 
 
 
-// file: machine/processing/mass_fabricator.js
+// file: machine/uu/mass_fabricator.js
 
 IDRegistry.genBlockID("massFabricator");
 Block.createBlock("massFabricator", [
@@ -5635,7 +5661,7 @@ TileRenderer.setStandartModel(BlockID.massFabricator, [["machine_advanced_bottom
 TileRenderer.registerRotationModel(BlockID.massFabricator, 0, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.massFabricator, 4, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 
-NameOverrides.addTierTooltip("massFabricator", 5);
+NameOverrides.addTierTooltip("massFabricator", 4);
 
 Block.registerDropFunction("massFabricator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
@@ -5652,38 +5678,39 @@ Callback.addCallback("PreLoaded", function(){
 
 var ENERGY_PER_MATTER = 1000000;
 
-var guiMassFabricator = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiMassFabricator = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Mass Fabricator")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"matterSlot": {type: "slot", x: 821, y: 75, size: 100, isValid: function(){return false;}},
-			"catalyserSlot": {type: "slot", x: 841, y: 252},
-			"textInfo1": {type: "text", x: 542, y: 142, width: 200, height: 30, text: "Progress:"},
-			"textInfo2": {type: "text", x: 542, y: 177, width: 200, height: 30, text: "0%"},
-			"textInfo3": {type: "text", x: 542, y: 212, width: 200, height: 30, text: " "},
-			"textInfo4": {type: "text", x: 542, y: 239, width: 200, height: 30, text: " "},
-		}
-	});
+var guiMassFabricator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Mass Fabricator")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"matterSlot": {type: "slot", x: 821, y: 75, size: 100, isValid: function(){return false;}},
+		"catalyserSlot": {type: "slot", x: 841, y: 252, isValid: function(id){
+			return MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id)? true : false;
+		}},
+		"textInfo1": {type: "text", x: 542, y: 142, width: 200, height: 30, text: "Progress:"},
+		"textInfo2": {type: "text", x: 542, y: 177, width: 200, height: 30, text: "0%"},
+		"textInfo3": {type: "text", x: 542, y: 212, width: 200, height: 30, text: " "},
+		"textInfo4": {type: "text", x: 542, y: 239, width: 200, height: 30, text: " "},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiMassFabricator, "Mass Fabricator");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	defaultValues: {
 		meta: 0,
 		progress: 0,
 		catalyser: 0,
-		catalyserRatio: 0,
 		isEnabled: true,
 		isActive: false
 	},
@@ -5693,11 +5720,11 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	},
 		
 	getTransportSlots: function(){
-		return {input: ["catalyserSlot"], output: ["madtterSlot"]};
+		return {input: ["catalyserSlot"], output: ["matterSlot"]};
 	},
 	
 	getTier: function(){
-		return 5;
+		return 4;
 	},
 	
 	tick: function(){
@@ -5706,12 +5733,11 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		
 		if(this.data.isEnabled && this.data.energy > 0){
 			this.activate();
-			if(this.data.catalyser <= 1000){
+			if(this.data.catalyser < Math.max(1000, this.data.energy)){
 				var catalyserSlot = this.container.getSlot("catalyserSlot");
 				var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
 				if(catalyserData){
-					this.data.catalyser = catalyserData.input;
-					this.data.catalyserRatio = catalyserData.output / catalyserData.input;
+					this.data.catalyser += catalyserData.input;
 					catalyserSlot.count--;
 					this.container.validateAll();
 				}
@@ -5719,8 +5745,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 			if(this.data.catalyser > 0){
 				this.container.setText("textInfo3", "Catalyser:");
 				this.container.setText("textInfo4", parseInt(this.data.catalyser));
-				var transfer = Math.min((ENERGY_PER_MATTER - this.data.progress) / this.data.catalyserRatio, this.data.energy);
-				transfer = Math.min(this.data.catalyser, transfer);
+				var transfer = Math.min((ENERGY_PER_MATTER - this.data.progress) / 6, Math.min(this.data.catalyser, this.data.energy));
 				this.data.progress += transfer * this.data.catalyserRatio;
 				this.data.energy -= transfer;
 				this.data.catalyser -= transfer;
@@ -5728,10 +5753,10 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 			else{
 				this.container.setText("textInfo3", "");
 				this.container.setText("textInfo4", "");
-				var transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
-				this.data.progress += transfer;
-				this.data.energy -= transfer;
 			}
+			var transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
+			this.data.progress += transfer;
+			this.data.energy -= transfer;
 			
 			if(this.data.progress >= ENERGY_PER_MATTER){
 				var matterSlot = this.container.getSlot("matterSlot");
@@ -5752,14 +5777,46 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	},
 	
 	getEnergyStorage: function(){
-		return 32768;
+		return ENERGY_PER_MATTER - this.data.progress;
 	},
 	
 	init: MachineRegistry.updateMachine,
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc // To Do: infinite energy receive
+	energyReceive: function(type, amount, voltage) {
+		if(this.data.isEnabled){
+			if(voltageEnabled && voltage > this.getMaxPacketSize()){
+				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
+				this.selfDestroy();
+				return 1;
+			}
+			var add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
+			this.data.energy += add;
+			this.data.energy_receive += add;
+			this.data.voltage = Math.max(this.data.voltage, voltage);
+			return add;
+		}
+		return 0;
+	}
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.massFabricator);
+
+
+
+
+// file: machine/uu/scanner.js
+
+
+
+
+
+// file: machine/uu/pattern_storage.js
+
+
+
+
+
+// file: machine/uu/replicator.js
+
 
 
 
@@ -5789,42 +5846,42 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiPump = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiPump = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Pump")}},
-			inventory: {standart: true},
-			background: {standart: true}
+var guiPump = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Pump")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+
+	drawing: [
+		{type: "bitmap", x: 493, y: 149, bitmap: "extractor_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 407, y: 127, bitmap: "energy_small_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 602, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
+		{type: "bitmap", x: 675, y: 152, bitmap: "pump_arrow", scale: GUI_SCALE},
+	],
+
+	elements: {
+		"progressScale": {type: "scale", x: 493, y: 149, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 407, y: 127, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"liquidScale": {type: "scale", x: 400 + 67*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"slotEnergy": {type: "slot", x: 400, y: 50 + 39*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
+		"slotLiquid1": {type: "slot", x: 400 + 91*GUI_SCALE, y: 50 + 12*GUI_SCALE,
+			isValid: function(id, count, data){
+				return LiquidRegistry.getFullItem(id, data, "water")? true : false;
+			}
 		},
-
-		drawing: [
-			{type: "bitmap", x: 493, y: 149, bitmap: "extractor_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 407, y: 127, bitmap: "energy_small_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 602, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
-			{type: "bitmap", x: 675, y: 152, bitmap: "pump_arrow", scale: GUI_SCALE},
-		],
-
-		elements: {
-			"progressScale": {type: "scale", x: 493, y: 149, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 407, y: 127, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"liquidScale": {type: "scale", x: 400 + 67*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-			"slotEnergy": {type: "slot", x: 400, y: 50 + 39*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
-			"slotLiquid1": {type: "slot", x: 400 + 91*GUI_SCALE, y: 50 + 12*GUI_SCALE,
-				isValid: function(id, count, data){
-					return LiquidRegistry.getFullItem(id, data, "water")? true : false;
-				}
-			},
-			"slotLiquid2": {type: "slot", x: 400 + 125*GUI_SCALE, y: 50 + 29*GUI_SCALE, isValid: function(){return false;}},
-			//"slotPipe": {type: "slot", x: 400 + 91*GUI_SCALE, y: 160 + 12*GUI_SCALE},
-			"slotUpgrade1": {type: "slot", x: 880, y: 50 + 2*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 880, y: 50 + 21*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 880, y: 50 + 59*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		}
-	});
+		"slotLiquid2": {type: "slot", x: 400 + 125*GUI_SCALE, y: 50 + 29*GUI_SCALE, isValid: function(){return false;}},
+		//"slotPipe": {type: "slot", x: 400 + 91*GUI_SCALE, y: 160 + 12*GUI_SCALE},
+		"slotUpgrade1": {type: "slot", x: 880, y: 50 + 2*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 880, y: 50 + 21*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 880, y: 50 + 59*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiPump, "Pump");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.pump, {
 	defaultValues: {
@@ -5991,41 +6048,41 @@ Callback.addCallback("PreLoaded", function(){
 	], ['#', BlockID.machineBlockBasic, 0, 'a', ItemID.upgradeFluidPulling, 0, 'c', ItemID.cellEmpty, 0]);
 });
 
-var guiFluidDistributor = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiFluidDistributor = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Fluid Distributor")}},
-			inventory: {standart: true},
-			background: {standart: true},
-		},
-		
-		params: {
-			slot: "default_slot",
-			invSlot: "default_slot"
-		},
-		
-		drawing: [
-			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-			{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "fluid_distributor_background", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, value: 0, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
-			"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE},
-			"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE, isValid: function(){return false;}},
-			"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "fluid_distributor_button", scale: GUI_SCALE, clicker: {
-				onClick: function(container, tile){
-					tile.data.inverted = !tile.data.inverted;
-					TileRenderer.mapAtCoords(tile.x, tile.y, tile.z, BlockID.fluidDistributor, tile.data.meta + 6*tile.data.inverted);
-				}
-			}},
-			"text1": {type: "text", font: {size: 24, color: android.graphics.Color.rgb(87, 196, 218)}, x: 400 + 107*GUI_SCALE, y: 50+42*GUI_SCALE, width: 128, height: 48, text: Translation.translate("Mode:")},
-			"text2": {type: "text", font: {size: 24, color: android.graphics.Color.rgb(87, 196, 218)}, x: 400 + 92*GUI_SCALE, y: 50+66*GUI_SCALE, width: 256, height: 48, text: Translation.translate("Distribute")},
-		}
-	});
+var guiFluidDistributor = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Fluid Distributor")}},
+		inventory: {standart: true},
+		background: {standart: true},
+	},
+	
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+	
+	drawing: [
+		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "fluid_distributor_background", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, value: 0, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE},
+		"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE, isValid: function(){return false;}},
+		"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "fluid_distributor_button", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				tile.data.inverted = !tile.data.inverted;
+				TileRenderer.mapAtCoords(tile.x, tile.y, tile.z, BlockID.fluidDistributor, tile.data.meta + 6*tile.data.inverted);
+			}
+		}},
+		"text1": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 400 + 107*GUI_SCALE, y: 50+42*GUI_SCALE, width: 128, height: 48, text: Translation.translate("Mode:")},
+		"text2": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 400 + 92*GUI_SCALE, y: 50+66*GUI_SCALE, width: 256, height: 48, text: Translation.translate("Distribute")},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiFluidDistributor, "Fluid Distributor");
+});
 
 MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 	defaultValues: {
@@ -6112,31 +6169,31 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiTank = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiTank = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Tank")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 611, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"liquidScale": {type: "scale", x: 400 + 70*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-			"slotLiquid1": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 12*GUI_SCALE},
-			"slotLiquid2": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 36*GUI_SCALE, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		}
-	});
+var guiTank = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Tank")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 611, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"liquidScale": {type: "scale", x: 400 + 70*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"slotLiquid1": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 12*GUI_SCALE},
+		"slotLiquid2": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 36*GUI_SCALE, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiTank, "Tank");
+});
 
 MachineRegistry.registerPrototype(BlockID.tank, {
 	getGuiScreen: function(){
@@ -6213,48 +6270,48 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiMiner = null;
+var guiMiner = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Miner")}},
+		inventory: {standart: true},
+		background: {standart: true},
+	},
+
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+
+	drawing: [
+		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+
+	elements: {
+		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill", 
+			isValid: function(id){
+				if(id == ItemID.drill || id == ItemID.diamondDrill) return true;
+				return false;
+			}
+		},
+		"slotPipe": {type: "slot", x: 541, y: 75,
+			isValid: function(id){
+				if(id < 256 || id >= 8192) return true;
+				return false;
+			}
+		},
+		"slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner", 
+			isValid: function(id){
+				if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
+				return false;
+			}
+		},
+		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
+	}
+});
 Callback.addCallback("LevelLoaded", function(){
-	guiMiner = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Miner")}},
-			inventory: {standart: true},
-			background: {standart: true},
-		},
-
-		params: {
-			slot: "default_slot",
-			invSlot: "default_slot"
-		},
-
-		drawing: [
-			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-			{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
-
-		elements: {
-			"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill", 
-				isValid: function(id){
-					if(id == ItemID.drill || id == ItemID.diamondDrill) return true;
-					return false;
-				}
-			},
-			"slotPipe": {type: "slot", x: 541, y: 75,
-				isValid: function(id){
-					if(id < 256 || id >= 8192) return true;
-					return false;
-				}
-			},
-			"slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner", 
-				isValid: function(id){
-					if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
-					return false;
-				}
-			},
-			"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
-		}
-	});
+	MachineRegistry.updateGuiHeader(guiMiner, "Miner");
 });
 
 
@@ -6575,72 +6632,73 @@ function isValidMinerUpgrade(id){
 	return false;
 }
 
-var guiAdvancedMiner = null;
+var guiAdvancedMiner = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Advanced Miner")}},
+		inventory: {standart: true},
+		background: {standart: true},
+	},
+
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+
+	drawing: [
+		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},
+		{type: "bitmap", x: 400, y: 50 + 98*GUI_SCALE, bitmap: "miner_info", scale: GUI_SCALE},
+	],
+
+	elements: {
+		"energyScale": {type: "scale", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotScanner": {type: "slot", x: 400, y: 50 + 19*GUI_SCALE, bitmap: "slot_scanner", 
+			isValid: function(id){
+				if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
+				return false;
+			}
+		},
+		"slotEnergy": {type: "slot", x: 400, y: 290, isValid: MachineRegistry.isValidEUStorage},
+		"slot1": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot2": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot3": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot4": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot5": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot6": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot7": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot8": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot9": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot10": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot11": {type: "slot", x: 400 + 28*GUI_SCALE, y: 290},
+		"slot12": {type: "slot", x: 400 + 47*GUI_SCALE, y: 290},
+		"slot13": {type: "slot", x: 400 + 66*GUI_SCALE, y: 290},
+		"slot14": {type: "slot", x: 400 + 85*GUI_SCALE, y: 290},
+		"slot15": {type: "slot", x: 400 + 104*GUI_SCALE, y: 290},
+		"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE, isValid: isValidMinerUpgrade},
+		"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE, isValid: isValidMinerUpgrade},
+		"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				tile.data.whitelist = !tile.data.whitelist;
+			}
+		}},
+		"button_restart": {type: "button", x: 400 + 125*GUI_SCALE, y: 50 + 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				tile.data.x = tile.data.y = tile.data.z =  0;
+			}
+		}},
+		"button_silk": {type: "button", x: 400 + 126*GUI_SCALE, y: 50 + 41*GUI_SCALE, bitmap: "miner_button_silk_0", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				tile.data.silk_touch = (tile.data.silk_touch+1)%2;
+			}
+		}},
+		"textInfoMode": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 32*GUI_SCALE, y: 50+24*GUI_SCALE, width: 256, height: 42, text: Translation.translate("Mode: Blacklist")},
+		"textInfoXYZ": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 4*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
+	}
+});
+
 Callback.addCallback("LevelLoaded", function(){
-	guiAdvancedMiner = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Advanced Miner")}},
-			inventory: {standart: true},
-			background: {standart: true},
-		},
-
-		params: {
-			slot: "default_slot",
-			invSlot: "default_slot"
-		},
-
-		drawing: [
-			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-			{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},
-			{type: "bitmap", x: 400, y: 50 + 98*GUI_SCALE, bitmap: "miner_info", scale: GUI_SCALE},
-		],
-
-		elements: {
-			"energyScale": {type: "scale", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotScanner": {type: "slot", x: 400, y: 50 + 19*GUI_SCALE, bitmap: "slot_scanner", 
-				isValid: function(id){
-					if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
-					return false;
-				}
-			},
-			"slotEnergy": {type: "slot", x: 400, y: 290, isValid: MachineRegistry.isValidEUStorage},
-			"slot1": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-			"slot2": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-			"slot3": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-			"slot4": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-			"slot5": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-			"slot6": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-			"slot7": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-			"slot8": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-			"slot9": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-			"slot10": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-			"slot11": {type: "slot", x: 400 + 28*GUI_SCALE, y: 290},
-			"slot12": {type: "slot", x: 400 + 47*GUI_SCALE, y: 290},
-			"slot13": {type: "slot", x: 400 + 66*GUI_SCALE, y: 290},
-			"slot14": {type: "slot", x: 400 + 85*GUI_SCALE, y: 290},
-			"slot15": {type: "slot", x: 400 + 104*GUI_SCALE, y: 290},
-			"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE, isValid: isValidMinerUpgrade},
-			"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE, isValid: isValidMinerUpgrade},
-			"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
-				onClick: function(container, tile){
-					tile.data.whitelist = !tile.data.whitelist;
-				}
-			}},
-			"button_restart": {type: "button", x: 400 + 125*GUI_SCALE, y: 50 + 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
-				onClick: function(container, tile){
-					tile.data.x = tile.data.y = tile.data.z =  0;
-				}
-			}},
-			"button_silk": {type: "button", x: 400 + 126*GUI_SCALE, y: 50 + 41*GUI_SCALE, bitmap: "miner_button_silk_0", scale: GUI_SCALE, clicker: {
-				onClick: function(container, tile){
-					tile.data.silk_touch = (tile.data.silk_touch+1)%2;
-				}
-			}},
-			"textInfoMode": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 32*GUI_SCALE, y: 50+24*GUI_SCALE, width: 256, height: 42, text: Translation.translate("Mode: Blacklist")},
-			"textInfoXYZ": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 4*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
-		}
-	});
+	MachineRegistry.updateGuiHeader(guiAdvancedMiner, "Advanced Miner");
 });
 
 MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
@@ -10168,7 +10226,7 @@ ToolType.drill = {
 		coords = coords.relative;
 		block = World.getBlockID(coords.x, coords.y, coords.z);
 		if(GenerationUtils.isTransparentBlock(block)){
-			for(var i = 0; i < 36; i++){
+			for(var i = 9; i < 45; i++){
 				var slot = Player.getInventorySlot(i);
 				if(slot.id==50){
 					slot.count--;
@@ -10210,9 +10268,8 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime){
 		if(item.data + 800 <= Item.getMaxDamage(item.id)){
-			var extra = item.extra;
-			extraData = extra;
-			var mode = extra? extra.getInt("mode") : 0;
+			extraData = item.extra;
+			var mode = extraData? extraData.getInt("mode") : 0;
 			var material = ToolAPI.getBlockMaterial(block.id) || {};
 			material = material.name;
 			if(mode > 1 && (material == "dirt" || material == "stone")){
@@ -10238,63 +10295,56 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 					}
 				}
 			}
-			Game.message(destroyTime);
 			return destroyTime;
 		}
 		return params.base;
 	},
 	destroyBlock: function(coords, side, item, block){
-		var extra = extraData;
-		var mode = extra? extra.getInt("mode") : 0;
-		if(item.data + 800 <= Item.getMaxDamage(item.id)){
-			if(mode < 2){
-				item.data += 800;
-			}
-			else{
-				var X = 1;
-				var Y = 1;
-				var Z = 1;
-				if(side==BlockSide.EAST || side==BlockSide.WEST){
-				X = 0;}
-				if(side==BlockSide.UP || side==BlockSide.DOWN){
-				Y = 0;}
-				if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-				Z = 0;}
-				for(var xx = coords.x - X; xx <= coords.x + X; xx++){
-					for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
-						for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-							blockID = World.getBlockID(xx, yy, zz);
-							var material = ToolAPI.getBlockMaterial(blockID) || {};
-							if(material.name == "dirt" || material.name == "stone"){
-								item.data += 800;
-								if(mode == 3 || material == "stone"){
-									World.destroyBlock(xx, yy, zz, true);
-								}else{
-									drop = dirtBlocksDrop[blockID];
-									if(drop){
-										World.destroyBlock(xx, yy, zz, false);
-										World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
-									}
-									else{World.destroyBlock(xx, yy, zz, true);}
+		var mode = extraData? extraData.getInt("mode") : 0;
+		if(mode >= 2 && item.data + 800 <= Item.getMaxDamage(item.id)){
+			var X = 1;
+			var Y = 1;
+			var Z = 1;
+			if(side==BlockSide.EAST || side==BlockSide.WEST){
+			X = 0;}
+			if(side==BlockSide.UP || side==BlockSide.DOWN){
+			Y = 0;}
+			if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
+			Z = 0;}
+			for(var xx = coords.x - X; xx <= coords.x + X; xx++){
+				for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
+					for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
+						blockID = World.getBlockID(xx, yy, zz);
+						var material = ToolAPI.getBlockMaterial(blockID) || {};
+						if(material.name == "dirt" || material.name == "stone"){
+							item.data += 800;
+							if(mode == 3 || material == "stone"){
+								World.destroyBlock(xx, yy, zz, true);
+							}else{
+								drop = dirtBlocksDrop[blockID];
+								if(drop){
+									World.destroyBlock(xx, yy, zz, false);
+									World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
 								}
+								else{World.destroyBlock(xx, yy, zz, true);}
 							}
-							if(item.data + 800 >= Item.getMaxDamage(item.id)){
-								Player.setCarriedItem(item.id, 1, item.data, extra);
-								return;
-							}
+						}
+						if(item.data + 800 >= Item.getMaxDamage(item.id)){
+							Player.setCarriedItem(item.id, 1, item.data, extraData);
+							return;
 						}
 					}
 				}
 			}
 		}
-		Player.setCarriedItem(item.id, 1, item.data, extra);
+		Player.setCarriedItem(item.id, 1, item.data, extraData);
 	},
 	useItem: function(coords, item, block){
 		var side  = coords.side;
 		coords = coords.relative;
 		block = World.getBlockID(coords.x, coords.y, coords.z);
 		if(GenerationUtils.isTransparentBlock(block)){
-			for(var i = 0; i < 36; i++){
+			for(var i = 9; i < 45; i++){
 				var slot = Player.getInventorySlot(i);
 				if(slot.id==50){
 					slot.count--;
@@ -10393,7 +10443,7 @@ ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: NANO_SABER_DURABI
 
 Callback.addCallback("tick", function(){
 	if(World.getThreadTime() % 20 == 0){
-		var item = Player.getCarriedItem()
+		var item = Player.getCarriedItem();
 		if(item.id == ItemID.nanoSaber){
 			item.data = Math.min(item.data+1280, NANO_SABER_DURABILITY);
 			Player.setCarriedItem(item.id, 1, item.data);

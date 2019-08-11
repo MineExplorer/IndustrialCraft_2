@@ -22,10 +22,16 @@ MachineRegistry.registerTransformer = function(id, tier){
 			this.data.voltage = 0;
 		
 			var maxVoltage = this.getMaxPacketSize();
-			if(this.data.energy >= maxVoltage){
-				var output = maxVoltage;
-				if(!this.data.increaseMode) maxVoltage /= 4;
-				this.data.energy += src.add(output, maxVoltage) - output;
+			if(this.data.increaseMode){
+				if(this.data.energy >= maxVoltage){
+					this.data.energy += src.add(maxVoltage, maxVoltage) - maxVoltage;
+				}
+			}
+			else{
+				if(this.data.energy >= maxVoltage/4){
+					var output = this.data.energy;
+					this.data.energy += src.add(output, maxVoltage/4) - output;
+				}
 			}
 		},
 		

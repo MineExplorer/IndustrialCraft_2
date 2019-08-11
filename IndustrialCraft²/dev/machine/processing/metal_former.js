@@ -56,39 +56,39 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiMetalFormer = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiMetalFormer = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Metal Former")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 530, y: 164, bitmap: "metalformer_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"progressScale": {type: "scale", x: 530, y: 164, direction: 0, value: 0.5, bitmap: "metalformer_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotSource": {type: "slot", x: 441, y: 79},
-			"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-			"slotResult": {type: "slot", x: 717, y: 148, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 870, y: 60, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 870, y: 119, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 870, y: 178, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 870, y: 237, isValid: UpgradeAPI.isUpgrade},
-			"button": {type: "button", x: 572, y: 210, bitmap: "metal_former_button_0", scale: GUI_SCALE, clicker: {
-				onClick: function(container, tile){
-					tile.data.mode = (tile.data.mode + 1) % 3;
-				}
-			}}
-		}
-	});
+var guiMetalFormer = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Metal Former")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 530, y: 164, bitmap: "metalformer_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 164, direction: 0, value: 0.5, bitmap: "metalformer_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult": {type: "slot", x: 717, y: 148, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 870, y: 60, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 870, y: 119, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 870, y: 178, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 870, y: 237, isValid: UpgradeAPI.isUpgrade},
+		"button": {type: "button", x: 572, y: 210, bitmap: "metal_former_button_0", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				tile.data.mode = (tile.data.mode + 1) % 3;
+			}
+		}}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiMetalFormer, "Metal Former");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 	defaultValues: {

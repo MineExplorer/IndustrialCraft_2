@@ -50,7 +50,11 @@ machine/processing/metal_former.js
 machine/processing/ore_washer.js
 machine/processing/thermal_centrifuge.js
 machine/processing/blast_furnace.js
-machine/processing/mass_fabricator.js
+
+machine/uu/mass_fabricator.js
+machine/uu/scanner.js
+machine/uu/pattern_storage.js
+machine/uu/replicator.js
 
 machine/fluid/pump.js
 machine/fluid/fluid_distributor.js

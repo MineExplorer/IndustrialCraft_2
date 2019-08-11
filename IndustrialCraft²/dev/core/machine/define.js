@@ -64,7 +64,7 @@ var MachineRegistry = {
 	registerElectricMachine: function(id, Prototype){
 		// wire connection
 		ICRender.getGroup("ic-wire").add(id, -1);
-		// setup energy value
+		// setup energy values
 		if (Prototype.defaultValues){
 			Prototype.defaultValues.energy = 0;
 			Prototype.defaultValues.energy_receive = 0;
@@ -238,7 +238,7 @@ var MachineRegistry = {
 			if(voltageEnabled){
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
 				this.selfDestroy();
-				return 0;
+				return 1;
 			}
 			var add = Math.min(maxVoltage, this.getEnergyStorage() - this.data.energy);
 		}else{
@@ -259,6 +259,11 @@ var MachineRegistry = {
 		var level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidStorage(id, "Eu",  level);
 	},
+	
+	updateGuiHeader: function(gui, text){
+		var header = gui.getWindow("header");
+		header.contentProvider.drawing[1].text = Translation.translate(text);
+	}
 }
 
 var transferByTier = {

@@ -103,7 +103,7 @@ ToolType.drill = {
 		coords = coords.relative;
 		block = World.getBlockID(coords.x, coords.y, coords.z);
 		if(GenerationUtils.isTransparentBlock(block)){
-			for(var i = 0; i < 36; i++){
+			for(var i = 9; i < 45; i++){
 				var slot = Player.getInventorySlot(i);
 				if(slot.id==50){
 					slot.count--;
@@ -145,9 +145,8 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime){
 		if(item.data + 800 <= Item.getMaxDamage(item.id)){
-			var extra = item.extra;
-			extraData = extra;
-			var mode = extra? extra.getInt("mode") : 0;
+			extraData = item.extra;
+			var mode = extraData? extraData.getInt("mode") : 0;
 			var material = ToolAPI.getBlockMaterial(block.id) || {};
 			material = material.name;
 			if(mode > 1 && (material == "dirt" || material == "stone")){
@@ -173,63 +172,56 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 					}
 				}
 			}
-			Game.message(destroyTime);
 			return destroyTime;
 		}
 		return params.base;
 	},
 	destroyBlock: function(coords, side, item, block){
-		var extra = extraData;
-		var mode = extra? extra.getInt("mode") : 0;
-		if(item.data + 800 <= Item.getMaxDamage(item.id)){
-			if(mode < 2){
-				item.data += 800;
-			}
-			else{
-				var X = 1;
-				var Y = 1;
-				var Z = 1;
-				if(side==BlockSide.EAST || side==BlockSide.WEST){
-				X = 0;}
-				if(side==BlockSide.UP || side==BlockSide.DOWN){
-				Y = 0;}
-				if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-				Z = 0;}
-				for(var xx = coords.x - X; xx <= coords.x + X; xx++){
-					for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
-						for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-							blockID = World.getBlockID(xx, yy, zz);
-							var material = ToolAPI.getBlockMaterial(blockID) || {};
-							if(material.name == "dirt" || material.name == "stone"){
-								item.data += 800;
-								if(mode == 3 || material == "stone"){
-									World.destroyBlock(xx, yy, zz, true);
-								}else{
-									drop = dirtBlocksDrop[blockID];
-									if(drop){
-										World.destroyBlock(xx, yy, zz, false);
-										World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
-									}
-									else{World.destroyBlock(xx, yy, zz, true);}
+		var mode = extraData? extraData.getInt("mode") : 0;
+		if(mode >= 2 && item.data + 800 <= Item.getMaxDamage(item.id)){
+			var X = 1;
+			var Y = 1;
+			var Z = 1;
+			if(side==BlockSide.EAST || side==BlockSide.WEST){
+			X = 0;}
+			if(side==BlockSide.UP || side==BlockSide.DOWN){
+			Y = 0;}
+			if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
+			Z = 0;}
+			for(var xx = coords.x - X; xx <= coords.x + X; xx++){
+				for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
+					for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
+						blockID = World.getBlockID(xx, yy, zz);
+						var material = ToolAPI.getBlockMaterial(blockID) || {};
+						if(material.name == "dirt" || material.name == "stone"){
+							item.data += 800;
+							if(mode == 3 || material == "stone"){
+								World.destroyBlock(xx, yy, zz, true);
+							}else{
+								drop = dirtBlocksDrop[blockID];
+								if(drop){
+									World.destroyBlock(xx, yy, zz, false);
+									World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
 								}
+								else{World.destroyBlock(xx, yy, zz, true);}
 							}
-							if(item.data + 800 >= Item.getMaxDamage(item.id)){
-								Player.setCarriedItem(item.id, 1, item.data, extra);
-								return;
-							}
+						}
+						if(item.data + 800 >= Item.getMaxDamage(item.id)){
+							Player.setCarriedItem(item.id, 1, item.data, extraData);
+							return;
 						}
 					}
 				}
 			}
 		}
-		Player.setCarriedItem(item.id, 1, item.data, extra);
+		Player.setCarriedItem(item.id, 1, item.data, extraData);
 	},
 	useItem: function(coords, item, block){
 		var side  = coords.side;
 		coords = coords.relative;
 		block = World.getBlockID(coords.x, coords.y, coords.z);
 		if(GenerationUtils.isTransparentBlock(block)){
-			for(var i = 0; i < 36; i++){
+			for(var i = 9; i < 45; i++){
 				var slot = Player.getInventorySlot(i);
 				if(slot.id==50){
 					slot.count--;

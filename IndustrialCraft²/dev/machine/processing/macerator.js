@@ -73,32 +73,33 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiMacerator = null;
+var guiMacerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Macerator")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+
+	drawing: [
+		{type: "bitmap", x: 530, y: 155, bitmap: "macerator_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+
+	elements: {
+		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "macerator_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
+	}
+});
+
 Callback.addCallback("LevelLoaded", function(){
-	guiMacerator = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Macerator")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-
-		drawing: [
-			{type: "bitmap", x: 530, y: 155, bitmap: "macerator_bar_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
-
-		elements: {
-			"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "macerator_bar_scale", scale: GUI_SCALE},
-			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotSource": {type: "slot", x: 441, y: 79},
-			"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-			"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
-			"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
-			"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
-		}
-	});
+	MachineRegistry.updateGuiHeader(guiMacerator, "Macerator");
 });
 
 MachineRegistry.registerElectricMachine(BlockID.macerator, {

@@ -16,39 +16,52 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiSolarPanel = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiSolarPanel = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Solar Panel")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		params: {
-			slot: "default_slot",
-			invSlot: "default_slot"
-		},
-		
-		drawing: [
-			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-		],
-		
-		elements: {
-			"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
-			"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
-		}
-	});
+var guiSolarPanel = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Solar Panel")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+	
+	drawing: [
+		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+	],
+	
+	elements: {
+		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
+		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiSolarPanel, "Solar Panel");
+});
+
+
 MachineRegistry.registerGenerator(BlockID.solarPanel, {
+	defaultValues: {
+		canSeeSky: false
+	},
+	
 	getGuiScreen: function(){
 		return guiSolarPanel;
 	},
 	
+	init: function(){
+		this.data.canSeeSky = GenerationUtils.canSeeSky(this.x, this.y + 1, this.z);
+	},
+	
 	tick: function(){
 		var content = this.container.getGuiContent();
-		if(World.getBlockID(this.x, this.y + 1, this.z) != BlockID.luminator && World.getLightLevel(this.x, this.y + 1, this.z) == 15){
+		if(World.getThreadTime()%100 == 0){
+			this.data.canSeeSky = GenerationUtils.canSeeSky(this.x, this.y + 1, this.z);
+		}
+		if(this.data.canSeeSky && World.getLightLevel(this.x, this.y + 1, this.z) == 15){
 			this.data.energy = 1;
 			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", 1, 32, 1);
 			if(content){ 

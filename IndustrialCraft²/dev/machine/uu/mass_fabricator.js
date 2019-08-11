@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.massFabricator, [["machine_advanced_bottom
 TileRenderer.registerRotationModel(BlockID.massFabricator, 0, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.massFabricator, 4, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 
-NameOverrides.addTierTooltip("massFabricator", 5);
+NameOverrides.addTierTooltip("massFabricator", 4);
 
 Block.registerDropFunction("massFabricator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
@@ -23,38 +23,39 @@ Callback.addCallback("PreLoaded", function(){
 
 var ENERGY_PER_MATTER = 1000000;
 
-var guiMassFabricator = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiMassFabricator = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Mass Fabricator")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"matterSlot": {type: "slot", x: 821, y: 75, size: 100, isValid: function(){return false;}},
-			"catalyserSlot": {type: "slot", x: 841, y: 252},
-			"textInfo1": {type: "text", x: 542, y: 142, width: 200, height: 30, text: "Progress:"},
-			"textInfo2": {type: "text", x: 542, y: 177, width: 200, height: 30, text: "0%"},
-			"textInfo3": {type: "text", x: 542, y: 212, width: 200, height: 30, text: " "},
-			"textInfo4": {type: "text", x: 542, y: 239, width: 200, height: 30, text: " "},
-		}
-	});
+var guiMassFabricator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Mass Fabricator")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"matterSlot": {type: "slot", x: 821, y: 75, size: 100, isValid: function(){return false;}},
+		"catalyserSlot": {type: "slot", x: 841, y: 252, isValid: function(id){
+			return MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id)? true : false;
+		}},
+		"textInfo1": {type: "text", x: 542, y: 142, width: 200, height: 30, text: "Progress:"},
+		"textInfo2": {type: "text", x: 542, y: 177, width: 200, height: 30, text: "0%"},
+		"textInfo3": {type: "text", x: 542, y: 212, width: 200, height: 30, text: " "},
+		"textInfo4": {type: "text", x: 542, y: 239, width: 200, height: 30, text: " "},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiMassFabricator, "Mass Fabricator");
+});
 
 MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	defaultValues: {
 		meta: 0,
 		progress: 0,
 		catalyser: 0,
-		catalyserRatio: 0,
 		isEnabled: true,
 		isActive: false
 	},
@@ -64,11 +65,11 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	},
 		
 	getTransportSlots: function(){
-		return {input: ["catalyserSlot"], output: ["madtterSlot"]};
+		return {input: ["catalyserSlot"], output: ["matterSlot"]};
 	},
 	
 	getTier: function(){
-		return 5;
+		return 4;
 	},
 	
 	tick: function(){
@@ -77,12 +78,11 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		
 		if(this.data.isEnabled && this.data.energy > 0){
 			this.activate();
-			if(this.data.catalyser <= 1000){
+			if(this.data.catalyser < Math.max(1000, this.data.energy)){
 				var catalyserSlot = this.container.getSlot("catalyserSlot");
 				var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
 				if(catalyserData){
-					this.data.catalyser = catalyserData.input;
-					this.data.catalyserRatio = catalyserData.output / catalyserData.input;
+					this.data.catalyser += catalyserData.input;
 					catalyserSlot.count--;
 					this.container.validateAll();
 				}
@@ -90,19 +90,18 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 			if(this.data.catalyser > 0){
 				this.container.setText("textInfo3", "Catalyser:");
 				this.container.setText("textInfo4", parseInt(this.data.catalyser));
-				var transfer = Math.min((ENERGY_PER_MATTER - this.data.progress) / this.data.catalyserRatio, this.data.energy);
-				transfer = Math.min(this.data.catalyser, transfer);
-				this.data.progress += transfer * this.data.catalyserRatio;
+				var transfer = Math.min((ENERGY_PER_MATTER - this.data.progress) / 6, Math.min(this.data.catalyser, this.data.energy));
+				this.data.progress += transfer * 6;
 				this.data.energy -= transfer;
 				this.data.catalyser -= transfer;
 			}
 			else{
 				this.container.setText("textInfo3", "");
 				this.container.setText("textInfo4", "");
-				var transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
-				this.data.progress += transfer;
-				this.data.energy -= transfer;
 			}
+			var transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
+			this.data.progress += transfer;
+			this.data.energy -= transfer;
 			
 			if(this.data.progress >= ENERGY_PER_MATTER){
 				var matterSlot = this.container.getSlot("matterSlot");
@@ -123,11 +122,25 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	},
 	
 	getEnergyStorage: function(){
-		return 32768;
+		return ENERGY_PER_MATTER - this.data.progress;
 	},
 	
 	init: MachineRegistry.updateMachine,
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc // To Do: infinite energy receive
+	energyReceive: function(type, amount, voltage) {
+		if(this.data.isEnabled){
+			if(voltageEnabled && voltage > this.getMaxPacketSize()){
+				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
+				this.selfDestroy();
+				return 1;
+			}
+			var add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
+			this.data.energy += add;
+			this.data.energy_receive += add;
+			this.data.voltage = Math.max(this.data.voltage, voltage);
+			return add;
+		}
+		return 0;
+	}
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.massFabricator);

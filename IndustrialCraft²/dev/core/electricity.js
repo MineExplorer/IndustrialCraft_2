@@ -1,5 +1,6 @@
+var wireBurnoutFunc = function(){};
 if(voltageEnabled){
-	EU.onNetOverload = function(voltage) {
+	wireBurnoutFunc = function(voltage){
 		for(var key in this.wireMap){
 			var coords = key.split(':');
 			var x = Math.floor(coords[0]), y = Math.floor(coords[1]), z = Math.floor(coords[2]);
@@ -10,7 +11,7 @@ if(voltageEnabled){
 	}
 }
 
-var addBurnParticles = function(x, y, z){
+function addBurnParticles(x, y, z){
 	for(var i = 0; i < 32; i++){
 		var px = x + Math.random();
 		var pz = z + Math.random();

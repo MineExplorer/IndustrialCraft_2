@@ -48,9 +48,9 @@ Translation.addTranslation("HV Transformer", {ru: "Трансформатор В
 Translation.addTranslation("EV Transformer", {ru: "Трансформатор СВН", zh: "超高压变压器"});
 
 // Machines
-Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Coletar Experiência", zh: "铁炉"});
 Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", pt: "Iluminador", zh: "日光灯"});
 Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм"}); // To Do
+Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Fornalha de Ferro", zh: "铁炉"});
 Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", pt: "Fornalha Elétrica", zh: "感应炉"});
 Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", pt: "Fornalha de Indução", zh: "感应炉"});
 Translation.addTranslation("Macerator", {ru: "Дробитель", es: "Trituradora", pt: "Macerador", zh: "打粉机"});

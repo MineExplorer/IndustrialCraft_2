@@ -26,7 +26,7 @@ ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: NANO_SABER_DURABI
 
 Callback.addCallback("tick", function(){
 	if(World.getThreadTime() % 20 == 0){
-		var item = Player.getCarriedItem()
+		var item = Player.getCarriedItem();
 		if(item.id == ItemID.nanoSaber){
 			item.data = Math.min(item.data+1280, NANO_SABER_DURABILITY);
 			Player.setCarriedItem(item.id, 1, item.data);

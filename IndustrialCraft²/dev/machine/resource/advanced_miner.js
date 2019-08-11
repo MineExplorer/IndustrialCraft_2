@@ -25,72 +25,73 @@ function isValidMinerUpgrade(id){
 	return false;
 }
 
-var guiAdvancedMiner = null;
+var guiAdvancedMiner = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Advanced Miner")}},
+		inventory: {standart: true},
+		background: {standart: true},
+	},
+
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+
+	drawing: [
+		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},
+		{type: "bitmap", x: 400, y: 50 + 98*GUI_SCALE, bitmap: "miner_info", scale: GUI_SCALE},
+	],
+
+	elements: {
+		"energyScale": {type: "scale", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotScanner": {type: "slot", x: 400, y: 50 + 19*GUI_SCALE, bitmap: "slot_scanner", 
+			isValid: function(id){
+				if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
+				return false;
+			}
+		},
+		"slotEnergy": {type: "slot", x: 400, y: 290, isValid: MachineRegistry.isValidEUStorage},
+		"slot1": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot2": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot3": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot4": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot5": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 37*GUI_SCALE},
+		"slot6": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot7": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot8": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot9": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot10": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 56*GUI_SCALE},
+		"slot11": {type: "slot", x: 400 + 28*GUI_SCALE, y: 290},
+		"slot12": {type: "slot", x: 400 + 47*GUI_SCALE, y: 290},
+		"slot13": {type: "slot", x: 400 + 66*GUI_SCALE, y: 290},
+		"slot14": {type: "slot", x: 400 + 85*GUI_SCALE, y: 290},
+		"slot15": {type: "slot", x: 400 + 104*GUI_SCALE, y: 290},
+		"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE, isValid: isValidMinerUpgrade},
+		"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE, isValid: isValidMinerUpgrade},
+		"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				tile.data.whitelist = !tile.data.whitelist;
+			}
+		}},
+		"button_restart": {type: "button", x: 400 + 125*GUI_SCALE, y: 50 + 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				tile.data.x = tile.data.y = tile.data.z =  0;
+			}
+		}},
+		"button_silk": {type: "button", x: 400 + 126*GUI_SCALE, y: 50 + 41*GUI_SCALE, bitmap: "miner_button_silk_0", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				tile.data.silk_touch = (tile.data.silk_touch+1)%2;
+			}
+		}},
+		"textInfoMode": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 32*GUI_SCALE, y: 50+24*GUI_SCALE, width: 256, height: 42, text: Translation.translate("Mode: Blacklist")},
+		"textInfoXYZ": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 4*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
+	}
+});
+
 Callback.addCallback("LevelLoaded", function(){
-	guiAdvancedMiner = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Advanced Miner")}},
-			inventory: {standart: true},
-			background: {standart: true},
-		},
-
-		params: {
-			slot: "default_slot",
-			invSlot: "default_slot"
-		},
-
-		drawing: [
-			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-			{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},
-			{type: "bitmap", x: 400, y: 50 + 98*GUI_SCALE, bitmap: "miner_info", scale: GUI_SCALE},
-		],
-
-		elements: {
-			"energyScale": {type: "scale", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
-			"slotScanner": {type: "slot", x: 400, y: 50 + 19*GUI_SCALE, bitmap: "slot_scanner", 
-				isValid: function(id){
-					if(id == ItemID.scanner || id == ItemID.scannerAdvanced) return true;
-					return false;
-				}
-			},
-			"slotEnergy": {type: "slot", x: 400, y: 290, isValid: MachineRegistry.isValidEUStorage},
-			"slot1": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-			"slot2": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-			"slot3": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-			"slot4": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-			"slot5": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 37*GUI_SCALE},
-			"slot6": {type: "slot", x: 400 + 28*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-			"slot7": {type: "slot", x: 400 + 47*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-			"slot8": {type: "slot", x: 400 + 66*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-			"slot9": {type: "slot", x: 400 + 85*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-			"slot10": {type: "slot", x: 400 + 104*GUI_SCALE, y: 50 + 56*GUI_SCALE},
-			"slot11": {type: "slot", x: 400 + 28*GUI_SCALE, y: 290},
-			"slot12": {type: "slot", x: 400 + 47*GUI_SCALE, y: 290},
-			"slot13": {type: "slot", x: 400 + 66*GUI_SCALE, y: 290},
-			"slot14": {type: "slot", x: 400 + 85*GUI_SCALE, y: 290},
-			"slot15": {type: "slot", x: 400 + 104*GUI_SCALE, y: 290},
-			"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE, isValid: isValidMinerUpgrade},
-			"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE, isValid: isValidMinerUpgrade},
-			"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
-				onClick: function(container, tile){
-					tile.data.whitelist = !tile.data.whitelist;
-				}
-			}},
-			"button_restart": {type: "button", x: 400 + 125*GUI_SCALE, y: 50 + 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
-				onClick: function(container, tile){
-					tile.data.x = tile.data.y = tile.data.z =  0;
-				}
-			}},
-			"button_silk": {type: "button", x: 400 + 126*GUI_SCALE, y: 50 + 41*GUI_SCALE, bitmap: "miner_button_silk_0", scale: GUI_SCALE, clicker: {
-				onClick: function(container, tile){
-					tile.data.silk_touch = (tile.data.silk_touch+1)%2;
-				}
-			}},
-			"textInfoMode": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 32*GUI_SCALE, y: 50+24*GUI_SCALE, width: 256, height: 42, text: Translation.translate("Mode: Blacklist")},
-			"textInfoXYZ": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 4*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
-		}
-	});
+	MachineRegistry.updateGuiHeader(guiAdvancedMiner, "Advanced Miner");
 });
 
 MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {

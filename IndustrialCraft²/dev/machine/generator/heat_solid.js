@@ -25,31 +25,31 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiSolidHeatGenerator = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiSolidHeatGenerator = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Solid Fuel Firebox")}},
-			inventory: {standart: true},
-			background: {standart: true}
-		},
-		
-		drawing: [
-			{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
-			{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},
-			{type: "bitmap", x: 441, y: 330, bitmap: "black_line", scale: GUI_SCALE}
-		],
-		
-		elements: {
-			"slotFuel": {type: "slot", x: 441, y: 212},
-			"slotAshes": {type: "slot", x: 591, y: 212, isValid: function(){return false;}},
-			"burningScale": {type: "scale", x: 450, y: 160, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-			"textInfo1": {type: "text", font: {size: 24, color: android.graphics.Color.rgb(87, 196, 218)}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
-			"textInfo2": {type: "text", font: {size: 24, color: android.graphics.Color.rgb(87, 196, 218)}, x: 600, y: 344, width: 300, height: 30, text: "20"}
-		}
-	});
+var guiSolidHeatGenerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Solid Fuel Firebox")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},
+		{type: "bitmap", x: 441, y: 330, bitmap: "black_line", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"slotFuel": {type: "slot", x: 441, y: 212},
+		"slotAshes": {type: "slot", x: 591, y: 212, isValid: function(){return false;}},
+		"burningScale": {type: "scale", x: 450, y: 160, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
+		"textInfo1": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
+		"textInfo2": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 600, y: 344, width: 300, height: 30, text: "20"}
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiSolidHeatGenerator, "Solid Fuel Firebox");
+});
 
 MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 	defaultValues:{

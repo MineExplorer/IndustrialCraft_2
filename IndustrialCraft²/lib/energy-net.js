@@ -9,7 +9,7 @@
 
 LIBRARY({
 	name: "EnergyNet",
-	version: 2,
+	version: 3,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -18,17 +18,15 @@ LIBRARY({
 Translation.addTranslation("Energy", {ru: "Энергия"});
 
 function EnergyType(name) {
-    this.name = name;
-    
-    this.value = 1;
-    
-    this.wireData = {};
-    
-    this.onNetOverload = function() {};
-    
-    this.registerWire = function(id, value) {
-        this.wireData[id] = value;
-        EnergyRegistry.wireData[id] = {type: this.name, value: value};
+	this.name = name;
+
+	this.value = 1;
+
+	this.wireData = {};
+
+	this.registerWire = function(id, maxValue, overloadFunc) {
+		this.wireData[id] = maxValue;
+		EnergyRegistry.wireData[id] = {type: this.name, value: maxValue, onOverload: overloadFunc};
 		
 		Block.registerPlaceFunction(id, function(coords, item, block){
 			var place = coords.relative;
@@ -38,7 +36,7 @@ function EnergyType(name) {
 				EnergyRegistry.onWirePlaced(place.x, place.y, place.z);
 			}
 		});
-    }
+	}
 }
 
 var EnergyRegistry = {
@@ -333,8 +331,8 @@ var EnergyNetBuilder = {
 	
 	buildForTile: function(tile, type) {
 		var net = new EnergyNet(type);
-		this.addEnergyNet(net);
 		net.sourceTile = tile;
+		this.addEnergyNet(net);
 		
 		for (var side = 0; side < 6; side++) {
 			if (tile.canExtractEnergy(side, type.name)) {
@@ -377,9 +375,9 @@ var EnergyNetBuilder = {
 	buildForWire: function(x, y, z, id) {
 		var wireData = EnergyRegistry.getWireData(id);
 		var type = EnergyRegistry.getEnergyType(wireData.type);
-		var net = new EnergyNet(type, wireData.value);
-		this.addEnergyNet(net);
+		var net = new EnergyNet(type, wireData.value, wireData.onOverload);
 		net.wireId = id;
+		this.addEnergyNet(net);
 		this.rebuildRecursive(net, id, x, y, z);
 		return net;
 	},
@@ -532,7 +530,7 @@ Callback.addCallback("tick", function() {
 
 var GLOBAL_WEB_ID = 0;
 
-function EnergyNet(energyType, maxPacketSize) {
+function EnergyNet(energyType, maxPacketSize, overloadFunc) {
 	this.energyType = energyType;
 	this.energyName = energyType.name;
 	this.maxPacketSize = maxPacketSize || 2e9;
@@ -540,6 +538,7 @@ function EnergyNet(energyType, maxPacketSize) {
 	this.netId = GLOBAL_WEB_ID++;
 	
 	this.wireMap = {};
+	this.onOverload = overloadFunc || function() {};
 	
 	this.store = 0;
 	this.transfered = 0;
@@ -616,6 +615,15 @@ function EnergyNet(energyType, maxPacketSize) {
 			amount = Math.min(amount, voltage);
 		}
 		var inAmount = amount;
+		var n = this.tileEntities.length;
+		for (var i in this.tileEntities) {
+			if (amount <= 0) break;
+			var tile = this.tileEntities[i];
+			if (tile != source) {
+				amount -= tile.energyReceive(this.energyName, Math.ceil(amount/n), voltage);
+			}
+			n--;
+		}
 		for (var i in this.tileEntities) {
 			if (amount <= 0) break;
 			var tile = this.tileEntities[i];
@@ -663,8 +671,6 @@ function EnergyNet(energyType, maxPacketSize) {
 		this.transfered = 0;
 		this.voltage = 0;
 	}
-	
-	this.onOverload = this.energyType.onNetOverload;
 }
 
 

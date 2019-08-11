@@ -6,7 +6,7 @@ NameOverrides = {
 	addTierTooltip: function(id, tier){
 		Item.registerNameOverrideFunction(BlockID[id], function(item, name){
 			var tooltip = Translation.translate("Power Tier: ") + tier;
-			return name + NameOverrides.getTooltip(name, tooltip);
+			return name + "§7" + NameOverrides.getTooltip(name, tooltip);
 		});
 	},
 	
@@ -67,11 +67,13 @@ NameOverrides = {
 	},
 	
 	displayEnergy: function(energy){
-		if(energy >= 1e6){
-			return Math.floor(energy / 1e5) / 10 + "M";
-		}
-		if(energy >= 1000){
-			return Math.floor(energy / 100) / 10 + "K";
+		if(!debugMode){
+			if(energy >= 1e6){
+				return Math.floor(energy / 1e5) / 10 + "M";
+			}
+			if(energy >= 1000){
+				return Math.floor(energy / 100) / 10 + "K";
+			}
 		}
 		return energy;
 	}

@@ -51,6 +51,7 @@ var UIbuttons = {
 	
 	registerButton: function(name, properties){
 		buttonContent[name] = properties;
+		buttonMap[name] = false;
 	},
 	
 	registerSwitchFunction: function(id, func){
@@ -65,6 +66,7 @@ var UIbuttons = {
 var buttonMap = {
 	button_nightvision: false,
 	button_fly: false,
+	button_hover: false,
 	button_jump: false,
 }
 
@@ -199,7 +201,6 @@ function updateUIbuttons(){
 
 Callback.addCallback("tick", function(){
 	var armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
-	activeButtons = [];
 	for(var i in armor){
 		var buttons = UIbuttons.getButtons(armor[i].id);
 		for(var i in buttons){
@@ -228,9 +229,7 @@ Callback.addCallback("tick", function(){
 		if(UIbuttons.container.isElementTouched("button_fly")){
 			var armor = armor[1];
 			var extra = armor.extra;
-			if(extra){
-				var hover = extra.getBoolean("hover");
-			}
+			var hover = extra? extra.getBoolean("hover") : false;
 			var y = Player.getPosition().y
 			var maxDmg = Item.getMaxDamage(armor.id)
 			if(armor.data < maxDmg && y < 256){
@@ -255,11 +254,9 @@ Callback.addCallback("tick", function(){
 			}
 		}
 	}
-	else{
-		if(UIbuttons.container){
-			UIbuttons.container.close();
-			UIbuttons.container = null;
-		}
+	else if(UIbuttons.container){
+		UIbuttons.container.close();
+		UIbuttons.container = null;
 	}
 	UIbuttons.isEnabled = false;
 });

@@ -50,7 +50,7 @@ Block.setDestroyTime(BlockID.cableOptic, 0.05);
 
 var IC_WIRES = {};
 function setupBlockAsWire(id, maxVoltage, insulationLevels){
-	EU.registerWire(id, maxVoltage);
+	EU.registerWire(id, maxVoltage, wireBurnoutFunc);
 	IC_WIRES[id] = insulationLevels || 0;
 }
 

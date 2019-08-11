@@ -18,41 +18,41 @@ Callback.addCallback("PreLoaded", function(){
 	], ['#', BlockID.machineBlockBasic, 0, 'a', ItemID.upgradeFluidPulling, 0, 'c', ItemID.cellEmpty, 0]);
 });
 
-var guiFluidDistributor = null;
-Callback.addCallback("LevelLoaded", function(){
-	guiFluidDistributor = new UI.StandartWindow({
-		standart: {
-			header: {text: {text: Translation.translate("Fluid Distributor")}},
-			inventory: {standart: true},
-			background: {standart: true},
-		},
-		
-		params: {
-			slot: "default_slot",
-			invSlot: "default_slot"
-		},
-		
-		drawing: [
-			{type: "background", color: android.graphics.Color.rgb(179, 179, 179)},
-			{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "fluid_distributor_background", scale: GUI_SCALE},
-		],
-		
-		elements: {
-			"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, value: 0, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
-			"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE},
-			"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE, isValid: function(){return false;}},
-			"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "fluid_distributor_button", scale: GUI_SCALE, clicker: {
-				onClick: function(container, tile){
-					tile.data.inverted = !tile.data.inverted;
-					TileRenderer.mapAtCoords(tile.x, tile.y, tile.z, BlockID.fluidDistributor, tile.data.meta + 6*tile.data.inverted);
-				}
-			}},
-			"text1": {type: "text", font: {size: 24, color: android.graphics.Color.rgb(87, 196, 218)}, x: 400 + 107*GUI_SCALE, y: 50+42*GUI_SCALE, width: 128, height: 48, text: Translation.translate("Mode:")},
-			"text2": {type: "text", font: {size: 24, color: android.graphics.Color.rgb(87, 196, 218)}, x: 400 + 92*GUI_SCALE, y: 50+66*GUI_SCALE, width: 256, height: 48, text: Translation.translate("Distribute")},
-		}
-	});
+var guiFluidDistributor = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Fluid Distributor")}},
+		inventory: {standart: true},
+		background: {standart: true},
+	},
+	
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+	
+	drawing: [
+		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "fluid_distributor_background", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, value: 0, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE},
+		"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE, isValid: function(){return false;}},
+		"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "fluid_distributor_button", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				tile.data.inverted = !tile.data.inverted;
+				TileRenderer.mapAtCoords(tile.x, tile.y, tile.z, BlockID.fluidDistributor, tile.data.meta + 6*tile.data.inverted);
+			}
+		}},
+		"text1": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 400 + 107*GUI_SCALE, y: 50+42*GUI_SCALE, width: 128, height: 48, text: Translation.translate("Mode:")},
+		"text2": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 400 + 92*GUI_SCALE, y: 50+66*GUI_SCALE, width: 256, height: 48, text: Translation.translate("Distribute")},
+	}
 });
 
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiFluidDistributor, "Fluid Distributor");
+});
 
 MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 	defaultValues: {

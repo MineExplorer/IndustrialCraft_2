@@ -102,18 +102,17 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 			var transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
 			this.data.progress += transfer;
 			this.data.energy -= transfer;
-			
-			if(this.data.progress >= ENERGY_PER_MATTER){
-				var matterSlot = this.container.getSlot("matterSlot");
-				if(matterSlot.id == ItemID.matter && matterSlot.count < 64 || matterSlot.id == 0){
-					matterSlot.id = ItemID.matter;
-					matterSlot.count++;
-					this.data.progress = 0;
-				}
-			}
 		}
 		else{
 			this.deactivate();
+		}
+		if(this.data.progress >= ENERGY_PER_MATTER){
+			var matterSlot = this.container.getSlot("matterSlot");
+			if(matterSlot.id == ItemID.matter && matterSlot.count < 64 || matterSlot.id == 0){
+				matterSlot.id = ItemID.matter;
+				matterSlot.count++;
+				this.data.progress = 0;
+			}
 		}
 	},
 	

@@ -29,58 +29,90 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-MachineRegistry.registerElectricMachine(BlockID.nuclearReactor, {
+var guiNuclearReactor = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Nuclear Reactor")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 340, y: 400, bitmap: "reactor_info", scale: GUI_SCALE},
+	],
+	
+	elements: {
+		"heatScale": {type: "scale", x: 340 + GUI_SCALE*2, y: 400 + GUI_SCALE*2, direction: 0, value: 0.5, bitmap: "reactor_heat_scale", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 400, y: 80},
+		"textInfo": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 675 + GUI_SCALE*2, y: 400 + GUI_SCALE*2, width: 256, height: 42, text: Translation.translate("Generating: ")},
+	}
+});
+
+MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	defaultValues: {
+		chambers_count: 0,
+		isEnabled: false,
 		isActive: false,
-		heat: 300
-	},
-	
-	isGenerator: function() {
-		return true;
-	},
-	
-	getChamberCount: function(){
-		var count = 0;
-		var coords = [[-1,0,0], [1,0,0], [0,-1,0], [0,1,0], [0,0,-1], [0,0,1]];
-		for(var i in coords){
-			var c = coords[i];
-			if(World.getBlockID(this.x+c[0], this.y+c[1], this.z+c[2]) == BlockID.reactorChamber){
-				count++;
-			}
-		}
-		return count;
-	},
-	
-	tick: function(){
+		heat: 300,
 		
 	},
 	
+	getGuiScreen: function(){
+		return guiNuclearReactor;
+	},
+	
+	init: function(){
+		this.rebuildEnergyNet();
+	},
+	
+	rebuildEnergyNet: function(){
+		var net = EnergyNetBuilder.buildForTile(this, EU);
+		this.__energyNets.EU = net;
+		for (var i = 0; i < 6; i++) {
+			var coords = EnergyNetBuilder.getRelativeCoords(this.x, this.y, this.z, i);
+			if(World.getBlockID(coords.x, coords.y, coords.z)==BlockID.reactorChamber){
+				this.data.chambers_count++;
+				for (var side = 0; side < 6; side++) {
+					var c = EnergyNetBuilder.getRelativeCoords(coords.x, coords.y, coords.z, side);
+					EnergyNetBuilder.buildTileNet(net, c.x, c.y, c.z, side + Math.pow(-1, side));
+				}
+			}
+		}
+	},
+	
+	tick: function(){
+		var slot = this.container.getSlot("slot1");
+		if(this.data.isEnabled && slot.id == ItemID.fuelRodUranium){
+			this.data.heat += 100;
+			this.data.energy = this.data.heat;
+		}
+		var maxHeat = this.getMaxHeat();
+		if(this.data.heat >= maxHeat){
+			//for(var i = 0; i < 5; i++){
+				Entity.spawn(this.x + 0.5, this.y + 0.5, this.z + 0.5, EntityType.PRIMED_TNT);
+			//}
+			World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5);
+		}
+		this.container.setScale("heatScale", this.data.heat / maxHeat);
+		this.container.setText("textInfo", "Generating: " + this.data.energy + " EU/t");
+	},
+	
 	redstone: function(signal){
-		if(signal.power > 0) this.data.isActive = true;
+		this.data.isEnabled = (signal.power == 0);
 	},
 	
-	canReceiveEnergy: function(){
-		return false;
-	},
-	
-	isEnergySource: function(){
-		return true;
-	},
-	
-	getEnergyStorage: function(){
+	getMaxHeat: function(){
 		return 10000;
 	},
 	
 	energyTick: function(type, src){
 		src.add(this.data.energy);
+		this.data.energy = 0;
 	}
 });
 
 MachineRegistry.registerElectricMachine(BlockID.reactorChamber, {
 	defaultValues: {
-		reactor: null
+		core: null,
 	},
-	isGenerator: function() {
-		return true;
-	},
+	
 });

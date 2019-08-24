@@ -100,7 +100,22 @@ Translation.addTranslation("Piece of Uranium 238", {ru: "Кусочек уран
 Translation.addTranslation("Plutonium", {ru: "Плутоний", es: "Plutonio", pt: "Plutônio", zh: "钚"});
 Translation.addTranslation("Piece of Plutonium", {ru: "Кусочек плутония", es: "Diminuta Pila de Plutonio", pt: "Pequena Pilha de Plutônio", zh: "小撮钚"});
 
-// Reactor
+// Reactor Stuff - Radioactive Items
+Translation.addTranslation("Fuel Rod (Empty)", {ru: "Топливный стержень (Пустой)", es: "Vara Combustible (Vacía)", pt: "Haste de Combustível (Vazia)", zh: "燃料棒(空)"});
+Translation.addTranslation("Fuel Rod (Uranium)", {ru: "Топливный стержень (Уран)", es: "Vara Combustible (Uranio)", pt: "Haste de Combustível (Urânio)", zh: "燃料棒(铀)"});
+Translation.addTranslation("Dual Fuel Rod (Uranium)", {ru: "Спаренный топливный стержень (Уран)", es: "Vara Combustible Doble (Uranio)", pt: "Haste de Combustível Dupla (Urânio)", zh: "双联燃料棒(铀)"});
+Translation.addTranslation("Quad Fuel Rod (Uranium)", {ru: "Счетверённый топливный стержень (Уран)", es: "Vara Combustible Cuádruple (Uranio)", pt: "Haste de Combustível Quádrupla (Urânio)", zh: "四联燃料棒(铀)"});
+Translation.addTranslation("Fuel Rod (MOX)", {ru: "Топливный стержень (MOX)", es: "Vara Combustible (MOX)", pt: "Haste de Combustível (MOX)", zh: "燃料棒(MOX)"});
+Translation.addTranslation("Dual Fuel Rod (MOX)", {ru: "Спаренный топливный стержень (MOX)", es: "Vara Combustible Doble (MOX)", pt: "Haste de Combustível Dupla (MOX)", zh: "双联燃料棒(MOX)"});
+Translation.addTranslation("Quad Fuel Rod (MOX)", {ru: "Счетверённый топливный стержень (MOX)", es: "Vara Combustible Cuádruple (MOX)", pt: "Haste de Combustível Quádrupla (MOX)", zh: "四联燃料棒(MOX)"});
+Translation.addTranslation("Fuel Rod (Depleted Uranium)", {ru: "Топливный стержень (Обеднённый Уран)", es: "Vara Combustible (Uranio Empobrecido)", pt: "Haste de Combustível (Urânio Esgotado)", zh: "燃料棒(枯竭铀)"});
+Translation.addTranslation("Dual Fuel Rod (Depleted Uranium)", {ru: "Спаренный топливный стержень (Обеднённый Уран)", es: "Vara Combustible Doble (Uranio Empobrecido)", pt: "Haste de Combustível Dupla (Urânio Esgotado)", zh: "双联燃料棒(枯竭铀)"});
+Translation.addTranslation("Quad Fuel Rod (Depleted Uranium)", {ru: "Счетверённый топливный стержень (Обеднённый Уран)", es: "Vara Combustible Cuádruple (Uranio Empobrecido)", pt: "Haste de Combustível Quádrupla (Urânio Esgotado)", zh: "四联燃料棒(枯竭铀)"});
+Translation.addTranslation("Fuel Rod (Depleted MOX)", {ru: "Топливный стержень (Обеднённый MOX)", es: "Vara Combustible (MOX Empobrecido)", pt: "Haste de Combustível (MOX Esgotado)", zh: "燃料棒(枯竭MOX)"});
+Translation.addTranslation("Dual Fuel Rod (Depleted MOX)", {ru: "Спаренный топливный стержень (Обеднённый MOX)", es: "Vara Combustible Doble (MOX Empobrecido)", pt: "Haste de Combustível Dupla (MOX Esgotado)", zh: "双联燃料棒(枯竭MOX)"});
+Translation.addTranslation("Quad Fuel Rod (Depleted MOX)", {ru: "Счетверённый топливный стержень (Обеднённый MOX)", es: "Vara Combustible Cuádruple (MOX Empobrecido)", pt: "Haste de Combustível Quádrupla (MOX Esgotado)", zh: "四联燃料棒(枯竭MOX)"});
+
+// Reactor Stuff - Cooling/Heat Management
 Translation.addTranslation("10k Coolant Cell", {ru: "Охлаждающая капсула 10к", es: "Celda Refrigerante 10k", pt: "Célula Refrigerante de 10k", zh: "10k冷却单元"});
 Translation.addTranslation("30k Coolant Cell", {ru: "Охлаждающая капсула 30к", es: "Celda Refrigerante 30k", pt: "Célula Refrigerante de 30k", zh: "30k冷却单元"});
 Translation.addTranslation("60k Coolant Cell", {ru: "Охлаждающая капсула 60к", es: "Celda Refrigerante 60k", pt: "Célula Refrigerante de 60k", zh: "60k冷却单元"});
@@ -303,6 +318,13 @@ Translation.addTranslation("Avg:", {ru: "Средн.:", es: "Promedio:", pt: "M�
 Translation.addTranslation("Max/Min", {ru: "Макс./Мин.", zh: "最大/最小"});
 Translation.addTranslation("Cycle: ", {ru: "Цикл: ", es: "Ciclo: ", pt: "Cíclo: ", zh: "周期: "});
 Translation.addTranslation("Reset", {ru: "Сброс", pt: "Resetar", zh: "重置"});
+// Mining Laser
+Translation.addTranslation("Mining", {ru: "Добыча", es: "Taladrando", pt: "Mineração", zh: "挖矿模式"});
+Translation.addTranslation("Low-Focus", {ru: "Короткого фокуса", es: "Baja Potencia", pt: "Baixo-Foco", zh: "低聚焦模式"});
+Translation.addTranslation("Long-Range", {ru: "Дальнего действия", es: "Largo Alcance", pt: "Longo Alcance", zh: "远距模式"});
+Translation.addTranslation("Horizontal", {ru: "Горизонтальный", zh: "水平模式"});
+Translation.addTranslation("Super-Heat", {ru: "Перегревающий", es: "Super-Calor", pt: "Super Quente", zh: "超级热线模式"});
+Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
 
 // Messages
 Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен"});

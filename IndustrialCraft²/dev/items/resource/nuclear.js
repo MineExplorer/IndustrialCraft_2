@@ -19,11 +19,11 @@ Item.createItem("plutonium", "Plutonium", {name: "plutonium"});
 IDRegistry.genItemID("smallPlutonium");
 Item.createItem("smallPlutonium", "Piece of Plutonium", {name: "small_plutonium"});
 
-//IDRegistry.genItemID("mox");
-//Item.createItem("mox", "MOX Nuclear Fuel", {name: "mox"});
+IDRegistry.genItemID("mox");
+Item.createItem("mox", "MOX Nuclear Fuel", {name: "mox"});
 
-//IDRegistry.genItemID("RTGPellet");
-//Item.createItem("RTGPellet", "RTG Pellet", {name: "rtg_pellet"});
+IDRegistry.genItemID("RTGPellet");
+Item.createItem("RTGPellet", "RTG Pellet", {name: "rtg_pellet"});
 
 
 Recipes.addShaped({id: ItemID.uranium, count: 1, data: 0}, [

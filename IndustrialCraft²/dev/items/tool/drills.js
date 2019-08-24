@@ -102,7 +102,7 @@ ToolType.drill = {
 		var side  = coords.side;
 		coords = coords.relative;
 		block = World.getBlockID(coords.x, coords.y, coords.z);
-		if(GenerationUtils.isTransparentBlock(block)){
+		if(canTileBeReplaced(block)){
 			for(var i = 9; i < 45; i++){
 				var slot = Player.getInventorySlot(i);
 				if(slot.id==50){
@@ -220,7 +220,7 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 		var side  = coords.side;
 		coords = coords.relative;
 		block = World.getBlockID(coords.x, coords.y, coords.z);
-		if(GenerationUtils.isTransparentBlock(block)){
+		if(canTileBeReplaced(block)){
 			for(var i = 9; i < 45; i++){
 				var slot = Player.getInventorySlot(i);
 				if(slot.id==50){

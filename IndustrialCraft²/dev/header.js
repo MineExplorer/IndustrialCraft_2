@@ -12,6 +12,7 @@
 
 // libraries
 IMPORT("flags");
+IMPORT("Vector");
 IMPORT("ToolLib");
 IMPORT("EnergyNet");
 IMPORT("ChargeItem");
@@ -35,6 +36,7 @@ var MobEffect = Native.PotionEffect;
 var Enchantment = Native.Enchantment;
 var BlockSide = Native.BlockSide;
 var EntityType = Native.EntityType;
+var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
@@ -86,6 +88,22 @@ Callback.addCallback("tick", function(){
 				Game.tipMessage(Math.round(tps * 10) / 10 + "tps")
 			}
 			lasttime = t
+		}
+	}
+});
+
+
+// redstone items fix
+Item.registerUseFunctionForID(69, function(coords, item, block){
+	if(block.id >= 8192){
+		Game.prevent();
+		var side  = coords.side;
+		coords = coords.relative;
+		block = World.getBlockID(coords.x, coords.y, coords.z);
+		if(canTileBeReplaced(block)){
+			var item = Player.getCarriedItem(i);
+			Player.decreaseCarriedItem(1);
+			World.setBlock(coords.x, coords.y, coords.z, 69, (6 - side)%6);
 		}
 	}
 });

@@ -7,8 +7,8 @@ Item.createItem("heatExchangerAdv", "Advanced Heat Exchanger", {name: "heat_exch
 IDRegistry.genItemID("heatExchangerComponent");
 Item.createItem("heatExchangerComponent", "Component Heat Exchanger", {name: "heat_exchanger", meta: 2});
 
-//IDRegistry.genItemID("heatExchangerReactor");
-//Item.createItem("heatExchangerReactor", "Reactor Heat Exchanger", {name: "heat_exchanger", meta: 3});
+IDRegistry.genItemID("heatExchangerReactor");
+Item.createItem("heatExchangerReactor", "Reactor Heat Exchanger", {name: "heat_exchanger", meta: 3});
 
 Recipes.addShaped({id: ItemID.heatExchanger, count: 1, data: 0}, [
 	"aca",
@@ -27,10 +27,9 @@ Recipes.addShaped({id: ItemID.heatExchangerComponent, count: 1, data: 0}, [
 	"axa",
 	" a "
 ], ['x', ItemID.heatExchanger, 0, 'a', ItemID.plateGold, 0]);
-/*
+
 Recipes.addShaped({id: ItemID.heatExchangerReactor, count: 1, data: 0}, [
 	"aaa",
 	"axa",
 	"aaa"
 ], ['x', ItemID.heatExchanger, 0, 'a', ItemID.plateCopper, 0]);
- */

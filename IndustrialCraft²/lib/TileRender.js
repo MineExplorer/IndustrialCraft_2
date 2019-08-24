@@ -1,12 +1,19 @@
 LIBRARY({
 	name: "TileRender",
-	version: 7,
+	version: 8,
 	shared: true,
 	api: "CoreEngine"
 });
 
 var EntityGetYaw = ModAPI.requireGlobal("Entity.getYaw");
 var EntityGetPitch = ModAPI.requireGlobal("Entity.getPitch");
+
+// block place fix
+var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
+var REPLACEABLE_TILES = ModAPI.requireGlobal("CONSTANT_REPLACEABLE_TILES")
+REPLACEABLE_TILES[51] = true;
+REPLACEABLE_TILES[78] = true;
+REPLACEABLE_TILES[106] = true;
 
 var TileRenderer = {
 	data: {},
@@ -113,14 +120,11 @@ var TileRenderer = {
 			var x = coords.relative.x
 			var y = coords.relative.y
 			var z = coords.relative.z
-			block = World.getBlockID(x, y, z)
-			if(GenerationUtils.isTransparentBlock(block)){
-				World.setBlock(x, y, z, item.id, 0);
-				var rotation = TileRenderer.getBlockRotation(fullRotation);
-				var tile = World.addTileEntity(x, y, z);
-				tile.data.meta = rotation;
-				TileRenderer.mapAtCoords(x, y, z, item.id, rotation);
-			}
+			World.setBlock(x, y, z, item.id, 0);
+			var rotation = TileRenderer.getBlockRotation(fullRotation);
+			var tile = World.addTileEntity(x, y, z);
+			tile.data.meta = rotation;
+			TileRenderer.mapAtCoords(x, y, z, item.id, rotation);
 		});
 	},
 	
@@ -183,6 +187,38 @@ var TileRenderer = {
 		model.addBox(0, 0, 0.5, 1, 1, 0.5, id, 0);
 		render.addEntry(model);
 		BlockRenderer.setStaticICRender(id, 0, render);	
+	},
+	
+	makeSlab: function(id, fullBlockID, fullBlockData){
+		this.setSlabShape(id);
+		this.setSlabPlaceFunction(id, fullBlockID, fullBlockData || 0);
+	},
+	
+	setSlabShape: function(id){
+		Block.setShape(id, 0, 0, 0, 1, 0.5, 1, 0);
+		Block.setShape(id, 0, 0.5, 0, 1, 1, 1, 1);
+	},
+	
+	setSlabPlaceFunction: function(id, fullBlockID, fullBlockData){
+		Block.registerPlaceFunction(id, function(coords, item, block){
+			Game.prevent();
+			if(block.id == item.id && (block.data == (coords.side+1)%2)){
+				World.setBlock(coords.x, coords.y, coords.z, fullBlockID, fullBlockData);
+				return;
+			}
+			var x = coords.relative.x
+			var y = coords.relative.y
+			var z = coords.relative.z
+			block = World.getBlockID(x, y, z);
+			if(canTileBeReplaced(block)){
+				if(coords.vec.y - y < 0.5){
+					World.setBlock(x, y, z, item.id, 0);
+				}
+				else {
+					World.setBlock(x, y, z, item.id, 1);
+				}
+			}
+		});
 	}
 }
 

@@ -7,6 +7,7 @@ core/machine/upgrade.js
 
 core/tool.js
 core/electricity.js
+core/radiation.js
 core/name_override.js
 core/ui_buttons.js
 
@@ -25,6 +26,7 @@ machine/generator/solar.js
 machine/generator/windmill.js
 machine/generator/watermill.js
 machine/generator/heat_solid.js
+machine/generator/heat_electric.js
 machine/generator/heat_electric.js
 
 machine/storage/bat_box.js
@@ -89,8 +91,11 @@ items/electric/storage.js
 items/electric/charging.js
 items/electric/upgrades.js
 
+items/reactor/plating.js
+items/reactor/reflector.js
 items/reactor/coolant.js
 items/reactor/heat_exchanger.js
+items/reactor/heat_vent.js
 
 items/armor/hazmat.js
 items/armor/bronze.js

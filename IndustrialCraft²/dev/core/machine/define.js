@@ -55,7 +55,7 @@ var MachineRegistry = {
 			}
 		}
 		
-		ToolAPI.registerBlockMaterial(id, "stone", 1);
+		ToolAPI.registerBlockMaterial(id, "stone", 1, true);
 		Block.setDestroyTime(id, 3);
 		TileEntity.registerPrototype(id, Prototype);
 	},
@@ -147,16 +147,13 @@ var MachineRegistry = {
 			var x = coords.relative.x
 			var y = coords.relative.y
 			var z = coords.relative.z
-			block = World.getBlockID(x, y, z)
-			if(GenerationUtils.isTransparentBlock(block)){
-				World.setBlock(x, y, z, item.id, 0);
-				var rotation = TileRenderer.getBlockRotation(fullRotation);
-				var tile = World.addTileEntity(x, y, z);
-				tile.data.meta = rotation;
-				TileRenderer.mapAtCoords(x, y, z, item.id, rotation);
-				if(item.extra){
-					tile.data.energy = item.extra.getInt("Eu");
-				}
+			World.setBlock(x, y, z, item.id, 0);
+			var rotation = TileRenderer.getBlockRotation(fullRotation);
+			var tile = World.addTileEntity(x, y, z);
+			tile.data.meta = rotation;
+			TileRenderer.mapAtCoords(x, y, z, item.id, rotation);
+			if(item.extra){
+				tile.data.energy = item.extra.getInt("Eu");
 			}
 		});
 	},

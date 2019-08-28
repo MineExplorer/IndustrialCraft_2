@@ -5,7 +5,7 @@ ModAPI.registerAPI("ICore", {
 	ChargeRegistry: ChargeItemRegistry,
 	Upgrade: UpgradeAPI,
 	Tool: ICTool,
-	ItemName: NameOverrides,
+	ItemName: ItemName,
 	UI: UIbuttons,
 	Ore: OreGenerator,
 	

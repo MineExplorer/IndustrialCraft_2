@@ -20,7 +20,7 @@ var ICTool = {
 		if(!wrench.energy){
 			ToolAPI.breakCarriedTool(damage);
 		}else{
-			Player.setCarriedItem(id, 1, data + wrench.energy * damage);
+			this.useElectricItem({id: id, data: data}, wrench.energy * damage);
 		}
 	},
 	
@@ -39,6 +39,31 @@ var ICTool = {
 				}
 			}
 		});
+	},
+	dischargeItem: function(item, consume){
+		var energy = 0;
+		var armor = Player.getArmorSlot(1);
+		var armorChargeData = ChargeItemRegistry.getItemData(armor.id);
+		var itemChargeLevel = ChargeItemRegistry.getItemData(item.id).level;
+		if(armorChargeData && armorChargeData.level >= itemChargeLevel){
+			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, consume, 100);
+			consume -= energy;
+		}
+		if(item.data + consume <= Item.getMaxDamage(item.id)){
+			if(energy > 0){
+				Player.setArmorSlot(armor.id, 1, armor.data, armor.extra);
+			}
+			item.data += consume;
+			return true;
+		}
+		return false;
+	},
+	useElectricItem: function(item, consume){
+		if(this.dischargeItem(item, consume)){
+			Player.setCarriedItem(item.id, 1, item.data, item.extra);
+			return true;
+		}
+		return false;
 	}
 }
 

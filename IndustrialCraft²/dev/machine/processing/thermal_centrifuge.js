@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.thermalCentrifuge, [["machine_advanced", 0
 TileRenderer.registerRotationModel(BlockID.thermalCentrifuge, 0, [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.thermalCentrifuge, 4, [["machine_advanced", 0], ["thermal_centrifuge_top", 1], ["machine_side", 0], ["thermal_centrifuge_front", 1], ["thermal_centrifuge_side", 1], ["thermal_centrifuge_side", 1]]);
 
-NameOverrides.addTierTooltip("thermalCentrifuge", 2);
+ItemName.addTierTooltip("thermalCentrifuge", 2);
 
 Block.registerDropFunction("thermalCentrifuge", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);

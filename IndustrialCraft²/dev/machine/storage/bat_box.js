@@ -15,7 +15,7 @@ Block.registerDropFunction("storageBatBox", function(coords, blockID, blockData,
 	return [];
 });
 
-NameOverrides.addStorageBlockTooltip("storageBatBox", 1, "40K");
+ItemName.addStorageBlockTooltip("storageBatBox", 1, "40K");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageBatBox, count: 1, data: 0}, [

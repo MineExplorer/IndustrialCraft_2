@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.recycler, [["machine_bottom", 0], ["macera
 TileRenderer.registerRotationModel(BlockID.recycler, 0, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.recycler, 4, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["recycler_front", 1], ["machine_side", 0], ["machine_side", 0]]);
 
-NameOverrides.addTierTooltip("recycler", 1);
+ItemName.addTierTooltip("recycler", 1);
 
 Block.registerDropFunction("recycler", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);

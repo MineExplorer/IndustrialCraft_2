@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ToolLib",
-	version: 4,
+	version: 5,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -107,38 +107,7 @@ ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){
 	}
 }
 
-// bug fixes
-ToolAPI.playerAttackHook = function(attacker, mob, item) {
-	var tool = this.getToolData(item.id);
-	var enchant = this.getEnchantExtraData(item.extra);
-	var time = World.getThreadTime();
-	if(this.LastAttackTime + 10 < time && tool && !tool.isNative && Entity.getHealth(mob) > 0) {
-		if(tool.modifyEnchant){
-			tool.modifyEnchant(enchant, item);
-		}
-		if(Math.random() < 1 / (enchant.unbreaking + 1)){
-			item.data++;
-			if(!tool.isWeapon) item.data++;
-		}
-		if (tool.onAttack){
-			tool.onAttack(item, mob);
-		}
-		if(item.data >= Item.getMaxDamage(item.id)){
-			if(tool.onBroke){
-				tool.onBroke(item);
-			}
-			else{
-				item.id = tool.brokenId; item.count = 1; item.data = 0;
-			}
-		}
-		var damage = tool.damage + tool.toolMaterial.damage;
-		damage = Math.floor(damage) + (Math.random() < damage - Math.floor(damage) ? 1 : 0);
-		Entity.damageEntity(mob, damage, 2, {attacker: Player.get(), bool1: true});
-		Player.setCarriedItem(item.id, item.count, item.data, item.enchant, item.name);
-		this.LastAttackTime = time;
-	}
-}
-
+// API bug fixes
 ToolAPI.getEnchantExtraData = function(extra){
 	var enchant = {
 		silk: false,
@@ -170,6 +139,65 @@ ToolAPI.getEnchantExtraData = function(extra){
 	return enchant;
 }
 
+ToolAPI.playerAttackHook = function(attacker, victim, item) {
+	var toolData = this.getToolData(item.id);
+	var enchant = this.getEnchantExtraData(item.extra);
+	var worldTime = World.getThreadTime();
+	var isTimeCorrect = this.LastAttackTime + 10 < worldTime;
+	if(isTimeCorrect && toolData && !toolData.isNative && Entity.getHealth(victim) > 0) {
+		if (!(toolData.onAttack && toolData.onAttack(item, victim))) {
+			if (toolData.modifyEnchant) {
+				toolData.modifyEnchant(enchant, item);
+			}
+			if (Math.random() < 1 / (enchant.unbreaking + 1)) {
+				item.data++;
+				if (toolData.isWeapon) {
+					item.data++;
+				}
+			}
+		}
+		if (item.data >= toolData.durability) {
+			if (!(toolData.onBroke && toolData.onBroke(item))) {
+				item.id = toolData.brokenId;
+				item.count = 1;
+				item.data = 0;
+			}
+		}
+		var damage = toolData.damage + toolData.toolMaterial.damage;
+		damage = Math.floor(damage) + (Math.random() < damage - Math.floor(damage) ? 1 : 0);
+		Entity.damageEntity(victim, damage, 2, {attacker: Player.get(), bool1: true});
+		Player.setCarriedItem(item.id, item.count, item.data, item.extra);
+		this.LastAttackTime = worldTime;
+	}
+}
+
+ToolAPI.destroyBlockHook = function (coords, block, item) {
+	var toolData = this.getToolData(item.id);
+	var enchant = this.getEnchantExtraData(item.extra);
+	if (toolData && !toolData.isNative) {
+		if (!(toolData.onDestroy && toolData.onDestroy(item, coords, block))) {
+			if (toolData.modifyEnchant) {
+				toolData.modifyEnchant(enchant, item);
+			}
+			if (Math.random() < 1 / (enchant.unbreaking + 1)) {
+				item.data++;
+				if (toolData.isWeapon) {
+					item.data++;
+				}
+			}
+		}
+		if (item.data >= toolData.toolMaterial.durability) {
+			if (!(toolData.onBroke && toolData.onBroke(item, coords, block))) {
+				item.id = toolData.brokenId;
+				item.count = 1;
+				item.data = 0;
+				World.playSoundAtEntity(Player.get(), "random.break", 1);
+			}
+		}
+		Player.setCarriedItem(item.id, item.count, item.data, item.extra);
+	}
+},
+
 Block.setDestroyLevel = function(id, lvl){
 	Block.registerDropFunction(id, function(coords, blockID, blockData, level){
 		if(level >= lvl){
@@ -199,6 +227,7 @@ ToolAPI.registerBlockMaterial(138, "stone");
 ToolAPI.registerBlockMaterial(159, "stone");
 ToolAPI.registerBlockMaterial(174, "stone");
 
+// Drop fix
 Block.setDestroyLevelForID(24, 1);
 registerStandardDrop(61, 1);
 registerStandardDrop(67, 1);
@@ -216,6 +245,59 @@ registerStandardDrop(180, 1);
 registerStandardDrop(203, 1);
 registerStandardDrop(251, 1);
 
+Block.registerDropFunctionForID(13, function(coords, blockID, blockData, level, enchant){ // gravel
+	if (Math.random() < [0, 0.14, 0.25, 1][enchant.fortune || 0]){
+		return [[318, 1, 0]];
+	}
+	return [[13, 1, 0]];
+}, 0);
+Block.registerDropFunctionForID(78, function(coords, blockID, blockData, level, enchant){ // snow layer
+	if (level > 0){
+		if(blockData == 7) return [[332, 4, 0]];
+		if(blockData >= 5) return [[332, 3, 0]];
+		if(blockData >= 3) return [[332, 2, 0]];
+		return [[332, 1, 0]];
+	}
+	return [];
+}, 0);
+Block.registerDropFunctionForID(80, function(coords, blockID, blockData, level, enchant){ // snow block
+	if (enchant.silk){
+		return [[80, 1, 0]];
+	}
+	return [[332, 1, 0], [332, 1, 0], [332, 1, 0], [332, 1, 0]];
+}, 0);
+Block.registerDropFunctionForID(110, function(coords, blockID, blockData, level, enchant){ // mycelium
+	if (enchant.silk){
+		return [[110, 1, 0]];
+	}
+	return [[3, 1, 0]];
+}, 0);
+Block.registerDropFunctionForID(198, function(coords, blockID, blockData, level, enchant){ // grass path
+	if (enchant.silk){
+		return [[198, 1, 0]];
+	}
+	return [[3, 1, 0]];
+}, 0);
+Block.registerDropFunctionForID(243, function(coords, blockID, blockData, level, enchant){ // podzol
+	if (enchant.silk){
+		return [[243, 1, 0]];
+	}
+	return [[3, 1, 0]];
+}, 0);
+// glass
+Block.registerDropFunctionForID(20, function(coords, blockID, blockData, level, enchant){
+	if (enchant.silk){
+		return [[20, 1, 0]];
+	}
+	return [];
+}, 0);
+Block.registerDropFunctionForID(102, function(coords, blockID, blockData, level, enchant){
+	if (enchant.silk){
+		return [[102, 1, 0]];
+	}
+	return [];
+}, 0);
+// slabs
 Block.registerDropFunctionForID(44, function(coords, id, data, level, enchant){
 	if(level > 0){
 		return [[id, 1, data%8]];
@@ -228,18 +310,21 @@ Block.registerDropFunctionForID(182, function(coords, id, data, level, enchant){
 	}
 	return [];
 }, 1);
+// ice
+Callback.addCallback("DestroyBlock", function(coords, block, player){
+	if(block.id == 79 || block.id == 194){
+		var item = Player.getCarriedItem();
+		var enchant = ToolAPI.getEnchantExtraData(item.extra);
+		var toolData = ToolAPI.getToolData(item.id);
+		if (toolData && toolData.modifyEnchant) {
+			toolData.modifyEnchant(enchant, item);
+		}
+		if(ToolAPI.getToolLevelViaBlock(item.id, block.id) > 0 && enchant.silk){
+			World.destroyBlock(coords.x, coords.y, coords.z);
+			World.drop(coords.x + 0.5, coords.y + 0.5, coords.z + 0.5, block.id, 1);
+		}
+	}
+});
 
-Block.registerDropFunctionForID(79, function(coords, id, data, level, enchant){
-	if(level > 0 && enchant.silk){
-		return [[id, 1, data]];
-	}
-	return [];
-}, 1);
-Block.registerDropFunctionForID(174, function(coords, id, data, level, enchant){
-	if(level > 0 && enchant.silk){
-		return [[id, 1, data]];
-	}
-	return [];
-}, 1);
 
 EXPORT("ToolType", ToolType);

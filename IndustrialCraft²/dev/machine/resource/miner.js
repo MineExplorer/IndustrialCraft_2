@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.miner, [["miner_bottom", 0], ["machine_top
 TileRenderer.registerRotationModel(BlockID.miner, 0, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.miner, 4, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 1], ["miner_side", 1], ["miner_side", 1]]);
 
-NameOverrides.addTierTooltip("miner", 2);
+ItemName.addTierTooltip("miner", 2);
 
 Block.registerDropFunction("miner", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
@@ -66,15 +66,20 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-var dropData0 = [3, 25, 39, 40, 46, 50, 53, 54, 58, 65, 72, 96, 107, 134, 135, 136, 143, 146, 163, 164, 165, 170, 183, 184, 185, 186, 187];
+// dropData0 = [3, 25, 39, 40, 46, 50, 53, 54, 58, 65, 72, 96, 107, 134, 135, 136, 143, 146, 163, 164, 165, 170, 183, 184, 185, 186, 187];
+var noDrop = [6, 18, 30, 31, 32, 59, 81, 83, 86, 92, 99, 100, 103, 104, 105, 106, 111, 115, 127, 131, 132, 140, 141, 142, 161, 175, 244];
 
-function getBlockDrop(coords, id, data, level, enchant){
+function getBlockDrop(coords, id, data, level, enchant, smelt){
+	if(smelt){
+		if(id == 78) return [];
+		if(id == 80){
+			World.setBlock(coords.x, coords.y, coords.z, 8);
+			return [];
+		}
+	}
 	var dropFunc = Block.dropFunctions[id];
 	if(dropFunc){
-		return dropFunc(coords, id, data, level, enchant||{});
-	}
-	if(dirtBlocksDrop[id]){
-		return [[dirtBlocksDrop[id], 1, 0]];
+		return dropFunc(coords, id, data, level, enchant || {});
 	}
 	if(id==5 || id == 19 || id==35 || id==85 || id==144 || id==171) return [[id, 1, data]];
 	if(id == 17 || id == 162) return [[id, 1, data%4]];
@@ -84,6 +89,7 @@ function getBlockDrop(coords, id, data, level, enchant){
 		return [[340, 3, 0]];
 	}
 	if(id == 55) return [[331, 1, 0]];
+	if(id == 60) return [[3, 1, 0]];
 	if(id == 63 || id == 68) return [[338, 1, 0]];
 	if(id == 64) return [[324, 1, 0]];
 	if(id == 75 || id == 76) return [[76, 1, 0]];
@@ -100,9 +106,8 @@ function getBlockDrop(coords, id, data, level, enchant){
 	if(id == 195) return [[429, 1, 0]];
 	if(id == 196) return [[430, 1, 0]];
 	if(id == 197) return [[431, 1, 0]];
-	if(dropData0.indexOf(id) != -1) return [[id, 1, 0]];
-	// no drop 6, 18, 20, 30, 31, 32, 59, 81, 83, 86, 92, 99, 100, 102, 103 - 106, 111, 115, 127, 131, 132, 140-142, 161, 175, 244
-	return [];
+	if(noDrop.indexOf(id) != -1) return [];
+	return [[id, 1, 0]];
 }
 
 MachineRegistry.registerElectricMachine(BlockID.miner, {

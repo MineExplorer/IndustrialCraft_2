@@ -35,7 +35,7 @@ Recipes.addShaped({id: ItemID.heatVentReactor, count: 1, data: 0}, [
 	"a",
 	"x",
 	"a"
-], ['x', ItemID.heatVent, 0, 'a', ItemID.plateCopper, 0]); // dense copper plate
+], ['x', ItemID.heatVent, 0, 'a', ItemID.densePlateCopper, 0]);
 
 Recipes.addShaped({id: ItemID.heatVentOverclocked, count: 1, data: 0}, [
 	"a",

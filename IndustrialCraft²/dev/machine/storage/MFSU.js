@@ -11,7 +11,7 @@ Block.registerDropFunction("storageMFSU", function(coords, blockID, blockData, l
 	return [];
 });
 
-NameOverrides.addStorageBlockTooltip("storageMFSU", 4, "60M");
+ItemName.addStorageBlockTooltip("storageMFSU", 4, "60M");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageMFSU, count: 1, data: 0}, [

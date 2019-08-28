@@ -1,8 +1,8 @@
 IDRegistry.genItemID("nanoSaber");
 Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 3);
-
-Item.registerNameOverrideFunction(ItemID.nanoSaber, NameOverrides.showItemStorage);
+ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 3, "tool");
+ItemName.setRarity(ItemID.nanoSaber, 1);
+Item.registerNameOverrideFunction(ItemID.nanoSaber, ItemName.showItemStorage);
 
 var NANO_SABER_DURABILITY = Item.getMaxDamage(ItemID.nanoSaber);
 
@@ -20,7 +20,7 @@ ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: NANO_SABER_DURABI
 	},
 	onAttack: function(item, mob){
 		this.damage = item.data < NANO_SABER_DURABILITY ? 16 : 0;
-		return false;
+		return true;
 	}
 });
 

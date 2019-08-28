@@ -50,6 +50,18 @@ Recipes.addShaped({id: ItemID.plutonium, count: 1, data: 0}, [
 	"xxx"
 ], ['x', ItemID.smallPlutonium, 0]);
 
+Recipes.addShaped({id: ItemID.mox, count: 1, data: 0}, [
+	"xxx",
+	"aaa",
+	"xxx"
+], ['x', ItemID.smallPlutonium, 0, 'a', ItemID.uranium238, 0]);
+
+Recipes.addShaped({id: ItemID.RTGPellet, count: 1, data: 0}, [
+	"xxx",
+	"aaa",
+	"xxx"
+], ['x', ItemID.densePlateIron, 0, 'a', ItemID.plutonium, 0]);
+
 Recipes.addShapeless({id: ItemID.smallUranium235, count: 9, data: 0}, [{id: ItemID.uranium235, data: 0}]);
 Recipes.addShapeless({id: ItemID.smallUranium238, count: 9, data: 0}, [{id: ItemID.uranium238, data: 0}]);
 Recipes.addShapeless({id: ItemID.smallPlutonium, count: 9, data: 0}, [{id: ItemID.plutonium, data: 0}]);

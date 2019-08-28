@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.conserver, [["machine_bottom", 0], ["machi
 TileRenderer.registerRotationModel(BlockID.conserver, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.conserver, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 1], ["machine_side", 0], ["machine_side", 0]]);
 
-NameOverrides.addTierTooltip("conserver", 1);
+ItemName.addTierTooltip("conserver", 1);
 
 Block.registerDropFunction("conserver", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);

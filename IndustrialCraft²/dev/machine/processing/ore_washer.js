@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.oreWasher, [["machine_bottom", 0], ["machi
 TileRenderer.registerRotationModel(BlockID.oreWasher, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.oreWasher, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 1], ["ore_washer_side", 1], ["ore_washer_side", 1]]);
 
-NameOverrides.addTierTooltip("oreWasher", 1);
+ItemName.addTierTooltip("oreWasher", 1);
 
 Block.registerDropFunction("oreWasher", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);

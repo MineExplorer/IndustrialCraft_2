@@ -116,6 +116,12 @@ Translation.addTranslation("Dual Fuel Rod (Depleted MOX)", {ru: "Спаренн�
 Translation.addTranslation("Quad Fuel Rod (Depleted MOX)", {ru: "Счетверённый топливный стержень (Обеднённый MOX)", es: "Vara Combustible Cuádruple (MOX Empobrecido)", pt: "Haste de Combustível Quádrupla (MOX Esgotado)", zh: "四联燃料棒(枯竭MOX)"});
 
 // Reactor Stuff - Cooling/Heat Management
+Translation.addTranslation("Reactor Plating", {ru: "Обшивка реактора", es: "Revestimiento para Reactor", pt: "Placa de Reator", zh: "反应堆隔板"});
+Translation.addTranslation("Containment Reactor Plating", {ru: "Сдерживающая реакторная обшивка", es: "Revestimiento de Reactor con Capacidad de Calor", pt: "Placa de Contenção de Reator", zh: "高热容反应堆隔板"});
+Translation.addTranslation("Heat-Capacity Reactor Plating", {ru: "Теплоёмкая реакторная обшивка", es: "Revestimiento de Contención para Reactor", pt: "Placa de Reator com Capacidade de Calor", zh: "密封反应堆隔热板"});
+Translation.addTranslation("Neutron Reflector", {ru: "Отражатель нейтронов", es: "Reflector de Neutrones", pt: "Reflector de Neutrons", zh: "中子反射板"});
+Translation.addTranslation("Thick Neutron Reflector", {ru: "Утолщённый отражатель нейтронов", es: "Reflector de Neutrones Grueso", pt: "Reflector de Neutrons Grosso", zh: "加厚中子反射板"});
+Translation.addTranslation("Iridium Neutron Reflector", {ru: "Иридиевый отражатель нейтронов", es: "Reflector de Neutrones de Iridio", pt: "Reflector de Neutrons de Irídio", zh: "铱中子反射板"});
 Translation.addTranslation("10k Coolant Cell", {ru: "Охлаждающая капсула 10к", es: "Celda Refrigerante 10k", pt: "Célula Refrigerante de 10k", zh: "10k冷却单元"});
 Translation.addTranslation("30k Coolant Cell", {ru: "Охлаждающая капсула 30к", es: "Celda Refrigerante 30k", pt: "Célula Refrigerante de 30k", zh: "30k冷却单元"});
 Translation.addTranslation("60k Coolant Cell", {ru: "Охлаждающая капсула 60к", es: "Celda Refrigerante 60k", pt: "Célula Refrigerante de 60k", zh: "60k冷却单元"});
@@ -123,6 +129,11 @@ Translation.addTranslation("Heat Exchanger", {ru: "Теплообменник", 
 Translation.addTranslation("Advanced Heat Exchanger", {ru: "Улучшенный теплообменник", es: "Intercambiador de Calor para Reactor", pt: "Trocador de Calor Avançado", zh: "高级热交换器"});
 Translation.addTranslation("Component Heat Exchanger", {ru: "Компонентный теплообменник", es: "Intercambiador de Calor para Componentes", pt: "Trocador de Calor Componente", zh: "元件热交换器"});
 Translation.addTranslation("Reactor Heat Exchanger", {ru: "Реакторный теплообменник", es: "Intercambiador de Calor para Reactor", pt: "Trocador de Calor do Reator", zh: "反应堆热交换器"});
+Translation.addTranslation("Heat Vent", {ru: "Теплоотвод", es: "Ventilación de Calor", pt: "Ventilação de Calor", zh: "散热片"});
+Translation.addTranslation("Advanced Heat Vent", {ru: "Улучшенный теплоотвод", es: "Ventilación de Calor Avanzada", pt: "Ventilação de Calor Avançada", zh: "高级散热片"});
+Translation.addTranslation("Component Heat Vent", {ru: "Компонентный теплоотвод", es: "Componente para Ventilación de Calor", pt: "Ventilação de Calor Componente", zh: "元件散热片"});
+Translation.addTranslation("Reactor Heat Vent", {ru: "Реакторный теплоотвод", es: "Ventilación de Calor para Reactor", pt: "Ventilação de Calor para Reator", zh: "反应堆散热片"});
+Translation.addTranslation("Overclocked Heat Vent", {ru: "Разогнанный теплоотвод", es: "Ventilación de Calor con Sobreproducción", pt: "Ventilação de Calor com Overclock", zh: "超频散热片"});
 
 // Electric
 Translation.addTranslation("Electronic Circuit", {ru: "Электросхема", es: "Circuito Electrónico", pt: "Circuito Eletrônico", zh: "电路板"});
@@ -214,6 +225,15 @@ Translation.addTranslation("Steel Plate", {ru: "Стальная пластин�
 Translation.addTranslation("Gold Plate", {ru: "Золотая пластина", es: "Placa de Oro", pt: "Placa de Ouro", zh: "金板"});
 Translation.addTranslation("Lapis Plate", {ru: "Лазуритовая пластина", es: "Placa de Lapislázuli", pt: "Placa de Lápis-Lazuli", zh: "青金石板"});
 Translation.addTranslation("Lead Plate", {ru: "Свинцовая пластина", es: "Placa de Plomo", pt: "Placa de Chumbo", zh: "铅板"});
+
+// Dense Plates
+Translation.addTranslation("Dense Copper Plate", {ru: "Плотная медная пластина", es: "Placa de Cobre Denso", pt: "Placa Densa de Cobre", zh: "致密铜板"});
+Translation.addTranslation("Dense Tin Plate", {ru: "Плотная оловянная пластина", es: "Placa Densa de Estaño", pt: "Placa Densa de Estanho", zh: "致密锡板"});
+Translation.addTranslation("Dense Iron Plate", {ru: "Плотная железная пластина", es: "Placa Densa de Hierro", pt: "Placa Densa de Ferro", zh: "致密铁板"});
+Translation.addTranslation("Dense Bronze Plate", {ru: "Плотная бронзовая пластина", es: "Placa de Bronce Densa", pt: "Placa Densa de Bronze", zh: "致密青铜板"});
+Translation.addTranslation("Dense Steel Plate", {ru: "Плотная стальная пластина", es: "Placa de Hierro Refinado Denso", pt: "Placa Densa de Aço", zh: "致密钢板"});
+Translation.addTranslation("Dense Gold Plate", {ru: "Плотная золотая пластина", es: "Placa Densa de Oro", pt: "Placa Densa de Ouro", zh: "致密金板"});
+Translation.addTranslation("Dense Lead Plate", {ru: "Плотная свинцовая пластина", es: "Placa Densa de Plomo", pt: "Placa Densa de Chumbo", zh: "致密铅板"});
 
 // Casings
 Translation.addTranslation("Copper Casing", {ru: "Медная оболочка", es: "Carcasa para Objetos de Cobre", pt: "Invólucro de Cobre", zh: "铜质外壳"});
@@ -325,6 +345,9 @@ Translation.addTranslation("Long-Range", {ru: "Дальнего действия
 Translation.addTranslation("Horizontal", {ru: "Горизонтальный", zh: "水平模式"});
 Translation.addTranslation("Super-Heat", {ru: "Перегревающий", es: "Super-Calor", pt: "Super Quente", zh: "超级热线模式"});
 Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
+// Iridium Drill
+Translation.addTranslation("Fortune III", {ru: "Удача III"});
+Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание"});
 
 // Messages
 Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен"});

@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.macerator, [["machine_bottom", 0], ["macer
 TileRenderer.registerRotationModel(BlockID.macerator, 0, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.macerator, 4, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 1], ["machine_side", 0], ["machine_side", 0]]);
 
-NameOverrides.addTierTooltip("macerator", 1);
+ItemName.addTierTooltip("macerator", 1);
 
 Block.registerDropFunction("macerator", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
@@ -47,6 +47,14 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.plateSteel": {id: ItemID.dustSteel, count: 1, data: 0},
 		"ItemID.plateLead": {id: ItemID.dustLead, count: 1, data: 0},
 		"ItemID.plateLapis": {id: ItemID.dustLapis, count: 1, data: 0},
+		// dense plates
+		"ItemID.densePlateIron": {id: ItemID.dustIron, count: 9, data: 0},
+		"ItemID.densePlateGold": {id: ItemID.dustGold, count: 9, data: 0},
+		"ItemID.densePlateCopper": {id: ItemID.dustCopper, count: 9, data: 0},
+		"ItemID.densePlateTin": {id: ItemID.dustTin, count: 9, data: 0},
+		"ItemID.densePlateBronze": {id: ItemID.dustBronze, count: 9, data: 0},
+		"ItemID.densePlateSteel": {id: ItemID.dustSteel, count: 9, data: 0},
+		"ItemID.densePlateLead": {id: ItemID.dustLead, count: 9, data: 0},
 		// other resources
 		22: {id: ItemID.dustLapis, count: 9, data: 0},
 		173: {id: ItemID.dustCoal, count: 9, data: 0},

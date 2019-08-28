@@ -20,7 +20,7 @@ Recipes.addShaped({id: ItemID.heatExchangerAdv, count: 1, data: 0}, [
 	"pcp",
 	"xdx",
 	"pcp"
-], ['x', ItemID.heatExchanger, 0, 'c', ItemID.circuitBasic, 0, 'd', ItemID.plateCopper, 0, 'p', ItemID.plateLapis, 0]); // dense copper plate
+], ['x', ItemID.heatExchanger, 0, 'c', ItemID.circuitBasic, 0, 'd', ItemID.densePlateCopper, 0, 'p', ItemID.plateLapis, 0]);
 
 Recipes.addShaped({id: ItemID.heatExchangerComponent, count: 1, data: 0}, [
 	" a ",

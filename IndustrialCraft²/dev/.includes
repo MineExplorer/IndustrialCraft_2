@@ -8,7 +8,7 @@ core/machine/upgrade.js
 core/tool.js
 core/electricity.js
 core/radiation.js
-core/name_override.js
+core/item_name.js
 core/ui_buttons.js
 
 block/sapling.js
@@ -76,6 +76,7 @@ items/resource/crushed.js
 items/resource/dust.js
 items/resource/ingot.js
 items/resource/plates.js
+items/resource/dense_plates.js
 items/resource/casing.js
 items/resource/nuclear.js
 items/resource/scrap.js

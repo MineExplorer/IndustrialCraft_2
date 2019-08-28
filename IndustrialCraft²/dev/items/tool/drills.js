@@ -5,27 +5,29 @@ Item.createItem("drill", "Mining Drill", {name: "drill"}, {stack: 1});
 Item.createItem("diamondDrill", "Diamond Drill", {name: "drill_diamond"}, {stack: 1});
 Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill_iridium"}, {stack: 1});
 Item.setGlint(ItemID.iridiumDrill, true);
-ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 1);
-ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 1);
-ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 3);
+ItemName.setRarity(ItemID.iridiumDrill, 2);
 
-Item.registerNameOverrideFunction(ItemID.drill, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.diamondDrill, NameOverrides.showItemStorage);
+ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 1, "tool");
+ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 1, "tool");
+ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 3, "tool");
+
+Item.registerNameOverrideFunction(ItemID.drill, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.diamondDrill, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
-	name = NameOverrides.showRareItemStorage(item, name);
+	name = ItemName.showItemStorage(item, name);
 	var mode = item.extra? item.extra.getInt("mode") : 0;
 	switch(mode){
 		case 0:
-			name += "\nFortune III mode";
+			name += "\n" + Translation.translate("Mode: ") + Translation.translate("Fortune III");
 		break;
 		case 1:
-			name += "\nSilk Touch mode";
+			name += "\n" + Translation.translate("Mode: ") + Translation.translate("Silk Touch");
 		break;
 		case 2:
-			name += "\n3x3 Fortune III mode";
+			name += "\n" + Translation.translate("Mode: ") + "3x3 " + Translation.translate("Fortune III");
 		break;
 		case 3:
-			name += "\n3x3 Silk Touch mode";
+			name += "\n" + Translation.translate("Mode: ") + "3x3 " + Translation.translate("Silk Touch");
 		break;
 	}
 	
@@ -62,19 +64,19 @@ UIbuttons.registerSwitchFunction(ItemID.iridiumDrill, function(item){
 	switch(mode){
 	case 0:
 		//var enchant = {type: Enchantment.FORTUNE, level: 3};
-		Game.message("§eFortune III mode");
+		Game.message("§e" + Translation.translate("Mode: ") + Translation.translate("Fortune III"));
 	break;
 	case 1:
 		//var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
-		Game.message("§9Silk Touch mode");
+		Game.message("§9" + Translation.translate("Mode: ") + Translation.translate("Silk Touch"));
 	break;
 	case 2:
 		//var enchant = {type: Enchantment.FORTUNE, level: 3};
-		Game.message("§c3x3 Fortune III mode");
+		Game.message("§c" + Translation.translate("Mode: ") + "3x3 " + Translation.translate("Fortune III"));
 	break;
 	case 3:
 		//var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
-		Game.message("§23x3 Silk Touch mode");
+		Game.message("§2" + Translation.translate("Mode: ") + "3x3 " + Translation.translate("Silk Touch"));
 	break;
 	}
 	//extra.removeAllEnchants();
@@ -86,11 +88,13 @@ ToolType.drill = {
 	damage: 0,
 	blockTypes: ["stone", "dirt"],
 	onDestroy: function(item){
-		item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 1, Item.getMaxDamage(item.id));
+		ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
+		return true;
 	},
 	onBroke: function(item){return true;},
 	onAttack: function(item, mob){
-		item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 2, Item.getMaxDamage(item.id));
+		ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
+		return true;
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
 		if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
@@ -117,8 +121,6 @@ ToolType.drill = {
 	}
 }
 
-var extraData;
-var dirtBlocksDrop = {13:318, 60:3, 110:3, 198:3, 243:3};
 ToolAPI.setTool(ItemID.drill, {energyConsumption: 50, level: 3, efficiency: 8, damage: 3},  ToolType.drill);
 ToolAPI.setTool(ItemID.diamondDrill, {energyConsumption: 80, level: 4, efficiency: 16, damage: 4}, ToolType.drill);
 ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficiency: 24, damage: 5}, {
@@ -126,30 +128,27 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 	blockTypes: ["stone", "dirt"],
 
 	modifyEnchant: function(enchant, item){
-		var mode = 0;
-		var extra = item.extra || extraData;
-		if(extra){
-		mode = extra.getInt("mode");}
-		
+		var mode = item.extra? item.extra.getInt("mode") : 0;
 		if(mode%2){
 		enchant.silk = true;}
 		else{
 		enchant.fortune = 3;}
 	},
 	onDestroy: function(item){
-		item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 1, Item.getMaxDamage(item.id));
+		ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
+		return true;
 	},
 	onBroke: function(item){return true;},
 	onAttack: function(item, mob){
-		item.data = Math.min(item.data + this.toolMaterial.energyConsumption - 2, Item.getMaxDamage(item.id));
+		ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
+		return true;
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime){
 		if(item.data + 800 <= Item.getMaxDamage(item.id)){
-			extraData = item.extra;
-			var mode = extraData? extraData.getInt("mode") : 0;
+			var mode = item.extra? item.extra.getInt("mode") : 0;
 			var material = ToolAPI.getBlockMaterial(block.id) || {};
 			material = material.name;
-			if(mode > 1 && (material == "dirt" || material == "stone")){
+			if(mode >= 2 && (material == "dirt" || material == "stone")){
 				var side = coords.side;
 				var X = 1;
 				var Y = 1;
@@ -177,8 +176,10 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 		return params.base;
 	},
 	destroyBlock: function(coords, side, item, block){
-		var mode = extraData? extraData.getInt("mode") : 0;
-		if(mode >= 2 && item.data + 800 <= Item.getMaxDamage(item.id)){
+		var mode = item.extra? item.extra.getInt("mode") : 0;
+		var material = ToolAPI.getBlockMaterial(block.id) || {};
+		material = material.name;
+		if(mode >= 2 && (material == "dirt" || material == "stone") && item.data + 800 <= Item.getMaxDamage(item.id)){
 			var X = 1;
 			var Y = 1;
 			var Z = 1;
@@ -195,26 +196,21 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 						var material = ToolAPI.getBlockMaterial(blockID) || {};
 						if(material.name == "dirt" || material.name == "stone"){
 							item.data += 800;
-							if(mode == 3 || material == "stone"){
+							if(block.id == 60){
+								World.destroyBlock(xx, yy, zz, false);
+								World.drop(xx+0.5, yy+0.5, zz+0.5, 3, 1);
+							}
+							else{
 								World.destroyBlock(xx, yy, zz, true);
-							}else{
-								drop = dirtBlocksDrop[blockID];
-								if(drop){
-									World.destroyBlock(xx, yy, zz, false);
-									World.drop(xx+0.5, yy+0.5, zz+0.5, drop, 1);
-								}
-								else{World.destroyBlock(xx, yy, zz, true);}
 							}
 						}
 						if(item.data + 800 >= Item.getMaxDamage(item.id)){
-							Player.setCarriedItem(item.id, 1, item.data, extraData);
 							return;
 						}
 					}
 				}
 			}
 		}
-		Player.setCarriedItem(item.id, 1, item.data, extraData);
 	},
 	useItem: function(coords, item, block){
 		var side  = coords.side;

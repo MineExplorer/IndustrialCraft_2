@@ -1,10 +1,11 @@
 IDRegistry.genItemID("miningLaser");
 Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0});
-ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 3);
+ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 3, "tool");
 Item.setToolRender(ItemID.miningLaser, true);
 
+ItemName.setRarity(ItemID.miningLaser, 1);
 Item.registerNameOverrideFunction(ItemID.miningLaser, function(item, name){
-	name = NameOverrides.showItemStorage(item, name);
+	name = ItemName.showItemStorage(item, name);
 	var mode = item.extra? item.extra.getInt("mode") : 0;
 	name += "\n"+MiningLaser.getModeInfo(mode);
 	return name;
@@ -31,34 +32,33 @@ UIbuttons.registerSwitchFunction(ItemID.miningLaser, function(item){
 
 var MiningLaser = {
 	modes: {
-		0: {name: "Mining", energy: 1250, range: 64, power: 6},
+		0: {name: "Mining", energy: 1250, power: 6},
 		1: {name: "Low-Focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1},
-		2: {name: "Long-Range", energy: 5000, range: 64, power: 20},
-		3: {name: "Horizontal", energy: 1250, range: 64, power: 6},
-		4: {name: "Super-Heat", energy: 2500, range: 64, power: 8, smelt: true},
-		5: {name: "Scatter", energy: 10000, range: 64, power: 12, blockBreaks: 16},
-		6: {name: "3x3", energy: 10000, range: 32, power: 6}
+		2: {name: "Long-Range", energy: 5000, power: 20},
+		3: {name: "Horizontal", energy: 1250, power: 6},
+		4: {name: "Super-Heat", energy: 2500, power: 8, smelt: true},
+		5: {name: "Scatter", energy: 10000, power: 12, blockBreaks: 16},
+		6: {name: "3x3", energy: 10000, power: 6}
 	},
 	getModeData: function(n){
 		return this.modes[n];
 	},
 	getModeInfo: function(n){
 		var modeName = this.getModeData(n).name;
-		return Translation.translate("Mode: ")+Translation.translate(modeName);
+		return Translation.translate("Mode: ") + Translation.translate(modeName);
 	},
 	lasers: [],
 	shootLaser: function(pos, vel, mode){
 		var ent = Entity.spawn(pos.x, pos.y, pos.z, EntityType.ARROW);
 		Entity.setSkin(ent, "models/laser.png");
 		Entity.setVelocity(ent, vel.x, vel.y, vel.z);
-		this.lasers.push({ent: ent, start: pos, vel: vel, range: mode.range, power: mode.power, blockBreaks: mode.blockBreaks || 128, smelt: mode.smelt || false, dropChance: mode.dropChance || 0.9, hitblock: false});
+		this.lasers.push({ent: ent, start: pos, vel: vel, range: mode.range || 64, power: mode.power, blockBreaks: mode.blockBreaks || 128, smelt: mode.smelt || false, dropChance: mode.dropChance || 0.9, hitblock: false});
 	},
 	useItem: function(item){
 		var laserSetting = item.extra? item.extra.getInt("mode") : 0;
 		if(laserSetting == 3 || laserSetting == 6) return;
 		var mode = this.getModeData(laserSetting);
-		if(item.data + mode.energy <= Item.getMaxDamage(item.id)){
-			Player.setCarriedItem(item.id, 1, item.data + mode.energy, item.extra);
+		if(ICTool.useElectricItem(item, mode.energy)){
 			var pos = Player.getPosition();
 			var angle = Entity.getLookAngle(Player.get());
 			var dir = new Vector3(Entity.getLookVectorByAngle(angle));
@@ -90,8 +90,7 @@ var MiningLaser = {
 			return;
 		}
 		var mode = this.getModeData(laserSetting);
-		if(item.data + mode.energy <= Item.getMaxDamage(item.id)){
-			Player.setCarriedItem(item.id, 1, item.data + mode.energy, item.extra);
+		if(ICTool.useElectricItem(item, mode.energy)){
 			var pos = Player.getPosition();
 			var angle = Entity.getLookAngle(Player.get());
 			var dir = new Vector3(Entity.getLookVectorByAngle(angle));
@@ -135,25 +134,26 @@ var MiningLaser = {
 		}
 	},
 	destroyBlock: function(laser, x, y, z, block){
-		var material = (ToolAPI.getBlockMaterial(block.id) || {}).name;
-		if(material != "plant"){
-			laser.blockBreaks--;
-		}
 		var hardness = Block.getDestroyTime(block.id);
 		laser.power -= hardness / 1.5;
         if (laser.power < 0) {
             return;
         }
+        if(hardness > 0){
+        	laser.blockBreaks--;
+       }
+       var material = (ToolAPI.getBlockMaterial(block.id) || {}).name;
 		if(Math.random() < 0.5 && (material == "wood" || material == "plant" || material == "fibre" || material == "wool")){
 			World.setBlock(x, y, z, 51);
 		}else{
 			World.setBlock(x, y, z, 0);
 		}
-		var drop = getBlockDrop({x: x, y: y, z: z}, block.id, block.data, 100);
+		var drop = getBlockDrop({x: x, y: y, z: z}, block.id, block.data, 100, true);
 		if(drop)
 		for(var i in drop){
 			var item = drop[i];
 			if(laser.smelt && material == "stone"){
+				laser.power = 0;
 				var result = Recipes.getFurnaceRecipeResult(item[0]);
 				if(result){
 					item[0] = result.id;
@@ -176,9 +176,9 @@ var MiningLaser = {
 				i--;
 			}else{
 				if(laser.hitblock){
-					laser.power -= 0.25;
-				}else{
 					laser.hitblock = false;
+				}else{
+					laser.power -= 0.25;
 				}
 				var vel = laser.vel;
 				Entity.setVelocity(laser.ent, vel.x, vel.y, vel.z);
@@ -224,8 +224,8 @@ var MiningLaser = {
 					var damage = laser.power;
 					if(damage > 0){
 						if(laser.smelt) damage *= 2;
+						Entity.setFire(target.entity, 100, true);
 						Entity.damageEntity(target.entity, damage, 3, {attacker: Player.get()});
-						Entity.setFire(target.entity, 5, true);
 					}
 					Entity.remove(laser.ent);
 					this.lasers.splice(i, 1);

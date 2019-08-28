@@ -11,7 +11,7 @@ Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, le
 	return [];
 });
 
-NameOverrides.addStorageBlockTooltip("storageMFE", 3, "4M");
+ItemName.addStorageBlockTooltip("storageMFE", 3, "4M");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageMFE, count: 1, data: 0}, [

@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.inductionFurnace, [["machine_advanced", 0]
 TileRenderer.registerRotationModel(BlockID.inductionFurnace, 0, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.inductionFurnace, 4, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
 
-NameOverrides.addTierTooltip("inductionFurnace", 2);
+ItemName.addTierTooltip("inductionFurnace", 2);
 
 Block.registerDropFunction("inductionFurnace", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);

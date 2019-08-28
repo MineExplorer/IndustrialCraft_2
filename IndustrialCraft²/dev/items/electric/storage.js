@@ -1,27 +1,28 @@
 IDRegistry.genItemID("storageBattery");
 Item.createItem("storageBattery", "RE-Battery", {name: "re_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 1, true);
+ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 1, "storage");
 
 IDRegistry.genItemID("storageAdvBattery");
 Item.createItem("storageAdvBattery", "Advanced RE-Battery", {name: "adv_re_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 2, true);
+ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 2, "storage");
 
 IDRegistry.genItemID("storageCrystal");
 Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 3, true);
+ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 3, "storage");
 
 IDRegistry.genItemID("storageLapotronCrystal");
 Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 4, true);
+ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 4, "storage");
+ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");
 Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: !debugMode});
-ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, 0, true);
+ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, 0, "storage");
 
-Item.registerNameOverrideFunction(ItemID.storageBattery, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.storageAdvBattery, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.storageCrystal, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.storageLapotronCrystal, NameOverrides.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.storageBattery, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.storageAdvBattery, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.storageCrystal, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.storageLapotronCrystal, ItemName.showItemStorage);
 
 Item.registerIconOverrideFunction(ItemID.storageBattery, function(item, name){
 	var capacity = Item.getMaxDamage(item.id) - 1;

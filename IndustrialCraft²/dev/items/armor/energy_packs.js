@@ -8,15 +8,16 @@ Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"
 Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
 Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 10000000, texture: "armor/lappack_1.png", isTech: false});
 
-ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 1, true);
-ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 2, true);
-ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 3, true);
-ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 4, true);
+ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 1, "storage");
+ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 2, "storage");
+ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 3, "storage");
+ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 4, "storage");
+ItemName.setRarity(ItemID.lappack, 1);
 
-Item.registerNameOverrideFunction(ItemID.batpack, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.advBatpack, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.energypack, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.lappack, NameOverrides.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.batpack, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.advBatpack, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.energypack, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.lappack, ItemName.showItemStorage);
 
 Recipes.addShaped({id: ItemID.batpack, count: 1, data: Item.getMaxDamage(ItemID.batpack)}, [
     "bcb",
@@ -58,7 +59,7 @@ function registerStoragePack(id, level, tranfer){
 var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	if(World.getThreadTime()%20==0){
 		var item = Player.getCarriedItem();
-		if(!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)){
+		if(ChargeItemRegistry.isValidItem(item.id, "Eu", level, "tool")){
 			var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", maxDamage - slot.data, transfer*20, level);
 			if(energyAdd > 0){
 				slot.data += energyAdd;

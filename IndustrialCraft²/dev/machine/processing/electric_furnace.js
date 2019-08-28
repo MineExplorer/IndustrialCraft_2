@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.electricFurnace, [["machine_bottom", 0], [
 TileRenderer.registerRotationModel(BlockID.electricFurnace, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.electricFurnace, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]]);
 
-NameOverrides.addTierTooltip("electricFurnace", 1);
+ItemName.addTierTooltip("electricFurnace", 1);
 
 Block.registerDropFunction("electricFurnace", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.ironFurnace);

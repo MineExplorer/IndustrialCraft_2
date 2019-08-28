@@ -11,7 +11,7 @@ Block.registerDropFunction("storageCESU", function(coords, blockID, blockData, l
 	return [];
 });
 
-NameOverrides.addStorageBlockTooltip("storageCESU", 2, "300K");
+ItemName.addStorageBlockTooltip("storageCESU", 2, "300K");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.storageCESU, count: 1, data: 0}, [

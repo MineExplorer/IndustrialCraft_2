@@ -5,8 +5,8 @@ Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner", meta: 1}, {st
 ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 1);
 ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 2);
 
-Item.registerNameOverrideFunction(ItemID.scanner, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.scannerAdvanced, NameOverrides.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.scanner, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.scannerAdvanced, ItemName.showItemStorage);
 
 Recipes.addShaped({id: ItemID.scanner, count: 1, data: Item.getMaxDamage(ItemID.scanner)}, [
 	"gdg",

@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.compressor, [["machine_bottom", 0], ["mach
 TileRenderer.registerRotationModel(BlockID.compressor, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.compressor, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 1], ["machine_side", 0], ["machine_side", 0]]);
 
-NameOverrides.addTierTooltip("compressor", 1);
+ItemName.addTierTooltip("compressor", 1);
 
 Block.registerDropFunction("compressor", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
@@ -29,6 +29,14 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.coalBall": {id: ItemID.coalBlock, count: 1, data: 0},
 		"ItemID.coalChunk": {id: 264, count: 1, data: 0},
 		"ItemID.cellEmpty": {id: ItemID.cellAir, count: 1, data: 0},
+		// Dense Plates
+		"ItemID.densePlateIron": {id: ItemID.plateIron, count: 9},
+		"ItemID.densePlateGold": {id: ItemID.plateGold, count: 9},
+		"ItemID.densePlateTin": {id: ItemID.plateTin, count: 9},
+		"ItemID.densePlateCopper": {id: ItemID.plateCopper, count: 9},
+		"ItemID.densePlateBronze": {id: ItemID.plateBronze, count: 9},
+		"ItemID.densePlateSteel": {id: ItemID.plateSteel, count: 9},
+		"ItemID.densePlateLead": {id: ItemID.plateLead, count: 9},
 		
 		// Blocks
 		265: {id: 42, count: 1, data: 0, ingredientCount: 9},

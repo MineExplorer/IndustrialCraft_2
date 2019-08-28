@@ -2,7 +2,7 @@ IDRegistry.genBlockID("teslaCoil");
 Block.createBlock("teslaCoil", [
 	{name: "Tesla Coil", texture: [["tesla_coil", 0], ["tesla_coil", 0], ["tesla_coil", 1], ["tesla_coil", 1], ["tesla_coil", 1], ["tesla_coil", 1]], inCreative: true},
 ], "opaque");
-NameOverrides.addTierTooltip("teslaCoil", 3);
+ItemName.addTierTooltip("teslaCoil", 3);
 
 Block.registerDropFunction("teslaCoil", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);

@@ -1,19 +1,19 @@
 IDRegistry.genItemID("chargingBattery");
 Item.createItem("chargingBattery", "Charging RE-Battery", {name: "charging_re_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 1, true);
+ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 1, "storage");
 
 IDRegistry.genItemID("chargingAdvBattery");
 Item.createItem("chargingAdvBattery", "Advanced Charging Battery", {name: "adv_charging_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 2, true);
+ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 2, "storage");
 
 IDRegistry.genItemID("chargingCrystal");
 Item.createItem("chargingCrystal", "Charging Energy Crystal", {name: "charging_energy_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 3, true);
+ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 3, "storage");
 
 IDRegistry.genItemID("chargingLapotronCrystal");
 Item.createItem("chargingLapotronCrystal", "Charging Lapotron Crystal", {name: "charging_lapotron_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 4, true);
-
+ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 4, "storage");
+ItemName.setRarity(ItemID.chargingLapotronCrystal, 1);
 
 Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name){
 	var capacity = Item.getMaxDamage(item.id) - 1;
@@ -82,8 +82,8 @@ function registerChargingItem(nameId, tier){
 		if(mode == 2){
 			var tooltip = "Mode: Disabled";
 		}
-		tooltip = NameOverrides.getTooltip(name, tooltip);
-		name = NameOverrides.showItemStorage(item, name);
+		tooltip = ItemName.getTooltip(name, tooltip);
+		name = ItemName.showItemStorage(item, name);
 		return name + tooltip;
 	});
 }

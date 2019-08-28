@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ChargeItem",
-	version: 3,
+	version: 4,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -8,28 +8,41 @@ LIBRARY({
 var ChargeItemRegistry = {
 	chargeData: {},
 	
-	registerItem: function(item, energyType, capacity, level, isEnergyStorage){
+	registerItem: function(item, energyType, capacity, level, prefix){
+		if(prefix === true) prefix = "storage"; // deprecated
 		Item.setMaxDamage(item, capacity + 1);
 		this.chargeData[item] = {
 			type: "normal",
+			prefix: prefix,
 			energy: energyType,
 			id: item,
 			level: level || 0,
 			maxCharge: capacity,
-			maxDamage: capacity + 1,
-			isEnergyStorage: isEnergyStorage
+			maxDamage: capacity + 1
 		};
 	},
 	
 	registerFlashItem: function(item, energyType, amount, level){
 		this.chargeData[item] = {
 			type: "flash",
+			prefix: "storage",
 			id: item,
 			level: level || 0,
 			energy: energyType,
-			amount: amount,
-			isEnergyStorage: true
+			amount: amount
 		};
+	},
+	
+	registerExtraItem: function(item, energyType, capacity, level, prefix){
+		this.chargeData[item] = {
+			type: "extra",
+			prefix: prefix,
+			energy: energyType,
+			id: item,
+			level: level || 0,
+			maxCharge: capacity,
+			extra: energyType
+		}
 	},
 	
 	registerChargeFunction: function(id, func){
@@ -49,19 +62,25 @@ var ChargeItemRegistry = {
 		return (data && data.type == "flash");
 	},
 	
-	isValidItem: function(id, energyType, level){
+	isValidItem: function(id, energyType, level, prefix){
 		var data = this.getItemData(id);
-		return (data && data.type == "normal" && data.energy == energyType && data.level <= level);
+		return (data && data.type != "flash" && (!prefix || data.prefix == prefix) && data.energy == energyType && data.level <= level);
 	},
 	
 	isValidStorage: function(id, energyType, level){
 		var data = this.getItemData(id);
-		return (data && data.isEnergyStorage && data.energy == energyType && data.level <= level);
+		return (data && data.prefix == "storage" && data.energy == energyType && data.level <= level);
 	},
 	
 	getEnergyStored: function(item, energyType){
 		var data = this.getItemData(item.id);
 		if(!data || energyType && data.energy != energyType){
+			return 0;
+		}
+		if(data.type == "extra"){
+			if(item.extra){
+				return item.extra.getInt(data.extra);
+			}
 			return 0;
 		}
 		return Math.min(data.maxDamage - item.data, data.maxCharge);
@@ -70,7 +89,7 @@ var ChargeItemRegistry = {
 	getEnergyFrom: function(item, energyType, amount, transf, level, getFromAll){
 		level = level || 0;
 		var data = this.getItemData(item.id);
-		if(!data || data.energy != energyType || data.level > level || !getFromAll && !data.isEnergyStorage){
+		if(!data || data.energy != energyType || data.level > level || !(getFromAll || data.prefix == "storage")){
 			return 0;
 		}
 		if(data.type == "flash"){
@@ -87,7 +106,7 @@ var ChargeItemRegistry = {
 		if(data.dischargeFunction){
 			return data.dischargeFunction(item, amount, transf, level);
 		}
-		else{
+		if(data.type != "extra"){
 			if(item.data < 1){
 				item.data = 1;
 			}
@@ -96,6 +115,13 @@ var ChargeItemRegistry = {
 			item.data += energyGot;
 			return energyGot;
 		}
+		if(item.extra){
+			var energyStored = item.extra.getInt(data.extra);
+			var energyGot = Math.min(amount, Math.min(energyStored, transf));
+			item.extra.putInt(data.extra, energyStored - energyGot);
+			return energyGot;
+		}
+		return 0;
 	},
 	
 	addEnergyTo: function(item, energyType, amount, transf, level){
@@ -108,11 +134,18 @@ var ChargeItemRegistry = {
 		if(data.chargeFunction){
 			return data.chargeFunction(item, amount, transf, level);
 		}
-		else{
+		if(data.type != "extra"){
 			var energyAdd = Math.min(amount, Math.min(item.data - 1, transf));
 			item.data -= energyAdd;
 			return energyAdd;
 		}
+		if(!item.extra){
+			item.extra = new ItemExtraData();
+		}
+		var energyStored = item.extra.getInt(data.extra);
+		var energyAdd = Math.min(amount, Math.min(data.maxCharge - energyStored, transf));
+		item.extra.putInt(data.extra, energyStored + energyAdd);
+		return energyAdd;
 	},
 	
 	transportEnergy: function(api, field, result){
@@ -120,7 +153,7 @@ var ChargeItemRegistry = {
 		var amount = 0;
 		for(var i in field){
 			if(!ChargeItemRegistry.isFlashStorage(field[i].id)){
-				amount += ChargeItemRegistry.getEnergyFrom(field[i], data.energy, data.maxCharge, data.maxCharge, 100, true);
+				amount += ChargeItemRegistry.getEnergyStored(field[i], data.energy);
 			}
 			api.decreaseFieldSlot(i);
 		}

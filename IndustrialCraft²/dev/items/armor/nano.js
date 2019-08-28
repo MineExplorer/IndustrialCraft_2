@@ -13,10 +13,15 @@ ChargeItemRegistry.registerItem(ItemID.nanoChestplate, "Eu", 1000000, 3);
 ChargeItemRegistry.registerItem(ItemID.nanoLeggings, "Eu", 1000000, 3);
 ChargeItemRegistry.registerItem(ItemID.nanoBoots, "Eu", 1000000, 3);
 
-Item.registerNameOverrideFunction(ItemID.nanoHelmet, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.nanoChestplate, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.nanoLeggings, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.nanoBoots, NameOverrides.showItemStorage);
+ItemName.setRarity(ItemID.nanoHelmet, 1);
+ItemName.setRarity(ItemID.nanoChestplate, 1);
+ItemName.setRarity(ItemID.nanoLeggings, 1);
+ItemName.setRarity(ItemID.nanoBoots, 1);
+
+Item.registerNameOverrideFunction(ItemID.nanoHelmet, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.nanoChestplate, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.nanoLeggings, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.nanoBoots, ItemName.showItemStorage);
 
 IDRegistry.genItemID("nanoHelmetUncharged");
 IDRegistry.genItemID("nanoChestplateUncharged");
@@ -33,10 +38,15 @@ ChargeItemRegistry.registerItem(ItemID.nanoChestplateUncharged, "Eu", 1000000, 3
 ChargeItemRegistry.registerItem(ItemID.nanoLeggingsUncharged, "Eu", 1000000, 3);
 ChargeItemRegistry.registerItem(ItemID.nanoBootsUncharged, "Eu", 1000000, 3);
 
-Item.registerNameOverrideFunction(ItemID.nanoHelmetUncharged, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.nanoChestplateUncharged, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.nanoLeggingsUncharged, NameOverrides.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.nanoBootsUncharged, NameOverrides.showItemStorage);
+ItemName.setRarity(ItemID.nanoHelmetUncharged, 1);
+ItemName.setRarity(ItemID.nanoChestplateUncharged, 1);
+ItemName.setRarity(ItemID.nanoLeggingsUncharged, 1);
+ItemName.setRarity(ItemID.nanoBootsUncharged, 1);
+
+Item.registerNameOverrideFunction(ItemID.nanoHelmetUncharged, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.nanoChestplateUncharged, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.nanoLeggingsUncharged, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.nanoBootsUncharged, ItemName.showItemStorage);
 
 Recipes.addShaped({id: ItemID.nanoHelmet, count: 1, data: Item.getMaxDamage(ItemID.nanoHelmet)}, [
 	"x#x",

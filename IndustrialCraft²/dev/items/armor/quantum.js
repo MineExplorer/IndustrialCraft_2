@@ -13,10 +13,15 @@ ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 4);
 ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 4);
 ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 4);
 
-Item.registerNameOverrideFunction(ItemID.quantumHelmet, NameOverrides.showRareItemStorage);
-Item.registerNameOverrideFunction(ItemID.quantumChestplate, NameOverrides.showRareItemStorage);
-Item.registerNameOverrideFunction(ItemID.quantumLeggings, NameOverrides.showRareItemStorage);
-Item.registerNameOverrideFunction(ItemID.quantumBoots, NameOverrides.showRareItemStorage);
+ItemName.setRarity(ItemID.quantumHelmet, 2);
+ItemName.setRarity(ItemID.quantumChestplate, 2);
+ItemName.setRarity(ItemID.quantumLeggings, 2);
+ItemName.setRarity(ItemID.quantumBoots, 2);
+
+Item.registerNameOverrideFunction(ItemID.quantumHelmet, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumChestplate, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumLeggings, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumBoots, ItemName.showItemStorage);
 
 IDRegistry.genItemID("quantumHelmetUncharged");
 IDRegistry.genItemID("quantumChestplateUncharged");
@@ -33,10 +38,15 @@ ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 4);
 ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 4);
 ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 4);
 
-Item.registerNameOverrideFunction(ItemID.quantumHelmetUncharged, NameOverrides.showRareItemStorage);
-Item.registerNameOverrideFunction(ItemID.quantumChestplateUncharged, NameOverrides.showRareItemStorage);
-Item.registerNameOverrideFunction(ItemID.quantumLeggingsUncharged, NameOverrides.showRareItemStorage);
-Item.registerNameOverrideFunction(ItemID.quantumBootsUncharged, NameOverrides.showRareItemStorage);
+ItemName.setRarity(ItemID.quantumHelmetUncharged, 2);
+ItemName.setRarity(ItemID.quantumChestplateUncharged, 2);
+ItemName.setRarity(ItemID.quantumLeggingsUncharged, 2);
+ItemName.setRarity(ItemID.quantumBootsUncharged, 2);
+
+Item.registerNameOverrideFunction(ItemID.quantumHelmetUncharged, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumChestplateUncharged, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumLeggingsUncharged, ItemName.showItemStorage);
+Item.registerNameOverrideFunction(ItemID.quantumBootsUncharged, ItemName.showItemStorage);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.quantumHelmet, count: 1, data: Item.getMaxDamage(ItemID.quantumHelmet)}, [

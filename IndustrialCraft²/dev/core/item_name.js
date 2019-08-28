@@ -2,17 +2,34 @@ var RARE_ITEM_NAME = function(item, name){
 	return "§b" + name;
 }
 
-NameOverrides = {
+ItemName = {
+	itemRarity: {},
+	
+	setRarity: function(id, lvl){
+		this.itemRarity[id] = lvl;
+	},
+	
+	getRarity: function(id){
+		return this.itemRarity[id] || 0;
+	},
+	
+	getRarityCode: function(lvl){
+		if(lvl == 1) return "§e";
+		if(lvl == 2) return "§b";
+		if(lvl == 3) return "§d";
+		return "";
+	},
+	
 	addTierTooltip: function(id, tier){
 		Item.registerNameOverrideFunction(BlockID[id], function(item, name){
 			var tooltip = Translation.translate("Power Tier: ") + tier;
-			return name + "§7" + NameOverrides.getTooltip(name, tooltip);
+			return name + "§7" + ItemName.getTooltip(name, tooltip);
 		});
 	},
 	
 	addStorageBlockTooltip: function(id, tier, capacity){
 		Item.registerNameOverrideFunction(BlockID[id], function(item, name){
-			return NameOverrides.showBlockStorage(name, tier, capacity);
+			return ItemName.showBlockStorage(name, tier, capacity);
 		});
 	},
 	
@@ -46,24 +63,22 @@ NameOverrides = {
 	getItemStorageText: function(item, name){
 		var capacity = Item.getMaxDamage(item.id) - 1;
 		var energy = ChargeItemRegistry.getEnergyStored(item);
-		var tooltip = "§7" + NameOverrides.displayEnergy(energy) + "/" + NameOverrides.displayEnergy(capacity) + " EU";
-		return NameOverrides.getTooltip(name, tooltip);
+		var tooltip = "§7" + this.displayEnergy(energy) + "/" + this.displayEnergy(capacity) + " EU";
+		return this.getTooltip(name, tooltip);
 	},
 	
 	showItemStorage: function(item, name){
-		var tooltip = NameOverrides.getItemStorageText(item, name);
+		var tooltip = ItemName.getItemStorageText(item, name);
+		var rarity = ItemName.getRarity(item.id);
+		if(rarity > 0 && ChargeItemRegistry.getEnergyStored(item) > 0){
+			name = ItemName.getRarityCode(rarity) + name;
+		}
 		return name + tooltip;
 	},
 	
 	showRareItemStorage: function(item, name){
-		var capacity = Item.getMaxDamage(item.id) - 1;
-		var energy = ChargeItemRegistry.getEnergyStored(item);
-		var tooltip = "§7" + NameOverrides.displayEnergy(energy) + "/" + NameOverrides.displayEnergy(capacity) + " EU"
-		tooltip = NameOverrides.getTooltip(name, tooltip);
-		if(energy > 0){
-			name = "§b" + name;
-		}
-		return name + tooltip;
+		ItemName.setRarity(item.id, 2);
+		return ItemName.showItemStorage(item, name);
 	},
 	
 	displayEnergy: function(energy){

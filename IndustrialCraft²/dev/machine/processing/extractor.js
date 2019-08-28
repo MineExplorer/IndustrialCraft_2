@@ -6,7 +6,7 @@ TileRenderer.setStandartModel(BlockID.extractor, [["machine_bottom", 0], ["machi
 TileRenderer.registerRotationModel(BlockID.extractor, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.extractor, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 1], ["extractor_side", 1], ["extractor_side", 1]]);
 
-NameOverrides.addTierTooltip("extractor", 1);
+ItemName.addTierTooltip("extractor", 1);
 
 Block.registerDropFunction("extractor", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);

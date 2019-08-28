@@ -51,7 +51,7 @@ var ICTool = {
 		}
 		if(item.data + consume <= Item.getMaxDamage(item.id)){
 			if(energy > 0){
-				Player.setArmorSlot(armor.id, 1, armor.data, armor.extra);
+				Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 			}
 			item.data += consume;
 			return true;

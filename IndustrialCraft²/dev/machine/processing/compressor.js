@@ -123,18 +123,16 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 		this.setDefaultValues();
 		UpgradeAPI.executeUpgrades(this);
 		
+		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = MachineRecipeRegistry.getRecipeResult("compressor", sourceSlot.id, sourceSlot.data);
 		if(result && (sourceSlot.count >= result.ingredientCount || !result.ingredientCount)){
 			var resultSlot = this.container.getSlot("slotResult");
-			if(resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= Item.getMaxStack(result.id) - result.count || resultSlot.id == 0){
+			if(resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0){
 				if(this.data.energy >= this.data.energy_consumption){
 					this.data.energy -= this.data.energy_consumption;
 					this.data.progress += 1/this.data.work_time;
-					this.activate();
-				}
-				else{
-					this.deactivate();
+					newActive = true;
 				}
 				if(this.data.progress.toFixed(3) >= 1){
 					sourceSlot.count -= result.ingredientCount || 1;
@@ -144,14 +142,12 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 					this.container.validateAll();
 					this.data.progress = 0;
 				}
-			}else{
-				this.deactivate();
 			}
 		}
 		else {
 			this.data.progress = 0;
-			this.deactivate();
 		}
+		this.setActive(newActive);
 		
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
@@ -166,7 +162,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 		return this.data.energy_storage;
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 

@@ -106,7 +106,9 @@ MachineRegistry.registerEUStorage(BlockID.storageBatBox, {
 		nativeDropItem(coords.x, coords.y, coords.z, 0, BlockID.storageBatBox, 1, 0, extra);
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: function(){
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta);
+	},
 	destroy: function(){
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	}

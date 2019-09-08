@@ -38,7 +38,7 @@ var guiMFSU = new UI.StandartWindow({
 		"slot1": {type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem},
 		"slot2": {type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage},
 		"textInfo1": {type: "text", x: 642, y: 142, width: 350, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "40000000"}
+		"textInfo2": {type: "text", x: 642, y: 172, width: 350, height: 30, text: "60000000"}
 	}
 });
 
@@ -106,7 +106,9 @@ MachineRegistry.registerEUStorage(BlockID.storageMFSU, {
 		}
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: function(){
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta);
+	},
 	destroy: function(){
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	}

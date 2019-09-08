@@ -66,7 +66,7 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 
 	init: function(){
 		this.liquidStorage.setLimit(null, 1);
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + 6*this.data.inverted);
+		this.renderModel();
 	},
 
 	tick: function(){
@@ -99,16 +99,16 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 		
 		liquidStor.updateUiScale("liquidScale", liquid);
 	},
-
+	
 	wrenchClick: function(id, count, data, coords){
-		if(Entity.getSneaking(player)){
-			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
-		}else{
-			this.data.meta = coords.side;
-		}
+		this.setFacing(coords);
+	},
+	
+	setFacing: MachineRegistry.setFacing,
+	
+	renderModel: function(){
 		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + 6*this.data.inverted);
 	},
-
 	destroy: function(){
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	},

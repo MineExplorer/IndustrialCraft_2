@@ -4,6 +4,8 @@ ModAPI.registerAPI("ICore", {
 	Render: TileRenderer,
 	ChargeRegistry: ChargeItemRegistry,
 	Upgrade: UpgradeAPI,
+	Reactor: ReactorAPI,
+	Radiation: RadiationAPI,
 	Tool: ICTool,
 	ItemName: ItemName,
 	UI: UIbuttons,

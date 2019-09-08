@@ -42,17 +42,17 @@ Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 1, data: 0}, [
 		"aaa",
 		"x#x",
-	], ['#', ItemID.circuitBasic, -1, 'x', ItemID.cableCopper1, -1, 'a', ItemID.coolantCell, 0]);
+	], ['#', ItemID.circuitBasic, -1, 'x', ItemID.cableCopper1, -1, 'a', ItemID.coolantCell, 1]);
 
 	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 3, data: 0}, [
 		"aaa",
 		"x#x",
-	], ['#', ItemID.circuitBasic, -1, 'x', ItemID.cableCopper1, -1, 'a', ItemID.coolantCell3, 0]);
+	], ['#', ItemID.circuitBasic, -1, 'x', ItemID.cableCopper1, -1, 'a', ItemID.coolantCell3, 1]);
 	
 	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 6, data: 0}, [
 		"aaa",
 		"x#x",
-	], ['#', ItemID.circuitBasic, -1, 'x', ItemID.cableCopper1, -1, 'a', ItemID.coolantCell6, 0]);
+	], ['#', ItemID.circuitBasic, -1, 'x', ItemID.cableCopper1, -1, 'a', ItemID.coolantCell6, 1]);
 	
 	Recipes.addShaped({id: ItemID.upgradeTransformer, count: 1, data: 0}, [
 		"aaa",

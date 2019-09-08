@@ -7,7 +7,7 @@ Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: Item.getMaxDam
 	"xbx",
 	"aga",
 	"rcr"
-], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'x', ItemID.heatExchangerAdv, 0, 'g', 20, 0,'r', ItemID.rubber, 0], ChargeItemRegistry.transportEnergy);
+], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'x', ItemID.heatExchangerAdv, 1, 'g', 20, 0,'r', ItemID.rubber, 0], ChargeItemRegistry.transportEnergy);
 
 UIbuttons.setArmorButton(ItemID.nightvisionGoggles, "button_nightvision");
 

@@ -19,6 +19,11 @@ Callback.addCallback("PreLoaded", function(){
 
 
 MachineRegistry.registerPrototype(BlockID.teleporter, {
+	defaultValues: {
+		isActive: false,
+		frequency: null
+	},
+	
 	getNearestStorages: function(x, y, z){
 		var directions = StorageInterface.directionsBySide;
 		var storages = [];
@@ -81,16 +86,8 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 	
 	redstone: function(signal){
 		this.data.isActive = signal.power > 0;
-		if(this.data.isActive){
-			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, 0);
-		}
-		else{
-			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-		}
+		this.renderModel();
 	},
 	
-	init: function(){
-		if(this.data.isActive){
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, 0);}
-	},
+	renderModel: MachineRegistry.renderModel
 });

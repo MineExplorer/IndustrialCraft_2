@@ -89,13 +89,10 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 	},
 	
 	wrenchClick: function(id, count, data, coords){
-		if(Entity.getSneaking(player)){
-			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
-		}else{
-			this.data.meta = coords.side;
-		}
-		this.initModel();
+		this.setFacing(coords);
 	},
+	
+	setFacing: MachineRegistry.setFacing,
 	
 	calcOutput:function(){
 		var maxOutput = 0;
@@ -114,7 +111,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		if(this.data.energy >= 1){
 			var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
 			var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-			if(TE && TE.heatReceiveFunction && this.data.meta == TE.data.meta + (TE.data.meta%2)*(-2) + 1){
+			if(TE && TE.heatReceiveFunction && this.data.meta == TE.data.meta + Math.pow(-1, TE.data.meta)){
 				output = TE.heatReceiveFunction(Math.min(maxOutput, parseInt(this.data.energy)*2));
 				if(output > 0){
 					this.activate();
@@ -139,9 +136,8 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		return 2000;
 	},
 	
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc,
-	
-	hasFullRotation: true,
+	renderModel: MachineRegistry.renderModelWith6Sides,
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.electricHeatGenerator, true);

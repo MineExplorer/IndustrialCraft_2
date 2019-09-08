@@ -102,7 +102,6 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", this.data.energy + "/");
-		this.container.setText("textInfo2", energyStorage + "");
 	},
 	
 	getEnergyStorage: function(){
@@ -114,7 +113,7 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 		this.data.energy += src.add(output) - output;
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.primalGenerator);

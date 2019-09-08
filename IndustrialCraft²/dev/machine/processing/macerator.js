@@ -144,6 +144,7 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 		this.setDefaultValues();
 		UpgradeAPI.executeUpgrades(this);
 		
+		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
 		var result = MachineRecipeRegistry.getRecipeResult("macerator", sourceSlot.id, sourceSlot.data);
@@ -151,10 +152,7 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 			if(this.data.energy >= this.data.energy_consumption){
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
-				this.activate();
-			}
-			else{
-				this.deactivate();
+				newActive = true;
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
@@ -167,8 +165,8 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 		}
 		else {
 			this.data.progress = 0;
-			this.deactivate();
 		}
+		this.setActive(newActive);
 		
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
@@ -183,7 +181,7 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 		return this.data.energy_storage;
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 

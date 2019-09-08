@@ -64,15 +64,16 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 		return {input: ["slot1"], output: ["slot2"]};
 	},
 	
-	updateMachine: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	
 	init: function(){
 		this.liquidStorage.setLimit("lava", 8);
-		this.updateMachine();
+		this.renderModel();
 	},
 	
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
+		var newActive = false;
 		var slot1 = this.container.getSlot("slot1");
 		var slot2 = this.container.getSlot("slot2");
 		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
@@ -90,14 +91,10 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 			if(this.data.energy <= energyStorage - 20){
 				this.data.energy += 20;
 				this.liquidStorage.getLiquid("lava", 0.001);
-				this.activate();
-			}else{
-				this.deactivate();
+				newActive = true;
 			}
 		}
-		else{
-			this.deactivate();
-		}
+		this.setActive(newActive);
 		
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);
 		
@@ -113,7 +110,7 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 	energyTick: function(type, src){
 		var output = Math.min(32, this.data.energy);
 		this.data.energy += src.add(output) - output;
-	},
+	}
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.geothermalGenerator);

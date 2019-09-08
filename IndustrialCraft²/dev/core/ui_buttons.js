@@ -36,8 +36,8 @@ var UIbuttons = {
 		}
 	},
 	
-	setToolButton: function(id, name){
-		var data = {type: 1, name: name};
+	setToolButton: function(id, name, notHidden){
+		var data = {type: 1, name: name, hidden: !notHidden};
 		if(!this.data[id]){
 			this.data[id] = [data]
 		}else{
@@ -215,7 +215,7 @@ Callback.addCallback("tick", function(){
 	var buttons = UIbuttons.getButtons(item.id);
 	for(var i in buttons){
 		var button = buttons[i];
-		if(button.type == 1){
+		if(button.type == 1 && (!button.hidden || Entity.getSneaking(Player.get()))){
 			buttonMap[button.name] = true;
 			UIbuttons.isEnabled = true;
 		}

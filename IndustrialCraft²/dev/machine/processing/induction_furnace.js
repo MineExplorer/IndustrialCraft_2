@@ -109,16 +109,14 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		this.setDefaultValues();
 		UpgradeAPI.executeUpgrades(this);
 		
+		var newActive = false;
 		var result = this.getResult();
 		if(result){
 			if(this.data.energy > 15 && this.data.progress < 1){
 				this.data.energy -= 16;
 				if(this.data.heat < 5000){this.data.heat++;}
 				this.data.progress += this.data.heat/60000;
-				this.activate();
-			}
-			else{
-				this.deactivate();
+				newActive = true;
 			}
 			if(this.data.progress >= 1){
 				var put1 = this.putResult(result[0], this.container.getSlot("slotSource1"), this.container.getSlot("slotResult1"));
@@ -131,7 +129,6 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		}
 		else {
 			this.data.progress = 0;
-			this.deactivate();
 			if(this.data.isHeating && this.data.energy > 0){
 				if(this.data.heat < 5000){this.data.heat++;}
 				this.data.energy--;
@@ -140,6 +137,7 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 				this.data.heat--;
 			}
 		}
+		this.setActive(newActive);
 		
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
@@ -159,7 +157,7 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		return this.data.energy_storage;
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 

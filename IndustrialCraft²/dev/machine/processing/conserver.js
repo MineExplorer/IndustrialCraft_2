@@ -21,8 +21,8 @@ Callback.addCallback("PreLoaded", function(){
 	
 	
 	MachineRecipeRegistry.registerRecipesFor("canner", {
-		//"ItemID.uranium": {storage: [ItemID.fuelRod, 1], result: [ItemID.fuelRodUranium, 1, 0]},
-		//"ItemID.mox": {storage: [ItemID.fuelRod, 1], result: [ItemID.fuelRodMOX, 1, 0]},
+		"ItemID.uranium": {storage: [ItemID.fuelRod, 1], result: [ItemID.fuelRodUranium, 1, 0]},
+		"ItemID.mox": {storage: [ItemID.fuelRod, 1], result: [ItemID.fuelRodMOX, 1, 0]},
 		354: {storage: [ItemID.tinCanEmpty, 14], result: [ItemID.tinCanFull, 14, 0]},
 		413: {storage: [ItemID.tinCanEmpty, 10], result: [ItemID.tinCanFull, 10, 0]},
 		320: {storage: [ItemID.tinCanEmpty, 8], result: [ItemID.tinCanFull, 8, 0]},
@@ -128,15 +128,13 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 		var resultSlot = this.container.getSlot("slotResult");
 		var canSlot = this.container.getSlot("slotCan");
 		
+		var newActive = false;
 		var recipe = MachineRecipeRegistry.getRecipeResult("canner", sourceSlot.id);
 		if(recipe && canSlot.id == recipe.storage[0] && canSlot.count >= recipe.storage[1] && (resultSlot.id == recipe.result[0] && resultSlot.data == recipe.result[2] && resultSlot.count <= 64 - recipe.result[1] || resultSlot.id == 0)){
 			if(this.data.energy >= this.data.energy_consumption){
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
-				this.activate();
-			}
-			else{
-				this.deactivate();
+				newActive = true;
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
@@ -150,8 +148,8 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 		}
 		else {
 			this.data.progress = 0;
-			this.deactivate();
 		}
+		this.setActive(newActive);
 		
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
@@ -166,7 +164,7 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 		return this.data.energy_storage;
 	},
 
-	init: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 

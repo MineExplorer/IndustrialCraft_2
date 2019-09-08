@@ -5,7 +5,7 @@ var DIRT_TILES = {
 };
 
 IDRegistry.genItemID("rubberSapling");
-Item.createItem("rubberSapling", "Rubber Tree Sapling", {name: "rubber_sapling", data: 0});
+Item.createItem("rubberSapling", "Rubber Tree Sapling", {name: "rubber_tree_sapling", data: 0});
 
 Item.registerUseFunction("rubberSapling", function(coords, item, tile){
 	var place = coords.relative;
@@ -21,7 +21,7 @@ Item.registerUseFunction("rubberSapling", function(coords, item, tile){
 
 IDRegistry.genBlockID("rubberTreeSapling");
 Block.createBlock("rubberTreeSapling", [
-	{name: "Rubber Tree Sapling", texture: [["rubber_sapling", 0]], inCreative: false}
+	{name: "Rubber Tree Sapling", texture: [["rubber_tree_sapling", 0]], inCreative: false}
 ]);
 
 TileRenderer.setPlantModel(BlockID.rubberTreeSapling);
@@ -41,11 +41,12 @@ Block.setRandomTickCallback(BlockID.rubberTreeSapling, function(x, y, z){
 // bone use
 Callback.addCallback("ItemUse", function(coords, item, block){
 	if(item.id == 351 && item.data == 15 && block.id == BlockID.rubberTreeSapling){
+		Player.setCarriedItem(item.id, item.count - 1, item.data);
 		for(var i = 0; i < 16; i++){
 			var px = coords.x + Math.random();
 			var pz = coords.z + Math.random();
 			var py = coords.y + Math.random(); 
-			Particles.addFarParticle(Native.ParticleType.happyVillager, px, py, pz, 0, 0, 0);
+			Particles.addFarParticle(ParticleType.happyVillager, px, py, pz, 0, 0, 0);
 		}
 		if(Math.random() < 0.25){
 			RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y, coords.z);

@@ -1,0 +1,402 @@
+IDRegistry.genBlockID("nuclearReactor");
+Block.createBlock("nuclearReactor", [
+	{name: "Nuclear Reactor", texture: [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]], inCreative: true},
+], "opaque");
+TileRenderer.setStandartModel(BlockID.nuclearReactor, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1]]);
+
+IDRegistry.genBlockID("reactorChamber");
+Block.createBlock("reactorChamber", [
+	{name: "Reactor Chamber", texture: [["machine_bottom", 0], ["machine_top", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0]], inCreative: true},
+], "opaque");
+
+Block.registerDropFunction("nuclearReactor", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
+});
+
+Block.registerDropFunction("reactorChamber", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.nuclearReactor, count: 1, data: 0}, [
+		"xcx",
+		"aaa",
+		"x#x"
+	], ['#', BlockID.primalGenerator, 0, 'a', BlockID.reactorChamber, 0, 'x', ItemID.densePlateLead, 0, 'c', ItemID.circuitAdvanced, 0]);
+	
+	Recipes.addShaped({id: BlockID.reactorChamber, count: 1, data: 0}, [
+		" x ",
+		"x#x",
+		" x "
+	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.plateLead, 0]);
+});
+
+function checkReactorSlot(i, id, count, data, container){
+	let slot = container.getSlot("slot"+i);
+	if(ReactorAPI.isReactorItem(id) && slot.id == 0){
+		if(Item.getMaxStack(id) == 1) return true;
+		for(let i = 9; i < 46; i++){
+			let invSlot = Player.getInventorySlot(i);
+			if(invSlot.id == id && invSlot.count == count && invSlot.data == data){
+				Player.setInventorySlot(i, --count ? id : 0, count, 0);
+				break;
+			}
+		}
+		slot.id = id;
+		slot.count = 1;
+		slot.data = data;
+	}
+	return false;
+}
+
+let reactorElements = {
+	"heatScale": {type: "scale", x: 340 + GUI_SCALE*2, y: 420 + GUI_SCALE*2, direction: 0, value: 0.5, bitmap: "reactor_heat_scale", scale: GUI_SCALE},
+	"textInfo": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 675 + GUI_SCALE*2, y: 432, width: 256, height: 42, text: Translation.translate("Generating: ")},
+}
+
+for(let y = 0; y < 6; y++){
+	for(let x = 0; x < 9; x++){
+		let i = y*9+x;
+		reactorElements["slot"+i] = {type: "slot", x: 400 + 59 * x, y: 50 + 59 * y, isValid: function(id, count, data, container){
+			return checkReactorSlot(i, id, count, data, container);
+		}}
+	}
+}
+
+let guiNuclearReactor = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Nuclear Reactor")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 340, y: 420, bitmap: "reactor_info", scale: GUI_SCALE},
+	],
+	
+	elements: reactorElements
+});
+
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiNuclearReactor, "Nuclear Reactor");
+});
+
+let EUReactorModifier = 5;
+
+MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
+	defaultValues: {
+		isEnabled: false,
+		isActive: false,
+		heat: 0,
+		maxHeat: 10000,
+		hem: 1,
+		output: 0,
+	},
+	
+	chambers: [],
+	
+	tnt: [],
+	
+	getGuiScreen: function(){
+		return guiNuclearReactor;
+	},
+	
+	init: function(){
+		this.chambers = [];
+		this.tnt = [];
+		this.renderModel();
+		this.rebuildEnergyNet();
+	},
+	
+	rebuildEnergyNet: function(){
+		let net = EnergyNetBuilder.buildForTile(this, EU);
+		this.__energyNets.Eu = net;
+		for (let i = 0; i < 6; i++) {
+			let c = EnergyNetBuilder.getRelativeCoords(this.x, this.y, this.z, i);
+			if(World.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber){
+				let tileEnt = World.getTileEntity(c.x, c.y, c.z);
+				if(tileEnt){
+					this.addChamber(tileEnt);
+				}
+			}
+		}
+	},
+	
+	addChamber: function(chamber){
+		if(this.chambers.indexOf(chamber) == -1){
+			this.chambers.push(chamber);
+			chamber.core = this;
+			chamber.container = this.container;
+			chamber.data.x = this.x;
+			chamber.data.y = this.y;
+			chamber.data.z = this.z;
+		}
+		let net = this.__energyNets.Eu;
+		let chamberNets = chamber.__energyNets;
+		if(chamberNets.Eu){
+			if(chamberNets.Eu != net){
+			EnergyNetBuilder.mergeNets(net, chamberNets.Eu);}
+		} else {
+			for (let side = 0; side < 6; side++) {
+				let c = EnergyNetBuilder.getRelativeCoords(chamber.x, chamber.y, chamber.z, side);
+				EnergyNetBuilder.buildTileNet(net, c.x, c.y, c.z, side + Math.pow(-1, side));
+			}
+		}
+		chamberNets.Eu = net;
+	},
+	
+	removeChamber: function(chamber){
+		this.chambers.splice(this.chambers.indexOf(chamber), 1);
+		this.rebuildEnergyNet();
+		let x = this.getReactorSize();
+		for(let y = 0; y < 6; y++){
+			let slot = this.container.getSlot("slot"+(y*9+x));
+			if(slot.id > 0){
+				World.drop(chamber.x+.5, chamber.y+.5, chamber.z+.5, slot.id, slot.count, slot.data);
+				slot.id = slot.count = slot.data = 0;
+			}
+		}
+	},
+	
+	getReactorSize: function(){
+		return 3 + this.chambers.length;
+	},
+	
+	click: function(id, count, data, coords){
+		if(id == BlockID.reactorChamber) return true;
+		return false;
+	},
+	
+	processChambers: function() {
+        let size = this.getReactorSize();
+        for (let pass = 0; pass < 2; pass++) {
+            for (let y = 0; y < 6; y++) {
+                for (let x = 0; x < size; x++) {
+                    let slot = this.container.getSlot("slot"+(y*9+x));
+					let component = ReactorAPI.getComponent(slot.id);
+                    if(component){
+						component.processChamber(slot, this, x, y, pass == 0);
+					}
+                }
+            }
+        }
+    },
+	
+	tick: function(){
+		let content = this.container.getGuiContent();
+		let reactorSize = this.getReactorSize();
+		if(content){
+			for(let y = 0; y < 6; y++){
+				for(let x = 0; x < 9; x++){
+					let newX = (x < reactorSize) ? 400 + 59 * x : 1400;
+					content.elements["slot"+(y*9+x)].x = newX;
+				}
+			}
+		}
+
+		if(this.data.isEnabled){
+			this.data.maxHeat = 10000;
+			this.data.hem = 1;
+			this.processChambers();
+			this.calculateHeatEffects();
+		}
+		this.setActive(this.data.heat >= 1000 || this.data.output > 0);
+		this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
+		this.container.setText("textInfo", "Generating: " + this.getEnergyOutput() + " EU/t");
+	},
+	
+	energyTick: function(type, src){
+		src.add(this.getEnergyOutput());
+		this.data.output = 0;
+	},
+	
+	redstone: function(signal){
+		this.data.isEnabled = (signal.power > 0);
+	},
+	
+	getEnergyOutput: function(){
+		return parseInt(this.data.output * EUReactorModifier);
+	},
+	
+	getHeat: function(){
+		return this.data.heat;
+	},
+	
+	setHeat: function(heat){
+		this.data.heat = heat;
+	},
+	
+	addHeat: function(amount){
+		this.data.heat += amount;
+	},
+	
+	getMaxHeat: function(){
+		return this.data.maxHeat;
+	},
+	
+	setMaxHeat: function(newMaxHeat){
+		this.data.maxHeat = newMaxHeat;
+	},
+	
+	getHeatEffectModifier: function(){
+		return this.data.hem;
+	},
+	
+	setHeatEffectModifier: function(newHEM){
+		this.data.hem = newHEM;
+	},
+	
+	getItemAt: function(x, y) {
+        if (x < 0 || x >= this.getReactorSize() || y < 0 || y >= 6) {
+            return null;
+        }
+        return this.container.getSlot("slot"+(y*9+x));
+    },
+	
+	setItemAt: function(x, y, id, count, data) {
+        if (x < 0 || x >= this.getReactorSize() || y < 0 || y >= 6) {
+            return null;
+        }
+        this.container.setSlot("slot"+(y*9+x), id, count || 0, data || 0);
+    },
+	
+	addOutput: function(energy){
+		this.data.output += energy;
+	},
+	
+	destroyBlock: function(coords, player){
+		for(let i in this.chambers){
+			let c = this.chambers[i];
+			World.destroyBlock(c.x, c.y, c.z, true);
+		}
+	},
+	
+	renderModel: MachineRegistry.renderModel,
+
+	calculateHeatEffects: function() {
+        let power = this.data.heat / this.data.maxHeat;
+        if (power >= 1) {
+            if(this.tnt.length > 0){
+				for(let i = 0; i < this.tnt.length; i++){
+					Entity.setPosition(this.tnt[i], this.x + 0.5, this.y + 0.5, this.z + 0.5);
+				}
+				for(let i = 0; i < 54; i++){
+					this.container.setSlot("slot"+i, 0, 0, 0);
+				}
+			}else{
+				for(let i = 0; i < 5; i++){
+					this.tnt.push(Entity.spawn(this.x + 0.5, this.y + 0.5, this.z + 0.5, EntityType.PRIMED_TNT));
+				}
+			}
+			//World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5);
+        }
+		if (power >= 0.85 && Math.random() <= 0.2 * this.data.hem) {
+			let coord = this.getRandCoord(2);
+			let block = World.getBlockID(coord.x, coord.y, coord.z);
+			let mat = ToolAPI.getBlockMaterial(block);
+			if (mat && (mat.name == "stone" || mat.name == "dirt")) {
+				World.setBlock(coord.x, coord.y, coord.z, 10, 1);
+			}
+		} 
+		if (power >= 0.7 && World.getThreadTime()%20 == 0) {
+			let entities = Entity.getAll();
+			for(let i in entities){
+				let ent = entities[i];
+				if(isMob(ent)){
+					let c = Entity.getPosition(ent);
+					if(Math.abs(this.x + 0.5 - c.x) <= 3 && Math.abs(this.y + 0.5 - c.y) <= 3 && Math.abs(this.z + 0.5 - c.z) <= 3){
+						RadiationAPI.addEffect(ent, parseInt(4 * this.data.hem));
+					}
+				}
+			}
+		}
+		if (power >= 0.5 && Math.random() <= this.data.hem) {
+			let coord = this.getRandCoord(2);
+			let block = World.getBlockID(coord.x, coord.y, coord.z);
+			if(block == 8 || block == 9){
+				World.setBlock(coord.x, coord.y, coord.z, 0);
+			}
+		}
+		if (power >= 0.4 && Math.random() <= this.data.hem) {
+			let coord = this.getRandCoord(2);
+			let block = World.getBlockID(coord.x, coord.y, coord.z);
+			let mat = ToolAPI.getBlockMaterial(block);
+			if(mat && block != 49 && (mat.name == "wood" || mat.name == "wool" || mat.name == "fibre" || mat.name == "plant")){
+				for (let i = 0; i < 6; i++) {
+					let c = StorageInterface.getRelativeCoords(coord, i);
+					if(World.getBlockID(c.x, c.y, c.z) == 0){
+						World.setBlock(c.x, c.y, c.z, 51);
+						break;
+					}
+				}
+			}
+		}
+	},
+
+	getRandCoord: function(r) {
+		do{
+			var x = this.x + random(-r, r), y = this.y + random(-r, r), z = this.z + random(-r, r);
+		}
+		while(World.getBlockID(x, y, z) == BlockID.nuclearReactor)
+		return {x: x, y: y, z: z};
+	}
+});
+
+MachineRegistry.registerGenerator(BlockID.reactorChamber, {
+	defaultValues: {
+		x: -1,
+		y: -1,
+		z: -1
+	},
+	
+	core: null,
+	
+	getGuiScreen: function(){
+		if(this.core){
+			return guiNuclearReactor;
+		}
+		return null;
+	},
+	
+	init: function(){
+		if(this.data.y >= 0 && World.getBlockID(this.data.x, this.data.y, this.data.z) == BlockID.nuclearReactor){
+			let tileEnt = World.getTileEntity(this.data.x, this.data.y, this.data.z);
+			if(tileEnt){
+				tileEnt.addChamber(this);
+			}
+		}
+		else for (let i = 0; i < 6; i++) {
+			let c = StorageInterface.getRelativeCoords(this, i);
+			if(World.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor){
+				let tileEnt = World.getTileEntity(c.x, c.y, c.z);
+				if(tileEnt){
+					tileEnt.addChamber(this);
+					break;
+				}
+			}
+		}
+	},
+	
+	destroy: function(){
+		this.container = new UI.Container();
+		if(this.core){
+			this.core.removeChamber(this);
+		}
+	}
+});
+
+Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block){
+	Game.prevent();
+	let x = coords.relative.x
+	let y = coords.relative.y
+	let z = coords.relative.z
+	for (let i = 0; i < 6; i++) {
+		let c = EnergyNetBuilder.getRelativeCoords(x, y, z, i);
+		if(World.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor){
+			World.setBlock(x, y, z, item.id, 0);
+			World.addTileEntity(x, y, z);
+			break;
+		}
+	}
+});

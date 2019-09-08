@@ -14,7 +14,7 @@ var MachineRegistry = {
 		// click fix
 		Prototype.onItemClick = function(id, count, data, coords){
 			if (id == ItemID.debugItem || id == ItemID.EUMeter) return false;
-			if (this.click(id, count, data, coords)) return true;
+			if (this.click(id, count, data, coords)) return false;
 			if (Entity.getSneaking(player)) return false;
 			var gui = this.getGuiScreen();
 			if (gui){
@@ -34,13 +34,12 @@ var MachineRegistry = {
 			};
 		}
 		
-		if(!Prototype.initModel){
-			Prototype.initModel = this.initModel;
-		}
-		
 		if(Prototype.defaultValues && Prototype.defaultValues.isActive !== undefined){
-			if(!Prototype.init){
-				Prototype.init = Prototype.initModel;
+			if(!Prototype.renderModel){
+				Prototype.renderModel = this.renderModelWithRotation
+			}
+			if(!Prototype.setActive){
+				Prototype.setActive = this.setActive
 			}
 			if(!Prototype.activate){
 				Prototype.activate = this.activateMachine;
@@ -53,6 +52,10 @@ var MachineRegistry = {
 					BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 				}
 			}
+		}
+		
+		if(!Prototype.init && Prototype.renderModel){
+			Prototype.init = Prototype.renderModel;
 		}
 		
 		ToolAPI.registerBlockMaterial(id, "stone", 1, true);
@@ -103,7 +106,7 @@ var MachineRegistry = {
 		
 		if (!Prototype.getMaxPacketSize) {
 			Prototype.getMaxPacketSize = function(tier){
-				return Math.pow(2, 3 + this.getTier()*2);
+				return 8 << this.getTier()*2;
 			}
 		}
 		
@@ -182,30 +185,41 @@ var MachineRegistry = {
 		}
 		if(facing != this.data.meta){
 			this.data.meta = facing;
-			this.initModel();
+			this.renderModel();
 			return true;
 		}
 		return false;
 	},
 	
-	initModel: function(){
-		var index = this.hasFullRotation? 6 : 4;
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + (this.data.isActive? index : 0));
+	renderModel: function(){
+		if(this.data.isActive){
+			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, 0);
+		} else {
+			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+		}
+	},
+	
+	renderModelWithRotation: function(){
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + (this.data.isActive? 4 : 0));
+	},
+	
+	renderModelWith6Sides: function(){
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + (this.data.isActive? 6 : 0));
+	},
+	
+	setActive: function(isActive){
+		if(this.data.isActive != isActive){
+			this.data.isActive = isActive;
+			this.renderModel();
+		}
 	},
 	
 	activateMachine: function(){
-		var index = this.hasFullRotation? 6 : 4;
-		if(!this.data.isActive){
-			this.data.isActive = true;
-			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + index);
-		}
+		this.setActive(true);
 	},
 	
 	deactivateMachine: function(){
-		if(this.data.isActive){
-			this.data.isActive = false;
-			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta);
-		}
+		this.setActive(false);
 	},
 	
 	updateMachine: function(){
@@ -215,7 +229,7 @@ var MachineRegistry = {
 			World.setBlock(this.x, this.y, this.z, this.id, 0);
 			this.data.meta = 0;
 		}
-		this.initModel();
+		this.renderModel();
 	},
 	
 	basicEnergyOutFunc: function(type, src){

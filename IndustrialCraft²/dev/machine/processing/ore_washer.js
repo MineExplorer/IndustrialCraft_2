@@ -107,11 +107,11 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 		this.data.work_time = this.defaultValues.work_time;
 	},
 	
-	updateMachine: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	
 	init: function(){
 		this.liquidStorage.setLimit("water", 8);
-		this.updateMachine();
+		this.renderModel();
 	},
 
 	checkResult: function(result){
@@ -157,16 +157,14 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 			}
 		}
 		
+		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = MachineRecipeRegistry.getRecipeResult("oreWasher", sourceSlot.id);
 		if(result && this.checkResult(result) && this.liquidStorage.getAmount("water") >= 1){
 			if(this.data.energy >= this.data.energy_consumption){
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
-				this.activate();
-			}
-			else{
-				this.deactivate();
+				newActive = true;
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
@@ -177,8 +175,8 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 		}
 		else {
 			this.data.progress = 0;
-			this.deactivate();
 		}
+		this.setActive(newActive);
 		
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();

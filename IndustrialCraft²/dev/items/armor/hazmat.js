@@ -3,10 +3,10 @@ IDRegistry.genItemID("hazmatChestplate");
 IDRegistry.genItemID("hazmatLeggings");
 IDRegistry.genItemID("rubberBoots");
 
-Item.createArmorItem("hazmatHelmet", "Scuba Helmet", {name: "hazmat_helmet"}, {type: "helmet", armor: 3, durability: 64, texture: "armor/hazmat_1.png"});
-Item.createArmorItem("hazmatChestplate", "Hazmat Suit", {name: "hazmat_chestplate"}, {type: "chestplate", armor: 8, durability: 64, texture: "armor/hazmat_1.png"});
-Item.createArmorItem("hazmatLeggings", "Hazmat Suit Leggings", {name: "hazmat_leggins"}, {type: "leggings", armor: 6, durability: 64, texture: "armor/hazmat_2.png"});
-Item.createArmorItem("rubberBoots", "Rubber Boots", {name: "rubber_boots"}, {type: "boots", armor: 3, durability: 64, texture: "armor/rubber_1.png"});
+Item.createArmorItem("hazmatHelmet", "Scuba Helmet", {name: "hazmat_helmet"}, {type: "helmet", armor: 1, durability: 64, texture: "armor/hazmat_1.png"});
+Item.createArmorItem("hazmatChestplate", "Hazmat Suit", {name: "hazmat_chestplate"}, {type: "chestplate", armor: 1, durability: 64, texture: "armor/hazmat_1.png"});
+Item.createArmorItem("hazmatLeggings", "Hazmat Suit Leggings", {name: "hazmat_leggins"}, {type: "leggings", armor: 1, durability: 64, texture: "armor/hazmat_2.png"});
+Item.createArmorItem("rubberBoots", "Rubber Boots", {name: "rubber_boots"}, {type: "boots", armor: 1, durability: 64, texture: "armor/rubber_1.png"});
 
 Recipes.addShaped({id: ItemID.hazmatHelmet, count: 1, data: 0}, [
 	" d ",
@@ -73,7 +73,9 @@ var RUBBER_ARMOR_FUNC = {
 	},
 	tick: function(slot, index, maxDamage){
 		if(index==0 && Player.getArmorSlot(1).id==ItemID.hazmatChestplate && Player.getArmorSlot(2).id==ItemID.hazmatLeggings && Player.getArmorSlot(3).id==ItemID.rubberBoots){
-			Entity.clearEffect(player, MobEffect.poison);
+			if(RadiationAPI.playerRad <= 0){
+				Entity.clearEffect(player, MobEffect.poison);
+			}
 			Entity.clearEffect(player, MobEffect.wither);
 		}
 		return false;

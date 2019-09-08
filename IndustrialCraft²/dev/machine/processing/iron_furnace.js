@@ -139,7 +139,7 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		return 0;
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.ironFurnace);

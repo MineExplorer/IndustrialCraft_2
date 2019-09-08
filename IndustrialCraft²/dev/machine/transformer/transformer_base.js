@@ -71,11 +71,11 @@ MachineRegistry.registerTransformer = function(id, tier){
 		
 		setFacing: MachineRegistry.setFacing,
 		
-		initModel: function(){
+		renderModel: function(){
 			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta);
 		},
 		
-		init: this.initModel,
+		init: this.renderModel,
 		
 		destroy: function(){
 			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);

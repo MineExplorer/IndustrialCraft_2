@@ -84,13 +84,10 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 	},
 	
 	wrenchClick: function(id, count, data, coords){
-		if(Entity.getSneaking(player)){
-			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
-		}else{
-			this.data.meta = coords.side;
-		}
-		this.initModel();
+		this.setFacing(coords);
 	},
+	
+	setFacing: MachineRegistry.setFacing,
 	
 	checkResult: function(result){
 		for(var i = 1; i < 3; i++){
@@ -215,7 +212,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		return 0;
 	},
 	
-	hasFullRotation: true,
+	renderModel: MachineRegistry.renderModelWith6Sides,
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.blastFurnace, true);

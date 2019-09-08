@@ -101,12 +101,12 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		this.data.work_time = this.defaultValues.work_time;
 	},
 	
-	updateMachine: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	
 	init: function(){
 		this.liquidStorage.setLimit("water", 8);
 		this.liquidStorage.setLimit("lava", 8);
-		this.updateMachine();
+		this.renderModel();
 	},
 	
 	getLiquidType: function(liquid, block){
@@ -121,7 +121,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 	
 	recursiveSearch: function(liquid, x, y, z, map){
 		var block = World.getBlock(x, y, z);
-		var scoords = ""+x+':'+y+':'+z;
+		var scoords = x+':'+y+':'+z;
 		if(!map[scoords] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)){
 			if(block.data == 0) return {x: x, y: y, z: z};
 			map[scoords] = true;
@@ -138,6 +138,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		this.setDefaultValues();
 		UpgradeAPI.executeUpgrades(this);
 		
+		var newActive = false;
 		var liquidStor = this.liquidStorage;
 		var liquid = liquidStor.getLiquidStored();
 		if(this.y > 0 && this.liquidStorage.getAmount(liquid) <= 7 && this.data.energy >= this.data.energy_consumption){
@@ -145,6 +146,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 				this.data.coords = this.recursiveSearch(liquid, this.x, this.y-1, this.z, {});
 			}
 			if(this.data.coords){
+				newActive = true;
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				if(this.data.progress.toFixed(3) >= 1){
@@ -157,15 +159,12 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 					}
 					this.data.progress = 0;
 				}
-				this.activate();
-			}else {
-				this.deactivate();
 			}
 		}
 		else {
 			this.data.progress = 0;
-			this.deactivate();
 		}
+		this.setActive(newActive);
 		
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");

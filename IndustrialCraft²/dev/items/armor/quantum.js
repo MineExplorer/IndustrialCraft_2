@@ -149,7 +149,16 @@ var QUANTUM_ARMOR_FUNCS = {
 		else{
 			switch (index){
 			case 0:
-				Entity.clearEffect(player, MobEffect.poison);
+				if(RadiationAPI.playerRad > 0){
+					if(maxDamage - slot.data >= 100000){
+						RadiationAPI.playerRad = 0;
+						Entity.clearEffect(player, MobEffect.poison);
+						slot.data += 100000;
+						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+					}
+				} else {
+					Entity.clearEffect(player, MobEffect.poison);
+				}
 				Entity.clearEffect(player, MobEffect.wither);
 				
 				var hunger = Player.getHunger();

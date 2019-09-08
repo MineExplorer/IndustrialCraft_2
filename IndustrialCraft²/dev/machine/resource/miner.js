@@ -66,8 +66,8 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 
-// dropData0 = [3, 25, 39, 40, 46, 50, 53, 54, 58, 65, 72, 96, 107, 134, 135, 136, 143, 146, 163, 164, 165, 170, 183, 184, 185, 186, 187];
-var noDrop = [6, 18, 30, 31, 32, 59, 81, 83, 86, 92, 99, 100, 103, 104, 105, 106, 111, 115, 127, 131, 132, 140, 141, 142, 161, 175, 244];
+var dropData0 = [3, 25, 39, 40, 46, 50, 53, 54, 58, 65, 72, 96, 107, 134, 135, 136, 143, 146, 163, 164, 165, 170, 183, 184, 185, 186, 187];
+// noDrop = [6, 18, 30, 31, 32, 59, 81, 83, 86, 92, 99, 100, 103, 104, 105, 106, 111, 115, 127, 131, 132, 140, 141, 142, 161, 175, 244];
 
 function getBlockDrop(coords, id, data, level, enchant, smelt){
 	if(smelt){
@@ -106,8 +106,8 @@ function getBlockDrop(coords, id, data, level, enchant, smelt){
 	if(id == 195) return [[429, 1, 0]];
 	if(id == 196) return [[430, 1, 0]];
 	if(id == 197) return [[431, 1, 0]];
-	if(noDrop.indexOf(id) != -1) return [];
-	return [[id, 1, 0]];
+	if(dropData0.indexOf(id) != -1) return [[id, 1, 0]];
+	return [];
 }
 
 MachineRegistry.registerElectricMachine(BlockID.miner, {
@@ -280,9 +280,6 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 					if(this.data.energy >= params.energy){
 						this.data.energy -= params.energy;
 						this.data.progress++;
-						this.activate();
-					}else{
-						this.deactivate();
 					}
 					if(this.data.progress >= params.time){
 						this.mineBlock(coords.x, coords.y, coords.z, block, level);
@@ -333,12 +330,8 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				}
 			}
 		}
-		if(lastProgress != this.data.progress){
-			this.activate();
-		}else{
-			this.deactivate();
-		}
-		
+		this.setActive(lastProgress != this.data.progress);
+
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotDrill"), "Eu", this.data.energy, 128, 1);
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 128, 1);
@@ -350,7 +343,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		return 10000;
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 

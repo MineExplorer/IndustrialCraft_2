@@ -18,6 +18,7 @@ IMPORT("EnergyNet");
 IMPORT("ChargeItem");
 IMPORT("TileRender");
 IMPORT("StorageInterface");
+IMPORT("BackpackAPI");
 
 // constants
 const GUI_SCALE = 3.2;
@@ -33,7 +34,7 @@ Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var MobEffect = Native.PotionEffect;
-var Enchantment = Native.Enchantment;
+var ParticleType = Native.ParticleType;
 var BlockSide = Native.BlockSide;
 var EntityType = Native.EntityType;
 var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
@@ -91,7 +92,6 @@ Callback.addCallback("tick", function(){
 		}
 	}
 });
-
 
 // redstone items fix
 Item.registerUseFunctionForID(69, function(coords, item, block){

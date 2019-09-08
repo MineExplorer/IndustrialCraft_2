@@ -65,7 +65,9 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 		src.addAll(this.data.output);
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: function(){
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta);
+	},
 	destroy: function(){
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	},

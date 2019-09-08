@@ -263,6 +263,7 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 		return 4000000;
 	},
 	
+	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 

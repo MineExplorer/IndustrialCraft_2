@@ -63,24 +63,18 @@ UIbuttons.registerSwitchFunction(ItemID.iridiumDrill, function(item){
 	extra.putInt("mode", mode);
 	switch(mode){
 	case 0:
-		//var enchant = {type: Enchantment.FORTUNE, level: 3};
 		Game.message("§e" + Translation.translate("Mode: ") + Translation.translate("Fortune III"));
 	break;
 	case 1:
-		//var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
 		Game.message("§9" + Translation.translate("Mode: ") + Translation.translate("Silk Touch"));
 	break;
 	case 2:
-		//var enchant = {type: Enchantment.FORTUNE, level: 3};
 		Game.message("§c" + Translation.translate("Mode: ") + "3x3 " + Translation.translate("Fortune III"));
 	break;
 	case 3:
-		//var enchant = {type: Enchantment.SILK_TOUCH, level: 1};
 		Game.message("§2" + Translation.translate("Mode: ") + "3x3 " + Translation.translate("Silk Touch"));
 	break;
 	}
-	//extra.removeAllEnchants();
-	//extra.addEnchant(enchant.type, enchant.level);
 	Player.setCarriedItem(item.id, 1, item.data, extra);
 });
 

@@ -69,13 +69,10 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 	},
 	
 	wrenchClick: function(id, count, data, coords){
-		if(Entity.getSneaking(player)){
-			this.data.meta = coords.side + (coords.side%2)*(-2) + 1;
-		}else{
-			this.data.meta = coords.side;
-		}
-		this.initModel();
+		this.setFacing(coords);
 	},
+	
+	setFacing: MachineRegistry.setFacing,
 	
 	getFuel: function(fuelSlot){
 		if(fuelSlot.id > 0){
@@ -90,7 +87,7 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 	spreadHeat: function(){
 		var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
 		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-		if(TE && TE.heatReceiveFunction && this.data.meta == TE.data.meta + (TE.data.meta%2)*(-2) + 1){
+		if(TE && TE.heatReceiveFunction && this.data.meta == TE.data.meta + Math.pow(-1, TE.data.meta)){
 			return this.data.output = TE.heatReceiveFunction(20);
 		}
 		return false;
@@ -125,7 +122,7 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
     },
 	
-	hasFullRotation: true,
+	renderModel: MachineRegistry.renderModelWith6Sides,
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.solidHeatGenerator, true);

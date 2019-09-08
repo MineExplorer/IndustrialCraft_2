@@ -110,7 +110,9 @@ MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 		}
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: function(){
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta);
+	},
 	destroy: function(){
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	}

@@ -124,7 +124,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		return ENERGY_PER_MATTER - this.data.progress;
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: function(type, amount, voltage) {
 		if(this.data.isEnabled){
 			if(voltageEnabled && voltage > this.getMaxPacketSize()){

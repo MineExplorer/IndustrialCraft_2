@@ -22,8 +22,8 @@ ItemName = {
 	
 	addTierTooltip: function(id, tier){
 		Item.registerNameOverrideFunction(BlockID[id], function(item, name){
-			var tooltip = Translation.translate("Power Tier: ") + tier;
-			return name + "§7" + ItemName.getTooltip(name, tooltip);
+			var tooltip = "§7" + Translation.translate("Power Tier: ") + tier;
+			return name + ItemName.getTooltip(name, tooltip);
 		});
 	},
 	

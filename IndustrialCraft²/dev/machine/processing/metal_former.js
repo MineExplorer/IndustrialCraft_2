@@ -52,6 +52,7 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.ingotGold": {id: ItemID.cableGold0, count: 4},
 		265: {id: ItemID.cableIron0, count: 4},
 		"ItemID.casingTin": {id: ItemID.tinCanEmpty, count: 1},
+		"ItemID.plateIron": {id: ItemID.fuelRod, count: 1},
 	}, true);
 });
 
@@ -129,6 +130,7 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		this.setDefaultValues();
 		UpgradeAPI.executeUpgrades(this);
 		
+		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
 		var result = MachineRecipeRegistry.getRecipeResult("metalFormer" + this.data.mode, sourceSlot.id)
@@ -136,9 +138,7 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 			if(this.data.energy >= this.data.energy_consumption){
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
-				this.activate();
-			}else{
-				this.deactivate();
+				newActive = true;
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count -= 1;
@@ -150,8 +150,8 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		}
 		else {
 			this.data.progress = 0;
-			this.deactivate();
 		}
+		this.setActive(newActive);
 		
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
@@ -166,7 +166,7 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		return this.data.energy_storage;
 	},
 	
-	init: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 

@@ -25,9 +25,12 @@ machine/generator/geothermal.js
 machine/generator/solar.js
 machine/generator/windmill.js
 machine/generator/watermill.js
+machine/generator/rt_generator.js
 machine/generator/heat_solid.js
 machine/generator/heat_electric.js
-machine/generator/heat_electric.js
+
+machine/reactor/reactorAPI.js
+machine/reactor/nuclear_reactor.js
 
 machine/storage/bat_box.js
 machine/storage/CESU.js
@@ -67,8 +70,8 @@ machine/resource/advanced_miner.js
 
 machine/misc/teleporter.js
 machine/misc/lamp.js
-machine/misc/sapling.js
 machine/misc/tesla_coil.js
+machine/misc/nuke.js
 
 items/resource/rubber.js
 items/resource/slag.js
@@ -92,11 +95,13 @@ items/electric/storage.js
 items/electric/charging.js
 items/electric/upgrades.js
 
+items/reactor/fuel_rod.js
 items/reactor/plating.js
 items/reactor/reflector.js
 items/reactor/coolant.js
 items/reactor/heat_exchanger.js
 items/reactor/heat_vent.js
+items/reactor/condensator.js
 
 items/armor/hazmat.js
 items/armor/bronze.js
@@ -113,6 +118,7 @@ items/tool/scanner.js
 items/tool/treetap.js
 items/tool/crafting.js
 items/tool/tool_box.js
+items/tool/containment_box.js
 items/tool/bronze.js
 items/tool/wrench.js
 items/tool/electric.js

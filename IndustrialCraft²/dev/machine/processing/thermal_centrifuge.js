@@ -36,7 +36,14 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.crushedPurifiedGold": {result: [ItemID.dustSmallSilver, 1, ItemID.dustGold, 1], heat: 2000},
 		"ItemID.crushedPurifiedLead": {result: [ItemID.dustSmallSilver, 1, ItemID.dustLead, 1], heat: 2000},
 		"ItemID.crushedPurifiedUranium": {result: [ItemID.smallUranium235, 2, ItemID.uranium238, 5], heat: 3000},
-		"ItemID.slag": {result: [ItemID.dustSmallGold, 1, ItemID.dustCoal, 1], heat: 1500}
+		"ItemID.slag": {result: [ItemID.dustSmallGold, 1, ItemID.dustCoal, 1], heat: 1500},
+		"ItemID.fuelRodDepletedUranium": {result: [ItemID.smallPlutonium, 1, ItemID.uranium238, 4, ItemID.dustIron, 1], heat: 4000},
+		"ItemID.fuelRodDepletedUranium2": {result: [ItemID.smallPlutonium, 2, ItemID.uranium238, 8, ItemID.dustIron, 3], heat: 4000},
+		"ItemID.fuelRodDepletedUranium4": {result: [ItemID.smallPlutonium, 4, ItemID.uranium238, 16, ItemID.dustIron, 6], heat: 4000},
+		"ItemID.fuelRodDepletedMOX": {result: [ItemID.smallPlutonium, 1, ItemID.plutonium, 3, ItemID.dustIron, 1], heat: 5000},
+		"ItemID.fuelRodDepletedMOX2": {result: [ItemID.smallPlutonium, 2, ItemID.plutonium, 6, ItemID.dustIron, 3], heat: 5000},
+		"ItemID.fuelRodDepletedMOX4": {result: [ItemID.smallPlutonium, 4, ItemID.plutonium, 12, ItemID.dustIron, 6], heat: 5000},
+		"ItemID.rtgPellet": {result: [ItemID.plutonium, 3, ItemID.dustIron, 54], heat: 5000},
 	}, true);
 });
 
@@ -146,6 +153,7 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 			this.data.maxHeat = 5000;
 		}
 		
+		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", sourceSlot.id);
 		if(result && this.checkResult(result.result) && this.data.energy > 0){
@@ -157,10 +165,7 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 			else if(this.data.energy >= this.data.energy_consumption){
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
-				this.activate();
-			}
-			else{
-				this.deactivate();
+				newActive = true;
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
@@ -172,7 +177,6 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 		else {
 			this.data.maxHeat = 5000;
 			this.data.progress = 0;
-			this.deactivate();
 			if(this.data.isHeating && this.data.energy > 1){
 				if(this.data.heat < 5000){this.data.heat++;}
 				this.data.energy -= 2;
@@ -181,6 +185,7 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 				this.data.heat--;
 			}
 		}
+		this.setActive(newActive);
 		
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
@@ -207,7 +212,7 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 		return this.data.energy_storage;
 	},
 
-	init: MachineRegistry.updateMachine,
+	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 

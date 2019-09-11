@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ToolLib",
-	version: 5,
+	version: 6,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -246,7 +246,7 @@ registerStandardDrop(203, 1);
 registerStandardDrop(251, 1);
 
 Block.registerDropFunctionForID(13, function(coords, blockID, blockData, level, enchant){ // gravel
-	if (Math.random() < [0, 0.14, 0.25, 1][enchant.fortune || 0]){
+	if (Math.random() < [0.1, 0.14, 0.25, 1][enchant.fortune || 0]){
 		return [[318, 1, 0]];
 	}
 	return [[13, 1, 0]];

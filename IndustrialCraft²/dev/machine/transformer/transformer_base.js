@@ -75,8 +75,6 @@ MachineRegistry.registerTransformer = function(id, tier){
 			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta);
 		},
 		
-		init: this.renderModel,
-		
 		destroy: function(){
 			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 		}

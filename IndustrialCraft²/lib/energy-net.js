@@ -9,7 +9,7 @@
 
 LIBRARY({
 	name: "EnergyNet",
-	version: 3,
+	version: 4,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -635,7 +635,7 @@ function EnergyNet(energyType, maxPacketSize, overloadFunc) {
 		for (var i in this.connectedNets) {
 			if (amount <= 0) break;
 			var net = this.connectedNets[i];
-			if (!net.tileSource) {
+			if (!net.sourceTile) {
 				amount -= net.addEnergy(amount, voltage, source, explored);
 			}
 		}

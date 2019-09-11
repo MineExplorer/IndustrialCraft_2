@@ -42,10 +42,14 @@ var MachineRegistry = {
 				Prototype.setActive = this.setActive
 			}
 			if(!Prototype.activate){
-				Prototype.activate = this.activateMachine;
+				Prototype.activate = function(){
+					this.setActive(true);
+				}
 			}
 			if(!Prototype.deactivate){
-				Prototype.deactivate = this.deactivateMachine;
+				Prototype.deactivate = function(){
+					this.setActive(false);
+				}
 			}
 			if(!Prototype.destroy){
 				Prototype.destroy = function(){
@@ -212,14 +216,6 @@ var MachineRegistry = {
 			this.data.isActive = isActive;
 			this.renderModel();
 		}
-	},
-	
-	activateMachine: function(){
-		this.setActive(true);
-	},
-	
-	deactivateMachine: function(){
-		this.setActive(false);
 	},
 	
 	updateMachine: function(){

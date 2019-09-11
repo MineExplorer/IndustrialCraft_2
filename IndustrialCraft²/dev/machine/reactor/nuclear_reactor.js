@@ -33,6 +33,9 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 function checkReactorSlot(i, id, count, data, container){
+	if(container.tileEntity.tnt.length > 0){
+		return false;
+	}
 	let slot = container.getSlot("slot"+i);
 	if(ReactorAPI.isReactorItem(id) && slot.id == 0){
 		if(Item.getMaxStack(id) == 1) return true;
@@ -92,6 +95,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		maxHeat: 10000,
 		hem: 1,
 		output: 0,
+		boomPower: 0
 	},
 	
 	chambers: [],
@@ -273,29 +277,61 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	renderModel: MachineRegistry.renderModel,
-
-	calculateHeatEffects: function() {
-        let power = this.data.heat / this.data.maxHeat;
-        if (power >= 1) {
-            if(this.tnt.length > 0){
-				for(let i = 0; i < this.tnt.length; i++){
-					Entity.setPosition(this.tnt[i], this.x + 0.5, this.y + 0.5, this.z + 0.5);
+	
+	explode: function() {
+		if (this.tnt.length > 0) {
+			for(let i = 0; i < this.tnt.length; i++){
+				if(!Entity.isExist(this.tnt[i])){
+					RadiationAPI.addRadiationSource(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.data.boomPower, 600);
+					this.selfDestroy();
+					return;
 				}
-				for(let i = 0; i < 54; i++){
-					this.container.setSlot("slot"+i, 0, 0, 0);
+				Entity.setPosition(this.tnt[i], this.x + 0.5, this.y + 0.5, this.z + 0.5);
+			}
+		} else {
+			let explode = false;
+			let boomPower = 10;
+			let boomMod = 1;
+			for (let i = 0; i < this.getReactorSize() * 6; i++) {
+				let slot = this.container.getSlot("slot"+i);
+				let component = ReactorAPI.getComponent(slot.id);
+				if (component) {
+					let f = component.influenceExplosion(slot, this)
+					if(f > 0 && f < 1){
+						boomMod *= f;
+					} else {
+						if (f >= 1) explode = true;
+						boomPower += f;
+					}
 				}
-			}else{
+				this.container.setSlot("slot"+i, 0, 0, 0);
+			}
+			if(explode){
+				this.data.boomPower = Math.min(boomPower * this.data.hem * boomMod, __config__.access("reactor_explosion_max_power"));
 				for(let i = 0; i < 5; i++){
 					this.tnt.push(Entity.spawn(this.x + 0.5, this.y + 0.5, this.z + 0.5, EntityType.PRIMED_TNT));
 				}
 			}
-			//World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5);
+		}
+		//World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5);
+	},
+	
+	calculateHeatEffects: function() {
+        let power = this.data.heat / this.data.maxHeat;
+        if (power >= 1) {
+            this.explode();
         }
 		if (power >= 0.85 && Math.random() <= 0.2 * this.data.hem) {
 			let coord = this.getRandCoord(2);
 			let block = World.getBlockID(coord.x, coord.y, coord.z);
 			let mat = ToolAPI.getBlockMaterial(block);
-			if (mat && (mat.name == "stone" || mat.name == "dirt")) {
+			if (block == BlockID.nuclearReactor){
+				let tileEntity = World.getTileEntity(coord.x, coord.y, coord.z);
+				if(tileEntity){
+					tileEntity.explode();
+				}
+			}
+			else if (mat && (mat.name == "stone" || mat.name == "dirt")) {
 				World.setBlock(coord.x, coord.y, coord.z, 10, 1);
 			}
 		} 
@@ -335,11 +371,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 
 	getRandCoord: function(r) {
-		do{
-			var x = this.x + random(-r, r), y = this.y + random(-r, r), z = this.z + random(-r, r);
-		}
-		while(World.getBlockID(x, y, z) == BlockID.nuclearReactor)
-		return {x: x, y: y, z: z};
+		return {x: this.x + random(-r, r), y: this.y + random(-r, r), z: this.z + random(-r, r)};
 	}
 });
 

@@ -1,8 +1,8 @@
 IDRegistry.genItemID("neutronReflector");
 IDRegistry.genItemID("neutronReflectorThick");
 IDRegistry.genItemID("neutronReflectorIridium");
-Item.createItem("neutronReflector", "Neutron Reflector", {name: "neutron_reflector", meta: 0}, {stack: 1});
-Item.createItem("neutronReflectorThick", "Thick Neutron Reflector", {name: "neutron_reflector", meta: 1}, {stack: 1});
+Item.createItem("neutronReflector", "Neutron Reflector", {name: "neutron_reflector", meta: 0});
+Item.createItem("neutronReflectorThick", "Thick Neutron Reflector", {name: "neutron_reflector", meta: 1});
 Item.createItem("neutronReflectorIridium", "Iridium Neutron Reflector", {name: "neutron_reflector", meta: 2});
 ReactorAPI.registerComponent(ItemID.neutronReflector, new ReactorAPI.reflector(30000));
 ReactorAPI.registerComponent(ItemID.neutronReflectorThick, new ReactorAPI.reflector(120000));

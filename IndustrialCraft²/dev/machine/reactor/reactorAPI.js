@@ -125,6 +125,10 @@ let ReactorAPI = {
 		this.getFinalHeat = function(item, reactor, x, y, heat) {
 			return heat;
 		}
+		
+		this.influenceExplosion = function(item, reactor) {
+			return 2 * this.numberOfCells;
+		}
 	},
 	
 	fuelRodMOX: function(cells, durability, depleted) {
@@ -194,7 +198,7 @@ let ReactorAPI = {
 			}
 			return true;
 		}
-
+		
 		this.influenceExplosion = function(item, reactor) {
 			return -1;
 		}

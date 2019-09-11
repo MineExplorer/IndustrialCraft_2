@@ -19,7 +19,48 @@ Callback.addCallback("PreLoaded", function(){
 	], ['#', 46, -1, 'x', ItemID.plutonium, 0, 'c', ItemID.circuitAdvanced, 0, 'n', ItemID.neutronReflectorThick, 0]);
 });
 
-var explosion = {};
+function explodeNuke(coords, radius){
+	let x = coords.x, y = coords.y, z = coords.z;
+	World.explode(x + 0.5, y + 0.5, z + 0.5, 0.5);
+	let entities = Entity.getAll();
+	let rad = radius * 1.5;
+	for(let i in entities){
+		let ent = entities[i];
+		if(isMob(ent)){
+			let c = Entity.getPosition(ent);
+			let xx = Math.abs(x - c.x), yy = Math.abs(y - c.y), zz = Math.abs(z - c.z);
+			let dist = Math.sqrt(xx*xx + yy*yy + zz*zz);
+			if(dist <= rad){
+				let damage = Math.ceil(rad*rad * 25 / (dist*dist));
+				if(damage >= 100){
+					Entity.damageEntity(ent, damage);
+				} else {
+					Entity.damageEntity(ent, damage, 11);
+				}
+			}
+		}
+	}
+	
+	let height = radius/2;
+	for(let xx = -radius; xx <= radius; xx++)
+	for(let yy = -height; yy <= height; yy++)
+	for(let zz = -radius; zz <= radius; zz++){
+		if(Math.sqrt(xx*xx + yy*yy*4 + zz*zz) <= radius){
+			let block = World.getBlock(x + xx, y + yy, z + zz);
+			if(block.id != 7 && block.id != 120){
+				World.setBlock(x + xx, y + yy, z + zz, 0);
+				if(Math.random() < 0.01){
+					let drop = getBlockDrop({x: x + xx, y: y + yy, z: z + zz}, block.id, block.data, 100);
+					if(drop)
+					for(let i in drop){
+						let item = drop[i];
+						World.drop(x + xx, y + yy, z + zz, item[0], item[1], item[2]);
+					}
+				}
+			}
+		}
+	}
+}
 
 MachineRegistry.registerPrototype(BlockID.nuke, {
 	defaultValues: {
@@ -28,49 +69,12 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 	},
 	
 	explode: function(radius){
-		radius = radius || 20;
-		World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5);
-		let entities = Entity.getAll();
-		for(let i in entities){
-			let ent = entities[i];
-			if(isMob(ent)){
-				let c = Entity.getPosition(ent);
-				let xx = Math.abs(this.x - c.x), yy = Math.abs(this.y - c.y), zz = Math.abs(this.z - c.z);
-				var distance = Math.sqrt(xx*xx + yy*yy + zz*zz);
-				if(distance <= radius){
-					Entity.damageEntity(ent, Math.ceil(9999 * (radius - distance) / radius), 11);
-				}
-			}
-		}
+		var coords = {x: this.x, y: this.y, z: this.z};
+		runOnMainThread(function(){
+			explodeNuke(coords, radius);
+		});
 		
-		explosion = {radius: radius, x: this.x, y: this.y, z: this.z};
-		runOnMainThread(this.destroyBlocks);
-		
-		RadiationAPI.addRadiationSource(this.x + 0.5, this.y + 0.5, this.z + 0.5, radius, 600);
-	},
-	
-	destroyBlocks: function(){
-		var x = explosion.x, y = explosion.y, z = explosion.z;
-		var radius = explosion.radius;
-		let height = radius/2;
-		for(let xx = -radius; xx <= radius; xx++)
-		for(let yy = -height; yy <= height; yy++)
-		for(let zz = -radius; zz <= radius; zz++){
-			if(Math.sqrt(xx*xx + yy*yy*4 + zz*zz) <= radius){
-				let block = World.getBlock(x + xx, y + yy, z + zz);
-				if(block.id != 7 && block.id != 120){
-					World.setBlock(x + xx, y + yy, z + zz, 0);
-					if(Math.random() < 0.01){
-						let drop = getBlockDrop({x: x + xx, y: y + yy, z: z + zz}, block.id, block.data, 100);
-						if(drop)
-						for(let i in drop){
-							let item = drop[i];
-							World.drop(x + xx, y + yy, z + zz, item[0], item[1], item[2]);
-						}
-					}
-				}
-			}
-		}
+		RadiationAPI.addRadiationSource(this.x + 0.5, this.y + 0.5, this.z + 0.5, radius * 2, 600);
 	},
 	
 	tick: function(){
@@ -93,7 +97,5 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 		if(signal.power > 0){
 			this.data.activated = true; 
 		}
-	},
-	
-	renderModel: MachineRegistry.renderModel
+	}
 });

@@ -133,6 +133,5 @@ Callback.addCallback("tick", function(){
 Callback.addCallback("EntityDeath", function(entity){
 	if(entity == player){
 		RadiationAPI.playerRad = 0;
-		Game.message(
 	}
 });

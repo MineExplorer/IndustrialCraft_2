@@ -342,6 +342,7 @@ Translation.addTranslation("Mode: Whitelist", {ru: "Белый список", es
 // EU Meter
 Translation.addTranslation("EnergyIn", {ru: "Вход энергии", zh: "能量流入"});
 Translation.addTranslation("EnergyOut", {ru: "Выход энергии", zh: "能量流出"});
+Translation.addTranslation("EnergyGain", {ru: "Энергии получено", es: "EnergíaGana", pt: "GanhoEnerg", zh: "获得能量"});
 Translation.addTranslation("Voltage", {ru: "Напряжение", es: "Voltaje", pt: "Voltagem", zh: "电压"});
 Translation.addTranslation("Avg:", {ru: "Средн.:", es: "Promedio:", pt: "Méd:", zh: "平均:"});
 Translation.addTranslation("Max/Min", {ru: "Макс./Мин.", zh: "最大/最小"});

@@ -10,6 +10,7 @@ ModAPI.registerAPI("ICore", {
 	ItemName: ItemName,
 	UI: UIbuttons,
 	Ore: OreGenerator,
+	Integration: IntegrationAPI,
 	
 	registerEnergyPack: registerStoragePack,
 	requireGlobal: function(command){

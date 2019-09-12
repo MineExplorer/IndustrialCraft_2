@@ -10,6 +10,7 @@ core/electricity.js
 core/radiation.js
 core/item_name.js
 core/ui_buttons.js
+core/integration.js
 
 block/sapling.js
 block/rubber_tree.js

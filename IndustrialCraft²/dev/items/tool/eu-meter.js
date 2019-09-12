@@ -66,12 +66,21 @@ Callback.addCallback("LevelLoaded", function(){
 					elements.textMode2.text = Translation.translate("EnergyOut");
 				}
 			}},
-			"arrowButton2": {type: "button", x: 640, y: 290, bitmap: "geothermal_empty_liquid_slot", scale: 5.3, clicker: {
+			"arrowButton2": {type: "button", x: 576, y: 290, bitmap: "geothermal_empty_liquid_slot", scale: 5.3, clicker: {
 				onClick: function(container){
 					EUReader.mode = 2;
 					EUReader.resetValues();
 					var elements = container.getGuiContent().elements;
 					elements.arrow.bitmap = "eu_meter_arrow_2";
+					elements.textMode2.text = Translation.translate("EnergyGain");
+				}
+			}},
+			"arrowButton3": {type: "button", x: 640, y: 290, bitmap: "geothermal_empty_liquid_slot", scale: 5.3, clicker: {
+				onClick: function(container){
+					EUReader.mode = 3;
+					EUReader.resetValues();
+					var elements = container.getGuiContent().elements;
+					elements.arrow.bitmap = "eu_meter_arrow_3";
 					elements.textMode2.text = Translation.translate("Voltage");
 				}
 			}},
@@ -92,7 +101,7 @@ var EUReader = {
 		this.time = 0;
 		this.sum = 0;
 		this.minValue = 2e9;
-		this.maxValue = 0;
+		this.maxValue = -2e9;
 	}
 }
 
@@ -119,13 +128,28 @@ Callback.addCallback("tick", function(){
 			var r = function(x) {return Math.round(x * 100) / 100};
 			var currentValue = 0;
 			var elements = guiEUReader.content.elements;
-			if(EUReader.mode < 2){
+			if(EUReader.mode < 3){
 				var unit = " EU/t";
-				if(EUReader.tile && EUReader.mode == 0){
-					currentValue = r(EUReader.tile.data.last_energy_receive) || 0;
+				var energyIn = energyOut = 0;
+				if(EUReader.tile){
+					energyIn = r(EUReader.tile.data.last_energy_receive) || 0;
+					if(EUReader.net){
+						energyOut = r(EUReader.net.lastTransfered) || 0;
+					}
 				}
 				else if(EUReader.net){
-					currentValue = r(EUReader.net.lastTransfered) || 0;
+					energyIn = energyOut = r(EUReader.net.lastTransfered) || 0;
+				}
+				switch (EUReader.mode) {
+					case 0:
+						currentValue = energyIn;
+					break;
+					case 1:
+						currentValue = energyOut;
+					break;
+					case 2:
+						currentValue = energyIn - energyOut;
+					break;
 				}
 			}else{
 				var unit = " V";

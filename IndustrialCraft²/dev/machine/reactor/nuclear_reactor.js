@@ -114,7 +114,11 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	rebuildEnergyNet: function(){
-		let net = EnergyNetBuilder.buildForTile(this, EU);
+		let net = this.__energyNets.Eu;
+		if (net) {
+			EnergyNetBuilder.removeNet(net);
+		}
+		net = EnergyNetBuilder.buildForTile(this, EU);
 		this.__energyNets.Eu = net;
 		for (let i = 0; i < 6; i++) {
 			let c = EnergyNetBuilder.getRelativeCoords(this.x, this.y, this.z, i);
@@ -128,6 +132,9 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	addChamber: function(chamber){
+		if(chamber.removed || (chamber.core && chamber.core != this)){
+			return;
+		}
 		if(this.chambers.indexOf(chamber) == -1){
 			this.chambers.push(chamber);
 			chamber.core = this;
@@ -162,6 +169,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			}
 		}
 	},
+	
 	
 	getReactorSize: function(){
 		return 3 + this.chambers.length;
@@ -198,7 +206,6 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 				}
 			}
 		}
-
 		if(this.data.isEnabled){
 			this.data.maxHeat = 10000;
 			this.data.hem = 1;
@@ -308,6 +315,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			}
 			if(explode){
 				this.data.boomPower = Math.min(boomPower * this.data.hem * boomMod, __config__.access("reactor_explosion_max_power"));
+				Game.message(this.data.boomPower);
 				for(let i = 0; i < 5; i++){
 					this.tnt.push(Entity.spawn(this.x + 0.5, this.y + 0.5, this.z + 0.5, EntityType.PRIMED_TNT));
 				}
@@ -383,6 +391,7 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 	},
 	
 	core: null,
+	removed: false,
 	
 	getGuiScreen: function(){
 		if(this.core){
@@ -411,6 +420,7 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 	},
 	
 	destroy: function(){
+		this.removed = true;
 		this.container = new UI.Container();
 		if(this.core){
 			this.core.removeChamber(this);
@@ -418,17 +428,41 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 	}
 });
 
+Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block){
+	let x = coords.relative.x;
+	let y = coords.relative.y;
+	let z = coords.relative.z;
+	for (let i = 0; i < 6; i++) {
+		let c = EnergyNetBuilder.getRelativeCoords(x, y, z, i);
+		if(World.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber){
+			let tileEnt = World.getTileEntity(c.x, c.y, c.z);
+			if(tileEnt.core){
+				item.count++;
+				return;
+			}
+		}
+	}
+	World.setBlock(x, y, z, item.id, 0);
+	World.addTileEntity(x, y, z);
+});
+
 Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block){
 	Game.prevent();
-	let x = coords.relative.x
-	let y = coords.relative.y
-	let z = coords.relative.z
+	let x = coords.relative.x;
+	let y = coords.relative.y;
+	let z = coords.relative.z;
+	let reactorConnect = 0;
 	for (let i = 0; i < 6; i++) {
 		let c = EnergyNetBuilder.getRelativeCoords(x, y, z, i);
 		if(World.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor){
-			World.setBlock(x, y, z, item.id, 0);
-			World.addTileEntity(x, y, z);
-			break;
+			reactorConnect++;
+			if(reactorConnect > 1) break;
 		}
+	}
+	if(reactorConnect == 1){
+		World.setBlock(x, y, z, item.id, 0);
+		World.addTileEntity(x, y, z);
+	} else {
+		item.count++;
 	}
 });

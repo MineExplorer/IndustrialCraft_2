@@ -1,17 +1,17 @@
 IDRegistry.genItemID("heatVent");
-Item.createItem("heatVent", "Heat Vent", {name: "heat_vent", meta: 0}, {stack: 1});
+Item.createItem("heatVent", "Heat Vent", {name: "heat_vent", meta: 0});
 
 IDRegistry.genItemID("heatVentReactor");
-Item.createItem("heatVentReactor", "Reactor Heat Vent", {name: "heat_vent", meta: 1}, {stack: 1});
+Item.createItem("heatVentReactor", "Reactor Heat Vent", {name: "heat_vent", meta: 1});
 
 IDRegistry.genItemID("heatVentComponent");
 Item.createItem("heatVentComponent", "Component Heat Vent", {name: "heat_vent", meta: 2});
 
 IDRegistry.genItemID("heatVentAdv");
-Item.createItem("heatVentAdv", "Advanced Heat Vent", {name: "heat_vent", meta: 3}, {stack: 1});
+Item.createItem("heatVentAdv", "Advanced Heat Vent", {name: "heat_vent", meta: 3});
 
 IDRegistry.genItemID("heatVentOverclocked");
-Item.createItem("heatVentOverclocked", "Overclocked Heat Vent", {name: "heat_vent", meta: 4}, {stack: 1});
+Item.createItem("heatVentOverclocked", "Overclocked Heat Vent", {name: "heat_vent", meta: 4});
 
 ReactorAPI.registerComponent(ItemID.heatVent, new ReactorAPI.heatVent(1000, 6, 0));
 ReactorAPI.registerComponent(ItemID.heatVentReactor, new ReactorAPI.heatVent(1000, 5, 5));

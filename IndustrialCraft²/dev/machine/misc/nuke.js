@@ -19,8 +19,7 @@ Callback.addCallback("PreLoaded", function(){
 	], ['#', 46, -1, 'x', ItemID.plutonium, 0, 'c', ItemID.circuitAdvanced, 0, 'n', ItemID.neutronReflectorThick, 0]);
 });
 
-function explodeNuke(coords, radius){
-	let x = coords.x, y = coords.y, z = coords.z;
+function explodeNuke(x, y, z, radius){
 	World.explode(x + 0.5, y + 0.5, z + 0.5, 0.5);
 	let entities = Entity.getAll();
 	let rad = radius * 1.5;
@@ -69,9 +68,9 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 	},
 	
 	explode: function(radius){
-		var coords = {x: this.x, y: this.y, z: this.z};
+		let x = this.x, y = this.y, z = this.z;
 		runOnMainThread(function(){
-			explodeNuke(coords, radius);
+			explodeNuke(x, y, z, radius);
 		});
 		
 		RadiationAPI.addRadiationSource(this.x + 0.5, this.y + 0.5, this.z + 0.5, radius * 2, 600);

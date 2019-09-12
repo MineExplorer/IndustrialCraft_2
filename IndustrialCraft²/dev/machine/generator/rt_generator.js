@@ -59,7 +59,7 @@ MachineRegistry.registerGenerator(BlockID.rtGenerator, {
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
 		var output = 0.5;
-		for(var i = 0; i < 5; i++){
+		for(var i = 0; i < 6; i++){
 			var slot = this.container.getSlot("slot"+i);
 			if(slot.id == ItemID.rtgPellet){
 				output *= 2;

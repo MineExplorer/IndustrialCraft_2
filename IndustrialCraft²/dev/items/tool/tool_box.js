@@ -6,15 +6,14 @@ Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
 	"aaa",
 ], ['x', 54, 0, 'a', ItemID.casingBronze, 0]);
 
-var tool_box_items = [
-	ItemID.cableTin0, ItemID.cableTin1,
-	ItemID.cableCopper0, ItemID.cableCopper1,
-	ItemID.cableGold0, ItemID.cableGold1, ItemID.cableGold2,
-	ItemID.cableIron0, ItemID.cableIron1, ItemID.cableIron2, ItemID.cableIron3,
-	ItemID.cableOptic
+var toolbox_items = [
+	ItemID.treetap, ItemID.craftingHammer, ItemID.cutter, ItemID.EUMeter,
+	ItemID.chainsaw, ItemID.drill, ItemID.diamondDrill, ItemID.iridiumDrill, ItemID.electricHoe, ItemID.electricTreetap, ItemID.scanner, ItemID.scannerAdvanced,
+	ItemID.cableTin0, ItemID.cableTin1, ItemID.cableCopper0, ItemID.cableCopper1, ItemID.cableGold0, ItemID.cableGold1, ItemID.cableGold2,
+	ItemID.cableIron0, ItemID.cableIron1, ItemID.cableIron2, ItemID.cableIron3, ItemID.cableOptic
 ];
 
-let guiToolBox = new UI.StandartWindow({
+let guiToolbox = new UI.StandartWindow({
 	standart: {
 		header: {text: {text: Translation.translate("Tool Box")}},
 		inventory: {standart: true},
@@ -24,18 +23,18 @@ let guiToolBox = new UI.StandartWindow({
 	elements: {}
 });
 
-function isValidToolBoxItem(id){
-	if(tool_box_items.indexOf(id) != -1) return true;
-	if(Item.getMaxStack(id) == 1) return true;
+function isValidToolboxItem(id){
+	if(toolbox_items.indexOf(id) != -1) return true;
+	if(ICTool.getWrenchData(id)) return true;
 	return false;
 }
 
-BackpackRegistry.addSlotsToGui(guiToolBox, 10, isValidToolBoxItem, 5, true);
+BackpackRegistry.addSlotsToGui(guiToolbox, 10, isValidToolboxItem, 5, true);
 
 Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiToolBox, "Tool Box");
+	MachineRegistry.updateGuiHeader(guiToolbox, "Tool Box");
 });
 
 BackpackRegistry.register(ItemID.toolbox, {
-    gui: guiToolBox
+    gui: guiToolbox
 });

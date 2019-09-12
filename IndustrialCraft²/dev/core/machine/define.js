@@ -150,7 +150,6 @@ var MachineRegistry = {
 	// standart functions
 	setStoragePlaceFunction: function(id, fullRotation){
 		Block.registerPlaceFunction(BlockID[id], function(coords, item, block){
-			Game.prevent();
 			var x = coords.relative.x
 			var y = coords.relative.y
 			var z = coords.relative.z

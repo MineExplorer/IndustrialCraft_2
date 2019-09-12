@@ -9,7 +9,7 @@ var ICTool = {
 	
 	isValidWrench: function(id, data, damage){
 		var wrench = this.getWrenchData(id);
-		if(wrench && (!wrench.energy || data + wrench.energy * damage < Item.getMaxDamage(id))){
+		if(wrench && (!wrench.energy || data + wrench.energy * damage <= Item.getMaxDamage(id))){
 			return true;
 		}
 		return false;

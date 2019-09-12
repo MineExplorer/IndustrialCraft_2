@@ -420,6 +420,6 @@ Callback.addCallback("tick", function (){
 	let item = Player.getCarriedItem();
 	let component = ReactorAPI.getComponent(item.id);
 	if(item.data == 0 && component && component.canStoreHeat(item)){
-		Player.setCarriedItem(item.id, 1, 1);
+		Player.setCarriedItem(item.id, item.count, 1);
 	}
 });

@@ -12,7 +12,7 @@ ReactorAPI.registerComponent(ItemID.fuelRodUranium2, new ReactorAPI.fuelRod(2, 2
 ReactorAPI.registerComponent(ItemID.fuelRodUranium4, new ReactorAPI.fuelRod(4, 20000, ItemID.fuelRodDepletedUranium4));
 RadiationAPI.regRadioactiveItem(ItemID.fuelRodUranium, 10);
 RadiationAPI.regRadioactiveItem(ItemID.fuelRodUranium2, 10);
-RadiationAPI.regRadioactiveItem(ItemID.fuelRodUranium2, 10);
+RadiationAPI.regRadioactiveItem(ItemID.fuelRodUranium4, 10);
 
 IDRegistry.genItemID("fuelRodMOX");
 IDRegistry.genItemID("fuelRodMOX2");

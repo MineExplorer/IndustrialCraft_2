@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ToolLib",
-	version: 6,
+	version: 7,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -61,13 +61,13 @@ var ToolType = {
 
 ToolAPI.breakCarriedTool = function(damage){
 	var item = Player.getCarriedItem();
-	var tool = this.getToolData(item.id);
 	var enchant = this.getEnchantExtraData(item.extra);
 	if(Math.random() < 1 / (enchant.unbreaking + 1)){
 		item.data += damage;
 	}
 	if(item.data >= Item.getMaxDamage(item.id)){
-		item.id = tool.brokenId;
+		var tool = this.getToolData(item.id);
+		item.id = tool ? tool.brokenId : 0;
 		item.count = 1;
 		item.data = 0;
 	}

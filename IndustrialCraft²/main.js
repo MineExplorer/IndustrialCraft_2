@@ -3110,15 +3110,20 @@ Callback.addCallback("LevelLoaded", function(){
 function checkCoilSlot(i, id, count, data, container){
 	var slot = container.getSlot("slot"+i)
 	if(id == ItemID.coil && slot.id == 0){
+		if(count == 1) return true;
+		var slotFinded = false;
 		for(var i = 9; i < 46; i++){
 			var invSlot = Player.getInventorySlot(i);
 			if(invSlot.id == id && invSlot.count == count){
-				Player.setInventorySlot(i, --count ? id : 0, count, 0);
+				Player.setInventorySlot(i, id, count - 1, data);
+				slotFinded = true;
 				break;
 			}
 		}
-		slot.id = id;
-		slot.count = 1;
+		if(slotFinded){
+			slot.id = id;
+			slot.count = 1;
+		}
 	}
 	return false;
 }
@@ -3669,17 +3674,21 @@ function checkReactorSlot(i, id, count, data, container){
 	}
 	let slot = container.getSlot("slot"+i);
 	if(ReactorAPI.isReactorItem(id) && slot.id == 0){
-		if(Item.getMaxStack(id) == 1) return true;
+		if(count == 1) return true;
+		let slotFinded = false;
 		for(let i = 9; i < 46; i++){
 			let invSlot = Player.getInventorySlot(i);
 			if(invSlot.id == id && invSlot.count == count && invSlot.data == data){
-				Player.setInventorySlot(i, --count ? id : 0, count, 0);
+				Player.setInventorySlot(i, id, count - 1, data);
+				slotFinded = true;
 				break;
 			}
 		}
-		slot.id = id;
-		slot.count = 1;
-		slot.data = data;
+		if(slotFinded){
+			slot.id = id;
+			slot.count = 1;
+			slot.data = data;
+		}
 	}
 	return false;
 }
@@ -10175,7 +10184,7 @@ ReactorAPI.registerComponent(ItemID.fuelRodUranium2, new ReactorAPI.fuelRod(2, 2
 ReactorAPI.registerComponent(ItemID.fuelRodUranium4, new ReactorAPI.fuelRod(4, 20000, ItemID.fuelRodDepletedUranium4));
 RadiationAPI.regRadioactiveItem(ItemID.fuelRodUranium, 10);
 RadiationAPI.regRadioactiveItem(ItemID.fuelRodUranium2, 10);
-RadiationAPI.regRadioactiveItem(ItemID.fuelRodUranium2, 10);
+RadiationAPI.regRadioactiveItem(ItemID.fuelRodUranium4, 10);
 
 IDRegistry.genItemID("fuelRodMOX");
 IDRegistry.genItemID("fuelRodMOX2");
@@ -11730,9 +11739,9 @@ Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
 ], ['x', 54, 0, 'a', ItemID.casingBronze, 0]);
 
 var toolbox_items = [
-	ItemID.treetap, ItemID.craftingHammer, ItemID.cutter, ItemID.EUMeter,
-	ItemID.chainsaw, ItemID.drill, ItemID.diamondDrill, ItemID.iridiumDrill, ItemID.electricHoe, ItemID.electricTreetap, ItemID.scanner, ItemID.scannerAdvanced,
-	ItemID.cableTin0, ItemID.cableTin1, ItemID.cableCopper0, ItemID.cableCopper1, ItemID.cableGold0, ItemID.cableGold1, ItemID.cableGold2,
+	ItemID.treetap, ItemID.craftingHammer, ItemID.cutter, ItemID.electricHoe, ItemID.electricTreetap, ItemID.EUMeter,
+	ItemID.cableTin0, ItemID.cableTin1, ItemID.cableCopper0, ItemID.cableCopper1,
+	ItemID.cableGold0, ItemID.cableGold1, ItemID.cableGold2,
 	ItemID.cableIron0, ItemID.cableIron1, ItemID.cableIron2, ItemID.cableIron3, ItemID.cableOptic
 ];
 
@@ -11748,7 +11757,7 @@ let guiToolbox = new UI.StandartWindow({
 
 function isValidToolboxItem(id){
 	if(toolbox_items.indexOf(id) != -1) return true;
-	if(ICTool.getWrenchData(id)) return true;
+	if(ToolAPI.getToolData(id) || ICTool.getWrenchData(id)) return true;
 	return false;
 }
 

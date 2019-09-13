@@ -22,7 +22,7 @@ Callback.addCallback("PreLoaded", function(){
 	
 	MachineRecipeRegistry.registerRecipesFor("compressor", {
 		// Items
-		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), ingredientCount: 9},
+		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), sourceCount: 9},
 		"ItemID.dustLapis": {id: ItemID.plateLapis, count: 1, data: 0},
 		"ItemID.ingotAlloy": {id: ItemID.plateAlloy, count: 1, data: 0},
 		"ItemID.carbonMesh": {id: ItemID.carbonPlate, count: 1, data: 0},
@@ -30,32 +30,32 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.coalChunk": {id: 264, count: 1, data: 0},
 		"ItemID.cellEmpty": {id: ItemID.cellAir, count: 1, data: 0},
 		// Dense Plates
-		"ItemID.densePlateIron": {id: ItemID.plateIron, count: 9},
-		"ItemID.densePlateGold": {id: ItemID.plateGold, count: 9},
-		"ItemID.densePlateTin": {id: ItemID.plateTin, count: 9},
-		"ItemID.densePlateCopper": {id: ItemID.plateCopper, count: 9},
-		"ItemID.densePlateBronze": {id: ItemID.plateBronze, count: 9},
-		"ItemID.densePlateSteel": {id: ItemID.plateSteel, count: 9},
-		"ItemID.densePlateLead": {id: ItemID.plateLead, count: 9},
+		"ItemID.plateIron": {id: ItemID.densePlateIron, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateGold": {id: ItemID.densePlateGold, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateTin": {id: ItemID.densePlateTin, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateCopper": {id: ItemID.densePlateCopper, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateBronze": {id: ItemID.densePlateBronze, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateSteel": {id: ItemID.densePlateSteel, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateLead": {id: ItemID.densePlateLead, count: 1, data: 0, sourceCount: 9},
 		
 		// Blocks
-		265: {id: 42, count: 1, data: 0, ingredientCount: 9},
-		266: {id: 41, count: 1, data: 0, ingredientCount: 9},
-		"ItemID.ingotCopper": {id: BlockID.blockCopper, count: 1, data: 0, ingredientCount: 9},
-		"ItemID.ingotTin": {id: BlockID.blockTin, count: 1, data: 0, ingredientCount: 9},
-		"ItemID.ingotLead": {id: BlockID.blockLead, count: 1, data: 0, ingredientCount: 9},
-		"ItemID.ingotSteel": {id: BlockID.blockSteel, count: 1, data: 0, ingredientCount: 9},
-		"ItemID.ingotBronze": {id: BlockID.blockBronze, count: 1, data: 0, ingredientCount: 9},
+		265: {id: 42, count: 1, data: 0, sourceCount: 9},
+		266: {id: 41, count: 1, data: 0, sourceCount: 9},
+		"ItemID.ingotCopper": {id: BlockID.blockCopper, count: 1, data: 0, sourceCount: 9},
+		"ItemID.ingotTin": {id: BlockID.blockTin, count: 1, data: 0, sourceCount: 9},
+		"ItemID.ingotLead": {id: BlockID.blockLead, count: 1, data: 0, sourceCount: 9},
+		"ItemID.ingotSteel": {id: BlockID.blockSteel, count: 1, data: 0, sourceCount: 9},
+		"ItemID.ingotBronze": {id: BlockID.blockBronze, count: 1, data: 0, sourceCount: 9},
 		80: {id: 79, count: 1, data: 0},
-		12: {id: 24, count: 1, data: 0, ingredientCount: 4},
-		336: {id: 45, count: 1, data: 0, ingredientCount: 4},
-		405: {id: 112, count: 1, data: 0, ingredientCount: 4},
-		348: {id: 89, count: 1, data: 0, ingredientCount: 4},
-		406: {id: 155, count: 1, data: 0, ingredientCount: 4},
-		331: {id: 152, count: 1, data: 0, ingredientCount: 9},
-		"351:4": {id: 22, count: 1, data: 0, ingredientCount: 9},
-		264: {id: 57, count: 1, data: 0, ingredientCount: 9},
-		388: {id: 133, count: 1, data: 0, ingredientCount: 9},
+		12: {id: 24, count: 1, data: 0, sourceCount: 4},
+		336: {id: 45, count: 1, data: 0, sourceCount: 4},
+		405: {id: 112, count: 1, data: 0, sourceCount: 4},
+		348: {id: 89, count: 1, data: 0, sourceCount: 4},
+		406: {id: 155, count: 1, data: 0, sourceCount: 4},
+		331: {id: 152, count: 1, data: 0, sourceCount: 9},
+		"351:4": {id: 22, count: 1, data: 0, sourceCount: 9},
+		264: {id: 57, count: 1, data: 0, sourceCount: 9},
+		388: {id: 133, count: 1, data: 0, sourceCount: 9},
 	}, true);
 });
 
@@ -126,7 +126,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = MachineRecipeRegistry.getRecipeResult("compressor", sourceSlot.id, sourceSlot.data);
-		if(result && (sourceSlot.count >= result.ingredientCount || !result.ingredientCount)){
+		if(result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)){
 			var resultSlot = this.container.getSlot("slotResult");
 			if(resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0){
 				if(this.data.energy >= this.data.energy_consumption){
@@ -135,7 +135,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 					newActive = true;
 				}
 				if(this.data.progress.toFixed(3) >= 1){
-					sourceSlot.count -= result.ingredientCount || 1;
+					sourceSlot.count -= result.sourceCount || 1;
 					resultSlot.id = result.id;
 					resultSlot.data = result.data;
 					resultSlot.count += result.count;

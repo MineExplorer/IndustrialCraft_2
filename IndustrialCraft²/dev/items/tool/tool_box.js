@@ -7,9 +7,9 @@ Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
 ], ['x', 54, 0, 'a', ItemID.casingBronze, 0]);
 
 var toolbox_items = [
-	ItemID.treetap, ItemID.craftingHammer, ItemID.cutter, ItemID.EUMeter,
-	ItemID.chainsaw, ItemID.drill, ItemID.diamondDrill, ItemID.iridiumDrill, ItemID.electricHoe, ItemID.electricTreetap, ItemID.scanner, ItemID.scannerAdvanced,
-	ItemID.cableTin0, ItemID.cableTin1, ItemID.cableCopper0, ItemID.cableCopper1, ItemID.cableGold0, ItemID.cableGold1, ItemID.cableGold2,
+	ItemID.treetap, ItemID.craftingHammer, ItemID.cutter, ItemID.electricHoe, ItemID.electricTreetap, ItemID.EUMeter,
+	ItemID.cableTin0, ItemID.cableTin1, ItemID.cableCopper0, ItemID.cableCopper1,
+	ItemID.cableGold0, ItemID.cableGold1, ItemID.cableGold2,
 	ItemID.cableIron0, ItemID.cableIron1, ItemID.cableIron2, ItemID.cableIron3, ItemID.cableOptic
 ];
 
@@ -25,7 +25,7 @@ let guiToolbox = new UI.StandartWindow({
 
 function isValidToolboxItem(id){
 	if(toolbox_items.indexOf(id) != -1) return true;
-	if(ICTool.getWrenchData(id)) return true;
+	if(ToolAPI.getToolData(id) || ICTool.getWrenchData(id)) return true;
 	return false;
 }
 

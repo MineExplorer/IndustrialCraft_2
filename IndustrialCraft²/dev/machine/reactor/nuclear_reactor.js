@@ -38,17 +38,21 @@ function checkReactorSlot(i, id, count, data, container){
 	}
 	let slot = container.getSlot("slot"+i);
 	if(ReactorAPI.isReactorItem(id) && slot.id == 0){
-		if(Item.getMaxStack(id) == 1) return true;
+		if(count == 1) return true;
+		let slotFinded = false;
 		for(let i = 9; i < 46; i++){
 			let invSlot = Player.getInventorySlot(i);
 			if(invSlot.id == id && invSlot.count == count && invSlot.data == data){
-				Player.setInventorySlot(i, --count ? id : 0, count, 0);
+				Player.setInventorySlot(i, id, count - 1, data);
+				slotFinded = true;
 				break;
 			}
 		}
-		slot.id = id;
-		slot.count = 1;
-		slot.data = data;
+		if(slotFinded){
+			slot.id = id;
+			slot.count = 1;
+			slot.data = data;
+		}
 	}
 	return false;
 }

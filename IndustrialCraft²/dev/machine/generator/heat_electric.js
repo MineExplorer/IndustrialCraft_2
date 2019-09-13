@@ -59,15 +59,20 @@ Callback.addCallback("LevelLoaded", function(){
 function checkCoilSlot(i, id, count, data, container){
 	var slot = container.getSlot("slot"+i)
 	if(id == ItemID.coil && slot.id == 0){
+		if(count == 1) return true;
+		var slotFinded = false;
 		for(var i = 9; i < 46; i++){
 			var invSlot = Player.getInventorySlot(i);
 			if(invSlot.id == id && invSlot.count == count){
-				Player.setInventorySlot(i, --count ? id : 0, count, 0);
+				Player.setInventorySlot(i, id, count - 1, data);
+				slotFinded = true;
 				break;
 			}
 		}
-		slot.id = id;
-		slot.count = 1;
+		if(slotFinded){
+			slot.id = id;
+			slot.count = 1;
+		}
 	}
 	return false;
 }

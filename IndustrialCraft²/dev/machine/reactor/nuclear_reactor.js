@@ -210,9 +210,10 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 				}
 			}
 		}
-		if(this.data.isEnabled){
+		if(this.data.isEnabled && World.getThreadTime()%20 == 0){
 			this.data.maxHeat = 10000;
 			this.data.hem = 1;
+			this.data.output = 0;
 			this.processChambers();
 			this.calculateHeatEffects();
 		}
@@ -223,7 +224,6 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	
 	energyTick: function(type, src){
 		src.add(this.getEnergyOutput());
-		this.data.output = 0;
 	},
 	
 	redstone: function(signal){

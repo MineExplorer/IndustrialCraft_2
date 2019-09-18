@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "TileRender",
-	version: 8,
+	version: 9,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -177,15 +177,41 @@ var TileRenderer = {
 		BlockRenderer.setCustomCollisionShape(id, data, shape);
 	},
 	
+	__plantVertex: [
+		[0.15, 0, 0.15, 1, 1],
+		[0.85, 0, 0.85, 0, 1],
+		[0.85, 1, 0.85, 0, 0],
+		[0.15, 0, 0.15, 1, 1],
+		[0.15, 1, 0.15, 1, 0],
+		[0.85, 1, 0.85, 0, 0],
+		[0.15, 0, 0.85, 1, 1],
+		[0.85, 0, 0.15, 0, 1],
+		[0.85, 1, 0.15, 0, 0],
+		[0.15, 0, 0.85, 1, 1],
+		[0.15, 1, 0.85, 1, 0],
+		[0.85, 1, 0.15, 0, 0]
+	],
+	
 	setPlantModel: function(id){
 		var shape = new ICRender.CollisionShape();
 		shape.addEntry().addBox(7/8, 7/8, 7/8, 1/8, 1/8, 1/8);
 		BlockRenderer.setCustomCollisionShape(id, 0, shape);
 		var render = new ICRender.Model();
-		var model = BlockRenderer.createModel();
+		/*var model = BlockRenderer.createModel();
 		model.addBox(0.5, 0, 0, 0.5, 1, 1, id, 0);
 		model.addBox(0, 0, 0.5, 1, 1, 0.5, id, 0);
-		render.addEntry(model);
+		*/
+		var mesh = new RenderMesh();
+		mesh.setBlockTexture("rubber_tree_sapling", 0);
+		for(var i = 0; i < 12; i++){
+			var poly = this.__plantVertex[i];
+			mesh.addVertex(poly[0], poly[1], poly[2], poly[3], poly[4]);
+		}
+		for(var i = 11; i >= 0; i--){
+			var poly = this.__plantVertex[i];
+			mesh.addVertex(poly[0], poly[1], poly[2], poly[3], poly[4]);
+		}
+		render.addEntry(mesh);
 		BlockRenderer.setStaticICRender(id, 0, render);	
 	},
 	

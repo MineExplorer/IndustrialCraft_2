@@ -1,5 +1,5 @@
 IDRegistry.genItemID("containmentBox");
-Item.createItem("containmentBox", "Containment Box", {name: "containment_box", meta: 0});
+Item.createItem("containmentBox", "Containment Box", {name: "containment_box", meta: 0}, {stack: 1});
 
 Recipes.addShaped({id: ItemID.containmentBox, count: 1, data: 0}, [
 	"aaa",

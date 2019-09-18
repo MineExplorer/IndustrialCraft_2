@@ -33,7 +33,7 @@ Block.setRandomTickCallback(BlockID.rubberTreeSapling, function(x, y, z){
 	if(!DIRT_TILES[World.getBlockID(x, y-1, z)]){
 		World.destroyBlock(x, y, z, true);
 	}
-	else if(Math.random() < 0.1){
+	else if(Math.random() < 0.1 && World.getLightLevel(x, y, z) >= 9){
 		RubberTreeGenerationHelper.generateRubberTree(x, y, z);
 	}
 });

@@ -1620,7 +1620,7 @@ Block.setRandomTickCallback(BlockID.rubberTreeSapling, function(x, y, z){
 	if(!DIRT_TILES[World.getBlockID(x, y-1, z)]){
 		World.destroyBlock(x, y, z, true);
 	}
-	else if(Math.random() < 0.1){
+	else if(Math.random() < 0.1 && World.getLightLevel(x, y, z) >= 9){
 		RubberTreeGenerationHelper.generateRubberTree(x, y, z);
 	}
 });
@@ -3846,9 +3846,10 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 				}
 			}
 		}
-		if(this.data.isEnabled){
+		if(this.data.isEnabled && World.getThreadTime()%20 == 0){
 			this.data.maxHeat = 10000;
 			this.data.hem = 1;
+			this.data.output = 0;
 			this.processChambers();
 			this.calculateHeatEffects();
 		}
@@ -3859,7 +3860,6 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	
 	energyTick: function(type, src){
 		src.add(this.getEnergyOutput());
-		this.data.output = 0;
 	},
 	
 	redstone: function(signal){
@@ -5498,7 +5498,7 @@ Callback.addCallback("PreLoaded", function(){
 	
 	MachineRecipeRegistry.registerRecipesFor("compressor", {
 		// Items
-		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), ingredientCount: 9},
+		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), sourceCount: 9},
 		"ItemID.dustLapis": {id: ItemID.plateLapis, count: 1, data: 0},
 		"ItemID.ingotAlloy": {id: ItemID.plateAlloy, count: 1, data: 0},
 		"ItemID.carbonMesh": {id: ItemID.carbonPlate, count: 1, data: 0},
@@ -5506,32 +5506,32 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.coalChunk": {id: 264, count: 1, data: 0},
 		"ItemID.cellEmpty": {id: ItemID.cellAir, count: 1, data: 0},
 		// Dense Plates
-		"ItemID.densePlateIron": {id: ItemID.plateIron, count: 9},
-		"ItemID.densePlateGold": {id: ItemID.plateGold, count: 9},
-		"ItemID.densePlateTin": {id: ItemID.plateTin, count: 9},
-		"ItemID.densePlateCopper": {id: ItemID.plateCopper, count: 9},
-		"ItemID.densePlateBronze": {id: ItemID.plateBronze, count: 9},
-		"ItemID.densePlateSteel": {id: ItemID.plateSteel, count: 9},
-		"ItemID.densePlateLead": {id: ItemID.plateLead, count: 9},
+		"ItemID.plateIron": {id: ItemID.densePlateIron, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateGold": {id: ItemID.densePlateGold, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateTin": {id: ItemID.densePlateTin, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateCopper": {id: ItemID.densePlateCopper, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateBronze": {id: ItemID.densePlateBronze, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateSteel": {id: ItemID.densePlateSteel, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateLead": {id: ItemID.densePlateLead, count: 1, data: 0, sourceCount: 9},
 		
 		// Blocks
-		265: {id: 42, count: 1, data: 0, ingredientCount: 9},
-		266: {id: 41, count: 1, data: 0, ingredientCount: 9},
-		"ItemID.ingotCopper": {id: BlockID.blockCopper, count: 1, data: 0, ingredientCount: 9},
-		"ItemID.ingotTin": {id: BlockID.blockTin, count: 1, data: 0, ingredientCount: 9},
-		"ItemID.ingotLead": {id: BlockID.blockLead, count: 1, data: 0, ingredientCount: 9},
-		"ItemID.ingotSteel": {id: BlockID.blockSteel, count: 1, data: 0, ingredientCount: 9},
-		"ItemID.ingotBronze": {id: BlockID.blockBronze, count: 1, data: 0, ingredientCount: 9},
+		265: {id: 42, count: 1, data: 0, sourceCount: 9},
+		266: {id: 41, count: 1, data: 0, sourceCount: 9},
+		"ItemID.ingotCopper": {id: BlockID.blockCopper, count: 1, data: 0, sourceCount: 9},
+		"ItemID.ingotTin": {id: BlockID.blockTin, count: 1, data: 0, sourceCount: 9},
+		"ItemID.ingotLead": {id: BlockID.blockLead, count: 1, data: 0, sourceCount: 9},
+		"ItemID.ingotSteel": {id: BlockID.blockSteel, count: 1, data: 0, sourceCount: 9},
+		"ItemID.ingotBronze": {id: BlockID.blockBronze, count: 1, data: 0, sourceCount: 9},
 		80: {id: 79, count: 1, data: 0},
-		12: {id: 24, count: 1, data: 0, ingredientCount: 4},
-		336: {id: 45, count: 1, data: 0, ingredientCount: 4},
-		405: {id: 112, count: 1, data: 0, ingredientCount: 4},
-		348: {id: 89, count: 1, data: 0, ingredientCount: 4},
-		406: {id: 155, count: 1, data: 0, ingredientCount: 4},
-		331: {id: 152, count: 1, data: 0, ingredientCount: 9},
-		"351:4": {id: 22, count: 1, data: 0, ingredientCount: 9},
-		264: {id: 57, count: 1, data: 0, ingredientCount: 9},
-		388: {id: 133, count: 1, data: 0, ingredientCount: 9},
+		12: {id: 24, count: 1, data: 0, sourceCount: 4},
+		336: {id: 45, count: 1, data: 0, sourceCount: 4},
+		405: {id: 112, count: 1, data: 0, sourceCount: 4},
+		348: {id: 89, count: 1, data: 0, sourceCount: 4},
+		406: {id: 155, count: 1, data: 0, sourceCount: 4},
+		331: {id: 152, count: 1, data: 0, sourceCount: 9},
+		"351:4": {id: 22, count: 1, data: 0, sourceCount: 9},
+		264: {id: 57, count: 1, data: 0, sourceCount: 9},
+		388: {id: 133, count: 1, data: 0, sourceCount: 9},
 	}, true);
 });
 
@@ -5602,7 +5602,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = MachineRecipeRegistry.getRecipeResult("compressor", sourceSlot.id, sourceSlot.data);
-		if(result && (sourceSlot.count >= result.ingredientCount || !result.ingredientCount)){
+		if(result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)){
 			var resultSlot = this.container.getSlot("slotResult");
 			if(resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0){
 				if(this.data.energy >= this.data.energy_consumption){
@@ -5611,7 +5611,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 					newActive = true;
 				}
 				if(this.data.progress.toFixed(3) >= 1){
-					sourceSlot.count -= result.ingredientCount || 1;
+					sourceSlot.count -= result.sourceCount || 1;
 					resultSlot.id = result.id;
 					resultSlot.data = result.data;
 					resultSlot.count += result.count;
@@ -10324,9 +10324,9 @@ Recipes.addShaped({id: ItemID.neutronReflectorIridium, count: 1, data: 0}, [
 IDRegistry.genItemID("coolantCell");
 IDRegistry.genItemID("coolantCell3");
 IDRegistry.genItemID("coolantCell6");
-Item.createItem("coolantCell", "10k Coolant Cell", {name: "coolant_cell", meta: 0}, {stack: 1});
-Item.createItem("coolantCell3", "30k Coolant Cell", {name: "coolant_cell", meta: 1}, {stack: 1});
-Item.createItem("coolantCell6", "60k Coolant Cell", {name: "coolant_cell", meta: 2}, {stack: 1});
+Item.createItem("coolantCell", "10k Coolant Cell", {name: "coolant_cell", meta: 0});
+Item.createItem("coolantCell3", "30k Coolant Cell", {name: "coolant_cell", meta: 1});
+Item.createItem("coolantCell6", "60k Coolant Cell", {name: "coolant_cell", meta: 2});
 ReactorAPI.registerComponent(ItemID.coolantCell, new ReactorAPI.heatStorage(10000));
 ReactorAPI.registerComponent(ItemID.coolantCell3, new ReactorAPI.heatStorage(30000));
 ReactorAPI.registerComponent(ItemID.coolantCell6, new ReactorAPI.heatStorage(60000));
@@ -10476,8 +10476,8 @@ Recipes.addShaped({id: ItemID.heatVentOverclocked, count: 1, data: 1}, [
 
 IDRegistry.genItemID("rshCondensator");
 IDRegistry.genItemID("lzhCondensator");
-Item.createItem("rshCondensator", "RSH-Condensator", {name: "rsh_condensator"}, {stack: 1});
-Item.createItem("lzhCondensator", "LZH-Condensator", {name: "lzh_condensator"}, {stack: 1});
+Item.createItem("rshCondensator", "RSH-Condensator", {name: "rsh_condensator"});
+Item.createItem("lzhCondensator", "LZH-Condensator", {name: "lzh_condensator"});
 ReactorAPI.registerComponent(ItemID.rshCondensator, new ReactorAPI.condensator(20000));
 ReactorAPI.registerComponent(ItemID.lzhCondensator, new ReactorAPI.condensator(100000));
 
@@ -10495,42 +10495,60 @@ Recipes.addShaped({id: ItemID.lzhCondensator, count: 1, data: 1}, [
 
 Recipes.addShapeless({id: ItemID.rshCondensator, count: 1, data: 1}, [{id: ItemID.rshCondensator, data: -1}, {id: 331, data: 0}],
 function(api, field, result){
+	var index = 0;
+	var canBeRepaired = false;
 	for (var i in field){
-		if (field[i].id == ItemID.rshCondensator){
-			if(field[i].data <= 1) break;
-			field[i].data = Math.max(field[i].data - 10000, 1);
+		var slot = field[i];
+		if (slot.id == ItemID.rshCondensator){
+			if(slot.data <= 1) break;
+			canBeRepaired = true;
+			slot.data = Math.max(parseInt(slot.data - 10000 / slot.count), 1);
+		} else if(slot.id != 0){
+			index = i;
 		}
-		else {
-			api.decreaseFieldSlot(i);
-		}
+	}
+	if(canBeRepaired){
+		api.decreaseFieldSlot(index);
 	}
 	result.id = result.count = 0;
 });
 
 Recipes.addShapeless({id: ItemID.lzhCondensator, count: 1, data: 1}, [{id: ItemID.lzhCondensator, data: -1}, {id: 331, data: 0}],
 function(api, field, result){
+	var index = 0;
+	var canBeRepaired = false;
 	for (var i in field){
-		if (field[i].id == ItemID.lzhCondensator){
-			if(field[i].data <= 1) break;
-			field[i].data = Math.max(field[i].data - 10000, 1);
+		var slot = field[i];
+		if (slot.id == ItemID.lzhCondensator){
+			if(slot.data <= 1) break;
+			canBeRepaired = true;
+			slot.data = Math.max(parseInt(slot.data - 10000 / slot.count), 1);
+		} else if(slot.id != 0){
+			index = i;
 		}
-		else {
-			api.decreaseFieldSlot(i);
-		}
+	}
+	if(canBeRepaired){
+		api.decreaseFieldSlot(index);
 	}
 	result.id = result.count = 0;
 });
 
 Recipes.addShapeless({id: ItemID.lzhCondensator, count: 1, data: 1}, [{id: ItemID.lzhCondensator, data: -1}, {id: 351, data: 4}],
 function(api, field, result){
+	var index = 0;
+	var canBeRepaired = false;
 	for (var i in field){
-		if (field[i].id == ItemID.lzhCondensator){
-			if(field[i].data <= 1) break;
-			field[i].data = Math.max(field[i].data - 40000, 1);
+		var slot = field[i];
+		if (slot.id == ItemID.lzhCondensator){
+			if(slot.data <= 1) break;
+			canBeRepaired = true;
+			slot.data = Math.max(parseInt(slot.data - 40000 / slot.count), 1);
+		} else if(slot.id != 0){
+			index = i;
 		}
-		else {
-			api.decreaseFieldSlot(i);
-		}
+	}
+	if(canBeRepaired){
+		api.decreaseFieldSlot(index);
 	}
 	result.id = result.count = 0;
 });
@@ -11731,7 +11749,7 @@ Item.registerUseFunction("cutter", function(coords, item, block){
 // file: items/tool/tool_box.js
 
 IDRegistry.genItemID("toolbox");
-Item.createItem("toolbox", "Tool Box", {name: "tool_box", meta: 0});
+Item.createItem("toolbox", "Tool Box", {name: "tool_box", meta: 0}, {stack: 1});
 
 Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
 	"axa",
@@ -11771,13 +11789,37 @@ BackpackRegistry.register(ItemID.toolbox, {
     gui: guiToolbox
 });
 
+Callback.addCallback("ItemUse", function(coords, item, block){
+	if(block.id == 58){
+		for(let i = 9; i < 45; i++){
+			let slot = Player.getInventorySlot(i);
+			if(item.id == ItemID.toolbox){
+				let container = BackpackRegistry.containers["d" + slot.data];
+				if(container){
+					let isEmpty = true;
+					for(let i = 1; i <= 10; i++){
+						if(container.getSlot("slot"+i).id != 0){
+							isEmpty = false;
+						}
+					}
+					if(isEmpty){
+						delete BackpackRegistry.containers["d" + slot.data];
+						Player.setInventorySlot(i, slot.id, 1, 0);
+					}
+				}
+			}
+		}
+	}
+});
+
+
 
 
 
 // file: items/tool/containment_box.js
 
 IDRegistry.genItemID("containmentBox");
-Item.createItem("containmentBox", "Containment Box", {name: "containment_box", meta: 0});
+Item.createItem("containmentBox", "Containment Box", {name: "containment_box", meta: 0}, {stack: 1});
 
 Recipes.addShaped({id: ItemID.containmentBox, count: 1, data: 0}, [
 	"aaa",

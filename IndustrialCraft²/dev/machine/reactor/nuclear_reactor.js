@@ -202,7 +202,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	tick: function(){
 		let content = this.container.getGuiContent();
 		let reactorSize = this.getReactorSize();
-		if(content){
+		if (content) {
 			for(let y = 0; y < 6; y++){
 				for(let x = 0; x < 9; x++){
 					let newX = (x < reactorSize) ? 400 + 59 * x : 1400;
@@ -210,12 +210,16 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 				}
 			}
 		}
-		if(this.data.isEnabled && World.getThreadTime()%20 == 0){
-			this.data.maxHeat = 10000;
-			this.data.hem = 1;
+		if (this.data.isEnabled) {
+			if(World.getThreadTime()%20 == 0){
+				this.data.maxHeat = 10000;
+				this.data.hem = 1;
+				this.data.output = 0;
+				this.processChambers();
+				this.calculateHeatEffects();
+			}
+		} else {
 			this.data.output = 0;
-			this.processChambers();
-			this.calculateHeatEffects();
 		}
 		this.setActive(this.data.heat >= 1000 || this.data.output > 0);
 		this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
@@ -227,7 +231,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	redstone: function(signal){
-		this.data.isEnabled = (signal.power > 0);
+		this.data.isEnabled = signal.power > 0;
 	},
 	
 	getEnergyOutput: function(){

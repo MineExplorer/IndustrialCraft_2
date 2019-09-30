@@ -23,8 +23,9 @@ IDRegistry.genBlockID("rubberTreeSapling");
 Block.createBlock("rubberTreeSapling", [
 	{name: "Rubber Tree Sapling", texture: [["rubber_tree_sapling", 0]], inCreative: false}
 ]);
+Block.setDestroyTime(BlockID.rubberTreeSapling, 0);
+TileRenderer.setPlantModel(BlockID.rubberTreeSapling, 0, "rubber_tree_sapling", 0);
 
-TileRenderer.setPlantModel(BlockID.rubberTreeSapling);
 Block.registerDropFunction("rubberTreeSapling", function(){
 	return [[ItemID.rubberSapling, 1, 0]];
 });

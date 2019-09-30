@@ -6,37 +6,23 @@ Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
 	"aaa",
 ], ['x', 54, 0, 'a', ItemID.casingBronze, 0]);
 
-var toolbox_items = [
+let toolbox_items = [
 	ItemID.treetap, ItemID.craftingHammer, ItemID.cutter, ItemID.electricHoe, ItemID.electricTreetap, ItemID.EUMeter,
 	ItemID.cableTin0, ItemID.cableTin1, ItemID.cableCopper0, ItemID.cableCopper1,
 	ItemID.cableGold0, ItemID.cableGold1, ItemID.cableGold2,
 	ItemID.cableIron0, ItemID.cableIron1, ItemID.cableIron2, ItemID.cableIron3, ItemID.cableOptic
 ];
 
-let guiToolbox = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: Translation.translate("Tool Box")}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	drawing: [],
-	elements: {}
-});
-
-function isValidToolboxItem(id){
-	if(toolbox_items.indexOf(id) != -1) return true;
-	if(ToolAPI.getToolData(id) || ICTool.getWrenchData(id)) return true;
-	return false;
-}
-
-BackpackRegistry.addSlotsToGui(guiToolbox, 10, isValidToolboxItem, 5, true);
-
-Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiToolbox, "Tool Box");
-});
-
 BackpackRegistry.register(ItemID.toolbox, {
-    gui: guiToolbox
+	title: "Tool Box",
+	slots: 10,
+	inRow: 5,
+	slotsCenter: true,
+	isValidItem: function(id, count, data){
+		if(toolbox_items.indexOf(id) != -1) return true;
+		if(ToolAPI.getToolData(id) || ICTool.getWrenchData(id)) return true;
+		return false;
+	}
 });
 
 Callback.addCallback("ItemUse", function(coords, item, block){

@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "TileRender",
-	version: 9,
+	version: 10,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -116,10 +116,9 @@ var TileRenderer = {
 
 	setRotationPlaceFunction: function(id, fullRotation){
 		Block.registerPlaceFunction(id, function(coords, item, block){
-			Game.prevent();
-			var x = coords.relative.x
-			var y = coords.relative.y
-			var z = coords.relative.z
+			var x = coords.relative.x;
+			var y = coords.relative.y;
+			var z = coords.relative.z;
 			World.setBlock(x, y, z, item.id, 0);
 			var rotation = TileRenderer.getBlockRotation(fullRotation);
 			var tile = World.addTileEntity(x, y, z);
@@ -192,17 +191,13 @@ var TileRenderer = {
 		[0.85, 1, 0.15, 0, 0]
 	],
 	
-	setPlantModel: function(id){
+	setPlantModel: function(id, data, texture, meta){
 		var shape = new ICRender.CollisionShape();
-		shape.addEntry().addBox(7/8, 7/8, 7/8, 1/8, 1/8, 1/8);
-		BlockRenderer.setCustomCollisionShape(id, 0, shape);
+		shape.addEntry().addBox(7/8, 1, 7/8, 1/8, 0, 1/8);
+		BlockRenderer.setCustomCollisionShape(id, data, shape);
 		var render = new ICRender.Model();
-		/*var model = BlockRenderer.createModel();
-		model.addBox(0.5, 0, 0, 0.5, 1, 1, id, 0);
-		model.addBox(0, 0, 0.5, 1, 1, 0.5, id, 0);
-		*/
 		var mesh = new RenderMesh();
-		mesh.setBlockTexture("rubber_tree_sapling", 0);
+		mesh.setBlockTexture(texture, meta || 0);
 		for(var i = 0; i < 12; i++){
 			var poly = this.__plantVertex[i];
 			mesh.addVertex(poly[0], poly[1], poly[2], poly[3], poly[4]);
@@ -212,7 +207,24 @@ var TileRenderer = {
 			mesh.addVertex(poly[0], poly[1], poly[2], poly[3], poly[4]);
 		}
 		render.addEntry(mesh);
-		BlockRenderer.setStaticICRender(id, 0, render);	
+		BlockRenderer.setStaticICRender(id, data, render);	
+	},
+	
+	setCropModel: function(id, data, height){
+		if(height){
+			Block.setShape(id, 0, 0, 0, 1, height, 1, data);
+		}
+		var shape = new ICRender.CollisionShape();
+		shape.addEntry().addBox(1, 1, 1, 0, 0, 0);
+		BlockRenderer.setCustomCollisionShape(id, data, shape);
+		var render = new ICRender.Model();
+		var model = BlockRenderer.createModel();
+		model.addBox(0.25, 0, 0, 0.25, 1, 1, id, data);
+		model.addBox(0.75, 0, 0, 0.75, 1, 1, id, data);
+		model.addBox(0, 0, 0.25, 1, 1, 0.25, id, data);
+		model.addBox(0, 0, 0.75, 1, 1, 0.75, id, data);
+		render.addEntry(model);
+		BlockRenderer.setStaticICRender(id, data, render);	
 	},
 	
 	makeSlab: function(id, fullBlockID, fullBlockData){

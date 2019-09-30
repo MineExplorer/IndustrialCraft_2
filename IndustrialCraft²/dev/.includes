@@ -12,7 +12,7 @@ core/item_name.js
 core/ui_buttons.js
 core/integration.js
 
-block/sapling.js
+block/rubber_sapling.js
 block/rubber_tree.js
 block/ore.js
 block/metal.js

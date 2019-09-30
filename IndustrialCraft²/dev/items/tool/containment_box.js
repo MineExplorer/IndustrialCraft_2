@@ -36,10 +36,7 @@ let guiContainmentBox = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiContainmentBox, "Containment Box");
-});
-
 BackpackRegistry.register(ItemID.containmentBox, {
+	title: "Containment Box",
     gui: guiContainmentBox
 });

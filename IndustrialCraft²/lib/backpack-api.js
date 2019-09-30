@@ -21,10 +21,12 @@
  */
 LIBRARY({
     name: "BackpackAPI",
-    version: 2,
+    version: 5,
     shared: true,
     api: "CoreEngine",
 });
+
+Translation.addTranslation("Backpack", {ru: "Рюкзак"});
 
 Saver.addSavesScope("BackpacksScope",
     function read(scope) {
@@ -41,7 +43,6 @@ Saver.addSavesScope("BackpacksScope",
 );
 
 var BackpackRegistry = {
-
     /**
      * Следующий уникальный идентификтор
      */
@@ -54,11 +55,6 @@ var BackpackRegistry = {
      * Объекты описывающие параметры, передаваемые вторый аргументом в метод register. Ключом является айди рюкзака
      */
     prototypes: {},
-    /**
-     * Объект, который содержит стандартные интерфейсы. Ключом является количество слотов
-     */
-    guis: {},
-
     /**
      * Метод регистрации рюкзака
      * @param id айди предмета, при клике которым будет открыт интерфейс
@@ -76,50 +72,100 @@ var BackpackRegistry = {
         }
 
         let slots = obj.slots || 10;
-        let gui = obj.gui;
-        let isValidFunc = obj.isValidItem || function (id) {
-            return !BackpackRegistry.isBackpack(id);
+        let isValidFunc = obj.isValidItem || function (id, count, data) {
+            return !BackpackRegistry.isBackpack(id) &&
+                (obj.items ? BackpackRegistry.isValidFor(id, data, obj.items) : true);
         };
 
-        if (!gui && !this.guis[slots]) {
-
+        if (!obj.gui) {
             if (slots <= 0) {
                 Logger.Log("slots amount is not valid", "ERROR");
                 return;
             }
 
-            let gui = new UI.StandartWindow({
-                standart: {
-                    header: {
-                        text: {
-                            text: "Backpack"
-                        }
+            obj.gui = new UI.StandartWindow({
+                    standart: {
+                        header: {
+                            text: {
+                                text: obj.title || "Backpack"
+                            }
+                        },
+                        inventory: {
+                            standart: true
+                        },
+                        background: {
+                            standart: true
+                        },
+                        minHeight: 90 + (slots / 10 * 61) + 70
                     },
-                    inventory: {
-                        standart: true
-                    },
-                    background: {
-                        standart: true
-                    },
-                    minHeight: 90 + (slots / 10 * 61) + 70
-                },
-                drawing: [],
-                elements: {}
-            });
+                    drawing: [],
+                    elements: {}
+                });
 
-            BackpackRegistry.addSlotsToGui(gui, slots, isValidFunc, obj.inRow, true);
-            this.guis[slots] = gui;
+                BackpackRegistry.addSlotsToGui(obj.gui, slots, isValidFunc, obj.inRow, obj.slotsCenter !== false);
         }
 
         Item.registerUseFunctionForID(id, function (coords, item) {
             BackpackRegistry.openGuiFor(item.id, item.data);
         });
-		
-		Item.registerNoTargetUseFunction(id, function (item) {
+
+        Item.registerNoTargetUseFunction(id, function (item) {
             BackpackRegistry.openGuiFor(item.id, item.data);
         });
 
         this.prototypes[id] = obj;
+    },
+
+    isValidFor: function (id, data, items) {
+        data = data || 0;
+
+        for (let i in items) {
+            let item = items[i];
+
+            switch (typeof item) {
+                case "number":
+                    if (id === item) {
+                        return true;
+                    }
+                    break;
+                case "object":
+                    let rId = item.id;
+                    let rData = item.data || 0;
+                    let isOk = true;
+
+                    switch (typeof rId) {
+                        case "string":
+                            let nameId = IDRegistry.getNameByID(id);
+                            isOk = nameId !== null ? nameId.match(rId) : false;
+                            break;
+                        case "number":
+                            isOk = rId == id;
+                    }
+
+                    if (isOk == true) {
+                        switch (typeof rData) {
+                            case "string":
+                                if ((data + "").match(rData)) {
+                                    return true;
+                                }
+                                break;
+                            case "number":
+                                if (rData == -1 || rData == data) {
+                                    return true;
+                                }
+                        }
+                    }
+                    break;
+                case "string":
+                    let namedId = IDRegistry.getNameByID(id);
+                    if (namedId !== null && namedId.match(item)) {
+                        return true;
+                    }
+                    break;
+            }
+        }
+
+        return false;
     },
 
     /**
@@ -143,8 +189,11 @@ var BackpackRegistry = {
                 if (!notUpdateData)
                     Player.setCarriedItem(id, 1, data);
             }
-
-            container.openAs(prototype.gui || this.guis[prototype.slots]);
+			
+			let gui = prototype.gui;
+			let header = gui.getWindow("header");
+			header.contentProvider.drawing[1].text = Translation.translate(prototype.title || "Backpack");
+            container.openAs(gui);
             return data;
         }
 
@@ -160,7 +209,6 @@ var BackpackRegistry = {
     isBackpack: function (id) {
         return this.prototypes[id];
     },
-
 
     /**
      * Добавляет слоты в интерфейс
@@ -182,7 +230,7 @@ var BackpackRegistry = {
         let xp = x;
         let yp = y || 70;
 
-        for (let i = 1;i <= slots; i++) {
+        for (let i = 1; i <= slots; i++) {
             content.elements["slot" + i] = {type: "slot", x: xp, y: yp, isValid: isValidFunc};
 
             xp += 61;
@@ -194,7 +242,6 @@ var BackpackRegistry = {
 
         return gui;
     }
-
 };
 
 EXPORT("BackpackRegistry", BackpackRegistry);

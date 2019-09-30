@@ -1,22 +1,22 @@
 let ReactorAPI = {
 	reactor_components: {},
 	
-	registerComponent: function(id, component){
-		if(component.maxDamage){
+	registerComponent: function(id, component) {
+		if (component.maxDamage) {
 			Item.setMaxDamage(id, component.maxDamage);
 		}
 		this.reactor_components[id] = component;
 	},
 	
-	getComponent: function(id){
+	getComponent: function(id) {
 		return this.reactor_components[id];
 	},
 	
-	isReactorItem: function(id){
+	isReactorItem: function(id) {
 		return this.getComponent(id)? true : false;
 	},
 	
-	reactorComponent: function(){
+	reactorComponent: function() {
 		this.processChamber = function(item, reactor, x, y, heatRun) { },
 		
 		this.acceptUraniumPulse = function(item, reactor, pulsingItem, youX, youY, pulseX, pulseY, heatrun) {
@@ -416,10 +416,10 @@ let ReactorAPI = {
 	},
 }
 
-Callback.addCallback("tick", function (){
+Callback.addCallback("tick", function(){
 	let item = Player.getCarriedItem();
 	let component = ReactorAPI.getComponent(item.id);
-	if(item.data == 0 && component && component.canStoreHeat(item)){
+	if (item.data == 0 && component && component.canStoreHeat(item)) {
 		Player.setCarriedItem(item.id, item.count, 1);
 	}
 });

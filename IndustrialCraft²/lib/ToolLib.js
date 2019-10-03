@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ToolLib",
-	version: 7,
+	version: 8,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -27,7 +27,7 @@ var ToolType = {
 		damage: 2,
 		blockTypes: ["dirt"],
 		useItem: function(coords, item, block){
-			if(block.id==2&&coords.side==1){ 
+			if(block.id==2 && coords.side==1){ 
 				World.setBlock(coords.x, coords.y, coords.z, 198);
 				World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.75);
 				ToolAPI.breakCarriedTool(1);
@@ -156,7 +156,7 @@ ToolAPI.playerAttackHook = function(attacker, victim, item) {
 				}
 			}
 		}
-		if (item.data >= toolData.durability) {
+		if (item.data >= toolData.toolMaterial.durability) {
 			if (!(toolData.onBroke && toolData.onBroke(item))) {
 				item.id = toolData.brokenId;
 				item.count = 1;

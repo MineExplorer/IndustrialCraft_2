@@ -190,13 +190,7 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 						var material = ToolAPI.getBlockMaterial(blockID) || {};
 						if(material.name == "dirt" || material.name == "stone"){
 							item.data += 800;
-							if(block.id == 60){
-								World.destroyBlock(xx, yy, zz, false);
-								World.drop(xx+0.5, yy+0.5, zz+0.5, 3, 1);
-							}
-							else{
-								World.destroyBlock(xx, yy, zz, true);
-							}
+							World.destroyBlock(xx, yy, zz, true);
 						}
 						if(item.data + 800 >= Item.getMaxDamage(item.id)){
 							return;

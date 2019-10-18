@@ -1,9 +1,9 @@
 IDRegistry.genItemID("coolantCell");
 IDRegistry.genItemID("coolantCell3");
 IDRegistry.genItemID("coolantCell6");
-Item.createItem("coolantCell", "10k Coolant Cell", {name: "coolant_cell", meta: 0});
-Item.createItem("coolantCell3", "30k Coolant Cell", {name: "coolant_cell", meta: 1});
-Item.createItem("coolantCell6", "60k Coolant Cell", {name: "coolant_cell", meta: 2});
+Item.createItem("coolantCell", "10k Coolant Cell", {name: "coolant_cell", meta: 0}, {isTech: true});
+Item.createItem("coolantCell3", "30k Coolant Cell", {name: "coolant_cell", meta: 1}, {isTech: true});
+Item.createItem("coolantCell6", "60k Coolant Cell", {name: "coolant_cell", meta: 2}, {isTech: true});
 ReactorAPI.registerComponent(ItemID.coolantCell, new ReactorAPI.heatStorage(10000));
 ReactorAPI.registerComponent(ItemID.coolantCell3, new ReactorAPI.heatStorage(30000));
 ReactorAPI.registerComponent(ItemID.coolantCell6, new ReactorAPI.heatStorage(60000));

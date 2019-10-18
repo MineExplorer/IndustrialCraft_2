@@ -76,10 +76,11 @@ MachineRegistry.registerEUStorage(BlockID.storageBatBox, {
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
 		var tier = this.getTier();
-		var TRANSFER = transferByTier[tier];
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, tier);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, tier);
-		
+		var transfer = transferByTier[tier] * 2;
+		if(World.getThreadTime()%2 == 0){ // icon override crash fix
+			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, transfer, tier);
+			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, transfer, tier);
+		}
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);

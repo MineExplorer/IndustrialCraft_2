@@ -46,7 +46,7 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 			return [[blockID, 1, 0]];
 		}
 		var drop = [[ItemID.iridiumChunk, 1, 0]];
-		if(Math.random() < enchant.fortune/3 - 1/3){drop.push(drop[0]);}
+		if(Math.random() < enchant.fortune/6) drop.push(drop[0]);
 		ToolAPI.dropOreExp(coords, 12, 28, enchant.experience);
 		return drop;
 	}
@@ -89,17 +89,18 @@ var OreGenerator = {
 		maxHeight: __config__.getNumber("iridium_ore.maxHeight")
 	},
 	
-	addFlag: function(name, flag){
-		if(OreGenerator[name].enabled){
-			OreGenerator[name].enabled = !Flags.addFlag(flag);
+	addFlag: function(name, flag, disableOre){
+		if(this[name].enabled){
+			var flag = !Flags.addFlag(flag)
+			if(disableOre) this[name].enabled = flag;
 		}
 	}
 }
 
 OreGenerator.addFlag("copper", "oreGenCopper");
 OreGenerator.addFlag("tin", "oreGenTin");
-OreGenerator.addFlag("lead", "oreGenLead");
-OreGenerator.addFlag("uranium", "oreGenUranium");
+OreGenerator.addFlag("lead", "oreGenLead", true);
+OreGenerator.addFlag("uranium", "oreGenUranium", true);
 
 Callback.addCallback("PostLoaded", function(){
 	if(OreGenerator.copper.enabled){

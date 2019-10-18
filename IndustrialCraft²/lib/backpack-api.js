@@ -84,25 +84,25 @@ var BackpackRegistry = {
             }
 
             obj.gui = new UI.StandartWindow({
-                    standart: {
-                        header: {
-                            text: {
-                                text: obj.title || "Backpack"
-                            }
-                        },
-                        inventory: {
-                            standart: true
-                        },
-                        background: {
-                            standart: true
-                        },
-                        minHeight: 90 + (slots / 10 * 61) + 70
+                standart: {
+                    header: {
+                        text: {
+                            text: ""
+                        }
                     },
-                    drawing: [],
-                    elements: {}
-                });
+                    inventory: {
+                        standart: true
+                    },
+                    background: {
+                        standart: true
+                    },
+                    minHeight: 90 + (slots / 10 * 61) + 70
+                },
+                drawing: [],
+                elements: {}
+            });
 
-                BackpackRegistry.addSlotsToGui(obj.gui, slots, isValidFunc, obj.inRow, obj.slotsCenter !== false);
+            BackpackRegistry.addSlotsToGui(obj.gui, slots, isValidFunc, obj.inRow, obj.slotsCenter !== false);
         }
 
         Item.registerUseFunctionForID(id, function (coords, item) {
@@ -189,10 +189,10 @@ var BackpackRegistry = {
                 if (!notUpdateData)
                     Player.setCarriedItem(id, 1, data);
             }
-			
-			let gui = prototype.gui;
-			let header = gui.getWindow("header");
-			header.contentProvider.drawing[1].text = Translation.translate(prototype.title || "Backpack");
+
+            let gui = prototype.gui;
+            let header = gui.getWindow("header");
+            header.contentProvider.drawing[1].text = Translation.translate(prototype.title || "Backpack");
             container.openAs(gui);
             return data;
         }
@@ -224,20 +224,17 @@ var BackpackRegistry = {
     addSlotsToGui: function (gui, slots, isValidFunc, inRow, center, x, y) {
         let content = gui.getContent();
 
+        y = y || 70;
         x = center ? 300 + (700 - inRow * 61) / 2 : x || 345;
         inRow = inRow || 10;
 
-        let xp = x;
-        let yp = y || 70;
-
-        for (let i = 1; i <= slots; i++) {
-            content.elements["slot" + i] = {type: "slot", x: xp, y: yp, isValid: isValidFunc};
-
-            xp += 61;
-            if (i % inRow === 0) {
-                xp = x;
-                yp += 61;
-            }
+        for (let i = 0; i < slots; i++) {
+            content.elements["slot" + (i + 1)] = {
+                type: "slot",
+                x: x + i % inRow * 61,
+                y: y + Math.floor(i / inRow) * 61,
+                isValid: isValidFunc
+            };
         }
 
         return gui;
@@ -245,4 +242,3 @@ var BackpackRegistry = {
 };
 
 EXPORT("BackpackRegistry", BackpackRegistry);
-

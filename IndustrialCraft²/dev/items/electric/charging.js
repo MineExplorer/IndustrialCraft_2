@@ -1,18 +1,18 @@
 IDRegistry.genItemID("chargingBattery");
-Item.createItem("chargingBattery", "Charging RE-Battery", {name: "charging_re_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 1, "storage");
+Item.createItem("chargingBattery", "Charging RE-Battery", {name: "charging_re_battery", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 1, "storage", true, true);
 
 IDRegistry.genItemID("chargingAdvBattery");
-Item.createItem("chargingAdvBattery", "Advanced Charging Battery", {name: "adv_charging_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 2, "storage");
+Item.createItem("chargingAdvBattery", "Advanced Charging Battery", {name: "adv_charging_battery", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 2, "storage", true, true);
 
 IDRegistry.genItemID("chargingCrystal");
-Item.createItem("chargingCrystal", "Charging Energy Crystal", {name: "charging_energy_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 3, "storage");
+Item.createItem("chargingCrystal", "Charging Energy Crystal", {name: "charging_energy_crystal", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 3, "storage", true, true);
 
 IDRegistry.genItemID("chargingLapotronCrystal");
-Item.createItem("chargingLapotronCrystal", "Charging Lapotron Crystal", {name: "charging_lapotron_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 4, "storage");
+Item.createItem("chargingLapotronCrystal", "Charging Lapotron Crystal", {name: "charging_lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 4, "storage", true, true);
 ItemName.setRarity(ItemID.chargingLapotronCrystal, 1);
 
 Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name){

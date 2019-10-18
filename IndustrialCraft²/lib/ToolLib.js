@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ToolLib",
-	version: 8,
+	version: 9,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -161,6 +161,7 @@ ToolAPI.playerAttackHook = function(attacker, victim, item) {
 				item.id = toolData.brokenId;
 				item.count = 1;
 				item.data = 0;
+				World.playSoundAtEntity(Player.get(), "random.break", 1);
 			}
 		}
 		var damage = toolData.damage + toolData.toolMaterial.damage;
@@ -179,7 +180,7 @@ ToolAPI.destroyBlockHook = function (coords, block, item) {
 			if (toolData.modifyEnchant) {
 				toolData.modifyEnchant(enchant, item);
 			}
-			if (Math.random() < 1 / (enchant.unbreaking + 1)) {
+			if (Block.getDestroyTime(block.id) > 0 && Math.random() < 1 / (enchant.unbreaking + 1)) {
 				item.data++;
 				if (toolData.isWeapon) {
 					item.data++;
@@ -187,7 +188,7 @@ ToolAPI.destroyBlockHook = function (coords, block, item) {
 			}
 		}
 		if (item.data >= toolData.toolMaterial.durability) {
-			if (!(toolData.onBroke && toolData.onBroke(item, coords, block))) {
+			if (!(toolData.onBroke && toolData.onBroke(item))) {
 				item.id = toolData.brokenId;
 				item.count = 1;
 				item.data = 0;
@@ -196,7 +197,15 @@ ToolAPI.destroyBlockHook = function (coords, block, item) {
 		}
 		Player.setCarriedItem(item.id, item.count, item.data, item.extra);
 	}
-},
+}
+
+ToolAPI.getBlockMaterialName = function (blockID) {
+	var data = this.getBlockData(blockID);
+    if (data) {
+        return data.material.name;
+    }
+    return null;
+}
 
 Block.setDestroyLevel = function(id, lvl){
 	Block.registerDropFunction(id, function(coords, blockID, blockData, level){
@@ -213,7 +222,7 @@ function registerStandardDrop(id, lvl){
 	}, lvl);
 }
 
-// Material multipliers fix
+// Materials fix
 ToolAPI.blockMaterials["stone"].multiplier = 10/3;
 ToolAPI.blockMaterials["wood"].multiplier = 1;
 ToolAPI.blockMaterials["dirt"].multiplier = 1;
@@ -226,6 +235,7 @@ ToolAPI.registerBlockMaterial(120, "unbreaking");
 ToolAPI.registerBlockMaterial(138, "stone");
 ToolAPI.registerBlockMaterial(159, "stone");
 ToolAPI.registerBlockMaterial(174, "stone");
+ToolAPI.registerBlockMaterial(175, "plant");
 
 // Drop fix
 Block.setDestroyLevelForID(24, 1);

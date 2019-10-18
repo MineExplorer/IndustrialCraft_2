@@ -3,15 +3,15 @@ IDRegistry.genItemID("advBatpack");
 IDRegistry.genItemID("energypack");
 IDRegistry.genItemID("lappack");
 
-Item.createArmorItem("batpack", "Batpack", {name: "batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: false});
-Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: false});
-Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
-Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 10000000, texture: "armor/lappack_1.png", isTech: false});
+Item.createArmorItem("batpack", "Batpack", {name: "batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: true});
+Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: true});
+Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: true});
+Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 10000000, texture: "armor/lappack_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 1, "storage");
-ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 2, "storage");
-ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 3, "storage");
-ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 4, "storage");
+ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 1, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 2, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 3, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 4, "storage", true);
 ItemName.setRarity(ItemID.lappack, 1);
 
 Item.registerNameOverrideFunction(ItemID.batpack, ItemName.showItemStorage);

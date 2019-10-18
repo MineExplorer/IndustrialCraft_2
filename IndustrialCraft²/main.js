@@ -2,7 +2,7 @@
 BUILD INFO:
   dir: dev
   target: main.js
-  files: 112
+  files: 114
 */
 
 
@@ -44,10 +44,6 @@ Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
 Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
-var MobEffect = Native.PotionEffect;
-var ParticleType = Native.ParticleType;
-var BlockSide = Native.BlockSide;
-var EntityType = Native.EntityType;
 var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
 
 // energy (Eu)
@@ -269,7 +265,7 @@ Translation.addTranslation("Overclocked Heat Vent", {ru: "Разогнанный
 Translation.addTranslation("RSH-Condensator", {ru: "Красный конденсатор", es: "RSH-Condensador", pt: "RSH-Condensador", zh: "红石冷凝模块"});
 Translation.addTranslation("LZH-Condensator", {ru: "Лазуритовый конденсатор", es: "LZH-Condensador", pt: "LZH-Condensador", zh: "青金石冷凝模块"});
 
-// Electric
+// Electric Components
 Translation.addTranslation("Electronic Circuit", {ru: "Электросхема", es: "Circuito Electrónico", pt: "Circuito Eletrônico", zh: "电路板"});
 Translation.addTranslation("Advanced Circuit", {ru: "Улучшенная электросхема", es: "Circuito Avanzado", pt: "Circuito Avançado", zh: "高级电路板"});
 Translation.addTranslation("Coil", {ru: "Катушка", es: "Bobina", pt: "Bobina", zh: "线圈"});
@@ -1580,10 +1576,14 @@ var IntegrationAPI = {
 	}
 }
 
+ModAPI.addAPICallback("TreeCapitator", function(api){
+	api.registerTree([[BlockID.rubberTreeLog, -1], [BlockID.rubberTreeLogLatex, -1]], [BlockID.rubberTreeLeaves, -1]);
+});
 
 
 
-// file: block/sapling.js
+
+// file: block/rubber_tree/sapling.js
 
 var DIRT_TILES = {
 	2: true,
@@ -1594,14 +1594,13 @@ var DIRT_TILES = {
 IDRegistry.genItemID("rubberSapling");
 Item.createItem("rubberSapling", "Rubber Tree Sapling", {name: "rubber_tree_sapling", data: 0});
 
-Item.registerUseFunction("rubberSapling", function(coords, item, tile){
+Item.registerUseFunction("rubberSapling", function(coords, item, block){
 	var place = coords.relative;
 	var tile1 = World.getBlock(place.x, place.y, place.z);
 	var tile2 = World.getBlock(place.x, place.y - 1, place.z);
 	
-	if (GenerationUtils.isTransparentBlock(tile1.id) && DIRT_TILES[tile2.id]){
+	if (canTileBeReplaced(tile1.id) && DIRT_TILES[tile2.id]) {
 		World.setBlock(place.x, place.y, place.z, BlockID.rubberTreeSapling);
-		World.addTileEntity(place.x, place.y, place.z);
 		Player.setCarriedItem(item.id, item.count - 1, item.data);
 	}
 });
@@ -1610,8 +1609,10 @@ IDRegistry.genBlockID("rubberTreeSapling");
 Block.createBlock("rubberTreeSapling", [
 	{name: "Rubber Tree Sapling", texture: [["rubber_tree_sapling", 0]], inCreative: false}
 ]);
+Block.setDestroyTime(BlockID.rubberTreeSapling, 0);
+ToolAPI.registerBlockMaterial(BlockID.rubberTreeSapling, "plant");
+TileRenderer.setPlantModel(BlockID.rubberTreeSapling, 0, "rubber_tree_sapling", 0);
 
-TileRenderer.setPlantModel(BlockID.rubberTreeSapling);
 Block.registerDropFunction("rubberTreeSapling", function(){
 	return [[ItemID.rubberSapling, 1, 0]];
 });
@@ -1650,31 +1651,13 @@ Callback.addCallback("DestroyBlock", function(coords, block, player){
 
 
 
-// file: block/rubber_tree.js
-
-function destroyLeaves(x, y, z){
-	var max = 0;
-	while(World.getBlockID(x, y+max+1, z)==BlockID.rubberTreeLeaves){max++;}
-	for(var yy = y; yy <= y+max; yy++){
-		for(var xx = x-2; xx <= x+2; xx++){
-			for(var zz = z-2; zz <= z+2; zz++){
-				if(World.getBlockID(xx, yy, zz)==BlockID.rubberTreeLeaves){
-					if(Math.random() < .075){
-						World.drop(xx, yy, zz, ItemID.rubberSapling, 1, 0);
-					}
-					World.setBlock(xx, yy, zz, 0);
-				}
-			}
-		}
-	}
-}
+// file: block/rubber_tree/log.js
 
 IDRegistry.genBlockID("rubberTreeLog");
 Block.createBlock("rubberTreeLog", [
 	{name: "Rubber Tree Log", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: true}
 ], "opaque");
 Block.registerDropFunction("rubberTreeLog", function(coords, blockID){
-	destroyLeaves(coords.x, coords.y, coords.z);
 	return [[blockID, 1, 0]];
 });
 Block.setDestroyTime(BlockID.rubberTreeLog, 0.4);
@@ -1686,7 +1669,6 @@ Block.createBlockWithRotation("rubberTreeLogLatex", [
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_with_latex", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
 ], "opaque");
 Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID){
-	destroyLeaves(coords.x, coords.y, coords.z);
 	return [[BlockID.rubberTreeLog, 1, 0], [ItemID.latex, 1, 0]];
 });
 Block.setDestroyTime(BlockID.rubberTreeLogLatex, 0.4);
@@ -1697,25 +1679,99 @@ Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, da
 	}
 });
 
-
-IDRegistry.genBlockID("rubberTreeLeaves");
-Block.createBlock("rubberTreeLeaves", [
-	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false}
-]);
-Block.registerDropFunction("rubberTreeLeaves", function(){
-	if(Math.random() < .05){
-		return [[ItemID.rubberSapling, 1, 0]]
-	}
-	else {
-		return [];
-	}
-});
-Block.setDestroyTime(BlockID.rubberTreeLeaves, 0.2);
-ToolAPI.registerBlockMaterial(BlockID.rubberTreeLeaves, "plant");
-
+Recipes.addFurnace(BlockID.rubberTreeLog, 17, 3);
 Recipes.addShapeless({id: 5, count: 3, data: 3}, [{id: BlockID.rubberTreeLog, data: -1}]);
 
 
+
+
+// file: block/rubber_tree/leaves.js
+
+IDRegistry.genBlockID("rubberTreeLeaves");
+Block.createBlock("rubberTreeLeaves", [
+	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false},
+	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false},
+	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: true}
+]);
+Block.registerDropFunction("rubberTreeLeaves", function(coords, blockID, blockData, level, enchant){
+	if(level > 0 || Player.getCarriedItem().id == 359){
+		return [[blockID, 1, 2]];
+	}
+	if(Math.random() < .04){
+		return [[ItemID.rubberSapling, 1, 0]]
+	}
+	return [];
+});
+
+Block.setDestroyTime(BlockID.rubberTreeLeaves, 0.2);
+ToolAPI.registerBlockMaterial(BlockID.rubberTreeLeaves, "plant");
+
+function checkLeaves(x, y, z, explored){
+	let blockID = World.getBlockID(x, y, z);
+	if(blockID == BlockID.rubberTreeLog || blockID == BlockID.rubberTreeLogLatex){
+		return true;
+	}
+	if(blockID == BlockID.rubberTreeLeaves){
+		explored[x+':'+y+':'+z] = true;
+	}
+	return false;
+}
+
+function checkLeavesFor6Sides(x, y, z, explored){
+	return checkLeaves(x-1, y, z, explored) ||
+	checkLeaves(x+1, y, z, explored) ||
+	checkLeaves(x, y, z-1, explored) ||
+	checkLeaves(x, y, z+1, explored) ||
+	checkLeaves(x, y-1, z, explored) ||
+	checkLeaves(x, y+1, z, explored);
+}
+
+function updateLeaves(x, y, z){
+	for(let xx = x - 1; xx <= x + 1; xx++){
+		for(let yy = y - 1; yy <= y + 1; yy++){
+			for(let zz = z - 1; zz <= z + 1; zz++){
+				let block = World.getBlock(xx, yy, zz);
+				if(block.id == BlockID.rubberTreeLeaves && block.data == 0){
+					World.setBlock(xx, yy, zz, BlockID.rubberTreeLeaves, 1);
+				}
+			}
+		}
+	}
+}
+
+Block.setRandomTickCallback(BlockID.rubberTreeLeaves, function(x, y, z, id, data){
+	if(data == 1){
+		let explored = {};
+		explored[x+':'+y+':'+z] = true;
+		for(let i = 0; i < 4; i++){
+			let checkingLeaves = explored;
+			explored = {};
+			for(let coords in checkingLeaves){
+				let c = coords.split(':');
+				if(checkLeavesFor6Sides(parseInt(c[0]), parseInt(c[1]), parseInt(c[2]), explored)){
+					World.setBlock(x, y, z, BlockID.rubberTreeLeaves, 0);
+					return;
+				}
+			}
+		}
+		World.setBlock(x, y, z, 0);
+		updateLeaves(x, y, z);
+		let dropFunc = Block.dropFunctions[id];
+		let drop = dropFunc(null, id, data, 0, {});
+		for(let i in drop){
+			World.drop(x, y, z, drop[i][0], drop[i][1], drop[i][2]);
+		}
+	}
+});
+
+Callback.addCallback("DestroyBlock", function(coords, block, player){
+	updateLeaves(coords.x, coords.y, coords.z);
+});
+
+
+
+
+// file: block/rubber_tree/generator.js
 
 var RubberTreeGenerationHelper = {
 	/*
@@ -1742,42 +1798,65 @@ var RubberTreeGenerationHelper = {
 		var leaves = params.leaves;
 		var log = params.log;
 		
-		var height = parseInt(Math.random() * (0.5 + params.height.max - params.height.min) + params.height.min);
-		var k = 0.25;
-		for(var ys = 0; ys < height; ys++){
-			if(log.resin && Math.random() < k){
-				World.setBlock(x, y + ys, z, log.resin, parseInt(Math.random()*4) + 4);
-				k -= 0.1;
+		var height = this.getHeight(x, y, z, random(params.height.min, params.height.max) + 2);
+		if(height >= 5){
+			height -= 2;
+			var k = 0.25;
+			for(var ys = 0; ys < height; ys++){
+				if(log.resin && Math.random() < k){
+					World.setBlock(x, y + ys, z, log.resin, parseInt(Math.random()*4) + 4);
+					k -= 0.1;
+				}
+				else{
+					World.setFullBlock(x, y + ys, z, log);
+				}
 			}
-			else{
-				World.setFullBlock(x, y + ys, z, log);
-			}
-		}
-		if(params.pike){
-			for(var ys = 0; ys < params.pike; ys++){
-				World.setFullBlock(x, y + ys + height, z, leaves);
-			}
-		}
-		
-		var leavesStart = params.height.start;
-		var leavesEnd = height;
-		var leavesMiddle = (leavesEnd + leavesStart) / 2;
-		var leavesLen = leavesEnd - leavesStart;
-		for(var ys = leavesStart; ys < leavesEnd; ys++){
-			for(var xs = -params.radius; xs <= params.radius; xs++){
-				for(var zs = -params.radius; zs <= params.radius; zs++){
-					var d = Math.sqrt(xs*xs + zs*zs) + (Math.random()*0.5 + 0.5) * Math.pow(Math.abs(leavesMiddle - ys) / leavesLen, 1.5) * 1.2;
-					var blockID = World.getBlockID(x + xs, y + ys, z + zs);
-					if(d <= params.radius + 0.5 && (blockID==0 || blockID==106)){
-						World.setFullBlock(x + xs, y + ys, z + zs, leaves);
+			
+			var leavesStart = parseInt(height / 2);
+			var leavesEnd = height;
+			var leavesHeight = height - leavesStart;
+			for(var ys = leavesStart; ys <= leavesEnd; ys++){
+				for(var xs = -params.radius; xs <= params.radius; xs++){
+					for(var zs = -params.radius; zs <= params.radius; zs++){
+						var d = Math.sqrt(xs*xs + zs*zs);
+						var radius = params.radius + 0.5 + Math.random() * Math.abs(leavesEnd - ys + 1) / leavesHeight;
+						if(ys == leavesEnd) radius /= 2;
+						if(d <= radius){
+							this.setLeaves(x + xs, y + ys, z + zs, leaves);
+						}
 					}
+				}
+			}
+			
+			if(params.pike){
+				for(var ys = 1; ys <= params.pike; ys++){
+					this.setLeaves(x, y + ys + height, z, leaves);
 				}
 			}
 		}
 	},
+	
+	getHeight: function(x, y, z, max){
+		var height = 0;
+		while(height < max){
+			var blockID = World.getBlockID(x, y + height, z);
+			if(blockID != 0 && ToolAPI.getBlockMaterialName(blockID) != "plant"){
+				break;
+			}
+			height++;
+		}
+		return height;
+	},
+	
+	setLeaves: function(x, y, z, leaves){
+		var blockID = World.getBlockID(x, y, z);
+		if(blockID==0 || blockID==106){
+			World.setFullBlock(x, y, z, leaves);
+		}
+	},
 
 	generateRubberTree: function(x, y, z){
-		RubberTreeGenerationHelper.generateCustomTree(x, y, z, {
+		this.generateCustomTree(x, y, z, {
 			log: {
 				id: BlockID.rubberTreeLog,
 				data: 0,
@@ -1788,9 +1867,8 @@ var RubberTreeGenerationHelper = {
 				data: 0
 			},
 			height: {
-				min: 4,
+				min: 3,
 				max: 8,
-				start: 2 + parseInt(Math.random() * 2)
 			},
 			pike: 2 + parseInt(Math.random() * 1.5),
 			radius: 2
@@ -1888,7 +1966,7 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 			return [[blockID, 1, 0]];
 		}
 		var drop = [[ItemID.iridiumChunk, 1, 0]];
-		if(Math.random() < enchant.fortune/3 - 1/3){drop.push(drop[0]);}
+		if(Math.random() < enchant.fortune/6) drop.push(drop[0]);
 		ToolAPI.dropOreExp(coords, 12, 28, enchant.experience);
 		return drop;
 	}
@@ -1931,17 +2009,18 @@ var OreGenerator = {
 		maxHeight: __config__.getNumber("iridium_ore.maxHeight")
 	},
 	
-	addFlag: function(name, flag){
-		if(OreGenerator[name].enabled){
-			OreGenerator[name].enabled = !Flags.addFlag(flag);
+	addFlag: function(name, flag, disableOre){
+		if(this[name].enabled){
+			var flag = !Flags.addFlag(flag)
+			if(disableOre) this[name].enabled = flag;
 		}
 	}
 }
 
 OreGenerator.addFlag("copper", "oreGenCopper");
 OreGenerator.addFlag("tin", "oreGenTin");
-OreGenerator.addFlag("lead", "oreGenLead");
-OreGenerator.addFlag("uranium", "oreGenUranium");
+OreGenerator.addFlag("lead", "oreGenLead", true);
+OreGenerator.addFlag("uranium", "oreGenUranium", true);
 
 Callback.addCallback("PostLoaded", function(){
 	if(OreGenerator.copper.enabled){
@@ -3206,22 +3285,25 @@ TileRenderer.setRotationPlaceFunction(BlockID.electricHeatGenerator, true);
 let ReactorAPI = {
 	reactor_components: {},
 	
-	registerComponent: function(id, component){
-		if(component.maxDamage){
+	registerComponent: function(id, component) {
+		if (component.maxDamage) {
 			Item.setMaxDamage(id, component.maxDamage);
+		}
+		if (component.getMaxHeat() > 0) {
+			Item.addToCreative(id, 1, 1);
 		}
 		this.reactor_components[id] = component;
 	},
 	
-	getComponent: function(id){
+	getComponent: function(id) {
 		return this.reactor_components[id];
 	},
 	
-	isReactorItem: function(id){
+	isReactorItem: function(id) {
 		return this.getComponent(id)? true : false;
 	},
 	
-	reactorComponent: function(){
+	reactorComponent: function() {
 		this.processChamber = function(item, reactor, x, y, heatRun) { },
 		
 		this.acceptUraniumPulse = function(item, reactor, pulsingItem, youX, youY, pulseX, pulseY, heatrun) {
@@ -3621,14 +3703,6 @@ let ReactorAPI = {
 	},
 }
 
-Callback.addCallback("tick", function (){
-	let item = Player.getCarriedItem();
-	let component = ReactorAPI.getComponent(item.id);
-	if(item.data == 0 && component && component.canStoreHeat(item)){
-		Player.setCarriedItem(item.id, item.count, 1);
-	}
-});
-
 
 
 
@@ -3838,7 +3912,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	tick: function(){
 		let content = this.container.getGuiContent();
 		let reactorSize = this.getReactorSize();
-		if(content){
+		if (content) {
 			for(let y = 0; y < 6; y++){
 				for(let x = 0; x < 9; x++){
 					let newX = (x < reactorSize) ? 400 + 59 * x : 1400;
@@ -3846,12 +3920,16 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 				}
 			}
 		}
-		if(this.data.isEnabled && World.getThreadTime()%20 == 0){
-			this.data.maxHeat = 10000;
-			this.data.hem = 1;
+		if (this.data.isEnabled) {
+			if(World.getThreadTime()%20 == 0){
+				this.data.maxHeat = 10000;
+				this.data.hem = 1;
+				this.data.output = 0;
+				this.processChambers();
+				this.calculateHeatEffects();
+			}
+		} else {
 			this.data.output = 0;
-			this.processChambers();
-			this.calculateHeatEffects();
 		}
 		this.setActive(this.data.heat >= 1000 || this.data.output > 0);
 		this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
@@ -3863,7 +3941,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	redstone: function(signal){
-		this.data.isEnabled = (signal.power > 0);
+		this.data.isEnabled = signal.power > 0;
 	},
 	
 	getEnergyOutput: function(){
@@ -3972,14 +4050,14 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		if (power >= 0.85 && Math.random() <= 0.2 * this.data.hem) {
 			let coord = this.getRandCoord(2);
 			let block = World.getBlockID(coord.x, coord.y, coord.z);
-			let mat = ToolAPI.getBlockMaterial(block);
+			let material = ToolAPI.getBlockMaterialName(block);
 			if (block == BlockID.nuclearReactor){
 				let tileEntity = World.getTileEntity(coord.x, coord.y, coord.z);
 				if(tileEntity){
 					tileEntity.explode();
 				}
 			}
-			else if (mat && (mat.name == "stone" || mat.name == "dirt")) {
+			else if (material == "stone" || material == "dirt") {
 				World.setBlock(coord.x, coord.y, coord.z, 10, 1);
 			}
 		} 
@@ -4005,8 +4083,8 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		if (power >= 0.4 && Math.random() <= this.data.hem) {
 			let coord = this.getRandCoord(2);
 			let block = World.getBlockID(coord.x, coord.y, coord.z);
-			let mat = ToolAPI.getBlockMaterial(block);
-			if(mat && block != 49 && (mat.name == "wood" || mat.name == "wool" || mat.name == "fibre" || mat.name == "plant")){
+			let material = ToolAPI.getBlockMaterialName(block);
+			if(block != 49 && (material == "wood" || material == "wool" || material == "fibre" || material == "plant")){
 				for (let i = 0; i < 6; i++) {
 					let c = StorageInterface.getRelativeCoords(coord, i);
 					if(World.getBlockID(c.x, c.y, c.z) == 0){
@@ -4190,10 +4268,11 @@ MachineRegistry.registerEUStorage(BlockID.storageBatBox, {
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
 		var tier = this.getTier();
-		var TRANSFER = transferByTier[tier];
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, tier);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, tier);
-		
+		var transfer = transferByTier[tier] * 2;
+		if(World.getThreadTime()%2 == 0){ // icon override crash fix
+			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, transfer, tier);
+			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, transfer, tier);
+		}
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);
@@ -4310,10 +4389,11 @@ MachineRegistry.registerEUStorage(BlockID.storageCESU, {
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
 		var tier = this.getTier();
-		var TRANSFER = transferByTier[tier];
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, tier);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, tier);
-		
+		var transfer = transferByTier[tier] * 2;
+		if(World.getThreadTime()%2 == 0){ // icon override crash fix
+			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, transfer, tier);
+			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, transfer, tier);
+		}
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);
@@ -4435,10 +4515,11 @@ MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
 		var tier = this.getTier();
-		var TRANSFER = transferByTier[tier];
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, tier);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, tier);
-		
+		var transfer = transferByTier[tier] * 2;
+		if(World.getThreadTime()%2 == 0){ // icon override crash fix
+			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, transfer, tier);
+			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, transfer, tier);
+		}
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);
@@ -4558,10 +4639,11 @@ MachineRegistry.registerEUStorage(BlockID.storageMFSU, {
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
 		var tier = this.getTier();
-		var TRANSFER = transferByTier[tier];
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, TRANSFER, tier);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, TRANSFER, tier);
-		
+		var transfer = transferByTier[tier] * 2;
+		if(World.getThreadTime()%2 == 0){ // icon override crash fix
+			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, transfer, tier);
+			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, transfer, tier);
+		}
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);
@@ -9691,20 +9773,20 @@ Callback.addCallback("PreLoaded", function(){
 // file: items/electric/storage.js
 
 IDRegistry.genItemID("storageBattery");
-Item.createItem("storageBattery", "RE-Battery", {name: "re_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 1, "storage");
+Item.createItem("storageBattery", "RE-Battery", {name: "re_battery", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 1, "storage", true, true);
 
 IDRegistry.genItemID("storageAdvBattery");
-Item.createItem("storageAdvBattery", "Advanced RE-Battery", {name: "adv_re_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 2, "storage");
+Item.createItem("storageAdvBattery", "Advanced RE-Battery", {name: "adv_re_battery", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 2, "storage", true, true);
 
 IDRegistry.genItemID("storageCrystal");
-Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 3, "storage");
+Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 3, "storage", true, true);
 
 IDRegistry.genItemID("storageLapotronCrystal");
-Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 4, "storage");
+Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 4, "storage", true, true);
 ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");
@@ -9803,20 +9885,20 @@ Item.registerUseFunction("debugItem", function(coords, item, block){
 // file: items/electric/charging.js
 
 IDRegistry.genItemID("chargingBattery");
-Item.createItem("chargingBattery", "Charging RE-Battery", {name: "charging_re_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 1, "storage");
+Item.createItem("chargingBattery", "Charging RE-Battery", {name: "charging_re_battery", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 1, "storage", true, true);
 
 IDRegistry.genItemID("chargingAdvBattery");
-Item.createItem("chargingAdvBattery", "Advanced Charging Battery", {name: "adv_charging_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 2, "storage");
+Item.createItem("chargingAdvBattery", "Advanced Charging Battery", {name: "adv_charging_battery", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 2, "storage", true, true);
 
 IDRegistry.genItemID("chargingCrystal");
-Item.createItem("chargingCrystal", "Charging Energy Crystal", {name: "charging_energy_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 3, "storage");
+Item.createItem("chargingCrystal", "Charging Energy Crystal", {name: "charging_energy_crystal", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 3, "storage", true, true);
 
 IDRegistry.genItemID("chargingLapotronCrystal");
-Item.createItem("chargingLapotronCrystal", "Charging Lapotron Crystal", {name: "charging_lapotron_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 4, "storage");
+Item.createItem("chargingLapotronCrystal", "Charging Lapotron Crystal", {name: "charging_lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 4, "storage", true, true);
 ItemName.setRarity(ItemID.chargingLapotronCrystal, 1);
 
 Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name){
@@ -10324,9 +10406,9 @@ Recipes.addShaped({id: ItemID.neutronReflectorIridium, count: 1, data: 0}, [
 IDRegistry.genItemID("coolantCell");
 IDRegistry.genItemID("coolantCell3");
 IDRegistry.genItemID("coolantCell6");
-Item.createItem("coolantCell", "10k Coolant Cell", {name: "coolant_cell", meta: 0});
-Item.createItem("coolantCell3", "30k Coolant Cell", {name: "coolant_cell", meta: 1});
-Item.createItem("coolantCell6", "60k Coolant Cell", {name: "coolant_cell", meta: 2});
+Item.createItem("coolantCell", "10k Coolant Cell", {name: "coolant_cell", meta: 0}, {isTech: true});
+Item.createItem("coolantCell3", "30k Coolant Cell", {name: "coolant_cell", meta: 1}, {isTech: true});
+Item.createItem("coolantCell6", "60k Coolant Cell", {name: "coolant_cell", meta: 2}, {isTech: true});
 ReactorAPI.registerComponent(ItemID.coolantCell, new ReactorAPI.heatStorage(10000));
 ReactorAPI.registerComponent(ItemID.coolantCell3, new ReactorAPI.heatStorage(30000));
 ReactorAPI.registerComponent(ItemID.coolantCell6, new ReactorAPI.heatStorage(60000));
@@ -10373,16 +10455,16 @@ Recipes.addShaped({id: ItemID.coolantCell6, count: 1, data: 1}, [
 // file: items/reactor/heat_exchanger.js
 
 IDRegistry.genItemID("heatExchanger");
-Item.createItem("heatExchanger", "Heat Exchanger", {name: "heat_exchanger", meta: 0});
+Item.createItem("heatExchanger", "Heat Exchanger", {name: "heat_exchanger", meta: 0}, {isTech: true});
 
 IDRegistry.genItemID("heatExchangerReactor");
-Item.createItem("heatExchangerReactor", "Reactor Heat Exchanger", {name: "heat_exchanger", meta: 1});
+Item.createItem("heatExchangerReactor", "Reactor Heat Exchanger", {name: "heat_exchanger", meta: 1}, {isTech: true});
 
 IDRegistry.genItemID("heatExchangerComponent");
-Item.createItem("heatExchangerComponent", "Component Heat Exchanger", {name: "heat_exchanger", meta: 2});
+Item.createItem("heatExchangerComponent", "Component Heat Exchanger", {name: "heat_exchanger", meta: 2}, {isTech: true});
 
 IDRegistry.genItemID("heatExchangerAdv");
-Item.createItem("heatExchangerAdv", "Advanced Heat Exchanger", {name: "heat_exchanger", meta: 3});
+Item.createItem("heatExchangerAdv", "Advanced Heat Exchanger", {name: "heat_exchanger", meta: 3}, {isTech: true});
 
 ReactorAPI.registerComponent(ItemID.heatExchanger, new ReactorAPI.heatExchanger(2500, 12, 4));
 ReactorAPI.registerComponent(ItemID.heatExchangerReactor, new ReactorAPI.heatExchanger(5000, 0, 72));
@@ -10419,19 +10501,19 @@ Recipes.addShaped({id: ItemID.heatExchangerAdv, count: 1, data: 1}, [
 // file: items/reactor/heat_vent.js
 
 IDRegistry.genItemID("heatVent");
-Item.createItem("heatVent", "Heat Vent", {name: "heat_vent", meta: 0});
+Item.createItem("heatVent", "Heat Vent", {name: "heat_vent", meta: 0}, {isTech: true});
 
 IDRegistry.genItemID("heatVentReactor");
-Item.createItem("heatVentReactor", "Reactor Heat Vent", {name: "heat_vent", meta: 1});
+Item.createItem("heatVentReactor", "Reactor Heat Vent", {name: "heat_vent", meta: 1}, {isTech: true});
 
 IDRegistry.genItemID("heatVentComponent");
 Item.createItem("heatVentComponent", "Component Heat Vent", {name: "heat_vent", meta: 2});
 
 IDRegistry.genItemID("heatVentAdv");
-Item.createItem("heatVentAdv", "Advanced Heat Vent", {name: "heat_vent", meta: 3});
+Item.createItem("heatVentAdv", "Advanced Heat Vent", {name: "heat_vent", meta: 3}, {isTech: true});
 
 IDRegistry.genItemID("heatVentOverclocked");
-Item.createItem("heatVentOverclocked", "Overclocked Heat Vent", {name: "heat_vent", meta: 4});
+Item.createItem("heatVentOverclocked", "Overclocked Heat Vent", {name: "heat_vent", meta: 4}, {isTech: true});
 
 ReactorAPI.registerComponent(ItemID.heatVent, new ReactorAPI.heatVent(1000, 6, 0));
 ReactorAPI.registerComponent(ItemID.heatVentReactor, new ReactorAPI.heatVent(1000, 5, 5));
@@ -10476,8 +10558,8 @@ Recipes.addShaped({id: ItemID.heatVentOverclocked, count: 1, data: 1}, [
 
 IDRegistry.genItemID("rshCondensator");
 IDRegistry.genItemID("lzhCondensator");
-Item.createItem("rshCondensator", "RSH-Condensator", {name: "rsh_condensator"});
-Item.createItem("lzhCondensator", "LZH-Condensator", {name: "lzh_condensator"});
+Item.createItem("rshCondensator", "RSH-Condensator", {name: "rsh_condensator"}, {isTech: true});
+Item.createItem("lzhCondensator", "LZH-Condensator", {name: "lzh_condensator"}, {isTech: true});
 ReactorAPI.registerComponent(ItemID.rshCondensator, new ReactorAPI.condensator(20000));
 ReactorAPI.registerComponent(ItemID.lzhCondensator, new ReactorAPI.condensator(100000));
 
@@ -10727,8 +10809,8 @@ Recipes.addShaped({id: ItemID.compositeBoots, count: 1, data: 0}, [
 // file: items/armor/nightvision.js
 
 IDRegistry.genItemID("nightvisionGoggles");
-Item.createArmorItem("nightvisionGoggles", "Nightvision Goggles", {name: "nightvision"}, {type: "helmet", armor: 1, durability: 100000, texture: "armor/nightvision_1.png", isTech: false});
-ChargeItemRegistry.registerItem(ItemID.nightvisionGoggles, "Eu", 100000, 2);
+Item.createArmorItem("nightvisionGoggles", "Nightvision Goggles", {name: "nightvision"}, {type: "helmet", armor: 1, durability: 100000, texture: "armor/nightvision_1.png", isTech: true});
+ChargeItemRegistry.registerItem(ItemID.nightvisionGoggles, "Eu", 100000, 2, "armor", true);
 Item.registerNameOverrideFunction(ItemID.nightvisionGoggles, ItemName.showItemStorage);
 
 Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: Item.getMaxDamage(ItemID.nightvisionGoggles)}, [
@@ -10772,15 +10854,15 @@ IDRegistry.genItemID("nanoChestplate");
 IDRegistry.genItemID("nanoLeggings");
 IDRegistry.genItemID("nanoBoots");
 
-Item.createArmorItem("nanoHelmet", "Nano Helmet", {name: "nano_helmet"}, {type: "helmet", armor: 4, durability: 1250, texture: "armor/nano_1.png", isTech: false});
-Item.createArmorItem("nanoChestplate", "Nano Bodyarmor", {name: "nano_chestplate"}, {type: "chestplate", armor: 8, durability: 1250, texture: "armor/nano_1.png", isTech: false});
-Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 6, durability: 1250, texture: "armor/nano_2.png", isTech: false});
-Item.createArmorItem("nanoBoots", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 4, durability: 1250, texture: "armor/nano_1.png", isTech: false});
+Item.createArmorItem("nanoHelmet", "Nano Helmet", {name: "nano_helmet"}, {type: "helmet", armor: 4, durability: 1250, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoChestplate", "Nano Bodyarmor", {name: "nano_chestplate"}, {type: "chestplate", armor: 8, durability: 1250, texture: "armor/nano_1.png", isTech: true});
+Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 6, durability: 1250, texture: "armor/nano_2.png", isTech: true});
+Item.createArmorItem("nanoBoots", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 4, durability: 1250, texture: "armor/nano_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.nanoHelmet, "Eu",1000000, 3);
-ChargeItemRegistry.registerItem(ItemID.nanoChestplate, "Eu", 1000000, 3);
-ChargeItemRegistry.registerItem(ItemID.nanoLeggings, "Eu", 1000000, 3);
-ChargeItemRegistry.registerItem(ItemID.nanoBoots, "Eu", 1000000, 3);
+ChargeItemRegistry.registerItem(ItemID.nanoHelmet, "Eu",1000000, 3, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.nanoChestplate, "Eu", 1000000, 3, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.nanoLeggings, "Eu", 1000000, 3, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.nanoBoots, "Eu", 1000000, 3, "armor", true);
 
 ItemName.setRarity(ItemID.nanoHelmet, 1);
 ItemName.setRarity(ItemID.nanoChestplate, 1);
@@ -10802,10 +10884,10 @@ Item.createArmorItem("nanoChestplateUncharged", "Nano Bodyarmor", {name: "nano_c
 Item.createArmorItem("nanoLeggingsUncharged", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 3, durability: 1250, texture: "armor/nano_2.png", isTech: true});
 Item.createArmorItem("nanoBootsUncharged", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 2, durability: 1250, texture: "armor/nano_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.nanoHelmetUncharged, "Eu", 1000000, 3);
-ChargeItemRegistry.registerItem(ItemID.nanoChestplateUncharged, "Eu", 1000000, 3);
-ChargeItemRegistry.registerItem(ItemID.nanoLeggingsUncharged, "Eu", 1000000, 3);
-ChargeItemRegistry.registerItem(ItemID.nanoBootsUncharged, "Eu", 1000000, 3);
+ChargeItemRegistry.registerItem(ItemID.nanoHelmetUncharged, "Eu", 1000000, 3, "armor");
+ChargeItemRegistry.registerItem(ItemID.nanoChestplateUncharged, "Eu", 1000000, 3, "armor");
+ChargeItemRegistry.registerItem(ItemID.nanoLeggingsUncharged, "Eu", 1000000, 3, "armor");
+ChargeItemRegistry.registerItem(ItemID.nanoBootsUncharged, "Eu", 1000000, 3, "armor");
 
 ItemName.setRarity(ItemID.nanoHelmetUncharged, 1);
 ItemName.setRarity(ItemID.nanoChestplateUncharged, 1);
@@ -10939,15 +11021,15 @@ IDRegistry.genItemID("quantumChestplate");
 IDRegistry.genItemID("quantumLeggings");
 IDRegistry.genItemID("quantumBoots");
 
-Item.createArmorItem("quantumHelmet", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 5, durability: 10000, texture: "armor/quantum_1.png", isTech: false});
-Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 10000, texture: "armor/quantum_1.png", isTech: false});
-Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 10000, texture: "armor/quantum_2.png", isTech: false});
-Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 10000, texture: "armor/quantum_1.png", isTech: false});
+Item.createArmorItem("quantumHelmet", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 5, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 10000, texture: "armor/quantum_2.png", isTech: true});
+Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 4);
-ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 4);
-ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 4);
-ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 4);
+ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 4, "armor", true);
 
 ItemName.setRarity(ItemID.quantumHelmet, 2);
 ItemName.setRarity(ItemID.quantumChestplate, 2);
@@ -10969,10 +11051,10 @@ Item.createArmorItem("quantumChestplateUncharged", "Quantum Bodyarmor", {name: "
 Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 10000, texture: "armor/quantum_2.png", isTech: true});
 Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 4);
-ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 4);
-ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 4);
-ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 4);
+ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 4, "armor");
 
 ItemName.setRarity(ItemID.quantumHelmetUncharged, 2);
 ItemName.setRarity(ItemID.quantumChestplateUncharged, 2);
@@ -11181,8 +11263,8 @@ Armor.registerFuncs("quantumBootsUncharged", QUANTUM_ARMOR_FUNCS);
 // file: items/armor/jetpack.js
 
 IDRegistry.genItemID("jetpack");
-Item.createArmorItem("jetpack", "Jetpack", {name: "electric_jetpack"}, {type: "chestplate", armor: 3, durability: 30000, texture: "armor/jetpack_1.png"});
-ChargeItemRegistry.registerItem(ItemID.jetpack, "Eu", 30000, 1);
+Item.createArmorItem("jetpack", "Jetpack", {name: "electric_jetpack"}, {type: "chestplate", armor: 3, durability: 30000, texture: "armor/jetpack_1.png", isTech: true});
+ChargeItemRegistry.registerItem(ItemID.jetpack, "Eu", 30000, 1, "armor", true);
 Item.registerNameOverrideFunction(ItemID.jetpack, ItemName.showItemStorage);
 
 Recipes.addShaped({id: ItemID.jetpack, count: 1, data: Item.getMaxDamage(ItemID.jetpack)}, [
@@ -11245,15 +11327,15 @@ IDRegistry.genItemID("advBatpack");
 IDRegistry.genItemID("energypack");
 IDRegistry.genItemID("lappack");
 
-Item.createArmorItem("batpack", "Batpack", {name: "batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: false});
-Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: false});
-Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: false});
-Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 10000000, texture: "armor/lappack_1.png", isTech: false});
+Item.createArmorItem("batpack", "Batpack", {name: "batpack"}, {type: "chestplate", armor: 3, durability: 60000, texture: "armor/batpack_1.png", isTech: true});
+Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"}, {type: "chestplate", armor: 3, durability: 600000, texture: "armor/advbatpack_1.png", isTech: true});
+Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: true});
+Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 10000000, texture: "armor/lappack_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 1, "storage");
-ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 2, "storage");
-ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 3, "storage");
-ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 4, "storage");
+ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 1, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 2, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 3, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 4, "storage", true);
 ItemName.setRarity(ItemID.lappack, 1);
 
 Item.registerNameOverrideFunction(ItemID.batpack, ItemName.showItemStorage);
@@ -11577,10 +11659,10 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 
 IDRegistry.genItemID("scanner");
 IDRegistry.genItemID("scannerAdvanced");
-Item.createItem("scanner", "OD Scanner", {name: "scanner", meta: 0}, {stack: 1});
-Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner", meta: 1}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 1);
-ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 2);
+Item.createItem("scanner", "OD Scanner", {name: "scanner", meta: 0}, {stack: 1, isTech: true});
+Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner", meta: 1}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 1, true);
+ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 2, true);
 
 Item.registerNameOverrideFunction(ItemID.scanner, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.scannerAdvanced, ItemName.showItemStorage);
@@ -11756,37 +11838,23 @@ Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
 	"aaa",
 ], ['x', 54, 0, 'a', ItemID.casingBronze, 0]);
 
-var toolbox_items = [
+let toolbox_items = [
 	ItemID.treetap, ItemID.craftingHammer, ItemID.cutter, ItemID.electricHoe, ItemID.electricTreetap, ItemID.EUMeter,
 	ItemID.cableTin0, ItemID.cableTin1, ItemID.cableCopper0, ItemID.cableCopper1,
 	ItemID.cableGold0, ItemID.cableGold1, ItemID.cableGold2,
 	ItemID.cableIron0, ItemID.cableIron1, ItemID.cableIron2, ItemID.cableIron3, ItemID.cableOptic
 ];
 
-let guiToolbox = new UI.StandartWindow({
-	standart: {
-		header: {text: {text: Translation.translate("Tool Box")}},
-		inventory: {standart: true},
-		background: {standart: true}
-	},
-	drawing: [],
-	elements: {}
-});
-
-function isValidToolboxItem(id){
-	if(toolbox_items.indexOf(id) != -1) return true;
-	if(ToolAPI.getToolData(id) || ICTool.getWrenchData(id)) return true;
-	return false;
-}
-
-BackpackRegistry.addSlotsToGui(guiToolbox, 10, isValidToolboxItem, 5, true);
-
-Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiToolbox, "Tool Box");
-});
-
 BackpackRegistry.register(ItemID.toolbox, {
-    gui: guiToolbox
+	title: "Tool Box",
+	slots: 10,
+	inRow: 5,
+	slotsCenter: true,
+	isValidItem: function(id, count, data){
+		if(toolbox_items.indexOf(id) != -1) return true;
+		if(ToolAPI.getToolData(id) || ICTool.getWrenchData(id)) return true;
+		return false;
+	}
 });
 
 Callback.addCallback("ItemUse", function(coords, item, block){
@@ -11856,11 +11924,8 @@ let guiContainmentBox = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiContainmentBox, "Containment Box");
-});
-
 BackpackRegistry.register(ItemID.containmentBox, {
+	title: "Containment Box",
     gui: guiContainmentBox
 });
 
@@ -11928,8 +11993,8 @@ Item.createItem("wrenchBronze", "Wrench", {name: "bronze_wrench", meta: 0}, {sta
 Item.setMaxDamage(ItemID.wrenchBronze, 161);
 
 IDRegistry.genItemID("electricWrench");
-Item.createItem("electricWrench", "Electric Wrench", {name: "electric_wrench", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.electricWrench, "Eu", 10000, 1, "tool");
+Item.createItem("electricWrench", "Electric Wrench", {name: "electric_wrench", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.electricWrench, "Eu", 10000, 1, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.electricWrench, ItemName.showItemStorage);
 
@@ -11953,10 +12018,10 @@ ICTool.registerWrench(ItemID.electricWrench, 1, 50);
 
 IDRegistry.genItemID("electricHoe");
 IDRegistry.genItemID("electricTreetap");
-Item.createItem("electricHoe", "Electric Hoe", {name: "electric_hoe", meta: 0}, {stack: 1});
-Item.createItem("electricTreetap", "Electric Treetap", {name: "electric_treetap", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.electricHoe, "Eu", 10000, 1, "tool");
-ChargeItemRegistry.registerItem(ItemID.electricTreetap, "Eu", 10000, 1, "tool");
+Item.createItem("electricHoe", "Electric Hoe", {name: "electric_hoe", meta: 0}, {stack: 1, isTech: true});
+Item.createItem("electricTreetap", "Electric Treetap", {name: "electric_treetap", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.electricHoe, "Eu", 10000, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.electricTreetap, "Eu", 10000, 1, "tool", true);
 Item.setToolRender(ItemID.electricHoe, true);
 
 Item.registerNameOverrideFunction(ItemID.electricHoe, ItemName.showItemStorage);
@@ -12002,15 +12067,15 @@ Item.registerUseFunction("electricTreetap", function(coords, item, block){
 IDRegistry.genItemID("drill");
 IDRegistry.genItemID("diamondDrill");
 IDRegistry.genItemID("iridiumDrill");
-Item.createItem("drill", "Mining Drill", {name: "drill"}, {stack: 1});
-Item.createItem("diamondDrill", "Diamond Drill", {name: "drill_diamond"}, {stack: 1});
-Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill_iridium"}, {stack: 1});
+Item.createItem("drill", "Mining Drill", {name: "drill"}, {stack: 1, isTech: true});
+Item.createItem("diamondDrill", "Diamond Drill", {name: "drill_diamond"}, {stack: 1, isTech: true});
+Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill_iridium"}, {stack: 1, isTech: true});
 Item.setGlint(ItemID.iridiumDrill, true);
 ItemName.setRarity(ItemID.iridiumDrill, 2);
 
-ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 1, "tool");
-ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 1, "tool");
-ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 3, "tool");
+ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 3, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.drill, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.diamondDrill, ItemName.showItemStorage);
@@ -12082,8 +12147,10 @@ UIbuttons.registerSwitchFunction(ItemID.iridiumDrill, function(item){
 ToolType.drill = {
 	damage: 0,
 	blockTypes: ["stone", "dirt"],
-	onDestroy: function(item){
-		ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
+	onDestroy: function(item, coords, block){
+		if(Block.getDestroyTime(block.id) > 0){
+			ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
+		}
 		return true;
 	},
 	onBroke: function(item){return true;},
@@ -12100,15 +12167,19 @@ ToolType.drill = {
 	useItem: function(coords, item, block){
 		var side  = coords.side;
 		coords = coords.relative;
-		block = World.getBlockID(coords.x, coords.y, coords.z);
-		if(canTileBeReplaced(block)){
+		var blockID = World.getBlockID(coords.x, coords.y, coords.z);
+		if(canTileBeReplaced(blockID)){
 			for(var i = 9; i < 45; i++){
 				var slot = Player.getInventorySlot(i);
 				if(slot.id==50){
 					slot.count--;
 					if(!slot.count) slot.id = 0;
 					Player.setInventorySlot(i, slot.id, slot.count, 0);
-					World.setBlock(coords.x, coords.y, coords.z, 50, (6 - side)%6);
+					var data = 5;
+					if(block.id >= 8192 || !GenerationUtils.isTransparentBlock(block.id)){
+						data = (6 - side)%6;
+					}
+					World.setBlock(coords.x, coords.y, coords.z, 50, data);
 					break;
 				}
 			}
@@ -12121,7 +12192,6 @@ ToolAPI.setTool(ItemID.diamondDrill, {energyConsumption: 80, level: 4, efficienc
 ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficiency: 24, damage: 5}, {
 	damage: 0,
 	blockTypes: ["stone", "dirt"],
-
 	modifyEnchant: function(enchant, item){
 		var mode = item.extra? item.extra.getInt("mode") : 0;
 		if(mode%2){
@@ -12129,20 +12199,13 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 		else{
 		enchant.fortune = 3;}
 	},
-	onDestroy: function(item){
-		ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
-		return true;
-	},
+	onDestroy: ToolType.drill.onDestroy,
 	onBroke: function(item){return true;},
-	onAttack: function(item, mob){
-		ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
-		return true;
-	},
+	onAttack: ToolType.drill.onAttack,
 	calcDestroyTime: function(item, coords, block, params, destroyTime){
 		if(item.data + 800 <= Item.getMaxDamage(item.id)){
 			var mode = item.extra? item.extra.getInt("mode") : 0;
-			var material = ToolAPI.getBlockMaterial(block.id) || {};
-			material = material.name;
+			var material = ToolAPI.getBlockMaterialName(block.id);
 			if(mode >= 2 && (material == "dirt" || material == "stone")){
 				var side = coords.side;
 				var X = 1;
@@ -12158,8 +12221,8 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 					for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
 						for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
 							var blockID = World.getBlockID(xx, yy, zz);
-							var material = ToolAPI.getBlockMaterial(blockID) || {};
-							if(material.name == "dirt" || material.name == "stone"){
+							var material = ToolAPI.getBlockMaterialName(blockID);
+							if(material == "dirt" || material == "stone"){
 								destroyTime = Math.max(destroyTime, Block.getDestroyTime(blockID) / material.multiplier / 24);
 							}
 						}
@@ -12172,8 +12235,7 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 	},
 	destroyBlock: function(coords, side, item, block){
 		var mode = item.extra? item.extra.getInt("mode") : 0;
-		var material = ToolAPI.getBlockMaterial(block.id) || {};
-		material = material.name;
+		var material = ToolAPI.getBlockMaterialName(block.id);
 		if(mode >= 2 && (material == "dirt" || material == "stone") && item.data + 800 <= Item.getMaxDamage(item.id)){
 			var X = 1;
 			var Y = 1;
@@ -12187,43 +12249,26 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 			for(var xx = coords.x - X; xx <= coords.x + X; xx++){
 				for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
 					for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-						blockID = World.getBlockID(xx, yy, zz);
-						var material = ToolAPI.getBlockMaterial(blockID) || {};
-						if(material.name == "dirt" || material.name == "stone"){
-							item.data += 800;
-							if(block.id == 60){
-								World.destroyBlock(xx, yy, zz, false);
-								World.drop(xx+0.5, yy+0.5, zz+0.5, 3, 1);
-							}
-							else{
-								World.destroyBlock(xx, yy, zz, true);
-							}
+						if(xx == coords.x && yy == coords.y && zz == coords.z){
+							continue;
 						}
-						if(item.data + 800 >= Item.getMaxDamage(item.id)){
-							return;
+						blockID = World.getBlockID(xx, yy, zz);
+						var material = ToolAPI.getBlockMaterialName(blockID);
+						if(material == "dirt" || material == "stone"){
+							item.data += 800;
+							World.destroyBlock(xx, yy, zz, true);
+							if(item.data + 800 >= Item.getMaxDamage(item.id)){
+								Player.setCarriedItem(item.id, 1, item.data, item.extra);
+								return;
+							}
 						}
 					}
 				}
 			}
+			Player.setCarriedItem(item.id, 1, item.data, item.extra);
 		}
 	},
-	useItem: function(coords, item, block){
-		var side  = coords.side;
-		coords = coords.relative;
-		block = World.getBlockID(coords.x, coords.y, coords.z);
-		if(canTileBeReplaced(block)){
-			for(var i = 9; i < 45; i++){
-				var slot = Player.getInventorySlot(i);
-				if(slot.id==50){
-					slot.count--;
-					if(!slot.count) slot.id = 0;
-					Player.setInventorySlot(i, slot.id, slot.count, 0);
-					World.setBlock(coords.x, coords.y, coords.z, 50, (6 - side)%6);
-					break;
-				}
-			}
-		}
-	}
+	useItem: ToolType.drill.useItem
 });
 
 
@@ -12232,8 +12277,8 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 // file: items/tool/chainsaw.js
 
 IDRegistry.genItemID("chainsaw");
-Item.createItem("chainsaw", "Chainsaw", {name: "chainsaw", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chainsaw, "Eu", 30000, 1, "tool");
+Item.createItem("chainsaw", "Chainsaw", {name: "chainsaw", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.chainsaw, "Eu", 30000, 1, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.chainsaw, ItemName.showItemStorage);
 
@@ -12250,9 +12295,14 @@ ToolType.chainsaw = {
 	damage: 4,
 	baseDamage: 0,
 	blockTypes: ["wood", "wool", "fibre", "plant"],
-	onDestroy: function(item){
-		ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
-		item.data--;
+	onDestroy: function(item, coords, block){
+		if(Block.getDestroyTime(block.id) > 0){
+			if(ICTool.dischargeItem(item, this.toolMaterial.energyConsumption) && (block.id == 18 || block.id == 161)){
+				World.destroyBlock(coords.x, coords.y, coords.z);
+				World.drop(coords.x + .5, coords.y + .5, coords.z + .5, block.id, 1, block.data%4);
+			}
+		}
+		return true;
 	},
 	onBroke: function(item){return true;},
 	onAttack: function(item, mob){
@@ -12284,8 +12334,8 @@ ToolAPI.setTool(ItemID.chainsaw, {energyConsumption: 60, level: 3, efficiency: 1
 // file: items/tool/nano_saber.js
 
 IDRegistry.genItemID("nanoSaber");
-Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 3, "tool");
+Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 3, "tool", true);
 ItemName.setRarity(ItemID.nanoSaber, 1);
 Item.registerNameOverrideFunction(ItemID.nanoSaber, ItemName.showItemStorage);
 
@@ -12325,8 +12375,8 @@ Callback.addCallback("tick", function(){
 // file: items/tool/mining_laser.js
 
 IDRegistry.genItemID("miningLaser");
-Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 3, "tool");
+Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 3, "tool", true);
 Item.setToolRender(ItemID.miningLaser, true);
 
 ItemName.setRarity(ItemID.miningLaser, 1);
@@ -12468,7 +12518,7 @@ var MiningLaser = {
         if(hardness > 0){
         	laser.blockBreaks--;
        }
-       var material = (ToolAPI.getBlockMaterial(block.id) || {}).name;
+       var material = ToolAPI.getBlockMaterialName(block.id);
 		if(Math.random() < 0.5 && (material == "wood" || material == "plant" || material == "fibre" || material == "wool")){
 			World.setBlock(x, y, z, 51);
 		}else{
@@ -12515,8 +12565,8 @@ var MiningLaser = {
 	},
 	checkBlock: function(laser, x, y, z){
 		var block = World.getBlock(x, y, z);
-		var material = ToolAPI.getBlockMaterial(block.id)
-		if(material && material.name=="unbreaking"){
+		var material = ToolAPI.getBlockMaterialName(block.id);
+		if(material == "unbreaking"){
 			laser.power = 0;
 		}
 		else if(block.id > 0 && block.id != 50 && block.id != 51){

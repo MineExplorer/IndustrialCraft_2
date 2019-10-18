@@ -1,7 +1,7 @@
 IDRegistry.genItemID("rshCondensator");
 IDRegistry.genItemID("lzhCondensator");
-Item.createItem("rshCondensator", "RSH-Condensator", {name: "rsh_condensator"});
-Item.createItem("lzhCondensator", "LZH-Condensator", {name: "lzh_condensator"});
+Item.createItem("rshCondensator", "RSH-Condensator", {name: "rsh_condensator"}, {isTech: true});
+Item.createItem("lzhCondensator", "LZH-Condensator", {name: "lzh_condensator"}, {isTech: true});
 ReactorAPI.registerComponent(ItemID.rshCondensator, new ReactorAPI.condensator(20000));
 ReactorAPI.registerComponent(ItemID.lzhCondensator, new ReactorAPI.condensator(100000));
 

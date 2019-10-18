@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ChargeItem",
-	version: 4,
+	version: 5,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -8,9 +8,15 @@ LIBRARY({
 var ChargeItemRegistry = {
 	chargeData: {},
 	
-	registerItem: function(item, energyType, capacity, level, prefix){
+	registerItem: function(item, energyType, capacity, level, prefix, inCreativeCharged, inCreativeDischarged){
 		if(prefix === true) prefix = "storage"; // deprecated
 		Item.setMaxDamage(item, capacity + 1);
+		if(inCreativeDischarged){
+			Item.addToCreative(item, 1, capacity + 1);
+		}
+		if(inCreativeCharged){
+			Item.addToCreative(item, 1, 1);
+		}
 		this.chargeData[item] = {
 			type: "normal",
 			prefix: prefix,

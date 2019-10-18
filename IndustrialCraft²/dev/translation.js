@@ -143,7 +143,7 @@ Translation.addTranslation("Overclocked Heat Vent", {ru: "Разогнанный
 Translation.addTranslation("RSH-Condensator", {ru: "Красный конденсатор", es: "RSH-Condensador", pt: "RSH-Condensador", zh: "红石冷凝模块"});
 Translation.addTranslation("LZH-Condensator", {ru: "Лазуритовый конденсатор", es: "LZH-Condensador", pt: "LZH-Condensador", zh: "青金石冷凝模块"});
 
-// Electric
+// Electric Components
 Translation.addTranslation("Electronic Circuit", {ru: "Электросхема", es: "Circuito Electrónico", pt: "Circuito Eletrônico", zh: "电路板"});
 Translation.addTranslation("Advanced Circuit", {ru: "Улучшенная электросхема", es: "Circuito Avanzado", pt: "Circuito Avançado", zh: "高级电路板"});
 Translation.addTranslation("Coil", {ru: "Катушка", es: "Bobina", pt: "Bobina", zh: "线圈"});

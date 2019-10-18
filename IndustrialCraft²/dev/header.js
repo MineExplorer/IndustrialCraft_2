@@ -33,10 +33,6 @@ Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
 Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
-var MobEffect = Native.PotionEffect;
-var ParticleType = Native.ParticleType;
-var BlockSide = Native.BlockSide;
-var EntityType = Native.EntityType;
 var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
 
 // energy (Eu)

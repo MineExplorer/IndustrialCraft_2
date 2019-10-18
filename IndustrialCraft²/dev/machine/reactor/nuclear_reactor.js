@@ -340,14 +340,14 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		if (power >= 0.85 && Math.random() <= 0.2 * this.data.hem) {
 			let coord = this.getRandCoord(2);
 			let block = World.getBlockID(coord.x, coord.y, coord.z);
-			let mat = ToolAPI.getBlockMaterial(block);
+			let material = ToolAPI.getBlockMaterialName(block);
 			if (block == BlockID.nuclearReactor){
 				let tileEntity = World.getTileEntity(coord.x, coord.y, coord.z);
 				if(tileEntity){
 					tileEntity.explode();
 				}
 			}
-			else if (mat && (mat.name == "stone" || mat.name == "dirt")) {
+			else if (material == "stone" || material == "dirt") {
 				World.setBlock(coord.x, coord.y, coord.z, 10, 1);
 			}
 		} 
@@ -373,8 +373,8 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		if (power >= 0.4 && Math.random() <= this.data.hem) {
 			let coord = this.getRandCoord(2);
 			let block = World.getBlockID(coord.x, coord.y, coord.z);
-			let mat = ToolAPI.getBlockMaterial(block);
-			if(mat && block != 49 && (mat.name == "wood" || mat.name == "wool" || mat.name == "fibre" || mat.name == "plant")){
+			let material = ToolAPI.getBlockMaterialName(block);
+			if(block != 49 && (material == "wood" || material == "wool" || material == "fibre" || material == "plant")){
 				for (let i = 0; i < 6; i++) {
 					let c = StorageInterface.getRelativeCoords(coord, i);
 					if(World.getBlockID(c.x, c.y, c.z) == 0){

@@ -1,6 +1,6 @@
 IDRegistry.genItemID("miningLaser");
-Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 3, "tool");
+Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 3, "tool", true);
 Item.setToolRender(ItemID.miningLaser, true);
 
 ItemName.setRarity(ItemID.miningLaser, 1);
@@ -142,7 +142,7 @@ var MiningLaser = {
         if(hardness > 0){
         	laser.blockBreaks--;
        }
-       var material = (ToolAPI.getBlockMaterial(block.id) || {}).name;
+       var material = ToolAPI.getBlockMaterialName(block.id);
 		if(Math.random() < 0.5 && (material == "wood" || material == "plant" || material == "fibre" || material == "wool")){
 			World.setBlock(x, y, z, 51);
 		}else{
@@ -189,8 +189,8 @@ var MiningLaser = {
 	},
 	checkBlock: function(laser, x, y, z){
 		var block = World.getBlock(x, y, z);
-		var material = ToolAPI.getBlockMaterial(block.id)
-		if(material && material.name=="unbreaking"){
+		var material = ToolAPI.getBlockMaterialName(block.id);
+		if(material == "unbreaking"){
 			laser.power = 0;
 		}
 		else if(block.id > 0 && block.id != 50 && block.id != 51){

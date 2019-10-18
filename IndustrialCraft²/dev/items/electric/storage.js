@@ -1,18 +1,18 @@
 IDRegistry.genItemID("storageBattery");
-Item.createItem("storageBattery", "RE-Battery", {name: "re_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 1, "storage");
+Item.createItem("storageBattery", "RE-Battery", {name: "re_battery", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 1, "storage", true, true);
 
 IDRegistry.genItemID("storageAdvBattery");
-Item.createItem("storageAdvBattery", "Advanced RE-Battery", {name: "adv_re_battery", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 2, "storage");
+Item.createItem("storageAdvBattery", "Advanced RE-Battery", {name: "adv_re_battery", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 2, "storage", true, true);
 
 IDRegistry.genItemID("storageCrystal");
-Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 3, "storage");
+Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 3, "storage", true, true);
 
 IDRegistry.genItemID("storageLapotronCrystal");
-Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 4, "storage");
+Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 4, "storage", true, true);
 ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");

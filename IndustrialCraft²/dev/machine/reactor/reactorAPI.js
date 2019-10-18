@@ -5,6 +5,9 @@ let ReactorAPI = {
 		if (component.maxDamage) {
 			Item.setMaxDamage(id, component.maxDamage);
 		}
+		if (component.getMaxHeat() > 0) {
+			Item.addToCreative(id, 1, 1);
+		}
 		this.reactor_components[id] = component;
 	},
 	
@@ -415,11 +418,3 @@ let ReactorAPI = {
 		}
 	},
 }
-
-Callback.addCallback("tick", function(){
-	let item = Player.getCarriedItem();
-	let component = ReactorAPI.getComponent(item.id);
-	if (item.data == 0 && component && component.canStoreHeat(item)) {
-		Player.setCarriedItem(item.id, item.count, 1);
-	}
-});

@@ -7,14 +7,13 @@ var DIRT_TILES = {
 IDRegistry.genItemID("rubberSapling");
 Item.createItem("rubberSapling", "Rubber Tree Sapling", {name: "rubber_tree_sapling", data: 0});
 
-Item.registerUseFunction("rubberSapling", function(coords, item, tile){
+Item.registerUseFunction("rubberSapling", function(coords, item, block){
 	var place = coords.relative;
 	var tile1 = World.getBlock(place.x, place.y, place.z);
 	var tile2 = World.getBlock(place.x, place.y - 1, place.z);
 	
-	if (GenerationUtils.isTransparentBlock(tile1.id) && DIRT_TILES[tile2.id]){
+	if (canTileBeReplaced(tile1.id) && DIRT_TILES[tile2.id]) {
 		World.setBlock(place.x, place.y, place.z, BlockID.rubberTreeSapling);
-		World.addTileEntity(place.x, place.y, place.z);
 		Player.setCarriedItem(item.id, item.count - 1, item.data);
 	}
 });
@@ -24,6 +23,7 @@ Block.createBlock("rubberTreeSapling", [
 	{name: "Rubber Tree Sapling", texture: [["rubber_tree_sapling", 0]], inCreative: false}
 ]);
 Block.setDestroyTime(BlockID.rubberTreeSapling, 0);
+ToolAPI.registerBlockMaterial(BlockID.rubberTreeSapling, "plant");
 TileRenderer.setPlantModel(BlockID.rubberTreeSapling, 0, "rubber_tree_sapling", 0);
 
 Block.registerDropFunction("rubberTreeSapling", function(){

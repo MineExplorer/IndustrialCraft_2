@@ -1,14 +1,14 @@
 IDRegistry.genItemID("heatExchanger");
-Item.createItem("heatExchanger", "Heat Exchanger", {name: "heat_exchanger", meta: 0});
+Item.createItem("heatExchanger", "Heat Exchanger", {name: "heat_exchanger", meta: 0}, {isTech: true});
 
 IDRegistry.genItemID("heatExchangerReactor");
-Item.createItem("heatExchangerReactor", "Reactor Heat Exchanger", {name: "heat_exchanger", meta: 1});
+Item.createItem("heatExchangerReactor", "Reactor Heat Exchanger", {name: "heat_exchanger", meta: 1}, {isTech: true});
 
 IDRegistry.genItemID("heatExchangerComponent");
-Item.createItem("heatExchangerComponent", "Component Heat Exchanger", {name: "heat_exchanger", meta: 2});
+Item.createItem("heatExchangerComponent", "Component Heat Exchanger", {name: "heat_exchanger", meta: 2}, {isTech: true});
 
 IDRegistry.genItemID("heatExchangerAdv");
-Item.createItem("heatExchangerAdv", "Advanced Heat Exchanger", {name: "heat_exchanger", meta: 3});
+Item.createItem("heatExchangerAdv", "Advanced Heat Exchanger", {name: "heat_exchanger", meta: 3}, {isTech: true});
 
 ReactorAPI.registerComponent(ItemID.heatExchanger, new ReactorAPI.heatExchanger(2500, 12, 4));
 ReactorAPI.registerComponent(ItemID.heatExchangerReactor, new ReactorAPI.heatExchanger(5000, 0, 72));

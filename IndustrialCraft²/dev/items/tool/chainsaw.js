@@ -1,6 +1,6 @@
 IDRegistry.genItemID("chainsaw");
-Item.createItem("chainsaw", "Chainsaw", {name: "chainsaw", meta: 0}, {stack: 1});
-ChargeItemRegistry.registerItem(ItemID.chainsaw, "Eu", 30000, 1, "tool");
+Item.createItem("chainsaw", "Chainsaw", {name: "chainsaw", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.chainsaw, "Eu", 30000, 1, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.chainsaw, ItemName.showItemStorage);
 
@@ -17,9 +17,14 @@ ToolType.chainsaw = {
 	damage: 4,
 	baseDamage: 0,
 	blockTypes: ["wood", "wool", "fibre", "plant"],
-	onDestroy: function(item){
-		ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
-		item.data--;
+	onDestroy: function(item, coords, block){
+		if(Block.getDestroyTime(block.id) > 0){
+			if(ICTool.dischargeItem(item, this.toolMaterial.energyConsumption) && (block.id == 18 || block.id == 161)){
+				World.destroyBlock(coords.x, coords.y, coords.z);
+				World.drop(coords.x + .5, coords.y + .5, coords.z + .5, block.id, 1, block.data%4);
+			}
+		}
+		return true;
 	},
 	onBroke: function(item){return true;},
 	onAttack: function(item, mob){

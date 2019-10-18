@@ -1,4 +1,4 @@
-﻿// BLOCKS
+// BLOCKS
 Translation.addTranslation("Rubber Tree Log", {ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", pt: "Madeira de Seringueira", zh: "橡胶树原木"});
 Translation.addTranslation("Rubber Tree Leaves", {ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", pt: "Folhas de Seringueira", zh: "橡胶树树叶"});
 Translation.addTranslation("Rubber Tree Sapling", {ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", pt: "Muda de Seringueira", zh: "橡胶树树苗"});
@@ -8,7 +8,7 @@ Translation.addTranslation("Lead Ore", {ru: "Свинцовая руда", es: "
 Translation.addTranslation("Uranium Ore", {ru: "Урановая руда", es: "Mineral de Uranium", pt: "Minério de Urânio", zh: "铀矿石"});
 Translation.addTranslation("Iridium Ore", {ru: "Иридиевая руда",  es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱矿石"});
 Translation.addTranslation("Copper Block", {ru: "Медный блок", es: "Bloque de Cobre", pt: "Bloco de Cobre", zh: "铜块"});
-Translation.addTranslation("Tin Block", {ru: "Оловянный блок", es: "Bloque de Estaño", pt: "Bloco de Estanho", zh: "锡矿石"});
+Translation.addTranslation("Tin Block", {ru: "Оловянный блок", es: "Bloque de Estaño", pt: "Bloco de Estanho", zh: "锡块"});
 Translation.addTranslation("Bronze Block", {ru: "Бронзовый блок", es: "Bloque de Bronce", pt: "Bloco de Bronze", zh: "青铜块"});
 Translation.addTranslation("Lead Block", {ru: "Свинцовый блок", es: "Bloque de Plomo", pt: "Bloco de Chumbo", zh: "铅块"});
 Translation.addTranslation("Steel Block", {ru: "Стальной блок", es: "Bloque de Hierro Refinado", pt: "Bloco de Aço", zh: "钢块"});
@@ -19,7 +19,7 @@ Translation.addTranslation("Mining Pipe", {ru: "Буровая труба", es: 
 Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", pt: "Vidro Reforçado", zh: "防爆石"});
 Translation.addTranslation("Reinforced Glass", {ru: "Укреплённое стекло", es: "Cristal Reforzado", pt: "Vidro Reforçado", zh: "防爆玻璃"});
 Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", pt: "Estrutura de Máquina Básica", zh: "基础机械外壳"});
-Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Estrutura de Máquina Avançada", zh: "基础机械外壳"});
+Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Estrutura de Máquina Avançada", zh: "高级机械外壳"});
 
 // Generators
 Translation.addTranslation("Generator", {ru: "Генератор", es: "Generador", pt: "Gerador", zh: "火力发电机"});
@@ -33,14 +33,14 @@ Translation.addTranslation("Nuclear Reactor", {ru: "Ядерный реакто�
 Translation.addTranslation("Reactor Chamber", {ru: "Реакторная камера", es: "Cámara del Reactor", pt: "Câmara de Reator", zh: "核反应仓"});
 
 // Heat Generators
-Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor à Combustível Sólido", zh: "固体的热发生器"});
-Translation.addTranslation("Electric Heat Generator", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电热发生器"});
+Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor à Combustível Sólido", zh: "固体加热机"});
+Translation.addTranslation("Electric Heat Generator", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电力加热机"});
 
 // Energy storage
 Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", pt: "Caixa de Baterias", zh: "储电盒"});
-Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", pt: "Unidade de Armazenamento de Energia", zh: "CESU充电座"});
-Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", pt: "Transmissor de Energia Multi-funcional", zh: "MFE充电座"});
-Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", pt: "Unidade de Armazenamento Multi-funcional", zh: "MFSU充电座"});
+Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", pt: "Unidade de Armazenamento de Energia", zh: "CESU储电箱"});
+Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", pt: "Transmissor de Energia Multi-funcional", zh: "MFE储电箱"});
+Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", pt: "Unidade de Armazenamento Multi-funcional", zh: "MFSU储电箱"});
 
 // Transformer
 Translation.addTranslation("LV Transformer", {ru: "Трансформатор НН", zh: "低压变压器"});
@@ -50,9 +50,9 @@ Translation.addTranslation("EV Transformer", {ru: "Трансформатор С
 
 // Machines
 Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", pt: "Iluminador", zh: "日光灯"});
-Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм"}); // To Do
+Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм", zh: "固体装罐机"}); // To Do
 Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Fornalha de Ferro", zh: "铁炉"});
-Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", pt: "Fornalha Elétrica", zh: "感应炉"});
+Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", pt: "Fornalha Elétrica", zh: "电炉"});
 Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", pt: "Fornalha de Indução", zh: "感应炉"});
 Translation.addTranslation("Macerator", {ru: "Дробитель", es: "Trituradora", pt: "Macerador", zh: "打粉机"});
 Translation.addTranslation("Compressor", {ru: "Компрессор", es: "Compresor", pt: "Compactador", zh: "压缩机"});
@@ -78,14 +78,14 @@ Translation.addTranslation("Tank", {ru: "Бак", es: "Tanque", pt: "Tanque", zh
 
 // ITEMS
 Translation.addTranslation("Iridium", {ru: "Иридий", es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱碎片"});
-Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", pt: "Latex", zh: "胶乳"});
+Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", pt: "Latex", zh: "粘性树脂"});
 Translation.addTranslation("Rubber", {ru: "Резина", es: "Rubber", pt: "Borracha", zh: "橡胶"});
 Translation.addTranslation("Ashes", {ru: "Пепел", es: "Ceniza", pt: "Cinzas", zh: "灰烬"});
 Translation.addTranslation("Slag", {ru: "Шлак", es: "Escoria", pt: "Sucata", zh: "渣"});
 Translation.addTranslation("Scrap", {ru: "Утильсырьё", es: "Chatarra", pt: "Sucata", zh: "废料"});
 Translation.addTranslation("Scrap Box", {ru: "Коробка утильсырья", es: "Caja de Chatarra", pt: "Caixa de Sucata", zh: "废料盒"});
-Translation.addTranslation("UU-matter", {ru: "Материя", es: "Materia", pt: "Metéria UU", zh: "物质"});
-Translation.addTranslation("Heat Conductor", {ru: "Теплопроводник ", es: "Conductor de calor", pt: "Condutor de Calor", zh: "热导体"});
+Translation.addTranslation("UU-Matter", {ru: "Материя", es: "Materia", pt: "Metéria UU", zh: "UU物质"});
+Translation.addTranslation("Heat Conductor", {ru: "Теплопроводник ", es: "Conductor de calor", pt: "Condutor de Calor", zh: "热传导器"});
 Translation.addTranslation("Coal Ball", {ru: "Угольный шарик", es: "Bola de Carbón", pt: "Bola de Carvão", zh: "煤球"});
 Translation.addTranslation("Coal Block", {ru: "Сжатый угольный шарик", es: "Bola de Carbón Compactada", pt: "Bola de Carvão Comprimido", zh: "压缩煤球"});
 Translation.addTranslation("Coal Chunk", {ru: "Угольная глыба", es: "Carbono Bruto", zh: "煤块", pt: "Pedaço de Carvão"});
@@ -96,7 +96,7 @@ Translation.addTranslation("Alloy Plate", {ru: "Композит", es: "Compuest
 Translation.addTranslation("Iridium Reinforced Plate", {ru: "Иридиевый композит", es: "Placa de Iridio", pt: "Placa Reforçada com Irídio", zh: "强化铱板"});
 
 // Nuclear
-Translation.addTranslation("Enriched Uranium", {ru: "Обогащённый уран", es: "Uranio Enriquecido", pt: "Urânio Enriquecido", zh: "浓缩铀"});
+Translation.addTranslation("Enriched Uranium", {ru: "Обогащённый уран", es: "Uranio Enriquecido", pt: "Urânio Enriquecido", zh: "浓缩铀核燃料"});
 Translation.addTranslation("Uranium 235", {ru: "Уран-235", es: "Uranio 235", pt: "Urânio 235", zh: "铀-235"});
 Translation.addTranslation("Piece of Uranium 235", {ru: "Кусочек урана-235", es: "Diminuta Pila de Uranio 235", pt: "Pequena Pilha de Urânio 235", zh: "小撮铀-235"});
 Translation.addTranslation("Uranium 238", {ru: "Уран-238", es: "Uranio 238", pt: "Urânio 238", zh: "铀-238"});
@@ -153,10 +153,10 @@ Translation.addTranslation("Small Power Unit", {ru: "Малый силовой �
 
 // Energy Storage
 Translation.addTranslation("RE-Battery", {ru: "Аккумулятор", es: "Batería Recargable", pt: "Bateria Reutilizável", zh: "充电电池"});
-Translation.addTranslation("Advanced RE-Battery", {ru: "Продвинутый аккумулятор", es: "Bateria-RE Avanzada", pt: "Bateria-RE Avançada", zh: "强化充电电池"});
+Translation.addTranslation("Advanced RE-Battery", {ru: "Продвинутый аккумулятор", es: "Bateria-RE Avanzada", pt: "Bateria-RE Avançada", zh: "高级充电电池"});
 Translation.addTranslation("Energy Crystal", {ru: "Энергетический кристалл", es: "Cristal de Energía", pt: "Cristal de Energia", zh: "能量水晶"});
 Translation.addTranslation("Lapotron Crystal", {ru: "Лазуротроновый кристалл", es: "Cristal Lapotron", pt: "Cristal Lapotrônico", zh: "兰波顿水晶"});
-Translation.addTranslation("Charging RE-Battery", {ru: "Заряжающий аккумулятор", es: "Batería Cargadora", pt: "Bateria Carregadora", zh: "充电电池"});
+Translation.addTranslation("Charging RE-Battery", {ru: "Заряжающий аккумулятор", es: "Batería Cargadora", pt: "Bateria Carregadora", zh: "RE充电电池"});
 Translation.addTranslation("Advanced Charging Battery", {ru: "Продвинутый заряжающий аккумулятор", es: "Bateria Cargadora Avanzada", pt: "Bateria Carregadora Avançada", zh: "高级充电电池"});
 Translation.addTranslation("Charging Energy Crystal", {ru: "Заряжающий энергетический кристалл", es: "Cargador de Cristales de Energía", pt: "Carregador de Cristais de Energia", zh: "能量水晶充电电池"});
 Translation.addTranslation("Charging Lapotron Crystal", {ru: "Заряжающий лазуротроновый кристалл", es: "Cargador de Cristales Lapotron", pt: "Carregador de Cristais Lapotrônicos", zh: "兰波顿充电电池"});
@@ -248,14 +248,14 @@ Translation.addTranslation("Copper Casing", {ru: "Медная оболочка"
 Translation.addTranslation("Tin Casing", {ru: "Оловянная оболочка", es: "Carcasa para Objetos de Estaño", pt: "Invólucro de Estanho", zh: "锡质外壳"});
 Translation.addTranslation("Iron Casing", {ru: "Железная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Ferro", zh: "铁质外壳"});
 Translation.addTranslation("Bronze Casing", {ru: "Бронзовая оболочка", es: "Carcasa para Objetos de Bronce", pt: "Invólucro de Bronze", zh: "青铜外壳"});
-Translation.addTranslation("Steel Casing", {ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Aço", zh: "钢质外壳а"});
+Translation.addTranslation("Steel Casing", {ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Aço", zh: "钢质外壳"});
 Translation.addTranslation("Gold Casing", {ru: "Золотая оболочка", es: "Carcasa para Objetos de Oro", pt: "Invólucro de Ouro", zh: "黄金外壳"});
 Translation.addTranslation("Lead Casing", {ru: "Свинцовая оболочка", es: "Carcasa para Objetos de Plomo", pt: "Invólucro de Chumbo", zh: "铅质外壳"});
 
 // Cans
 Translation.addTranslation("Tin Can", {ru: "Консервная банка", es: "Lata de Estaño", pt: "Lata de Estanho", zh: "锡罐(空)"});
 Translation.addTranslation("Filled Tin Can", {ru: "Заполненная консервная банка", es: "Lata de Estaño (llena)", pt: "Lata de Estanho (Cheia)", zh: "锡罐(满)"});
-Translation.addTranslation("This looks bad...", {ru: "Это выглядит несъедобно…"});
+Translation.addTranslation("This looks bad...", {ru: "Это выглядит несъедобно…", zh: "这看起来很糟糕..."});
 
 // Cells
 Translation.addTranslation("Cell", {ru: "Капсула", es: "Celda Vacía", pt: "Célula Universal de Fluidos", zh: "空单元"});
@@ -308,7 +308,7 @@ Translation.addTranslation("Lappack", {ru: "Лазуротроновый ран�
 // Tools
 Translation.addTranslation("Tool Box", {ru: "Ящик для инструментов", es: "Caja de Herramientas", pt: "Caixa de Ferramentas", zh: "工具盒"});
 Translation.addTranslation("Containment Box", {ru: "Защитный контейнер", es: "Caja de Contención", pt: "Caixa de Contenção", zh: "防辐射容纳盒"});
-Translation.addTranslation("Frequency Transmitter", {ru: "Частотный связыватель", es: "Transmisor de Frecuencias", pt: "Transmissor de Frequência", zh: "传送频率遥控器"});
+Translation.addTranslation("Frequency Transmitter", {ru: "Частотный связыватель", es: "Transmisor de Frecuencias", pt: "Transmissor de Frequência", zh: "遥控器"});
 Translation.addTranslation("OD Scanner", {ru: "Сканер КР", es: "Escaner de Densidad", zh: "OD扫描器"});
 Translation.addTranslation("OV Scanner", {ru: "Сканер ЦР", es: "Escaner de Riqueza", zh: "OV扫描器"});
 Translation.addTranslation("Treetap", {ru: "Краник", es: "Grifo para Resina", pt: "Drenador", zh: "木龙头"});
@@ -334,14 +334,14 @@ Translation.addTranslation("EU Meter", {ru: "Мультиметр", pt: "Leitor 
 // TEXT
 // Fluid Distributor
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
-Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "过滤混合液体"});
-Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "concentrado", pt: "Concentrar", zh: "混合纯净液体"});
+Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "分配模式"});
+Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "concentrado", pt: "Concentrar", zh: "混合模式"});
 // Advanced Miner
 Translation.addTranslation("Mode: Blacklist", {ru: "Чёрный список", es: "Modo: lista negra", pt: "Modo: Lst Negra", zh: "模式:黑名单"});
 Translation.addTranslation("Mode: Whitelist", {ru: "Белый список", es: "Modo: lista blanca", pt: "Modo: Lst Branca", zh: "模式:白名单"});
 // EU Meter
-Translation.addTranslation("EnergyIn", {ru: "Вход энергии", zh: "能量流入"});
-Translation.addTranslation("EnergyOut", {ru: "Выход энергии", zh: "能量流出"});
+Translation.addTranslation("EnergyIn", {ru: "Вход энергии", zh: "输入能量"});
+Translation.addTranslation("EnergyOut", {ru: "Выход энергии", zh: "输出能量"});
 Translation.addTranslation("EnergyGain", {ru: "Энергии получено", es: "EnergíaGana", pt: "GanhoEnerg", zh: "获得能量"});
 Translation.addTranslation("Voltage", {ru: "Напряжение", es: "Voltaje", pt: "Voltagem", zh: "电压"});
 Translation.addTranslation("Avg:", {ru: "Средн.:", es: "Promedio:", pt: "Méd:", zh: "平均:"});
@@ -356,15 +356,15 @@ Translation.addTranslation("Horizontal", {ru: "Горизонтальный", zh
 Translation.addTranslation("Super-Heat", {ru: "Перегревающий", es: "Super-Calor", pt: "Super Quente", zh: "超级热线模式"});
 Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
 // Iridium Drill
-Translation.addTranslation("Fortune III", {ru: "Удача III"});
-Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание"});
+Translation.addTranslation("Fortune III", {ru: "Удача III", zh:"时运 III"});
+Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", zh:"精准采集"});
 
 // Messages
-Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен"});
-Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен"});
-Translation.addTranslation("Hover mode disabled", {ru: "Режим парения выключен"});
-Translation.addTranslation("Hover mode enabled", {ru: "Режим парения включен"});
+Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh:"已启用夜视模式"});
+Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен", zh:"已禁用夜视模式"});
+Translation.addTranslation("Hover mode disabled", {ru: "Режим парения выключен", zh:"已禁用悬浮模式"});
+Translation.addTranslation("Hover mode enabled", {ru: "Режим парения включен", zh:"已启用悬浮模式"});
 
 // Tooltips
-Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: "});
-Translation.addTranslation("Max voltage: ", {ru: "Макс. напряжение: "});
+Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: ", zh:"能量等级: "});
+Translation.addTranslation("Max voltage: ", {ru: "Макс. напряжение: ", zh:"最大电压: "});

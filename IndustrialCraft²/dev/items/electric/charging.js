@@ -56,13 +56,13 @@ Callback.addCallback("PreLoaded", function(){
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingAdvBattery, -1, 'x', ItemID.heatExchangerComponent, 0, 'b', ItemID.storageCrystal, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingAdvBattery, -1, 'x', ItemID.heatExchangerComponent, 1, 'b', ItemID.storageCrystal, -1], ChargeItemRegistry.transportEnergy);
 	
 	Recipes.addShaped({id: ItemID.chargingLapotronCrystal, count: 1, data: Item.getMaxDamage(ItemID.chargingLapotronCrystal)}, [
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingCrystal, -1, 'x', ItemID.heatExchangerAdv, 0, 'b', ItemID.storageLapotronCrystal, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingCrystal, -1, 'x', ItemID.heatExchangerAdv, 1, 'b', ItemID.storageLapotronCrystal, -1], ChargeItemRegistry.transportEnergy);
 });
 
 var charging_items = {}

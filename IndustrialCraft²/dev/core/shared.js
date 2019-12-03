@@ -7,8 +7,10 @@ ModAPI.registerAPI("ICore", {
 	Reactor: ReactorAPI,
 	Radiation: RadiationAPI,
 	Tool: ICTool,
+	Sound: SoundAPI,
 	ItemName: ItemName,
 	UI: UIbuttons,
+	Config: Config,
 	Ore: OreGenerator,
 	Integration: IntegrationAPI,
 	

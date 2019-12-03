@@ -27,34 +27,82 @@ var MachineRegistry = {
 			Prototype.click = function(id, count, data, coords){
 				if(ICTool.isValidWrench(id, data, 10)){
 					if(this.wrenchClick(id, count, data, coords))
-					ICTool.useWrench(id, data, 10);
+						ICTool.useWrench(id, data, 10);
 					return true;
 				}
 				return false;
 			};
 		}
 		
+		// audio
+		if(Prototype.getStartSoundFile){
+			if(!Prototype.getStartingSoundFile){
+				Prototype.getStartingSoundFile = function(){return null;}
+			}
+			if(!Prototype.getInterruptSoundFile){
+				Prototype.getInterruptSoundFile = function(){return null;}
+			}
+			Prototype.startPlaySound = Prototype.startPlaySound || function(){
+				if(!Config.machineSoundEnabled){return;}
+				var audio = this.audioSource;
+				if(audio && audio.isFinishing){
+					audio.stop();
+					audio.media = audio.startingSound || audio.startSound;
+					audio.start();
+					audio.isFinishing = false;
+				}
+				else if(!audio && !this.remove){
+					this.audioSource = SoundAPI.createSource([this.getStartingSoundFile(), this.getStartSoundFile(), this.getInterruptSoundFile()], this, 16);
+				}
+			}
+			Prototype.stopPlaySound = Prototype.stopPlaySound || function(){
+				var audio = this.audioSource;
+				if(audio){
+					if(!audio.isPlaying()){
+						this.audioSource = null;
+					}
+					else if(!audio.isFinishing){
+						audio.stop();
+						audio.playFinishingSound();
+					}
+				}
+			}
+		} else {
+			Prototype.startPlaySound = Prototype.startPlaySound || function(name){
+				if(!this.audioSource && !this.remove){
+					let sound = SoundAPI.playSound(name, true);
+					if(sound){
+						sound.setSource(this, 16);
+						this.audioSource = sound;
+					}
+				}
+			}
+			Prototype.stopPlaySound = Prototype.stopPlaySound || function(){
+				if(this.audioSource && this.audioSource.isPlaying()){
+					this.audioSource.stop();
+					this.audioSource = null;
+				}
+			}
+		}
+		
+		
+		// machine activation
 		if(Prototype.defaultValues && Prototype.defaultValues.isActive !== undefined){
 			if(!Prototype.renderModel){
-				Prototype.renderModel = this.renderModelWithRotation
+				Prototype.renderModel = this.renderModelWithRotation;
 			}
-			if(!Prototype.setActive){
-				Prototype.setActive = this.setActive
+			
+			Prototype.setActive = Prototype.setActive || this.setActive;
+			
+			Prototype.activate = Prototype.activate || function(){
+				this.setActive(true);
 			}
-			if(!Prototype.activate){
-				Prototype.activate = function(){
-					this.setActive(true);
-				}
+			Prototype.deactivate = Prototype.deactivate || function(){
+				this.setActive(false);
 			}
-			if(!Prototype.deactivate){
-				Prototype.deactivate = function(){
-					this.setActive(false);
-				}
-			}
-			if(!Prototype.destroy){
-				Prototype.destroy = function(){
-					BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-				}
+			Prototype.destroy = Prototype.destroy || function(){
+				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+				this.stopPlaySound();
 			}
 		}
 		
@@ -147,17 +195,15 @@ var MachineRegistry = {
 		this.registerElectricMachine(id, Prototype);
 	},
 	
-	// standart functions
+	// standard functions
 	setStoragePlaceFunction: function(id, fullRotation){
 		Block.registerPlaceFunction(BlockID[id], function(coords, item, block){
-			var x = coords.relative.x
-			var y = coords.relative.y
-			var z = coords.relative.z
-			World.setBlock(x, y, z, item.id, 0);
+			var place = canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
+			World.setBlock(place.x, place.y, place.z, item.id, 0);
 			var rotation = TileRenderer.getBlockRotation(fullRotation);
-			var tile = World.addTileEntity(x, y, z);
+			var tile = World.addTileEntity(place.x, place.y, place.z);
 			tile.data.meta = rotation;
-			TileRenderer.mapAtCoords(x, y, z, item.id, rotation);
+			TileRenderer.mapAtCoords(place.x, place.y, place.z, item.id, rotation);
 			if(item.extra){
 				tile.data.energy = item.extra.getInt("Eu");
 			}
@@ -217,16 +263,6 @@ var MachineRegistry = {
 		}
 	},
 	
-	updateMachine: function(){
-		var block = World.getBlock(this.x, this.y, this.z);
-		if(block.id != this.id && block.id > 0){
-			Game.message("§2Update tile ID: " + this.id);
-			World.setBlock(this.x, this.y, this.z, this.id, 0);
-			this.data.meta = 0;
-		}
-		this.renderModel();
-	},
-	
 	basicEnergyOutFunc: function(type, src){
 		this.data.last_energy_receive = this.data.energy_receive;
 		this.data.energy_receive = 0;
@@ -241,7 +277,7 @@ var MachineRegistry = {
 	basicEnergyReceiveFunc: function(type, amount, voltage) {
 		var maxVoltage = this.getMaxPacketSize();
 		if(voltage > maxVoltage){
-			if(voltageEnabled){
+			if(Config.voltageEnabled){
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
 				this.selfDestroy();
 				return 1;

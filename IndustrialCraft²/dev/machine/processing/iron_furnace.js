@@ -111,8 +111,10 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		
 		if(this.data.burn > 0){
 			this.data.burn--;
+			this.startPlaySound("Machines/IronFurnaceOp.ogg");
 			this.activate();
-		}else{
+		} else {
+			this.stopPlaySound();
 			this.deactivate();
 		}
 		

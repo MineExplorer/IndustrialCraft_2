@@ -356,15 +356,15 @@ Translation.addTranslation("Horizontal", {ru: "Горизонтальный", zh
 Translation.addTranslation("Super-Heat", {ru: "Перегревающий", es: "Super-Calor", pt: "Super Quente", zh: "超级热线模式"});
 Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
 // Iridium Drill
-Translation.addTranslation("Fortune III", {ru: "Удача III", zh:"时运 III"});
-Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", zh:"精准采集"});
+Translation.addTranslation("Fortune III", {ru: "Удача III", zh: "时运 III"});
+Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", zh: "精准采集"});
 
 // Messages
-Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh:"已启用夜视模式"});
-Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен", zh:"已禁用夜视模式"});
-Translation.addTranslation("Hover mode disabled", {ru: "Режим парения выключен", zh:"已禁用悬浮模式"});
-Translation.addTranslation("Hover mode enabled", {ru: "Режим парения включен", zh:"已启用悬浮模式"});
+Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
+Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
+Translation.addTranslation("Hover mode disabled", {ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
+Translation.addTranslation("Hover mode enabled", {ru: "Режим парения включен", zh: "已启用悬浮模式"});
 
 // Tooltips
-Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: ", zh:"能量等级: "});
-Translation.addTranslation("Max voltage: ", {ru: "Макс. напряжение: ", zh:"最大电压: "});
+Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: ", zh: "能量等级: "});
+Translation.addTranslation("Max voltage: ", {ru: "Макс. напряжение: ", zh: "最大电压: "});

@@ -12,7 +12,7 @@ Item.registerUseFunction("rubberSapling", function(coords, item, block){
 	var tile1 = World.getBlock(place.x, place.y, place.z);
 	var tile2 = World.getBlock(place.x, place.y - 1, place.z);
 	
-	if (canTileBeReplaced(tile1.id) && DIRT_TILES[tile2.id]) {
+	if (canTileBeReplaced(tile1.id, tile1.data) && DIRT_TILES[tile2.id]) {
 		World.setBlock(place.x, place.y, place.z, BlockID.rubberTreeSapling);
 		Player.setCarriedItem(item.id, item.count - 1, item.data);
 	}

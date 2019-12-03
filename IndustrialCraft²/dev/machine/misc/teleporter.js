@@ -66,7 +66,7 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 						var weight = this.getWeight(ent);
 						if(weight){
 							var energyNeed = weight * receive.energy;
-							if(debugMode){Debug.m(energyNeed);}
+							if(Config.debugMode){Debug.m(energyNeed);}
 							if(energyNeed < energyAvailable){
 								for(var i in storages){
 									var data = storages[i].data;
@@ -75,6 +75,7 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 									energyNeed -= energyChange;
 									if(energyNeed <= 0){break;}
 								}
+								SoundAPI.playSound("Machines/Teleporter/TeleUse.ogg")
 								Entity.setPosition(ent, receive.x+0.5, receive.y+3, receive.z+0.5);
 							}
 						}

@@ -78,6 +78,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		
 		if(this.data.isEnabled && this.data.energy > 0){
 			this.activate();
+			this.startPlaySound("Generators/MassFabricator/MassFabLoop.ogg");
 			if(this.data.catalyser < Math.max(1000, this.data.energy)){
 				var catalyserSlot = this.container.getSlot("catalyserSlot");
 				var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
@@ -94,6 +95,9 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 				this.data.progress += transfer * 6;
 				this.data.energy -= transfer;
 				this.data.catalyser -= transfer;
+				if(World.getThreadTime()%40 == 0 && transfer > 0){
+					SoundAPI.playMachineAt("Generators/MassFabricator/MassFabScrapSolo.ogg", false, this, 16);
+				}
 			}
 			else{
 				this.container.setText("textInfo3", "");
@@ -104,6 +108,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 			this.data.energy -= transfer;
 		}
 		else{
+			this.stopPlaySound();
 			this.deactivate();
 		}
 		if(this.data.progress >= ENERGY_PER_MATTER){
@@ -127,7 +132,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: function(type, amount, voltage) {
 		if(this.data.isEnabled){
-			if(voltageEnabled && voltage > this.getMaxPacketSize()){
+			if(Config.voltageEnabled && voltage > this.getMaxPacketSize()){
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
 				this.selfDestroy();
 				return 1;

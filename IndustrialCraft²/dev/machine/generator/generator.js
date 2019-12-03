@@ -78,11 +78,10 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 			if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)){
 				fuelSlot.count--;
 				this.container.validateSlot(slotName);
-				this.activate();
+				
 				return burn;
 			}
 		}
-		this.deactivate();
 		return 0;
 	},
 	
@@ -92,9 +91,16 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 		if(this.data.burn <= 0 && this.data.energy < energyStorage){
 			this.data.burn = this.data.burnMax = this.getFuel("slotFuel") / 4;
 		}
-		if(this.data.burn > 0){
-			this.data.energy = Math.min(this.data.energy + 10, energyStorage);
+		if(this.data.burn > 0 && 
+		  (!this.data.isActive && this.data.energy + 100 <= energyStorage) ||
+		  (this.data.isActive && this.data.energy + 10 <= energyStorage)){
+			this.data.energy += 10;
 			this.data.burn--;
+			this.activate();
+			this.startPlaySound("Generators/GeneratorLoop.ogg");
+		} else {
+			this.deactivate();
+			this.stopPlaySound();
 		}
 		
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);

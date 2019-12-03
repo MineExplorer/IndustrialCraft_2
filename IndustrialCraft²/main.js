@@ -2,7 +2,7 @@
 BUILD INFO:
   dir: dev
   target: main.js
-  files: 114
+  files: 116
 */
 
 
@@ -43,22 +43,12 @@ LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
 Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
 Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");
+Player.getPointed = ModAPI.requireGlobal("Player.getPointed");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
-
-// config
-var debugMode = __config__.getBool("debug_mode");
-var voltageEnabled = __config__.getBool("voltage_enabled");
-var wireDamageEnabled = __config__.getBool("wire_damage_enabled");
-Callback.addCallback("LevelLoaded", function(){
-	debugMode = __config__.getBool("debug_mode");
-	voltageEnabled = __config__.getBool("voltage_enabled");
-	wireDamageEnabled = __config__.getBool("wire_damage_enabled");
-	player = Player.get();
-});
 
 // API
 function random(min, max){
@@ -88,8 +78,8 @@ var lasttime = -1
 var frame = 0
 
 Callback.addCallback("tick", function(){
-	if(debugMode){
-		var t = java.lang.System.currentTimeMillis()
+	if(Config.debugMode){
+		var t = Debug.sysTime();
 		if(frame++ % 20 == 0){
 			if(lasttime != -1){
 				tps = 1000 / (t - lasttime) * 20
@@ -100,7 +90,7 @@ Callback.addCallback("tick", function(){
 	}
 });
 
-// redstone items fix
+// redstone items placing fix
 Item.registerUseFunctionForID(69, function(coords, item, block){
 	if(block.id >= 8192){
 		Game.prevent();
@@ -120,7 +110,7 @@ Item.registerUseFunctionForID(69, function(coords, item, block){
 
 // file: translation.js
 
-﻿// BLOCKS
+// BLOCKS
 Translation.addTranslation("Rubber Tree Log", {ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", pt: "Madeira de Seringueira", zh: "橡胶树原木"});
 Translation.addTranslation("Rubber Tree Leaves", {ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", pt: "Folhas de Seringueira", zh: "橡胶树树叶"});
 Translation.addTranslation("Rubber Tree Sapling", {ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", pt: "Muda de Seringueira", zh: "橡胶树树苗"});
@@ -130,7 +120,7 @@ Translation.addTranslation("Lead Ore", {ru: "Свинцовая руда", es: "
 Translation.addTranslation("Uranium Ore", {ru: "Урановая руда", es: "Mineral de Uranium", pt: "Minério de Urânio", zh: "铀矿石"});
 Translation.addTranslation("Iridium Ore", {ru: "Иридиевая руда",  es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱矿石"});
 Translation.addTranslation("Copper Block", {ru: "Медный блок", es: "Bloque de Cobre", pt: "Bloco de Cobre", zh: "铜块"});
-Translation.addTranslation("Tin Block", {ru: "Оловянный блок", es: "Bloque de Estaño", pt: "Bloco de Estanho", zh: "锡矿石"});
+Translation.addTranslation("Tin Block", {ru: "Оловянный блок", es: "Bloque de Estaño", pt: "Bloco de Estanho", zh: "锡块"});
 Translation.addTranslation("Bronze Block", {ru: "Бронзовый блок", es: "Bloque de Bronce", pt: "Bloco de Bronze", zh: "青铜块"});
 Translation.addTranslation("Lead Block", {ru: "Свинцовый блок", es: "Bloque de Plomo", pt: "Bloco de Chumbo", zh: "铅块"});
 Translation.addTranslation("Steel Block", {ru: "Стальной блок", es: "Bloque de Hierro Refinado", pt: "Bloco de Aço", zh: "钢块"});
@@ -141,7 +131,7 @@ Translation.addTranslation("Mining Pipe", {ru: "Буровая труба", es: 
 Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", pt: "Vidro Reforçado", zh: "防爆石"});
 Translation.addTranslation("Reinforced Glass", {ru: "Укреплённое стекло", es: "Cristal Reforzado", pt: "Vidro Reforçado", zh: "防爆玻璃"});
 Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", pt: "Estrutura de Máquina Básica", zh: "基础机械外壳"});
-Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Estrutura de Máquina Avançada", zh: "基础机械外壳"});
+Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Estrutura de Máquina Avançada", zh: "高级机械外壳"});
 
 // Generators
 Translation.addTranslation("Generator", {ru: "Генератор", es: "Generador", pt: "Gerador", zh: "火力发电机"});
@@ -155,14 +145,14 @@ Translation.addTranslation("Nuclear Reactor", {ru: "Ядерный реакто�
 Translation.addTranslation("Reactor Chamber", {ru: "Реакторная камера", es: "Cámara del Reactor", pt: "Câmara de Reator", zh: "核反应仓"});
 
 // Heat Generators
-Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor à Combustível Sólido", zh: "固体的热发生器"});
-Translation.addTranslation("Electric Heat Generator", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电热发生器"});
+Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor à Combustível Sólido", zh: "固体加热机"});
+Translation.addTranslation("Electric Heat Generator", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电力加热机"});
 
 // Energy storage
 Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", pt: "Caixa de Baterias", zh: "储电盒"});
-Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", pt: "Unidade de Armazenamento de Energia", zh: "CESU充电座"});
-Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", pt: "Transmissor de Energia Multi-funcional", zh: "MFE充电座"});
-Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", pt: "Unidade de Armazenamento Multi-funcional", zh: "MFSU充电座"});
+Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", pt: "Unidade de Armazenamento de Energia", zh: "CESU储电箱"});
+Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", pt: "Transmissor de Energia Multi-funcional", zh: "MFE储电箱"});
+Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", pt: "Unidade de Armazenamento Multi-funcional", zh: "MFSU储电箱"});
 
 // Transformer
 Translation.addTranslation("LV Transformer", {ru: "Трансформатор НН", zh: "低压变压器"});
@@ -172,9 +162,9 @@ Translation.addTranslation("EV Transformer", {ru: "Трансформатор С
 
 // Machines
 Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", pt: "Iluminador", zh: "日光灯"});
-Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм"}); // To Do
+Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм", zh: "固体装罐机"}); // To Do
 Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Fornalha de Ferro", zh: "铁炉"});
-Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", pt: "Fornalha Elétrica", zh: "感应炉"});
+Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", pt: "Fornalha Elétrica", zh: "电炉"});
 Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", pt: "Fornalha de Indução", zh: "感应炉"});
 Translation.addTranslation("Macerator", {ru: "Дробитель", es: "Trituradora", pt: "Macerador", zh: "打粉机"});
 Translation.addTranslation("Compressor", {ru: "Компрессор", es: "Compresor", pt: "Compactador", zh: "压缩机"});
@@ -200,14 +190,14 @@ Translation.addTranslation("Tank", {ru: "Бак", es: "Tanque", pt: "Tanque", zh
 
 // ITEMS
 Translation.addTranslation("Iridium", {ru: "Иридий", es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱碎片"});
-Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", pt: "Latex", zh: "胶乳"});
+Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", pt: "Latex", zh: "粘性树脂"});
 Translation.addTranslation("Rubber", {ru: "Резина", es: "Rubber", pt: "Borracha", zh: "橡胶"});
 Translation.addTranslation("Ashes", {ru: "Пепел", es: "Ceniza", pt: "Cinzas", zh: "灰烬"});
 Translation.addTranslation("Slag", {ru: "Шлак", es: "Escoria", pt: "Sucata", zh: "渣"});
 Translation.addTranslation("Scrap", {ru: "Утильсырьё", es: "Chatarra", pt: "Sucata", zh: "废料"});
 Translation.addTranslation("Scrap Box", {ru: "Коробка утильсырья", es: "Caja de Chatarra", pt: "Caixa de Sucata", zh: "废料盒"});
-Translation.addTranslation("UU-matter", {ru: "Материя", es: "Materia", pt: "Metéria UU", zh: "物质"});
-Translation.addTranslation("Heat Conductor", {ru: "Теплопроводник ", es: "Conductor de calor", pt: "Condutor de Calor", zh: "热导体"});
+Translation.addTranslation("UU-Matter", {ru: "Материя", es: "Materia", pt: "Metéria UU", zh: "UU物质"});
+Translation.addTranslation("Heat Conductor", {ru: "Теплопроводник ", es: "Conductor de calor", pt: "Condutor de Calor", zh: "热传导器"});
 Translation.addTranslation("Coal Ball", {ru: "Угольный шарик", es: "Bola de Carbón", pt: "Bola de Carvão", zh: "煤球"});
 Translation.addTranslation("Coal Block", {ru: "Сжатый угольный шарик", es: "Bola de Carbón Compactada", pt: "Bola de Carvão Comprimido", zh: "压缩煤球"});
 Translation.addTranslation("Coal Chunk", {ru: "Угольная глыба", es: "Carbono Bruto", zh: "煤块", pt: "Pedaço de Carvão"});
@@ -218,7 +208,7 @@ Translation.addTranslation("Alloy Plate", {ru: "Композит", es: "Compuest
 Translation.addTranslation("Iridium Reinforced Plate", {ru: "Иридиевый композит", es: "Placa de Iridio", pt: "Placa Reforçada com Irídio", zh: "强化铱板"});
 
 // Nuclear
-Translation.addTranslation("Enriched Uranium", {ru: "Обогащённый уран", es: "Uranio Enriquecido", pt: "Urânio Enriquecido", zh: "浓缩铀"});
+Translation.addTranslation("Enriched Uranium", {ru: "Обогащённый уран", es: "Uranio Enriquecido", pt: "Urânio Enriquecido", zh: "浓缩铀核燃料"});
 Translation.addTranslation("Uranium 235", {ru: "Уран-235", es: "Uranio 235", pt: "Urânio 235", zh: "铀-235"});
 Translation.addTranslation("Piece of Uranium 235", {ru: "Кусочек урана-235", es: "Diminuta Pila de Uranio 235", pt: "Pequena Pilha de Urânio 235", zh: "小撮铀-235"});
 Translation.addTranslation("Uranium 238", {ru: "Уран-238", es: "Uranio 238", pt: "Urânio 238", zh: "铀-238"});
@@ -275,10 +265,10 @@ Translation.addTranslation("Small Power Unit", {ru: "Малый силовой �
 
 // Energy Storage
 Translation.addTranslation("RE-Battery", {ru: "Аккумулятор", es: "Batería Recargable", pt: "Bateria Reutilizável", zh: "充电电池"});
-Translation.addTranslation("Advanced RE-Battery", {ru: "Продвинутый аккумулятор", es: "Bateria-RE Avanzada", pt: "Bateria-RE Avançada", zh: "强化充电电池"});
+Translation.addTranslation("Advanced RE-Battery", {ru: "Продвинутый аккумулятор", es: "Bateria-RE Avanzada", pt: "Bateria-RE Avançada", zh: "高级充电电池"});
 Translation.addTranslation("Energy Crystal", {ru: "Энергетический кристалл", es: "Cristal de Energía", pt: "Cristal de Energia", zh: "能量水晶"});
 Translation.addTranslation("Lapotron Crystal", {ru: "Лазуротроновый кристалл", es: "Cristal Lapotron", pt: "Cristal Lapotrônico", zh: "兰波顿水晶"});
-Translation.addTranslation("Charging RE-Battery", {ru: "Заряжающий аккумулятор", es: "Batería Cargadora", pt: "Bateria Carregadora", zh: "充电电池"});
+Translation.addTranslation("Charging RE-Battery", {ru: "Заряжающий аккумулятор", es: "Batería Cargadora", pt: "Bateria Carregadora", zh: "RE充电电池"});
 Translation.addTranslation("Advanced Charging Battery", {ru: "Продвинутый заряжающий аккумулятор", es: "Bateria Cargadora Avanzada", pt: "Bateria Carregadora Avançada", zh: "高级充电电池"});
 Translation.addTranslation("Charging Energy Crystal", {ru: "Заряжающий энергетический кристалл", es: "Cargador de Cristales de Energía", pt: "Carregador de Cristais de Energia", zh: "能量水晶充电电池"});
 Translation.addTranslation("Charging Lapotron Crystal", {ru: "Заряжающий лазуротроновый кристалл", es: "Cargador de Cristales Lapotron", pt: "Carregador de Cristais Lapotrônicos", zh: "兰波顿充电电池"});
@@ -370,14 +360,14 @@ Translation.addTranslation("Copper Casing", {ru: "Медная оболочка"
 Translation.addTranslation("Tin Casing", {ru: "Оловянная оболочка", es: "Carcasa para Objetos de Estaño", pt: "Invólucro de Estanho", zh: "锡质外壳"});
 Translation.addTranslation("Iron Casing", {ru: "Железная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Ferro", zh: "铁质外壳"});
 Translation.addTranslation("Bronze Casing", {ru: "Бронзовая оболочка", es: "Carcasa para Objetos de Bronce", pt: "Invólucro de Bronze", zh: "青铜外壳"});
-Translation.addTranslation("Steel Casing", {ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Aço", zh: "钢质外壳а"});
+Translation.addTranslation("Steel Casing", {ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Aço", zh: "钢质外壳"});
 Translation.addTranslation("Gold Casing", {ru: "Золотая оболочка", es: "Carcasa para Objetos de Oro", pt: "Invólucro de Ouro", zh: "黄金外壳"});
 Translation.addTranslation("Lead Casing", {ru: "Свинцовая оболочка", es: "Carcasa para Objetos de Plomo", pt: "Invólucro de Chumbo", zh: "铅质外壳"});
 
 // Cans
 Translation.addTranslation("Tin Can", {ru: "Консервная банка", es: "Lata de Estaño", pt: "Lata de Estanho", zh: "锡罐(空)"});
 Translation.addTranslation("Filled Tin Can", {ru: "Заполненная консервная банка", es: "Lata de Estaño (llena)", pt: "Lata de Estanho (Cheia)", zh: "锡罐(满)"});
-Translation.addTranslation("This looks bad...", {ru: "Это выглядит несъедобно…"});
+Translation.addTranslation("This looks bad...", {ru: "Это выглядит несъедобно…", zh: "这看起来很糟糕..."});
 
 // Cells
 Translation.addTranslation("Cell", {ru: "Капсула", es: "Celda Vacía", pt: "Célula Universal de Fluidos", zh: "空单元"});
@@ -430,7 +420,7 @@ Translation.addTranslation("Lappack", {ru: "Лазуротроновый ран�
 // Tools
 Translation.addTranslation("Tool Box", {ru: "Ящик для инструментов", es: "Caja de Herramientas", pt: "Caixa de Ferramentas", zh: "工具盒"});
 Translation.addTranslation("Containment Box", {ru: "Защитный контейнер", es: "Caja de Contención", pt: "Caixa de Contenção", zh: "防辐射容纳盒"});
-Translation.addTranslation("Frequency Transmitter", {ru: "Частотный связыватель", es: "Transmisor de Frecuencias", pt: "Transmissor de Frequência", zh: "传送频率遥控器"});
+Translation.addTranslation("Frequency Transmitter", {ru: "Частотный связыватель", es: "Transmisor de Frecuencias", pt: "Transmissor de Frequência", zh: "遥控器"});
 Translation.addTranslation("OD Scanner", {ru: "Сканер КР", es: "Escaner de Densidad", zh: "OD扫描器"});
 Translation.addTranslation("OV Scanner", {ru: "Сканер ЦР", es: "Escaner de Riqueza", zh: "OV扫描器"});
 Translation.addTranslation("Treetap", {ru: "Краник", es: "Grifo para Resina", pt: "Drenador", zh: "木龙头"});
@@ -456,14 +446,14 @@ Translation.addTranslation("EU Meter", {ru: "Мультиметр", pt: "Leitor 
 // TEXT
 // Fluid Distributor
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
-Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "过滤混合液体"});
-Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "concentrado", pt: "Concentrar", zh: "混合纯净液体"});
+Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "分配模式"});
+Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "concentrado", pt: "Concentrar", zh: "混合模式"});
 // Advanced Miner
 Translation.addTranslation("Mode: Blacklist", {ru: "Чёрный список", es: "Modo: lista negra", pt: "Modo: Lst Negra", zh: "模式:黑名单"});
 Translation.addTranslation("Mode: Whitelist", {ru: "Белый список", es: "Modo: lista blanca", pt: "Modo: Lst Branca", zh: "模式:白名单"});
 // EU Meter
-Translation.addTranslation("EnergyIn", {ru: "Вход энергии", zh: "能量流入"});
-Translation.addTranslation("EnergyOut", {ru: "Выход энергии", zh: "能量流出"});
+Translation.addTranslation("EnergyIn", {ru: "Вход энергии", zh: "输入能量"});
+Translation.addTranslation("EnergyOut", {ru: "Выход энергии", zh: "输出能量"});
 Translation.addTranslation("EnergyGain", {ru: "Энергии получено", es: "EnergíaGana", pt: "GanhoEnerg", zh: "获得能量"});
 Translation.addTranslation("Voltage", {ru: "Напряжение", es: "Voltaje", pt: "Voltagem", zh: "电压"});
 Translation.addTranslation("Avg:", {ru: "Средн.:", es: "Promedio:", pt: "Méd:", zh: "平均:"});
@@ -478,18 +468,18 @@ Translation.addTranslation("Horizontal", {ru: "Горизонтальный", zh
 Translation.addTranslation("Super-Heat", {ru: "Перегревающий", es: "Super-Calor", pt: "Super Quente", zh: "超级热线模式"});
 Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
 // Iridium Drill
-Translation.addTranslation("Fortune III", {ru: "Удача III"});
-Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание"});
+Translation.addTranslation("Fortune III", {ru: "Удача III", zh: "时运 III"});
+Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", zh: "精准采集"});
 
 // Messages
-Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен"});
-Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен"});
-Translation.addTranslation("Hover mode disabled", {ru: "Режим парения выключен"});
-Translation.addTranslation("Hover mode enabled", {ru: "Режим парения включен"});
+Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
+Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
+Translation.addTranslation("Hover mode disabled", {ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
+Translation.addTranslation("Hover mode enabled", {ru: "Режим парения включен", zh: "已启用悬浮模式"});
 
 // Tooltips
-Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: "});
-Translation.addTranslation("Max voltage: ", {ru: "Макс. напряжение: "});
+Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: ", zh: "能量等级: "});
+Translation.addTranslation("Max voltage: ", {ru: "Макс. напряжение: ", zh: "最大电压: "});
 
 
 
@@ -525,34 +515,82 @@ var MachineRegistry = {
 			Prototype.click = function(id, count, data, coords){
 				if(ICTool.isValidWrench(id, data, 10)){
 					if(this.wrenchClick(id, count, data, coords))
-					ICTool.useWrench(id, data, 10);
+						ICTool.useWrench(id, data, 10);
 					return true;
 				}
 				return false;
 			};
 		}
 		
+		// audio
+		if(Prototype.getStartSoundFile){
+			if(!Prototype.getStartingSoundFile){
+				Prototype.getStartingSoundFile = function(){return null;}
+			}
+			if(!Prototype.getInterruptSoundFile){
+				Prototype.getInterruptSoundFile = function(){return null;}
+			}
+			Prototype.startPlaySound = Prototype.startPlaySound || function(){
+				if(!Config.machineSoundEnabled){return;}
+				var audio = this.audioSource;
+				if(audio && audio.isFinishing){
+					audio.stop();
+					audio.media = audio.startingSound || audio.startSound;
+					audio.start();
+					audio.isFinishing = false;
+				}
+				else if(!audio && !this.remove){
+					this.audioSource = SoundAPI.createSource([this.getStartingSoundFile(), this.getStartSoundFile(), this.getInterruptSoundFile()], this, 16);
+				}
+			}
+			Prototype.stopPlaySound = Prototype.stopPlaySound || function(){
+				var audio = this.audioSource;
+				if(audio){
+					if(!audio.isPlaying()){
+						this.audioSource = null;
+					}
+					else if(!audio.isFinishing){
+						audio.stop();
+						audio.playFinishingSound();
+					}
+				}
+			}
+		} else {
+			Prototype.startPlaySound = Prototype.startPlaySound || function(name){
+				if(!this.audioSource && !this.remove){
+					let sound = SoundAPI.playSound(name, true);
+					if(sound){
+						sound.setSource(this, 16);
+						this.audioSource = sound;
+					}
+				}
+			}
+			Prototype.stopPlaySound = Prototype.stopPlaySound || function(){
+				if(this.audioSource && this.audioSource.isPlaying()){
+					this.audioSource.stop();
+					this.audioSource = null;
+				}
+			}
+		}
+		
+		
+		// machine activation
 		if(Prototype.defaultValues && Prototype.defaultValues.isActive !== undefined){
 			if(!Prototype.renderModel){
-				Prototype.renderModel = this.renderModelWithRotation
+				Prototype.renderModel = this.renderModelWithRotation;
 			}
-			if(!Prototype.setActive){
-				Prototype.setActive = this.setActive
+			
+			Prototype.setActive = Prototype.setActive || this.setActive;
+			
+			Prototype.activate = Prototype.activate || function(){
+				this.setActive(true);
 			}
-			if(!Prototype.activate){
-				Prototype.activate = function(){
-					this.setActive(true);
-				}
+			Prototype.deactivate = Prototype.deactivate || function(){
+				this.setActive(false);
 			}
-			if(!Prototype.deactivate){
-				Prototype.deactivate = function(){
-					this.setActive(false);
-				}
-			}
-			if(!Prototype.destroy){
-				Prototype.destroy = function(){
-					BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-				}
+			Prototype.destroy = Prototype.destroy || function(){
+				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+				this.stopPlaySound();
 			}
 		}
 		
@@ -645,17 +683,15 @@ var MachineRegistry = {
 		this.registerElectricMachine(id, Prototype);
 	},
 	
-	// standart functions
+	// standard functions
 	setStoragePlaceFunction: function(id, fullRotation){
 		Block.registerPlaceFunction(BlockID[id], function(coords, item, block){
-			var x = coords.relative.x
-			var y = coords.relative.y
-			var z = coords.relative.z
-			World.setBlock(x, y, z, item.id, 0);
+			var place = canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
+			World.setBlock(place.x, place.y, place.z, item.id, 0);
 			var rotation = TileRenderer.getBlockRotation(fullRotation);
-			var tile = World.addTileEntity(x, y, z);
+			var tile = World.addTileEntity(place.x, place.y, place.z);
 			tile.data.meta = rotation;
-			TileRenderer.mapAtCoords(x, y, z, item.id, rotation);
+			TileRenderer.mapAtCoords(place.x, place.y, place.z, item.id, rotation);
 			if(item.extra){
 				tile.data.energy = item.extra.getInt("Eu");
 			}
@@ -715,16 +751,6 @@ var MachineRegistry = {
 		}
 	},
 	
-	updateMachine: function(){
-		var block = World.getBlock(this.x, this.y, this.z);
-		if(block.id != this.id && block.id > 0){
-			Game.message("§2Update tile ID: " + this.id);
-			World.setBlock(this.x, this.y, this.z, this.id, 0);
-			this.data.meta = 0;
-		}
-		this.renderModel();
-	},
-	
 	basicEnergyOutFunc: function(type, src){
 		this.data.last_energy_receive = this.data.energy_receive;
 		this.data.energy_receive = 0;
@@ -739,7 +765,7 @@ var MachineRegistry = {
 	basicEnergyReceiveFunc: function(type, amount, voltage) {
 		var maxVoltage = this.getMaxPacketSize();
 		if(voltage > maxVoltage){
-			if(voltageEnabled){
+			if(Config.voltageEnabled){
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
 				this.selfDestroy();
 				return 1;
@@ -882,13 +908,37 @@ var UpgradeAPI = {
 
 
 
+// file: core/config.js
+
+let Config = {
+	reload: function(){
+		this.debugMode = __config__.getBool("debug_mode");
+		this.soundEnabled = __config__.getBool("sound_enabled");
+		this.machineSoundEnabled = __config__.getBool("machine_sounds");
+		this.voltageEnabled = __config__.getBool("voltage_enabled");
+		this.wireDamageEnabled = __config__.getBool("wire_damage_enabled");
+	}
+}
+
+Config.reload();
+
+Callback.addCallback("LevelLoaded", function(){
+	Config.reload();
+	player = Player.get();
+});
+
+
+
+
 // file: core/tool.js
 
 var ICTool = {
 	wrenchData: {},
+	
 	registerWrench: function(id, chance, energyOnUse){
 		this.wrenchData[id] = {chance: chance, energy: energyOnUse}
 	},
+	
 	getWrenchData: function(id){
 		return this.wrenchData[id];
 	},
@@ -908,6 +958,7 @@ var ICTool = {
 		}else{
 			this.useElectricItem({id: id, data: data}, wrench.energy * damage);
 		}
+		SoundAPI.playSound("Tools/Wrench.ogg");
 	},
 	
 	addRecipe: function(result, data, tool){
@@ -926,6 +977,7 @@ var ICTool = {
 			}
 		});
 	},
+	
 	dischargeItem: function(item, consume){
 		var energy = 0;
 		var armor = Player.getArmorSlot(1);
@@ -944,12 +996,42 @@ var ICTool = {
 		}
 		return false;
 	},
+	
 	useElectricItem: function(item, consume){
 		if(this.dischargeItem(item, consume)){
 			Player.setCarriedItem(item.id, 1, item.data, item.extra);
 			return true;
 		}
 		return false;
+	},
+	
+	registerElectricHoe: function(nameID){
+		Item.registerUseFunction(nameID, function(coords, item, block){
+			if((block.id==2 || block.id==3 || block.id==110 || block.id==243) && coords.side==1 && ICTool.useElectricItem(item, 50)){ 
+				World.setBlock(coords.x, coords.y, coords.z, 60);
+				World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.75);
+			}
+		});
+	},
+	
+	registerElectricTreerap: function(nameID){
+		Item.registerUseFunction(nameID, function(coords, item, block){
+			if(block.id == BlockID.rubberTreeLogLatex && block.data - 2 == coords.side && ICTool.useElectricItem(item, 50)){
+				SoundAPI.playSound("Tools/Treetap.ogg");
+				World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLogLatex, block.data - 4);
+				Entity.setVelocity(
+					World.drop(
+						coords.relative.x + 0.5,
+						coords.relative.y + 0.5,
+						coords.relative.z + 0.5,
+						ItemID.latex, 1 + parseInt(Math.random() * 3), 0
+					),
+					(coords.relative.x - coords.x) * 0.25,
+					(coords.relative.y - coords.y) * 0.25,
+					(coords.relative.z - coords.z) * 0.25
+				);
+			}
+		});
 	}
 }
 
@@ -968,7 +1050,7 @@ Callback.addCallback("DestroyBlockStart", function(coords, block){
 // file: core/electricity.js
 
 var wireBurnoutFunc = function(){};
-if(voltageEnabled){
+if(Config.voltageEnabled){
 	wireBurnoutFunc = function(voltage){
 		for(var key in this.wireMap){
 			var coords = key.split(':');
@@ -1034,7 +1116,7 @@ var insulationMaxVolt = {
 
 Callback.addCallback("tick", function(){
 	if(World.getThreadTime()%20 == 0){
-		if(wireDamageEnabled){
+		if(Config.wireDamageEnabled){
 			var entities = Entity.getAll();
 		}
 		else{
@@ -1196,6 +1278,303 @@ Callback.addCallback("EntityDeath", function(entity){
 
 
 
+// file: core/sound_engine.js
+
+let SoundAPI = {
+	soundPlayers: [],
+	soundsToRelease: [],
+	maxPlayersCount: 28,
+	
+	getFilePath: function(name){
+		return __dir__ + "res/sounds/" + name;
+	},
+	
+	addSoundPlayer: function(name, isLooping, priority){
+		if(this.soundPlayers.length >= this.maxPlayersCount){
+			Logger.Log(__name__ + " sound stack is full", "WARNING");
+			return;
+		}
+		let sound = new Sound(name, priority);
+		sound.setDataSource(this.getFilePath(name));
+		sound.setLooping(isLooping || false);
+		sound.prepare();
+		this.soundPlayers.push(sound);
+		return sound;
+	},
+	
+	addMultiSoundPlayer: function(startingSound, startSound, finishingSound){
+		if(this.soundPlayers.length >= this.maxPlayersCount){
+			Logger.Log(__name__ + " sound stack is full", "WARNING");
+			return;
+		}
+		let sound = new MultiSound(startingSound, startSound, finishingSound);
+		this.soundPlayers.push(sound);
+		return sound;
+	},
+	
+	playSound: function(name, isLooping, disableMultiPlaying){
+		if(!Config.soundEnabled) {return;}
+		let curSound = null;
+		try{
+		for(let i in this.soundPlayers){
+			let sound = this.soundPlayers[i];
+			if(sound.isPlaying()){
+				if(sound.name == name && disableMultiPlaying){
+					return sound;
+				}
+			}
+			else if(sound.name == name) {
+				sound.start();
+				return sound;
+			}
+			else if(!sound.isPreparing && sound.priority <= 0){
+				curSound = new Sound(name, 0, false);
+				curSound.setDataSource(this.getFilePath(name));
+				curSound.setLooping(isLooping || false);
+				curSound.prepare();
+				sound = this.soundPlayers[i];
+				if(!sound.isPreparing && !sound.isPlaying()){ // double check after preparing because of multi-threading
+					this.soundPlayers[i] = curSound;
+					this.soundsToRelease.push(sound);
+				} else {
+					this.soundPlayers.push(curSound);
+				}
+				break;
+			}
+		}
+		if(!curSound){
+			curSound = this.addSoundPlayer(name, isLooping, 0, true);
+		}
+		curSound.start();
+		} 
+		catch(err) {
+			Logger.Log("sound "+ name +" start failed", "ERROR");
+			Logger.Log(err, "ERROR");
+		}
+		return curSound;
+	},
+	
+	playSoundAt: function(name, isLooping, coord, radius){
+		let sound = this.playSound(name, isLooping);
+		if(sound){
+			sound.setSource(coord, radius);
+		}
+		return sound;
+	},
+	
+	updateVolume: function(){
+		for(let i in this.soundPlayers){
+			let sound = this.soundPlayers[i];
+			sound.setVolume(sound.volume);
+		}
+	},
+	
+	createSource: function(fileName, coord, radius){
+		if(!Config.soundEnabled) {return;}
+		let curSound = null;
+		try{
+		for(let i in this.soundPlayers){
+			let sound = this.soundPlayers[i];
+			if(!sound.isPlaying() && !sound.isPreparing && sound.priority <= 0){
+				curSound = new MultiSound(fileName[0], fileName[1], fileName[2]);
+				sound = this.soundPlayers[i];
+				if(!sound.isPreparing && !sound.isPlaying()){ // double check after preparing because of multi-threading
+					this.soundPlayers[i] = curSound;
+					this.soundsToRelease.push(sound);
+				} else {
+					this.soundPlayers.push(curSound);
+				}
+				break;
+			}
+		}
+		if(!curSound){
+			curSound = this.addMultiSoundPlayer(fileName[0], fileName[1], fileName[2]);
+		}
+		curSound.setSource(coord, radius);
+		curSound.start();
+		} 
+		catch(err) {
+			Logger.Log("multi-sound ["+ fileName +"] start failed", "ERROR");
+			Logger.Log(err, "ERROR");
+		}
+		return curSound;
+	},
+	
+	updateSourceVolume: function(sound){
+		let s = sound.source;
+		let p = Player.getPosition();
+		let volume = Math.max(0, 1 - Math.sqrt(Math.pow(p.x - s.x, 2) + Math.pow(p.y - s.y, 2) + Math.pow(p.z - s.z, 2))/s.radius);
+		sound.setVolume(volume);
+	},
+	
+	clearSounds: function(){
+		for(let i = 0; i < this.soundPlayers.length; i++){
+			let sound = this.soundPlayers[i];
+			if(sound.isPlaying()){
+				sound.stop();
+			}
+			if(sound.priority <= 0){
+				sound.release();
+				this.soundPlayers.splice(i--, 1);
+			}
+		}
+	}
+}
+
+function Sound(name, priority){
+	this.name = name;
+	this.media = new android.media.MediaPlayer();
+	this.priority = priority || 0;
+	this.isPreparing = true;
+	
+	this.setDataSource = function(path){
+		this.media.setDataSource(path);
+	}
+	
+	this.setLooping = function(isLooping){
+		this.media.setLooping(isLooping);
+	}
+	
+	this.prepare = function(){
+		this.media.prepare();
+	}
+	
+	this.isPlaying = function(){
+		return this.media.isPlaying();
+	}
+	
+	this.isLooping = function(){
+		return this.media.isLooping();
+	}
+	
+	this.start = function(){
+		this.media.start();
+		this.isPreparing = false;
+	}
+	
+	this.pause = function(){
+		this.media.pause();
+	}
+	
+	this.seekTo = function(ms){
+		this.media.seekTo(ms);
+	}
+	
+	this.stop = function(){
+		this.media.pause();
+		this.media.seekTo(0);
+	}
+	
+	this.release = function(){
+		this.media.release();
+	}
+	
+	this.setVolume = function(volume){
+		this.volume = volume;
+		volume *= gameVolume;
+		this.media.setVolume(volume, volume);
+	}
+	
+	this.setVolume(1);
+	
+	this.setSource = function(coord, radius){
+		this.source = {x: coord.x + 0.5, y: coord.y + 0.5, z: coord.z + 0.5, radius: radius};
+		SoundAPI.updateSourceVolume(this);
+	}
+}
+
+function MultiSound(startingSound, startSound, finishingSound){
+	this.parent = Sound;
+	this.parent(startingSound || startSound, 0, true);
+	
+	this.startingSound = null;
+	this.startSound = null;
+	this.finishingSound = null;
+	
+	this.setDataSource(SoundAPI.getFilePath(startingSound || startSound));
+	if(startingSound){
+		this.startingSound = this.media;
+		this.startSound = new android.media.MediaPlayer();
+		this.startSound.setDataSource(SoundAPI.getFilePath(startSound));
+		this.startSound.setLooping(true);
+		let self = this;
+		this.media.setOnCompletionListener(new android.media.MediaPlayer.OnCompletionListener({
+			onCompletion: function(mp){
+				self.playStartSound();
+			}
+		}));
+		this.startSound.prepareAsync();
+	} else {
+		this.startSound = this.media;
+		this.setLooping(true);
+	}
+	this.prepare();
+	
+	if(finishingSound){
+		let media = new android.media.MediaPlayer();
+		media.setDataSource(SoundAPI.getFilePath(finishingSound));
+		media.prepareAsync();
+		this.finishingSound = media;
+	}
+	
+	this.playStartSound = function(){
+		this.media = this.startSound;
+		this.media.start();
+	}
+	
+	this.playFinishingSound = function(){
+		if(!this.isFinishing){
+			this.media = this.finishingSound;
+			this.media.start();
+			this.isFinishing = true;
+		}
+	}
+	
+	this.release = function(){
+		this.startSound.release();
+		if(this.startingSound){
+			this.startingSound.release();
+		}
+		if(this.finishingSound){
+			this.finishingSound.release();
+		}
+	}
+}
+
+Callback.addCallback("tick", function(){
+	for(let i in SoundAPI.soundsToRelease){
+		SoundAPI.soundsToRelease[i].release();
+	}
+	SoundAPI.soundsToRelease = [];
+	for(let i in SoundAPI.soundPlayers){
+		let sound = SoundAPI.soundPlayers[i];
+		if(sound.isPlaying() && sound.source){
+			SoundAPI.updateSourceVolume(sound);
+		}
+	}
+});
+
+Callback.addCallback("LevelLeft", function(){
+	SoundAPI.clearSounds();
+});
+
+/*Volume in the settings*/
+/*From SoundAPI lib by WolfTeam*/
+var settings_path = "/storage/emulated/0/games/com.mojang/minecraftpe/options.txt";
+var gameVolume = FileTools.ReadKeyValueFile(settings_path)["audio_sound"];
+var prevScreen = false;
+Callback.addCallback("NativeGuiChanged", function (screen) {
+    var currentScreen = screen.startsWith("screen_world_controls_and_settings") || screen.startsWith("screen_controls_and_settings");
+    if(prevScreen && !currentScreen){
+        gameVolume = FileTools.ReadKeyValueFile(settings_path)["audio_sound"];
+		SoundAPI.updateVolume();
+    }
+    prevScreen = currentScreen;
+});
+
+
+
+
 // file: core/item_name.js
 
 var RARE_ITEM_NAME = function(item, name){
@@ -1282,7 +1661,7 @@ ItemName = {
 	},
 	
 	displayEnergy: function(energy){
-		if(!debugMode){
+		if(!Config.debugMode){
 			if(energy >= 1e6){
 				return Math.floor(energy / 1e5) / 10 + "M";
 			}
@@ -1500,6 +1879,7 @@ function updateUIbuttons(){
 	}
 }
 
+let jetpackLoop = SoundAPI.addSoundPlayer("Tools/JetpackLoop.ogg", true, 1);
 Callback.addCallback("tick", function(){
 	var armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
 	for(var i in armor){
@@ -1527,12 +1907,13 @@ Callback.addCallback("tick", function(){
 			UIbuttons.container = new UI.Container();
 			UIbuttons.container.openAs(UIbuttons.Window);
 		}
+		var armor = armor[1];
+		var extra = armor.extra;
+		var hover = extra? extra.getBoolean("hover") : false;
+		var playSound = false;
 		if(UIbuttons.container.isElementTouched("button_fly")){
-			var armor = armor[1];
-			var extra = armor.extra;
-			var hover = extra? extra.getBoolean("hover") : false;
-			var y = Player.getPosition().y
-			var maxDmg = Item.getMaxDamage(armor.id)
+			var y = Player.getPosition().y;
+			var maxDmg = Item.getMaxDamage(armor.id);
 			if(armor.data < maxDmg && y < 256){
 				var vel = Player.getVelocity();
 				var vy = Math.min(32, 264-y) / 160;
@@ -1553,6 +1934,20 @@ Callback.addCallback("tick", function(){
 					}
 				}
 			}
+			playSound = true;
+		} else if(hover){
+			playSound = true;
+		}
+		if(Config.soundEnabled && playSound && !jetpackLoop.isPlaying()){
+			if(hover){
+				jetpackLoop.setVolume(0.8);
+			} else {
+				jetpackLoop.setVolume(1);
+			}
+			jetpackLoop.start();
+		}
+		if(!playSound && jetpackLoop.isPlaying()){
+			jetpackLoop.stop();
 		}
 	}
 	else if(UIbuttons.container){
@@ -1599,7 +1994,7 @@ Item.registerUseFunction("rubberSapling", function(coords, item, block){
 	var tile1 = World.getBlock(place.x, place.y, place.z);
 	var tile2 = World.getBlock(place.x, place.y - 1, place.z);
 	
-	if (canTileBeReplaced(tile1.id) && DIRT_TILES[tile2.id]) {
+	if (canTileBeReplaced(tile1.id, tile1.data) && DIRT_TILES[tile2.id]) {
 		World.setBlock(place.x, place.y, place.z, BlockID.rubberTreeSapling);
 		Player.setCarriedItem(item.id, item.count - 1, item.data);
 	}
@@ -2502,11 +2897,10 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 			if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)){
 				fuelSlot.count--;
 				this.container.validateSlot(slotName);
-				this.activate();
+				
 				return burn;
 			}
 		}
-		this.deactivate();
 		return 0;
 	},
 	
@@ -2516,9 +2910,16 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 		if(this.data.burn <= 0 && this.data.energy < energyStorage){
 			this.data.burn = this.data.burnMax = this.getFuel("slotFuel") / 4;
 		}
-		if(this.data.burn > 0){
-			this.data.energy = Math.min(this.data.energy + 10, energyStorage);
+		if(this.data.burn > 0 && 
+		  (!this.data.isActive && this.data.energy + 100 <= energyStorage) ||
+		  (this.data.isActive && this.data.energy + 10 <= energyStorage)){
+			this.data.energy += 10;
 			this.data.burn--;
+			this.activate();
+			this.startPlaySound("Generators/GeneratorLoop.ogg");
+		} else {
+			this.deactivate();
+			this.stopPlaySound();
 		}
 		
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);
@@ -2636,14 +3037,16 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 				this.container.validateAll();
 			}
 		}
-		if(this.liquidStorage.getAmount("lava") >= 0.001){
-			if(this.data.energy <= energyStorage - 20){
-				this.data.energy += 20;
-				this.liquidStorage.getLiquid("lava", 0.001);
-				newActive = true;
-			}
+		if(this.liquidStorage.getAmount("lava") >= 0.001 && this.data.energy + 20 <= energyStorage){
+			this.data.energy += 20;
+			this.liquidStorage.getLiquid("lava", 0.001);
+			this.activate();
+			this.startPlaySound("Generators/GeothermalLoop.ogg");
 		}
-		this.setActive(newActive);
+		else {
+			this.stopPlaySound();
+			this.deactivate();
+		}
 		
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);
 		
@@ -3175,7 +3578,7 @@ var guiElectricHeatGenerator = new UI.StandartWindow({
 		"slot8": {type: "slot", x: 620, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(8, id, c, d, cont)}},
 		"slot9": {type: "slot", x: 680, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(9, id, c, d, cont)}},
 
-		"slotEnergy": {type: "slot", x: 340, y: 180},
+		"slotEnergy": {type: "slot", x: 340, y: 180, isValid: MachineRegistry.isValidEUStorage},
 		"energyScale": {type: "scale", x: 342, y: 110, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 530, y: 264, width: 300, height: 30, text: "0    /"},
 		"textInfo2": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 630, y: 264, width: 300, height: 30, text: "0"}
@@ -3932,6 +4335,13 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			this.data.output = 0;
 		}
 		this.setActive(this.data.heat >= 1000 || this.data.output > 0);
+		
+		if(this.data.output > 0){
+			this.startPlaySound("Generators/NuclearReactor/NuclearReactorLoop.ogg");
+		} else {
+			this.stopPlaySound();
+		}
+		
 		this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
 		this.container.setText("textInfo", "Generating: " + this.getEnergyOutput() + " EU/t");
 	},
@@ -4033,7 +4443,6 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			}
 			if(explode){
 				this.data.boomPower = Math.min(boomPower * this.data.hem * boomMod, __config__.access("reactor_explosion_max_power"));
-				Game.message(this.data.boomPower);
 				for(let i = 0; i < 5; i++){
 					this.tnt.push(Entity.spawn(this.x + 0.5, this.y + 0.5, this.z + 0.5, EntityType.PRIMED_TNT));
 				}
@@ -4058,7 +4467,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 				}
 			}
 			else if (material == "stone" || material == "dirt") {
-				World.setBlock(coord.x, coord.y, coord.z, 10, 1);
+				World.setBlock(coord.x, coord.y, coord.z, 11, 1);
 			}
 		} 
 		if (power >= 0.7 && World.getThreadTime()%20 == 0) {
@@ -5021,8 +5430,10 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		
 		if(this.data.burn > 0){
 			this.data.burn--;
+			this.startPlaySound("Machines/IronFurnaceOp.ogg");
 			this.activate();
-		}else{
+		} else {
+			this.stopPlaySound();
 			this.deactivate();
 		}
 		
@@ -5153,6 +5564,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
+				this.startPlaySound();
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
@@ -5166,6 +5578,8 @@ MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 		else {
 			this.data.progress = 0;
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -5180,6 +5594,16 @@ MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 	getEnergyStorage: function(){
 		return this.data.energy_storage;
 	},
+	
+	getStartingSoundFile: function(){
+		return "Machines/Electro Furnace/ElectroFurnaceStart.ogg";
+    },
+	getStartSoundFile: function(){
+		return "Machines/Electro Furnace/ElectroFurnaceLoop.ogg";
+    },
+	getInterruptSoundFile: function(){
+		return "Machines/Electro Furnace/ElectroFurnaceStop.ogg";
+    },
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
@@ -5306,13 +5730,14 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		var newActive = false;
 		var result = this.getResult();
 		if(result){
-			if(this.data.energy > 15 && this.data.progress < 1){
+			if(this.data.energy > 15 && this.data.progress < 100){
 				this.data.energy -= 16;
-				if(this.data.heat < 5000){this.data.heat++;}
-				this.data.progress += this.data.heat/60000;
+				if(this.data.heat < 10000){this.data.heat++;}
+				this.data.progress += this.data.heat / 1200;
 				newActive = true;
+				this.startPlaySound();
 			}
-			if(this.data.progress >= 1){
+			if(this.data.progress >= 100){
 				var put1 = this.putResult(result[0], this.container.getSlot("slotSource1"), this.container.getSlot("slotResult1"));
 				var put2 = this.putResult(result[1], this.container.getSlot("slotSource2"), this.container.getSlot("slotResult2"));
 				if(put1 || put2){
@@ -5324,13 +5749,15 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		else {
 			this.data.progress = 0;
 			if(this.data.isHeating && this.data.energy > 0){
-				if(this.data.heat < 5000){this.data.heat++;}
+				if(this.data.heat < 10000){this.data.heat++;}
 				this.data.energy--;
 			}
 			else if(this.data.heat > 0){
-				this.data.heat--;
+				this.data.heat -= 4;
 			}
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -5338,9 +5765,9 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		this.data.energy = Math.min(this.data.energy, energyStorage);
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
 		
-		this.container.setScale("progressScale", this.data.progress);
+		this.container.setScale("progressScale", this.data.progress / 100);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo2", parseInt(this.data.heat / 50) + "%");
+		this.container.setText("textInfo2", parseInt(this.data.heat / 100) + "%");
 	},
 	
 	redstone: function(signal){
@@ -5350,6 +5777,16 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 	getEnergyStorage: function(){
 		return this.data.energy_storage;
 	},
+	
+	getStartingSoundFile: function(){
+		return "Machines/Induction Furnace/InductionStart.ogg";
+    },
+	getStartSoundFile: function(){
+		return "Machines/Induction Furnace/InductionLoop.ogg";
+    },
+	getInterruptSoundFile: function(){
+		return "Machines/Induction Furnace/InductionStop.ogg";
+    },
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
@@ -5517,6 +5954,7 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
+				this.startPlaySound();
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
@@ -5530,6 +5968,8 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 		else {
 			this.data.progress = 0;
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -5544,6 +5984,13 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 	getEnergyStorage: function(){
 		return this.data.energy_storage;
 	},
+	
+	getStartSoundFile: function(){
+		return "Machines/MaceratorOp.ogg";
+    },
+	getInterruptSoundFile: function(){
+		return "Machines/InterruptOne.ogg";
+    },
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
@@ -5691,6 +6138,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 					this.data.energy -= this.data.energy_consumption;
 					this.data.progress += 1/this.data.work_time;
 					newActive = true;
+					this.startPlaySound();
 				}
 				if(this.data.progress.toFixed(3) >= 1){
 					sourceSlot.count -= result.sourceCount || 1;
@@ -5705,6 +6153,8 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 		else {
 			this.data.progress = 0;
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -5719,6 +6169,13 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 	getEnergyStorage: function(){
 		return this.data.energy_storage;
 	},
+	
+	getStartSoundFile: function(){
+		return "Machines/CompressorOp.ogg";
+    },
+	getInterruptSoundFile: function(){
+		return "Machines/InterruptOne.ogg";
+    },
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
@@ -5833,6 +6290,7 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
+				this.startPlaySound();
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
@@ -5845,6 +6303,8 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 		else {
 			this.data.progress = 0;
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -5859,6 +6319,13 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 	getEnergyStorage: function(){
 		return this.data.energy_storage;
 	},
+	
+	getStartSoundFile: function(){
+		return "Machines/ExtractorOp.ogg";
+    },
+	getInterruptSoundFile: function(){
+		return "Machines/InterruptOne.ogg";
+    },
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
@@ -6144,6 +6611,7 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
+				this.startPlaySound();
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
@@ -6158,6 +6626,8 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 		else {
 			this.data.progress = 0;
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -6172,6 +6642,13 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 	getEnergyStorage: function(){
 		return this.data.energy_storage;
 	},
+	
+	getStartSoundFile: function(){
+		return "Machines/RecyclerOp.ogg";
+    },
+	getInterruptSoundFile: function(){
+		return "Machines/InterruptOne.ogg";
+    },
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc
@@ -6811,7 +7288,7 @@ Callback.addCallback("PreLoaded", function(){
 		"axa"
 	], ['s', BlockID.machineBlockBasic, 0,'a', ItemID.casingIron, 0,'x', ItemID.heatConductor, 0]);
 	
-	MachineRecipeRegistry.registerRecipesFor("blastFrunace", {
+	MachineRecipeRegistry.registerRecipesFor("blastFurnace", {
 		15: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		265: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"ItemID.dustIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
@@ -6955,7 +7432,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 			this.setIndicator(content, true);
 			var sourceSlot = this.container.getSlot("slotSource");
 			var source = this.data.sourceID || sourceSlot.id;
-			var result = MachineRecipeRegistry.getRecipeResult("blastFrunace", source);
+			var result = MachineRecipeRegistry.getRecipeResult("blastFurnace", source);
 			if(result && this.checkResult(result.result)){
 				if(this.controlAir()){
 					this.controlAirImage(content, true);
@@ -7096,6 +7573,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		
 		if(this.data.isEnabled && this.data.energy > 0){
 			this.activate();
+			this.startPlaySound("Generators/MassFabricator/MassFabLoop.ogg");
 			if(this.data.catalyser < Math.max(1000, this.data.energy)){
 				var catalyserSlot = this.container.getSlot("catalyserSlot");
 				var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
@@ -7112,6 +7590,9 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 				this.data.progress += transfer * 6;
 				this.data.energy -= transfer;
 				this.data.catalyser -= transfer;
+				if(World.getThreadTime()%40 == 0 && transfer > 0){
+					SoundAPI.playMachineAt("Generators/MassFabricator/MassFabScrapSolo.ogg", false, this, 16);
+				}
 			}
 			else{
 				this.container.setText("textInfo3", "");
@@ -7122,6 +7603,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 			this.data.energy -= transfer;
 		}
 		else{
+			this.stopPlaySound();
 			this.deactivate();
 		}
 		if(this.data.progress >= ENERGY_PER_MATTER){
@@ -7145,7 +7627,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: function(type, amount, voltage) {
 		if(this.data.isEnabled){
-			if(voltageEnabled && voltage > this.getMaxPacketSize()){
+			if(Config.voltageEnabled && voltage > this.getMaxPacketSize()){
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
 				this.selfDestroy();
 				return 1;
@@ -7336,6 +7818,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 				newActive = true;
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
+				this.startPlaySound("Machines/PumpOp.ogg");
 				if(this.data.progress.toFixed(3) >= 1){
 					var coords = this.data.coords;
 					var block = World.getBlock(coords.x, coords.y, coords.z);
@@ -7351,6 +7834,8 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		else {
 			this.data.progress = 0;
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var slot1 = this.container.getSlot("slotLiquid1");
@@ -7856,7 +8341,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 			this.data.y = y;
 		}
 		
-		var lastProgress = this.data.progress;
+		var newActive = false;
 		var drillSlot = this.container.getSlot("slotDrill");
 		var pipeSlot = this.container.getSlot("slotPipe");
 		if(drillSlot.id == ItemID.drill || drillSlot.id == ItemID.diamondDrill){
@@ -7890,6 +8375,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 					if(this.data.energy >= params.energy){
 						this.data.energy -= params.energy;
 						this.data.progress++;
+						newActive = true;
 					}
 					if(this.data.progress >= params.time){
 						this.mineBlock(coords.x, coords.y, coords.z, block, level);
@@ -7900,8 +8386,9 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				var block = World.getBlock(this.x, this.data.y-1, this.z);
 				if(this.isValid(block)){
 					if(this.data.energy >= 3){
-						this.data.progress++;
 						this.data.energy -= 3;
+						this.data.progress++;
+						newActive = true;
 					}
 					if(this.data.progress >= 20){
 						this.setPipe(this.data.y, pipeSlot);
@@ -7913,6 +8400,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 					if(this.data.energy >= params.energy){
 						this.data.energy -= params.energy;
 						this.data.progress++;
+						newActive = true;
 					}
 					if(this.data.progress >= params.time){
 						this.mineBlock(this.x, this.data.y-1, this.z, block, level);
@@ -7924,8 +8412,9 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		else {
 			if(World.getBlockID(this.x, this.data.y, this.z) == BlockID.miningPipe){
 				if(this.data.energy >= 3){
-					this.data.progress++;
 					this.data.energy -= 3;
+					this.data.progress++;
+					newActive = true;
 				}
 				if(this.data.progress >= 20){
 					this.drop([{id: BlockID.miningPipe, count: 1, data: 0}]);
@@ -7940,7 +8429,12 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				}
 			}
 		}
-		this.setActive(lastProgress != this.data.progress);
+		if(newActive){
+			this.startPlaySound("Machines/MinerOp.ogg");
+		} else {
+			this.stopPlaySound();
+		}
+		this.setActive(newActive);
 
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotDrill"), "Eu", this.data.energy, 128, 1);
@@ -8308,7 +8802,7 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 						var weight = this.getWeight(ent);
 						if(weight){
 							var energyNeed = weight * receive.energy;
-							if(debugMode){Debug.m(energyNeed);}
+							if(Config.debugMode){Debug.m(energyNeed);}
 							if(energyNeed < energyAvailable){
 								for(var i in storages){
 									var data = storages[i].data;
@@ -8317,6 +8811,7 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 									energyNeed -= energyChange;
 									if(energyNeed <= 0){break;}
 								}
+								SoundAPI.playSound("Machines/Teleporter/TeleUse.ogg")
 								Entity.setPosition(ent, receive.x+0.5, receive.y+3, receive.z+0.5);
 							}
 						}
@@ -8624,6 +9119,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 			explodeNuke(x, y, z, radius);
 		});
 		
+		let sound = SoundAPI.playSoundAt("Tools/NukeExplosion.ogg", this, 128);
 		RadiationAPI.addRadiationSource(this.x + 0.5, this.y + 0.5, this.z + 0.5, radius * 2, 600);
 	},
 	
@@ -8936,7 +9432,7 @@ Callback.addCallback("PreLoaded", function(){
 		"a a"
 	], ['x', 280, 0, 'a', ItemID.ingotBronze, 0]);
 	
-	Recipes.addShaped({id: 33, count: 12, data: 0}, [
+	Recipes.addShaped({id: 33, count: 1, data: 0}, [
 		"ppp",
 		"cbc",
 		"cxc"
@@ -9519,29 +10015,38 @@ Recipes.addShaped({id: 49, count: 1, data: 0}, [
 	"bb"
 ], ['a', ItemID.cellLava, 0, 'b', ItemID.cellWater, 0]);
 
-Callback.addCallback("ItemUse", function(coords, item, block){
-	if(item.id == ItemID.cellEmpty){
-		if(block.id > 7 && block.id < 12 && block.data == 0){
-			World.setBlock(coords.x, coords.y, coords.z, 0);
-			if(block.id == 8 || block.id == 9){
-			Player.addItemToInventory(ItemID.cellWater, 1);}
-			else{
-			Player.addItemToInventory(ItemID.cellLava, 1);}
-			Player.decreaseCarriedItem(1);
-		}
-	} else if(item.id == ItemID.cellWater || item.id == ItemID.cellLava){
-		var x = coords.relative.x
-		var y = coords.relative.y
-		var z = coords.relative.z
-		var block = World.getBlockID(x,y,z)
-		if(block == 0 || block > 7 && block < 12){
-			if(item.id == ItemID.cellWater){
-			World.setBlock(x, y, z, 8);}
-			else{
-			World.setBlock(x, y, z, 10);}
-			Player.addItemToInventory(ItemID.cellEmpty, 1);
-			Player.decreaseCarriedItem(1);
-		}
+Item.registerUseFunction("cellEmpty",function(coords, item, block){
+	if(block.id > 7 && block.id < 12 && block.data == 0){
+		World.setBlock(coords.x, coords.y, coords.z, 0);
+		if(block.id == 8 || block.id == 9){
+		Player.addItemToInventory(ItemID.cellWater, 1);}
+		else{
+		Player.addItemToInventory(ItemID.cellLava, 1);}
+		Player.decreaseCarriedItem(1);
+	}
+});
+
+Item.registerUseFunction("cellWater", function(coords, item, block){
+	var x = coords.relative.x
+	var y = coords.relative.y
+	var z = coords.relative.z
+	var block = World.getBlockID(x,y,z)
+	if(block == 0 || block > 7 && block < 12){
+		World.setBlock(x, y, z, 8);
+		Player.addItemToInventory(ItemID.cellEmpty, 1);
+		Player.decreaseCarriedItem(1);
+	}
+});
+
+Item.registerUseFunction("cellLava", function(coords, item, block){
+	var x = coords.relative.x
+	var y = coords.relative.y
+	var z = coords.relative.z
+	var block = World.getBlockID(x,y,z)
+	if(block == 0 || block > 7 && block < 12){
+		World.setBlock(x, y, z, 10);
+		Player.addItemToInventory(ItemID.cellEmpty, 1);
+		Player.decreaseCarriedItem(1);
 	}
 });
 
@@ -9563,24 +10068,32 @@ Item.registerNameOverrideFunction(ItemID.tinCanFull, function(item, name){
 	return name;
 });
 
+let getMaxHunger = function(){return 20;}
+ModAPI.addAPICallback("ThirstAPI", function(api){
+	getMaxHunger = api.getMaxHunger;
+});
+
 Item.registerNoTargetUseFunction("tinCanFull", function(){
 	var item = Player.getCarriedItem();
 	var hunger = Player.getHunger();
 	var saturation = Player.getSaturation();
-	var count = Math.min(20 - hunger, item.count);
-	Player.setHunger(hunger + count);
-	Player.setSaturation(Math.min(20, saturation + count*0.6));
-	if(item.data == 1 && Math.random() < 0.2*count){
-		Entity.addEffect(player, MobEffect.hunger, 1, 600);
-	}
-	if(item.data == 2){
-		Entity.addEffect(player, MobEffect.poison, 1, 80);
-	}
-	if(item.count == count){
-		Player.setCarriedItem(ItemID.tinCanEmpty, count, 0);
-	}else{
-		Player.setCarriedItem(item.id, item.count - count, item.data);
-		Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+	var count = Math.min(getMaxHunger() - hunger, item.count);
+	if(count > 0){
+		SoundAPI.playSound("Tools/eat.ogg");
+		Player.setHunger(hunger + count);
+		Player.setSaturation(Math.min(20, saturation + count*0.6));
+		if(item.data == 1 && Math.random() < 0.2*count){
+			Entity.addEffect(player, MobEffect.hunger, 1, 600);
+		}
+		if(item.data == 2){
+			Entity.addEffect(player, MobEffect.poison, 1, 80);
+		}
+		if(item.count == count){
+			Player.setCarriedItem(ItemID.tinCanEmpty, count, 0);
+		}else{
+			Player.setCarriedItem(item.id, item.count - count, item.data);
+			Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+		}
 	}
 });
 
@@ -9647,12 +10160,17 @@ Callback.addCallback("PreLoaded", function(){
 
 function registerCablePlaceFunc(nameID, blockID, blockData){
 	Item.registerUseFunction(nameID, function(coords, item, block){
-		var place = coords.relative;
-		if(World.getBlockID(place.x, place.y, place.z) == 0){
-			World.setBlock(place.x, place.y, place.z, blockID, blockData);
-			Player.setCarriedItem(item.id, item.count - 1, item.data);
-			EnergyTypeRegistry.onWirePlaced(place.x, place.y, place.z);
+		var place = coords;
+		if(!canTileBeReplaced(block.id, block.data)){
+			place = coords.relative;
+			block = World.getBlock(place.x, place.y, place.z);
+			if(!canTileBeReplaced(block.id, block.data)){
+				return;
+			}
 		}
+		World.setBlock(place.x, place.y, place.z, blockID, blockData);
+		Player.setCarriedItem(item.id, item.count - 1, item.data);
+		EnergyTypeRegistry.onWirePlaced(place.x, place.y, place.z);
 	});
 }
 
@@ -9790,7 +10308,7 @@ ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 4
 ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");
-Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: !debugMode});
+Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: !Config.debugMode});
 ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, 0, "storage");
 
 Item.registerNameOverrideFunction(ItemID.storageBattery, ItemName.showItemStorage);
@@ -9936,7 +10454,7 @@ Callback.addCallback("PreLoaded", function(){
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingBattery, -1, 'x', ItemID.heatExchanger, 0, 'b', ItemID.storageAdvBattery, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingBattery, -1, 'x', ItemID.heatExchanger, 1, 'b', ItemID.storageAdvBattery, -1], ChargeItemRegistry.transportEnergy);
 
 	Recipes.addShaped({id: ItemID.chargingCrystal, count: 1, data: Item.getMaxDamage(ItemID.chargingCrystal)}, [
 		"xbx",
@@ -10831,7 +11349,7 @@ Armor.registerFuncs("nightvisionGoggles", {
 		if(nightvision && slot.data < maxDamage){
 			var coords = Player.getPosition();
 			var time = World.getWorldTime()%24000;
-			if(World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time >= 0 && time <= 12000){
+			if(World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000){
 				Entity.addEffect(player, MobEffect.blindness, 1, 25);
 			}
 			Entity.addEffect(player, MobEffect.nightVision, 1, 225);
@@ -10983,7 +11501,7 @@ var NANO_ARMOR_FUNCS = {
 				if(nightvision){
 					var coords = Player.getPosition();
 					var time = World.getWorldTime()%24000;
-					if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time >= 0 && time <= 12000){
+					if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time <= 12000){
 						Entity.addEffect(player, MobEffect.blindness, 1, 25);
 					}
 					Entity.addEffect(player, MobEffect.nightVision, 1, 225);
@@ -11198,7 +11716,7 @@ var QUANTUM_ARMOR_FUNCS = {
 				if(nightvision){
 					var coords = Player.getPosition();
 					var time = World.getWorldTime()%24000;
-					if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time >= 0 && time <= 12000){
+					if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time <= 12000){
 						Entity.addEffect(player, MobEffect.blindness, 1, 25);
 					}
 					Entity.addEffect(player, MobEffect.nightVision, 1, 225);
@@ -11684,10 +12202,6 @@ var scan_radius = 3;
 var adv_scan_radius = 6;
 var ore_blocks = [14, 15, 16, 21, 73, 74, 56, 129, 153];
 
-ModAPI.addAPICallback("GTCore", function(api){
-	ore_blocks = [];
-});
-
 Callback.addCallback("PreLoaded", function(coords, item, block){
 	for(var id in BlockID){
 		if(id[0]=='o' && id[1]=='r' && id[2]=='e' && !TileEntity.isTileEntityBlock(Block[id])){
@@ -11702,8 +12216,9 @@ Callback.addCallback("PreLoaded", function(coords, item, block){
 
 Item.registerUseFunction("scanner", function(coords, item, block){
 	if(item.data + 50 < Item.getMaxDamage(item.id)){
-		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
 		Player.setCarriedItem(item.id, 1, item.data + 50);
+		SoundAPI.playSound("Tools/ODScanner.ogg");
+		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
 		var ores = {};
 		for(var x = coords.x - scan_radius; x <= coords.x + scan_radius; x++){
 			for(var y = coords.y - scan_radius; y <= coords.y + scan_radius; y++){
@@ -11724,6 +12239,7 @@ Item.registerUseFunction("scanner", function(coords, item, block){
 Item.registerUseFunction("scannerAdvanced", function(coords, item, block){
 	if(item.data + 200 < Item.getMaxDamage(item.id)){
 		Player.setCarriedItem(item.id, 1, item.data + 200);
+		SoundAPI.playSound("Tools/ODScanner.ogg");
 		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
 		var ores = {};
 		for(var x = coords.x - adv_scan_radius; x <= coords.x + adv_scan_radius; x++){
@@ -11753,6 +12269,7 @@ Item.setMaxDamage(ItemID.treetap, 17);
 
 Item.registerUseFunction("treetap", function(coords, item, block){
 	if(block.id == BlockID.rubberTreeLogLatex && block.data - 2 == coords.side){
+		SoundAPI.playSound("Tools/Treetap.ogg");
 		World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLogLatex, block.data - 4);
 		Player.setCarriedItem(item.id, ++item.data < 17 ? item.count : 0, item.data);
 		Entity.setVelocity(
@@ -11805,6 +12322,7 @@ Callback.addCallback("DestroyBlockStart", function(coords, block){
 	if(item.id == ItemID.cutter && IC_WIRES[block.id] && block.data > 0){
 		Game.prevent();
 		ToolAPI.breakCarriedTool(1);
+		SoundAPI.playSound("Tools/InsulationCutters.ogg");
 		World.setBlock(coords.x, coords.y, coords.z, block.id, block.data - 1);
 		World.drop(coords.x + 0.5, coords.y + 1, coords.z + 0.5, ItemID.rubber, 1);
 	}
@@ -12035,29 +12553,8 @@ Recipes.addShaped({id: ItemID.electricHoe, count: 1, data: Item.getMaxDamage(Ite
 
 Recipes.addShapeless({id: ItemID.electricTreetap, count: 1, data: Item.getMaxDamage(ItemID.electricTreetap)}, [{id: ItemID.powerUnitSmall, data: 0}, {id: ItemID.treetap, data: 0}]);
 
-Item.registerUseFunction("electricHoe", function(coords, item, block){
-	if((block.id==2 || block.id==3 || block.id==110 || block.id==243) && coords.side==1 && ICTool.useElectricItem(item, 50)){ 
-		World.setBlock(coords.x, coords.y, coords.z, 60);
-		World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.75);
-	}
-});
-
-Item.registerUseFunction("electricTreetap", function(coords, item, block){
-	if(block.id == BlockID.rubberTreeLogLatex && block.data - 2 == coords.side && ICTool.useElectricItem(item, 50)){
-		World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLogLatex, block.data - 4);
-		Entity.setVelocity(
-			World.drop(
-				coords.relative.x + 0.5,
-				coords.relative.y + 0.5,
-				coords.relative.z + 0.5,
-				ItemID.latex, 1 + parseInt(Math.random() * 3), 0
-			),
-			(coords.relative.x - coords.x) * 0.25,
-			(coords.relative.y - coords.y) * 0.25,
-			(coords.relative.z - coords.z) * 0.25
-		);
-	}
-});
+ICTool.registerElectricHoe("electricHoe");
+ICTool.registerElectricTreerap("electricTreetap");
 
 
 
@@ -12081,7 +12578,7 @@ Item.registerNameOverrideFunction(ItemID.drill, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.diamondDrill, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
 	name = ItemName.showItemStorage(item, name);
-	var mode = item.extra? item.extra.getInt("mode") : 0;
+	let mode = item.extra? item.extra.getInt("mode") : 0;
 	switch(mode){
 		case 0:
 			name += "\n" + Translation.translate("Mode: ") + Translation.translate("Fortune III");
@@ -12121,11 +12618,11 @@ Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(It
 UIbuttons.setToolButton(ItemID.iridiumDrill, "button_switch");
 
 UIbuttons.registerSwitchFunction(ItemID.iridiumDrill, function(item){
-	var extra = item.extra;
+	let extra = item.extra;
 	if(!extra){
 		extra = new ItemExtraData();
 	}
-	var mode = (extra.getInt("mode")+1)%4;
+	let mode = (extra.getInt("mode")+1)%4;
 	extra.putInt("mode", mode);
 	switch(mode){
 	case 0:
@@ -12149,51 +12646,77 @@ ToolType.drill = {
 	blockTypes: ["stone", "dirt"],
 	onDestroy: function(item, coords, block){
 		if(Block.getDestroyTime(block.id) > 0){
-			ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
+			ICTool.dischargeItem(item, this.toolMaterial.energyPerUse);
 		}
 		return true;
 	},
 	onBroke: function(item){return true;},
 	onAttack: function(item, mob){
-		ICTool.dischargeItem(item, this.toolMaterial.energyConsumption);
+		ICTool.dischargeItem(item, this.toolMaterial.energyPerUse);
 		return true;
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
-		if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
+		if(item.data + this.toolMaterial.energyPerUse <= Item.getMaxDamage(item.id)){
 			return destroyTime;
 		}
 		return params.base;
 	},
 	useItem: function(coords, item, block){
-		var side  = coords.side;
-		coords = coords.relative;
-		var blockID = World.getBlockID(coords.x, coords.y, coords.z);
-		if(canTileBeReplaced(blockID)){
-			for(var i = 9; i < 45; i++){
-				var slot = Player.getInventorySlot(i);
-				if(slot.id==50){
-					slot.count--;
-					if(!slot.count) slot.id = 0;
-					Player.setInventorySlot(i, slot.id, slot.count, 0);
-					var data = 5;
-					if(block.id >= 8192 || !GenerationUtils.isTransparentBlock(block.id)){
-						data = (6 - side)%6;
+		let place = coords;
+		if(!canTileBeReplaced(block.id, block.data)){
+			place = coords.relative;
+			let tile = World.getBlock(place.x, place.y, place.z);
+			if(!canTileBeReplaced(tile.id, tile.data)){
+				return;
+			}
+		}
+		for(let i = 9; i < 45; i++){
+			let slot = Player.getInventorySlot(i);
+			if(slot.id == 50){
+				slot.count--;
+				if(!slot.count) slot.id = 0;
+				Player.setInventorySlot(i, slot.id, slot.count, 0);
+				if(block.id >= 8192 || !GenerationUtils.isTransparentBlock(block.id)){
+					World.setBlock(place.x, place.y, place.z, 50, (6 - coords.side)%6);
+				} else {
+					block = World.getBlock(place.x, place.y - 1, place.z);
+					if(!GenerationUtils.isTransparentBlock(block.id) || ((block.id == 44 || block.id == 158 || block.id == 182) && block.data > 7)){
+						World.setBlock(place.x, place.y, place.z, 50, 5);
 					}
-					World.setBlock(coords.x, coords.y, coords.z, 50, data);
-					break;
 				}
+				break;
+			}
+		}
+	},
+	continueDestroyBlock: function(item, coords, block, progress){
+		if(progress > 0){
+			this.playDestroySound(item, block);
+		}
+	},
+	destroyBlock: function(coords, side, item, block){
+		this.playDestroySound(item, block);
+	},
+	playDestroySound: function(item, block){
+		if(Config.soundEnabled && item.data + this.toolMaterial.energyPerUse <= Item.getMaxDamage(item.id)){
+			let hardness = Block.getDestroyTime(block.id);
+			if(hardness > 1 || hardness < 0){
+				SoundAPI.playSound("Tools/Drill/DrillHard.ogg", false, true);
+			}
+			else if(hardness > 0){
+				SoundAPI.playSound("Tools/Drill/DrillSoft.ogg", false, true);
 			}
 		}
 	}
 }
 
-ToolAPI.setTool(ItemID.drill, {energyConsumption: 50, level: 3, efficiency: 8, damage: 3},  ToolType.drill);
-ToolAPI.setTool(ItemID.diamondDrill, {energyConsumption: 80, level: 4, efficiency: 16, damage: 4}, ToolType.drill);
-ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficiency: 24, damage: 5}, {
+ToolAPI.setTool(ItemID.drill, {energyPerUse: 50, level: 3, efficiency: 8, damage: 3},  ToolType.drill);
+ToolAPI.setTool(ItemID.diamondDrill, {energyPerUse: 80, level: 4, efficiency: 16, damage: 4}, ToolType.drill);
+ToolAPI.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 24, damage: 5}, {
 	damage: 0,
 	blockTypes: ["stone", "dirt"],
+	soundType: "drill",
 	modifyEnchant: function(enchant, item){
-		var mode = item.extra? item.extra.getInt("mode") : 0;
+		let mode = item.extra? item.extra.getInt("mode") : 0;
 		if(mode%2){
 		enchant.silk = true;}
 		else{
@@ -12204,25 +12727,26 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 	onAttack: ToolType.drill.onAttack,
 	calcDestroyTime: function(item, coords, block, params, destroyTime){
 		if(item.data + 800 <= Item.getMaxDamage(item.id)){
-			var mode = item.extra? item.extra.getInt("mode") : 0;
-			var material = ToolAPI.getBlockMaterialName(block.id);
+			let mode = item.extra? item.extra.getInt("mode") : 0;
+			let material = ToolAPI.getBlockMaterialName(block.id);
 			if(mode >= 2 && (material == "dirt" || material == "stone")){
-				var side = coords.side;
-				var X = 1;
-				var Y = 1;
-				var Z = 1;
+				destroyTime = 0;
+				let side = coords.side;
+				let X = 1;
+				let Y = 1;
+				let Z = 1;
 				if(side==BlockSide.EAST || side==BlockSide.WEST){
 				X = 0;}
 				if(side==BlockSide.UP || side==BlockSide.DOWN){
 				Y = 0;}
 				if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
 				Z = 0;}
-				for(var xx = coords.x - X; xx <= coords.x + X; xx++){
-					for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
-						for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
-							var blockID = World.getBlockID(xx, yy, zz);
-							var material = ToolAPI.getBlockMaterialName(blockID);
-							if(material == "dirt" || material == "stone"){
+				for(let xx = coords.x - X; xx <= coords.x + X; xx++){
+					for(let yy = coords.y - Y; yy <= coords.y + Y; yy++){
+						for(let zz = coords.z - Z; zz <= coords.z + Z; zz++){
+							let blockID = World.getBlockID(xx, yy, zz);
+							material = ToolAPI.getBlockMaterial(blockID) || {};
+							if(material.name == "dirt" || material.name == "stone"){
 								destroyTime = Math.max(destroyTime, Block.getDestroyTime(blockID) / material.multiplier / 24);
 							}
 						}
@@ -12234,26 +12758,27 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 		return params.base;
 	},
 	destroyBlock: function(coords, side, item, block){
-		var mode = item.extra? item.extra.getInt("mode") : 0;
-		var material = ToolAPI.getBlockMaterialName(block.id);
+		this.playDestroySound(item, block);
+		let mode = item.extra? item.extra.getInt("mode") : 0;
+		let material = ToolAPI.getBlockMaterialName(block.id);
 		if(mode >= 2 && (material == "dirt" || material == "stone") && item.data + 800 <= Item.getMaxDamage(item.id)){
-			var X = 1;
-			var Y = 1;
-			var Z = 1;
+			let X = 1;
+			let Y = 1;
+			let Z = 1;
 			if(side==BlockSide.EAST || side==BlockSide.WEST){
 			X = 0;}
 			if(side==BlockSide.UP || side==BlockSide.DOWN){
 			Y = 0;}
 			if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
 			Z = 0;}
-			for(var xx = coords.x - X; xx <= coords.x + X; xx++){
-				for(var yy = coords.y - Y; yy <= coords.y + Y; yy++){
-					for(var zz = coords.z - Z; zz <= coords.z + Z; zz++){
+			for(let xx = coords.x - X; xx <= coords.x + X; xx++){
+				for(let yy = coords.y - Y; yy <= coords.y + Y; yy++){
+					for(let zz = coords.z - Z; zz <= coords.z + Z; zz++){
 						if(xx == coords.x && yy == coords.y && zz == coords.z){
 							continue;
 						}
 						blockID = World.getBlockID(xx, yy, zz);
-						var material = ToolAPI.getBlockMaterialName(blockID);
+						let material = ToolAPI.getBlockMaterialName(blockID);
 						if(material == "dirt" || material == "stone"){
 							item.data += 800;
 							World.destroyBlock(xx, yy, zz, true);
@@ -12268,7 +12793,9 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyConsumption: 800, level: 5, efficien
 			Player.setCarriedItem(item.id, 1, item.data, item.extra);
 		}
 	},
-	useItem: ToolType.drill.useItem
+	useItem: ToolType.drill.useItem,
+	continueDestroyBlock: ToolType.drill.continueDestroyBlock,
+	playDestroySound: ToolType.drill.playDestroySound,
 });
 
 
@@ -12293,11 +12820,12 @@ ToolAPI.registerBlockMaterial(35, "wool");
 
 ToolType.chainsaw = {
 	damage: 4,
-	baseDamage: 0,
+	toolDamage: 0,
 	blockTypes: ["wood", "wool", "fibre", "plant"],
+	soundType: "chainsaw",
 	onDestroy: function(item, coords, block){
 		if(Block.getDestroyTime(block.id) > 0){
-			if(ICTool.dischargeItem(item, this.toolMaterial.energyConsumption) && (block.id == 18 || block.id == 161)){
+			if(ICTool.dischargeItem(item, this.toolMaterial.energyPerUse) && (block.id == 18 || block.id == 161)){
 				World.destroyBlock(coords.x, coords.y, coords.z);
 				World.drop(coords.x + .5, coords.y + .5, coords.z + .5, block.id, 1, block.data%4);
 			}
@@ -12307,9 +12835,9 @@ ToolType.chainsaw = {
 	onBroke: function(item){return true;},
 	onAttack: function(item, mob){
 		var material = this.toolMaterial;
-		if(!this.baseDamage) this.baseDamage = material.damage;
-		if(ICTool.dischargeItem(item, this.toolMaterial.energyConsumption)){
-			material.damage = this.baseDamage;
+		if(!this.toolDamage) this.toolDamage = material.damage;
+		if(ICTool.dischargeItem(item, this.toolMaterial.energyPerUse)){
+			material.damage = this.toolDamage;
 		}
 		else{
 			material.damage = 0;
@@ -12317,16 +12845,33 @@ ToolType.chainsaw = {
 		return true;
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
-		if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
+		if(item.data + this.toolMaterial.energyPerUse <= Item.getMaxDamage(item.id)){
 			return destroyTime;
 		}
 		else{
 			return params.base;
 		}
-	}
+	},
 }
 
-ToolAPI.setTool(ItemID.chainsaw, {energyConsumption: 60, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
+ToolAPI.setTool(ItemID.chainsaw, {energyPerUse: 60, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
+
+let chainsawLoop = SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawIdle.ogg", true, 1);
+SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawStop.ogg", false, 1);
+Callback.addCallback("tick", function(){
+	if(!Config.soundEnabled) {return;}
+	let item = Player.getCarriedItem();
+	let tool = ToolAPI.getToolData(item.id);
+	if(tool && tool.soundType == "chainsaw"){
+		if(!chainsawLoop.isPlaying()){
+			chainsawLoop.start();
+		}
+	}
+	else if(chainsawLoop.isPlaying()){
+		chainsawLoop.stop();
+		SoundAPI.playSound("Tools/Chainsaw/ChainsawStop.ogg", false, true);
+	}
+});
 
 
 
@@ -12339,7 +12884,17 @@ ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 3, "tool", true
 ItemName.setRarity(ItemID.nanoSaber, 1);
 Item.registerNameOverrideFunction(ItemID.nanoSaber, ItemName.showItemStorage);
 
-var NANO_SABER_DURABILITY = Item.getMaxDamage(ItemID.nanoSaber);
+IDRegistry.genItemID("nanoSaberActive");
+Item.createItem("nanoSaberActive", "Nano Saber", {name: "nano_saber_active", meta: 0}, {stack: 1, isTech: true});
+ChargeItemRegistry.registerItem(ItemID.nanoSaberActive, "Eu", 1000000, 3, "tool");
+ItemName.setRarity(ItemID.nanoSaberActive, 1);
+Item.registerNameOverrideFunction(ItemID.nanoSaberActive, ItemName.showItemStorage);
+
+let NANO_SABER_DURABILITY = Item.getMaxDamage(ItemID.nanoSaber);
+
+Item.registerIconOverrideFunction(ItemID.nanoSaberActive, function(item, name){
+	return {name: "nano_saber_active", meta: World.getThreadTime()%2}
+});
 
 Recipes.addShaped({id: ItemID.nanoSaber, count: 1, data: NANO_SABER_DURABILITY}, [
 	"ca ",
@@ -12350,21 +12905,69 @@ Recipes.addShaped({id: ItemID.nanoSaber, count: 1, data: NANO_SABER_DURABILITY},
 ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: NANO_SABER_DURABILITY, damage: 4}, {
 	damage: 0,
 	onBroke: function(item){
-		item.data = Math.min(item.data, NANO_SABER_DURABILITY);
 		return true;
 	},
 	onAttack: function(item, mob){
-		this.damage = item.data < NANO_SABER_DURABILITY ? 16 : 0;
 		return true;
 	}
 });
 
+ToolAPI.registerSword(ItemID.nanoSaberActive, {level: 0, durability: NANO_SABER_DURABILITY, damage: 20}, {
+	damage: 0,
+	onBroke: function(item){
+		return true;
+	},
+	onAttack: function(item, mob){
+		return true;
+	}
+});
+
+let nanoSaberActivationTime = 0;
+let nanoSaberSound = null;
+Item.registerNoTargetUseFunction("nanoSaber", function(item){
+	if(item.data < NANO_SABER_DURABILITY){
+		Player.setCarriedItem(ItemID.nanoSaberActive, 1, item.data);
+		if(nanoSaberSound) nanoSaberSound.stop();
+		nanoSaberSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberPowerup.ogg");
+		nanoSaberActivationTime = World.getThreadTime();
+	}
+});
+
+Item.registerNoTargetUseFunction("nanoSaberActive", function(item){
+	if(nanoSaberActivationTime > 0){
+		let discharge = World.getThreadTime() - nanoSaberActivationTime;
+		item.data = Math.min(item.data + discharge*64, NANO_SABER_DURABILITY);
+		nanoSaberActivationTime = 0;
+	}
+	Player.setCarriedItem(ItemID.nanoSaber, 1, item.data);
+});
+
 Callback.addCallback("tick", function(){
+	let item = Player.getCarriedItem();
+	if(nanoSaberSound && nanoSaberSound.isPlaying()){
+		if(item.id != ItemID.nanoSaberActive)
+		nanoSaberSound.stop();
+	}
+	else if(item.id == ItemID.nanoSaberActive){
+		nanoSaberSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberIdle.ogg", true);
+	}
+	
 	if(World.getThreadTime() % 20 == 0){
-		var item = Player.getCarriedItem();
-		if(item.id == ItemID.nanoSaber){
-			item.data = Math.min(item.data+1280, NANO_SABER_DURABILITY);
-			Player.setCarriedItem(item.id, 1, item.data);
+		for(let i = 9; i < 45; i++){
+			let item = Player.getInventorySlot(i);
+			if(item.id == ItemID.nanoSaberActive){
+				if(nanoSaberActivationTime > 0){
+					let discharge = World.getThreadTime() - nanoSaberActivationTime;
+					item.data = Math.min(item.data + discharge*64, NANO_SABER_DURABILITY);
+					nanoSaberActivationTime = 0;
+				} else {
+					item.data = Math.min(item.data + 1280, NANO_SABER_DURABILITY);
+				}
+				if(item.data == NANO_SABER_DURABILITY){
+					item.id = ItemID.nanoSaber;
+				}
+				Player.setInventorySlot(i, item.id, 1, item.data);
+			}
 		}
 	}
 });
@@ -12409,11 +13012,11 @@ UIbuttons.registerSwitchFunction(ItemID.miningLaser, function(item){
 var MiningLaser = {
 	modes: {
 		0: {name: "Mining", energy: 1250, power: 6},
-		1: {name: "Low-Focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1},
-		2: {name: "Long-Range", energy: 5000, power: 20},
+		1: {name: "Low-Focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1, sound: "MiningLaserLowFocus.ogg"},
+		2: {name: "Long-Range", energy: 5000, power: 20, sound: "MiningLaserLongRange.ogg"},
 		3: {name: "Horizontal", energy: 1250, power: 6},
 		4: {name: "Super-Heat", energy: 2500, power: 8, smelt: true},
-		5: {name: "Scatter", energy: 10000, power: 12, blockBreaks: 16},
+		5: {name: "Scatter", energy: 10000, power: 12, blockBreaks: 16, sound: "MiningLaserScatter.ogg"},
 		6: {name: "3x3", energy: 10000, power: 6}
 	},
 	getModeData: function(n){
@@ -12435,6 +13038,7 @@ var MiningLaser = {
 		if(laserSetting == 3 || laserSetting == 6) return;
 		var mode = this.getModeData(laserSetting);
 		if(ICTool.useElectricItem(item, mode.energy)){
+			SoundAPI.playSound("Tools/MiningLaser/" + (mode.sound || "MiningLaser.ogg"));
 			var pos = Player.getPosition();
 			var angle = Entity.getLookAngle(Player.get());
 			var dir = new Vector3(Entity.getLookVectorByAngle(angle));
@@ -12467,6 +13071,7 @@ var MiningLaser = {
 		}
 		var mode = this.getModeData(laserSetting);
 		if(ICTool.useElectricItem(item, mode.energy)){
+			SoundAPI.playSound("Tools/MiningLaser/" + (mode.sound || "MiningLaser.ogg"));
 			var pos = Player.getPosition();
 			var angle = Entity.getLookAngle(Player.get());
 			var dir = new Vector3(Entity.getLookVectorByAngle(angle));
@@ -12642,8 +13247,10 @@ ModAPI.registerAPI("ICore", {
 	Reactor: ReactorAPI,
 	Radiation: RadiationAPI,
 	Tool: ICTool,
+	Sound: SoundAPI,
 	ItemName: ItemName,
 	UI: UIbuttons,
+	Config: Config,
 	Ore: OreGenerator,
 	Integration: IntegrationAPI,
 	

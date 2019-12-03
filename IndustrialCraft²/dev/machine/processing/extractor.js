@@ -100,6 +100,7 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
+				this.startPlaySound();
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
@@ -112,6 +113,8 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 		else {
 			this.data.progress = 0;
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -126,6 +129,13 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 	getEnergyStorage: function(){
 		return this.data.energy_storage;
 	},
+	
+	getStartSoundFile: function(){
+		return "Machines/ExtractorOp.ogg";
+    },
+	getInterruptSoundFile: function(){
+		return "Machines/InterruptOne.ogg";
+    },
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc

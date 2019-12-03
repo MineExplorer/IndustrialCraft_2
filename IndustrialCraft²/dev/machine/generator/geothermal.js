@@ -87,14 +87,16 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 				this.container.validateAll();
 			}
 		}
-		if(this.liquidStorage.getAmount("lava") >= 0.001){
-			if(this.data.energy <= energyStorage - 20){
-				this.data.energy += 20;
-				this.liquidStorage.getLiquid("lava", 0.001);
-				newActive = true;
-			}
+		if(this.liquidStorage.getAmount("lava") >= 0.001 && this.data.energy + 20 <= energyStorage){
+			this.data.energy += 20;
+			this.liquidStorage.getLiquid("lava", 0.001);
+			this.activate();
+			this.startPlaySound("Generators/GeothermalLoop.ogg");
 		}
-		this.setActive(newActive);
+		else {
+			this.stopPlaySound();
+			this.deactivate();
+		}
 		
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);
 		

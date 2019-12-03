@@ -246,7 +246,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 			this.data.y = y;
 		}
 		
-		var lastProgress = this.data.progress;
+		var newActive = false;
 		var drillSlot = this.container.getSlot("slotDrill");
 		var pipeSlot = this.container.getSlot("slotPipe");
 		if(drillSlot.id == ItemID.drill || drillSlot.id == ItemID.diamondDrill){
@@ -280,6 +280,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 					if(this.data.energy >= params.energy){
 						this.data.energy -= params.energy;
 						this.data.progress++;
+						newActive = true;
 					}
 					if(this.data.progress >= params.time){
 						this.mineBlock(coords.x, coords.y, coords.z, block, level);
@@ -290,8 +291,9 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				var block = World.getBlock(this.x, this.data.y-1, this.z);
 				if(this.isValid(block)){
 					if(this.data.energy >= 3){
-						this.data.progress++;
 						this.data.energy -= 3;
+						this.data.progress++;
+						newActive = true;
 					}
 					if(this.data.progress >= 20){
 						this.setPipe(this.data.y, pipeSlot);
@@ -303,6 +305,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 					if(this.data.energy >= params.energy){
 						this.data.energy -= params.energy;
 						this.data.progress++;
+						newActive = true;
 					}
 					if(this.data.progress >= params.time){
 						this.mineBlock(this.x, this.data.y-1, this.z, block, level);
@@ -314,8 +317,9 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		else {
 			if(World.getBlockID(this.x, this.data.y, this.z) == BlockID.miningPipe){
 				if(this.data.energy >= 3){
-					this.data.progress++;
 					this.data.energy -= 3;
+					this.data.progress++;
+					newActive = true;
 				}
 				if(this.data.progress >= 20){
 					this.drop([{id: BlockID.miningPipe, count: 1, data: 0}]);
@@ -330,7 +334,12 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				}
 			}
 		}
-		this.setActive(lastProgress != this.data.progress);
+		if(newActive){
+			this.startPlaySound("Machines/MinerOp.ogg");
+		} else {
+			this.stopPlaySound();
+		}
+		this.setActive(newActive);
 
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotDrill"), "Eu", this.data.energy, 128, 1);

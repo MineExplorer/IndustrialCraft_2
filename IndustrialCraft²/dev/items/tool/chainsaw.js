@@ -15,11 +15,12 @@ ToolAPI.registerBlockMaterial(35, "wool");
 
 ToolType.chainsaw = {
 	damage: 4,
-	baseDamage: 0,
+	toolDamage: 0,
 	blockTypes: ["wood", "wool", "fibre", "plant"],
+	soundType: "chainsaw",
 	onDestroy: function(item, coords, block){
 		if(Block.getDestroyTime(block.id) > 0){
-			if(ICTool.dischargeItem(item, this.toolMaterial.energyConsumption) && (block.id == 18 || block.id == 161)){
+			if(ICTool.dischargeItem(item, this.toolMaterial.energyPerUse) && (block.id == 18 || block.id == 161)){
 				World.destroyBlock(coords.x, coords.y, coords.z);
 				World.drop(coords.x + .5, coords.y + .5, coords.z + .5, block.id, 1, block.data%4);
 			}
@@ -29,9 +30,9 @@ ToolType.chainsaw = {
 	onBroke: function(item){return true;},
 	onAttack: function(item, mob){
 		var material = this.toolMaterial;
-		if(!this.baseDamage) this.baseDamage = material.damage;
-		if(ICTool.dischargeItem(item, this.toolMaterial.energyConsumption)){
-			material.damage = this.baseDamage;
+		if(!this.toolDamage) this.toolDamage = material.damage;
+		if(ICTool.dischargeItem(item, this.toolMaterial.energyPerUse)){
+			material.damage = this.toolDamage;
 		}
 		else{
 			material.damage = 0;
@@ -39,13 +40,30 @@ ToolType.chainsaw = {
 		return true;
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
-		if(item.data + this.toolMaterial.energyConsumption <= Item.getMaxDamage(item.id)){
+		if(item.data + this.toolMaterial.energyPerUse <= Item.getMaxDamage(item.id)){
 			return destroyTime;
 		}
 		else{
 			return params.base;
 		}
-	}
+	},
 }
 
-ToolAPI.setTool(ItemID.chainsaw, {energyConsumption: 60, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
+ToolAPI.setTool(ItemID.chainsaw, {energyPerUse: 60, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
+
+let chainsawLoop = SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawIdle.ogg", true, 1);
+SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawStop.ogg", false, 1);
+Callback.addCallback("tick", function(){
+	if(!Config.soundEnabled) {return;}
+	let item = Player.getCarriedItem();
+	let tool = ToolAPI.getToolData(item.id);
+	if(tool && tool.soundType == "chainsaw"){
+		if(!chainsawLoop.isPlaying()){
+			chainsawLoop.start();
+		}
+	}
+	else if(chainsawLoop.isPlaying()){
+		chainsawLoop.stop();
+		SoundAPI.playSound("Tools/Chainsaw/ChainsawStop.ogg", false, true);
+	}
+});

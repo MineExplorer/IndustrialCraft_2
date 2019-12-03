@@ -60,7 +60,7 @@ Callback.addCallback("PreLoaded", function(){
 		"a a"
 	], ['x', 280, 0, 'a', ItemID.ingotBronze, 0]);
 	
-	Recipes.addShaped({id: 33, count: 12, data: 0}, [
+	Recipes.addShaped({id: 33, count: 1, data: 0}, [
 		"ppp",
 		"cbc",
 		"cxc"

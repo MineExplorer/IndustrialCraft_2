@@ -199,6 +199,7 @@ function updateUIbuttons(){
 	}
 }
 
+let jetpackLoop = SoundAPI.addSoundPlayer("Tools/JetpackLoop.ogg", true, 1);
 Callback.addCallback("tick", function(){
 	var armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
 	for(var i in armor){
@@ -226,12 +227,13 @@ Callback.addCallback("tick", function(){
 			UIbuttons.container = new UI.Container();
 			UIbuttons.container.openAs(UIbuttons.Window);
 		}
+		var armor = armor[1];
+		var extra = armor.extra;
+		var hover = extra? extra.getBoolean("hover") : false;
+		var playSound = false;
 		if(UIbuttons.container.isElementTouched("button_fly")){
-			var armor = armor[1];
-			var extra = armor.extra;
-			var hover = extra? extra.getBoolean("hover") : false;
-			var y = Player.getPosition().y
-			var maxDmg = Item.getMaxDamage(armor.id)
+			var y = Player.getPosition().y;
+			var maxDmg = Item.getMaxDamage(armor.id);
 			if(armor.data < maxDmg && y < 256){
 				var vel = Player.getVelocity();
 				var vy = Math.min(32, 264-y) / 160;
@@ -252,6 +254,20 @@ Callback.addCallback("tick", function(){
 					}
 				}
 			}
+			playSound = true;
+		} else if(hover){
+			playSound = true;
+		}
+		if(Config.soundEnabled && playSound && !jetpackLoop.isPlaying()){
+			if(hover){
+				jetpackLoop.setVolume(0.8);
+			} else {
+				jetpackLoop.setVolume(1);
+			}
+			jetpackLoop.start();
+		}
+		if(!playSound && jetpackLoop.isPlaying()){
+			jetpackLoop.stop();
 		}
 	}
 	else if(UIbuttons.container){

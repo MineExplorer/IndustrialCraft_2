@@ -1,5 +1,5 @@
 var wireBurnoutFunc = function(){};
-if(voltageEnabled){
+if(Config.voltageEnabled){
 	wireBurnoutFunc = function(voltage){
 		for(var key in this.wireMap){
 			var coords = key.split(':');
@@ -65,7 +65,7 @@ var insulationMaxVolt = {
 
 Callback.addCallback("tick", function(){
 	if(World.getThreadTime()%20 == 0){
-		if(wireDamageEnabled){
+		if(Config.wireDamageEnabled){
 			var entities = Entity.getAll();
 		}
 		else{

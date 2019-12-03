@@ -73,6 +73,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 			explodeNuke(x, y, z, radius);
 		});
 		
+		let sound = SoundAPI.playSoundAt("Tools/NukeExplosion.ogg", this, 128);
 		RadiationAPI.addRadiationSource(this.x + 0.5, this.y + 0.5, this.z + 0.5, radius * 2, 600);
 	},
 	

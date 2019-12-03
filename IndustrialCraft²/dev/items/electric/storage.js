@@ -16,7 +16,7 @@ ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 4
 ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");
-Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: !debugMode});
+Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: !Config.debugMode});
 ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, 0, "storage");
 
 Item.registerNameOverrideFunction(ItemID.storageBattery, ItemName.showItemStorage);

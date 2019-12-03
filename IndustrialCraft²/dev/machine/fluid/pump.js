@@ -149,6 +149,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 				newActive = true;
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
+				this.startPlaySound("Machines/PumpOp.ogg");
 				if(this.data.progress.toFixed(3) >= 1){
 					var coords = this.data.coords;
 					var block = World.getBlock(coords.x, coords.y, coords.z);
@@ -164,6 +165,8 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		else {
 			this.data.progress = 0;
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var slot1 = this.container.getSlot("slotLiquid1");

@@ -50,7 +50,7 @@ Callback.addCallback("PreLoaded", function(){
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingBattery, -1, 'x', ItemID.heatExchanger, 0, 'b', ItemID.storageAdvBattery, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingBattery, -1, 'x', ItemID.heatExchanger, 1, 'b', ItemID.storageAdvBattery, -1], ChargeItemRegistry.transportEnergy);
 
 	Recipes.addShaped({id: ItemID.chargingCrystal, count: 1, data: Item.getMaxDamage(ItemID.chargingCrystal)}, [
 		"xbx",

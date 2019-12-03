@@ -33,11 +33,11 @@ UIbuttons.registerSwitchFunction(ItemID.miningLaser, function(item){
 var MiningLaser = {
 	modes: {
 		0: {name: "Mining", energy: 1250, power: 6},
-		1: {name: "Low-Focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1},
-		2: {name: "Long-Range", energy: 5000, power: 20},
+		1: {name: "Low-Focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1, sound: "MiningLaserLowFocus.ogg"},
+		2: {name: "Long-Range", energy: 5000, power: 20, sound: "MiningLaserLongRange.ogg"},
 		3: {name: "Horizontal", energy: 1250, power: 6},
 		4: {name: "Super-Heat", energy: 2500, power: 8, smelt: true},
-		5: {name: "Scatter", energy: 10000, power: 12, blockBreaks: 16},
+		5: {name: "Scatter", energy: 10000, power: 12, blockBreaks: 16, sound: "MiningLaserScatter.ogg"},
 		6: {name: "3x3", energy: 10000, power: 6}
 	},
 	getModeData: function(n){
@@ -59,6 +59,7 @@ var MiningLaser = {
 		if(laserSetting == 3 || laserSetting == 6) return;
 		var mode = this.getModeData(laserSetting);
 		if(ICTool.useElectricItem(item, mode.energy)){
+			SoundAPI.playSound("Tools/MiningLaser/" + (mode.sound || "MiningLaser.ogg"));
 			var pos = Player.getPosition();
 			var angle = Entity.getLookAngle(Player.get());
 			var dir = new Vector3(Entity.getLookVectorByAngle(angle));
@@ -91,6 +92,7 @@ var MiningLaser = {
 		}
 		var mode = this.getModeData(laserSetting);
 		if(ICTool.useElectricItem(item, mode.energy)){
+			SoundAPI.playSound("Tools/MiningLaser/" + (mode.sound || "MiningLaser.ogg"));
 			var pos = Player.getPosition();
 			var angle = Entity.getLookAngle(Player.get());
 			var dir = new Vector3(Entity.getLookVectorByAngle(angle));

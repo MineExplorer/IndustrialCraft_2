@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ToolLib",
-	version: 9,
+	version: 10,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -101,7 +101,15 @@ ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){
 		Callback.addCallback("DestroyBlock", function(coords, block, player){
 			var item = Player.getCarriedItem();
 			if(item.id == id){
-				toolType.destroyBlock(coords, coords.side, item, block);
+				ToolAPI.getToolData(id).destroyBlock(coords, coords.side, item, block);
+			}
+		});
+	}
+	if(toolType.continueDestroyBlock){
+		Callback.addCallback("DestroyBlockContinue", function(coords, block, progress){
+			var item = Player.getCarriedItem();
+			if(item.id == id){
+				ToolAPI.getToolData(id).continueDestroyBlock(item, coords, block, progress);
 			}
 		});
 	}

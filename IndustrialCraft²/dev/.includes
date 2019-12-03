@@ -5,9 +5,11 @@ core/machine/define.js
 core/machine/recipe.js
 core/machine/upgrade.js
 
+core/config.js
 core/tool.js
 core/electricity.js
 core/radiation.js
+core/sound_engine.js
 core/item_name.js
 core/ui_buttons.js
 core/integration.js

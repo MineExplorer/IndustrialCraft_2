@@ -153,6 +153,7 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
+				this.startPlaySound();
 			}
 			if(this.data.progress.toFixed(3) >= 1){
 				sourceSlot.count--;
@@ -166,6 +167,8 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 		else {
 			this.data.progress = 0;
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -180,6 +183,13 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 	getEnergyStorage: function(){
 		return this.data.energy_storage;
 	},
+	
+	getStartSoundFile: function(){
+		return "Machines/MaceratorOp.ogg";
+    },
+	getInterruptSoundFile: function(){
+		return "Machines/InterruptOne.ogg";
+    },
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc

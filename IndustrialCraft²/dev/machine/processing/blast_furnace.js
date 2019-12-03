@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function(){
 		"axa"
 	], ['s', BlockID.machineBlockBasic, 0,'a', ItemID.casingIron, 0,'x', ItemID.heatConductor, 0]);
 	
-	MachineRecipeRegistry.registerRecipesFor("blastFrunace", {
+	MachineRecipeRegistry.registerRecipesFor("blastFurnace", {
 		15: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		265: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"ItemID.dustIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
@@ -161,7 +161,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 			this.setIndicator(content, true);
 			var sourceSlot = this.container.getSlot("slotSource");
 			var source = this.data.sourceID || sourceSlot.id;
-			var result = MachineRecipeRegistry.getRecipeResult("blastFrunace", source);
+			var result = MachineRecipeRegistry.getRecipeResult("blastFurnace", source);
 			if(result && this.checkResult(result.result)){
 				if(this.controlAir()){
 					this.controlAirImage(content, true);

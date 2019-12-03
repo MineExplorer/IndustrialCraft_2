@@ -32,22 +32,12 @@ LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
 Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
 Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");
+Player.getPointed = ModAPI.requireGlobal("Player.getPointed");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
-
-// config
-var debugMode = __config__.getBool("debug_mode");
-var voltageEnabled = __config__.getBool("voltage_enabled");
-var wireDamageEnabled = __config__.getBool("wire_damage_enabled");
-Callback.addCallback("LevelLoaded", function(){
-	debugMode = __config__.getBool("debug_mode");
-	voltageEnabled = __config__.getBool("voltage_enabled");
-	wireDamageEnabled = __config__.getBool("wire_damage_enabled");
-	player = Player.get();
-});
 
 // API
 function random(min, max){
@@ -77,8 +67,8 @@ var lasttime = -1
 var frame = 0
 
 Callback.addCallback("tick", function(){
-	if(debugMode){
-		var t = java.lang.System.currentTimeMillis()
+	if(Config.debugMode){
+		var t = Debug.sysTime();
 		if(frame++ % 20 == 0){
 			if(lasttime != -1){
 				tps = 1000 / (t - lasttime) * 20
@@ -89,7 +79,7 @@ Callback.addCallback("tick", function(){
 	}
 });
 
-// redstone items fix
+// redstone items placing fix
 Item.registerUseFunctionForID(69, function(coords, item, block){
 	if(block.id >= 8192){
 		Game.prevent();

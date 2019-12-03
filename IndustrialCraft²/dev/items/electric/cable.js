@@ -56,12 +56,17 @@ Callback.addCallback("PreLoaded", function(){
 
 function registerCablePlaceFunc(nameID, blockID, blockData){
 	Item.registerUseFunction(nameID, function(coords, item, block){
-		var place = coords.relative;
-		if(World.getBlockID(place.x, place.y, place.z) == 0){
-			World.setBlock(place.x, place.y, place.z, blockID, blockData);
-			Player.setCarriedItem(item.id, item.count - 1, item.data);
-			EnergyTypeRegistry.onWirePlaced(place.x, place.y, place.z);
+		var place = coords;
+		if(!canTileBeReplaced(block.id, block.data)){
+			place = coords.relative;
+			block = World.getBlock(place.x, place.y, place.z);
+			if(!canTileBeReplaced(block.id, block.data)){
+				return;
+			}
 		}
+		World.setBlock(place.x, place.y, place.z, blockID, blockData);
+		Player.setCarriedItem(item.id, item.count - 1, item.data);
+		EnergyTypeRegistry.onWirePlaced(place.x, place.y, place.z);
 	});
 }
 

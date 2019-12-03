@@ -112,13 +112,14 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		var newActive = false;
 		var result = this.getResult();
 		if(result){
-			if(this.data.energy > 15 && this.data.progress < 1){
+			if(this.data.energy > 15 && this.data.progress < 100){
 				this.data.energy -= 16;
-				if(this.data.heat < 5000){this.data.heat++;}
-				this.data.progress += this.data.heat/60000;
+				if(this.data.heat < 10000){this.data.heat++;}
+				this.data.progress += this.data.heat / 1200;
 				newActive = true;
+				this.startPlaySound();
 			}
-			if(this.data.progress >= 1){
+			if(this.data.progress >= 100){
 				var put1 = this.putResult(result[0], this.container.getSlot("slotSource1"), this.container.getSlot("slotResult1"));
 				var put2 = this.putResult(result[1], this.container.getSlot("slotSource2"), this.container.getSlot("slotResult2"));
 				if(put1 || put2){
@@ -130,13 +131,15 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		else {
 			this.data.progress = 0;
 			if(this.data.isHeating && this.data.energy > 0){
-				if(this.data.heat < 5000){this.data.heat++;}
+				if(this.data.heat < 10000){this.data.heat++;}
 				this.data.energy--;
 			}
 			else if(this.data.heat > 0){
-				this.data.heat--;
+				this.data.heat -= 4;
 			}
 		}
+		if(!newActive)
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -144,9 +147,9 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		this.data.energy = Math.min(this.data.energy, energyStorage);
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
 		
-		this.container.setScale("progressScale", this.data.progress);
+		this.container.setScale("progressScale", this.data.progress / 100);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo2", parseInt(this.data.heat / 50) + "%");
+		this.container.setText("textInfo2", parseInt(this.data.heat / 100) + "%");
 	},
 	
 	redstone: function(signal){
@@ -156,6 +159,16 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 	getEnergyStorage: function(){
 		return this.data.energy_storage;
 	},
+	
+	getStartingSoundFile: function(){
+		return "Machines/Induction Furnace/InductionStart.ogg";
+    },
+	getStartSoundFile: function(){
+		return "Machines/Induction Furnace/InductionLoop.ogg";
+    },
+	getInterruptSoundFile: function(){
+		return "Machines/Induction Furnace/InductionStop.ogg";
+    },
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
 	energyReceive: MachineRegistry.basicEnergyReceiveFunc

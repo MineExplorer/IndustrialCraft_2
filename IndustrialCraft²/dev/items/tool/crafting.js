@@ -23,6 +23,7 @@ Callback.addCallback("DestroyBlockStart", function(coords, block){
 	if(item.id == ItemID.cutter && IC_WIRES[block.id] && block.data > 0){
 		Game.prevent();
 		ToolAPI.breakCarriedTool(1);
+		SoundAPI.playSound("Tools/InsulationCutters.ogg");
 		World.setBlock(coords.x, coords.y, coords.z, block.id, block.data - 1);
 		World.drop(coords.x + 0.5, coords.y + 1, coords.z + 0.5, ItemID.rubber, 1);
 	}

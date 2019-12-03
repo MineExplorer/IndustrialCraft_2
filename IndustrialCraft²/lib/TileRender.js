@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "TileRender",
-	version: 10,
+	version: 11,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -9,11 +9,15 @@ var EntityGetYaw = ModAPI.requireGlobal("Entity.getYaw");
 var EntityGetPitch = ModAPI.requireGlobal("Entity.getPitch");
 
 // block place fix
-var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
-var REPLACEABLE_TILES = ModAPI.requireGlobal("CONSTANT_REPLACEABLE_TILES")
-REPLACEABLE_TILES[51] = true;
-REPLACEABLE_TILES[78] = true;
-REPLACEABLE_TILES[106] = true;
+function canTileBeReplaced(id, data) {
+	if(id == 175 && (data%8 == 2 || data%8 == 3)) return true;
+    return CONSTANT_REPLACEABLE_TILES[id] || false;
+}
+var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced = "+uneval(canTileBeReplaced));
+var CONSTANT_REPLACEABLE_TILES = ModAPI.requireGlobal("CONSTANT_REPLACEABLE_TILES")
+CONSTANT_REPLACEABLE_TILES[51] = true;
+CONSTANT_REPLACEABLE_TILES[78] = true;
+CONSTANT_REPLACEABLE_TILES[106] = true;
 
 var TileRenderer = {
 	data: {},
@@ -116,17 +120,14 @@ var TileRenderer = {
 
 	setRotationPlaceFunction: function(id, fullRotation){
 		Block.registerPlaceFunction(id, function(coords, item, block){
-			var x = coords.relative.x;
-			var y = coords.relative.y;
-			var z = coords.relative.z;
-			World.setBlock(x, y, z, item.id, 0);
+			var place = canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
+			World.setBlock(place.x, place.y, place.z, item.id, 0);
 			var rotation = TileRenderer.getBlockRotation(fullRotation);
-			var tile = World.addTileEntity(x, y, z);
+			var tile = World.addTileEntity(place.x, place.y, place.z);
 			tile.data.meta = rotation;
-			TileRenderer.mapAtCoords(x, y, z, item.id, rotation);
+			TileRenderer.mapAtCoords(place.x, place.y, place.z, item.id, rotation);
 		});
 	},
-	
 	
 	setupWireModel: function(id, data, width, groupName, preventSelfAdd) {
 		var render = new ICRender.Model();
@@ -247,8 +248,8 @@ var TileRenderer = {
 			var x = coords.relative.x
 			var y = coords.relative.y
 			var z = coords.relative.z
-			block = World.getBlockID(x, y, z);
-			if(canTileBeReplaced(block)){
+			block = World.getBlock(x, y, z);
+			if(canTileBeReplaced(block.id, block.data)){
 				if(coords.vec.y - y < 0.5){
 					World.setBlock(x, y, z, item.id, 0);
 				}

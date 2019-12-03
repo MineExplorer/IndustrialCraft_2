@@ -25,10 +25,6 @@ var scan_radius = 3;
 var adv_scan_radius = 6;
 var ore_blocks = [14, 15, 16, 21, 73, 74, 56, 129, 153];
 
-ModAPI.addAPICallback("GTCore", function(api){
-	ore_blocks = [];
-});
-
 Callback.addCallback("PreLoaded", function(coords, item, block){
 	for(var id in BlockID){
 		if(id[0]=='o' && id[1]=='r' && id[2]=='e' && !TileEntity.isTileEntityBlock(Block[id])){
@@ -43,8 +39,9 @@ Callback.addCallback("PreLoaded", function(coords, item, block){
 
 Item.registerUseFunction("scanner", function(coords, item, block){
 	if(item.data + 50 < Item.getMaxDamage(item.id)){
-		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
 		Player.setCarriedItem(item.id, 1, item.data + 50);
+		SoundAPI.playSound("Tools/ODScanner.ogg");
+		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
 		var ores = {};
 		for(var x = coords.x - scan_radius; x <= coords.x + scan_radius; x++){
 			for(var y = coords.y - scan_radius; y <= coords.y + scan_radius; y++){
@@ -65,6 +62,7 @@ Item.registerUseFunction("scanner", function(coords, item, block){
 Item.registerUseFunction("scannerAdvanced", function(coords, item, block){
 	if(item.data + 200 < Item.getMaxDamage(item.id)){
 		Player.setCarriedItem(item.id, 1, item.data + 200);
+		SoundAPI.playSound("Tools/ODScanner.ogg");
 		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
 		var ores = {};
 		for(var x = coords.x - adv_scan_radius; x <= coords.x + adv_scan_radius; x++){

@@ -222,6 +222,13 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			this.data.output = 0;
 		}
 		this.setActive(this.data.heat >= 1000 || this.data.output > 0);
+		
+		if(this.data.output > 0){
+			this.startPlaySound("Generators/NuclearReactor/NuclearReactorLoop.ogg");
+		} else {
+			this.stopPlaySound();
+		}
+		
 		this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
 		this.container.setText("textInfo", "Generating: " + this.getEnergyOutput() + " EU/t");
 	},
@@ -323,7 +330,6 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			}
 			if(explode){
 				this.data.boomPower = Math.min(boomPower * this.data.hem * boomMod, __config__.access("reactor_explosion_max_power"));
-				Game.message(this.data.boomPower);
 				for(let i = 0; i < 5; i++){
 					this.tnt.push(Entity.spawn(this.x + 0.5, this.y + 0.5, this.z + 0.5, EntityType.PRIMED_TNT));
 				}
@@ -348,7 +354,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 				}
 			}
 			else if (material == "stone" || material == "dirt") {
-				World.setBlock(coord.x, coord.y, coord.z, 10, 1);
+				World.setBlock(coord.x, coord.y, coord.z, 11, 1);
 			}
 		} 
 		if (power >= 0.7 && World.getThreadTime()%20 == 0) {

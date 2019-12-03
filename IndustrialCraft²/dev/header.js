@@ -32,7 +32,6 @@ LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
 Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
 Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");
-Player.getPointed = ModAPI.requireGlobal("Player.getPointed");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
 

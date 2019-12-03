@@ -43,12 +43,12 @@ ToolAPI.registerSword(ItemID.nanoSaberActive, {level: 0, durability: NANO_SABER_
 });
 
 let nanoSaberActivationTime = 0;
-let nanoSaberSound = null;
+let nanoSaberStartSound = null;
+let nanoSaberIdleSound = null;
 Item.registerNoTargetUseFunction("nanoSaber", function(item){
 	if(item.data < NANO_SABER_DURABILITY){
 		Player.setCarriedItem(ItemID.nanoSaberActive, 1, item.data);
-		if(nanoSaberSound) nanoSaberSound.stop();
-		nanoSaberSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberPowerup.ogg");
+		nanoSaberStartSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberPowerup.ogg");
 		nanoSaberActivationTime = World.getThreadTime();
 	}
 });
@@ -59,17 +59,29 @@ Item.registerNoTargetUseFunction("nanoSaberActive", function(item){
 		item.data = Math.min(item.data + discharge*64, NANO_SABER_DURABILITY);
 		nanoSaberActivationTime = 0;
 	}
+	if(nanoSaberIdleSound){
+		nanoSaberIdleSound.stop();
+		nanoSaberIdleSound = null;
+	}
 	Player.setCarriedItem(ItemID.nanoSaber, 1, item.data);
+});
+
+Callback.addCallback("LevelLeft", function(){
+	nanoSaberStartSound = null;
+	nanoSaberIdleSound = null;
 });
 
 Callback.addCallback("tick", function(){
 	let item = Player.getCarriedItem();
-	if(nanoSaberSound && nanoSaberSound.isPlaying()){
-		if(item.id != ItemID.nanoSaberActive)
-		nanoSaberSound.stop();
+	if(item.id == ItemID.nanoSaberActive){
+		if(!nanoSaberIdleSound && (!nanoSaberStartSound || !nanoSaberStartSound.isPlaying())){
+			nanoSaberIdleSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberIdle.ogg", true, true);
+			nanoSaberStartSound = null;
+		}
 	}
-	else if(item.id == ItemID.nanoSaberActive){
-		nanoSaberSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberIdle.ogg", true);
+	else if(nanoSaberIdleSound){
+		nanoSaberIdleSound.stop();
+		nanoSaberIdleSound = null;
 	}
 	
 	if(World.getThreadTime() % 20 == 0){

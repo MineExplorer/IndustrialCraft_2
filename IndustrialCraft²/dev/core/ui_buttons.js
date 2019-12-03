@@ -239,7 +239,7 @@ Callback.addCallback("tick", function(){
 				var vy = Math.min(32, 264-y) / 160;
 				if(hover){
 					if(World.getThreadTime() % 5 == 0){
-						Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+20, maxDmg), extra);
+						Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+10, maxDmg), extra);
 					}
 					if(vel.y < 0.2){
 						Player.addVelocity(0, Math.min(vy, 0.2-vel.y), 0);

@@ -22,7 +22,6 @@ Item.registerNoTargetUseFunction("tinCanFull", function(){
 	var saturation = Player.getSaturation();
 	var count = Math.min(getMaxHunger() - hunger, item.count);
 	if(count > 0){
-		SoundAPI.playSound("Tools/eat.ogg");
 		Player.setHunger(hunger + count);
 		Player.setSaturation(Math.min(20, saturation + count*0.6));
 		if(item.data == 1 && Math.random() < 0.2*count){
@@ -37,5 +36,6 @@ Item.registerNoTargetUseFunction("tinCanFull", function(){
 			Player.setCarriedItem(item.id, item.count - count, item.data);
 			Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
 		}
+		SoundAPI.playSound("Tools/eat.ogg");
 	}
 });

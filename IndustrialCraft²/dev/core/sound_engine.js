@@ -51,7 +51,7 @@ let SoundAPI = {
 				curSound.setLooping(isLooping || false);
 				curSound.prepare();
 				sound = this.soundPlayers[i];
-				if(!sound.isPreparing && !sound.isPlaying()){ // double check after preparing because of multi-threading
+				if(!sound.isPreparing && !sound.isPlaying()){ // second check after preparing because of multi-threading
 					this.soundPlayers[i] = curSound;
 					this.soundsToRelease.push(sound);
 				} else {
@@ -96,7 +96,7 @@ let SoundAPI = {
 			if(!sound.isPlaying() && !sound.isPreparing && sound.priority <= 0){
 				curSound = new MultiSound(fileName[0], fileName[1], fileName[2]);
 				sound = this.soundPlayers[i];
-				if(!sound.isPreparing && !sound.isPlaying()){ // double check after preparing because of multi-threading
+				if(!sound.isPreparing && !sound.isPlaying()){ // second check after preparing because of multi-threading
 					this.soundPlayers[i] = curSound;
 					this.soundsToRelease.push(sound);
 				} else {

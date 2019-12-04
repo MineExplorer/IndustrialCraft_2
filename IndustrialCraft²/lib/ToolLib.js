@@ -1,9 +1,27 @@
+/*
+ToolLib by MineExplorer
+The library includes simple tool create methods and a lot of CoreEngine bug fixes.
+
+Attention!
+Code change or clearing up the code is prohibited.
+By using the library you automatically agree to these rules.
+
+Внимание!
+Явное копирование или изменение кода запрещено.
+Используя библиотеку вы автоматически соглашаетесь с этими правилами.
+*/
+
 LIBRARY({
 	name: "ToolLib",
 	version: 10,
 	shared: true,
 	api: "CoreEngine"
 });
+
+/**
+* Adding new tool type in your mod
+* ToolType.*name* = {...}
+*/
 
 var ToolType = {
 	sword: {

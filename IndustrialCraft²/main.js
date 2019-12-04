@@ -43,7 +43,6 @@ LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
 Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
 Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");
-Player.getPointed = ModAPI.requireGlobal("Player.getPointed");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
 
@@ -543,7 +542,7 @@ var MachineRegistry = {
 					this.audioSource = SoundAPI.createSource([this.getStartingSoundFile(), this.getStartSoundFile(), this.getInterruptSoundFile()], this, 16);
 				}
 			}
-			Prototype.stopPlaySound = Prototype.stopPlaySound || function(){
+			Prototype.stopPlaySound = Prototype.stopPlaySound || function(playInterruptSound){
 				var audio = this.audioSource;
 				if(audio){
 					if(!audio.isPlaying()){
@@ -551,18 +550,18 @@ var MachineRegistry = {
 					}
 					else if(!audio.isFinishing){
 						audio.stop();
-						audio.playFinishingSound();
+						if(playInterruptSound){
+							audio.playFinishingSound();
+						}
 					}
 				}
 			}
 		} else {
 			Prototype.startPlaySound = Prototype.startPlaySound || function(name){
+				if(!Config.machineSoundEnabled){return;}
 				if(!this.audioSource && !this.remove){
-					let sound = SoundAPI.playSound(name, true);
-					if(sound){
-						sound.setSource(this, 16);
-						this.audioSource = sound;
-					}
+					let sound = SoundAPI.playSoundAt(this, name, true, 16);
+					this.audioSource = sound;
 				}
 			}
 			Prototype.stopPlaySound = Prototype.stopPlaySound || function(){
@@ -1289,14 +1288,14 @@ let SoundAPI = {
 		return __dir__ + "res/sounds/" + name;
 	},
 	
-	addSoundPlayer: function(name, isLooping, priority){
+	addSoundPlayer: function(name, loop, priorized){
 		if(this.soundPlayers.length >= this.maxPlayersCount){
 			Logger.Log(__name__ + " sound stack is full", "WARNING");
-			return;
+			return null;
 		}
-		let sound = new Sound(name, priority);
+		let sound = new Sound(name, priorized);
 		sound.setDataSource(this.getFilePath(name));
-		sound.setLooping(isLooping || false);
+		sound.setLooping(loop || false);
 		sound.prepare();
 		this.soundPlayers.push(sound);
 		return sound;
@@ -1312,8 +1311,8 @@ let SoundAPI = {
 		return sound;
 	},
 	
-	playSound: function(name, isLooping, disableMultiPlaying){
-		if(!Config.soundEnabled) {return;}
+	playSound: function(name, loop, disableMultiPlaying){
+		if(!Config.soundEnabled) {return null;}
 		let curSound = null;
 		try{
 		for(let i in this.soundPlayers){
@@ -1327,13 +1326,13 @@ let SoundAPI = {
 				sound.start();
 				return sound;
 			}
-			else if(!sound.isPreparing && sound.priority <= 0){
-				curSound = new Sound(name, 0, false);
+			else if(!sound.isPreparing && !sound.priorized){
+				curSound = new Sound(name, false);
 				curSound.setDataSource(this.getFilePath(name));
-				curSound.setLooping(isLooping || false);
+				curSound.setLooping(loop || false);
 				curSound.prepare();
 				sound = this.soundPlayers[i];
-				if(!sound.isPreparing && !sound.isPlaying()){ // double check after preparing because of multi-threading
+				if(!sound.isPreparing && !sound.isPlaying()){ // second check after preparing because of multi-threading
 					this.soundPlayers[i] = curSound;
 					this.soundsToRelease.push(sound);
 				} else {
@@ -1343,10 +1342,11 @@ let SoundAPI = {
 			}
 		}
 		if(!curSound){
-			curSound = this.addSoundPlayer(name, isLooping, 0, true);
+			curSound = this.addSoundPlayer(name, loop, false);
 		}
 		curSound.start();
-		} 
+		Game.message("sound "+ name +" started");
+		}
 		catch(err) {
 			Logger.Log("sound "+ name +" start failed", "ERROR");
 			Logger.Log(err, "ERROR");
@@ -1354,8 +1354,11 @@ let SoundAPI = {
 		return curSound;
 	},
 	
-	playSoundAt: function(name, isLooping, coord, radius){
-		let sound = this.playSound(name, isLooping);
+	playSoundAt: function(coord, name, loop, radius){
+		if(loop && Entity.getDistanceBetweenCoords(coord, Player.getPosition()) > radius){
+			return null;
+		}
+		let sound = this.playSound(name, loop);
 		if(sound){
 			sound.setSource(coord, radius);
 		}
@@ -1370,15 +1373,15 @@ let SoundAPI = {
 	},
 	
 	createSource: function(fileName, coord, radius){
-		if(!Config.soundEnabled) {return;}
+		if(!Config.soundEnabled) {return null;}
 		let curSound = null;
 		try{
 		for(let i in this.soundPlayers){
 			let sound = this.soundPlayers[i];
-			if(!sound.isPlaying() && !sound.isPreparing && sound.priority <= 0){
+			if(!sound.isPlaying() && !sound.isPreparing && !sound.priorized){
 				curSound = new MultiSound(fileName[0], fileName[1], fileName[2]);
 				sound = this.soundPlayers[i];
-				if(!sound.isPreparing && !sound.isPlaying()){ // double check after preparing because of multi-threading
+				if(!sound.isPreparing && !sound.isPlaying()){ // second check after preparing because of multi-threading
 					this.soundPlayers[i] = curSound;
 					this.soundsToRelease.push(sound);
 				} else {
@@ -1413,7 +1416,7 @@ let SoundAPI = {
 			if(sound.isPlaying()){
 				sound.stop();
 			}
-			if(sound.priority <= 0){
+			if(!sound.priorized){
 				sound.release();
 				this.soundPlayers.splice(i--, 1);
 			}
@@ -1421,18 +1424,18 @@ let SoundAPI = {
 	}
 }
 
-function Sound(name, priority){
+function Sound(name, priorized){
 	this.name = name;
 	this.media = new android.media.MediaPlayer();
-	this.priority = priority || 0;
+	this.priorized = priorized || false;
 	this.isPreparing = true;
 	
 	this.setDataSource = function(path){
 		this.media.setDataSource(path);
 	}
 	
-	this.setLooping = function(isLooping){
-		this.media.setLooping(isLooping);
+	this.setLooping = function(loop){
+		this.media.setLooping(loop);
 	}
 	
 	this.prepare = function(){
@@ -1919,7 +1922,7 @@ Callback.addCallback("tick", function(){
 				var vy = Math.min(32, 264-y) / 160;
 				if(hover){
 					if(World.getThreadTime() % 5 == 0){
-						Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+20, maxDmg), extra);
+						Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+10, maxDmg), extra);
 					}
 					if(vel.y < 0.2){
 						Player.addVelocity(0, Math.min(vy, 0.2-vel.y), 0);
@@ -2907,12 +2910,12 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
 		
-		if(this.data.burn <= 0 && this.data.energy < energyStorage){
+		if(this.data.burn <= 0 && this.data.energy + 10 < energyStorage){
 			this.data.burn = this.data.burnMax = this.getFuel("slotFuel") / 4;
 		}
 		if(this.data.burn > 0 && 
-		  (!this.data.isActive && this.data.energy + 100 <= energyStorage) ||
-		  (this.data.isActive && this.data.energy + 10 <= energyStorage)){
+		  (!this.data.isActive && this.data.energy + 100 <= energyStorage ||
+		  this.data.isActive && this.data.energy + 10 <= energyStorage)){
 			this.data.energy += 10;
 			this.data.burn--;
 			this.activate();
@@ -4337,7 +4340,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		this.setActive(this.data.heat >= 1000 || this.data.output > 0);
 		
 		if(this.data.output > 0){
-			this.startPlaySound("Generators/NuclearReactor/NuclearReactorLoop.ogg");
+			this.startPlaySound();
 		} else {
 			this.stopPlaySound();
 		}
@@ -4358,6 +4361,40 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		return parseInt(this.data.output * EUReactorModifier);
 	},
 	
+	startPlaySound: function(){
+		if(!Config.machineSoundEnabled){return;}
+		if(!this.remove){
+			if(!this.audioSource){
+				let sound = SoundAPI.playSoundAt(this, "Generators/NuclearReactor/NuclearReactorLoop.ogg", true, 16);
+				this.audioSource = sound;
+			}
+			if(this.data.output < 40){
+				var geigerSound = "Generators/NuclearReactor/GeigerLowEU.ogg";
+			} else if(this.data.output < 80){
+				var geigerSound = "Generators/NuclearReactor/GeigerMedEU.ogg";
+			} else {
+				var geigerSound = "Generators/NuclearReactor/GeigerHighEU.ogg";
+			}
+			if(!this.audioSourceGeiger){
+				this.audioSourceGeiger = SoundAPI.playSoundAt(this, geigerSound, true, 16);
+			} 
+			else if(this.audioSourceGeiger.name != geigerSound){
+				this.audioSourceGeiger.stop();
+				this.audioSourceGeiger = SoundAPI.playSoundAt(this, geigerSound, true, 16);
+			}
+		}
+	},
+	stopPlaySound: function(){
+		if(this.audioSource && this.audioSource.isPlaying()){
+			this.audioSource.stop();
+			this.audioSource = null;
+		}
+		if(this.audioSourceGeiger && this.audioSourceGeiger.isPlaying()){
+			this.audioSourceGeiger.stop();
+			this.audioSourceGeiger = null;
+		}
+	},
+
 	getHeat: function(){
 		return this.data.heat;
 	},
@@ -5430,8 +5467,8 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		
 		if(this.data.burn > 0){
 			this.data.burn--;
-			this.startPlaySound("Machines/IronFurnaceOp.ogg");
 			this.activate();
+			this.startPlaySound("Machines/IronFurnaceOp.ogg");
 		} else {
 			this.stopPlaySound();
 			this.deactivate();
@@ -5579,7 +5616,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 			this.data.progress = 0;
 		}
 		if(!newActive)
-			this.stopPlaySound();
+			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -5757,7 +5794,7 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 			}
 		}
 		if(!newActive)
-			this.stopPlaySound();
+			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -5969,7 +6006,7 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 			this.data.progress = 0;
 		}
 		if(!newActive)
-			this.stopPlaySound();
+			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -6154,7 +6191,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 			this.data.progress = 0;
 		}
 		if(!newActive)
-			this.stopPlaySound();
+			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -6304,7 +6341,7 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 			this.data.progress = 0;
 		}
 		if(!newActive)
-			this.stopPlaySound();
+			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -6627,7 +6664,7 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 			this.data.progress = 0;
 		}
 		if(!newActive)
-			this.stopPlaySound();
+			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
 		var tier = this.getTier();
@@ -9119,7 +9156,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 			explodeNuke(x, y, z, radius);
 		});
 		
-		let sound = SoundAPI.playSoundAt("Tools/NukeExplosion.ogg", this, 128);
+		let sound = SoundAPI.playSoundAt(this, "Tools/NukeExplosion.ogg", false, 128);
 		RadiationAPI.addRadiationSource(this.x + 0.5, this.y + 0.5, this.z + 0.5, radius * 2, 600);
 	},
 	
@@ -10079,7 +10116,6 @@ Item.registerNoTargetUseFunction("tinCanFull", function(){
 	var saturation = Player.getSaturation();
 	var count = Math.min(getMaxHunger() - hunger, item.count);
 	if(count > 0){
-		SoundAPI.playSound("Tools/eat.ogg");
 		Player.setHunger(hunger + count);
 		Player.setSaturation(Math.min(20, saturation + count*0.6));
 		if(item.data == 1 && Math.random() < 0.2*count){
@@ -10094,6 +10130,7 @@ Item.registerNoTargetUseFunction("tinCanFull", function(){
 			Player.setCarriedItem(item.id, item.count - count, item.data);
 			Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
 		}
+		SoundAPI.playSound("Tools/eat.ogg");
 	}
 });
 
@@ -10460,13 +10497,13 @@ Callback.addCallback("PreLoaded", function(){
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingAdvBattery, -1, 'x', ItemID.heatExchangerComponent, 0, 'b', ItemID.storageCrystal, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingAdvBattery, -1, 'x', ItemID.heatExchangerComponent, 1, 'b', ItemID.storageCrystal, -1], ChargeItemRegistry.transportEnergy);
 	
 	Recipes.addShaped({id: ItemID.chargingLapotronCrystal, count: 1, data: Item.getMaxDamage(ItemID.chargingLapotronCrystal)}, [
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingCrystal, -1, 'x', ItemID.heatExchangerAdv, 0, 'b', ItemID.storageLapotronCrystal, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingCrystal, -1, 'x', ItemID.heatExchangerAdv, 1, 'b', ItemID.storageLapotronCrystal, -1], ChargeItemRegistry.transportEnergy);
 });
 
 var charging_items = {}
@@ -12923,12 +12960,12 @@ ToolAPI.registerSword(ItemID.nanoSaberActive, {level: 0, durability: NANO_SABER_
 });
 
 let nanoSaberActivationTime = 0;
-let nanoSaberSound = null;
+let nanoSaberStartSound = null;
+let nanoSaberIdleSound = null;
 Item.registerNoTargetUseFunction("nanoSaber", function(item){
 	if(item.data < NANO_SABER_DURABILITY){
 		Player.setCarriedItem(ItemID.nanoSaberActive, 1, item.data);
-		if(nanoSaberSound) nanoSaberSound.stop();
-		nanoSaberSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberPowerup.ogg");
+		nanoSaberStartSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberPowerup.ogg");
 		nanoSaberActivationTime = World.getThreadTime();
 	}
 });
@@ -12939,17 +12976,29 @@ Item.registerNoTargetUseFunction("nanoSaberActive", function(item){
 		item.data = Math.min(item.data + discharge*64, NANO_SABER_DURABILITY);
 		nanoSaberActivationTime = 0;
 	}
+	if(nanoSaberIdleSound){
+		nanoSaberIdleSound.stop();
+		nanoSaberIdleSound = null;
+	}
 	Player.setCarriedItem(ItemID.nanoSaber, 1, item.data);
+});
+
+Callback.addCallback("LevelLeft", function(){
+	nanoSaberStartSound = null;
+	nanoSaberIdleSound = null;
 });
 
 Callback.addCallback("tick", function(){
 	let item = Player.getCarriedItem();
-	if(nanoSaberSound && nanoSaberSound.isPlaying()){
-		if(item.id != ItemID.nanoSaberActive)
-		nanoSaberSound.stop();
+	if(item.id == ItemID.nanoSaberActive){
+		if(!nanoSaberIdleSound && (!nanoSaberStartSound || !nanoSaberStartSound.isPlaying())){
+			nanoSaberIdleSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberIdle.ogg", true, true);
+			nanoSaberStartSound = null;
+		}
 	}
-	else if(item.id == ItemID.nanoSaberActive){
-		nanoSaberSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberIdle.ogg", true);
+	else if(nanoSaberIdleSound){
+		nanoSaberIdleSound.stop();
+		nanoSaberIdleSound = null;
 	}
 	
 	if(World.getThreadTime() % 20 == 0){

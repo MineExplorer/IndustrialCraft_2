@@ -88,12 +88,12 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 	tick: function(){
 		var energyStorage = this.getEnergyStorage();
 		
-		if(this.data.burn <= 0 && this.data.energy < energyStorage){
+		if(this.data.burn <= 0 && this.data.energy + 10 < energyStorage){
 			this.data.burn = this.data.burnMax = this.getFuel("slotFuel") / 4;
 		}
 		if(this.data.burn > 0 && 
-		  (!this.data.isActive && this.data.energy + 100 <= energyStorage) ||
-		  (this.data.isActive && this.data.energy + 10 <= energyStorage)){
+		  (!this.data.isActive && this.data.energy + 100 <= energyStorage ||
+		  this.data.isActive && this.data.energy + 10 <= energyStorage)){
 			this.data.energy += 10;
 			this.data.burn--;
 			this.activate();

@@ -168,7 +168,7 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 			this.data.progress = 0;
 		}
 		if(!newActive)
-			this.stopPlaySound();
+			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
 		var tier = this.getTier();

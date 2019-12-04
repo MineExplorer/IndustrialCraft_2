@@ -139,7 +139,7 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 			}
 		}
 		if(!newActive)
-			this.stopPlaySound();
+			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
 		var tier = this.getTier();

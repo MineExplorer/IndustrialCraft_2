@@ -224,7 +224,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		this.setActive(this.data.heat >= 1000 || this.data.output > 0);
 		
 		if(this.data.output > 0){
-			this.startPlaySound("Generators/NuclearReactor/NuclearReactorLoop.ogg");
+			this.startPlaySound();
 		} else {
 			this.stopPlaySound();
 		}
@@ -245,6 +245,40 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		return parseInt(this.data.output * EUReactorModifier);
 	},
 	
+	startPlaySound: function(){
+		if(!Config.machineSoundEnabled){return;}
+		if(!this.remove){
+			if(!this.audioSource){
+				let sound = SoundAPI.playSoundAt(this, "Generators/NuclearReactor/NuclearReactorLoop.ogg", true, 16);
+				this.audioSource = sound;
+			}
+			if(this.data.output < 40){
+				var geigerSound = "Generators/NuclearReactor/GeigerLowEU.ogg";
+			} else if(this.data.output < 80){
+				var geigerSound = "Generators/NuclearReactor/GeigerMedEU.ogg";
+			} else {
+				var geigerSound = "Generators/NuclearReactor/GeigerHighEU.ogg";
+			}
+			if(!this.audioSourceGeiger){
+				this.audioSourceGeiger = SoundAPI.playSoundAt(this, geigerSound, true, 16);
+			} 
+			else if(this.audioSourceGeiger.name != geigerSound){
+				this.audioSourceGeiger.stop();
+				this.audioSourceGeiger = SoundAPI.playSoundAt(this, geigerSound, true, 16);
+			}
+		}
+	},
+	stopPlaySound: function(){
+		if(this.audioSource && this.audioSource.isPlaying()){
+			this.audioSource.stop();
+			this.audioSource = null;
+		}
+		if(this.audioSourceGeiger && this.audioSourceGeiger.isPlaying()){
+			this.audioSourceGeiger.stop();
+			this.audioSourceGeiger = null;
+		}
+	},
+
 	getHeat: function(){
 		return this.data.heat;
 	},

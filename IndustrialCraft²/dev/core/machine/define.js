@@ -55,7 +55,7 @@ var MachineRegistry = {
 					this.audioSource = SoundAPI.createSource([this.getStartingSoundFile(), this.getStartSoundFile(), this.getInterruptSoundFile()], this, 16);
 				}
 			}
-			Prototype.stopPlaySound = Prototype.stopPlaySound || function(){
+			Prototype.stopPlaySound = Prototype.stopPlaySound || function(playInterruptSound){
 				var audio = this.audioSource;
 				if(audio){
 					if(!audio.isPlaying()){
@@ -63,18 +63,18 @@ var MachineRegistry = {
 					}
 					else if(!audio.isFinishing){
 						audio.stop();
-						audio.playFinishingSound();
+						if(playInterruptSound){
+							audio.playFinishingSound();
+						}
 					}
 				}
 			}
 		} else {
 			Prototype.startPlaySound = Prototype.startPlaySound || function(name){
+				if(!Config.machineSoundEnabled){return;}
 				if(!this.audioSource && !this.remove){
-					let sound = SoundAPI.playSound(name, true);
-					if(sound){
-						sound.setSource(this, 16);
-						this.audioSource = sound;
-					}
+					let sound = SoundAPI.playSoundAt(this, name, true, 16);
+					this.audioSource = sound;
 				}
 			}
 			Prototype.stopPlaySound = Prototype.stopPlaySound || function(){

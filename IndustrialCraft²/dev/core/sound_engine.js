@@ -7,14 +7,14 @@ let SoundAPI = {
 		return __dir__ + "res/sounds/" + name;
 	},
 	
-	addSoundPlayer: function(name, isLooping, priority){
+	addSoundPlayer: function(name, loop, priorized){
 		if(this.soundPlayers.length >= this.maxPlayersCount){
 			Logger.Log(__name__ + " sound stack is full", "WARNING");
-			return;
+			return null;
 		}
-		let sound = new Sound(name, priority);
+		let sound = new Sound(name, priorized);
 		sound.setDataSource(this.getFilePath(name));
-		sound.setLooping(isLooping || false);
+		sound.setLooping(loop || false);
 		sound.prepare();
 		this.soundPlayers.push(sound);
 		return sound;
@@ -30,8 +30,8 @@ let SoundAPI = {
 		return sound;
 	},
 	
-	playSound: function(name, isLooping, disableMultiPlaying){
-		if(!Config.soundEnabled) {return;}
+	playSound: function(name, loop, disableMultiPlaying){
+		if(!Config.soundEnabled) {return null;}
 		let curSound = null;
 		try{
 		for(let i in this.soundPlayers){
@@ -45,10 +45,10 @@ let SoundAPI = {
 				sound.start();
 				return sound;
 			}
-			else if(!sound.isPreparing && sound.priority <= 0){
-				curSound = new Sound(name, 0, false);
+			else if(!sound.isPreparing && !sound.priorized){
+				curSound = new Sound(name, false);
 				curSound.setDataSource(this.getFilePath(name));
-				curSound.setLooping(isLooping || false);
+				curSound.setLooping(loop || false);
 				curSound.prepare();
 				sound = this.soundPlayers[i];
 				if(!sound.isPreparing && !sound.isPlaying()){ // second check after preparing because of multi-threading
@@ -61,10 +61,11 @@ let SoundAPI = {
 			}
 		}
 		if(!curSound){
-			curSound = this.addSoundPlayer(name, isLooping, 0, true);
+			curSound = this.addSoundPlayer(name, loop, false);
 		}
 		curSound.start();
-		} 
+		//Game.message("sound "+ name +" started");
+		}
 		catch(err) {
 			Logger.Log("sound "+ name +" start failed", "ERROR");
 			Logger.Log(err, "ERROR");
@@ -72,8 +73,11 @@ let SoundAPI = {
 		return curSound;
 	},
 	
-	playSoundAt: function(name, isLooping, coord, radius){
-		let sound = this.playSound(name, isLooping);
+	playSoundAt: function(coord, name, loop, radius){
+		if(loop && Entity.getDistanceBetweenCoords(coord, Player.getPosition()) > radius){
+			return null;
+		}
+		let sound = this.playSound(name, loop);
 		if(sound){
 			sound.setSource(coord, radius);
 		}
@@ -88,12 +92,12 @@ let SoundAPI = {
 	},
 	
 	createSource: function(fileName, coord, radius){
-		if(!Config.soundEnabled) {return;}
+		if(!Config.soundEnabled) {return null;}
 		let curSound = null;
 		try{
 		for(let i in this.soundPlayers){
 			let sound = this.soundPlayers[i];
-			if(!sound.isPlaying() && !sound.isPreparing && sound.priority <= 0){
+			if(!sound.isPlaying() && !sound.isPreparing && !sound.priorized){
 				curSound = new MultiSound(fileName[0], fileName[1], fileName[2]);
 				sound = this.soundPlayers[i];
 				if(!sound.isPreparing && !sound.isPlaying()){ // second check after preparing because of multi-threading
@@ -131,7 +135,7 @@ let SoundAPI = {
 			if(sound.isPlaying()){
 				sound.stop();
 			}
-			if(sound.priority <= 0){
+			if(!sound.priorized){
 				sound.release();
 				this.soundPlayers.splice(i--, 1);
 			}
@@ -139,18 +143,18 @@ let SoundAPI = {
 	}
 }
 
-function Sound(name, priority){
+function Sound(name, priorized){
 	this.name = name;
 	this.media = new android.media.MediaPlayer();
-	this.priority = priority || 0;
+	this.priorized = priorized || false;
 	this.isPreparing = true;
 	
 	this.setDataSource = function(path){
 		this.media.setDataSource(path);
 	}
 	
-	this.setLooping = function(isLooping){
-		this.media.setLooping(isLooping);
+	this.setLooping = function(loop){
+		this.media.setLooping(loop);
 	}
 	
 	this.prepare = function(){

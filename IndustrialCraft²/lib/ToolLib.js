@@ -13,7 +13,7 @@ By using the library you automatically agree to these rules.
 
 LIBRARY({
 	name: "ToolLib",
-	version: 10,
+	version: 11,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -206,7 +206,7 @@ ToolAPI.destroyBlockHook = function (coords, block, item) {
 			if (toolData.modifyEnchant) {
 				toolData.modifyEnchant(enchant, item);
 			}
-			if (Block.getDestroyTime(block.id) > 0 && Math.random() < 1 / (enchant.unbreaking + 1)) {
+			if ((Block.getDestroyTime(block.id) > 0 || this.getToolLevelViaBlock(item.id, block.id) > 0) && Math.random() < 1 / (enchant.unbreaking + 1)) {
 				item.data++;
 				if (toolData.isWeapon) {
 					item.data++;
@@ -233,19 +233,13 @@ ToolAPI.getBlockMaterialName = function (blockID) {
     return null;
 }
 
-Block.setDestroyLevel = function(id, lvl){
-	Block.registerDropFunction(id, function(coords, blockID, blockData, level){
-		if(level >= lvl){
-			return [[blockID, 1, blockData]];
-		}
+Block.setDestroyLevelForID = function (id, level, resetData) {
+    Block.registerDropFunctionForID(id, function (blockCoords, blockID, blockData, diggingLevel) {
+        if (diggingLevel >= level) {
+            return [[blockID, 1, resetData? 0 : blockData]];
+        }
 		return [];
-	}, lvl);
-}
-function registerStandardDrop(id, lvl){
-	Block.registerDropFunctionForID(id, function(coords, blockID, blockData, level){
-		if(level >= lvl) return [[id, 1, 0]];
-		return [];
-	}, lvl);
+    }, level);
 }
 
 // Materials fix
@@ -255,38 +249,38 @@ ToolAPI.blockMaterials["dirt"].multiplier = 1;
 ToolAPI.blockMaterials["plant"].multiplier = 1;
 ToolAPI.blockMaterials["fibre"].multiplier = 1;
 
-ToolAPI.registerBlockMaterial(79, "stone");
 ToolAPI.registerBlockMaterial(82, "dirt");
 ToolAPI.registerBlockMaterial(120, "unbreaking");
 ToolAPI.registerBlockMaterial(138, "stone");
-ToolAPI.registerBlockMaterial(159, "stone");
-ToolAPI.registerBlockMaterial(174, "stone");
 ToolAPI.registerBlockMaterial(175, "plant");
 
 // Drop fix
 Block.setDestroyLevelForID(24, 1);
-registerStandardDrop(61, 1);
-registerStandardDrop(67, 1);
-registerStandardDrop(70, 1);
-registerStandardDrop(108, 1);
-registerStandardDrop(109, 1);
-registerStandardDrop(114, 1);
-registerStandardDrop(125, 1);
-registerStandardDrop(128, 1);
-registerStandardDrop(147, 2);
-registerStandardDrop(148, 2);
-registerStandardDrop(156, 1);
-registerStandardDrop(167, 2);
-registerStandardDrop(180, 1);
-registerStandardDrop(203, 1);
-registerStandardDrop(251, 1);
+Block.setDestroyLevelForID(61, 1, true);
+Block.setDestroyLevelForID(67, 1, true);
+Block.setDestroyLevelForID(70, 1, true);
+Block.setDestroyLevelForID(108, 1, true);
+Block.setDestroyLevelForID(109, 1, true);
+Block.setDestroyLevelForID(112, 1);
+Block.setDestroyLevelForID(113, 1);
+Block.setDestroyLevelForID(114, 1, true);
+Block.setDestroyLevelForID(125, 1, true);
+Block.setDestroyLevelForID(128, 1, true);
+Block.setDestroyLevelForID(147, 1, true);
+Block.setDestroyLevelForID(148, 1, true);
+Block.setDestroyLevelForID(152, 1);
+Block.setDestroyLevelForID(156, 1, true);
+Block.setDestroyLevelForID(167, 2, true);
+Block.setDestroyLevelForID(180, 1, true);
+Block.setDestroyLevelForID(203, 1, true);
+Block.setDestroyLevelForID(251, 1, true);
 
 Block.registerDropFunctionForID(13, function(coords, blockID, blockData, level, enchant){ // gravel
 	if (Math.random() < [0.1, 0.14, 0.25, 1][enchant.fortune || 0]){
 		return [[318, 1, 0]];
 	}
 	return [[13, 1, 0]];
-}, 0);
+});
 Block.registerDropFunctionForID(78, function(coords, blockID, blockData, level, enchant){ // snow layer
 	if (level > 0){
 		if(blockData == 7) return [[332, 4, 0]];
@@ -295,44 +289,44 @@ Block.registerDropFunctionForID(78, function(coords, blockID, blockData, level, 
 		return [[332, 1, 0]];
 	}
 	return [];
-}, 0);
+});
 Block.registerDropFunctionForID(80, function(coords, blockID, blockData, level, enchant){ // snow block
 	if (enchant.silk){
 		return [[80, 1, 0]];
 	}
 	return [[332, 1, 0], [332, 1, 0], [332, 1, 0], [332, 1, 0]];
-}, 0);
+});
 Block.registerDropFunctionForID(110, function(coords, blockID, blockData, level, enchant){ // mycelium
 	if (enchant.silk){
 		return [[110, 1, 0]];
 	}
 	return [[3, 1, 0]];
-}, 0);
+});
 Block.registerDropFunctionForID(198, function(coords, blockID, blockData, level, enchant){ // grass path
 	if (enchant.silk){
 		return [[198, 1, 0]];
 	}
 	return [[3, 1, 0]];
-}, 0);
+});
 Block.registerDropFunctionForID(243, function(coords, blockID, blockData, level, enchant){ // podzol
 	if (enchant.silk){
 		return [[243, 1, 0]];
 	}
 	return [[3, 1, 0]];
-}, 0);
+});
 // glass
 Block.registerDropFunctionForID(20, function(coords, blockID, blockData, level, enchant){
 	if (enchant.silk){
 		return [[20, 1, 0]];
 	}
 	return [];
-}, 0);
+});
 Block.registerDropFunctionForID(102, function(coords, blockID, blockData, level, enchant){
 	if (enchant.silk){
 		return [[102, 1, 0]];
 	}
 	return [];
-}, 0);
+});
 // slabs
 Block.registerDropFunctionForID(44, function(coords, id, data, level, enchant){
 	if(level > 0){

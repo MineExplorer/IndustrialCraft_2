@@ -1,35 +1,66 @@
 IDRegistry.genItemID("upgradeOverclocker");
-Item.createItem("upgradeOverclocker", "Overclocker Upgrade", {name: "upgrade_overclocker", meta: 0}, {stack: 16});
+Item.createItem("upgradeOverclocker", "Overclocker Upgrade", {name: "upgrade_overclocker", meta: 0});
+Item.registerNameOverrideFunction(ItemID.upgradeOverclocker, function(item, name){
+	let percent = "%%"; // it's one % in game
+	if(currentUIscreen == "hud_screen" || currentUIscreen == "in_game_play_screen"){
+		percent += "%%"; // this game is broken
+	}
+	let timeTooltip = Translation.translate("Decrease process time to ") + 70 + percent;
+	let powerTooltip = Translation.translate("Increase power to ") + 160 + percent;
+	return name + "§7\n" + timeTooltip + "\n" + powerTooltip;
+});
 
 IDRegistry.genItemID("upgradeTransformer");
 Item.createItem("upgradeTransformer", "Transformer Upgrade", {name: "upgrade_transformer", meta: 0});
+Item.registerNameOverrideFunction(ItemID.upgradeTransformer, function(item, name){
+	return name + "§7\n" + Translation.translate("Increase energy tier by 1");
+});
 
 IDRegistry.genItemID("upgradeEnergyStorage");
 Item.createItem("upgradeEnergyStorage", "Energy Storage Upgrade", {name: "upgrade_energy_storage", meta: 0});
+Item.registerNameOverrideFunction(ItemID.upgradeEnergyStorage, function(item, name){
+	return name + "§7\n" + Translation.translate("Increase energy storage by 10k EU");
+});
 
 IDRegistry.genItemID("upgradeRedstone");
 Item.createItem("upgradeRedstone", "Redstone Signal Inverter Upgrade", {name: "upgrade_redstone_inv", meta: 0});
 
 IDRegistry.genItemID("upgradeEjector");
 Item.createItem("upgradeEjector", "Ejector Upgrade", {name: "upgrade_ejector", meta: 0});
+Item.registerNameOverrideFunction(ItemID.upgradeEjector, function(item, name){
+	name += "§7\n" + Translation.translate("Automatically output to\nthe %s side").replace("%s", ItemName.getSideName(item.data-1));
+	return name; 
+});
 Item.registerIconOverrideFunction(ItemID.upgradeEjector, function(item, name){
 	return {name: "upgrade_ejector", meta: item.data}
 });
 
 IDRegistry.genItemID("upgradePulling");
 Item.createItem("upgradePulling", "Pulling Upgrade", {name: "upgrade_pulling", meta: 0});
+Item.registerNameOverrideFunction(ItemID.upgradePulling, function(item, name){
+	name += "§7\n" + Translation.translate("Automatically input from\nthe %s side").replace("%s", ItemName.getSideName(item.data-1));
+	return name; 
+});
 Item.registerIconOverrideFunction(ItemID.upgradePulling, function(item, name){
 	return {name: "upgrade_pulling", meta: item.data}
 });
 
 IDRegistry.genItemID("upgradeFluidEjector");
 Item.createItem("upgradeFluidEjector", "Fluid Ejector Upgrade", {name: "upgrade_fluid_ejector", meta: 0});
+Item.registerNameOverrideFunction(ItemID.upgradeFluidEjector, function(item, name){
+	name += "§7\n" + Translation.translate("Automatically output to\nthe %s side").replace("%s", ItemName.getSideName(item.data-1));
+	return name; 
+});
 Item.registerIconOverrideFunction(ItemID.upgradeFluidEjector, function(item, name){
 	return {name: "upgrade_fluid_ejector", meta: item.data}
 });
 
 IDRegistry.genItemID("upgradeFluidPulling");
 Item.createItem("upgradeFluidPulling", "Fluid Pulling Upgrade", {name: "upgrade_fluid_pulling", meta: 0});
+Item.registerNameOverrideFunction(ItemID.upgradeFluidPulling, function(item, name){
+	name += "§7\n" + Translation.translate("Automatically input from\nthe %s side").replace("%s", ItemName.getSideName(item.data-1));
+	return name; 
+});
 Item.registerIconOverrideFunction(ItemID.upgradeFluidPulling, function(item, name){
 	return {name: "upgrade_fluid_pulling", meta: item.data}
 });
@@ -102,26 +133,26 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, "overclocker", function(item, machine, container, data, coords){
 	if(data.work_time){
 		data.energy_consumption = Math.round(data.energy_consumption * Math.pow(1.6, item.count));
 		data.work_time = Math.round(data.work_time * Math.pow(0.7, item.count));
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, "transformer", function(item, machine, container, data, coords){
 	data.power_tier += item.count;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, "energyStorage", function(item, machine, container, data, coords){
 	data.energy_storage += 10000 * item.count;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, machine, container, data, coords){
 	data.isHeating = !data.isHeating;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, machine, container, data, coords){
 	var items = [];
 	var slots = machine.getTransportSlots().output;
 	for(var i in slots){
@@ -134,38 +165,34 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, function(item, machine, contai
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling, function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, machine, container, data, coords){
 	if(World.getThreadTime()%20 == 0){
-		var items = [];
-		var slots = machine.getTransportSlots().input;
-		for(var i in slots){
-			var slot = container.getSlot(slots[i]);
-			if(slot.count < Item.getMaxStack(slot.id)){
-				items.push(slot);
-			}
-		}
-		if(items.length){
-			var containers = StorageInterface.getNearestContainers(coords, item.data-1);
-			StorageInterface.extractItems(items, containers, machine);
+		var containers = StorageInterface.getNearestContainers(coords, item.data-1);
+		for(var side in containers){
+			StorageInterface.extractItemsFromContainer(machine, containers[side], parseInt(side));
 		}
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(item, machine, container, data, coords){
 	var storage = machine.liquidStorage;
 	var liquid = storage.getLiquidStored();
 	if(liquid){
-		var storages = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
-		StorageInterface.transportLiquid(liquid, 0.25, storage, storages);
+		var input = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
+		for(var side in input){
+			StorageInterface.transportLiquid(liquid, 0.25, machine, input[side], parseInt(side));
+		}
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, container, data, coords){
 	var storage = machine.liquidStorage;
 	var liquid = storage.getLiquidStored();
 	if(!liquid || !storage.isFull(liquid)){
-		var storages = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
-		StorageInterface.extractLiquid(liquid, 0.25, storage, storages);
+		var output = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
+		for(var side in output){
+			StorageInterface.extractLiquid(liquid, 0.25, machine, output[side], parseInt(side));
+		}
 	}
 });
 

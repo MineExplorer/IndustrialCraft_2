@@ -40,7 +40,7 @@ var guiBlastFurnace = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 400, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, bitmap: "progress_scale_background", scale: GUI_SCALE*1.01}
 	],
@@ -48,13 +48,15 @@ var guiBlastFurnace = new UI.StandartWindow({
 	elements: {
 		"progressScale": {type: "scale", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, direction: 1, value: 0.5, bitmap: "progress_scale", scale: GUI_SCALE*1.01},
 		"heatScale": {type: "scale", x: 336 + 66*GUI_SCALE, y: 47 + 64*GUI_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE},
-		"slotSource": {type: "slot", x: 400 + 6*GUI_SCALE, y: 70 + 16*GUI_SCALE},
+		"slotSource": {type: "slot", x: 400 + 6*GUI_SCALE, y: 70 + 16*GUI_SCALE, isValid: function(id){
+			return MachineRecipeRegistry.hasRecipeFor("blastFurnace", id);
+		}},
 		"slotResult1": {type: "slot", x: 340 + 124*GUI_SCALE, y: 140 + 20*GUI_SCALE, isValid: function(){return false;}},
 		"slotResult2": {type: "slot", x: 400 + 124*GUI_SCALE, y: 140 + 20*GUI_SCALE, isValid: function(){return false;}},
-		"slotAir1": {type: "slot", x: 20 + 118*GUI_SCALE, y: 170 + 10*GUI_SCALE},
+		"slotAir1": {type: "slot", x: 20 + 118*GUI_SCALE, y: 170 + 10*GUI_SCALE, isValid: function(id){return id == ItemID.cellAir;}},
 		"slotAir2": {type: "slot", x: 80 + 118*GUI_SCALE, y: 170 + 10*GUI_SCALE, isValid: function(){return false;}},
-		"slotUpgrade1": {type: "slot", x: 330 + 145*GUI_SCALE, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 330 + 145*GUI_SCALE, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade1": {type: "slot", x: 330 + 145*GUI_SCALE, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 330 + 145*GUI_SCALE, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
 		"indicator": {type: "image", x: 344 + 88*GUI_SCALE, y: 53 + 58*GUI_SCALE, bitmap: "indicator_red", scale: GUI_SCALE}
 	}
 });
@@ -75,13 +77,11 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		signal: 0
 	},
 	
+	upgrades: ["redstone", "itemEjector", "itemPulling"],
+	
 	getGuiScreen: function(){
        return guiBlastFurnace;
     },
-	
-	getTransportSlots: function(){
-		return {input: ["slotAir1","slotSource"],output:["slotAir2","slotResult2","slotResult1"]};
-	},
 	
 	wrenchClick: function(id, count, data, coords){
 		this.setFacing(coords);
@@ -216,3 +216,21 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.blastFurnace, true);
+
+StorageInterface.createInterface(BlockID.blastFurnace, {
+	slots: {
+		"slotSource": {input: true,
+			isValid: function(item){
+				return MachineRecipeRegistry.hasRecipeFor("blastFurnace", item.id);
+			}
+		},
+		"slotAir1": {input: true, 
+			isValid: function(item){
+				return item.id == ItemID.cellAir;
+			}
+		},
+		"slotAir2": {output: true},
+		"slotResult1": {output: true},
+		"slotResult2": {output: true}
+	}
+});

@@ -59,7 +59,7 @@ function checkReactorSlot(i, id, count, data, container){
 
 let reactorElements = {
 	"heatScale": {type: "scale", x: 340 + GUI_SCALE*2, y: 420 + GUI_SCALE*2, direction: 0, value: 0.5, bitmap: "reactor_heat_scale", scale: GUI_SCALE},
-	"textInfo": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 675 + GUI_SCALE*2, y: 432, width: 256, height: 42, text: Translation.translate("Generating: ")},
+	"textInfo": {type: "text", font: {size: 24, color: Color.GREEN}, x: 675 + GUI_SCALE*2, y: 432, width: 256, height: 42, text: Translation.translate("Generating: ")},
 }
 
 for(let y = 0; y < 6; y++){

@@ -34,7 +34,7 @@ var guiMiner = new UI.StandartWindow({
 	},
 
 	drawing: [
-		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
 
@@ -112,7 +112,6 @@ function getBlockDrop(coords, id, data, level, enchant, smelt){
 
 MachineRegistry.registerElectricMachine(BlockID.miner, {
 	defaultValues: {
-		power_tier: 2,
 		meta: 0,
 		x: 0,
 		y: 0,
@@ -125,6 +124,10 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 
 	getGuiScreen: function(){
 		return guiMiner;
+	},
+	
+	getTier: function(){
+		return 2;
 	},
 	
 	getMiningValues: function(slot){
@@ -227,7 +230,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	drop: function(items){
 		var containers = StorageInterface.getNearestContainers(this, 0, true);
 		if(containers){
-			StorageInterface.putItems(items, containers);
+			StorageInterface.putItems(items, containers, this);
 		}
 		for(var i in items){
 			var item = items[i]
@@ -342,9 +345,9 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		this.setActive(newActive);
 
 		var energyStorage = this.getEnergyStorage();
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotDrill"), "Eu", this.data.energy, 128, 1);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 128, 1);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 128, 1);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotDrill"), "Eu", this.data.energy, 128, 2);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 128, 2);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 128, 2);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 

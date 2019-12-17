@@ -96,10 +96,10 @@ MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 	
 	destroyBlock: function(coords, player){
 		var itemID = Player.getCarriedItem().id;
-		var blockID = BlockID.storageMFE;
+		var blockID = this.id;
 		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID);
 		var drop = MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-		if(drop.length > 0 ){
+		if(drop.length > 0){
 			if(drop[0][0] == blockID && this.data.energy > 0){
 				var extra = new ItemExtraData();
 				extra.putInt("Eu", this.data.energy);

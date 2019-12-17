@@ -195,7 +195,12 @@ var QUANTUM_ARMOR_FUNCS = {
 				var hover = extra? extra.getBoolean("hover") : false;
 				if(hover && slot.data < maxDamage){
 					var vel = Player.getVelocity();
-					if(vel.y < -0.1){
+					if(Math.abs(vel.y - fallVelocity) < 0.0001){
+						extra.putBoolean("hover", false);
+						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+						Game.message("§4" + Translation.translate("Hover mode disabled"));
+					}
+					else if(vel.y < -0.1){
 						Player.setVelocity(vel.x, -0.1, vel.z);
 						if(World.getThreadTime() % 5 == 0){
 							slot.data = Math.min(slot.data+20, maxDamage);

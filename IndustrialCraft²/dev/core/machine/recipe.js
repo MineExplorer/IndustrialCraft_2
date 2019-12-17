@@ -32,5 +32,9 @@ var MachineRecipeRegistry = {
 		if(data){
 			return data[key1] || data[key1+":"+key2];
 		}
+	},
+	
+	hasRecipeFor: function(name, key1, key2){
+		return this.getRecipeResult(name, key1, key2)? true : false;
 	}
 }

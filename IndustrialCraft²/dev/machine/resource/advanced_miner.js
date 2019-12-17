@@ -20,10 +20,6 @@ Callback.addCallback("PreLoaded", function(){
 	], ['#', BlockID.machineBlockAdvanced, 0, 'a', BlockID.teleporter, 0, 'e', BlockID.storageMFE, -1, 'm', BlockID.miner, -1, 'p', ItemID.plateAlloy, 0]);
 });
 
-function isValidMinerUpgrade(id){
-	if(ItemID.upgradeOverclocker || ItemID.upgradeTransformer) return true;
-	return false;
-}
 
 var guiAdvancedMiner = new UI.StandartWindow({
 	standart: {
@@ -38,7 +34,7 @@ var guiAdvancedMiner = new UI.StandartWindow({
 	},
 
 	drawing: [
-		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},
 		{type: "bitmap", x: 400, y: 50 + 98*GUI_SCALE, bitmap: "miner_info", scale: GUI_SCALE},
@@ -68,8 +64,8 @@ var guiAdvancedMiner = new UI.StandartWindow({
 		"slot13": {type: "slot", x: 400 + 66*GUI_SCALE, y: 290},
 		"slot14": {type: "slot", x: 400 + 85*GUI_SCALE, y: 290},
 		"slot15": {type: "slot", x: 400 + 104*GUI_SCALE, y: 290},
-		"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE, isValid: isValidMinerUpgrade},
-		"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE, isValid: isValidMinerUpgrade},
+		"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
 		"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
 			onClick: function(container, tile){
 				tile.data.whitelist = !tile.data.whitelist;
@@ -85,8 +81,8 @@ var guiAdvancedMiner = new UI.StandartWindow({
 				tile.data.silk_touch = (tile.data.silk_touch+1)%2;
 			}
 		}},
-		"textInfoMode": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 32*GUI_SCALE, y: 50+24*GUI_SCALE, width: 256, height: 42, text: Translation.translate("Mode: Blacklist")},
-		"textInfoXYZ": {type: "text", font: {size: 24, color: android.graphics.Color.GREEN}, x: 400 + 4*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
+		"textInfoMode": {type: "text", font: {size: 24, color: Color.GREEN}, x: 400 + 32*GUI_SCALE, y: 50+24*GUI_SCALE, width: 256, height: 42, text: Translation.translate("Mode: Blacklist")},
+		"textInfoXYZ": {type: "text", font: {size: 24, color: Color.GREEN}, x: 400 + 4*GUI_SCALE, y: 50 + 101*GUI_SCALE, width: 100, height: 42, text: ""},
 	}
 });
 
@@ -106,6 +102,8 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 		isEnabled: true,
 		isActive: false
 	},
+	
+	upgrades: ["overclocker", "transformer"],
 	
 	getTransportSlots: function(){
 		return {input: []};
@@ -150,7 +148,7 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 	drop: function(items){
 		var containers = StorageInterface.getNearestContainers(this, 0, true);
 		if(containers){
-			StorageInterface.putItems(items, containers);
+			StorageInterface.putItems(items, containers, this);
 		}
 		for(var i in items){
 			var item = items[i]
@@ -229,7 +227,7 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 		
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 512, 2);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 512, 3);
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},

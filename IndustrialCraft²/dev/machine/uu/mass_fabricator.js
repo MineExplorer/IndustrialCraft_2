@@ -38,7 +38,7 @@ var guiMassFabricator = new UI.StandartWindow({
 		"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"matterSlot": {type: "slot", x: 821, y: 75, size: 100, isValid: function(){return false;}},
 		"catalyserSlot": {type: "slot", x: 841, y: 252, isValid: function(id){
-			return MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id)? true : false;
+			return MachineRecipeRegistry.hasRecipeFor("catalyser", id);
 		}},
 		"textInfo1": {type: "text", x: 542, y: 142, width: 200, height: 30, text: "Progress:"},
 		"textInfo2": {type: "text", x: 542, y: 177, width: 200, height: 30, text: "0%"},
@@ -63,16 +63,14 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	getGuiScreen: function(){
 		return guiMassFabricator;
 	},
-		
-	getTransportSlots: function(){
-		return {input: ["catalyserSlot"], output: ["matterSlot"]};
-	},
 	
 	getTier: function(){
 		return 4;
 	},
 	
 	tick: function(){
+		StorageInterface.checkHoppers(this);
+		
 		this.container.setScale("energyScale", this.data.progress / ENERGY_PER_MATTER);
 		this.container.setText("textInfo2", parseInt(100 * this.data.progress / ENERGY_PER_MATTER) + "%");
 		
@@ -134,6 +132,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		if(this.data.isEnabled){
 			if(Config.voltageEnabled && voltage > this.getMaxPacketSize()){
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
+				SoundAPI.playSoundAt(this, "Machines/MachineOverload.ogg", false, 32);
 				this.selfDestroy();
 				return 1;
 			}
@@ -148,3 +147,13 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.massFabricator);
+
+StorageInterface.createInterface(BlockID.massFabricator, {
+	slots: {
+		"catalyserSlot": {input: true},
+		"matterSlot": {output: true}
+	},
+	isValidInput: function(item){
+		return MachineRecipeRegistry.hasRecipeFor("catalyser", item.id);
+	}
+});

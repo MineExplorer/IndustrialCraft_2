@@ -29,12 +29,14 @@ var guiTank = new UI.StandartWindow({
 	
 	elements: {
 		"liquidScale": {type: "scale", x: 400 + 70*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"slotLiquid1": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 12*GUI_SCALE},
-		"slotLiquid2": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 36*GUI_SCALE, isValid: function(){return false;}},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotLiquid1": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 16*GUI_SCALE, isValid: function(id, count, data){
+			return (LiquidRegistry.getFullItem(id, data, "water") || LiquidRegistry.getEmptyItem(id, data))? true : false;
+		}},
+		"slotLiquid2": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 40*GUI_SCALE, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
 	}
 });
 
@@ -43,12 +45,10 @@ Callback.addCallback("LevelLoaded", function(){
 });
 
 MachineRegistry.registerPrototype(BlockID.tank, {
+	upgrades: ["fluidEjector", "fluidPulling"],
+	
 	getGuiScreen: function(){
 		return guiTank;
-	},
-	
-	getTransportSlots: function(){
-		return {input: ["slotLiquid1"], output: ["slotLiquid2"]};
 	},
 	
 	init: function(){
@@ -87,4 +87,16 @@ MachineRegistry.registerPrototype(BlockID.tank, {
 		}
 		storage.updateUiScale("liquidScale", liquid);
 	}
+});
+
+StorageInterface.createInterface(BlockID.tank, {
+	slots: {
+		"slotLiquid1": {input: true},
+		"slotLiquid2": {output: true}
+	},
+	isValidInput: function(item){
+		return LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidRegistry.getEmptyItem(item.id, item.data);
+	},
+	canReceiveLiquid: function(liquid, side){ return true; },
+	canTransportLiquid: function(liquid, side){ return true; }
 });

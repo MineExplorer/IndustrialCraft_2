@@ -200,7 +200,7 @@ function Sound(name, priorized){
 	this.setVolume(1);
 	
 	this.setSource = function(coord, radius){
-		this.source = {x: coord.x + 0.5, y: coord.y + 0.5, z: coord.z + 0.5, radius: radius};
+		this.source = {x: coord.x + 0.5, y: coord.y + 0.5, z: coord.z + 0.5, radius: radius, dimension: Player.getDimension()};
 		SoundAPI.updateSourceVolume(this);
 	}
 }
@@ -271,7 +271,11 @@ Callback.addCallback("tick", function(){
 	for(let i in SoundAPI.soundPlayers){
 		let sound = SoundAPI.soundPlayers[i];
 		if(sound.isPlaying() && sound.source){
-			SoundAPI.updateSourceVolume(sound);
+			if(sound.source.dimension == Player.getDimension()){
+				SoundAPI.updateSourceVolume(sound);
+			} else {
+				sound.stop();
+			}
 		}
 	}
 });

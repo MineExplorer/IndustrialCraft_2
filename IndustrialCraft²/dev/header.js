@@ -34,6 +34,7 @@ Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
+var Color = android.graphics.Color;
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
@@ -61,6 +62,12 @@ Recipes.addFurnace(81, 351, 2); // cactus fix
 Recipes.addFurnaceFuel(325, 10, 2000); // lava bucket
 ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone
 
+Recipes.deleteRecipe({id: 355, count: 1, data: 0}); // bed fix
+Recipes.addShaped({id: 355, count: 1, data: 0}, [
+	"aaa",
+	"bbb",
+], ['a', 35, -1, 'b', 5, -1]);
+
 // debug
 var lasttime = -1
 var frame = 0
@@ -74,21 +81,6 @@ Callback.addCallback("tick", function(){
 				Game.tipMessage(Math.round(tps * 10) / 10 + "tps")
 			}
 			lasttime = t
-		}
-	}
-});
-
-// redstone items placing fix
-Item.registerUseFunctionForID(69, function(coords, item, block){
-	if(block.id >= 8192){
-		Game.prevent();
-		var side  = coords.side;
-		coords = coords.relative;
-		block = World.getBlockID(coords.x, coords.y, coords.z);
-		if(canTileBeReplaced(block)){
-			var item = Player.getCarriedItem(i);
-			Player.decreaseCarriedItem(1);
-			World.setBlock(coords.x, coords.y, coords.z, 69, (6 - side)%6);
 		}
 	}
 });

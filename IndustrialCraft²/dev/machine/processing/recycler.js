@@ -41,10 +41,10 @@ var guiRecycler = new UI.StandartWindow({
 		"slotSource": {type: "slot", x: 441, y: 79},
 		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
 		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
-		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isValidUpgrade},
 	}
 });
 
@@ -63,12 +63,10 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 		isActive: false
 	},
 	
+	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"],
+	
 	getGuiScreen: function(){
 		return guiRecycler;
-	},
-	
-	getTransportSlots: function(){
-		return {input: ["slotSource"], output: ["slotResult"]};
 	},
 	
 	getTier: function(){
@@ -138,3 +136,10 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.recycler);
+
+StorageInterface.createInterface(BlockID.recycler, {
+	slots: {
+		"slotSource": {input: true},
+		"slotResult": {output: true}
+	}
+});

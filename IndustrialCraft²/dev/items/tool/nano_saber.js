@@ -10,7 +10,7 @@ ChargeItemRegistry.registerItem(ItemID.nanoSaberActive, "Eu", 1000000, 3, "tool"
 ItemName.setRarity(ItemID.nanoSaberActive, 1);
 Item.registerNameOverrideFunction(ItemID.nanoSaberActive, ItemName.showItemStorage);
 
-let NANO_SABER_DURABILITY = Item.getMaxDamage(ItemID.nanoSaber);
+const NANO_SABER_DURABILITY = Item.getMaxDamage(ItemID.nanoSaber);
 
 Item.registerIconOverrideFunction(ItemID.nanoSaberActive, function(item, name){
 	return {name: "nano_saber_active", meta: World.getThreadTime()%2}

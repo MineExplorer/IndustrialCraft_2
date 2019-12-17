@@ -132,4 +132,7 @@ items/tool/chainsaw.js
 items/tool/nano_saber.js
 items/tool/mining_laser.js
 
+integration/recipe_viewer.js
+integration/tree_capitator.js
+
 core/shared.js

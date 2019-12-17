@@ -67,10 +67,6 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 		return guiGenerator;
 	},
 	
-	getTransportSlots: function(){
-		return {input: ["slotFuel"]};
-	},
-	
 	getFuel: function(slotName){
 		var fuelSlot = this.container.getSlot(slotName);
 		if (fuelSlot.id > 0){
@@ -86,6 +82,7 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 	},
 	
 	tick: function(){
+		StorageInterface.checkHoppers(this);
 		var energyStorage = this.getEnergyStorage();
 		
 		if(this.data.burn <= 0 && this.data.energy + 10 < energyStorage){
@@ -123,3 +120,12 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.primalGenerator);
+
+StorageInterface.createInterface(BlockID.primalGenerator, {
+	slots: {
+		"slotFuel": {input: true}
+	},
+	isValidInput: function(item){
+		return Recipes.getFuelBurnDuration(item.id, item.data) > 0;
+	}
+});

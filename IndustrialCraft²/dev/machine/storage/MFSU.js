@@ -92,7 +92,7 @@ MachineRegistry.registerEUStorage(BlockID.storageMFSU, {
 	
 	destroyBlock: function(coords, player){
 		var itemID = Player.getCarriedItem().id;
-		var blockID = BlockID.storageMFSU;
+		var blockID = this.id;
 		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID);
 		var drop = MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
 		if(drop.length > 0){

@@ -26,15 +26,15 @@ Callback.addCallback("LevelLoaded", function(){
 		elements: {
 			"arrow": {type: "image", x: 576, y: 226, bitmap: "eu_meter_arrow_0", scale: GUI_SCALE},
 			"textName": {type: "text", font: {size: 36}, x: 378, y: 66, width: 256, height: 42, text: Translation.translate("EU Meter")},
-			"textAvg": {type: "text", font: {size: 22, color: android.graphics.Color.GREEN}, x: 266, y: 184, width: 256, height: 42, text: Translation.translate("Avg:")},
-			"textAvgValue": {type: "text", font: {size: 22, color: android.graphics.Color.GREEN}, x: 266, y: 214, width: 256, height: 42, text: "0 EU/t"},
-			"textMaxMin": {type: "text", font: {size: 22, color: android.graphics.Color.GREEN}, x: 266, y: 260, width: 256, height: 42, text: Translation.translate("Max/Min")},
-			"textMax": {type: "text", font: {size: 22, color: android.graphics.Color.GREEN}, x: 266, y: 290, width: 256, height: 42, text: "0 EU/t"},
-			"textMin": {type: "text", font: {size: 22, color: android.graphics.Color.GREEN}, x: 266, y: 320, width: 256, height: 42, text: "0 EU/t"},
-			"textMode1": {type: "text", font: {size: 22, color: android.graphics.Color.GREEN}, x: 554, y: 184, width: 100, height: 42, text: Translation.translate("Mode:")},
-			"textMode2": {type: "text", font: {size: 22, color: android.graphics.Color.GREEN}, x: 554, y: 368, width: 256, height: 42, text: Translation.translate("EnergyIn")},
-			"textTime": {type: "text", font: {size: 22, color: android.graphics.Color.GREEN}, x: 266, y: 368, width: 256, height: 42, text: "Cycle: 0 sec"},
-			"textReset": {type: "text", font: {size: 22, color: android.graphics.Color.GREEN}, x: 330, y: 412, width: 256, height: 42, text: Translation.translate("Reset")},
+			"textAvg": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 184, width: 256, height: 42, text: Translation.translate("Avg:")},
+			"textAvgValue": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 214, width: 256, height: 42, text: "0 EU/t"},
+			"textMaxMin": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 260, width: 256, height: 42, text: Translation.translate("Max/Min")},
+			"textMax": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 290, width: 256, height: 42, text: "0 EU/t"},
+			"textMin": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 320, width: 256, height: 42, text: "0 EU/t"},
+			"textMode1": {type: "text", font: {size: 22, color: Color.GREEN}, x: 554, y: 184, width: 100, height: 42, text: Translation.translate("Mode:")},
+			"textMode2": {type: "text", font: {size: 22, color: Color.GREEN}, x: 554, y: 368, width: 256, height: 42, text: Translation.translate("EnergyIn")},
+			"textTime": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 368, width: 256, height: 42, text: "Cycle: 0 sec"},
+			"textReset": {type: "text", font: {size: 22, color: Color.GREEN}, x: 330, y: 412, width: 256, height: 42, text: Translation.translate("Reset")},
 			"closeButton": {type: "button", x: 727, y: 60, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					container.close();

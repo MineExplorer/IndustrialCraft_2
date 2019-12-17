@@ -46,7 +46,7 @@ var guiOreWasher = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
@@ -62,14 +62,18 @@ var guiOreWasher = new UI.StandartWindow({
 			}
 		},
 		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
-		"slotSource": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 12*GUI_SCALE},
+		"slotSource": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 12*GUI_SCALE,
+			isValid: function(id, count, data){
+				return MachineRecipeRegistry.hasRecipeFor("oreWasher", id, data);
+			}
+		},
 		"slotResult1": {type: "slot", x: 400 + 80*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
 		"slotResult2": {type: "slot", x: 400 + 99*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
 		"slotResult3": {type: "slot", x: 400 + 118*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 20*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 39*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade1": {type: "slot", x: 870, y: 50 + GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 20*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 39*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
 	}
 });
 
@@ -87,13 +91,11 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 		progress: 0,
 		isActive: false
 	},
-
+	
+	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidPulling"],
+	
 	getGuiScreen: function(){
 		return guiOreWasher;
-	},
-		
-	getTransportSlots: function(){
-		return {input: ["slotSource"], output: ["slotLiquid2", "slotResult1", "slotResult2", "slotResult3"]};
 	},
 	
 	getTier: function(){
@@ -196,3 +198,24 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.oreWasher);
+
+StorageInterface.createInterface(BlockID.oreWasher, {
+	slots: {
+		"slotSource": {input: true,
+			isValid: function(item){
+				return MachineRecipeRegistry.hasRecipeFor("oreWasher", item.id, item.data);
+			}
+		},
+		"slotLiquid1": {input: true, 
+			isValid: function(item){
+				return LiquidRegistry.getItemLiquid(item.id, item.data) == "water";
+			}
+		},
+		"slotLiquid2": {output: true},
+		"slotResult1": {output: true},
+		"slotResult2": {output: true},
+		"slotResult3": {output: true}
+	},
+	canReceiveLiquid: function(liquid, side){ return liquid == "water"; },
+	canTransportLiquid: function(liquid, side){ return false; }
+});

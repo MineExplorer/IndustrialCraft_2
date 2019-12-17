@@ -29,7 +29,7 @@ var guiSolarPanel = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "background", color: Color.parseColor("#b3b3b3")},
 	],
 	
 	elements: {

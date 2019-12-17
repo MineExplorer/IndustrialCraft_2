@@ -14,7 +14,7 @@ let guiContainmentBox = new UI.StandartWindow({
 		background: {standart: true}
 	},
 	drawing: [
-		{type: "background", color: android.graphics.Color.parseColor("#d5d9b9")},
+		{type: "background", color: Color.parseColor("#d5d9b9")},
 		{type: "bitmap", x: 415, y: 112, bitmap: "containment_box_image", scale: GUI_SCALE},
 		{type: "bitmap", x: 805, y: 112, bitmap: "containment_box_image", scale: GUI_SCALE},
 		{type: "bitmap", x: 415, y: 232, bitmap: "containment_box_image", scale: GUI_SCALE},

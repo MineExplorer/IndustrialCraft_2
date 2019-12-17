@@ -39,11 +39,13 @@ var guiSolidHeatGenerator = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"slotFuel": {type: "slot", x: 441, y: 212},
+		"slotFuel": {type: "slot", x: 441, y: 212, isValid: function(id, count, data){
+			return Recipes.getFuelBurnDuration(id, data) > 0;
+		}},
 		"slotAshes": {type: "slot", x: 591, y: 212, isValid: function(){return false;}},
 		"burningScale": {type: "scale", x: 450, y: 160, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-		"textInfo1": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
-		"textInfo2": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 600, y: 344, width: 300, height: 30, text: "20"}
+		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
+		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 600, y: 344, width: 300, height: 30, text: "20"}
 	}
 });
 
@@ -63,10 +65,6 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 	getGuiScreen: function(){
        return guiSolidHeatGenerator;
     },
-	
-	getTransportSlots: function(){
-		return {input: ["slotFuel"], output:["slotAshes"]};
-	},
 	
 	wrenchClick: function(id, count, data, coords){
 		this.setFacing(coords);
@@ -94,6 +92,8 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 	},
 	
     tick: function(){
+		StorageInterface.checkHoppers(this);
+		
 		this.data.output = 0;
 		var slot = this.container.getSlot("slotAshes");
 		if(this.data.burn <= 0){
@@ -126,3 +126,13 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.solidHeatGenerator, true);
+
+StorageInterface.createInterface(BlockID.solidHeatGenerator, {
+	slots: {
+		"slotFuel": {input: true},
+		"slotAshes": {output: true}
+	},
+	isValidInput: function(item){
+		return Recipes.getFuelBurnDuration(item.id, item.data) > 0;
+	}
+});

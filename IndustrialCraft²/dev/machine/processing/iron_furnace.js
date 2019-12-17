@@ -34,12 +34,12 @@ var guiIronFurnace = new UI.StandartWindow({
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
 		"burningScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-		"slotSource": {type: "slot", x: 441, y: 79},
-		"slotFuel": {type: "slot", x: 441, y: 218,
-			isValid: function(id, count, data){
-				return Recipes.getFuelBurnDuration(id, data) > 0;
-			}
-		},
+		"slotSource": {type: "slot", x: 441, y: 79, isValid: function(id, count, data){
+			return Recipes.getFurnaceRecipeResult(id, "iron")? true : false;
+		}},
+		"slotFuel": {type: "slot", x: 441, y: 218, isValid: function(id, count, data){
+			return Recipes.getFuelBurnDuration(id, data) > 0;
+		}},
 		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
 	}
 });
@@ -61,32 +61,9 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		return guiIronFurnace;
 	},
 	
-	addTransportedItem: function(self, item, direction){
-		var slot = this.container.getSlot("slotSource");
-		if(slot.id==0 || slot.id==item.id && slot.data==item.data && slot.count < 64){
-			var add = Math.min(item.count, 64 - slot.count);
-			item.count -= add;
-			slot.id = item.id;
-			slot.data = item.data;
-			slot.count += add;
-			if(!item.count){return;}
-		}
-		
-		var slot = this.container.getSlot("slotFuel");
-		if(Recipes.getFuelBurnDuration(item.id, item.data) && (slot.id==0 || slot.id==item.id && slot.data==item.data && slot.count < 64)){
-			var add = Math.min(item.count, 64 - slot.count);
-			item.count -= add;
-			slot.id = item.id;
-			slot.data = item.data;
-			slot.count += add;
-		}
-	},
-	
-	getTransportSlots: function(){
-		return {input: ["slotSource", "slotFuel"], output: ["slotResult"]};
-	},
-	
 	tick: function(){
+		StorageInterface.checkHoppers(this);
+		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = Recipes.getFurnaceRecipeResult(sourceSlot.id, "iron");
 		
@@ -145,3 +122,19 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.ironFurnace);
+
+StorageInterface.createInterface(BlockID.ironFurnace, {
+	slots: {
+		"slotSource": {input: true,
+			isValid: function(item, side){
+				return side != 0 && Recipes.getFurnaceRecipeResult(item.id, "iron");
+			}
+		},
+		"slotFuel": {input: true, 
+			isValid: function(item, side){
+				return side != 1 && Recipes.getFuelBurnDuration(item.id, item.data) > 0;
+			}
+		},
+		"slotResult": {output: true}
+	}
+});

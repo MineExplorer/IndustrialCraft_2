@@ -4,7 +4,7 @@ Block.createBlock("conserver", [
 ], "opaque");
 TileRenderer.setStandartModel(BlockID.conserver, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.conserver, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.conserver, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.conserver, 1, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 ItemName.addTierTooltip("conserver", 1);
 
@@ -76,13 +76,25 @@ var guiConserver = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
 		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
-		"slotSource": {type: "slot", x: 400 + 32*GUI_SCALE, y: 50 + 32*GUI_SCALE},
-		"slotCan": {type: "slot", x: 400 + 63*GUI_SCALE, y: 50 + 32*GUI_SCALE},
+		"slotSource": {type: "slot", x: 400 + 32*GUI_SCALE, y: 50 + 32*GUI_SCALE,
+			isValid: function(id){
+				return MachineRecipeRegistry.hasRecipeFor("canner", id);
+			}
+		},
+		"slotCan": {type: "slot", x: 400 + 63*GUI_SCALE, y: 50 + 32*GUI_SCALE, 
+			isValid: function(id){
+				var recipes = MachineRecipeRegistry.requireRecipesFor("canner");
+				for(var i in recipes){
+					if(recipes[i].storage[0] == id) return true;
+				}
+				return false;
+			}
+		},
 		"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE, y: 50 + 32*GUI_SCALE, isValid: function(){return false;}},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
 	}
 });
 
@@ -101,14 +113,12 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 		isActive: false
 	},
 
+	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"],
+
 	getGuiScreen: function(){
 		return guiConserver;
 	},
-
-	getTransportSlots: function(){
-		return {input: ["slotSource", "slotCan"], output: ["slotResult"]};
-	},
-
+	
 	getTier: function(){
 		return this.data.power_tier;
 	},
@@ -169,3 +179,23 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.conserver);
+
+StorageInterface.createInterface(BlockID.conserver, {
+	slots: {
+		"slotSource": {input: true,
+			isValid: function(item){
+				return MachineRecipeRegistry.hasRecipeFor("canner", item.id);
+			}
+		},
+		"slotCan": {input: true,
+			isValid: function(item){
+				var recipes = MachineRecipeRegistry.requireRecipesFor("canner");
+				for(var i in recipes){
+					if(recipes[i].storage[0] == item.id) return true;
+				}
+				return false;
+			}
+		},
+		"slotResult": {output: true}
+	}
+});

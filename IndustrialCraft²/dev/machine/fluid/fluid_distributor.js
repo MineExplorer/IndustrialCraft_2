@@ -31,13 +31,15 @@ var guiFluidDistributor = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "background", color: android.graphics.Color.parseColor("#b3b3b3")},
+		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "fluid_distributor_background", scale: GUI_SCALE},
 	],
 	
 	elements: {
 		"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, value: 0, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
-		"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE},
+		"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE, isValid: function(id, count, data){
+			return LiquidRegistry.getFullItem(id, data, "water")? true : false;
+		}},
 		"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE, isValid: function(){return false;}},
 		"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "fluid_distributor_button", scale: GUI_SCALE, clicker: {
 			onClick: function(container, tile){
@@ -45,8 +47,8 @@ var guiFluidDistributor = new UI.StandartWindow({
 				TileRenderer.mapAtCoords(tile.x, tile.y, tile.z, BlockID.fluidDistributor, tile.data.meta + 6*tile.data.inverted);
 			}
 		}},
-		"text1": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 400 + 107*GUI_SCALE, y: 50+42*GUI_SCALE, width: 128, height: 48, text: Translation.translate("Mode:")},
-		"text2": {type: "text", font: {size: 24, color: android.graphics.Color.parseColor("#57c4da")}, x: 400 + 92*GUI_SCALE, y: 50+66*GUI_SCALE, width: 256, height: 48, text: Translation.translate("Distribute")},
+		"text1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 400 + 107*GUI_SCALE, y: 50+42*GUI_SCALE, width: 128, height: 48, text: Translation.translate("Mode:")},
+		"text2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 400 + 92*GUI_SCALE, y: 50+66*GUI_SCALE, width: 256, height: 48, text: Translation.translate("Distribute")},
 	}
 });
 
@@ -92,9 +94,10 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 		
 		liquid = liquidStor.getLiquidStored();
 		if(liquid){
-			var coords = {x: this.x, y: this.y, z: this.z};
-			var output = StorageInterface.getNearestLiquidStorages(coords, this.data.meta, !this.data.inverted);
-			StorageInterface.transportLiquid(liquid, 1, liquidStor, output);
+			var input = StorageInterface.getNearestLiquidStorages(this, this.data.meta, !this.data.inverted);
+			for(var side in input){
+				StorageInterface.transportLiquid(liquid, 0.25, this, input[side], parseInt(side));
+			}
 		}
 		
 		liquidStor.updateUiScale("liquidScale", liquid);
@@ -115,3 +118,20 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 });
 
 TileRenderer.setRotationPlaceFunction("fluidDistributor", true);
+
+StorageInterface.createInterface(BlockID.fluidDistributor, {
+	slots: {
+		"slot1": {input: true},
+		"slot2": {output: true}
+	},
+	isValidInput: function(item){
+		return LiquidRegistry.getFullItem(item.id, item.data, "water")? true : false;
+	},
+	canReceiveLiquid: function(liquid, side){
+		let data = this.tileEntity.data;
+		return (side == data.meta) ^ data.inverted;
+	},
+	canTransportLiquid: function(liquid, side){
+		return true;
+	}
+});

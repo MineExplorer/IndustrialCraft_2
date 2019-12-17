@@ -43,13 +43,15 @@ var guiExtractor = new UI.StandartWindow({
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotSource": {type: "slot", x: 441, y: 79, isValid: function(id, count, data){
+			return MachineRecipeRegistry.hasRecipeFor("exractor", id);
+		}},
 		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
 		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
-		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isValidUpgrade},
 	}
 });
 
@@ -68,12 +70,10 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 		isActive: false
 	},
 	
+	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"],
+	
 	getGuiScreen: function(){
 		return guiExtractor;
-	},
-		
-	getTransportSlots: function(){
-		return {input: ["slotSource"], output: ["slotResult"]};
 	},
 	
 	getTier: function(){
@@ -142,3 +142,13 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.extractor);
+
+StorageInterface.createInterface(BlockID.extractor, {
+	slots: {
+		"slotSource": {input: true},
+		"slotResult": {output: true}
+	},
+	isValidInput: function(item){
+		return MachineRecipeRegistry.hasRecipeFor("extractor", item.id);
+	}
+});

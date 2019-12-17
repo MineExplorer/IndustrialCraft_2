@@ -235,7 +235,7 @@ var TileEntityRegistry = {
 					}
 					var src = net.source;
 					this.energyTick(name, src);
-				}else{
+				} else {
 					this.energyTick(name, null);
 				}
 			}

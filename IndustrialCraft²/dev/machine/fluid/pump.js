@@ -46,11 +46,10 @@ var guiPump = new UI.StandartWindow({
 			}
 		},
 		"slotLiquid2": {type: "slot", x: 400 + 125*GUI_SCALE, y: 50 + 29*GUI_SCALE, isValid: function(){return false;}},
-		//"slotPipe": {type: "slot", x: 400 + 91*GUI_SCALE, y: 160 + 12*GUI_SCALE},
-		"slotUpgrade1": {type: "slot", x: 880, y: 50 + 2*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade2": {type: "slot", x: 880, y: 50 + 21*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
-		"slotUpgrade4": {type: "slot", x: 880, y: 50 + 59*GUI_SCALE, isValid: UpgradeAPI.isUpgrade},
+		"slotUpgrade1": {type: "slot", x: 880, y: 50 + 2*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 880, y: 50 + 21*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade4": {type: "slot", x: 880, y: 50 + 59*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
 	}
 });
 
@@ -68,27 +67,12 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		isActive: false,
 		coords: null
 	},
-
+	
+	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector"],
+	
 	getGuiScreen: function(){
 		return guiPump;
 	},
-
-	getTransportSlots: function(){
-		return {input: ["slotLiquid1"], output: ["slotLiquid2"]};
-	},
-	
-	addTransportedItem: function(self, item, direction){
-        var slot = this.container.getSlot("slotLiquid1");
-        var full = LiquidRegistry.getFullItem(item.id, item.data, "water");
-        if(full && (slot.id == item.id && slot.data == item.data || slot.id == 0)){
-            var maxStack = Item.getMaxStack(slot.id);
-            var add = Math.min(maxStack - item.count, slot.count);
-            item.count -= add;
-            slot.count += add;
-            slot.id = item.id;
-            slot.data = item.data;
-        }
-    },
 	
 	getTier: function(){
 		return this.data.power_tier;
@@ -199,3 +183,15 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.pump);
+
+StorageInterface.createInterface(BlockID.pump, {
+	slots: {
+		"slotLiquid1": {input: true},
+		"slotLiquid2": {output: true}
+	},
+	isValidInput: function(item){
+		return LiquidRegistry.getFullItem(item.id, item.data, "water")? true : false;
+	},
+	canReceiveLiquid: function(liquid, side){ return false; },
+	canTransportLiquid: function(liquid, side){ return true; }
+});

@@ -14,7 +14,7 @@ var MachineRegistry = {
 		// click fix
 		Prototype.onItemClick = function(id, count, data, coords){
 			if (id == ItemID.debugItem || id == ItemID.EUMeter) return false;
-			if (this.click(id, count, data, coords)) return false;
+			if (this.click(id, count, data, coords)) return true;
 			if (Entity.getSneaking(player)) return false;
 			var gui = this.getGuiScreen();
 			if (gui){
@@ -44,19 +44,19 @@ var MachineRegistry = {
 			}
 			Prototype.startPlaySound = Prototype.startPlaySound || function(){
 				if(!Config.machineSoundEnabled){return;}
-				var audio = this.audioSource;
+				let audio = this.audioSource;
 				if(audio && audio.isFinishing){
 					audio.stop();
 					audio.media = audio.startingSound || audio.startSound;
 					audio.start();
 					audio.isFinishing = false;
 				}
-				else if(!audio && !this.remove){
+				else if(!this.remove && (!audio || !audio.isPlaying()) && this.dimension == Player.getDimension()){
 					this.audioSource = SoundAPI.createSource([this.getStartingSoundFile(), this.getStartSoundFile(), this.getInterruptSoundFile()], this, 16);
 				}
 			}
 			Prototype.stopPlaySound = Prototype.stopPlaySound || function(playInterruptSound){
-				var audio = this.audioSource;
+				let audio = this.audioSource;
 				if(audio){
 					if(!audio.isPlaying()){
 						this.audioSource = null;
@@ -69,10 +69,12 @@ var MachineRegistry = {
 					}
 				}
 			}
-		} else {
+		} 
+		else {
 			Prototype.startPlaySound = Prototype.startPlaySound || function(name){
 				if(!Config.machineSoundEnabled){return;}
-				if(!this.audioSource && !this.remove){
+				let audio = this.audioSource;
+				if(!this.remove && (!audio || !audio.isPlaying()) && this.dimension == Player.getDimension()){
 					let sound = SoundAPI.playSoundAt(this, name, true, 16);
 					this.audioSource = sound;
 				}
@@ -279,6 +281,10 @@ var MachineRegistry = {
 		if(voltage > maxVoltage){
 			if(Config.voltageEnabled){
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
+				var sound = SoundAPI.playSound("Machines/MachineOverload.ogg", false, true);
+				if(sound && !sound.source){
+					sound.setSource(this, 32);
+				}
 				this.selfDestroy();
 				return 1;
 			}
@@ -314,3 +320,32 @@ var transferByTier = {
 	3: 2048,
 	4: 8192
 }
+
+// lever placing fix
+Item.registerUseFunctionForID(69, function(coords, item, block){
+	if(block.id >= 8192 && MachineRegistry.isMachine(block.id)){
+		Game.prevent();
+		var side  = coords.side;
+		var coord = coords.relative;
+		block = World.getBlockID(coord.x, coord.y, coord.z);
+		if(canTileBeReplaced(block)){
+			Player.decreaseCarriedItem(1);
+			World.setBlock(coord.x, coord.y, coord.z, item.id, (6 - side)%6);
+		}
+	}
+});
+// buttons placing fix
+function BUTTON_PLACE_FUNC(coords, item, block){
+	if(block.id >= 8192 && MachineRegistry.isMachine(block.id)){
+		Game.prevent();
+		var side  = coords.side;
+		var coord = coords.relative;
+		block = World.getBlockID(coord.x, coord.y, coord.z);
+		if(canTileBeReplaced(block)){
+			Player.decreaseCarriedItem(1);
+			World.setBlock(coord.x, coord.y, coord.z, item.id, side);
+		}
+	}
+}
+Item.registerUseFunctionForID(77, BUTTON_PLACE_FUNC);
+Item.registerUseFunctionForID(143, BUTTON_PLACE_FUNC);

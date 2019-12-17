@@ -112,29 +112,33 @@ registerChargingItem("chargingAdvBattery", 2);
 registerChargingItem("chargingCrystal", 3);
 registerChargingItem("chargingLapotronCrystal", 4);
 
-Callback.addCallback("tick", function(){
-	if(World.getThreadTime() % 20 == 0){
-		for(var i = 9; i < 45; i++){
-			var slot = Player.getInventorySlot(i);
-			var tier = charging_items[slot.id];
-			if(tier){
-				var mode = slot.extra? slot.extra.getInt("mode") : 0;
-				if(mode == 2) continue;
-				var transfer = transferByTier[tier];
-				var maxDamage = Item.getMaxDamage(slot.id);
-				for(var index = 0; index < 9; index++){
-					if(mode == 1 && Player.getSelectedSlotId() == index) continue;
-					var item = Player.getInventorySlot(index);
-					if(!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)){
-						var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", maxDamage - slot.data, transfer*20, tier);
-						if(energyAdd > 0){
-							slot.data += energyAdd;
-							Player.setInventorySlot(index, item.id, 1, item.data, item.extra);
-						}
+function checkCharging(){
+	for(var i = 9; i < 45; i++){
+		var slot = Player.getInventorySlot(i);
+		var tier = charging_items[slot.id];
+		if(tier){
+			var mode = slot.extra? slot.extra.getInt("mode") : 0;
+			if(mode == 2) continue;
+			var transfer = transferByTier[tier];
+			var maxDamage = Item.getMaxDamage(slot.id);
+			for(var index = 0; index < 9; index++){
+				if(mode == 1 && Player.getSelectedSlotId() == index) continue;
+				var item = Player.getInventorySlot(index);
+				if(!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)){
+					var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", maxDamage - slot.data, transfer*20, tier);
+					if(energyAdd > 0){
+						slot.data += energyAdd;
+						Player.setInventorySlot(index, item.id, 1, item.data, item.extra);
 					}
 				}
-				Player.setInventorySlot(i, slot.id, 1, slot.data, slot.extra);
 			}
+			Player.setInventorySlot(i, slot.id, 1, slot.data, slot.extra);
 		}
+	}
+}
+
+Callback.addCallback("tick", function(){
+	if(World.getThreadTime() % 20 == 0){
+		runOnMainThread(checkCharging);
 	}
 });

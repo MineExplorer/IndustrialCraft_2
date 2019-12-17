@@ -60,10 +60,6 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 		return guiGeothermalGenerator;
 	},
 	
-	getTransportSlots: function(){
-		return {input: ["slot1"], output: ["slot2"]};
-	},
-	
 	renderModel: MachineRegistry.renderModelWithRotation,
 	
 	init: function(){
@@ -72,6 +68,7 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 	},
 	
 	tick: function(){
+		StorageInterface.checkHoppers(this);
 		var energyStorage = this.getEnergyStorage();
 		var newActive = false;
 		var slot1 = this.container.getSlot("slot1");
@@ -116,3 +113,15 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.geothermalGenerator);
+
+StorageInterface.createInterface(BlockID.geothermalGenerator, {
+	slots: {
+		"slot1": {input: true},
+		"slot2": {output: true}
+	},
+	isValidInput: function(id, count, data){
+		return LiquidRegistry.getItemLiquid(id, data) == "lava";
+	},
+	canReceiveLiquid: function(liquid, side){ return liquid == "lava"; },
+	canTransportLiquid: function(liquid, side){ return false; }
+});

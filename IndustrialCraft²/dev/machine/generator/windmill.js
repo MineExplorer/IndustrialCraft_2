@@ -20,25 +20,42 @@ Callback.addCallback("PreLoaded", function(){
 MachineRegistry.registerGenerator(BlockID.genWindmill, {
 	defaultValues: {
 		meta: 0,
-		output: 0
+		output: 0,
+		ticker: -1,
+		blockCount: 0
+	},
+		
+	updateBlockCount: function(){
+		var blockCount = -1;
+		for(var x = -4; x <= 4; x++){
+			for(var y = -2; y <= 2; y++){
+				for(var z = -4; z <= 4; z++){
+					if(World.getBlockID(this.x + x, this.y + y, this.z + z) != 0)
+					blockCount++;
+				}
+			}
+		}
+		this.data.blockCount = blockCount;
 	},
 	
+	init: function(){
+		if(this.data.ticker == undefined) this.data.ticker = -1;
+		this.renderModel();
+		if(this.dimension != 0) this.selfDestroy();
+	},
+
 	energyTick: function(type, src){
-		if(World.getThreadTime()%20 == 0){
-			var height = Math.max(0, Math.min(this.y-64, 96)) / 64;
-			var output = height * 140;
-			var wether = World.getWeather();
-			if(wether.thunder){output *= 5;}
-			else if(wether.rain){output *= 1.5;}
-			var radius = 4;
-			if(World.getBlockID(
-					this.x - random(-radius, radius),
-					this.y - random(-radius, radius),
-					this.z - random(-radius, radius)
-				) == 0){
-				this.data.output = Math.round(output)/20;
+		if(++this.data.ticker % 128 == 0){
+			if(this.data.ticker % 1024 == 0){
+				this.updateBlockCount();
 			}
-			else this.data.output = 0;
+			var height = (this.y < 160) ? Math.max(this.y - 64, 0) : 256 - this.y;
+			var wind = windStrength;
+			var wether = World.getWeather();
+			if(wether.thunder) wind *= 1.25;
+			else if(wether.rain) wind *= 1.5;
+			var output = wind * height * (1 - this.data.blockCount/405) / 288;
+			this.data.output = Math.round(output*10)/10;
 		}
 		src.addAll(this.data.output);
 	},
@@ -52,3 +69,31 @@ MachineRegistry.registerGenerator(BlockID.genWindmill, {
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.genWindmill);
+
+var windStrength = 0;
+Callback.addCallback("tick", function (){
+	if (World.getThreadTime()%128 != 0) {
+		return;
+	}
+	var upChance = 10;
+	var downChance = 10;
+	if (windStrength > 20) {
+		upChance -= windStrength - 20;
+	} else if (windStrength < 10) {
+		downChance -= 10 - windStrength;
+	}
+	if (Math.random()*100 < upChance) {
+		windStrength++;
+	} else if (Math.random()*100 < downChance) {
+		windStrength--;
+	}
+});
+
+Saver.addSavesScope("windSim",
+    function read(scope){
+        windStrength = scope.strength || random(5, 25);
+    },
+    function save(){
+        return {strength: windStrength};
+    }
+);

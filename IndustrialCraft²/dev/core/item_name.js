@@ -91,5 +91,33 @@ ItemName = {
 			}
 		}
 		return energy;
+	},
+	
+	getSideName: function(side){
+		var sideNames = {
+			en: [
+				"first valid",
+				"down",
+				"up",
+				"north",
+				"south",
+				"east",
+				"west"
+			],
+			ru: [
+				"первой подходящей",
+				"нижней",
+				"верхней",
+				"северной",
+				"южной",
+				"восточной",
+				"западной"
+			]
+		}
+		if(sideNames[Config.language]){
+			return sideNames[Config.language][side+1];
+		} else {
+			return sideNames["en"][side+1];
+		}
 	}
 }

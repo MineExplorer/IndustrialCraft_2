@@ -5,6 +5,9 @@ let Config = {
 		this.machineSoundEnabled = __config__.getBool("machine_sounds");
 		this.voltageEnabled = __config__.getBool("voltage_enabled");
 		this.wireDamageEnabled = __config__.getBool("wire_damage_enabled");
+		
+		var lang = FileTools.ReadKeyValueFile("games/com.mojang/minecraftpe/options.txt").game_language;
+		this.language = (lang || "en_US").substring(0, 2);
 	}
 }
 

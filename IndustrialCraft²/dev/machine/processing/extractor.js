@@ -44,7 +44,7 @@ var guiExtractor = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 79, isValid: function(id, count, data){
-			return MachineRecipeRegistry.hasRecipeFor("exractor", id);
+			return MachineRecipeRegistry.hasRecipeFor("extractor", id);
 		}},
 		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
 		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},

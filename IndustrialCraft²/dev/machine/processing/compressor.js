@@ -21,14 +21,21 @@ Callback.addCallback("PreLoaded", function(){
 	
 	
 	MachineRecipeRegistry.registerRecipesFor("compressor", {
+		// Blocks
+		80: {id: 79, count: 1, data: 0},
+		12: {id: 24, count: 1, data: 0, sourceCount: 4},
+		336: {id: 45, count: 1, data: 0, sourceCount: 4},
+		405: {id: 112, count: 1, data: 0, sourceCount: 4},
+		348: {id: 89, count: 1, data: 0, sourceCount: 4},
+		406: {id: 155, count: 1, data: 0, sourceCount: 4},
 		// Items
 		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), sourceCount: 9},
-		"ItemID.dustLapis": {id: ItemID.plateLapis, count: 1, data: 0},
 		"ItemID.ingotAlloy": {id: ItemID.plateAlloy, count: 1, data: 0},
 		"ItemID.carbonMesh": {id: ItemID.carbonPlate, count: 1, data: 0},
 		"ItemID.coalBall": {id: ItemID.coalBlock, count: 1, data: 0},
 		"ItemID.coalChunk": {id: 264, count: 1, data: 0},
 		"ItemID.cellEmpty": {id: ItemID.cellAir, count: 1, data: 0},
+		"ItemID.dustLapis": {id: ItemID.plateLapis, count: 1, data: 0},
 		// Dense Plates
 		"ItemID.plateIron": {id: ItemID.densePlateIron, count: 1, data: 0, sourceCount: 9},
 		"ItemID.plateGold": {id: ItemID.densePlateGold, count: 1, data: 0, sourceCount: 9},
@@ -37,8 +44,11 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.plateBronze": {id: ItemID.densePlateBronze, count: 1, data: 0, sourceCount: 9},
 		"ItemID.plateSteel": {id: ItemID.densePlateSteel, count: 1, data: 0, sourceCount: 9},
 		"ItemID.plateLead": {id: ItemID.densePlateLead, count: 1, data: 0, sourceCount: 9},
-		
-		// Blocks
+		// Compact
+		331: {id: 152, count: 1, data: 0, sourceCount: 9},
+		"351:4": {id: 22, count: 1, data: 0, sourceCount: 9},
+		264: {id: 57, count: 1, data: 0, sourceCount: 9},
+		388: {id: 133, count: 1, data: 0, sourceCount: 9},
 		265: {id: 42, count: 1, data: 0, sourceCount: 9},
 		266: {id: 41, count: 1, data: 0, sourceCount: 9},
 		"ItemID.ingotCopper": {id: BlockID.blockCopper, count: 1, data: 0, sourceCount: 9},
@@ -46,16 +56,13 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.ingotLead": {id: BlockID.blockLead, count: 1, data: 0, sourceCount: 9},
 		"ItemID.ingotSteel": {id: BlockID.blockSteel, count: 1, data: 0, sourceCount: 9},
 		"ItemID.ingotBronze": {id: BlockID.blockBronze, count: 1, data: 0, sourceCount: 9},
-		80: {id: 79, count: 1, data: 0},
-		12: {id: 24, count: 1, data: 0, sourceCount: 4},
-		336: {id: 45, count: 1, data: 0, sourceCount: 4},
-		405: {id: 112, count: 1, data: 0, sourceCount: 4},
-		348: {id: 89, count: 1, data: 0, sourceCount: 4},
-		406: {id: 155, count: 1, data: 0, sourceCount: 4},
-		331: {id: 152, count: 1, data: 0, sourceCount: 9},
-		"351:4": {id: 22, count: 1, data: 0, sourceCount: 9},
-		264: {id: 57, count: 1, data: 0, sourceCount: 9},
-		388: {id: 133, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallIron": {id: ItemID.dustIron, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallGold": {id: ItemID.dustGold, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallCopper": {id: ItemID.dustCopper, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallTin": {id: ItemID.dustTin, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallLead": {id: ItemID.dustLead, count: 1, data: 0, sourceCount: 9},
+		"ItemID.smallUranium235": {id: ItemID.uranium235, count: 1, data: 0, sourceCount: 9},
+		"ItemID.smallPlutonium": {id: ItemID.plutonium, count: 1, data: 0, sourceCount: 9}
 	}, true);
 });
 

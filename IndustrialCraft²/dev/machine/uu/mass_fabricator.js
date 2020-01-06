@@ -94,7 +94,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 				this.data.energy -= transfer;
 				this.data.catalyser -= transfer;
 				if(World.getThreadTime()%40 == 0 && transfer > 0){
-					SoundAPI.playMachineAt("Generators/MassFabricator/MassFabScrapSolo.ogg", false, this, 16);
+					SoundAPI.playSoundAt(this, "Generators/MassFabricator/MassFabScrapSolo.ogg", false, 16);
 				}
 			}
 			else{

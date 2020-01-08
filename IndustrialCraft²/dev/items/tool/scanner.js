@@ -27,11 +27,7 @@ var ore_blocks = [14, 15, 16, 21, 73, 74, 56, 129, 153];
 
 Callback.addCallback("PreLoaded", function(coords, item, block){
 	for(var id in BlockID){
-		if(id[0]=='o' && id[1]=='r' && id[2]=='e' && !TileEntity.isTileEntityBlock(Block[id])){
-			var name = "";
-			for(var i = 3; i < id.length; i++){
-				name += id[i];
-			}
+		if(id[0]=='o' && id[1]=='r' && id[2]=='e' && !TileEntity.isTileEntityBlock(BlockID[id])){
 			ore_blocks.push(BlockID[id]);
 		}
 	}

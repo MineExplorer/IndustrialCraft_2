@@ -13,7 +13,7 @@ By using the library you automatically agree to these rules.
 
 LIBRARY({
 	name: "ToolLib",
-	version: 11,
+	version: 12,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -48,7 +48,7 @@ var ToolType = {
 			if(block.id==2 && coords.side==1){ 
 				World.setBlock(coords.x, coords.y, coords.z, 198);
 				World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.75);
-				ToolAPI.breakCarriedTool(1);
+				ToolLib.breakCarriedTool(1);
 			}
 		}
 	},
@@ -70,68 +70,74 @@ var ToolType = {
 			if((block.id==2 || block.id==3) && coords.side==1){ 
 				World.setBlock(coords.x, coords.y, coords.z, 60);
 				World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.75);
-				ToolAPI.breakCarriedTool(1);
+				ToolLib.breakCarriedTool(1);
 			}
 		}
 	}
 }
 
 
-ToolAPI.breakCarriedTool = function(damage){
-	var item = Player.getCarriedItem();
-	var enchant = this.getEnchantExtraData(item.extra);
-	if(Math.random() < 1 / (enchant.unbreaking + 1)){
-		item.data += damage;
+var ToolLib = {
+	setTool: function(id, toolMaterial, toolType, brokenId){
+		Item.setToolRender(id, true);
+		if(typeof toolMaterial == "string"){
+		toolMaterial = ToolAPI.toolMaterials[toolMaterial];}
+		toolData = {brokenId: brokenId || 0};
+		for(var i in toolType){
+			toolData[i] = toolType[i];
+		}
+		if(!toolMaterial.durability){
+			var maxDmg = Item.getMaxDamage(id);
+			toolMaterial.durability = maxDmg;
+		}
+		if(!toolType.blockTypes){
+			toolData.isNative = true;
+			Item.setMaxDamage(id, toolMaterial.durability);
+		}
+		ToolAPI.registerTool(id, toolMaterial, toolType.blockTypes, toolData);
+		if(toolType.enchantType){
+			Item.setEnchantType(id, toolType.enchantType, toolMaterial.enchantability);
+		}
+		if(toolType.useItem){
+			Item.registerUseFunctionForID(id, toolType.useItem);
+		}
+		if(toolType.destroyBlock){
+			Callback.addCallback("DestroyBlock", function(coords, block, player){
+				var item = Player.getCarriedItem();
+				if(item.id == id){
+					ToolAPI.getToolData(id).destroyBlock(coords, coords.side, item, block);
+				}
+			});
+		}
+		if(toolType.continueDestroyBlock){
+			Callback.addCallback("DestroyBlockContinue", function(coords, block, progress){
+				var item = Player.getCarriedItem();
+				if(item.id == id){
+					ToolAPI.getToolData(id).continueDestroyBlock(item, coords, block, progress);
+				}
+			});
+		}
+	},
+	
+	breakCarriedTool: function(damage){
+		var item = Player.getCarriedItem();
+		var enchant = this.getEnchantExtraData(item.extra);
+		if(Math.random() < 1 / (enchant.unbreaking + 1)){
+			item.data += damage;
+		}
+		if(item.data >= Item.getMaxDamage(item.id)){
+			var tool = this.getToolData(item.id);
+			item.id = tool ? tool.brokenId : 0;
+			item.count = 1;
+			item.data = 0;
+		}
+		Player.setCarriedItem(item.id, item.count, item.data, item.extra);
 	}
-	if(item.data >= Item.getMaxDamage(item.id)){
-		var tool = this.getToolData(item.id);
-		item.id = tool ? tool.brokenId : 0;
-		item.count = 1;
-		item.data = 0;
-	}
-	Player.setCarriedItem(item.id, item.count, item.data, item.extra);
 }
 
-ToolAPI.setTool = function(id, toolMaterial, toolType, brokenId){
-	Item.setToolRender(id, true);
-	if(typeof toolMaterial == "string"){
-	toolMaterial = ToolAPI.toolMaterials[toolMaterial];}
-	toolData = {brokenId: brokenId || 0};
-	for(var i in toolType){
-		toolData[i] = toolType[i];
-	}
-	if(!toolMaterial.durability){
-		var maxDmg = Item.getMaxDamage(id);
-		toolMaterial.durability = maxDmg;
-	}
-	if(!toolType.blockTypes){
-		toolData.isNative = true;
-		Item.setMaxDamage(id, toolMaterial.durability);
-	}
-	ToolAPI.registerTool(id, toolMaterial, toolType.blockTypes, toolData);
-	if(toolType.enchantType){
-		Item.setEnchantType(id, toolType.enchantType, toolMaterial.enchantability);
-	}
-	if(toolType.useItem){
-		Item.registerUseFunctionForID(id, toolType.useItem);
-	}
-	if(toolType.destroyBlock){
-		Callback.addCallback("DestroyBlock", function(coords, block, player){
-			var item = Player.getCarriedItem();
-			if(item.id == id){
-				ToolAPI.getToolData(id).destroyBlock(coords, coords.side, item, block);
-			}
-		});
-	}
-	if(toolType.continueDestroyBlock){
-		Callback.addCallback("DestroyBlockContinue", function(coords, block, progress){
-			var item = Player.getCarriedItem();
-			if(item.id == id){
-				ToolAPI.getToolData(id).continueDestroyBlock(item, coords, block, progress);
-			}
-		});
-	}
-}
+// old versions compatibility
+ToolAPI.setTool = ToolLib.setTool;
+ToolAPI.breakCarriedTool = ToolLib.breakCarriedTool;
 
 // API bug fixes
 ToolAPI.getEnchantExtraData = function(extra){
@@ -357,4 +363,5 @@ Callback.addCallback("DestroyBlock", function(coords, block, player){
 });
 
 
+EXPORT("ToolLib", ToolType);
 EXPORT("ToolType", ToolType);

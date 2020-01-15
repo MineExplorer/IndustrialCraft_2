@@ -49,7 +49,7 @@ ToolType.chainsaw = {
 	},
 }
 
-ToolAPI.setTool(ItemID.chainsaw, {energyPerUse: 60, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
+ToolLib.setTool(ItemID.chainsaw, {energyPerUse: 60, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
 
 let chainsawLoop = SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawIdle.ogg", true, 1);
 SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawStop.ogg", false, 1);

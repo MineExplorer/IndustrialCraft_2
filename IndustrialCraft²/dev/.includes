@@ -34,6 +34,14 @@ machine/generator/rt_generator.js
 machine/generator/heat_solid.js
 machine/generator/heat_electric.js
 
+machine/harvest/harvestAPI.js
+machine/harvest/biome_bonuses.js
+machine/harvest/base_crop_classes.js
+machine/harvest/crop.js
+machine/harvest/list_crops.js
+machine/harvest/crop_harvester.js
+machine/harvest/сrop_matron.js
+
 machine/reactor/reactorAPI.js
 machine/reactor/nuclear_reactor.js
 
@@ -92,6 +100,15 @@ items/resource/matter.js
 items/resource/produced.js
 items/resource/cells.js
 
+items/crop/crop_seed_bag.js
+items/crop/perches.js
+items/crop/grin_powder.js
+items/crop/weed_ex.js
+items/crop/fertilizer.js
+items/crop/hydration_capsule.js
+items/crop/terra_wart.js
+items/crop/coffee_beans.js
+
 items/can.js
 
 items/electric/cable.js
@@ -131,6 +148,8 @@ items/tool/drills.js
 items/tool/chainsaw.js
 items/tool/nano_saber.js
 items/tool/mining_laser.js
+items/tool/agricultural_analyzer.js
+items/tool/weeding_machine.js
 
 integration/recipe_viewer.js
 integration/tree_capitator.js

@@ -363,5 +363,5 @@ Callback.addCallback("DestroyBlock", function(coords, block, player){
 });
 
 
-EXPORT("ToolLib", ToolType);
+EXPORT("ToolLib", ToolLib);
 EXPORT("ToolType", ToolType);

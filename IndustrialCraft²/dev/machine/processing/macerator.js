@@ -25,6 +25,7 @@ Callback.addCallback("PreLoaded", function(){
 		14: {id: ItemID.crushedGold, count: 2, data: 0},
 		15: {id: ItemID.crushedIron, count: 2, data: 0},
 		"BlockID.oreCopper": {id: ItemID.crushedCopper, count: 2, data: 0},
+		"BlockID.coffeeBeans": {id: ItemID.coffeePowder, count: 3, data: 0},
 		"BlockID.oreTin": {id: ItemID.crushedTin, count: 2, data: 0},
 		"BlockID.oreLead": {id: ItemID.crushedLead, count: 2, data: 0},
 		"BlockID.oreSilver": {id: ItemID.crushedSilver, count: 2, data: 0},

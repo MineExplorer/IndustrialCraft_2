@@ -11,6 +11,7 @@ var AgricultureAPI = {
     abstractFunctions:{/* file: baseCropClasses.js */},
     nutrientBiomeBonusValue:{/* file: biome_bonuses.js */},
     registerCropCard: function(card){
+        if(!card.texture) card.texture = card.id;
         if(card.base){
             var funcs = AgricultureAPI.abstractFunctions[card.base];
             if(funcs) this.addMissingFuncsToCard(card, funcs);            
@@ -20,31 +21,29 @@ var AgricultureAPI = {
 			Item.addToCreative(ItemID.cropSeedBag, 1, this.cropCards.length);
 		}
         this.cropCards.push(card);
-        //alert("crop registered "+card.name+" on base "+(card.base || "IC2CropCard"));
     },
     addMissingFuncsToCard: function(card, functions){ 
         for(var funcName in functions){
             if(!card[funcName]){
-				card[funcName] = functions[funcName];
-			}
+                card[funcName] = functions[funcName];
+            }
         }
     },
-    getCropCard: function(name){
+    getCropCard: function(id){
         for(var i in this.cropCards){
-            if(this.cropCards[i].name == name){
+            if(this.cropCards[i].id == id)
 				return this.cropCards[i];
-			}
         }
 		return null  
     },
-    getCardIndexFromName: function(name){
+    getCardIndexFromID: function(id){
         for(var i in this.cropCards){
-            if(this.cropCards[i].name == name) return i;
+            if(this.cropCards[i].id == id) return i;
         }
 		return null  
     },
     getHumidityBiomeBonus: function(x, z){
-        return 0;//доделоть// и так сойдет
+        return 0;
     },
     getNutrientBiomeBonus: function(x, z){
         var biomeID = World.getBiome(x, z);
@@ -54,7 +53,7 @@ var AgricultureAPI = {
     getCardFromSeed: function(item){
         for(var i in this.cropCards){
             var seed = this.cropCards[i].baseSeed;
-            if(seed && eval(seed.id)==item.id && (!seed.data || seed.data==item.data)){
+            if(seed && eval(seed.id) == item.id && (!seed.data || seed.data == item.data)){
 				return this.cropCards[i];
             }
         }

@@ -117,7 +117,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
         this.container.setScale("energyScale", this.data.energy / energyStorage);
     },
 
-    scan:function(){
+    scan: function(){
         this.data.scanX++;
         if (this.data.scanX > 5) {
             this.data.scanX = -5;
@@ -156,7 +156,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
             this.container.validateAll();
         }
     },
-    getSlot:function(type){
+    getSlot: function(type){
         for(var i = 0; i<3;i++){
             var slott = this.container.getSlot(type+i);
             if(slott.id)return slott;

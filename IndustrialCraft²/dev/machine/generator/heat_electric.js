@@ -98,7 +98,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 	
 	setFacing: MachineRegistry.setFacing,
 	
-	calcOutput:function(){
+	calcOutput: function(){
 		var maxOutput = 0;
 		for(var i = 0; i < 10; i++){
 			var slot = this.container.getSlot("slot"+i);

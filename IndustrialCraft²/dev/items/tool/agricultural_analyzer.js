@@ -2,45 +2,43 @@ IDRegistry.genItemID("agriculturalAnalyzer");
 Item.createItem("agriculturalAnalyzer", "Crop Analyzer", {name: "cropnalyzer"}, {stack: 1});
 Callback.addCallback("PostLoaded", function(){
     Recipes.addShaped({id: ItemID.agriculturalAnalyzer , count: 1 , data: 0}, [
-     "xx ",
-     "zfz",
-     "zrz"
-], ['x', ItemID.cableCopper1, 0, 'z', 331, 0, 'f', 20, 0, "r", ItemID.circuitBasic, 0]);
+		"xx ",
+		"rgr",
+		"rcr"
+	], ['x', ItemID.cableCopper1, 0, 'r', 331, 0, 'g', 20, 0, "c", ItemID.circuitBasic, 0]);
 });
-
-function isValidSeedBag(id, count, data){
-    return id == ItemID.cropSeedBag;
-};
 
 var guiAddConst = 14;
 var guiAnalyserObject = {
-        location: {
-            x: 0,
-            y: 0,
-            width: 1000,
-            height: 1000
-        },
-        
-        drawing: [
-            {type: "background", color: 0},
-            {type: "bitmap", x: 250, y: UI.getScreenHeight()/10, bitmap: "agricultural_analyser", scale: GUI_SCALE/2.3},
-        ],
-        
-        elements: {
-            "closeButton": {type: "button", x: 672, y: 77, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {onClick: function(container){
-                AgriculturalAnalyser.dropItems(container);
-                container.close();
-                AgriculturalAnalyser.container = null;
-            }}},
-            "textName": {type: "text", font: {size: 18}, x: 432, y: 86, width: 256, height: 42, text: Translation.translate("Crop Analyzer")}, 
-            "slotSeedIn": {type: "slot", x: 265, y: 75, size: GUI_SCALE*16, isValid: isValidSeedBag},
-            "slotSeedOut": {type: "slot", x: 360, y: 75, size: GUI_SCALE*16, isValid: isValidSeedBag},
-            "slotEnergy": {type: "slot", x: 615, y: 75, size: GUI_SCALE*16, isValid: MachineRegistry.isValidEUStorage}
-        }
-    };
-    for(var i = 0; i < 10; i++){
-        guiAnalyserObject.elements["slot" + i] = {type: "invSlot", x: 270 + i * 45, y: 455, size:GUI_SCALE * guiAddConst, index: i};
-    }
+	location: {
+		x: 0,
+		y: 0,
+		width: 1000,
+		height: 1000
+	},
+	
+	drawing: [
+		{type: "background", color: 0},
+		{type: "bitmap", x: 250, y: UI.getScreenHeight()/10, bitmap: "agricultural_analyser", scale: GUI_SCALE/2.3},
+	],
+	
+	elements: {
+		"closeButton": {type: "button", x: 672, y: 77, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {onClick: function(container){
+			AgriculturalAnalyser.dropItems(container);
+			container.close();
+			AgriculturalAnalyser.container = null;
+		}}},
+		"textName": {type: "text", font: {size: 18}, x: 432, y: 86, width: 256, height: 42, text: Translation.translate("Crop Analyzer")}, 
+		"slotSeedIn": {type: "slot", x: 265, y: 75, size: GUI_SCALE*16, isValid: function(id, count, data){
+			return id == ItemID.cropSeedBag;
+		}},
+		"slotSeedOut": {type: "slot", x: 360, y: 75, size: GUI_SCALE*16, isValid: function(){return false;}},
+		"slotEnergy": {type: "slot", x: 615, y: 75, size: GUI_SCALE*16, isValid: MachineRegistry.isValidEUStorage}
+	}
+};
+for(var i = 0; i < 10; i++){
+	guiAnalyserObject.elements["slot" + i] = {type: "invSlot", x: 270 + i * 45, y: 455, size:GUI_SCALE * guiAddConst, index: i};
+}
 var guiAgriculturalAnalyzer = new UI.Window(guiAnalyserObject);
 guiAgriculturalAnalyzer.setInventoryNeeded(true);
 
@@ -57,7 +55,7 @@ var AgriculturalAnalyser = {
 
         if(slotIn.id && !slotOut.id && currentEnergy){
             var level = slotIn.extra.getInt("scan");
-            if(level<4){
+            if(level < 4){
                 var ned = AgriculturalAnalyser.energyForLevel(level);
                 if(currentEnergy > ned){ 
                     ICTool.dischargeItem(slotEnergy, ned);
@@ -117,33 +115,33 @@ var AgriculturalAnalyser = {
         var resist = slot.extra.getInt("resistance");
         var statsXpos = 560;
 
-        elements["growthText"] = {type: "text", font: {size: 18, color:android.graphics.Color.rgb(0, 128, 0)}, x: statsXpos, y: 160, width: 256, height: 42, text: "Growth: "};
-        elements["growth"] = {type: "text", font: {size: 18, color:android.graphics.Color.rgb(0, 128, 0)}, x: statsXpos, y: 200, width: 256, height: 42, text: growth.toString()};
-        elements["gainText"] = {type: "text", font: {size: 18, color:android.graphics.Color.rgb(255, 255, 0)}, x: statsXpos, y: 240, width: 256, height: 42, text: "Gain: "};
-        elements["gain"] = {type: "text", font: {size: 18, color:android.graphics.Color.rgb(255, 255, 0)}, x: statsXpos, y: 280, width: 256, height: 42, text: gain.toString()};
-        elements["resistText"] = {type: "text", font: {size: 18, color:android.graphics.Color.rgb(0, 255, 255)}, x: statsXpos, y: 320, width: 256, height: 42, text: "Resistance: "};
-        elements["resist"] = {type: "text", font: {size: 18, color:android.graphics.Color.rgb(0, 255, 255)}, x: statsXpos, y: 360, width: 256, height: 42, text: resist.toString()};
+        elements["growthText"] = {type: "text", font: {size: 18, color: Color.rgb(0, 128, 0)}, x: statsXpos, y: 160, width: 256, height: 42, text: "Growth: "};
+        elements["growth"] = {type: "text", font: {size: 18, color: Color.rgb(0, 128, 0)}, x: statsXpos, y: 200, width: 256, height: 42, text: growth.toString()};
+        elements["gainText"] = {type: "text", font: {size: 18, color: Color.rgb(255, 255, 0)}, x: statsXpos, y: 240, width: 256, height: 42, text: "Gain: "};
+        elements["gain"] = {type: "text", font: {size: 18, color: Color.rgb(255, 255, 0)}, x: statsXpos, y: 280, width: 256, height: 42, text: gain.toString()};
+        elements["resistText"] = {type: "text", font: {size: 18, color: Color.rgb(0, 255, 255)}, x: statsXpos, y: 320, width: 256, height: 42, text: "Resistance: "};
+        elements["resist"] = {type: "text", font: {size: 18, color: Color.rgb(0, 255, 255)}, x: statsXpos, y: 360, width: 256, height: 42, text: resist.toString()};
     },
-    showDiscoveredBy:function(crop, font, elements){
+    showDiscoveredBy: function(crop, font, elements){
         var discBy = crop.getDiscoveredBy();
         elements["discoveredByText"] = {type: "text", font: font, x: 270, y: 240, width: 256, height: 42, text: "Discovered by: "};
         elements["discoveredBy"] = {type: "text", font: font, x: 270, y: 280, width: 256, height: 42, text: discBy};
     },
-    showTier:function(crop, font, elements){
+    showTier: function(crop, font, elements){
         var tier = "Tier: " + AgriculturalAnalyser.getStringTier(crop.properties.tier);
         elements["textTier"] = {type: "text", font: font, x: 270, y: 200, width: 256, height: 42, text: tier};
     },
-    showAttributes:function(crop, font, elements){
+    showAttributes: function(crop, font, elements){
         var arr = AgriculturalAnalyser.getAttributesText(crop.attributes)
         for(var i in arr){
             elements["attributes"+i] = {type: "text", font:font, x: 270, y: 320 + 40 * i, width: 256, height: 42, text: arr[i]};
         }
     },
-    showName:function(crop, font, elements){
+    showName: function(crop, font, elements){
         var name = AgriculturalAnalyser.getSeedName(crop.id);
         elements["cropName"] = {type: "text", font:font, x: 270, y: 160, width: 256, height: 42, text: name};
     },
-    getStringTier:function(tier){
+    getStringTier: function(tier){
         switch (tier) {
             default: {
                 return "0";
@@ -198,7 +196,7 @@ var AgriculturalAnalyser = {
             }
         }
     },
-    energyForLevel:function(level){
+    energyForLevel: function(level){
         switch (level) {
             default: {
                 return 10;
@@ -214,10 +212,10 @@ var AgriculturalAnalyser = {
             }
         }
     },
-    getSeedName:function(name){
+    getSeedName: function(name){
         return Translation.translate(name);
     },
-    getAttributesText:function(attributes){
+    getAttributesText: function(attributes){
         var arr = ["", "", ""];
         for(var i in attributes){
             var indForPush = Math.floor((i) / 3);
@@ -225,7 +223,7 @@ var AgriculturalAnalyser = {
         }
         return arr;
     },
-    dropItems:function(container){
+    dropItems: function(container){
         var coords = Player.getPosition();
         var slots = ["slotSeedIn", "slotSeedOut", "slotEnergy"]
         for(var i in slots){
@@ -235,7 +233,7 @@ var AgriculturalAnalyser = {
         }
         container.validateAll();
     },
-    showCropValues:function(te){
+    showCropValues: function(te){
         switch(te.data.scanLevel){
             case 4:
                 Game.message("Growth: " + te.data.statGrowth);
@@ -249,7 +247,7 @@ var AgriculturalAnalyser = {
                 Game.message(Translation.translate(te.crop.id));
         }
     },
-    useFunction:function(coords, item, block){
+    useFunction: function(coords, item, block){
         if(block.id == BlockID.perches){
             var te = World.getTileEntity(coords.x, coords.y, coords.z);
             if(!te.crop) return;

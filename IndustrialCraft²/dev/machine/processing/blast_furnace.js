@@ -113,7 +113,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		}
 	},
 	
-	controlAir:function(){
+	controlAir: function(){
 		var slot1 = this.container.getSlot("slotAir1");
 		var slot2 = this.container.getSlot("slotAir2");
 		if(this.data.air == 0){

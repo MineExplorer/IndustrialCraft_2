@@ -20,7 +20,7 @@ Item.registerUseFunction("cropSeedBag", function(coords, item, block){
 Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name){
     var extra = item.extra|| AgricultureAPI.addDefaultExtra(item);
     var scanLvl = extra.getInt("scan");
-    var cropClassName = AgricultureAPI.cropCards[item.data].name;
+    var cropClassName = AgricultureAPI.cropCards[item.data].id;
     var newName = (scanLvl > 0 ? Translation.translate(cropClassName) : "Unknown")+" Seeds"+'\n';
     if(scanLvl >= 4){
         newName += "§2Gr: "+extra.getInt("growth")+'\n';

@@ -19,7 +19,7 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 var cropHarvesterGuiObject = {
-    outputSlotsNames:[],
+    outputSlotsNames: [],
     standart: {
         header: {text: {text: Translation.translate("Crop Harvester")}},
         inventory: {standart: true},
@@ -33,8 +33,8 @@ var cropHarvesterGuiObject = {
     elements: {
         "energyScale": {type: "scale", x: 845, y: 120, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
         "slotEnergy": {type: "slot", x: 840, y: 170, isValid: MachineRegistry.isValidEUStorage},
-		"slotAnalyser": {type: "slot", x: 440, y: 170, isValid:function(id, count, data){
-			return id==ItemID.agriculturalAnalyzer
+		"slotAnalyser": {type: "slot", x: 440, y: 170, isValid: function(id, count, data){
+			return id == ItemID.agriculturalAnalyzer
 		}},
 		"slotUpgrade": {type: "slot", x: 640, y: 310, isValid: UpgradeAPI.isUpgrade}
     }
@@ -43,16 +43,16 @@ var cropHarvesterGuiObject = {
 cropHarvesterGuiObject.outputSlotsNames["slotAnalyser"] = {
     input: true,
     isValid: function(id){
-        return id==ItemID.agriculturalAnalyzer
+        return id == ItemID.agriculturalAnalyzer
     }
 };
 
-for(let ind = 0; ind<15; ind++){
+for(let ind = 0; ind < 15; ind++){
     let x = ind % 5;
-    let y = Math.floor(ind / 5)+1;
+    let y = Math.floor(ind / 5) + 1;
     let padd = 60;
-    cropHarvesterGuiObject.outputSlotsNames["outSlot"+ind] = {output: true};
-    cropHarvesterGuiObject.elements["outSlot"+ind] = {type: "slot", x: 520+padd*x, y: 50+padd*y};
+    cropHarvesterGuiObject.outputSlotsNames["outSlot" + ind] = {output: true};
+    cropHarvesterGuiObject.elements["outSlot" + ind] = {type: "slot", x: 520 + padd * x, y: 50 + padd * y};
 }
 
 var guiCropHarvester = new UI.StandartWindow(cropHarvesterGuiObject);
@@ -84,7 +84,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         this.setDefaultValues();
         UpgradeAPI.executeUpgrades(this);
         
-        if(this.data.energy>200)this.scan();
+        if(this.data.energy>200) this.scan();
         
         var tier = this.getTier();
         var energyStorage = this.getEnergyStorage();
@@ -95,7 +95,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         this.container.validateAll();
 	},
 	
-	scan:function(){
+	scan: function(){
         this.data.scanX++;
         if (this.data.scanX > 5) {
             this.data.scanX = -5;
@@ -109,47 +109,47 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
             }
         }
         this.data.energy -= 1;
-        var cropTile = World.getTileEntity(this.x+this.data.scanX, this.y+this.data.scanY, this.z+this.data.scanZ);
-        if(cropTile&&cropTile.crop&&!this.isInvFull()){
+        var cropTile = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
+        if(cropTile && cropTile.crop && !this.isInvFull()){
             var cropAnalyser = this.container.getSlot("slotAnalyser");
             var drops = null;
-            if(cropAnalyser.id&&cropTile.data.currentSize==cropTile.crop.getOptimalHarvestSize(cropTile)){
+            if(cropAnalyser.id && cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)){
                 drops = cropTile.performHarvest();
             }
             else if (cropTile.data.currentSize == cropTile.crop.maxSize) {
                 drops = cropTile.performHarvest();
             }
-            if(drops&&drops.length){//тут какая-то херня//кажется наладил
+            if(drops && drops.length){
                 for(var ind in drops){
                     var item = drops[ind];
                     this.putItem(item);
                     this.data.energy -= 100
-                    if(!cropAnalyser.id)this.data.energy -= 100;
+                    if(!cropAnalyser.id) this.data.energy -= 100;
 
-                    if(item.count>0){
-                        nativeDropItem(this.x, this.y+1, this.z, 0,item.id,item.count,item.data,null);
+                    if(item.count > 0){
+                        nativeDropItem(this.x, this.y + 1, this.z, 0, item.id, item.count, item.data, null);
                     }
                 }
             }
         }
     },
-    putItem:function(item){
-        for(var i = 0; i< 15; i++){
-            var slott = this.container.getSlot("outSlot"+i);
+    putItem: function(item){
+        for(var i = 0; i < 15; i++){
+            var slott = this.container.getSlot("outSlot" + i);
             if(!slott.id || slott.id == item.id && slott.count < Item.getMaxStack(item.id)){
                 var putCount = Math.min(Item.getMaxStack(item.id) - slott.count, item.count);
                 slott.id = item.id;
                 slott.count += putCount;
                 slott.data = item.data;
-                item.count-=putCount;
+                item.count -= putCount;
             }
         }
     },
-    isInvFull:function(){
-        for(var i = 0; i<15; i++){
-            var slot = this.container.getSlot("outSlot"+i);
+    isInvFull: function(){
+        for(var i = 0; i < 15; i++){
+            var slot = this.container.getSlot("outSlot" + i);
             var maxStack = Item.getMaxStack(slot.id);
-            if(!slot.id||slot.count < maxStack)return false;
+            if(!slot.id || slot.count < maxStack) return false;
         }
         return true;
     },

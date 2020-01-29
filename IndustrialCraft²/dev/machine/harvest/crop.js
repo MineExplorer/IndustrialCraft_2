@@ -82,18 +82,20 @@ TileEntity.registerPrototype(BlockID.perches, {
                 return;
             }
         }
-        if(Entity.getSneaking(Player.get())){
-            if(this.data.crossingBase){
-                World.drop(this.x, this.y, this.z, ItemID.perches, 1, 0);
-                this.data.crossingBase = false;
-                this.data.dirty = true;
-                this.updateRender();
-            }else if(this.crop){ 
-                this.crop.onLeftClick(this);
-                return;
-            }
-        }
         if(this.crop && this.crop.canBeHarvested(this)) this.crop.onRightClick(this);
+    },
+    onLongClick: function(){
+        if(this.data.crossingBase){
+            World.drop(this.x, this.y, this.z, ItemID.perches, 1, 0);
+            this.data.crossingBase = false;
+            this.data.dirty = true;
+            this.updateRender();
+            return true;
+        }else if(this.crop){ 
+            this.crop.onLeftClick(this);
+            return true;
+        }
+        return false;
     },
     destroyBlock: function(coords, player){
         World.drop(this.x, this.y, this.z, ItemID.perches, 1, 0);
@@ -514,14 +516,24 @@ TileEntity.registerPrototype(BlockID.perches, {
         var extra = AgricultureAPI.generateExtraFromValues(data);
         return {id: ItemID.cropSeedBag, data: this.data.crop, extra: extra};
     },
-    isBlockBelow: function(reqBlock){
+    isBlockBelow: function(reqBlockID){
         if (!this.crop) return false;
 
-        for (var i = 1; i < this.crop.getRootsLength(this); i++) {
-            var block = World.getBlockID(this.x, this.y-i, this.z);
-            if(!block) return false;
-            if(reqBlock == block) return true;
+        var rootsLength = this.crop.getRootsLength(this);
+        for (var i = 1; i < rootsLength; i++) {
+            var blockID = World.getBlockID(this.x, this.y - i, this.z);
+            if(!blockID) return false;
+            if(reqBlockID == blockID) return true;
         }
         return false;
+    }
+});
+
+Callback.addCallback("DestroyBlockStart", function(coords, block){
+    if(block.id == BlockID.perches){
+        var tileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
+        if(tileEntity && tileEntity.onLongClick()){
+            Game.prevent();
+        }
     }
 });

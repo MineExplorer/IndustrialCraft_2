@@ -387,6 +387,7 @@ Translation.addTranslation("Cold Coffee", {ru: "Холодный кофе"});
 Translation.addTranslation("Dark Coffee", {ru: "Тёмный кофе"});
 
 // Crops Utilites
+Translation.addTranslation("Seed Bag (%s)", {ru: "Мешок с семенами (%s)"});
 Translation.addTranslation("Perches", {ru: "Жёрдочки"});
 Translation.addTranslation("Grin Powder", {ru: "Токсичная пыль"});
 Translation.addTranslation("Weed EX", {ru: "Средство от сорняков"});

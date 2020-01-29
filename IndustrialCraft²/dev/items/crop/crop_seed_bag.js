@@ -1,5 +1,5 @@
 IDRegistry.genItemID("cropSeedBag");
-Item.createItem("cropSeedBag", "Crop Seed Bag", {name: "crop_seed_bag"}, {stack: 1, isTech: true});
+Item.createItem("cropSeedBag", "Seed Bag (%s)", {name: "crop_seed_bag"}, {stack: 1, isTech: true});
 Item.registerUseFunction("cropSeedBag", function(coords, item, block){
     if(block.id == BlockID.perches){
         var te = World.getTileEntity(coords.x,coords.y,coords.z);
@@ -18,17 +18,19 @@ Item.registerUseFunction("cropSeedBag", function(coords, item, block){
 });
 
 Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name){
-    var extra = item.extra|| AgricultureAPI.addDefaultExtra(item);
+    var extra = item.extra || AgricultureAPI.addDefaultExtra(item);
     var scanLvl = extra.getInt("scan");
-    var cropClassName = AgricultureAPI.cropCards[item.data].id;
-    var newName = (scanLvl > 0 ? Translation.translate(cropClassName) : "Unknown")+" Seeds"+'\n';
+    var cropClassName = scanLvl > 0 ? AgricultureAPI.cropCards[item.data].id : "Unknown";
+    var translatedCropName = Translation.translate(cropClassName);
+
+    var newName = Translation.translate("Seed Bag (%s)").replace("%s", translatedCropName) + '\n';
     if(scanLvl >= 4){
-        newName += "§2Gr: "+extra.getInt("growth")+'\n';
-        newName += "§6Ga: "+extra.getInt("gain")+'\n';
-        newName += "§bRe: "+extra.getInt("resistance")+'\n';
+        newName += "§2Gr: " + extra.getInt("growth") + '\n';
+        newName += "§6Ga: " + extra.getInt("gain") + '\n';
+        newName += "§bRe: " + extra.getInt("resistance") + '\n';
     }
     if(Config.debugMode){
-		newName += "[DEBUG]scanLevel: "+scanLvl+'\n';
+		newName += "[DEBUG]scanLevel: " + scanLvl;
 	}
-    return newName+'\n';
+    return newName + '\n';
 });

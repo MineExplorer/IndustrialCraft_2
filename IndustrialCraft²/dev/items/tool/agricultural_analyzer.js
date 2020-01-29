@@ -249,16 +249,19 @@ var AgriculturalAnalyser = {
     },
     useFunction: function(coords, item, block){
         if(block.id == BlockID.perches){
-            var te = World.getTileEntity(coords.x, coords.y, coords.z);
-            if(!te.crop) return;
-
-            AgriculturalAnalyser.showCropValues(te);
-            return;
+            var tileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
+            if(!tileEntity.crop) return;
+            AgriculturalAnalyser.showCropValues(tileEntity);
+        }else{
+            AgriculturalAnalyser.noTargetUseFunction(item);
         }
+    },
+    noTargetUseFunction: function(item){
         if(!AgriculturalAnalyser.container) AgriculturalAnalyser.container = new UI.Container();
         AgriculturalAnalyser.container.openAs(guiAgriculturalAnalyzer);
     }
 };
 
 Item.registerUseFunction("agriculturalAnalyzer", AgriculturalAnalyser.useFunction);
+Item.registerNoTargetUseFunction("agriculturalAnalyzer", AgriculturalAnalyser.noTargetUseFunction);
 Callback.addCallback("tick", AgriculturalAnalyser.tick);

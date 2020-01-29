@@ -10,11 +10,11 @@ Item.createItem("bronzeAxe", "Bronze Axe", {name: "bronze_axe", meta: 0}, {stack
 Item.createItem("bronzeHoe", "Bronze Hoe", {name: "bronze_hoe", meta: 0}, {stack: 1});
 
 ToolAPI.addToolMaterial("bronze", {durability: 225, level: 3, efficiency: 6, damage: 2, enchantability: 14});
-ToolLib.setTool(ItemID.bronzeSword, "bronze", ToolType.sword);
-ToolLib.setTool(ItemID.bronzeShovel, "bronze", ToolType.shovel);
-ToolLib.setTool(ItemID.bronzePickaxe, "bronze", ToolType.pickaxe);
-ToolLib.setTool(ItemID.bronzeAxe, "bronze", ToolType.axe);
-ToolLib.setTool(ItemID.bronzeHoe, "bronze", ToolType.hoe);
+ToolAPI.setTool(ItemID.bronzeSword, "bronze", ToolType.sword);
+ToolAPI.setTool(ItemID.bronzeShovel, "bronze", ToolType.shovel);
+ToolAPI.setTool(ItemID.bronzePickaxe, "bronze", ToolType.pickaxe);
+ToolAPI.setTool(ItemID.bronzeAxe, "bronze", ToolType.axe);
+ToolAPI.setTool(ItemID.bronzeHoe, "bronze", ToolType.hoe);
 
 
 Recipes.addShaped({id: ItemID.bronzeSword, count: 1, data: 0}, [

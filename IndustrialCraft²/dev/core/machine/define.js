@@ -300,12 +300,12 @@ var MachineRegistry = {
 	
 	isValidEUItem: function(id, count, data, container){
 		var level = container.tileEntity.getTier();
-		return ChargeItemRegistry.isValidItem(id, "Eu",  level);
+		return ChargeItemRegistry.isValidItem(id, "Eu", level);
 	},
 	
 	isValidEUStorage: function(id, count, data, container){
 		var level = container.tileEntity.getTier();
-		return ChargeItemRegistry.isValidStorage(id, "Eu",  level);
+		return ChargeItemRegistry.isValidStorage(id, "Eu", level);
 	},
 	
 	updateGuiHeader: function(gui, text){

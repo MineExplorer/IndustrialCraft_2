@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "StorageInterface",
-	version: 2,
+	version: 3,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -83,8 +83,11 @@ let StorageInterface = {
 				let slots = [];
 				for(let name in this.slots){
 					let slotData = this.slots[name];
-					if(slotData.output && (!slotData.isAvailable || slotData.isAvailable(side, this.tileEntity))){
-						slots.push(name);
+					if(slotData.output){
+						let item = this.container.getSlot(name);
+						if(item.id > 0 && (!slotData.canOutput || slotData.canOutput(item, side, this.tileEntity))){
+							slots.push(name);
+						}
 					}
 				}
 				return slots;
@@ -200,13 +203,13 @@ let StorageInterface = {
 		if(!slotsInitialized){
 			slots = this.getContainerSlots(container);
 		}
-		for(let s in slots){
-			let slot = container.getSlot(slots[s]);
+		for(let i in slots){
+			let slot = container.getSlot(slots[i]);
 			let added = this.addItemToSlot(item, slot, maxCount - count)
 			if(added > 0){
 				count += added;
 				if(!container.slots){
-					container.setSlot(s, slot.id, slot.count, slot.data);
+					container.setSlot(i, slot.id, slot.count, slot.data);
 				}
 				if(item.count == 0 || count >= maxCount){break;}
 			}
@@ -233,14 +236,14 @@ let StorageInterface = {
 		if(!slotsInitialized){
 			slots = this.getContainerSlots(container);
 		}
-		for(let s in slots){
-			let slot = container.getSlot(slots[s]);
+		for(let i in slots){
+			let slot = container.getSlot(slots[i]);
 			if(slot.id > 0){
 				let added = inputTile.interface.addItem(slot, side, maxCount - count);
 				if(added > 0){
 					count += added;
 					if(!container.slots){
-						container.setSlot(s, slot.id, slot.count, slot.data);
+						container.setSlot(i, slot.id, slot.count, slot.data);
 					}
 					if(oneStack || count >= maxCount){break;}
 				}

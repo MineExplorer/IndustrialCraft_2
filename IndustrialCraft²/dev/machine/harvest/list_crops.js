@@ -278,13 +278,6 @@ AgricultureAPI.registerCropCard({
         colorful: 0 ,
         weed: 2 
     },
-    baseSeed: {
-        id: 338,
-        size: 1,
-        growth: 3,
-        gain: 0,
-        resistance: 2
-    },
     maxSize: 4,
     getOptimalHarvestSize: function(crop) {return 4},
     getDiscoveredBy: function() {
@@ -529,13 +522,6 @@ AgricultureAPI.registerCropCard({
         colorful: 2 ,
         weed: 0
     },
-    baseSeed: {
-        id: 391,
-        size: 1,
-        growth: 1,
-        gain: 1,
-        resistance: 1
-    },
     maxSize: 7,
     getOptimalHarvestSize: function(crop){return 7},
     getDiscoveredBy: function() {
@@ -733,7 +719,7 @@ AgricultureAPI.registerCropCard({
     tick: function(te){
         if(te.data.currentSize == 1) return;
 
-        var entity = Entity.findNearest({x: this.x+.5, y: this.y+.5, z: this.z+.5}, null, 2);
+        var entity = Entity.findNearest({x: this.x + .5, y: this.y + .5, z: this.z + .5}, null, 2);
         if(!entity)return;
 
         Entity.damageEntity(entity, te.data.currentSize * 2);

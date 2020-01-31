@@ -19,21 +19,21 @@ var guiAnalyserObject = {
 	
 	drawing: [
 		{type: "background", color: 0},
-		{type: "bitmap", x: 250, y: UI.getScreenHeight()/10, bitmap: "agricultural_analyser", scale: GUI_SCALE/2.3},
+		{type: "bitmap", x: 250, y: UI.getScreenHeight() / 10, bitmap: "agricultural_analyser", scale: GUI_SCALE / 2.3},
 	],
 	
 	elements: {
 		"closeButton": {type: "button", x: 672, y: 77, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {onClick: function(container){
 			AgriculturalAnalyser.dropItems(container);
-			container.close();
-			AgriculturalAnalyser.container = null;
+            container.close();
+            AgriculturalAnalyser.hideAllValuse(container);
 		}}},
 		"textName": {type: "text", font: {size: 18}, x: 432, y: 86, width: 256, height: 42, text: Translation.translate("Crop Analyzer")}, 
-		"slotSeedIn": {type: "slot", x: 265, y: 75, size: GUI_SCALE*16, isValid: function(id, count, data){
+		"slotSeedIn": {type: "slot", x: 265, y: 75, size: GUI_SCALE * 16, isValid: function(id, count, data){
 			return id == ItemID.cropSeedBag;
 		}},
-		"slotSeedOut": {type: "slot", x: 360, y: 75, size: GUI_SCALE*16, isValid: function(){return false;}},
-		"slotEnergy": {type: "slot", x: 615, y: 75, size: GUI_SCALE*16, isValid: MachineRegistry.isValidEUStorage}
+		"slotSeedOut": {type: "slot", x: 360, y: 75, size: GUI_SCALE * 16, isValid: function(){return false;}},
+		"slotEnergy": {type: "slot", x: 615, y: 75, size: GUI_SCALE * 16, isValid: MachineRegistry.isValidEUStorage}
 	}
 };
 for(var i = 0; i < 10; i++){
@@ -60,7 +60,6 @@ var AgriculturalAnalyser = {
                 if(currentEnergy > ned){ 
                     ICTool.dischargeItem(slotEnergy, ned);
                     slotIn.extra.putInt("scan", level + 1);
-                    alert("new level " + (level + 1));
                 }
             }
             slotOut.id = slotIn.id;

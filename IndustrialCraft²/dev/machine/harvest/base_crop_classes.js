@@ -1,4 +1,11 @@
 AgricultureAPI.abstractFunctions["IC2CropCard"] = {
+    baseSeed: {
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 1,
     getOptimalHarvestSize(te) {
         return te.crop.maxSize;
     },

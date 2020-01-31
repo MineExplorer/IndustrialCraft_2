@@ -35,20 +35,22 @@ TileEntity.registerPrototype(BlockID.perches, {
     tick: function () {
         this.checkGround();
         this.checkPlayerRunning();
-        if(World.getThreadTime() % 192 == 0)this.performTick();
+        if(World.getThreadTime() % 192 == 0) this.performTick();
     }, 
     click: function(id, count, data, coords){
-        var card = AgricultureAPI.getCardFromSeed({id: id, data: data});
-        if(id == ItemID.debugItem && this.crop){
-            this.data.currentSize = this.crop.maxSize;
-            this.updateRender();
-            return;
-        }
-        if(Config.debugMode && id == 351 && this.data.crossingBase){
-            this.attemptCrossing();
-            return;
-        }
         if(id){
+            var card = AgricultureAPI.getCardFromSeed({id: id, data: data});
+            if(id == ItemID.agriculturalAnalyzer) return;
+            if(id == ItemID.debugItem && this.crop){
+                this.data.currentSize = this.crop.maxSize;
+                this.updateRender();
+                return;
+            }
+            if(Config.debugMode && id == 351 && this.data.crossingBase){
+                this.attemptCrossing();
+                return;
+            }
+
             if (!this.crop && !this.data.crossingBase && id == ItemID.perches){
                 this.data.crossingBase = true;
                 this.data.dirty = true;
@@ -123,27 +125,27 @@ TileEntity.registerPrototype(BlockID.perches, {
 
         if(playerX == this.x && playerY-1 == this.y && playerZ == this.z){
             var vel = Player.getVelocity();
-            var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z)
+            var horizontalVel = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
             if(horizontalVel > 0.15 && this.crop.onEntityCollision(this)){
                 World.destroyBlock(this.x,this.y,this.z);
             }
         }
     },
     checkGround: function(){
-        if(World.getBlockID(this.x,this.y-1,this.z)!=60){
-            World.destroyBlock(this.x,this.y,this.z);
+        if(World.getBlockID(this.x, this.y - 1, this.z) != 60){
+            World.destroyBlock(this.x, this.y, this.z);
         }
     },
     performTick: function(){
-        if(World.getThreadTime()%768 == 0){
+        if(World.getThreadTime() % 768 == 0){
             this.updateTerrainHumidity();
             this.updateTerrainNutrients();
             this.updateTerrainAirQuality();
         }
         
         if (!this.crop  && (!this.data.crossingBase || !this.attemptCrossing())) {
-            if (random(0,100) != 0 || this.data.storageWeedEX > 0) {
-                if (this.data.storageWeedEX  > 0 && random(0,10)  == 0) {
+            if (random(0, 100) != 0 || this.data.storageWeedEX > 0) {
+                if (this.data.storageWeedEX  > 0 && random(0, 10)  == 0) {
                     this.data.storageWeedEX--;
                 }
                 return;
@@ -174,7 +176,7 @@ TileEntity.registerPrototype(BlockID.perches, {
         if (this.data.storageNutrients > 0) this.data.storageNutrients--;
         if (this.data.storageWater > 0) this.data.storageWater--;
 
-        if (this.crop.isWeed(this) && random(0,50) - this.data.statGrowth <= 2){
+        if (this.crop.isWeed(this) && random(0, 50) - this.data.statGrowth <= 2){
             this.performWeedWork();
         }
     },
@@ -242,7 +244,7 @@ TileEntity.registerPrototype(BlockID.perches, {
         this.data.growthPoints += Math.round(totalGrowth);
     },
     performWeedWork: function(){
-        var coords = this.relativeCropCoords[random(0,3)];
+        var coords = this.relativeCropCoords[random(0, 3)];
         var preCoords = [this.x+coords[0],this.y+coords[0],this.z+coords[0]];
         if(World.getBlockID(preCoords[0], preCoords[1], preCoords[2]) == BlockID.perches){
             var TE = World.getTileEntity(preCoords[0], preCoords[1], preCoords[2]);
@@ -295,7 +297,7 @@ TileEntity.registerPrototype(BlockID.perches, {
             var crop = cropCards[j];
             for(var crd in cropCoords){
                 var coords = cropCoords[crd];
-                var tileEnt = World.getTileEntity(coords.x, coords.y,coords.z);
+                var tileEnt = World.getTileEntity(coords.x, coords.y, coords.z);
                 total += this.calculateRatioFor(crop, tileEnt.crop);
             }
             ratios[j] = total;
@@ -457,7 +459,7 @@ TileEntity.registerPrototype(BlockID.perches, {
         var ret = [];
         for (var i = 0; i < dropCount2; i++) {
             ret[i] = this.crop.getGain(this);
-            if (ret[i] && random(0,100) <= this.data.statGain) {
+            if (ret[i] && random(0, 100) <= this.data.statGain) {
                 ret[i] = ret[i].count++;
             }
         }
@@ -504,10 +506,8 @@ TileEntity.registerPrototype(BlockID.perches, {
         }else if (Math.random() <= firstchance * 1.5) dropCount++;
         
         var item = this.crop.getSeeds(this);
-        for(var ccount = 0; ccount < dropCount; ccount++){
-            nativeDropItem(this.x, this.y, this.z, 0, item.id, 1, item.data, item.extra);
-        }
-
+        nativeDropItem(this.x, this.y, this.z, 0, item.id, dropCount, item.data, item.extra);
+        
         this.reset();
         this.updateRender();
         return true;

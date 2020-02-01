@@ -70,6 +70,8 @@ MachineRegistry.registerEUStorage(BlockID.storageCESU, {
 	setFacing: MachineRegistry.setFacing,
 	
 	tick: function(){
+		StorageInterface.checkHoppers(this);
+		
 		var energyStorage = this.getEnergyStorage();
 		var tier = this.getTier();
 		var transfer = transferByTier[tier] * 2;
@@ -118,3 +120,24 @@ MachineRegistry.registerEUStorage(BlockID.storageCESU, {
 });
 
 MachineRegistry.setStoragePlaceFunction("storageCESU", true);
+
+StorageInterface.createInterface(BlockID.storageCESU, {
+	slots: {
+		"slot1": {input: true, output: true, 
+			isValid: function(item, side, tileEntity){
+				return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", 2);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data <= 1;
+			}
+		},
+		"slot2": {input: true, output: true,
+			isValid: function(item, side, tileEntity){
+				return side > 1 && ChargeItemRegistry.isValidStorage(item.id, "Eu", 2);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data == Item.getMaxDamage(item.id);
+			}
+		}
+	}
+});

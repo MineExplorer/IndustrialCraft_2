@@ -10,11 +10,11 @@ Item.setLiquidClip(ItemID.cellEmpty, true);
 LiquidRegistry.registerItem("water", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellWater, data: 0});
 LiquidRegistry.registerItem("lava", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellLava, data: 0});
 
-Recipes.addShaped({id: ItemID.cellEmpty, count: 2, data: 0}, [
+Recipes.addShaped({id: ItemID.cellEmpty, count: 1, data: 0}, [
 	" x ",
-	"x x",
+	"xgx",
 	" x "
-], ['x', ItemID.casingTin, 0]);
+], ['x', ItemID.casingTin, 0, 'g', 102, 0]);
 
 Recipes.addShaped({id: 49, count: 1, data: 0}, [
 	"aa",

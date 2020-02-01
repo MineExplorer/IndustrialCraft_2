@@ -180,7 +180,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				{type: "bitmap", x: 450, y: 320, scale: 6, bitmap: "empty_button_up"}
 			],
 			elements: {
-				slotMode: {type: "slot", x: 450, y: 330, z: 1, size: 90, visual: true, needClean: true, bitmap: "_default_slot_empty", source: {id: 0, count: 0, data: 0}},
+				slotMode: {type: "slot", x: 445, y: 320, z: 1, size: 112, visual: true, needClean: true, bitmap: "_default_slot_empty", source: {id: 0, count: 0, data: 0}},
 				input0: {type: "slot", x: 220, y: 190, size: 120},
 				output0: {type: "slot", x: 660, y: 190, size: 120}
 			}

@@ -74,6 +74,8 @@ MachineRegistry.registerEUStorage(BlockID.storageBatBox, {
 	setFacing: MachineRegistry.setFacing,
 	
 	tick: function(){
+		StorageInterface.checkHoppers(this);
+		
 		var energyStorage = this.getEnergyStorage();
 		var tier = this.getTier();
 		var transfer = transferByTier[tier] * 2;
@@ -117,3 +119,24 @@ MachineRegistry.registerEUStorage(BlockID.storageBatBox, {
 
 MachineRegistry.setStoragePlaceFunction("storageBatBox", true);
 ToolAPI.registerBlockMaterial(BlockID.storageBatBox, "wood");
+
+StorageInterface.createInterface(BlockID.storageBatBox, {
+	slots: {
+		"slot1": {input: true, output: true, 
+			isValid: function(item, side, tileEntity){
+				return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", 1);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data <= 1;
+			}
+		},
+		"slot2": {input: true, output: true,
+			isValid: function(item, side, tileEntity){
+				return side > 1 && ChargeItemRegistry.isValidStorage(item.id, "Eu", 1);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data == Item.getMaxDamage(item.id);
+			}
+		}
+	}
+});

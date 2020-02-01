@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "TileRender",
-	version: 11,
+	version: 12,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -227,6 +227,18 @@ var TileRenderer = {
 		render.addEntry(model);
 		BlockRenderer.setStaticICRender(id, data, render);	
 	},
+	
+	getCropModel:function(texture){   
+        var render = new ICRender.Model(); 
+        var model = BlockRenderer.createModel(); 
+        model.addBox(0.2499, 0.01, 0,0.25, 0.99, 1, texture[0], texture[1]); 
+        model.addBox(0, 0.01, 0.2499, 1, 0.99, 0.25, texture[0], texture[1]); 
+        model.addBox(0.7499, 0.01, 0, 0.75, 0.99, 1, texture[0], texture[1]); 
+        model.addBox(0, 0.01, 0.7499,1, 0.99, 0.75, texture[0], texture[1]); 
+        render.addEntry(model); 
+        return render; 
+
+    }, 
 	
 	makeSlab: function(id, fullBlockID, fullBlockData){
 		this.setSlabShape(id);

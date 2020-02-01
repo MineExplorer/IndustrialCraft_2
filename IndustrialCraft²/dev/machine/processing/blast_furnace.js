@@ -15,7 +15,7 @@ Callback.addCallback("PreLoaded", function(){
 		"aaa",
 		"asa",
 		"axa"
-	], ['s', BlockID.machineBlockBasic, 0,'a', ItemID.casingIron, 0,'x', ItemID.heatConductor, 0]);
+	], ['s', BlockID.machineBlockBasic, 0, 'a', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
 	
 	MachineRecipeRegistry.registerRecipesFor("blastFurnace", {
 		15: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
@@ -204,7 +204,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 	
 	heatReceiveFunction: function(amount){
 		var slot = this.container.getSlot("slotSource");
-		if(this.data.isHeating || this.data.sourceID > 0 || MachineRecipeRegistry.getRecipeResult("blastFrunace", slot.id)){
+		if(this.data.isHeating || this.data.sourceID > 0 || MachineRecipeRegistry.getRecipeResult("blastFurnace", slot.id)){
 			amount = Math.min(this.getMaxHeat() - this.data.heat, Math.min(amount, 20));
 			this.data.heat += amount;
 			return amount;

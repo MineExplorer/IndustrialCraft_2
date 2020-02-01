@@ -14,6 +14,8 @@ Item.createFoodItem("terraWart", "Terra Wart", {name: "terra_wart"}, {food: 1});
 Item.registerNameOverrideFunction(ItemID.terraWart, RARE_ITEM_NAME);
 
 Callback.addCallback("FoodEaten", function(heal, satRatio){
+    if(Player.getCarriedItem().id != ItemID.terraWart) return;
+    
     RadiationAPI.addRadiation(-600);
     for(var i in negativePotions){
         var potionID = negativePotions[i];

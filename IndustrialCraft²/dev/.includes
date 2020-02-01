@@ -109,6 +109,9 @@ items/crop/hydration_capsule.js
 items/crop/terra_wart.js
 items/crop/coffee_beans.js
 
+items/drinks/mug.js
+items/drinks/coffee.js
+
 items/can.js
 
 items/electric/cable.js

@@ -121,7 +121,6 @@ var TileRenderer = {
 
 	setRotationPlaceFunction: function(id, fullRotation){
 		Block.registerPlaceFunction(id, function(coords, item, block){
-			Debug.m(canTileBeReplaced(block.id, block.data));
 			var place = canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
 			World.setBlock(place.x, place.y, place.z, item.id, 0);
 			var rotation = TileRenderer.getBlockRotation(fullRotation);

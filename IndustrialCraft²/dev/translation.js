@@ -16,7 +16,7 @@ Translation.addTranslation("Silver Block", {ru: "Серебряный блок",
 Translation.addTranslation("Uranium Block", {ru: "Урановый блок", es: "Bloque de Uranio", pt: "Bloco de Urânio", zh: "铀块"});
 
 Translation.addTranslation("Mining Pipe", {ru: "Буровая труба", es: "Tubo Minero", pt: "Tubo de Mineração", zh: "采矿管道"});
-Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", pt: "Vidro Reforçado", zh: "防爆石"});
+Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", pt: "Pedra Reforçada", zh: "防爆石"});
 Translation.addTranslation("Reinforced Glass", {ru: "Укреплённое стекло", es: "Cristal Reforzado", pt: "Vidro Reforçado", zh: "防爆玻璃"});
 Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", pt: "Estrutura de Máquina Básica", zh: "基础机械外壳"});
 Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Estrutura de Máquina Avançada", zh: "高级机械外壳"});
@@ -29,7 +29,7 @@ Translation.addTranslation("Water Mill", {ru: "Гидрогенератор", es
 Translation.addTranslation("Wind Mill", {ru: "Ветрогенератор", es: "Molino de Viento", pt: "Cata-vento", zh: "风力发电机"});
 Translation.addTranslation("Radioisotope Thermoelectric Generator", {ru: "Радиоизотопный термоэлектрический генератор", es: "Generador Radioisotopos Termoeléctrico", pt: "Gerador Termoelétrico de Radioisótopos", zh: "放射性同位素温差发电机"});
 
-Translation.addTranslation("Nuclear Reactor", {ru: "Ядерный реактор", es: "Reactor Nuclear", pt: "Reactor Nuclear", zh: "核反应堆"});
+Translation.addTranslation("Nuclear Reactor", {ru: "Ядерный реактор", es: "Reactor Nuclear", pt: "Reator Nuclear", zh: "核反应堆"});
 Translation.addTranslation("Reactor Chamber", {ru: "Реакторная камера", es: "Cámara del Reactor", pt: "Câmara de Reator", zh: "核反应仓"});
 
 // Heat Generators
@@ -127,7 +127,7 @@ Translation.addTranslation("Quad Fuel Rod (Depleted MOX)", {ru: "Счетвер�
 Translation.addTranslation("Reactor Plating", {ru: "Обшивка реактора", es: "Revestimiento para Reactor", pt: "Placa de Reator", zh: "反应堆隔板"});
 Translation.addTranslation("Containment Reactor Plating", {ru: "Сдерживающая реакторная обшивка", es: "Revestimiento de Reactor con Capacidad de Calor", pt: "Placa de Contenção de Reator", zh: "高热容反应堆隔板"});
 Translation.addTranslation("Heat-Capacity Reactor Plating", {ru: "Теплоёмкая реакторная обшивка", es: "Revestimiento de Contención para Reactor", pt: "Placa de Reator com Capacidade de Calor", zh: "密封反应堆隔热板"});
-Translation.addTranslation("Neutron Reflector", {ru: "Отражатель нейтронов", es: "Reflector de Neutrones", pt: "Reflector de Neutrons", zh: "中子反射板"});
+Translation.addTranslation("Neutron Reflector", {ru: "Отражатель нейтронов", es: "Reflector de Neutrones", pt: "Refletor de Neutrons", zh: "中子反射板"});
 Translation.addTranslation("Thick Neutron Reflector", {ru: "Утолщённый отражатель нейтронов", es: "Reflector de Neutrones Grueso", pt: "Reflector de Neutrons Grosso", zh: "加厚中子反射板"});
 Translation.addTranslation("Iridium Neutron Reflector", {ru: "Иридиевый отражатель нейтронов", es: "Reflector de Neutrones de Iridio", pt: "Reflector de Neutrons de Irídio", zh: "铱中子反射板"});
 Translation.addTranslation("10k Coolant Cell", {ru: "Охлаждающая капсула 10к", es: "Celda Refrigerante 10k", pt: "Célula Refrigerante de 10k", zh: "10k冷却单元"});
@@ -193,7 +193,7 @@ Translation.addTranslation("Purified Crushed Silver Ore", {ru: "Очищенна
 Translation.addTranslation("Purified Crushed Uranium Ore", {ru: "Очищенная измельчённая урановая руда", es: "Mineral de Uranio Triturado y Purificado", pt: "Minério Purificado de Urânio Triturado", zh: "纯净的粉碎铀矿石"});
 
 // Dusts
-Translation.addTranslation("Copper Dust", {ru: "Медная пыль", es: "Polvo de Cobre", pt: "ó de Cobre", zh: "铜粉"});
+Translation.addTranslation("Copper Dust", {ru: "Медная пыль", es: "Polvo de Cobre", pt: "Pó de Cobre", zh: "铜粉"});
 Translation.addTranslation("Tin Dust", {ru: "Оловянная пыль", es: "Polvo de Estaño", pt: "Pó de Estanho", zh: "锡粉"});
 Translation.addTranslation("Bronze Dust", {ru: "Бронзовая пыль", es: "Polvo de Bronce", pt: "Pó de Bronze", zh: "青铜粉"});
 Translation.addTranslation("Iron Dust", {ru: "Железная пыль", es: "Polvo de Hierro", pt: "Pó de Ferro", zh: "铁粉"});
@@ -281,20 +281,20 @@ Translation.addTranslation("Glass Fibre Cable", {ru: "Стекловолокон
 
 // Armor
 Translation.addTranslation("Bronze Helmet", {ru: "Бронзовый шлем", es: "Casco de Bronce", pt: "Elmo de Bronze", zh: "青铜头盔"});
-Translation.addTranslation("Bronze Chestplate", {ru: "Бронзовый нагрудник", es: "Chaleco de Bronce", pt: "Armadura de Bronze", zh: "青铜胸甲"});
+Translation.addTranslation("Bronze Chestplate", {ru: "Бронзовый нагрудник", es: "Chaleco de Bronce", pt: "Peitoral de Bronze", zh: "青铜胸甲"});
 Translation.addTranslation("Bronze Leggings", {ru: "Бронзовые поножи", es: "Pantalones de Bronce", pt: "Perneiras de Bronze", zh: "青铜护腿"});
 Translation.addTranslation("Bronze Boots", {ru: "Бронзовые ботинки", es: "Botas de Bronce", pt: "Botas de Bronze", zh: "青铜靴子"});
 Translation.addTranslation("Composite Helmet", {ru: "Композитный шлем", es: "Casco de Compuesto", pt: "Capacete Composto", zh: "复合头盔"});
 Translation.addTranslation("Composite Chestplate", {ru: "Композитный нагрудник", es: "Chaleco de Compuesto", pt: "Colete Composto", zh: "复合胸甲"});
 Translation.addTranslation("Composite Leggings", {ru: "Композитные поножи", es: "Pantalones de Compuesto", pt: "Perneiras compostas", zh: "复合护腿"});
 Translation.addTranslation("Composite Boots", {ru: "Композитные ботинки", es: "Botas de Compuesto", pt: "Botas compostas", zh: "复合靴子"});
-Translation.addTranslation("Nightvision Goggles", {ru: "Прибор ночного зрения", es: "Gafas de Vision Nocturna", pt: "Óculos de Visão", zh: "夜视镜"});
+Translation.addTranslation("Nightvision Goggles", {ru: "Прибор ночного зрения", es: "Gafas de Vision Nocturna", pt: "Óculos de Visão Noturna", zh: "夜视镜"});
 Translation.addTranslation("Nano Helmet", {ru: "Нано-шлем", es: "Casco de Nanotraje", pt: "Elmo de Nanotecnologia", zh: "纳米头盔"});
-Translation.addTranslation("Nano Bodyarmor", {ru: "Нано-жилет", es: "Chaleco de Nanotraje", pt: "Armadura de Nanotecnologia", zh: "纳米胸甲"});
+Translation.addTranslation("Nano Bodyarmor", {ru: "Нано-жилет", es: "Chaleco de Nanotraje", pt: "Peitoral de Nanotecnologia", zh: "纳米胸甲"});
 Translation.addTranslation("Nano Leggings", {ru: "Нано-штаны", es: "Pantalones de Nanotraje", pt: "Calça de Nanotecnologia", zh: "纳米护腿"});
 Translation.addTranslation("Nano Boots", {ru: "Нано-ботинки", es: "Botas de Nanotraje", pt: "Botas de Nanotecnologia", zh: "纳米靴子"});
 Translation.addTranslation("Quantum Helmet", {ru: "Квантовый шлем", es: "Casco de Traje Cuántico", pt: "Elmo Quântico", zh: "量子头盔"});
-Translation.addTranslation("Quantum Bodyarmor", {ru: "Квантовый жилет", es: "Chaleco de Traje Cuántico", pt: "Armadura Quântica", zh: "量子护甲"});
+Translation.addTranslation("Quantum Bodyarmor", {ru: "Квантовый жилет", es: "Chaleco de Traje Cuántico", pt: "Peitoral Quântica", zh: "量子护甲"});
 Translation.addTranslation("Quantum Leggings", {ru: "Квантовые штаны", es: "Pantalones de Traje Cuántico", pt: "Calças Quânticas", zh: "量子护腿"});
 Translation.addTranslation("Quantum Boots", {ru: "Квантовые ботинки", es: "Botas de Traje Cuántico", pt: "Botas Quânticas", zh: "量子靴子"});
 Translation.addTranslation("Scuba Helmet", {ru: "Шлем-акваланг", es: "Casco de Buceo", pt: "Máscara de Mergulho", zh: "防化头盔"});
@@ -322,9 +322,9 @@ Translation.addTranslation("Bronze Pickaxe", {ru: "Бронзовая кирка
 Translation.addTranslation("Bronze Axe", {ru: "Бронзовый топор", es: "Hacha de Bronce", pt: "Machado de Bronze", zh: "青铜斧"});
 Translation.addTranslation("Bronze Hoe", {ru: "Бронзовая мотыга", es: "Azada de Bronce", pt: "Enxada de Bronze", zh: "青铜锄"});
 Translation.addTranslation("Wrench", {ru: "Гаечный ключ", es: "Llave Inglesa", pt: "Chave de Grifo", zh: "扳手"});
-Translation.addTranslation("Electric Wrench", {ru: "Электроключ", es: "Llave Inglesa Eléctrica", pt: "Laser de Mineração", zh: "电动扳手"});
+Translation.addTranslation("Electric Wrench", {ru: "Электроключ", es: "Llave Inglesa Eléctrica", pt: "Chave de Grifo Elétrica", zh: "电动扳手"});
 Translation.addTranslation("Electric Hoe", {ru: "Электромотыга", es: "Azada Eléctrica", pt: "Enxada Elétrica", zh: "电动锄"});
-Translation.addTranslation("Electric Treetap", {ru: "Электрокраник", es: "Grifo para Resina Eléctrico", pt: "Chave de Grifo Elétrica", zh: "电动树脂提取器"});
+Translation.addTranslation("Electric Treetap", {ru: "Электрокраник", es: "Grifo para Resina Eléctrico", pt: "Drenador Elétrico", zh: "电动树脂提取器"});
 Translation.addTranslation("Chainsaw", {ru: "Электропила", es: "Motosierra", pt: "Serra Elétrica", zh: "链锯"});
 Translation.addTranslation("Mining Drill", {ru: "Шахтёрский бур", es: "Taladro", pt: "Broca de Mineração", zh: "采矿钻头"});
 Translation.addTranslation("Diamond Drill", {ru: "Алмазный бур", es: "Taladro de Diamante", pt: "Broca de Diamante", zh: "钻石钻头"});

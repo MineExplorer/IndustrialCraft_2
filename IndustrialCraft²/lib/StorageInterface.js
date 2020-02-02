@@ -5,9 +5,6 @@ LIBRARY({
 	api: "CoreEngine"
 });
 
-let CONSTANT_VANILLA_UI_TILES = ModAPI.requireGlobal("CONSTANT_VANILLA_UI_TILES");
-CONSTANT_VANILLA_UI_TILES[154] = true;
-
 let StorageInterface = {
 	data: {},
 	

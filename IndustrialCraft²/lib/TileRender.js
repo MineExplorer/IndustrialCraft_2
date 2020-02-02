@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "TileRender",
-	version: 12,
+	version: 13,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -14,10 +14,11 @@ function canTileBeReplaced(id, data) {
     return CONSTANT_REPLACEABLE_TILES[id] || false;
 }
 var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced = "+uneval(canTileBeReplaced));
-var CONSTANT_REPLACEABLE_TILES = ModAPI.requireGlobal("CONSTANT_REPLACEABLE_TILES")
+var CONSTANT_REPLACEABLE_TILES = ModAPI.requireGlobal("CONSTANT_REPLACEABLE_TILES");
 CONSTANT_REPLACEABLE_TILES[51] = true;
 CONSTANT_REPLACEABLE_TILES[78] = true;
 CONSTANT_REPLACEABLE_TILES[106] = true;
+ModAPI.requireGlobal("CONSTANT_VANILLA_UI_TILES[158]=false");
 
 var TileRenderer = {
 	data: {},
@@ -120,6 +121,7 @@ var TileRenderer = {
 
 	setRotationPlaceFunction: function(id, fullRotation){
 		Block.registerPlaceFunction(id, function(coords, item, block){
+			Debug.m(canTileBeReplaced(block.id, block.data));
 			var place = canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
 			World.setBlock(place.x, place.y, place.z, item.id, 0);
 			var rotation = TileRenderer.getBlockRotation(fullRotation);

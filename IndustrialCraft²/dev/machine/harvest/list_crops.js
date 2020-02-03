@@ -9,6 +9,13 @@ AgricultureAPI.registerCropCard({
         colorful: 0 ,
         weed: 5
     },
+    baseSeed: {
+        addToCreative: false,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
     maxSize: 5,
     getOptimalHarvestSize: function(crop){return 1},
     canBeHarvested: function(tileentity){return false},
@@ -27,7 +34,7 @@ AgricultureAPI.registerCropCard({
         consumable: 4 ,
         defensive: 0,
         colorful: 0 ,
-        weed: 2 
+        weed: 2
     },
     baseSeed: {
         id: 295,
@@ -56,7 +63,7 @@ AgricultureAPI.registerCropCard({
         consumable: 1 ,
         defensive: 0,
         colorful: 3 ,
-        weed: 1 
+        weed: 1
     },
     baseSeed: {
         id: 361,
@@ -70,7 +77,7 @@ AgricultureAPI.registerCropCard({
         return {id: 86, count: 1, data: 0}
     },
     getGrowthDuration: function(te) {
-        if (te.data.currentSize == 3) return 600;  
+        if (te.data.currentSize == 3) return 600;
         return 200;
     },
     getSeed: function(){
@@ -91,7 +98,7 @@ AgricultureAPI.registerCropCard({
         consumable: 4 ,
         defensive: 0,
         colorful: 2 ,
-        weed: 0 
+        weed: 0
     },
     baseSeed: {
         id: 362,
@@ -179,7 +186,7 @@ AgricultureAPI.registerCropCard({
         consumable: 1 ,
         defensive: 3,
         colorful: 3 ,
-        weed: 3 
+        weed: 3
     },
     maxSize: 6,
     getOptimalHarvestSize: function(crop){return 4},
@@ -244,7 +251,7 @@ AgricultureAPI.registerCropCard({
         consumable: 0 ,
         defensive: 2,
         colorful: 0 ,
-        weed: 2 
+        weed: 2
     },
     baseSeed: {
         id: 338,
@@ -276,7 +283,7 @@ AgricultureAPI.registerCropCard({
         consumable: 0 ,
         defensive: 2,
         colorful: 0 ,
-        weed: 2 
+        weed: 2
     },
     maxSize: 4,
     getOptimalHarvestSize: function(crop) {return 4},
@@ -388,7 +395,7 @@ AgricultureAPI.registerCropCard({
         consumable: 2 ,
         defensive: 0,
         colorful: 2 ,
-        weed: 1 
+        weed: 1
     },
     baseSeed: {
         id: 372,
@@ -424,7 +431,7 @@ AgricultureAPI.registerCropCard({
         consumable: 4 ,
         defensive: 0,
         colorful: 3 ,
-        weed: 0 
+        weed: 0
     },
     baseSeed: {
         id: "ItemID.terraWart",
@@ -625,7 +632,7 @@ AgricultureAPI.registerCropCard({
         consumable: 4 ,
         defensive: 0,
         colorful: 0 ,
-        weed: 2 
+        weed: 2
     },
     baseSeed: {
         id: 391,
@@ -650,7 +657,7 @@ AgricultureAPI.registerCropCard({
         consumable: 4 ,
         defensive: 0,
         colorful: 0 ,
-        weed: 2 
+        weed: 2
     },
     baseSeed: {
         id: 392,
@@ -686,7 +693,7 @@ AgricultureAPI.registerCropCard({
         consumable: 1 ,
         defensive: 3,
         colorful: 1 ,
-        weed: 4 
+        weed: 4
     },
     baseSeed: {
         id: 81,
@@ -760,10 +767,10 @@ AgricultureAPI.registerCropCard({
     properties: {
         tier: 1,
         chemistry: 0,
-        consumable: 4 ,
+        consumable: 4,
         defensive: 0,
-        colorful: 1 ,
-        weed: 2 
+        colorful: 1,
+        weed: 2
     },
     baseSeed: {
         id: 458,

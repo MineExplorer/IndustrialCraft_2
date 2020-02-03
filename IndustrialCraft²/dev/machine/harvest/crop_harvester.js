@@ -83,18 +83,18 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
     tick: function(){
         this.setDefaultValues();
         UpgradeAPI.executeUpgrades(this);
-        
+
         if(this.data.energy>200) this.scan();
-        
+
         var tier = this.getTier();
         var energyStorage = this.getEnergyStorage();
         this.data.energy = Math.min(this.data.energy, energyStorage);
         this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
-        
+
         this.container.setScale("energyScale", this.data.energy / energyStorage);
         this.container.validateAll();
 	},
-	
+
 	scan: function(){
         this.data.scanX++;
         if (this.data.scanX > 5) {
@@ -153,7 +153,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         }
         return true;
     },
-    
+
     getEnergyStorage: function(){
         return this.data.energy_storage;
     },

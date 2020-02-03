@@ -40,12 +40,12 @@ var guiCropMatron = new UI.StandartWindow({
 		slot: "default_slot",
 		invSlot: "default_slot"
     },
-    
+
     drawing: [
         {type: "background", color: Color.parseColor("#b3b3b3")},
         {type: "bitmap", x: 350, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
     ],
-    
+
     elements: {
         "energyScale": {type: "scale", x: 350, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
         "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "dust_slot", isValid:isFertilizer},
@@ -97,16 +97,16 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
         scanY: -1,
         scanZ: -4
     },
-    
+
     getGuiScreen: function(){
         return guiCropMatron;
     },
-    
+
     getTier: function(){
         return this.data.power_tier;
     },
-    
-    
+
+
     tick: function(){
         let newActive = false;
         if(this.data.energy >= 31){
@@ -164,11 +164,11 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
         }
         return null
     },
-    
+
     getEnergyStorage: function(){
         return this.data.energy_storage;
     },
-    
+
     renderModel: MachineRegistry.renderModelWithRotation,
     energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });

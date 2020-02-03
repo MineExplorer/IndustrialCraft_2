@@ -14,7 +14,7 @@ var AgricultureAPI = {
         if(!card.texture) card.texture = card.id;
         if(card.base){
             var funcs = AgricultureAPI.abstractFunctions[card.base];
-            if(funcs) this.addMissingFuncsToCard(card, funcs);            
+            if(funcs) this.addMissingFuncsToCard(card, funcs);
         }
         this.addMissingFuncsToCard(card, AgricultureAPI.abstractFunctions["IC2CropCard"]);
         if(card.baseSeed.addToCreative != false){
@@ -22,7 +22,7 @@ var AgricultureAPI = {
 		}
         this.cropCards.push(card);
     },
-    addMissingFuncsToCard: function(card, functions){ 
+    addMissingFuncsToCard: function(card, functions){
         for(var funcName in functions){
             if(!card[funcName]){
                 card[funcName] = functions[funcName];
@@ -34,13 +34,13 @@ var AgricultureAPI = {
             if(this.cropCards[i].id == id)
 				return this.cropCards[i];
         }
-		return null  
+		return null;
     },
     getCardIndexFromID: function(id){
         for(var i in this.cropCards){
             if(this.cropCards[i].id == id) return i;
         }
-		return null  
+		return null;
     },
     getHumidityBiomeBonus: function(x, z){
         return 0;

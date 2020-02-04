@@ -108,6 +108,8 @@ items/crop/fertilizer.js
 items/crop/hydration_capsule.js
 items/crop/terra_wart.js
 items/crop/coffee_beans.js
+items/crop/hops.js
+items/crop/weed.js
 
 items/food/mug.js
 items/food/coffee.js

@@ -309,7 +309,7 @@ TileEntity.registerPrototype(BlockID.perches, {
             var cur = Math.floor((min + max) / 2);
             var value = ratios[cur];
             if (search < value){
-                max = cur;   
+                max = cur;
             }else {
                 min = cur + 1;
             }
@@ -362,7 +362,7 @@ TileEntity.registerPrototype(BlockID.perches, {
             var sideTileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
             var blockId = World.getBlockID(coords.x, coords.y, coords.z)
 
-            if(!sideTileEntity || !sideTileEntity.crop || blockId != BlockID.perches) continue;  
+            if(!sideTileEntity || !sideTileEntity.crop || blockId != BlockID.perches) continue;
             if(sideTileEntity.data.currentSize <= 3) continue;
 
             var base = 4;
@@ -375,7 +375,7 @@ TileEntity.registerPrototype(BlockID.perches, {
         }
         return cropsCoords;
     },
-    calculateRatioFor: function(newCrop, oldCrop ){
+    calculateRatioFor: function(newCrop, oldCrop){
         if (newCrop.id == oldCrop.id) return 500;
 
         var value = 0;
@@ -408,7 +408,7 @@ TileEntity.registerPrototype(BlockID.perches, {
         this.data.storageNutrients += manual ? 100 : 90;
         return true;
     },
-    applyWeedEx: function(id,manual){
+    applyWeedEx: function(id, manual){
         if(id == ItemID.weedEx){
             var limit = manual ? 100 : 150;
             if (this.data.storageWeedEX >= limit) return false;
@@ -421,7 +421,7 @@ TileEntity.registerPrototype(BlockID.perches, {
         }
         return false;
     },
-    applyHydration: function(id,data,manual){
+    applyHydration: function(id, data, manual){
         if(id == ItemID.hydrationCell){
             var limit = 200;
             if (this.data.storageWater >= limit) return false;

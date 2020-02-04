@@ -25,6 +25,12 @@ block/reinforced.js
 block/cable.js
 block/mining_pipe.js
 
+block/crop/harvestAPI.js
+block/crop/biome_bonuses.js
+block/crop/base_crop_classes.js
+block/crop/crop.js
+block/crop/crop_cards.js
+
 machine/generator/generator.js
 machine/generator/geothermal.js
 machine/generator/solar.js
@@ -33,14 +39,6 @@ machine/generator/watermill.js
 machine/generator/rt_generator.js
 machine/generator/heat_solid.js
 machine/generator/heat_electric.js
-
-machine/harvest/harvestAPI.js
-machine/harvest/biome_bonuses.js
-machine/harvest/base_crop_classes.js
-machine/harvest/crop.js
-machine/harvest/list_crops.js
-machine/harvest/crop_harvester.js
-machine/harvest/сrop_matron.js
 
 machine/reactor/reactorAPI.js
 machine/reactor/nuclear_reactor.js
@@ -80,6 +78,8 @@ machine/fluid/tank.js
 
 machine/resource/miner.js
 machine/resource/advanced_miner.js
+machine/resource/crop_harvester.js
+machine/resource/сrop_matron.js
 
 machine/misc/teleporter.js
 machine/misc/lamp.js
@@ -109,10 +109,9 @@ items/crop/hydration_capsule.js
 items/crop/terra_wart.js
 items/crop/coffee_beans.js
 
-items/drinks/mug.js
-items/drinks/coffee.js
-
-items/can.js
+items/food/mug.js
+items/food/coffee.js
+items/food/can.js
 
 items/electric/cable.js
 items/electric/components.js

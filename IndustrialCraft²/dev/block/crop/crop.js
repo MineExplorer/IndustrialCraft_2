@@ -27,7 +27,7 @@ TileEntity.registerPrototype(BlockID.perches, {
         growthPoints: 0,
         scanLevel: 0,
         crossingBase: false
-    }, 
+    },
     init: function(){
         if(this.data.crop) this.crop = AgricultureAPI.cropCards[this.data.crop];
         this.updateRender();
@@ -36,7 +36,7 @@ TileEntity.registerPrototype(BlockID.perches, {
         this.checkGround();
         this.checkPlayerRunning();
         if(World.getThreadTime() % 192 == 0) this.performTick();
-    }, 
+    },
     click: function(id, count, data, coords){
         if(id){
             var card = AgricultureAPI.getCardFromSeed({id: id, data: data});
@@ -111,10 +111,10 @@ TileEntity.registerPrototype(BlockID.perches, {
             texture[0] = this.crop.texture;
             texture[1] = this.data.currentSize;
         }else if(this.data.crossingBase)texture[1]=1;
-        
+
         var render = TileRenderer.getCropModel(texture);
         BlockRenderer.mapAtCoords(this.x, this.y, this.z, render);
-    }, 
+    },
     checkPlayerRunning: function(){
         if(!this.crop)return;
 
@@ -142,7 +142,7 @@ TileEntity.registerPrototype(BlockID.perches, {
             this.updateTerrainNutrients();
             this.updateTerrainAirQuality();
         }
-        
+
         if (!this.crop  && (!this.data.crossingBase || !this.attemptCrossing())) {
             if (random(0, 100) != 0 || this.data.storageWeedEX > 0) {
                 if (this.data.storageWeedEX  > 0 && random(0, 10)  == 0) {
@@ -170,7 +170,7 @@ TileEntity.registerPrototype(BlockID.perches, {
 
                     this.updateRender();
                 }
-            }  
+            }
         }
 
         if (this.data.storageNutrients > 0) this.data.storageNutrients--;
@@ -213,12 +213,12 @@ TileEntity.registerPrototype(BlockID.perches, {
         if(GenerationUtils.canSeeSky(this.x, this.y + 1, this.z)) value+=2;
         value += Math.floor( fresh / 2);
         value += height;
-        
+
         this.data.terrainAirQuality = value;
     },
     performGrowthTick: function(){
         if (!this.crop) return;
-        
+
         var totalGrowth = 0;
         var baseGrowth = 3 + random(0, 7) + this.data.statGrowth;
         var properties = this.crop.properties;
@@ -233,7 +233,7 @@ TileEntity.registerPrototype(BlockID.perches, {
             var aux = (minimumQuality - providedQuality) * 4;
             if (aux > 100 && random(0, 32) > this.data.statResistance) {
                 totalGrowth = 0;
-                
+
                 this.reset();
                 this.updateRender();
             }else {
@@ -377,7 +377,7 @@ TileEntity.registerPrototype(BlockID.perches, {
     },
     calculateRatioFor: function(newCrop, oldCrop ){
         if (newCrop.id == oldCrop.id) return 500;
-        
+
         var value = 0;
         var propOld = oldCrop.properties;
         var propNew = newCrop.properties;
@@ -395,16 +395,16 @@ TileEntity.registerPrototype(BlockID.perches, {
                 if(attO == attN) value += 5;
             }
         }
-        
+
         var diff = newCrop.properties.tier - oldCrop.properties.tier;
         if (diff > 1) value -= 2 * diff;
         if (diff < -3) value += diff;
-        
+
         return Math.max(value, 0);
     },
     applyFertilizer: function(manual){
         if (this.data.storageNutrients >= 100) return false;
-        
+
         this.data.storageNutrients += manual ? 100 : 90;
         return true;
     },
@@ -412,7 +412,7 @@ TileEntity.registerPrototype(BlockID.perches, {
         if(id == ItemID.weedEx){
             var limit = manual ? 100 : 150;
             if (this.data.storageWeedEX >= limit) return false;
-            
+
             var amount = manual ? 50 : 100;
             this.data.storageWeedEX += amount;
 
@@ -452,7 +452,7 @@ TileEntity.registerPrototype(BlockID.perches, {
     },
     performHarvest: function(){
         if (!this.crop || !this.crop.canBeHarvested(this)) return null;
-        
+
         var chance = this.crop.dropGainChance(this);
         chance *= Math.pow(1.03, this.data.statGain);
         var dropCount2 = Math.max(0, Math.round(this.nextGaussian() * chance * 0.6827 + chance));
@@ -504,10 +504,10 @@ TileEntity.registerPrototype(BlockID.perches, {
             chance *= Math.pow(.95, this.statGain - 23);
             if (Math.random() <= chance) dropCount++;
         }else if (Math.random() <= firstchance * 1.5) dropCount++;
-        
+
         var item = this.crop.getSeeds(this);
         nativeDropItem(this.x, this.y, this.z, 0, item.id, dropCount, item.data, item.extra);
-        
+
         this.reset();
         this.updateRender();
         return true;

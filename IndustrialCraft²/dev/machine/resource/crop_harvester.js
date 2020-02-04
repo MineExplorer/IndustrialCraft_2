@@ -2,7 +2,6 @@ IDRegistry.genBlockID("cropHarvester");
 Block.createBlock("cropHarvester", [
 	{name: "Crop Harvester", texture: [["machine_bottom", 0], ["crop_harvester", 0]], inCreative: true}
 ], "opaque");
-//TileRenderer.setStandartModel(BlockID.cropHarvester, [["machine_bottom", 0], ["crop_harvester", 0]]);
 
 ItemName.addTierTooltip("cropHarvester", 1);
 
@@ -19,7 +18,6 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 var cropHarvesterGuiObject = {
-    outputSlotsNames: [],
     standart: {
         header: {text: {text: Translation.translate("Crop Harvester")}},
         inventory: {standart: true},
@@ -36,14 +34,7 @@ var cropHarvesterGuiObject = {
 		"slotAnalyser": {type: "slot", x: 440, y: 170, isValid: function(id, count, data){
 			return id == ItemID.agriculturalAnalyzer
 		}},
-		"slotUpgrade": {type: "slot", x: 640, y: 310, isValid: UpgradeAPI.isUpgrade}
-    }
-};
-
-cropHarvesterGuiObject.outputSlotsNames["slotAnalyser"] = {
-    input: true,
-    isValid: function(id){
-        return id == ItemID.agriculturalAnalyzer
+		"slotUpgrade": {type: "slot", x: 640, y: 310, isValid: UpgradeAPI.isValidUpgrade}
     }
 };
 
@@ -51,7 +42,6 @@ for(let ind = 0; ind < 15; ind++){
     let x = ind % 5;
     let y = Math.floor(ind / 5) + 1;
     let padd = 60;
-    cropHarvesterGuiObject.outputSlotsNames["outSlot" + ind] = {output: true};
     cropHarvesterGuiObject.elements["outSlot" + ind] = {type: "slot", x: 520 + padd * x, y: 50 + padd * y};
 }
 
@@ -68,7 +58,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         scanY:-1,
         scanZ:-5
     },
-    upgrades: [ "transformer", "energyStorage", "itemEjector"],
+    upgrades: ["transformer", "energyStorage", "itemEjector"],
     getGuiScreen: function(){
         return guiCropHarvester;
     },
@@ -84,7 +74,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         this.setDefaultValues();
         UpgradeAPI.executeUpgrades(this);
         
-        if(this.data.energy>200) this.scan();
+        if(this.data.energy > 200) this.scan();
         
         var tier = this.getTier();
         var energyStorage = this.getEnergyStorage();
@@ -127,7 +117,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
                     if(!cropAnalyser.id) this.data.energy -= 100;
 
                     if(item.count > 0){
-                        nativeDropItem(this.x, this.y + 1, this.z, 0, item.id, item.count, item.data, null);
+                        World.drop(this.x, this.y + 1, this.z, item.id, item.count, item.data, null);
                     }
                 }
             }
@@ -135,13 +125,13 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
     },
     putItem: function(item){
         for(var i = 0; i < 15; i++){
-            var slott = this.container.getSlot("outSlot" + i);
-            if(!slott.id || slott.id == item.id && slott.count < Item.getMaxStack(item.id)){
-                var putCount = Math.min(Item.getMaxStack(item.id) - slott.count, item.count);
-                slott.id = item.id;
-                slott.count += putCount;
-                slott.data = item.data;
-                item.count -= putCount;
+            var slot = this.container.getSlot("outSlot" + i);
+            if(!slot.id || slot.id == item.id && slot.count < Item.getMaxStack(item.id)){
+                var add = Math.min(Item.getMaxStack(item.id) - slot.count, item.count);
+                slot.id = item.id;
+                slot.count += add;
+                slot.data = item.data;
+                item.count -= add;
             }
         }
     },
@@ -160,5 +150,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
     energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 StorageInterface.createInterface(BlockID.cropHarvester, {
-	slots: cropHarvesterGuiObject.outputSlotsNames
+	slots: {
+		"outSlot^0-14": {output: true},
+	}
 });

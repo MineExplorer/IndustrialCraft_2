@@ -13,7 +13,7 @@ By using the library you automatically agree to these rules.
 
 LIBRARY({
 	name: "ToolLib",
-	version: 12,
+	version: 13,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -121,12 +121,12 @@ var ToolLib = {
 	
 	breakCarriedTool: function(damage){
 		var item = Player.getCarriedItem();
-		var enchant = this.getEnchantExtraData(item.extra);
+		var enchant = ToolAPI.getEnchantExtraData(item.extra);
 		if(Math.random() < 1 / (enchant.unbreaking + 1)){
 			item.data += damage;
 		}
 		if(item.data >= Item.getMaxDamage(item.id)){
-			var tool = this.getToolData(item.id);
+			var tool = ToolAPI.getToolData(item.id);
 			item.id = tool ? tool.brokenId : 0;
 			item.count = 1;
 			item.data = 0;

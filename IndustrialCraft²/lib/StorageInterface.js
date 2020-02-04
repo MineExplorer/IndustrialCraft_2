@@ -5,6 +5,8 @@ LIBRARY({
 	api: "CoreEngine"
 });
 
+let LIQUID_STORAGE_MAX_LIMIT = 99999999;
+
 let StorageInterface = {
 	data: {},
 	
@@ -42,23 +44,40 @@ let StorageInterface = {
 				this._init();
 			}
 			
-			if(!tilePrototype.getTransportSlots){
-				let inputSlots = [], outputSlots = [];
-				for(let i in interface.slots){
-					let slot = interface.slots[i];
-					if(slot.input) inputSlots.push(i);
-					if(slot.output) outputSlots.push(i);
+			if(interface.slots){
+				for(let name in interface.slots){
+					Logger.Log(name);
+					if(name.includes('^')){
+						let slotData = interface.slots[name];
+						let str = name.split('^');
+						let index = str[1].split('-');
+						for(let i = parseInt(index[0]); i <= parseInt(index[1]); i++){
+							interface.slots[str[0] + i] = slotData;
+						}
+						delete interface.slots[name];
+					}
 				}
-				tilePrototype.getTransportSlots = function(){
-					return {input: inputSlots, output: outputSlots};
+				if(!tilePrototype.getTransportSlots){
+					let inputSlots = [], outputSlots = [];
+					for(let i in interface.slots){
+						let slot = interface.slots[i];
+						if(slot.input) inputSlots.push(i);
+						if(slot.output) outputSlots.push(i);
+					}
+					tilePrototype.getTransportSlots = function(){
+						return {input: inputSlots, output: outputSlots};
+					}
 				}
+			}
+			else {
+				interface.slots = {};
 			}
 			
 			tilePrototype.addTransportedItem = function(obj, item, side){
 				this.interface.addItem(item, side);
 			}
 			
-			interface.isValidInput = interface.isValidInput || function(){
+			interface.isValidInput = interface.isValidInput || function(item, side, tileEntity){
 				return true;
 			}
 			
@@ -101,6 +120,9 @@ let StorageInterface = {
 			}
 			interface.getLiquid = interface.getLiquid || function(luquid, amount){
 				return this.tileEntity.liquidStorage.getLiquid(luquid, amount);
+			}
+			interface.getLiquidStored = interface.getLiquidStored || function(storage){
+				return this.tileEntity.liquidStorage.getLiquidStored();
 			}
 			
 			this.data[id] = interface;			
@@ -171,7 +193,7 @@ let StorageInterface = {
 		return storages;
 	},
 	
-	putItems: function(items, containers, tile){
+	putItems: function(items, containers){
 		for(let i in items){
 			let item = items[i];
 			for(let side in containers){
@@ -251,21 +273,30 @@ let StorageInterface = {
 	
 	extractLiquid: function(liquid, maxAmount, input, output, inputSide){
 		if(!liquid){
-			liquid = output.liquidStorage.getLiquidStored();
+			if(output.interface){
+				liquid = output.interface.getLiquidStored("output");
+			} else {
+				liquid = output.liquidStorage.getLiquidStored();
+			}
 		}
-		if(!output.interface || output.interface.canTransportLiquid(liquid, outputSide)){
-			this.transportLiquid(liquid, maxAmount, output, input, inputSide + Math.pow(-1, inputSide));
+		if(liquid){
+			let outputSide = inputSide + Math.pow(-1, inputSide);
+			if(!output.interface || output.interface.canTransportLiquid(liquid, outputSide)){
+				this.transportLiquid(liquid, maxAmount, output, input, outputSide);
+			}
 		}
 	},
 	
 	transportLiquid: function(liquid, maxAmount, output, input, outputSide){
 		if(liquid){
 			let inputSide = outputSide + Math.pow(-1, outputSide);
+			let inputStorage = input.interface || input.liquidStorage;
+			let outputStorage = output.interface || output.liquidStorage;
 			let amount = Math.min(output.liquidStorage.getAmount(liquid), maxAmount);
-			if(amount > 0 && (!input.interface || input.interface.canReceiveLiquid(liquid, inputSide))){
-				let liquidStored = input.liquidStorage.getLiquidStored();
-				if(!liquidStored && input.liquidStorage.getLimit(liquid) < 99999999 || liquidStored == liquid){
-					output.liquidStorage.getLiquid(liquid, amount - input.liquidStorage.addLiquid(liquid, amount));
+			if(!input.interface || input.interface.canReceiveLiquid(liquid, inputSide)){
+				let liquidStored = inputStorage.getLiquidStored("input");
+				if(!liquidStored && input.liquidStorage.getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT || liquidStored == liquid){
+					outputStorage.getLiquid(liquid, amount - inputStorage.addLiquid(liquid, amount));
 				}
 			}
 		}
@@ -284,7 +315,7 @@ let StorageInterface = {
 		}
 		return slots;
 	},
-	
+		
 	// use it in tick function of tile entity
 	// require storage interface for tile entity
 	checkHoppers: function(tile){

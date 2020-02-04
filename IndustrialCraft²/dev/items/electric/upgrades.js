@@ -175,8 +175,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, 
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(item, machine, container, data, coords){
-	var storage = machine.liquidStorage;
-	var liquid = storage.getLiquidStored();
+	var liquid = machine.interface.getLiquidStored("output");
 	if(liquid){
 		var input = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
 		for(var side in input){
@@ -186,9 +185,8 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, container, data, coords){
-	var storage = machine.liquidStorage;
-	var liquid = storage.getLiquidStored();
-	if(!liquid || !storage.isFull(liquid)){
+	var liquid = machine.interface.getLiquidStored("input");
+	if(!liquid || !machine.liquidStorage.isFull(liquid)){
 		var output = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
 		for(var side in output){
 			StorageInterface.extractLiquid(liquid, 0.25, machine, output[side], parseInt(side));

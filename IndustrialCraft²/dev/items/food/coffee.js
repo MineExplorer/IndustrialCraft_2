@@ -76,13 +76,13 @@ var CoffeeMug = {
 };
 
 IDRegistry.genItemID("mugCoffee");
-Item.createFoodItem("mugCoffee", "Coffee", {name: "mug_coffee"},{stack: 1});
+Item.createFoodItem("mugCoffee", "Coffee", {name: "mug_coffee"}, {stack: 1});
 
 IDRegistry.genItemID("mugColdCoffee");
-Item.createFoodItem("mugColdCoffee", "Cold Coffee", {name: "mug_cold_coffee"},{stack: 1});
+Item.createFoodItem("mugColdCoffee", "Cold Coffee", {name: "mug_cold_coffee"}, {stack: 1});
 
 IDRegistry.genItemID("mugDarkCoffee");
-Item.createFoodItem("mugDarkCoffee", "Dark Coffee", {name: "mug_dark_coffee"},{stack: 1});
+Item.createFoodItem("mugDarkCoffee", "Dark Coffee", {name: "mug_dark_coffee"}, {stack: 1});
 
 Callback.addCallback("FoodEaten", CoffeeMug.onFoodEaten);
 Callback.addCallback("tick", CoffeeMug.tick);

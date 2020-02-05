@@ -427,3 +427,5 @@ Translation.addTranslation("eatingplant", {ru: "Плотоядное расте�
 Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", zh: "甜菜根"});
 Translation.addTranslation("Terra Wart", {ru: "Земляной нарост", zh: "大地疣"});
 Translation.addTranslation("Coffee Beans", {ru: "Кофейные зёрна", zh: "咖啡豆"});
+Translation.addTranslation("Weed", {ru: "Сорняк"});
+Translation.addTranslation("Hops", {ru: "Хмель"});

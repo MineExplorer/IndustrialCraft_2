@@ -50,7 +50,7 @@ Translation.addTranslation("EV Transformer", {ru: "Трансформатор С
 
 // Machines
 Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", pt: "Iluminador", zh: "日光灯"});
-Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм", zh: "固体装罐机"}); // To Do
+Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм", es: "Máquina de Enlatado", pt: "Enlatadora de Sólidos", zh: "固体装罐机"});
 Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Fornalha de Ferro", zh: "铁炉"});
 Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", pt: "Fornalha Elétrica", zh: "电炉"});
 Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", pt: "Fornalha de Indução", zh: "感应炉"});
@@ -67,8 +67,8 @@ Translation.addTranslation("Advanced Miner", {ru: "Продвинутая бур
 Translation.addTranslation("Tesla Coil", {ru: "Катушка теслы", es: "Bobina de Tesla", pt: "Bobina Tesla", zh: "特斯拉线圈"});
 Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Teletransportador", pt: "Teletransportador", zh: "传送机"});
 Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", pt: "Fabricador de Massa", zh: "物质生成机"});
-Translation.addTranslation("Crop Matron", {ru: "Автосадовник"});
-Translation.addTranslation("Crop Harvester", {ru: "Сборщик урожая"});
+Translation.addTranslation("Crop Matron", {ru: "Автосадовник", es: "Máquina Cosechadora", pt: "Fazendeiro", zh: "作物监管机"});
+Translation.addTranslation("Crop Harvester", {ru: "Сборщик урожая", es: "Cocechador de Cultivo", pt: "Colheitadeira", zh: "作物收割机"});
 
 // Explosive
 Translation.addTranslation("Nuke", {ru: "Ядерная бомба", pt: "Bomba Nuke", zh: "核弹"});
@@ -332,8 +332,60 @@ Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es
 Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-Sable", pt: "Sabre Nano", zh: "纳米剑"});
 Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", pt: "Laser de Mineração", zh: "采矿镭射枪"});
 Translation.addTranslation("EU Meter", {ru: "Мультиметр", pt: "Leitor de EU", zh: "EU电表"});
-Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор"});
-Translation.addTranslation("Weeding Trowel", {ru: "Пропалыватель"});
+Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador"});
+Translation.addTranslation("Weeding Trowel", {ru: "Пропалыватель", pt: "Espátula Transplantadora"});
+
+// Coffee
+Translation.addTranslation("Coffee Powder", {ru: "Молотый кофе", es: "Polvo de Café", pt: "Pó de Café", zh: "咖啡粉"});
+Translation.addTranslation("Stone Mug", {ru: "Каменная кружка", es: "Jarra de Piedra", pt: "Caneca de Pedra", zh: "石杯"});
+Translation.addTranslation("Cold Coffee", {ru: "Холодный кофе", es: "Café Frío", pt: "Café Frio", zh: "冷咖啡"});
+Translation.addTranslation("Dark Coffee", {ru: "Тёмный кофе", es: "Café Oscuro", pt: "Café Forte", zh: "黑咖啡"});
+Translation.addTranslation("Coffee", {ru: "Кофе", es: "Café", pt: "Café", zh: "咖啡"});
+
+// Crops Utilities
+Translation.addTranslation("Seed Bag (%s)", {ru: "Мешок с семенами (%s)", es: "Semillas Desconocidas (%s)", pt: "Saco de sementes (%s)", zh: "种子袋 (%s)"});
+Translation.addTranslation("Crop", {ru: "Жёрдочки", pt: "Muda", zh: "作物架"});
+Translation.addTranslation("Grin Powder", {ru: "Токсичная пыль", es: "Polvo Horrible", zh: "蛤蛤粉", pt: "Pó do Riso"});
+Translation.addTranslation("Weed EX", {ru: "Средство от сорняков", es: "Veneno para Hierbas", pt: "Erbicida", zh: "除草剂"});
+Translation.addTranslation("Fertilizer", {ru: "Удобрение", es: "Fertilizante", pt: "Fertilizante", zh: "肥料"});
+Translation.addTranslation("Hydration Cell", {ru: "Увлажняющая капсула", pt: "Líquido de Refrigeração", zh: "水化单元"});
+
+// Crops
+Translation.addTranslation("wheat", {ru: "Пшеница", en: "Wheat", pt: "Trigo", zh: "小麦"});
+Translation.addTranslation("weed", {ru: "Сорняк", en: "Weed", pt: "Erva Daninha", zh: "杂草"});
+Translation.addTranslation("pumpkin", {ru: "Тыква", en: "Pumpkin", pt: "Abóbora", zh: "南瓜"});
+Translation.addTranslation("melon", {ru: "Арбуз", en: "Melon", pt: "Melancia", zh: "西瓜"});
+Translation.addTranslation("dandelion", {ru: "Одуванчик", en: "Dandelion", pt: "Dente-de-Leão", zh: "蒲公英"});
+Translation.addTranslation("rose", {ru: "Роза", en: "Rose", pt: "Rosa", zh: "玫瑰"});
+Translation.addTranslation("blackthorn", {ru: "Терновник", en: "Blackthorn", pt: "Espinheiro-negro", zh: "黑刺李"});
+Translation.addTranslation("tulip", {ru: "Тюльпан", en: "Tulip", pt: "Tulipa", zh: "郁金香"});
+Translation.addTranslation("cyazint", {ru: "Гиацинт", en: "Cyazint", pt: "Cyazint", zh: "缤纷花"});
+Translation.addTranslation("venomilia", {ru: "Веномилия", en: "Venomilia", pt: "Venomilia", zh: "奇妙花"});
+Translation.addTranslation("reed", {ru: "Сахарный тростник", en: "Reed", pt: "Cana-de-açúcar", zh: "甘蔗"});
+Translation.addTranslation("stickreed", {ru: "Резиновый тростник", en: "Stickreed", zh: "粘性甘蔗", pt: "Cana-de-borracha"});
+Translation.addTranslation("cocoa", {ru: "Какао", en: "Cocoa", pt: "Cacau", zh: "可可"});
+Translation.addTranslation("red_mushroom", {ru: "Красный гриб", en: "Red Mushroom", pt: "Cogumelo Vermelho", zh: "红色蘑菇"});
+Translation.addTranslation("brown_mushroom", {ru: "Коричневый гриб", en: "Brown Mushroom", pt: "Cogumelo marrom", zh: "棕色蘑菇"});
+Translation.addTranslation("nether_wart", {ru: "Адский нарост", en: "Nether Wart", pt: "Fungo do Nether", zh: "地狱疣"});
+Translation.addTranslation("terra_wart", {ru: "Земляной нарост", en: "Terra Wart", pt: "Fungo da Terra", zh: "大地疣"});
+Translation.addTranslation("ferru", {ru: "Феррий", en: "Ferru", pt: "Ferru", zh: "铁叶草"});
+Translation.addTranslation("cyprium", {ru: "Куприй", en: "Cyprium", pt: "Chipre", zh: "铜叶草"});
+Translation.addTranslation("stagnium", {ru: "Стагний", en: "Stagnium", pt: "Stagnium", zh: "银矿草"});
+Translation.addTranslation("plumbiscus", {ru: "Плюмбий", en: "Plumbiscus", pt: "Biscoito de canela", zh: "铅叶草"});
+Translation.addTranslation("aurelia", {ru: "Аурелия", en: "Aurelia", pt: "Aurélia", zh: "金叶草"});
+Translation.addTranslation("shining", {ru: "Аргентий", en: "Shining", pt: "Brilhante", zh: "闪光"});
+Translation.addTranslation("redwheat", {ru: "Красная пшеница", en: "Red Wheat", pt: "Trigo Vermelho", zh: "红麦"});
+Translation.addTranslation("coffee", {ru: "Кофе", en: "Coffee", pt: "Café", zh: "咖啡"});
+Translation.addTranslation("hops", {ru: "Хмель", en: "Hops", pt: "Lúpulo", zh: "啤酒花"});
+Translation.addTranslation("carrots", {ru: "Морковь", en: "Carrots", pt: "Cenouras", zh: "胡萝卜"});
+Translation.addTranslation("potato", {ru: "Картофель", en: "Potato", pt: "Batata", zh: "马铃薯"});
+Translation.addTranslation("eatingplant", {ru: "Плотоядное растение", en: "Eating Plant", pt: "Planta Carnívora", zh: "食人花"});
+Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt: "Beterrabas", zh: "甜菜根"});
+
+Translation.addTranslation("Terra Wart", {ru: "Земляной нарост", es: "Verruga de Tierra", pt: "Fungo da Terra", zh: "大地疣"});
+Translation.addTranslation("Coffee Beans", {ru: "Кофейные зёрна", es: "Granos de Café", pt: "Grãos de Café", zh: "咖啡豆"});
+Translation.addTranslation("Weed", {ru: "Сорняк", pt: "Erva Daninha", zh: "杂草"});
+Translation.addTranslation("Hops", {ru: "Хмель", es: "Lúpulo", pt: "Lúpulo", zh: "啤酒花"});
 
 // TEXT
 // Fluid Distributor
@@ -378,52 +430,4 @@ Translation.addTranslation("Increase energy tier by 1", {ru: "Увеличива
 Translation.addTranslation("Increase energy storage by 10k EU", {ru: "Увеличивает энергоёмкость на 10k EU", zh: "增加10k EU储能"});
 Translation.addTranslation("Automatically output to\nthe %s side", {ru: "Автоматическое извлечение с %s стороны", zh: "从 %s 面自动输出"});
 Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Автоматический ввод с %s стороны", zh: "从 %s 面自动输入"});
-
-// Drinks
-Translation.addTranslation("Coffee Powder", {ru: "Молотый кофе", zh: "咖啡粉"});
-Translation.addTranslation("Empty Mug", {ru: "Каменная кружка", zh: "石杯"});
-Translation.addTranslation("Coffee", {ru: "Кофе", zh: "咖啡"});
-Translation.addTranslation("Cold Coffee", {ru: "Холодный кофе", zh: "冷咖啡"});
-Translation.addTranslation("Dark Coffee", {ru: "Тёмный кофе", zh: "黑咖啡"});
-
-// Crops Utilites
-Translation.addTranslation("Seed Bag (%s)", {ru: "Мешок с семенами (%s)", zh: "种子袋 (%s)"});
-Translation.addTranslation("Perches", {ru: "Жёрдочки", zh: "作物架"});
-Translation.addTranslation("Grin Powder", {ru: "Токсичная пыль", zh: "蛤蛤粉"});
-Translation.addTranslation("Weed EX", {ru: "Средство от сорняков", zh: "除草剂"});
-Translation.addTranslation("Fertilizer", {ru: "Удобрение", zh: "肥料"});
-Translation.addTranslation("Hydration Cell", {ru: "Увлажняющая капсула", zh: "水化单元"});
-
-// Crops
-Translation.addTranslation("wheat", {ru: "Пшеница", en: "Wheat", zh: "小麦"});
-Translation.addTranslation("weed", {ru: "Сорняк", en: "Weed", zh: "杂草"});
-Translation.addTranslation("pumpkin", {ru: "Тыква", en: "Pumpkin", zh: "南瓜"});
-Translation.addTranslation("melon", {ru: "Арбуз", en: "Melon", zh: "西瓜"});
-Translation.addTranslation("dandelion", {ru: "Одуванчик", en: "Dandelion", zh: "蒲公英"});
-Translation.addTranslation("rose", {ru: "Роза", en: "Rose", zh:"玫瑰"});
-Translation.addTranslation("blackthorn", {ru: "Терновник", en: "Blackthorn", zh: "黑刺李"});
-Translation.addTranslation("tulip", {ru: "Тюльпан", en: "Tulip", zh: "郁金香"});
-Translation.addTranslation("cyazint", {ru: "Гиацинт", en: "Cyazint", zh: "缤纷花"});
-Translation.addTranslation("venomilia", {ru: "Веномилия", en: "Venomilia", zh: "奇妙花"});
-Translation.addTranslation("reed", {ru: "Сахарный тростник", en: "Reed", zh: "甘蔗"});
-Translation.addTranslation("stickreed", {ru: "Резиновый тростник", en: "Stickreed", zh: "粘性甘蔗"});
-Translation.addTranslation("cocoa", {ru: "Какао", en: "Cocoa", zh: "可可"});
-Translation.addTranslation("red_mushroom", {ru: "Красный гриб", en: "Red Mushroom", zh: "红色蘑菇"});
-Translation.addTranslation("brown_mushroom", {ru: "Коричневый гриб", en: "Brown Mushroom", zh: "棕色蘑菇"});
-Translation.addTranslation("nether_wart", {ru: "Адский нарост", en: "Nether Wart", zh: "地狱疣"});
-Translation.addTranslation("terra_wart", {ru: "Земляной нарост", en: "Terra Wart", zh: "大地疣"});
-Translation.addTranslation("ferru", {ru: "Феррий", en: "Ferru", zh: "铁叶草"});
-Translation.addTranslation("cyprium", {ru: "Куприй", en: "Cyprium", zh: "铜叶草"});
-Translation.addTranslation("stagnium", {ru: "Стагний", en: "Stagnium", zh: "银矿草"});
-Translation.addTranslation("plumbiscus", {ru: "Плюмбий", en: "Plumbiscus", zh: "铅叶草"});
-Translation.addTranslation("aurelia", {ru: "Аурелия", en: "Aurelia", zh: "金叶草"});
-Translation.addTranslation("shining", {ru: "Аргентий", en: "Shining", zh: "闪光"});
-Translation.addTranslation("redwheat", {ru: "Красная пшеница", en: "Red Wheat", zh: "红麦"});
-Translation.addTranslation("coffee", {ru: "Кофе", en: "Coffee", zh: "咖啡"});
-Translation.addTranslation("hops", {ru: "Хмель", en: "Hops", zh: "啤酒花"});
-Translation.addTranslation("carrots", {ru: "Морковь", en: "Carrots", zh: "胡萝卜"});
-Translation.addTranslation("potato", {ru: "Картофель", en: "Potato", zh: "马铃薯"});
-Translation.addTranslation("eatingplant", {ru: "Плотоядное растение", en: "Eating Plant", zh: "食人花"});
-Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", zh: "甜菜根"});
-Translation.addTranslation("Terra Wart", {ru: "Земляной нарост", zh: "大地疣"});
-Translation.addTranslation("Coffee Beans", {ru: "Кофейные зёрна", zh: "咖啡豆"});
+// side names are translated in core/item_name.js

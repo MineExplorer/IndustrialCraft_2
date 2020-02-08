@@ -46,7 +46,6 @@ let StorageInterface = {
 			
 			if(interface.slots){
 				for(let name in interface.slots){
-					Logger.Log(name);
 					if(name.includes('^')){
 						let slotData = interface.slots[name];
 						let str = name.split('^');
@@ -130,9 +129,7 @@ let StorageInterface = {
 			Logger.Log("failed to create storage interface: no tile entity for id "+id, "ERROR");
 		}
 	},
-	/* WARNING */
-	// if you use this function on native container (furnace, chest, etc)
-	// you should set its slot by using container.setSlot(...) after function execution
+	// doesn't override native container slot (only slot object)
 	addItemToSlot: function(item, slot, count){
 		if(slot.id == 0 || slot.id == item.id && slot.data == item.data){
 			let maxStack = Item.getMaxStack(item.id);
@@ -209,6 +206,7 @@ let StorageInterface = {
 		let count = 0;
 		let slots = [];
 		let slotsInitialized = false;
+		side = side + Math.pow(-1, side);
 		
 		if(tileEntity){
 			if(tileEntity.interface){
@@ -220,7 +218,7 @@ let StorageInterface = {
 			}
 		}
 		if(!slotsInitialized){
-			slots = this.getContainerSlots(container);
+			slots = this.getContainerSlots(container, 0, side);
 		}
 		for(let i in slots){
 			let slot = container.getSlot(slots[i]);
@@ -241,10 +239,11 @@ let StorageInterface = {
 		let count = 0;
 		let slots = [];
 		let slotsInitialized = false;
+		let outputSide = side + Math.pow(-1, side);
 		
 		if(outputTile){
 			if(outputTile.interface){
-				slots = outputTile.interface.getOutputSlots(side);
+				slots = outputTile.interface.getOutputSlots(outputSide);
 				slotsInitialized = true;
 			}
 			else if(outputTile.getTransportSlots){
@@ -253,7 +252,7 @@ let StorageInterface = {
 			}
 		}
 		if(!slotsInitialized){
-			slots = this.getContainerSlots(container);
+			slots = this.getContainerSlots(container, 1, outputSide);
 		}
 		for(let i in slots){
 			let slot = container.getSlot(slots[i]);
@@ -262,7 +261,7 @@ let StorageInterface = {
 				if(added > 0){
 					count += added;
 					if(!container.slots){
-						container.setSlot(i, slot.id, slot.count, slot.data);
+						container.setSlot(slots[i], slot.id, slot.count, slot.data);
 					}
 					if(oneStack || count >= maxCount){break;}
 				}
@@ -302,15 +301,28 @@ let StorageInterface = {
 		}
 	},
 	
-	getContainerSlots: function(container){
+	getContainerSlots: function(container, mode, side){
 		let slots = [];
 		if(container.slots){
 			for(let name in container.slots){
 				slots.push(name);
 			}
 		} else {
-			for(let i = 0; i < container.getSize(); i++){
-				slots.push(i);
+			if(container.getType() == 1){
+				if(mode == 1){
+					slots.push(2);
+				}
+				else if(side == 1){
+					slots.push(0);
+				}
+				else if(side > 1){
+					slots.push(1);
+				}
+			}
+			else {
+				for(let i = 0; i < container.getSize(); i++){
+					slots.push(i);
+				}
 			}
 		}
 		return slots;
@@ -325,10 +337,10 @@ let StorageInterface = {
 			let block = World.getBlock(dir.x, dir.y, dir.z);
 			if(block.id == 154 && block.data == side + Math.pow(-1, side)){
 				let container = World.getContainer(dir.x, dir.y, dir.z);
-				for(let i = 0; i < container.getSize(); i++){
-					let slot = container.getSlot(i);
+				for(let s = 0; s < container.getSize(); s++){
+					let slot = container.getSlot(s);
 					if(slot.id > 0 && tile.interface.addItem(slot, side, 1)){
-						container.setSlot(i, slot.id, slot.count, slot.data);
+						container.setSlot(s, slot.id, slot.count, slot.data);
 						break;
 					}
 				}
@@ -341,10 +353,10 @@ let StorageInterface = {
 			for(let i in slots){
 				let item = tile.container.getSlot(slots[i]);
 				if(item.id > 0){
-					for(let j = 0; j < container.getSize(); j++){
-						var slot = container.getSlot(j);
+					for(let s = 0; s < container.getSize(); s++){
+						var slot = container.getSlot(s);
 						if(this.addItemToSlot(item, slot, 1)){
-							container.setSlot(j, slot.id, slot.count, slot.data);
+							container.setSlot(s, slot.id, slot.count, slot.data);
 							return;
 						}
 					}
@@ -353,7 +365,7 @@ let StorageInterface = {
 		}
 	},
 	
-	// deprecated
+	// legacy
 	extractItems: function(items, containers, tile){
 		for(let i in items){
 			let item = items[i];
@@ -363,10 +375,11 @@ let StorageInterface = {
 				let tileEntity = container.tileEntity;
 				let slots = [];
 				let slotsInitialized = false;
+				let outputSide = parseInt(side) + Math.pow(-1, parseInt(side));
 				
 				if(tileEntity){
 					if(tileEntity.interface){
-						slots = tileEntity.interface.getOutputSlots(parseInt(side));
+						slots = tileEntity.interface.getOutputSlots(outputSide);
 						slotsInitialized = true;
 					}
 					else if(tileEntity.getTransportSlots){
@@ -375,18 +388,19 @@ let StorageInterface = {
 					}
 				}
 				if(!slotsInitialized){
-					slots = this.getContainerSlots(container);
+					slots = this.getContainerSlots(container, 1, outputSide);
 				}
-				for(let s in slots){
-					let slot = container.getSlot(slots[s]);
+				for(let i in slots){
+					let slot = container.getSlot(slots[i]);
 					if(slot.id > 0){
+						let added = 0;
 						if(tile.interface){
-							if(tile.interface.addItem(slot, parseInt(side)) && !container.slots){
-								container.setSlot(s, slot.id, slot.count, slot.data);
-							}
+							added = tile.interface.addItem(slot, parseInt(side));
+						} else {
+							added = this.addItemToSlot(slot, item) 
 						}
-						else if(this.addItemToSlot(slot, item) && !container.slots){
-							container.setSlot(s, slot.id, slot.count, slot.data);
+						if(added > 0 && !container.slots){
+							container.setSlot(slots[i], slot.id, slot.count, slot.data);
 						}
 						if(item.count == maxStack){break;}
 					}

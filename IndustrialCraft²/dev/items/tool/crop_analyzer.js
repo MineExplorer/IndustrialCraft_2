@@ -92,7 +92,7 @@ var AgriculturalAnalyser = {
     },
     showAllValues: function(container, seedBagSlot){
         var elements = container.getGuiContent().elements;
-        var font = {size: 18, color: android.graphics.Color.rgb(255, 255, 255)}
+        var font = {size: 18, color: Color.WHITE}
         var level = seedBagSlot.extra.getInt("scan");
         var crop = AgricultureAPI.cropCards[seedBagSlot.data];
         
@@ -133,12 +133,12 @@ var AgriculturalAnalyser = {
     showAttributes: function(crop, font, elements){
         var arr = AgriculturalAnalyser.getAttributesText(crop.attributes)
         for(var i in arr){
-            elements["attributes"+i] = {type: "text", font:font, x: 270, y: 320 + 40 * i, width: 256, height: 42, text: arr[i]};
+            elements["attributes"+i] = {type: "text", font: font, x: 270, y: 320 + 40 * i, width: 256, height: 42, text: arr[i]};
         }
     },
     showName: function(crop, font, elements){
         var name = AgriculturalAnalyser.getSeedName(crop.id);
-        elements["cropName"] = {type: "text", font:font, x: 270, y: 160, width: 256, height: 42, text: name};
+        elements["cropName"] = {type: "text", font: font, x: 270, y: 160, width: 256, height: 42, text: name};
     },
     getStringTier: function(tier){
         switch (tier) {
@@ -247,7 +247,7 @@ var AgriculturalAnalyser = {
         }
     },
     useFunction: function(coords, item, block){
-        if(block.id == BlockID.perches){
+        if(block.id == BlockID.crop){
             var tileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
             if(!tileEntity.crop) return;
             AgriculturalAnalyser.showCropValues(tileEntity);

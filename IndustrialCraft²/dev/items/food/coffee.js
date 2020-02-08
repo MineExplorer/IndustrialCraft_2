@@ -89,18 +89,18 @@ Callback.addCallback("tick", CoffeeMug.tick);
 Callback.addCallback("EntityDeath", CoffeeMug.onDeath);
 
 Callback.addCallback("PostLoaded", function(){
-    Recipes.addShaped({id: ItemID.mugColdCoffee, count: 1, data: 0}, [
-        "x",
-        "y",
-        "z",
-    ], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0]);
-    Recipes.addShaped({id: ItemID.mugColdCoffee, count: 1, data: 0}, [
-        "x",
-        "y",
-        "z",
-        ], ['x', ItemID.coffeePowder, 0, 'y', 325, 8, 'z', ItemID.mugEmpty, 0],
-        function(api, field, result){
-            Player.addItemToInventory(325, 1, 0);
-    });
-    Recipes.addFurnace(ItemID.mugColdCoffee, ItemID.mugDarkCoffee, 0);
+	Recipes.addShaped({id: ItemID.mugCoffee, count: 1, data: 0}, [
+		"x",
+		"y",
+		"z",
+	], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0]);
+	Recipes.addShaped({id: ItemID.mugColdCoffee, count: 1, data: 0}, [
+		"x",
+		"y",
+		"z",
+	], ['x', ItemID.coffeePowder, 0, 'y', 325, 8, 'z', ItemID.mugEmpty, 0],
+	function(api, field, result){
+		Player.addItemToInventory(325, 1, 0);
+	});
+	Recipes.addFurnace(ItemID.mugColdCoffee, ItemID.mugDarkCoffee, 0);
 });

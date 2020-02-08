@@ -101,7 +101,7 @@ items/resource/produced.js
 items/resource/cells.js
 
 items/crop/crop_seed_bag.js
-items/crop/perches.js
+items/crop/crop_stick.js
 items/crop/grin_powder.js
 items/crop/weed_ex.js
 items/crop/fertilizer.js
@@ -152,7 +152,7 @@ items/tool/drills.js
 items/tool/chainsaw.js
 items/tool/nano_saber.js
 items/tool/mining_laser.js
-items/tool/agricultural_analyzer.js
+items/tool/crop_analyzer.js
 items/tool/weeding_machine.js
 
 integration/recipe_viewer.js

@@ -11,10 +11,10 @@ Block.registerDropFunction("cropHarvester", function(coords, blockID, blockData,
 
 Callback.addCallback("PreLoaded", function(){
     Recipes.addShaped({id: BlockID.cropHarvester, count: 1, data: 0}, [
-        "zxz",
-        "asa",
-        "wqw"
-    ], ['z', ItemID.circuitBasic, 0, 'x', 54, 0, 'a', 359, -1, 's',  BlockID.machineBlockBasic, 0,'w',  ItemID.plateIron, 0,'q',  ItemID.agriculturalAnalyzer, 0]);
+        "zcz",
+        "s#s",
+        "pap"
+    ], ['#', BlockID.machineBlockBasic, 0, 'z', ItemID.circuitBasic, 0, 'c', 54, -1, 'a', ItemID.agriculturalAnalyzer, 0, 'p', ItemID.plateIron, 0, 's', 359, 0]);
 });
 
 var cropHarvesterGuiObject = {

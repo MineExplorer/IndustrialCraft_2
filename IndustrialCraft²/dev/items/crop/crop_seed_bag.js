@@ -1,7 +1,7 @@
 IDRegistry.genItemID("cropSeedBag");
 Item.createItem("cropSeedBag", "Seed Bag (%s)", {name: "crop_seed_bag"}, {stack: 1, isTech: true});
 Item.registerUseFunction("cropSeedBag", function(coords, item, block){
-    if(block.id == BlockID.perches){
+    if(block.id == BlockID.crop){
         var te = World.getTileEntity(coords.x,coords.y,coords.z);
         if(!te.data.crop){
             var data = {

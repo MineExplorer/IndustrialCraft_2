@@ -3,11 +3,15 @@ Block.createBlock("solidHeatGenerator", [
 	{name: "Solid Fuel Firebox", texture: [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]], inCreative: true},
 ], "opaque");
 TileRenderer.setStandartModel(BlockID.solidHeatGenerator, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.solidHeatGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.solidHeatGenerator, 6, [["machine_bottom", 0], ["machine_top", 0], ["generator", 1], ["heat_pipe", 1], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 0, [["heat_pipe", 0], ["generator", 0], ["machine_bottom", 0], ["machine_top", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 1, [["generator", 0], ["heat_pipe", 0], ["machine_top", 0], ["machine_bottom", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
+TileRenderer.registerRotationModel(BlockID.solidHeatGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 6, [["heat_pipe", 1], ["generator", 0], ["machine_bottom", 0], ["machine_top", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 7, [["generator", 0], ["heat_pipe", 1], ["machine_top", 0], ["machine_bottom", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
+TileRenderer.registerRotationModel(BlockID.solidHeatGenerator, 8, [["machine_bottom", 0], ["machine_top", 0], ["generator", 1], ["heat_pipe", 1], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
 
 Block.registerDropFunction("solidHeatGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.solidHeatGenerator);
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
 });
 
 Callback.addCallback("PreLoaded", function(){
@@ -21,7 +25,7 @@ Callback.addCallback("PreLoaded", function(){
 		" a ",
 		"ppp",
 		" f "
-	], ['a', ItemID.heatConductor, 0,'p', ItemID.plateIron, 0,'f', BlockID.ironFurnace, 0]);
+	], ['a', ItemID.heatConductor, 0, 'p', ItemID.plateIron, 0, 'f', BlockID.ironFurnace, 0]);
 });
 
 

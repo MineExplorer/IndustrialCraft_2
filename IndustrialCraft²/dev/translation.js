@@ -342,13 +342,17 @@ Translation.addTranslation("Cold Coffee", {ru: "Холодный кофе", es: 
 Translation.addTranslation("Dark Coffee", {ru: "Тёмный кофе", es: "Café Oscuro", pt: "Café Forte", zh: "黑咖啡"});
 Translation.addTranslation("Coffee", {ru: "Кофе", es: "Café", pt: "Café", zh: "咖啡"});
 
-// Crops Utilities
+// Crop Items
 Translation.addTranslation("Seed Bag (%s)", {ru: "Мешок с семенами (%s)", es: "Semillas Desconocidas (%s)", pt: "Saco de sementes (%s)", zh: "种子袋 (%s)"});
 Translation.addTranslation("Crop", {ru: "Жёрдочки", pt: "Muda", zh: "作物架"});
 Translation.addTranslation("Grin Powder", {ru: "Токсичная пыль", es: "Polvo Horrible", zh: "蛤蛤粉", pt: "Pó do Riso"});
 Translation.addTranslation("Weed EX", {ru: "Средство от сорняков", es: "Veneno para Hierbas", pt: "Erbicida", zh: "除草剂"});
 Translation.addTranslation("Fertilizer", {ru: "Удобрение", es: "Fertilizante", pt: "Fertilizante", zh: "肥料"});
 Translation.addTranslation("Hydration Cell", {ru: "Увлажняющая капсула", pt: "Líquido de Refrigeração", zh: "水化单元"});
+Translation.addTranslation("Terra Wart", {ru: "Земляной нарост", es: "Verruga de Tierra", pt: "Fungo da Terra", zh: "大地疣"});
+Translation.addTranslation("Coffee Beans", {ru: "Кофейные зёрна", es: "Granos de Café", pt: "Grãos de Café", zh: "咖啡豆"});
+Translation.addTranslation("Weed", {ru: "Сорняк", pt: "Erva Daninha", zh: "杂草"});
+Translation.addTranslation("Hops", {ru: "Хмель", es: "Lúpulo", pt: "Lúpulo", zh: "啤酒花"});
 
 // Crops
 Translation.addTranslation("wheat", {ru: "Пшеница", en: "Wheat", pt: "Trigo", zh: "小麦"});
@@ -381,11 +385,6 @@ Translation.addTranslation("carrots", {ru: "Морковь", en: "Carrots", pt: 
 Translation.addTranslation("potato", {ru: "Картофель", en: "Potato", pt: "Batata", zh: "马铃薯"});
 Translation.addTranslation("eatingplant", {ru: "Плотоядное растение", en: "Eating Plant", pt: "Planta Carnívora", zh: "食人花"});
 Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt: "Beterrabas", zh: "甜菜根"});
-
-Translation.addTranslation("Terra Wart", {ru: "Земляной нарост", es: "Verruga de Tierra", pt: "Fungo da Terra", zh: "大地疣"});
-Translation.addTranslation("Coffee Beans", {ru: "Кофейные зёрна", es: "Granos de Café", pt: "Grãos de Café", zh: "咖啡豆"});
-Translation.addTranslation("Weed", {ru: "Сорняк", pt: "Erva Daninha", zh: "杂草"});
-Translation.addTranslation("Hops", {ru: "Хмель", es: "Lúpulo", pt: "Lúpulo", zh: "啤酒花"});
 
 // TEXT
 // Fluid Distributor

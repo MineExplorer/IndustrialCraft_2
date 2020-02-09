@@ -101,14 +101,14 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.isHeating = this.data.signal > 0;
 	},
 	
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;

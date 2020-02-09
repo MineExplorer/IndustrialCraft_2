@@ -21,43 +21,44 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 function isFertilizer(id){
-    return id == ItemID.fertilizer;
-};
-function isWeedEx(id){
-    return id == ItemID.weedEx;
-};
+	return id == ItemID.fertilizer;
+}
 function isWater(id){
-    return id == ItemID.hydrationCell;
-};
-var guiCropMatron = new UI.StandartWindow({
-    standart: {
-        header: {text: {text: Translation.translate("Crop Matron")}},
-        inventory: {standart: true},
-        background: {standart: true}
-    },
+	return id == ItemID.hydrationCell;
+}
+function isWeedEx(id){
+	return id == ItemID.weedEx;
+}
 
-    params: {
+var guiCropMatron = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Crop Matron")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+
+	params: {
 		slot: "default_slot",
 		invSlot: "default_slot"
-    },
-    
-    drawing: [
-        {type: "background", color: Color.parseColor("#b3b3b3")},
-        {type: "bitmap", x: 350, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
-    ],
-    
-    elements: {
-        "energyScale": {type: "scale", x: 350, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
-        "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "dust_slot", isValid: isFertilizer},
-        "slotFertilizer1": {type: "slot", x: 441, y: 135, isValid: isFertilizer},
-        "slotFertilizer2": {type: "slot", x: 441, y: 195, isValid: isFertilizer},
-        "slotWeedEx0": {type: "slot", x: 641, y: 75, bitmap: "weedEx_slot", isValid: isWeedEx},
-        "slotWeedEx1": {type: "slot", x: 641, y: 135, isValid: isWeedEx},
-        "slotWeedEx2": {type: "slot", x: 641, y: 195, isValid: isWeedEx},
-        "slotWater0": {type: "slot", x: 541, y: 75,  bitmap: "cap_slot",isValid: isWater},
-        "slotWater1": {type: "slot", x: 541, y: 135, isValid: isWater},
-        "slotWater2": {type: "slot", x: 541, y: 195, isValid: isWater},
-    }
+	},
+
+	drawing: [
+		{type: "background", color: Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 350, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
+	],
+
+	elements: {
+		"energyScale": {type: "scale", x: 350, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "dust_slot", isValid: isFertilizer},
+		"slotFertilizer1": {type: "slot", x: 441, y: 135, isValid: isFertilizer},
+		"slotFertilizer2": {type: "slot", x: 441, y: 195, isValid: isFertilizer},
+		"slotWater0": {type: "slot", x: 541, y: 75,  bitmap: "cap_slot",isValid: isWater},
+		"slotWater1": {type: "slot", x: 541, y: 135, isValid: isWater},
+		"slotWater2": {type: "slot", x: 541, y: 195, isValid: isWater},
+		"slotWeedEx0": {type: "slot", x: 641, y: 75, bitmap: "weedEx_slot", isValid: isWeedEx},
+		"slotWeedEx1": {type: "slot", x: 641, y: 135, isValid: isWeedEx},
+		"slotWeedEx2": {type: "slot", x: 641, y: 195, isValid: isWeedEx},
+	}
 });
 
 Callback.addCallback("LevelLoaded", function(){
@@ -156,11 +157,11 @@ StorageInterface.createInterface(BlockID.cropMatron, {
 		"slotFertilizer^0-2": {input: true, isValid: function(item){
 			return item.id == ItemID.fertilizer;
 		}},
-		"slotWeedEx^0-2": {input: true, isValid: function(item){
-			return item.id == ItemID.weedEx;
-		}},
 		"slotWater^0-2": {input: true, isValid: function(item){
 			return item.id == ItemID.hydrationCell;
+		}},
+		"slotWeedEx^0-2": {input: true, isValid: function(item){
+			return item.id == ItemID.weedEx;
 		}}
 	}
 });

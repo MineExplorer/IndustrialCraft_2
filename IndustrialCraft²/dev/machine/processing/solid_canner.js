@@ -1,10 +1,10 @@
 IDRegistry.genBlockID("conserver");
 Block.createBlock("conserver", [
-	{name: "Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+	{name: "Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
-TileRenderer.setStandartModel(BlockID.conserver, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.conserver, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.conserver, 1, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandartModel(BlockID.conserver, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.conserver, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.conserver, 1, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 ItemName.addTierTooltip("conserver", 1);
 
@@ -18,7 +18,6 @@ Callback.addCallback("PreLoaded", function(){
 		" e ",
 		"axa"
 	], ['x', BlockID.machineBlockBasic, 0, 'e', ItemID.tinCanEmpty, 0, 'a', ItemID.circuitBasic, 0]);
-	
 	
 	MachineRecipeRegistry.registerRecipesFor("canner", {
 		"ItemID.uranium": {storage: [ItemID.fuelRod, 1], result: [ItemID.fuelRodUranium, 1, 0]},
@@ -123,7 +122,7 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -131,7 +130,7 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 	},
 
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");

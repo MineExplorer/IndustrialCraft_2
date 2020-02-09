@@ -1,5 +1,5 @@
 MachineRegistry.registerTransformer = function(id, tier){
-	Prototype = {
+	var Prototype = {
 		defaultValues: {
 			increaseMode: false,
 			meta: 0

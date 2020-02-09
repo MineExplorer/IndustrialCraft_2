@@ -89,8 +89,8 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 	spreadHeat: function(){
 		var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
 		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-		if(TE && TE.heatReceiveFunction && this.data.meta == TE.data.meta + Math.pow(-1, TE.data.meta)){
-			return this.data.output = TE.heatReceiveFunction(20);
+		if(TE && TE.heatReceive && this.data.meta == TE.data.meta + Math.pow(-1, TE.data.meta)){
+			return this.data.output = TE.heatReceive(20);
 		}
 		return false;
 	},

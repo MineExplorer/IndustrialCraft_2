@@ -37,6 +37,7 @@ machine/generator/solar.js
 machine/generator/windmill.js
 machine/generator/watermill.js
 machine/generator/rt_generator.js
+machine/generator/stirling_generator.js
 machine/generator/heat_solid.js
 machine/generator/heat_electric.js
 

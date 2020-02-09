@@ -71,7 +71,7 @@ MachineRegistry.registerPrototype(BlockID.fermenter, {
 		this.container.setScale("progressScale", 0);
     },
 	
-	heatReceiveFunction: function(amount){
+	heatReceive: function(amount){
 		return 0;
 	},
 	

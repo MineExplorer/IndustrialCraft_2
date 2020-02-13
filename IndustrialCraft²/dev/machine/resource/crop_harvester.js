@@ -30,23 +30,19 @@ var cropHarvesterGuiObject = {
 
     elements: {
         "energyScale": {type: "scale", x: 409, y: 167, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-        "slotEnergy": {type: "slot", x: 400, y: 230, isValid: MachineRegistry.isValidEUStorage}
+        "slotEnergy": {type: "slot", x: 400, y: 230, isValid: MachineRegistry.isValidEUStorage},
+        "slotUpgrade0": {type: "slot", x: 880, y: 110, isValid: UpgradeAPI.isValidUpgrade},
+        "slotUpgrade1": {type: "slot", x: 880, y: 110 + 60, isValid: UpgradeAPI.isValidUpgrade},
+        "slotUpgrade2": {type: "slot", x: 880, y: 110 + 120, isValid: UpgradeAPI.isValidUpgrade}
     }
 };
 
-for(let ind = 0; ind < 15; ind++){
-    let coords = {x: 520, y: 50};
-    let x = ind % 5;
-    let y = Math.floor(ind / 5) + 1;
-    let padd = 60;
-    cropHarvesterGuiObject.elements["outSlot" + ind] = {type: "slot", x: coords.x + padd * x, y: coords.y + padd * y};
+for(let i = 0; i < 15; i++){
+    let x = i % 5;
+    let y = Math.floor(i / 5) + 1;
+    cropHarvesterGuiObject.elements["outSlot" + i] = {type: "slot", x: 520 + x*60, y: 50 + y*60};
 };
 
-for(let ind = 0; ind < 3; ind++){
-    let coords = {x: 880, y: 110};
-    let padd = 60 * ind;
-    cropHarvesterGuiObject.elements["slotUpgrade" + ind] = {type: "slot", x: coords.x, y: coords.y + padd, isValid: UpgradeAPI.isValidUpgrade};
-};
 
 var guiCropHarvester = new UI.StandartWindow(cropHarvesterGuiObject);
 Callback.addCallback("LevelLoaded", function(){
@@ -103,20 +99,18 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         this.data.energy -= 1;
         var cropTile = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
         if(cropTile && cropTile.crop && !this.isInvFull()){
-            var cropAnalyser = this.container.getSlot("slotAnalyser");
             var drops = null;
-            if(cropAnalyser.id && cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)){
+            if(cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)){
                 drops = cropTile.performHarvest();
             }
             else if (cropTile.data.currentSize == cropTile.crop.maxSize) {
                 drops = cropTile.performHarvest();
             }
             if(drops && drops.length){
-                for(var ind in drops){
-                    var item = drops[ind];
+                for(let i in drops){
+                    var item = drops[i];
                     this.putItem(item);
-                    this.data.energy -= 100
-                    if(!cropAnalyser.id) this.data.energy -= 100;
+                    this.data.energy -= 200
 
                     if(item.count > 0){
                         World.drop(this.x, this.y + 1, this.z, item.id, item.count, item.data);
@@ -152,6 +146,6 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
 });
 StorageInterface.createInterface(BlockID.cropHarvester, {
 	slots: {
-		"outSlot^0-14": {output: true},
+		"outSlot^0-14": {output: true}
 	}
 });

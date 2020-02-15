@@ -32,8 +32,8 @@ var cropHarvesterGuiObject = {
         "energyScale": {type: "scale", x: 409, y: 167, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
         "slotEnergy": {type: "slot", x: 400, y: 230, isValid: MachineRegistry.isValidEUStorage},
         "slotUpgrade0": {type: "slot", x: 880, y: 110, isValid: UpgradeAPI.isValidUpgrade},
-        "slotUpgrade1": {type: "slot", x: 880, y: 110 + 60, isValid: UpgradeAPI.isValidUpgrade},
-        "slotUpgrade2": {type: "slot", x: 880, y: 110 + 120, isValid: UpgradeAPI.isValidUpgrade}
+        "slotUpgrade1": {type: "slot", x: 880, y: 170, isValid: UpgradeAPI.isValidUpgrade},
+        "slotUpgrade2": {type: "slot", x: 880, y: 230, isValid: UpgradeAPI.isValidUpgrade}
     }
 };
 
@@ -73,7 +73,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         UpgradeAPI.executeUpgrades(this);
         StorageInterface.checkHoppers(this);
 
-        if(this.data.energy > 200) this.scan();
+        if(this.data.energy > 100) this.scan();
 
         var tier = this.getTier();
         var energyStorage = this.getEnergyStorage();
@@ -110,7 +110,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
                 for(let i in drops){
                     var item = drops[i];
                     this.putItem(item);
-                    this.data.energy -= 200
+                    this.data.energy -= 100
 
                     if(item.count > 0){
                         World.drop(this.x, this.y + 1, this.z, item.id, item.count, item.data);

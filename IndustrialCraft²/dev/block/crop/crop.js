@@ -116,14 +116,14 @@ TileEntity.registerPrototype(BlockID.crop, {
         BlockRenderer.mapAtCoords(this.x, this.y, this.z, render);
     },
     checkPlayerRunning: function(){
-        if(!this.crop)return;
+        if(!this.crop) return;
 
         var coords = Entity.getPosition(Player.get());
         var playerX = Math.floor(coords.x);
         var playerY = Math.floor(coords.y);
         var playerZ = Math.floor(coords.z);
 
-        if(playerX == this.x && playerY-1 == this.y && playerZ == this.z){
+        if(playerX == this.x && playerY - 1 == this.y && playerZ == this.z){
             var vel = Player.getVelocity();
             var horizontalVel = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
             if(horizontalVel > 0.15 && this.crop.onEntityCollision(this)){
@@ -194,23 +194,23 @@ TileEntity.registerPrototype(BlockID.crop, {
         nutrients += (this.data.terrainNutrients + 19) / 20;
 
         for (var i = 2; i < 5; ++i){
-            if(World.getBlockID(this.x,this.y-i,this.z) == 3) nutrients++
+            if(World.getBlockID(this.x, this.y - i, this.z) == 3) nutrients++;
         }
         this.data.terrainNutrients = nutrients;
     },
     updateTerrainAirQuality: function(){
         var value = 0;
-        var height = Math.floor((this.y- 64) / 15);
+        var height = Math.floor((this.y - 64) / 15);
         if (height > 4) height = 4;
         if (height < 0) height = 0;
 
         var fresh = 9;
-        for (var x = this.x - 1; x < this.x+2; x++) {
+        for (var x = this.x - 1; x < this.x + 2; x++) {
             for (var z = this.z - 1; z < this.z + 2; z++) {
                 if (World.getBlockID(x, this.y, z)) fresh--;
             }
         }
-        if(GenerationUtils.canSeeSky(this.x, this.y + 1, this.z)) value+=2;
+        if(GenerationUtils.canSeeSky(this.x, this.y + 1, this.z)) value + =2;
         value += Math.floor( fresh / 2);
         value += height;
 
@@ -245,7 +245,7 @@ TileEntity.registerPrototype(BlockID.crop, {
     },
     performWeedWork: function(){
         var coords = this.relativeCropCoords[random(0, 3)];
-        var preCoords = [this.x+coords[0],this.y+coords[0],this.z+coords[0]];
+        var preCoords = [this.x + coords[0], this.y + coords[0], this.z + coords[0]];
         if(World.getBlockID(preCoords[0], preCoords[1], preCoords[2]) == BlockID.crop){
             var TE = World.getTileEntity(preCoords[0], preCoords[1], preCoords[2]);
             if(!TE.crop || (!TE.crop.isWeed(this) && !TE.hasWeedEX() && random(0, 32) >= TE.data.statResistance)){
@@ -259,8 +259,8 @@ TileEntity.registerPrototype(BlockID.crop, {
                 TE.data.statGrowth = newGrowth;
                 TE.updateRender();
             }
-        }else if(World.getBlockID(preCoords[0], preCoords[1]-1, preCoords[2]) == 60){
-            World.setBlock(preCoords[0], preCoords[1]-1, preCoords[2] ,2 ,0);
+        }else if(World.getBlockID(preCoords[0], preCoords[1] - 1, preCoords[2]) == 60){
+            World.setBlock(preCoords[0], preCoords[1] - 1, preCoords[2] ,2 ,0);
         }
     },
     reset: function(){
@@ -427,16 +427,17 @@ TileEntity.registerPrototype(BlockID.crop, {
             if (this.data.storageWater >= limit) return false;
 
             var relativeAmount = limit - this.data.storageWater;
-            var amount = relativeAmount < 1000-data ? relativeAmount : 1000 - data;
+            var amount = relativeAmount < 1000 - data ? relativeAmount : 1000 - data;
             this.data.storageWater += amount;
 
             if(manual) ToolAPI.breakCarriedTool(amount);
             return amount;
-        }return false;
+        }
+        return false;
     },
     tryPlantIn: function(cropCardID, size, statGr, statGa, statRe, scan){
         var cropCard = AgricultureAPI.cropCards[cropCardID];
-        if (!cropCard || cropCard.id =="weed" || this.data.crossingBase) return false;
+        if (!cropCard || cropCard.id == "weed" || this.data.crossingBase) return false;
 
         this.reset();
         this.data.crop = cropCardID;

@@ -7,9 +7,10 @@ Recipes.addShaped({id: ItemID.cropStick , count: 2 , data: 0}, [
 ], ['x', 280, 0]);
 
 Item.registerUseFunction("cropStick", function(coords, item, block){
-    if(block.id==60 && coords.side==1){
+    if(block.id == 60 && coords.side == 1){
 		var place = coords.relative;
-		if(canTileBeReplaced(block.id, block.data)){
+		var relativeBlock = World.getBlock(place.x, place.y, place.z);
+		if(canTileBeReplaced(relativeBlock.id, relativeBlock.data)){
 			World.setBlock(place.x, place.y, place.z, BlockID.crop, 0);
 			World.addTileEntity(place.x, place.y, place.z);
 			Player.decreaseCarriedItem(1);

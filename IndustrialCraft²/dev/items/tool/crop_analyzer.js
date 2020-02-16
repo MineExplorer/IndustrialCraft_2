@@ -25,10 +25,10 @@ var guiAnalyserObject = {
 	elements: {
 		"closeButton": {type: "button", x: 672, y: 77, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {onClick: function(container){
 			AgriculturalAnalyser.dropItems(container);
+            AgriculturalAnalyser.hideAllValues(container);
             container.close();
-            AgriculturalAnalyser.hideAllValuse(container);
 		}}},
-		"textName": {type: "text", font: {size: 18}, x: 432, y: 86, width: 256, height: 42, text: Translation.translate("Crop Analyzer")}, 
+		"textName": {type: "text", font: {size: 18}, x: 432, y: 86, width: 256, height: 42, text: Translation.translate("Crop Analyzer")},
 		"slotSeedIn": {type: "slot", x: 265, y: 75, size: GUI_SCALE * 16, isValid: function(id, count, data){
 			return id == ItemID.cropSeedBag;
 		}},
@@ -57,7 +57,7 @@ var AgriculturalAnalyser = {
             var level = slotIn.extra.getInt("scan");
             if(level < 4){
                 var ned = AgriculturalAnalyser.energyForLevel(level);
-                if(currentEnergy > ned){ 
+                if(currentEnergy > ned){
                     ICTool.dischargeItem(slotEnergy, ned);
                     slotIn.extra.putInt("scan", level + 1);
                 }
@@ -71,11 +71,13 @@ var AgriculturalAnalyser = {
             AgriculturalAnalyser.showAllValues(container, slotOut);
             container.validateAll();
         }else if(!slotOut.id){
-            AgriculturalAnalyser.hideAllValuse(container);
+            AgriculturalAnalyser.hideAllValues(container);
         }
     },
-    hideAllValuse: function(container){
-        var elements = container.getGuiContent().elements;
+    hideAllValues: function(container){
+        var content = container.getGuiContent();
+        if(!content) return;
+        var elements = content.elements;
         elements["cropName"] = null;
         elements["textTier"] = null;
         elements["discoveredBy"] = null;
@@ -95,7 +97,7 @@ var AgriculturalAnalyser = {
         var font = {size: 18, color: Color.WHITE}
         var level = seedBagSlot.extra.getInt("scan");
         var crop = AgricultureAPI.cropCards[seedBagSlot.data];
-        
+
         switch(level){
             case 4:
                 this.showStats(seedBagSlot, elements);
@@ -238,7 +240,6 @@ var AgriculturalAnalyser = {
                 Game.message("Growth: " + te.data.statGrowth);
                 Game.message("Gain: " + te.data.statGain);
                 Game.message("Resistance: " + te.data.statResistance);
-           
             case 2:
                 Game.message("Tier: " + te.crop.properties.tier);
                 Game.message("Discovered by: " + te.crop.getDiscoveredBy());

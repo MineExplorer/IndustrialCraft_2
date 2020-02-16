@@ -9,8 +9,9 @@ Callback.addCallback("PostLoaded", function(){
 });
 Item.registerUseFunction("weeding_trowel",function(coords, item, block){
     var te = World.getTileEntity(coords.x, coords.y, coords.z);
-    if(block.id == BlockID.crop && te.data.crop == "weed"){
+    if(block.id == BlockID.crop && te.crop && te.crop.id == "weed"){
         World.drop(coords.x, coords.y, coords.z, ItemID.weed, te.data.currentSize, 0);
         te.reset();
+        te.updateRender();
     }
 });

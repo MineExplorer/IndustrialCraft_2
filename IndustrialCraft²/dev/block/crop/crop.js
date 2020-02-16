@@ -69,7 +69,7 @@ TileEntity.registerPrototype(BlockID.crop, {
                 Player.decreaseCarriedItem(1);
                 return;
             }
-            if (this.applyHydration(id, data, true) || this.applyWeedEx(id, data, true)) {
+            if (this.applyHydration(id, data, true) || this.applyWeedEx(id, true)) {
                 this.data.dirty = true;
                 return;
             }
@@ -99,7 +99,7 @@ TileEntity.registerPrototype(BlockID.crop, {
             this.data.dirty = true;
             this.updateRender();
             return true;
-        }else if(this.crop){ 
+        }else if(this.crop){
             this.crop.onLeftClick(this);
             return true;
         }
@@ -136,7 +136,7 @@ TileEntity.registerPrototype(BlockID.crop, {
             var vel = Player.getVelocity();
             var horizontalVel = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
             if(horizontalVel > 0.15 && this.crop.onEntityCollision(this)){
-                World.destroyBlock(this.x,this.y,this.z);
+                World.destroyBlock(this.x, this.y, this.z);
             }
         }
     },
@@ -176,7 +176,7 @@ TileEntity.registerPrototype(BlockID.crop, {
                 var growDuration = this.crop.getGrowthDuration(this);
                 if (this.data.growthPoints >= growDuration) {
                     this.data.growthPoints = 0;
-                    this.data.currentSize = this.data.currentSize+ 1;
+                    this.data.currentSize = this.data.currentSize + 1;
                     this.data.dirty = true;
 
                     this.updateRender();

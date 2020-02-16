@@ -185,6 +185,8 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
     energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
 
+TileRenderer.setRotationPlaceFunction(BlockID.cropMatron, true);
+
 StorageInterface.createInterface(BlockID.cropMatron, {
 	slots: {
 		"slotFertilizer^0-6": {input: true, isValid: function(item){

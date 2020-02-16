@@ -22,11 +22,11 @@ var UpgradeAPI = {
 		this.data[id] = {type: type, func: func};
 	},
 
-	callUpgrade: function(item, machine, container, data, coords){
+	callUpgrade: function(item, machine, container, data){
 		var upgrades = machine.upgrades;
 		var upgrade = this.getUpgradeData(item.id);
 		if(upgrade && (!upgrades || upgrades.indexOf(upgrade.type) != -1)){
-			upgrade.func(item, machine, container, data, coords);
+			upgrade.func(item, machine, container, data);
 		}
 	},
 	
@@ -47,7 +47,7 @@ var UpgradeAPI = {
 					}
 					if(!find){
 						item = {id: slot.id, count: slot.count, data: slot.data};
-						upgrades.push();
+						upgrades.push(item);
 					}
 				}
 			}

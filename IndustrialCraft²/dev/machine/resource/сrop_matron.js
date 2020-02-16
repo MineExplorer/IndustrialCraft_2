@@ -54,8 +54,8 @@ var newGuiMatronObject = {
         "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "cap_slot", isValid: function(id, count, data){
             return LiquidRegistry.getItemLiquid(id, data) == "water";
         }},
-        "slotWaterOut": {type: "slot", x: 441, y: 295, isValid: function(id, count, data){
-            return LiquidRegistry.getFullItem(id, data, "water");
+        "slotWaterOut": {type: "slot", x: 441, y: 295, isValid: function(){
+            return false;
         }}
 	}
 };
@@ -196,9 +196,7 @@ StorageInterface.createInterface(BlockID.cropMatron, {
         "slotWaterIn": {input: true, isValid: function(item){
 			return LiquidRegistry.getItemLiquid(item.id, item.data) == "water";
         }},
-        "slotWaterOut": {output: true, isValid: function(item){
-			return LiquidRegistry.getFullItem(item.id, item.data, "water");
-        }}
+        "slotWaterOut": {output: true}
     },
     canReceiveLiquid: function(liquid, side){return liquid == "water"}
 });

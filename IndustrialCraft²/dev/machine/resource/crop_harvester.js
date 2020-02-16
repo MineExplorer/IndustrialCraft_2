@@ -57,17 +57,22 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         scanY: -1,
         scanZ: -5
     },
+	
     upgrades: ["transformer", "energyStorage", "itemEjector"],
+	
     getGuiScreen: function(){
         return guiCropHarvester;
     },
+	
     getTier: function(){
         return this.data.power_tier;
     },
+	
     setDefaultValues: function(){
         this.data.power_tier = this.defaultValues.power_tier;
         this.data.energy_storage = this.defaultValues.energy_storage;
     },
+	
     tick: function(){
         this.setDefaultValues();
         UpgradeAPI.executeUpgrades(this);
@@ -83,6 +88,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         this.container.setScale("energyScale", this.data.energy / energyStorage);
         this.container.validateAll();
 	},
+	
 	scan: function(){
         this.data.scanX++;
         if (this.data.scanX > 5) {
@@ -110,7 +116,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
                 for(let i in drops){
                     var item = drops[i];
                     this.putItem(item);
-                    this.data.energy -= 100
+                    this.data.energy -= 100;
 
                     if(item.count > 0){
                         World.drop(this.x, this.y + 1, this.z, item.id, item.count, item.data);
@@ -119,6 +125,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
             }
         }
     },
+	
     putItem: function(item){
         for(var i = 0; i < 15; i++){
             var slot = this.container.getSlot("outSlot" + i);
@@ -131,6 +138,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
             }
         }
     },
+	
     isInvFull: function(){
         for(var i = 0; i < 15; i++){
             var slot = this.container.getSlot("outSlot" + i);
@@ -139,11 +147,14 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         }
         return true;
     },
+	
     getEnergyStorage: function(){
         return this.data.energy_storage;
     },
+	
     energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
+
 StorageInterface.createInterface(BlockID.cropHarvester, {
 	slots: {
 		"outSlot^0-14": {output: true}

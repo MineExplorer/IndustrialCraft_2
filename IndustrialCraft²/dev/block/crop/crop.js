@@ -224,8 +224,8 @@ TileEntity.registerPrototype(BlockID.crop, {
                 if (World.getBlockID(x, this.y, z)) fresh--;
             }
         }
-        if(GenerationUtils.canSeeSky(this.x, this.y + 1, this.z)) value + =2;
-        value += Math.floor( fresh / 2);
+        if(GenerationUtils.canSeeSky(this.x, this.y + 1, this.z)) value += 2;
+        value += Math.floor(fresh / 2);
         value += height;
 
         this.data.terrainAirQuality = value;

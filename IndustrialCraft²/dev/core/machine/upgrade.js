@@ -23,7 +23,7 @@ var UpgradeAPI = {
 	},
 
 	callUpgrade: function(item, machine, container, data, coords){
-		var upgrades = container.tileEntity.upgrades;
+		var upgrades = machine.upgrades;
 		var upgrade = this.getUpgradeData(item.id);
 		if(upgrade && (!upgrades || upgrades.indexOf(upgrade.type) != -1)){
 			upgrade.func(item, machine, container, data, coords);
@@ -35,18 +35,19 @@ var UpgradeAPI = {
 		for(var slotName in container.slots){
 			if(slotName.match(/Upgrade/)){
 				var slot = container.getSlot(slotName);
-				if(slot.id){
+				if(slot.id > 0){
 					var find = false;
 					for(var i in upgrades){
 						var item = upgrades[i];
 						if(item.id == slot.id && item.data == slot.data){
-							find = true;
 							item.count += slot.count;
+							find = true;
+							break;
 						}
 					}
 					if(!find){
 						item = {id: slot.id, count: slot.count, data: slot.data};
-						upgrades.push(item);
+						upgrades.push();
 					}
 				}
 			}
@@ -57,10 +58,9 @@ var UpgradeAPI = {
 	executeUpgrades: function(machine){
 		var container = machine.container;
 		var data = machine.data;
-		var coords = {x: machine.x, y: machine.y, z: machine.z};
 		var upgrades = this.getUpgrades(machine, container);
 		for(var i in upgrades){
-			this.callUpgrade(upgrades[i], machine, container, data, coords);
+			this.callUpgrade(upgrades[i], machine, container, data);
 		}
 		StorageInterface.checkHoppers(machine);
 	},

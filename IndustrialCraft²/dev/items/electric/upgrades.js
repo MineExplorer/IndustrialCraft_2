@@ -133,26 +133,26 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, "overclocker", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, "overclocker", function(item, machine, container, data){
 	if(data.work_time){
 		data.energy_consumption = Math.round(data.energy_consumption * Math.pow(1.6, item.count));
 		data.work_time = Math.round(data.work_time * Math.pow(0.7, item.count));
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, "transformer", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, "transformer", function(item, machine, container, data){
 	data.power_tier += item.count;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, "energyStorage", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, "energyStorage", function(item, machine, container, data){
 	data.energy_storage += 10000 * item.count;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, machine, container, data){
 	data.isHeating = !data.isHeating;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, machine, container, data){
 	var items = [];
 	var slots = machine.getTransportSlots().output;
 	for(var i in slots){
@@ -160,34 +160,34 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, 
 		if(slot.id){items.push(slot);}
 	}
 	if(items.length){
-		var containers = StorageInterface.getNearestContainers(coords, item.data-1);
+		var containers = StorageInterface.getNearestContainers(machine, item.data-1);
 		StorageInterface.putItems(items, containers, machine);
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, machine, container, data){
 	if(World.getThreadTime()%20 == 0){
-		var containers = StorageInterface.getNearestContainers(coords, item.data-1);
+		var containers = StorageInterface.getNearestContainers(machine, item.data-1);
 		for(var side in containers){
 			StorageInterface.extractItemsFromContainer(machine, containers[side], parseInt(side));
 		}
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(item, machine, container, data){
 	var liquid = machine.interface.getLiquidStored("output");
 	if(liquid){
-		var input = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
+		var input = StorageInterface.getNearestLiquidStorages(machine, item.data-1);
 		for(var side in input){
 			StorageInterface.transportLiquid(liquid, 0.25, machine, input[side], parseInt(side));
 		}
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, container, data){
 	var liquid = machine.interface.getLiquidStored("input");
 	if(!liquid || !machine.liquidStorage.isFull(liquid)){
-		var output = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
+		var output = StorageInterface.getNearestLiquidStorages(machine, item.data-1);
 		for(var side in output){
 			StorageInterface.extractLiquid(liquid, 0.25, machine, output[side], parseInt(side));
 		}

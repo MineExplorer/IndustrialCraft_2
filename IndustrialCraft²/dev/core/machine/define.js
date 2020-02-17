@@ -314,11 +314,8 @@ var MachineRegistry = {
 	}
 }
 
-var transferByTier = {
-	1: 32,
-	2: 256,
-	3: 2048,
-	4: 8192
+function transferByTier(tier){
+    return 32 * Math.pow(4,tier - 1);
 }
 
 // lever placing fix

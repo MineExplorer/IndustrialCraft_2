@@ -119,7 +119,7 @@ function checkCharging(){
 		if(tier){
 			var mode = slot.extra? slot.extra.getInt("mode") : 0;
 			if(mode == 2) continue;
-			var transfer = transferByTier[tier];
+			var transfer = transferByTier(tier);
 			var maxDamage = Item.getMaxDamage(slot.id);
 			for(var index = 0; index < 9; index++){
 				if(mode == 1 && Player.getSelectedSlotId() == index) continue;

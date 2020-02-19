@@ -9,9 +9,9 @@ Block.registerDropFunction("tank", function(coords, blockID, blockData, level){
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.tank, count: 1, data: 0}, [
-		"ccc",
+		" c ",
 		"c#c",
-		"ccc"
+		" c "
 	], ['#', BlockID.machineBlockBasic, 0, 'c', ItemID.cellEmpty, 0]);
 });
 
@@ -85,7 +85,7 @@ MachineRegistry.registerPrototype(BlockID.tank, {
 				this.container.validateAll();
 			}
 		}
-		storage.updateUiScale("liquidScale", liquid);
+		storage.updateUiScale("liquidScale", storage.getLiquidStored());
 	}
 });
 

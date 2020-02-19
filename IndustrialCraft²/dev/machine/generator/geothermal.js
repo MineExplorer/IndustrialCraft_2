@@ -19,7 +19,7 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiGeothermalGenerator = guiGeothermalGenerator = new UI.StandartWindow({
+var guiGeothermalGenerator = new UI.StandartWindow({
 	standart: {
 		header: {text: {text: Translation.translate("Geothermal Generator")}},
 		inventory: {standart: true},
@@ -119,8 +119,8 @@ StorageInterface.createInterface(BlockID.geothermalGenerator, {
 		"slot1": {input: true},
 		"slot2": {output: true}
 	},
-	isValidInput: function(id, count, data){
-		return LiquidRegistry.getItemLiquid(id, data) == "lava";
+	isValidInput: function(item){
+		return LiquidRegistry.getItemLiquid(item.id, item.data) == "lava";
 	},
 	canReceiveLiquid: function(liquid, side){ return liquid == "lava"; },
 	canTransportLiquid: function(liquid, side){ return false; }

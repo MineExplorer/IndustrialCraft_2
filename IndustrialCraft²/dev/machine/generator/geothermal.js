@@ -37,9 +37,7 @@ var guiGeothermalGenerator = new UI.StandartWindow({
 		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 440, y: 75,
 			isValid: function(id, count, data){
-				var empty = LiquidRegistry.getEmptyItem(id, data);
-				if(!empty) return false;
-				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+				return LiquidRegistry.getItemLiquid(id, data) == "lava";
 			}
 		},
 		"slot2": {type: "slot", x: 440, y: 183, isValid: function(){return false;}},

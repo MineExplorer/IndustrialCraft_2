@@ -26,19 +26,33 @@ var guiFermenter = new UI.StandartWindow({
 		background: {standart: true}
 	},
 	
-	params: {       
+	params: {
 		slot: "default_slot",
-		invSlot: "default_slot"              
+		invSlot: "default_slot"
 	},
 	
 	drawing: [
 		{type: "background", color: Color.parseColor("#b3b3b3")},
-		{type: "bitmap", x: 400, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, bitmap: "progress_scale_background", scale: GUI_SCALE}
+		{type: "bitmap", x: 390, y: 80, bitmap: "fermenter_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 758, y: 95, bitmap: "liquid_bar", scale: GUI_SCALE}
 	],
 	
 	elements: {
-		"progressScale": {type: "scale", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, direction: 1, value: 0.5, bitmap: "progress_scale", scale: GUI_SCALE},
+		"progressScale": {type: "scale", x: 492, y: 150, direction: 0, value: .5, bitmap: "red_line", scale: GUI_SCALE},
+		"fertilizerScale": {type: "scale", x: 480, y: 301, direction: 0, value: .5, bitmap: "fertilizer_progress", scale: GUI_SCALE},
+		"biogasScale": {type: "scale", x: 771, y: 108, direction: 1, value: .5, bitmap: "liquid_biogas", scale: GUI_SCALE},
+		"biomassScale": {type: "scale", x: 483, y: 179, direction: 1, value: .5, bitmap: "biomass_scale", scale: GUI_SCALE},
+		"slotBiomass0": {type: "slot", x: 400, y: 162, isValid: function(id, count, data){
+            return LiquidRegistry.getItemLiquid(id, data) == "biomass";
+        }},
+		"slotBiomass1": {type: "slot", x: 400, y: 222, isValid: function(){return false;}},
+		"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "fertilizer_slot", isValid: function(){return false;}},
+		"slotBiogas0": {type: "slot", x: 832, y: 155, isValid: function(id, count, data){
+            return LiquidRegistry.getFullItem(id, data, "biogas") ? true : false;
+        }},
+		"slotBiogas1": {type: "slot", x: 832, y: 215, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 765, y: 290, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 825, y: 290, isValid: UpgradeAPI.isValidUpgrade}
 	}
 });
 
@@ -56,7 +70,7 @@ MachineRegistry.registerPrototype(BlockID.fermenter, {
 	upgrades: ["itemEjector", "itemPulling", "fluidEjector", "fluidPulling"],
 	
 	getGuiScreen: function(){
-       return null;
+       return guiFermenter;
     },
 	
 	wrenchClick: function(id, count, data, coords){
@@ -68,7 +82,6 @@ MachineRegistry.registerPrototype(BlockID.fermenter, {
     tick: function(){
 		StorageInterface.checkHoppers(this);
 		UpgradeAPI.executeUpgrades(this);
-		this.container.setScale("progressScale", 0);
     },
 	
 	heatReceive: function(amount){
@@ -82,6 +95,14 @@ TileRenderer.setRotationPlaceFunction(BlockID.fermenter, true);
 
 StorageInterface.createInterface(BlockID.fermenter, {
 	slots: {
-		
-	}
+		"slotBiomass0": {input: true},
+		"slotBiomass1": {output: true},
+		"slotFertilizer": {output: true},
+		"slotBiogas0": {input: true},
+		"slotBiogas1": {output: true}
+	},
+	canReceiveLiquid: function(liquid, side){
+		return liquid == "biomass";
+	},
+	canTransportLiquid: function(liquid, side){ return true }
 });

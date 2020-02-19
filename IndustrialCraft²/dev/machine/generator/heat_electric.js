@@ -120,7 +120,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		if(this.data.energy >= 1){
 			var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
 			var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-			if(TE && TE.heatReceive && this.data.meta == TE.data.meta + Math.pow(-1, TE.data.meta)){
+			if(TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)){
 				output = TE.heatReceive(Math.min(maxOutput, parseInt(this.data.energy)*2));
 				if(output > 0){
 					this.activate();

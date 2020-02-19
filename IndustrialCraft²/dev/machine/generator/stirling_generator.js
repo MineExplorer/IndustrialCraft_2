@@ -29,6 +29,10 @@ MachineRegistry.registerGenerator(BlockID.stirlingGenerator, {
 	
 	setFacing: MachineRegistry.setFacing,
 	
+	canReceiveHeat: function(side){
+		return this.data.meta == side + Math.pow(-1, side);
+	},
+	
 	heatReceive: function(amount){
 		if(this.data.energy == 0){
 			this.data.energy = Math.round(amount / 2);

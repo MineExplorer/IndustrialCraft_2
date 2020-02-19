@@ -202,6 +202,10 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		this.data.signal = signal.power > 0;
 	},
 	
+	canReceiveHeat: function(side){
+		return this.data.meta == side + Math.pow(-1, side);
+	},
+	
 	heatReceive: function(amount){
 		var slot = this.container.getSlot("slotSource");
 		if(this.data.isHeating || this.data.sourceID > 0 || MachineRecipeRegistry.getRecipeResult("blastFurnace", slot.id)){

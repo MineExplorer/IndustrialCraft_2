@@ -85,7 +85,7 @@ MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
 		var slot2 = this.container.getSlot("slot2");
 		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
 		if(empty && (!liquid || empty.liquid == liquid)){
-			if(this.liquidStorage.getAmount(empty.liquid) <= 9 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
+			if(this.liquidStorage.getAmount(empty.liquid).toFixed(3) <= 9 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
 				liquid = empty.liquid;
 				this.liquidStorage.addLiquid(liquid, 1);
 				slot1.count--;
@@ -95,6 +95,7 @@ MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
 				this.container.validateAll();
 			}
 		}
+		
 		if(this.data.fuel <= 0){
 			var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", liquid);
 			if(fuel && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= energyStorage){
@@ -103,7 +104,6 @@ MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
 				this.data.liquid = liquid;
 			}
 		}
-		
 		if(this.data.fuel > 0){
 			var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid);
 			this.data.energy += fuel.power;

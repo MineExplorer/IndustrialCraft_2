@@ -160,10 +160,9 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 		}
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);

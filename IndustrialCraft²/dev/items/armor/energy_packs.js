@@ -8,10 +8,10 @@ Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"
 Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: true});
 Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 10000000, texture: "armor/lappack_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 1, "storage", true);
-ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 2, "storage", true);
-ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 3, "storage", true);
-ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 4, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 128, 1, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 512, 2, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 2048, 3, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 8192, 4, "storage", true);
 ItemName.setRarity(ItemID.lappack, 1);
 
 Item.registerNameOverrideFunction(ItemID.batpack, ItemName.showItemStorage);
@@ -23,25 +23,25 @@ Recipes.addShaped({id: ItemID.batpack, count: 1, data: Item.getMaxDamage(ItemID.
     "bcb",
     "bab",
     "b b"
-], ['a', 5, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, 0], ChargeItemRegistry.transportEnergy);
+], ['a', 5, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, 0], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.advBatpack, count: 1, data: Item.getMaxDamage(ItemID.advBatpack)}, [
     "bcb",
     "bab",
     "b b"
-], ['a', ItemID.plateBronze, 0, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitBasic, 0], ChargeItemRegistry.transportEnergy);
+], ['a', ItemID.plateBronze, 0, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitBasic, 0], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.energypack, count: 1, data: Item.getMaxDamage(ItemID.energypack)}, [
     "cbc",
     "aba",
     "b b"
-], ['a', ItemID.storageCrystal, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+], ['a', ItemID.storageCrystal, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.lappack, count: 1, data: Item.getMaxDamage(ItemID.lappack)}, [
     "e",
     "c",
     "a"
-], ['e', ItemID.energypack, -1, 'a', ItemID.storageLapotronCrystal, -1, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+], ['e', ItemID.energypack, -1, 'a', ItemID.storageLapotronCrystal, -1, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
 
 
 function registerStoragePack(id, level, tranfer){
@@ -70,7 +70,7 @@ var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	}
 }
 
-registerStoragePack("batpack", 1, 32);
-registerStoragePack("advBatpack", 2, 256);
+registerStoragePack("batpack", 1, 128);
+registerStoragePack("advBatpack", 2, 512);
 registerStoragePack("energypack", 3, 2048);
 registerStoragePack("lappack", 4, 8192);

@@ -1,12 +1,12 @@
 IDRegistry.genItemID("nanoSaber");
 Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 3, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 2048, 3, "tool", true);
 ItemName.setRarity(ItemID.nanoSaber, 1);
 Item.registerNameOverrideFunction(ItemID.nanoSaber, ItemName.showItemStorage);
 
 IDRegistry.genItemID("nanoSaberActive");
 Item.createItem("nanoSaberActive", "Nano Saber", {name: "nano_saber_active", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.nanoSaberActive, "Eu", 1000000, 3, "tool");
+ChargeItemRegistry.registerItem(ItemID.nanoSaberActive, "Eu", 1000000, 2048, 3, "tool");
 ItemName.setRarity(ItemID.nanoSaberActive, 1);
 Item.registerNameOverrideFunction(ItemID.nanoSaberActive, ItemName.showItemStorage);
 
@@ -20,7 +20,7 @@ Recipes.addShaped({id: ItemID.nanoSaber, count: 1, data: NANO_SABER_DURABILITY},
 	"ca ",
 	"ca ",
 	"bxb"
-], ['x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, 'b', ItemID.carbonPlate, 0, "c", 348, 0], ChargeItemRegistry.transportEnergy);
+], ['x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, 'b', ItemID.carbonPlate, 0, "c", 348, 0], ChargeItemRegistry.transferEnergy);
 
 ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: NANO_SABER_DURABILITY, damage: 4}, {
 	damage: 0,

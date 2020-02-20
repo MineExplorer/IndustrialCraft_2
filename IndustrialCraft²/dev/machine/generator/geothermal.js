@@ -94,7 +94,7 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 			this.deactivate();
 		}
 		
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
 		
 		this.liquidStorage.updateUiScale("liquidScale", "lava");
 		this.container.setScale("energyScale", this.data.energy / energyStorage);

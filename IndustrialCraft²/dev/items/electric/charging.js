@@ -1,18 +1,18 @@
 IDRegistry.genItemID("chargingBattery");
 Item.createItem("chargingBattery", "Charging RE-Battery", {name: "charging_re_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 1, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 128, 1, "storage", true, true);
 
 IDRegistry.genItemID("chargingAdvBattery");
 Item.createItem("chargingAdvBattery", "Advanced Charging Battery", {name: "adv_charging_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 2, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 512, 2, "storage", true, true);
 
 IDRegistry.genItemID("chargingCrystal");
 Item.createItem("chargingCrystal", "Charging Energy Crystal", {name: "charging_energy_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 3, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 2048, 3, "storage", true, true);
 
 IDRegistry.genItemID("chargingLapotronCrystal");
 Item.createItem("chargingLapotronCrystal", "Charging Lapotron Crystal", {name: "charging_lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 4, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 8192, 4, "storage", true, true);
 ItemName.setRarity(ItemID.chargingLapotronCrystal, 1);
 
 Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name){
@@ -44,25 +44,25 @@ Callback.addCallback("PreLoaded", function(){
 		"xbx",
 		"b b",
 		"xbx"
-	], ['x', ItemID.circuitBasic, 0, 'b', ItemID.storageBattery, -1], ChargeItemRegistry.transportEnergy);
+	], ['x', ItemID.circuitBasic, 0, 'b', ItemID.storageBattery, -1], ChargeItemRegistry.transferEnergy);
 
 	Recipes.addShaped({id: ItemID.chargingAdvBattery, count: 1, data: Item.getMaxDamage(ItemID.chargingAdvBattery)}, [
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingBattery, -1, 'x', ItemID.heatExchanger, 1, 'b', ItemID.storageAdvBattery, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingBattery, -1, 'x', ItemID.heatExchanger, 1, 'b', ItemID.storageAdvBattery, -1], ChargeItemRegistry.transferEnergy);
 
 	Recipes.addShaped({id: ItemID.chargingCrystal, count: 1, data: Item.getMaxDamage(ItemID.chargingCrystal)}, [
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingAdvBattery, -1, 'x', ItemID.heatExchangerComponent, 1, 'b', ItemID.storageCrystal, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingAdvBattery, -1, 'x', ItemID.heatExchangerComponent, 1, 'b', ItemID.storageCrystal, -1], ChargeItemRegistry.transferEnergy);
 	
 	Recipes.addShaped({id: ItemID.chargingLapotronCrystal, count: 1, data: Item.getMaxDamage(ItemID.chargingLapotronCrystal)}, [
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingCrystal, -1, 'x', ItemID.heatExchangerAdv, 1, 'b', ItemID.storageLapotronCrystal, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingCrystal, -1, 'x', ItemID.heatExchangerAdv, 1, 'b', ItemID.storageLapotronCrystal, -1], ChargeItemRegistry.transferEnergy);
 });
 
 var charging_items = {}

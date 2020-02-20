@@ -8,10 +8,10 @@ Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_c
 Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 10000, texture: "armor/quantum_2.png", isTech: true});
 Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 8192, 4, "armor", true);
 
 ItemName.setRarity(ItemID.quantumHelmet, 2);
 ItemName.setRarity(ItemID.quantumChestplate, 2);
@@ -33,10 +33,10 @@ Item.createArmorItem("quantumChestplateUncharged", "Quantum Bodyarmor", {name: "
 Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 10000, texture: "armor/quantum_2.png", isTech: true});
 Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 8192, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 8192, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 8192, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 8192, 4, "armor");
 
 ItemName.setRarity(ItemID.quantumHelmetUncharged, 2);
 ItemName.setRarity(ItemID.quantumChestplateUncharged, 2);
@@ -53,24 +53,24 @@ Callback.addCallback("PreLoaded", function(){
 		"a#a",
 		"bxb",
 		"cqc"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoHelmet, -1, 'q', ItemID.hazmatHelmet, 0, 'a', ItemID.plateReinforcedIridium, 0, 'b', BlockID.reinforcedGlass, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoHelmet, -1, 'q', ItemID.hazmatHelmet, 0, 'a', ItemID.plateReinforcedIridium, 0, 'b', BlockID.reinforcedGlass, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
 	
 	Recipes.addShaped({id: ItemID.quantumChestplate, count: 1, data: Item.getMaxDamage(ItemID.quantumChestplate)}, [
 		"bxb",
 		"a#a",
 		"aca"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoChestplate, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.plateAlloy, 0, 'c', ItemID.jetpack, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoChestplate, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.plateAlloy, 0, 'c', ItemID.jetpack, -1], ChargeItemRegistry.transferEnergy);
 	
 	Recipes.addShaped({id: ItemID.quantumLeggings, count: 1, data: Item.getMaxDamage(ItemID.quantumLeggings)}, [
 		"m#m",
 		"axa",
 		"c c"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoLeggings, -1, 'a', ItemID.plateReinforcedIridium, 0, 'm', BlockID.machineBlockBasic, 0, 'c', 348, 0], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoLeggings, -1, 'a', ItemID.plateReinforcedIridium, 0, 'm', BlockID.machineBlockBasic, 0, 'c', 348, 0], ChargeItemRegistry.transferEnergy);
 	
 	Recipes.addShaped({id: ItemID.quantumBoots, count: 1, data: Item.getMaxDamage(ItemID.quantumBoots)}, [
 		"axa",
 		"b#b"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoBoots, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.rubberBoots, 0], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoBoots, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.rubberBoots, 0], ChargeItemRegistry.transferEnergy);
 });
 
 

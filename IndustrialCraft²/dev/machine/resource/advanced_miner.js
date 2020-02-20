@@ -227,8 +227,8 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 		
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 512, 3);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, tier);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 

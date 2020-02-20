@@ -34,16 +34,16 @@ var guiElectricHeatGenerator = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"slot0": {type: "slot", x: 440, y: 120, isValid: isValidCoilSlotFunction(0)},
-		"slot1": {type: "slot", x: 500, y: 120, isValid: isValidCoilSlotFunction(1)},
-		"slot2": {type: "slot", x: 560, y: 120, isValid: isValidCoilSlotFunction(2)},
-		"slot3": {type: "slot", x: 620, y: 120, isValid: isValidCoilSlotFunction(3)},
-		"slot4": {type: "slot", x: 680, y: 120, isValid: isValidCoilSlotFunction(4)},
-		"slot5": {type: "slot", x: 440, y: 180, isValid: isValidCoilSlotFunction(5)},
-		"slot6": {type: "slot", x: 500, y: 180, isValid: isValidCoilSlotFunction(6)},
-		"slot7": {type: "slot", x: 560, y: 180, isValid: isValidCoilSlotFunction(7)},
-		"slot8": {type: "slot", x: 620, y: 180, isValid: isValidCoilSlotFunction(8)},
-		"slot9": {type: "slot", x: 680, y: 180, isValid: isValidCoilSlotFunction(9)},
+		"slot0": {type: "slot", x: 440, y: 120, isValid: getValidCoilSlotFunction(0)},
+		"slot1": {type: "slot", x: 500, y: 120, isValid: getValidCoilSlotFunction(1)},
+		"slot2": {type: "slot", x: 560, y: 120, isValid: getValidCoilSlotFunction(2)},
+		"slot3": {type: "slot", x: 620, y: 120, isValid: getValidCoilSlotFunction(3)},
+		"slot4": {type: "slot", x: 680, y: 120, isValid: getValidCoilSlotFunction(4)},
+		"slot5": {type: "slot", x: 440, y: 180, isValid: getValidCoilSlotFunction(5)},
+		"slot6": {type: "slot", x: 500, y: 180, isValid: getValidCoilSlotFunction(6)},
+		"slot7": {type: "slot", x: 560, y: 180, isValid: getValidCoilSlotFunction(7)},
+		"slot8": {type: "slot", x: 620, y: 180, isValid: getValidCoilSlotFunction(8)},
+		"slot9": {type: "slot", x: 680, y: 180, isValid: getValidCoilSlotFunction(9)},
 		"slotEnergy": {type: "slot", x: 340, y: 180, isValid: MachineRegistry.isValidEUStorage},
 		"energyScale": {type: "scale", x: 342, y: 110, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 530, y: 264, width: 300, height: 30, text: "0    /"},
@@ -76,7 +76,7 @@ function checkCoilSlot(i, id, count, data, container){
 	return false;
 }
 
-function isValidCoilSlotFunction(i){
+function getValidCoilSlotFunction(i){
 	return function(id, count, data, container){
 		return checkCoilSlot(i, count, data, container);
 	}
@@ -135,7 +135,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		}
 		
 		var energyStorage = this.getEnergyStorage()
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 32, 0);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 4);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo2", maxOutput);
 	},

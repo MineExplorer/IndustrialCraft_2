@@ -7,9 +7,9 @@ Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill_iridium"}, {stack
 Item.setGlint(ItemID.iridiumDrill, true);
 ItemName.setRarity(ItemID.iridiumDrill, 2);
 
-ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 1, "tool", true);
-ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 1, "tool", true);
-ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 3, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 100, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 100, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 2048, 3, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.drill, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.diamondDrill, ItemName.showItemStorage);
@@ -44,13 +44,13 @@ Recipes.addShaped({id: ItemID.drill, count: 1, data: Item.getMaxDamage(ItemID.dr
 Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: Item.getMaxDamage(ItemID.diamondDrill)}, [
 	" a ",
 	"ada"
-], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transportEnergy);
+], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(ItemID.iridiumDrill)}, [
 	" a ",
 	"ada",
 	" e "
-], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transportEnergy);
+], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transferEnergy);
 
 UIbuttons.setToolButton(ItemID.iridiumDrill, "button_switch");
 

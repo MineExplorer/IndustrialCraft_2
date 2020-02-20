@@ -2,8 +2,8 @@ IDRegistry.genItemID("scanner");
 IDRegistry.genItemID("scannerAdvanced");
 Item.createItem("scanner", "OD Scanner", {name: "scanner", meta: 0}, {stack: 1, isTech: true});
 Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner", meta: 1}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 1, "tool", true);
-ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 2, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 100, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 256, 2, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.scanner, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.scannerAdvanced, ItemName.showItemStorage);
@@ -12,13 +12,13 @@ Recipes.addShaped({id: ItemID.scanner, count: 1, data: Item.getMaxDamage(ItemID.
 	"gdg",
 	"cbc",
 	"xxx"
-], ['x', ItemID.cableCopper1, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transportEnergy);
+], ['x', ItemID.cableCopper1, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.scannerAdvanced, count: 1, data: Item.getMaxDamage(ItemID.scannerAdvanced)}, [
 	"gbg",
 	"dcd",
 	"xsx"
-], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transportEnergy);
+], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
 
 
 var scan_radius = 3;

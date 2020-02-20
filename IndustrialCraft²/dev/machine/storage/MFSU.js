@@ -69,12 +69,9 @@ MachineRegistry.registerEUStorage(BlockID.storageMFSU, {
 		StorageInterface.checkHoppers(this);
 		
 		var energyStorage = this.getEnergyStorage();
-		var tier = this.getTier();
-		var transfer = transferByTier[tier] * 2;
-		if(World.getThreadTime()%2 == 0){ // icon override crash fix
-			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, transfer, tier);
-			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, transfer, tier);
-		}
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, 4);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, 4);
+		
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);

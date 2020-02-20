@@ -1,6 +1,6 @@
 IDRegistry.genItemID("miningLaser");
 Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 3, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 2048, 3, "tool", true);
 Item.setToolRender(ItemID.miningLaser, true);
 
 ItemName.setRarity(ItemID.miningLaser, 1);
@@ -15,7 +15,7 @@ Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: Item.getMaxDamage(Ite
 	"ccx",
 	"aa#",
 	" aa"
-], ['#', ItemID.circuitAdvanced, 0, 'x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, "c", 331, 0], ChargeItemRegistry.transportEnergy);
+], ['#', ItemID.circuitAdvanced, 0, 'x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, "c", 331, 0], ChargeItemRegistry.transferEnergy);
 
 UIbuttons.setToolButton(ItemID.miningLaser, "button_switch", true);
 

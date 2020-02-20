@@ -63,7 +63,7 @@ MachineRegistry.registerGenerator(BlockID.solarPanel, {
 		}
 		if(this.data.canSeeSky && World.getLightLevel(this.x, this.y + 1, this.z) == 15){
 			this.data.energy = 1;
-			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", 1, 32, 1);
+			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", 1, 1);
 			if(content){ 
 				content.elements["sun"].bitmap = "sun_on";
 			}

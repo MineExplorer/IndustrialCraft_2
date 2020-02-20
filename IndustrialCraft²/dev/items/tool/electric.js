@@ -2,8 +2,8 @@ IDRegistry.genItemID("electricHoe");
 IDRegistry.genItemID("electricTreetap");
 Item.createItem("electricHoe", "Electric Hoe", {name: "electric_hoe", meta: 0}, {stack: 1, isTech: true});
 Item.createItem("electricTreetap", "Electric Treetap", {name: "electric_treetap", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.electricHoe, "Eu", 10000, 1, "tool", true);
-ChargeItemRegistry.registerItem(ItemID.electricTreetap, "Eu", 10000, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.electricHoe, "Eu", 10000, 100, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.electricTreetap, "Eu", 10000, 100, 1, "tool", true);
 Item.setToolRender(ItemID.electricHoe, true);
 
 Item.registerNameOverrideFunction(ItemID.electricHoe, ItemName.showItemStorage);

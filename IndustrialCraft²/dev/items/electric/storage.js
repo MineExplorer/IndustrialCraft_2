@@ -1,18 +1,18 @@
 IDRegistry.genItemID("storageBattery");
 Item.createItem("storageBattery", "RE-Battery", {name: "re_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 1, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 100, 1, "storage", true, true);
 
 IDRegistry.genItemID("storageAdvBattery");
 Item.createItem("storageAdvBattery", "Advanced RE-Battery", {name: "adv_re_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 2, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 256, 2, "storage", true, true);
 
 IDRegistry.genItemID("storageCrystal");
 Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 3, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 2048, 3, "storage", true, true);
 
 IDRegistry.genItemID("storageLapotronCrystal");
 Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 4, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 8192, 4, "storage", true, true);
 ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");
@@ -65,7 +65,7 @@ Callback.addCallback("PreLoaded", function(){
 		"x#x",
 		"xax",
 		"x#x"
-	], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+	], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
 });
 
 ChargeItemRegistry.registerChargeFunction(ItemID.debugItem, function(item, amount, transf, level){

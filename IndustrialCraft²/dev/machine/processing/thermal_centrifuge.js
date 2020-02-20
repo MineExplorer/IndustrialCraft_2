@@ -114,7 +114,7 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -147,7 +147,7 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 	},
 
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		if(this.data.isHeating){
 			this.data.maxHeat = 5000;

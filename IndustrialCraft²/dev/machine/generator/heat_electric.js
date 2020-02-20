@@ -9,7 +9,7 @@ TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 6, [["mach
 ItemName.addTierTooltip("electricHeatGenerator", 4);
 
 Block.registerDropFunction("electricHeatGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.electricHeatGenerator);
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
 });
 
 Callback.addCallback("PreLoaded", function(){
@@ -34,16 +34,16 @@ var guiElectricHeatGenerator = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"slot0": {type: "slot", x: 440, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(0, id, c, d, cont)}},
-		"slot1": {type: "slot", x: 500, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(1, id, c, d, cont)}},
-		"slot2": {type: "slot", x: 560, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(2, id, c, d, cont)}},
-		"slot3": {type: "slot", x: 620, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(3, id, c, d, cont)}},
-		"slot4": {type: "slot", x: 680, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(4, id, c, d, cont)}},
-		"slot5": {type: "slot", x: 440, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(5, id, c, d, cont)}},
-		"slot6": {type: "slot", x: 500, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(6, id, c, d, cont)}},
-		"slot7": {type: "slot", x: 560, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(7, id, c, d, cont)}},
-		"slot8": {type: "slot", x: 620, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(8, id, c, d, cont)}},
-		"slot9": {type: "slot", x: 680, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(9, id, c, d, cont)}},
+		"slot0": {type: "slot", x: 440, y: 120, isValid: isValidCoilSlotFunction(0)},
+		"slot1": {type: "slot", x: 500, y: 120, isValid: isValidCoilSlotFunction(1)},
+		"slot2": {type: "slot", x: 560, y: 120, isValid: isValidCoilSlotFunction(2)},
+		"slot3": {type: "slot", x: 620, y: 120, isValid: isValidCoilSlotFunction(3)},
+		"slot4": {type: "slot", x: 680, y: 120, isValid: isValidCoilSlotFunction(4)},
+		"slot5": {type: "slot", x: 440, y: 180, isValid: isValidCoilSlotFunction(5)},
+		"slot6": {type: "slot", x: 500, y: 180, isValid: isValidCoilSlotFunction(6)},
+		"slot7": {type: "slot", x: 560, y: 180, isValid: isValidCoilSlotFunction(7)},
+		"slot8": {type: "slot", x: 620, y: 180, isValid: isValidCoilSlotFunction(8)},
+		"slot9": {type: "slot", x: 680, y: 180, isValid: isValidCoilSlotFunction(9)},
 		"slotEnergy": {type: "slot", x: 340, y: 180, isValid: MachineRegistry.isValidEUStorage},
 		"energyScale": {type: "scale", x: 342, y: 110, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 530, y: 264, width: 300, height: 30, text: "0    /"},
@@ -76,6 +76,11 @@ function checkCoilSlot(i, id, count, data, container){
 	return false;
 }
 
+function isValidCoilSlotFunction(i){
+	return function(id, count, data, container){
+		return checkCoilSlot(i, count, data, container);
+	}
+}
 
 MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
     defaultValues: {
@@ -102,8 +107,8 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		var maxOutput = 0;
 		for(var i = 0; i < 10; i++){
 			var slot = this.container.getSlot("slot"+i);
-			if(slot.id==ItemID.coil)
-			maxOutput += 20;
+			if(slot.id == ItemID.coil)
+				maxOutput += 20;
 		}
 		return maxOutput;
 	},
@@ -115,13 +120,12 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		if(this.data.energy >= 1){
 			var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
 			var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-			if(TE && TE.heatReceiveFunction && this.data.meta == TE.data.meta + Math.pow(-1, TE.data.meta)){
-				output = TE.heatReceiveFunction(Math.min(maxOutput, parseInt(this.data.energy)*2));
+			if(TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)){
+				output = TE.heatReceive(Math.min(maxOutput, parseInt(this.data.energy)*2));
 				if(output > 0){
 					this.activate();
-					this.data.energy -= Math.round(output/2);
+					this.data.energy -= Math.round(output / 2);
 					this.container.setText("textInfo1", output + "    /");
-					
 				}
 			}
 		}

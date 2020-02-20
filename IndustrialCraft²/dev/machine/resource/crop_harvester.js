@@ -25,25 +25,24 @@ var cropHarvesterGuiObject = {
     },
 
     drawing: [
-        {type: "bitmap", x: 845, y: 120, bitmap: "energy_small_background", scale: GUI_SCALE}
+        {type: "bitmap", x: 409, y: 167, bitmap: "energy_small_background", scale: GUI_SCALE}
     ],
 
     elements: {
-        "energyScale": {type: "scale", x: 845, y: 120, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-        "slotEnergy": {type: "slot", x: 840, y: 170, isValid: MachineRegistry.isValidEUStorage},
-		"slotAnalyser": {type: "slot", x: 440, y: 170, isValid: function(id, count, data){
-			return id == ItemID.agriculturalAnalyzer
-		}},
-		"slotUpgrade": {type: "slot", x: 640, y: 310, isValid: UpgradeAPI.isValidUpgrade}
+        "energyScale": {type: "scale", x: 409, y: 167, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+        "slotEnergy": {type: "slot", x: 400, y: 230, isValid: MachineRegistry.isValidEUStorage},
+        "slotUpgrade0": {type: "slot", x: 880, y: 110, isValid: UpgradeAPI.isValidUpgrade},
+        "slotUpgrade1": {type: "slot", x: 880, y: 170, isValid: UpgradeAPI.isValidUpgrade},
+        "slotUpgrade2": {type: "slot", x: 880, y: 230, isValid: UpgradeAPI.isValidUpgrade}
     }
 };
 
-for(let ind = 0; ind < 15; ind++){
-    let x = ind % 5;
-    let y = Math.floor(ind / 5) + 1;
-    let padd = 60;
-    cropHarvesterGuiObject.elements["outSlot" + ind] = {type: "slot", x: 520 + padd * x, y: 50 + padd * y};
-}
+for(let i = 0; i < 15; i++){
+    let x = i % 5;
+    let y = Math.floor(i / 5) + 1;
+    cropHarvesterGuiObject.elements["outSlot" + i] = {type: "slot", x: 520 + x*60, y: 50 + y*60};
+};
+
 
 var guiCropHarvester = new UI.StandartWindow(cropHarvesterGuiObject);
 Callback.addCallback("LevelLoaded", function(){
@@ -54,33 +53,38 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
     defaultValues: {
         power_tier: 1,
         energy_storage: 10000,
-        scanX:-5,
-        scanY:-1,
-        scanZ:-5
+        scanX: -5,
+        scanY: -1,
+        scanZ: -5
     },
+	
     upgrades: ["transformer", "energyStorage", "itemEjector"],
+	
     getGuiScreen: function(){
         return guiCropHarvester;
     },
+	
     getTier: function(){
         return this.data.power_tier;
     },
-    setDefaultValues: function(){
+	
+    resetValues: function(){
         this.data.power_tier = this.defaultValues.power_tier;
         this.data.energy_storage = this.defaultValues.energy_storage;
     },
-
+	
     tick: function(){
-        this.setDefaultValues();
+        this.resetValues();
         UpgradeAPI.executeUpgrades(this);
-        
-        if(this.data.energy > 200) this.scan();
-        
+        StorageInterface.checkHoppers(this);
+
+        if(this.data.energy > 100) this.scan();
+
         var tier = this.getTier();
         var energyStorage = this.getEnergyStorage();
         this.data.energy = Math.min(this.data.energy, energyStorage);
         this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
-        
+
         this.container.setScale("energyScale", this.data.energy / energyStorage);
         this.container.validateAll();
 	},
@@ -101,28 +105,27 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         this.data.energy -= 1;
         var cropTile = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
         if(cropTile && cropTile.crop && !this.isInvFull()){
-            var cropAnalyser = this.container.getSlot("slotAnalyser");
             var drops = null;
-            if(cropAnalyser.id && cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)){
+            if(cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)){
                 drops = cropTile.performHarvest();
             }
             else if (cropTile.data.currentSize == cropTile.crop.maxSize) {
                 drops = cropTile.performHarvest();
             }
             if(drops && drops.length){
-                for(var ind in drops){
-                    var item = drops[ind];
+                for(let i in drops){
+                    var item = drops[i];
                     this.putItem(item);
-                    this.data.energy -= 100
-                    if(!cropAnalyser.id) this.data.energy -= 100;
+                    this.data.energy -= 100;
 
                     if(item.count > 0){
-                        World.drop(this.x, this.y + 1, this.z, item.id, item.count, item.data, null);
+                        World.drop(this.x, this.y + 1, this.z, item.id, item.count, item.data);
                     }
                 }
             }
         }
     },
+	
     putItem: function(item){
         for(var i = 0; i < 15; i++){
             var slot = this.container.getSlot("outSlot" + i);
@@ -135,6 +138,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
             }
         }
     },
+	
     isInvFull: function(){
         for(var i = 0; i < 15; i++){
             var slot = this.container.getSlot("outSlot" + i);
@@ -143,14 +147,16 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         }
         return true;
     },
-    
+	
     getEnergyStorage: function(){
         return this.data.energy_storage;
     },
+	
     energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });
+
 StorageInterface.createInterface(BlockID.cropHarvester, {
 	slots: {
-		"outSlot^0-14": {output: true},
+		"outSlot^0-14": {output: true}
 	}
 });

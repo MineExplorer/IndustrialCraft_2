@@ -36,7 +36,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				if(result.id == id && (result.data == data || data == -1)){
 					item = key.split(":");
 					list.push({
-						input: [{id: parseInt(item[0]), count: 1, data: parseInt(item[1] || 0)}],
+						input: [{id: parseInt(item[0]), count: result.sourceCount || 1, data: parseInt(item[1] || 0)}],
 						output: [result]
 					});
 				}

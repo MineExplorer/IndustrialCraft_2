@@ -1,14 +1,16 @@
 IDRegistry.genBlockID("crop");
 Block.createBlock("crop", [
     {name: "crop", texture: [["stick", 0]], inCreative: false}
-],"plant");
-Block.registerDropFunctionForID(BlockID.crop, function(coords, id, data, diggingLevel, toolLevel){ 
-    return [[0, 0, 0]];
-});
+], "plant");
+
 var shape = new ICRender.CollisionShape();
 shape.addEntry().addBox(7/8, 7/8, 7/8, 1/8, 1/8, 1/8);
 BlockRenderer.setCustomCollisionShape(BlockID.crop, 0, shape);
 BlockRenderer.enableCoordMapping(BlockID.crop, 0, TileRenderer.getCropModel(["stick", 0]));
+
+Block.registerDropFunctionForID(BlockID.crop, function(coords, id, data, diggingLevel, toolLevel){ 
+    return [];
+});
 
 TileEntity.registerPrototype(BlockID.crop, {
     defaultValues: {
@@ -28,15 +30,18 @@ TileEntity.registerPrototype(BlockID.crop, {
         scanLevel: 0,
         crossingBase: false
     },
+	
     init: function(){
         if(this.data.crop) this.crop = AgricultureAPI.cropCards[this.data.crop];
         this.updateRender();
     },
+	
     tick: function () {
         this.checkGround();
         this.checkPlayerRunning();
         if(World.getThreadTime() % 192 == 0) this.performTick();
     },
+	
     click: function(id, count, data, coords){
         if(id){
             var card = AgricultureAPI.getCardFromSeed({id: id, data: data});
@@ -64,7 +69,7 @@ TileEntity.registerPrototype(BlockID.crop, {
                 Player.decreaseCarriedItem(1);
                 return;
             }
-            if (this.applyHydration(id, data, true) || this.applyWeedEx(id, data, true)) {
+            if (this.applyHydration(id, data, true) || this.applyWeedEx(id, true)) {
                 this.data.dirty = true;
                 return;
             }
@@ -86,6 +91,7 @@ TileEntity.registerPrototype(BlockID.crop, {
         }
         if(this.crop && this.crop.canBeHarvested(this)) this.crop.onRightClick(this);
     },
+	
     onLongClick: function(){
         if(this.data.crossingBase){
             World.drop(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
@@ -93,18 +99,20 @@ TileEntity.registerPrototype(BlockID.crop, {
             this.data.dirty = true;
             this.updateRender();
             return true;
-        }else if(this.crop){ 
+        }else if(this.crop){
             this.crop.onLeftClick(this);
             return true;
         }
         return false;
     },
+	
     destroyBlock: function(coords, player){
         World.drop(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
         if(this.data.crossingBase) World.drop(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
         if(this.crop) this.crop.onLeftClick(this);
         BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
     },
+	
     updateRender: function(){
         var texture = ["stick", 0];
         if(this.crop){
@@ -115,27 +123,30 @@ TileEntity.registerPrototype(BlockID.crop, {
         var render = TileRenderer.getCropModel(texture);
         BlockRenderer.mapAtCoords(this.x, this.y, this.z, render);
     },
+	
     checkPlayerRunning: function(){
-        if(!this.crop)return;
+        if(!this.crop) return;
 
         var coords = Entity.getPosition(Player.get());
         var playerX = Math.floor(coords.x);
         var playerY = Math.floor(coords.y);
         var playerZ = Math.floor(coords.z);
 
-        if(playerX == this.x && playerY-1 == this.y && playerZ == this.z){
+        if(playerX == this.x && playerY - 1 == this.y && playerZ == this.z){
             var vel = Player.getVelocity();
             var horizontalVel = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
             if(horizontalVel > 0.15 && this.crop.onEntityCollision(this)){
-                World.destroyBlock(this.x,this.y,this.z);
+                World.destroyBlock(this.x, this.y, this.z);
             }
         }
     },
+	
     checkGround: function(){
         if(World.getBlockID(this.x, this.y - 1, this.z) != 60){
             World.destroyBlock(this.x, this.y, this.z);
         }
     },
+	
     performTick: function(){
         if(World.getThreadTime() % 768 == 0){
             this.updateTerrainHumidity();
@@ -165,7 +176,7 @@ TileEntity.registerPrototype(BlockID.crop, {
                 var growDuration = this.crop.getGrowthDuration(this);
                 if (this.data.growthPoints >= growDuration) {
                     this.data.growthPoints = 0;
-                    this.data.currentSize = this.data.currentSize+ 1;
+                    this.data.currentSize = this.data.currentSize + 1;
                     this.data.dirty = true;
 
                     this.updateRender();
@@ -180,6 +191,7 @@ TileEntity.registerPrototype(BlockID.crop, {
             this.performWeedWork();
         }
     },
+	
     updateTerrainHumidity: function(){
         var humidity = AgricultureAPI.getHumidityBiomeBonus(this.x, this.z);
 
@@ -189,33 +201,36 @@ TileEntity.registerPrototype(BlockID.crop, {
         humidity += (this.data.storageWater + 24) / 25;
         this.data.terrainHumidity = humidity;
     },
+	
     updateTerrainNutrients: function(){
         var nutrients = AgricultureAPI.getNutrientBiomeBonus(this.x, this.z);
         nutrients += (this.data.terrainNutrients + 19) / 20;
 
         for (var i = 2; i < 5; ++i){
-            if(World.getBlockID(this.x,this.y-i,this.z) == 3) nutrients++
+            if(World.getBlockID(this.x, this.y - i, this.z) == 3) nutrients++;
         }
         this.data.terrainNutrients = nutrients;
     },
+	
     updateTerrainAirQuality: function(){
         var value = 0;
-        var height = Math.floor((this.y- 64) / 15);
+        var height = Math.floor((this.y - 64) / 15);
         if (height > 4) height = 4;
         if (height < 0) height = 0;
 
         var fresh = 9;
-        for (var x = this.x - 1; x < this.x+2; x++) {
+        for (var x = this.x - 1; x < this.x + 2; x++) {
             for (var z = this.z - 1; z < this.z + 2; z++) {
                 if (World.getBlockID(x, this.y, z)) fresh--;
             }
         }
-        if(GenerationUtils.canSeeSky(this.x, this.y + 1, this.z)) value+=2;
-        value += Math.floor( fresh / 2);
+        if(GenerationUtils.canSeeSky(this.x, this.y + 1, this.z)) value += 2;
+        value += Math.floor(fresh / 2);
         value += height;
 
         this.data.terrainAirQuality = value;
     },
+	
     performGrowthTick: function(){
         if (!this.crop) return;
 
@@ -243,9 +258,10 @@ TileEntity.registerPrototype(BlockID.crop, {
         }
         this.data.growthPoints += Math.round(totalGrowth);
     },
+	
     performWeedWork: function(){
         var coords = this.relativeCropCoords[random(0, 3)];
-        var preCoords = [this.x+coords[0],this.y+coords[0],this.z+coords[0]];
+        var preCoords = [this.x + coords[0], this.y + coords[0], this.z + coords[0]];
         if(World.getBlockID(preCoords[0], preCoords[1], preCoords[2]) == BlockID.crop){
             var TE = World.getTileEntity(preCoords[0], preCoords[1], preCoords[2]);
             if(!TE.crop || (!TE.crop.isWeed(this) && !TE.hasWeedEX() && random(0, 32) >= TE.data.statResistance)){
@@ -259,10 +275,11 @@ TileEntity.registerPrototype(BlockID.crop, {
                 TE.data.statGrowth = newGrowth;
                 TE.updateRender();
             }
-        }else if(World.getBlockID(preCoords[0], preCoords[1]-1, preCoords[2]) == 60){
-            World.setBlock(preCoords[0], preCoords[1]-1, preCoords[2] ,2 ,0);
+        }else if(World.getBlockID(preCoords[0], preCoords[1] - 1, preCoords[2]) == 60){
+            World.setBlock(preCoords[0], preCoords[1] - 1, preCoords[2] ,2 ,0);
         }
     },
+	
     reset: function(){
         this.data.crop = null;
         this.crop = undefined;
@@ -277,6 +294,7 @@ TileEntity.registerPrototype(BlockID.crop, {
         this.data.currentSize = 1;
         this.data.dirty = true;
     },
+	
     hasWeedEX: function(){
         if (this.data.storageWeedEX > 0) {
             this.data.storageWeedEX -= 5;
@@ -284,7 +302,8 @@ TileEntity.registerPrototype(BlockID.crop, {
         }
         return false;
     },
-    attemptCrossing: function(){//modified from the original
+	
+    attemptCrossing: function(){ // modified from the original
         if (random(0, 3) != 0) return false;
 
         var cropCoords = this.askCropJoinCross(this.relativeCropCoords);
@@ -348,13 +367,16 @@ TileEntity.registerPrototype(BlockID.crop, {
         this.updateRender();
         return true;
     },
+	
     lim: function(value, min, max){
         if (value <= min) return min;
         if (value >= max) return max;
         return value;
     },
+	
     relativeCropCoords: [ [1, 0, 0], [-1, 0, 0], [0, 0, 1], [0, 0, -1] ],
-    askCropJoinCross: function(coordsArray){//modified from the original
+	
+    askCropJoinCross: function(coordsArray){ // modified from the original
         var cropsCoords = [];
         for(var r in coordsArray){
             var pos = coordsArray[r];
@@ -375,6 +397,7 @@ TileEntity.registerPrototype(BlockID.crop, {
         }
         return cropsCoords;
     },
+	
     calculateRatioFor: function(newCrop, oldCrop){
         if (newCrop.id == oldCrop.id) return 500;
 
@@ -402,12 +425,14 @@ TileEntity.registerPrototype(BlockID.crop, {
 
         return Math.max(value, 0);
     },
+	
     applyFertilizer: function(manual){
         if (this.data.storageNutrients >= 100) return false;
 
         this.data.storageNutrients += manual ? 100 : 90;
         return true;
     },
+	
     applyWeedEx: function(id, manual){
         if(id == ItemID.weedEx){
             var limit = manual ? 100 : 150;
@@ -421,22 +446,25 @@ TileEntity.registerPrototype(BlockID.crop, {
         }
         return false;
     },
+	
     applyHydration: function(id, data, manual){
         if(id == ItemID.hydrationCell){
             var limit = 200;
             if (this.data.storageWater >= limit) return false;
 
             var relativeAmount = limit - this.data.storageWater;
-            var amount = relativeAmount < 1000-data ? relativeAmount : 1000 - data;
+            var amount = relativeAmount < 1000 - data ? relativeAmount : 1000 - data;
             this.data.storageWater += amount;
 
             if(manual) ToolAPI.breakCarriedTool(amount);
             return amount;
-        }return false;
+        }
+        return false;
     },
+	
     tryPlantIn: function(cropCardID, size, statGr, statGa, statRe, scan){
         var cropCard = AgricultureAPI.cropCards[cropCardID];
-        if (!cropCard || cropCard.id =="weed" || this.data.crossingBase) return false;
+        if (!cropCard || cropCard.id == "weed" || this.data.crossingBase) return false;
 
         this.reset();
         this.data.crop = cropCardID;
@@ -450,6 +478,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 
         return true;
     },
+	
     performHarvest: function(){
         if (!this.crop || !this.crop.canBeHarvested(this)) return null;
 
@@ -470,6 +499,7 @@ TileEntity.registerPrototype(BlockID.crop, {
         this.updateRender();
         return ret;
     },
+	
     performManualHarvest: function(){
         var dropItems = this.performHarvest();
         if(!dropItems || !dropItems.length) return;
@@ -479,6 +509,7 @@ TileEntity.registerPrototype(BlockID.crop, {
             nativeDropItem(this.x, this.y, this.z, 0, item.id, item.count, item.data, null);
         }
     },
+	
     nextGaussian: function(){
         var v1, v2, s;
         do{
@@ -490,6 +521,7 @@ TileEntity.registerPrototype(BlockID.crop, {
         var norm = Math.sqrt(-2 * Math.log(s) / s);
         return v1 * norm;
     },
+	
     pick: function(){
         if(!this.crop) return false;
 
@@ -503,7 +535,8 @@ TileEntity.registerPrototype(BlockID.crop, {
             var chance = this.crop.getSeedDropChance(this) + this.data.statGrowth / 100;
             chance *= Math.pow(.95, this.statGain - 23);
             if (Math.random() <= chance) dropCount++;
-        }else if (Math.random() <= firstchance * 1.5) dropCount++;
+        }
+		else if (Math.random() <= firstchance * 1.5) dropCount++;
 
         var item = this.crop.getSeeds(this);
         nativeDropItem(this.x, this.y, this.z, 0, item.id, dropCount, item.data, item.extra);
@@ -512,10 +545,12 @@ TileEntity.registerPrototype(BlockID.crop, {
         this.updateRender();
         return true;
     },
+	
     generateSeeds: function(data){
         var extra = AgricultureAPI.generateExtraFromValues(data);
         return {id: ItemID.cropSeedBag, data: this.data.crop, extra: extra};
     },
+	
     isBlockBelow: function(reqBlockID){
         if (!this.crop) return false;
 

@@ -75,25 +75,20 @@ var CoffeeMug = {
     }
 };
 
-IDRegistry.genItemID("mugCoffee");
-Item.createFoodItem("mugCoffee", "Coffee", {name: "mug_coffee"}, {stack: 1});
-
 IDRegistry.genItemID("mugColdCoffee");
 Item.createFoodItem("mugColdCoffee", "Cold Coffee", {name: "mug_cold_coffee"}, {stack: 1});
 
 IDRegistry.genItemID("mugDarkCoffee");
 Item.createFoodItem("mugDarkCoffee", "Dark Coffee", {name: "mug_dark_coffee"}, {stack: 1});
 
+IDRegistry.genItemID("mugCoffee");
+Item.createFoodItem("mugCoffee", "Coffee", {name: "mug_coffee"}, {stack: 1});
+
 Callback.addCallback("FoodEaten", CoffeeMug.onFoodEaten);
 Callback.addCallback("tick", CoffeeMug.tick);
 Callback.addCallback("EntityDeath", CoffeeMug.onDeath);
 
-Callback.addCallback("PostLoaded", function(){
-	Recipes.addShaped({id: ItemID.mugCoffee, count: 1, data: 0}, [
-		"x",
-		"y",
-		"z",
-	], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0]);
+Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.mugColdCoffee, count: 1, data: 0}, [
 		"x",
 		"y",
@@ -102,5 +97,12 @@ Callback.addCallback("PostLoaded", function(){
 	function(api, field, result){
 		Player.addItemToInventory(325, 1, 0);
 	});
+	
+	Recipes.addShaped({id: ItemID.mugCoffee, count: 1, data: 0}, [
+		"x",
+		"y",
+		"z",
+	], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0]);
+	
 	Recipes.addFurnace(ItemID.mugColdCoffee, ItemID.mugDarkCoffee, 0);
 });

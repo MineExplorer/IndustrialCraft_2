@@ -119,7 +119,7 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -131,7 +131,7 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		if(content){
 			content.elements.button.bitmap = "metal_former_button_" + this.data.mode;
 		}
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;

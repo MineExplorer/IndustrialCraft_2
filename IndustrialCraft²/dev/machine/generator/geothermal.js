@@ -19,7 +19,7 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiGeothermalGenerator = guiGeothermalGenerator = new UI.StandartWindow({
+var guiGeothermalGenerator = new UI.StandartWindow({
 	standart: {
 		header: {text: {text: Translation.translate("Geothermal Generator")}},
 		inventory: {standart: true},
@@ -27,22 +27,21 @@ var guiGeothermalGenerator = guiGeothermalGenerator = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "bitmap", x: 675, y: 106, bitmap: "energy_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 450, y: 150, bitmap: "geothermal_liquid_slot", scale: GUI_SCALE}
+		{type: "bitmap", x: 702, y: 91, bitmap: "energy_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
+		{type: "bitmap", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE}
 	],
 	
 	elements: {
-		"energyScale": {type: "scale", x: 675 + GUI_SCALE * 4, y: 106, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-		"liquidScale": {type: "scale", x: 450 + GUI_SCALE, y: 150 + GUI_SCALE, direction: 1, value: 0.5, bitmap: "geothermal_empty_liquid_slot", overlay: "geothermal_liquid_slot_overlay", overlayOffset: {x: -GUI_SCALE, y: -GUI_SCALE}, scale: GUI_SCALE},
-		"slot1": {type: "slot", x: 441, y: 75,
+		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 440, y: 75,
 			isValid: function(id, count, data){
 				return LiquidRegistry.getItemLiquid(id, data) == "lava";
 			}
 		},
-		"slot2": {type: "slot", x: 441, y: 212, isValid: function(){return false;}},
-		"slotEnergy": {type: "slot", x: 695, y: 181, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
-		"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
+		"slot2": {type: "slot", x: 440, y: 183, isValid: function(){return false;}},
+		"slotEnergy": {type: "slot", x: 725, y: 165, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}}
 	}
 });
 
@@ -75,7 +74,7 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 		var slot2 = this.container.getSlot("slot2");
 		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
 		if(empty && empty.liquid == "lava"){
-			if(this.liquidStorage.getAmount("lava") <= 7 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
+			if(this.liquidStorage.getAmount("lava").toFixed(3) <= 7 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
 				this.liquidStorage.addLiquid("lava", 1);
 				slot1.count--;
 				slot2.id = empty.id;
@@ -84,7 +83,7 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 				this.container.validateAll();
 			}
 		}
-		if(this.liquidStorage.getAmount("lava") >= 0.001 && this.data.energy + 20 <= energyStorage){
+		if(this.liquidStorage.getAmount("lava").toFixed(3) >= 0.001 && this.data.energy + 20 <= energyStorage){
 			this.data.energy += 20;
 			this.liquidStorage.getLiquid("lava", 0.001);
 			this.activate();
@@ -97,7 +96,6 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 		
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);
 		
-		this.container.setText("textInfo1", parseInt(this.liquidStorage.getAmount("lava") * 1000) + "/");
 		this.liquidStorage.updateUiScale("liquidScale", "lava");
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
@@ -119,8 +117,8 @@ StorageInterface.createInterface(BlockID.geothermalGenerator, {
 		"slot1": {input: true},
 		"slot2": {output: true}
 	},
-	isValidInput: function(id, count, data){
-		return LiquidRegistry.getItemLiquid(id, data) == "lava";
+	isValidInput: function(item){
+		return LiquidRegistry.getItemLiquid(item.id, item.data) == "lava";
 	},
 	canReceiveLiquid: function(liquid, side){ return liquid == "lava"; },
 	canTransportLiquid: function(liquid, side){ return false; }

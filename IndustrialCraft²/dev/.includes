@@ -33,11 +33,14 @@ block/crop/crop_cards.js
 
 machine/generator/generator.js
 machine/generator/geothermal.js
+machine/generator/fluid_generator.js
 machine/generator/solar.js
 machine/generator/windmill.js
 machine/generator/watermill.js
 machine/generator/rt_generator.js
+machine/generator/stirling_generator.js
 machine/generator/heat_solid.js
+machine/generator/heat_fluid.js
 machine/generator/heat_electric.js
 
 machine/reactor/reactorAPI.js
@@ -60,12 +63,13 @@ machine/processing/induction_furnace.js
 machine/processing/macerator.js
 machine/processing/compressor.js
 machine/processing/extractor.js
-machine/processing/conserver.js
+machine/processing/solid_canner.js
 machine/processing/recycler.js
 machine/processing/metal_former.js
 machine/processing/ore_washer.js
 machine/processing/thermal_centrifuge.js
 machine/processing/blast_furnace.js
+machine/processing/fermenter.js
 
 machine/uu/mass_fabricator.js
 machine/uu/scanner.js
@@ -87,7 +91,6 @@ machine/misc/tesla_coil.js
 machine/misc/nuke.js
 
 items/resource/rubber.js
-items/resource/slag.js
 items/resource/crushed.js
 items/resource/dust.js
 items/resource/ingot.js
@@ -98,19 +101,17 @@ items/resource/nuclear.js
 items/resource/scrap.js
 items/resource/matter.js
 items/resource/produced.js
+items/resource/liquid.js
 items/resource/cells.js
+items/resource/waste.js
 
 items/crop/crop_seed_bag.js
 items/crop/crop_stick.js
-items/crop/grin_powder.js
-items/crop/weed_ex.js
-items/crop/fertilizer.js
-items/crop/hydration_capsule.js
-items/crop/terra_wart.js
+items/crop/crop_utils.js
+items/crop/crop_items.js
 items/crop/coffee_beans.js
-items/crop/hops.js
-items/crop/weed.js
 
+items/food/terra_wart.js
 items/food/mug.js
 items/food/coffee.js
 items/food/can.js

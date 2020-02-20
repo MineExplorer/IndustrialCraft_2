@@ -25,7 +25,6 @@ Callback.addCallback("PreLoaded", function(){
 		14: {id: ItemID.crushedGold, count: 2, data: 0},
 		15: {id: ItemID.crushedIron, count: 2, data: 0},
 		"BlockID.oreCopper": {id: ItemID.crushedCopper, count: 2, data: 0},
-		"BlockID.coffeeBeans": {id: ItemID.coffeePowder, count: 3, data: 0},
 		"BlockID.oreTin": {id: ItemID.crushedTin, count: 2, data: 0},
 		"BlockID.oreLead": {id: ItemID.crushedLead, count: 2, data: 0},
 		"BlockID.oreSilver": {id: ItemID.crushedSilver, count: 2, data: 0},
@@ -77,7 +76,26 @@ Callback.addCallback("PreLoaded", function(){
 		179: {id: 12, count: 2, data: 1},
 		180: {id: 12, count: 3, data: 1},
 		352: {id: 351, count: 5, data: 15}, 
-		369: {id: 377, count: 5, data: 0}
+		369: {id: 377, count: 5, data: 0},
+		// plants
+		5: {id: ItemID.bioChaff, count: 1, sourceCount: 4},
+		"ItemID.rubberSapling": {id: ItemID.bioChaff, count: 1, sourceCount: 4},
+		"ItemID.rubberTreeLeaves": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		18: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		161: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		32: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		81: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		86: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		296: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		338: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		360: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		391: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		392: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		361: {id: ItemID.bioChaff, count: 1, sourceCount: 16},
+		362: {id: ItemID.bioChaff, count: 1, sourceCount: 16},
+		"ItemID.weed": {id: ItemID.bioChaff, count: 1, sourceCount: 32},
+		"ItemID.bioChaff": {id: 3, count: 1, data: 0},
+		"ItemID.coffeeBeans": {id: ItemID.coffeePowder, count: 3, data: 0},
 	}, true);
 });
 
@@ -134,7 +152,7 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -142,27 +160,30 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 	},
 
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
 		var result = MachineRecipeRegistry.getRecipeResult("macerator", sourceSlot.id, sourceSlot.data);
-		if(result && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)){
-			if(this.data.energy >= this.data.energy_consumption){
-				this.data.energy -= this.data.energy_consumption;
-				this.data.progress += 1/this.data.work_time;
-				newActive = true;
-				this.startPlaySound();
-			}
-			if(this.data.progress.toFixed(3) >= 1){
-				sourceSlot.count--;
-				resultSlot.id = result.id;
-				resultSlot.data = result.data;
-				resultSlot.count += result.count;
-				this.container.validateAll();
-				this.data.progress = 0;
+		if(result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)){
+			var resultSlot = this.container.getSlot("slotResult");
+			if(resultSlot.id == result.id && (!result.data || resultSlot.data == result.data) && resultSlot.count <= 64 - result.count || resultSlot.id == 0){
+				if(this.data.energy >= this.data.energy_consumption){
+					this.data.energy -= this.data.energy_consumption;
+					this.data.progress += 1/this.data.work_time;
+					newActive = true;
+					this.startPlaySound();
+				}
+				if(this.data.progress.toFixed(3) >= 1){
+					sourceSlot.count--;
+					resultSlot.id = result.id;
+					resultSlot.data = result.data || 0;
+					resultSlot.count += result.count;
+					this.container.validateAll();
+					this.data.progress = 0;
+				}
 			}
 		}
 		else {

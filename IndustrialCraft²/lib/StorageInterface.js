@@ -108,17 +108,17 @@ let StorageInterface = {
 				return slots;
 			}
 			
-			interface.canReceiveLiquid = interface.canReceiveLiquid || function(luquid, side){
+			interface.canReceiveLiquid = interface.canReceiveLiquid || function(liquid, side){
 				return false;
 			}
-			interface.canTransportLiquid = interface.canTransportLiquid || function(luquid, side){
+			interface.canTransportLiquid = interface.canTransportLiquid || function(liquid, side){
 				return false;
 			}
-			interface.addLiquid = interface.addLiquid || function(luquid, amount){
-				return this.tileEntity.liquidStorage.addLiquid(luquid, amount);
+			interface.addLiquid = interface.addLiquid || function(liquid, amount){
+				return this.tileEntity.liquidStorage.addLiquid(liquid, amount);
 			}
-			interface.getLiquid = interface.getLiquid || function(luquid, amount){
-				return this.tileEntity.liquidStorage.getLiquid(luquid, amount);
+			interface.getLiquid = interface.getLiquid || function(liquid, amount){
+				return this.tileEntity.liquidStorage.getLiquid(liquid, amount);
 			}
 			interface.getLiquidStored = interface.getLiquidStored || function(storage){
 				return this.tileEntity.liquidStorage.getLiquidStored();

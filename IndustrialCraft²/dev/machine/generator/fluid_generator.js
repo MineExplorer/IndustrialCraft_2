@@ -116,6 +116,7 @@ MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
 			this.stopPlaySound();
 			this.deactivate();
 		}
+    
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
 		
 		this.liquidStorage.updateUiScale("liquidScale", liquid);

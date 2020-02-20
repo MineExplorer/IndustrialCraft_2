@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ChargeItem",
-	version: 5,
+	version: 6,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -8,8 +8,15 @@ LIBRARY({
 var ChargeItemRegistry = {
 	chargeData: {},
 	
-	registerItem: function(item, energyType, capacity, level, prefix, inCreativeCharged, inCreativeDischarged){
-		if(prefix === true) prefix = "storage"; // deprecated
+	registerItem: function(item, energyType, capacity, transferLimit, level, prefix, inCreativeCharged, inCreativeDischarged){
+		if(typeof level != "number"){ // function overload
+			inCreativeDischarged = inCreativeCharged;
+			inCreativeCharged = prefix;
+			prefix = level;
+			level = transferLimit;
+			transferLimit = capacity;
+		}
+		if(prefix === true) prefix = "storage"; // legacy
 		Item.setMaxDamage(item, capacity + 1);
 		if(inCreativeDischarged){
 			Item.addToCreative(item, 1, capacity + 1);
@@ -24,7 +31,8 @@ var ChargeItemRegistry = {
 			id: item,
 			level: level || 0,
 			maxCharge: capacity,
-			maxDamage: capacity + 1
+			maxDamage: capacity + 1,
+			transferLimit: transferLimit
 		};
 	},
 	
@@ -93,11 +101,19 @@ var ChargeItemRegistry = {
 	},
 	
 	getEnergyFrom: function(item, energyType, amount, transf, level, getFromAll){
-		level = level || 0;
 		var data = this.getItemData(item.id);
-		if(!data || data.energy != energyType || data.level > level || !(getFromAll || data.prefix == "storage")){
+		if(!data){return 0;}
+		
+		if(typeof level != "number"){ // function overload
+			getFromAll = level;
+			level = transf;
+			transf = data.transferLimit;
+		}
+		
+		if(data.energy != energyType || data.level > level || !(getFromAll || data.prefix == "storage")){
 			return 0;
 		}
+		
 		if(data.type == "flash"){
 			if(amount < 1){
 				return 0;
@@ -131,12 +147,18 @@ var ChargeItemRegistry = {
 	},
 	
 	addEnergyTo: function(item, energyType, amount, transf, level){
-		level = level || 0;
+		var data = this.getItemData(item.id);
+		if(!data){return 0;}
+		
+		if(level == undefined){ // function overload
+			level = transf;
+			transf = data.transferLimit;
+		}
+		
 		if(!this.isValidItem(item.id, energyType, level)){
 			return 0;
 		}
 		
-		var data = this.getItemData(item.id);
 		if(data.chargeFunction){
 			return data.chargeFunction(item, amount, transf, level);
 		}
@@ -154,7 +176,7 @@ var ChargeItemRegistry = {
 		return energyAdd;
 	},
 	
-	transportEnergy: function(api, field, result){
+	transferEnergy: function(api, field, result){
 		var data = ChargeItemRegistry.getItemData(result.id);
 		var amount = 0;
 		for(var i in field){
@@ -166,5 +188,7 @@ var ChargeItemRegistry = {
 		ChargeItemRegistry.addEnergyTo(result, data.energy, amount, amount, 100);
 	}
 }
+
+ChargeItemRegistry.transportEnergy = ChargeItemRegistry.transferEnergy; // legacy
 
 EXPORT("ChargeItemRegistry", ChargeItemRegistry);

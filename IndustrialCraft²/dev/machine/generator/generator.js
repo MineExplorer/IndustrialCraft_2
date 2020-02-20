@@ -100,7 +100,7 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 			this.stopPlaySound();
 		}
 		
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
 		
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);

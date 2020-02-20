@@ -4,7 +4,7 @@ Item.setMaxDamage(ItemID.wrenchBronze, 161);
 
 IDRegistry.genItemID("electricWrench");
 Item.createItem("electricWrench", "Electric Wrench", {name: "electric_wrench", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.electricWrench, "Eu", 10000, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.electricWrench, "Eu", 10000, 100, 1, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.electricWrench, ItemName.showItemStorage);
 

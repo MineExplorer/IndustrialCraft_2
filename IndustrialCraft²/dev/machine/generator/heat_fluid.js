@@ -33,7 +33,8 @@ var guiFluidHeatGenerator = new UI.StandartWindow({
 	drawing: [
 		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
 		{type: "bitmap", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE},
-		//{type: "bitmap", x: 655, y: 330, bitmap: "fluid_heat_generator_info", scale: GUI_SCALE}
+		{type: "bitmap", x: 660, y: 102, bitmap: "fluid_heat_generator_info", scale: GUI_SCALE},
+		{type: "bitmap", x: 660, y: 176, bitmap: "fluid_heat_generator_info", scale: GUI_SCALE}
 	],
 	
 	elements: {
@@ -46,7 +47,8 @@ var guiFluidHeatGenerator = new UI.StandartWindow({
 			}
 		},
 		"slot2": {type: "slot", x: 440, y: 183, isValid: function(){return false;}},
-		// TODO: emit info
+		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 112, width: 300, height: 30, text: "Emit: 0"},
+		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 186, width: 300, height: 30, text: "Max Emit: 0"}
 	}
 });
 
@@ -67,6 +69,12 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 	getGuiScreen: function(){
 		return guiFluidHeatGenerator;
 	},
+	
+	wrenchClick: function(id, count, data, coords){
+		this.setFacing(coords);
+	},
+	
+	setFacing: MachineRegistry.setFacing,
 	
 	init: function(){
 		this.liquidStorage.setLimit(null, 10);
@@ -93,26 +101,26 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 		}
 		
 		var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid || liquid);
-		if(fuel){
-			if(this.data.fuel <= 0 && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)){
-				this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
-				this.data.fuel = fuel.amount;
-				this.data.liquid = liquid;
+		if(fuel && this.data.fuel <= 0 && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)){
+			this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
+			this.data.fuel = fuel.amount;
+			this.data.liquid = liquid;
+		}
+		if(fuel && this.data.fuel > 0){
+			if(this.data.fuel < fuel.amount){
+				this.spreadHeat(fuel.power*2);
 			}
-			if(this.data.fuel > 0){
-				var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid);
-				if(this.data.fuel < fuel.amount){
-					this.spreadHeat(fuel.power*2);
-				}
-				this.data.fuel -= fuel.amount/20;
-				this.activate();
-				this.startPlaySound("Generators/GeothermalLoop.ogg");
-			}
-			else {
-				this.data.liquid = null;
-				this.stopPlaySound();
-				this.deactivate();
-			}
+			this.data.fuel -= fuel.amount/20;
+			this.activate();
+			this.container.setText("textInfo2", "Max Emit: " + fuel.power * 2);
+			this.startPlaySound("Generators/GeothermalLoop.ogg");
+		}
+		else {
+			this.data.liquid = null;
+			this.stopPlaySound();
+			this.deactivate();
+			this.container.setText("textInfo1", "Emit: 0");
+			this.container.setText("textInfo2", "Max Emit: 0");
 		}
 		
 		this.liquidStorage.updateUiScale("liquidScale", liquid);
@@ -125,8 +133,10 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 	spreadHeat: function(heat){
 		var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
 		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-		if(TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta) && TE.heatReceive(heat) > 0){
-			return true;
+		if(TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)){
+			var output = TE.heatReceive(heat);
+			this.container.setText("textInfo1", "Emit: " + output);
+			return output;
 		}
 		return false;
 	},

@@ -1,17 +1,17 @@
-IDRegistry.genBlockID("fermenter");
-Block.createBlock("fermenter", [
-	{name: "Fermenter", texture: [["machine_bottom", 0], ["machine_top", 0], ["fermenter_back", 0], ["heat_pipe", 0], ["fermenter_side", 0], ["fermenter_side", 0]], inCreative: true},
+IDRegistry.genBlockID("icFermenter");
+Block.createBlock("icFermenter", [
+	{name: "icFermenter", texture: [["machine_bottom", 0], ["machine_top", 0], ["fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], inCreative: true},
 ], "opaque");
-TileRenderer.setStandartModel(BlockID.fermenter, [["machine_bottom", 0], ["machine_top", 0], ["fermenter_back", 0], ["heat_pipe", 0], ["fermenter_side", 0], ["fermenter_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.fermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["fermenter_back", 0], ["heat_pipe", 0], ["fermenter_side", 0], ["fermenter_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.fermenter, 6, [["machine_bottom", 0], ["machine_top", 1], ["fermenter_back", 0], ["heat_pipe", 1], ["fermenter_side", 1], ["fermenter_side", 1]]);
+TileRenderer.setStandartModel(BlockID.icFermenter, [["machine_bottom", 0], ["machine_top", 0], ["fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
+TileRenderer.registerFullRotationModel(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
+TileRenderer.registerFullRotationModel(BlockID.icFermenter, 6, [["machine_bottom", 0], ["machine_top", 1], ["fermenter_back", 0], ["heat_pipe", 1], ["ic_fermenter_side", 1], ["ic_fermenter_side", 1]]);
 
-Block.registerDropFunction("fermenter", function(coords, blockID, blockData, level, enchant){
+Block.registerDropFunction("icFermenter", function(coords, blockID, blockData, level, enchant){
 	return MachineRegistry.getMachineDrop(coords, blockID, level);
 });
 
 Callback.addCallback("PreLoaded", function(){
-	Recipes.addShaped({id: BlockID.fermenter, count: 1, data: 0}, [
+	Recipes.addShaped({id: BlockID.icFermenter, count: 1, data: 0}, [
 		"aaa",
 		"ccc",
 		"axa"
@@ -60,7 +60,7 @@ Callback.addCallback("LevelLoaded", function(){
 	MachineRegistry.updateGuiHeader(guiFermenter, "Fermenter");
 });
 
-MachineRegistry.registerPrototype(BlockID.fermenter, {
+MachineRegistry.registerPrototype(BlockID.icFermenter, {
 	defaultValues:{
 		meta: 0,
 		progress: 0,
@@ -91,15 +91,15 @@ MachineRegistry.registerPrototype(BlockID.fermenter, {
 	renderModel: MachineRegistry.renderModelWith6Sides,
 });
 
-TileRenderer.setRotationPlaceFunction(BlockID.fermenter, true);
+TileRenderer.setRotationPlaceFunction(BlockID.icFermenter, true);
 
-StorageInterface.createInterface(BlockID.fermenter, {
+StorageInterface.createInterface(BlockID.icFermenter, {
 	slots: {
 		"slotBiomass0": {input: true},
 		"slotBiomass1": {output: true},
-		"slotFertilizer": {output: true},
 		"slotBiogas0": {input: true},
-		"slotBiogas1": {output: true}
+		"slotBiogas1": {output: true},
+		"slotFertilizer": {output: true}
 	},
 	canReceiveLiquid: function(liquid, side){
 		return liquid == "biomass";

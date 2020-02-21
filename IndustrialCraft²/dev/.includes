@@ -83,7 +83,7 @@ machine/fluid/tank.js
 machine/resource/miner.js
 machine/resource/advanced_miner.js
 machine/resource/crop_harvester.js
-machine/resource/сrop_matron.js
+machine/resource/crop_matron.js
 
 machine/misc/teleporter.js
 machine/misc/lamp.js

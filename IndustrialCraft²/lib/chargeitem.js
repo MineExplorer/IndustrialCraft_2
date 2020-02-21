@@ -47,7 +47,7 @@ var ChargeItemRegistry = {
 		};
 	},
 	
-	registerExtraItem: function(item, energyType, capacity, level, prefix){
+	registerExtraItem: function(item, energyType, capacity, transferLimit, level, prefix){
 		this.chargeData[item] = {
 			type: "extra",
 			prefix: prefix,
@@ -55,7 +55,8 @@ var ChargeItemRegistry = {
 			id: item,
 			level: level || 0,
 			maxCharge: capacity,
-			extra: energyType
+			extra: energyType,
+			transferLimit: transferLimit
 		}
 	},
 	

@@ -13,7 +13,7 @@ Block.registerDropFunction("semifluidGenerator", function(coords, blockID, block
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.fluidHeatGenerator, count: 1, data: 0}, [
 		"pcp",
-		"cxp",
+		"cxc",
 		"pcp"
 	], ['x', BlockID.machineBlockBasic, 0, 'c', ItemID.cellEmpty, 0, 'p', ItemID.casingIron, 0]);
 });

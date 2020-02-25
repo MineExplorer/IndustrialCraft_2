@@ -51,7 +51,7 @@ var newGuiMatronObject = {
         "slotEnergy": {type: "slot", x: 804, y: 265, isValid: MachineRegistry.isValidEUStorage},
         "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "dust_slot", isValid: isFertilizer},
         "slotWeedEx0": {type: "slot", x: 441, y: 155, bitmap: "weedEx_slot", isValid: isWeedEx},
-        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "cap_slot", isValid: function(id, count, data){
+        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "cell_slot", isValid: function(id, count, data){
             return LiquidRegistry.getItemLiquid(id, data) == "water";
         }},
         "slotWaterOut": {type: "slot", x: 441, y: 295, isValid: function(){

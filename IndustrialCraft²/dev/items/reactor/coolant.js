@@ -18,7 +18,7 @@ Recipes.addShaped({id: ItemID.coolantCell, count: 1, data: 1}, [
 	" a ",
 	"axa",
 	" a ",
-], ['x', ItemID.cellWater, 0, 'a', ItemID.plateTin, 0]);
+], ['x', ItemID.cellCoolant, 0, 'a', ItemID.plateTin, 0]);
 
 Recipes.addShaped({id: ItemID.coolantCell3, count: 1, data: 1}, [
 	"aaa",

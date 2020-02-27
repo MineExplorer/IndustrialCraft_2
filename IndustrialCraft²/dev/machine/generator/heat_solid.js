@@ -39,7 +39,7 @@ var guiSolidHeatGenerator = new UI.StandartWindow({
 	drawing: [
 		{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},
-		{type: "bitmap", x: 441, y: 330, bitmap: "solid_heat_generator_info", scale: GUI_SCALE}
+		{type: "bitmap", x: 441, y: 330, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],
 	
 	elements: {

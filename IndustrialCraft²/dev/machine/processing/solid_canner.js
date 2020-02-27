@@ -14,10 +14,10 @@ Block.registerDropFunction("conserver", function(coords, blockID, blockData, lev
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.conserver, count: 1, data: 0}, [
-		" e ",
-		" e ",
-		"axa"
-	], ['x', BlockID.machineBlockBasic, 0, 'e', ItemID.tinCanEmpty, 0, 'a', ItemID.circuitBasic, 0]);
+		"c#c",
+		"cxc",
+		"ccc"
+	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.casingTin, 0]);
 	
 	MachineRecipeRegistry.registerRecipesFor("solidCanner", {
 		"ItemID.uranium": {storage: [ItemID.fuelRod, 1], result: [ItemID.fuelRodUranium, 1, 0]},

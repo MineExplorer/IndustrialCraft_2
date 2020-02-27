@@ -1,6 +1,6 @@
 IDRegistry.genBlockID("canner");
 Block.createBlock("canner", [
-	{name: "Fluid/Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
+	{name: "Universal Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
 ], "opaque");
 TileRenderer.setStandartModel(BlockID.canner, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.canner, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
@@ -15,9 +15,8 @@ Block.registerDropFunction("canner", function(coords, blockID, blockData, level)
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.canner, count: 1, data: 0}, [
 		"c#c",
-		"ccc",
-		"cxc"
-	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.casingTin, 0]);
+		"cxc",
+	], ['#', BlockID.conserver, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
 	
 	MachineRecipeRegistry.registerRecipesFor("canner", {
 		"ItemID.dustLapis": {storage: [ItemID.cellWater, 1], result: [ItemID.cellCoolant, 1, 0]},
@@ -62,7 +61,7 @@ Callback.addCallback("PreLoaded", function(){
 
 var guiCanner = new UI.StandartWindow({
 	standart: {
-		header: {text: {text: Translation.translate("Canning Machine")}},
+		header: {text: {text: Translation.translate("Universal Canning Machine")}},
 		inventory: {standart: true},
 		background: {standart: true}
 	},
@@ -108,7 +107,7 @@ var guiCanner = new UI.StandartWindow({
 });
 
 Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiCanner, "Fluid/Solid Canning Machine");
+	MachineRegistry.updateGuiHeader(guiCanner, "Universal Canning Machine");
 });
 
 MachineRegistry.registerElectricMachine(BlockID.canner, {

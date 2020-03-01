@@ -116,12 +116,16 @@ let StorageInterface = {
 				return false;
 			}
 			interface.addLiquid = interface.addLiquid || function(liquid, amount){
-				return this.liquidStorage.addLiquid(liquid, amount);
+				var liquidStored = this.liquidStorage.getLiquidStored();
+				if(!liquidStored || liquidStored == liquid){
+					return this.liquidStorage.addLiquid(liquid, amount);
+				}
+				return amount;
 			}
 			interface.getLiquid = interface.getLiquid || function(liquid, amount){
 				return this.liquidStorage.getLiquid(liquid, amount);
 			}
-			interface.getLiquidStored = interface.getLiquidStored || function(storage){
+			interface.getLiquidStored = interface.getLiquidStored || function(storage, side){
 				return this.liquidStorage.getLiquidStored();
 			}
 			
@@ -240,11 +244,11 @@ let StorageInterface = {
 		let count = 0;
 		let slots = [];
 		let slotsInitialized = false;
-		let outputSide = side + Math.pow(-1, side);
+		side = side + Math.pow(-1, side);
 		
 		if(tileEntity){
 			if(tileEntity.interface){
-				slots = tileEntity.interface.getOutputSlots(outputSide);
+				slots = tileEntity.interface.getOutputSlots(side);
 				slotsInitialized = true;
 			}
 			else if(tileEntity.getTransportSlots){
@@ -253,7 +257,7 @@ let StorageInterface = {
 			}
 		}
 		if(!slotsInitialized){
-			slots = this.getContainerSlots(container, 1, outputSide);
+			slots = this.getContainerSlots(container, 1, side);
 		}
 		for(let i in slots){
 			let slot = container.getSlot(slots[i]);
@@ -293,12 +297,9 @@ let StorageInterface = {
 			let inputStorage = input.interface || input.liquidStorage;
 			let outputStorage = output.interface || output.liquidStorage;
 			if(!input.interface && inputStorage.getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT || input.interface.canReceiveLiquid(liquid, inputSide)){
-				let liquidStored = inputStorage.getLiquidStored("input");
-				if(!liquidStored || liquidStored == liquid){
-					let amount = outputStorage.getLiquid(liquid, maxAmount);
-					amount = inputStorage.addLiquid(liquid, amount);
-					outputStorage.addLiquid(liquid, amount);
-				}
+				let amount = outputStorage.getLiquid(liquid, maxAmount);
+				amount = inputStorage.addLiquid(liquid, amount);
+				outputStorage.getLiquid(liquid, -amount);
 			}
 		}
 	},

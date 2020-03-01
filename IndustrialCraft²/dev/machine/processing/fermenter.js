@@ -181,7 +181,7 @@ StorageInterface.createInterface(BlockID.icFermenter, {
 		return liquid == "biomass";
 	},
 	canTransportLiquid: function(liquid, side){ return true; },
-	getLiquidStored: function(mode){
-		return mode == "input" ? "biomass" : "biogas";
+	getLiquidStored: function(storage){
+		return storage == "input" ? "biomass" : "biogas";
 	}
 });

@@ -113,7 +113,7 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 		power_tier: 1,
 		energy_storage: 1600,
 		energy_consumption: 1,
-		work_time: 40,
+		work_time: 200,
 		meta: 0,
 		progress: 0,
 		mode: 0,
@@ -184,6 +184,7 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 				}
 				if(this.data.progress.toFixed(3) >= 1){
 					canSlot.count -= recipe.storage[1];
+					sourceSlot.count--;
 					resultSlot.id = recipe.result[0];
 					resultSlot.data = recipe.result[2];
 					resultSlot.count += recipe.result[1];

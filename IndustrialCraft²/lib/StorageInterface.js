@@ -95,7 +95,7 @@ let StorageInterface = {
 				return count;
 			}
 			
-			interface.getOutputSlots = interface.getItems || function(side){
+			interface.getOutputSlots = interface.getOutputSlots || function(side){
 				let slots = [];
 				for(let name in this.slots){
 					let slotData = this.slots[name];
@@ -235,20 +235,20 @@ let StorageInterface = {
 		return count;
 	},
 	
-	extractItemsFromContainer: function(inputTile, container, side, maxCount, oneStack){
-		let outputTile = container.tileEntity;
+	extractItemsFromContainer: function(inputContainer, container, side, maxCount, oneStack){
+		let tileEntity = container.tileEntity;
 		let count = 0;
 		let slots = [];
 		let slotsInitialized = false;
 		let outputSide = side + Math.pow(-1, side);
 		
-		if(outputTile){
-			if(outputTile.interface){
-				slots = outputTile.interface.getOutputSlots(outputSide);
+		if(tileEntity){
+			if(tileEntity.interface){
+				slots = tileEntity.interface.getOutputSlots(outputSide);
 				slotsInitialized = true;
 			}
-			else if(outputTile.getTransportSlots){
-				slots = outputTile.getTransportSlots().output || [];
+			else if(tileEntity.getTransportSlots){
+				slots = tileEntity.getTransportSlots().output || [];
 				slotsInitialized = true;
 			}
 		}
@@ -258,7 +258,7 @@ let StorageInterface = {
 		for(let i in slots){
 			let slot = container.getSlot(slots[i]);
 			if(slot.id > 0){
-				let added = inputTile.interface.addItem(slot, side, maxCount - count);
+				let added = this.putItemToContainer(slot, inputContainer, side, maxCount - count);
 				if(added > 0){
 					count += added;
 					if(!container.slots){

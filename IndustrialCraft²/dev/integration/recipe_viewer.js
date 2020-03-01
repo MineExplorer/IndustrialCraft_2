@@ -120,7 +120,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 	});
 
 
-	RecipeViewer.registerRecipeType("icpe_canner", {
+	RecipeViewer.registerRecipeType("icpe_solid_canner", {
 		contents: {
 			icon: BlockID.conserver,
 			drawing: [
@@ -135,10 +135,10 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 		},
 		getList: function(id, data, isUsage){
 			let list = [];
-			let recipe = MachineRecipeRegistry.requireRecipesFor("canner");
+			let recipe = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 			let result;
 			if(isUsage){
-				result = MachineRecipeRegistry.getRecipeResult("canner", id);
+				result = MachineRecipeRegistry.getRecipeResult("solidCanner", id);
 				if(result){
 					return [{
 						input: [{id: id, count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],

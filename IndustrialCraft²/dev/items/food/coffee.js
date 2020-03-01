@@ -53,6 +53,7 @@ var CoffeeMug = {
                 this.amplifier = 0;
                 this.effectTimer = 0;
                 break;
+            default : return;
         }
         var highest = 0;
         var x = CoffeeMug.amplifyEffect(MobEffect.movementSpeed, maxAmplifier, extraDuration);

@@ -157,11 +157,11 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, 
 	var slots = machine.getTransportSlots().output;
 	for(var i in slots){
 		var slot = container.getSlot(slots[i]);
-		if(slot.id){items.push(slot);}
+		if(slot.id) items.push(slot);
 	}
 	if(items.length){
 		var containers = StorageInterface.getNearestContainers(machine, item.data-1);
-		StorageInterface.putItems(items, containers, machine);
+		StorageInterface.putItems(items, containers);
 	}
 });
 
@@ -169,28 +169,26 @@ UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, 
 	if(World.getThreadTime()%20 == 0){
 		var containers = StorageInterface.getNearestContainers(machine, item.data-1);
 		for(var side in containers){
-			StorageInterface.extractItemsFromContainer(machine, containers[side], parseInt(side));
+			StorageInterface.extractItemsFromContainer(container, containers[side], parseInt(side));
 		}
 	}
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(item, machine, container, data){
-	var liquid = machine.interface.getLiquidStored("output");
-	if(liquid){
-		var input = StorageInterface.getNearestLiquidStorages(machine, item.data-1);
-		for(var side in input){
+	var input = StorageInterface.getNearestLiquidStorages(machine, item.data-1);
+	for(var side in input){
+		var liquid = machine.interface.getLiquidStored("output", side);
+		if(liquid){
 			StorageInterface.transportLiquid(liquid, 0.25, machine, input[side], parseInt(side));
 		}
 	}
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, container, data){
-	var liquid = machine.interface.getLiquidStored("input");
-	if(!liquid || !machine.liquidStorage.isFull(liquid)){
-		var output = StorageInterface.getNearestLiquidStorages(machine, item.data-1);
-		for(var side in output){
-			StorageInterface.extractLiquid(liquid, 0.25, machine, output[side], parseInt(side));
-		}
+	var output = StorageInterface.getNearestLiquidStorages(machine, item.data-1);
+	for(var side in output){
+		var liquid = machine.interface.getLiquidStored("input", side);
+		StorageInterface.extractLiquid(liquid, 0.25, machine, output[side], parseInt(side));
 	}
 });
 

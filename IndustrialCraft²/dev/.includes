@@ -64,6 +64,7 @@ machine/processing/macerator.js
 machine/processing/compressor.js
 machine/processing/extractor.js
 machine/processing/solid_canner.js
+machine/processing/canner.js
 machine/processing/recycler.js
 machine/processing/metal_former.js
 machine/processing/ore_washer.js

@@ -1,10 +1,10 @@
 IDRegistry.genBlockID("icFermenter");
 Block.createBlock("icFermenter", [
-	{name: "icFermenter", texture: [["machine_bottom", 0], ["machine_top", 0], ["fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], inCreative: true},
+	{name: "Fermenter", texture: [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], inCreative: true},
 ], "opaque");
-TileRenderer.setStandartModel(BlockID.icFermenter, [["machine_bottom", 0], ["machine_top", 0], ["fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.icFermenter, 6, [["machine_bottom", 0], ["machine_top", 1], ["fermenter_back", 0], ["heat_pipe", 1], ["ic_fermenter_side", 1], ["ic_fermenter_side", 1]]);
+TileRenderer.setStandartModel(BlockID.icFermenter, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
+TileRenderer.registerFullRotationModel(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
+TileRenderer.registerFullRotationModel(BlockID.icFermenter, 6, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 1], ["heat_pipe", 1], ["ic_fermenter_side", 1], ["ic_fermenter_side", 1]]);
 
 Block.registerDropFunction("icFermenter", function(coords, blockID, blockData, level, enchant){
 	return MachineRegistry.getMachineDrop(coords, blockID, level);
@@ -38,15 +38,15 @@ var guiFermenter = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"progressScale": {type: "scale", x: 492, y: 150, direction: 0, value: .5, bitmap: "red_line", scale: GUI_SCALE},
-		"fertilizerScale": {type: "scale", x: 480, y: 301, direction: 0, value: .5, bitmap: "fertilizer_progress", scale: GUI_SCALE},
+		"progressScale": {type: "scale", x: 492, y: 150, direction: 0, value: .5, bitmap: "fermenter_progress_scale", scale: GUI_SCALE},
+		"fertilizerScale": {type: "scale", x: 480, y: 301, direction: 0, value: .5, bitmap: "fertilizer_progress_scale", scale: GUI_SCALE},
 		"biogasScale": {type: "scale", x: 771, y: 108, direction: 1, value: .5, bitmap: "liquid_biogas", scale: GUI_SCALE},
 		"biomassScale": {type: "scale", x: 483, y: 179, direction: 1, value: .5, bitmap: "biomass_scale", scale: GUI_SCALE},
 		"slotBiomass0": {type: "slot", x: 400, y: 162, isValid: function(id, count, data){
             return LiquidRegistry.getItemLiquid(id, data) == "biomass";
         }},
 		"slotBiomass1": {type: "slot", x: 400, y: 222, isValid: function(){return false;}},
-		"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "fertilizer_slot", isValid: function(){return false;}},
+		"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "black_border_slot", isValid: function(){return false;}},
 		"slotBiogas0": {type: "slot", x: 832, y: 155, isValid: function(id, count, data){
             return LiquidRegistry.getFullItem(id, data, "biogas") ? true : false;
         }},
@@ -63,7 +63,9 @@ Callback.addCallback("LevelLoaded", function(){
 MachineRegistry.registerPrototype(BlockID.icFermenter, {
 	defaultValues:{
 		meta: 0,
+		heat: 0,
 		progress: 0,
+		fertilizer: 0,
 		isActive: false,
 	},
 	
@@ -79,12 +81,86 @@ MachineRegistry.registerPrototype(BlockID.icFermenter, {
 	
 	setFacing: MachineRegistry.setFacing,
 	
+	init: function(){
+		this.liquidStorage.setLimit("biomass", 10);
+		this.liquidStorage.setLimit("biogas", 2);
+		this.renderModel();
+	},
+	
+	checkLiquidSlots: function(){
+		var storage = this.liquidStorage;
+		
+		var slot1 = this.container.getSlot("slotBiomass0");
+		var slot2 = this.container.getSlot("slotBiomass1");
+		if(storage.getAmount("biomass") <= 9){
+			var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
+			if(empty && empty.liquid == "biomass" && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
+				storage.addLiquid("biomass", 1);
+				slot1.count--;
+				slot2.id = empty.id;
+				slot2.data = empty.data;
+				slot2.count++;
+				this.container.validateSlot("slotBiomass0");
+			}
+		}
+		
+		var slot1 = this.container.getSlot("slotBiogas0");
+		var slot2 = this.container.getSlot("slotBiogas1");
+		if(storage.getAmount("biogas") >= 1){
+			var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, "biogas");
+			if(full && (slot2.id == full.id && slot2.data == full.data && slot2.count < 64 || slot2.id == 0)){
+				storage.getLiquid("biogas", 1);
+				slot1.count--;
+				slot2.id = full.id;
+				slot2.data = full.data;
+				slot2.count++;
+				this.container.validateSlot("slotBiogas0");
+			}
+		}
+	},
+	
     tick: function(){
 		StorageInterface.checkHoppers(this);
 		UpgradeAPI.executeUpgrades(this);
+		this.setActive(this.data.heat > 0);
+		
+		if(this.data.heat > 0){
+			this.data.progress += this.data.heat;
+			this.data.heat = 0;
+			
+			if(this.data.progress >= 4000){
+				this.liquidStorage.getLiquid("biomass", 0.02);
+				this.liquidStorage.addLiquid("biogas", 0.4);
+				this.data.fertilizer++;
+				this.data.progress = 0;
+			}
+			
+			var outputSlot = this.container.getSlot("slotFertilizer");
+			if(this.data.fertilizer >= 25){
+				this.data.fertilizer = 0;
+				outputSlot.id = ItemID.fertilizer;
+				outputSlot.count++;
+			}
+		}
+		
+		this.checkLiquidSlots();
+		
+		this.container.setScale("progressScale", this.data.progress / 4000);
+		this.container.setScale("fertilizerScale", this.data.fertilizer / 25);
+		this.liquidStorage.updateUiScale("biomassScale", "biomass");
+		this.liquidStorage.updateUiScale("biogasScale", "biogas");
     },
 	
+	canReceiveHeat: function(side){
+		return this.data.meta == side + Math.pow(-1, side);
+	},
+	
 	heatReceive: function(amount){
+		var outputSlot = this.container.getSlot("slotFertilizer");
+		if(this.liquidStorage.getAmount("biomass").toFixed(3) >= 0.02 && this.liquidStorage.getAmount("biogas") <= 1.6 && outputSlot.count < 64){
+			this.data.heat = amount;
+			return amount;
+		}
 		return 0;
 	},
 	
@@ -104,5 +180,8 @@ StorageInterface.createInterface(BlockID.icFermenter, {
 	canReceiveLiquid: function(liquid, side){
 		return liquid == "biomass";
 	},
-	canTransportLiquid: function(liquid, side){ return true }
+	canTransportLiquid: function(liquid, side){ return true; },
+	getLiquidStored: function(storage){
+		return storage == "input" ? "biomass" : "biogas";
+	}
 });

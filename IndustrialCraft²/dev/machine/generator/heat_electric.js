@@ -1,6 +1,6 @@
 IDRegistry.genBlockID("electricHeatGenerator");
 Block.createBlock("electricHeatGenerator", [
-	{name: "Electric Heat Generator", texture: [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
+	{name: "Electric Heater", texture: [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
 ], "opaque");
 TileRenderer.setStandartModel(BlockID.electricHeatGenerator, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
@@ -23,14 +23,14 @@ Callback.addCallback("PreLoaded", function(){
 
 var guiElectricHeatGenerator = new UI.StandartWindow({
 	standart: {
-		header: {text: {text: Translation.translate("Electric Heat Generator")}},
+		header: {text: {text: Translation.translate("Electric Heater")}},
 		inventory: {standart: true},
 		background: {standart: true}
 	},
 	
 	drawing: [
 		{type: "bitmap", x: 342, y: 110, bitmap: "energy_small_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 461, y: 250, bitmap: "black_line", scale: GUI_SCALE}
+		{type: "bitmap", x: 461, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],
 	
 	elements: {
@@ -52,11 +52,11 @@ var guiElectricHeatGenerator = new UI.StandartWindow({
 });
 
 Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiElectricHeatGenerator, "Electric Heat Generator");
+	MachineRegistry.updateGuiHeader(guiElectricHeatGenerator, "Electric Heater");
 });
 
-function checkCoilSlot(i, id, count, data, container){
-	var slot = container.getSlot("slot"+i)
+function checkCoilSlot(index, id, count, data, container){
+	var slot = container.getSlot("slot"+index);
 	if(id == ItemID.coil && slot.id == 0){
 		if(count == 1) return true;
 		var slotFinded = false;
@@ -76,9 +76,9 @@ function checkCoilSlot(i, id, count, data, container){
 	return false;
 }
 
-function getValidCoilSlotFunction(i){
+function getValidCoilSlotFunction(index){
 	return function(id, count, data, container){
-		return checkCoilSlot(i, count, data, container);
+		return checkCoilSlot(index, id, count, data, container);
 	}
 }
 
@@ -107,8 +107,9 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		var maxOutput = 0;
 		for(var i = 0; i < 10; i++){
 			var slot = this.container.getSlot("slot"+i);
-			if(slot.id == ItemID.coil)
-				maxOutput += 20;
+			if(slot.id == ItemID.coil){
+				maxOutput += 10;
+			}
 		}
 		return maxOutput;
 	},
@@ -121,10 +122,10 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 			var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
 			var TE = World.getTileEntity(coords.x, coords.y, coords.z);
 			if(TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)){
-				output = TE.heatReceive(Math.min(maxOutput, parseInt(this.data.energy)*2));
+				output = TE.heatReceive(Math.min(maxOutput, this.data.energy));
 				if(output > 0){
 					this.activate();
-					this.data.energy -= Math.round(output / 2);
+					this.data.energy -= output;
 					this.container.setText("textInfo1", output + "    /");
 				}
 			}

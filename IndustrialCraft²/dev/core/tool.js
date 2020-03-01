@@ -75,7 +75,7 @@ var ICTool = {
 		Item.registerUseFunction(nameID, function(coords, item, block){
 			if((block.id==2 || block.id==3 || block.id==110 || block.id==243) && coords.side==1 && ICTool.useElectricItem(item, 50)){ 
 				World.setBlock(coords.x, coords.y, coords.z, 60);
-				World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.75);
+				World.playSoundAtEntity(Player.get(), "step.gravel", 1, 0.75);
 			}
 		});
 	},

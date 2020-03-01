@@ -16,7 +16,7 @@ ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 8
 ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");
-Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: !Config.debugMode});
+Item.createItem("debugItem", "Debug Item", {name: "debug_item", meta: 0}, {isTech: !Config.debugMode});
 ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, 0, "storage");
 
 Item.registerNameOverrideFunction(ItemID.storageBattery, ItemName.showItemStorage);
@@ -86,10 +86,19 @@ Item.registerUseFunction("debugItem", function(coords, item, block){
 		}
 		for(var i in tile.data){
 			if(i != "energy_storage"){
-				if(i == "energy"){
-				Game.message("energy: " + tile.data[i] + "/" + tile.getEnergyStorage());}
-				else{
-				Game.message(i + ": " + tile.data[i]);}
+				if(i == "__liquid_tanks"){
+					var tanks = tile.data[i];
+					Game.message(tanks.input.liquid + ": "+ tanks.input.amount*1000 + "mB");
+					Game.message(tanks.output.liquid + ": "+ tanks.output.amount*1000 + "mB");
+				}
+				else if(i == "energy"){
+					Game.message("energy: " + tile.data[i] + "/" + tile.getEnergyStorage());
+				}
+				else try {
+					Game.message(i + ": " + tile.data[i]);
+				} catch(e){
+					Game.message(i);
+				}
 			}
 		}
 	}

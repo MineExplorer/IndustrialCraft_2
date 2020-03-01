@@ -32,6 +32,7 @@ let StorageInterface = {
 		}
 		instance.tileEntity = tileEntity;
 		instance.container = tileEntity.container;
+		instance.liquidStorage = tileEntity.liquidStorage;
 		return instance;
 	},
 	
@@ -115,13 +116,13 @@ let StorageInterface = {
 				return false;
 			}
 			interface.addLiquid = interface.addLiquid || function(liquid, amount){
-				return this.tileEntity.liquidStorage.addLiquid(liquid, amount);
+				return this.liquidStorage.addLiquid(liquid, amount);
 			}
 			interface.getLiquid = interface.getLiquid || function(liquid, amount){
-				return this.tileEntity.liquidStorage.getLiquid(liquid, amount);
+				return this.liquidStorage.getLiquid(liquid, amount);
 			}
 			interface.getLiquidStored = interface.getLiquidStored || function(storage){
-				return this.tileEntity.liquidStorage.getLiquidStored();
+				return this.liquidStorage.getLiquidStored();
 			}
 			
 			this.data[id] = interface;			
@@ -291,11 +292,12 @@ let StorageInterface = {
 			let inputSide = outputSide + Math.pow(-1, outputSide);
 			let inputStorage = input.interface || input.liquidStorage;
 			let outputStorage = output.interface || output.liquidStorage;
-			let amount = Math.min(output.liquidStorage.getAmount(liquid), maxAmount);
-			if(!input.interface || input.interface.canReceiveLiquid(liquid, inputSide)){
+			if(!input.interface && inputStorage.getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT || input.interface.canReceiveLiquid(liquid, inputSide)){
 				let liquidStored = inputStorage.getLiquidStored("input");
-				if(!liquidStored && input.liquidStorage.getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT || liquidStored == liquid){
-					outputStorage.getLiquid(liquid, amount - inputStorage.addLiquid(liquid, amount));
+				if(!liquidStored || liquidStored == liquid){
+					let amount = outputStorage.getLiquid(liquid, maxAmount);
+					amount = inputStorage.addLiquid(liquid, amount);
+					outputStorage.addLiquid(liquid, amount);
 				}
 			}
 		}

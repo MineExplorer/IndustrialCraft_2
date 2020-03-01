@@ -16,8 +16,14 @@ var MachineRecipeRegistry = {
 		this.recipeData[name] = data;
 	},
 	
-	addRecipeFor: function(name, source, result){
-		this.requireRecipesFor(name, true)[source] = result;
+	addRecipeFor: function(name, input, result){
+		var recipes = this.requireRecipesFor(name, true);
+		if(Array.isArray(recipes)){
+			recipes.push({input: input, result: result});
+		}
+		else {
+			recipes[input] = result;
+		}
 	},
 	
 	requireRecipesFor: function(name, createIfNotFound){

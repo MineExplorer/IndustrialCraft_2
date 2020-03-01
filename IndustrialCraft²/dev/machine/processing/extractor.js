@@ -24,6 +24,7 @@ Callback.addCallback("PreLoaded", function(){
 		"BlockID.rubberTreeLog": {id: ItemID.rubber, count: 1},
 		35: {id: 35, count: 1},
 		289: {id: ItemID.dustSulfur, count: 1},
+		"ItemID.tinCanFull": {id: ItemID.tinCanEmpty, count: 1},
 	}, true);
 });
 

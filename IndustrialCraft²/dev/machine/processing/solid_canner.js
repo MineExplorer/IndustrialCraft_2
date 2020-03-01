@@ -106,7 +106,7 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 		power_tier: 1,
 		energy_storage: 800,
 		energy_consumption: 1,
-		work_time: 150,
+		work_time: 200,
 		meta: 0,
 		progress: 0,
 		isActive: false

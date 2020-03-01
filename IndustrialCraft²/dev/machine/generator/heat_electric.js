@@ -55,8 +55,8 @@ Callback.addCallback("LevelLoaded", function(){
 	MachineRegistry.updateGuiHeader(guiElectricHeatGenerator, "Electric Heater");
 });
 
-function checkCoilSlot(i, id, count, data, container){
-	var slot = container.getSlot("slot"+i)
+function checkCoilSlot(index, id, count, data, container){
+	var slot = container.getSlot("slot"+index);
 	if(id == ItemID.coil && slot.id == 0){
 		if(count == 1) return true;
 		var slotFinded = false;
@@ -76,9 +76,9 @@ function checkCoilSlot(i, id, count, data, container){
 	return false;
 }
 
-function getValidCoilSlotFunction(i){
+function getValidCoilSlotFunction(index){
 	return function(id, count, data, container){
-		return checkCoilSlot(i, count, data, container);
+		return checkCoilSlot(index, id, count, data, container);
 	}
 }
 

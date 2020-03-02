@@ -332,7 +332,8 @@ Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es
 Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-Sable", pt: "Sabre Nano", zh: "纳米剑"});
 Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", pt: "Laser de Mineração", zh: "采矿镭射枪"});
 Translation.addTranslation("EU Meter", {ru: "Мультиметр", pt: "Leitor de EU", zh: "EU电表"});
-Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador"});
+Translation.addTranslation("debug.item", {ru: "Предмет отладки", pt: "Item de Depuração", zh:"测试工具"});
+Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh;"除草铲"});
 Translation.addTranslation("Weeding Trowel", {ru: "Пропалыватель", pt: "Espátula Transplantadora"});
 
 // Coffee
@@ -388,6 +389,7 @@ Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt
 
 // TEXT
 // Fluid Distributor
+Translation.addTranslation("Mode:", {ru: "Режим:", es: "Modo:", pt: "Modo:", zh: "模式:"});
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "分配模式"});
 Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "concentrado", pt: "Concentrar", zh: "混合模式"});
@@ -395,8 +397,8 @@ Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "con
 Translation.addTranslation("Mode: Blacklist", {ru: "Чёрный список", es: "Modo: lista negra", pt: "Modo: Lst Negra", zh: "模式:黑名单"});
 Translation.addTranslation("Mode: Whitelist", {ru: "Белый список", es: "Modo: lista blanca", pt: "Modo: Lst Branca", zh: "模式:白名单"});
 // EU Meter
-Translation.addTranslation("EnergyIn", {ru: "Вход энергии", zh: "输入能量"});
-Translation.addTranslation("EnergyOut", {ru: "Выход энергии", zh: "输出能量"});
+Translation.addTranslation("EnergyIn", {ru: "Вход энергии", zh: "能量流入"});
+Translation.addTranslation("EnergyOut", {ru: "Выход энергии", zh: "能量流出"});
 Translation.addTranslation("EnergyGain", {ru: "Энергии получено", es: "EnergíaGana", pt: "GanhoEnerg", zh: "获得能量"});
 Translation.addTranslation("Voltage", {ru: "Напряжение", es: "Voltaje", pt: "Voltagem", zh: "电压"});
 Translation.addTranslation("Avg:", {ru: "Средн.:", es: "Promedio:", pt: "Méd:", zh: "平均:"});
@@ -427,6 +429,6 @@ Translation.addTranslation("Decrease process time to ", {ru: "Уменьшает
 Translation.addTranslation("Increase power to ", {ru: "Увеличивает энергопотребление до ", zh: "能量增加到"});
 Translation.addTranslation("Increase energy tier by 1", {ru: "Увеличивает энергоуровень на 1 ", zh: "增加一级输出电压"});
 Translation.addTranslation("Increase energy storage by 10k EU", {ru: "Увеличивает энергоёмкость на 10k EU", zh: "增加10k EU储能"});
-Translation.addTranslation("Automatically output to\nthe %s side", {ru: "Автоматическое извлечение с %s стороны", zh: "从 %s 面自动输出"});
-Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Автоматический ввод с %s стороны", zh: "从 %s 面自动输入"});
+Translation.addTranslation("Automatically output to\nthe %s side", {ru: "Автоматическое извлечение с %s стороны", zh: "自动输出到%s方向"});
+Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Автоматический ввод с %s стороны", zh: "自动从%s抽入物品"});
 // side names are translated in core/item_name.js

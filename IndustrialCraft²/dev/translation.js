@@ -425,10 +425,10 @@ Translation.addTranslation("Hover mode enabled", {ru: "Режим парения
 // Tooltips
 Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: ", zh: "能量等级: "});
 Translation.addTranslation("Max voltage: ", {ru: "Макс. напряжение: ", zh: "最大电压: "});
-Translation.addTranslation("Decrease process time to ", {ru: "Уменьшает время работы до ", zh: "加工用时缩短为"});
-Translation.addTranslation("Increase power to ", {ru: "Увеличивает энергопотребление до ", zh: "能量增加到"});
-Translation.addTranslation("Increase energy tier by 1", {ru: "Увеличивает энергоуровень на 1 ", zh: "增加一级输出电压"});
-Translation.addTranslation("Increase energy storage by 10k EU", {ru: "Увеличивает энергоёмкость на 10k EU", zh: "增加10k EU储能"});
+Translation.addTranslation("Decrease process time to ", {ru: "Уменьшает время работы до ", pt: "Diminui o tempo de processo para ", zh: "加工用时缩短为"});
+Translation.addTranslation("Increase power to ", {ru: "Увеличивает энергопотребление до ", pt: "Aumenta o Uso de Energia em ", zh: "能量增加到"});
+Translation.addTranslation("Increase energy tier by 1", {ru: "Увеличивает энергоуровень на 1 ", pt: "Aumenta o nível da máquina em 1", zh: "增加一级输出电压"});
+Translation.addTranslation("Increase energy storage by 10k EU", {ru: "Увеличивает энергоёмкость на 10k EU", pt: "Aumenta o armazenamento de energia em 10k EU", zh: "增加10k EU储能"});
 Translation.addTranslation("Automatically output to\nthe %s side", {ru: "Автоматическое извлечение с %s стороны", zh: "自动输出到%s方向"});
 Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Автоматический ввод с %s стороны", zh: "自动从%s抽入物品"});
 // side names are translated in core/item_name.js

@@ -1,6 +1,6 @@
 IDRegistry.genBlockID("canner");
 Block.createBlock("canner", [
-	{name: "Solid/Fluid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
+	{name: "Fluid/Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
 ], "opaque");
 TileRenderer.setStandartModel(BlockID.canner, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.canner, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function(){
 
 var guiCanner = new UI.StandartWindow({
 	standart: {
-		header: {text: {text: Translation.translate("Solid/Fluid Canning Machine")}},
+		header: {text: {text: Translation.translate("Fluid/Solid Canning Machine")}},
 		inventory: {standart: true},
 		background: {standart: true}
 	},
@@ -88,6 +88,7 @@ var guiCanner = new UI.StandartWindow({
 		}}
 	}
 });
+
 function isValidCannerSource(id, data, tile){
 	if(tile.data.mode == 0 && MachineRecipeRegistry.hasRecipeFor("solidCanner", id)){
 		return true;
@@ -118,8 +119,9 @@ function isValidCannerCan(id, data, tile){
 }
 
 Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiCanner, "Solid/Fluid Canning Machine");
+	MachineRegistry.updateGuiHeader(guiCanner, "Fluid/Solid Canning Machine");
 });
+
 
 MachineRegistry.registerElectricMachine(BlockID.canner, {
 	defaultValues: {

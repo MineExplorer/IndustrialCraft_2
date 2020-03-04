@@ -332,8 +332,8 @@ Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es
 Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-Sable", pt: "Sabre Nano", zh: "纳米剑"});
 Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", pt: "Laser de Mineração", zh: "采矿镭射枪"});
 Translation.addTranslation("EU Meter", {ru: "Мультиметр", pt: "Leitor de EU", zh: "EU电表"});
-Translation.addTranslation("debug.item", {ru: "Предмет отладки", pt: "Item de Depuração", zh:"测试工具"});
-Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh;"除草铲"});
+Translation.addTranslation("Debug Item", {ru: "Предмет отладки", pt: "Item de Depuração", zh:"测试工具"});
+Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh:"除草铲"});
 Translation.addTranslation("Weeding Trowel", {ru: "Пропалыватель", pt: "Espátula Transplantadora"});
 
 // Coffee

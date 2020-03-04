@@ -28,16 +28,14 @@ Translation.addTranslation("Solar Panel", {ru: "Солнечная панель"
 Translation.addTranslation("Water Mill", {ru: "Гидрогенератор", es: "Molino de Agua", pt: "Gerador Aquático", zh: "水力发电机"});
 Translation.addTranslation("Wind Mill", {ru: "Ветрогенератор", es: "Molino de Viento", pt: "Cata-vento", zh: "风力发电机"});
 Translation.addTranslation("Radioisotope Thermoelectric Generator", {ru: "Радиоизотопный термоэлектрический генератор", es: "Generador Radioisotopos Termoeléctrico", pt: "Gerador Termoelétrico de Radioisótopos", zh: "放射性同位素温差发电机"});
-Translation.addTranslation("Semifluid Generator", {ru: "Полужидкостный генератор", pt: "Gerador à Semi-Fluidos", zh: "半流质发电机"});
-Translation.addTranslation("Stirling Generator", {ru: "Генератор Стирлинга", pt: "Gerador à Calor", zh: "斯特林发电机"});
-
+Translation.addTranslation("Semifluid Generator", {ru: "Полужидкостный генератор", es: "Generador a Semifluidos", pt: "Gerador à Semi-Fluidos", zh: "半流质发电机"});
+Translation.addTranslation("Stirling Generator", {ru: "Генератор Стирлинга", es: "Generador Stirling", pt: "Gerador à Calor", zh: "斯特林发电机"});
 
 Translation.addTranslation("Nuclear Reactor", {ru: "Ядерный реактор", es: "Reactor Nuclear", pt: "Reator Nuclear", zh: "核反应堆"});
 Translation.addTranslation("Reactor Chamber", {ru: "Реакторная камера", es: "Cámara del Reactor", pt: "Câmara de Reator", zh: "核反应仓"});
 
 // Heat Generators
-Translation.addTranslation("Liquid Fuel Firebox", {ru: "Жидкостный теплогенератор", pt: "Aquecedor à Combustível Líquido", zh: "流体加热机"});
-
+Translation.addTranslation("Liquid Fuel Firebox", {ru: "Жидкостный теплогенератор", es: "Generador de Calor Líquido", pt: "Aquecedor à Combustível Líquido", zh: "流体加热机"});
 Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor à Combustível Sólido", zh: "固体加热机"});
 Translation.addTranslation("Electric Heat Generator", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电力加热机"});
 
@@ -61,7 +59,6 @@ Translation.addTranslation("Induction Furnace", {ru: "Индукционная �
 Translation.addTranslation("Macerator", {ru: "Дробитель", es: "Trituradora", pt: "Macerador", zh: "打粉机"});
 Translation.addTranslation("Compressor", {ru: "Компрессор", es: "Compresor", pt: "Compactador", zh: "压缩机"});
 Translation.addTranslation("Extractor", {ru: "Экстрактор", es: "Extractor", pt: "Extrator", zh: "提取机"});
-Translation.addTranslation("Fermenter", {ru: "Ферментер", pt: "Fermentador", zh: "发酵机"};
 Translation.addTranslation("Recycler", {ru: "Утилизатор", es: "Reciclador", pt: "Recicladora", zh: "回收机"});
 Translation.addTranslation("Metal Former", {ru: "Металлоформовщик", es: "Arqueador de Metal", pt: "Moldelador de Metais", zh: "金属成型机"});
 Translation.addTranslation("Ore Washing Plant", {ru: "Рудопромывочная машина", es: "Planta de Lavado de Minerales", pt: "Estação de Lavagem de Minérios", zh: "洗矿机"});
@@ -72,6 +69,7 @@ Translation.addTranslation("Advanced Miner", {ru: "Продвинутая бур
 Translation.addTranslation("Tesla Coil", {ru: "Катушка теслы", es: "Bobina de Tesla", pt: "Bobina Tesla", zh: "特斯拉线圈"});
 Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Teletransportador", pt: "Teletransportador", zh: "传送机"});
 Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", pt: "Fabricador de Massa", zh: "物质生成机"});
+Translation.addTranslation("Fermenter", {ru: "Ферментер", es: "Fermentadora", pt: "Fermentador", zh: "发酵机"});
 Translation.addTranslation("Solid Canning Machine", {ru: "Консервирующий механизм", es: "Máquina de Enlatado", pt: "Enlatadora de Sólidos", zh: "固体装罐机"});
 Translation.addTranslation("Fluid/Solid Canning Machine ", {ru: "Универсальный наполняющий механизм", es: "Enlatadora de Líquidos/Sólidos", pt: "Enlatadora de Fluidos/Sólidos", zh: "流体/固体装罐机"});
 Translation.addTranslation("Crop Matron", {ru: "Автосадовник", es: "Máquina Cosechadora", pt: "Fazendeiro", zh: "作物监管机"});

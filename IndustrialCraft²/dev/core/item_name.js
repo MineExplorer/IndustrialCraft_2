@@ -114,13 +114,31 @@ ItemName = {
 				"западной"
 			],
 			zh: [
-				"首个有效",
-				"下",
-				"上",
-				"北",
-				"南",
-				"东",
-				"西"
+				"初次生效",
+				"底部",
+				"顶部",
+				"北边",
+				"南边",
+				"东边",
+				"西边"
+			],
+			es: [
+				"Primera vez efectivo",
+				"abajo",
+				"arriba",
+				"norte",
+				"sur",
+				"este",
+				"oeste"
+			],
+			pt: [
+				"Primeira vez eficaz",
+				"o lado de baixo",
+				"o lado de cima",
+				"o norte",
+				"o sul",
+				"o leste",
+				"o oeste"
 			]
 		}
 		if(sideNames[Config.language]){

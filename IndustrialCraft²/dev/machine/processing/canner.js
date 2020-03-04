@@ -1,6 +1,6 @@
 IDRegistry.genBlockID("canner");
 Block.createBlock("canner", [
-	{name: "Universal Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
+	{name: "Fluid/Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
 ], "opaque");
 TileRenderer.setStandartModel(BlockID.canner, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.canner, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function(){
 
 var guiCanner = new UI.StandartWindow({
 	standart: {
-		header: {text: {text: Translation.translate("Universal Canning Machine")}},
+		header: {text: {text: Translation.translate("Fluid/Solid Canning Machine")}},
 		inventory: {standart: true},
 		background: {standart: true}
 	},
@@ -55,22 +55,13 @@ var guiCanner = new UI.StandartWindow({
 		"energyScale": {type: "scale", x: 406, y: 50 + 58*GUI_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotEnergy": {type: "slot", x: 400, y: 290, size: 58, isValid: MachineRegistry.isValidEUStorage},
 		"slotSource": {type: "slot", x: 630, y: 174, size: 58, visual: false, bitmap: "canner_slot_source_0",
-			isValid: function(id){
-				if(MachineRecipeRegistry.hasRecipeFor("solidCanner", id)) return true;
-				var recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
-				for(var i in recipes){
-					if(recipes[i].input[1].id == id) return true;
-				}
-				return false;
+			isValid: function(id, count, data, container){
+				return isValidCannerSource(id, data, container.tileEntity);
 			}
 		},
-		"slotContainer": {type: "slot", x: 506, y: 50 + 12*GUI_SCALE, size: 58, 
-			isValid: function(id){
-				var recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-				for(var i in recipes){
-					if(recipes[i].storage[0] == id) return true;
-				}
-				return false;
+		"slotCan": {type: "slot", x: 506, y: 50 + 12*GUI_SCALE, size: 58, 
+			isValid: function(id, count, data, container){
+				return isValidCannerCan(id, data, container.tileEntity);
 			}
 		},
 		"slotResult": {type: "slot", x: 755, y: 50 + 12*GUI_SCALE, size: 58, isValid: function(){return false;}},
@@ -98,15 +89,39 @@ var guiCanner = new UI.StandartWindow({
 	}
 });
 
-function isValidCannerSource(id, data, mode){
-	switch(mode){
-		
+function isValidCannerSource(id, data, tile){
+	if(tile.data.mode == 0 && MachineRecipeRegistry.hasRecipeFor("solidCanner", id)){
+		return true;
 	}
+	if(tile.data.mode == 3){
+		var recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
+		for(var i in recipes){
+			if(recipes[i].input[1].id == id) return true;
+		}
+	}
+	return false;
+}
+
+function isValidCannerCan(id, data, tile){
+	if(tile.data.mode == 0){
+		var recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+		for(var i in recipes){
+			if(recipes[i].storage[0] == id) return true;
+		}
+	}
+	if(tile.data.mode == 1){
+		return LiquidRegistry.getEmptyItem(id, data) ? true : false;
+	}
+	if(tile.data.mode == 2){
+		return LiquidRegistry.getFullItem(id, data, "water") ? true : false;
+	}
+	return false;
 }
 
 Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiCanner, "Universal Canning Machine");
+	MachineRegistry.updateGuiHeader(guiCanner, "Fluid/Solid Canning Machine");
 });
+
 
 MachineRegistry.registerElectricMachine(BlockID.canner, {
 	defaultValues: {
@@ -135,6 +150,7 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
 		this.data.work_time = this.defaultValues.work_time;
+		if(this.data.mode%3 > 0) this.data.work_time /= 5;
 	},
 	
 	updateUI: function(){
@@ -170,7 +186,7 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
-		var canSlot = this.container.getSlot("slotContainer");
+		var canSlot = this.container.getSlot("slotCan");
 		
 		var newActive = false;
 		switch(this.data.mode){
@@ -197,10 +213,54 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 			}
 		break;
 		case 1:
-			// TODO
+			var liquid = this.outputTank.getLiquidStored();
+			var empty = LiquidRegistry.getEmptyItem(canSlot.id, canSlot.data);
+			if(empty && (!liquid || empty.liquid == liquid) && this.outputTank.getAmount() <= 7){
+				if(this.data.energy >= this.data.energy_consumption && (resultSlot.id == empty.id && resultSlot.data == empty.data && resultSlot.count < Item.getMaxStack(empty.id) || resultSlot.id == 0)){
+					this.data.energy -= this.data.energy_consumption;
+					this.data.progress += 1/this.data.work_time;
+					newActive = true;
+				}
+				if(this.data.progress.toFixed(3) >= 1){
+					this.outputTank.addLiquid(empty.liquid, 1);
+					canSlot.count--;
+					resultSlot.id = empty.id;
+					resultSlot.data = empty.data;
+					resultSlot.count++;
+					this.container.validateAll();
+					this.data.progress = 0;
+				}
+			}
+			else {
+				this.data.progress = 0;
+			}
 		break;
 		case 2:
-			// TODO
+			var resetProgress = true;
+			var liquid = this.inputTank.getLiquidStored();
+			if(liquid){
+				var full = LiquidRegistry.getFullItem(canSlot.id, canSlot.data, liquid);
+				if(full && this.inputTank.getAmount() >= 1){
+					resetProgress = false;
+					if(this.data.energy >= this.data.energy_consumption && (resultSlot.id == full.id && resultSlot.data == full.data && resultSlot.count < Item.getMaxStack(full.id) || resultSlot.id == 0)){
+						this.data.energy -= this.data.energy_consumption;
+						this.data.progress += 1/this.data.work_time;
+						newActive = true;
+					}
+					if(this.data.progress.toFixed(3) >= 1){
+						this.inputTank.getLiquid(liquid, 1);
+						canSlot.count--;
+						resultSlot.id = full.id;
+						resultSlot.data = full.data;
+						resultSlot.count++;
+						this.container.validateAll();
+						this.data.progress = 0;
+					}
+				}
+			}
+			if(resetProgress){
+				this.data.progress = 0;
+			}
 		break;
 		case 3:
 			var recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
@@ -258,16 +318,12 @@ StorageInterface.createInterface(BlockID.canner, {
 	slots: {
 		"slotSource": {input: true,
 			isValid: function(item){
-				return MachineRecipeRegistry.hasRecipeFor("canner", item.id);
+				return isValidCannerSource(item.id, item.data, this.tileEntity);
 			}
 		},
-		"slotContainer": {input: true,
+		"slotCan": {input: true,
 			isValid: function(item){
-				var recipes = MachineRecipeRegistry.requireRecipesFor("canner");
-				for(var i in recipes){
-					if(recipes[i].storage[0] == item.id) return true;
-				}
-				return false;
+				return isValidCannerCan(item.id, item.data, this.tileEntity);
 			}
 		},
 		"slotResult": {output: true}

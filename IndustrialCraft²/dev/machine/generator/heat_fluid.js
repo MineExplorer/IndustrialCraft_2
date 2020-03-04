@@ -25,7 +25,7 @@ Callback.addCallback("PreLoaded", function(){
 
 var guiFluidHeatGenerator = new UI.StandartWindow({
 	standart: {
-		header: {text: {text: Translation.translate("Fluid Heat Generator")}},
+		header: {text: {text: Translation.translate("Liquid Fuel Firebox")}},
 		inventory: {standart: true},
 		background: {standart: true}
 	},
@@ -54,7 +54,7 @@ var guiFluidHeatGenerator = new UI.StandartWindow({
 
 
 Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiFluidHeatGenerator, "Fluid Heat Generator");
+	MachineRegistry.updateGuiHeader(guiFluidHeatGenerator, "Liquid Fuel Firebox");
 });
 
 MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {

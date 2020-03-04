@@ -28,11 +28,16 @@ Translation.addTranslation("Solar Panel", {ru: "Солнечная панель"
 Translation.addTranslation("Water Mill", {ru: "Гидрогенератор", es: "Molino de Agua", pt: "Gerador Aquático", zh: "水力发电机"});
 Translation.addTranslation("Wind Mill", {ru: "Ветрогенератор", es: "Molino de Viento", pt: "Cata-vento", zh: "风力发电机"});
 Translation.addTranslation("Radioisotope Thermoelectric Generator", {ru: "Радиоизотопный термоэлектрический генератор", es: "Generador Radioisotopos Termoeléctrico", pt: "Gerador Termoelétrico de Radioisótopos", zh: "放射性同位素温差发电机"});
+Translation.addTranslation("Semifluid Generator", {ru: "Полужидкостный генератор", pt: "Gerador à Semi-Fluidos", zh: "半流质发电机"});
+Translation.addTranslation("Stirling Generator", {ru: "Генератор Стирлинга", pt: "Gerador à Calor", zh: "斯特林发电机"});
+
 
 Translation.addTranslation("Nuclear Reactor", {ru: "Ядерный реактор", es: "Reactor Nuclear", pt: "Reator Nuclear", zh: "核反应堆"});
 Translation.addTranslation("Reactor Chamber", {ru: "Реакторная камера", es: "Cámara del Reactor", pt: "Câmara de Reator", zh: "核反应仓"});
 
 // Heat Generators
+Translation.addTranslation("Liquid Fuel Firebox", {ru: "Жидкостный теплогенератор", pt: "Aquecedor à Combustível Líquido", zh: "流体加热机"});
+
 Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor à Combustível Sólido", zh: "固体加热机"});
 Translation.addTranslation("Electric Heat Generator", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电力加热机"});
 
@@ -51,12 +56,14 @@ Translation.addTranslation("EV Transformer", {ru: "Трансформатор С
 // Machines
 Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", pt: "Iluminador", zh: "日光灯"});
 Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм", es: "Máquina de Enlatado", pt: "Enlatadora de Sólidos", zh: "固体装罐机"});
+Translation.addTranslation("Solid Canning Machine", {ru: "Консервирующая машина", pt: "Enlatadora de Sólidos", zh: "流体装罐机"});
 Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Fornalha de Ferro", zh: "铁炉"});
 Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", pt: "Fornalha Elétrica", zh: "电炉"});
 Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", pt: "Fornalha de Indução", zh: "感应炉"});
 Translation.addTranslation("Macerator", {ru: "Дробитель", es: "Trituradora", pt: "Macerador", zh: "打粉机"});
 Translation.addTranslation("Compressor", {ru: "Компрессор", es: "Compresor", pt: "Compactador", zh: "压缩机"});
 Translation.addTranslation("Extractor", {ru: "Экстрактор", es: "Extractor", pt: "Extrator", zh: "提取机"});
+Translation.addTranslation("Fermenter", {ru: "Ферментер", pt: "Fermentador", zh: "发酵机"};
 Translation.addTranslation("Recycler", {ru: "Утилизатор", es: "Reciclador", pt: "Recicladora", zh: "回收机"});
 Translation.addTranslation("Metal Former", {ru: "Металлоформовщик", es: "Arqueador de Metal", pt: "Moldelador de Metais", zh: "金属成型机"});
 Translation.addTranslation("Ore Washing Plant", {ru: "Рудопромывочная машина", es: "Planta de Lavado de Minerales", pt: "Estação de Lavagem de Minérios", zh: "洗矿机"});
@@ -83,7 +90,8 @@ Translation.addTranslation("Iridium", {ru: "Иридий", es: "Mineral de Iridi
 Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", pt: "Resina Pegajosa", zh: "粘性树脂"});
 Translation.addTranslation("Rubber", {ru: "Резина", es: "Rubber", pt: "Borracha", zh: "橡胶"});
 Translation.addTranslation("Ashes", {ru: "Пепел", es: "Ceniza", pt: "Cinzas", zh: "灰烬"});
-Translation.addTranslation("Slag", {ru: "Шлак", es: "Escoria", pt: "Sucata", zh: "渣"});
+Translation.addTranslation("Slag", {ru: "Шлак", es: "Escoria", pt: "Sucata", zh: "渣渣"});
+Translation.addTranslation("Bio Chaff", {ru: "Отходы", pt: "Bio-Produto", zh: "糠"});
 Translation.addTranslation("Scrap", {ru: "Утильсырьё", es: "Chatarra", pt: "Sucata", zh: "废料"});
 Translation.addTranslation("Scrap Box", {ru: "Коробка утильсырья", es: "Caja de Chatarra", pt: "Caixa de Sucata", zh: "废料盒"});
 Translation.addTranslation("UU-Matter", {ru: "Материя", es: "Materia", pt: "Metéria UU", zh: "UU物质"});
@@ -263,6 +271,10 @@ Translation.addTranslation("This looks bad...", {ru: "Это выглядит н
 Translation.addTranslation("Cell", {ru: "Капсула", es: "Celda Vacía", pt: "Célula Universal de Fluidos", zh: "空单元"});
 Translation.addTranslation("Water Cell", {ru: "Капсула с водой", es: "Celda de Agua", pt: "Célula com Água", zh: "水单元"});
 Translation.addTranslation("Lava Cell", {ru: "Капсула с лавой", es: "Celda de Lava", pt: "Célula com Lava", zh: "岩浆单元"});
+Translation.addTranslation("Biomass Cell", {ru: "Капсула биомассы", es: "Celda de Biomasa", pt: "Célula com Biomassa", zh: "生物质单元"});
+Translation.addTranslation("Biogas Cell", {ru: "Капсула биогаза", pt: "Célula com Biogás", zh: "沼气单元"});
+Translation.addTranslation("Coolant Cell", {ru: "Капсула хладагента", es: "Celda de Refrigerante", pt: "Célula com Líquido Refrigerante", zh: "冷却液单元"});
+Translation.addTranslation("UU-Matter Cell", {ru: "Капсула жидкой материи", es: "Celda de Materia UU", pt: "Célula com Matéria UU", zh: "UU物质单元"});
 Translation.addTranslation("Compressed Air Cell", {ru: "Капсула со сжатым воздухом", es: "Celda de Aire Comprimida", pt: "Célula com Ar Comprimido", zh: "压缩空气单元"});
 
 // Cables
@@ -333,8 +345,8 @@ Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-S
 Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", pt: "Laser de Mineração", zh: "采矿镭射枪"});
 Translation.addTranslation("EU Meter", {ru: "Мультиметр", pt: "Leitor de EU", zh: "EU电表"});
 Translation.addTranslation("debug.item", {ru: "Предмет отладки", pt: "Item de Depuração", zh:"测试工具"});
-Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh;"除草铲"});
-Translation.addTranslation("Weeding Trowel", {ru: "Пропалыватель", pt: "Espátula Transplantadora"});
+Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh: "作物分析器"});
+Translation.addTranslation("Weeding Trowel", {ru: "Пропалыватель", pt: "Espátula Transplantadora", zh: "除草铲"});
 
 // Coffee
 Translation.addTranslation("Coffee Powder", {ru: "Молотый кофе", es: "Polvo de Café", pt: "Pó de Café", zh: "咖啡粉"});

@@ -55,6 +55,9 @@ function LiquidTank(tileEntity, name, limit){
 		if(!liquid || this.data.liquid == liquid){
 			var got = Math.min(amount, this.data.amount);
 			this.data.amount -= got;
+			if(this.data.amount == 0){
+				this.data.liquid = null;
+			}
 			return got;
 		}
 		return 0;

@@ -13,7 +13,7 @@ By using the library you automatically agree to these rules.
 
 LIBRARY({
 	name: "ToolLib",
-	version: 13,
+	version: 14,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -362,6 +362,15 @@ Callback.addCallback("DestroyBlock", function(coords, block, player){
 	}
 });
 
+// armor fix
+Callback.addCallback("tick", function(){
+	for(var i = 0; i < 4; i++){
+		var armor = Player.getArmorSlot(i);
+		if(armor.id == 0 && armor.count > 0){
+			Player.setArmorSlot(i, 0, 0, 0);
+		}
+	}
+});
 
 EXPORT("ToolLib", ToolLib);
 EXPORT("ToolType", ToolType);

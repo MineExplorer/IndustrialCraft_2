@@ -71,7 +71,7 @@ Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Telet
 Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", pt: "Fabricador de Massa", zh: "物质生成机"});
 Translation.addTranslation("Fermenter", {ru: "Ферментер", es: "Fermentadora", pt: "Fermentador", zh: "发酵机"});
 Translation.addTranslation("Solid Canning Machine", {ru: "Консервирующий механизм", es: "Máquina de Enlatado", pt: "Enlatadora de Sólidos", zh: "固体装罐机"});
-Translation.addTranslation("Fluid/Solid Canning Machine ", {ru: "Универсальный наполняющий механизм", es: "Enlatadora de Líquidos/Sólidos", pt: "Enlatadora de Fluidos/Sólidos", zh: "流体/固体装罐机"});
+Translation.addTranslation("Fluid/Solid Canning Machine", {ru: "Универсальный наполняющий механизм", es: "Enlatadora de Líquidos/Sólidos", pt: "Enlatadora de Fluidos/Sólidos", zh: "流体/固体装罐机"});
 Translation.addTranslation("Crop Matron", {ru: "Автосадовник", es: "Máquina Cosechadora", pt: "Fazendeiro", zh: "作物监管机"});
 Translation.addTranslation("Crop Harvester", {ru: "Сборщик урожая", es: "Cocechador de Cultivo", pt: "Colheitadeira", zh: "作物收割机"});
 

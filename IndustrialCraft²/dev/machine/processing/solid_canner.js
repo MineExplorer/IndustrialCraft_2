@@ -98,7 +98,7 @@ var guiSolidCanner = new UI.StandartWindow({
 });
 
 Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiSolidCanner, "Canning Machine");
+	MachineRegistry.updateGuiHeader(guiSolidCanner, "Solid Canning Machine");
 });
 
 MachineRegistry.registerElectricMachine(BlockID.conserver, {

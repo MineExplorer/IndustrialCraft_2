@@ -239,30 +239,30 @@ let StorageInterface = {
 		return count;
 	},
 	
-	extractItemsFromContainer: function(inputContainer, container, side, maxCount, oneStack){
-		let tileEntity = container.tileEntity;
+	extractItemsFromContainer: function(inputTile, container, side, maxCount, oneStack){
+		let outputTile = container.tileEntity;
 		let count = 0;
 		let slots = [];
 		let slotsInitialized = false;
-		side = side + Math.pow(-1, side);
+		let outputSide = side + Math.pow(-1, side);
 		
-		if(tileEntity){
-			if(tileEntity.interface){
-				slots = tileEntity.interface.getOutputSlots(side);
+		if(outputTile){
+			if(outputTile.interface){
+				slots = outputTile.interface.getOutputSlots(outputSide);
 				slotsInitialized = true;
 			}
-			else if(tileEntity.getTransportSlots){
-				slots = tileEntity.getTransportSlots().output || [];
+			else if(outputTile.getTransportSlots){
+				slots = outputTile.getTransportSlots().output || [];
 				slotsInitialized = true;
 			}
 		}
 		if(!slotsInitialized){
-			slots = this.getContainerSlots(container, 1, side);
+			slots = this.getContainerSlots(container, 1, outputSide);
 		}
 		for(let i in slots){
 			let slot = container.getSlot(slots[i]);
 			if(slot.id > 0){
-				let added = this.putItemToContainer(slot, inputContainer, side, maxCount - count);
+				let added = inputTile.interface.addItem(slot, side, maxCount - count);
 				if(added > 0){
 					count += added;
 					if(!container.slots){

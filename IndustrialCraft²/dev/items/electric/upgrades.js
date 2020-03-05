@@ -169,7 +169,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, 
 	if(World.getThreadTime()%20 == 0){
 		var containers = StorageInterface.getNearestContainers(machine, item.data-1);
 		for(var side in containers){
-			StorageInterface.extractItemsFromContainer(container, containers[side], parseInt(side));
+			StorageInterface.extractItemsFromContainer(machine, containers[side], parseInt(side));
 		}
 	}
 });

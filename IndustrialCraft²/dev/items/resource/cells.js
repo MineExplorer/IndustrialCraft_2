@@ -17,11 +17,17 @@ Item.createItem("cellCoolant", "Coolant Cell", {name: "cell_coolant"});
 //Item.createItem("cellMatter", "UU-Matter Cell", {name: "cell_uu_matter"});
 Item.createItem("cellAir", "Compressed Air Cell", {name: "cell_air"});
 
-LiquidRegistry.registerItem("water", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellWater, data: 0});
-LiquidRegistry.registerItem("lava", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellLava, data: 0});
-LiquidRegistry.registerItem("biomass", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellBiomass, data: 0});
-LiquidRegistry.registerItem("biogas", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellBiogas, data: 0});
-LiquidRegistry.registerItem("coolant", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellCoolant, data: 0});
+LiquidLib.registerItem("water", ItemID.cellEmpty, ItemID.cellWater, 1000);
+LiquidLib.registerItem("lava", ItemID.cellEmpty, ItemID.cellLava, 1000);
+LiquidLib.registerItem("biomass", ItemID.cellEmpty, ItemID.cellBiomass, 1000);
+LiquidLib.registerItem("biogas", ItemID.cellEmpty, ItemID.cellBiogas, 1000);
+LiquidLib.registerItem("coolant", ItemID.cellEmpty, ItemID.cellCoolant, 1000);
+
+ItemName.addStoredLiquidTooltip(ItemID.cellWater);
+ItemName.addStoredLiquidTooltip(ItemID.cellLava);
+ItemName.addStoredLiquidTooltip(ItemID.cellBiomass);
+ItemName.addStoredLiquidTooltip(ItemID.cellBiogas);
+ItemName.addStoredLiquidTooltip(ItemID.cellCoolant);
 
 Recipes.addShaped({id: ItemID.cellEmpty, count: 1, data: 0}, [
 	" x ",
@@ -38,14 +44,16 @@ Item.registerUseFunction("cellEmpty",function(coords, item, block){
 	if(block.id > 7 && block.id < 12 && block.data == 0){
 		World.setBlock(coords.x, coords.y, coords.z, 0);
 		if(block.id == 8 || block.id == 9){
-		Player.addItemToInventory(ItemID.cellWater, 1);}
-		else{
-		Player.addItemToInventory(ItemID.cellLava, 1);}
+			Player.addItemToInventory(ItemID.cellWater, 1);
+		} else {
+			Player.addItemToInventory(ItemID.cellLava, 1);
+		}
 		Player.decreaseCarriedItem(1);
 	}
 });
 
 Item.registerUseFunction("cellWater", function(coords, item, block){
+	if(item.data > 0 || block.id == BlockID.crop) return;
 	var x = coords.relative.x
 	var y = coords.relative.y
 	var z = coords.relative.z
@@ -58,6 +66,7 @@ Item.registerUseFunction("cellWater", function(coords, item, block){
 });
 
 Item.registerUseFunction("cellLava", function(coords, item, block){
+	if(item.data > 0) return;
 	var x = coords.relative.x
 	var y = coords.relative.y
 	var z = coords.relative.z

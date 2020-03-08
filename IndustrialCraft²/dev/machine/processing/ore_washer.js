@@ -58,7 +58,7 @@ var guiOreWasher = new UI.StandartWindow({
 		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
 		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 12*GUI_SCALE,
 			isValid: function(id, count, data){
-				return LiquidRegistry.getItemLiquid(id, data) == "water";
+				return LiquidLib.getItemLiquid(id, data) == "water";
 			}
 		},
 		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
@@ -140,24 +140,22 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 			}
 		}
 	},
-
+	
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	
+	click: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			return this.getLiquidFromItem("water", {id: id, count: count, data: data}, null, true);
+		}
+	},
+	
 	tick: function(){
 		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");
-		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
-		if(empty && empty.liquid == "water"){
-			if(this.liquidStorage.getAmount("water") <= 7 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
-				this.liquidStorage.addLiquid("water", 1);
-				slot1.count--;
-				slot2.id = empty.id;
-				slot2.data = empty.data;
-				slot2.count++;
-				this.container.validateAll();
-			}
-		}
+		this.getLiquidFromItem("water", slot1, slot2);
 		
 		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
@@ -207,7 +205,7 @@ StorageInterface.createInterface(BlockID.oreWasher, {
 		},
 		"slotLiquid1": {input: true, 
 			isValid: function(item){
-				return LiquidRegistry.getItemLiquid(item.id, item.data) == "water";
+				return LiquidLib.getItemLiquid(item.id, item.data) == "water";
 			}
 		},
 		"slotLiquid2": {output: true},

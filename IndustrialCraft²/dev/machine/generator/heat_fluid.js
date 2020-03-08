@@ -41,7 +41,7 @@ var guiFluidHeatGenerator = new UI.StandartWindow({
 		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 440, y: 75,
 			isValid: function(id, count, data){
-				var empty = LiquidRegistry.getEmptyItem(id, data);
+				var empty = LiquidLib.getEmptyItem(id, data);
 				if(!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			}
@@ -70,10 +70,6 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 		return guiFluidHeatGenerator;
 	},
 	
-	wrenchClick: function(id, count, data, coords){
-		this.setFacing(coords);
-	},
-	
 	setFacing: MachineRegistry.setFacing,
 	
 	init: function(){
@@ -81,24 +77,27 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 		this.renderModel();
 	},
 	
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	
+	click: function(id, count, data, coords){
+		var liquid = this.liquidStorage.getLiquidStored();
+		if(Entity.getSneaking(player) && this.getLiquidFromItem(liquid, {id: id, count: count, data: data}, null, true)){
+			return true;
+		}
+		if(ICTool.isValidWrench(id, data, 10)){
+			if(this.setFacing(coords))
+				ICTool.useWrench(id, data, 10);
+			return true;
+		}
+		return false;
+	},
+	
 	tick: function(){
 		StorageInterface.checkHoppers(this);
-		var newActive = false;
 		var liquid = this.liquidStorage.getLiquidStored();
 		var slot1 = this.container.getSlot("slot1");
 		var slot2 = this.container.getSlot("slot2");
-		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
-		if(empty && (!liquid || empty.liquid == liquid)){
-			if(this.liquidStorage.getAmount(empty.liquid).toFixed(3) <= 9 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
-				liquid = empty.liquid;
-				this.liquidStorage.addLiquid(liquid, 1);
-				slot1.count--;
-				slot2.id = empty.id;
-				slot2.data = empty.data;
-				slot2.count++;
-				this.container.validateAll();
-			}
-		}
+		this.getLiquidFromItem(liquid, slot1, slot2);
 		
 		var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid || liquid);
 		if(fuel && this.data.fuel <= 0 && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)){
@@ -152,7 +151,7 @@ StorageInterface.createInterface(BlockID.fluidHeatGenerator, {
 		"slot2": {output: true}
 	},
 	isValidInput: function(item){
-		var empty = LiquidRegistry.getEmptyItem(item.id, item.data);
+		var empty = LiquidLib.getEmptyItem(item.id, item.data);
 		if(!empty) return false;
 		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 	},

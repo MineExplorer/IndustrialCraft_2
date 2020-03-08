@@ -22,9 +22,9 @@ Armor.registerFuncs("nightvisionGoggles", {
 			var coords = Player.getPosition();
 			var time = World.getWorldTime()%24000;
 			if(World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000){
-				Entity.addEffect(player, MobEffect.blindness, 1, 25);
+				Entity.addEffect(Player.get(), MobEffect.blindness, 1, 25);
 			}
-			Entity.addEffect(player, MobEffect.nightVision, 1, 225);
+			Entity.addEffect(Player.get(), MobEffect.nightVision, 1, 225);
 			if(World.getThreadTime()%20==0){
 				slot.data = Math.min(slot.data+20, maxDamage);
 				return true;

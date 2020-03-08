@@ -38,7 +38,7 @@ var guiFluidDistributor = new UI.StandartWindow({
 	elements: {
 		"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, value: 0, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE, isValid: function(id, count, data){
-			return LiquidRegistry.getFullItem(id, data, "water")? true : false;
+			return LiquidLib.getFullItem(id, data, "water")? true : false;
 		}},
 		"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE, isValid: function(){return false;}},
 		"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "fluid_distributor_button", scale: GUI_SCALE, clicker: {
@@ -70,7 +70,9 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 		this.liquidStorage.setLimit(null, 1);
 		this.renderModel();
 	},
-
+	
+	addLiquidToItem: MachineRegistry.addLiquidToItem,
+	
 	tick: function(){
 		if(this.data.inverted){
 			this.container.setText("text2", Translation.translate("Concentrate"));
@@ -78,21 +80,13 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 			this.container.setText("text2", Translation.translate("Distribute"));
 		}
 		
-		var liquidStor = this.liquidStorage;
-		var liquid = liquidStor.getLiquidStored();
+		var storage = this.liquidStorage;
+		var liquid = storage.getLiquidStored();
 		var slot1 = this.container.getSlot("slot1");
 		var slot2 = this.container.getSlot("slot2");
-		var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, liquid);
-		if(full && liquidStor.getAmount(liquid) >= 1 && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)){
-			liquidStor.getLiquid(liquid, 1);
-			slot1.count--;
-			slot2.id = full.id;
-			slot2.data = full.data;
-			slot2.count++;
-			this.container.validateSlot("slot1");
-		}
+		this.addLiquidToItem(liquid, slot1, slot2);
 		
-		liquid = liquidStor.getLiquidStored();
+		liquid = storage.getLiquidStored();
 		if(liquid){
 			var input = StorageInterface.getNearestLiquidStorages(this, this.data.meta, !this.data.inverted);
 			for(var side in input){
@@ -100,7 +94,7 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 			}
 		}
 		
-		liquidStor.updateUiScale("liquidScale", liquid);
+		storage.updateUiScale("liquidScale", liquid);
 	},
 	
 	wrenchClick: function(id, count, data, coords){
@@ -125,7 +119,7 @@ StorageInterface.createInterface(BlockID.fluidDistributor, {
 		"slot2": {output: true}
 	},
 	isValidInput: function(item){
-		return LiquidRegistry.getFullItem(item.id, item.data, "water")? true : false;
+		return LiquidLib.getFullItem(item.id, item.data, "water")? true : false;
 	},
 	canReceiveLiquid: function(liquid, side){
 		let data = this.tileEntity.data;

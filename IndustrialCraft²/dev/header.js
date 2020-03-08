@@ -26,9 +26,6 @@ const GUI_SCALE = 3.2;
 const fallVelocity = -0.0784;
 var player;
 
-// square lava texture for geothermal generator ui.
-LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
-
 // import values
 Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
 Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");

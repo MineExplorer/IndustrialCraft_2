@@ -298,6 +298,66 @@ var MachineRegistry = {
 		return add;
 	},
 	
+	getLiquidFromItem: function(liquid, inputItem, outputItem, hand){
+		if(hand) outputItem = {id: 0, count: 0, data: 0};
+		var empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
+		if(empty && (!liquid || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid)){
+			if(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0){
+				var liquidLimit = this.liquidStorage.getLimit(empty.liquid);
+				var storedAmount = this.liquidStorage.getAmount(liquid).toFixed(3);
+				var count = Math.min(hand? inputItem.count : 1, parseInt((liquidLimit - storedAmount) / empty.amount));
+				if(count > 0){
+					this.liquidStorage.addLiquid(empty.liquid, empty.amount * count);
+					inputItem.count -= count;
+					outputItem.id = empty.id;
+					outputItem.data = empty.data;
+					outputItem.count += count;
+					if(!hand) this.container.validateAll();
+				}
+				else if(inputItem.count == 1 && empty.storage){
+					var amount = Math.min(liquidLimit - storedAmount, empty.amount);
+					this.liquidStorage.addLiquid(empty.liquid, amount);
+					inputItem.data += amount * 1000;
+				}
+				if(hand){
+					if(outputItem.id){
+						Player.addItemToInventory(outputItem.id, outputItem.count, outputItem.data);
+					}
+					if(inputItem.count == 0) inputItem.id = inputItem.data = 0;
+					Player.setCarriedItem(inputItem.id, inputItem.count, inputItem.data);
+					return true;
+				}
+			}
+		}
+	},
+	
+	addLiquidToItem: function(liquid, inputItem, outputItem){
+		var amount = this.liquidStorage.getAmount(liquid).toFixed(3);
+		if(amount > 0){
+			var full = LiquidLib.getFullItem(inputItem.id, inputItem.data, liquid);
+			if(full && (outputItem.id == full.id && outputItem.data == full.data && outputItem.count < Item.getMaxStack(full.id) || outputItem.id == 0)){
+				if(amount >= full.amount){
+					this.liquidStorage.getLiquid(liquid, full.amount);
+					inputItem.count--;
+					outputItem.id = full.id;
+					outputItem.data = full.data;
+					outputItem.count++;
+					this.container.validateAll();
+				}
+				else if(inputItem.count == 1 && full.storage){
+					if(inputItem.id == full.id){
+						amount = this.liquidStorage.getLiquid(liquid, full.amount);
+						inputItem.data -= amount * 1000;
+					} else {
+						amount = this.liquidStorage.getLiquid(liquid, full.storage);
+						inputItem.id = full.id;
+						inputItem.data = (full.storage - amount)*1000;
+					}
+				}
+			}
+		}
+	},
+	
 	isValidEUItem: function(id, count, data, container){
 		var level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidItem(id, "Eu", level);

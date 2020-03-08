@@ -33,6 +33,12 @@ ItemName = {
 		});
 	},
 	
+	addStoredLiquidTooltip: function(id){
+		Item.registerNameOverrideFunction(id, function(item, name){
+			return name += "\n§7Stored: " + (1000 - item.data) + " mB";
+		});
+	},
+	
 	showBlockStorage: function(name, tier, capacity){
 		var tierText = "§7" + Translation.translate("Power Tier: ") + tier;
 		tierText = this.getTooltip(name, tierText);

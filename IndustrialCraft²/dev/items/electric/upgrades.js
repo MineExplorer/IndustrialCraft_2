@@ -198,8 +198,8 @@ Item.registerUseFunction("upgradeMFSU", function(coords, item, block){
 		var tile = World.getTileEntity(coords.x ,coords.y, coords.z);
 		var data = tile.data;
 		tile.selfDestroy();
-		World.setBlock(coords.x ,coords.y, coords.z, BlockID.storageMFSU, 0);
-		block = World.addTileEntity(coords.x ,coords.y, coords.z);
+		World.setBlock(coords.x, coords.y, coords.z, BlockID.storageMFSU, 0);
+		block = World.addTileEntity(coords.x, coords.y, coords.z);
 		block.data = data;
 		TileRenderer.mapAtCoords(coords.x, coords.y, coords.z, BlockID.storageMFSU, data.meta);
 		Player.decreaseCarriedItem(1);

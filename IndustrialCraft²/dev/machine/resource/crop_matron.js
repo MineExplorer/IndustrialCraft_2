@@ -100,7 +100,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
 
         var slot1 = this.container.getSlot("slotWaterIn");
 		var slot2 = this.container.getSlot("slotWaterOut");
-		this.getLiquidFromItem("lava", slot1, slot2);
+		this.getLiquidFromItem("water", slot1, slot2);
 		
         if(this.data.energy >= 31){
             this.scan();

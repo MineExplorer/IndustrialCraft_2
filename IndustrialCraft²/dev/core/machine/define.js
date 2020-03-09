@@ -301,7 +301,7 @@ var MachineRegistry = {
 	getLiquidFromItem: function(liquid, inputItem, outputItem, hand){
 		if(hand) outputItem = {id: 0, count: 0, data: 0};
 		var empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
-		if(empty && (!liquid || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid)){
+		if(empty && (!liquid && this.interface.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid)){
 			if(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0){
 				var liquidLimit = this.liquidStorage.getLimit(empty.liquid);
 				var storedAmount = this.liquidStorage.getAmount(liquid).toFixed(3);

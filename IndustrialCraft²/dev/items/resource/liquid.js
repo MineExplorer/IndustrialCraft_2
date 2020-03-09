@@ -3,4 +3,5 @@ LiquidRegistry.registerLiquid("biogas", "Biogas", ["liquid_biogas", "liquid_biog
 LiquidRegistry.registerLiquid("coolant", "Coolant", ["liquid_coolant", "liquid_coolant_110x94"]);
 
 LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_55x47");
+LiquidRegistry.getLiquidData("water").uiTextures.push("gui_water_texture_47x24");
 LiquidRegistry.getLiquidData("water").uiTextures.push("gui_water_texture_55x47");

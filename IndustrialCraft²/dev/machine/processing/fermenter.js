@@ -43,12 +43,12 @@ var guiFermenter = new UI.StandartWindow({
 		"biogasScale": {type: "scale", x: 771, y: 108, direction: 1, value: .5, bitmap: "liquid_biogas", scale: GUI_SCALE},
 		"biomassScale": {type: "scale", x: 483, y: 179, direction: 1, value: .5, bitmap: "biomass_scale", scale: GUI_SCALE},
 		"slotBiomass0": {type: "slot", x: 400, y: 162, isValid: function(id, count, data){
-            return LiquidRegistry.getItemLiquid(id, data) == "biomass";
+            return LiquidLib.getItemLiquid(id, data) == "biomass";
         }},
 		"slotBiomass1": {type: "slot", x: 400, y: 222, isValid: function(){return false;}},
 		"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "black_border_slot", isValid: function(){return false;}},
 		"slotBiogas0": {type: "slot", x: 832, y: 155, isValid: function(id, count, data){
-            return LiquidRegistry.getFullItem(id, data, "biogas") ? true : false;
+            return LiquidLib.getFullItem(id, data, "biogas") ? true : false;
         }},
 		"slotBiogas1": {type: "slot", x: 832, y: 215, isValid: function(){return false;}},
 		"slotUpgrade1": {type: "slot", x: 765, y: 290, isValid: UpgradeAPI.isValidUpgrade},
@@ -87,36 +87,20 @@ MachineRegistry.registerPrototype(BlockID.icFermenter, {
 		this.renderModel();
 	},
 	
-	checkLiquidSlots: function(){
-		var storage = this.liquidStorage;
-		
-		var slot1 = this.container.getSlot("slotBiomass0");
-		var slot2 = this.container.getSlot("slotBiomass1");
-		if(storage.getAmount("biomass") <= 9){
-			var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
-			if(empty && empty.liquid == "biomass" && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
-				storage.addLiquid("biomass", 1);
-				slot1.count--;
-				slot2.id = empty.id;
-				slot2.data = empty.data;
-				slot2.count++;
-				this.container.validateSlot("slotBiomass0");
-			}
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	addLiquidToItem: MachineRegistry.addLiquidToItem,
+	
+	click: function(id, count, data, coords){
+		var liquid = this.liquidStorage.getLiquidStored();
+		if(Entity.getSneaking(player) && this.getLiquidFromItem("biogas", {id: id, count: count, data: data}, null, true)){
+			return true;
 		}
-		
-		var slot1 = this.container.getSlot("slotBiogas0");
-		var slot2 = this.container.getSlot("slotBiogas1");
-		if(storage.getAmount("biogas") >= 1){
-			var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, "biogas");
-			if(full && (slot2.id == full.id && slot2.data == full.data && slot2.count < 64 || slot2.id == 0)){
-				storage.getLiquid("biogas", 1);
-				slot1.count--;
-				slot2.id = full.id;
-				slot2.data = full.data;
-				slot2.count++;
-				this.container.validateSlot("slotBiogas0");
-			}
+		if(ICTool.isValidWrench(id, data, 10)){
+			if(this.setFacing(coords))
+				ICTool.useWrench(id, data, 10);
+			return true;
 		}
+		return false;
 	},
 	
     tick: function(){
@@ -143,7 +127,13 @@ MachineRegistry.registerPrototype(BlockID.icFermenter, {
 			}
 		}
 		
-		this.checkLiquidSlots();
+		var slot1 = this.container.getSlot("slotBiomass0");
+		var slot2 = this.container.getSlot("slotBiomass1");
+		this.getLiquidFromItem("biomass", slot1, slot2);
+		
+		var slot1 = this.container.getSlot("slotBiogas0");
+		var slot2 = this.container.getSlot("slotBiogas1");
+		this.addLiquidToItem("biogas", slot1, slot2);
 		
 		this.container.setScale("progressScale", this.data.progress / 4000);
 		this.container.setScale("fertilizerScale", this.data.fertilizer / 25);
@@ -164,7 +154,7 @@ MachineRegistry.registerPrototype(BlockID.icFermenter, {
 		return 0;
 	},
 	
-	renderModel: MachineRegistry.renderModelWith6Sides,
+	renderModel: MachineRegistry.renderModelWith6Sides
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.icFermenter, true);

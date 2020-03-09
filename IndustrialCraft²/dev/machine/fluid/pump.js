@@ -42,7 +42,7 @@ var guiPump = new UI.StandartWindow({
 		"slotEnergy": {type: "slot", x: 400, y: 50 + 39*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
 		"slotLiquid1": {type: "slot", x: 400 + 91*GUI_SCALE, y: 50 + 12*GUI_SCALE,
 			isValid: function(id, count, data){
-				return LiquidRegistry.getFullItem(id, data, "water")? true : false;
+				return LiquidLib.getFullItem(id, data, "water")? true : false;
 			}
 		},
 		"slotLiquid2": {type: "slot", x: 400 + 125*GUI_SCALE, y: 50 + 29*GUI_SCALE, isValid: function(){return false;}},
@@ -86,6 +86,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 	},
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
+	addLiquidToItem: MachineRegistry.addLiquidToItem,
 	
 	init: function(){
 		this.liquidStorage.setLimit("water", 8);
@@ -117,14 +118,13 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		}
 		return null;
 	},
-
+	
 	tick: function(){
 		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
-		var liquidStor = this.liquidStorage;
-		var liquid = liquidStor.getLiquidStored();
+		var liquid = this.liquidStorage.getLiquidStored();
 		if(this.y > 0 && this.liquidStorage.getAmount(liquid) <= 7 && this.data.energy >= this.data.energy_consumption){
 			if(this.data.progress == 0){
 				this.data.coords = this.recursiveSearch(liquid, this.x, this.y-1, this.z, {});
@@ -140,7 +140,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 					liquid = this.getLiquidType(liquid, block);
 					if(liquid && block.data == 0){
 						World.setBlock(coords.x, coords.y, coords.z, 0);
-						liquidStor.addLiquid(liquid, 1);
+						this.liquidStorage.addLiquid(liquid, 1);
 					}
 					this.data.progress = 0;
 				}
@@ -155,22 +155,14 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");
-		var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, liquid);
-		if(full && liquidStor.getAmount(liquid) >= 1 && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)){
-			liquidStor.getLiquid(liquid, 1);
-			slot1.count--;
-			slot2.id = full.id;
-			slot2.data = full.data;
-			slot2.count++;
-			this.container.validateAll();
-		}
+		this.addLiquidToItem(liquid, slot1, slot2);
 		
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
-		liquidStor.updateUiScale("liquidScale", liquid);
+		this.liquidStorage.updateUiScale("liquidScale", liquid);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 
@@ -189,7 +181,7 @@ StorageInterface.createInterface(BlockID.pump, {
 		"slotLiquid2": {output: true}
 	},
 	isValidInput: function(item){
-		return LiquidRegistry.getFullItem(item.id, item.data, "water")? true : false;
+		return LiquidLib.getFullItem(item.id, item.data, "water")? true : false;
 	},
 	canReceiveLiquid: function(liquid, side){ return false; },
 	canTransportLiquid: function(liquid, side){ return true; }

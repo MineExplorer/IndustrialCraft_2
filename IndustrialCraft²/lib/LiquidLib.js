@@ -1,9 +1,59 @@
 LIBRARY({
 	name: "LiquidLib",
-	version: 1,
+	version: 2,
 	shared: true,
 	api: "CoreEngine"
 });
+
+var LiquidLib = {
+	itemData: {},
+	
+	registerItem: function(liquid, emptyId, fullId, storage){
+		this.itemData[fullId] = {id: emptyId, data: 0, liquid: liquid, storage: storage};
+		Item.setMaxDamage(fullId, storage);
+		if(storage == 1000) LiquidRegistry.registerItem(liquid, {id: emptyId, data: 0}, {id: fullId, data: -1});
+	},
+	
+	getItemLiquid: function(id, data){
+		var empty = this.itemData[id];
+		if(empty){
+			return empty.liquid;
+		}
+		return LiquidRegistry.getItemLiquid(id, data);
+	},
+	
+	getEmptyItem: function(id, data){
+		var empty = LiquidRegistry.getEmptyItem(id, data);
+		var emptyData = this.itemData[id];
+		if(empty){
+			var itemData = {id: empty.id, data: empty.data, liquid: empty.liquid};
+			if(emptyData){
+				itemData.storage = emptyData.storage;
+				itemData.amount = (emptyData.storage - data) / 1000;
+			} else {
+				itemData.amount = 1;
+			}
+			return itemData;
+		}
+		return null;
+	},
+	
+	getFullItem: function (id, data, liquid) {
+		for(var i in this.itemData){
+			var emptyData = this.itemData[i];
+			if(emptyData.liquid == liquid && (id == parseInt(i) && data > 0 || emptyData.id == id)){
+				var fullData = {id: parseInt(i), data: 0, amount: (data || emptyData.storage) / 1000, storage: emptyData.storage / 1000};
+				return fullData;
+			}
+		}
+		var full = LiquidRegistry.getFullItem(id, data, liquid);
+		if(full){
+			var fullData = {id: full.id, data: full.data, amount: 1};
+			return fullData;
+		}
+		return null;
+	}
+}
 
 function LiquidTank(tileEntity, name, limit){
 	this.tileEntity = tileEntity;
@@ -90,4 +140,5 @@ function LiquidTank(tileEntity, name, limit){
 	}
 }
 
+EXPORT("LiquidLib", LiquidLib);
 EXPORT("LiquidTank", LiquidTank);

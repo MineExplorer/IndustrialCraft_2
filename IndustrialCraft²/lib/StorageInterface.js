@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "StorageInterface",
-	version: 3,
+	version: 5,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -296,7 +296,7 @@ let StorageInterface = {
 			let inputSide = outputSide + Math.pow(-1, outputSide);
 			let inputStorage = input.interface || input.liquidStorage;
 			let outputStorage = output.interface || output.liquidStorage;
-			if(!input.interface && inputStorage.getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT || input.interface.canReceiveLiquid(liquid, inputSide)){
+			if(!input.interface && inputStorage.getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT || input.interface && input.interface.canReceiveLiquid(liquid, inputSide)){
 				let amount = outputStorage.getLiquid(liquid, maxAmount);
 				amount = inputStorage.addLiquid(liquid, amount);
 				outputStorage.getLiquid(liquid, -amount);

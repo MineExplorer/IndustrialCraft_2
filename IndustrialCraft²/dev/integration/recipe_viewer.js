@@ -168,7 +168,57 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 			return list;
 		}
 	});
-
+	
+	
+	RecipeViewer.registerRecipeType("icpe_canner", {
+		contents: {
+			icon: BlockID.canner,
+			drawing: [
+				{type: "bitmap", x: 200, y: 50, bitmap: "canner_background_recipe", scale: 6},
+				{type: "bitmap", x: 194, y: 216, bitmap: "liquid_bar", scale: 6},
+				{type: "bitmap", x: 662, y: 216, bitmap: "liquid_bar", scale: 6}
+			],
+			elements: {
+				input0: {type: "slot", x: 200, y: 50, size: 108, bitmap: "default_slot"},
+				input1: {type: "slot", x: 434, y: 212, size: 108, bitmap: "canner_slot_source_0"},
+				output0: {type: "slot", x: 668, y: 50, size: 108, bitmap: "default_slot"}
+			}
+		},
+		getList: function(id, data, isUsage){
+			let list = [];
+			let recipe = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+			let result;
+			if(isUsage){
+				result = MachineRecipeRegistry.getRecipeResult("solidCanner", id);
+				if(result){
+					return [{
+						input: [{id: id, count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
+						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+					}];
+				}
+				for(let key in recipe){
+					result = recipe[key];
+					if(result.storage[0] == id){
+						list.push({
+							input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
+							output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+						});
+					}
+				}
+				return list;
+			}
+			for(let key in recipe){
+				result = recipe[key];
+				if(result.result[0] == id){
+					list.push({
+						input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
+						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+					});
+				}
+			}
+			return list;
+		}
+	});
 
 	let iconMetalFormer = [ItemID.craftingHammer, ItemID.cutter, ItemID.cableCopper0];
 

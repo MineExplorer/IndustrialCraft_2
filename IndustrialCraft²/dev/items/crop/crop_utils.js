@@ -1,10 +1,6 @@
 IDRegistry.genItemID("fertilizer");
 Item.createItem("fertilizer", "Fertilizer", {name: "fertilizer"});
 
-IDRegistry.genItemID("hydrationCell");
-Item.createItem("hydrationCell", "Hydration Cell", {name: "hydration_cell"}, {stack: 1});
-Item.setMaxDamage(ItemID.hydrationCell, 1000);
-
 IDRegistry.genItemID("weedEx");
 Item.createItem("weedEx", "Weed EX", {name: "weed_ex"}, {stack: 1});
 Item.setMaxDamage(ItemID.weedEx, 10);

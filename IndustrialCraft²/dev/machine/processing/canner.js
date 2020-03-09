@@ -109,8 +109,8 @@ function isValidCannerCan(id, data, tile){
 			if(recipes[i].storage[0] == id) return true;
 		}
 	}
-	if(tile.data.mode == 1){
-		return LiquidRegistry.getEmptyItem(id, data) ? true : false;
+	if(tile.data.mode == 1 || tile.data.mode == 3){
+		return LiquidLib.getEmptyItem(id, data) ? true : false;
 	}
 	if(tile.data.mode == 2){
 		return LiquidRegistry.getFullItem(id, data, "water") ? true : false;
@@ -214,15 +214,15 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 		break;
 		case 1:
 			var liquid = this.outputTank.getLiquidStored();
-			var empty = LiquidRegistry.getEmptyItem(canSlot.id, canSlot.data);
-			if(empty && (!liquid || empty.liquid == liquid) && this.outputTank.getAmount() <= 7){
+			var empty = LiquidLib.getEmptyItem(canSlot.id, canSlot.data);
+			if(empty && (!liquid || empty.liquid == liquid) && this.outputTank.getAmount() <= 8 - empty.amount){
 				if(this.data.energy >= this.data.energy_consumption && (resultSlot.id == empty.id && resultSlot.data == empty.data && resultSlot.count < Item.getMaxStack(empty.id) || resultSlot.id == 0)){
 					this.data.energy -= this.data.energy_consumption;
 					this.data.progress += 1/this.data.work_time;
 					newActive = true;
 				}
 				if(this.data.progress.toFixed(3) >= 1){
-					this.outputTank.addLiquid(empty.liquid, 1);
+					this.outputTank.addLiquid(empty.liquid, empty.amount);
 					canSlot.count--;
 					resultSlot.id = empty.id;
 					resultSlot.data = empty.data;

@@ -59,7 +59,6 @@ TileEntity.registerPrototype(BlockID.crop, {
             if (!this.crop && !this.data.crossingBase && id == ItemID.cropStick){
                 this.data.crossingBase = true;
                 this.data.dirty = true;
-
                 Player.decreaseCarriedItem(1);
                 this.updateRender();
                 return;
@@ -69,7 +68,18 @@ TileEntity.registerPrototype(BlockID.crop, {
                 Player.decreaseCarriedItem(1);
                 return;
             }
-            if (this.applyHydration(id, data, true) || this.applyWeedEx(id, true)) {
+            if (id == ItemID.cellWater && count == 1) {
+				var amount = this.applyHydration(1000 - data);
+				if(amount > 0) {
+					if(data + amount >= 1000) {
+						Player.setCarriedItem(ItemID.cellEmpty, 1, 0);
+					} else {
+						Player.setCarriedItem(id, 1, data + amount);
+					}
+				}
+				return;
+			}
+			if (this.applyWeedEx(id, true)) {
                 this.data.dirty = true;
                 return;
             }
@@ -447,19 +457,15 @@ TileEntity.registerPrototype(BlockID.crop, {
         return false;
     },
 	
-    applyHydration: function(id, data, manual){
-        if(id == ItemID.hydrationCell){
-            var limit = 200;
-            if (this.data.storageWater >= limit) return false;
-
-            var relativeAmount = limit - this.data.storageWater;
-            var amount = relativeAmount < 1000 - data ? relativeAmount : 1000 - data;
-            this.data.storageWater += amount;
-
-            if(manual) ToolAPI.breakCarriedTool(amount);
-            return amount;
-        }
-        return false;
+    applyHydration: function(amount){
+		var limit = 200;
+		if (this.data.storageWater >= limit) return 0;
+		
+		var relativeAmount = limit - this.data.storageWater;
+		amount = Math.min(relativeAmount, amount);
+		this.data.storageWater += amount;
+		
+		return amount;
     },
 	
     tryPlantIn: function(cropCardID, size, statGr, statGa, statRe, scan){

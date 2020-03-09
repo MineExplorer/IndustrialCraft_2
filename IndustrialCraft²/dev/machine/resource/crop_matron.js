@@ -52,7 +52,7 @@ var newGuiMatronObject = {
         "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "dust_slot", isValid: isFertilizer},
         "slotWeedEx0": {type: "slot", x: 441, y: 155, bitmap: "weedEx_slot", isValid: isWeedEx},
         "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "cell_slot", isValid: function(id, count, data){
-            return LiquidRegistry.getItemLiquid(id, data) == "water";
+            return LiquidLib.getItemLiquid(id, data) == "water";
         }},
         "slotWaterOut": {type: "slot", x: 441, y: 295, isValid: function(){
             return false;
@@ -92,23 +92,16 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
 		this.liquidStorage.setLimit("water", 2);
 		this.renderModel();
     },
-
+	
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	
     tick: function(){
         StorageInterface.checkHoppers(this);
 
         var slot1 = this.container.getSlot("slotWaterIn");
 		var slot2 = this.container.getSlot("slotWaterOut");
-		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
-		if(empty && empty.liquid == "water"){
-			if(this.liquidStorage.getAmount("water") <=1 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
-				this.liquidStorage.addLiquid("water", 1);
-				slot1.count--;
-				slot2.id = empty.id;
-				slot2.data = empty.data;
-				slot2.count++;
-				this.container.validateAll();
-			}
-		}
+		this.getLiquidFromItem("water", slot1, slot2);
+		
         if(this.data.energy >= 31){
             this.scan();
             this.setActive(true);
@@ -149,8 +142,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
             }
             var liquidAmount = this.liquidStorage.getAmount("water");
             if(liquidAmount > 0){
-                var data = Math.max(1 - liquidAmount, 0) * 1000;
-                var amount = tileentity.applyHydration(ItemID.hydrationCell, data, false);
+                amount = tileentity.applyHydration(liquidAmount);
                 if(amount > 0){
                     this.liquidStorage.getLiquid("water", amount / 1000);
                 }
@@ -195,7 +187,7 @@ StorageInterface.createInterface(BlockID.cropMatron, {
 			return item.id == ItemID.weedEx;
         }},
         "slotWaterIn": {input: true, isValid: function(item){
-			return LiquidRegistry.getItemLiquid(item.id, item.data) == "water";
+			return LiquidLib.getItemLiquid(item.id, item.data) == "water";
         }},
         "slotWaterOut": {output: true}
     },

@@ -61,6 +61,8 @@ Callback.addCallback("PreLoaded", function(){
 		"263:0": {id: ItemID.dustCoal, count: 1, data: 0},
 		264: {id: ItemID.dustDiamond, count: 1, data: 0},
 		"351:4": {id: ItemID.dustLapis, count: 1, data: 0},
+		375: {id: ItemID.grinPowder, count: 2, data: 0},
+		394: {id: ItemID.grinPowder, count: 1, data: 0},
 		// other materials
 		1: {id: 4, count: 1, data: 0},
 		4: {id: 12, count: 1, data: 0},

@@ -239,8 +239,8 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 			var resetProgress = true;
 			var liquid = this.inputTank.getLiquidStored();
 			if(liquid){
-				var full = LiquidRegistry.getFullItem(canSlot.id, canSlot.data, liquid);
-				if(full && this.inputTank.getAmount() >= 1){
+				var full = LiquidLib.getFullItem(canSlot.id, canSlot.data, liquid);
+				if(full && this.inputTank.getAmount() >= full.storage){
 					resetProgress = false;
 					if(this.data.energy >= this.data.energy_consumption && (resultSlot.id == full.id && resultSlot.data == full.data && resultSlot.count < Item.getMaxStack(full.id) || resultSlot.id == 0)){
 						this.data.energy -= this.data.energy_consumption;
@@ -248,7 +248,7 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 						newActive = true;
 					}
 					if(this.data.progress.toFixed(3) >= 1){
-						this.inputTank.getLiquid(liquid, 1);
+						this.inputTank.getLiquid(liquid, full.storage);
 						canSlot.count--;
 						resultSlot.id = full.id;
 						resultSlot.data = full.data;

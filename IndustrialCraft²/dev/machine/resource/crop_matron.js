@@ -95,6 +95,12 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
 	
 	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
 	
+	click: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			return this.getLiquidFromItem("water", {id: id, count: count, data: data}, null, true);
+		}
+	},
+	
     tick: function(){
         StorageInterface.checkHoppers(this);
 

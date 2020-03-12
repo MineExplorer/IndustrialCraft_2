@@ -315,6 +315,7 @@ AgricultureAPI.registerCropCard({
 
 AgricultureAPI.registerCropCard({
     id: "cocoa",
+    texture: "ic2_cocoa",
     attributes: ["Brown", "Food", "Stem"],
     properties: {
         tier: 3,

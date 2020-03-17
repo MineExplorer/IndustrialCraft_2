@@ -48,7 +48,7 @@ var guiInductionFurnace = new UI.StandartWindow({
 		"slotUpgrade1": {type: "slot", x: 900, y: 80, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade2": {type: "slot", x: 900, y: 144, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade3": {type: "slot", x: 900, y: 208, isValid: UpgradeAPI.isValidUpgrade},
-		"textInfo1": {type: "text", x: 402, y: 143, width: 100, height: 30, text: "Heat:"},
+		"textInfo1": {type: "text", x: 402, y: 143, width: 100, height: 30, text: Translation.translate("Heat:")},
 		"textInfo2": {type: "text", x: 402, y: 173, width: 100, height: 30, text: "0%"},
 	}
 });

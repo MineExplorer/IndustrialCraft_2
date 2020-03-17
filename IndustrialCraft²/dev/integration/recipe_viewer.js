@@ -389,7 +389,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 		},
 		onOpen: function(elements, data){
 			let elem = elements.get("textHeat");
-			elem.onBindingUpdated("text", data ? "Heat: " + data.heat : "");
+			elem.onBindingUpdated("text", data ? Translation.translate("Heat: ") + data.heat : "");
 		}
 	});
 

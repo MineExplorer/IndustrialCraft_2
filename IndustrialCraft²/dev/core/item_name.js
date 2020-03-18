@@ -103,8 +103,8 @@ ItemName = {
 		var sideNames = {
 			en: [
 				"first valid",
-				"down",
-				"up",
+				"bottom",
+				"top",
 				"north",
 				"south",
 				"east",

@@ -74,13 +74,13 @@ function registerChargingItem(nameId, tier){
 	Item.registerNameOverrideFunction(id, function(item, name){
 		var mode = item.extra? item.extra.getInt("mode") : 0;
 		if(mode == 0){
-			var tooltip = "Mode: Enabled";
+			var tooltip = Translation.translate("Mode: Enabled");
 		}
 		if(mode == 1){
-			var tooltip = "Mode: Charge items not in hand";
+			var tooltip = Translation.translate("Mode: Charge items not in hand)";
 		}
 		if(mode == 2){
-			var tooltip = "Mode: Disabled";
+			var tooltip = Translation.translate("Mode: Disabled");
 		}
 		tooltip = ItemName.getTooltip(name, tooltip);
 		name = ItemName.showItemStorage(item, name);
@@ -96,13 +96,13 @@ function chargingItemSwitch(item){
 	var mode = (extra.getInt("mode")+1)%3;
 	extra.putInt("mode", mode);
 	if(mode == 0){
-		Game.message("Mode: Enabled");
+		Game.message(Translation.translate("Mode: Enabled"));
 	}
 	if(mode == 1){
-		Game.message("Mode: Charge items not in hand");
+		Game.message(Translation.translate("Mode: Charge items not in hand"));
 	}
 	if(mode == 2){
-		Game.message("Mode: Disabled");
+		Game.message(Translation.translate("Mode: Disabled"));
 	}
 	Player.setCarriedItem(item.id, 1, item.data, extra);
 }

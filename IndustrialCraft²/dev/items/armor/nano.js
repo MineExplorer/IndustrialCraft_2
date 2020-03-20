@@ -99,7 +99,7 @@ var NANO_ARMOR_FUNCS = {
 			if(height < 22){
 				if(height < 17){
 					var damage = Math.floor(height) - 3;
-				}else{
+				} else {
 					var damage = Math.ceil(height)- 3;
 				}
 			}
@@ -108,8 +108,7 @@ var NANO_ARMOR_FUNCS = {
 				damage = Math.min(Math.min(params.damage, 9), Math.floor((maxDamage - slot.data)/2000));
 				if(params.damage > damage){
 					Entity.setHealth(player, Entity.getHealth(player) + damage);
-				}
-				else{
+				} else {
 					Game.prevent();
 				}
 				slot.data = Math.min(slot.data + damage * 2000, maxDamage);

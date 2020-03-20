@@ -96,7 +96,7 @@ var QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params, slot, index, maxDamage){
 		var type = params.type;
 		if(type==2 || type==3 || type==11){
-			var energy = params.damage*2500;
+			var energy = params.damage * 2500;
 			slot.data = Math.min(slot.data + energy, maxDamage);
 		}
 		if(type==5 && (index==1 || index==3)){
@@ -107,7 +107,7 @@ var QUANTUM_ARMOR_FUNCS = {
 			if(height < 22){
 				if(height < 17){
 					var damage = Math.floor(height) - 3;
-				}else{
+				} else {
 					var damage = Math.ceil(height)- 3;
 				}
 			}
@@ -124,8 +124,7 @@ var QUANTUM_ARMOR_FUNCS = {
 				damage = Math.min(params.damage, Math.floor((maxDamage - slot.data)/2500));
 				if(params.damage > damage){
 					Entity.setHealth(player, Entity.getHealth(player) + damage);
-				}
-				else{
+				} else {
 					Game.prevent();
 				}
 				slot.data = slot.data + damage*2500;

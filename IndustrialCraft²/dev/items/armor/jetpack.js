@@ -13,7 +13,7 @@ UIbuttons.setArmorButton(ItemID.jetpack, "button_fly");
 UIbuttons.setArmorButton(ItemID.jetpack, "button_hover");
 
 Armor.registerFuncs("jetpack", {
-	hurt: function(params, item, index, maxDamage){
+	hurt: function(params, slot, index, maxDamage){
 		if(params.type==5){
 			var vel = Player.getVelocity().y;
 			var time = vel / -0.06;
@@ -21,7 +21,7 @@ Armor.registerFuncs("jetpack", {
 			if(height < 22){
 				if(height < 17){
 					var damage = Math.floor(height) - 3;
-				}else{
+				} else {
 					var damage = Math.ceil(height) - 3;
 				}
 			}

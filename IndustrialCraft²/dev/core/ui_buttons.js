@@ -114,24 +114,27 @@ var buttonContent = {
 		scale: 50,
 		clicker: {
 			onClick: function(){
-				var armor = Player.getArmorSlot(1);
-				var extra = armor.extra;
-				if(extra){
-					var hover = extra.getBoolean("hover");
+				var vel = Player.getVelocity();
+				if(Math.abs(vel.y - fallVelocity) >= 0.0001){
+					var armor = Player.getArmorSlot(1);
+					var extra = armor.extra;
+					if(extra){
+						var hover = extra.getBoolean("hover");
+					}
+					else{
+						var hover = false;
+						extra = new ItemExtraData();
+					}
+					if(hover){
+						extra.putBoolean("hover", false);
+						Game.message("§4" + Translation.translate("Hover mode disabled"));
+					}
+					else{
+						extra.putBoolean("hover", true);
+						Game.message("§2" + Translation.translate("Hover mode enabled"));
+					}
+					Player.setArmorSlot(1, armor.id, 1, armor.data, extra);
 				}
-				else{
-					var hover = false;
-					extra = new ItemExtraData();
-				}
-				if(hover){
-					extra.putBoolean("hover", false);
-					Game.message("§4" + Translation.translate("Hover mode disabled"));
-				}
-				else{
-					extra.putBoolean("hover", true);
-					Game.message("§2" + Translation.translate("Hover mode enabled"));
-				}
-				Player.setArmorSlot(1, armor.id, 1, armor.data, extra);
 			}
 		}
 	},

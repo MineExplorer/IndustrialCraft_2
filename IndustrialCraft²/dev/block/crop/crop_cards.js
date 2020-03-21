@@ -20,7 +20,8 @@ AgricultureAPI.registerCropCard({
     getOptimalHarvestSize: function(crop){return 1},
     canBeHarvested: function(tileentity){return false},
     getGrowthDuration: function(){return 300},
-    getGain: function(tileentity){return null}
+    getGain: function(tileentity){return null},
+    onLeftClick: function(te){return false}
 });
 
 AgricultureAPI.registerCropCard({

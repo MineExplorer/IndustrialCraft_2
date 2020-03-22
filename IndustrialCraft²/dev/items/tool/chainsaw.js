@@ -58,7 +58,7 @@ Callback.addCallback("tick", function(){
 	let item = Player.getCarriedItem();
 	let tool = ToolAPI.getToolData(item.id);
 	let energyStored = Item.getMaxDamage(item.id) - item.data;
-	if(tool && tool.soundType == "chainsaw" && energyStored >= this.toolMaterial.energyPerUse){
+	if(tool && tool.soundType == "chainsaw" && energyStored >= tool.toolMaterial.energyPerUse){
 		if(!chainsawLoop.isPlaying()){
 			chainsawLoop.start();
 		}

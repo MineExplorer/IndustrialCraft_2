@@ -3,10 +3,10 @@ IDRegistry.genItemID("quantumChestplate");
 IDRegistry.genItemID("quantumLeggings");
 IDRegistry.genItemID("quantumBoots");
 
-Item.createArmorItem("quantumHelmet", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 5, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 10000, texture: "armor/quantum_2.png", isTech: true});
-Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumHelmet", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 5, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 10000000, texture: "armor/quantum_2.png", isTech: true});
+Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
 
 ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 8192, 4, "armor", true);
 ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 8192, 4, "armor", true);
@@ -28,10 +28,10 @@ IDRegistry.genItemID("quantumChestplateUncharged");
 IDRegistry.genItemID("quantumLeggingsUncharged");
 IDRegistry.genItemID("quantumBootsUncharged");
 
-Item.createArmorItem("quantumHelmetUncharged", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 2, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumChestplateUncharged", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 10000, texture: "armor/quantum_2.png", isTech: true});
-Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumHelmetUncharged", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 2, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumChestplateUncharged", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 10000000, texture: "armor/quantum_2.png", isTech: true});
+Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
 
 ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 8192, 4, "armor");
 ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 8192, 4, "armor");
@@ -194,7 +194,7 @@ var QUANTUM_ARMOR_FUNCS = {
 				var hover = extra? extra.getBoolean("hover") : false;
 				if(hover && slot.data < maxDamage){
 					var vel = Player.getVelocity();
-					if(Math.abs(vel.y - fallVelocity) < 0.0001){
+					if(vel.y.toFixed(4) == fallVelocity){
 						extra.putBoolean("hover", false);
 						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 						Game.message("§4" + Translation.translate("Hover mode disabled"));
@@ -213,7 +213,7 @@ var QUANTUM_ARMOR_FUNCS = {
 				var vel = Player.getVelocity();
 				var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z)
 				if(horizontalVel > 0.15){
-					if(Math.abs(vel.y - fallVelocity) < 0.0001){runTime++;}
+					if(vel.y.toFixed(4) == fallVelocity){runTime++;}
 				}
 				else{runTime = 0;}
 				if(runTime > 2 && !Player.getFlying()){

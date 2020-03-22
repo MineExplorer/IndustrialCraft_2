@@ -65,19 +65,42 @@ Callback.addCallback("PreLoaded", function(){
 	], ['#', ItemID.chargingCrystal, -1, 'x', ItemID.heatExchangerAdv, 1, 'b', ItemID.storageLapotronCrystal, -1], ChargeItemRegistry.transferEnergy);
 });
 
-var charging_items = {}
-
-function registerChargingItem(nameId, tier){
-	var id = ItemID[nameId];
-	charging_items[id] = tier;
-	Item.registerNoTargetUseFunction(nameId, chargingItemSwitch);
-	Item.registerNameOverrideFunction(id, function(item, name){
+var ChargingBattery = {
+	itemIDs: {},
+	
+	registerItem: function(nameID){
+		var id = ItemID[nameID];
+		this.itemIDs[id] = true;
+		Item.registerNoTargetUseFunction(nameID, this.switchFunction);
+		Item.registerNameOverrideFunction(id, this.getName);
+	},
+	
+	switchFunction: function(item){
+		var extra = item.extra;
+		if(!extra){
+			extra = new ItemExtraData();
+		}
+		var mode = (extra.getInt("mode")+1)%3;
+		extra.putInt("mode", mode);
+		if(mode == 0){
+			Game.message(Translation.translate("Mode: Enabled"));
+		}
+		if(mode == 1){
+			Game.message(Translation.translate("Mode: Charge items not in hand"));
+		}
+		if(mode == 2){
+			Game.message(Translation.translate("Mode: Disabled"));
+		}
+		Player.setCarriedItem(item.id, 1, item.data, extra);
+	},
+	
+	getName: function(item, name){
 		var mode = item.extra? item.extra.getInt("mode") : 0;
 		if(mode == 0){
 			var tooltip = Translation.translate("Mode: Enabled");
 		}
 		if(mode == 1){
-			var tooltip = Translation.translate("Mode: Charge items not in hand)";
+			var tooltip = Translation.translate("Mode: Charge items not in hand");
 		}
 		if(mode == 2){
 			var tooltip = Translation.translate("Mode: Disabled");
@@ -85,47 +108,27 @@ function registerChargingItem(nameId, tier){
 		tooltip = ItemName.getTooltip(name, tooltip);
 		name = ItemName.showItemStorage(item, name);
 		return name + tooltip;
-	});
+	}
 }
 
-function chargingItemSwitch(item){
-	var extra = item.extra;
-	if(!extra){
-		extra = new ItemExtraData();
-	}
-	var mode = (extra.getInt("mode")+1)%3;
-	extra.putInt("mode", mode);
-	if(mode == 0){
-		Game.message(Translation.translate("Mode: Enabled"));
-	}
-	if(mode == 1){
-		Game.message(Translation.translate("Mode: Charge items not in hand"));
-	}
-	if(mode == 2){
-		Game.message(Translation.translate("Mode: Disabled"));
-	}
-	Player.setCarriedItem(item.id, 1, item.data, extra);
-}
-
-registerChargingItem("chargingBattery", 1);
-registerChargingItem("chargingAdvBattery", 2);
-registerChargingItem("chargingCrystal", 3);
-registerChargingItem("chargingLapotronCrystal", 4);
+ChargingBattery.registerItem("chargingBattery");
+ChargingBattery.registerItem("chargingAdvBattery");
+ChargingBattery.registerItem("chargingCrystal");
+ChargingBattery.registerItem("chargingLapotronCrystal");
 
 function checkCharging(){
 	for(var i = 9; i < 45; i++){
 		var slot = Player.getInventorySlot(i);
-		var tier = charging_items[slot.id];
-		if(tier){
+		if(ChargingBattery.itemIDs[slot.id]){
 			var mode = slot.extra? slot.extra.getInt("mode") : 0;
-			if(mode == 2) continue;
-			var transfer = transferByTier[tier];
 			var maxDamage = Item.getMaxDamage(slot.id);
+			if(mode == 2 || slot.data == maxDamage) continue;
+			var chargeData = ChargeItemRegistry.getItemData(slot.id);
 			for(var index = 0; index < 9; index++){
 				if(mode == 1 && Player.getSelectedSlotId() == index) continue;
 				var item = Player.getInventorySlot(index);
 				if(!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)){
-					var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", maxDamage - slot.data, transfer*20, tier);
+					var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", maxDamage - slot.data, chargeData.transferLimit*20, chargeData.level);
 					if(energyAdd > 0){
 						slot.data += energyAdd;
 						Player.setInventorySlot(index, item.id, 1, item.data, item.extra);

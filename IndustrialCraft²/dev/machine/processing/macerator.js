@@ -179,7 +179,7 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 					this.startPlaySound();
 				}
 				if(this.data.progress.toFixed(3) >= 1){
-					sourceSlot.count--;
+					sourceSlot.count -= result.sourceCount || 1;
 					resultSlot.id = result.id;
 					resultSlot.data = result.data || 0;
 					resultSlot.count += result.count;

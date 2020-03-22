@@ -40,7 +40,7 @@ Armor.registerFuncs("jetpack", {
 		var hover = extra? extra.getBoolean("hover") : false;
 		if(hover && slot.data < maxDamage){
 			var vel = Player.getVelocity();
-			if(Math.abs(vel.y - fallVelocity) < 0.0001){
+			if(vel.y.toFixed(4) == fallVelocity){
 				extra.putBoolean("hover", false);
 				Player.setArmorSlot(index, slot.id, 1, slot.data, extra);
 				Game.message("§4" + Translation.translate("Hover mode disabled"));

@@ -115,7 +115,7 @@ var buttonContent = {
 		clicker: {
 			onClick: function(){
 				var vel = Player.getVelocity();
-				if(Math.abs(vel.y - fallVelocity) >= 0.0001){
+				if(vel.y.toFixed(4) == fallVelocity){
 					var armor = Player.getArmorSlot(1);
 					var extra = armor.extra;
 					if(extra){
@@ -147,7 +147,7 @@ var buttonContent = {
 		clicker: {
 			onClick: function(){
 				var armor = Player.getArmorSlot(3);
-				if(Item.getMaxDamage(armor.id) - armor.data >= 1000 && Math.abs(Player.getVelocity().y - fallVelocity) < 0.0001){
+				if(Item.getMaxDamage(armor.id) - armor.data >= 1000 && Player.getVelocity().y.toFixed(4) == fallVelocity){
 					Player.addVelocity(0, 1.4, 0);
 					Player.setArmorSlot(3, armor.id, 1, armor.data+1000);
 				}

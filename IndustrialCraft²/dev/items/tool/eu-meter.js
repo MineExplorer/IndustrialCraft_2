@@ -48,7 +48,7 @@ Callback.addCallback("LevelLoaded", function(){
 					EUReader.resetValues();
 				}
 			}},
-			"arrowButton0": {type: "button", x: 576, y: 226, bitmap: "geothermal_empty_liquid_slot", scale: 5.3, clicker: {
+			"arrowButton0": {type: "button", x: 576, y: 226, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					EUReader.mode = 0;
 					EUReader.resetValues();
@@ -57,7 +57,7 @@ Callback.addCallback("LevelLoaded", function(){
 					elements.textMode2.text = Translation.translate("EnergyIn");
 				}
 			}},
-			"arrowButton1": {type: "button", x: 640, y: 226, bitmap: "geothermal_empty_liquid_slot", scale: 5.3, clicker: {
+			"arrowButton1": {type: "button", x: 640, y: 226, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					EUReader.mode = 1;
 					EUReader.resetValues();
@@ -66,7 +66,7 @@ Callback.addCallback("LevelLoaded", function(){
 					elements.textMode2.text = Translation.translate("EnergyOut");
 				}
 			}},
-			"arrowButton2": {type: "button", x: 576, y: 290, bitmap: "geothermal_empty_liquid_slot", scale: 5.3, clicker: {
+			"arrowButton2": {type: "button", x: 576, y: 290, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					EUReader.mode = 2;
 					EUReader.resetValues();
@@ -75,7 +75,7 @@ Callback.addCallback("LevelLoaded", function(){
 					elements.textMode2.text = Translation.translate("EnergyGain");
 				}
 			}},
-			"arrowButton3": {type: "button", x: 640, y: 290, bitmap: "geothermal_empty_liquid_slot", scale: 5.3, clicker: {
+			"arrowButton3": {type: "button", x: 640, y: 290, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					EUReader.mode = 3;
 					EUReader.resetValues();

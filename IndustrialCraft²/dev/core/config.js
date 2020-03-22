@@ -13,6 +13,7 @@ let Config = {
 
 Config.reload();
 
+var player;
 Callback.addCallback("LevelLoaded", function(){
 	Config.reload();
 	player = Player.get();

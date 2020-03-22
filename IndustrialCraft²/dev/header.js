@@ -24,7 +24,6 @@ IMPORT("BackpackAPI");
 // constants
 const GUI_SCALE = 3.2;
 const fallVelocity = -0.0784;
-var player;
 
 // import values
 Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");

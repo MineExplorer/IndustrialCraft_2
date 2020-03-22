@@ -49,7 +49,7 @@ ToolType.chainsaw = {
 	},
 }
 
-ToolLib.setTool(ItemID.chainsaw, {energyPerUse: 60, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
+ToolLib.setTool(ItemID.chainsaw, {energyPerUse: 60, level: 3, efficiency: 16, damage: 6}, ToolType.chainsaw);
 
 let chainsawLoop = SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawIdle.ogg", true, 1);
 SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawStop.ogg", false, 1);
@@ -57,7 +57,8 @@ Callback.addCallback("tick", function(){
 	if(!Config.soundEnabled) {return;}
 	let item = Player.getCarriedItem();
 	let tool = ToolAPI.getToolData(item.id);
-	if(tool && tool.soundType == "chainsaw"){
+	let energyStored = Item.getMaxDamage(item.id) - item.data;
+	if(tool && tool.soundType == "chainsaw" && energyStored >= this.toolMaterial.energyPerUse){
 		if(!chainsawLoop.isPlaying()){
 			chainsawLoop.start();
 		}

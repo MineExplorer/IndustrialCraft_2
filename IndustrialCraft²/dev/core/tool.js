@@ -1,4 +1,4 @@
-var ICTool = {
+let ICTool = {
 	wrenchData: {},
 	
 	registerWrench: function(id, chance, energyOnUse){
@@ -10,7 +10,7 @@ var ICTool = {
 	},
 	
 	isValidWrench: function(id, data, damage){
-		var wrench = this.getWrenchData(id);
+		let wrench = this.getWrenchData(id);
 		if(wrench && (!wrench.energy || data + wrench.energy * damage <= Item.getMaxDamage(id))){
 			return true;
 		}
@@ -18,7 +18,7 @@ var ICTool = {
 	},
 	
 	useWrench: function(id, data, damage){
-		var wrench = this.getWrenchData(id);
+		let wrench = this.getWrenchData(id);
 		if(!wrench.energy){
 			ToolAPI.breakCarriedTool(damage);
 		}else{
@@ -30,7 +30,7 @@ var ICTool = {
 	addRecipe: function(result, data, tool){
 		data.push({id: tool, data: -1});
 		Recipes.addShapeless(result, data, function(api, field, result){
-			for (var i in field){
+			for (let i in field){
 				if (field[i].id == tool){
 					field[i].data++;
 					if (field[i].data >= Item.getMaxDamage(tool)){
@@ -45,12 +45,12 @@ var ICTool = {
 	},
 	
 	dischargeItem: function(item, consume){
-		var energy = 0;
-		var armor = Player.getArmorSlot(1);
-		var armorChargeData = ChargeItemRegistry.getItemData(armor.id);
-		var itemChargeLevel = ChargeItemRegistry.getItemData(item.id).level;
-		if(armorChargeData && armorChargeData.level >= itemChargeLevel){
-			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, consume, 100);
+		let energy = 0;
+		let armor = Player.getArmorSlot(1);
+		let armorChargeData = ChargeItemRegistry.getItemData(armor.id);
+		if(armorChargeData){
+			let itemChargeLevel = ChargeItemRegistry.getItemData(item.id).level;
+			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, consume, itemChargeLevel);
 			consume -= energy;
 		}
 		if(item.data + consume <= Item.getMaxDamage(item.id)){
@@ -75,7 +75,7 @@ var ICTool = {
 		Item.registerUseFunction(nameID, function(coords, item, block){
 			if((block.id==2 || block.id==3 || block.id==110 || block.id==243) && coords.side==1 && ICTool.useElectricItem(item, 50)){ 
 				World.setBlock(coords.x, coords.y, coords.z, 60);
-				World.playSoundAtEntity(Player.get(), "step.gravel", 1, 0.75);
+				World.playSoundAtEntity(Player.get(), "step.gravel", 1, 0.8);
 			}
 		});
 	},
@@ -103,7 +103,7 @@ var ICTool = {
 
 Callback.addCallback("DestroyBlockStart", function(coords, block){
 	if(MachineRegistry.machineIDs[block.id]){
-		var item = Player.getCarriedItem();
+		let item = Player.getCarriedItem();
 		if(ICTool.isValidWrench(item.id, item.data, 10)){
 			Block.setTempDestroyTime(block.id, 0);
 		}

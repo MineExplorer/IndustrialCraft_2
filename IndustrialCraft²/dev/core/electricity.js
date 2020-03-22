@@ -1,6 +1,5 @@
-var wireBurnoutFunc = function(){};
-if(Config.voltageEnabled){
-	wireBurnoutFunc = function(voltage){
+function wireBurnoutFunc(voltage){
+	if(Config.voltageEnabled){
 		for(var key in this.wireMap){
 			var coords = key.split(':');
 			var x = Math.floor(coords[0]), y = Math.floor(coords[1]), z = Math.floor(coords[2]);

@@ -26,7 +26,7 @@ IMPORT("BackpackAPI");
 const GUI_SCALE = 3.2;
 const fallVelocity = -0.0784;
 
-// import values
+// import functions
 Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
 Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
 Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");

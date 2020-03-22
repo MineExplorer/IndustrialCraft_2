@@ -25,7 +25,7 @@
     "count":25,
     "size":6,
     "minHeight":0,
-    "maxHeight":56
+    "maxHeight":52
   },
   "lead_ore":{
     "enabled":true,
@@ -44,6 +44,6 @@
   "iridium":{
     "chance":0.2,
     "minHeight":1,
-    "maxHeight":100
+    "maxHeight":64
   }
 }

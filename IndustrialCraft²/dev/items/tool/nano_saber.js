@@ -42,64 +42,81 @@ ToolAPI.registerSword(ItemID.nanoSaberActive, {level: 0, durability: NANO_SABER_
 	}
 });
 
-let nanoSaberActivationTime = 0;
-let nanoSaberStartSound = null;
-let nanoSaberIdleSound = null;
-Item.registerNoTargetUseFunction("nanoSaber", function(item){
-	if(item.data < NANO_SABER_DURABILITY){
-		Player.setCarriedItem(ItemID.nanoSaberActive, 1, item.data);
-		nanoSaberStartSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberPowerup.ogg");
-		nanoSaberActivationTime = World.getThreadTime();
-	}
-});
-
-Item.registerNoTargetUseFunction("nanoSaberActive", function(item){
-	if(nanoSaberActivationTime > 0){
-		let discharge = World.getThreadTime() - nanoSaberActivationTime;
-		item.data = Math.min(item.data + discharge*64, NANO_SABER_DURABILITY);
-		nanoSaberActivationTime = 0;
-	}
-	if(nanoSaberIdleSound){
-		nanoSaberIdleSound.stop();
-		nanoSaberIdleSound = null;
-	}
-	Player.setCarriedItem(ItemID.nanoSaber, 1, item.data);
-});
-
-Callback.addCallback("LevelLeft", function(){
-	nanoSaberStartSound = null;
-	nanoSaberIdleSound = null;
-});
-
-Callback.addCallback("tick", function(){
-	let item = Player.getCarriedItem();
-	if(item.id == ItemID.nanoSaberActive){
-		if(!nanoSaberIdleSound && (!nanoSaberStartSound || !nanoSaberStartSound.isPlaying())){
-			nanoSaberIdleSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberIdle.ogg", true, true);
-			nanoSaberStartSound = null;
-		}
-	}
-	else if(nanoSaberIdleSound){
-		nanoSaberIdleSound.stop();
-		nanoSaberIdleSound = null;
-	}
+let NanoSaber = {
+	activationTime: 0,
+	startSound: null,
+	idleSound: null,
 	
-	if(World.getThreadTime() % 20 == 0){
-		for(let i = 9; i < 45; i++){
-			let item = Player.getInventorySlot(i);
+	noTargetUse: function(item){
+		if(NANO_SABER_DURABILITY - item.data >= 64){
+			Player.setCarriedItem(ItemID.nanoSaberActive, 1, item.data);
+			this.startSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberPowerup.ogg");
+			this.activationTime = World.getThreadTime();
+		}
+	},
+	
+	noTargetUseActive: function(item){
+		if(this.activationTime > 0){
+			let energyStored = ChargeItemRegistry.getEnergyStored(item);
+			item.data = Math.min(item.data + discharge*64, NANO_SABER_DURABILITY);
+			this.activationTime = 0;
+		}
+		if(this.idleSound){
+			this.idleSound.stop();
+			this.idleSound = null;
+		}
+		Player.setCarriedItem(ItemID.nanoSaber, 1, item.data);
+	},
+	
+	tick: function(){
+		let item = Player.getCarriedItem();
+		if(Config.soundEnabled){
 			if(item.id == ItemID.nanoSaberActive){
-				if(nanoSaberActivationTime > 0){
-					let discharge = World.getThreadTime() - nanoSaberActivationTime;
-					item.data = Math.min(item.data + discharge*64, NANO_SABER_DURABILITY);
-					nanoSaberActivationTime = 0;
-				} else {
-					item.data = Math.min(item.data + 1280, NANO_SABER_DURABILITY);
+				if(!this.idleSound && (!this.startSound || !this.startSound.isPlaying())){
+					this.idleSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberIdle.ogg", true, true);
+					this.startSound = null;
 				}
-				if(item.data == NANO_SABER_DURABILITY){
-					item.id = ItemID.nanoSaber;
+			}
+			else if(this.idleSound){
+				this.idleSound.stop();
+				this.idleSound = null;
+			}
+		}
+		
+		if(World.getThreadTime() % 20 == 0){
+			for(let i = 9; i < 45; i++){
+				let item = Player.getInventorySlot(i);
+				if(item.id == ItemID.nanoSaberActive){
+					if(this.activationTime > 0){
+						let discharge = World.getThreadTime() - this.activationTime;
+						item.data = Math.min(item.data + discharge*64, NANO_SABER_DURABILITY);
+						this.activationTime = 0;
+					} else {
+						item.data = Math.min(item.data + 1280, NANO_SABER_DURABILITY);
+					}
+					if(item.data == NANO_SABER_DURABILITY){
+						item.id = ItemID.nanoSaber;
+					}
+					Player.setInventorySlot(i, item.id, 1, item.data);
 				}
-				Player.setInventorySlot(i, item.id, 1, item.data);
 			}
 		}
 	}
+}
+
+Item.registerNoTargetUseFunction("nanoSaber", function(item){
+	NanoSaber.noTargetUse(item);
+});
+
+Item.registerNoTargetUseFunction("nanoSaberActive", function(item){
+	NanoSaber.noTargetUseActive(item);
+});
+
+Callback.addCallback("LevelLeft", function(){
+	NanoSaber.startSound = null;
+	NanoSaber.idleSound = null;
+});
+
+Callback.addCallback("tick", function(){
+	NanoSaber.tick();
 });

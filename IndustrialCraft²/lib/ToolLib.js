@@ -47,7 +47,7 @@ var ToolType = {
 		useItem: function(coords, item, block){
 			if(block.id==2 && coords.side==1){ 
 				World.setBlock(coords.x, coords.y, coords.z, 198);
-				World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.75);
+				World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.8);
 				ToolLib.breakCarriedTool(1);
 			}
 		}
@@ -69,7 +69,7 @@ var ToolType = {
 		useItem: function(coords, item, block){
 			if((block.id==2 || block.id==3) && coords.side==1){ 
 				World.setBlock(coords.x, coords.y, coords.z, 60);
-				World.playSoundAtEntity(Player.get(), "step.gravel", 1, 0.75);
+				World.playSoundAtEntity(Player.get(), "step.gravel", 1, 0.8);
 				ToolLib.breakCarriedTool(1);
 			}
 		}

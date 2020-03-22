@@ -317,13 +317,13 @@ TileRenderer.setRotationPlaceFunction(BlockID.canner);
 StorageInterface.createInterface(BlockID.canner, {
 	slots: {
 		"slotSource": {input: true,
-			isValid: function(item){
-				return isValidCannerSource(item.id, item.data, this.tileEntity);
+			isValid: function(item, side, tileEntity){
+				return isValidCannerSource(item.id, item.data, tileEntity);
 			}
 		},
 		"slotCan": {input: true,
-			isValid: function(item){
-				return isValidCannerCan(item.id, item.data, this.tileEntity);
+			isValid: function(item, side, tileEntity){
+				return isValidCannerCan(item.id, item.data, tileEntity);
 			}
 		},
 		"slotResult": {output: true}

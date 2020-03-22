@@ -115,7 +115,7 @@ var buttonContent = {
 		clicker: {
 			onClick: function(){
 				var vel = Player.getVelocity();
-				if(vel.y.toFixed(4) == fallVelocity){
+				if(vel.y.toFixed(4) != fallVelocity){
 					var armor = Player.getArmorSlot(1);
 					var extra = armor.extra;
 					if(extra){

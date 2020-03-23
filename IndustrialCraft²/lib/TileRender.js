@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "TileRender",
-	version: 13,
+	version: 14,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -18,36 +18,37 @@ var CONSTANT_REPLACEABLE_TILES = ModAPI.requireGlobal("CONSTANT_REPLACEABLE_TILE
 CONSTANT_REPLACEABLE_TILES[51] = true;
 CONSTANT_REPLACEABLE_TILES[78] = true;
 CONSTANT_REPLACEABLE_TILES[106] = true;
-let VANILLA_UI_TILES = ModAPI.requireGlobal("CONSTANT_VANILLA_UI_TILES");
-VANILLA_UI_TILES[25] = true;
-VANILLA_UI_TILES[26] = true;
-VANILLA_UI_TILES[92] = true;
-VANILLA_UI_TILES[93] = true;
-VANILLA_UI_TILES[94] = true;
-VANILLA_UI_TILES[107] = true;
-VANILLA_UI_TILES[117] = true;
-VANILLA_UI_TILES[122] = true;
-VANILLA_UI_TILES[125] = true;
-VANILLA_UI_TILES[130] = true;
-VANILLA_UI_TILES[138] = true;
-VANILLA_UI_TILES[143] = true;
-VANILLA_UI_TILES[146] = true;
-VANILLA_UI_TILES[149] = true;
-VANILLA_UI_TILES[150] = true;
-VANILLA_UI_TILES[151] = true;
-VANILLA_UI_TILES[154] = true;
-VANILLA_UI_TILES[158] = false;
-VANILLA_UI_TILES[178] = true;
-VANILLA_UI_TILES[183] = true;
-VANILLA_UI_TILES[184] = true;
-VANILLA_UI_TILES[185] = true;
-VANILLA_UI_TILES[186] = true;
-VANILLA_UI_TILES[187] = true;
-VANILLA_UI_TILES[193] = true;
-VANILLA_UI_TILES[194] = true;
-VANILLA_UI_TILES[195] = true;
-VANILLA_UI_TILES[196] = true;
-VANILLA_UI_TILES[197] = true;
+
+var CONSTANT_VANILLA_UI_TILES = {
+	23: true, // dispenser
+	25: true, // note block
+	26: true, // bed
+	54: true, // chest
+	58: true, // workbench
+	61: true, 62: true, // furnace
+	64: true, // door
+	69: true, // lever
+	77: true, // stone button
+	92: true, // cake
+	93: true, 94: true, // repeater
+	96: true, // wooden trapdoor
+	107: true, // fence gate
+	116: true, // enchanting table
+	117: true, // brewing stand
+	122: true, // dragon egg
+	125: true, // dropper
+	130: true, // ender chest
+	138: true, // beacon
+	143: true, // wooden button
+	145: true, // anvil
+	146: true, // trapped chest
+	149: true, 150: true, // comparator
+	151: true, 178: true, // day light detector
+	154: true, // hopper
+	183: true, 184: true, 185: true, 186: true, 187: true, // fence gate 2
+	193: true, 194: true, 195: true, 196: true, 197: true, // door 2
+}
+ModAPI.requireGlobal("CONSTANT_VANILLA_UI_TILES = "+uneval(CONSTANT_VANILLA_UI_TILES));
 
 var TileRenderer = {
 	data: {},
@@ -66,7 +67,7 @@ var TileRenderer = {
 				render.addEntry(model);
 				BlockRenderer.enableCoordMapping(id, i, render);
 			}
-		}else{
+		} else {
 			var render = new ICRender.Model();
 			var model = BlockRenderer.createTexturedBlock(texture);
 			render.addEntry(model);
@@ -105,7 +106,7 @@ var TileRenderer = {
 				}
 				this.registerRenderModel(id, i + data, textures);
 			}
-		}else{
+		} else {
 			var textures = [
 				[texture[3], texture[2], texture[0], texture[1], texture[4], texture[5]],
 				[texture[2], texture[3], texture[1], texture[0], texture[5], texture[4]],
@@ -223,8 +224,9 @@ var TileRenderer = {
 	],
 	
 	setPlantModel: function(id, data, texture, meta){
+		Block.setShape(id, 1/8, 0, 1/8, 7/8, 1, 7/8, data);
 		var shape = new ICRender.CollisionShape();
-		shape.addEntry().addBox(7/8, 1, 7/8, 1/8, 0, 1/8);
+		shape.addEntry().addBox(1, 1, 1, 0, 0, 0);
 		BlockRenderer.setCustomCollisionShape(id, data, shape);
 		var render = new ICRender.Model();
 		var mesh = new RenderMesh();
@@ -248,26 +250,19 @@ var TileRenderer = {
 		var shape = new ICRender.CollisionShape();
 		shape.addEntry().addBox(1, 1, 1, 0, 0, 0);
 		BlockRenderer.setCustomCollisionShape(id, data, shape);
-		var render = new ICRender.Model();
-		var model = BlockRenderer.createModel();
-		model.addBox(0.25, 0, 0, 0.25, 1, 1, id, data);
-		model.addBox(0.75, 0, 0, 0.75, 1, 1, id, data);
-		model.addBox(0, 0, 0.25, 1, 1, 0.25, id, data);
-		model.addBox(0, 0, 0.75, 1, 1, 0.75, id, data);
-		render.addEntry(model);
-		BlockRenderer.setStaticICRender(id, data, render);	
+		var render = this.getCropModel([id, data]);
+		BlockRenderer.setStaticICRender(id, data, render);
 	},
 	
-	getCropModel:function(texture){   
-        var render = new ICRender.Model(); 
-        var model = BlockRenderer.createModel(); 
-        model.addBox(0.2499, 0.01, 0,0.25, 0.99, 1, texture[0], texture[1]); 
-        model.addBox(0, 0.01, 0.2499, 1, 0.99, 0.25, texture[0], texture[1]); 
-        model.addBox(0.7499, 0.01, 0, 0.75, 0.99, 1, texture[0], texture[1]); 
-        model.addBox(0, 0.01, 0.7499,1, 0.99, 0.75, texture[0], texture[1]); 
-        render.addEntry(model); 
-        return render; 
-
+	getCropModel:function(texture){
+        var render = new ICRender.Model();
+        var model = BlockRenderer.createModel();
+        model.addBox(0.25, 0, 0, 0.25, 1, 1, texture[0], texture[1]);
+        model.addBox(0.75, 0, 0, 0.75, 1, 1, texture[0], texture[1]);
+        model.addBox(0, 0, 0.25, 1, 1, 0.25, texture[0], texture[1]);
+        model.addBox(0, 0, 0.75, 1, 1, 0.75, texture[0], texture[1]);
+        render.addEntry(model);
+        return render;
     }, 
 	
 	makeSlab: function(id, fullBlockID, fullBlockData){

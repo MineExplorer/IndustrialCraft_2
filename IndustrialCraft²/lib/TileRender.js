@@ -254,7 +254,7 @@ var TileRenderer = {
 		BlockRenderer.setStaticICRender(id, data, render);
 	},
 	
-	getCropModel:function(texture){
+	getCropModel: function(texture){
         var render = new ICRender.Model();
         var model = BlockRenderer.createModel();
         model.addBox(0.25, 0, 0, 0.25, 1, 1, texture[0], texture[1]);

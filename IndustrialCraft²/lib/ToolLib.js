@@ -183,7 +183,7 @@ ToolAPI.playerAttackHook = function(attacker, victim, item) {
 			}
 			if (Math.random() < 1 / (enchant.unbreaking + 1)) {
 				item.data++;
-				if (toolData.isWeapon) {
+				if (!toolData.isWeapon) {
 					item.data++;
 				}
 			}

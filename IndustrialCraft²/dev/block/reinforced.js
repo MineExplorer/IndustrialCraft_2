@@ -1,18 +1,16 @@
 Block.createSpecialType({
 	base: 1,
 	solid: true,
-	destroytime: 5,
+	destroytime: 25,
 	explosionres: 30,
-	opaque: false,
-	lightopacity: 0,
+	lightopacity: 15,
 	renderlayer: 3,
 }, "reinforced_block");
 
 Block.createSpecialType({
 	base: 1,
-	destroytime: 5,
+	destroytime: 25,
 	explosionres: 30,
-	opaque: false,
 	lightopacity: 0,
 	renderlayer: 9,
 }, "reinforced_glass");

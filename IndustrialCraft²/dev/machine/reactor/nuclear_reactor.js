@@ -125,7 +125,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		net = EnergyNetBuilder.buildForTile(this, EU);
 		this.__energyNets.Eu = net;
 		for (let i = 0; i < 6; i++) {
-			let c = EnergyNetBuilder.getRelativeCoords(this.x, this.y, this.z, i);
+			let c = StorageInterface.getRelativeCoords(this, i);
 			if(World.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber){
 				let tileEnt = World.getTileEntity(c.x, c.y, c.z);
 				if(tileEnt){
@@ -154,7 +154,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			EnergyNetBuilder.mergeNets(net, chamberNets.Eu);}
 		} else {
 			for (let side = 0; side < 6; side++) {
-				let c = EnergyNetBuilder.getRelativeCoords(chamber.x, chamber.y, chamber.z, side);
+				let c = StorageInterface.getRelativeCoords(chamber, side);
 				EnergyNetBuilder.buildTileNet(net, c.x, c.y, c.z, side + Math.pow(-1, side));
 			}
 		}
@@ -477,11 +477,8 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 });
 
 Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block){
-	let x = coords.relative.x;
-	let y = coords.relative.y;
-	let z = coords.relative.z;
 	for (let i = 0; i < 6; i++) {
-		let c = EnergyNetBuilder.getRelativeCoords(x, y, z, i);
+		let c = StorageInterface.getRelativeCoords(coords.relative, i);
 		if(World.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber){
 			let tileEnt = World.getTileEntity(c.x, c.y, c.z);
 			if(tileEnt.core){
@@ -496,12 +493,9 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block
 
 Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block){
 	Game.prevent();
-	let x = coords.relative.x;
-	let y = coords.relative.y;
-	let z = coords.relative.z;
 	let reactorConnect = 0;
 	for (let i = 0; i < 6; i++) {
-		let c = EnergyNetBuilder.getRelativeCoords(x, y, z, i);
+		let c = StorageInterface.getRelativeCoords(coords.relative, i);
 		if(World.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor){
 			reactorConnect++;
 			if(reactorConnect > 1) break;

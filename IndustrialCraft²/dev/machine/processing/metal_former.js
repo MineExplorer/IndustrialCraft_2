@@ -49,8 +49,8 @@ Callback.addCallback("PreLoaded", function(){
 	MachineRecipeRegistry.registerRecipesFor("metalFormer2", {
 		"ItemID.ingotTin": {id: ItemID.cableTin0, count: 3},
 		"ItemID.ingotCopper": {id: ItemID.cableCopper0, count: 3},
-		"ItemID.ingotGold": {id: ItemID.cableGold0, count: 4},
 		265: {id: ItemID.cableIron0, count: 4},
+		266: {id: ItemID.cableGold0, count: 4},
 		"ItemID.casingTin": {id: ItemID.tinCanEmpty, count: 1},
 		"ItemID.plateIron": {id: ItemID.fuelRod, count: 1},
 	}, true);

@@ -19,7 +19,7 @@ Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID){
 Block.setDestroyTime(BlockID.rubberTreeLogLatex, 0.4);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
 Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, data){
-	if(data < 4 && Math.random() < 0.1){
+	if(data < 4 && Math.random() < 1/7){
 		World.setBlock(x, y, z, id, data + 4);
 	}
 });

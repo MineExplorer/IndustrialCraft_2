@@ -51,7 +51,8 @@ var ChargeItemRegistry = {
 			Item.setMaxDamage(id, 27);
 		}
 		if(addToCreative){
-			Item.addToCreative(id, addScale? 1 : 0, 1, (new ItemExtraData()).putInt("energy", capacity));
+			// var extra = (new ItemExtraData()).putInt("energy", capacity);
+			Item.addToCreative(id, addScale? 1 : 0, 1);
 		}
 		this.chargeData[id] = {
 			type: "extra",
@@ -99,7 +100,7 @@ var ChargeItemRegistry = {
 		}
 		if(data.type == "extra"){
 			if(item.extra){
-				return item.extra.getInt("energy");
+				return item.extra.getInt("energy") || Math.round((27 - (item.data || 1)) / 26 * data.maxCharge);
 			}
 			return Math.round((27 - (item.data || 1)) / 26 * data.maxCharge);
 		}

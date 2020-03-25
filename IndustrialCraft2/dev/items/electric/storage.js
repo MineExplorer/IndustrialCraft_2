@@ -23,7 +23,7 @@ IDRegistry.genItemID("debugItem");
 Item.createItem("debugItem", "Debug Item", {name: "debug_item", meta: 0}, {isTech: !Config.debugMode});
 ChargeItemRegistry.registerExtraItem(ItemID.debugItem, "Eu", -1, 0, "storage");
 
-Item.addCreativeGroup("battery", Translation.translate("Batteries"), [
+Item.addCreativeGroup("batteryEU", Translation.translate("EU Batteries"), [
 	ItemID.storageBattery,
 	ItemID.storageAdvBattery,
 	ItemID.storageCrystal,

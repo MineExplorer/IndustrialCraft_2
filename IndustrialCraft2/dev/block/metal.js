@@ -56,6 +56,15 @@ Block.createBlock("blockUranium", [
 ToolAPI.registerBlockMaterial(BlockID.blockUranium, "stone", 3, true);
 Block.setDestroyLevel("blockUranium", 3);
 
+Item.addCreativeGroup("blockMetal", Translation.translate("Metal Blocks"), [
+	BlockID.blockCopper,
+	BlockID.blockTin,
+	BlockID.blockBronze,
+	BlockID.blockLead,
+	BlockID.blockSteel,
+	BlockID.blockSilver,
+	BlockID.blockUranium
+]);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.blockCopper, count: 1, data: 0}, [

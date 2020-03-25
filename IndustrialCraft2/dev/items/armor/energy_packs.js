@@ -19,6 +19,13 @@ Item.registerNameOverrideFunction(ItemID.advBatpack, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.energypack, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.lappack, ItemName.showItemStorage);
 
+Item.addCreativeGroup("batteryPack", Translation.translate("Battery Packs"), [
+	ItemID.batpack,
+	ItemID.advBatpack,
+	ItemID.energypack,
+	ItemID.lappack
+]);
+
 Recipes.addShaped({id: ItemID.batpack, count: 1, data: 27}, [
     "bcb",
     "bab",

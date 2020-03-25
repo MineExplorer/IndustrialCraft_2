@@ -53,6 +53,13 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 	return [];
 }, 4);
 
+Item.addCreativeGroup("oreMetal", Translation.translate("Metal Ores"), [
+	BlockID.oreCopper,
+	BlockID.oreTin,
+	BlockID.oreLead,
+	BlockID.oreUranium,
+	BlockID.oreIridium
+]);
 
 var OreGenerator = {
 	copper: {

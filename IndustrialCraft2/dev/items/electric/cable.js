@@ -27,7 +27,7 @@ Item.createItem("cableIron3", "3x Ins. HV Cable", {name: "cable_iron", meta: 3})
 IDRegistry.genItemID("cableOptic");
 Item.createItem("cableOptic", "Glass Fibre Cable", {name: "cable_optic", meta: 0});
 
-Item.addCreativeGroup("cable",Translation.translate("Cable"), [
+Item.addCreativeGroup("cableEU", Translation.translate("Cables"), [
 	ItemID.cableTin0,
 	ItemID.cableTin1,
 	ItemID.cableCopper0,

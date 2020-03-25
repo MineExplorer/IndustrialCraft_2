@@ -41,7 +41,7 @@ Item.createItem("dustDiamond", "Diamond Dust", {name: "dust_diamond"});
 IDRegistry.genItemID("dustEnergium");
 Item.createItem("dustEnergium", "Energium Dust", {name: "dust_energium"});
 
-Item.addCreativeGroup("dustMetal", Translation.translate("Metal Dust"), [
+Item.addCreativeGroup("dust", Translation.translate("Dusts"), [
 	ItemID.dustCopper,
 	ItemID.dustTin,
 	ItemID.dustBronze,
@@ -49,10 +49,7 @@ Item.addCreativeGroup("dustMetal", Translation.translate("Metal Dust"), [
 	ItemID.dustSteel,
 	ItemID.dustLead,
 	ItemID.dustGold,
-	ItemID.dustSilver
-]);
-
-Item.addCreativeGroup("dustNonMetal", Translation.translate("Non-Metal Dust"), [
+	ItemID.dustSilver,
 	ItemID.dustStone,
 	ItemID.dustCoal,
 	ItemID.dustSulfur,

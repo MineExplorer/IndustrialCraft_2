@@ -1,42 +1,42 @@
 IDRegistry.genItemID("chargingBattery");
 Item.createItem("chargingBattery", "Charging RE-Battery", {name: "charging_re_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 128, 1, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.chargingBattery, "Eu", 40000, 128, 1, "storage", true);
+Item.addToCreative(ItemID.chargingBattery, 1, 27);
+Item.addToCreative(ItemID.chargingBattery, 1, 1);
 
 IDRegistry.genItemID("chargingAdvBattery");
 Item.createItem("chargingAdvBattery", "Advanced Charging Battery", {name: "adv_charging_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 512, 2, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.chargingAdvBattery, "Eu", 400000, 512, 2, "storage", true);
+Item.addToCreative(ItemID.chargingAdvBattery, 1, 27);
+Item.addToCreative(ItemID.chargingAdvBattery, 1, 1);
 
 IDRegistry.genItemID("chargingCrystal");
 Item.createItem("chargingCrystal", "Charging Energy Crystal", {name: "charging_energy_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 2048, 3, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.chargingCrystal, "Eu", 4000000, 2048, 3, "storage", true);
+Item.addToCreative(ItemID.chargingCrystal, 1, 27);
+Item.addToCreative(ItemID.chargingCrystal, 1, 1);
 
 IDRegistry.genItemID("chargingLapotronCrystal");
 Item.createItem("chargingLapotronCrystal", "Charging Lapotron Crystal", {name: "charging_lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 8192, 4, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 8192, 4, "storage", true);
+Item.addToCreative(ItemID.chargingLapotronCrystal, 1, 27);
+Item.addToCreative(ItemID.chargingLapotronCrystal, 1, 1);
 ItemName.setRarity(ItemID.chargingLapotronCrystal, 1);
 
 Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name){
-	var capacity = Item.getMaxDamage(item.id) - 1;
-	var energy = capacity - item.data + 1;
-	return {name: "charging_re_battery", meta: Math.round(energy / capacity * 4)}
+	return {name: "charging_re_battery", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
 Item.registerIconOverrideFunction(ItemID.chargingAdvBattery, function(item, name){
-	var capacity = Item.getMaxDamage(item.id) - 1;
-	var energy = capacity - item.data + 1;
-	return {name: "adv_charging_battery", meta: Math.round(energy / capacity * 4)}
+	return {name: "adv_charging_battery", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
 Item.registerIconOverrideFunction(ItemID.chargingCrystal, function(item, name){
-	var capacity = Item.getMaxDamage(item.id) - 1;
-	var energy = capacity - item.data + 1;
-	return {name: "charging_energy_crystal", meta: Math.round(energy / capacity * 4)}
+	return {name: "charging_energy_crystal", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
 Item.registerIconOverrideFunction(ItemID.chargingLapotronCrystal, function(item, name){
-	var capacity = Item.getMaxDamage(item.id) - 1;
-	var energy = capacity - item.data + 1;
-	return {name: "charging_lapotron_crystal", meta: Math.round(energy / capacity * 4)}
+	return {name: "charging_lapotron_crystal", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
 Callback.addCallback("PreLoaded", function(){
@@ -117,24 +117,25 @@ ChargingBattery.registerItem("chargingCrystal");
 ChargingBattery.registerItem("chargingLapotronCrystal");
 
 function checkCharging(){
-	for(var i = 9; i < 45; i++){
+	for(var i = 0; i < 36; i++){
 		var slot = Player.getInventorySlot(i);
 		if(ChargingBattery.itemIDs[slot.id]){
 			var mode = slot.extra? slot.extra.getInt("mode") : 0;
-			var maxDamage = Item.getMaxDamage(slot.id);
-			if(mode == 2 || slot.data == maxDamage) continue;
+			var energyStored = ChargeItemRegistry.getEnergyStored(slot);
+			if(mode == 2 || energyStored <= 0) continue;
 			var chargeData = ChargeItemRegistry.getItemData(slot.id);
 			for(var index = 0; index < 9; index++){
 				if(mode == 1 && Player.getSelectedSlotId() == index) continue;
 				var item = Player.getInventorySlot(index);
 				if(!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)){
-					var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", maxDamage - slot.data, chargeData.transferLimit*20, chargeData.level);
+					var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", energyStored, chargeData.transferLimit*20, chargeData.level);
 					if(energyAdd > 0){
-						slot.data += energyAdd;
+						energyStored -= energyAdd;
 						Player.setInventorySlot(index, item.id, 1, item.data, item.extra);
 					}
 				}
 			}
+			ChargeItemRegistry.setEnergyStored(slot, energyStored);
 			Player.setInventorySlot(i, slot.id, 1, slot.data, slot.extra);
 		}
 	}
@@ -142,6 +143,6 @@ function checkCharging(){
 
 Callback.addCallback("tick", function(){
 	if(World.getThreadTime() % 20 == 0){
-		runOnMainThread(checkCharging);
+		checkCharging();
 	}
 });

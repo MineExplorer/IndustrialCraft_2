@@ -147,9 +147,11 @@ var buttonContent = {
 		clicker: {
 			onClick: function(){
 				var armor = Player.getArmorSlot(3);
-				if(Item.getMaxDamage(armor.id) - armor.data >= 1000 && Player.getVelocity().y.toFixed(4) == fallVelocity){
+				var energyStored = ChargeItemRegistry.getEnergyStored(armor);
+				if(energyStored >= 1000 && Player.getVelocity().y.toFixed(4) == fallVelocity){
 					Player.addVelocity(0, 1.4, 0);
-					Player.setArmorSlot(3, armor.id, 1, armor.data+1000);
+					ChargeItemRegistry.setEnergyStored(armor, energyStored - 1000);
+					Player.setArmorSlot(3, armor.id, 1, armor.data, armor.extra);
 				}
 			}
 		}
@@ -231,27 +233,24 @@ Callback.addCallback("tick", function(){
 			UIbuttons.container.openAs(UIbuttons.Window);
 		}
 		var armor = armor[1];
-		var extra = armor.extra;
-		var hover = extra? extra.getBoolean("hover") : false;
+		var hover = armor.extra? armor.extra.getBoolean("hover") : false;
 		var playSound = false;
 		if(UIbuttons.container.isElementTouched("button_fly")){
 			var y = Player.getPosition().y;
-			var maxDmg = Item.getMaxDamage(armor.id);
-			if(armor.data < maxDmg && y < 256){
+			if(y < 256){
 				var vel = Player.getVelocity();
 				var vy = Math.min(32, 264-y) / 160;
-				if(hover){
-					if(World.getThreadTime() % 5 == 0){
-						Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+10, maxDmg), extra);
-					}
+				var energyStored = ChargeItemRegistry.getEnergyStored(armor);
+				if(hover && energyStored > 2){
+					ChargeItemRegistry.setEnergyStored(armor, energyStored - 2);
+					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 					if(vel.y < 0.2){
 						Player.addVelocity(0, Math.min(vy, 0.2-vel.y), 0);
 					}
 				}
-				else{
-					if(World.getThreadTime() % 5 == 0){
-						Player.setArmorSlot(1, armor.id, 1, Math.min(armor.data+35, maxDmg), extra);
-					}
+				if(!hover && energyStored > 7){
+					ChargeItemRegistry.setEnergyStored(armor, energyStored - 7);
+					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 					if(vel.y < 0.67){
 						Player.addVelocity(0, Math.min(vy, 0.67-vel.y), 0);
 					}

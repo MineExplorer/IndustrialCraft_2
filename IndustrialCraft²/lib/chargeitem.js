@@ -8,27 +8,26 @@ LIBRARY({
 var ChargeItemRegistry = {
 	chargeData: {},
 	
-	registerItem: function(item, energyType, capacity, transferLimit, level, prefix, inCreativeCharged, inCreativeDischarged){
+	registerItem: function(id, energyType, capacity, transferLimit, level, itemType, inCreativeCharged, inCreativeDischarged){
 		if(typeof level != "number"){ // function overload
 			inCreativeDischarged = inCreativeCharged;
-			inCreativeCharged = prefix;
-			prefix = level;
+			inCreativeCharged = itemType;
+			itemType = level;
 			level = transferLimit;
 			transferLimit = capacity;
 		}
-		if(prefix === true) prefix = "storage"; // legacy
-		Item.setMaxDamage(item, capacity + 1);
+		Item.setMaxDamage(id, capacity + 1);
 		if(inCreativeDischarged){
-			Item.addToCreative(item, 1, capacity + 1);
+			Item.addToCreative(id, 1, capacity + 1);
 		}
 		if(inCreativeCharged){
-			Item.addToCreative(item, 1, 1);
+			Item.addToCreative(id, 1, 1);
 		}
-		this.chargeData[item] = {
+		this.chargeData[id] = {
 			type: "normal",
-			prefix: prefix,
+			prefix: itemType,
 			energy: energyType,
-			id: item,
+			id: id,
 			level: level || 0,
 			maxCharge: capacity,
 			maxDamage: capacity + 1,
@@ -36,27 +35,30 @@ var ChargeItemRegistry = {
 		};
 	},
 	
-	registerFlashItem: function(item, energyType, amount, level){
-		this.chargeData[item] = {
+	registerFlashItem: function(id, energyType, amount, level){
+		this.chargeData[id] = {
 			type: "flash",
 			prefix: "storage",
-			id: item,
+			id: id,
 			level: level || 0,
 			energy: energyType,
 			amount: amount
 		};
 	},
 	
-	registerExtraItem: function(item, energyType, capacity, transferLimit, level, prefix){
-		this.chargeData[item] = {
+	registerExtraItem: function(id, energyType, capacity, transferLimit, level, itemType, addScale){
+		if(addScale){
+			Item.setMaxDamage(id, 27);
+		}
+		this.chargeData[id] = {
 			type: "extra",
-			prefix: prefix,
+			prefix: itemType,
 			energy: energyType,
-			id: item,
+			id: id,
 			level: level || 0,
 			maxCharge: capacity,
-			extra: energyType,
-			transferLimit: transferLimit
+			transferLimit: transferLimit,
+			showScale: addScale || false
 		}
 	},
 	
@@ -94,11 +96,31 @@ var ChargeItemRegistry = {
 		}
 		if(data.type == "extra"){
 			if(item.extra){
-				return item.extra.getInt(data.extra);
+				return item.extra.getInt("energy") || Math.round((27 - (item.data || 1)) / 26 * data.maxCharge);
 			}
-			return 0;
+			return Math.round((27 - (item.data || 1)) / 26 * data.maxCharge);
 		}
 		return Math.min(data.maxDamage - item.data, data.maxCharge);
+	},
+	
+	getMaxCharge: function(item, energyType){
+		var data = this.getItemData(item.id);
+		if(!data || energyType && data.energy != energyType){
+			return 0;
+		}
+		return data.maxCharge;
+	},
+	
+	setEnergyStored: function(item, amount){
+		var data = this.getItemData(item.id);
+		if(!data) return;
+		if(!item.extra){
+			item.extra = new ItemExtraData();
+		}
+		item.extra.putInt("energy", amount);
+		if(data.showScale){
+			item.data = Math.round((data.maxCharge - amount)/data.maxCharge*26 + 1);
+		}
 	},
 	
 	getEnergyFrom: function(item, energyType, amount, transf, level, getFromAll){
@@ -129,22 +151,20 @@ var ChargeItemRegistry = {
 		if(data.dischargeFunction){
 			return data.dischargeFunction(item, amount, transf, level);
 		}
-		if(data.type != "extra"){
-			if(item.data < 1){
-				item.data = 1;
-			}
-			
-			var energyGot = Math.min(amount, Math.min(data.maxDamage - item.data, transf));
-			item.data += energyGot;
-			return energyGot;
-		}
-		if(item.extra){
-			var energyStored = item.extra.getInt(data.extra);
+		if(data.type == "extra"){
+			var energyStored = this.getEnergyStored(item);
 			var energyGot = Math.min(amount, Math.min(energyStored, transf));
-			item.extra.putInt(data.extra, energyStored - energyGot);
+			this.setEnergyStored(item, energyStored - energyGot);
 			return energyGot;
 		}
-		return 0;
+		
+		if(item.data < 1){
+			item.data = 1;
+		}
+		
+		var energyGot = Math.min(amount, Math.min(data.maxDamage - item.data, transf));
+		item.data += energyGot;
+		return energyGot;
 	},
 	
 	addEnergyTo: function(item, energyType, amount, transf, level){
@@ -163,17 +183,14 @@ var ChargeItemRegistry = {
 		if(data.chargeFunction){
 			return data.chargeFunction(item, amount, transf, level);
 		}
-		if(data.type != "extra"){
-			var energyAdd = Math.min(amount, Math.min(item.data - 1, transf));
-			item.data -= energyAdd;
+		if(data.type == "extra"){
+			var energyStored = this.getEnergyStored(item);
+			var energyAdd = Math.min(amount, Math.min(data.maxCharge - energyStored, transf));
+			this.setEnergyStored(item, energyStored + energyAdd);
 			return energyAdd;
 		}
-		if(!item.extra){
-			item.extra = new ItemExtraData();
-		}
-		var energyStored = item.extra.getInt(data.extra);
-		var energyAdd = Math.min(amount, Math.min(data.maxCharge - energyStored, transf));
-		item.extra.putInt(data.extra, energyStored + energyAdd);
+		var energyAdd = Math.min(amount, Math.min(item.data - 1, transf));
+		item.data -= energyAdd;
 		return energyAdd;
 	},
 	
@@ -186,7 +203,7 @@ var ChargeItemRegistry = {
 			}
 			api.decreaseFieldSlot(i);
 		}
-		ChargeItemRegistry.addEnergyTo(result, data.energy, amount, amount, 100);
+		ChargeItemRegistry.addEnergyTo(result, data.energy, amount, amount, data.level);
 	}
 }
 

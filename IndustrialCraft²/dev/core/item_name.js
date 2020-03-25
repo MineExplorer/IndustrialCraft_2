@@ -1,12 +1,13 @@
-var RARE_ITEM_NAME = function(item, name){
-	return "§b" + name;
-}
-
 ItemName = {
 	itemRarity: {},
 	
-	setRarity: function(id, lvl){
+	setRarity: function(id, lvl, regFunc){
 		this.itemRarity[id] = lvl;
+		if(regFunc){
+			Item.registerNameOverrideFunction(id, function(item, name){
+				return ItemName.getRarityCode(lvl) + name;
+			});
+		}
 	},
 	
 	getRarity: function(id){
@@ -67,7 +68,7 @@ ItemName = {
 	},
 	
 	getItemStorageText: function(item, name){
-		var capacity = Item.getMaxDamage(item.id) - 1;
+		var capacity = ChargeItemRegistry.getMaxCharge(item);
 		var energy = ChargeItemRegistry.getEnergyStored(item);
 		var tooltip = "§7" + this.displayEnergy(energy) + "/" + this.displayEnergy(capacity) + " EU";
 		return this.getTooltip(name, tooltip);

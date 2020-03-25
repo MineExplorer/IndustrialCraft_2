@@ -1,9 +1,18 @@
+Block.createSpecialType({
+	destroytime: 0.2,
+	explosionres: 1,
+	renderallfaces: true, 
+	renderlayer: 1,
+	lightopacity: 1
+}, "leaves");
+
 IDRegistry.genBlockID("rubberTreeLeaves");
 Block.createBlock("rubberTreeLeaves", [
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false},
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false},
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: true}
-]);
+], "leaves");
+
 Block.registerDropFunction("rubberTreeLeaves", function(coords, blockID, blockData, level, enchant){
 	if(level > 0 || Player.getCarriedItem().id == 359){
 		return [[blockID, 1, 2]];
@@ -14,7 +23,6 @@ Block.registerDropFunction("rubberTreeLeaves", function(coords, blockID, blockDa
 	return [];
 });
 
-Block.setDestroyTime(BlockID.rubberTreeLeaves, 0.2);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLeaves, "plant");
 
 function checkLeaves(x, y, z, explored){

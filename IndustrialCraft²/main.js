@@ -2,7 +2,7 @@
 BUILD INFO:
   dir: dev
   target: main.js
-  files: 118
+  files: 141
 */
 
 
@@ -29,15 +29,13 @@ IMPORT("EnergyNet");
 IMPORT("ChargeItem");
 IMPORT("TileRender");
 IMPORT("StorageInterface");
+IMPORT("LiquidLib");
 IMPORT("BackpackAPI");
 
 // constants
-const GUI_SCALE = 3.2;
+const GUI_SCALE = 3;
 const fallVelocity = -0.0784;
 var player;
-
-// square lava texture for geothermal generator ui.
-LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_16x16");
 
 // import values
 Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
@@ -119,7 +117,7 @@ Translation.addTranslation("Silver Block", {ru: "Серебряный блок",
 Translation.addTranslation("Uranium Block", {ru: "Урановый блок", es: "Bloque de Uranio", pt: "Bloco de Urânio", zh: "铀块"});
 
 Translation.addTranslation("Mining Pipe", {ru: "Буровая труба", es: "Tubo Minero", pt: "Tubo de Mineração", zh: "采矿管道"});
-Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", pt: "Vidro Reforçado", zh: "防爆石"});
+Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", pt: "Pedra Reforçada", zh: "防爆石"});
 Translation.addTranslation("Reinforced Glass", {ru: "Укреплённое стекло", es: "Cristal Reforzado", pt: "Vidro Reforçado", zh: "防爆玻璃"});
 Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", pt: "Estrutura de Máquina Básica", zh: "基础机械外壳"});
 Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Estrutura de Máquina Avançada", zh: "高级机械外壳"});
@@ -131,29 +129,31 @@ Translation.addTranslation("Solar Panel", {ru: "Солнечная панель"
 Translation.addTranslation("Water Mill", {ru: "Гидрогенератор", es: "Molino de Agua", pt: "Gerador Aquático", zh: "水力发电机"});
 Translation.addTranslation("Wind Mill", {ru: "Ветрогенератор", es: "Molino de Viento", pt: "Cata-vento", zh: "风力发电机"});
 Translation.addTranslation("Radioisotope Thermoelectric Generator", {ru: "Радиоизотопный термоэлектрический генератор", es: "Generador Radioisotopos Termoeléctrico", pt: "Gerador Termoelétrico de Radioisótopos", zh: "放射性同位素温差发电机"});
+Translation.addTranslation("Semifluid Generator", {ru: "Полужидкостный генератор", es: "Generador a Semifluidos", pt: "Gerador à Semi-Fluidos", zh: "半流质发电机"});
+Translation.addTranslation("Stirling Generator", {ru: "Генератор Стирлинга", es: "Generador Stirling", pt: "Gerador à Calor", zh: "斯特林发电机"});
 
-Translation.addTranslation("Nuclear Reactor", {ru: "Ядерный реактор", es: "Reactor Nuclear", pt: "Reactor Nuclear", zh: "核反应堆"});
+Translation.addTranslation("Nuclear Reactor", {ru: "Ядерный реактор", es: "Reactor Nuclear", pt: "Reator Nuclear", zh: "核反应堆"});
 Translation.addTranslation("Reactor Chamber", {ru: "Реакторная камера", es: "Cámara del Reactor", pt: "Câmara de Reator", zh: "核反应仓"});
 
 // Heat Generators
+Translation.addTranslation("Liquid Fuel Firebox", {ru: "Жидкостный теплогенератор", es: "Generador de Calor Líquido", pt: "Aquecedor à Combustível Líquido", zh: "流体加热机"});
 Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor à Combustível Sólido", zh: "固体加热机"});
-Translation.addTranslation("Electric Heat Generator", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电力加热机"});
+Translation.addTranslation("Electric Heater", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电力加热机"});
 
 // Energy storage
-Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", pt: "Caixa de Baterias", zh: "储电盒"});
-Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", pt: "Unidade de Armazenamento de Energia", zh: "CESU储电箱"});
-Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", pt: "Transmissor de Energia Multi-funcional", zh: "MFE储电箱"});
-Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", pt: "Unidade de Armazenamento Multi-funcional", zh: "MFSU储电箱"});
+Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", pt: "Caixa de Baterias (CB)", zh: "储电箱"});
+Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", pt: "Unidade de Armazenamento de Energia (UAE)", zh: "CESU储电箱"});
+Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", pt: "Transmissor de Energia Multi-funcional (TEMF)", zh: "MFE储电箱"});
+Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", pt: "Unidade de Armazenamento Multi-funcional (UAMF)", zh: "MFSU储电箱"});
 
 // Transformer
-Translation.addTranslation("LV Transformer", {ru: "Трансформатор НН", zh: "低压变压器"});
-Translation.addTranslation("MV Transformer", {ru: "Трансформатор СН", zh: "中压变压器"});
-Translation.addTranslation("HV Transformer", {ru: "Трансформатор ВН", zh: "高压变压器"});
-Translation.addTranslation("EV Transformer", {ru: "Трансформатор СВН", zh: "超高压变压器"});
+Translation.addTranslation("LV Transformer", {ru: "Трансформатор НН", pt: "Transformador de Baixa Voltagem", zh: "低压变压器"});
+Translation.addTranslation("MV Transformer", {ru: "Трансформатор СН", pt: "Transformador de Média Voltagem", zh: "中压变压器"});
+Translation.addTranslation("HV Transformer", {ru: "Трансформатор ВН", pt: "Transformador de Alta Voltagem", zh: "高压变压器"});
+Translation.addTranslation("EV Transformer", {ru: "Трансформатор СВН", pt: "Transformador de Voltagem Extrema", zh: "超高压变压器"});
 
 // Machines
 Translation.addTranslation("Luminator", {ru: "Электролампа", es: "Lámpara", pt: "Iluminador", zh: "日光灯"});
-Translation.addTranslation("Canning Machine", {ru: "Консервирующий механизм", zh: "固体装罐机"}); // To Do
 Translation.addTranslation("Iron Furnace", {ru: "Железная печь", es: "Horno de Hierro", pt: "Fornalha de Ferro", zh: "铁炉"});
 Translation.addTranslation("Electric Furnace", {ru: "Электрическая печь", es: "Horno Eléctrico", pt: "Fornalha Elétrica", zh: "电炉"});
 Translation.addTranslation("Induction Furnace", {ru: "Индукционная печь", es: "Horno de Induccion", pt: "Fornalha de Indução", zh: "感应炉"});
@@ -164,12 +164,17 @@ Translation.addTranslation("Recycler", {ru: "Утилизатор", es: "Recicla
 Translation.addTranslation("Metal Former", {ru: "Металлоформовщик", es: "Arqueador de Metal", pt: "Moldelador de Metais", zh: "金属成型机"});
 Translation.addTranslation("Ore Washing Plant", {ru: "Рудопромывочная машина", es: "Planta de Lavado de Minerales", pt: "Estação de Lavagem de Minérios", zh: "洗矿机"});
 Translation.addTranslation("Thermal Centrifuge", {ru: "Термальная центрифуга", es: "Centrífuga Térmica", pt: "Centrífuga Térmica", zh: "热能离心机"});
-Translation.addTranslation("Blast Furnace", {ru: "Доменная печь", es: "Alto Horno", pt: "Fornalha de Aquecimento", zh: "鼓风炉"});
+Translation.addTranslation("Blast Furnace", {ru: "Доменная печь", es: "Alto Horno", pt: "Fornalha de Aquecimento", zh: "高炉"});
 Translation.addTranslation("Miner", {ru: "Буровая установка", es: "Perforadora", pt: "Minerador", zh: "采矿机"});
 Translation.addTranslation("Advanced Miner", {ru: "Продвинутая буровая установка", es: "Minero Avanzado", pt: "Minerador Avançado", zh: "高级采矿机"});
 Translation.addTranslation("Tesla Coil", {ru: "Катушка теслы", es: "Bobina de Tesla", pt: "Bobina Tesla", zh: "特斯拉线圈"});
 Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Teletransportador", pt: "Teletransportador", zh: "传送机"});
 Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", pt: "Fabricador de Massa", zh: "物质生成机"});
+Translation.addTranslation("Fermenter", {ru: "Ферментер", es: "Fermentadora", pt: "Fermentador", zh: "发酵机"});
+Translation.addTranslation("Solid Canning Machine", {ru: "Консервирующий механизм", es: "Máquina de Enlatado", pt: "Enlatadora de Sólidos", zh: "固体装罐机"});
+Translation.addTranslation("Fluid/Solid Canning Machine", {ru: "Универсальный наполняющий механизм", es: "Enlatadora de Líquidos/Sólidos", pt: "Enlatadora de Fluidos/Sólidos", zh: "流体/固体装罐机"});
+Translation.addTranslation("Crop Matron", {ru: "Автосадовник", es: "Máquina Cosechadora", pt: "Fazendeiro", zh: "作物监管机"});
+Translation.addTranslation("Crop Harvester", {ru: "Сборщик урожая", es: "Cocechador de Cultivo", pt: "Colheitadeira", zh: "作物收割机"});
 
 // Explosive
 Translation.addTranslation("Nuke", {ru: "Ядерная бомба", pt: "Bomba Nuke", zh: "核弹"});
@@ -181,10 +186,11 @@ Translation.addTranslation("Tank", {ru: "Бак", es: "Tanque", pt: "Tanque", zh
 
 // ITEMS
 Translation.addTranslation("Iridium", {ru: "Иридий", es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱碎片"});
-Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", pt: "Latex", zh: "粘性树脂"});
+Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", pt: "Resina Pegajosa", zh: "粘性树脂"});
 Translation.addTranslation("Rubber", {ru: "Резина", es: "Rubber", pt: "Borracha", zh: "橡胶"});
 Translation.addTranslation("Ashes", {ru: "Пепел", es: "Ceniza", pt: "Cinzas", zh: "灰烬"});
-Translation.addTranslation("Slag", {ru: "Шлак", es: "Escoria", pt: "Sucata", zh: "渣"});
+Translation.addTranslation("Slag", {ru: "Шлак", es: "Escoria", pt: "Sucata", zh: "渣渣"});
+Translation.addTranslation("Bio Chaff", {ru: "Отходы", pt: "Bio-Produto", zh: "糠"});
 Translation.addTranslation("Scrap", {ru: "Утильсырьё", es: "Chatarra", pt: "Sucata", zh: "废料"});
 Translation.addTranslation("Scrap Box", {ru: "Коробка утильсырья", es: "Caja de Chatarra", pt: "Caixa de Sucata", zh: "废料盒"});
 Translation.addTranslation("UU-Matter", {ru: "Материя", es: "Materia", pt: "Metéria UU", zh: "UU物质"});
@@ -228,9 +234,9 @@ Translation.addTranslation("Quad Fuel Rod (Depleted MOX)", {ru: "Счетвер�
 Translation.addTranslation("Reactor Plating", {ru: "Обшивка реактора", es: "Revestimiento para Reactor", pt: "Placa de Reator", zh: "反应堆隔板"});
 Translation.addTranslation("Containment Reactor Plating", {ru: "Сдерживающая реакторная обшивка", es: "Revestimiento de Reactor con Capacidad de Calor", pt: "Placa de Contenção de Reator", zh: "高热容反应堆隔板"});
 Translation.addTranslation("Heat-Capacity Reactor Plating", {ru: "Теплоёмкая реакторная обшивка", es: "Revestimiento de Contención para Reactor", pt: "Placa de Reator com Capacidade de Calor", zh: "密封反应堆隔热板"});
-Translation.addTranslation("Neutron Reflector", {ru: "Отражатель нейтронов", es: "Reflector de Neutrones", pt: "Reflector de Neutrons", zh: "中子反射板"});
-Translation.addTranslation("Thick Neutron Reflector", {ru: "Утолщённый отражатель нейтронов", es: "Reflector de Neutrones Grueso", pt: "Reflector de Neutrons Grosso", zh: "加厚中子反射板"});
-Translation.addTranslation("Iridium Neutron Reflector", {ru: "Иридиевый отражатель нейтронов", es: "Reflector de Neutrones de Iridio", pt: "Reflector de Neutrons de Irídio", zh: "铱中子反射板"});
+Translation.addTranslation("Neutron Reflector", {ru: "Отражатель нейтронов", es: "Reflector de Neutrones", pt: "Refletor de Neutrons", zh: "中子反射板"});
+Translation.addTranslation("Thick Neutron Reflector", {ru: "Утолщённый отражатель нейтронов", es: "Reflector de Neutrones Grueso", pt: "Refletor de Neutrons Grosso", zh: "加厚中子反射板"});
+Translation.addTranslation("Iridium Neutron Reflector", {ru: "Иридиевый отражатель нейтронов", es: "Reflector de Neutrones de Iridio", pt: "Refletor de Neutrons de Irídio", zh: "铱中子反射板"});
 Translation.addTranslation("10k Coolant Cell", {ru: "Охлаждающая капсула 10к", es: "Celda Refrigerante 10k", pt: "Célula Refrigerante de 10k", zh: "10k冷却单元"});
 Translation.addTranslation("30k Coolant Cell", {ru: "Охлаждающая капсула 30к", es: "Celda Refrigerante 30k", pt: "Célula Refrigerante de 30k", zh: "30k冷却单元"});
 Translation.addTranslation("60k Coolant Cell", {ru: "Охлаждающая капсула 60к", es: "Celda Refrigerante 60k", pt: "Célula Refrigerante de 60k", zh: "60k冷却单元"});
@@ -243,8 +249,8 @@ Translation.addTranslation("Advanced Heat Vent", {ru: "Улучшенный те
 Translation.addTranslation("Component Heat Vent", {ru: "Компонентный теплоотвод", es: "Componente para Ventilación de Calor", pt: "Ventilação de Calor Componente", zh: "元件散热片"});
 Translation.addTranslation("Reactor Heat Vent", {ru: "Реакторный теплоотвод", es: "Ventilación de Calor para Reactor", pt: "Ventilação de Calor para Reator", zh: "反应堆散热片"});
 Translation.addTranslation("Overclocked Heat Vent", {ru: "Разогнанный теплоотвод", es: "Ventilación de Calor con Sobreproducción", pt: "Ventilação de Calor com Overclock", zh: "超频散热片"});
-Translation.addTranslation("RSH-Condensator", {ru: "Красный конденсатор", es: "RSH-Condensador", pt: "RSH-Condensador", zh: "红石冷凝模块"});
-Translation.addTranslation("LZH-Condensator", {ru: "Лазуритовый конденсатор", es: "LZH-Condensador", pt: "LZH-Condensador", zh: "青金石冷凝模块"});
+Translation.addTranslation("RSH-Condensator", {ru: "Красный конденсатор", es: "RSH-Condensador", pt: "Condensador de Calor de Redstone (CCR)", zh: "红石冷凝模块"});
+Translation.addTranslation("LZH-Condensator", {ru: "Лазуритовый конденсатор", es: "LZH-Condensador", pt: "Condensador de Calor de Lápis-Lazúli (CCL)", zh: "青金石冷凝模块"});
 
 // Electric Components
 Translation.addTranslation("Electronic Circuit", {ru: "Электросхема", es: "Circuito Electrónico", pt: "Circuito Eletrônico", zh: "电路板"});
@@ -256,10 +262,10 @@ Translation.addTranslation("Small Power Unit", {ru: "Малый силовой �
 
 // Energy Storage
 Translation.addTranslation("RE-Battery", {ru: "Аккумулятор", es: "Batería Recargable", pt: "Bateria Reutilizável", zh: "充电电池"});
-Translation.addTranslation("Advanced RE-Battery", {ru: "Продвинутый аккумулятор", es: "Bateria-RE Avanzada", pt: "Bateria-RE Avançada", zh: "高级充电电池"});
+Translation.addTranslation("Advanced RE-Battery", {ru: "Продвинутый аккумулятор", es: "Bateria-RE Avanzada", pt: "Bateria Reutilizável Avançada", zh: "高级充电电池"});
 Translation.addTranslation("Energy Crystal", {ru: "Энергетический кристалл", es: "Cristal de Energía", pt: "Cristal de Energia", zh: "能量水晶"});
 Translation.addTranslation("Lapotron Crystal", {ru: "Лазуротроновый кристалл", es: "Cristal Lapotron", pt: "Cristal Lapotrônico", zh: "兰波顿水晶"});
-Translation.addTranslation("Charging RE-Battery", {ru: "Заряжающий аккумулятор", es: "Batería Cargadora", pt: "Bateria Carregadora", zh: "RE充电电池"});
+Translation.addTranslation("Charging RE-Battery", {ru: "Заряжающий аккумулятор", es: "Batería Cargadora", pt: "Bateria Reutilizável Carregadora", zh: "RE充电电池"});
 Translation.addTranslation("Advanced Charging Battery", {ru: "Продвинутый заряжающий аккумулятор", es: "Bateria Cargadora Avanzada", pt: "Bateria Carregadora Avançada", zh: "高级充电电池"});
 Translation.addTranslation("Charging Energy Crystal", {ru: "Заряжающий энергетический кристалл", es: "Cargador de Cristales de Energía", pt: "Carregador de Cristais de Energia", zh: "能量水晶充电电池"});
 Translation.addTranslation("Charging Lapotron Crystal", {ru: "Заряжающий лазуротроновый кристалл", es: "Cargador de Cristales Lapotron", pt: "Carregador de Cristais Lapotrônicos", zh: "兰波顿充电电池"});
@@ -294,7 +300,7 @@ Translation.addTranslation("Purified Crushed Silver Ore", {ru: "Очищенна
 Translation.addTranslation("Purified Crushed Uranium Ore", {ru: "Очищенная измельчённая урановая руда", es: "Mineral de Uranio Triturado y Purificado", pt: "Minério Purificado de Urânio Triturado", zh: "纯净的粉碎铀矿石"});
 
 // Dusts
-Translation.addTranslation("Copper Dust", {ru: "Медная пыль", es: "Polvo de Cobre", pt: "ó de Cobre", zh: "铜粉"});
+Translation.addTranslation("Copper Dust", {ru: "Медная пыль", es: "Polvo de Cobre", pt: "Pó de Cobre", zh: "铜粉"});
 Translation.addTranslation("Tin Dust", {ru: "Оловянная пыль", es: "Polvo de Estaño", pt: "Pó de Estanho", zh: "锡粉"});
 Translation.addTranslation("Bronze Dust", {ru: "Бронзовая пыль", es: "Polvo de Bronce", pt: "Pó de Bronze", zh: "青铜粉"});
 Translation.addTranslation("Iron Dust", {ru: "Железная пыль", es: "Polvo de Hierro", pt: "Pó de Ferro", zh: "铁粉"});
@@ -334,7 +340,7 @@ Translation.addTranslation("Iron Plate", {ru: "Железная пластина
 Translation.addTranslation("Bronze Plate", {ru: "Бронзовая пластина", es: "Placa de Bronce", pt: "Placa de Bronze", zh: "青铜板"});
 Translation.addTranslation("Steel Plate", {ru: "Стальная пластина", es: "Placa de Hierro Refinado", pt: "Placa de Aço", zh: "钢板"});
 Translation.addTranslation("Gold Plate", {ru: "Золотая пластина", es: "Placa de Oro", pt: "Placa de Ouro", zh: "金板"});
-Translation.addTranslation("Lapis Plate", {ru: "Лазуритовая пластина", es: "Placa de Lapislázuli", pt: "Placa de Lápis-Lazuli", zh: "青金石板"});
+Translation.addTranslation("Lapis Plate", {ru: "Лазуритовая пластина", es: "Placa de Lapislázuli", pt: "Placa de Lápis-Lazúli", zh: "青金石板"});
 Translation.addTranslation("Lead Plate", {ru: "Свинцовая пластина", es: "Placa de Plomo", pt: "Placa de Chumbo", zh: "铅板"});
 
 // Dense Plates
@@ -358,12 +364,16 @@ Translation.addTranslation("Lead Casing", {ru: "Свинцовая оболоч�
 // Cans
 Translation.addTranslation("Tin Can", {ru: "Консервная банка", es: "Lata de Estaño", pt: "Lata de Estanho", zh: "锡罐(空)"});
 Translation.addTranslation("Filled Tin Can", {ru: "Заполненная консервная банка", es: "Lata de Estaño (llena)", pt: "Lata de Estanho (Cheia)", zh: "锡罐(满)"});
-Translation.addTranslation("This looks bad...", {ru: "Это выглядит несъедобно…", zh: "这看起来很糟糕..."});
+Translation.addTranslation("This looks bad...", {ru: "Это выглядит несъедобно…", pt: "Isso parece ruim ...", zh: "这看起来很糟糕..."});
 
 // Cells
 Translation.addTranslation("Cell", {ru: "Капсула", es: "Celda Vacía", pt: "Célula Universal de Fluidos", zh: "空单元"});
 Translation.addTranslation("Water Cell", {ru: "Капсула с водой", es: "Celda de Agua", pt: "Célula com Água", zh: "水单元"});
 Translation.addTranslation("Lava Cell", {ru: "Капсула с лавой", es: "Celda de Lava", pt: "Célula com Lava", zh: "岩浆单元"});
+Translation.addTranslation("Biomass Cell", {ru: "Капсула биомассы", es: "Celda de Biomasa", pt: "Célula com Biomassa", zh: "生物质单元"});
+Translation.addTranslation("Biogas Cell", {ru: "Капсула биогаза", pt: "Célula com Biogás", zh: "沼气单元"});
+Translation.addTranslation("Coolant Cell", {ru: "Капсула хладагента", es: "Celda de Refrigerante", pt: "Célula com Líquido Refrigerante", zh: "冷却液单元"});
+Translation.addTranslation("UU-Matter Cell", {ru: "Капсула жидкой материи", es: "Celda de Materia UU", pt: "Célula com Matéria UU", zh: "UU物质单元"});
 Translation.addTranslation("Compressed Air Cell", {ru: "Капсула со сжатым воздухом", es: "Celda de Aire Comprimida", pt: "Célula com Ar Comprimido", zh: "压缩空气单元"});
 
 // Cables
@@ -382,27 +392,27 @@ Translation.addTranslation("Glass Fibre Cable", {ru: "Стекловолокон
 
 // Armor
 Translation.addTranslation("Bronze Helmet", {ru: "Бронзовый шлем", es: "Casco de Bronce", pt: "Elmo de Bronze", zh: "青铜头盔"});
-Translation.addTranslation("Bronze Chestplate", {ru: "Бронзовый нагрудник", es: "Chaleco de Bronce", pt: "Armadura de Bronze", zh: "青铜胸甲"});
-Translation.addTranslation("Bronze Leggings", {ru: "Бронзовые поножи", es: "Pantalones de Bronce", pt: "Perneiras de Bronze", zh: "青铜护腿"});
+Translation.addTranslation("Bronze Chestplate", {ru: "Бронзовый нагрудник", es: "Chaleco de Bronce", pt: "Peitoral de Bronze", zh: "青铜胸甲"});
+Translation.addTranslation("Bronze Leggings", {ru: "Бронзовые поножи", es: "Pantalones de Bronce", pt: "Calças de Bronze", zh: "青铜护腿"});
 Translation.addTranslation("Bronze Boots", {ru: "Бронзовые ботинки", es: "Botas de Bronce", pt: "Botas de Bronze", zh: "青铜靴子"});
 Translation.addTranslation("Composite Helmet", {ru: "Композитный шлем", es: "Casco de Compuesto", pt: "Capacete Composto", zh: "复合头盔"});
 Translation.addTranslation("Composite Chestplate", {ru: "Композитный нагрудник", es: "Chaleco de Compuesto", pt: "Colete Composto", zh: "复合胸甲"});
-Translation.addTranslation("Composite Leggings", {ru: "Композитные поножи", es: "Pantalones de Compuesto", pt: "Perneiras compostas", zh: "复合护腿"});
+Translation.addTranslation("Composite Leggings", {ru: "Композитные поножи", es: "Pantalones de Compuesto", pt: "Calças compostas", zh: "复合护腿"});
 Translation.addTranslation("Composite Boots", {ru: "Композитные ботинки", es: "Botas de Compuesto", pt: "Botas compostas", zh: "复合靴子"});
-Translation.addTranslation("Nightvision Goggles", {ru: "Прибор ночного зрения", es: "Gafas de Vision Nocturna", pt: "Óculos de Visão", zh: "夜视镜"});
+Translation.addTranslation("Nightvision Goggles", {ru: "Прибор ночного зрения", es: "Gafas de Vision Nocturna", pt: "Óculos de Visão Noturna", zh: "夜视镜"});
 Translation.addTranslation("Nano Helmet", {ru: "Нано-шлем", es: "Casco de Nanotraje", pt: "Elmo de Nanotecnologia", zh: "纳米头盔"});
-Translation.addTranslation("Nano Bodyarmor", {ru: "Нано-жилет", es: "Chaleco de Nanotraje", pt: "Armadura de Nanotecnologia", zh: "纳米胸甲"});
-Translation.addTranslation("Nano Leggings", {ru: "Нано-штаны", es: "Pantalones de Nanotraje", pt: "Calça de Nanotecnologia", zh: "纳米护腿"});
+Translation.addTranslation("Nano Bodyarmor", {ru: "Нано-жилет", es: "Chaleco de Nanotraje", pt: "Peitoral de Nanotecnologia", zh: "纳米胸甲"});
+Translation.addTranslation("Nano Leggings", {ru: "Нано-штаны", es: "Pantalones de Nanotraje", pt: "Calças de Nanotecnologia", zh: "纳米护腿"});
 Translation.addTranslation("Nano Boots", {ru: "Нано-ботинки", es: "Botas de Nanotraje", pt: "Botas de Nanotecnologia", zh: "纳米靴子"});
 Translation.addTranslation("Quantum Helmet", {ru: "Квантовый шлем", es: "Casco de Traje Cuántico", pt: "Elmo Quântico", zh: "量子头盔"});
-Translation.addTranslation("Quantum Bodyarmor", {ru: "Квантовый жилет", es: "Chaleco de Traje Cuántico", pt: "Armadura Quântica", zh: "量子护甲"});
+Translation.addTranslation("Quantum Bodyarmor", {ru: "Квантовый жилет", es: "Chaleco de Traje Cuántico", pt: "Peitoral Quântico", zh: "量子护甲"});
 Translation.addTranslation("Quantum Leggings", {ru: "Квантовые штаны", es: "Pantalones de Traje Cuántico", pt: "Calças Quânticas", zh: "量子护腿"});
 Translation.addTranslation("Quantum Boots", {ru: "Квантовые ботинки", es: "Botas de Traje Cuántico", pt: "Botas Quânticas", zh: "量子靴子"});
 Translation.addTranslation("Scuba Helmet", {ru: "Шлем-акваланг", es: "Casco de Buceo", pt: "Máscara de Mergulho", zh: "防化头盔"});
 Translation.addTranslation("Hazmat Suit", {ru: "Защитная куртка", es: "Traje para Materiales Peligrosos", pt: "Roupa Anti-Radiação", zh: "防化服"});
 Translation.addTranslation("Hazmat Suit Leggings", {ru: "Защитные штаны", es: "Pantalones para Materiales Peligrosos", pt: "Calças Anti-Radiação", zh: "防化裤"});
 Translation.addTranslation("Rubber Boots", {ru: "Резиновые ботинки", es: "Botas de Goma", pt: "Botas de Borracha", zh: "橡胶靴"});
-Translation.addTranslation("Jetpack", {ru: "Реактивный ранец", es: "Jetpack Eléctrico", pt: "Mochila à Jato", zh: "电力喷气背包"});
+Translation.addTranslation("Jetpack", {ru: "Реактивный ранец", es: "Jetpack Eléctrico", pt: "Mochila à Jato Elétrica", zh: "电力喷气背包"});
 Translation.addTranslation("Batpack", {ru: "Аккумуляторный ранец", es: "Mochila de Baterías", pt: "Mochila de Baterias", zh: "电池背包"});
 Translation.addTranslation("Advanced Batpack", {ru: "Продвинутый аккумуляторный ранец", es: "Mochila de Baterías Avanzada", pt: "Mochila de Baterias Avançada", zh: "高级电池背包"});
 Translation.addTranslation("Energy Pack", {ru: "Энергетический ранец", es: "Pack de Energía", pt: "Mochila de Energia", zh: "能量水晶储电背包"});
@@ -423,9 +433,9 @@ Translation.addTranslation("Bronze Pickaxe", {ru: "Бронзовая кирка
 Translation.addTranslation("Bronze Axe", {ru: "Бронзовый топор", es: "Hacha de Bronce", pt: "Machado de Bronze", zh: "青铜斧"});
 Translation.addTranslation("Bronze Hoe", {ru: "Бронзовая мотыга", es: "Azada de Bronce", pt: "Enxada de Bronze", zh: "青铜锄"});
 Translation.addTranslation("Wrench", {ru: "Гаечный ключ", es: "Llave Inglesa", pt: "Chave de Grifo", zh: "扳手"});
-Translation.addTranslation("Electric Wrench", {ru: "Электроключ", es: "Llave Inglesa Eléctrica", pt: "Laser de Mineração", zh: "电动扳手"});
+Translation.addTranslation("Electric Wrench", {ru: "Электроключ", es: "Llave Inglesa Eléctrica", pt: "Chave de Grifo Elétrica", zh: "电动扳手"});
 Translation.addTranslation("Electric Hoe", {ru: "Электромотыга", es: "Azada Eléctrica", pt: "Enxada Elétrica", zh: "电动锄"});
-Translation.addTranslation("Electric Treetap", {ru: "Электрокраник", es: "Grifo para Resina Eléctrico", pt: "Chave de Grifo Elétrica", zh: "电动树脂提取器"});
+Translation.addTranslation("Electric Treetap", {ru: "Электрокраник", es: "Grifo para Resina Eléctrico", pt: "Drenador Elétrico", zh: "电动树脂提取器"});
 Translation.addTranslation("Chainsaw", {ru: "Электропила", es: "Motosierra", pt: "Serra Elétrica", zh: "链锯"});
 Translation.addTranslation("Mining Drill", {ru: "Шахтёрский бур", es: "Taladro", pt: "Broca de Mineração", zh: "采矿钻头"});
 Translation.addTranslation("Diamond Drill", {ru: "Алмазный бур", es: "Taladro de Diamante", pt: "Broca de Diamante", zh: "钻石钻头"});
@@ -433,9 +443,64 @@ Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es
 Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-Sable", pt: "Sabre Nano", zh: "纳米剑"});
 Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", pt: "Laser de Mineração", zh: "采矿镭射枪"});
 Translation.addTranslation("EU Meter", {ru: "Мультиметр", pt: "Leitor de EU", zh: "EU电表"});
+Translation.addTranslation("Debug Item", {ru: "Предмет отладки", pt: "Item de Depuração", zh:"测试工具"});
+Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh: "作物分析器"});
+Translation.addTranslation("Weeding Trowel", {ru: "Пропалыватель", pt: "Espátula Transplantadora", zh: "除草铲"});
+
+// Coffee
+Translation.addTranslation("Coffee Powder", {ru: "Молотый кофе", es: "Polvo de Café", pt: "Pó de Café", zh: "咖啡粉"});
+Translation.addTranslation("Stone Mug", {ru: "Каменная кружка", es: "Jarra de Piedra", pt: "Caneca de Pedra", zh: "石杯"});
+Translation.addTranslation("Cold Coffee", {ru: "Холодный кофе", es: "Café Frío", pt: "Café Frio", zh: "冷咖啡"});
+Translation.addTranslation("Dark Coffee", {ru: "Тёмный кофе", es: "Café Oscuro", pt: "Café Forte", zh: "黑咖啡"});
+Translation.addTranslation("Coffee", {ru: "Кофе", es: "Café", pt: "Café", zh: "咖啡"});
+
+// Crop Items
+Translation.addTranslation("Seed Bag (%s)", {ru: "Мешок с семенами (%s)", es: "Semillas Desconocidas (%s)", pt: "Saco de sementes (%s)", zh: "种子袋 (%s)"});
+Translation.addTranslation("Crop", {ru: "Жёрдочки", pt: "Muda", zh: "作物架"});
+Translation.addTranslation("Grin Powder", {ru: "Токсичная пыль", es: "Polvo Horrible", zh: "蛤蛤粉", pt: "Pó do Riso"});
+Translation.addTranslation("Weed EX", {ru: "Средство от сорняков", es: "Veneno para Hierbas", pt: "Erbicida", zh: "除草剂"});
+Translation.addTranslation("Fertilizer", {ru: "Удобрение", es: "Fertilizante", pt: "Fertilizante", zh: "肥料"});
+Translation.addTranslation("Hydration Cell", {ru: "Увлажняющая капсула", pt: "Líquido de Refrigeração", zh: "水化单元"});
+Translation.addTranslation("Terra Wart", {ru: "Земляной нарост", es: "Verruga de Tierra", pt: "Fungo da Terra", zh: "大地疣"});
+Translation.addTranslation("Coffee Beans", {ru: "Кофейные зёрна", es: "Granos de Café", pt: "Grãos de Café", zh: "咖啡豆"});
+Translation.addTranslation("Weed", {ru: "Сорняк", pt: "Erva Daninha", zh: "杂草"});
+Translation.addTranslation("Hops", {ru: "Хмель", es: "Lúpulo", pt: "Lúpulo", zh: "啤酒花"});
+
+// Crops
+Translation.addTranslation("wheat", {ru: "Пшеница", en: "Wheat", pt: "Trigo", zh: "小麦"});
+Translation.addTranslation("weed", {ru: "Сорняк", en: "Weed", pt: "Erva Daninha", zh: "杂草"});
+Translation.addTranslation("pumpkin", {ru: "Тыква", en: "Pumpkin", pt: "Abóbora", zh: "南瓜"});
+Translation.addTranslation("melon", {ru: "Арбуз", en: "Melon", pt: "Melancia", zh: "西瓜"});
+Translation.addTranslation("dandelion", {ru: "Одуванчик", en: "Dandelion", pt: "Dente-de-Leão", zh: "蒲公英"});
+Translation.addTranslation("rose", {ru: "Роза", en: "Rose", pt: "Rosa", zh: "玫瑰"});
+Translation.addTranslation("blackthorn", {ru: "Терновник", en: "Blackthorn", pt: "Espinheiro-negro", zh: "黑刺李"});
+Translation.addTranslation("tulip", {ru: "Тюльпан", en: "Tulip", pt: "Tulipa", zh: "郁金香"});
+Translation.addTranslation("cyazint", {ru: "Гиацинт", en: "Cyazint", pt: "Cyazint", zh: "缤纷花"});
+Translation.addTranslation("venomilia", {ru: "Веномилия", en: "Venomilia", pt: "Venomilia", zh: "奇妙花"});
+Translation.addTranslation("reed", {ru: "Сахарный тростник", en: "Reed", pt: "Cana-de-açúcar", zh: "甘蔗"});
+Translation.addTranslation("stickreed", {ru: "Резиновый тростник", en: "Stickreed", zh: "粘性甘蔗", pt: "Cana-de-borracha"});
+Translation.addTranslation("cocoa", {ru: "Какао", en: "Cocoa", pt: "Cacau", zh: "可可"});
+Translation.addTranslation("red_mushroom", {ru: "Красный гриб", en: "Red Mushroom", pt: "Cogumelo Vermelho", zh: "红色蘑菇"});
+Translation.addTranslation("brown_mushroom", {ru: "Коричневый гриб", en: "Brown Mushroom", pt: "Cogumelo marrom", zh: "棕色蘑菇"});
+Translation.addTranslation("nether_wart", {ru: "Адский нарост", en: "Nether Wart", pt: "Fungo do Nether", zh: "地狱疣"});
+Translation.addTranslation("terra_wart", {ru: "Земляной нарост", en: "Terra Wart", pt: "Fungo da Terra", zh: "大地疣"});
+Translation.addTranslation("ferru", {ru: "Феррий", en: "Ferru", pt: "Ferru", zh: "铁叶草"});
+Translation.addTranslation("cyprium", {ru: "Куприй", en: "Cyprium", pt: "Chipre", zh: "铜叶草"});
+Translation.addTranslation("stagnium", {ru: "Стагний", en: "Stagnium", pt: "Stagnium", zh: "银矿草"});
+Translation.addTranslation("plumbiscus", {ru: "Плюмбий", en: "Plumbiscus", pt: "Biscoito de canela", zh: "铅叶草"});
+Translation.addTranslation("aurelia", {ru: "Аурелия", en: "Aurelia", pt: "Aurélia", zh: "金叶草"});
+Translation.addTranslation("shining", {ru: "Аргентий", en: "Shining", pt: "Brilhante", zh: "闪光"});
+Translation.addTranslation("redwheat", {ru: "Красная пшеница", en: "Red Wheat", pt: "Trigo Vermelho", zh: "红麦"});
+Translation.addTranslation("coffee", {ru: "Кофе", en: "Coffee", pt: "Café", zh: "咖啡"});
+Translation.addTranslation("hops", {ru: "Хмель", en: "Hops", pt: "Lúpulo", zh: "啤酒花"});
+Translation.addTranslation("carrots", {ru: "Морковь", en: "Carrots", pt: "Cenouras", zh: "胡萝卜"});
+Translation.addTranslation("potato", {ru: "Картофель", en: "Potato", pt: "Batata", zh: "马铃薯"});
+Translation.addTranslation("eatingplant", {ru: "Плотоядное растение", en: "Eating Plant", pt: "Planta Carnívora", zh: "食人花"});
+Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt: "Beterrabas", zh: "甜菜根"});
 
 // TEXT
 // Fluid Distributor
+Translation.addTranslation("Mode:", {ru: "Режим:", es: "Modo:", pt: "Modo:", zh: "模式:"});
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "分配模式"});
 Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "concentrado", pt: "Concentrar", zh: "混合模式"});
@@ -443,12 +508,12 @@ Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "con
 Translation.addTranslation("Mode: Blacklist", {ru: "Чёрный список", es: "Modo: lista negra", pt: "Modo: Lst Negra", zh: "模式:黑名单"});
 Translation.addTranslation("Mode: Whitelist", {ru: "Белый список", es: "Modo: lista blanca", pt: "Modo: Lst Branca", zh: "模式:白名单"});
 // EU Meter
-Translation.addTranslation("EnergyIn", {ru: "Вход энергии", zh: "输入能量"});
-Translation.addTranslation("EnergyOut", {ru: "Выход энергии", zh: "输出能量"});
+Translation.addTranslation("EnergyIn", {ru: "Вход энергии", pt: "EnergiaEntr", zh: "能量流入"});
+Translation.addTranslation("EnergyOut", {ru: "Выход энергии", pt: "EnergiaSaid", zh: "能量流出"});
 Translation.addTranslation("EnergyGain", {ru: "Энергии получено", es: "EnergíaGana", pt: "GanhoEnerg", zh: "获得能量"});
 Translation.addTranslation("Voltage", {ru: "Напряжение", es: "Voltaje", pt: "Voltagem", zh: "电压"});
 Translation.addTranslation("Avg:", {ru: "Средн.:", es: "Promedio:", pt: "Méd:", zh: "平均:"});
-Translation.addTranslation("Max/Min", {ru: "Макс./Мин.", zh: "最大/最小"});
+Translation.addTranslation("Max/Min", {ru: "Макс./Мин.", pt: "Máx/Min", zh: "最大/最小"});
 Translation.addTranslation("Cycle: ", {ru: "Цикл: ", es: "Ciclo: ", pt: "Cíclo: ", zh: "周期: "});
 Translation.addTranslation("Reset", {ru: "Сброс", pt: "Resetar", zh: "重置"});
 // Mining Laser
@@ -459,8 +524,8 @@ Translation.addTranslation("Horizontal", {ru: "Горизонтальный", zh
 Translation.addTranslation("Super-Heat", {ru: "Перегревающий", es: "Super-Calor", pt: "Super Quente", zh: "超级热线模式"});
 Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
 // Iridium Drill
-Translation.addTranslation("Fortune III", {ru: "Удача III", zh: "时运 III"});
-Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", zh: "精准采集"});
+Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna III", zh: "时运 III"});
+Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
 
 // Messages
 Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
@@ -471,12 +536,13 @@ Translation.addTranslation("Hover mode enabled", {ru: "Режим парения
 // Tooltips
 Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: ", zh: "能量等级: "});
 Translation.addTranslation("Max voltage: ", {ru: "Макс. напряжение: ", zh: "最大电压: "});
-Translation.addTranslation("Decrease process time to ", {ru: "Уменьшает время работы до ", zh: "加工用时缩短为"});
-Translation.addTranslation("Increase power to ", {ru: "Увеличивает энергопотребление до ", zh: "能量增加到"});
-Translation.addTranslation("Increase energy tier by 1", {ru: "Увеличивает энергоуровень на 1 ", zh: "增加一级输出电压1"});
-Translation.addTranslation("Increase energy storage by 10k EU", {ru: "Увеличивает энергоёмкость на 10k EU", zh: "增加10k EU储能"});
-Translation.addTranslation("Automatically output to\nthe %s side", {ru: "Автоматическое извлечение с %s стороны"});
-Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Автоматический ввод с %s стороны"});
+Translation.addTranslation("Decrease process time to ", {ru: "Уменьшает время работы до ", pt: "Diminui o tempo de processo para ", zh: "加工用时缩短为"});
+Translation.addTranslation("Increase power to ", {ru: "Увеличивает энергопотребление до ", pt: "Aumenta o Uso de Energia em ", zh: "能量增加到"});
+Translation.addTranslation("Increase energy tier by 1", {ru: "Увеличивает энергоуровень на 1 ", pt: "Aumenta o nível da máquina em 1", zh: "增加一级输出电压"});
+Translation.addTranslation("Increase energy storage by 10k EU", {ru: "Увеличивает энергоёмкость на 10k EU", pt: "Aumenta o armazenamento de energia em 10k EU", zh: "增加10k EU储能"});
+Translation.addTranslation("Automatically output to\nthe %s side", {ru: "Автоматическое извлечение с %s стороны", zh: "自动输出到%s方向"});
+Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Автоматический ввод с %s стороны", zh: "自动从%s抽入物品"});
+// side names are translated in core/item_name.js
 
 
 
@@ -783,14 +849,74 @@ var MachineRegistry = {
 		return add;
 	},
 	
+	getLiquidFromItem: function(liquid, inputItem, outputItem, hand){
+		if(hand) outputItem = {id: 0, count: 0, data: 0};
+		var empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
+		if(empty && (!liquid && this.interface.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid)){
+			if(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0){
+				var liquidLimit = this.liquidStorage.getLimit(empty.liquid);
+				var storedAmount = this.liquidStorage.getAmount(liquid).toFixed(3);
+				var count = Math.min(hand? inputItem.count : 1, parseInt((liquidLimit - storedAmount) / empty.amount));
+				if(count > 0){
+					this.liquidStorage.addLiquid(empty.liquid, empty.amount * count);
+					inputItem.count -= count;
+					outputItem.id = empty.id;
+					outputItem.data = empty.data;
+					outputItem.count += count;
+					if(!hand) this.container.validateAll();
+				}
+				else if(inputItem.count == 1 && empty.storage){
+					var amount = Math.min(liquidLimit - storedAmount, empty.amount);
+					this.liquidStorage.addLiquid(empty.liquid, amount);
+					inputItem.data += amount * 1000;
+				}
+				if(hand){
+					if(outputItem.id){
+						Player.addItemToInventory(outputItem.id, outputItem.count, outputItem.data);
+					}
+					if(inputItem.count == 0) inputItem.id = inputItem.data = 0;
+					Player.setCarriedItem(inputItem.id, inputItem.count, inputItem.data);
+					return true;
+				}
+			}
+		}
+	},
+	
+	addLiquidToItem: function(liquid, inputItem, outputItem){
+		var amount = this.liquidStorage.getAmount(liquid).toFixed(3);
+		if(amount > 0){
+			var full = LiquidLib.getFullItem(inputItem.id, inputItem.data, liquid);
+			if(full && (outputItem.id == full.id && outputItem.data == full.data && outputItem.count < Item.getMaxStack(full.id) || outputItem.id == 0)){
+				if(amount >= full.amount){
+					this.liquidStorage.getLiquid(liquid, full.amount);
+					inputItem.count--;
+					outputItem.id = full.id;
+					outputItem.data = full.data;
+					outputItem.count++;
+					this.container.validateAll();
+				}
+				else if(inputItem.count == 1 && full.storage){
+					if(inputItem.id == full.id){
+						amount = this.liquidStorage.getLiquid(liquid, full.amount);
+						inputItem.data -= amount * 1000;
+					} else {
+						amount = this.liquidStorage.getLiquid(liquid, full.storage);
+						inputItem.id = full.id;
+						inputItem.data = (full.storage - amount)*1000;
+					}
+				}
+			}
+		}
+	},
+	
 	isValidEUItem: function(id, count, data, container){
 		var level = container.tileEntity.getTier();
-		return ChargeItemRegistry.isValidItem(id, "Eu",  level);
+		return ChargeItemRegistry.isValidItem(id, "Eu", level);
 	},
 	
 	isValidEUStorage: function(id, count, data, container){
 		var level = container.tileEntity.getTier();
-		return ChargeItemRegistry.isValidStorage(id, "Eu",  level);
+		return ChargeItemRegistry.isValidStorage(id, "Eu", level);
 	},
 	
 	updateGuiHeader: function(gui, text){
@@ -858,8 +984,14 @@ var MachineRecipeRegistry = {
 		this.recipeData[name] = data;
 	},
 	
-	addRecipeFor: function(name, source, result){
-		this.requireRecipesFor(name, true)[source] = result;
+	addRecipeFor: function(name, input, result){
+		var recipes = this.requireRecipesFor(name, true);
+		if(Array.isArray(recipes)){
+			recipes.push({input: input, result: result});
+		}
+		else {
+			recipes[input] = result;
+		}
 	},
 	
 	requireRecipesFor: function(name, createIfNotFound){
@@ -910,11 +1042,11 @@ var UpgradeAPI = {
 		this.data[id] = {type: type, func: func};
 	},
 
-	callUpgrade: function(item, machine, container, data, coords){
-		var upgrades = container.tileEntity.upgrades;
+	callUpgrade: function(item, machine, container, data){
+		var upgrades = machine.upgrades;
 		var upgrade = this.getUpgradeData(item.id);
 		if(upgrade && (!upgrades || upgrades.indexOf(upgrade.type) != -1)){
-			upgrade.func(item, machine, container, data, coords);
+			upgrade.func(item, machine, container, data);
 		}
 	},
 	
@@ -923,13 +1055,14 @@ var UpgradeAPI = {
 		for(var slotName in container.slots){
 			if(slotName.match(/Upgrade/)){
 				var slot = container.getSlot(slotName);
-				if(slot.id){
+				if(slot.id > 0){
 					var find = false;
 					for(var i in upgrades){
 						var item = upgrades[i];
 						if(item.id == slot.id && item.data == slot.data){
-							find = true;
 							item.count += slot.count;
+							find = true;
+							break;
 						}
 					}
 					if(!find){
@@ -945,10 +1078,9 @@ var UpgradeAPI = {
 	executeUpgrades: function(machine){
 		var container = machine.container;
 		var data = machine.data;
-		var coords = {x: machine.x, y: machine.y, z: machine.z};
 		var upgrades = this.getUpgrades(machine, container);
 		for(var i in upgrades){
-			this.callUpgrade(upgrades[i], machine, container, data, coords);
+			this.callUpgrade(upgrades[i], machine, container, data);
 		}
 		StorageInterface.checkHoppers(machine);
 	},
@@ -1061,7 +1193,7 @@ var ICTool = {
 		Item.registerUseFunction(nameID, function(coords, item, block){
 			if((block.id==2 || block.id==3 || block.id==110 || block.id==243) && coords.side==1 && ICTool.useElectricItem(item, 50)){ 
 				World.setBlock(coords.x, coords.y, coords.z, 60);
-				World.playSoundAtEntity(Player.get(), "step.grass", 0.5, 0.75);
+				World.playSoundAtEntity(Player.get(), "step.gravel", 1, 0.75);
 			}
 		});
 	},
@@ -1672,6 +1804,12 @@ ItemName = {
 		});
 	},
 	
+	addStoredLiquidTooltip: function(id){
+		Item.registerNameOverrideFunction(id, function(item, name){
+			return name += "\n§7Stored: " + (1000 - item.data) + " mB";
+		});
+	},
+	
 	showBlockStorage: function(name, tier, capacity){
 		var tierText = "§7" + Translation.translate("Power Tier: ") + tier;
 		tierText = this.getTooltip(name, tierText);
@@ -1751,6 +1889,33 @@ ItemName = {
 				"южной",
 				"восточной",
 				"западной"
+			],
+			zh: [
+				"初次生效",
+				"底部",
+				"顶部",
+				"北边",
+				"南边",
+				"东边",
+				"西边"
+			],
+			es: [
+				"Primera vez efectivo",
+				"abajo",
+				"arriba",
+				"norte",
+				"sur",
+				"este",
+				"oeste"
+			],
+			pt: [
+				"Primeira vez eficaz",
+				"o lado de baixo",
+				"o lado de cima",
+				"o norte",
+				"o sul",
+				"o leste",
+				"o oeste"
 			]
 		}
 		if(sideNames[Config.language]){
@@ -2899,6 +3064,1729 @@ Callback.addCallback("PreLoaded", function(){
 
 
 
+// file: block/crop/harvestAPI.js
+
+Block.createSpecialType({
+    base: 59,
+    destroytime: 0,
+    explosionres: 0,
+    opaque: false,
+    lightopacity: 0,
+}, "plant");
+
+var AgricultureAPI = {
+    cropCards:[],
+    abstractFunctions:{/* file: baseCropClasses.js */},
+    nutrientBiomeBonusValue:{/* file: biome_bonuses.js */},
+    registerCropCard: function(card){
+        if(!card.texture) card.texture = card.id;
+        if(card.base){
+            var funcs = AgricultureAPI.abstractFunctions[card.base];
+            if(funcs) this.addMissingFuncsToCard(card, funcs);
+        }
+        this.addMissingFuncsToCard(card, AgricultureAPI.abstractFunctions["IC2CropCard"]);
+        if(card.baseSeed.addToCreative != false){
+			Item.addToCreative(ItemID.cropSeedBag, 1, this.cropCards.length);
+		}
+        this.cropCards.push(card);
+    },
+    addMissingFuncsToCard: function(card, functions){
+        for(var funcName in functions){
+            if(!card[funcName]){
+                card[funcName] = functions[funcName];
+            }
+        }
+    },
+    getCropCard: function(id){
+        for(var i in this.cropCards){
+            if(this.cropCards[i].id == id)
+				return this.cropCards[i];
+        }
+		return null;
+    },
+    getCardIndexFromID: function(id){
+        for(var i in this.cropCards){
+            if(this.cropCards[i].id == id) return i;
+        }
+		return null;
+    },
+    getHumidityBiomeBonus: function(x, z){
+        return 0;
+    },
+    getNutrientBiomeBonus: function(x, z){
+        var biomeID = World.getBiome(x, z);
+        var bonus = AgricultureAPI.nutrientBiomeBonusValue[biomeID];
+        return bonus || 0;
+    },
+    getCardFromSeed: function(item){
+        for(var i in this.cropCards){
+            var seed = this.cropCards[i].baseSeed;
+            if(seed && eval(seed.id) == item.id && (!seed.data || seed.data == item.data)){
+				return this.cropCards[i];
+            }
+        }
+        return null;
+    },
+    generateExtraFromValues: function(data){
+        var extra = new ItemExtraData();
+        extra.putInt("growth", data.statGrowth);
+        extra.putInt("gain", data.statGain);
+        extra.putInt("resistance", data.statResistance);
+        extra.putInt("scan", data.scanLevel);
+        return extra;
+    },
+    addDefaultExtra: function(item){
+        var extra = new ItemExtraData();
+        var card = AgricultureAPI.cropCards[item.data];
+        extra.putInt("growth", card.baseSeed.growth);
+        extra.putInt("gain", card.baseSeed.gain);
+        extra.putInt("resistance", card.baseSeed.resistance);
+        extra.putInt("scan", 4);
+        Player.setCarriedItem(item.id, 1, item.data, extra);
+        return extra;
+    }
+};
+
+
+
+
+// file: block/crop/biome_bonuses.js
+
+AgricultureAPI.nutrientBiomeBonusValue = {
+    21:10,
+    22:10,
+    23:10,
+    149:10,
+    151:10,
+    6:10,
+    134:10,
+    14:5,
+    15:5,
+    4:5,
+    132:5,
+    18:5,
+    27:5,
+    155:5,
+    157:5,
+    29:5,
+    28:5,
+    7:2,
+    11:2,
+    1:0,
+    128:0,
+    129:0,
+    12:0,
+    35:-2,
+    163:-2,
+    36:-2,
+    3:-5,
+    13:-5,
+    162:-5,
+    165:-5,
+    166:-5,
+    34:-5,
+    158:-5,
+    131:-5,
+    37:-5,
+    38:-5,
+    39:-5,
+    17:-5,
+    18:-5,
+    19:-5,
+    20:-5,
+    23:-5,
+    161:-5,
+    156:-5,
+    33:-5,
+    31:-5
+};
+
+
+
+
+// file: block/crop/base_crop_classes.js
+
+AgricultureAPI.abstractFunctions["IC2CropCard"] = {
+    baseSeed: {
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 1,
+    getOptimalHarvestSize(te) {
+        return te.crop.maxSize;
+    },
+    getDiscoveredBy: function() {
+        return "IC2 Team";
+    },
+    isWeed: function(te){return false},
+    tick: function(te){},
+    dropGainChance: function(te){
+        return Math.pow(0.95, te.crop.properties.tier);
+    },
+    canGrow: function(te){
+        return te.data.currentSize < te.crop.maxSize;
+    },
+    canBeHarvested: function(te){
+        return te.data.currentSize == te.crop.maxSize;
+    },
+    getGrowthDuration: function(te){
+        return te.crop.properties.tier * 200;
+    },
+    getSeeds: function(te){
+        return te.generateSeeds(te.data);
+    },
+    getSeedDropChance: function(te){
+        if (te.data.currentSize == 1) return 0;
+        var base = .5;
+        if (te.data.currentSize ==  2) base /= 2;
+        base *= Math.pow(0.8, te.crop.properties.tier);
+        return base;
+    },
+    onLeftClick: function(te){return te.pick()},
+    onRightClick: function(te){return te.performManualHarvest()},
+    onEntityCollision: function(te){return true},
+    getSizeAfterHarvest: function(te){return 1},
+    getRootsLength: function(te){return 1}
+};
+
+AgricultureAPI.abstractFunctions["CropVanilla"] = {
+    getDiscoveredBy: function() {
+        return "Notch";
+    },
+    getProduct: function(){return {id: 0, count: 1, data: 0}},
+    canGrow: function(tileentity){
+        var light = World.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
+        return tileentity.data.currentSize < tileentity.crop.maxSize && light >= 9;
+    },
+    getGain: function(te){
+        return te.crop.getProduct();
+    },
+    getSeeds: function(te){
+        if (te.data.statGain <= 1 && te.data.statGrowth <= 1 && te.data.statResistance <= 1) {
+            return AgricultureAPI.abstractFunctions["CropVanilla"].getSeed();
+        }
+        return AgricultureAPI.abstractFunctions["IC2CropCard"].getSeeds(te);
+    },
+    getSeed: function(){return {id: 0, count: 0, data: 0}}
+};
+
+AgricultureAPI.abstractFunctions["CropColorFlower"] = {
+    getDiscoveredBy: function() {
+        if (this.name == "dandelion" || this.name == "rose") {
+            return "Notch";
+        }
+        return "Alblaka";
+    },
+    properties: {
+        tier: 2,
+        chemistry: 1,
+        consumable: 1 ,
+        defensive: 0,
+        colorful: 5,
+        weed: 1
+    },
+    maxSize: 4,
+    color: 0,
+    getOptimalHarvestSize: function(crop){return 4},
+    canGrow(tileentity) {
+        var light = World.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
+        return tileentity.data.currentSize < tileentity.crop.maxSize &&  light >= 12;
+    },
+    getGain: function(te){return {id: 351, count: 1, data: this.color}},
+    getSizeAfterHarvest: function(te){return 3},
+    getGrowthDuration(crop) {
+        if (crop.data.currentSize  ==  3) {
+            return 600;
+        }
+        return 400;
+    }
+};
+
+AgricultureAPI.abstractFunctions["CropBaseMushroom"] = {
+    properties: {
+        tier: 2,
+        chemistry: 0,
+        consumable: 4 ,
+        defensive: 0,
+        colorful: 0,
+        weed: 4
+    },
+    maxSize: 3,
+    canGrow: function(crop) {
+        return crop.data.currentSize < this.maxSize && crop.data.storageWater > 0;
+    },
+    getGrowthDuration: function(crop){return 200;}
+};
+
+AgricultureAPI.abstractFunctions["CropBaseMetalCommon"] = {
+    properties: {
+        tier: 6,
+        chemistry: 2,
+        consumable: 0 ,
+        defensive: 0,
+        colorful: 1,
+        weed: 0
+    },
+    maxSize: 4,
+    cropRootsRequirement: [],
+    getOptimalHarvestSize: function(crop){return 4},
+    getRootsLength: function(crop) {return 5},
+    canGrow: function(crop) {
+        if (crop.data.currentSize < 3) return true;
+        if (crop.data.currentSize  ==  3) {
+            if (!this.cropRootsRequirement || !this.cropRootsRequirement.length ) return true;
+            for(var ind in this.cropRootsRequirement){
+                var id = this.cropRootsRequirement[ind];
+                if(crop.isBlockBelow(eval(id))) return true;
+            }
+        }
+        return false;
+    },
+    canBeHarvested(crop) {
+        return crop.data.currentSize == 4;
+    },
+    dropGainChance: function() {
+        return  AgricultureAPI.abstractFunctions["IC2CropCard"] / 2;
+    },
+    getGrowthDuration: function(crop) {
+        if (crop.data.currentSize == 3) {
+            return 2000;
+        }
+        return 800;
+    },
+    getSizeAfterHarvest: function(crop) {
+        return 2;
+    }
+};
+
+AgricultureAPI.abstractFunctions["CropBaseMetalUncommon"] = {
+    properties: {
+        tier: 6,
+        chemistry: 2,
+        consumable: 0 ,
+        defensive: 0,
+        colorful: 2,
+        weed: 0
+    },
+    maxSize: 5,
+    cropRootsRequirement: [],
+    getOptimalHarvestSize: function(crop){return 5},
+    getRootsLength: function(crop) {return 5},
+    canGrow: function(crop) {
+        if (crop.data.currentSize < 4) return true;
+        if (crop.data.currentSize == 4) {
+            if (!this.cropRootsRequirement || !this.cropRootsRequirement.length) return true;
+            for(var ind in this.cropRootsRequirement){
+                var id = this.cropRootsRequirement[ind];
+                if(crop.isBlockBelow(eval(id))) return true;
+            }
+        }
+        return false;
+    },
+    canBeHarvested(crop) {
+        return crop.data.currentSize == 5;
+    },
+    dropGainChance: function() {
+        return Math.pow(0.95, this.properties.tier);
+    },
+    getGrowthDuration: function(crop) {
+        if (crop.data.currentSize == 4) {
+            return 2200;
+        }
+        return 750;
+    },
+    getSizeAfterHarvest: function(crop) {
+        return 2;
+    }
+};
+
+
+
+
+// file: block/crop/crop.js
+
+IDRegistry.genBlockID("crop");
+Block.createBlock("crop", [
+    {name: "crop", texture: [["stick", 0]], inCreative: false}
+], "plant");
+
+var shape = new ICRender.CollisionShape();
+shape.addEntry().addBox(7/8, 7/8, 7/8, 1/8, 1/8, 1/8);
+BlockRenderer.setCustomCollisionShape(BlockID.crop, 0, shape);
+BlockRenderer.enableCoordMapping(BlockID.crop, 0, TileRenderer.getCropModel(["stick", 0]));
+
+Block.registerDropFunctionForID(BlockID.crop, function(coords, id, data, diggingLevel, toolLevel){ 
+    return [];
+});
+
+TileEntity.registerPrototype(BlockID.crop, {
+    defaultValues: {
+        crop: null,
+        dirty: true,
+        statGrowth: 0,
+        statGain: 0,
+        statResistance: 0,
+        storageNutrients: 0,
+        storageWater: 0,
+        storageWeedEX: 0,
+        terrainAirQuality: -1,
+        terrainHumidity: -1,
+        terrainNutrients: -1,
+        currentSize: 1,
+        growthPoints: 0,
+        scanLevel: 0,
+        crossingBase: false
+    },
+	
+    init: function(){
+        if(this.data.crop) this.crop = AgricultureAPI.cropCards[this.data.crop];
+        this.updateRender();
+    },
+	
+    tick: function () {
+        this.checkGround();
+        this.checkPlayerRunning();
+        if(World.getThreadTime() % 192 == 0) this.performTick();
+    },
+	
+    click: function(id, count, data, coords){
+        if(id){
+            var card = AgricultureAPI.getCardFromSeed({id: id, data: data});
+            if(id == ItemID.agriculturalAnalyzer) return;
+            if(id == ItemID.debugItem && this.crop){
+                this.data.currentSize = this.crop.maxSize;
+                this.updateRender();
+                return;
+            }
+            if(Config.debugMode && id == 351 && this.data.crossingBase){
+                this.attemptCrossing();
+                return;
+            }
+
+            if (!this.crop && !this.data.crossingBase && id == ItemID.cropStick){
+                this.data.crossingBase = true;
+                this.data.dirty = true;
+                Player.decreaseCarriedItem(1);
+                this.updateRender();
+                return;
+            }
+            if (this.crop && id == ItemID.fertilizer) {
+                if (this.applyFertilizer(true)) this.data.dirty = true;
+                Player.decreaseCarriedItem(1);
+                return;
+            }
+            if (id == ItemID.cellWater && count == 1) {
+				var amount = this.applyHydration(1000 - data);
+				if(amount > 0) {
+					if(data + amount >= 1000) {
+						Player.setCarriedItem(ItemID.cellEmpty, 1, 0);
+					} else {
+						Player.setCarriedItem(id, 1, data + amount);
+					}
+				}
+				return;
+			}
+			if (this.applyWeedEx(id, true)) {
+                this.data.dirty = true;
+                return;
+            }
+            if (!this.crop && !this.data.crossingBase && card) {
+                this.reset();
+
+                this.data.crop = AgricultureAPI.getCardIndexFromID(card.id);
+                this.crop = AgricultureAPI.cropCards[this.data.crop];
+                this.data.currentSize = card.baseSeed.size;
+
+                this.data.statGain = card.baseSeed.gain;
+                this.data.statGrowth = card.baseSeed.growth;
+                this.data.statResistance = card.baseSeed.resistance;
+
+                Player.decreaseCarriedItem(1);
+                this.updateRender();
+                return;
+            }
+        }
+        if(this.crop && this.crop.canBeHarvested(this)) this.crop.onRightClick(this);
+    },
+	
+    onLongClick: function(){
+        if(this.data.crossingBase){
+            World.drop(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
+            this.data.crossingBase = false;
+            this.data.dirty = true;
+            this.updateRender();
+            return true;
+        }else if(this.crop){
+            this.crop.onLeftClick(this);
+            return true;
+        }
+        return false;
+    },
+	
+    destroyBlock: function(coords, player){
+        World.drop(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
+        if(this.data.crossingBase) World.drop(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
+        if(this.crop) this.crop.onLeftClick(this);
+        BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+    },
+	
+    updateRender: function(){
+        var texture = ["stick", 0];
+        if(this.crop){
+            texture[0] = this.crop.texture;
+            texture[1] = this.data.currentSize;
+        }else if(this.data.crossingBase)texture[1]=1;
+
+        var render = TileRenderer.getCropModel(texture);
+        BlockRenderer.mapAtCoords(this.x, this.y, this.z, render);
+    },
+	
+    checkPlayerRunning: function(){
+        if(!this.crop) return;
+
+        var coords = Entity.getPosition(Player.get());
+        var playerX = Math.floor(coords.x);
+        var playerY = Math.floor(coords.y);
+        var playerZ = Math.floor(coords.z);
+
+        if(playerX == this.x && playerY - 1 == this.y && playerZ == this.z){
+            var vel = Player.getVelocity();
+            var horizontalVel = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
+            if(horizontalVel > 0.15 && this.crop.onEntityCollision(this)){
+                World.destroyBlock(this.x, this.y, this.z);
+            }
+        }
+    },
+	
+    checkGround: function(){
+        if(World.getBlockID(this.x, this.y - 1, this.z) != 60){
+            World.destroyBlock(this.x, this.y, this.z);
+        }
+    },
+	
+    performTick: function(){
+        if(World.getThreadTime() % 768 == 0){
+            this.updateTerrainHumidity();
+            this.updateTerrainNutrients();
+            this.updateTerrainAirQuality();
+        }
+
+        if (!this.crop  && (!this.data.crossingBase || !this.attemptCrossing())) {
+            if (random(0, 100) != 0 || this.data.storageWeedEX > 0) {
+                if (this.data.storageWeedEX  > 0 && random(0, 10)  == 0) {
+                    this.data.storageWeedEX--;
+                }
+                return;
+            }
+            this.reset();
+
+            this.data.crop = AgricultureAPI.getCardIndexFromID("weed");
+            this.crop = AgricultureAPI.cropCards[this.data.crop];
+            this.data.currentSize = 1;
+
+            this.updateRender();
+        }
+        if(this.crop){
+            this.crop.tick(this);
+            if(this.crop.canGrow(this)){
+                this.performGrowthTick();
+                var growDuration = this.crop.getGrowthDuration(this);
+                if (this.data.growthPoints >= growDuration) {
+                    this.data.growthPoints = 0;
+                    this.data.currentSize = this.data.currentSize + 1;
+                    this.data.dirty = true;
+
+                    this.updateRender();
+                }
+            }
+        }
+
+        if (this.data.storageNutrients > 0) this.data.storageNutrients--;
+        if (this.data.storageWater > 0) this.data.storageWater--;
+
+        if (this.crop.isWeed(this) && random(0, 50) - this.data.statGrowth <= 2){
+            this.performWeedWork();
+        }
+    },
+	
+    updateTerrainHumidity: function(){
+        var humidity = AgricultureAPI.getHumidityBiomeBonus(this.x, this.z);
+
+        if(World.getBlockData(this.x, this.y-1, this.z) == 7) humidity += 2
+        if(this.data.storageWater >= 5) humidity += 2;
+
+        humidity += (this.data.storageWater + 24) / 25;
+        this.data.terrainHumidity = humidity;
+    },
+	
+    updateTerrainNutrients: function(){
+        var nutrients = AgricultureAPI.getNutrientBiomeBonus(this.x, this.z);
+        nutrients += (this.data.terrainNutrients + 19) / 20;
+
+        for (var i = 2; i < 5; ++i){
+            if(World.getBlockID(this.x, this.y - i, this.z) == 3) nutrients++;
+        }
+        this.data.terrainNutrients = nutrients;
+    },
+	
+    updateTerrainAirQuality: function(){
+        var value = 0;
+        var height = Math.floor((this.y - 64) / 15);
+        if (height > 4) height = 4;
+        if (height < 0) height = 0;
+
+        var fresh = 9;
+        for (var x = this.x - 1; x < this.x + 2; x++) {
+            for (var z = this.z - 1; z < this.z + 2; z++) {
+                if (World.getBlockID(x, this.y, z)) fresh--;
+            }
+        }
+        if(GenerationUtils.canSeeSky(this.x, this.y + 1, this.z)) value += 2;
+        value += Math.floor(fresh / 2);
+        value += height;
+
+        this.data.terrainAirQuality = value;
+    },
+	
+    performGrowthTick: function(){
+        if (!this.crop) return;
+
+        var totalGrowth = 0;
+        var baseGrowth = 3 + random(0, 7) + this.data.statGrowth;
+        var properties = this.crop.properties;
+        var sumOfStats = this.data.statGrowth + this.data.statGain + this.data.statResistance;
+        var minimumQuality = (properties.tier - 1) * 4 + sumOfStats;
+        minimumQuality = Math.max(minimumQuality, 0);
+        var providedQuality = 75;
+
+        if (providedQuality >= minimumQuality){
+            totalGrowth = baseGrowth * (100 + (providedQuality - minimumQuality)) / 100;
+        }else{
+            var aux = (minimumQuality - providedQuality) * 4;
+            if (aux > 100 && random(0, 32) > this.data.statResistance) {
+                totalGrowth = 0;
+
+                this.reset();
+                this.updateRender();
+            }else {
+                totalGrowth = baseGrowth * (100 - aux) / 100;
+                totalGrowth = Math.max(totalGrowth, 0);
+            }
+        }
+        this.data.growthPoints += Math.round(totalGrowth);
+    },
+	
+    performWeedWork: function(){
+        var coords = this.relativeCropCoords[random(0, 3)];
+        var preCoords = [this.x + coords[0], this.y + coords[0], this.z + coords[0]];
+        if(World.getBlockID(preCoords[0], preCoords[1], preCoords[2]) == BlockID.crop){
+            var TE = World.getTileEntity(preCoords[0], preCoords[1], preCoords[2]);
+            if(!TE.crop || (!TE.crop.isWeed(this) && !TE.hasWeedEX() && random(0, 32) >= TE.data.statResistance)){
+                var newGrowth = Math.max(this.data.statGrowth, TE.data.statGrowth);
+                if (newGrowth < 31 && random(0, 1)) newGrowth++;
+
+                TE.reset();
+                TE.data.crop = AgricultureAPI.getCardIndexFromID("weed");
+                TE.crop = AgricultureAPI.cropCards[TE.data.crop];
+                TE.data.currentSize = 1;
+                TE.data.statGrowth = newGrowth;
+                TE.updateRender();
+            }
+        }else if(World.getBlockID(preCoords[0], preCoords[1] - 1, preCoords[2]) == 60){
+            World.setBlock(preCoords[0], preCoords[1] - 1, preCoords[2] ,2 ,0);
+        }
+    },
+	
+    reset: function(){
+        this.data.crop = null;
+        this.crop = undefined;
+        this.data.statGain = 0;
+        this.data.statResistance = 0;
+        this.data.statGrowth = 0;
+        this.data.terrainAirQuality = -1;
+        this.data.terrainHumidity = -1;
+        this.data.terrainNutrients = -1;
+        this.data.growthPoints = 0;
+        this.data.scanLevel = 0;
+        this.data.currentSize = 1;
+        this.data.dirty = true;
+    },
+	
+    hasWeedEX: function(){
+        if (this.data.storageWeedEX > 0) {
+            this.data.storageWeedEX -= 5;
+            return true;
+        }
+        return false;
+    },
+	
+    attemptCrossing: function(){ // modified from the original
+        if (random(0, 3) != 0) return false;
+
+        var cropCoords = this.askCropJoinCross(this.relativeCropCoords);
+        if (cropCoords.length < 2) return false;
+
+        var cropCards = AgricultureAPI.cropCards;
+        var ratios = [];
+        var total = 0;
+        for(var j in cropCards){
+            var crop = cropCards[j];
+            for(var crd in cropCoords){
+                var coords = cropCoords[crd];
+                var tileEnt = World.getTileEntity(coords.x, coords.y, coords.z);
+                total += this.calculateRatioFor(crop, tileEnt.crop);
+            }
+            ratios[j] = total;
+        }
+        var search = random(0, total);
+        var min = 0;
+        var max = ratios.length - 1;
+        while (min < max) {
+            var cur = Math.floor((min + max) / 2);
+            var value = ratios[cur];
+            if (search < value){
+                max = cur;
+            }else {
+                min = cur + 1;
+            }
+        }
+
+        this.data.crossingBase = false;
+        this.crop = cropCards[min]
+        this.data.crop = min;
+        this.data.dirty = true;
+        this.data.currentSize = 1;
+
+        this.data.statGrowth = 0;
+        this.data.statResistance = 0;
+        this.data.statGain = 0;
+
+        for(var i in cropCoords){
+            var te2 = World.getTileEntity(cropCoords[i].x, cropCoords[i].y, cropCoords[i].z);
+            this.data.statGrowth += te2.data.statGrowth;
+            this.data.statResistance += te2.data.statResistance;
+            this.data.statGain += te2.data.statGain;
+        }
+        var count = cropCoords.length;
+
+        this.data.statGrowth = Math.floor(this.data.statGrowth / count);
+        this.data.statResistance = Math.floor(this.data.statResistance / count);
+        this.data.statGain = Math.floor(this.data.statGain / count);
+
+        this.data.statGrowth += Math.round(random(0, 1 + 2 * count) - count);
+        this.data.statGain += Math.round(random(0, 1 + 2 * count) - count);
+        this.data.statResistance += Math.round(random(0, 1 + 2 * count) - count);
+
+        this.data.statGrowth = this.lim(this.data.statGrowth, 0, 31);
+        this.data.statGain = this.lim(this.data.statGain, 0, 31);
+        this.data.statResistance = this.lim(this.data.statResistance, 0, 31);
+
+        this.updateRender();
+        return true;
+    },
+	
+    lim: function(value, min, max){
+        if (value <= min) return min;
+        if (value >= max) return max;
+        return value;
+    },
+	
+    relativeCropCoords: [ [1, 0, 0], [-1, 0, 0], [0, 0, 1], [0, 0, -1] ],
+	
+    askCropJoinCross: function(coordsArray){ // modified from the original
+        var cropsCoords = [];
+        for(var r in coordsArray){
+            var pos = coordsArray[r];
+            var coords = { x: this.x + pos[0], y: this.y + pos[1], z: this.z + pos[2] };
+            var sideTileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
+            var blockId = World.getBlockID(coords.x, coords.y, coords.z)
+
+            if(!sideTileEntity || !sideTileEntity.crop || blockId != BlockID.crop) continue;
+            if(sideTileEntity.data.currentSize <= 3) continue;
+
+            var base = 4;
+            if (sideTileEntity.data.statGrowth >= 16) base++;
+            if (sideTileEntity.data.statGrowth >= 30) base++;
+            if (sideTileEntity.data.statResistance >= 28){
+                base += 27 - sideTileEntity.data.statResistance;
+            }
+            if (base >= random(0, 20)) cropsCoords.push(coords);
+        }
+        return cropsCoords;
+    },
+	
+    calculateRatioFor: function(newCrop, oldCrop){
+        if (newCrop.id == oldCrop.id) return 500;
+
+        var value = 0;
+        var propOld = oldCrop.properties;
+        var propNew = newCrop.properties;
+        for (var i in propOld) {
+            var delta = Math.abs(propOld[i] - propNew[i]);
+            value += 2 - delta;
+        }
+
+        var attributesOld = oldCrop.attributes;
+        var attributesNew = newCrop.attributes;
+        for(var iO in attributesOld){
+            for(var iN in attributesNew){
+                var attO = attributesOld[iO];
+                var attN = attributesNew[iN];
+                if(attO == attN) value += 5;
+            }
+        }
+
+        var diff = newCrop.properties.tier - oldCrop.properties.tier;
+        if (diff > 1) value -= 2 * diff;
+        if (diff < -3) value += diff;
+
+        return Math.max(value, 0);
+    },
+	
+    applyFertilizer: function(manual){
+        if (this.data.storageNutrients >= 100) return false;
+
+        this.data.storageNutrients += manual ? 100 : 90;
+        return true;
+    },
+	
+    applyWeedEx: function(id, manual){
+        if(id == ItemID.weedEx){
+            var limit = manual ? 100 : 150;
+            if (this.data.storageWeedEX >= limit) return false;
+
+            var amount = manual ? 50 : 100;
+            this.data.storageWeedEX += amount;
+
+            if(manual) ToolAPI.breakCarriedTool(1);
+            return true;
+        }
+        return false;
+    },
+	
+    applyHydration: function(amount){
+		var limit = 200;
+		if (this.data.storageWater >= limit) return 0;
+		
+		var relativeAmount = limit - this.data.storageWater;
+		amount = Math.min(relativeAmount, amount);
+		this.data.storageWater += amount;
+		
+		return amount;
+    },
+	
+    tryPlantIn: function(cropCardID, size, statGr, statGa, statRe, scan){
+        var cropCard = AgricultureAPI.cropCards[cropCardID];
+        if (!cropCard || cropCard.id == "weed" || this.data.crossingBase) return false;
+
+        this.reset();
+        this.data.crop = cropCardID;
+        this.crop = cropCard;
+        this.data.currentSize = size;
+        this.data.statGain = statGa;
+        this.data.statGrowth = statGr;
+        this.data.statResistance = statRe;
+        this.data.scanLevel = scan;
+        this.updateRender();
+
+        return true;
+    },
+	
+    performHarvest: function(){
+        if (!this.crop || !this.crop.canBeHarvested(this)) return null;
+
+        var chance = this.crop.dropGainChance(this);
+        chance *= Math.pow(1.03, this.data.statGain);
+        var dropCount2 = Math.max(0, Math.round(this.nextGaussian() * chance * 0.6827 + chance));
+        var ret = [];
+        for (var i = 0; i < dropCount2; i++) {
+            ret[i] = this.crop.getGain(this);
+            if (ret[i] && random(0, 100) <= this.data.statGain) {
+                ret[i] = ret[i].count++;
+            }
+        }
+
+        this.data.currentSize = this.crop.getSizeAfterHarvest(this);
+        this.data.dirty = true;
+
+        this.updateRender();
+        return ret;
+    },
+	
+    performManualHarvest: function(){
+        var dropItems = this.performHarvest();
+        if(!dropItems || !dropItems.length) return;
+
+        for(var ind in dropItems){
+            var item = dropItems[ind];
+            nativeDropItem(this.x, this.y, this.z, 0, item.id, item.count, item.data, null);
+        }
+    },
+	
+    nextGaussian: function(){
+        var v1, v2, s;
+        do{
+            v1 = 2 * Math.random() - 1; // Between -1.0 and 1.0.
+            v2 = 2 * Math.random() - 1; // Between -1.0 and 1.0.
+            s = v1 * v1 + v2 * v2;
+        }while (s >= 1);
+
+        var norm = Math.sqrt(-2 * Math.log(s) / s);
+        return v1 * norm;
+    },
+	
+    pick: function(){
+        if(!this.crop) return false;
+
+        var bonus = this.crop.canBeHarvested(this);
+        var firstchance = this.crop.getSeedDropChance(this);
+        firstchance *= Math.pow(1.1, this.data.statResistance);
+        var dropCount = 0;
+
+        if (bonus) {
+            if (Math.random() <= (firstchance + 1) * .8) dropCount++;
+            var chance = this.crop.getSeedDropChance(this) + this.data.statGrowth / 100;
+            chance *= Math.pow(.95, this.statGain - 23);
+            if (Math.random() <= chance) dropCount++;
+        }
+		else if (Math.random() <= firstchance * 1.5) dropCount++;
+
+        var item = this.crop.getSeeds(this);
+        nativeDropItem(this.x, this.y, this.z, 0, item.id, dropCount, item.data, item.extra);
+
+        this.reset();
+        this.updateRender();
+        return true;
+    },
+	
+    generateSeeds: function(data){
+        var extra = AgricultureAPI.generateExtraFromValues(data);
+        return {id: ItemID.cropSeedBag, data: this.data.crop, extra: extra};
+    },
+	
+    isBlockBelow: function(reqBlockID){
+        if (!this.crop) return false;
+
+        var rootsLength = this.crop.getRootsLength(this);
+        for (var i = 1; i < rootsLength; i++) {
+            var blockID = World.getBlockID(this.x, this.y - i, this.z);
+            if(!blockID) return false;
+            if(reqBlockID == blockID) return true;
+        }
+        return false;
+    }
+});
+
+Callback.addCallback("DestroyBlockStart", function(coords, block){
+    if(block.id == BlockID.crop){
+        var tileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
+        if(tileEntity && tileEntity.onLongClick()){
+            Game.prevent();
+        }
+    }
+});
+
+
+
+
+// file: block/crop/crop_cards.js
+
+AgricultureAPI.registerCropCard({
+    id: "weed",
+    attributes: ["Weed", "Bad"],
+    properties: {
+        tier: 0,
+        chemistry: 0,
+        consumable: 0 ,
+        defensive: 1,
+        colorful: 0 ,
+        weed: 5
+    },
+    baseSeed: {
+        addToCreative: false,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 5,
+    getOptimalHarvestSize: function(crop){return 1},
+    canBeHarvested: function(tileentity){return false},
+    getGrowthDuration: function(){return 300},
+    getGain: function(tileentity){return null}
+});
+
+AgricultureAPI.registerCropCard({
+    id: "wheat",
+    texture: "ic2_wheat",
+    attributes: ["Yellow", "Food", "Wheat"],
+    base: "CropVanilla",
+    properties: {
+        tier: 1,
+        chemistry: 0,
+        consumable: 4 ,
+        defensive: 0,
+        colorful: 0 ,
+        weed: 2
+    },
+    baseSeed: {
+        id: 295,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 7,
+    sizeAfterHarvest: 2,
+    getProduct: function(){
+        return {id: 296, count: 1, data: 0};
+    },
+    getSeed: function(){
+        return {id: 295, count: 1, data: 0};
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "pumpkin",
+    attributes: ["Orange", "Decoration", "Stem"],
+    base: "CropVanilla",
+    properties: {
+        tier: 1,
+        chemistry: 0,
+        consumable: 1 ,
+        defensive: 0,
+        colorful: 3 ,
+        weed: 1
+    },
+    baseSeed: {
+        id: 361,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 4,
+    getProduct: function(){
+        return {id: 86, count: 1, data: 0}
+    },
+    getGrowthDuration: function(te) {
+        if (te.data.currentSize == 3) return 600;
+        return 200;
+    },
+    getSeed: function(){
+        return {id: 361, count: random(1, 4), data: 0}
+    },
+    getSizeAfterHarvest: function(te){
+        return this.maxSize - 1;
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "melon",
+    attributes: [ "Green", "Food", "Stem" ],
+    base: "CropVanilla",
+    properties: {
+        tier: 2,
+        chemistry: 0,
+        consumable: 4 ,
+        defensive: 0,
+        colorful: 2 ,
+        weed: 0
+    },
+    baseSeed: {
+        id: 362,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 4,
+    getProduct: function(){
+        if(Math.random() < 0.5){
+            return {id: 103, count: 1, data: 0}
+        }
+        return {id: 360, count: random(2, 6), data: 0}
+    },
+    getGrowthDuration: function(te) {
+        if (te.currentSize == 3) {
+            return 700;
+        }
+        return 250;
+    },
+    getSizeAfterHarvest: function(te){
+        return this.maxSize - 1;
+    },
+    getSeed: function(){
+        return {id: 362, count: random(1, 3), data: 0}
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "dandelion",
+    attributes: [  "Yellow", "Flower"],
+    base: "CropColorFlower",
+    baseSeed: {
+        id: 37,
+        size: 4,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    color: 0
+});
+
+AgricultureAPI.registerCropCard({
+    id: "rose",
+    attributes: ["Red", "Flower", "Rose"],
+    base: "CropColorFlower",
+    baseSeed: {
+        id: 38,
+        size: 4,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    color: 1
+});
+
+AgricultureAPI.registerCropCard({
+    id: "blackthorn",
+    attributes: ["Black", "Flower", "Rose" ],
+    base: "CropColorFlower",
+    color: 0
+});
+
+AgricultureAPI.registerCropCard({
+    id: "tulip",
+    attributes: ["Purple", "Flower", "Tulip" ],
+    base: "CropColorFlower",
+    color: 5
+});
+
+AgricultureAPI.registerCropCard({
+    id: "cyazint",
+    attributes: ["Blue", "Flower"],
+    base: "CropColorFlower",
+    color: 6
+});
+
+AgricultureAPI.registerCropCard({
+    id: "venomilia",
+    attributes: ["Purple", "Flower", "Tulip", "Poison"],
+    properties: {
+        tier: 3,
+        chemistry: 3,
+        consumable: 1 ,
+        defensive: 3,
+        colorful: 3 ,
+        weed: 3
+    },
+    maxSize: 6,
+    getOptimalHarvestSize: function(crop){return 4},
+    getDiscoveredBy: function() {
+        return "raGan";
+    },
+    canGrow: function(tileentity){
+        var light = World.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
+        return (tileentity.data.currentSize <= 4 && light >= 12) || tileentity.data.currentSize == 5;
+    },
+    canBeHarvested: function(crop) {
+        return crop.data.currentSize >= 4;
+    },
+    getGain: function(crop) {
+        if (crop.data.currentSize == 5) {
+            return {id: ItemID.grinPowder, count: 1, data: 0};
+        }
+        if (crop.data.currentSize >= 4) {
+            return {id: 351, count: 1, data: 5}
+        }
+        return null;
+    },
+    getSizeAfterHarvest: function(crop) {return 3},
+    getGrowthDuration: function(crop) {
+        if (crop.data.currentSize >= 3) {
+            return 600;
+        }
+        return 400;
+    },
+    onRightClick: function(crop) {
+        if (Player.getCarriedItem().id) this.onEntityCollision(crop);
+        return crop.performManualHarvest();
+    },
+    onLeftClick: function(crop) {
+        if (Player.getCarriedItem().id) this.onEntityCollision(crop);
+        return crop.pick();
+    },
+    onEntityCollision: function(crop) {
+        if (crop.data.currentSize == 5) {
+            var armorSlot = Player.getArmorSlot(3);
+            if (random(0,50)&&armorSlot.id){
+                return AgricultureAPI.abstractFunctions["IC2CropCard"].onEntityCollision(crop);
+            }
+            Entity.addEffect(Player.get(), MobEffect.poison, 1, (random(0,10) + 5) * 20);
+            crop.data.currentSize = 4;
+            crop.updateRender();
+        }
+        return AgricultureAPI.abstractFunctions["IC2CropCard"].onEntityCollision(crop);
+    },
+    isWeed: function(crop) {
+        return crop.data.currentSize == 5 && crop.data.statGrowth >= 8;
+    }
+});
+
+
+AgricultureAPI.registerCropCard({
+    id: "reed",
+    attributes: [ "Reed" ],
+    properties: {
+        tier: 2,
+        chemistry: 0,
+        consumable: 0 ,
+        defensive: 2,
+        colorful: 0 ,
+        weed: 2
+    },
+    baseSeed: {
+        id: 338,
+        size: 1,
+        growth: 3,
+        gain: 0,
+        resistance: 2
+    },
+    maxSize: 3,
+    getDiscoveredBy: AgricultureAPI.abstractFunctions["CropVanilla"].getDiscoveredBy,
+    canBeHarvested: function(te) {
+        return te.data.currentSize > 1
+    },
+    getGain: function(tileentity) {
+        return {id: 338, count: tileentity.data.currentSize - 1, data: 0};
+    },
+    onEntityCollision: function(te) {return false},
+    getGrowthDuration: function(te) {
+        return 200;
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "stickreed",
+    attributes: ["Reed", "Resin" ],
+    properties: {
+        tier: 2,
+        chemistry: 0,
+        consumable: 0 ,
+        defensive: 2,
+        colorful: 0 ,
+        weed: 2
+    },
+    maxSize: 4,
+    getOptimalHarvestSize: function(crop) {return 4},
+    getDiscoveredBy: function() {
+        return "raa1337";
+    },
+    canGrow: function(crop) {
+        return crop.data.currentSize < 4;
+    },
+    canBeHarvested: function(te) {
+        return te.data.currentSize > 1
+    },
+    getGain: function(crop) {
+        if (crop.data.currentSize <= 3) {
+            return {id: 338, count: crop.data.currentSize - 1, data: 0};
+        }
+        return {id: ItemID.latex, count: 1, data: 0};
+    },
+    getSizeAfterHarvest: function(crop) {
+        if (crop.data.currentSize == 4) {return random(0, 3)}
+        return 1;
+    },
+    onEntityCollision: function(crop) {return false},
+    getGrowthDuration: function(crop) {
+        if (crop.data.currentSize == 4) {return 400}
+        return 100;
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "cocoa",
+    texture: "ic2_cocoa",
+    attributes: ["Brown", "Food", "Stem"],
+    properties: {
+        tier: 3,
+        chemistry: 1,
+        consumable: 3 ,
+        defensive: 0,
+        colorful: 4 ,
+        weed: 0
+    },
+    baseSeed: {
+        id: 351,
+        data: 3,
+        size: 1,
+        growth: 0,
+        gain: 0,
+        resistance: 0
+    },
+    maxSize: 4,
+    getDiscoveredBy: AgricultureAPI.abstractFunctions["IC2CropCard"].getDiscoveredBy,
+    getOptimalHarvestSize: function(crop){return 4},
+    canGrow: function(crop) {
+        return crop.data.currentSize <= 3 && crop.data.storageNutrients >= 3;
+    },
+    canBeHarvested: function(crop) {
+        return crop.data.currentSize == 4;
+    },
+    getGain: function(tileentity){
+        return {id: 351, count: 1, data: 3};
+    },
+    getGrowthDuration: function(crop) {
+        if (crop.data.currentSize == 3) {
+            return 900;
+        }return 400;
+    },
+    getSizeAfterHarvest: function(crop){
+        return 3;
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "red_mushroom",
+    attributes: [ "Red", "Food", "Mushroom"],
+    base: "CropBaseMushroom",
+    baseSeed: {
+        id: 40,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    getGain: function(te){
+        return {id: 40, count: 1, data: 0}
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "brown_mushroom",
+    attributes: [ "Brown", "Food", "Mushroom" ],
+    base: "CropBaseMushroom",
+    baseSeed: {
+        id: 39,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    getGain: function(te){
+        return {id: 39, count: 1, data: 0}
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "nether_wart",
+    attributes: [ "Red", "Nether", "Ingredient", "Soulsand"],
+    properties: {
+        tier: 5,
+        chemistry: 4,
+        consumable: 2 ,
+        defensive: 0,
+        colorful: 2 ,
+        weed: 1
+    },
+    baseSeed: {
+        id: 372,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 3,
+    getDiscoveredBy: AgricultureAPI.abstractFunctions["CropVanilla"].getDiscoveredBy,
+    dropGainChance: function(te) {return 2},
+    getGain: function(te){
+        return {id: 372, count: 1, data: 0}
+    },
+    tick: function(te){
+        if(te.isBlockBelow(88)){
+            if (te.crop.canGrow(te)) {
+                te.data.growthPoints += 100;
+            }else if(te.isBlockBelow(80) && Math.random() < 1 / 300){
+                te.data.crop = AgricultureAPI.getCardIndexFromid("terra_wart");
+                te.crop = AgricultureAPI.cropCards[te.data.crop];
+            }
+        }
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "terra_wart",
+    attributes: [ "Blue", "Aether", "Consumable", "Snow"],
+    properties: {
+        tier: 5,
+        chemistry: 2,
+        consumable: 4 ,
+        defensive: 0,
+        colorful: 3 ,
+        weed: 0
+    },
+    baseSeed: {
+        id: "ItemID.terraWart",
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 3,
+    dropGainChance: function(te) {return .8},
+    getGain: function(te){
+        return {id: ItemID.terraWart, count: 1, data: 0}
+    },
+    tick: function(te){
+        if(te.isBlockBelow(80)){
+            if (te.crop.canGrow(te)) {
+                te.data.growthPoints += 100;
+            }
+			else if(te.isBlockBelow(88) && Math.random() < 1 / 300){
+                te.data.crop = AgricultureAPI.getCardIndexFromid("nether_wart");
+                te.crop = AgricultureAPI.cropCards[te.data.crop];
+            }
+        }
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "ferru",
+    attributes: ["Gray", "Leaves", "Metal"],
+    base: "CropBaseMetalCommon",
+    cropRootsRequirement: [15, 42],
+    getGain: function(crop) {
+        return {id: ItemID.dustSmallIron, count: 1, data: 0}
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "cyprium",
+    attributes: ["Orange", "Leaves", "Metal"],
+    base: "CropBaseMetalCommon",
+    cropRootsRequirement: ["BlockID.blockCopper", "BlockID.oreCopper"],
+    getGain: function(crop) {
+        return {id: ItemID.dustSmallCopper, count: 1, data: 0}
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "stagnium",
+    attributes: ["Shiny", "Leaves", "Metal"],
+    base: "CropBaseMetalCommon",
+    cropRootsRequirement: ["BlockID.blockTin","BlockID.oreTin"],
+    getGain: function(crop) {
+        return {id: ItemID.dustSmallTin, count: 1, data: 0}
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "plumbiscus",
+    attributes: ["Dense", "Leaves", "Metal"],
+    base: "CropBaseMetalCommon",
+    cropRootsRequirement: ["BlockID.blockLead","BlockID.oreLead"],
+    getGain: function(crop) {
+        return {id: ItemID.dustSmallLead, count: 1, data: 0}
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "aurelia",
+    attributes: [ "Gold", "Leaves", "Metal"],
+    base: "CropBaseMetalUncommon",
+    cropRootsRequirement: [14,41],
+    getGain: function(crop) {
+        return {id: 371, count: 1, data: 0}
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "shining",
+    attributes: [ "Silver", "Leaves", "Metal" ],
+    base: "CropBaseMetalUncommon",
+    cropRootsRequirement: ["BlockID.blockSilver","BlockID.oreSilver"],
+    getGain: function(crop) {
+        return {id: ItemID.dustSmallSilver, count: 1, data: 0}
+    }
+});
+
+AgricultureAPI.registerCropCard({
+    id: "redwheat",
+    attributes: [  "Red", "Redstone", "Wheat"],
+    properties: {
+        tier: 6,
+        chemistry: 3,
+        consumable: 0 ,
+        defensive: 0,
+        colorful: 2 ,
+        weed: 0
+    },
+    maxSize: 7,
+    getOptimalHarvestSize: function(crop){return 7},
+    getDiscoveredBy: function() {
+        return "raa1337";
+    },
+    canGrow: function(crop) {
+        var light = World.getLightLevel(crop.x,crop.y,crop.z);
+        return crop.data.currentSize < 7 && light <= 10 && light >= 5;
+    },
+    dropGainChance: function() {return 0.5},
+    getGain: function(crop) {
+        if (Math.random() < 0.5) return {id: 331, count: 1, data: 0};
+        return {id: 295, count: 1, data: 0}
+    },
+    getGrowthDuration: function(crop){return 600},
+    getSizeAfterHarvest: function(crop) {return 2}
+});
+
+AgricultureAPI.registerCropCard({
+    id: "coffee",
+    attributes: ["Leaves", "Ingredient", "Beans"],
+    properties: {
+        tier: 7,
+        chemistry: 1,
+        consumable: 4,
+        defensive: 1,
+        colorful: 2 ,
+        weed: 0
+    },
+    baseSeed: {
+        id: "ItemID.coffeeBeans",
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 5,
+    getDiscoveredBy: function() {
+        return "Snoochy";
+    },
+    canGrow: function(crop) {
+        var light = World.getLightLevel(crop.x,crop.y,crop.z);
+        return crop.data.currentSize < 5 && light >= 9;
+    },
+    getGrowthDuration(crop) {
+        var base = AgricultureAPI.abstractFunctions["IC2CropCard"];
+        if (crop.data.currentSize == 3) {
+            return Math.round(base.getGrowthDuration(crop) * .5);
+        }
+        if (crop.data.currentSize == 4) {
+            return Math.round(base.getGrowthDuration(crop) * 1.5);
+        }
+        return base.getGrowthDuration(crop);
+    },
+    canBeHarvested(crop) {
+        return crop.data.currentSize>= 4;
+    },
+    getGain: function(crop) {
+        if (crop.data.currentSize == 4) return null;
+        return {id: ItemID.coffeeBeans, count: 1, data: 0};
+    },
+    getSizeAfterHarvest: function(crop) {return 3}
+});
+
+AgricultureAPI.registerCropCard({
+    id: "hops",
+    attributes: [ "Green", "Ingredient", "Wheat"],
+    properties: {
+        tier: 5,
+        chemistry: 2,
+        consumable: 2,
+        defensive: 0,
+        colorful: 1 ,
+        weed: 1
+    },
+    maxSize: 7,
+    canGrow: function(crop) {
+        var light = World.getLightLevel(crop.x, crop.y, crop.z);
+        return crop.data.currentSize < 7 && light >= 9;
+    },
+    getGrowthDuration: function(crop) {
+       return 600;
+    },
+    canBeHarvested: function(crop) {
+        return crop.data.currentSize >= 4;
+    },
+    getGain: function(crop) {
+        return {id: ItemID.hops, count: 1, data: 0};
+    },
+    getSizeAfterHarvest: function(crop) {return 3}
+});
+
+AgricultureAPI.registerCropCard({
+    id: "carrots",
+    texture: "ic2_carrots",
+    attributes: ["Orange", "Food", "Carrots" ],
+    base: "CropVanilla",
+    properties: {
+        tier: 2,
+        chemistry: 0,
+        consumable: 4 ,
+        defensive: 0,
+        colorful: 0 ,
+        weed: 2
+    },
+    baseSeed: {
+        id: 391,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 3,
+    getProduct: function(){
+        return {id: 391, count: 1, data: 0}
+    },
+    getSeed: this.getProduct
+});
+
+AgricultureAPI.registerCropCard({
+    id: "potato",
+    attributes: ["Yellow", "Food", "Potato" ],
+    properties: {
+        tier: 2,
+        chemistry: 0,
+        consumable: 4 ,
+        defensive: 0,
+        colorful: 0 ,
+        weed: 2
+    },
+    baseSeed: {
+        id: 392,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 4,
+    canGrow: AgricultureAPI.abstractFunctions["IC2CropCard"].canGrow,
+    getOptimalHarvestSize: function(crop){return 3},
+    canBeHarvested: function(crop) {
+        return crop.data.currentSize >= 3;
+    },
+    getGain: function(crop) {
+        if (crop.data.currentSize >= 4 && Math.random() < 0.05) {
+            return {id: 394, count: 1, data: 0};
+        }
+        if (crop.data.currentSize >= 3) {
+            return {id: 392, count: 1, data: 0};
+        }
+        return null;
+    },
+    getSizeAfterHarvest: function(te){return 1}
+});
+
+AgricultureAPI.registerCropCard({
+    id: "eatingplant",
+    attributes: ["Bad", "Food"],
+    properties: {
+        tier: 6,
+        chemistry: 1,
+        consumable: 1 ,
+        defensive: 3,
+        colorful: 1 ,
+        weed: 4
+    },
+    baseSeed: {
+        id: 81,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 6,
+    getOptimalHarvestSize: function(crop){return 4},
+    getDiscoveredBy: function() {
+        return "Hasudako";
+    },
+    canGrow: function(crop) {
+        var light = World.getLightLevel(crop.x, crop.y, crop.z);
+        if (crop.data.currentSize < 3) {
+            return light > 10;
+        }
+        return crop.isBlockBelow(10) && crop.data.currentSize< this.maxSize() && light > 10;
+    },
+    canBeHarvested: function(crop) {
+        return crop.data.currentSize >= 4 && crop.data.currentSize< 6;
+    },
+    getGain: function(crop) {
+        if (crop.data.currentSize >= 4 && crop.data.currentSize < 6) {
+            return {id: 81, count: 1, data: 0};
+        }
+        return null;
+    },
+    tick: function(te){
+        if(te.data.currentSize == 1) return;
+
+        var entity = Entity.findNearest({x: this.x + .5, y: this.y + .5, z: this.z + .5}, null, 2);
+        if(!entity)return;
+
+        Entity.damageEntity(entity, te.data.currentSize * 2);
+        if(entity == player && !this.hasMetalArmor()){
+            Entity.addEffect(player, MobEffect.poison, 1, 50);
+        }
+        if(te.crop.canGrow(te)) te.data.growthPoints += 100;
+        nativeDropItem(this.x, this.y, this.z, 0, 367, 1, 0, null);
+    },
+    nonMetalCheck: {
+        298: true,
+        299: true,
+        300: true,
+        301: true
+    },
+    hasMetalArmor: function(){
+        for(var i = 0; i < 4; i++){
+            var armorSlot = Player.getArmorSlot(i);
+            if(!armorSlot.id || this.nonMetalCheck[armorSlot.id]) return false;
+        }
+        return true;
+    },
+    getGrowthDuration: function(crop) {
+        var multiplier = 1;
+        var base = AgricultureAPI.abstractFunctions["IC2CropCard"];
+        //todo: compare with PC version when BiomeDictionary will be available
+        return Math.round(base.getGrowthDuration(crop) * multiplier);
+    },
+    getSizeAfterHarvest: function(te){return 1},
+    getRootsLength: function(crop){return 5}
+});
+
+
+AgricultureAPI.registerCropCard({
+    id: "beetroots",
+    attributes: [ "Red", "Food", "Beetroot"],
+    base: "CropVanilla",
+    properties: {
+        tier: 1,
+        chemistry: 0,
+        consumable: 4,
+        defensive: 0,
+        colorful: 1,
+        weed: 2
+    },
+    baseSeed: {
+        id: 458,
+        size: 1,
+        growth: 1,
+        gain: 1,
+        resistance: 1
+    },
+    maxSize: 4,
+    getProduct: function(){
+        return {id: 457, count: 1, data: 0};
+    },
+    getSeed: function(){
+        return {id: 458, count: 1, data: 0};
+    }
+});
+
+
+
+
 // file: machine/generator/generator.js
 
 IDRegistry.genBlockID("primalGenerator");
@@ -3003,7 +4891,7 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 			this.stopPlaySound();
 		}
 		
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
 		
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
@@ -3059,7 +4947,7 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiGeothermalGenerator = guiGeothermalGenerator = new UI.StandartWindow({
+var guiGeothermalGenerator = new UI.StandartWindow({
 	standart: {
 		header: {text: {text: Translation.translate("Geothermal Generator")}},
 		inventory: {standart: true},
@@ -3067,22 +4955,21 @@ var guiGeothermalGenerator = guiGeothermalGenerator = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "bitmap", x: 675, y: 106, bitmap: "energy_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 450, y: 150, bitmap: "geothermal_liquid_slot", scale: GUI_SCALE}
+		{type: "bitmap", x: 702, y: 91, bitmap: "energy_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
+		{type: "bitmap", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE}
 	],
 	
 	elements: {
-		"energyScale": {type: "scale", x: 675 + GUI_SCALE * 4, y: 106, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-		"liquidScale": {type: "scale", x: 450 + GUI_SCALE, y: 150 + GUI_SCALE, direction: 1, value: 0.5, bitmap: "geothermal_empty_liquid_slot", overlay: "geothermal_liquid_slot_overlay", overlayOffset: {x: -GUI_SCALE, y: -GUI_SCALE}, scale: GUI_SCALE},
-		"slot1": {type: "slot", x: 441, y: 75,
+		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 440, y: 75,
 			isValid: function(id, count, data){
-				return LiquidRegistry.getItemLiquid(id, data) == "lava";
+				return LiquidLib.getItemLiquid(id, data) == "lava";
 			}
 		},
-		"slot2": {type: "slot", x: 441, y: 212, isValid: function(){return false;}},
-		"slotEnergy": {type: "slot", x: 695, y: 181, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
-		"textInfo1": {type: "text", x: 542, y: 142, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 542, y: 172, width: 300, height: 30, text: "8000 mB"}
+		"slot2": {type: "slot", x: 440, y: 183, isValid: function(){return false;}},
+		"slotEnergy": {type: "slot", x: 725, y: 165, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}}
 	}
 });
 
@@ -3100,31 +4987,28 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 		return guiGeothermalGenerator;
 	},
 	
-	renderModel: MachineRegistry.renderModelWithRotation,
-	
 	init: function(){
 		this.liquidStorage.setLimit("lava", 8);
 		this.renderModel();
 	},
 	
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	
+	click: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			return this.getLiquidFromItem("lava", {id: id, count: count, data: data}, null, true);
+		}
+	},
+	
 	tick: function(){
 		StorageInterface.checkHoppers(this);
-		var energyStorage = this.getEnergyStorage();
-		var newActive = false;
+		
 		var slot1 = this.container.getSlot("slot1");
 		var slot2 = this.container.getSlot("slot2");
-		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
-		if(empty && empty.liquid == "lava"){
-			if(this.liquidStorage.getAmount("lava") <= 7 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
-				this.liquidStorage.addLiquid("lava", 1);
-				slot1.count--;
-				slot2.id = empty.id;
-				slot2.data = empty.data;
-				slot2.count++;
-				this.container.validateAll();
-			}
-		}
-		if(this.liquidStorage.getAmount("lava") >= 0.001 && this.data.energy + 20 <= energyStorage){
+		this.getLiquidFromItem("lava", slot1, slot2);
+		
+		var energyStorage = this.getEnergyStorage();
+		if(this.liquidStorage.getAmount("lava").toFixed(3) >= 0.001 && this.data.energy + 20 <= energyStorage){
 			this.data.energy += 20;
 			this.liquidStorage.getLiquid("lava", 0.001);
 			this.activate();
@@ -3135,9 +5019,8 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 			this.deactivate();
 		}
 		
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 32, 1);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
 		
-		this.container.setText("textInfo1", parseInt(this.liquidStorage.getAmount("lava") * 1000) + "/");
 		this.liquidStorage.updateUiScale("liquidScale", "lava");
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
@@ -3149,7 +5032,9 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 	energyTick: function(type, src){
 		var output = Math.min(32, this.data.energy);
 		this.data.energy += src.add(output) - output;
-	}
+	},
+	
+	renderModel: MachineRegistry.renderModelWithRotation
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.geothermalGenerator);
@@ -3159,10 +5044,165 @@ StorageInterface.createInterface(BlockID.geothermalGenerator, {
 		"slot1": {input: true},
 		"slot2": {output: true}
 	},
-	isValidInput: function(id, count, data){
-		return LiquidRegistry.getItemLiquid(id, data) == "lava";
+	isValidInput: function(item){
+		return LiquidLib.getItemLiquid(item.id, item.data) == "lava";
 	},
 	canReceiveLiquid: function(liquid, side){ return liquid == "lava"; },
+	canTransportLiquid: function(liquid, side){ return false; }
+});
+
+
+
+
+// file: machine/generator/fluid_generator.js
+
+IDRegistry.genBlockID("semifluidGenerator");
+Block.createBlock("semifluidGenerator", [
+	{name: "Semifluid Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]], inCreative: true}
+], "opaque");
+TileRenderer.setStandartModel(BlockID.semifluidGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.semifluidGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.semifluidGenerator, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
+
+Block.registerDropFunction("semifluidGenerator", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
+});
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.fluidHeatGenerator, count: 1, data: 0}, [
+		"pcp",
+		"cxc",
+		"pcp"
+	], ['x', BlockID.machineBlockBasic, 0, 'c', ItemID.cellEmpty, 0, 'p', ItemID.casingIron, 0]);
+});
+
+MachineRecipeRegistry.registerRecipesFor("fluidFuel", {
+	"biomass": {power: 8, amount: 20},
+	"oil": {power: 8, amount: 10},
+	"biogas": {power: 16, amount: 10},
+	"ethanol": {power: 16, amount: 10},
+});
+
+var guiSemifluidGenerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Semifluid Generator")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 702, y: 91, bitmap: "energy_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
+		{type: "bitmap", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 440, y: 75,
+			isValid: function(id, count, data){
+				var empty = LiquidLib.getEmptyItem(id, data);
+				if(!empty) return false;
+				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+			}
+		},
+		"slot2": {type: "slot", x: 440, y: 183, isValid: function(){return false;}},
+		"slotEnergy": {type: "slot", x: 725, y: 165, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}}
+	}
+});
+
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiSemifluidGenerator, "Semifluid Generator");
+});
+
+MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
+	defaultValues: {
+		meta: 0,
+		fuel: 0,
+		liquid: null,
+		isActive: false,
+	},
+	
+	getGuiScreen: function(){
+		return guiSemifluidGenerator;
+	},
+	
+	init: function(){
+		this.liquidStorage.setLimit(null, 10);
+		this.renderModel();
+	},
+	
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	
+	click: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			var liquid = this.liquidStorage.getLiquidStored();
+			return this.getLiquidFromItem(liquid, {id: id, count: count, data: data}, null, true);
+		}
+	},
+	
+	tick: function(){
+		StorageInterface.checkHoppers(this);
+		var energyStorage = this.getEnergyStorage();
+		var liquid = this.liquidStorage.getLiquidStored();
+		var slot1 = this.container.getSlot("slot1");
+		var slot2 = this.container.getSlot("slot2");
+		this.getLiquidFromItem(liquid, slot1, slot2);
+		
+		if(this.data.fuel <= 0){
+			var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", liquid);
+			if(fuel && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= energyStorage){
+				this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
+				this.data.fuel = fuel.amount;
+				this.data.liquid = liquid;
+			}
+		}
+		if(this.data.fuel > 0){
+			var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid);
+			this.data.energy += fuel.power;
+			this.data.fuel -= fuel.amount/20;
+			this.activate();
+			this.startPlaySound("Generators/GeothermalLoop.ogg");
+		}
+		else {
+			this.data.liquid = null;
+			this.stopPlaySound();
+			this.deactivate();
+		}
+    
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
+		
+		this.liquidStorage.updateUiScale("liquidScale", liquid);
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+	},
+	
+	getEnergyStorage: function(){
+		return 10000;
+	},
+	
+	energyTick: function(type, src){
+		var output = Math.min(32, this.data.energy);
+		this.data.energy += src.add(output) - output;
+	},
+	
+	renderModel: MachineRegistry.renderModelWithRotation
+});
+
+TileRenderer.setRotationPlaceFunction(BlockID.semifluidGenerator);
+
+StorageInterface.createInterface(BlockID.semifluidGenerator, {
+	slots: {
+		"slot1": {input: true},
+		"slot2": {output: true}
+	},
+	isValidInput: function(item){
+		var empty = LiquidLib.getEmptyItem(item.id, item.data);
+		if(!empty) return false;
+		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+	},
+	canReceiveLiquid: function(liquid, side){
+		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid)
+	},
 	canTransportLiquid: function(liquid, side){ return false; }
 });
 
@@ -3236,7 +5276,7 @@ MachineRegistry.registerGenerator(BlockID.solarPanel, {
 		}
 		if(this.data.canSeeSky && World.getLightLevel(this.x, this.y + 1, this.z) == 15){
 			this.data.energy = 1;
-			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", 1, 32, 1);
+			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", 1, 1);
 			if(content){ 
 				content.elements["sun"].bitmap = "sun_on";
 			}
@@ -3539,6 +5579,67 @@ MachineRegistry.registerGenerator(BlockID.rtGenerator, {
 
 
 
+// file: machine/generator/stirling_generator.js
+
+IDRegistry.genBlockID("stirlingGenerator");
+Block.createBlock("stirlingGenerator", [
+	{name: "Stirling Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator", 0], ["heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+], "opaque");
+TileRenderer.setStandartModel(BlockID.stirlingGenerator, [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator", 0], ["heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerFullRotationModel(BlockID.stirlingGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator", 0], ["heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]]);
+
+Block.registerDropFunction("stirlingGenerator", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
+});
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.stirlingGenerator, count: 1, data: 0}, [
+		"cxc",
+		"c#c",
+		"ccc"
+	], ['#', BlockID.primalGenerator, 0, 'c', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
+});
+
+MachineRegistry.registerGenerator(BlockID.stirlingGenerator, {
+	defaultValues: {
+		meta: 0,
+		heat: 0
+	},
+	
+	wrenchClick: function(id, count, data, coords){
+		this.setFacing(coords);
+	},
+	
+	setFacing: MachineRegistry.setFacing,
+	
+	canReceiveHeat: function(side){
+		return this.data.meta == side + Math.pow(-1, side);
+	},
+	
+	heatReceive: function(amount){
+		if(this.data.energy == 0){
+			this.data.energy = Math.round(amount / 2);
+			return amount;
+		}
+		return 0;
+	},
+	
+	energyTick: function(type, src){
+		if(src.add(this.data.energy) < this.data.energy){
+			this.data.energy = 0;
+		}
+	},
+	
+	renderModel: function(){
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta);
+	}
+});
+
+TileRenderer.setRotationPlaceFunction(BlockID.stirlingGenerator, true);
+
+
+
+
 // file: machine/generator/heat_solid.js
 
 IDRegistry.genBlockID("solidHeatGenerator");
@@ -3546,11 +5647,15 @@ Block.createBlock("solidHeatGenerator", [
 	{name: "Solid Fuel Firebox", texture: [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]], inCreative: true},
 ], "opaque");
 TileRenderer.setStandartModel(BlockID.solidHeatGenerator, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.solidHeatGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.solidHeatGenerator, 6, [["machine_bottom", 0], ["machine_top", 0], ["generator", 1], ["heat_pipe", 1], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 0, [["heat_pipe", 0], ["generator", 0], ["machine_bottom", 0], ["machine_top", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 1, [["generator", 0], ["heat_pipe", 0], ["machine_top", 0], ["machine_bottom", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
+TileRenderer.registerRotationModel(BlockID.solidHeatGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 6, [["heat_pipe", 1], ["generator", 0], ["machine_bottom", 0], ["machine_top", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 7, [["generator", 0], ["heat_pipe", 1], ["machine_top", 0], ["machine_bottom", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
+TileRenderer.registerRotationModel(BlockID.solidHeatGenerator, 8, [["machine_bottom", 0], ["machine_top", 0], ["generator", 1], ["heat_pipe", 1], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
 
 Block.registerDropFunction("solidHeatGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.solidHeatGenerator);
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
 });
 
 Callback.addCallback("PreLoaded", function(){
@@ -3564,7 +5669,7 @@ Callback.addCallback("PreLoaded", function(){
 		" a ",
 		"ppp",
 		" f "
-	], ['a', ItemID.heatConductor, 0,'p', ItemID.plateIron, 0,'f', BlockID.ironFurnace, 0]);
+	], ['a', ItemID.heatConductor, 0, 'p', ItemID.plateIron, 0, 'f', BlockID.ironFurnace, 0]);
 });
 
 
@@ -3578,7 +5683,7 @@ var guiSolidHeatGenerator = new UI.StandartWindow({
 	drawing: [
 		{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},
-		{type: "bitmap", x: 441, y: 330, bitmap: "black_line", scale: GUI_SCALE}
+		{type: "bitmap", x: 441, y: 330, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],
 	
 	elements: {
@@ -3628,8 +5733,8 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 	spreadHeat: function(){
 		var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
 		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-		if(TE && TE.heatReceiveFunction && this.data.meta == TE.data.meta + Math.pow(-1, TE.data.meta)){
-			return this.data.output = TE.heatReceiveFunction(20);
+		if(TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)){
+			return this.data.output = TE.heatReceive(20);
 		}
 		return false;
 	},
@@ -3683,11 +5788,179 @@ StorageInterface.createInterface(BlockID.solidHeatGenerator, {
 
 
 
+// file: machine/generator/heat_fluid.js
+
+IDRegistry.genBlockID("fluidHeatGenerator");
+Block.createBlock("fluidHeatGenerator", [
+	{name: "Liquid Fuel Firebox", texture: [["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_back", 0], ["heat_pipe", 0], ["fluid_heat_generator_side", 0], ["fluid_heat_generator_side", 0]], inCreative: true},
+], "opaque");
+TileRenderer.setStandartModel(BlockID.fluidHeatGenerator, [["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_back", 0], ["heat_pipe", 0], ["fluid_heat_generator_side", 0], ["fluid_heat_generator_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 0, [["heat_pipe", 0], ["fluid_heat_generator_back", 0], ["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_side", 2], ["fluid_heat_generator_side", 2]]);
+TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 1, [["fluid_heat_generator_back", 0], ["heat_pipe", 0], ["machine_top", 0], ["machine_bottom", 0], ["fluid_heat_generator_side", 2], ["fluid_heat_generator_side", 2]]);
+TileRenderer.registerRotationModel(BlockID.fluidHeatGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_back", 0], ["heat_pipe", 0], ["fluid_heat_generator_side", 0], ["fluid_heat_generator_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 6, [["heat_pipe", 1], ["fluid_heat_generator_back", 0], ["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_side", 3], ["fluid_heat_generator_side", 3]]);
+TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 7, [["fluid_heat_generator_back", 0], ["heat_pipe", 1], ["machine_top", 0], ["machine_bottom", 0], ["fluid_heat_generator_side", 3], ["fluid_heat_generator_side", 3]]);
+TileRenderer.registerRotationModel(BlockID.fluidHeatGenerator, 8, [["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_back", 1], ["heat_pipe", 1], ["fluid_heat_generator_side", 1], ["fluid_heat_generator_side", 1]]);
+
+Block.registerDropFunction("fluidHeatGenerator", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.fluidHeatGenerator, count: 1, data: 0}, [
+		"pcp",
+		"cxc",
+		"pcp"
+	], ['x', ItemID.heatConductor, 0, 'c', ItemID.cellEmpty, 0, 'p', ItemID.casingIron, 0]);
+});
+
+
+var guiFluidHeatGenerator = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Liquid Fuel Firebox")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	drawing: [
+		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
+		{type: "bitmap", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE},
+		{type: "bitmap", x: 660, y: 102, bitmap: "fluid_heat_generator_info", scale: GUI_SCALE},
+		{type: "bitmap", x: 660, y: 176, bitmap: "fluid_heat_generator_info", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"slot1": {type: "slot", x: 440, y: 75,
+			isValid: function(id, count, data){
+				var empty = LiquidLib.getEmptyItem(id, data);
+				if(!empty) return false;
+				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+			}
+		},
+		"slot2": {type: "slot", x: 440, y: 183, isValid: function(){return false;}},
+		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 112, width: 300, height: 30, text: "Emit: 0"},
+		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 186, width: 300, height: 30, text: "Max Emit: 0"}
+	}
+});
+
+
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiFluidHeatGenerator, "Liquid Fuel Firebox");
+});
+
+MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
+	defaultValues: {
+		meta: 0,
+		output: 0,
+		fuel: 0,
+		liquid: null,
+		isActive: false
+	},
+	
+	getGuiScreen: function(){
+		return guiFluidHeatGenerator;
+	},
+	
+	setFacing: MachineRegistry.setFacing,
+	
+	init: function(){
+		this.liquidStorage.setLimit(null, 10);
+		this.renderModel();
+	},
+	
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	
+	click: function(id, count, data, coords){
+		var liquid = this.liquidStorage.getLiquidStored();
+		if(Entity.getSneaking(player) && this.getLiquidFromItem(liquid, {id: id, count: count, data: data}, null, true)){
+			return true;
+		}
+		if(ICTool.isValidWrench(id, data, 10)){
+			if(this.setFacing(coords))
+				ICTool.useWrench(id, data, 10);
+			return true;
+		}
+		return false;
+	},
+	
+	tick: function(){
+		StorageInterface.checkHoppers(this);
+		var liquid = this.liquidStorage.getLiquidStored();
+		var slot1 = this.container.getSlot("slot1");
+		var slot2 = this.container.getSlot("slot2");
+		this.getLiquidFromItem(liquid, slot1, slot2);
+		
+		var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid || liquid);
+		if(fuel && this.data.fuel <= 0 && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)){
+			this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
+			this.data.fuel = fuel.amount;
+			this.data.liquid = liquid;
+		}
+		if(fuel && this.data.fuel > 0){
+			if(this.data.fuel < fuel.amount){
+				this.spreadHeat(fuel.power*2);
+			}
+			this.data.fuel -= fuel.amount/20;
+			this.activate();
+			this.container.setText("textInfo2", "Max Emit: " + fuel.power * 2);
+			this.startPlaySound("Generators/GeothermalLoop.ogg");
+		}
+		else {
+			this.data.liquid = null;
+			this.stopPlaySound();
+			this.deactivate();
+			this.container.setText("textInfo1", "Emit: 0");
+			this.container.setText("textInfo2", "Max Emit: 0");
+		}
+		
+		this.liquidStorage.updateUiScale("liquidScale", liquid);
+	},
+	
+	getEnergyStorage: function(){
+		return 10000;
+	},
+	
+	spreadHeat: function(heat){
+		var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
+		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
+		if(TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)){
+			var output = TE.heatReceive(heat);
+			this.container.setText("textInfo1", "Emit: " + output);
+			return output;
+		}
+		return false;
+	},
+	
+	renderModel: MachineRegistry.renderModelWith6Sides
+});
+
+TileRenderer.setRotationPlaceFunction(BlockID.fluidHeatGenerator, true);
+
+StorageInterface.createInterface(BlockID.fluidHeatGenerator, {
+	slots: {
+		"slot1": {input: true},
+		"slot2": {output: true}
+	},
+	isValidInput: function(item){
+		var empty = LiquidLib.getEmptyItem(item.id, item.data);
+		if(!empty) return false;
+		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+	},
+	canReceiveLiquid: function(liquid, side){
+		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid)
+	},
+	canTransportLiquid: function(liquid, side){ return false; }
+});
+
+
+
+
 // file: machine/generator/heat_electric.js
 
 IDRegistry.genBlockID("electricHeatGenerator");
 Block.createBlock("electricHeatGenerator", [
-	{name: "Electric Heat Generator", texture: [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
+	{name: "Electric Heater", texture: [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
 ], "opaque");
 TileRenderer.setStandartModel(BlockID.electricHeatGenerator, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
@@ -3696,7 +5969,7 @@ TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 6, [["mach
 ItemName.addTierTooltip("electricHeatGenerator", 4);
 
 Block.registerDropFunction("electricHeatGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.electricHeatGenerator);
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
 });
 
 Callback.addCallback("PreLoaded", function(){
@@ -3710,27 +5983,27 @@ Callback.addCallback("PreLoaded", function(){
 
 var guiElectricHeatGenerator = new UI.StandartWindow({
 	standart: {
-		header: {text: {text: Translation.translate("Electric Heat Generator")}},
+		header: {text: {text: Translation.translate("Electric Heater")}},
 		inventory: {standart: true},
 		background: {standart: true}
 	},
 	
 	drawing: [
 		{type: "bitmap", x: 342, y: 110, bitmap: "energy_small_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 461, y: 250, bitmap: "black_line", scale: GUI_SCALE}
+		{type: "bitmap", x: 461, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],
 	
 	elements: {
-		"slot0": {type: "slot", x: 440, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(0, id, c, d, cont)}},
-		"slot1": {type: "slot", x: 500, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(1, id, c, d, cont)}},
-		"slot2": {type: "slot", x: 560, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(2, id, c, d, cont)}},
-		"slot3": {type: "slot", x: 620, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(3, id, c, d, cont)}},
-		"slot4": {type: "slot", x: 680, y: 120, isValid: function(id, c, d, cont){return checkCoilSlot(4, id, c, d, cont)}},
-		"slot5": {type: "slot", x: 440, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(5, id, c, d, cont)}},
-		"slot6": {type: "slot", x: 500, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(6, id, c, d, cont)}},
-		"slot7": {type: "slot", x: 560, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(7, id, c, d, cont)}},
-		"slot8": {type: "slot", x: 620, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(8, id, c, d, cont)}},
-		"slot9": {type: "slot", x: 680, y: 180, isValid: function(id, c, d, cont){return checkCoilSlot(9, id, c, d, cont)}},
+		"slot0": {type: "slot", x: 440, y: 120, isValid: getValidCoilSlotFunction(0)},
+		"slot1": {type: "slot", x: 500, y: 120, isValid: getValidCoilSlotFunction(1)},
+		"slot2": {type: "slot", x: 560, y: 120, isValid: getValidCoilSlotFunction(2)},
+		"slot3": {type: "slot", x: 620, y: 120, isValid: getValidCoilSlotFunction(3)},
+		"slot4": {type: "slot", x: 680, y: 120, isValid: getValidCoilSlotFunction(4)},
+		"slot5": {type: "slot", x: 440, y: 180, isValid: getValidCoilSlotFunction(5)},
+		"slot6": {type: "slot", x: 500, y: 180, isValid: getValidCoilSlotFunction(6)},
+		"slot7": {type: "slot", x: 560, y: 180, isValid: getValidCoilSlotFunction(7)},
+		"slot8": {type: "slot", x: 620, y: 180, isValid: getValidCoilSlotFunction(8)},
+		"slot9": {type: "slot", x: 680, y: 180, isValid: getValidCoilSlotFunction(9)},
 		"slotEnergy": {type: "slot", x: 340, y: 180, isValid: MachineRegistry.isValidEUStorage},
 		"energyScale": {type: "scale", x: 342, y: 110, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 530, y: 264, width: 300, height: 30, text: "0    /"},
@@ -3739,11 +6012,11 @@ var guiElectricHeatGenerator = new UI.StandartWindow({
 });
 
 Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiElectricHeatGenerator, "Electric Heat Generator");
+	MachineRegistry.updateGuiHeader(guiElectricHeatGenerator, "Electric Heater");
 });
 
-function checkCoilSlot(i, id, count, data, container){
-	var slot = container.getSlot("slot"+i)
+function checkCoilSlot(index, id, count, data, container){
+	var slot = container.getSlot("slot"+index);
 	if(id == ItemID.coil && slot.id == 0){
 		if(count == 1) return true;
 		var slotFinded = false;
@@ -3763,6 +6036,11 @@ function checkCoilSlot(i, id, count, data, container){
 	return false;
 }
 
+function getValidCoilSlotFunction(index){
+	return function(id, count, data, container){
+		return checkCoilSlot(index, id, count, data, container);
+	}
+}
 
 MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
     defaultValues: {
@@ -3785,12 +6063,13 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 	
 	setFacing: MachineRegistry.setFacing,
 	
-	calcOutput:function(){
+	calcOutput: function(){
 		var maxOutput = 0;
 		for(var i = 0; i < 10; i++){
 			var slot = this.container.getSlot("slot"+i);
-			if(slot.id==ItemID.coil)
-			maxOutput += 20;
+			if(slot.id == ItemID.coil){
+				maxOutput += 10;
+			}
 		}
 		return maxOutput;
 	},
@@ -3802,13 +6081,12 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		if(this.data.energy >= 1){
 			var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
 			var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-			if(TE && TE.heatReceiveFunction && this.data.meta == TE.data.meta + Math.pow(-1, TE.data.meta)){
-				output = TE.heatReceiveFunction(Math.min(maxOutput, parseInt(this.data.energy)*2));
+			if(TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)){
+				output = TE.heatReceive(Math.min(maxOutput, this.data.energy));
 				if(output > 0){
 					this.activate();
-					this.data.energy -= Math.round(output/2);
+					this.data.energy -= output;
 					this.container.setText("textInfo1", output + "    /");
-					
 				}
 			}
 		}
@@ -3818,7 +6096,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		}
 		
 		var energyStorage = this.getEnergyStorage()
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 32, 0);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 4);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo2", maxOutput);
 	},
@@ -4862,13 +7140,12 @@ MachineRegistry.registerEUStorage(BlockID.storageBatBox, {
 	setFacing: MachineRegistry.setFacing,
 	
 	tick: function(){
+		StorageInterface.checkHoppers(this);
+		
 		var energyStorage = this.getEnergyStorage();
-		var tier = this.getTier();
-		var transfer = transferByTier[tier] * 2;
-		if(World.getThreadTime()%2 == 0){ // icon override crash fix
-			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, transfer, tier);
-			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, transfer, tier);
-		}
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, 1);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, 1);
+		
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);
@@ -4905,6 +7182,27 @@ MachineRegistry.registerEUStorage(BlockID.storageBatBox, {
 
 MachineRegistry.setStoragePlaceFunction("storageBatBox", true);
 ToolAPI.registerBlockMaterial(BlockID.storageBatBox, "wood");
+
+StorageInterface.createInterface(BlockID.storageBatBox, {
+	slots: {
+		"slot1": {input: true, output: true, 
+			isValid: function(item, side, tileEntity){
+				return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", 1);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data <= 1;
+			}
+		},
+		"slot2": {input: true, output: true,
+			isValid: function(item, side, tileEntity){
+				return side > 1 && ChargeItemRegistry.isValidStorage(item.id, "Eu", 1);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data == Item.getMaxDamage(item.id);
+			}
+		}
+	}
+});
 
 
 
@@ -4983,13 +7281,12 @@ MachineRegistry.registerEUStorage(BlockID.storageCESU, {
 	setFacing: MachineRegistry.setFacing,
 	
 	tick: function(){
+		StorageInterface.checkHoppers(this);
+		
 		var energyStorage = this.getEnergyStorage();
-		var tier = this.getTier();
-		var transfer = transferByTier[tier] * 2;
-		if(World.getThreadTime()%2 == 0){ // icon override crash fix
-			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, transfer, tier);
-			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, transfer, tier);
-		}
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, 2);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, 2);
+		
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);
@@ -5031,6 +7328,27 @@ MachineRegistry.registerEUStorage(BlockID.storageCESU, {
 });
 
 MachineRegistry.setStoragePlaceFunction("storageCESU", true);
+
+StorageInterface.createInterface(BlockID.storageCESU, {
+	slots: {
+		"slot1": {input: true, output: true, 
+			isValid: function(item, side, tileEntity){
+				return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", 2);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data <= 1;
+			}
+		},
+		"slot2": {input: true, output: true,
+			isValid: function(item, side, tileEntity){
+				return side > 1 && ChargeItemRegistry.isValidStorage(item.id, "Eu", 2);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data == Item.getMaxDamage(item.id);
+			}
+		}
+	}
+});
 
 
 
@@ -5109,13 +7427,12 @@ MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 	setFacing: MachineRegistry.setFacing,
 	
 	tick: function(){
+		StorageInterface.checkHoppers(this);
+		
 		var energyStorage = this.getEnergyStorage();
-		var tier = this.getTier();
-		var transfer = transferByTier[tier] * 2;
-		if(World.getThreadTime()%2 == 0){ // icon override crash fix
-			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, transfer, tier);
-			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, transfer, tier);
-		}
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, 3);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, 3);
+		
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);
@@ -5159,6 +7476,27 @@ MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 });
 
 MachineRegistry.setStoragePlaceFunction("storageMFE", true);
+
+StorageInterface.createInterface(BlockID.storageMFE, {
+	slots: {
+		"slot1": {input: true, output: true, 
+			isValid: function(item, side, tileEntity){
+				return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", 3);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data <= 1;
+			}
+		},
+		"slot2": {input: true, output: true,
+			isValid: function(item, side, tileEntity){
+				return side > 1 && ChargeItemRegistry.isValidStorage(item.id, "Eu", 3);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data == Item.getMaxDamage(item.id);
+			}
+		}
+	}
+});
 
 
 
@@ -5233,13 +7571,12 @@ MachineRegistry.registerEUStorage(BlockID.storageMFSU, {
 	setFacing: MachineRegistry.setFacing,
 	
 	tick: function(){
+		StorageInterface.checkHoppers(this);
+		
 		var energyStorage = this.getEnergyStorage();
-		var tier = this.getTier();
-		var transfer = transferByTier[tier] * 2;
-		if(World.getThreadTime()%2 == 0){ // icon override crash fix
-			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, transfer, tier);
-			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, transfer, tier);
-		}
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, 4);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, 4);
+		
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);
@@ -5284,13 +7621,34 @@ MachineRegistry.registerEUStorage(BlockID.storageMFSU, {
 
 MachineRegistry.setStoragePlaceFunction("storageMFSU", true);
 
+StorageInterface.createInterface(BlockID.storageMFSU, {
+	slots: {
+		"slot1": {input: true, output: true, 
+			isValid: function(item, side, tileEntity){
+				return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", 4);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data <= 1;
+			}
+		},
+		"slot2": {input: true, output: true,
+			isValid: function(item, side, tileEntity){
+				return side > 1 && ChargeItemRegistry.isValidStorage(item.id, "Eu", 4);
+			},
+			canOutput: function(item, side, tileEntity){
+				return item.data == Item.getMaxDamage(item.id);
+			}
+		}
+	}
+});
+
 
 
 
 // file: machine/transformer/transformer_base.js
 
 MachineRegistry.registerTransformer = function(id, tier){
-	Prototype = {
+	var Prototype = {
 		defaultValues: {
 			increaseMode: false,
 			meta: 0
@@ -5724,7 +8082,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -5732,7 +8090,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 	},
 	
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
@@ -5762,10 +8120,9 @@ MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
@@ -5910,14 +8267,14 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.isHeating = this.data.signal > 0;
 	},
 	
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
@@ -5953,10 +8310,9 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress / 100);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
@@ -6067,6 +8423,8 @@ Callback.addCallback("PreLoaded", function(){
 		"263:0": {id: ItemID.dustCoal, count: 1, data: 0},
 		264: {id: ItemID.dustDiamond, count: 1, data: 0},
 		"351:4": {id: ItemID.dustLapis, count: 1, data: 0},
+		375: {id: ItemID.grinPowder, count: 2, data: 0},
+		394: {id: ItemID.grinPowder, count: 1, data: 0},
 		// other materials
 		1: {id: 4, count: 1, data: 0},
 		4: {id: 12, count: 1, data: 0},
@@ -6082,7 +8440,26 @@ Callback.addCallback("PreLoaded", function(){
 		179: {id: 12, count: 2, data: 1},
 		180: {id: 12, count: 3, data: 1},
 		352: {id: 351, count: 5, data: 15}, 
-		369: {id: 377, count: 5, data: 0}
+		369: {id: 377, count: 5, data: 0},
+		// plants
+		5: {id: ItemID.bioChaff, count: 1, sourceCount: 4},
+		"ItemID.rubberSapling": {id: ItemID.bioChaff, count: 1, sourceCount: 4},
+		"ItemID.rubberTreeLeaves": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		18: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		161: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		32: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		81: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		86: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		296: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		338: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		360: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		391: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		392: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		361: {id: ItemID.bioChaff, count: 1, sourceCount: 16},
+		362: {id: ItemID.bioChaff, count: 1, sourceCount: 16},
+		"ItemID.weed": {id: ItemID.bioChaff, count: 1, sourceCount: 32},
+		"ItemID.bioChaff": {id: 3, count: 1, data: 0},
+		"ItemID.coffeeBeans": {id: ItemID.coffeePowder, count: 3, data: 0},
 	}, true);
 });
 
@@ -6139,7 +8516,7 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -6147,27 +8524,30 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 	},
 
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
 		var result = MachineRecipeRegistry.getRecipeResult("macerator", sourceSlot.id, sourceSlot.data);
-		if(result && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)){
-			if(this.data.energy >= this.data.energy_consumption){
-				this.data.energy -= this.data.energy_consumption;
-				this.data.progress += 1/this.data.work_time;
-				newActive = true;
-				this.startPlaySound();
-			}
-			if(this.data.progress.toFixed(3) >= 1){
-				sourceSlot.count--;
-				resultSlot.id = result.id;
-				resultSlot.data = result.data;
-				resultSlot.count += result.count;
-				this.container.validateAll();
-				this.data.progress = 0;
+		if(result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)){
+			var resultSlot = this.container.getSlot("slotResult");
+			if(resultSlot.id == result.id && (!result.data || resultSlot.data == result.data) && resultSlot.count <= 64 - result.count || resultSlot.id == 0){
+				if(this.data.energy >= this.data.energy_consumption){
+					this.data.energy -= this.data.energy_consumption;
+					this.data.progress += 1/this.data.work_time;
+					newActive = true;
+					this.startPlaySound();
+				}
+				if(this.data.progress.toFixed(3) >= 1){
+					sourceSlot.count--;
+					resultSlot.id = result.id;
+					resultSlot.data = result.data || 0;
+					resultSlot.count += result.count;
+					this.container.validateAll();
+					this.data.progress = 0;
+				}
 			}
 		}
 		else {
@@ -6177,10 +8557,9 @@ MachineRegistry.registerElectricMachine(BlockID.macerator, {
 			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
@@ -6339,7 +8718,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -6347,7 +8726,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 	},
 	
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
@@ -6379,10 +8758,9 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
@@ -6446,6 +8824,7 @@ Callback.addCallback("PreLoaded", function(){
 		"BlockID.rubberTreeLog": {id: ItemID.rubber, count: 1},
 		35: {id: 35, count: 1},
 		289: {id: ItemID.dustSulfur, count: 1},
+		"ItemID.tinCanFull": {id: ItemID.tinCanEmpty, count: 1},
 	}, true);
 });
 
@@ -6502,7 +8881,7 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -6510,7 +8889,7 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 	},
 	
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
@@ -6539,10 +8918,9 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
@@ -6578,15 +8956,15 @@ StorageInterface.createInterface(BlockID.extractor, {
 
 
 
-// file: machine/processing/conserver.js
+// file: machine/processing/solid_canner.js
 
 IDRegistry.genBlockID("conserver");
 Block.createBlock("conserver", [
-	{name: "Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+	{name: "Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "opaque");
-TileRenderer.setStandartModel(BlockID.conserver, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.conserver, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.conserver, 1, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canning_machine", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandartModel(BlockID.conserver, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.conserver, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.conserver, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 1], ["machine_side", 0], ["machine_side", 0]]);
 
 ItemName.addTierTooltip("conserver", 1);
 
@@ -6596,13 +8974,12 @@ Block.registerDropFunction("conserver", function(coords, blockID, blockData, lev
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.conserver, count: 1, data: 0}, [
-		" e ",
-		" e ",
-		"axa"
-	], ['x', BlockID.machineBlockBasic, 0, 'e', ItemID.tinCanEmpty, 0, 'a', ItemID.circuitBasic, 0]);
+		"c#c",
+		"cxc",
+		"ccc"
+	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.casingTin, 0]);
 	
-	
-	MachineRecipeRegistry.registerRecipesFor("canner", {
+	MachineRecipeRegistry.registerRecipesFor("solidCanner", {
 		"ItemID.uranium": {storage: [ItemID.fuelRod, 1], result: [ItemID.fuelRodUranium, 1, 0]},
 		"ItemID.mox": {storage: [ItemID.fuelRod, 1], result: [ItemID.fuelRodMOX, 1, 0]},
 		354: {storage: [ItemID.tinCanEmpty, 14], result: [ItemID.tinCanFull, 14, 0]},
@@ -6641,15 +9018,15 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-var guiConserver = new UI.StandartWindow({
+var guiSolidCanner = new UI.StandartWindow({
 	standart: {
-		header: {text: {text: Translation.translate("Canning Machine")}},
+		header: {text: {text: Translation.translate("Solid Canning Machine")}},
 		inventory: {standart: true},
 		background: {standart: true}
 	},
 
 	drawing: [
-		{type: "bitmap", x: 400 + 52*GUI_SCALE, y: 50 + 33*GUI_SCALE, bitmap: "canner_arrow", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 52*GUI_SCALE, y: 50 + 33*GUI_SCALE, bitmap: "solid_canner_arrow", scale: GUI_SCALE},
 		{type: "bitmap", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, bitmap: "arrow_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
@@ -6660,12 +9037,12 @@ var guiConserver = new UI.StandartWindow({
 		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
 		"slotSource": {type: "slot", x: 400 + 32*GUI_SCALE, y: 50 + 32*GUI_SCALE,
 			isValid: function(id){
-				return MachineRecipeRegistry.hasRecipeFor("canner", id);
+				return MachineRecipeRegistry.hasRecipeFor("solidCanner", id);
 			}
 		},
 		"slotCan": {type: "slot", x: 400 + 63*GUI_SCALE, y: 50 + 32*GUI_SCALE, 
 			isValid: function(id){
-				var recipes = MachineRecipeRegistry.requireRecipesFor("canner");
+				var recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 				for(var i in recipes){
 					if(recipes[i].storage[0] == id) return true;
 				}
@@ -6681,7 +9058,7 @@ var guiConserver = new UI.StandartWindow({
 });
 
 Callback.addCallback("LevelLoaded", function(){
-	MachineRegistry.updateGuiHeader(guiConserver, "Canning Machine");
+	MachineRegistry.updateGuiHeader(guiSolidCanner, "Solid Canning Machine");
 });
 
 MachineRegistry.registerElectricMachine(BlockID.conserver, {
@@ -6689,7 +9066,7 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 		power_tier: 1,
 		energy_storage: 800,
 		energy_consumption: 1,
-		work_time: 150,
+		work_time: 200,
 		meta: 0,
 		progress: 0,
 		isActive: false
@@ -6698,14 +9075,14 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"],
 
 	getGuiScreen: function(){
-		return guiConserver;
+		return guiSolidCanner;
 	},
 	
 	getTier: function(){
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -6713,7 +9090,7 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 	},
 
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
@@ -6721,7 +9098,7 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 		var canSlot = this.container.getSlot("slotCan");
 		
 		var newActive = false;
-		var recipe = MachineRecipeRegistry.getRecipeResult("canner", sourceSlot.id);
+		var recipe = MachineRecipeRegistry.getRecipeResult("solidCanner", sourceSlot.id);
 		if(recipe && canSlot.id == recipe.storage[0] && canSlot.count >= recipe.storage[1] && (resultSlot.id == recipe.result[0] && resultSlot.data == recipe.result[2] && resultSlot.count <= 64 - recipe.result[1] || resultSlot.id == 0)){
 			if(this.data.energy >= this.data.energy_consumption){
 				this.data.energy -= this.data.energy_consumption;
@@ -6743,10 +9120,9 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 		}
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
@@ -6766,12 +9142,12 @@ StorageInterface.createInterface(BlockID.conserver, {
 	slots: {
 		"slotSource": {input: true,
 			isValid: function(item){
-				return MachineRecipeRegistry.hasRecipeFor("canner", item.id);
+				return MachineRecipeRegistry.hasRecipeFor("solidCanner", item.id);
 			}
 		},
 		"slotCan": {input: true,
 			isValid: function(item){
-				var recipes = MachineRecipeRegistry.requireRecipesFor("canner");
+				var recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 				for(var i in recipes){
 					if(recipes[i].storage[0] == item.id) return true;
 				}
@@ -6779,6 +9155,353 @@ StorageInterface.createInterface(BlockID.conserver, {
 			}
 		},
 		"slotResult": {output: true}
+	}
+});
+
+
+
+
+// file: machine/processing/canner.js
+
+IDRegistry.genBlockID("canner");
+Block.createBlock("canner", [
+	{name: "Fluid/Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
+], "opaque");
+TileRenderer.setStandartModel(BlockID.canner, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.canner, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.canner, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 1], ["canner_side", 1], ["canner_side", 0]]);
+
+ItemName.addTierTooltip("canner", 1);
+
+Block.registerDropFunction("canner", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
+});
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.canner, count: 1, data: 0}, [
+		"c#c",
+		"cxc",
+	], ['#', BlockID.conserver, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
+	
+	MachineRecipeRegistry.registerRecipesFor("fluidCanner", [
+		{input: ["water", {id: ItemID.bioChaff, count: 1}], output: "biomass"},
+		{input: ["water", {id: ItemID.dustLapis, count: 1}], output: "coolant"}
+	]);
+});
+
+
+var guiCanner = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Fluid/Solid Canning Machine")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+	
+	drawing: [
+		{type: "background", color: Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 406, y: 60 + 58*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 67*GUI_SCALE, y: 60 + 18*GUI_SCALE, bitmap: "extractor_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 496, y: 60 + 38*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE},
+		{type: "bitmap", x: 730, y: 60 + 38*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE}
+	],
+
+	elements: {
+		"background": {type: "image", x: 400 + 51*GUI_SCALE, y: 60 + 12*GUI_SCALE, bitmap: "canner_background_0", scale: GUI_SCALE},
+		"liquidInputScale": {type: "scale", x: 496 + 4*GUI_SCALE, y: 60 + 42*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"liquidOutputScale": {type: "scale", x: 730 + 4*GUI_SCALE, y: 60 + 42*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"progressScale": {type: "scale", x: 400 + 67*GUI_SCALE, y: 60 + 18*GUI_SCALE, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 406, y: 60 + 58*GUI_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotEnergy": {type: "slot", x: 400, y: 60 + 75*GUI_SCALE, size: 54, isValid: MachineRegistry.isValidEUStorage},
+		"slotSource": {type: "slot", x: 400 + 72*GUI_SCALE, y: 60 + 39*GUI_SCALE, size: 54, visual: false, bitmap: "canner_slot_source_0",
+			isValid: function(id, count, data, container){
+				return isValidCannerSource(id, data, container.tileEntity);
+			}
+		},
+		"slotCan": {type: "slot", x: 400 + 33*GUI_SCALE, y: 60 + 12*GUI_SCALE, size: 54, 
+			isValid: function(id, count, data, container){
+				return isValidCannerCan(id, data, container.tileEntity);
+			}
+		},
+		"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE, y: 60 + 12*GUI_SCALE, size: 54, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 850, y: 60 + 21*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 850, y: 60 + 39*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade3": {type: "slot", x: 850, y: 60 + 57*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade4": {type: "slot", x: 850, y: 60 + 75*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"buttonSwitch": {type: "button", x: 400 + 70*GUI_SCALE, y: 60 + 60*GUI_SCALE, bitmap: "canner_switch_button", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				if(tile.data.progress == 0){
+					var liquidData = tile.inputTank.data;
+					tile.inputTank.data = tile.outputTank.data;
+					tile.outputTank.data = liquidData;
+				}
+			}
+		}},
+		"buttonMode": {type: "button", x: 400 + 54*GUI_SCALE, y: 60 + 75*GUI_SCALE, bitmap: "canner_mode_0", scale: GUI_SCALE, clicker: {
+			onClick: function(container, tile){
+				if(tile.data.progress == 0){
+					tile.data.mode = (tile.data.mode + 1) % 4;
+					tile.updateUI();
+				}
+			}
+		}}
+	}
+});
+
+function isValidCannerSource(id, data, tile){
+	if(tile.data.mode == 0 && MachineRecipeRegistry.hasRecipeFor("solidCanner", id)){
+		return true;
+	}
+	if(tile.data.mode == 3){
+		var recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
+		for(var i in recipes){
+			if(recipes[i].input[1].id == id) return true;
+		}
+	}
+	return false;
+}
+
+function isValidCannerCan(id, data, tile){
+	if(tile.data.mode == 0){
+		var recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+		for(var i in recipes){
+			if(recipes[i].storage[0] == id) return true;
+		}
+	}
+	if(tile.data.mode == 1 || tile.data.mode == 3){
+		return LiquidLib.getEmptyItem(id, data) ? true : false;
+	}
+	if(tile.data.mode == 2){
+		return LiquidRegistry.getFullItem(id, data, "water") ? true : false;
+	}
+	return false;
+}
+
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiCanner, "Fluid/Solid Canning Machine");
+});
+
+
+MachineRegistry.registerElectricMachine(BlockID.canner, {
+	defaultValues: {
+		power_tier: 1,
+		energy_storage: 1600,
+		energy_consumption: 1,
+		work_time: 200,
+		meta: 0,
+		progress: 0,
+		mode: 0,
+		isActive: false
+	},
+
+	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector", "fluidPulling"],
+
+	getGuiScreen: function(){
+		return guiCanner;
+	},
+	
+	getTier: function(){
+		return this.data.power_tier;
+	},
+	
+	resetValues: function(){
+		this.data.power_tier = this.defaultValues.power_tier;
+		this.data.energy_storage = this.defaultValues.energy_storage;
+		this.data.energy_consumption = this.defaultValues.energy_consumption;
+		this.data.work_time = this.defaultValues.work_time;
+		if(this.data.mode%3 > 0) this.data.work_time /= 5;
+	},
+	
+	updateUI: function(){
+		var content = this.container.getGuiContent();
+		if(content){
+			this.updateElement(content.elements.buttonMode, "canner_mode_" + this.data.mode);
+			this.updateElement(content.elements.background, "canner_background_" + this.data.mode);
+			var element = content.elements.slotSource;
+			var texture = "canner_slot_source_" + this.data.mode;
+			if(element.bitmap != texture){
+				element.bitmap = texture;
+				element.visual = this.data.mode%3 > 0;
+			}
+		}
+	},
+	
+	updateElement: function(element, bitmap){
+		if(element.bitmap != bitmap){
+			element.bitmap = bitmap;
+		}
+	},
+	
+	init: function(){
+		this.inputTank = new LiquidTank(this, "input", 8);
+		this.outputTank = new LiquidTank(this, "output", 8);
+		this.renderModel();
+	},
+	
+	tick: function(){
+		this.updateUI();
+		this.resetValues();
+		UpgradeAPI.executeUpgrades(this);
+		
+		var sourceSlot = this.container.getSlot("slotSource");
+		var resultSlot = this.container.getSlot("slotResult");
+		var canSlot = this.container.getSlot("slotCan");
+		
+		var newActive = false;
+		switch(this.data.mode){
+		case 0:
+			var recipe = MachineRecipeRegistry.getRecipeResult("solidCanner", sourceSlot.id);
+			if(recipe && canSlot.id == recipe.storage[0] && canSlot.count >= recipe.storage[1] && (resultSlot.id == recipe.result[0] && resultSlot.data == recipe.result[2] && resultSlot.count <= 64 - recipe.result[1] || resultSlot.id == 0)){
+				if(this.data.energy >= this.data.energy_consumption){
+					this.data.energy -= this.data.energy_consumption;
+					this.data.progress += 1/this.data.work_time;
+					newActive = true;
+				}
+				if(this.data.progress.toFixed(3) >= 1){
+					canSlot.count -= recipe.storage[1];
+					sourceSlot.count--;
+					resultSlot.id = recipe.result[0];
+					resultSlot.data = recipe.result[2];
+					resultSlot.count += recipe.result[1];
+					this.container.validateAll();
+					this.data.progress = 0;
+				}
+			}
+			else {
+				this.data.progress = 0;
+			}
+		break;
+		case 1:
+			var liquid = this.outputTank.getLiquidStored();
+			var empty = LiquidLib.getEmptyItem(canSlot.id, canSlot.data);
+			if(empty && (!liquid || empty.liquid == liquid) && this.outputTank.getAmount() <= 8 - empty.amount){
+				if(this.data.energy >= this.data.energy_consumption && (resultSlot.id == empty.id && resultSlot.data == empty.data && resultSlot.count < Item.getMaxStack(empty.id) || resultSlot.id == 0)){
+					this.data.energy -= this.data.energy_consumption;
+					this.data.progress += 1/this.data.work_time;
+					newActive = true;
+				}
+				if(this.data.progress.toFixed(3) >= 1){
+					this.outputTank.addLiquid(empty.liquid, empty.amount);
+					canSlot.count--;
+					resultSlot.id = empty.id;
+					resultSlot.data = empty.data;
+					resultSlot.count++;
+					this.container.validateAll();
+					this.data.progress = 0;
+				}
+			}
+			else {
+				this.data.progress = 0;
+			}
+		break;
+		case 2:
+			var resetProgress = true;
+			var liquid = this.inputTank.getLiquidStored();
+			if(liquid){
+				var full = LiquidLib.getFullItem(canSlot.id, canSlot.data, liquid);
+				if(full && this.inputTank.getAmount() >= full.storage){
+					resetProgress = false;
+					if(this.data.energy >= this.data.energy_consumption && (resultSlot.id == full.id && resultSlot.data == full.data && resultSlot.count < Item.getMaxStack(full.id) || resultSlot.id == 0)){
+						this.data.energy -= this.data.energy_consumption;
+						this.data.progress += 1/this.data.work_time;
+						newActive = true;
+					}
+					if(this.data.progress.toFixed(3) >= 1){
+						this.inputTank.getLiquid(liquid, full.storage);
+						canSlot.count--;
+						resultSlot.id = full.id;
+						resultSlot.data = full.data;
+						resultSlot.count++;
+						this.container.validateAll();
+						this.data.progress = 0;
+					}
+				}
+			}
+			if(resetProgress){
+				this.data.progress = 0;
+			}
+		break;
+		case 3:
+			var recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
+			var resetProgress = true;
+			for(var i in recipes){
+				var recipe = recipes[i];
+				var liquid = recipe.input[0];
+				var source = recipe.input[1];
+				if(this.inputTank.getAmount(liquid) >= 1 && source.id == sourceSlot.id && source.count <= sourceSlot.count){
+					resetProgress = false;
+					var outputLiquid = this.outputTank.getLiquidStored()
+					if((!outputLiquid || recipe.output == outputLiquid && this.outputTank.getAmount() <= 7) && this.data.energy >= this.data.energy_consumption){
+						this.data.energy -= this.data.energy_consumption;
+						this.data.progress += 1/this.data.work_time;
+						newActive = true;
+					}
+					if(this.data.progress.toFixed(3) >= 1){
+						this.inputTank.getLiquid(1);
+						sourceSlot.count -= source.count;
+						this.outputTank.addLiquid(recipe.output, 1);
+						this.container.validateAll();
+						this.data.progress = 0;
+					}
+					break;
+				}
+			}
+			if(resetProgress){
+				this.data.progress = 0;
+			}
+		break;
+		}
+		this.setActive(newActive);
+		
+		var energyStorage = this.getEnergyStorage();
+		this.data.energy = Math.min(this.data.energy, energyStorage);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
+		
+		this.inputTank.updateUiScale("liquidInputScale");
+		this.outputTank.updateUiScale("liquidOutputScale");
+		this.container.setScale("progressScale", this.data.progress);
+		this.container.setScale("energyScale", this.data.energy / energyStorage);
+	},
+	
+	getEnergyStorage: function(){
+		return this.data.energy_storage;
+	},
+
+	renderModel: MachineRegistry.renderModelWithRotation,
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc
+});
+
+TileRenderer.setRotationPlaceFunction(BlockID.canner);
+
+StorageInterface.createInterface(BlockID.canner, {
+	slots: {
+		"slotSource": {input: true,
+			isValid: function(item){
+				return isValidCannerSource(item.id, item.data, this.tileEntity);
+			}
+		},
+		"slotCan": {input: true,
+			isValid: function(item){
+				return isValidCannerCan(item.id, item.data, this.tileEntity);
+			}
+		},
+		"slotResult": {output: true}
+	},
+	canReceiveLiquid: function(liquid, side){ return true; },
+	canTransportLiquid: function(liquid, side){ return true; },
+	addLiquid: function(liquid, amount){
+		return this.tileEntity.inputTank.addLiquid(liquid, amount);
+	},
+	getLiquid: function(liquid, amount){
+		return this.tileEntity.outputTank.getLiquid(liquid, amount);
+	},
+	getLiquidStored: function(mode){
+		if(mode == "input") return this.tileEntity.inputTank.getLiquidStored();
+		return this.tileEntity.outputTank.getLiquidStored();
 	}
 });
 
@@ -6862,7 +9585,7 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -6870,7 +9593,7 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 	},
 	
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
@@ -6900,10 +9623,9 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 			this.stopPlaySound(true);
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
@@ -7059,7 +9781,7 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -7071,7 +9793,7 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		if(content){
 			content.elements.button.bitmap = "metal_former_button_" + this.data.mode;
 		}
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
@@ -7097,10 +9819,9 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		}
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
@@ -7193,7 +9914,7 @@ var guiOreWasher = new UI.StandartWindow({
 		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
 		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 12*GUI_SCALE,
 			isValid: function(id, count, data){
-				return LiquidRegistry.getItemLiquid(id, data) == "water";
+				return LiquidLib.getItemLiquid(id, data) == "water";
 			}
 		},
 		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: function(){return false;}},
@@ -7237,7 +9958,7 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -7275,24 +9996,22 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 			}
 		}
 	},
-
+	
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	
+	click: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			return this.getLiquidFromItem("water", {id: id, count: count, data: data}, null, true);
+		}
+	},
+	
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");
-		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
-		if(empty && empty.liquid == "water"){
-			if(this.liquidStorage.getAmount("water") <= 7 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
-				this.liquidStorage.addLiquid("water", 1);
-				slot1.count--;
-				slot2.id = empty.id;
-				slot2.data = empty.data;
-				slot2.count++;
-				this.container.validateAll();
-			}
-		}
+		this.getLiquidFromItem("water", slot1, slot2);
 		
 		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
@@ -7315,10 +10034,9 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 		}
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
 		this.liquidStorage.updateUiScale("liquidScale", "water");
@@ -7343,7 +10061,7 @@ StorageInterface.createInterface(BlockID.oreWasher, {
 		},
 		"slotLiquid1": {input: true, 
 			isValid: function(item){
-				return LiquidRegistry.getItemLiquid(item.id, item.data) == "water";
+				return LiquidLib.getItemLiquid(item.id, item.data) == "water";
 			}
 		},
 		"slotLiquid2": {output: true},
@@ -7476,7 +10194,7 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -7509,7 +10227,7 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 	},
 
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		if(this.data.isHeating){
 			this.data.maxHeat = 5000;
@@ -7549,10 +10267,9 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 		}
 		this.setActive(newActive);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		var content = this.container.getGuiContent();
 		if(content){
@@ -7614,7 +10331,7 @@ Callback.addCallback("PreLoaded", function(){
 		"aaa",
 		"asa",
 		"axa"
-	], ['s', BlockID.machineBlockBasic, 0,'a', ItemID.casingIron, 0,'x', ItemID.heatConductor, 0]);
+	], ['s', BlockID.machineBlockBasic, 0, 'a', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
 	
 	MachineRecipeRegistry.registerRecipesFor("blastFurnace", {
 		15: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
@@ -7712,7 +10429,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		}
 	},
 	
-	controlAir:function(){
+	controlAir: function(){
 		var slot1 = this.container.getSlot("slotAir1");
 		var slot2 = this.container.getSlot("slotAir2");
 		if(this.data.air == 0){
@@ -7801,9 +10518,13 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		this.data.signal = signal.power > 0;
 	},
 	
-	heatReceiveFunction: function(amount){
+	canReceiveHeat: function(side){
+		return this.data.meta == side + Math.pow(-1, side);
+	},
+	
+	heatReceive: function(amount){
 		var slot = this.container.getSlot("slotSource");
-		if(this.data.isHeating || this.data.sourceID > 0 || MachineRecipeRegistry.getRecipeResult("blastFrunace", slot.id)){
+		if(this.data.isHeating || this.data.sourceID > 0 || MachineRecipeRegistry.getRecipeResult("blastFurnace", slot.id)){
 			amount = Math.min(this.getMaxHeat() - this.data.heat, Math.min(amount, 20));
 			this.data.heat += amount;
 			return amount;
@@ -7831,6 +10552,189 @@ StorageInterface.createInterface(BlockID.blastFurnace, {
 		"slotAir2": {output: true},
 		"slotResult1": {output: true},
 		"slotResult2": {output: true}
+	}
+});
+
+
+
+
+// file: machine/processing/fermenter.js
+
+IDRegistry.genBlockID("icFermenter");
+Block.createBlock("icFermenter", [
+	{name: "Fermenter", texture: [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], inCreative: true},
+], "opaque");
+TileRenderer.setStandartModel(BlockID.icFermenter, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
+TileRenderer.registerFullRotationModel(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
+TileRenderer.registerFullRotationModel(BlockID.icFermenter, 6, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 1], ["heat_pipe", 1], ["ic_fermenter_side", 1], ["ic_fermenter_side", 1]]);
+
+Block.registerDropFunction("icFermenter", function(coords, blockID, blockData, level, enchant){
+	return MachineRegistry.getMachineDrop(coords, blockID, level);
+});
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: BlockID.icFermenter, count: 1, data: 0}, [
+		"aaa",
+		"ccc",
+		"axa"
+	], ['c', ItemID.cellEmpty, 0, 'a', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
+});
+
+
+var guiFermenter = new UI.StandartWindow({
+	standart: {
+		header: {text: {text: Translation.translate("Fermenter")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+	
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+	
+	drawing: [
+		{type: "background", color: Color.parseColor("#b3b3b3")},
+		{type: "bitmap", x: 390, y: 80, bitmap: "fermenter_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 758, y: 95, bitmap: "liquid_bar", scale: GUI_SCALE}
+	],
+	
+	elements: {
+		"progressScale": {type: "scale", x: 492, y: 150, direction: 0, value: .5, bitmap: "fermenter_progress_scale", scale: GUI_SCALE},
+		"fertilizerScale": {type: "scale", x: 480, y: 301, direction: 0, value: .5, bitmap: "fertilizer_progress_scale", scale: GUI_SCALE},
+		"biogasScale": {type: "scale", x: 771, y: 108, direction: 1, value: .5, bitmap: "liquid_biogas", scale: GUI_SCALE},
+		"biomassScale": {type: "scale", x: 483, y: 179, direction: 1, value: .5, bitmap: "biomass_scale", scale: GUI_SCALE},
+		"slotBiomass0": {type: "slot", x: 400, y: 162, isValid: function(id, count, data){
+            return LiquidLib.getItemLiquid(id, data) == "biomass";
+        }},
+		"slotBiomass1": {type: "slot", x: 400, y: 222, isValid: function(){return false;}},
+		"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "black_border_slot", isValid: function(){return false;}},
+		"slotBiogas0": {type: "slot", x: 832, y: 155, isValid: function(id, count, data){
+            return LiquidLib.getFullItem(id, data, "biogas") ? true : false;
+        }},
+		"slotBiogas1": {type: "slot", x: 832, y: 215, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 765, y: 290, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 825, y: 290, isValid: UpgradeAPI.isValidUpgrade}
+	}
+});
+
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiFermenter, "Fermenter");
+});
+
+MachineRegistry.registerPrototype(BlockID.icFermenter, {
+	defaultValues:{
+		meta: 0,
+		heat: 0,
+		progress: 0,
+		fertilizer: 0,
+		isActive: false,
+	},
+	
+	upgrades: ["itemEjector", "itemPulling", "fluidEjector", "fluidPulling"],
+	
+	getGuiScreen: function(){
+       return guiFermenter;
+    },
+	
+	wrenchClick: function(id, count, data, coords){
+		this.setFacing(coords);
+	},
+	
+	setFacing: MachineRegistry.setFacing,
+	
+	init: function(){
+		this.liquidStorage.setLimit("biomass", 10);
+		this.liquidStorage.setLimit("biogas", 2);
+		this.renderModel();
+	},
+	
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	addLiquidToItem: MachineRegistry.addLiquidToItem,
+	
+	click: function(id, count, data, coords){
+		var liquid = this.liquidStorage.getLiquidStored();
+		if(Entity.getSneaking(player) && this.getLiquidFromItem("biogas", {id: id, count: count, data: data}, null, true)){
+			return true;
+		}
+		if(ICTool.isValidWrench(id, data, 10)){
+			if(this.setFacing(coords))
+				ICTool.useWrench(id, data, 10);
+			return true;
+		}
+		return false;
+	},
+	
+    tick: function(){
+		StorageInterface.checkHoppers(this);
+		UpgradeAPI.executeUpgrades(this);
+		this.setActive(this.data.heat > 0);
+		
+		if(this.data.heat > 0){
+			this.data.progress += this.data.heat;
+			this.data.heat = 0;
+			
+			if(this.data.progress >= 4000){
+				this.liquidStorage.getLiquid("biomass", 0.02);
+				this.liquidStorage.addLiquid("biogas", 0.4);
+				this.data.fertilizer++;
+				this.data.progress = 0;
+			}
+			
+			var outputSlot = this.container.getSlot("slotFertilizer");
+			if(this.data.fertilizer >= 25){
+				this.data.fertilizer = 0;
+				outputSlot.id = ItemID.fertilizer;
+				outputSlot.count++;
+			}
+		}
+		
+		var slot1 = this.container.getSlot("slotBiomass0");
+		var slot2 = this.container.getSlot("slotBiomass1");
+		this.getLiquidFromItem("biomass", slot1, slot2);
+		
+		var slot1 = this.container.getSlot("slotBiogas0");
+		var slot2 = this.container.getSlot("slotBiogas1");
+		this.addLiquidToItem("biogas", slot1, slot2);
+		
+		this.container.setScale("progressScale", this.data.progress / 4000);
+		this.container.setScale("fertilizerScale", this.data.fertilizer / 25);
+		this.liquidStorage.updateUiScale("biomassScale", "biomass");
+		this.liquidStorage.updateUiScale("biogasScale", "biogas");
+    },
+	
+	canReceiveHeat: function(side){
+		return this.data.meta == side + Math.pow(-1, side);
+	},
+	
+	heatReceive: function(amount){
+		var outputSlot = this.container.getSlot("slotFertilizer");
+		if(this.liquidStorage.getAmount("biomass").toFixed(3) >= 0.02 && this.liquidStorage.getAmount("biogas") <= 1.6 && outputSlot.count < 64){
+			this.data.heat = amount;
+			return amount;
+		}
+		return 0;
+	},
+	
+	renderModel: MachineRegistry.renderModelWith6Sides
+});
+
+TileRenderer.setRotationPlaceFunction(BlockID.icFermenter, true);
+
+StorageInterface.createInterface(BlockID.icFermenter, {
+	slots: {
+		"slotBiomass0": {input: true},
+		"slotBiomass1": {output: true},
+		"slotBiogas0": {input: true},
+		"slotBiogas1": {output: true},
+		"slotFertilizer": {output: true}
+	},
+	canReceiveLiquid: function(liquid, side){
+		return liquid == "biomass";
+	},
+	canTransportLiquid: function(liquid, side){ return true; },
+	getLiquidStored: function(storage){
+		return storage == "input" ? "biomass" : "biogas";
 	}
 });
 
@@ -7935,7 +10839,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 				this.data.energy -= transfer;
 				this.data.catalyser -= transfer;
 				if(World.getThreadTime()%40 == 0 && transfer > 0){
-					SoundAPI.playMachineAt("Generators/MassFabricator/MassFabScrapSolo.ogg", false, this, 16);
+					SoundAPI.playSoundAt(this, "Generators/MassFabricator/MassFabScrapSolo.ogg", false, 16);
 				}
 			}
 			else{
@@ -8066,7 +10970,7 @@ var guiPump = new UI.StandartWindow({
 		"slotEnergy": {type: "slot", x: 400, y: 50 + 39*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
 		"slotLiquid1": {type: "slot", x: 400 + 91*GUI_SCALE, y: 50 + 12*GUI_SCALE,
 			isValid: function(id, count, data){
-				return LiquidRegistry.getFullItem(id, data, "water")? true : false;
+				return LiquidLib.getFullItem(id, data, "water")? true : false;
 			}
 		},
 		"slotLiquid2": {type: "slot", x: 400 + 125*GUI_SCALE, y: 50 + 29*GUI_SCALE, isValid: function(){return false;}},
@@ -8102,7 +11006,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		return this.data.power_tier;
 	},
 	
-	setDefaultValues: function(){
+	resetValues: function(){
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -8110,6 +11014,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 	},
 	
 	renderModel: MachineRegistry.renderModelWithRotation,
+	addLiquidToItem: MachineRegistry.addLiquidToItem,
 	
 	init: function(){
 		this.liquidStorage.setLimit("water", 8);
@@ -8141,14 +11046,13 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		}
 		return null;
 	},
-
+	
 	tick: function(){
-		this.setDefaultValues();
+		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
-		var liquidStor = this.liquidStorage;
-		var liquid = liquidStor.getLiquidStored();
+		var liquid = this.liquidStorage.getLiquidStored();
 		if(this.y > 0 && this.liquidStorage.getAmount(liquid) <= 7 && this.data.energy >= this.data.energy_consumption){
 			if(this.data.progress == 0){
 				this.data.coords = this.recursiveSearch(liquid, this.x, this.y-1, this.z, {});
@@ -8164,7 +11068,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 					liquid = this.getLiquidType(liquid, block);
 					if(liquid && block.data == 0){
 						World.setBlock(coords.x, coords.y, coords.z, 0);
-						liquidStor.addLiquid(liquid, 1);
+						this.liquidStorage.addLiquid(liquid, 1);
 					}
 					this.data.progress = 0;
 				}
@@ -8179,23 +11083,14 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");
-		var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, liquid);
-		if(full && liquidStor.getAmount(liquid) >= 1 && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)){
-			liquidStor.getLiquid(liquid, 1);
-			slot1.count--;
-			slot2.id = full.id;
-			slot2.data = full.data;
-			slot2.count++;
-			this.container.validateAll();
-		}
+		this.addLiquidToItem(liquid, slot1, slot2);
 		
-		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.container.setScale("progressScale", this.data.progress);
-		liquidStor.updateUiScale("liquidScale", liquid);
+		this.liquidStorage.updateUiScale("liquidScale", liquid);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 
@@ -8214,7 +11109,7 @@ StorageInterface.createInterface(BlockID.pump, {
 		"slotLiquid2": {output: true}
 	},
 	isValidInput: function(item){
-		return LiquidRegistry.getFullItem(item.id, item.data, "water")? true : false;
+		return LiquidLib.getFullItem(item.id, item.data, "water")? true : false;
 	},
 	canReceiveLiquid: function(liquid, side){ return false; },
 	canTransportLiquid: function(liquid, side){ return true; }
@@ -8265,7 +11160,7 @@ var guiFluidDistributor = new UI.StandartWindow({
 	elements: {
 		"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, value: 0, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE, isValid: function(id, count, data){
-			return LiquidRegistry.getFullItem(id, data, "water")? true : false;
+			return LiquidLib.getFullItem(id, data, "water")? true : false;
 		}},
 		"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE, isValid: function(){return false;}},
 		"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "fluid_distributor_button", scale: GUI_SCALE, clicker: {
@@ -8297,7 +11192,9 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 		this.liquidStorage.setLimit(null, 1);
 		this.renderModel();
 	},
-
+	
+	addLiquidToItem: MachineRegistry.addLiquidToItem,
+	
 	tick: function(){
 		if(this.data.inverted){
 			this.container.setText("text2", Translation.translate("Concentrate"));
@@ -8305,21 +11202,13 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 			this.container.setText("text2", Translation.translate("Distribute"));
 		}
 		
-		var liquidStor = this.liquidStorage;
-		var liquid = liquidStor.getLiquidStored();
+		var storage = this.liquidStorage;
+		var liquid = storage.getLiquidStored();
 		var slot1 = this.container.getSlot("slot1");
 		var slot2 = this.container.getSlot("slot2");
-		var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, liquid);
-		if(full && liquidStor.getAmount(liquid) >= 1 && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)){
-			liquidStor.getLiquid(liquid, 1);
-			slot1.count--;
-			slot2.id = full.id;
-			slot2.data = full.data;
-			slot2.count++;
-			this.container.validateSlot("slot1");
-		}
+		this.addLiquidToItem(liquid, slot1, slot2);
 		
-		liquid = liquidStor.getLiquidStored();
+		liquid = storage.getLiquidStored();
 		if(liquid){
 			var input = StorageInterface.getNearestLiquidStorages(this, this.data.meta, !this.data.inverted);
 			for(var side in input){
@@ -8327,7 +11216,7 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 			}
 		}
 		
-		liquidStor.updateUiScale("liquidScale", liquid);
+		storage.updateUiScale("liquidScale", liquid);
 	},
 	
 	wrenchClick: function(id, count, data, coords){
@@ -8352,7 +11241,7 @@ StorageInterface.createInterface(BlockID.fluidDistributor, {
 		"slot2": {output: true}
 	},
 	isValidInput: function(item){
-		return LiquidRegistry.getFullItem(item.id, item.data, "water")? true : false;
+		return LiquidLib.getFullItem(item.id, item.data, "water")? true : false;
 	},
 	canReceiveLiquid: function(liquid, side){
 		let data = this.tileEntity.data;
@@ -8379,9 +11268,9 @@ Block.registerDropFunction("tank", function(coords, blockID, blockData, level){
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.tank, count: 1, data: 0}, [
-		"ccc",
+		" c ",
 		"c#c",
-		"ccc"
+		" c "
 	], ['#', BlockID.machineBlockBasic, 0, 'c', ItemID.cellEmpty, 0]);
 });
 
@@ -8400,7 +11289,7 @@ var guiTank = new UI.StandartWindow({
 	elements: {
 		"liquidScale": {type: "scale", x: 400 + 70*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slotLiquid1": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 16*GUI_SCALE, isValid: function(id, count, data){
-			return (LiquidRegistry.getFullItem(id, data, "water") || LiquidRegistry.getEmptyItem(id, data))? true : false;
+			return (LiquidRegistry.getFullItem(id, data, "water") || LiquidLib.getEmptyItem(id, data))? true : false;
 		}},
 		"slotLiquid2": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 40*GUI_SCALE, isValid: function(){return false;}},
 		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
@@ -8425,6 +11314,15 @@ MachineRegistry.registerPrototype(BlockID.tank, {
 		this.liquidStorage.setLimit(null, 16);
 	},
 	
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	
+	click: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			var liquid = this.liquidStorage.getLiquidStored();
+			return this.getLiquidFromItem(liquid, {id: id, count: count, data: data}, null, true);
+		}
+	},
+	
 	tick: function(){
 		UpgradeAPI.executeUpgrades(this);
 		
@@ -8432,22 +11330,11 @@ MachineRegistry.registerPrototype(BlockID.tank, {
 		var liquid = storage.getLiquidStored();
 		var slot1 = this.container.getSlot("slotLiquid1");
 		var slot2 = this.container.getSlot("slotLiquid2");
-		
-		var empty = LiquidRegistry.getEmptyItem(slot1.id, slot1.data);
-		if(empty && (!liquid || empty.liquid == liquid)){
-			if(storage.getAmount(empty.liquid) <= 15 && (slot2.id == empty.id && slot2.data == empty.data && slot2.count < Item.getMaxStack(empty.id) || slot2.id == 0)){
-				storage.addLiquid(empty.liquid, 1);
-				slot1.count--;
-				slot2.id = empty.id;
-				slot2.data = empty.data;
-				slot2.count++;
-				this.container.validateAll();
-			}
-		}
+		this.getLiquidFromItem(liquid, slot1, slot2);
 		if(liquid){
-			var full = LiquidRegistry.getFullItem(slot1.id, slot1.data, liquid);
-			if(full && storage.getAmount(liquid) >= 1 && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)){
-				storage.getLiquid(liquid, 1);
+			var full = LiquidLib.getFullItem(slot1.id, slot1.data, liquid);
+			if(full && storage.getAmount(liquid) >= full.storage && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)){
+				storage.getLiquid(liquid, full.storage);
 				slot1.count--;
 				slot2.id = full.id;
 				slot2.data = full.data;
@@ -8455,7 +11342,7 @@ MachineRegistry.registerPrototype(BlockID.tank, {
 				this.container.validateAll();
 			}
 		}
-		storage.updateUiScale("liquidScale", liquid);
+		storage.updateUiScale("liquidScale", storage.getLiquidStored());
 	}
 });
 
@@ -8465,7 +11352,7 @@ StorageInterface.createInterface(BlockID.tank, {
 		"slotLiquid2": {output: true}
 	},
 	isValidInput: function(item){
-		return LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidRegistry.getEmptyItem(item.id, item.data);
+		return LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidLib.getEmptyItem(item.id, item.data);
 	},
 	canReceiveLiquid: function(liquid, side){ return true; },
 	canTransportLiquid: function(liquid, side){ return true; }
@@ -8823,9 +11710,9 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		this.setActive(newActive);
 
 		var energyStorage = this.getEnergyStorage();
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotDrill"), "Eu", this.data.energy, 128, 2);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 128, 2);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 128, 2);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotDrill"), "Eu", this.data.energy, 2);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 2);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 2);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 
@@ -8846,11 +11733,11 @@ TileRenderer.setRotationPlaceFunction(BlockID.miner);
 
 IDRegistry.genBlockID("advancedMiner");
 Block.createBlock("advancedMiner", [
-	{name: "Advanced Miner", texture: [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
+	{name: "Advanced Miner", texture: [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "opaque");
-TileRenderer.setStandartModel(BlockID.advancedMiner, [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], true);
-TileRenderer.registerRotationModel(BlockID.advancedMiner, 0, [["advanced_miner_bottom", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.advancedMiner, 4, [["advanced_miner_bottom", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
+TileRenderer.setStandartModel(BlockID.advancedMiner, [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], true);
+TileRenderer.registerRotationModel(BlockID.advancedMiner, 0, [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.advancedMiner, 4, [["teleporter_top", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
 
 ItemName.addStorageBlockTooltip("advancedMiner", 3, "4M");
 
@@ -9073,8 +11960,8 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 		
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 512, 3);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, transferByTier[tier], tier);
+		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, tier);
+		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, tier);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 
@@ -9112,6 +11999,380 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 });
 
 MachineRegistry.setStoragePlaceFunction("advancedMiner");
+
+
+
+
+// file: machine/resource/crop_harvester.js
+
+IDRegistry.genBlockID("cropHarvester");
+Block.createBlock("cropHarvester", [
+	{name: "Crop Harvester", texture: [["machine_bottom", 0], ["crop_harvester", 0]], inCreative: true}
+], "opaque");
+
+ItemName.addTierTooltip("cropHarvester", 1);
+
+Block.registerDropFunction("cropHarvester", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
+});
+
+Callback.addCallback("PreLoaded", function(){
+    Recipes.addShaped({id: BlockID.cropHarvester, count: 1, data: 0}, [
+        "zcz",
+        "s#s",
+        "pap"
+    ], ['#', BlockID.machineBlockBasic, 0, 'z', ItemID.circuitBasic, 0, 'c', 54, -1, 'a', ItemID.agriculturalAnalyzer, 0, 'p', ItemID.plateIron, 0, 's', 359, 0]);
+});
+
+var cropHarvesterGuiObject = {
+    standart: {
+        header: {text: {text: Translation.translate("Crop Harvester")}},
+        inventory: {standart: true},
+        background: {standart: true}
+    },
+
+    drawing: [
+        {type: "bitmap", x: 409, y: 167, bitmap: "energy_small_background", scale: GUI_SCALE}
+    ],
+
+    elements: {
+        "energyScale": {type: "scale", x: 409, y: 167, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+        "slotEnergy": {type: "slot", x: 400, y: 230, isValid: MachineRegistry.isValidEUStorage},
+        "slotUpgrade0": {type: "slot", x: 880, y: 110, isValid: UpgradeAPI.isValidUpgrade},
+        "slotUpgrade1": {type: "slot", x: 880, y: 170, isValid: UpgradeAPI.isValidUpgrade},
+        "slotUpgrade2": {type: "slot", x: 880, y: 230, isValid: UpgradeAPI.isValidUpgrade}
+    }
+};
+
+for(let i = 0; i < 15; i++){
+    let x = i % 5;
+    let y = Math.floor(i / 5) + 1;
+    cropHarvesterGuiObject.elements["outSlot" + i] = {type: "slot", x: 520 + x*60, y: 50 + y*60};
+};
+
+
+var guiCropHarvester = new UI.StandartWindow(cropHarvesterGuiObject);
+Callback.addCallback("LevelLoaded", function(){
+	MachineRegistry.updateGuiHeader(guiCropHarvester, "Crop Harvester");
+});
+
+MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
+    defaultValues: {
+        power_tier: 1,
+        energy_storage: 10000,
+        scanX: -5,
+        scanY: -1,
+        scanZ: -5
+    },
+	
+    upgrades: ["transformer", "energyStorage", "itemEjector"],
+	
+    getGuiScreen: function(){
+        return guiCropHarvester;
+    },
+	
+    getTier: function(){
+        return this.data.power_tier;
+    },
+	
+    resetValues: function(){
+        this.data.power_tier = this.defaultValues.power_tier;
+        this.data.energy_storage = this.defaultValues.energy_storage;
+    },
+	
+    tick: function(){
+        this.resetValues();
+        UpgradeAPI.executeUpgrades(this);
+        StorageInterface.checkHoppers(this);
+
+        if(this.data.energy > 100) this.scan();
+
+        var energyStorage = this.getEnergyStorage();
+        this.data.energy = Math.min(this.data.energy, energyStorage);
+        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
+
+        this.container.setScale("energyScale", this.data.energy / energyStorage);
+        this.container.validateAll();
+	},
+	
+	scan: function(){
+        this.data.scanX++;
+        if (this.data.scanX > 5) {
+            this.data.scanX = -5;
+            this.data.scanZ++;
+            if (this.data.scanZ > 5) {
+                this.data.scanZ = -5;
+                this.data.scanY++;
+                if (this.data.scanY > 1) {
+                    this.data.scanY = -1;
+                }
+            }
+        }
+        this.data.energy -= 1;
+        var cropTile = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
+        if(cropTile && cropTile.crop && !this.isInvFull()){
+            var drops = null;
+            if(cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)){
+                drops = cropTile.performHarvest();
+            }
+            else if (cropTile.data.currentSize == cropTile.crop.maxSize) {
+                drops = cropTile.performHarvest();
+            }
+            if(drops && drops.length){
+                for(let i in drops){
+                    var item = drops[i];
+                    this.putItem(item);
+                    this.data.energy -= 100;
+
+                    if(item.count > 0){
+                        World.drop(this.x, this.y + 1, this.z, item.id, item.count, item.data);
+                    }
+                }
+            }
+        }
+    },
+	
+    putItem: function(item){
+        for(var i = 0; i < 15; i++){
+            var slot = this.container.getSlot("outSlot" + i);
+            if(!slot.id || slot.id == item.id && slot.count < Item.getMaxStack(item.id)){
+                var add = Math.min(Item.getMaxStack(item.id) - slot.count, item.count);
+                slot.id = item.id;
+                slot.count += add;
+                slot.data = item.data;
+                item.count -= add;
+            }
+        }
+    },
+	
+    isInvFull: function(){
+        for(var i = 0; i < 15; i++){
+            var slot = this.container.getSlot("outSlot" + i);
+            var maxStack = Item.getMaxStack(slot.id);
+            if(!slot.id || slot.count < maxStack) return false;
+        }
+        return true;
+    },
+	
+    getEnergyStorage: function(){
+        return this.data.energy_storage;
+    },
+	
+    energyReceive: MachineRegistry.basicEnergyReceiveFunc
+});
+
+StorageInterface.createInterface(BlockID.cropHarvester, {
+	slots: {
+		"outSlot^0-14": {output: true}
+	}
+});
+
+
+
+
+// file: machine/resource/crop_matron.js
+
+IDRegistry.genBlockID("cropMatron");
+Block.createBlock("cropMatron", [
+	{name: "Crop Matron", texture: [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0]], inCreative: true}
+], "opaque");
+TileRenderer.setStandartModel(BlockID.cropMatron, [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0]], true);
+TileRenderer.registerRotationModel(BlockID.cropMatron, 0, [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.cropMatron, 4, [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 3], ["cropmatron_side", 1], ["cropmatron_side", 2], ["cropmatron_side", 2]]);
+
+ItemName.addTierTooltip("cropMatron", 1);
+
+Block.registerDropFunction("cropMatron", function(coords, blockID, blockData, level){
+	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
+});
+
+Callback.addCallback("PreLoaded", function(){
+    Recipes.addShaped({id: BlockID.cropMatron, count: 1, data: 0}, [
+        "cxc",
+        "a#a",
+        "nnn"
+    ], ['#', BlockID.machineBlockBasic, 0, 'x', 54, 0, 'c', ItemID.circuitBasic, 0, 'a', ItemID.cellEmpty, 0, 'n', ItemID.cropStick, 0]);
+});
+
+function isFertilizer(id){
+	return id == ItemID.fertilizer;
+}
+function isWeedEx(id){
+	return id == ItemID.weedEx;
+}
+
+var newGuiMatronObject = {
+	standart: {
+		header: {text: {text: Translation.translate("Crop Matron")}},
+		inventory: {standart: true},
+		background: {standart: true}
+	},
+
+	params: {
+		slot: "default_slot",
+		invSlot: "default_slot"
+	},
+
+	drawing: [
+		{type: "background", color: Color.parseColor("#b3b3b3")},
+        {type: "bitmap", x: 870, y: 270, bitmap: "energy_small_background", scale: GUI_SCALE},
+        {type: "bitmap", x: 511, y: 243, bitmap: "water_storage", scale: GUI_SCALE}
+	],
+
+	elements: {
+        "energyScale": {type: "scale", x: 870, y: 270, direction: 1, value: .5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+        "liquidScale": {type: "scale", x: 572, y: 256, direction: 1, value: 1, bitmap: "matron_water_storage", scale: GUI_SCALE},
+        "slotEnergy": {type: "slot", x: 804, y: 265, isValid: MachineRegistry.isValidEUStorage},
+        "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "dust_slot", isValid: isFertilizer},
+        "slotWeedEx0": {type: "slot", x: 441, y: 155, bitmap: "weedEx_slot", isValid: isWeedEx},
+        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "cell_slot", isValid: function(id, count, data){
+            return LiquidLib.getItemLiquid(id, data) == "water";
+        }},
+        "slotWaterOut": {type: "slot", x: 441, y: 295, isValid: function(){
+            return false;
+        }}
+	}
+};
+
+for(let i = 1; i < 7; i++){
+    newGuiMatronObject.elements["slotWeedEx" + i] = {type: "slot", x: 441 + 60*i, y: 155, isValid: isWeedEx};
+}
+for(let i = 1; i < 7; i++){
+    newGuiMatronObject.elements["slotFertilizer" + i] = {type: "slot", x: 441 + 60*i, y: 75, isValid: isFertilizer};
+}
+
+var guiCropMatron = new UI.StandartWindow(newGuiMatronObject);
+
+Callback.addCallback("LevelLoaded", function(){
+    MachineRegistry.updateGuiHeader(guiCropMatron, "Crop Matron");
+});
+
+MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
+    defaultValues: {
+        power_tier: 1,
+        energy_storage: 10000,
+        meta: 0,
+        isActive: false,
+        scanX: -5,
+        scanY: -1,
+        scanZ: -5
+    },
+
+    getGuiScreen: function(){
+        return guiCropMatron;
+    },
+
+    init: function(){
+		this.liquidStorage.setLimit("water", 2);
+		this.renderModel();
+    },
+	
+	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	
+	click: function(id, count, data, coords){
+		if(Entity.getSneaking(player)){
+			return this.getLiquidFromItem("water", {id: id, count: count, data: data}, null, true);
+		}
+	},
+	
+    tick: function(){
+        StorageInterface.checkHoppers(this);
+
+        var slot1 = this.container.getSlot("slotWaterIn");
+		var slot2 = this.container.getSlot("slotWaterOut");
+		this.getLiquidFromItem("water", slot1, slot2);
+		
+        if(this.data.energy >= 31){
+            this.scan();
+            this.setActive(true);
+        } else {
+			this.setActive(false);
+        }
+
+		var energyStorage = this.getEnergyStorage();
+		this.data.energy = Math.min(this.data.energy, energyStorage);
+        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
+
+        this.container.setScale("energyScale", this.data.energy / energyStorage);
+        this.liquidStorage.updateUiScale("liquidScale", "water");
+    },
+
+    scan: function(){
+        this.data.scanX++;
+        if (this.data.scanX > 5) {
+            this.data.scanX = -5;
+            this.data.scanZ++;
+            if (this.data.scanZ > 5) {
+                this.data.scanZ = -5;
+                this.data.scanY++;
+                if (this.data.scanY > 1) {
+                    this.data.scanY = -1;
+                }
+            }
+        }
+        this.data.energy -= 1;
+
+        var tileentity = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
+        if(tileentity && tileentity.crop){
+            var slotFertilizer = this.getSlot("slotFertilizer");
+            var weedExSlot = this.getSlot("slotWeedEx");
+            if(slotFertilizer && tileentity.applyFertilizer(false)){
+                slotFertilizer.count--;
+                this.data.energy -= 10;
+            }
+            var liquidAmount = this.liquidStorage.getAmount("water");
+            if(liquidAmount > 0){
+                amount = tileentity.applyHydration(liquidAmount);
+                if(amount > 0){
+                    this.liquidStorage.getLiquid("water", amount / 1000);
+                }
+            }
+            if(weedExSlot && tileentity.applyWeedEx(weedExSlot.id, false)){
+                this.data.energy -= 10;
+                weedExSlot.data++;
+                if(weedExSlot.data >= 10) weedExSlot.id = 0;
+            }
+            this.container.validateAll();
+        }
+    },
+
+    getSlot: function(type){
+        for(let i = 0; i < 7; i++){
+            var slot = this.container.getSlot(type + i);
+            if(slot.id) return slot;
+        }
+        return null;
+    },
+
+    getTier: function(){
+        return this.data.power_tier;
+    },
+
+    getEnergyStorage: function(){
+        return this.data.energy_storage;
+    },
+
+    renderModel: MachineRegistry.renderModelWithRotation,
+    energyReceive: MachineRegistry.basicEnergyReceiveFunc
+});
+
+TileRenderer.setRotationPlaceFunction(BlockID.cropMatron, true);
+
+StorageInterface.createInterface(BlockID.cropMatron, {
+	slots: {
+		"slotFertilizer^0-6": {input: true, isValid: function(item){
+			return item.id == ItemID.fertilizer;
+		}},
+		"slotWeedEx^0-6": {input: true, isValid: function(item){
+			return item.id == ItemID.weedEx;
+        }},
+        "slotWaterIn": {input: true, isValid: function(item){
+			return LiquidLib.getItemLiquid(item.id, item.data) == "water";
+        }},
+        "slotWaterOut": {output: true}
+    },
+    canReceiveLiquid: function(liquid, side){return liquid == "water"}
+});
 
 
 
@@ -9552,17 +12813,6 @@ Recipes.addShaped({id: 29, count: 1, data: 0}, [
 	"a",
 	"b"
 ], ['a', ItemID.latex, 0, 'b', 33, 0]);
-
-
-
-
-// file: items/resource/slag.js
-
-IDRegistry.genItemID("ashes");
-Item.createItem("ashes", "Ashes", {name: "ashes"});
-
-IDRegistry.genItemID("slag");
-Item.createItem("slag", "Slag", {name: "slag"});
 
 
 
@@ -10367,25 +13617,57 @@ Callback.addCallback("PreLoaded", function(){
 
 
 
+// file: items/resource/liquid.js
+
+LiquidRegistry.registerLiquid("biomass", "Biomass", ["liquid_biomass", "liquid_biomass_48x30", "liquid_biomass_55x47"]);
+LiquidRegistry.registerLiquid("biogas", "Biogas", ["liquid_biogas", "liquid_biogas_55x47"]);
+LiquidRegistry.registerLiquid("coolant", "Coolant", ["liquid_coolant", "liquid_coolant_110x94"]);
+
+LiquidRegistry.getLiquidData("lava").uiTextures.push("gui_lava_texture_55x47");
+LiquidRegistry.getLiquidData("water").uiTextures.push("gui_water_texture_47x24");
+LiquidRegistry.getLiquidData("water").uiTextures.push("gui_water_texture_55x47");
+
+
+
+
 // file: items/resource/cells.js
 
 IDRegistry.genItemID("cellEmpty");
+Item.createItem("cellEmpty", "Cell", {name: "cell_empty"});
+Item.setLiquidClip(ItemID.cellEmpty, true);
+
 IDRegistry.genItemID("cellWater");
 IDRegistry.genItemID("cellLava");
+IDRegistry.genItemID("cellBiomass");
+IDRegistry.genItemID("cellBiogas");
+IDRegistry.genItemID("cellCoolant");
+IDRegistry.genItemID("cellMatter");
 IDRegistry.genItemID("cellAir");
-Item.createItem("cellEmpty", "Cell", {name: "cell_empty"});
 Item.createItem("cellWater", "Water Cell", {name: "cell_water"});
 Item.createItem("cellLava", "Lava Cell", {name: "cell_lava"});
+Item.createItem("cellBiomass", "Biomass Cell", {name: "cell_biomass"});
+Item.createItem("cellBiogas", "Biogas Cell", {name: "cell_biogas"});
+Item.createItem("cellCoolant", "Coolant Cell", {name: "cell_coolant"});
+//Item.createItem("cellMatter", "UU-Matter Cell", {name: "cell_uu_matter"});
 Item.createItem("cellAir", "Compressed Air Cell", {name: "cell_air"});
-Item.setLiquidClip(ItemID.cellEmpty, true);
-LiquidRegistry.registerItem("water", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellWater, data: 0});
-LiquidRegistry.registerItem("lava", {id: ItemID.cellEmpty, data: 0}, {id: ItemID.cellLava, data: 0});
 
-Recipes.addShaped({id: ItemID.cellEmpty, count: 2, data: 0}, [
+LiquidLib.registerItem("water", ItemID.cellEmpty, ItemID.cellWater, 1000);
+LiquidLib.registerItem("lava", ItemID.cellEmpty, ItemID.cellLava, 1000);
+LiquidLib.registerItem("biomass", ItemID.cellEmpty, ItemID.cellBiomass, 1000);
+LiquidLib.registerItem("biogas", ItemID.cellEmpty, ItemID.cellBiogas, 1000);
+LiquidLib.registerItem("coolant", ItemID.cellEmpty, ItemID.cellCoolant, 1000);
+
+ItemName.addStoredLiquidTooltip(ItemID.cellWater);
+ItemName.addStoredLiquidTooltip(ItemID.cellLava);
+ItemName.addStoredLiquidTooltip(ItemID.cellBiomass);
+ItemName.addStoredLiquidTooltip(ItemID.cellBiogas);
+ItemName.addStoredLiquidTooltip(ItemID.cellCoolant);
+
+Recipes.addShaped({id: ItemID.cellEmpty, count: 1, data: 0}, [
 	" x ",
-	"x x",
+	"xgx",
 	" x "
-], ['x', ItemID.casingTin, 0]);
+], ['x', ItemID.casingTin, 0, 'g', 102, 0]);
 
 Recipes.addShaped({id: 49, count: 1, data: 0}, [
 	"aa",
@@ -10396,14 +13678,16 @@ Item.registerUseFunction("cellEmpty",function(coords, item, block){
 	if(block.id > 7 && block.id < 12 && block.data == 0){
 		World.setBlock(coords.x, coords.y, coords.z, 0);
 		if(block.id == 8 || block.id == 9){
-		Player.addItemToInventory(ItemID.cellWater, 1);}
-		else{
-		Player.addItemToInventory(ItemID.cellLava, 1);}
+			Player.addItemToInventory(ItemID.cellWater, 1);
+		} else {
+			Player.addItemToInventory(ItemID.cellLava, 1);
+		}
 		Player.decreaseCarriedItem(1);
 	}
 });
 
 Item.registerUseFunction("cellWater", function(coords, item, block){
+	if(item.data > 0 || block.id == BlockID.crop) return;
 	var x = coords.relative.x
 	var y = coords.relative.y
 	var z = coords.relative.z
@@ -10416,6 +13700,7 @@ Item.registerUseFunction("cellWater", function(coords, item, block){
 });
 
 Item.registerUseFunction("cellLava", function(coords, item, block){
+	if(item.data > 0) return;
 	var x = coords.relative.x
 	var y = coords.relative.y
 	var z = coords.relative.z
@@ -10430,7 +13715,299 @@ Item.registerUseFunction("cellLava", function(coords, item, block){
 
 
 
-// file: items/can.js
+// file: items/resource/waste.js
+
+IDRegistry.genItemID("ashes");
+Item.createItem("ashes", "Ashes", {name: "ashes"});
+
+IDRegistry.genItemID("slag");
+Item.createItem("slag", "Slag", {name: "slag"});
+
+IDRegistry.genItemID("bioChaff");
+Item.createItem("bioChaff", "Bio Chaff", {name: "bio_chaff"});
+
+
+
+
+// file: items/crop/crop_seed_bag.js
+
+IDRegistry.genItemID("cropSeedBag");
+Item.createItem("cropSeedBag", "Seed Bag (%s)", {name: "crop_seed_bag"}, {stack: 1, isTech: true});
+Item.registerUseFunction("cropSeedBag", function(coords, item, block){
+    if(block.id == BlockID.crop){
+        var te = World.getTileEntity(coords.x,coords.y,coords.z);
+        if(!te.data.crop){
+            var data = {
+                statGrowth: item.extra.getInt("growth"),
+                statGain: item.extra.getInt("gain"),
+                statResistance: item.extra.getInt("resistance"),
+                scanLevel: item.extra.getInt("scan")
+            };
+            if(te.tryPlantIn(item.data, 1, data.statGrowth, data.statGain, data.statResistance, data.scanLevel)){
+				Player.decreaseCarriedItem(1);
+			}
+        }
+    }
+});
+
+Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name){
+    var extra = item.extra || AgricultureAPI.addDefaultExtra(item);
+    var scanLvl = extra.getInt("scan");
+    var cropClassName = scanLvl > 0 ? AgricultureAPI.cropCards[item.data].id : "Unknown";
+    var translatedCropName = Translation.translate(cropClassName);
+
+    var newName = Translation.translate("Seed Bag (%s)").replace("%s", translatedCropName) + '\n';
+    if(scanLvl >= 4){
+        newName += "§2Gr: " + extra.getInt("growth") + '\n';
+        newName += "§6Ga: " + extra.getInt("gain") + '\n';
+        newName += "§bRe: " + extra.getInt("resistance") + '\n';
+    }
+    if(Config.debugMode){
+		newName += "[DEBUG]scanLevel: " + scanLvl;
+	}
+    return newName + '\n';
+});
+
+
+
+
+// file: items/crop/crop_stick.js
+
+IDRegistry.genItemID("cropStick");
+Item.createItem("cropStick", "Crop", {name: "crop_stick"});
+
+Recipes.addShaped({id: ItemID.cropStick , count: 2 , data: 0}, [
+	"x x",
+	"x x"
+], ['x', 280, 0]);
+
+Item.registerUseFunction("cropStick", function(coords, item, block){
+    if(block.id == 60 && coords.side == 1){
+		var place = coords.relative;
+		var tile = World.getBlock(place.x, place.y, place.z);
+		if(canTileBeReplaced(tile.id, tile.data)){
+			World.setBlock(place.x, place.y, place.z, BlockID.crop, 0);
+			World.addTileEntity(place.x, place.y, place.z);
+			Player.decreaseCarriedItem(1);
+		}
+    }
+});
+
+
+
+
+// file: items/crop/crop_utils.js
+
+IDRegistry.genItemID("fertilizer");
+Item.createItem("fertilizer", "Fertilizer", {name: "fertilizer"});
+
+IDRegistry.genItemID("weedEx");
+Item.createItem("weedEx", "Weed EX", {name: "weed_ex"}, {stack: 1});
+Item.setMaxDamage(ItemID.weedEx, 10);
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShapeless({id: ItemID.fertilizer, count: 2, data: 0}, [{id: ItemID.scrap, data: 0}, {id: 351, data: 15}]);
+	Recipes.addShapeless({id: ItemID.fertilizer, count: 2, data: 0}, [{id: ItemID.scrap, data: 0}, {id: ItemID.ashes, data: 0}]);
+	Recipes.addShapeless({id: ItemID.fertilizer, count: 2, data: 0}, [{id: ItemID.scrap, data: 0}, {id: ItemID.scrap, data: 0}, {id: ItemID.fertilizer, data: 0}]);
+	
+	Recipes.addShaped({id: ItemID.weedEx, count: 1, data: 0}, [
+        "z",
+        "x",
+        "c"
+    ], ['z', 331, 0, 'x', ItemID.grinPowder, 0, 'c', ItemID.cellEmpty, 0]);
+});
+
+
+
+
+// file: items/crop/crop_items.js
+
+IDRegistry.genItemID("grinPowder");
+Item.createItem("grinPowder", "Grin Powder", {name: "grin_powder"});
+
+IDRegistry.genItemID("hops");
+Item.createItem("hops", "Hops", {name: "hops"});
+
+IDRegistry.genItemID("weed");
+Item.createItem("weed", "Weed", {name: "weed"});
+
+
+
+
+// file: items/crop/coffee_beans.js
+
+IDRegistry.genItemID("coffeeBeans");
+Item.createItem("coffeeBeans", "Coffee Beans", {name: "coffee_beans"});
+
+IDRegistry.genItemID("coffeePowder");
+Item.createItem("coffeePowder", "Coffee Powder", {name: "coffee_powder"});
+Recipes.addShapeless({id: ItemID.coffeePowder, count: 1, data: 0}, [{id: ItemID.coffeeBeans, data: 0}]);
+
+
+
+
+// file: items/food/terra_wart.js
+
+var negativePotions = [
+    MobEffect.movementSlowdown,
+    MobEffect.digSlowdown,
+    MobEffect.confusion,
+    MobEffect.blindness,
+    MobEffect.hunger,
+    MobEffect.weakness,
+    MobEffect.poison,
+    MobEffect.wither
+];
+
+IDRegistry.genItemID("terraWart");
+Item.createFoodItem("terraWart", "Terra Wart", {name: "terra_wart"}, {food: 1});
+Item.registerNameOverrideFunction(ItemID.terraWart, RARE_ITEM_NAME);
+
+Callback.addCallback("FoodEaten", function(heal, satRatio){
+    if(Player.getCarriedItem().id == ItemID.terraWart){
+		RadiationAPI.addRadiation(-600);
+		for(var i in negativePotions){
+			var potionID = negativePotions[i];
+			Entity.clearEffect(Player.get(), potionID);
+		}
+	}
+});
+
+
+
+
+// file: items/food/mug.js
+
+IDRegistry.genItemID("mugEmpty");
+Item.createItem("mugEmpty", "Stone Mug", {name: "mug_empty"}, {stack: 1});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: ItemID.mugEmpty, count: 1, data: 0}, [
+		"xx ",
+		"xxx",
+		"xx ",
+	], ['x', 1, -1]);
+});
+
+
+
+
+// file: items/food/coffee.js
+
+var CoffeeMug = {
+    effectTimer: 0,
+    amplifier: 0,
+    amplifyEffect: function(potionId, maxAmplifier, extraDuration){
+        if(this.effectTimer > 0){
+            this.effectTimer += extraDuration;
+            if (this.amplifier < maxAmplifier) this.amplifier++;
+
+            Entity.addEffect(Player.get(), potionId, this.amplifier, this.effectTimer);
+            return this.amplifier;
+        }
+        Entity.addEffect(Player.get(), potionId, 1, 300);
+        this.effectTimer = 300;
+        return 1;
+    },
+    tick: function(){
+        if(this.effectTimer > 1){
+            this.effectTimer--;
+            return;
+        }
+        if(this.effectTimer == 1){
+            this.effectTimer--;
+            this.amplifier = 0;
+        }
+    },
+    onDeath: function(entity){
+        if(entity != Player.get()) return;
+        this.effectTimer = 0;
+        this.amplifier = 0;
+    },
+    onFoodEaten: function(heal, satRatio){
+        var maxAmplifier = 0;
+        var extraDuration = 0;
+        var itemId = Player.getCarriedItem().id;
+        switch(itemId){
+            case ItemID.mugCoffee :
+                maxAmplifier = 6;
+                extraDuration = 1200;
+                break;
+            case ItemID.mugColdCoffee :
+                maxAmplifier = 1;
+                extraDuration = 600;
+                break;
+            case ItemID.mugDarkCoffee :
+                maxAmplifier = 5;
+                extraDuration = 1200;
+                break;
+            case ItemID.terraWart :
+                if(this.amplifier < 3) return;
+                this.amplifier = 2;
+                break;
+            case 351:
+                this.amplifier = 0;
+                this.effectTimer = 0;
+                break;
+            default : return;
+        }
+        var highest = 0;
+        var x = CoffeeMug.amplifyEffect(MobEffect.movementSpeed, maxAmplifier, extraDuration);
+        if (x > highest) highest = x;
+        x = CoffeeMug.amplifyEffect(MobEffect.digSpeed, maxAmplifier, extraDuration);
+
+        if (x > highest) highest = x;
+        if (itemId == ItemID.mugCoffee) highest -= 2;
+
+        if (highest >= 3) {
+            var badEffectTime = (highest - 2) * 200;
+            Entity.addEffect(Player.get(), MobEffect.confusion, 1, badEffectTime);
+            this.effectTimer = badEffectTime;
+            if (highest >= 4){
+                Entity.addEffect(Player.get(), MobEffect.harm, highest - 3, 1);
+            }
+        }
+
+        Player.addItemToInventory(ItemID.mugEmpty, 1, 0);
+    }
+};
+
+IDRegistry.genItemID("mugColdCoffee");
+Item.createFoodItem("mugColdCoffee", "Cold Coffee", {name: "mug_cold_coffee"}, {stack: 1});
+
+IDRegistry.genItemID("mugDarkCoffee");
+Item.createFoodItem("mugDarkCoffee", "Dark Coffee", {name: "mug_dark_coffee"}, {stack: 1});
+
+IDRegistry.genItemID("mugCoffee");
+Item.createFoodItem("mugCoffee", "Coffee", {name: "mug_coffee"}, {stack: 1});
+
+Callback.addCallback("FoodEaten", CoffeeMug.onFoodEaten);
+Callback.addCallback("tick", CoffeeMug.tick);
+Callback.addCallback("EntityDeath", CoffeeMug.onDeath);
+
+Callback.addCallback("PreLoaded", function(){
+	Recipes.addShaped({id: ItemID.mugColdCoffee, count: 1, data: 0}, [
+		"x",
+		"y",
+		"z",
+	], ['x', ItemID.coffeePowder, 0, 'y', 325, 8, 'z', ItemID.mugEmpty, 0],
+	function(api, field, result){
+		Player.addItemToInventory(325, 1, 0);
+	});
+	
+	Recipes.addShaped({id: ItemID.mugCoffee, count: 1, data: 0}, [
+		"x",
+		"y",
+		"z",
+	], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0]);
+	
+	Recipes.addFurnace(ItemID.mugColdCoffee, ItemID.mugDarkCoffee, 0);
+});
+
+
+
+
+// file: items/food/can.js
 
 IDRegistry.genItemID("tinCanEmpty");
 Item.createItem("tinCanEmpty", "Tin Can", {name: "tin_can", meta: 0});
@@ -10459,10 +14036,10 @@ Item.registerNoTargetUseFunction("tinCanFull", function(){
 		Player.setHunger(hunger + count);
 		Player.setSaturation(Math.min(20, saturation + count*0.6));
 		if(item.data == 1 && Math.random() < 0.2*count){
-			Entity.addEffect(player, MobEffect.hunger, 1, 600);
+			Entity.addEffect(Player.get(), MobEffect.hunger, 1, 600);
 		}
 		if(item.data == 2){
-			Entity.addEffect(player, MobEffect.poison, 1, 80);
+			Entity.addEffect(Player.get(), MobEffect.poison, 1, 80);
 		}
 		if(item.count == count){
 			Player.setCarriedItem(ItemID.tinCanEmpty, count, 0);
@@ -10669,23 +14246,23 @@ Callback.addCallback("PreLoaded", function(){
 
 IDRegistry.genItemID("storageBattery");
 Item.createItem("storageBattery", "RE-Battery", {name: "re_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 1, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 100, 1, "storage", true, true);
 
 IDRegistry.genItemID("storageAdvBattery");
 Item.createItem("storageAdvBattery", "Advanced RE-Battery", {name: "adv_re_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 2, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 256, 2, "storage", true, true);
 
 IDRegistry.genItemID("storageCrystal");
 Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 3, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 2048, 3, "storage", true, true);
 
 IDRegistry.genItemID("storageLapotronCrystal");
 Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 4, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 8192, 4, "storage", true, true);
 ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");
-Item.createItem("debugItem", "debug.item", {name: "debug_item", meta: 0}, {isTech: !Config.debugMode});
+Item.createItem("debugItem", "Debug Item", {name: "debug_item", meta: 0}, {isTech: !Config.debugMode});
 ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, 0, "storage");
 
 Item.registerNameOverrideFunction(ItemID.storageBattery, ItemName.showItemStorage);
@@ -10734,7 +14311,7 @@ Callback.addCallback("PreLoaded", function(){
 		"x#x",
 		"xax",
 		"x#x"
-	], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+	], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
 });
 
 ChargeItemRegistry.registerChargeFunction(ItemID.debugItem, function(item, amount, transf, level){
@@ -10755,10 +14332,19 @@ Item.registerUseFunction("debugItem", function(coords, item, block){
 		}
 		for(var i in tile.data){
 			if(i != "energy_storage"){
-				if(i == "energy"){
-				Game.message("energy: " + tile.data[i] + "/" + tile.getEnergyStorage());}
-				else{
-				Game.message(i + ": " + tile.data[i]);}
+				if(i == "__liquid_tanks"){
+					var tanks = tile.data[i];
+					Game.message(tanks.input.liquid + ": "+ tanks.input.amount*1000 + "mB");
+					Game.message(tanks.output.liquid + ": "+ tanks.output.amount*1000 + "mB");
+				}
+				else if(i == "energy"){
+					Game.message("energy: " + tile.data[i] + "/" + tile.getEnergyStorage());
+				}
+				else try {
+					Game.message(i + ": " + tile.data[i]);
+				} catch(e){
+					Game.message(i);
+				}
 			}
 		}
 	}
@@ -10781,19 +14367,19 @@ Item.registerUseFunction("debugItem", function(coords, item, block){
 
 IDRegistry.genItemID("chargingBattery");
 Item.createItem("chargingBattery", "Charging RE-Battery", {name: "charging_re_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 1, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 128, 1, "storage", true, true);
 
 IDRegistry.genItemID("chargingAdvBattery");
 Item.createItem("chargingAdvBattery", "Advanced Charging Battery", {name: "adv_charging_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 2, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 512, 2, "storage", true, true);
 
 IDRegistry.genItemID("chargingCrystal");
 Item.createItem("chargingCrystal", "Charging Energy Crystal", {name: "charging_energy_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 3, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 2048, 3, "storage", true, true);
 
 IDRegistry.genItemID("chargingLapotronCrystal");
 Item.createItem("chargingLapotronCrystal", "Charging Lapotron Crystal", {name: "charging_lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 4, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 8192, 4, "storage", true, true);
 ItemName.setRarity(ItemID.chargingLapotronCrystal, 1);
 
 Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name){
@@ -10825,25 +14411,25 @@ Callback.addCallback("PreLoaded", function(){
 		"xbx",
 		"b b",
 		"xbx"
-	], ['x', ItemID.circuitBasic, 0, 'b', ItemID.storageBattery, -1], ChargeItemRegistry.transportEnergy);
+	], ['x', ItemID.circuitBasic, 0, 'b', ItemID.storageBattery, -1], ChargeItemRegistry.transferEnergy);
 
 	Recipes.addShaped({id: ItemID.chargingAdvBattery, count: 1, data: Item.getMaxDamage(ItemID.chargingAdvBattery)}, [
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingBattery, -1, 'x', ItemID.heatExchanger, 1, 'b', ItemID.storageAdvBattery, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingBattery, -1, 'x', ItemID.heatExchanger, 1, 'b', ItemID.storageAdvBattery, -1], ChargeItemRegistry.transferEnergy);
 
 	Recipes.addShaped({id: ItemID.chargingCrystal, count: 1, data: Item.getMaxDamage(ItemID.chargingCrystal)}, [
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingAdvBattery, -1, 'x', ItemID.heatExchangerComponent, 1, 'b', ItemID.storageCrystal, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingAdvBattery, -1, 'x', ItemID.heatExchangerComponent, 1, 'b', ItemID.storageCrystal, -1], ChargeItemRegistry.transferEnergy);
 	
 	Recipes.addShaped({id: ItemID.chargingLapotronCrystal, count: 1, data: Item.getMaxDamage(ItemID.chargingLapotronCrystal)}, [
 		"xbx",
 		"b#b",
 		"xbx"
-	], ['#', ItemID.chargingCrystal, -1, 'x', ItemID.heatExchangerAdv, 1, 'b', ItemID.storageLapotronCrystal, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.chargingCrystal, -1, 'x', ItemID.heatExchangerAdv, 1, 'b', ItemID.storageLapotronCrystal, -1], ChargeItemRegistry.transferEnergy);
 });
 
 var charging_items = {}
@@ -11064,66 +14650,62 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, "overclocker", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, "overclocker", function(item, machine, container, data){
 	if(data.work_time){
 		data.energy_consumption = Math.round(data.energy_consumption * Math.pow(1.6, item.count));
 		data.work_time = Math.round(data.work_time * Math.pow(0.7, item.count));
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, "transformer", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, "transformer", function(item, machine, container, data){
 	data.power_tier += item.count;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, "energyStorage", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, "energyStorage", function(item, machine, container, data){
 	data.energy_storage += 10000 * item.count;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, machine, container, data){
 	data.isHeating = !data.isHeating;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, machine, container, data){
 	var items = [];
 	var slots = machine.getTransportSlots().output;
 	for(var i in slots){
 		var slot = container.getSlot(slots[i]);
-		if(slot.id){items.push(slot);}
+		if(slot.id) items.push(slot);
 	}
 	if(items.length){
-		var containers = StorageInterface.getNearestContainers(coords, item.data-1);
-		StorageInterface.putItems(items, containers, machine);
+		var containers = StorageInterface.getNearestContainers(machine, item.data-1);
+		StorageInterface.putItems(items, containers);
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, machine, container, data, coords){
+UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, machine, container, data){
 	if(World.getThreadTime()%20 == 0){
-		var containers = StorageInterface.getNearestContainers(coords, item.data-1);
+		var containers = StorageInterface.getNearestContainers(machine, item.data-1);
 		for(var side in containers){
 			StorageInterface.extractItemsFromContainer(machine, containers[side], parseInt(side));
 		}
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(item, machine, container, data, coords){
-	var storage = machine.liquidStorage;
-	var liquid = storage.getLiquidStored();
-	if(liquid){
-		var input = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
-		for(var side in input){
+UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(item, machine, container, data){
+	var input = StorageInterface.getNearestLiquidStorages(machine, item.data-1);
+	for(var side in input){
+		var liquid = machine.interface.getLiquidStored("output", side);
+		if(liquid){
 			StorageInterface.transportLiquid(liquid, 0.25, machine, input[side], parseInt(side));
 		}
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, container, data, coords){
-	var storage = machine.liquidStorage;
-	var liquid = storage.getLiquidStored();
-	if(!liquid || !storage.isFull(liquid)){
-		var output = StorageInterface.getNearestLiquidStorages(coords, item.data-1);
-		for(var side in output){
-			StorageInterface.extractLiquid(liquid, 0.25, machine, output[side], parseInt(side));
-		}
+UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, container, data){
+	var output = StorageInterface.getNearestLiquidStorages(machine, item.data-1);
+	for(var side in output){
+		var liquid = machine.interface.getLiquidStored("input", side);
+		StorageInterface.extractLiquid(liquid, 0.25, machine, output[side], parseInt(side));
 	}
 });
 
@@ -11133,8 +14715,8 @@ Item.registerUseFunction("upgradeMFSU", function(coords, item, block){
 		var tile = World.getTileEntity(coords.x ,coords.y, coords.z);
 		var data = tile.data;
 		tile.selfDestroy();
-		World.setBlock(coords.x ,coords.y, coords.z, BlockID.storageMFSU, 0);
-		block = World.addTileEntity(coords.x ,coords.y, coords.z);
+		World.setBlock(coords.x, coords.y, coords.z, BlockID.storageMFSU, 0);
+		block = World.addTileEntity(coords.x, coords.y, coords.z);
 		block.data = data;
 		TileRenderer.mapAtCoords(coords.x, coords.y, coords.z, BlockID.storageMFSU, data.meta);
 		Player.decreaseCarriedItem(1);
@@ -11349,7 +14931,7 @@ Recipes.addShaped({id: ItemID.coolantCell, count: 1, data: 1}, [
 	" a ",
 	"axa",
 	" a ",
-], ['x', ItemID.cellWater, 0, 'a', ItemID.plateTin, 0]);
+], ['x', ItemID.cellCoolant, 0, 'a', ItemID.plateTin, 0]);
 
 Recipes.addShaped({id: ItemID.coolantCell3, count: 1, data: 1}, [
 	"aaa",
@@ -11743,7 +15325,7 @@ Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: Item.getMaxDam
 	"xbx",
 	"aga",
 	"rcr"
-], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'x', ItemID.heatExchangerAdv, 1, 'g', 20, 0,'r', ItemID.rubber, 0], ChargeItemRegistry.transportEnergy);
+], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'x', ItemID.heatExchangerAdv, 1, 'g', 20, 0,'r', ItemID.rubber, 0], ChargeItemRegistry.transferEnergy);
 
 UIbuttons.setArmorButton(ItemID.nightvisionGoggles, "button_nightvision");
 
@@ -11758,9 +15340,9 @@ Armor.registerFuncs("nightvisionGoggles", {
 			var coords = Player.getPosition();
 			var time = World.getWorldTime()%24000;
 			if(World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000){
-				Entity.addEffect(player, MobEffect.blindness, 1, 25);
+				Entity.addEffect(Player.get(), MobEffect.blindness, 1, 25);
 			}
-			Entity.addEffect(player, MobEffect.nightVision, 1, 225);
+			Entity.addEffect(Player.get(), MobEffect.nightVision, 1, 225);
 			if(World.getThreadTime()%20==0){
 				slot.data = Math.min(slot.data+20, maxDamage);
 				return true;
@@ -11785,10 +15367,10 @@ Item.createArmorItem("nanoChestplate", "Nano Bodyarmor", {name: "nano_chestplate
 Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 6, durability: 1250, texture: "armor/nano_2.png", isTech: true});
 Item.createArmorItem("nanoBoots", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 4, durability: 1250, texture: "armor/nano_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.nanoHelmet, "Eu",1000000, 3, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.nanoChestplate, "Eu", 1000000, 3, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.nanoLeggings, "Eu", 1000000, 3, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.nanoBoots, "Eu", 1000000, 3, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.nanoHelmet, "Eu",1000000, 2048, 3, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.nanoChestplate, "Eu", 1000000, 2048, 3, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.nanoLeggings, "Eu", 1000000, 2048, 3, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.nanoBoots, "Eu", 1000000, 2048, 3, "armor", true);
 
 ItemName.setRarity(ItemID.nanoHelmet, 1);
 ItemName.setRarity(ItemID.nanoChestplate, 1);
@@ -11810,10 +15392,10 @@ Item.createArmorItem("nanoChestplateUncharged", "Nano Bodyarmor", {name: "nano_c
 Item.createArmorItem("nanoLeggingsUncharged", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 3, durability: 1250, texture: "armor/nano_2.png", isTech: true});
 Item.createArmorItem("nanoBootsUncharged", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 2, durability: 1250, texture: "armor/nano_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.nanoHelmetUncharged, "Eu", 1000000, 3, "armor");
-ChargeItemRegistry.registerItem(ItemID.nanoChestplateUncharged, "Eu", 1000000, 3, "armor");
-ChargeItemRegistry.registerItem(ItemID.nanoLeggingsUncharged, "Eu", 1000000, 3, "armor");
-ChargeItemRegistry.registerItem(ItemID.nanoBootsUncharged, "Eu", 1000000, 3, "armor");
+ChargeItemRegistry.registerItem(ItemID.nanoHelmetUncharged, "Eu", 1000000, 2048, 3, "armor");
+ChargeItemRegistry.registerItem(ItemID.nanoChestplateUncharged, "Eu", 1000000, 2048, 3, "armor");
+ChargeItemRegistry.registerItem(ItemID.nanoLeggingsUncharged, "Eu", 1000000, 2048, 3, "armor");
+ChargeItemRegistry.registerItem(ItemID.nanoBootsUncharged, "Eu", 1000000, 2048, 3, "armor");
 
 ItemName.setRarity(ItemID.nanoHelmetUncharged, 1);
 ItemName.setRarity(ItemID.nanoChestplateUncharged, 1);
@@ -11828,24 +15410,24 @@ Item.registerNameOverrideFunction(ItemID.nanoBootsUncharged, ItemName.showItemSt
 Recipes.addShaped({id: ItemID.nanoHelmet, count: 1, data: Item.getMaxDamage(ItemID.nanoHelmet)}, [
 	"x#x",
 	"xax"
-], ['#', ItemID.storageCrystal, -1, 'x', ItemID.carbonPlate, 0, 'a', ItemID.nightvisionGoggles, -1], ChargeItemRegistry.transportEnergy);
+], ['#', ItemID.storageCrystal, -1, 'x', ItemID.carbonPlate, 0, 'a', ItemID.nightvisionGoggles, -1], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.nanoChestplate, count: 1, data: Item.getMaxDamage(ItemID.nanoChestplate)}, [
 	"x x",
 	"x#x",
 	"xxx"
-], ['#', ItemID.storageCrystal, -1, 'x', ItemID.carbonPlate, 0], ChargeItemRegistry.transportEnergy);
+], ['#', ItemID.storageCrystal, -1, 'x', ItemID.carbonPlate, 0], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.nanoLeggings, count: 1, data: Item.getMaxDamage(ItemID.nanoLeggings)}, [
 	"x#x",
 	"x x",
 	"x x"
-], ['#', ItemID.storageCrystal, -1, 'x', ItemID.carbonPlate, 0], ChargeItemRegistry.transportEnergy);
+], ['#', ItemID.storageCrystal, -1, 'x', ItemID.carbonPlate, 0], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.nanoBoots, count: 1, data: Item.getMaxDamage(ItemID.nanoBoots)}, [
 	"x x",
 	"x#x"
-], ['#', ItemID.storageCrystal, -1, 'x', ItemID.carbonPlate, 0], ChargeItemRegistry.transportEnergy);
+], ['#', ItemID.storageCrystal, -1, 'x', ItemID.carbonPlate, 0], ChargeItemRegistry.transferEnergy);
 
 
 MachineRecipeRegistry.registerRecipesFor("nano-armor-charge", {
@@ -11952,10 +15534,10 @@ Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_c
 Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 10000, texture: "armor/quantum_2.png", isTech: true});
 Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 8192, 4, "armor", true);
 
 ItemName.setRarity(ItemID.quantumHelmet, 2);
 ItemName.setRarity(ItemID.quantumChestplate, 2);
@@ -11977,10 +15559,10 @@ Item.createArmorItem("quantumChestplateUncharged", "Quantum Bodyarmor", {name: "
 Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 10000, texture: "armor/quantum_2.png", isTech: true});
 Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 10000, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 8192, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 8192, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 8192, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 8192, 4, "armor");
 
 ItemName.setRarity(ItemID.quantumHelmetUncharged, 2);
 ItemName.setRarity(ItemID.quantumChestplateUncharged, 2);
@@ -11997,24 +15579,24 @@ Callback.addCallback("PreLoaded", function(){
 		"a#a",
 		"bxb",
 		"cqc"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoHelmet, -1, 'q', ItemID.hazmatHelmet, 0, 'a', ItemID.plateReinforcedIridium, 0, 'b', BlockID.reinforcedGlass, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoHelmet, -1, 'q', ItemID.hazmatHelmet, 0, 'a', ItemID.plateReinforcedIridium, 0, 'b', BlockID.reinforcedGlass, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
 	
 	Recipes.addShaped({id: ItemID.quantumChestplate, count: 1, data: Item.getMaxDamage(ItemID.quantumChestplate)}, [
 		"bxb",
 		"a#a",
 		"aca"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoChestplate, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.plateAlloy, 0, 'c', ItemID.jetpack, -1], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoChestplate, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.plateAlloy, 0, 'c', ItemID.jetpack, -1], ChargeItemRegistry.transferEnergy);
 	
 	Recipes.addShaped({id: ItemID.quantumLeggings, count: 1, data: Item.getMaxDamage(ItemID.quantumLeggings)}, [
 		"m#m",
 		"axa",
 		"c c"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoLeggings, -1, 'a', ItemID.plateReinforcedIridium, 0, 'm', BlockID.machineBlockBasic, 0, 'c', 348, 0], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoLeggings, -1, 'a', ItemID.plateReinforcedIridium, 0, 'm', BlockID.machineBlockBasic, 0, 'c', 348, 0], ChargeItemRegistry.transferEnergy);
 	
 	Recipes.addShaped({id: ItemID.quantumBoots, count: 1, data: Item.getMaxDamage(ItemID.quantumBoots)}, [
 		"axa",
 		"b#b"
-	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoBoots, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.rubberBoots, 0], ChargeItemRegistry.transportEnergy);
+	], ['#', ItemID.storageLapotronCrystal, -1, 'x', ItemID.nanoBoots, -1, 'a', ItemID.plateReinforcedIridium, 0, 'b', ItemID.rubberBoots, 0], ChargeItemRegistry.transferEnergy);
 });
 
 
@@ -12195,7 +15777,7 @@ Armor.registerFuncs("quantumBootsUncharged", QUANTUM_ARMOR_FUNCS);
 
 IDRegistry.genItemID("jetpack");
 Item.createArmorItem("jetpack", "Jetpack", {name: "electric_jetpack"}, {type: "chestplate", armor: 3, durability: 30000, texture: "armor/jetpack_1.png", isTech: true});
-ChargeItemRegistry.registerItem(ItemID.jetpack, "Eu", 30000, 1, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.jetpack, "Eu", 30000, 100, 1, "armor", true);
 Item.registerNameOverrideFunction(ItemID.jetpack, ItemName.showItemStorage);
 
 Recipes.addShaped({id: ItemID.jetpack, count: 1, data: Item.getMaxDamage(ItemID.jetpack)}, [
@@ -12266,10 +15848,10 @@ Item.createArmorItem("advBatpack", "Advanced Batpack", {name: "advanced_batpack"
 Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: "chestplate", armor: 3, durability: 2000000, texture: "armor/energypack_1.png", isTech: true});
 Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 10000000, texture: "armor/lappack_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 1, "storage", true);
-ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 2, "storage", true);
-ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 3, "storage", true);
-ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 4, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.batpack, "Eu",  60000, 128, 1, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.advBatpack, "Eu",  600000, 512, 2, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.energypack, "Eu", 2000000, 2048, 3, "storage", true);
+ChargeItemRegistry.registerItem(ItemID.lappack, "Eu", 10000000, 8192, 4, "storage", true);
 ItemName.setRarity(ItemID.lappack, 1);
 
 Item.registerNameOverrideFunction(ItemID.batpack, ItemName.showItemStorage);
@@ -12281,25 +15863,25 @@ Recipes.addShaped({id: ItemID.batpack, count: 1, data: Item.getMaxDamage(ItemID.
     "bcb",
     "bab",
     "b b"
-], ['a', 5, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, 0], ChargeItemRegistry.transportEnergy);
+], ['a', 5, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, 0], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.advBatpack, count: 1, data: Item.getMaxDamage(ItemID.advBatpack)}, [
     "bcb",
     "bab",
     "b b"
-], ['a', ItemID.plateBronze, 0, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitBasic, 0], ChargeItemRegistry.transportEnergy);
+], ['a', ItemID.plateBronze, 0, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitBasic, 0], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.energypack, count: 1, data: Item.getMaxDamage(ItemID.energypack)}, [
     "cbc",
     "aba",
     "b b"
-], ['a', ItemID.storageCrystal, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+], ['a', ItemID.storageCrystal, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.lappack, count: 1, data: Item.getMaxDamage(ItemID.lappack)}, [
     "e",
     "c",
     "a"
-], ['e', ItemID.energypack, -1, 'a', ItemID.storageLapotronCrystal, -1, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transportEnergy);
+], ['e', ItemID.energypack, -1, 'a', ItemID.storageLapotronCrystal, -1, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
 
 
 function registerStoragePack(id, level, tranfer){
@@ -12328,8 +15910,8 @@ var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
 	}
 }
 
-registerStoragePack("batpack", 1, 32);
-registerStoragePack("advBatpack", 2, 256);
+registerStoragePack("batpack", 1, 128);
+registerStoragePack("advBatpack", 2, 512);
 registerStoragePack("energypack", 3, 2048);
 registerStoragePack("lappack", 4, 8192);
 
@@ -12595,8 +16177,8 @@ IDRegistry.genItemID("scanner");
 IDRegistry.genItemID("scannerAdvanced");
 Item.createItem("scanner", "OD Scanner", {name: "scanner", meta: 0}, {stack: 1, isTech: true});
 Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner", meta: 1}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 1, "tool", true);
-ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 2, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 100, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 256, 2, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.scanner, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.scannerAdvanced, ItemName.showItemStorage);
@@ -12605,13 +16187,13 @@ Recipes.addShaped({id: ItemID.scanner, count: 1, data: Item.getMaxDamage(ItemID.
 	"gdg",
 	"cbc",
 	"xxx"
-], ['x', ItemID.cableCopper1, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transportEnergy);
+], ['x', ItemID.cableCopper1, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.scannerAdvanced, count: 1, data: Item.getMaxDamage(ItemID.scannerAdvanced)}, [
 	"gbg",
 	"dcd",
 	"xsx"
-], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transportEnergy);
+], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
 
 
 var scan_radius = 3;
@@ -12620,11 +16202,7 @@ var ore_blocks = [14, 15, 16, 21, 73, 74, 56, 129, 153];
 
 Callback.addCallback("PreLoaded", function(coords, item, block){
 	for(var id in BlockID){
-		if(id[0]=='o' && id[1]=='r' && id[2]=='e' && !TileEntity.isTileEntityBlock(Block[id])){
-			var name = "";
-			for(var i = 3; i < id.length; i++){
-				name += id[i];
-			}
+		if(id[0]=='o' && id[1]=='r' && id[2]=='e' && !TileEntity.isTileEntityBlock(BlockID[id])){
 			ore_blocks.push(BlockID[id]);
 		}
 	}
@@ -12880,11 +16458,11 @@ Item.createItem("bronzeAxe", "Bronze Axe", {name: "bronze_axe", meta: 0}, {stack
 Item.createItem("bronzeHoe", "Bronze Hoe", {name: "bronze_hoe", meta: 0}, {stack: 1});
 
 ToolAPI.addToolMaterial("bronze", {durability: 225, level: 3, efficiency: 6, damage: 2, enchantability: 14});
-ToolAPI.setTool(ItemID.bronzeSword, "bronze", ToolType.sword);
-ToolAPI.setTool(ItemID.bronzeShovel, "bronze", ToolType.shovel);
-ToolAPI.setTool(ItemID.bronzePickaxe, "bronze", ToolType.pickaxe);
-ToolAPI.setTool(ItemID.bronzeAxe, "bronze", ToolType.axe);
-ToolAPI.setTool(ItemID.bronzeHoe, "bronze", ToolType.hoe);
+ToolLib.setTool(ItemID.bronzeSword, "bronze", ToolType.sword);
+ToolLib.setTool(ItemID.bronzeShovel, "bronze", ToolType.shovel);
+ToolLib.setTool(ItemID.bronzePickaxe, "bronze", ToolType.pickaxe);
+ToolLib.setTool(ItemID.bronzeAxe, "bronze", ToolType.axe);
+ToolLib.setTool(ItemID.bronzeHoe, "bronze", ToolType.hoe);
 
 
 Recipes.addShaped({id: ItemID.bronzeSword, count: 1, data: 0}, [
@@ -12928,7 +16506,7 @@ Item.setMaxDamage(ItemID.wrenchBronze, 161);
 
 IDRegistry.genItemID("electricWrench");
 Item.createItem("electricWrench", "Electric Wrench", {name: "electric_wrench", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.electricWrench, "Eu", 10000, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.electricWrench, "Eu", 10000, 100, 1, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.electricWrench, ItemName.showItemStorage);
 
@@ -12954,8 +16532,8 @@ IDRegistry.genItemID("electricHoe");
 IDRegistry.genItemID("electricTreetap");
 Item.createItem("electricHoe", "Electric Hoe", {name: "electric_hoe", meta: 0}, {stack: 1, isTech: true});
 Item.createItem("electricTreetap", "Electric Treetap", {name: "electric_treetap", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.electricHoe, "Eu", 10000, 1, "tool", true);
-ChargeItemRegistry.registerItem(ItemID.electricTreetap, "Eu", 10000, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.electricHoe, "Eu", 10000, 100, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.electricTreetap, "Eu", 10000, 100, 1, "tool", true);
 Item.setToolRender(ItemID.electricHoe, true);
 
 Item.registerNameOverrideFunction(ItemID.electricHoe, ItemName.showItemStorage);
@@ -12986,9 +16564,9 @@ Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill_iridium"}, {stack
 Item.setGlint(ItemID.iridiumDrill, true);
 ItemName.setRarity(ItemID.iridiumDrill, 2);
 
-ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 1, "tool", true);
-ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 1, "tool", true);
-ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 3, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 100, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 100, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 2048, 3, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.drill, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.diamondDrill, ItemName.showItemStorage);
@@ -13023,13 +16601,13 @@ Recipes.addShaped({id: ItemID.drill, count: 1, data: Item.getMaxDamage(ItemID.dr
 Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: Item.getMaxDamage(ItemID.diamondDrill)}, [
 	" a ",
 	"ada"
-], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transportEnergy);
+], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transferEnergy);
 
 Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(ItemID.iridiumDrill)}, [
 	" a ",
 	"ada",
 	" e "
-], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transportEnergy);
+], ['d', ItemID.diamondDrill, -1, 'e', ItemID.storageCrystal, -1, 'a', ItemID.plateReinforcedIridium, 0], ChargeItemRegistry.transferEnergy);
 
 UIbuttons.setToolButton(ItemID.iridiumDrill, "button_switch");
 
@@ -13125,9 +16703,9 @@ ToolType.drill = {
 	}
 }
 
-ToolAPI.setTool(ItemID.drill, {energyPerUse: 50, level: 3, efficiency: 8, damage: 3},  ToolType.drill);
-ToolAPI.setTool(ItemID.diamondDrill, {energyPerUse: 80, level: 4, efficiency: 16, damage: 4}, ToolType.drill);
-ToolAPI.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 24, damage: 5}, {
+ToolLib.setTool(ItemID.drill, {energyPerUse: 50, level: 3, efficiency: 8, damage: 3},  ToolType.drill);
+ToolLib.setTool(ItemID.diamondDrill, {energyPerUse: 80, level: 4, efficiency: 16, damage: 4}, ToolType.drill);
+ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 24, damage: 5}, {
 	damage: 0,
 	blockTypes: ["stone", "dirt"],
 	soundType: "drill",
@@ -13221,7 +16799,7 @@ ToolAPI.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 2
 
 IDRegistry.genItemID("chainsaw");
 Item.createItem("chainsaw", "Chainsaw", {name: "chainsaw", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chainsaw, "Eu", 30000, 1, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.chainsaw, "Eu", 30000, 100, 1, "tool", true);
 
 Item.registerNameOverrideFunction(ItemID.chainsaw, ItemName.showItemStorage);
 
@@ -13270,7 +16848,7 @@ ToolType.chainsaw = {
 	},
 }
 
-ToolAPI.setTool(ItemID.chainsaw, {energyPerUse: 60, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
+ToolLib.setTool(ItemID.chainsaw, {energyPerUse: 60, level: 3, efficiency: 16, damage: 6},  ToolType.chainsaw);
 
 let chainsawLoop = SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawIdle.ogg", true, 1);
 SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawStop.ogg", false, 1);
@@ -13296,13 +16874,13 @@ Callback.addCallback("tick", function(){
 
 IDRegistry.genItemID("nanoSaber");
 Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 3, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 2048, 3, "tool", true);
 ItemName.setRarity(ItemID.nanoSaber, 1);
 Item.registerNameOverrideFunction(ItemID.nanoSaber, ItemName.showItemStorage);
 
 IDRegistry.genItemID("nanoSaberActive");
 Item.createItem("nanoSaberActive", "Nano Saber", {name: "nano_saber_active", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.nanoSaberActive, "Eu", 1000000, 3, "tool");
+ChargeItemRegistry.registerItem(ItemID.nanoSaberActive, "Eu", 1000000, 2048, 3, "tool");
 ItemName.setRarity(ItemID.nanoSaberActive, 1);
 Item.registerNameOverrideFunction(ItemID.nanoSaberActive, ItemName.showItemStorage);
 
@@ -13316,7 +16894,7 @@ Recipes.addShaped({id: ItemID.nanoSaber, count: 1, data: NANO_SABER_DURABILITY},
 	"ca ",
 	"ca ",
 	"bxb"
-], ['x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, 'b', ItemID.carbonPlate, 0, "c", 348, 0], ChargeItemRegistry.transportEnergy);
+], ['x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, 'b', ItemID.carbonPlate, 0, "c", 348, 0], ChargeItemRegistry.transferEnergy);
 
 ToolAPI.registerSword(ItemID.nanoSaber, {level: 0, durability: NANO_SABER_DURABILITY, damage: 4}, {
 	damage: 0,
@@ -13407,7 +16985,7 @@ Callback.addCallback("tick", function(){
 
 IDRegistry.genItemID("miningLaser");
 Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 3, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 2048, 3, "tool", true);
 Item.setToolRender(ItemID.miningLaser, true);
 
 ItemName.setRarity(ItemID.miningLaser, 1);
@@ -13422,7 +17000,7 @@ Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: Item.getMaxDamage(Ite
 	"ccx",
 	"aa#",
 	" aa"
-], ['#', ItemID.circuitAdvanced, 0, 'x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, "c", 331, 0], ChargeItemRegistry.transportEnergy);
+], ['#', ItemID.circuitAdvanced, 0, 'x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, "c", 331, 0], ChargeItemRegistry.transferEnergy);
 
 UIbuttons.setToolButton(ItemID.miningLaser, "button_switch", true);
 
@@ -13664,6 +17242,304 @@ Item.registerNoTargetUseFunction("miningLaser", function(item){
 
 
 
+// file: items/tool/crop_analyzer.js
+
+IDRegistry.genItemID("agriculturalAnalyzer");
+Item.createItem("agriculturalAnalyzer", "Crop Analyzer", {name: "cropnalyzer"}, {stack: 1});
+Callback.addCallback("PostLoaded", function(){
+    Recipes.addShaped({id: ItemID.agriculturalAnalyzer , count: 1 , data: 0}, [
+		"xx ",
+		"rgr",
+		"rcr"
+	], ['x', ItemID.cableCopper1, 0, 'r', 331, 0, 'g', 20, 0, "c", ItemID.circuitBasic, 0]);
+});
+
+var guiAddConst = 14;
+var guiAnalyserObject = {
+	location: {
+		x: 0,
+		y: 0,
+		width: 1000,
+		height: 1000
+	},
+	
+	drawing: [
+		{type: "background", color: 0},
+		{type: "bitmap", x: 250, y: UI.getScreenHeight() / 10, bitmap: "agricultural_analyser", scale: GUI_SCALE / 2.3},
+	],
+	
+	elements: {
+		"closeButton": {type: "button", x: 672, y: 77, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {onClick: function(container){
+			AgriculturalAnalyser.dropItems(container);
+            AgriculturalAnalyser.hideAllValues(container);
+            container.close();
+		}}},
+		"textName": {type: "text", font: {size: 18}, x: 432, y: 86, width: 256, height: 42, text: Translation.translate("Crop Analyzer")},
+		"slotSeedIn": {type: "slot", x: 265, y: 75, size: GUI_SCALE * 16, isValid: function(id, count, data){
+			return id == ItemID.cropSeedBag;
+		}},
+		"slotSeedOut": {type: "slot", x: 360, y: 75, size: GUI_SCALE * 16, isValid: function(){return false;}},
+		"slotEnergy": {type: "slot", x: 615, y: 75, size: GUI_SCALE * 16, isValid: MachineRegistry.isValidEUStorage}
+	}
+};
+for(var i = 0; i < 10; i++){
+	guiAnalyserObject.elements["slot" + i] = {type: "invSlot", x: 270 + i * 45, y: 455, size:GUI_SCALE * guiAddConst, index: i};
+}
+var guiAgriculturalAnalyzer = new UI.Window(guiAnalyserObject);
+guiAgriculturalAnalyzer.setInventoryNeeded(true);
+
+var AgriculturalAnalyser = {
+    container: null,
+    tick: function(){
+        var container = AgriculturalAnalyser.container;
+        if(!container) return;
+
+        var slotIn = container.getSlot("slotSeedIn");
+        var slotOut = container.getSlot("slotSeedOut");
+        var slotEnergy = container.getSlot("slotEnergy");
+        var currentEnergy = ChargeItemRegistry.getEnergyStored(slotEnergy, "Eu");
+
+        if(slotIn.id && !slotOut.id && currentEnergy){
+            var level = slotIn.extra.getInt("scan");
+            if(level < 4){
+                var ned = AgriculturalAnalyser.energyForLevel(level);
+                if(currentEnergy > ned){
+                    ICTool.dischargeItem(slotEnergy, ned);
+                    slotIn.extra.putInt("scan", level + 1);
+                }
+            }
+            slotOut.id = slotIn.id;
+            slotOut.count = slotIn.count;
+            slotOut.data = slotIn.data;
+            slotOut.extra = slotIn.extra;
+            slotIn.id = 0;
+
+            AgriculturalAnalyser.showAllValues(container, slotOut);
+            container.validateAll();
+        }else if(!slotOut.id){
+            AgriculturalAnalyser.hideAllValues(container);
+        }
+    },
+    hideAllValues: function(container){
+        var content = container.getGuiContent();
+        if(!content) return;
+        var elements = content.elements;
+        elements["cropName"] = null;
+        elements["textTier"] = null;
+        elements["discoveredBy"] = null;
+        elements["discoveredByText"] = null;
+        elements["attributes0"] = null;
+        elements["attributes1"] = null;
+        elements["attributes2"] = null;
+        elements["growth"] = null;
+        elements["gain"] = null;
+        elements["resist"] = null;
+        elements["growthText"] = null;
+        elements["gainText"] = null;
+        elements["resistText"] = null;
+    },
+    showAllValues: function(container, seedBagSlot){
+        var elements = container.getGuiContent().elements;
+        var font = {size: 18, color: Color.WHITE}
+        var level = seedBagSlot.extra.getInt("scan");
+        var crop = AgricultureAPI.cropCards[seedBagSlot.data];
+
+        switch(level){
+            case 4:
+                this.showStats(seedBagSlot, elements);
+            case 3:
+                this.showAttributes(crop, font, elements);
+            case 2:
+                this.showTier(crop, font, elements);
+                this.showDiscoveredBy(crop, font, elements);
+            case 1:
+                this.showName(crop, font, elements);
+        }
+    },
+    showStats: function(slot, elements){
+        var growth = slot.extra.getInt("growth");
+        var gain = slot.extra.getInt("gain");
+        var resist = slot.extra.getInt("resistance");
+        var statsXpos = 560;
+
+        elements["growthText"] = {type: "text", font: {size: 18, color: Color.rgb(0, 128, 0)}, x: statsXpos, y: 160, width: 256, height: 42, text: "Growth: "};
+        elements["growth"] = {type: "text", font: {size: 18, color: Color.rgb(0, 128, 0)}, x: statsXpos, y: 200, width: 256, height: 42, text: growth.toString()};
+        elements["gainText"] = {type: "text", font: {size: 18, color: Color.rgb(255, 255, 0)}, x: statsXpos, y: 240, width: 256, height: 42, text: "Gain: "};
+        elements["gain"] = {type: "text", font: {size: 18, color: Color.rgb(255, 255, 0)}, x: statsXpos, y: 280, width: 256, height: 42, text: gain.toString()};
+        elements["resistText"] = {type: "text", font: {size: 18, color: Color.rgb(0, 255, 255)}, x: statsXpos, y: 320, width: 256, height: 42, text: "Resistance: "};
+        elements["resist"] = {type: "text", font: {size: 18, color: Color.rgb(0, 255, 255)}, x: statsXpos, y: 360, width: 256, height: 42, text: resist.toString()};
+    },
+    showDiscoveredBy: function(crop, font, elements){
+        var discBy = crop.getDiscoveredBy();
+        elements["discoveredByText"] = {type: "text", font: font, x: 270, y: 240, width: 256, height: 42, text: "Discovered by: "};
+        elements["discoveredBy"] = {type: "text", font: font, x: 270, y: 280, width: 256, height: 42, text: discBy};
+    },
+    showTier: function(crop, font, elements){
+        var tier = "Tier: " + AgriculturalAnalyser.getStringTier(crop.properties.tier);
+        elements["textTier"] = {type: "text", font: font, x: 270, y: 200, width: 256, height: 42, text: tier};
+    },
+    showAttributes: function(crop, font, elements){
+        var arr = AgriculturalAnalyser.getAttributesText(crop.attributes)
+        for(var i in arr){
+            elements["attributes"+i] = {type: "text", font: font, x: 270, y: 320 + 40 * i, width: 256, height: 42, text: arr[i]};
+        }
+    },
+    showName: function(crop, font, elements){
+        var name = AgriculturalAnalyser.getSeedName(crop.id);
+        elements["cropName"] = {type: "text", font: font, x: 270, y: 160, width: 256, height: 42, text: name};
+    },
+    getStringTier: function(tier){
+        switch (tier) {
+            default: {
+                return "0";
+            }
+            case 1: {
+                return "I";
+            }
+            case 2: {
+                return "II";
+            }
+            case 3: {
+                return "III";
+            }
+            case 4: {
+                return "IV";
+            }
+            case 5: {
+                return "V";
+            }
+            case 6: {
+                return "VI";
+            }
+            case 7: {
+                return "VII";
+            }
+            case 8: {
+                return "VIII";
+            }
+            case 9: {
+                return "IX";
+            }
+            case 10: {
+                return "X";
+            }
+            case 11: {
+                return "XI";
+            }
+            case 12: {
+                return "XII";
+            }
+            case 13: {
+                return "XIII";
+            }
+            case 14: {
+                return "XIV";
+            }
+            case 15: {
+                return "XV";
+            }
+            case 16: {
+                return "XVI";
+            }
+        }
+    },
+    energyForLevel: function(level){
+        switch (level) {
+            default: {
+                return 10;
+            }
+            case 1: {
+                return 90;
+            }
+            case 2: {
+                return 900;
+            }
+            case 3: {
+                return 9000;
+            }
+        }
+    },
+    getSeedName: function(name){
+        return Translation.translate(name);
+    },
+    getAttributesText: function(attributes){
+        var arr = ["", "", ""];
+        for(var i in attributes){
+            var indForPush = Math.floor((i) / 3);
+            arr[indForPush] += attributes[i]+' ';
+        }
+        return arr;
+    },
+    dropItems: function(container){
+        var coords = Player.getPosition();
+        var slots = ["slotSeedIn", "slotSeedOut", "slotEnergy"]
+        for(var i in slots){
+            var slot = container.getSlot(slots[i]);
+            nativeDropItem(coords.x, coords.y, coords.z, 0, slot.id, slot.count, slot.data, slot.extra);
+            slot.id = 0;
+        }
+        container.validateAll();
+    },
+    showCropValues: function(te){
+        switch(te.data.scanLevel){
+            case 4:
+                Game.message("Growth: " + te.data.statGrowth);
+                Game.message("Gain: " + te.data.statGain);
+                Game.message("Resistance: " + te.data.statResistance);
+            case 2:
+                Game.message("Tier: " + te.crop.properties.tier);
+                Game.message("Discovered by: " + te.crop.getDiscoveredBy());
+            case 1:
+                Game.message(Translation.translate(te.crop.id));
+        }
+    },
+    useFunction: function(coords, item, block){
+        if(block.id == BlockID.crop){
+            var tileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
+            if(!tileEntity.crop) return;
+            AgriculturalAnalyser.showCropValues(tileEntity);
+        }else{
+            AgriculturalAnalyser.noTargetUseFunction(item);
+        }
+    },
+    noTargetUseFunction: function(item){
+        if(!AgriculturalAnalyser.container) AgriculturalAnalyser.container = new UI.Container();
+        AgriculturalAnalyser.container.openAs(guiAgriculturalAnalyzer);
+    }
+};
+
+Item.registerUseFunction("agriculturalAnalyzer", AgriculturalAnalyser.useFunction);
+Item.registerNoTargetUseFunction("agriculturalAnalyzer", AgriculturalAnalyser.noTargetUseFunction);
+Callback.addCallback("tick", AgriculturalAnalyser.tick);
+
+
+
+
+// file: items/tool/weeding_machine.js
+
+IDRegistry.genItemID("weeding_trowel");
+Item.createItem("weeding_trowel", "Weeding Trowel", {name: "weeding_trowel"}, {stack: 1});
+
+Callback.addCallback("PostLoaded", function(){
+	Recipes.addShaped({id: ItemID.weeding_trowel , count: 1 , data: 0}, [
+		"c c",
+		" c ",
+		"zcz"
+	], ['c', 265, 0, 'z', ItemID.rubber, 0]);
+});
+
+Item.registerUseFunction("weeding_trowel",function(coords, item, block){
+    var te = World.getTileEntity(coords.x, coords.y, coords.z);
+    if(block.id == BlockID.crop && te.crop && te.crop.id == "weed"){
+        World.drop(coords.x, coords.y, coords.z, ItemID.weed, te.data.currentSize, 0);
+        te.reset();
+        te.updateRender();
+    }
+});
+
+
+
+
 // file: integration/recipe_viewer.js
 
 ModAPI.addAPICallback("RecipeViewer", function(api){
@@ -13704,7 +17580,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				if(result.id == id && (result.data == data || data == -1)){
 					item = key.split(":");
 					list.push({
-						input: [{id: parseInt(item[0]), count: 1, data: parseInt(item[1] || 0)}],
+						input: [{id: parseInt(item[0]), count: result.sourceCount || 1, data: parseInt(item[1] || 0)}],
 						output: [result]
 					});
 				}
@@ -13788,7 +17664,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 	});
 
 
-	RecipeViewer.registerRecipeType("icpe_canner", {
+	RecipeViewer.registerRecipeType("icpe_solid_canner", {
 		contents: {
 			icon: BlockID.conserver,
 			drawing: [
@@ -13803,10 +17679,61 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 		},
 		getList: function(id, data, isUsage){
 			let list = [];
-			let recipe = MachineRecipeRegistry.requireRecipesFor("canner");
+			let recipe = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 			let result;
 			if(isUsage){
-				result = MachineRecipeRegistry.getRecipeResult("canner", id);
+				result = MachineRecipeRegistry.getRecipeResult("solidCanner", id);
+				if(result){
+					return [{
+						input: [{id: id, count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
+						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+					}];
+				}
+				for(let key in recipe){
+					result = recipe[key];
+					if(result.storage[0] == id){
+						list.push({
+							input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
+							output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+						});
+					}
+				}
+				return list;
+			}
+			for(let key in recipe){
+				result = recipe[key];
+				if(result.result[0] == id){
+					list.push({
+						input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
+						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+					});
+				}
+			}
+			return list;
+		}
+	});
+	
+	
+	RecipeViewer.registerRecipeType("icpe_canner", {
+		contents: {
+			icon: BlockID.canner,
+			drawing: [
+				{type: "bitmap", x: 200, y: 50, bitmap: "canner_background_recipe", scale: 6},
+				{type: "bitmap", x: 194, y: 216, bitmap: "liquid_bar", scale: 6},
+				{type: "bitmap", x: 662, y: 216, bitmap: "liquid_bar", scale: 6}
+			],
+			elements: {
+				input0: {type: "slot", x: 200, y: 50, size: 108, bitmap: "default_slot"},
+				input1: {type: "slot", x: 434, y: 212, size: 108, bitmap: "canner_slot_source_0"},
+				output0: {type: "slot", x: 668, y: 50, size: 108, bitmap: "default_slot"}
+			}
+		},
+		getList: function(id, data, isUsage){
+			let list = [];
+			let recipe = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+			let result;
+			if(isUsage){
+				result = MachineRecipeRegistry.getRecipeResult("solidCanner", id);
 				if(result){
 					return [{
 						input: [{id: id, count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
@@ -13837,7 +17764,6 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 		}
 	});
 
-
 	let iconMetalFormer = [ItemID.craftingHammer, ItemID.cutter, ItemID.cableCopper0];
 
 	RecipeViewer.registerRecipeType("icpe_metal_former", {
@@ -13848,7 +17774,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				{type: "bitmap", x: 450, y: 320, scale: 6, bitmap: "empty_button_up"}
 			],
 			elements: {
-				slotMode: {type: "slot", x: 450, y: 330, z: 1, size: 90, visual: true, needClean: true, bitmap: "_default_slot_empty", source: {id: 0, count: 0, data: 0}},
+				slotMode: {type: "slot", x: 445, y: 320, z: 1, size: 112, visual: true, needClean: true, bitmap: "_default_slot_empty", source: {id: 0, count: 0, data: 0}},
 				input0: {type: "slot", x: 220, y: 190, size: 120},
 				output0: {type: "slot", x: 660, y: 190, size: 120}
 			}
@@ -14117,6 +18043,7 @@ ModAPI.registerAPI("ICore", {
 	Radiation: RadiationAPI,
 	Tool: ICTool,
 	Sound: SoundAPI,
+	Agriculture: AgricultureAPI,
 	ItemName: ItemName,
 	UI: UIbuttons,
 	Config: Config,

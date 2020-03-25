@@ -4,7 +4,8 @@ Item.setMaxDamage(ItemID.wrenchBronze, 161);
 
 IDRegistry.genItemID("electricWrench");
 Item.createItem("electricWrench", "Electric Wrench", {name: "electric_wrench", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.electricWrench, "Eu", 10000, 100, 1, "tool", true);
+ChargeItemRegistry.registerExtraItem(ItemID.electricWrench, "Eu", 10000, 100, 1, "tool", true);
+Item.addToCreative(ItemID.electricWrench, 1, 1);
 
 Item.registerNameOverrideFunction(ItemID.electricWrench, ItemName.showItemStorage);
 
@@ -14,7 +15,7 @@ Recipes.addShaped({id: ItemID.wrenchBronze, count: 1, data: 0}, [
 	" a "
 ], ['a', ItemID.ingotBronze, 0]);
 
-Recipes.addShapeless({id: ItemID.electricWrench, count: 1, data: Item.getMaxDamage(ItemID.electricWrench)}, [
+Recipes.addShapeless({id: ItemID.electricWrench, count: 1, data: 27}, [
 	{id: ItemID.wrenchBronze, data: 0}, {id: ItemID.powerUnitSmall, data: 0}
 ]);
 

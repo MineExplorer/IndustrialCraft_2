@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("solarDistiller");
 Block.createBlock("solarDistiller", [
 	{name: "Solar Distiller", texture: [["machine_bottom", 0], ["solar_distiller", 0], ["solar_distiller", 0], ["solar_distiller", 0], ["solar_distiller", 0], ["solar_distiller", 0]], inCreative: true}
-], "opaque");
+], "stone");
 
 Block.registerDropFunction("solarDistiller", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);

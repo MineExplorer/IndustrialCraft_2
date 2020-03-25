@@ -200,7 +200,7 @@ var MachineRegistry = {
 	// standard functions
 	setStoragePlaceFunction: function(id, fullRotation){
 		Block.registerPlaceFunction(BlockID[id], function(coords, item, block){
-			var place = canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
+			var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
 			World.setBlock(place.x, place.y, place.z, item.id, 0);
 			var rotation = TileRenderer.getBlockRotation(fullRotation);
 			var tile = World.addTileEntity(place.x, place.y, place.z);
@@ -388,7 +388,7 @@ Item.registerUseFunctionForID(69, function(coords, item, block){
 		var side  = coords.side;
 		var coord = coords.relative;
 		block = World.getBlockID(coord.x, coord.y, coord.z);
-		if(canTileBeReplaced(block)){
+		if(World.canTileBeReplaced(block)){
 			Player.decreaseCarriedItem(1);
 			World.setBlock(coord.x, coord.y, coord.z, item.id, (6 - side)%6);
 		}
@@ -401,7 +401,7 @@ function BUTTON_PLACE_FUNC(coords, item, block){
 		var side  = coords.side;
 		var coord = coords.relative;
 		block = World.getBlockID(coord.x, coord.y, coord.z);
-		if(canTileBeReplaced(block)){
+		if(World.canTileBeReplaced(block)){
 			Player.decreaseCarriedItem(1);
 			World.setBlock(coord.x, coord.y, coord.z, item.id, side);
 		}

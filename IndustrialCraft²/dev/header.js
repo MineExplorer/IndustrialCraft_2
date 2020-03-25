@@ -27,11 +27,7 @@ const GUI_SCALE = 3.2;
 const fallVelocity = -0.0784;
 
 // import functions
-Player.getArmorSlot = ModAPI.requireGlobal("Player.getArmorSlot");
-Player.setArmorSlot = ModAPI.requireGlobal("Player.setArmorSlot");
-Player.setInventorySlot = ModAPI.requireGlobal("Player.setInventorySlot");
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
-var canTileBeReplaced = ModAPI.requireGlobal("canTileBeReplaced");
 var Color = android.graphics.Color;
 
 // energy (Eu)
@@ -53,18 +49,9 @@ function addShapelessRecipe(result, source){
 	Recipes.addShapeless(result, ingredients);
 }
 
-
 // vanilla items
-Recipes.removeFurnaceRecipe(81);
-Recipes.addFurnace(81, 351, 2); // cactus fix
 Recipes.addFurnaceFuel(325, 10, 2000); // lava bucket
 ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone
-
-Recipes.deleteRecipe({id: 355, count: 1, data: 0}); // bed fix
-Recipes.addShaped({id: 355, count: 1, data: 0}, [
-	"aaa",
-	"bbb",
-], ['a', 35, -1, 'b', 5, -1]);
 
 // debug
 var lasttime = -1

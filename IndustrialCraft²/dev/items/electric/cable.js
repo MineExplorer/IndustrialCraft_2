@@ -57,10 +57,10 @@ Callback.addCallback("PreLoaded", function(){
 function registerCablePlaceFunc(nameID, blockID, blockData){
 	Item.registerUseFunction(nameID, function(coords, item, block){
 		var place = coords;
-		if(!canTileBeReplaced(block.id, block.data)){
+		if(!World.canTileBeReplaced(block.id, block.data)){
 			place = coords.relative;
 			block = World.getBlock(place.x, place.y, place.z);
-			if(!canTileBeReplaced(block.id, block.data)){
+			if(!World.canTileBeReplaced(block.id, block.data)){
 				return;
 			}
 		}

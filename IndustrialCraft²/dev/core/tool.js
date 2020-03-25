@@ -53,11 +53,12 @@ let ICTool = {
 			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, consume, itemChargeLevel);
 			consume -= energy;
 		}
-		if(item.data + consume <= Item.getMaxDamage(item.id)){
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		if(energyStored >= consume){
 			if(energy > 0){
 				Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 			}
-			item.data += consume;
+			ChargeItemRegistry.setEnergyStored(item, energyStored - consume);
 			return true;
 		}
 		return false;

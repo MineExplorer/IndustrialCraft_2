@@ -1,7 +1,8 @@
 IDRegistry.genItemID("miningLaser");
 Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 2048, 3, "tool", true);
+ChargeItemRegistry.registerExtraItem(ItemID.miningLaser, "Eu", 1000000, 2048, 3, "tool", true);
 Item.setToolRender(ItemID.miningLaser, true);
+Item.addToCreative(ItemID.miningLaser, 1, 1);
 
 ItemName.setRarity(ItemID.miningLaser, 1);
 Item.registerNameOverrideFunction(ItemID.miningLaser, function(item, name){
@@ -11,7 +12,7 @@ Item.registerNameOverrideFunction(ItemID.miningLaser, function(item, name){
 	return name;
 });
 
-Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: Item.getMaxDamage(ItemID.miningLaser)}, [
+Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: 27}, [
 	"ccx",
 	"aa#",
 	" aa"

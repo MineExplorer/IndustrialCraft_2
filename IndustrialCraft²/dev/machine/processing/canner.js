@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("canner");
 Block.createBlock("canner", [
 	{name: "Fluid/Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
-], "opaque");
+], "stone");
 TileRenderer.setStandartModel(BlockID.canner, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.canner, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.canner, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 1], ["canner_side", 1], ["canner_side", 0]]);
@@ -39,37 +39,35 @@ var guiCanner = new UI.StandartWindow({
 	
 	drawing: [
 		{type: "background", color: Color.parseColor("#b3b3b3")},
-		{type: "bitmap", x: 562, y: 50 + 12*GUI_SCALE, bitmap: "canner_background_top", scale: GUI_SCALE},
-		{type: "bitmap", x: 566, y: 50 + 12*GUI_SCALE, bitmap: "canner_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 406, y: 50 + 58*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 400 + 67*GUI_SCALE, y: 50 + 18*GUI_SCALE, bitmap: "extractor_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 502, y: 174, bitmap: "liquid_bar", scale: GUI_SCALE},
-		{type: "bitmap", x: 752, y: 174, bitmap: "liquid_bar", scale: GUI_SCALE}
+		{type: "bitmap", x: 406, y: 60 + 58*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 67*GUI_SCALE, y: 60 + 18*GUI_SCALE, bitmap: "extractor_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 496, y: 60 + 38*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE},
+		{type: "bitmap", x: 730, y: 60 + 38*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE}
 	],
 
 	elements: {
-		"background": {type: "image", x: 566, y: 50 + 39*GUI_SCALE, bitmap: "canner_arrows_0", scale: GUI_SCALE},
-		"liquidInputScale": {type: "scale", x: 502 + 4*GUI_SCALE, y: 174 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"liquidOutputScale": {type: "scale", x: 752 + 4*GUI_SCALE, y: 174 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"progressScale": {type: "scale", x: 400 + 67*GUI_SCALE, y: 50 + 18*GUI_SCALE, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
-		"energyScale": {type: "scale", x: 406, y: 50 + 58*GUI_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotEnergy": {type: "slot", x: 400, y: 290, size: 58, isValid: MachineRegistry.isValidEUStorage},
-		"slotSource": {type: "slot", x: 630, y: 174, size: 58, visual: false, bitmap: "canner_slot_source_0",
+		"background": {type: "image", x: 400 + 51*GUI_SCALE, y: 60 + 12*GUI_SCALE, bitmap: "canner_background_0", scale: GUI_SCALE},
+		"liquidInputScale": {type: "scale", x: 496 + 4*GUI_SCALE, y: 60 + 42*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"liquidOutputScale": {type: "scale", x: 730 + 4*GUI_SCALE, y: 60 + 42*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"progressScale": {type: "scale", x: 400 + 67*GUI_SCALE, y: 60 + 18*GUI_SCALE, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
+		"energyScale": {type: "scale", x: 406, y: 60 + 58*GUI_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotEnergy": {type: "slot", x: 400, y: 60 + 75*GUI_SCALE, size: 54, isValid: MachineRegistry.isValidEUStorage},
+		"slotSource": {type: "slot", x: 400 + 72*GUI_SCALE, y: 60 + 39*GUI_SCALE, size: 54, visual: false, bitmap: "canner_slot_source_0",
 			isValid: function(id, count, data, container){
 				return isValidCannerSource(id, data, container.tileEntity);
 			}
 		},
-		"slotCan": {type: "slot", x: 506, y: 50 + 12*GUI_SCALE, size: 58, 
+		"slotCan": {type: "slot", x: 400 + 33*GUI_SCALE, y: 60 + 12*GUI_SCALE, size: 54, 
 			isValid: function(id, count, data, container){
 				return isValidCannerCan(id, data, container.tileEntity);
 			}
 		},
-		"slotResult": {type: "slot", x: 755, y: 50 + 12*GUI_SCALE, size: 58, isValid: function(){return false;}},
-		"slotUpgrade1": {type: "slot", x: 861, y: 113, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade2": {type: "slot", x: 861, y: 172, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade3": {type: "slot", x: 861, y: 231, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade4": {type: "slot", x: 861, y: 290, isValid: UpgradeAPI.isValidUpgrade},
-		"buttonSwitch": {type: "button", x: 624, y: 242, bitmap: "canner_switch_button", scale: GUI_SCALE, clicker: {
+		"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE, y: 60 + 12*GUI_SCALE, size: 54, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 850, y: 60 + 21*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 850, y: 60 + 39*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade3": {type: "slot", x: 850, y: 60 + 57*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade4": {type: "slot", x: 850, y: 60 + 75*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"buttonSwitch": {type: "button", x: 400 + 70*GUI_SCALE, y: 60 + 60*GUI_SCALE, bitmap: "canner_switch_button", scale: GUI_SCALE, clicker: {
 			onClick: function(container, tile){
 				if(tile.data.progress == 0){
 					var liquidData = tile.inputTank.data;
@@ -78,7 +76,7 @@ var guiCanner = new UI.StandartWindow({
 				}
 			}
 		}},
-		"buttonMode": {type: "button", x: 573, y: 290, bitmap: "canner_mode_0", scale: GUI_SCALE, clicker: {
+		"buttonMode": {type: "button", x: 400 + 54*GUI_SCALE, y: 60 + 75*GUI_SCALE, bitmap: "canner_mode_0", scale: GUI_SCALE, clicker: {
 			onClick: function(container, tile){
 				if(tile.data.progress == 0){
 					tile.data.mode = (tile.data.mode + 1) % 4;
@@ -157,7 +155,7 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 		var content = this.container.getGuiContent();
 		if(content){
 			this.updateElement(content.elements.buttonMode, "canner_mode_" + this.data.mode);
-			this.updateElement(content.elements.background, "canner_arrows_" + this.data.mode);
+			this.updateElement(content.elements.background, "canner_background_" + this.data.mode);
 			var element = content.elements.slotSource;
 			var texture = "canner_slot_source_" + this.data.mode;
 			if(element.bitmap != texture){

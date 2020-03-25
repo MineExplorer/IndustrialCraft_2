@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("electricHeatGenerator");
 Block.createBlock("electricHeatGenerator", [
 	{name: "Electric Heater", texture: [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
-], "opaque");
+], "stone");
 TileRenderer.setStandartModel(BlockID.electricHeatGenerator, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 6, [["machine_bottom", 0], ["ind_furnace_side", 1], ["heat_generator_side", 1], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
@@ -34,16 +34,16 @@ var guiElectricHeatGenerator = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"slot0": {type: "slot", x: 440, y: 120, isValid: getValidCoilSlotFunction(0)},
-		"slot1": {type: "slot", x: 500, y: 120, isValid: getValidCoilSlotFunction(1)},
-		"slot2": {type: "slot", x: 560, y: 120, isValid: getValidCoilSlotFunction(2)},
-		"slot3": {type: "slot", x: 620, y: 120, isValid: getValidCoilSlotFunction(3)},
-		"slot4": {type: "slot", x: 680, y: 120, isValid: getValidCoilSlotFunction(4)},
-		"slot5": {type: "slot", x: 440, y: 180, isValid: getValidCoilSlotFunction(5)},
-		"slot6": {type: "slot", x: 500, y: 180, isValid: getValidCoilSlotFunction(6)},
-		"slot7": {type: "slot", x: 560, y: 180, isValid: getValidCoilSlotFunction(7)},
-		"slot8": {type: "slot", x: 620, y: 180, isValid: getValidCoilSlotFunction(8)},
-		"slot9": {type: "slot", x: 680, y: 180, isValid: getValidCoilSlotFunction(9)},
+		"slot0": {type: "slot", x: 440, y: 120, maxStackSize: 1, isValid: function(id){return id == ItemID.coil}},
+		"slot1": {type: "slot", x: 500, y: 120, maxStackSize: 1, isValid: function(id){return id == ItemID.coil}},
+		"slot2": {type: "slot", x: 560, y: 120, maxStackSize: 1, isValid: function(id){return id == ItemID.coil}},
+		"slot3": {type: "slot", x: 620, y: 120, maxStackSize: 1, isValid: function(id){return id == ItemID.coil}},
+		"slot4": {type: "slot", x: 680, y: 120, maxStackSize: 1, isValid: function(id){return id == ItemID.coil}},
+		"slot5": {type: "slot", x: 440, y: 180, maxStackSize: 1, isValid: function(id){return id == ItemID.coil}},
+		"slot6": {type: "slot", x: 500, y: 180, maxStackSize: 1, isValid: function(id){return id == ItemID.coil}},
+		"slot7": {type: "slot", x: 560, y: 180, maxStackSize: 1, isValid: function(id){return id == ItemID.coil}},
+		"slot8": {type: "slot", x: 620, y: 180, maxStackSize: 1, isValid: function(id){return id == ItemID.coil}},
+		"slot9": {type: "slot", x: 680, y: 180, maxStackSize: 1, isValid: function(id){return id == ItemID.coil}},
 		"slotEnergy": {type: "slot", x: 340, y: 180, isValid: MachineRegistry.isValidEUStorage},
 		"energyScale": {type: "scale", x: 342, y: 110, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 530, y: 264, width: 300, height: 30, text: "0    /"},
@@ -54,33 +54,6 @@ var guiElectricHeatGenerator = new UI.StandartWindow({
 Callback.addCallback("LevelLoaded", function(){
 	MachineRegistry.updateGuiHeader(guiElectricHeatGenerator, "Electric Heater");
 });
-
-function checkCoilSlot(index, id, count, data, container){
-	var slot = container.getSlot("slot"+index);
-	if(id == ItemID.coil && slot.id == 0){
-		if(count == 1) return true;
-		var slotFinded = false;
-		for(var i = 9; i < 46; i++){
-			var invSlot = Player.getInventorySlot(i);
-			if(invSlot.id == id && invSlot.count == count){
-				Player.setInventorySlot(i, id, count - 1, data);
-				slotFinded = true;
-				break;
-			}
-		}
-		if(slotFinded){
-			slot.id = id;
-			slot.count = 1;
-		}
-	}
-	return false;
-}
-
-function getValidCoilSlotFunction(index){
-	return function(id, count, data, container){
-		return checkCoilSlot(index, id, count, data, container);
-	}
-}
 
 MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
     defaultValues: {

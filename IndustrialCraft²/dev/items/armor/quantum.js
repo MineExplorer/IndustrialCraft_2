@@ -3,15 +3,20 @@ IDRegistry.genItemID("quantumChestplate");
 IDRegistry.genItemID("quantumLeggings");
 IDRegistry.genItemID("quantumBoots");
 
-Item.createArmorItem("quantumHelmet", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 5, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 10000000, texture: "armor/quantum_2.png", isTech: true});
-Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumHelmet", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 5, durability: 27, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 27, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 27, texture: "armor/quantum_2.png", isTech: true});
+Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 27, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 8192, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 8192, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 8192, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumHelmet, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumChestplate, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumLeggings, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumBoots, "Eu", 10000000, 8192, 4, "armor", true);
+
+Item.addToCreative(ItemID.quantumHelmet, 1, 1);
+Item.addToCreative(ItemID.quantumChestplate, 1, 1);
+Item.addToCreative(ItemID.quantumLeggings, 1, 1);
+Item.addToCreative(ItemID.quantumBoots, 1, 1);
 
 ItemName.setRarity(ItemID.quantumHelmet, 2);
 ItemName.setRarity(ItemID.quantumChestplate, 2);
@@ -28,15 +33,15 @@ IDRegistry.genItemID("quantumChestplateUncharged");
 IDRegistry.genItemID("quantumLeggingsUncharged");
 IDRegistry.genItemID("quantumBootsUncharged");
 
-Item.createArmorItem("quantumHelmetUncharged", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 2, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumChestplateUncharged", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 10000000, texture: "armor/quantum_2.png", isTech: true});
-Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumHelmetUncharged", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 2, durability: 27, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumChestplateUncharged", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 27, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 27, texture: "armor/quantum_2.png", isTech: true});
+Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 27, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 8192, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 8192, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 8192, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 8192, 4, "armor");
+ChargeItemRegistry.registerExtraItem(ItemID.quantumHelmetUncharged, 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumChestplateUncharged, 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumLeggingsUncharged, 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumBootsUncharged, 10000000, 8192, 4, "armor", true);
 
 ItemName.setRarity(ItemID.quantumHelmetUncharged, 2);
 ItemName.setRarity(ItemID.quantumChestplateUncharged, 2);
@@ -94,10 +99,12 @@ var runTime = 0;
 
 var QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params, slot, index, maxDamage){
+		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		var type = params.type;
-		if(type==2 || type==3 || type==11){
+		if(energyStored >= 2500 && (type==2 || type==3 || type==11)){
 			var energy = params.damage * 2500;
-			slot.data = Math.min(slot.data + energy, maxDamage);
+			ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - energy, 0));
+			return true;
 		}
 		if(type==5 && (index==1 || index==3)){
 			var damage = 0;
@@ -119,7 +126,7 @@ var QUANTUM_ARMOR_FUNCS = {
 					Entity.setHealth(player, Entity.getHealth(player) + params.damage - damage);
 				}
 			}
-			if(index==3 && slot.data + 2500 <= maxDamage && (damage > 0 || height >= 22)){
+			else if(energyStored >= 2500 && (damage > 0 || height >= 22)){
 				params.damage = damage;
 				damage = Math.min(params.damage, Math.floor((maxDamage - slot.data)/2500));
 				if(params.damage > damage){
@@ -127,33 +134,40 @@ var QUANTUM_ARMOR_FUNCS = {
 				} else {
 					Game.prevent();
 				}
-				slot.data = slot.data + damage*2500;
+				ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - damage * 2500, 0));
+				return true;
 			}
 		}
-		if(type==9 && index==0 && slot.data + 500 <= maxDamage){
+		if(type==9 && index==0 && energyStored >= 500){
 			Game.prevent();
 			Entity.addEffect(player, MobEffect.waterBreathing, 1, 2);
-			slot.data += 500;
+			ChargeItemRegistry.setEnergyStored(slot, energyStored - 500);
+			return true;
 		}
-		Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 		return false;
 	},
 	
 	tick: function(slot, index, maxDamage){
 		var armor = MachineRecipeRegistry.getRecipeResult("quantum-armor-charge", slot.id);
-		if(slot.data >= maxDamage){
-			slot.id = armor.uncharged;
+		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
+		if(energyStored < 2500){
+			var newId = armor.uncharged;
+		} else {
+			var newId = armor.charged;
+		}
+		if(slot.id != newId){
+			slot.id = newId;
 			Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 		}
-		else{
+		if(energyStored > 0){
 			switch (index){
 			case 0:
+				var newEnergyStored = energyStored;
 				if(RadiationAPI.playerRad > 0){
-					if(maxDamage - slot.data >= 100000){
+					if(energyStored >= 100000){
 						RadiationAPI.playerRad = 0;
 						Entity.clearEffect(player, MobEffect.poison);
-						slot.data += 100000;
-						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+						newEnergyStored -= 100000;
 					}
 				} else {
 					Entity.clearEffect(player, MobEffect.poison);
@@ -161,8 +175,8 @@ var QUANTUM_ARMOR_FUNCS = {
 				Entity.clearEffect(player, MobEffect.wither);
 				
 				var hunger = Player.getHunger();
-				if(hunger < 20){
-					var i = World.getThreadTime%36+9;
+				if(hunger < 20 && newEnergyStored >= 500){
+					var i = World.getThreadTime%36;
 					var item = Player.getInventorySlot(i);
 					if(item.id == ItemID.tinCanFull){
 						var count = Math.min(20 - hunger, item.count);
@@ -170,39 +184,45 @@ var QUANTUM_ARMOR_FUNCS = {
 						item.count -= count;
 						Player.setInventorySlot(i, item.count ? item.id : 0, item.count, item.data);
 						Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+						newEnergyStored -= 500;
 						break;
 					}
 				}
 				
-				var extra = slot.extra;
-				var nightvision = extra? extra.getBoolean("nv") : false;
-				if(nightvision){
+				var nightvision = slot.extra? slot.extra.getBoolean("nv") : false;
+				if(nightvision && newEnergyStored > 0){
 					var coords = Player.getPosition();
 					var time = World.getWorldTime()%24000;
-					if(World.getLightLevel(coords.x, coords.y, coords.z)==15 && time <= 12000){
-						Entity.addEffect(player, MobEffect.blindness, 1, 25);
+					if(World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000){
+						Entity.addEffect(Player.get(), MobEffect.blindness, 1, 25);
+						Entity.clearEffect(Player.get(), MobEffect.nightVision);
+					} else {
+						Entity.addEffect(Player.get(), MobEffect.nightVision, 1, 225);
 					}
-					Entity.addEffect(player, MobEffect.nightVision, 1, 225);
-					if(World.getThreadTime()%20==0){
-						slot.data = Math.min(slot.data+20, maxDamage);
-						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+					if(World.getThreadTime()%20 == 0){
+						newEnergyStored = Math.max(newEnergyStored - 20, 0);
 					}
+				}
+				
+				if(energyStored != newEnergyStored){
+					ChargeItemRegistry.setEnergyStored(slot, energyStored);
+					Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 				}
 			break;
 			case 1:
 				var extra = slot.extra;
 				var hover = extra? extra.getBoolean("hover") : false;
-				if(hover && slot.data < maxDamage){
+				if(hover){
 					var vel = Player.getVelocity();
 					if(vel.y.toFixed(4) == fallVelocity){
 						extra.putBoolean("hover", false);
 						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 						Game.message("§4" + Translation.translate("Hover mode disabled"));
 					}
-					else if(vel.y < -0.1){
+					else if(vel.y < -0.1 && energyStored >= 20){
 						Player.setVelocity(vel.x, -0.1, vel.z);
-						if(World.getThreadTime() % 5 == 0){
-							slot.data = Math.min(slot.data+20, maxDamage);
+						if(World.getThreadTime()%5 == 0){
+							ChargeItemRegistry.setEnergyStored(slot, energyStored - 20);
 							Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 						}
 					}
@@ -219,15 +239,11 @@ var QUANTUM_ARMOR_FUNCS = {
 				if(runTime > 2 && !Player.getFlying()){
 					Entity.addEffect(player, MobEffect.movementSpeed, 6, 5);
 					if(World.getThreadTime()%5==0){
-						slot.data = Math.min(slot.data + Math.floor(horizontalVel*600), maxDamage);
+						ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - Math.floor(horizontalVel*600)));
 						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 					}
 				}
 			break;
-			}
-			if(slot.id != armor.charged){
-				slot.id = armor.charged;
-				Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 			}
 		}
 		return false;

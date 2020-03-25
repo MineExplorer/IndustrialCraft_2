@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("metalFormer");
 Block.createBlock("metalFormer", [
 	{name: "Metal Former", texture: [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "opaque");
+], "stone");
 TileRenderer.setStandartModel(BlockID.metalFormer, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.metalFormer, 0, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.metalFormer, 4, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -51,6 +51,7 @@ Callback.addCallback("PreLoaded", function(){
 		"ItemID.ingotCopper": {id: ItemID.cableCopper0, count: 3},
 		"ItemID.ingotGold": {id: ItemID.cableGold0, count: 4},
 		265: {id: ItemID.cableIron0, count: 4},
+		266: {id: ItemID.cableGold0, count: 4},
 		"ItemID.casingTin": {id: ItemID.tinCanEmpty, count: 1},
 		"ItemID.plateIron": {id: ItemID.fuelRod, count: 1},
 	}, true);

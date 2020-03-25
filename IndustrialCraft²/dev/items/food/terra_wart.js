@@ -11,7 +11,7 @@ var negativePotions = [
 
 IDRegistry.genItemID("terraWart");
 Item.createFoodItem("terraWart", "Terra Wart", {name: "terra_wart"}, {food: 1});
-Item.registerNameOverrideFunction(ItemID.terraWart, RARE_ITEM_NAME);
+ItemName.setRarity(ItemID.terraWart, 2, true);
 
 Callback.addCallback("FoodEaten", function(heal, satRatio){
     if(Player.getCarriedItem().id == ItemID.terraWart){

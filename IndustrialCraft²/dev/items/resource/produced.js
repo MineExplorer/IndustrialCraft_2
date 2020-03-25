@@ -1,10 +1,10 @@
 IDRegistry.genItemID("iridiumChunk");
 Item.createItem("iridiumChunk", "Iridium", {name: "iridium"});
-Item.registerNameOverrideFunction(ItemID.iridiumChunk, RARE_ITEM_NAME);
+ItemName.setRarity(ItemID.iridiumChunk, 2, true);
 
 IDRegistry.genItemID("plateReinforcedIridium");
 Item.createItem("plateReinforcedIridium", "Iridium Reinforced Plate", {name: "plate_reinforced_iridium"});
-Item.registerNameOverrideFunction(ItemID.plateReinforcedIridium, RARE_ITEM_NAME);
+ItemName.setRarity(ItemID.plateReinforcedIridium, 2, true);
 
 IDRegistry.genItemID("ingotAlloy");
 Item.createItem("ingotAlloy", "Alloy Ingot", {name: "ingot_alloy"});

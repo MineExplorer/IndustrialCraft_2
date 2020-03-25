@@ -1,9 +1,10 @@
 IDRegistry.genItemID("nightvisionGoggles");
-Item.createArmorItem("nightvisionGoggles", "Nightvision Goggles", {name: "nightvision"}, {type: "helmet", armor: 1, durability: 100000, texture: "armor/nightvision_1.png", isTech: true});
-ChargeItemRegistry.registerItem(ItemID.nightvisionGoggles, "Eu", 100000, 256, 2, "armor", true);
+Item.createArmorItem("nightvisionGoggles", "Nightvision Goggles", {name: "nightvision"}, {type: "helmet", armor: 1, durability: 27, texture: "armor/nightvision_1.png", isTech: true});
+ChargeItemRegistry.registerExtraItem(ItemID.nightvisionGoggles, "Eu", 100000, 256, 2, "armor", true);
+Item.addToCreative(ItemID.nightvisionGoggles, 1, 1);
 Item.registerNameOverrideFunction(ItemID.nightvisionGoggles, ItemName.showItemStorage);
 
-Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: Item.getMaxDamage(ItemID.nightvisionGoggles)}, [
+Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: 27}, [
 	"xbx",
 	"aga",
 	"rcr"
@@ -16,18 +17,20 @@ Armor.registerFuncs("nightvisionGoggles", {
 		return false;
 	},
 	tick: function(slot, index, maxDamage){
-		var extra = slot.extra;
-		var nightvision = extra? extra.getBoolean("nv") : false;
-		if(nightvision && slot.data < maxDamage){
+		var nightvision = slot.extra? slot.extra.getBoolean("nv") : false;
+		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
+		if(nightvision && energyStored > 0){
 			var coords = Player.getPosition();
 			var time = World.getWorldTime()%24000;
 			if(World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000){
 				Entity.addEffect(Player.get(), MobEffect.blindness, 1, 25);
+				Entity.clearEffect(Player.get(), MobEffect.nightVision);
+			} else {
+				Entity.addEffect(Player.get(), MobEffect.nightVision, 1, 225);
 			}
-			Entity.addEffect(Player.get(), MobEffect.nightVision, 1, 225);
-			if(World.getThreadTime()%20==0){
-				slot.data = Math.min(slot.data+20, maxDamage);
-				return true;
+			if(World.getThreadTime()%20 == 0){
+				ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
+				Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 			}
 		}
 		return false;

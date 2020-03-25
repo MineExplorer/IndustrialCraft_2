@@ -7,9 +7,13 @@ Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill_iridium"}, {stack
 Item.setGlint(ItemID.iridiumDrill, true);
 ItemName.setRarity(ItemID.iridiumDrill, 2);
 
-ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 100, 1, "tool", true);
-ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 100, 1, "tool", true);
-ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 2048, 3, "tool", true);
+ChargeItemRegistry.registerExtraItem(ItemID.drill, "Eu", 30000, 100, 1, "tool", true);
+ChargeItemRegistry.registerExtraItem(ItemID.diamondDrill, "Eu", 30000, 100, 1, "tool", true);
+ChargeItemRegistry.registerExtraItem(ItemID.iridiumDrill, "Eu", 1000000, 2048, 3, "tool", true);
+
+Item.addToCreative(ItemID.drill, 1, 1);
+Item.addToCreative(ItemID.diamondDrill, 1, 1);
+Item.addToCreative(ItemID.iridiumDrill, 1, 1);
 
 Item.registerNameOverrideFunction(ItemID.drill, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.diamondDrill, ItemName.showItemStorage);
@@ -35,18 +39,18 @@ Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
 });
 
 
-Recipes.addShaped({id: ItemID.drill, count: 1, data: Item.getMaxDamage(ItemID.drill)}, [
+Recipes.addShaped({id: ItemID.drill, count: 1, data: 27}, [
 	" p ",
 	"ppp",
 	"pxp"
 ], ['x', ItemID.powerUnit, 0, 'p', ItemID.plateIron, 0]);
 
-Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: Item.getMaxDamage(ItemID.diamondDrill)}, [
+Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: 27}, [
 	" a ",
 	"ada"
 ], ['d', ItemID.drill, -1, 'a', 264, 0], ChargeItemRegistry.transferEnergy);
 
-Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: Item.getMaxDamage(ItemID.iridiumDrill)}, [
+Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: 27}, [
 	" a ",
 	"ada",
 	" e "
@@ -93,17 +97,17 @@ ToolType.drill = {
 		return true;
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
-		if(item.data + this.toolMaterial.energyPerUse <= Item.getMaxDamage(item.id)){
+		if(ChargeItemRegistry.getEnergyStored(item) >= this.toolMaterial.energyPerUse){
 			return destroyTime;
 		}
 		return params.base;
 	},
 	useItem: function(coords, item, block){
 		let place = coords;
-		if(!canTileBeReplaced(block.id, block.data)){
+		if(!World.canTileBeReplaced(block.id, block.data)){
 			place = coords.relative;
 			let tile = World.getBlock(place.x, place.y, place.z);
-			if(!canTileBeReplaced(tile.id, tile.data)){
+			if(!World.canTileBeReplaced(tile.id, tile.data)){
 				return;
 			}
 		}
@@ -134,7 +138,7 @@ ToolType.drill = {
 		this.playDestroySound(item, block);
 	},
 	playDestroySound: function(item, block){
-		if(Config.soundEnabled && item.data + this.toolMaterial.energyPerUse <= Item.getMaxDamage(item.id)){
+		if(Config.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.toolMaterial.energyPerUse){
 			let hardness = Block.getDestroyTime(block.id);
 			if(hardness > 1 || hardness < 0){
 				SoundAPI.playSound("Tools/Drill/DrillHard.ogg", false, true);
@@ -163,7 +167,7 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 2
 	onBroke: function(item){return true;},
 	onAttack: ToolType.drill.onAttack,
 	calcDestroyTime: function(item, coords, block, params, destroyTime){
-		if(item.data + 800 <= Item.getMaxDamage(item.id)){
+		if(ChargeItemRegistry.getEnergyStored(item) >= 800){
 			let mode = item.extra? item.extra.getInt("mode") : 0;
 			let material = ToolAPI.getBlockMaterialName(block.id);
 			if(mode >= 2 && (material == "dirt" || material == "stone")){
@@ -198,7 +202,8 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 2
 		this.playDestroySound(item, block);
 		let mode = item.extra? item.extra.getInt("mode") : 0;
 		let material = ToolAPI.getBlockMaterialName(block.id);
-		if(mode >= 2 && (material == "dirt" || material == "stone") && item.data + 800 <= Item.getMaxDamage(item.id)){
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		if(mode >= 2 && (material == "dirt" || material == "stone") && energyStored >= 800){
 			let X = 1;
 			let Y = 1;
 			let Z = 1;
@@ -217,9 +222,10 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 2
 						blockID = World.getBlockID(xx, yy, zz);
 						let material = ToolAPI.getBlockMaterialName(blockID);
 						if(material == "dirt" || material == "stone"){
-							item.data += 800;
+							energyStored -= 800;
 							World.destroyBlock(xx, yy, zz, true);
-							if(item.data + 800 >= Item.getMaxDamage(item.id)){
+							if(energyStored < 800){
+								ChargeItemRegistry.setEnergyStored(item, energyStored);
 								Player.setCarriedItem(item.id, 1, item.data, item.extra);
 								return;
 							}
@@ -227,6 +233,7 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 2
 					}
 				}
 			}
+			ChargeItemRegistry.setEnergyStored(item, energyStored);
 			Player.setCarriedItem(item.id, 1, item.data, item.extra);
 		}
 	},

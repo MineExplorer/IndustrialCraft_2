@@ -16,6 +16,11 @@ ToolLib.setTool(ItemID.bronzePickaxe, "bronze", ToolType.pickaxe);
 ToolLib.setTool(ItemID.bronzeAxe, "bronze", ToolType.axe);
 ToolLib.setTool(ItemID.bronzeHoe, "bronze", ToolType.hoe);
 
+Item.addRepairItemIds(ItemID.bronzeSword, [ItemID.ingotBronze]);
+Item.addRepairItemIds(ItemID.bronzeShovel, [ItemID.ingotBronze]);
+Item.addRepairItemIds(ItemID.bronzePickaxe, [ItemID.ingotBronze]);
+Item.addRepairItemIds(ItemID.bronzeAxe, [ItemID.ingotBronze]);
+Item.addRepairItemIds(ItemID.bronzeHoe, [ItemID.ingotBronze]);
 
 Recipes.addShaped({id: ItemID.bronzeSword, count: 1, data: 0}, [
 	"a",

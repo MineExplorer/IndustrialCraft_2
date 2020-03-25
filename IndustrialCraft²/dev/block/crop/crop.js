@@ -1,11 +1,9 @@
 IDRegistry.genBlockID("crop");
 Block.createBlock("crop", [
 	{name: "crop", texture: [["stick", 0]], inCreative: false}
-], "plant");
-
-var shape = new ICRender.CollisionShape();
-shape.addEntry().addBox(7/8, 7/8, 7/8, 1/8, 1/8, 1/8);
-BlockRenderer.setCustomCollisionShape(BlockID.crop, 0, shape);
+], {base: 59, rendertype: 6, explosionres: 0});
+ToolAPI.registerBlockMaterial(BlockID.crop, "wood");
+TileRenderer.setEmptyCollisionShape(BlockID.crop);
 BlockRenderer.enableCoordMapping(BlockID.crop, 0, TileRenderer.getCropModel(["stick", 0]));
 
 Block.registerDropFunctionForID(BlockID.crop, function(coords, id, data, diggingLevel, toolLevel){ 

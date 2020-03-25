@@ -1,11 +1,3 @@
-Block.createSpecialType({
-    base: 59,
-    destroytime: 0,
-    explosionres: 0,
-    opaque: false,
-    lightopacity: 0,
-}, "plant");
-
 var AgricultureAPI = {
     cropCards:[],
     abstractFunctions:{/* file: baseCropClasses.js */},
@@ -18,7 +10,7 @@ var AgricultureAPI = {
         }
         this.addMissingFuncsToCard(card, AgricultureAPI.abstractFunctions["IC2CropCard"]);
         if(card.baseSeed.addToCreative != false){
-			Item.addToCreative(ItemID.cropSeedBag, 1, this.cropCards.length);
+			//Item.addToCreative(ItemID.cropSeedBag, 1, this.cropCards.length);
 		}
         this.cropCards.push(card);
     },

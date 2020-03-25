@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("tank");
 Block.createBlock("tank", [
 	{name: "Tank", texture: [["machine_bottom", 0], ["machine_top", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0]], inCreative: true}
-], "opaque");
+], "stone");
 
 Block.registerDropFunction("tank", function(coords, blockID, blockData, level){
 	return MachineRegistry.getMachineDrop(coords, blockID, level);

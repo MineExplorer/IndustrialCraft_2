@@ -1,12 +1,3 @@
-Block.createSpecialType({
-	destroytime: 2,
-	explosionres: 0.5,
-	opaque: false,
-	lightopacity: 0,
-	renderlayer: 3,
-	lightlevel: 15
-}, "light");
-
 IDRegistry.genBlockID("luminator");
 Block.createBlock("luminator", [
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
@@ -15,7 +6,7 @@ Block.createBlock("luminator", [
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false}
-], "part");
+], {renderlayer: 2});
 
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 15/16, z: 0}, {x: 1, y: 1, z: 1}, 0);
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1, y: 1/16, z: 1}, 1);
@@ -37,7 +28,11 @@ Block.createBlock("luminator_on", [
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false}
-], "light");
+], {
+	destroytime: 2,
+	explosionres: 0.5,
+	lightlevel: 15
+});
 
 Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 15/16, z: 0}, {x: 1, y: 1, z: 1}, 0);
 Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 0, z: 0}, {x: 1, y: 1/16, z: 1}, 1);
@@ -58,7 +53,6 @@ Callback.addCallback("PreLoaded", function(){
 		"aaa",
 	], ['a', 20, 0, 'x', ItemID.cableCopper1, 0, 'b', ItemID.cableTin0, 0, 'c', ItemID.casingIron, 0]);
 });
-
 
 
 MachineRegistry.registerElectricMachine(BlockID.luminator, {

@@ -1,7 +1,8 @@
 IDRegistry.genBlockID("nuke");
 Block.createBlock("nuke", [
 	{name: "Nuke", texture: [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]], inCreative: true}
-], "opaque");
+], "stone");
+ItemName.setRarity(ItemID.nuke, 1, true);
 TileRenderer.setStandartModel(BlockID.nuke, [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]]);
 TileRenderer.registerRenderModel(BlockID.nuke, 0, [["tnt_active", 0]]);
 

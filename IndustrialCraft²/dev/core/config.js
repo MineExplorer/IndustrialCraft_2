@@ -18,3 +18,11 @@ Callback.addCallback("LevelLoaded", function(){
 	Config.reload();
 	player = Player.get();
 });
+
+isLevelDisplayed = false;
+Callback.addCallback("LevelDisplayed", function(){
+	isLevelDisplayed = true;
+});
+Callback.addCallback("LevelLeft", function(){
+	isLevelDisplayed = false;
+});

@@ -1,6 +1,6 @@
 IDRegistry.genItemID("matter");
 Item.createItem("matter", "UU-Matter", {name: "uu_matter"});
-Item.registerNameOverrideFunction(ItemID.matter, RARE_ITEM_NAME);
+ItemName.setRarity(ItemID.matter, 2, true);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.iridiumChunk, count: 1, data: 0}, [

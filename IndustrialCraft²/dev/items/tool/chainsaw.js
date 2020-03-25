@@ -1,10 +1,11 @@
 IDRegistry.genItemID("chainsaw");
 Item.createItem("chainsaw", "Chainsaw", {name: "chainsaw", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chainsaw, "Eu", 30000, 100, 1, "tool", true);
+ChargeItemRegistry.registerExtraItem(ItemID.chainsaw, "Eu", 30000, 100, 1, "tool", true);
+Item.addToCreative(ItemID.chainsaw, 1, 1);
 
 Item.registerNameOverrideFunction(ItemID.chainsaw, ItemName.showItemStorage);
 
-Recipes.addShaped({id: ItemID.chainsaw, count: 1, data: Item.getMaxDamage(ItemID.chainsaw)}, [
+Recipes.addShaped({id: ItemID.chainsaw, count: 1, data: 27}, [
 	" pp",
 	"ppp",
 	"xp "
@@ -40,7 +41,7 @@ ToolType.chainsaw = {
 		return true;
 	},
 	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
-		if(item.data + this.toolMaterial.energyPerUse <= Item.getMaxDamage(item.id)){
+		if(ChargeItemRegistry.getEnergyStored(item) >= this.toolMaterial.energyPerUse){
 			return destroyTime;
 		}
 		else{
@@ -54,10 +55,10 @@ ToolLib.setTool(ItemID.chainsaw, {energyPerUse: 60, level: 3, efficiency: 16, da
 let chainsawLoop = SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawIdle.ogg", true, 1);
 SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawStop.ogg", false, 1);
 Callback.addCallback("tick", function(){
-	if(!Config.soundEnabled) {return;}
+	if(!Config.soundEnabled || !isLevelDisplayed) {return;}
 	let item = Player.getCarriedItem();
 	let tool = ToolAPI.getToolData(item.id);
-	let energyStored = Item.getMaxDamage(item.id) - item.data;
+	let energyStored = ChargeItemRegistry.getEnergyStored(item);
 	if(tool && tool.soundType == "chainsaw" && energyStored >= tool.toolMaterial.energyPerUse){
 		if(!chainsawLoop.isPlaying()){
 			chainsawLoop.start();

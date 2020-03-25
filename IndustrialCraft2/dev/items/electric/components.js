@@ -16,6 +16,16 @@ Item.createItem("powerUnitSmall", "Small Power Unit", {name: "power_unit_small",
 IDRegistry.genItemID("heatConductor");
 Item.createItem("heatConductor", "Heat Conductor", {name: "heat_conductor", meta: 0});
 
+Item.addCreativeGroup("component", Translation.translate("Components"), [
+	ItemID.circuitBasic,
+	ItemID.circuitAdvanced,
+	ItemID.coil,
+	ItemID.electricMotor,
+	ItemID.powerUnit,
+	ItemID.powerUnitSmall,
+	ItemID.heatConductor
+]);
+
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.circuitBasic, count: 1, data: 0}, [
 		"xxx",

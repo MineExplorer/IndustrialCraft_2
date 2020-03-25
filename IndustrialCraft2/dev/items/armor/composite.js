@@ -18,6 +18,13 @@ Item.addRepairItemIds(ItemID.compositeChestplate, [ItemID.plateAlloy]);
 Item.addRepairItemIds(ItemID.compositeLeggings, [ItemID.plateAlloy]);
 Item.addRepairItemIds(ItemID.compositeBoots, [ItemID.plateAlloy]);
 
+/*Item.addCreativeGroup("armorСomposite", "Composite Armor", [
+	ItemID.compositeHelmet,
+	ItemID.compositeChestplate,
+	ItemID.compositeLeggings,
+	ItemID.compositeBoots
+]);*/
+
 Recipes.addShaped({id: ItemID.compositeHelmet, count: 1, data: 0}, [
 	"xxx",
 	"x x"

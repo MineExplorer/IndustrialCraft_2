@@ -19,6 +19,17 @@ Item.createItem("casingGold", "Gold Casing", {name: "casing_gold"});
 IDRegistry.genItemID("casingLead");
 Item.createItem("casingLead", "Lead Casing", {name: "casing_lead"});
 
+// creative group
+Item.addCreativeGroup("casingMetal", Translation.translate("Metal Casing"), [
+	ItemID.casingCopper,
+	ItemID.casingLead,
+	ItemID.casingGold,
+	ItemID.casingSteel,
+	ItemID.casingIron,
+	ItemID.casingBronze,
+	ItemID.casingTin
+]);
+
 // recipes
 Callback.addCallback("PreLoaded", function(){
 	ICTool.addRecipe({id: ItemID.casingCopper, count: 2, data: 0}, [{id: ItemID.plateCopper, data: 0}], ItemID.craftingHammer);

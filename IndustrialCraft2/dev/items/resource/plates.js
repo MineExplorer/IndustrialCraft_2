@@ -22,6 +22,17 @@ Item.createItem("plateLead", "Lead Plate", {name: "plate_lead"});
 IDRegistry.genItemID("plateLapis");
 Item.createItem("plateLapis", "Lapis Plate", {name: "plate_lapis"});
 
+Item.addCreativeGroup("plate", Translation.translate("Plates"), [
+	ItemID.plateCopper,
+	ItemID.plateTin,
+	ItemID.plateBronze,
+	ItemID.plateIron,
+	ItemID.plateSteel,
+	ItemID.plateGold,
+	ItemID.plateLead,
+	ItemID.plateLapis
+]);
+
 // recipes
 Callback.addCallback("PreLoaded", function(){
 	ICTool.addRecipe({id: ItemID.plateCopper, count: 1, data: 0}, [{id: ItemID.ingotCopper, data: 0}], ItemID.craftingHammer);

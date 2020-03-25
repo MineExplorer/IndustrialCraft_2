@@ -8,6 +8,13 @@ Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_c
 Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 27, texture: "armor/quantum_2.png", isTech: true});
 Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 27, texture: "armor/quantum_1.png", isTech: true});
 
+/*Item.addCreativeGroup("armorQuantumCharged", "Charged Quantum Armor", [
+	ItemID.quantumHelmet,
+	ItemID.quantumChestplate,
+	ItemID.quantumLeggings,
+	ItemID.quantumBoots
+]);*/
+
 ChargeItemRegistry.registerExtraItem(ItemID.quantumHelmet, "Eu", 10000000, 8192, 4, "armor", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.quantumChestplate, "Eu", 10000000, 8192, 4, "armor", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.quantumLeggings, "Eu", 10000000, 8192, 4, "armor", true, true);

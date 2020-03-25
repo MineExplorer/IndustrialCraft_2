@@ -34,6 +34,18 @@ IDRegistry.genItemID("rtgPellet");
 Item.createItem("rtgPellet", "Pellets of RTG Fuel", {name: "rtg_pellet"}, {stack: 1});
 RadiationAPI.regRadioactiveItem(ItemID.rtgPellet, 1, true);
 
+Item.addCreativeGroup("nuclear", Translation.translate("Nuclear"), [
+	ItemID.uranium,
+	ItemID.uranium235,
+	ItemID.smallUranium235,
+	ItemID.uranium238,
+	ItemID.smallUranium238,
+	ItemID.plutonium,
+	ItemID.smallPlutonium,
+	ItemID.mox,
+	ItemID.rtgPellet
+]);
+
 Recipes.addShaped({id: ItemID.uranium, count: 1, data: 0}, [
 	"xxx",
 	"aaa",

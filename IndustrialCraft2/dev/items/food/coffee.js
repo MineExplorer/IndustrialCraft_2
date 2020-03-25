@@ -85,6 +85,13 @@ Item.createFoodItem("mugDarkCoffee", "Dark Coffee", {name: "mug_dark_coffee"}, {
 IDRegistry.genItemID("mugCoffee");
 Item.createFoodItem("mugCoffee", "Coffee", {name: "mug_coffee"}, {stack: 1});
 
+Item.addCreativeGroup("coffee",Translation.translate("Coffee"), [
+	ItemID.mugEmpty,
+	ItemID.mugColdCoffee,
+	ItemID.mugDarkCoffee,
+	ItemID.mugCoffee
+]);
+
 Callback.addCallback("FoodEaten", CoffeeMug.onFoodEaten);
 Callback.addCallback("tick", CoffeeMug.tick);
 Callback.addCallback("EntityDeath", CoffeeMug.onDeath);
@@ -98,12 +105,12 @@ Callback.addCallback("PreLoaded", function(){
 	function(api, field, result){
 		Player.addItemToInventory(325, 1, 0);
 	});
-	
+
 	Recipes.addShaped({id: ItemID.mugCoffee, count: 1, data: 0}, [
 		"x",
 		"y",
 		"z",
 	], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0]);
-	
+
 	Recipes.addFurnace(ItemID.mugColdCoffee, ItemID.mugDarkCoffee, 0);
 });

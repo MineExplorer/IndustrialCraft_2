@@ -1,11 +1,19 @@
 IDRegistry.genItemID("drill");
 IDRegistry.genItemID("diamondDrill");
 IDRegistry.genItemID("iridiumDrill");
+
 Item.createItem("drill", "Mining Drill", {name: "drill"}, {stack: 1, isTech: true});
 Item.createItem("diamondDrill", "Diamond Drill", {name: "drill_diamond"}, {stack: 1, isTech: true});
 Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill_iridium"}, {stack: 1, isTech: true});
+
 Item.setGlint(ItemID.iridiumDrill, true);
 ItemName.setRarity(ItemID.iridiumDrill, 2);
+
+Item.addCreativeGroup("drills", Translation.translate("Drills"), [
+	ItemID.drill,
+	ItemID.diamondDrill,
+	ItemID.iridiumDrill
+]);
 
 ChargeItemRegistry.registerExtraItem(ItemID.drill, "Eu", 30000, 100, 1, "tool", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.diamondDrill, "Eu", 30000, 100, 1, "tool", true, true);

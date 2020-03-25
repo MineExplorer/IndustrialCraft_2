@@ -19,6 +19,13 @@ Item.addToCreative(ItemID.chargingLapotronCrystal, 1, 27);
 ChargeItemRegistry.registerExtraItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 8192, 4, "storage", true, true);
 ItemName.setRarity(ItemID.chargingLapotronCrystal, 1);
 
+Item.addCreativeGroup("batteryCharging", Translation.translate("Charging Batteries") , [
+	ItemID.chargingBattery,
+	ItemID.chargingAdvBattery,
+	ItemID.chargingCrystal,
+	ItemID.chargingLapotronCrystal
+]);
+
 Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name){
 	return {name: "charging_re_battery", meta: Math.round((27 - item.data) / 26 * 4)}
 });

@@ -77,3 +77,15 @@ Item.registerUseFunction("cellLava", function(coords, item, block){
 		Player.decreaseCarriedItem(1);
 	}
 });
+
+// creative group
+Item.addCreativeGroup("cells", Translation.translate("Cells"), [
+	ItemID.cellEmpty,
+	ItemID.cellWater,
+	ItemID.cellLava,
+	ItemID.cellBiomass,
+	ItemID.cellBiogas,
+	ItemID.cellCoolant,
+	ItemID.cellMatter,
+	ItemID.cellAir
+]);

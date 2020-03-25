@@ -8,6 +8,13 @@ Item.createArmorItem("nanoChestplate", "Nano Bodyarmor", {name: "nano_chestplate
 Item.createArmorItem("nanoLeggings", "Nano Leggings", {name: "nano_leggings"}, {type: "leggings", armor: 6, durability: 27, texture: "armor/nano_2.png", isTech: true});
 Item.createArmorItem("nanoBoots", "Nano Boots", {name: "nano_boots"}, {type: "boots", armor: 4, durability: 27, texture: "armor/nano_1.png", isTech: true});
 
+/*Item.addCreativeGroup("armorNanoCharged", "Charged Nano Armor", [
+	ItemID.nanoHelmet,
+	ItemID.nanoChestplate,
+	ItemID.nanoLeggings,
+	ItemID.nanoBoots
+]);*/
+
 ChargeItemRegistry.registerExtraItem(ItemID.nanoHelmet, "Eu",1000000, 2048, 3, "armor", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.nanoChestplate, "Eu", 1000000, 2048, 3, "armor", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.nanoLeggings, "Eu", 1000000, 2048, 3, "armor", true, true);

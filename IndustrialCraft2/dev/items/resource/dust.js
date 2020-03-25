@@ -41,6 +41,26 @@ Item.createItem("dustDiamond", "Diamond Dust", {name: "dust_diamond"});
 IDRegistry.genItemID("dustEnergium");
 Item.createItem("dustEnergium", "Energium Dust", {name: "dust_energium"});
 
+Item.addCreativeGroup("dustMetal", Translation.translate("Metal Dust"), [
+	ItemID.dustCopper,
+	ItemID.dustTin,
+	ItemID.dustBronze,
+	ItemID.dustIron,
+	ItemID.dustSteel,
+	ItemID.dustLead,
+	ItemID.dustGold,
+	ItemID.dustSilver
+]);
+
+Item.addCreativeGroup("dustNonMetal", Translation.translate("Non-Metal Dust"), [
+	ItemID.dustStone,
+	ItemID.dustCoal,
+	ItemID.dustSulfur,
+	ItemID.dustLapis,
+	ItemID.dustDiamond,
+	ItemID.dustEnergium
+]);
+
 // Small Dust
 IDRegistry.genItemID("dustSmallCopper");
 Item.createItem("dustSmallCopper", "Tiny Pile of Copper Dust", {name: "dust_copper_small"});
@@ -62,6 +82,16 @@ Item.createItem("dustSmallSilver", "Tiny Pile of Silver Dust", {name: "dust_silv
 
 IDRegistry.genItemID("dustSmallSulfur");
 Item.createItem("dustSmallSulfur", "Tiny Pile of Sulfur Dust", {name: "dust_sulfur_small"});
+
+Item.addCreativeGroup("dustSmall", Translation.translate("Small Dust"), [
+	ItemID.dustSmallCopper,
+	ItemID.dustSmallTin,
+	ItemID.dustSmallIron,
+	ItemID.dustSmallLead,
+	ItemID.dustSmallGold,
+	ItemID.dustSmallSilver,
+	ItemID.dustSmallSulfur
+]);
 
 // Recipe
 Recipes.addShaped({id: ItemID.dustEnergium, count: 9, data: 0}, [

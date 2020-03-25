@@ -18,3 +18,13 @@ Item.createItem("densePlateGold", "Dense Gold Plate", {name: "dense_plate_gold"}
 
 IDRegistry.genItemID("densePlateLead");
 Item.createItem("densePlateLead", "Dense Lead Plate", {name: "dense_plate_lead"});
+
+Item.addCreativeGroup("plateDense", Translation.translate("Desne Plates"), [
+	ItemID.densePlateCopper,
+	ItemID.densePlateTin,
+	ItemID.densePlateBronze,
+	ItemID.densePlateIron,
+	ItemID.densePlateSteel,
+	ItemID.densePlateGold,
+	ItemID.densePlateLead
+]);

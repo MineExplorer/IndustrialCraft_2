@@ -25,7 +25,7 @@ var ChargeItemRegistry = {
 		}
 		this.chargeData[id] = {
 			type: "normal",
-			prefix: itemType,
+			itemType: itemType,
 			energy: energyType,
 			id: id,
 			level: level || 0,
@@ -38,7 +38,7 @@ var ChargeItemRegistry = {
 	registerFlashItem: function(id, energyType, amount, level){
 		this.chargeData[id] = {
 			type: "flash",
-			prefix: "storage",
+			itemType: "storage",
 			id: id,
 			level: level || 0,
 			energy: energyType,
@@ -46,13 +46,16 @@ var ChargeItemRegistry = {
 		};
 	},
 	
-	registerExtraItem: function(id, energyType, capacity, transferLimit, level, itemType, addScale){
+	registerExtraItem: function(id, energyType, capacity, transferLimit, level, itemType, addScale, addToCreative){
 		if(addScale){
 			Item.setMaxDamage(id, 27);
 		}
+		if(addToCreative){
+			Item.addToCreative(id, addScale? 1 : 0, 1, (new ItemExtraData()).putInt("energy", capacity));
+		}
 		this.chargeData[id] = {
 			type: "extra",
-			prefix: itemType,
+			itemType: itemType,
 			energy: energyType,
 			id: id,
 			level: level || 0,
@@ -79,14 +82,14 @@ var ChargeItemRegistry = {
 		return (data && data.type == "flash");
 	},
 	
-	isValidItem: function(id, energyType, level, prefix){
+	isValidItem: function(id, energyType, level, itemType){
 		var data = this.getItemData(id);
-		return (data && data.type != "flash" && (!prefix || data.prefix == prefix) && data.energy == energyType && data.level <= level);
+		return (data && data.type != "flash" && (!itemType || data.itemType == itemType) && data.energy == energyType && data.level <= level);
 	},
 	
 	isValidStorage: function(id, energyType, level){
 		var data = this.getItemData(id);
-		return (data && data.prefix == "storage" && data.energy == energyType && data.level <= level);
+		return (data && data.itemType == "storage" && data.energy == energyType && data.level <= level);
 	},
 	
 	getEnergyStored: function(item, energyType){
@@ -96,7 +99,7 @@ var ChargeItemRegistry = {
 		}
 		if(data.type == "extra"){
 			if(item.extra){
-				return item.extra.getInt("energy") || Math.round((27 - (item.data || 1)) / 26 * data.maxCharge);
+				return item.extra.getInt("energy");
 			}
 			return Math.round((27 - (item.data || 1)) / 26 * data.maxCharge);
 		}
@@ -133,7 +136,7 @@ var ChargeItemRegistry = {
 			transf = data.transferLimit;
 		}
 		
-		if(data.energy != energyType || data.level > level || !(getFromAll || data.prefix == "storage")){
+		if(data.energy != energyType || data.level > level || !(getFromAll || data.itemType == "storage")){
 			return 0;
 		}
 		

@@ -16,6 +16,10 @@ Item.createItem("ingotLead", "Lead Ingot", {name: "ingot_lead"});
 IDRegistry.genItemID("ingotSilver");
 Item.createItem("ingotSilver", "Silver Ingot", {name: "ingot_silver"});
 
+Item.addCreativeGroup("ingot", Translation.translate("Copper Ingot"), [
+	ItemID.ingotCopper, ItemID.ingotTin, ItemID.ingotBronze, ItemID.ingotSteel, ItemID.ingotLead, ItemID.ingotSilver
+]);
+
 Callback.addCallback("PreLoaded", function(){
 	// from ore
 	Recipes.addFurnace(BlockID.oreCopper, ItemID.ingotCopper, 0);

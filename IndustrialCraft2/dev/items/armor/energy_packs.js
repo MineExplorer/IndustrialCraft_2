@@ -9,15 +9,10 @@ Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: 
 Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 27, texture: "armor/lappack_1.png", isTech: true});
 ItemName.setRarity(ItemID.lappack, 1);
 
-ChargeItemRegistry.registerExtraItem(ItemID.batpack, "Eu",  60000, 128, 1, "storage", true);
-ChargeItemRegistry.registerExtraItem(ItemID.advBatpack, "Eu",  600000, 512, 2, "storage", true);
-ChargeItemRegistry.registerExtraItem(ItemID.energypack, "Eu", 2000000, 2048, 3, "storage", true);
-ChargeItemRegistry.registerExtraItem(ItemID.lappack, "Eu", 10000000, 8192, 4, "storage", true);
-
-Item.addToCreative(ItemID.batpack, 1, 1);
-Item.addToCreative(ItemID.advBatpack, 1, 1);
-Item.addToCreative(ItemID.energypack, 1, 1);
-Item.addToCreative(ItemID.lappack, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.batpack, "Eu",  60000, 128, 1, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.advBatpack, "Eu",  600000, 512, 2, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.energypack, "Eu", 2000000, 2048, 3, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.lappack, "Eu", 10000000, 8192, 4, "storage", true, true);
 
 Item.registerNameOverrideFunction(ItemID.batpack, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.advBatpack, ItemName.showItemStorage);

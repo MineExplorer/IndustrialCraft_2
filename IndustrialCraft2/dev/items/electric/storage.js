@@ -1,26 +1,22 @@
 IDRegistry.genItemID("storageBattery");
 Item.createItem("storageBattery", "RE-Battery", {name: "re_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerExtraItem(ItemID.storageBattery, "Eu", 10000, 100, 1, "storage", true);
 Item.addToCreative(ItemID.storageBattery, 1, 27);
-Item.addToCreative(ItemID.storageBattery, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.storageBattery, "Eu", 10000, 100, 1, "storage", true, true);
 
 IDRegistry.genItemID("storageAdvBattery");
 Item.createItem("storageAdvBattery", "Advanced RE-Battery", {name: "adv_re_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerExtraItem(ItemID.storageAdvBattery, "Eu", 100000, 256, 2, "storage", true);
 Item.addToCreative(ItemID.storageAdvBattery, 1, 27);
-Item.addToCreative(ItemID.storageAdvBattery, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.storageAdvBattery, "Eu", 100000, 256, 2, "storage", true, true);
 
 IDRegistry.genItemID("storageCrystal");
 Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerExtraItem(ItemID.storageCrystal, "Eu", 1000000, 2048, 3, "storage", true);
 Item.addToCreative(ItemID.storageCrystal, 1, 27);
-Item.addToCreative(ItemID.storageCrystal, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.storageCrystal, "Eu", 1000000, 2048, 3, "storage", true, true);
 
 IDRegistry.genItemID("storageLapotronCrystal");
 Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerExtraItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 8192, 4, "storage", true);
 Item.addToCreative(ItemID.storageLapotronCrystal, 1, 27);
-Item.addToCreative(ItemID.storageLapotronCrystal, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 8192, 4, "storage", true, true);
 ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");

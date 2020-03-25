@@ -1,7 +1,6 @@
 IDRegistry.genItemID("nightvisionGoggles");
 Item.createArmorItem("nightvisionGoggles", "Nightvision Goggles", {name: "nightvision"}, {type: "helmet", armor: 1, durability: 27, texture: "armor/nightvision_1.png", isTech: true});
-ChargeItemRegistry.registerExtraItem(ItemID.nightvisionGoggles, "Eu", 100000, 256, 2, "armor", true);
-Item.addToCreative(ItemID.nightvisionGoggles, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.nightvisionGoggles, "Eu", 100000, 256, 2, "armor", true, true);
 Item.registerNameOverrideFunction(ItemID.nightvisionGoggles, ItemName.showItemStorage);
 
 Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: 27}, [

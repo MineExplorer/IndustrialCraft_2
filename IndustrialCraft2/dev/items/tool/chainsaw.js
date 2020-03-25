@@ -1,7 +1,6 @@
 IDRegistry.genItemID("chainsaw");
 Item.createItem("chainsaw", "Chainsaw", {name: "chainsaw", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerExtraItem(ItemID.chainsaw, "Eu", 30000, 100, 1, "tool", true);
-Item.addToCreative(ItemID.chainsaw, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.chainsaw, "Eu", 30000, 100, 1, "tool", true, true);
 
 Item.registerNameOverrideFunction(ItemID.chainsaw, ItemName.showItemStorage);
 

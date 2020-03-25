@@ -7,13 +7,9 @@ Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill_iridium"}, {stack
 Item.setGlint(ItemID.iridiumDrill, true);
 ItemName.setRarity(ItemID.iridiumDrill, 2);
 
-ChargeItemRegistry.registerExtraItem(ItemID.drill, "Eu", 30000, 100, 1, "tool", true);
-ChargeItemRegistry.registerExtraItem(ItemID.diamondDrill, "Eu", 30000, 100, 1, "tool", true);
-ChargeItemRegistry.registerExtraItem(ItemID.iridiumDrill, "Eu", 1000000, 2048, 3, "tool", true);
-
-Item.addToCreative(ItemID.drill, 1, 1);
-Item.addToCreative(ItemID.diamondDrill, 1, 1);
-Item.addToCreative(ItemID.iridiumDrill, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.drill, "Eu", 30000, 100, 1, "tool", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.diamondDrill, "Eu", 30000, 100, 1, "tool", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.iridiumDrill, "Eu", 1000000, 2048, 3, "tool", true, true);
 
 Item.registerNameOverrideFunction(ItemID.drill, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.diamondDrill, ItemName.showItemStorage);

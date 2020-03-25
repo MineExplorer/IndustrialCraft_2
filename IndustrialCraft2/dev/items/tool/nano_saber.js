@@ -1,8 +1,7 @@
 IDRegistry.genItemID("nanoSaber");
 Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack: 1, isTech: true});
 Item.setToolRender(ItemID.nanoSaber, true);
-ChargeItemRegistry.registerExtraItem(ItemID.nanoSaber, "Eu", 1000000, 2048, 3, "tool", true);
-Item.addToCreative(ItemID.nanoSaber, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.nanoSaber, "Eu", 1000000, 2048, 3, "tool", true, true);
 ItemName.setRarity(ItemID.nanoSaber, 1);
 Item.registerNameOverrideFunction(ItemID.nanoSaber, ItemName.showItemStorage);
 

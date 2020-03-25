@@ -8,15 +8,10 @@ Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_c
 Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 27, texture: "armor/quantum_2.png", isTech: true});
 Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 27, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerExtraItem(ItemID.quantumHelmet, "Eu", 10000000, 8192, 4, "armor", true);
-ChargeItemRegistry.registerExtraItem(ItemID.quantumChestplate, "Eu", 10000000, 8192, 4, "armor", true);
-ChargeItemRegistry.registerExtraItem(ItemID.quantumLeggings, "Eu", 10000000, 8192, 4, "armor", true);
-ChargeItemRegistry.registerExtraItem(ItemID.quantumBoots, "Eu", 10000000, 8192, 4, "armor", true);
-
-Item.addToCreative(ItemID.quantumHelmet, 1, 1);
-Item.addToCreative(ItemID.quantumChestplate, 1, 1);
-Item.addToCreative(ItemID.quantumLeggings, 1, 1);
-Item.addToCreative(ItemID.quantumBoots, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumHelmet, "Eu", 10000000, 8192, 4, "armor", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumChestplate, "Eu", 10000000, 8192, 4, "armor", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumLeggings, "Eu", 10000000, 8192, 4, "armor", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.quantumBoots, "Eu", 10000000, 8192, 4, "armor", true, true);
 
 ItemName.setRarity(ItemID.quantumHelmet, 2);
 ItemName.setRarity(ItemID.quantumChestplate, 2);

@@ -1,14 +1,12 @@
 IDRegistry.genItemID("electricHoe");
 Item.createItem("electricHoe", "Electric Hoe", {name: "electric_hoe", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerExtraItem(ItemID.electricHoe, "Eu", 10000, 100, 1, "tool", true);
+ChargeItemRegistry.registerExtraItem(ItemID.electricHoe, "Eu", 10000, 100, 1, "tool", true, true);
 Item.setToolRender(ItemID.electricHoe, true);
-Item.addToCreative(ItemID.electricHoe, 1, 1);
 Item.registerNameOverrideFunction(ItemID.electricHoe, ItemName.showItemStorage);
 
 IDRegistry.genItemID("electricTreetap");
 Item.createItem("electricTreetap", "Electric Treetap", {name: "electric_treetap", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerExtraItem(ItemID.electricTreetap, "Eu", 10000, 100, 1, "tool", true);
-Item.addToCreative(ItemID.electricTreetap, 1, 1);
+ChargeItemRegistry.registerExtraItem(ItemID.electricTreetap, "Eu", 10000, 100, 1, "tool", true, true);
 Item.registerNameOverrideFunction(ItemID.electricTreetap, ItemName.showItemStorage);
 
 Recipes.addShaped({id: ItemID.electricHoe, count: 1, data: 27}, [

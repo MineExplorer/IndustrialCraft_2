@@ -20,7 +20,7 @@ Item.createItem("crushedSilver", "Crushed Silver Ore", {name: "crushed_silver_or
 IDRegistry.genItemID("crushedUranium");
 Item.createItem("crushedUranium", "Crushed Uranium Ore", {name: "crushed_uranium_ore"});
 
-Item.addCreativeGroup("oreCrushed", Translation.translate("Crushed Ore"), [
+Item.addCreativeGroup("oreCrushed", Translation.translate("Crushed Ores"), [
 	ItemID.crushedCopper,
 	ItemID.crushedTin,
 	ItemID.crushedIron,
@@ -52,7 +52,7 @@ Item.createItem("crushedPurifiedSilver", "Purified Crushed Silver Ore", {name: "
 IDRegistry.genItemID("crushedPurifiedUranium");
 Item.createItem("crushedPurifiedUranium", "Purified Crushed Uranium Ore", {name: "purified_uranium_ore"});
 
-Item.addCreativeGroup("oreCrushedPurified", Translation.translate("Purified Crushed Ore"), [
+Item.addCreativeGroup("oreCrushedPurified", Translation.translate("Purified Crushed Ores"), [
 	ItemID.crushedPurifiedCopper,
 	ItemID.crushedPurifiedTin,
 	ItemID.crushedPurifiedIron,

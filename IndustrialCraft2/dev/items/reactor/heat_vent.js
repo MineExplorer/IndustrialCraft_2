@@ -19,6 +19,14 @@ ReactorAPI.registerComponent(ItemID.heatVentComponent, new ReactorAPI.heatVentSp
 ReactorAPI.registerComponent(ItemID.heatVentAdv, new ReactorAPI.heatVent(1000, 12, 0));
 ReactorAPI.registerComponent(ItemID.heatVentOverclocked, new ReactorAPI.heatVent(1000, 20, 36));
 
+Item.addCreativeGroup("ic2_reactorHeatVent", Translation.translate("Reactor Heat Vent"), [
+	ItemID.heatVent,
+	ItemID.heatVentReactor,
+	ItemID.heatVentComponent,
+    ItemID.heatVentAdv,
+	ItemID.heatVentOverclocked
+]);
+
 Recipes.addShaped({id: ItemID.heatVent, count: 1, data: 1}, [
 	"bab",
 	"axa",

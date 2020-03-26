@@ -8,6 +8,12 @@ ReactorAPI.registerComponent(ItemID.reactorPlating, new ReactorAPI.plating(1000,
 ReactorAPI.registerComponent(ItemID.reactorPlatingContainment, new ReactorAPI.plating(500, 0.9));
 ReactorAPI.registerComponent(ItemID.reactorPlatingHeat, new ReactorAPI.plating(2000, 0.99));
 
+Item.addCreativeGroup("ic2_reactorPlating", Translation.translate("Reactor Plating"), [
+	ItemID.reactorPlating,
+	ItemID.reactorPlatingContainment,
+    ItemID.reactorPlatingHeat
+]);
+
 Recipes.addShapeless({id: ItemID.reactorPlating, count: 1, data: 0}, [{id: ItemID.plateAlloy, data: 0}, {id: ItemID.plateLead, data: 0}]);
 
 Recipes.addShapeless({id: ItemID.reactorPlatingContainment, count: 1, data: 0}, [{id: ItemID.reactorPlating, data: 0}, {id: ItemID.plateAlloy, data: 0}, {id: ItemID.plateAlloy, data: 0}]);

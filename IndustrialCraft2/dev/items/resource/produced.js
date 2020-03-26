@@ -6,9 +6,6 @@ IDRegistry.genItemID("plateReinforcedIridium");
 Item.createItem("plateReinforcedIridium", "Iridium Reinforced Plate", {name: "plate_reinforced_iridium"});
 ItemName.setRarity(ItemID.plateReinforcedIridium, 2, true);
 
-IDRegistry.genItemID("ingotAlloy");
-Item.createItem("ingotAlloy", "Alloy Ingot", {name: "ingot_alloy"});
-
 IDRegistry.genItemID("plateAlloy");
 Item.createItem("plateAlloy", "Alloy Plate", {name: "plate_alloy"});
 
@@ -29,6 +26,18 @@ Item.createItem("coalBlock", "Coal Block", {name: "coal_block"});
 
 IDRegistry.genItemID("coalChunk");
 Item.createItem("coalChunk", "Coal Chunk", {name: "coal_chunk"});
+
+Item.addCreativeGroup("ic2_material", Translation.translate("IC2 Materials"), [
+	ItemID.iridiumChunk,
+	ItemID.plateReinforcedIridium,
+	ItemID.plateAlloy,
+	ItemID.carbonFibre,
+	ItemID.carbonMesh,
+	ItemID.carbonPlate,
+	ItemID.coalBall,
+	ItemID.coalBlock,
+	ItemID.coalChunk,
+]);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.ingotAlloy, count: 2, data: 0}, [

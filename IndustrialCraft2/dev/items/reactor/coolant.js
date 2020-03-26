@@ -8,6 +8,12 @@ ReactorAPI.registerComponent(ItemID.coolantCell, new ReactorAPI.heatStorage(1000
 ReactorAPI.registerComponent(ItemID.coolantCell3, new ReactorAPI.heatStorage(30000));
 ReactorAPI.registerComponent(ItemID.coolantCell6, new ReactorAPI.heatStorage(60000));
 
+Item.addCreativeGroup("ic2_reactorCoolant", Translation.translate("Reactor Coolant"), [
+	ItemID.coolantCell,
+	ItemID.coolantCell3,
+	ItemID.coolantCell6
+]);
+
 Recipes.addShaped({id: ItemID.coolantCell, count: 1, data: 1}, [
 	" a ",
 	"axa",

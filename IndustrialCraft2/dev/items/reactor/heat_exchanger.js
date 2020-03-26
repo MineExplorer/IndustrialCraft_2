@@ -15,6 +15,13 @@ ReactorAPI.registerComponent(ItemID.heatExchangerReactor, new ReactorAPI.heatExc
 ReactorAPI.registerComponent(ItemID.heatExchangerComponent, new ReactorAPI.heatExchanger(5000, 36, 0));
 ReactorAPI.registerComponent(ItemID.heatExchangerAdv, new ReactorAPI.heatExchanger(10000, 24, 8));
 
+Item.addCreativeGroup("ic2_reactorHeatExchanger", Translation.translate("Reactor Heat Exchanger"), [
+	ItemID.heatExchanger,
+	ItemID.heatExchangerReactor,
+	ItemID.heatExchangerComponent,
+	ItemID.heatExchangerAdv
+]);
+
 Recipes.addShaped({id: ItemID.heatExchanger, count: 1, data: 1}, [
 	"aca",
 	"bab",

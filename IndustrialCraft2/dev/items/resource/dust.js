@@ -80,7 +80,7 @@ Item.createItem("dustSmallSilver", "Tiny Pile of Silver Dust", {name: "dust_silv
 IDRegistry.genItemID("dustSmallSulfur");
 Item.createItem("dustSmallSulfur", "Tiny Pile of Sulfur Dust", {name: "dust_sulfur_small"});
 
-Item.addCreativeGroup("dustSmall", Translation.translate("Small Dust"), [
+Item.addCreativeGroup("dustSmall", Translation.translate("Small Dusts"), [
 	ItemID.dustSmallCopper,
 	ItemID.dustSmallTin,
 	ItemID.dustSmallIron,

@@ -16,13 +16,17 @@ Item.createItem("ingotLead", "Lead Ingot", {name: "ingot_lead"});
 IDRegistry.genItemID("ingotSilver");
 Item.createItem("ingotSilver", "Silver Ingot", {name: "ingot_silver"});
 
+IDRegistry.genItemID("ingotAlloy");
+Item.createItem("ingotAlloy", "Alloy Ingot", {name: "ingot_alloy"});
+
 Item.addCreativeGroup("ingot", Translation.translate("Ingots"), [
 	ItemID.ingotCopper,
 	ItemID.ingotTin,
 	ItemID.ingotBronze,
 	ItemID.ingotSteel,
 	ItemID.ingotLead,
-	ItemID.ingotSilver
+	ItemID.ingotSilver,
+	ItemID.ingotAlloy
 ]);
 
 Callback.addCallback("PreLoaded", function(){

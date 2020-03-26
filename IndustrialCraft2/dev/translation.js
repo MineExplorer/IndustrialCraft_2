@@ -451,3 +451,32 @@ Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Авт
 
 // Recipe Viewer
 Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "Calor: ", zh:"热量: "});
+
+//Creative Groups
+Translation.addTranslation("Cables", {ru: "Провода"});
+Translation.addTranslation("Metal Blocks", {ru: "Блоки металлов"});
+Translation.addTranslation("Metal Ores", {ru: "Блоки руды"});
+Translation.addTranslation("Battery Packs", {ru: "Заряжающие ранцы"});
+Translation.addTranslation("Charging Batteries", {ru: "Заряжающие аккумуляторы"});
+Translation.addTranslation("IC2 Components", {ru: "Компонены машин"});
+Translation.addTranslation("IC2 Materials", {ru: "Материалы"});
+Translation.addTranslation("EU Batteries", {ru: "Аккумуляторы"});
+Translation.addTranslation("Upgrades", {ru: "Улучшения"});
+Translation.addTranslation("Coffee", {ru: "Кофе"});
+Translation.addTranslation("IC2 Reactor Fuel Rods", {ru: "Стержни реактора"});
+Translation.addTranslation("Metal Casing", {ru: "Металлические оболочки"});
+Translation.addTranslation("Crushed Ore", {ru: "Измельчённая руда"});
+Translation.addTranslation("Purified Crushed Ore", {ru: "Очищенная измельчённая руда"});
+Translation.addTranslation("Desne Plates", {ru: "Плотные пластины"});
+Translation.addTranslation("Dusts", {ru: "Пыль"});
+Translation.addTranslation("Small Dusts", {ru: "Небольшие кучки пыли"});
+Translation.addTranslation("Ingots", {ru: "Слитки"});
+Translation.addTranslation("IC2 Nuclear", {ru: "Ядерное топливо"});
+Translation.addTranslation("Plates", {ru: "Пластины"});
+Translation.addTranslation("Mining Drill", {ru: "Шахтерские буры"});
+Translation.addTranslation("Cells", {ru: "Капсулы"});
+Translation.addTranslation("Reactor Neutron Reflector", {ru: "Отражатели нейтронов"});
+Translation.addTranslation("Reactor Plating", {ru: "Обшивки реактора"});
+Translation.addTranslation("Reactor Heat Vent", {ru: "Теплоотводы"});
+Translation.addTranslation("Reactor Heat Exchanger", {ru: "Теплообменники"});
+Translation.addTranslation("Reactor Coolant", {ru: "Охлаждающие капсулы"});

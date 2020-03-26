@@ -15,7 +15,7 @@ LIBRARY({
 });
 
 
-Translation.addTranslation("Energy", {ru: "Энергия", zh: "能量"});
+Translation.addTranslation("Energy", {ru: "Энергия", pt: "Energia", zh: "能量"});
 
 function EnergyType(name) {
 	this.name = name;

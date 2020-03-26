@@ -31,7 +31,7 @@ let SoundAPI = {
 	},
 	
 	playSound: function(name, loop, disableMultiPlaying){
-		if(!Config.soundEnabled) {return null;}
+		if(!Config.soundEnabled || !isLevelDisplayed) {return null;}
 		let curSound = null;
 		try{
 		for(let i in this.soundPlayers){
@@ -92,7 +92,7 @@ let SoundAPI = {
 	},
 	
 	createSource: function(fileName, coord, radius){
-		if(!Config.soundEnabled) {return null;}
+		if(!Config.soundEnabled || !isLevelDisplayed) {return null;}
 		let curSound = null;
 		try{
 		for(let i in this.soundPlayers){

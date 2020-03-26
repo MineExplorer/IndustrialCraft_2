@@ -106,8 +106,8 @@ var ChargeItemRegistry = {
 		return Math.min(data.maxDamage - item.data, data.maxCharge);
 	},
 	
-	getMaxCharge: function(item, energyType){
-		var data = this.getItemData(item.id);
+	getMaxCharge: function(itemID, energyType){
+		var data = this.getItemData(itemID);
 		if(!data || energyType && data.energy != energyType){
 			return 0;
 		}

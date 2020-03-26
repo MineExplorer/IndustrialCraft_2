@@ -54,7 +54,7 @@ ToolLib.setTool(ItemID.chainsaw, {energyPerUse: 60, level: 3, efficiency: 16, da
 let chainsawLoop = SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawIdle.ogg", true, 1);
 SoundAPI.addSoundPlayer("Tools/Chainsaw/ChainsawStop.ogg", false, 1);
 Callback.addCallback("tick", function(){
-	if(!Config.soundEnabled || !isLevelDisplayed) {return;}
+	if(!Config.soundEnabled) {return;}
 	let item = Player.getCarriedItem();
 	let tool = ToolAPI.getToolData(item.id);
 	let energyStored = ChargeItemRegistry.getEnergyStored(item);

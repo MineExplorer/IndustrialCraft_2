@@ -68,7 +68,7 @@ ItemName = {
 	},
 	
 	getItemStorageText: function(item, name){
-		var capacity = ChargeItemRegistry.getMaxCharge(item);
+		var capacity = ChargeItemRegistry.getMaxCharge(item.id);
 		var energy = ChargeItemRegistry.getEnergyStored(item);
 		var tooltip = "§7" + this.displayEnergy(energy) + "/" + this.displayEnergy(capacity) + " EU";
 		return this.getTooltip(name, tooltip);

@@ -16,7 +16,7 @@ Item.createItem("powerUnitSmall", "Small Power Unit", {name: "power_unit_small",
 IDRegistry.genItemID("heatConductor");
 Item.createItem("heatConductor", "Heat Conductor", {name: "heat_conductor", meta: 0});
 
-Item.addCreativeGroup("ic2_component", Translation.translate("IC2 Components"), [
+Item.addCreativeGroup("ic2_component", Translation.translate("Crafting Components"), [
 	ItemID.circuitBasic,
 	ItemID.circuitAdvanced,
 	ItemID.coil,

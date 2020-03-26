@@ -9,7 +9,7 @@ Item.createItem("iridiumDrill", "Iridium Drill", {name: "drill_iridium"}, {stack
 Item.setGlint(ItemID.iridiumDrill, true);
 ItemName.setRarity(ItemID.iridiumDrill, 2);
 
-Item.addCreativeGroup("ic2_drills", Translation.translate("Mining Drill"), [
+Item.addCreativeGroup("ic2_drills", Translation.translate("Mining Drills"), [
 	ItemID.drill,
 	ItemID.diamondDrill,
 	ItemID.iridiumDrill

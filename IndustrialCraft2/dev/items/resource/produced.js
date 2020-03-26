@@ -27,7 +27,7 @@ Item.createItem("coalBlock", "Coal Block", {name: "coal_block"});
 IDRegistry.genItemID("coalChunk");
 Item.createItem("coalChunk", "Coal Chunk", {name: "coal_chunk"});
 
-Item.addCreativeGroup("ic2_material", Translation.translate("IC2 Materials"), [
+Item.addCreativeGroup("ic2_material", Translation.translate("Materials"), [
 	ItemID.iridiumChunk,
 	ItemID.plateReinforcedIridium,
 	ItemID.plateAlloy,
@@ -36,16 +36,10 @@ Item.addCreativeGroup("ic2_material", Translation.translate("IC2 Materials"), [
 	ItemID.carbonPlate,
 	ItemID.coalBall,
 	ItemID.coalBlock,
-	ItemID.coalChunk,
+	ItemID.coalChunk
 ]);
 
 Callback.addCallback("PreLoaded", function(){
-	Recipes.addShaped({id: ItemID.ingotAlloy, count: 2, data: 0}, [
-		"aaa",
-		"bbb",
-		"ccc"
-	], ['a', ItemID.plateSteel, 0, 'b', ItemID.plateBronze, 0, 'c', ItemID.plateTin, 0]);
-	
 	Recipes.addShaped({id: ItemID.carbonFibre, count: 1, data: 0}, [
 		"xx",
 		"xx"

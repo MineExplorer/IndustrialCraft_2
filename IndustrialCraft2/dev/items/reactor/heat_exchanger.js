@@ -15,7 +15,7 @@ ReactorAPI.registerComponent(ItemID.heatExchangerReactor, new ReactorAPI.heatExc
 ReactorAPI.registerComponent(ItemID.heatExchangerComponent, new ReactorAPI.heatExchanger(5000, 36, 0));
 ReactorAPI.registerComponent(ItemID.heatExchangerAdv, new ReactorAPI.heatExchanger(10000, 24, 8));
 
-Item.addCreativeGroup("ic2_reactorHeatExchanger", Translation.translate("Reactor Heat Exchanger"), [
+Item.addCreativeGroup("ic2_reactorHeatExchanger", Translation.translate("Reactor Heat Exchangers"), [
 	ItemID.heatExchanger,
 	ItemID.heatExchangerReactor,
 	ItemID.heatExchangerComponent,

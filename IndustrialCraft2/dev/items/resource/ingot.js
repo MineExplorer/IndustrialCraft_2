@@ -66,6 +66,12 @@ Callback.addCallback("PreLoaded", function(){
 	Recipes.addFurnace(ItemID.plateGold, 266, 0);
 	Recipes.addFurnace(ItemID.plateLead, ItemID.ingotLead, 0);
 	
+	Recipes.addShaped({id: ItemID.ingotAlloy, count: 2, data: 0}, [
+		"aaa",
+		"bbb",
+		"ccc"
+	], ['a', ItemID.plateSteel, 0, 'b', ItemID.plateBronze, 0, 'c', ItemID.plateTin, 0]);
+	
 	// alternative
 	Recipes.addShaped({id: 66, count: 12, data: 0}, [
 		"a a",

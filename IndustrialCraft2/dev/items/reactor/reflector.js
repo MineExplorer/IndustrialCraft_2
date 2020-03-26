@@ -8,7 +8,7 @@ ReactorAPI.registerComponent(ItemID.neutronReflector, new ReactorAPI.reflector(3
 ReactorAPI.registerComponent(ItemID.neutronReflectorThick, new ReactorAPI.reflector(120000));
 ReactorAPI.registerComponent(ItemID.neutronReflectorIridium, new ReactorAPI.reflector());
 
-Item.addCreativeGroup("ic2_reactorNeutronReflector", Translation.translate("Reactor Neutron Reflector"), [
+Item.addCreativeGroup("ic2_reactorNeutronReflector", Translation.translate("Neutron Reflectors"), [
     ItemID.neutronReflector,
     ItemID.neutronReflectorThick,
     ItemID.neutronReflectorIridium

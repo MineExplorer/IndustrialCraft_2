@@ -8,7 +8,7 @@ ReactorAPI.registerComponent(ItemID.reactorPlating, new ReactorAPI.plating(1000,
 ReactorAPI.registerComponent(ItemID.reactorPlatingContainment, new ReactorAPI.plating(500, 0.9));
 ReactorAPI.registerComponent(ItemID.reactorPlatingHeat, new ReactorAPI.plating(2000, 0.99));
 
-Item.addCreativeGroup("ic2_reactorPlating", Translation.translate("Reactor Plating"), [
+Item.addCreativeGroup("ic2_reactorPlating", Translation.translate("Reactor Platings"), [
 	ItemID.reactorPlating,
 	ItemID.reactorPlatingContainment,
     ItemID.reactorPlatingHeat

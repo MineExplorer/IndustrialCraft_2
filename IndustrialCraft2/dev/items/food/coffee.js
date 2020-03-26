@@ -85,7 +85,7 @@ Item.createFoodItem("mugDarkCoffee", "Dark Coffee", {name: "mug_dark_coffee"}, {
 IDRegistry.genItemID("mugCoffee");
 Item.createFoodItem("mugCoffee", "Coffee", {name: "mug_coffee"}, {stack: 1});
 
-Item.addCreativeGroup("ic2_coffee", Translation.translate("Coffee"), [
+Item.addCreativeGroup("mug_coffee", Translation.translate("Coffee"), [
 	ItemID.mugEmpty,
 	ItemID.mugColdCoffee,
 	ItemID.mugDarkCoffee,

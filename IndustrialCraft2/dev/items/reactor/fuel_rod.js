@@ -47,7 +47,7 @@ RadiationAPI.regRadioactiveItem(ItemID.fuelRodDepletedMOX, 10);
 RadiationAPI.regRadioactiveItem(ItemID.fuelRodDepletedMOX2, 10);
 RadiationAPI.regRadioactiveItem(ItemID.fuelRodDepletedMOX4, 10);
 
-Item.addCreativeGroup("ic2_fuelRod", Translation.translate("IC2 Reactor Fuel Rods"), [
+Item.addCreativeGroup("ic2_fuelRod", Translation.translate("Nuclear Fuel Rods"), [
 	ItemID.fuelRod,
 	ItemID.fuelRodUranium,
 	ItemID.fuelRodUranium2,

@@ -8,7 +8,7 @@ ReactorAPI.registerComponent(ItemID.coolantCell, new ReactorAPI.heatStorage(1000
 ReactorAPI.registerComponent(ItemID.coolantCell3, new ReactorAPI.heatStorage(30000));
 ReactorAPI.registerComponent(ItemID.coolantCell6, new ReactorAPI.heatStorage(60000));
 
-Item.addCreativeGroup("ic2_reactorCoolant", Translation.translate("Reactor Coolant"), [
+Item.addCreativeGroup("ic2_reactorCoolant", Translation.translate("Reactor Coolants"), [
 	ItemID.coolantCell,
 	ItemID.coolantCell3,
 	ItemID.coolantCell6

@@ -37,7 +37,7 @@ Item.registerUseFunction("scanner", function(coords, item, block){
 	if(item.data + 50 < Item.getMaxDamage(item.id)){
 		Player.setCarriedItem(item.id, 1, item.data + 50);
 		SoundAPI.playSound("Tools/ODScanner.ogg");
-		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
+		Game.message(Translation.translate(Scan Result:") + coords.x + ", " + coords.y + ", " + coords.z);
 		var ores = {};
 		for(var x = coords.x - scan_radius; x <= coords.x + scan_radius; x++){
 			for(var y = coords.y - scan_radius; y <= coords.y + scan_radius; y++){
@@ -59,7 +59,7 @@ Item.registerUseFunction("scannerAdvanced", function(coords, item, block){
 	if(item.data + 200 < Item.getMaxDamage(item.id)){
 		Player.setCarriedItem(item.id, 1, item.data + 200);
 		SoundAPI.playSound("Tools/ODScanner.ogg");
-		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
+		Game.message(Translation.translate("Scan Result:") + coords.x + ", " + coords.y + ", " + coords.z);
 		var ores = {};
 		for(var x = coords.x - adv_scan_radius; x <= coords.x + adv_scan_radius; x++){
 			for(var y = coords.y - adv_scan_radius; y <= coords.y + adv_scan_radius; y++){

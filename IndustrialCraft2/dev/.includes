@@ -101,7 +101,7 @@ items/resource/casing.js
 items/resource/nuclear.js
 items/resource/scrap.js
 items/resource/matter.js
-items/resource/produced.js
+items/resource/material.js
 items/resource/liquid.js
 items/resource/cells.js
 items/resource/waste.js

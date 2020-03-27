@@ -115,16 +115,10 @@ var buttonContent = {
 		clicker: {
 			onClick: function(){
 				var vel = Player.getVelocity();
-				if(vel.y.toFixed(4) != fallVelocity){
-					var armor = Player.getArmorSlot(1);
-					var extra = armor.extra;
-					if(extra){
-						var hover = extra.getBoolean("hover");
-					}
-					else{
-						var hover = false;
-						extra = new ItemExtraData();
-					}
+				var armor = Player.getArmorSlot(1);
+				if(vel.y.toFixed(4) != fallVelocity && ChargeItemRegistry.getEnergyStored(armor) > 0){
+					var extra = armor.extra || new ItemExtraData();
+					var hover = extra.getBoolean("hover");
 					if(hover){
 						extra.putBoolean("hover", false);
 						Game.message("§4" + Translation.translate("Hover mode disabled"));
@@ -232,35 +226,35 @@ Callback.addCallback("tick", function(){
 			UIbuttons.container = new UI.Container();
 			UIbuttons.container.openAs(UIbuttons.Window);
 		}
+		var playSound = false;
 		var armor = armor[1];
 		var hover = armor.extra? armor.extra.getBoolean("hover") : false;
-		var playSound = false;
-		if(UIbuttons.container.isElementTouched("button_fly")){
+		var energyStored = ChargeItemRegistry.getEnergyStored(armor);
+		if(energyStored > 0){
 			var y = Player.getPosition().y;
-			if(y < 256){
+			if(UIbuttons.container.isElementTouched("button_fly") && y < 256){
 				var vel = Player.getVelocity();
 				var vy = Math.min(32, 264-y) / 160;
-				var energyStored = ChargeItemRegistry.getEnergyStored(armor);
-				if(hover && energyStored > 2){
-					ChargeItemRegistry.setEnergyStored(armor, energyStored - 2);
+				if(hover){
+					ChargeItemRegistry.setEnergyStored(armor, Math.max(energyStored - 2, 0));
 					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 					if(vel.y < 0.2){
 						Player.addVelocity(0, Math.min(vy, 0.2-vel.y), 0);
 					}
 				}
-				if(!hover && energyStored > 7){
-					ChargeItemRegistry.setEnergyStored(armor, energyStored - 7);
+				else {
+					ChargeItemRegistry.setEnergyStored(armor, Math.max(energyStored - 7, 0));
 					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 					if(vel.y < 0.67){
 						Player.addVelocity(0, Math.min(vy, 0.67-vel.y), 0);
 					}
 				}
+				playSound = true;
+			} else if(hover){
+				playSound = true;
 			}
-			playSound = true;
-		} else if(hover){
-			playSound = true;
 		}
-		if(Config.soundEnabled && playSound && !jetpackLoop.isPlaying()){
+		if(playSound && SoundAPI.isSoundEnabled() && !jetpackLoop.isPlaying()){
 			if(hover){
 				jetpackLoop.setVolume(0.8);
 			} else {

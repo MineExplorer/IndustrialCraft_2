@@ -71,7 +71,7 @@ let NanoSaber = {
 	
 	tick: function(){
 		let item = Player.getCarriedItem();
-		if(Config.soundEnabled){
+		if(SoundAPI.isSoundEnabled()){
 			if(item.id == ItemID.nanoSaberActive){
 				if(!this.idleSound && (!this.startSound || !this.startSound.isPlaying())){
 					this.idleSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberIdle.ogg", true, true);

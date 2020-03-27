@@ -7,6 +7,10 @@ let SoundAPI = {
 		return __dir__ + "res/sounds/" + name;
 	},
 	
+	isSoundEnabled: function(){
+		return Config.soundEnabled && isLevelDisplayed;
+	},
+	
 	addSoundPlayer: function(name, loop, priorized){
 		if(this.soundPlayers.length >= this.maxPlayersCount){
 			Logger.Log(__name__ + " sound stack is full", "WARNING");
@@ -31,7 +35,7 @@ let SoundAPI = {
 	},
 	
 	playSound: function(name, loop, disableMultiPlaying){
-		if(!Config.soundEnabled || !isLevelDisplayed) {return null;}
+		if(!this.isSoundEnabled()) {return null;}
 		let curSound = null;
 		try{
 		for(let i in this.soundPlayers){
@@ -92,7 +96,7 @@ let SoundAPI = {
 	},
 	
 	createSource: function(fileName, coord, radius){
-		if(!Config.soundEnabled || !isLevelDisplayed) {return null;}
+		if(!this.isSoundEnabled()) {return null;}
 		let curSound = null;
 		try{
 		for(let i in this.soundPlayers){

@@ -6,7 +6,7 @@ Item.createItem("neutronReflectorThick", "Thick Neutron Reflector", {name: "neut
 Item.createItem("neutronReflectorIridium", "Iridium Neutron Reflector", {name: "neutron_reflector", meta: 2});
 ReactorAPI.registerComponent(ItemID.neutronReflector, new ReactorAPI.reflector(30000));
 ReactorAPI.registerComponent(ItemID.neutronReflectorThick, new ReactorAPI.reflector(120000));
-ReactorAPI.registerComponent(ItemID.neutronReflectorIridium, new ReactorAPI.reflector());
+ReactorAPI.registerComponent(ItemID.neutronReflectorIridium, new ReactorAPI.reflectorIridium());
 
 Item.addCreativeGroup("ic2_reactorNeutronReflector", Translation.translate("Neutron Reflectors"), [
     ItemID.neutronReflector,

@@ -7,7 +7,7 @@ ItemName.setRarity(ItemID.miningLaser, 1);
 Item.registerNameOverrideFunction(ItemID.miningLaser, function(item, name){
 	name = ItemName.showItemStorage(item, name);
 	var mode = item.extra? item.extra.getInt("mode") : 0;
-	name += "\n"+MiningLaser.getModeInfo(mode);
+	name += " (WIP)\n"+MiningLaser.getModeInfo(mode);
 	return name;
 });
 
@@ -237,7 +237,7 @@ var MiningLaser = {
 		}
 	}
 }
-
+/*
 Callback.addCallback("tick", function(){
 	MiningLaser.update();
 });
@@ -252,4 +252,4 @@ Item.registerUseFunction("miningLaser", function(coords, item, block){
 
 Item.registerNoTargetUseFunction("miningLaser", function(item){
 	MiningLaser.useItem(item);
-});
+});*/

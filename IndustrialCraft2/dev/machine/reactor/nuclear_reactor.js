@@ -80,16 +80,13 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	chambers: [],
-	
-	tnt: [],
-	
+		
 	getGuiScreen: function(){
 		return guiNuclearReactor;
 	},
 	
 	init: function(){
 		this.chambers = [];
-		this.tnt = [];
 		this.renderModel();
 		this.rebuildEnergyNet();
 	},
@@ -436,8 +433,11 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 });
 
 Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block){
+	let x = coords.relative.x;
+	let y = coords.relative.y;
+	let z = coords.relative.z;
 	for (let i = 0; i < 6; i++) {
-		let c = StorageInterface.getRelativeCoords(coords.relative, i);
+		let c = World.getRelativeCoords(x, y, z, i);
 		if(World.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber){
 			let tileEnt = World.getTileEntity(c.x, c.y, c.z);
 			if(tileEnt.core){
@@ -452,9 +452,12 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block
 
 Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block){
 	Game.prevent();
+	let x = coords.relative.x;
+	let y = coords.relative.y;
+	let z = coords.relative.z;
 	let reactorConnect = 0;
 	for (let i = 0; i < 6; i++) {
-		let c = StorageInterface.getRelativeCoords(coords.relative, i);
+		let c = World.getRelativeCoords(x, y, z, i);
 		if(World.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor){
 			reactorConnect++;
 			if(reactorConnect > 1) break;

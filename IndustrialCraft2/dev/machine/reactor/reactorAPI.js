@@ -3,7 +3,7 @@ let ReactorAPI = {
 	
 	registerComponent: function(id, component) {
 		if (component.maxDamage) {
-			Item.setMaxDamage(id, component.maxDamage);
+			Item.setMaxDamage(id, 27);
 		}
 		if (component.getMaxHeat() > 0) {
 			Item.addToCreative(id, 1, 1);
@@ -47,12 +47,31 @@ let ReactorAPI = {
 		}
 	},
 	
-	fuelRod: function(cells, durability, depleted) {
+	damageableReactorComponent: function(durability){
 		this.parent = ReactorAPI.reactorComponent;
 		this.parent();
 		
-		this.numberOfCells = cells;
 		this.maxDamage = durability;
+		
+		this.getCustomDamage = function(item){
+			return item.extra ? item.extra.getInt("damage") : 0;
+		}
+		
+		this.setCustomDamage = function(item, damage){
+			if(!item.extra) item.extra = new ItemExtraData();
+			item.data = 1 + Math.ceil(damage / this.maxDamage * 26);
+		}
+		
+		this.applyCustomDamage = function(item, damage){
+			this.setCustomDamage(item, this.getCustomDamage(item) + damage);
+		}
+	},
+	
+	fuelRod: function(cells, durability, depleted) {
+		this.parent = ReactorAPI.damageableReactorComponent;
+		this.parent(durability);
+		
+		this.numberOfCells = cells;
 		this.depletedItem = depleted;
 		this.processChamber = function(item, reactor, x, y, heatRun) {
 			let basePulses = parseInt(1 + this.numberOfCells / 2);
@@ -85,10 +104,10 @@ let ReactorAPI = {
 				if (heat <= 0) continue;
 				reactor.addHeat(heat);
 			}
-			if (!heatRun && item.data >= this.maxDamage) {
+			if (!heatRun && this.getCustomDamage(item) + 1 >= this.maxDamage) {
 				reactor.setItemAt(x, y, this.depletedItem, 1);
 			} else if (!heatRun) {
-				reactor.setItemAt(x, y, item.id, 1, item.data+1);
+				this.applyCustomDamage(item, 1);
 			}
 		}
 		
@@ -180,24 +199,35 @@ let ReactorAPI = {
 	},
 	
 	reflector: function(maxDamage) {
-		this.parent = ReactorAPI.reactorComponent;
-		this.parent();
-		
-		if(maxDamage){
-			this.maxDamage = maxDamage;
-		}
+		this.parent = ReactorAPI.damageableReactorComponent;
+		this.parent(maxDamage);
 		
 		this.acceptUraniumPulse = function(item, reactor, pulsingItem, youX, youY, pulseX, pulseY, heatrun) {
 			if (!heatrun) {
 				let source = ReactorAPI.getComponent(pulsingItem.id);
 				source.acceptUraniumPulse(pulsingItem, reactor, item, pulseX, pulseY, youX, youY, heatrun);
 			}
-			else if (this.maxDamage){
-				if (item.data >= this.maxDamage) {
-					reactor.setItemAt(youX, youY, 0);
-				} else {
-					reactor.setItemAt(youX, youY, item.id, 1, item.data + 1);
-				}
+			else if (this.getCustomDamage + 1 >= this.maxDamage) {
+				reactor.setItemAt(youX, youY, 0);
+			} else {
+				this.applyCustomDamage(item, 1);
+			}
+			return true;
+		}
+		
+		this.influenceExplosion = function(item, reactor) {
+			return -1;
+		}
+	},
+	
+	reflectorIridium: function() {
+		this.parent = ReactorAPI.reactorComponent;
+		this.parent();
+		
+		this.acceptUraniumPulse = function(item, reactor, pulsingItem, youX, youY, pulseX, pulseY, heatrun) {
+			if (!heatrun) {
+				let source = ReactorAPI.getComponent(pulsingItem.id);
+				source.acceptUraniumPulse(pulsingItem, reactor, item, pulseX, pulseY, youX, youY, heatrun);
 			}
 			return true;
 		}
@@ -208,11 +238,9 @@ let ReactorAPI = {
 	},
 	
 	heatStorage: function(heatStorage) {
-		this.parent = ReactorAPI.reactorComponent;
-		this.parent();
-		
-		this.maxDamage = heatStorage;
-		
+		this.parent = ReactorAPI.damageableReactorComponent;
+		this.parent(heatStorage);
+				
 		this.canStoreHeat = function(item) {
 			return true;
 		}
@@ -222,7 +250,7 @@ let ReactorAPI = {
 		}
 		
 		this.getCurrentHeat = function(item){
-			return item.data - 1;
+			return this.getCustomDamage(item);
 		}
 
 		this.alterHeat = function(item, reactor, x, y, heat) {
@@ -238,7 +266,7 @@ let ReactorAPI = {
 				} else {
 					heat = 0;
 				}
-				reactor.setItemAt(x, y, item.id, 1, myHeat + 1);
+				this.setCustomDamage(item, myHeat);
 			}
 			return heat;
 		}
@@ -391,13 +419,11 @@ let ReactorAPI = {
 	},
 	
 	condensator: function(maxDmg) {
-		this.parent = ReactorAPI.reactorComponent;
-		this.parent();
-		
-		this.maxDamage = maxDmg;
-		
+		this.parent = ReactorAPI.damageableReactorComponent;
+		this.parent(maxDmg);
+				
 		this.canStoreHeat = function(item) {
-			return item.data < this.maxDamage;
+			return this.getCurrentHeat(item) < this.maxDamage;
 		}
 		
 		this.getMaxHeat = function(item) {
@@ -405,15 +431,16 @@ let ReactorAPI = {
 		}
 
 		this.getCurrentHeat = function(item) {
-			return item.data - 1;
+			return this.getCustomDamage(item);
 		}
 		
 		this.alterHeat = function(item, reactor, x, y, heat) {
 			if (heat < 0) {
 				return heat;
 			}
-			let amount = Math.min(heat, this.getMaxHeat(item) - item.data);
-			item.data += amount;
+			let currentHeat = this.getCurrentHeat(item);
+			let amount = Math.min(heat, this.getMaxHeat(item) - currentHeat);
+			this.setCustomDamage(item, currentHeat + amount);
 			return heat - amount;
 		}
 	},

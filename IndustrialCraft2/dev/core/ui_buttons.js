@@ -116,7 +116,7 @@ var buttonContent = {
 			onClick: function(){
 				var vel = Player.getVelocity();
 				var armor = Player.getArmorSlot(1);
-				if(vel.y.toFixed(4) != fallVelocity && ChargeItemRegistry.getEnergyStored(armor) > 0){
+				if(vel.y.toFixed(4) != fallVelocity && ChargeItemRegistry.getEnergyStored(armor) >= 8){
 					var extra = armor.extra || new ItemExtraData();
 					var hover = extra.getBoolean("hover");
 					if(hover){
@@ -230,29 +230,29 @@ Callback.addCallback("tick", function(){
 		var armor = armor[1];
 		var hover = armor.extra? armor.extra.getBoolean("hover") : false;
 		var energyStored = ChargeItemRegistry.getEnergyStored(armor);
-		if(energyStored > 0){
+		if(energyStored >= 8 && UIbuttons.container.isElementTouched("button_fly")){
 			var y = Player.getPosition().y;
-			if(UIbuttons.container.isElementTouched("button_fly") && y < 256){
+			if(y < 256){
 				var vel = Player.getVelocity();
 				var vy = Math.min(32, 264-y) / 160;
 				if(hover){
-					ChargeItemRegistry.setEnergyStored(armor, Math.max(energyStored - 2, 0));
+					ChargeItemRegistry.setEnergyStored(armor, energyStored - 2);
 					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 					if(vel.y < 0.2){
 						Player.addVelocity(0, Math.min(vy, 0.2-vel.y), 0);
 					}
 				}
 				else {
-					ChargeItemRegistry.setEnergyStored(armor, Math.max(energyStored - 7, 0));
+					ChargeItemRegistry.setEnergyStored(armor, energyStored - 8);
 					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 					if(vel.y < 0.67){
 						Player.addVelocity(0, Math.min(vy, 0.67-vel.y), 0);
 					}
 				}
-				playSound = true;
-			} else if(hover){
-				playSound = true;
 			}
+			playSound = true;
+		} else if(hover){
+			playSound = true;
 		}
 		if(playSound && SoundAPI.isSoundEnabled() && !jetpackLoop.isPlaying()){
 			if(hover){

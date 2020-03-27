@@ -56,14 +56,14 @@ function registerStoragePack(id, level, tranfer){
 		hurt: function(){
 			return false;
 		},
-		tick: function(slot, index, maxDamage){
-			ENERGY_PACK_TICK(slot, maxDamage, level, tranfer);
+		tick: function(slot){
+			ENERGY_PACK_TICK(slot, level, tranfer);
 			return false;
 		}
 	});
 }
 
-var ENERGY_PACK_TICK = function(slot, maxDamage, level, transfer){
+var ENERGY_PACK_TICK = function(slot, level, transfer){
 	if(World.getThreadTime()%20==0){
 		var item = Player.getCarriedItem();
 		if(ChargeItemRegistry.isValidItem(item.id, "Eu", level, "tool")){

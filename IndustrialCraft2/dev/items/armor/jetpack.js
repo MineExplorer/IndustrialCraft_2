@@ -36,23 +36,20 @@ Armor.registerFuncs("jetpack", {
 		return false;
 	},
 	tick: function(slot, index, maxDamage){
-		var extra = slot.extra;
-		var hover = extra? extra.getBoolean("hover") : false;
+		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
+		var hover = slot.extra? slot.extra.getBoolean("hover") : false;
 		if(hover){
 			var vel = Player.getVelocity();
-			if(vel.y.toFixed(4) == fallVelocity){
-				extra.putBoolean("hover", false);
+			if(vel.y.toFixed(4) == fallVelocity || energyStored < 8){
+				slot.extra.putBoolean("hover", false);
 				Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 				Game.message("§4" + Translation.translate("Hover mode disabled"));
 			}
-			else {
-				var energyStored = ChargeItemRegistry.getEnergyStored(slot);
-				if(vel.y < -0.1 && energyStored >= 20){
-					Player.setVelocity(vel.x, -0.1, vel.z);
-					if(World.getThreadTime()%5 == 0){
-						ChargeItemRegistry.setEnergyStored(slot, energyStored - 20);
-						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
-					}
+			else if(vel.y < -0.1){
+				Player.setVelocity(vel.x, -0.1, vel.z);
+				if(World.getThreadTime()%5 == 0){
+					ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
+					Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 				}
 			}
 		}

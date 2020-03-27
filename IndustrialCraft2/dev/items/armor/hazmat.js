@@ -8,12 +8,10 @@ Item.createArmorItem("hazmatChestplate", "Hazmat Suit", {name: "hazmat_chestplat
 Item.createArmorItem("hazmatLeggings", "Hazmat Suit Leggings", {name: "hazmat_leggins"}, {type: "leggings", armor: 1, durability: 64, texture: "armor/hazmat_2.png"});
 Item.createArmorItem("rubberBoots", "Rubber Boots", {name: "rubber_boots"}, {type: "boots", armor: 1, durability: 64, texture: "armor/rubber_1.png"});
 
-/*Item.addCreativeGroup("armorHazmat", "Hazmat Armor", [
-	ItemID.hazmatHelmet,
-	ItemID.hazmatChestplate,
-	ItemID.hazmatLeggings,
-	ItemID.rubberBoots
-]);*/
+RadiationAPI.registerHazmatArmor(ItemID.hazmatHelmet);
+RadiationAPI.registerHazmatArmor(ItemID.hazmatChestplate);
+RadiationAPI.registerHazmatArmor(ItemID.hazmatLeggings);
+RadiationAPI.registerHazmatArmor(ItemID.rubberBoots);
 
 Recipes.addShaped({id: ItemID.hazmatHelmet, count: 1, data: 0}, [
 	" d ",

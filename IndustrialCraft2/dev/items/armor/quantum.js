@@ -8,13 +8,6 @@ Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_c
 Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 27, texture: "armor/quantum_2.png", isTech: true});
 Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 27, texture: "armor/quantum_1.png", isTech: true});
 
-/*Item.addCreativeGroup("armorQuantumCharged", "Charged Quantum Armor", [
-	ItemID.quantumHelmet,
-	ItemID.quantumChestplate,
-	ItemID.quantumLeggings,
-	ItemID.quantumBoots
-]);*/
-
 ChargeItemRegistry.registerExtraItem(ItemID.quantumHelmet, "Eu", 10000000, 8192, 4, "armor", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.quantumChestplate, "Eu", 10000000, 8192, 4, "armor", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.quantumLeggings, "Eu", 10000000, 8192, 4, "armor", true, true);
@@ -29,6 +22,12 @@ Item.registerNameOverrideFunction(ItemID.quantumHelmet, ItemName.showItemStorage
 Item.registerNameOverrideFunction(ItemID.quantumChestplate, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.quantumLeggings, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.quantumBoots, ItemName.showItemStorage);
+
+RadiationAPI.registerHazmatArmor(ItemID.quantumHelmet);
+RadiationAPI.registerHazmatArmor(ItemID.quantumChestplate);
+RadiationAPI.registerHazmatArmor(ItemID.quantumLeggings);
+RadiationAPI.registerHazmatArmor(ItemID.quantumBoots);
+
 
 IDRegistry.genItemID("quantumHelmetUncharged");
 IDRegistry.genItemID("quantumChestplateUncharged");
@@ -54,6 +53,7 @@ Item.registerNameOverrideFunction(ItemID.quantumHelmetUncharged, ItemName.showIt
 Item.registerNameOverrideFunction(ItemID.quantumChestplateUncharged, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.quantumLeggingsUncharged, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.quantumBootsUncharged, ItemName.showItemStorage);
+
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: ItemID.quantumHelmet, count: 1, data: Item.getMaxDamage(ItemID.quantumHelmet)}, [
@@ -207,24 +207,23 @@ var QUANTUM_ARMOR_FUNCS = {
 				}
 				
 				if(energyStored != newEnergyStored){
-					ChargeItemRegistry.setEnergyStored(slot, energyStored);
+					ChargeItemRegistry.setEnergyStored(slot, newEnergyStored);
 					Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 				}
 			break;
 			case 1:
-				var extra = slot.extra;
-				var hover = extra? extra.getBoolean("hover") : false;
+				var hover = slot.extra? slot.extra.getBoolean("hover") : false;
 				if(hover){
 					var vel = Player.getVelocity();
-					if(vel.y.toFixed(4) == fallVelocity){
-						extra.putBoolean("hover", false);
+					if(vel.y.toFixed(4) == fallVelocity || energyStored < 8){
+						slot.extra.putBoolean("hover", false);
 						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 						Game.message("§4" + Translation.translate("Hover mode disabled"));
 					}
-					else if(vel.y < -0.1 && energyStored >= 20){
+					else if(vel.y < -0.1){
 						Player.setVelocity(vel.x, -0.1, vel.z);
 						if(World.getThreadTime()%5 == 0){
-							ChargeItemRegistry.setEnergyStored(slot, energyStored - 20);
+							ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
 							Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 						}
 					}

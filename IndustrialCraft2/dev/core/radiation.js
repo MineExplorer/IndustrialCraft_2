@@ -2,13 +2,14 @@ let RadiationAPI = {
 	items: {},
 	playerRad: 0,
 	sources: {},
+	hazmatArmor: [],
 	
 	regRadioactiveItem: function(id, duration, stack){
 		this.items[id] = [duration, stack || false];
 	},
 	
 	getItemRadiation: function(id){
-		return this.items[id] || 0;
+		return this.items[id];
 	},
 	
 	isRadioactiveItem: function(id){
@@ -36,10 +37,16 @@ let RadiationAPI = {
 		this.playerRad = Math.max(this.playerRad + duration, 0);
 	},
 	
+	registerHazmatArmor: function(id){
+		this.hazmatArmor.push(id);
+	},
+	
 	checkPlayerArmor: function(){
-		let armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
-		return !((armor[0].id == ItemID.hazmatHelmet && armor[1].id == ItemID.hazmatChestplate && armor[2].id == ItemID.hazmatLeggings && armor[3].id == ItemID.rubberBoots) || 
-		(armor[0].id == ItemID.quantumHelmet && armor[1].id == ItemID.quantumChestplate && armor[2].id == ItemID.quantumLeggings && armor[3].id == ItemID.quantumBoots));
+		for(let i = 0; i < 4; i++){
+			let armorID = Player.getArmorSlot(i).id;
+			if(this.hazmatArmor.indexOf(armorID) == -1) return true;
+		}
+		return false;
 	},
 	
 	addEffect: function(ent, duration){
@@ -95,7 +102,7 @@ let RadiationAPI = {
 				this.addRadiation(-1);
 			}
 			let armor = Player.getArmorSlot(0);
-			if(this.playerRad > 0 && !(armor.id == ItemID.quantumHelmet && armor.data + 1e5 <= Item.getMaxDamage(armor.id))){
+			if(this.playerRad > 0 && !(armor.id == ItemID.quantumHelmet && ChargeItemRegistry.getEnergyStored(armor) >= 100000)){
 				Entity.addEffect(player, MobEffect.poison, 1, this.playerRad * 20);
 				if(Entity.getHealth(player) == 1){
 					Entity.damageEntity(player, 1);

@@ -18,13 +18,6 @@ Item.addRepairItemIds(ItemID.bronzeChestplate, [ItemID.ingotBronze]);
 Item.addRepairItemIds(ItemID.bronzeLeggings, [ItemID.ingotBronze]);
 Item.addRepairItemIds(ItemID.bronzeBoots, [ItemID.ingotBronze]);
 
-/*Item.addCreativeGroup("armorBronze", "Bronze Armor", [
-	ItemID.bronzeHelmet,
-	ItemID.bronzeChestplate,
-	ItemID.bronzeLeggings,
-	ItemID.bronzeBoots
-]);*/
-
 Recipes.addShaped({id: ItemID.bronzeHelmet, count: 1, data: 0}, [
 	"xxx",
 	"x x"

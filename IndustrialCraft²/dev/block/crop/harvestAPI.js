@@ -67,14 +67,13 @@ var AgricultureAPI = {
         extra.putInt("scan", data.scanLevel);
         return extra;
     },
-    addDefaultExtra: function(item){
+    getDefaultExtra: function(item){
         var extra = new ItemExtraData();
         var card = AgricultureAPI.cropCards[item.data];
         extra.putInt("growth", card.baseSeed.growth);
         extra.putInt("gain", card.baseSeed.gain);
         extra.putInt("resistance", card.baseSeed.resistance);
         extra.putInt("scan", 4);
-        Player.setCarriedItem(item.id, 1, item.data, extra);
         return extra;
     }
 };

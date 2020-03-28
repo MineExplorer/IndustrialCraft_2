@@ -2,13 +2,14 @@ IDRegistry.genItemID("cropSeedBag");
 Item.createItem("cropSeedBag", "Seed Bag (%s)", {name: "crop_seed_bag"}, {stack: 1, isTech: true});
 Item.registerUseFunction("cropSeedBag", function(coords, item, block){
     if(block.id == BlockID.crop){
-        var te = World.getTileEntity(coords.x,coords.y,coords.z);
+        var te = World.getTileEntity(coords.x, coords.y, coords.z);
         if(!te.data.crop){
+            let extra = item.extra || AgricultureAPI.getDefaultExtra(item);
             var data = {
-                statGrowth: item.extra.getInt("growth"),
-                statGain: item.extra.getInt("gain"),
-                statResistance: item.extra.getInt("resistance"),
-                scanLevel: item.extra.getInt("scan")
+                statGrowth: extra.getInt("growth"),
+                statGain: extra.getInt("gain"),
+                statResistance: extra.getInt("resistance"),
+                scanLevel: extra.getInt("scan")
             };
             if(te.tryPlantIn(item.data, 1, data.statGrowth, data.statGain, data.statResistance, data.scanLevel)){
 				Player.decreaseCarriedItem(1);
@@ -18,7 +19,7 @@ Item.registerUseFunction("cropSeedBag", function(coords, item, block){
 });
 
 Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name){
-    var extra = item.extra || AgricultureAPI.addDefaultExtra(item);
+    var extra = item.extra || AgricultureAPI.getDefaultExtra(item);
     var scanLvl = extra.getInt("scan");
     var cropClassName = scanLvl > 0 ? AgricultureAPI.cropCards[item.data].id : "Unknown";
     var translatedCropName = Translation.translate(cropClassName);

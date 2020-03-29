@@ -155,7 +155,7 @@ items/tool/chainsaw.js
 items/tool/nano_saber.js
 items/tool/mining_laser.js
 items/tool/crop_analyzer.js
-items/tool/weeding_machine.js
+items/tool/weeding_trovel.js
 
 integration/recipe_viewer.js
 integration/tree_capitator.js

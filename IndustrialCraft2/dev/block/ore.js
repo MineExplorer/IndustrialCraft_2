@@ -4,7 +4,8 @@ Block.createSpecialType({
 	destroytime: 3,
 	explosionres: 15,
 	lightopacity: 15,
-	renderlayer: 2
+	renderlayer: 2,
+	translucency: 0
 }, "ore");
 
 IDRegistry.genBlockID("oreCopper");
@@ -53,7 +54,7 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 	return [];
 }, 4);
 
-Item.addCreativeGroup("oreMetal", Translation.translate("Metal Ores"), [
+Item.addCreativeGroup("ores", Translation.translate("Ores"), [
 	BlockID.oreCopper,
 	BlockID.oreTin,
 	BlockID.oreLead,

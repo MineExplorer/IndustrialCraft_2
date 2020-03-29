@@ -187,34 +187,27 @@ var TileRenderer = {
         return render;
     }, 
 	
-	makeSlab: function(id, fullBlockID, fullBlockData){
-		this.setSlabShape(id);
-		this.setSlabPlaceFunction(id, fullBlockID, fullBlockData || 0);
+	setSlabShape: function(id, count){
+		for(var i = 0; i < count; i++){
+			Block.setShape(id, 0, 0, 0, 1, 0.5, 1, i);
+		}
+		for(var i = count; i < count*2; i++){
+			Block.setShape(id, 0, 0.5, 0, 1, 1, 1, i);
+		}
 	},
 	
-	setSlabShape: function(id){
-		Block.setShape(id, 0, 0, 0, 1, 0.5, 1, 0);
-		Block.setShape(id, 0, 0.5, 0, 1, 1, 1, 1);
-	},
-	
-	setSlabPlaceFunction: function(id, fullBlockID, fullBlockData){
+	setSlabPlaceFunction: function(id, count, fullBlockID){
 		Block.registerPlaceFunction(id, function(coords, item, block){
-			Game.prevent();
-			if(block.id == item.id && (block.data == (coords.side+1)%2)){
-				World.setBlock(coords.x, coords.y, coords.z, fullBlockID, fullBlockData);
+			if(block.id == item.id && block.data%count == item.data && parseInt(block.data/count) == (coords.side+1)%2){
+				World.setBlock(coords.x, coords.y, coords.z, fullBlockID, item.data);
 				return;
 			}
-			var x = coords.relative.x
-			var y = coords.relative.y
-			var z = coords.relative.z
-			block = World.getBlock(x, y, z);
-			if(World.canTileBeReplaced(block.id, block.data)){
-				if(coords.vec.y - y < 0.5){
-					World.setBlock(x, y, z, item.id, 0);
-				}
-				else {
-					World.setBlock(x, y, z, item.id, 1);
-				}
+			var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
+			if(coords.vec.y - place.y < 0.5){
+				World.setBlock(place.x, place.y, place.z, item.id, item.data);
+			}
+			else {
+				World.setBlock(place.x, place.y, place.z, item.id, item.data + count);
 			}
 		});
 	}

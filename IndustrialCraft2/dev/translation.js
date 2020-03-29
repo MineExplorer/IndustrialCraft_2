@@ -400,13 +400,12 @@ Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt
 // TEXT
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh:"热量:"});
-//Charging
+// Charging Batteries
 Translation.addTranslation("Mode: Disabled", {ru: "Режим: Выключен", pt: "Modo: Desabilitado", zh:"模式: 禁用"});
 Translation.addTranslation("Mode: Charge items not in hand", {ru: "Режим: Заряжать предметы, которые не в руке", pt: "Modo: Carregar itens que não estão nas mãos", zh:"模式: 手里没有要充电的东西"});
 Translation.addTranslation("Mode: Enabled", {ru: "Режим: Включён", pt: "Modo: Habilitado", zh:"模式: 启用"});
 // Fluid Distributor
 Translation.addTranslation("Mode:", {ru: "Режим:", es: "Modo:", pt: "Modo:", zh: "模式:"});
-Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "分配模式"});
 Translation.addTranslation("Concentrate", {ru: "концентрац.", es: "concentrado", pt: "Concentrar", zh: "混合模式"});
 // Advanced Miner
@@ -422,6 +421,7 @@ Translation.addTranslation("Max/Min", {ru: "Макс./Мин.", pt: "Máx/Min", 
 Translation.addTranslation("Cycle: ", {ru: "Цикл: ", es: "Ciclo: ", pt: "Cíclo: ", zh: "周期: "});
 Translation.addTranslation("Reset", {ru: "Сброс", pt: "Resetar", zh: "重置"});
 // Mining Laser
+Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 Translation.addTranslation("Mining", {ru: "Добыча", es: "Taladrando", pt: "Mineração", zh: "挖矿模式"});
 Translation.addTranslation("Low-Focus", {ru: "Короткого фокуса", es: "Baja Potencia", pt: "Baixo-Foco", zh: "低聚焦模式"});
 Translation.addTranslation("Long-Range", {ru: "Дальнего действия", es: "Largo Alcance", pt: "Longo Alcance", zh: "远距模式"});
@@ -453,8 +453,8 @@ Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Авт
 Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "Calor: ", zh:"热量: "});
 
 //Creative Groups
+Translation.addTranslation("Ores", {ru: "Руды"});
 Translation.addTranslation("Metal Blocks", {ru: "Блоки металлов"});
-Translation.addTranslation("Metal Ores", {ru: "Блоки руды"});
 Translation.addTranslation("Cables", {ru: "Провода"});
 Translation.addTranslation("Battery Packs", {ru: "Аккумуляторные ранцы"});
 Translation.addTranslation("Charging Batteries", {ru: "Заряжающие аккумуляторы"});

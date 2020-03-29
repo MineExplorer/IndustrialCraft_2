@@ -355,8 +355,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		return 10000;
 	},
 	
-	renderModel: MachineRegistry.renderModelWithRotation,
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc
+	renderModel: MachineRegistry.renderModelWithRotation
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.miner);

@@ -26,6 +26,7 @@ var evilMobs = [EntityType.BLAZE, EntityType.CAVE_SPIDER, EntityType.CREEPER, En
 function isMob(ent){
 	var type = Entity.getType(ent);
 	if(ent == player){
+		if(Game.getGameMode() == 1) return false;
 		if(Player.getArmorSlot(0).id == ItemID.hazmatHelmet && Player.getArmorSlot(1).id == ItemID.hazmatChestplate &&
 		Player.getArmorSlot(2).id == ItemID.hazmatLeggings && Player.getArmorSlot(3).id == ItemID.rubberBoots){
 			return false;

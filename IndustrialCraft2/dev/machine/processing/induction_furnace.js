@@ -172,8 +172,7 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		return "Machines/Induction Furnace/InductionStop.ogg";
     },
 	
-	renderModel: MachineRegistry.renderModelWithRotation,
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc
+	renderModel: MachineRegistry.renderModelWithRotation
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.inductionFurnace);

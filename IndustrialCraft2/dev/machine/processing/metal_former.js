@@ -170,8 +170,7 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		return this.data.energy_storage;
 	},
 	
-	renderModel: MachineRegistry.renderModelWithRotation,
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc
+	renderModel: MachineRegistry.renderModelWithRotation
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.metalFormer);

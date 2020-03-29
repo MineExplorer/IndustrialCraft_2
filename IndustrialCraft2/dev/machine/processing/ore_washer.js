@@ -109,8 +109,6 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 		this.data.work_time = this.defaultValues.work_time;
 	},
 	
-	renderModel: MachineRegistry.renderModelWithRotation,
-	
 	init: function(){
 		this.liquidStorage.setLimit("water", 8);
 		this.renderModel();
@@ -191,7 +189,7 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 		return this.data.energy_storage;
 	},
 	
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc
+	renderModel: MachineRegistry.renderModelWithRotation
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.oreWasher);

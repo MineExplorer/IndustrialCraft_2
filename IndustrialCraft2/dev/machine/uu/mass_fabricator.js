@@ -132,7 +132,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	energyReceive: function(type, amount, voltage) {
 		if(this.data.isEnabled){
 			if(Config.voltageEnabled && voltage > this.getMaxPacketSize()){
-				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
+				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 15, true);
 				SoundAPI.playSoundAt(this, "Machines/MachineOverload.ogg", false, 32);
 				this.selfDestroy();
 				return 1;

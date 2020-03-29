@@ -118,8 +118,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		return 2000;
 	},
 	
-	renderModel: MachineRegistry.renderModelWith6Sides,
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc
+	renderModel: MachineRegistry.renderModelWith6Sides
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.electricHeatGenerator, true);

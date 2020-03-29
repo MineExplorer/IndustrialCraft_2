@@ -79,9 +79,7 @@ MachineRegistry.registerElectricMachine(BlockID.luminator, {
 			var tile = World.addTileEntity(x, y, z);
 			tile.data = data;
 		}
-	},
-	
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc
+	}
 });
 
 MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
@@ -115,9 +113,7 @@ MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 		}else{
 			this.data.energy -= 0.25;
 		}
-	},
-	
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc
+	}
 });
 
 Block.registerPlaceFunction("luminator", function(coords, item, block){

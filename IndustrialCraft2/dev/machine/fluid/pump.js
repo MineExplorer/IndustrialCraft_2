@@ -168,9 +168,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 
 	getEnergyStorage: function(){
 		return this.data.energy_storage;
-	},
-	
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc
+	}
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.pump);

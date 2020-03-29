@@ -178,8 +178,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 		return "Machines/InterruptOne.ogg";
     },
 	
-	renderModel: MachineRegistry.renderModelWithRotation,
-	energyReceive: MachineRegistry.basicEnergyReceiveFunc
+	renderModel: MachineRegistry.renderModelWithRotation
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.compressor);

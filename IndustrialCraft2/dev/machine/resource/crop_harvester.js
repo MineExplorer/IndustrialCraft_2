@@ -149,9 +149,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
 	
     getEnergyStorage: function(){
         return this.data.energy_storage;
-    },
-	
-    energyReceive: MachineRegistry.basicEnergyReceiveFunc
+    }
 });
 
 StorageInterface.createInterface(BlockID.cropHarvester, {

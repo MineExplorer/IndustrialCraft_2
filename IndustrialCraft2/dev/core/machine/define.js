@@ -164,6 +164,8 @@ var MachineRegistry = {
 			}
 		}
 		
+		Prototype.energyReceive = Prototype.energyReceive || this.basicEnergyReceiveFunc;
+		
 		this.registerPrototype(id, Prototype);
 		// register for energy net
 		EnergyTileRegistry.addEnergyTypeForId(id, EU);

@@ -480,3 +480,4 @@ Translation.addTranslation("Reactor Platings", {ru: "Обшивки реакто
 Translation.addTranslation("Reactor Heat Vents", {ru: "Теплоотводы"});
 Translation.addTranslation("Reactor Heat Exchangers", {ru: "Теплообменники"});
 Translation.addTranslation("Reactor Coolants", {ru: "Охлаждающие капсулы"});
+Translation.addTranslation("Seed bags", {ru: "Мешки с семенами"});

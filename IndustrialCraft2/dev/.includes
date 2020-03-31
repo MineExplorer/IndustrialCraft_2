@@ -13,6 +13,7 @@ core/sound_engine.js
 core/item_name.js
 core/ui_buttons.js
 core/integration.js
+core/harvestAPI.js
 
 block/rubber_tree/sapling.js
 block/rubber_tree/log.js
@@ -25,11 +26,9 @@ block/reinforced.js
 block/cable.js
 block/mining_pipe.js
 
-block/crop/harvestAPI.js
 block/crop/biome_bonuses.js
 block/crop/base_crop_classes.js
 block/crop/crop.js
-block/crop/crop_cards.js
 
 machine/generator/generator.js
 machine/generator/geothermal.js
@@ -107,6 +106,7 @@ items/resource/cells.js
 items/resource/waste.js
 
 items/crop/crop_seed_bag.js
+items/crop/crop_cards.js
 items/crop/crop_stick.js
 items/crop/crop_utils.js
 items/crop/crop_items.js

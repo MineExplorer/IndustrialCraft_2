@@ -17,8 +17,10 @@ Item.registerUseFunction("cropSeedBag", function(coords, item, block){
     }
 });
 
+Item.addCreativeGroup("cropSeedBag", Translation.translate("Seed bags"), [ItemID.cropSeedBag]);
+
 Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name){
-    var extra = item.extra || AgricultureAPI.addDefaultExtra(item);
+    var extra = item.extra;
     var scanLvl = extra.getInt("scan");
     var cropClassName = scanLvl > 0 ? AgricultureAPI.cropCards[item.data].id : "Unknown";
     var translatedCropName = Translation.translate(cropClassName);
@@ -27,10 +29,10 @@ Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name){
     if(scanLvl >= 4){
         newName += "§2Gr: " + extra.getInt("growth") + '\n';
         newName += "§6Ga: " + extra.getInt("gain") + '\n';
-        newName += "§bRe: " + extra.getInt("resistance") + '\n';
+        newName += "§bRe: " + extra.getInt("resistance");
     }
     if(Config.debugMode){
 		newName += "[DEBUG]scanLevel: " + scanLvl;
 	}
-    return newName + '\n';
+    return newName;
 });

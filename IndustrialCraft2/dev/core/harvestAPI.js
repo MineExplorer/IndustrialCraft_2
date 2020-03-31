@@ -8,11 +8,14 @@ var AgricultureAPI = {
             var funcs = AgricultureAPI.abstractFunctions[card.base];
             if(funcs) this.addMissingFuncsToCard(card, funcs);
         }
+
         this.addMissingFuncsToCard(card, AgricultureAPI.abstractFunctions["IC2CropCard"]);
-        if(card.baseSeed.addToCreative != false){
-			//Item.addToCreative(ItemID.cropSeedBag, 1, this.cropCards.length);
-		}
         this.cropCards.push(card);
+
+        if(card.baseSeed.addToCreative != false){
+            let extra = this.getDefaultExtra(this.cropCards.length - 1);
+            Item.addToCreative(ItemID.cropSeedBag, 1, this.cropCards.length - 1, extra);
+		}
     },
     addMissingFuncsToCard: function(card, functions){
         for(var funcName in functions){
@@ -59,14 +62,13 @@ var AgricultureAPI = {
         extra.putInt("scan", data.scanLevel);
         return extra;
     },
-    addDefaultExtra: function(item){
+    getDefaultExtra: function(cardIndex){
         var extra = new ItemExtraData();
-        var card = AgricultureAPI.cropCards[item.data];
+        var card = AgricultureAPI.cropCards[cardIndex];
         extra.putInt("growth", card.baseSeed.growth);
         extra.putInt("gain", card.baseSeed.gain);
         extra.putInt("resistance", card.baseSeed.resistance);
         extra.putInt("scan", 4);
-        Player.setCarriedItem(item.id, 1, item.data, extra);
         return extra;
     }
 };

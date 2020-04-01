@@ -398,6 +398,7 @@ Translation.addTranslation("eatingplant", {ru: "Плотоядное расте�
 Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt: "Beterrabas", zh: "甜菜根"});
 
 // TEXT
+Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh:"热量:"});
 // Charging Batteries
@@ -421,7 +422,6 @@ Translation.addTranslation("Max/Min", {ru: "Макс./Мин.", pt: "Máx/Min", 
 Translation.addTranslation("Cycle: ", {ru: "Цикл: ", es: "Ciclo: ", pt: "Cíclo: ", zh: "周期: "});
 Translation.addTranslation("Reset", {ru: "Сброс", pt: "Resetar", zh: "重置"});
 // Mining Laser
-Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 Translation.addTranslation("Mining", {ru: "Добыча", es: "Taladrando", pt: "Mineração", zh: "挖矿模式"});
 Translation.addTranslation("Low-Focus", {ru: "Короткого фокуса", es: "Baja Potencia", pt: "Baixo-Foco", zh: "低聚焦模式"});
 Translation.addTranslation("Long-Range", {ru: "Дальнего действия", es: "Largo Alcance", pt: "Longo Alcance", zh: "远距模式"});

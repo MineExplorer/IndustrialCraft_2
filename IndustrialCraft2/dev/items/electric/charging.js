@@ -108,9 +108,8 @@ var ChargingBattery = {
 		if(mode == 2){
 			var tooltip = Translation.translate("Mode: Disabled");
 		}
-		tooltip = ItemName.getTooltip(name, tooltip);
 		name = ItemName.showItemStorage(item, name);
-		return name + tooltip;
+		return name + '\n' + tooltip;
 	}
 }
 

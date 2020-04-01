@@ -6,6 +6,7 @@ TileRenderer.setStandartModel(BlockID.advancedMiner, [["teleporter_top", 0], ["m
 TileRenderer.registerRotationModel(BlockID.advancedMiner, 0, [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.advancedMiner, 4, [["teleporter_top", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
 
+ItemName.setRarity(BlockID.advancedMiner, 2, true);
 ItemName.addStorageBlockTooltip("advancedMiner", 3, "4M");
 
 Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData, level){

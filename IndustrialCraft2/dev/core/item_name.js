@@ -23,8 +23,7 @@ ItemName = {
 	
 	addTierTooltip: function(id, tier){
 		Item.registerNameOverrideFunction(BlockID[id], function(item, name){
-			var tooltip = "§7" + Translation.translate("Power Tier: ") + tier;
-			return name + ItemName.getTooltip(name, tooltip);
+			return name + "\n§7" + Translation.translate("Power Tier: ") + tier;
 		});
 	},
 	
@@ -42,7 +41,6 @@ ItemName = {
 	
 	showBlockStorage: function(name, tier, capacity){
 		var tierText = "§7" + Translation.translate("Power Tier: ") + tier;
-		tierText = this.getTooltip(name, tierText);
 		
 		var energy = 0;
 		var item = Player.getCarriedItem();
@@ -50,42 +48,26 @@ ItemName = {
 			energy = item.extra.getInt("Eu");
 		}
 		var energyText = this.displayEnergy(energy) + "/" + capacity + " EU";
-		energyText = this.getTooltip(name, energyText);
 		
-		return name + tierText + energyText;
+		return name + "\n" + tierText + "\n" +energyText;
 	},
 	
 	getTooltip: function(name, tooltip){
-		var n = name.length, l = tooltip.length;
-		var space = "";
-		if(name[0]=='§') n -= 2;
-		if(tooltip[0]=='§') l -= 2;
-		while(n > l){
-			space += " ";
-			n -= 2;
-		}
-		return "\n" + space + tooltip;
+		return "\n" + tooltip;
 	},
 	
-	getItemStorageText: function(item, name){
+	getItemStorageText: function(item){
 		var capacity = ChargeItemRegistry.getMaxCharge(item.id);
 		var energy = ChargeItemRegistry.getEnergyStored(item);
-		var tooltip = "§7" + this.displayEnergy(energy) + "/" + this.displayEnergy(capacity) + " EU";
-		return this.getTooltip(name, tooltip);
+		return "§7" + this.displayEnergy(energy) + "/" + this.displayEnergy(capacity) + " EU";
 	},
 	
 	showItemStorage: function(item, name){
-		var tooltip = ItemName.getItemStorageText(item, name);
 		var rarity = ItemName.getRarity(item.id);
-		if(rarity > 0 && ChargeItemRegistry.getEnergyStored(item) > 0){
+		if(rarity > 0){
 			name = ItemName.getRarityCode(rarity) + name;
 		}
-		return name + tooltip;
-	},
-	
-	showRareItemStorage: function(item, name){
-		ItemName.setRarity(item.id, 2);
-		return ItemName.showItemStorage(item, name);
+		return name + '\n' + ItemName.getItemStorageText(item);
 	},
 	
 	displayEnergy: function(energy){

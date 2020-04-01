@@ -5,9 +5,9 @@ ChargeItemRegistry.registerExtraItem(ItemID.miningLaser, "Eu", 1000000, 2048, 3,
 
 ItemName.setRarity(ItemID.miningLaser, 1);
 Item.registerNameOverrideFunction(ItemID.miningLaser, function(item, name){
-	name = ItemName.showItemStorage(item, name);
+	name = "(WIP) " + ItemName.showItemStorage(item, name);
 	var mode = item.extra? item.extra.getInt("mode") : 0;
-	name += " (WIP)\n"+MiningLaser.getModeInfo(mode);
+	name += "\n"+MiningLaser.getModeInfo(mode);
 	return name;
 });
 

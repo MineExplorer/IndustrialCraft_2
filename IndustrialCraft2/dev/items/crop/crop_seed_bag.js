@@ -10,7 +10,9 @@ Item.registerUseFunction("cropSeedBag", function(coords, item, block){
                 statResistance: item.extra.getInt("resistance"),
                 scanLevel: item.extra.getInt("scan")
             };
-            if(te.tryPlantIn(item.data, 1, data.statGrowth, data.statGain, data.statResistance, data.scanLevel)){
+            let isCropPlanted = te.tryPlantIn(item.data, 1, data.statGrowth, data.statGain, data.statResistance, data.scanLevel);
+            let isCreativeMode = Game.getGameMode() == Native.GameMode.CREATIVE;
+            if(isCropPlanted && !isCreativeMode){
 				Player.decreaseCarriedItem(1);
 			}
         }

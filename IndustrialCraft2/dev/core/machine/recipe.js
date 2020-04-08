@@ -5,9 +5,11 @@ var MachineRecipeRegistry = {
 		if(validateKeys){
 			var newData = {};
 			for(var key in data){
-				var newKey = key;
-				if(key.split(":").length < 2){
-					newKey = eval(key);
+				if(key.indexOf(":") != -1){
+					var keyArray = key.split(":");
+					var newKey = eval(keyArray[0]) + ":" + keyArray[1];
+				} else {
+					var newKey = eval(key);
 				}
 				newData[newKey] = data[key];
 			}

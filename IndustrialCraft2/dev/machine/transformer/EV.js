@@ -16,6 +16,13 @@ Item.registerNameOverrideFunction(BlockID.transformerEV, function(item, name){
 	return name + "\n§7Low: 2048 EU/t High: 8192 EU/t";
 });
 
+Item.addCreativeGroup("EUTransformers", Translation.translate("Transformers"), [
+	BlockID.transformerLV,
+	BlockID.transformerMV,
+	BlockID.transformerHV,
+	BlockID.transformerEV
+]);
+
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.transformerEV, count: 1, data: 0}, [
 		" b ",

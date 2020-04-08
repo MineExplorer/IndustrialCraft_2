@@ -68,7 +68,7 @@ Item.registerIconOverrideFunction(ItemID.upgradeFluidPulling, function(item, nam
 IDRegistry.genItemID("upgradeMFSU");
 Item.createItem("upgradeMFSU", "MFSU Upgrade Kit", {name: "mfsu_upgrade", meta: 0});
 
-Item.addCreativeGroup("upgrade", Translation.translate("Upgrades"), [
+Item.addCreativeGroup("ic2_upgrade", Translation.translate("Machine Upgrades"), [
 	ItemID.upgradeOverclocker,
 	ItemID.upgradeTransformer,
 	ItemID.upgradeEnergyStorage,

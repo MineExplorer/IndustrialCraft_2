@@ -20,7 +20,7 @@ IDRegistry.genItemID("casingLead");
 Item.createItem("casingLead", "Lead Casing", {name: "casing_lead"});
 
 // creative group
-Item.addCreativeGroup("casingMetal", Translation.translate("Metal Casing"), [
+Item.addCreativeGroup("casingMetal", Translation.translate("Metal Casings"), [
 	ItemID.casingCopper,
 	ItemID.casingLead,
 	ItemID.casingGold,

@@ -11,15 +11,14 @@ Item.registerUseFunction("cropSeedBag", function(coords, item, block){
                 scanLevel: item.extra.getInt("scan")
             };
             let isCropPlanted = te.tryPlantIn(item.data, 1, data.statGrowth, data.statGain, data.statResistance, data.scanLevel);
-            let isCreativeMode = Game.getGameMode() == Native.GameMode.CREATIVE;
-            if(isCropPlanted && !isCreativeMode){
+            if(isCropPlanted && Game.getGameMode() != 1){
 				Player.decreaseCarriedItem(1);
 			}
         }
     }
 });
 
-Item.addCreativeGroup("cropSeedBag", Translation.translate("Seed bags"), [ItemID.cropSeedBag]);
+Item.addCreativeGroup("cropSeedBag", Translation.translate("Seed Bags"), [ItemID.cropSeedBag]);
 
 Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name){
     var extra = item.extra;

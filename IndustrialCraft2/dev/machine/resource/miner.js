@@ -174,13 +174,13 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				var prc = sprc;
 			}else if(Math.abs(dx) > Math.abs(dz)){
 				var prc = 0;
-			}else{
+			} else {
 				var prc = 1;
 			}
 			if(prc == 0){
 				if(dx > 0) x++;
 				else x--;
-			}else{
+			} else {
 				if(dz > 0) z++;
 				else z--;
 			}
@@ -207,7 +207,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 					items.push({id: slot.id, count: slot.count, data: slot.data, extra: slot.extra});
 					if(container.slots){
 						slot.id = slot.count = slot.data = 0;
-					}else{
+					} else {
 						container.setSlot(i, 0, 0, 0);
 					}
 				}
@@ -327,8 +327,9 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				if(this.data.progress >= 20){
 					this.drop([{id: BlockID.miningPipe, count: 1, data: 0}]);
 					var pipeSlot = this.container.getSlot("slotPipe");
-					if(pipeSlot.id < 256 && pipeSlot.id > 0 || pipeSlot.id >= 8192 && pipeSlot.id != BlockID.miningPipe){
-						World.setBlock(this.x, this.data.y, this.z, pipeSlot.id, pipeSlot.data);
+					if(pipeSlot.id != 0 && (pipeSlot.id < 256 || pipeSlot.id >= 8192 && pipeSlot.id != BlockID.miningPipe)){
+						var blockId = Block.covertItemToBlockId(pipeSlot.id);
+						World.setBlock(this.x, this.data.y, this.z, blockId, pipeSlot.data);
 						pipeSlot.count--;
 						if(!pipeSlot.count) pipeSlot.id = 0;
 					}

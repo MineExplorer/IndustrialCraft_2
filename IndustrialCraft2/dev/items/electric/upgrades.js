@@ -1,9 +1,9 @@
 IDRegistry.genItemID("upgradeOverclocker");
 Item.createItem("upgradeOverclocker", "Overclocker Upgrade", {name: "upgrade_overclocker", meta: 0});
 Item.registerNameOverrideFunction(ItemID.upgradeOverclocker, function(item, name){
-	let percent = "%%"; // it's one % in game
+	let percent = "%%%%"; // it's one % in name
 	if(currentUIscreen == "hud_screen" || currentUIscreen == "in_game_play_screen"){
-		percent += "%%"; // this game is broken
+		percent += "%%%%"; // this game is broken
 	}
 	let timeTooltip = Translation.translate("Decrease process time to ") + 70 + percent;
 	let powerTooltip = Translation.translate("Increase power to ") + 160 + percent;
@@ -221,7 +221,7 @@ Item.registerUseFunction("upgradeMFSU", function(coords, item, block){
 Item.registerUseFunction("upgradePulling", function(coords, item, block){
 	if(item.data == 0){
 		Player.setCarriedItem(ItemID.upgradePulling, item.count, coords.side+1);
-	}else{
+	} else {
 		Player.setCarriedItem(ItemID.upgradePulling, item.count);
 	}
 });
@@ -229,7 +229,7 @@ Item.registerUseFunction("upgradePulling", function(coords, item, block){
 Item.registerUseFunction("upgradeEjector", function(coords, item, block){
 	if(item.data == 0){
 		Player.setCarriedItem(ItemID.upgradeEjector, item.count, coords.side+1);
-	}else{
+	} else {
 		Player.setCarriedItem(ItemID.upgradeEjector, item.count);
 	}
 });
@@ -237,7 +237,7 @@ Item.registerUseFunction("upgradeEjector", function(coords, item, block){
 Item.registerUseFunction("upgradeFluidEjector", function(coords, item, block){
 	if(item.data == 0){
 		Player.setCarriedItem(ItemID.upgradeFluidEjector, item.count, coords.side+1);
-	}else{
+	} else {
 		Player.setCarriedItem(ItemID.upgradeFluidEjector, item.count);
 	}
 });
@@ -245,7 +245,7 @@ Item.registerUseFunction("upgradeFluidEjector", function(coords, item, block){
 Item.registerUseFunction("upgradeFluidPulling", function(coords, item, block){
 	if(item.data == 0){
 		Player.setCarriedItem(ItemID.upgradeFluidPulling, item.count, coords.side+1);
-	}else{
+	} else {
 		Player.setCarriedItem(ItemID.upgradeFluidPulling, item.count, 0);
 	}
 });

@@ -233,7 +233,7 @@ var MachineRegistry = {
 	setFacing: function(coords){
 		if(Entity.getSneaking(player)){
 			var facing = coords.side + Math.pow(-1, coords.side);
-		}else{
+		} else {
 			var facing = coords.side;
 		}
 		if(facing != this.data.meta){
@@ -291,7 +291,7 @@ var MachineRegistry = {
 				return 1;
 			}
 			var add = Math.min(maxVoltage, this.getEnergyStorage() - this.data.energy);
-		}else{
+		} else {
 			var add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
 		}
 		this.data.energy += add;

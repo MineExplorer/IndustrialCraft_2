@@ -76,7 +76,7 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 	tick: function(){
 		if(this.data.inverted){
 			this.container.setText("text2", Translation.translate("Concentrate"));
-		}else{
+		} else {
 			this.container.setText("text2", Translation.translate("Distribute"));
 		}
 		

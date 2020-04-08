@@ -183,7 +183,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 				}
 				else this.controlAirImage(content, false);
 			}
-		}else{
+		} else {
 			this.setIndicator(content, false);
 			this.deactivate();
 		}

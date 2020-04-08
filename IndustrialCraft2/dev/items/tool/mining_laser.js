@@ -116,7 +116,7 @@ var MiningLaser = {
 							}
 						}
 					}
-				}else{
+				} else {
 					this.shootLaser(start, dir, mode);
 				}
 			}
@@ -147,7 +147,7 @@ var MiningLaser = {
        var material = ToolAPI.getBlockMaterialName(block.id);
 		if(Math.random() < 0.5 && (material == "wood" || material == "plant" || material == "fibre" || material == "wool")){
 			World.setBlock(x, y, z, 51);
-		}else{
+		} else {
 			World.setBlock(x, y, z, 0);
 		}
 		var drop = getBlockDrop({x: x, y: y, z: z}, block.id, block.data, 100, true);
@@ -176,10 +176,10 @@ var MiningLaser = {
 				Entity.remove(laser.ent);
 				this.lasers.splice(i, 1);
 				i--;
-			}else{
+			} else {
 				if(laser.hitblock){
 					laser.hitblock = false;
-				}else{
+				} else {
 					laser.power -= 0.25;
 				}
 				var vel = laser.vel;
@@ -217,7 +217,7 @@ var MiningLaser = {
 						laser.hitblock = true;
 						var vel = laser.vel;
 						Entity.setVelocity(laser.ent, vel.x, vel.y, vel.z);	
-					}else{
+					} else {
 						Entity.remove(laser.ent);
 						this.lasers.splice(i, 1);
 					}

@@ -65,7 +65,7 @@ var RUBBER_ARMOR_FUNC = {
 			var Db = Math.floor(params.damage*7/16);
 			if(Dp < 1){
 				Game.prevent();
-			}else{
+			} else {
 				Entity.setHealth(player, Entity.getHealth(player) + params.damage - Dp);
 			}
 			item.data += Db;

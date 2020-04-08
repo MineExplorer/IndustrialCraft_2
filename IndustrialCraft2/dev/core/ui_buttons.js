@@ -31,7 +31,7 @@ var UIbuttons = {
 		var data = {type: 0, name: name};
 		if(!this.data[id]){
 			this.data[id] = [data]
-		}else{
+		} else {
 			this.data[id].push(data);
 		}
 	},
@@ -40,7 +40,7 @@ var UIbuttons = {
 		var data = {type: 1, name: name, hidden: !notHidden};
 		if(!this.data[id]){
 			this.data[id] = [data]
-		}else{
+		} else {
 			this.data[id].push(data);
 		}
 	},
@@ -174,7 +174,7 @@ UIbuttons.onButtonUpdate("button_hover", function(element){
 	var extra = armor.extra;
 	if(extra && extra.getBoolean("hover")){
 		element.bitmap = "button_hover_on";
-	}else{
+	} else {
 		element.bitmap = "button_hover_off";
 	}
 });

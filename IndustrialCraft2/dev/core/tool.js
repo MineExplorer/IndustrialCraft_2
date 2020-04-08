@@ -21,7 +21,7 @@ let ICTool = {
 		let wrench = this.getWrenchData(id);
 		if(!wrench.energy){
 			ToolAPI.breakCarriedTool(damage);
-		}else{
+		} else {
 			this.useElectricItem({id: id, data: data}, wrench.energy * damage);
 		}
 		SoundAPI.playSound("Tools/Wrench.ogg");

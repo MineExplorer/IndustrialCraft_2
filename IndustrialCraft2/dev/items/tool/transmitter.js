@@ -27,7 +27,7 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 	if(!extra){
 		extra = new ItemExtraData();
 		item.extra = extra;
-	}else{
+	} else {
 		var x = extra.getInt("x");
 		var y = extra.getInt("y");
 		var z = extra.getInt("z");

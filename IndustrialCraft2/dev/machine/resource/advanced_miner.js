@@ -217,7 +217,7 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 				}
 			}
 			this.activate();
-		}else{
+		} else {
 			this.deactivate();
 		}
 		

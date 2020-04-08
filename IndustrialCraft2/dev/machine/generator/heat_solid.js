@@ -109,7 +109,7 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 				this.data.burn = burn - 1;
 				fuelSlot.count--;
 				if(fuelSlot.count <= 0) fuelSlot.id = 0;
-			}else{
+			} else {
 				this.deactivate();
 			}
 		}

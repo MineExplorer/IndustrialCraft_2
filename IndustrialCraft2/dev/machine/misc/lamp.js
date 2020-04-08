@@ -110,7 +110,7 @@ MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 	tick: function(type, src){
 		if(this.data.energy < 0.25){
 			this.disable();
-		}else{
+		} else {
 			this.data.energy -= 0.25;
 		}
 	}

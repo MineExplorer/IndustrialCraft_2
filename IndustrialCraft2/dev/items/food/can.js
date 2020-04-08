@@ -32,7 +32,7 @@ Item.registerNoTargetUseFunction("tinCanFull", function(){
 		}
 		if(item.count == count){
 			Player.setCarriedItem(ItemID.tinCanEmpty, count, 0);
-		}else{
+		} else {
 			Player.setCarriedItem(item.id, item.count - count, item.data);
 			Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
 		}

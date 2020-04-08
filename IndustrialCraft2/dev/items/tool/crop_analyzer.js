@@ -252,7 +252,7 @@ var AgriculturalAnalyser = {
             var tileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
             if(!tileEntity.crop) return;
             AgriculturalAnalyser.showCropValues(tileEntity);
-        }else{
+        } else {
             AgriculturalAnalyser.noTargetUseFunction(item);
         }
     },

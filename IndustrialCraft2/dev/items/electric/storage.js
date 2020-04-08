@@ -112,7 +112,7 @@ Item.registerUseFunction("debugItem", function(coords, item, block){
 			var net = tile.__energyNets[i];
 			if(net) Game.message(net.toString());
 		}
-	}else{
+	} else {
 		var net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
 		if(net) Game.message(net.toString());
 	}

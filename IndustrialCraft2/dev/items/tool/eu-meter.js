@@ -109,7 +109,7 @@ Item.registerUseFunction("EUMeter", function(coords, item, block){
 	var tile = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z);
 	if(tile){
 		var net = tile.__energyNets.Eu;
-	}else{
+	} else {
 		var net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
 	}
 	if(!EUReader.container && (net || tile)){
@@ -151,7 +151,7 @@ Callback.addCallback("tick", function(){
 						currentValue = energyIn - energyOut;
 					break;
 				}
-			}else{
+			} else {
 				var unit = " V";
 				if(EUReader.tile){
 					currentValue = r(EUReader.tile.data.last_voltage) || 0;

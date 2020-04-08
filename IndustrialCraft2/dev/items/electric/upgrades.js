@@ -2,7 +2,7 @@ IDRegistry.genItemID("upgradeOverclocker");
 Item.createItem("upgradeOverclocker", "Overclocker Upgrade", {name: "upgrade_overclocker", meta: 0});
 Item.registerNameOverrideFunction(ItemID.upgradeOverclocker, function(item, name){
 	let percent = "%%%%"; // it's one % in name
-	if(currentUIscreen == "hud_screen" || currentUIscreen == "in_game_play_screen"){
+	if(currentUIscreen == "in_game_play_screen" || currentUIscreen == "world_loading_progress_screen - local_world_load"){
 		percent += "%%%%"; // this game is broken
 	}
 	let timeTooltip = Translation.translate("Decrease process time to ") + 70 + percent;

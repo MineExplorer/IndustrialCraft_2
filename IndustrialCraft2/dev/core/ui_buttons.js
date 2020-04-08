@@ -1,7 +1,7 @@
 var currentUIscreen;
 Callback.addCallback("NativeGuiChanged", function(screenName){
 	currentUIscreen = screenName;
-	if(screenName != "hud_screen" && screenName != "in_game_play_screen"){
+	if(screenName != "in_game_play_screen"){
 		if(UIbuttons.container){
 			UIbuttons.container.close();
 			UIbuttons.container = null;

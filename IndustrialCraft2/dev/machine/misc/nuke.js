@@ -20,23 +20,30 @@ Callback.addCallback("PreLoaded", function(){
 	], ['#', 46, -1, 'x', ItemID.plutonium, 0, 'c', ItemID.circuitAdvanced, 0, 'n', ItemID.neutronReflectorThick, 0]);
 });
 
-function explodeNuke(x, y, z, radius){
-	World.explode(x + 0.5, y + 0.5, z + 0.5, 0.5);
+
+MachineRegistry.registerPrototype(BlockID.nuke, {
+	defaultValues: {
+		activated: false,
+		timer: 300
+	},
+	
+	explode: function(radius){
+		let x = this.x, y = this.y, z = this.z;
+		//function explodeNuke(x, y, z, radius){
+	World.explode(x + 0.5, y + 0.5, z + 0.5, 1);
 	let entities = Entity.getAll();
 	let rad = radius * 1.5;
 	for(let i in entities){
 		let ent = entities[i];
-		if(isMob(ent)){
-			let c = Entity.getPosition(ent);
-			let xx = Math.abs(x - c.x), yy = Math.abs(y - c.y), zz = Math.abs(z - c.z);
-			let dist = Math.sqrt(xx*xx + yy*yy + zz*zz);
-			if(dist <= rad){
-				let damage = Math.ceil(rad*rad * 25 / (dist*dist));
-				if(damage >= 100){
-					Entity.damageEntity(ent, damage);
-				} else {
-					Entity.damageEntity(ent, damage, 11);
-				}
+		let c = Entity.getPosition(ent);
+		let dx = Math.abs(x - c.x), dy = Math.abs(y - c.y), dz = Math.abs(z - c.z);
+		let dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+		if(dist <= rad){
+			let damage = Math.ceil(rad*rad * 25 / (dist*dist));
+			if(damage >= 100){
+				Entity.damageEntity(ent, damage);
+			} else {
+				Entity.damageEntity(ent, damage, 11);
 			}
 		}
 	}
@@ -47,7 +54,7 @@ function explodeNuke(x, y, z, radius){
 	for(let zz = -radius; zz <= radius; zz++){
 		if(Math.sqrt(xx*xx + yy*yy*4 + zz*zz) <= radius){
 			let block = World.getBlock(x + xx, y + yy, z + zz);
-			if(block.id != 7 && block.id != 120){
+			if(Block.getExplosionResistance(block.id) < 10000){
 				World.setBlock(x + xx, y + yy, z + zz, 0);
 				if(Math.random() < 0.01){
 					let drop = getBlockDrop({x: x + xx, y: y + yy, z: z + zz}, block.id, block.data, 100);
@@ -60,19 +67,7 @@ function explodeNuke(x, y, z, radius){
 			}
 		}
 	}
-}
 
-MachineRegistry.registerPrototype(BlockID.nuke, {
-	defaultValues: {
-		activated: false,
-		timer: 300
-	},
-	
-	explode: function(radius){
-		let x = this.x, y = this.y, z = this.z;
-		runOnMainThread(function(){
-			explodeNuke(x, y, z, radius);
-		});
 		
 		let sound = SoundAPI.playSoundAt(this, "Tools/NukeExplosion.ogg", false, 128);
 		RadiationAPI.addRadiationSource(this.x + 0.5, this.y + 0.5, this.z + 0.5, radius * 2, 600);

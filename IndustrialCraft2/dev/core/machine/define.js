@@ -25,9 +25,10 @@ var MachineRegistry = {
 		
 		if(Prototype.wrenchClick){
 			Prototype.click = function(id, count, data, coords){
-				if(ICTool.isValidWrench(id, data, 10)){
+				var item = Player.getCarriedItem();
+				if(ICTool.isValidWrench(item, 10)){
 					if(this.wrenchClick(id, count, data, coords))
-						ICTool.useWrench(id, data, 10);
+						ICTool.useWrench(item, 10);
 					return true;
 				}
 				return false;
@@ -209,25 +210,47 @@ var MachineRegistry = {
 			tile.data.meta = rotation;
 			TileRenderer.mapAtCoords(place.x, place.y, place.z, item.id, rotation);
 			if(item.extra){
-				tile.data.energy = item.extra.getInt("Eu");
+				tile.data.energy = item.extra.getInt("energy");
 			}
 		});
 	},
 	
-	getMachineDrop: function(coords, blockID, level, basicDrop){
+	getMachineDrop: function(coords, blockID, level, basicDrop, saveEnergyAmount){
 		BlockRenderer.unmapAtCoords(coords.x, coords.y, coords.z);
 		var item = Player.getCarriedItem();
-		if(ICTool.isValidWrench(item.id, item.data, 10)){
-			ICTool.useWrench(item.id, item.data, 10);
+		var dropID = 0;
+		if(ICTool.isValidWrench(item, 10)){
+			ICTool.useWrench(item, 10);
 			World.setBlock(coords.x, coords.y, coords.z, 0);
 			var chance = ICTool.getWrenchData(item.id).chance;
-			if(Math.random() < chance){return [[blockID, 1, 0]];}
-			return [[basicDrop || blockID, 1, 0]];
+			if(Math.random() < chance){
+				dropID = blockID;
+			} else {
+				dropID = basicDrop || blockID;
+			}
 		}
-		if(level >= ToolAPI.getBlockDestroyLevel(blockID)){
-			return [[basicDrop || blockID, 1, 0]];
+		else if(level >= ToolAPI.getBlockDestroyLevel(blockID)){
+			dropID = basicDrop || blockID;
 		}
+		if(dropID == blockID && saveEnergyAmount){
+			var extra = new ItemExtraData();
+			extra.putInt("energy", saveEnergyAmount);
+			World.drop(coords.x, coords.y, coords.z, dropID, 1, 0, extra);
+			return [];
+		}
+		if(dropID) return [[dropID, 1, 0]];
 		return [];
+	},
+	
+	setMachineDrop: function(nameID, basicDrop){
+		Block.registerDropFunction(nameID, function(coords, blockID, blockData, level){
+			return MachineRegistry.getMachineDrop(coords, blockID, level, basicDrop);
+		});
+		Block.registerPopResourcesFunction(nameID, function(coords, block){ // drop on explosion
+			if(Math.random() < 0.25){
+				World.drop(coords.x + .5, coords.y + .5, coords.z + .5, basicDrop || block.id, 1);
+			}
+		});
 	},
 	
 	setFacing: function(coords){
@@ -282,7 +305,8 @@ var MachineRegistry = {
 		var maxVoltage = this.getMaxPacketSize();
 		if(voltage > maxVoltage){
 			if(Config.voltageEnabled){
-				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 0.5, true);
+				World.setBlock(this.x, this.y, this.z, 0);
+				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 1.2, true);
 				var sound = SoundAPI.playSound("Machines/MachineOverload.ogg", false, true);
 				if(sound && !sound.source){
 					sound.setSource(this, 32);
@@ -382,32 +406,3 @@ var transferByTier = {
 	3: 2048,
 	4: 8192
 }
-
-// lever placing fix
-Item.registerUseFunctionForID(69, function(coords, item, block){
-	if(block.id >= 8192 && MachineRegistry.isMachine(block.id)){
-		Game.prevent();
-		var side  = coords.side;
-		var coord = coords.relative;
-		block = World.getBlockID(coord.x, coord.y, coord.z);
-		if(World.canTileBeReplaced(block)){
-			Player.decreaseCarriedItem(1);
-			World.setBlock(coord.x, coord.y, coord.z, item.id, (6 - side)%6);
-		}
-	}
-});
-// buttons placing fix
-function BUTTON_PLACE_FUNC(coords, item, block){
-	if(block.id >= 8192 && MachineRegistry.isMachine(block.id)){
-		Game.prevent();
-		var side  = coords.side;
-		var coord = coords.relative;
-		block = World.getBlockID(coord.x, coord.y, coord.z);
-		if(World.canTileBeReplaced(block)){
-			Player.decreaseCarriedItem(1);
-			World.setBlock(coord.x, coord.y, coord.z, item.id, side);
-		}
-	}
-}
-Item.registerUseFunctionForID(77, BUTTON_PLACE_FUNC);
-Item.registerUseFunctionForID(143, BUTTON_PLACE_FUNC);

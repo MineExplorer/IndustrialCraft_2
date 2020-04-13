@@ -118,7 +118,7 @@ let SoundAPI = {
 		}
 		curSound.setSource(coord, radius);
 		curSound.start();
-		} 
+		}
 		catch(err) {
 			Logger.Log("multi-sound ["+ fileName +"] start failed", "ERROR");
 			Logger.Log(err, "ERROR");
@@ -285,6 +285,10 @@ Callback.addCallback("tick", function(){
 });
 
 Callback.addCallback("LevelLeft", function(){
+	SoundAPI.clearSounds();
+});
+
+Callback.addCallback("MinecraftActivityStopped", function() {
 	SoundAPI.clearSounds();
 });
 

@@ -8,9 +8,7 @@ TileRenderer.registerRotationModel(BlockID.miner, 4, [["miner_bottom", 1], ["mac
 
 ItemName.addTierTooltip("miner", 2);
 
-Block.registerDropFunction("miner", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("miner", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.miner, count: 1, data: 0}, [
@@ -185,7 +183,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				else z--;
 			}
 			return this.findPath(x, y, z, sprc, level);
-		}else if(this.canBeDestroyed(block.id, level)){
+		} else if(this.canBeDestroyed(block.id, level)){
 			return {x: x, y: y, z: z};
 		}
 		this.data.x++;

@@ -176,16 +176,16 @@ var TileRenderer = {
 		BlockRenderer.setCustomCollisionShape(id, -1, shape);
 	},
 	
-	getCropModel: function(texture){   
-        var render = new ICRender.Model(); 
-        var model = BlockRenderer.createModel(); 
+	getCropModel: function(texture){
+        var render = new ICRender.Model();
+        var model = BlockRenderer.createModel();
         model.addBox(0.25, 0, 0, 0.25, 1, 1, texture[0], texture[1]);
         model.addBox(0.75, 0, 0, 0.75, 1, 1, texture[0], texture[1]);
         model.addBox(0, 0, 0.25, 1, 1, 0.25, texture[0], texture[1]);
         model.addBox(0, 0, 0.75, 1, 1, 0.75, texture[0], texture[1]);
-        render.addEntry(model); 
+        render.addEntry(model);
         return render;
-    }, 
+    },
 	
 	setSlabShape: function(id, count){
 		for(var i = 0; i < count; i++){

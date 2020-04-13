@@ -9,9 +9,7 @@ TileRenderer.registerRotationModel(BlockID.massFabricator, 4, [["machine_advance
 ItemName.setRarity(BlockID.massFabricator, 2, true);
 ItemName.addTierTooltip("massFabricator", 4);
 
-Block.registerDropFunction("massFabricator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
-});
+MachineRegistry.setMachineDrop("massFabricator", BlockID.machineBlockAdvanced);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.massFabricator, count: 1, data: 0}, [

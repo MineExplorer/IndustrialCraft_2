@@ -3,9 +3,7 @@ Block.createBlock("solarPanel", [
 	{name: "Solar Panel", texture: [["machine_bottom", 0], ["solar_panel", 0], ["machine", 0], ["machine", 0], ["machine", 0], ["machine", 0]], inCreative: true}
 ], "stone");
 
-Block.registerDropFunction("solarPanel", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("solarPanel", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [

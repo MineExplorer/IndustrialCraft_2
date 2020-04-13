@@ -5,9 +5,7 @@ Block.createBlock("rtGenerator", [
 TileRenderer.setStandartModel(BlockID.rtGenerator, [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top", 1], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 
-Block.registerDropFunction("rtGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
-});
+MachineRegistry.setMachineDrop("rtGenerator", BlockID.primalGenerator);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.rtGenerator, count: 1, data: 0}, [

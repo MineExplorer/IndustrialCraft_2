@@ -14,6 +14,7 @@ Block.createBlock("oreCopper", [
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreCopper, "stone", 2, true);
 Block.setDestroyLevel("oreCopper", 2);
+ToolLib.addBlockDropOnExplosion("oreCopper");
 
 IDRegistry.genBlockID("oreTin");
 Block.createBlock("oreTin", [
@@ -21,6 +22,7 @@ Block.createBlock("oreTin", [
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreTin, "stone", 2, true);
 Block.setDestroyLevel("oreTin", 2);
+ToolLib.addBlockDropOnExplosion("oreTin");
 
 IDRegistry.genBlockID("oreLead");
 Block.createBlock("oreLead", [
@@ -28,6 +30,7 @@ Block.createBlock("oreLead", [
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreLead, "stone", 2, true);
 Block.setDestroyLevel("oreLead", 2);
+ToolLib.addBlockDropOnExplosion("oreLead");
 
 IDRegistry.genBlockID("oreUranium");
 Block.createBlock("oreUranium", [
@@ -35,6 +38,7 @@ Block.createBlock("oreUranium", [
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreUranium, "stone", 3, true);
 Block.setDestroyLevel("oreUranium", 3);
+ToolLib.addBlockDropOnExplosion("oreUranium");
 
 IDRegistry.genBlockID("oreIridium");
 Block.createBlock("oreIridium", [
@@ -53,6 +57,7 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 	}
 	return [];
 }, 4);
+ToolLib.addBlockDropOnExplosion("oreIridium");
 
 Item.addCreativeGroup("ores", Translation.translate("Ores"), [
 	BlockID.oreCopper,

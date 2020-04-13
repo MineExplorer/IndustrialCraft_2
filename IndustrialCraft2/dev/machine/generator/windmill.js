@@ -5,9 +5,7 @@ Block.createBlock("genWindmill", [
 TileRenderer.setStandartModel(BlockID.genWindmill, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.genWindmill, 0, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
 
-Block.registerDropFunction("genWindmill", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
-});
+MachineRegistry.setMachineDrop("genWindmill", BlockID.primalGenerator);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.genWindmill, count: 1, data: 0}, [

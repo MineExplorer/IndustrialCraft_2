@@ -3,9 +3,7 @@ Block.createBlock("tank", [
 	{name: "Tank", texture: [["machine_bottom", 0], ["machine_top", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0]], inCreative: true}
 ], "stone");
 
-Block.registerDropFunction("tank", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
+MachineRegistry.setMachineDrop("tank");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.tank, count: 1, data: 0}, [

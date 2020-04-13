@@ -8,9 +8,7 @@ TileRenderer.registerRotationModel(BlockID.extractor, 4, [["machine_bottom", 0],
 
 ItemName.addTierTooltip("extractor", 1);
 
-Block.registerDropFunction("extractor", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("extractor", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.extractor, count: 1, data: 0}, [

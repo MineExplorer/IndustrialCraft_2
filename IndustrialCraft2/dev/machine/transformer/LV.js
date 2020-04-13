@@ -5,9 +5,7 @@ Block.createBlock("transformerLV", [
 TileRenderer.setStandartModel(BlockID.transformerLV, [["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.transformerLV, 0, [["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0]]);
 
-Block.registerDropFunction("transformerLV", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
+MachineRegistry.setMachineDrop("transformerLV");
 
 Item.registerNameOverrideFunction(BlockID.transformerLV, function(item, name){
 	return name + "\n§7Low: 32 EU/t High: 128 EU/t";

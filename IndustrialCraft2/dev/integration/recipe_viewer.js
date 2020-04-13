@@ -122,7 +122,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 
 	RecipeViewer.registerRecipeType("icpe_solid_canner", {
 		contents: {
-			icon: BlockID.conserver,
+			icon: BlockID.solidCanner,
 			drawing: [
 				{type: "bitmap", x: 325, y: 205, scale: 6, bitmap: "canner_arrow"},
 				{type: "bitmap", x: 520, y: 205, scale: 6, bitmap: "arrow_bar_scale"}

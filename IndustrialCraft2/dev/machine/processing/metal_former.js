@@ -8,9 +8,7 @@ TileRenderer.registerRotationModel(BlockID.metalFormer, 4, [["machine_bottom", 0
 
 ItemName.addTierTooltip("metalFormer", 1);
 
-Block.registerDropFunction("metalFormer", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("metalFormer", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.metalFormer, count: 1, data: 0}, [

@@ -8,9 +8,7 @@ TileRenderer.registerRotationModel(BlockID.cropMatron, 4, [["machine_bottom", 0]
 
 ItemName.addTierTooltip("cropMatron", 1);
 
-Block.registerDropFunction("cropMatron", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("cropMatron", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
     Recipes.addShaped({id: BlockID.cropMatron, count: 1, data: 0}, [

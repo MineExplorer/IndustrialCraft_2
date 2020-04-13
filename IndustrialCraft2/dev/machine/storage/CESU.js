@@ -95,16 +95,10 @@ MachineRegistry.registerEUStorage(BlockID.storageCESU, {
 	
 	destroyBlock: function(coords, player){
 		var itemID = Player.getCarriedItem().id;
-		var blockID = BlockID.storageCESU;
-		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID);
-		var drop = MachineRegistry.getMachineDrop(coords, blockID, level);
-		if(drop.length > 0 && drop[0][0] == blockID){
-			var extra;
-			if(this.data.energy > 0){
-				extra = new ItemExtraData();
-				extra.putInt("Eu", this.data.energy);
-			}
-			nativeDropItem(coords.x, coords.y, coords.z, 0, blockID, 1, 0, extra);
+		var level = ToolAPI.getToolLevelViaBlock(itemID, this.id)
+		var drop = MachineRegistry.getMachineDrop(coords, this.id, level, this.id, this.data.energy);
+		if(drop.length > 0){
+			World.drop(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
 		}
 	},
 	

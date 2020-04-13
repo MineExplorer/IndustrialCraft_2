@@ -15,6 +15,7 @@ Block.createBlock("rubberTreeLog", [
 Block.registerDropFunction("rubberTreeLog", function(coords, blockID){
 	return [[blockID, 1, 0]];
 });
+ToolLib.addBlockDropOnExplosion("rubberTreeLog");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
 
 IDRegistry.genBlockID("rubberTreeLogLatex");
@@ -25,6 +26,7 @@ Block.createBlockWithRotation("rubberTreeLogLatex", [
 Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID){
 	return [[BlockID.rubberTreeLog, 1, 0], [ItemID.latex, 1, 0]];
 });
+ToolLib.addBlockDropOnExplosion("rubberTreeLogLatex");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
 Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, data){
 	if(data < 4 && Math.random() < 1/7){

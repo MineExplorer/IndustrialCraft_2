@@ -311,21 +311,21 @@ let StorageInterface = {
 				slots.push(name);
 			}
 		} else {
-			if(container.getType() == 1){
-				if(mode == 1){
-					slots.push(2);
-				}
-				else if(side == 1){
-					slots.push(0);
-				}
-				else if(side > 1){
-					slots.push(1);
+			if(mode !== undefined){
+				if(container.getType() == 1){
+					if(mode == 1){
+						return [2];
+					}
+					if(side == 1){
+						return [0];
+					}
+					if(side > 1){
+						return[1];
+					}
 				}
 			}
-			else {
-				for(let i = 0; i < container.getSize(); i++){
-					slots.push(i);
-				}
+			for(let i = 0; i < container.getSize(); i++){
+				slots.push(i);
 			}
 		}
 		return slots;

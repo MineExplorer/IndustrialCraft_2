@@ -374,6 +374,7 @@ var EnergyNetBuilder = {
 	
 	buildForWire: function(x, y, z, id) {
 		var wireData = EnergyRegistry.getWireData(id);
+		if(!wireData) return null;
 		var type = EnergyRegistry.getEnergyType(wireData.type);
 		var net = new EnergyNet(type, wireData.value, wireData.onOverload);
 		net.wireId = id;

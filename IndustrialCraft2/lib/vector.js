@@ -46,7 +46,7 @@ var VectorAPI = {
 			this.z -= vz;
 			return this;
 		}
-		return this.sub(v.x, v.y, v.z);        
+		return this.sub(v.x, v.y, v.z);
     },
 
     cross: function(vx, vy, vz) {

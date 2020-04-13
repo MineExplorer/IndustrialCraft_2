@@ -6,9 +6,7 @@ TileRenderer.setStandartModel(BlockID.semifluidGenerator, [["machine_bottom", 0]
 TileRenderer.registerRotationModel(BlockID.semifluidGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.semifluidGenerator, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
 
-Block.registerDropFunction("semifluidGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
-});
+MachineRegistry.setMachineDrop("semifluidGenerator", BlockID.primalGenerator);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.fluidHeatGenerator, count: 1, data: 0}, [

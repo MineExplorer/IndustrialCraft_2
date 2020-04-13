@@ -86,28 +86,28 @@ function registerCablePlaceFunc(nameID, blockID, blockData){
 }
 
 for(var i = 0; i < 2; i++){
-	registerCablePlaceFunc("cableTin"+i, BlockID.cableTin, i);
+	registerCablePlaceFunc("cableTin"+i, BlockID["cableTin"+i], 0);
 	Item.registerNameOverrideFunction(ItemID["cableTin"+i], function(item, name){
 		return name + "\n§7" + Translation.translate("Max voltage: ") + "32 EU/t";
 	});
 }
 
 for(var i = 0; i < 2; i++){
-	registerCablePlaceFunc("cableCopper"+i, BlockID.cableCopper, i);
+	registerCablePlaceFunc("cableCopper"+i, BlockID["cableCopper"+i], 0);
 	Item.registerNameOverrideFunction(ItemID["cableCopper"+i], function(item, name){
 		return name + "\n§7" + Translation.translate("Max voltage: ") + "128 EU/t";
 	});
 }
 
 for(var i = 0; i < 3; i++){
-	registerCablePlaceFunc("cableGold"+i, BlockID.cableGold, i);
+	registerCablePlaceFunc("cableGold"+i, BlockID["cableGold"+i], 0);
 	Item.registerNameOverrideFunction(ItemID["cableGold"+i], function(item, name){
 		return name + "\n§7" + Translation.translate("Max voltage: ") + "512 EU/t";
 	});
 }
 
 for(var i = 0; i < 4; i++){
-	registerCablePlaceFunc("cableIron"+i, BlockID.cableIron, i);
+	registerCablePlaceFunc("cableIron"+i, BlockID["cableIron"+i], 0);
 	Item.registerNameOverrideFunction(ItemID["cableIron"+i], function(item, name){
 		return name + "\n§7" + Translation.translate("Max voltage: ") + "2048 EU/t";
 	});

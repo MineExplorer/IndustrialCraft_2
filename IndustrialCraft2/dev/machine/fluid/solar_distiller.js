@@ -3,9 +3,7 @@ Block.createBlock("solarDistiller", [
 	{name: "Solar Distiller", texture: [["machine_bottom", 0], ["solar_distiller", 0], ["solar_distiller", 0], ["solar_distiller", 0], ["solar_distiller", 0], ["solar_distiller", 0]], inCreative: true}
 ], "stone");
 
-Block.registerDropFunction("solarDistiller", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("solarDistiller", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.solarDistiller, count: 1, data: 0}, [

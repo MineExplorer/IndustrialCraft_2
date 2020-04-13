@@ -8,9 +8,7 @@ TileRenderer.registerRotationModel(BlockID.macerator, 4, [["machine_bottom", 0],
 
 ItemName.addTierTooltip("macerator", 1);
 
-Block.registerDropFunction("macerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("macerator", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.macerator, count: 1, data: 0}, [

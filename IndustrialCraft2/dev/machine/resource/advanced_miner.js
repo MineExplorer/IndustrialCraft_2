@@ -235,18 +235,10 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 
 	destroyBlock: function(coords, player){
 		var itemID = Player.getCarriedItem().id;
-		var blockID = BlockID.advancedMiner;
-		var level = ToolAPI.getToolLevelViaBlock(itemID, blockID)
-		var drop = MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
+		var level = ToolAPI.getToolLevelViaBlock(itemID, this.id)
+		var drop = MachineRegistry.getMachineDrop(coords, this.id, level, BlockID.machineBlockAdvanced, this.data.energy);
 		if(drop.length > 0){
-			if(drop[0][0] == blockID && this.data.energy > 0){
-				var extra = new ItemExtraData();
-				extra.putInt("Eu", this.data.energy);
-				nativeDropItem(coords.x, coords.y, coords.z, 0, blockID, 1, 0, extra);
-			}
-			else{
-				World.drop(coords.x, coords.y, coords.z, drop[0][0], drop[0][1], drop[0][2]);
-			}
+			World.drop(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
 		}
 	},
 	

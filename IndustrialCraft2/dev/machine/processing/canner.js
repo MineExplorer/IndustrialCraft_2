@@ -8,9 +8,7 @@ TileRenderer.registerRotationModel(BlockID.canner, 4, [["machine_bottom", 0], ["
 
 ItemName.addTierTooltip("canner", 1);
 
-Block.registerDropFunction("canner", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("canner", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.canner, count: 1, data: 0}, [

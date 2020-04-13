@@ -229,7 +229,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			}
 			if(!this.audioSourceGeiger){
 				this.audioSourceGeiger = SoundAPI.playSoundAt(this, geigerSound, true, 16);
-			} 
+			}
 			else if(this.audioSourceGeiger.name != geigerSound){
 				this.audioSourceGeiger.stop();
 				this.audioSourceGeiger = SoundAPI.playSoundAt(this, geigerSound, true, 16);
@@ -346,7 +346,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			else if (material == "stone" || material == "dirt") {
 				World.setBlock(coord.x, coord.y, coord.z, 11, 1);
 			}
-		} 
+		}
 		if (power >= 0.7 && World.getThreadTime()%20 == 0) {
 			let entities = Entity.getAll();
 			for(let i in entities){

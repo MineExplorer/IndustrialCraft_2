@@ -27,7 +27,7 @@ MachineRegistry.registerTransformer = function(id, tier){
 					this.data.energy += src.add(maxVoltage, maxVoltage) - maxVoltage;
 				}
 			}
-			else{
+			else {
 				if(this.data.energy >= maxVoltage/4){
 					var output = this.data.energy;
 					this.data.energy += src.add(output, maxVoltage/4) - output;

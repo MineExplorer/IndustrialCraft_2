@@ -10,9 +10,7 @@ TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 6, [["heat_pipe", 1
 TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 7, [["generator", 0], ["heat_pipe", 1], ["machine_top", 0], ["machine_bottom", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
 TileRenderer.registerRotationModel(BlockID.solidHeatGenerator, 8, [["machine_bottom", 0], ["machine_top", 0], ["generator", 1], ["heat_pipe", 1], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
 
-Block.registerDropFunction("solidHeatGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
+MachineRegistry.setMachineDrop("solidHeatGenerator");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.solidHeatGenerator, count: 1, data: 0}, [

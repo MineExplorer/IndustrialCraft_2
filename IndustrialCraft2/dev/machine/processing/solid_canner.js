@@ -1,19 +1,17 @@
-IDRegistry.genBlockID("conserver");
-Block.createBlock("conserver", [
+IDRegistry.genBlockID("solidCanner");
+Block.createBlock("solidCanner", [
 	{name: "Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "stone");
-TileRenderer.setStandartModel(BlockID.conserver, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.conserver, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.conserver, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandartModel(BlockID.solidCanner, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.solidCanner, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRotationModel(BlockID.solidCanner, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 1], ["machine_side", 0], ["machine_side", 0]]);
 
-ItemName.addTierTooltip("conserver", 1);
+ItemName.addTierTooltip("solidCanner", 1);
 
-Block.registerDropFunction("conserver", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("solidCanner", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
-	Recipes.addShaped({id: BlockID.conserver, count: 1, data: 0}, [
+	Recipes.addShaped({id: BlockID.solidCanner, count: 1, data: 0}, [
 		"c#c",
 		"cxc",
 		"ccc"
@@ -101,7 +99,7 @@ Callback.addCallback("LevelLoaded", function(){
 	MachineRegistry.updateGuiHeader(guiSolidCanner, "Solid Canning Machine");
 });
 
-MachineRegistry.registerElectricMachine(BlockID.conserver, {
+MachineRegistry.registerElectricMachine(BlockID.solidCanner, {
 	defaultValues: {
 		power_tier: 1,
 		energy_storage: 800,
@@ -175,9 +173,9 @@ MachineRegistry.registerElectricMachine(BlockID.conserver, {
 	renderModel: MachineRegistry.renderModelWithRotation
 });
 
-TileRenderer.setRotationPlaceFunction(BlockID.conserver);
+TileRenderer.setRotationPlaceFunction(BlockID.solidCanner);
 
-StorageInterface.createInterface(BlockID.conserver, {
+StorageInterface.createInterface(BlockID.solidCanner, {
 	slots: {
 		"slotSource": {input: true,
 			isValid: function(item){

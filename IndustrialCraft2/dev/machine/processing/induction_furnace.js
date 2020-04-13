@@ -9,9 +9,7 @@ TileRenderer.registerRotationModel(BlockID.inductionFurnace, 4, [["machine_advan
 ItemName.setRarity(BlockID.inductionFurnace, 1, true);
 ItemName.addTierTooltip("inductionFurnace", 2);
 
-Block.registerDropFunction("inductionFurnace", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
-});
+MachineRegistry.setMachineDrop("inductionFurnace", BlockID.machineBlockAdvanced);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.inductionFurnace, count: 1, data: 0}, [

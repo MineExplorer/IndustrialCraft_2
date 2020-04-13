@@ -132,6 +132,18 @@ var ToolLib = {
 			item.data = 0;
 		}
 		Player.setCarriedItem(item.id, item.count, item.data, item.extra);
+	},
+	
+	addBlockDropOnExplosion: function(nameID){
+		Block.registerPopResourcesFunction(nameID, function(coords, block, f, i){
+			if(Math.random() < 0.25){
+				var dropFunc = Block.getDropFunction(block.id);
+				var drop = dropFunc(coords, block.id, block.data, 99, {});
+				for(var i in drop){
+					World.drop(coords.x + .5, coords.y + .5, coords.z + .5, drop[i][0], drop[i][1], drop[i][2]);
+				}
+			}
+		});
 	}
 }
 

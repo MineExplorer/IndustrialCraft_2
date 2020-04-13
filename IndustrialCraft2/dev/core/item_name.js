@@ -29,7 +29,7 @@ ItemName = {
 	
 	addStorageBlockTooltip: function(id, tier, capacity){
 		Item.registerNameOverrideFunction(BlockID[id], function(item, name){
-			return ItemName.showBlockStorage(name, tier, capacity);
+			return ItemName.showBlockStorage(item, name, tier, capacity);
 		});
 	},
 	
@@ -39,13 +39,12 @@ ItemName = {
 		});
 	},
 	
-	showBlockStorage: function(name, tier, capacity){
+	showBlockStorage: function(item, name, tier, capacity){
 		var tierText = "§7" + Translation.translate("Power Tier: ") + tier;
 		
 		var energy = 0;
-		var item = Player.getCarriedItem();
 		if(item.extra){
-			energy = item.extra.getInt("Eu");
+			energy = item.extra.getInt("energy");
 		}
 		var energyText = this.displayEnergy(energy) + "/" + capacity + " EU";
 		

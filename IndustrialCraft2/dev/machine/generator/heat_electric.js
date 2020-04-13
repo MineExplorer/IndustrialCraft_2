@@ -8,9 +8,7 @@ TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 6, [["mach
 
 ItemName.addTierTooltip("electricHeatGenerator", 4);
 
-Block.registerDropFunction("electricHeatGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
+MachineRegistry.setMachineDrop("electricHeatGenerator");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.electricHeatGenerator, count: 1, data: 0}, [

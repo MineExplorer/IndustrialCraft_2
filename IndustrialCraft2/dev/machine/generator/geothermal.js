@@ -6,9 +6,7 @@ TileRenderer.setStandartModel(BlockID.geothermalGenerator, [["machine_bottom", 0
 TileRenderer.registerRotationModel(BlockID.geothermalGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.geothermalGenerator, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]]);
 
-Block.registerDropFunction("geothermalGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
-});
+MachineRegistry.setMachineDrop("geothermalGenerator", BlockID.primalGenerator);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.geothermalGenerator, count: 1, data: 0}, [

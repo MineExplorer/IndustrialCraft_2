@@ -8,9 +8,7 @@ TileRenderer.registerRotationModel(BlockID.oreWasher, 4, [["machine_bottom", 0],
 
 ItemName.addTierTooltip("oreWasher", 1);
 
-Block.registerDropFunction("oreWasher", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("oreWasher", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.oreWasher, count: 1, data: 0}, [

@@ -8,9 +8,7 @@ TileRenderer.registerRotationModel(BlockID.thermalCentrifuge, 4, [["machine_adva
 
 ItemName.addTierTooltip("thermalCentrifuge", 2);
 
-Block.registerDropFunction("thermalCentrifuge", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockAdvanced);
-});
+MachineRegistry.setMachineDrop("thermalCentrifuge", BlockID.machineBlockAdvanced);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.thermalCentrifuge, count: 1, data: 0}, [

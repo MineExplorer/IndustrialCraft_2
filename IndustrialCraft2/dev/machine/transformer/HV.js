@@ -8,9 +8,7 @@ TileRenderer.registerRenderModel(BlockID.transformerHV, 0, [["hv_transformer_fro
 TileRenderer.registerRenderModel(BlockID.transformerHV, 1, [["hv_transformer_side", 0], ["hv_transformer_front", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 1], ["hv_transformer_side", 1]]);
 TileRenderer.registerRotationModel(BlockID.transformerHV, 2, [["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_front", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0]]);
 
-Block.registerDropFunction("transformerHV", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("transformerHV", BlockID.machineBlockBasic);
 
 Item.registerNameOverrideFunction(BlockID.transformerHV, function(item, name){
 	return name + "\n§7Low: 512 EU/t High: 2048 EU/t";

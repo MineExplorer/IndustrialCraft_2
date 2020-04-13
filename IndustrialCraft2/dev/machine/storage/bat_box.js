@@ -101,9 +101,9 @@ MachineRegistry.registerEUStorage(BlockID.storageBatBox, {
 		var extra;
 		if(this.data.energy > 0){
 			extra = new ItemExtraData();
-			extra.putInt("Eu", this.data.energy);
+			extra.putInt("energy", this.data.energy);
 		}
-		nativeDropItem(coords.x, coords.y, coords.z, 0, BlockID.storageBatBox, 1, 0, extra);
+		World.drop(coords.x + .5, coords.y + .5, coords.z + .5, BlockID.storageBatBox, 1, 0, extra);
 	},
 	
 	renderModel: function(){

@@ -6,9 +6,7 @@ TileRenderer.setStandartModel(BlockID.primalGenerator, [["machine_bottom", 0], [
 TileRenderer.registerRotationModel(BlockID.primalGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.primalGenerator, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]]);
 
-Block.registerDropFunction("primalGenerator", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
+MachineRegistry.setMachineDrop("primalGenerator");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [

@@ -6,9 +6,7 @@ TileRenderer.setStandartModel(BlockID.icFermenter, [["machine_bottom", 0], ["mac
 TileRenderer.registerFullRotationModel(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.icFermenter, 6, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 1], ["heat_pipe", 1], ["ic_fermenter_side", 1], ["ic_fermenter_side", 1]]);
 
-Block.registerDropFunction("icFermenter", function(coords, blockID, blockData, level, enchant){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
+MachineRegistry.setMachineDrop("icFermenter");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.icFermenter, count: 1, data: 0}, [

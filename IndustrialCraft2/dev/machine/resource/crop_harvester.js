@@ -2,12 +2,9 @@ IDRegistry.genBlockID("cropHarvester");
 Block.createBlock("cropHarvester", [
 	{name: "Crop Harvester", texture: [["machine_bottom", 0], ["crop_harvester", 0]], inCreative: true}
 ], "stone");
-
 ItemName.addTierTooltip("cropHarvester", 1);
 
-Block.registerDropFunction("cropHarvester", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("cropHarvester", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
     Recipes.addShaped({id: BlockID.cropHarvester, count: 1, data: 0}, [

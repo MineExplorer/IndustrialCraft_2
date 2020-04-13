@@ -20,22 +20,25 @@ Recipes.addShaped({id: ItemID.cutter, count: 1, data: 0}, [
 
 Callback.addCallback("DestroyBlockStart", function(coords, block){
 	var item = Player.getCarriedItem();
-	if(item.id == ItemID.cutter && IC_WIRES[block.id] && block.data > 0){
+	var cableData = ElectricCable.getCableData(block.id);
+	if(item.id == ItemID.cutter && cableData && cableData.insulation > 0){
 		Game.prevent();
 		ToolAPI.breakCarriedTool(1);
 		SoundAPI.playSound("Tools/InsulationCutters.ogg");
-		World.setBlock(coords.x, coords.y, coords.z, block.id, block.data - 1);
+		var blockID = BlockID[cableData.name + (cableData.insulation - 1)]
+		World.setBlock(coords.x, coords.y, coords.z, blockID, 0);
 		World.drop(coords.x + 0.5, coords.y + 1, coords.z + 0.5, ItemID.rubber, 1);
 	}
 });
 
 Item.registerUseFunction("cutter", function(coords, item, block){
-	var wireData = IC_WIRES[block.id]
-	if(wireData && block.data < wireData){
+	var cableData = ElectricCable.getCableData(block.id);
+	if(cableData && cableData.insulation < cableData.maxInsulation){
 		for(var i = 9; i < 45; i++){
 			var slot = Player.getInventorySlot(i);
 			if(slot.id == ItemID.rubber){
-				World.setBlock(coords.x, coords.y, coords.z, block.id, block.data + 1);
+				var blockID = BlockID[cableData.name + (cableData.insulation + 1)]
+				World.setBlock(coords.x, coords.y, coords.z, blockID, 0);
 				slot.count--;
 				Player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data);
 				break;

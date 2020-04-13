@@ -1,12 +1,11 @@
 IDRegistry.genItemID("agriculturalAnalyzer");
 Item.createItem("agriculturalAnalyzer", "Crop Analyzer", {name: "cropnalyzer"}, {stack: 1});
-Callback.addCallback("PostLoaded", function(){
-    Recipes.addShaped({id: ItemID.agriculturalAnalyzer , count: 1 , data: 0}, [
-		"xx ",
-		"rgr",
-		"rcr"
-	], ['x', ItemID.cableCopper1, 0, 'r', 331, 0, 'g', 20, 0, "c", ItemID.circuitBasic, 0]);
-});
+
+Recipes.addShaped({id: ItemID.agriculturalAnalyzer , count: 1 , data: 0}, [
+	"xx ",
+	"rgr",
+	"rcr"
+], ['x', ItemID.cableCopper1, 0, 'r', 331, 0, 'g', 20, 0, "c", ItemID.circuitBasic, 0]);
 
 var guiAddConst = 14;
 var guiAnalyserObject = {

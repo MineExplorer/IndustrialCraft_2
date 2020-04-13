@@ -12,6 +12,7 @@ Block.createBlock("reinforcedStone", [
 });
 ToolAPI.registerBlockMaterial(BlockID.reinforcedStone, "stone", 2, true);
 Block.setDestroyLevel("reinforcedStone", 2);
+ToolLib.addBlockDropOnExplosion("reinforcedStone");
 
 IDRegistry.genBlockID("reinforcedGlass");
 Block.createBlock("reinforcedGlass", [
@@ -24,6 +25,7 @@ Block.createBlock("reinforcedGlass", [
 });
 ToolAPI.registerBlockMaterial(BlockID.reinforcedGlass, "stone", 2, true);
 Block.setDestroyLevel("reinforcedGlass", 2);
+ToolLib.addBlockDropOnExplosion("reinforcedGlass");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.reinforcedStone, count: 8, data: 0}, [

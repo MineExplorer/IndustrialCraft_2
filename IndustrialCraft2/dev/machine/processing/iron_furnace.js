@@ -6,9 +6,7 @@ TileRenderer.setStandartModel(BlockID.ironFurnace, [["iron_furnace_bottom", 0], 
 TileRenderer.registerRotationModel(BlockID.ironFurnace, 0, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.ironFurnace, 4, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 1], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
 
-Block.registerDropFunction("ironFurnace", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
+MachineRegistry.setMachineDrop("ironFurnace");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.ironFurnace, count: 1, data: 0}, [

@@ -13,6 +13,7 @@ Block.createBlock("blockCopper", [
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockCopper, "stone", 2, true);
 Block.setDestroyLevel("blockCopper", 2);
+ToolLib.addBlockDropOnExplosion("blockCopper");
 
 IDRegistry.genBlockID("blockTin");
 Block.createBlock("blockTin", [
@@ -20,6 +21,7 @@ Block.createBlock("blockTin", [
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockTin, "stone", 2, true);
 Block.setDestroyLevel("blockTin", 2);
+ToolLib.addBlockDropOnExplosion("blockTin");
 
 IDRegistry.genBlockID("blockBronze");
 Block.createBlock("blockBronze", [
@@ -27,6 +29,7 @@ Block.createBlock("blockBronze", [
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockBronze, "stone", 2, true);
 Block.setDestroyLevel("blockBronze", 2);
+ToolLib.addBlockDropOnExplosion("blockBronze");
 
 IDRegistry.genBlockID("blockLead");
 Block.createBlock("blockLead", [
@@ -34,6 +37,7 @@ Block.createBlock("blockLead", [
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockLead, "stone", 2, true);
 Block.setDestroyLevel("blockLead", 2);
+ToolLib.addBlockDropOnExplosion("blockLead");
 
 IDRegistry.genBlockID("blockSteel");
 Block.createBlock("blockSteel", [
@@ -41,6 +45,7 @@ Block.createBlock("blockSteel", [
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockSteel, "stone", 2, true);
 Block.setDestroyLevel("blockSteel", 2);
+ToolLib.addBlockDropOnExplosion("blockSteel");
 
 IDRegistry.genBlockID("blockSilver");
 Block.createBlock("blockSilver", [
@@ -48,6 +53,7 @@ Block.createBlock("blockSilver", [
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockSilver, "stone", 3, true);
 Block.setDestroyLevel("blockSilver", 3);
+ToolLib.addBlockDropOnExplosion("blockSilver");
 
 IDRegistry.genBlockID("blockUranium");
 Block.createBlock("blockUranium", [
@@ -55,6 +61,7 @@ Block.createBlock("blockUranium", [
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockUranium, "stone", 3, true);
 Block.setDestroyLevel("blockUranium", 3);
+ToolLib.addBlockDropOnExplosion("blockUranium");
 
 Item.addCreativeGroup("blockMetal", Translation.translate("Metal Blocks"), [
 	BlockID.blockCopper,

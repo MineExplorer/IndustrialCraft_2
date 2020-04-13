@@ -9,20 +9,23 @@ let ICTool = {
 		return this.wrenchData[id];
 	},
 	
-	isValidWrench: function(id, data, damage){
-		let wrench = this.getWrenchData(id);
-		if(wrench && (!wrench.energy || data + wrench.energy * damage <= Item.getMaxDamage(id))){
-			return true;
+	isValidWrench: function(item, damage){
+		let wrench = this.getWrenchData(item.id);
+		if(wrench){
+			let energyStored = ChargeItemRegistry.getEnergyStored(item);
+			if(!wrench.energy || energyStored >= wrench.energy * damage){
+				return true;
+			}
 		}
 		return false;
 	},
 	
-	useWrench: function(id, data, damage){
-		let wrench = this.getWrenchData(id);
+	useWrench: function(item, damage){
+		let wrench = this.getWrenchData(item.id);
 		if(!wrench.energy){
 			ToolAPI.breakCarriedTool(damage);
 		} else {
-			this.useElectricItem({id: id, data: data}, wrench.energy * damage);
+			this.useElectricItem(item, wrench.energy * damage);
 		}
 		SoundAPI.playSound("Tools/Wrench.ogg");
 	},

@@ -8,9 +8,7 @@ TileRenderer.registerRotationModel(BlockID.recycler, 4, [["machine_bottom", 0], 
 
 ItemName.addTierTooltip("recycler", 1);
 
-Block.registerDropFunction("recycler", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.machineBlockBasic);
-});
+MachineRegistry.setMachineDrop("recycler", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.recycler, count: 1, data: 0}, [

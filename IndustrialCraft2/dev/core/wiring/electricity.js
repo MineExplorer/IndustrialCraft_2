@@ -43,10 +43,11 @@ function damageEntityInR(x, y, z, ent){
 	for(var yy = y-2; yy < y+2; yy++){
 		for(var xx = x-1; xx < x+2; xx++){
 			for(var zz = z-1; zz < z+2; zz++){
-				var block = World.getBlock(xx, yy, zz);
-				if(block.data < IC_WIRES[block.id]){
+				var blockID = World.getBlockID(xx, yy, zz);
+				var cableData = ElectricCable.getCableData(blockID);
+				if(cableData && cableData.insulation < cableData.maxInsultaion){
 					var net = EnergyNetBuilder.getNetOnCoords(xx, yy, zz);
-					if(net && net.energyName == "Eu" && net.lastVoltage > insulationMaxVolt[block.data]){
+					if(net && net.energyName == "Eu" && net.lastVoltage > insulationMaxVolt[cableData.insulation]){
 						var damage = Math.ceil(net.lastVoltage / 32);
 						Entity.damageEntity(ent, damage);
 						return;

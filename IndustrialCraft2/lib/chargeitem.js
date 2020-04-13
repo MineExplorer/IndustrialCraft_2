@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "ChargeItem",
-	version: 6,
+	version: 7,
 	shared: true,
 	api: "CoreEngine"
 });

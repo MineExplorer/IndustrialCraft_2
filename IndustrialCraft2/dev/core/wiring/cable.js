@@ -12,7 +12,9 @@ let ElectricCable = {
 	registerCable: function(name, maxVoltage, maxInsulationLevel){
 		if(maxInsulationLevel){
 			for(let i = 0; i <= maxInsulationLevel; i++){
-				this.data[BlockID[name + i]] = {name: name, insulation: i, maxInsulation: maxInsulationLevel}
+				let id = BlockID[name + i];
+				this.data[id] = {name: name, insulation: i, maxInsulation: maxInsulationLevel};
+				EU.registerWire(id, maxVoltage, wireBurnoutFunc);
 			}
 		} else {
 			EU.registerWire(BlockID[name], maxVoltage, wireBurnoutFunc);

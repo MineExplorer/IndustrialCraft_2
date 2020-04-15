@@ -62,7 +62,7 @@ ElectricCable.registerCable("cableTin", 32, 1);
 ElectricCable.registerCable("cableCopper", 128, 1);
 ElectricCable.registerCable("cableGold", 512, 2);
 ElectricCable.registerCable("cableIron", 2048, 3);
-ElectricCable.registerCable("cableOptic", 8192, 1);
+ElectricCable.registerCable("cableOptic", 8192);
 
 // block model
 TileRenderer.setupWireModel(BlockID.cableTin0, -1, 4/16, "ic-wire");

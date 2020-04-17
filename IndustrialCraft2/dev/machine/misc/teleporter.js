@@ -38,10 +38,10 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 
 	getWeight: function(ent){
 		var type = Entity.getType(ent);
-		if(ent==player || type==EntityType.MINECART) return 1000;
-		if(type==EntityType.ITEM) return 100;
-		if(friendlyMobs.indexOf(type) !== -1) return 200;
-		if(evilMobs.indexOf(type) !== -1) return 500;
+		if(ent == player || type == EntityType.MINECART) return 1000;
+		if(type == EntityType.ITEM) return 100;
+		if(isFriendlyMob(type)) return 200;
+		if(isHostileMob(type)) return 500;
 		return 0;
 	},
 	

@@ -20,7 +20,7 @@ Recipes.addShaped({id: ItemID.cutter, count: 1, data: 0}, [
 
 Callback.addCallback("DestroyBlockStart", function(coords, block){
 	var item = Player.getCarriedItem();
-	var cableData = ElectricCable.getCableData(block.id);
+	var cableData = CableRegistry.getCableData(block.id);
 	if(item.id == ItemID.cutter && cableData && cableData.insulation > 0){
 		Game.prevent();
 		ToolAPI.breakCarriedTool(1);
@@ -32,7 +32,7 @@ Callback.addCallback("DestroyBlockStart", function(coords, block){
 });
 
 Item.registerUseFunction("cutter", function(coords, item, block){
-	var cableData = ElectricCable.getCableData(block.id);
+	var cableData = CableRegistry.getCableData(block.id);
 	if(cableData && cableData.insulation < cableData.maxInsulation){
 		for(var i = 9; i < 45; i++){
 			var slot = Player.getInventorySlot(i);

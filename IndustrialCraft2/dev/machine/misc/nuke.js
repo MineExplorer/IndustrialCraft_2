@@ -79,7 +79,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 				return;
 			}
 			if(this.data.timer % 10 < 5){
-				TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, 0);
+				TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, 0);
 			} else {
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 			}

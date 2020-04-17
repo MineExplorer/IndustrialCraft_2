@@ -102,7 +102,7 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 	setFacing: MachineRegistry.setFacing,
 	
 	renderModel: function(){
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + 6*this.data.inverted);
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + 6*this.data.inverted);
 	},
 	destroy: function(){
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);

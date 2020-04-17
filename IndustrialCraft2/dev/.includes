@@ -5,8 +5,8 @@ core/machine/define.js
 core/machine/recipe.js
 core/machine/upgrade.js
 
-core/wiring/cable.js
-core/wiring/electricity.js
+core/wiring/cableAPI.js
+core/wiring/electric_damage.js
 
 core/config.js
 core/tool.js

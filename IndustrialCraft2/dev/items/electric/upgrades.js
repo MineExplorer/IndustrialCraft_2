@@ -153,7 +153,9 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, "overclocker", function(it
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, "transformer", function(item, machine, container, data){
-	data.power_tier += item.count;
+	var tier = data.power_tier + item.count
+	if(tier > 14) tier = 14;
+	data.power_tier = tier;
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, "energyStorage", function(item, machine, container, data){

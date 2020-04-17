@@ -678,4 +678,3 @@ function EnergyNet(energyType, maxPacketSize, overloadFunc) {
 registerAPIUnit("EnergyTypeRegistry", EnergyRegistry);
 registerAPIUnit("EnergyNetBuilder", EnergyNetBuilder);
 registerAPIUnit("EnergyTileRegistry", TileEntityRegistry);
-

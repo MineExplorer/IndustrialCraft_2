@@ -88,6 +88,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	init: function(){
 		this.chambers = [];
 		this.renderModel();
+		this.__initialized = true;
 		this.rebuildEnergyNet();
 	},
 	
@@ -110,7 +111,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	addChamber: function(chamber){
-		if(chamber.removed || (chamber.core && chamber.core != this)){
+		if(!this.__initialized || chamber.removed || (chamber.core && chamber.core != this)){
 			return;
 		}
 		if(this.chambers.indexOf(chamber) == -1){
@@ -351,7 +352,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			let entities = Entity.getAll();
 			for(let i in entities){
 				let ent = entities[i];
-				if(isMob(ent)){
+				if(canTakeDamage(ent, "radiation")){
 					let c = Entity.getPosition(ent);
 					if(Math.abs(this.x + 0.5 - c.x) <= 3 && Math.abs(this.y + 0.5 - c.y) <= 3 && Math.abs(this.z + 0.5 - c.z) <= 3){
 						RadiationAPI.addEffect(ent, parseInt(4 * this.data.hem));

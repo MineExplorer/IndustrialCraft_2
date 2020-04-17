@@ -67,7 +67,7 @@ let RadiationAPI = {
 		let entities = Entity.getAll();
 		for(let i in entities){
 			let ent = entities[i];
-			if(isMob(ent) && Entity.getHealth(ent) > 0){
+			if(canTakeDamage(ent, "radiation") && Entity.getHealth(ent) > 0){
 				let c = Entity.getPosition(ent);
 				let xx = Math.abs(x - c.x), yy = Math.abs(y - c.y), zz = Math.abs(z - c.z);
 				if(Math.sqrt(xx*xx + yy*yy + zz*zz) <= radius){

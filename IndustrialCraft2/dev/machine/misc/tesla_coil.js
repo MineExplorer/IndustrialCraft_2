@@ -32,7 +32,7 @@ MachineRegistry.registerElectricMachine(BlockID.teslaCoil, {
 					var dx = this.x + 0.5 - coords.x;
 					var dy = this.y + 0.5 - coords.y;
 					var dz = this.z + 0.5 - coords.z;
-					if(Math.sqrt(dx*dx + dy*dy + dz*dz) < 4.5 && isMob(ent) && Entity.getHealth(ent) > 0){
+					if(Math.sqrt(dx*dx + dy*dy + dz*dz) < 4.5 && canTakeDamage(ent, "electricity") && Entity.getHealth(ent) > 0){
 						discharge = true;
 						if(damage >= 24){
 							Entity.setFire(ent, 1, true);

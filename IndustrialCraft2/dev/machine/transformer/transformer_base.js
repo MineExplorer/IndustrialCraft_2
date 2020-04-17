@@ -72,7 +72,7 @@ MachineRegistry.registerTransformer = function(id, tier){
 		setFacing: MachineRegistry.setFacing,
 		
 		renderModel: function(){
-			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta);
+			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta);
 		},
 		
 		destroy: function(){

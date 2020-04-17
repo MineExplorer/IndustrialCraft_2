@@ -9,7 +9,6 @@ var MachineRegistry = {
 	registerPrototype: function(id, Prototype){
 		// register ID
 		this.machineIDs[id] = true;
-		Prototype.id = id;
 		
 		// click fix
 		Prototype.onItemClick = function(id, count, data, coords){
@@ -269,18 +268,18 @@ var MachineRegistry = {
 	
 	renderModel: function(){
 		if(this.data.isActive){
-			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, 0);
+			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, 0);
 		} else {
 			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 		}
 	},
 	
 	renderModelWithRotation: function(){
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + (this.data.isActive? 4 : 0));
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + (this.data.isActive? 4 : 0));
 	},
 	
 	renderModelWith6Sides: function(){
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta + (this.data.isActive? 6 : 0));
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + (this.data.isActive? 6 : 0));
 	},
 	
 	setActive: function(isActive){

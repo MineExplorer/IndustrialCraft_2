@@ -95,15 +95,15 @@ MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 	
 	destroyBlock: function(coords, player){
 		var itemID = Player.getCarriedItem().id;
-		var level = ToolAPI.getToolLevelViaBlock(itemID, this.id)
-		var drop = MachineRegistry.getMachineDrop(coords, this.id, level, BlockID.machineBlockBasic, this.data.energy);
+		var level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID)
+		var drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, BlockID.machineBlockBasic, this.data.energy);
 		if(drop.length > 0){
 			World.drop(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
 		}
 	},
 	
 	renderModel: function(){
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.id, this.data.meta);
+		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta);
 	},
 	destroy: function(){
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);

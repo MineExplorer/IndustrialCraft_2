@@ -118,17 +118,19 @@ ToolType.drill = {
 		for(let i = 9; i < 45; i++){
 			let slot = Player.getInventorySlot(i);
 			if(slot.id == 50){
-				slot.count--;
-				if(!slot.count) slot.id = 0;
-				Player.setInventorySlot(i, slot.id, slot.count, 0);
-				if(block.id >= 8192 || !GenerationUtils.isTransparentBlock(block.id)){
+				if(Block.isSolid(block.id)){
 					World.setBlock(place.x, place.y, place.z, 50, (6 - coords.side)%6);
 				} else {
 					block = World.getBlock(place.x, place.y - 1, place.z);
-					if(!GenerationUtils.isTransparentBlock(block.id) || ((block.id == 44 || block.id == 158 || block.id == 182) && block.data > 7)){
+					if(Block.isSolid(block.id)){
 						World.setBlock(place.x, place.y, place.z, 50, 5);
+					} else {
+						break;
 					}
 				}
+				slot.count--;
+				if(slot.count == 0) slot.id = 0;
+				Player.setInventorySlot(i, slot.id, slot.count, 0);
 				break;
 			}
 		}

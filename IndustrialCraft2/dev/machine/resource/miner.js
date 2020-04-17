@@ -46,7 +46,7 @@ var guiMiner = new UI.StandartWindow({
 		},
 		"slotPipe": {type: "slot", x: 541, y: 75,
 			isValid: function(id){
-				if(id < 256 || id >= 8192) return true;
+				if(ToolLib.isBlock(id) && !TileEntity.isTileEntityBlock(id)) return true;
 				return false;
 			}
 		},
@@ -325,7 +325,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				if(this.data.progress >= 20){
 					this.drop([{id: BlockID.miningPipe, count: 1, data: 0}]);
 					var pipeSlot = this.container.getSlot("slotPipe");
-					if(pipeSlot.id != 0 && (pipeSlot.id < 256 || pipeSlot.id >= 8192 && pipeSlot.id != BlockID.miningPipe)){
+					if(pipeSlot.id != 0 && ToolLib.isBlock(pipeSlot.id) && !TileEntity.isTileEntityBlock(id) && pipeSlot.id != BlockID.miningPipe){
 						var blockId = Block.covertItemToBlockId(pipeSlot.id);
 						World.setBlock(this.x, this.data.y, this.z, blockId, pipeSlot.data);
 						pipeSlot.count--;

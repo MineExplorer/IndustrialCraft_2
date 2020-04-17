@@ -134,8 +134,13 @@ var ToolLib = {
 		Player.setCarriedItem(item.id, item.count, item.data, item.extra);
 	},
 	
+	isBlock: function(id){
+		return IDRegistry.getIdInfo(id).startsWith("block");
+	},
+
 	addBlockDropOnExplosion: function(nameID){
-		Block.registerPopResourcesFunction(nameID, function(coords, block, f, i){
+		var numericID = BlockID[nameID];
+		Block.registerPopResourcesFunctionForID(numericID, function(coords, block, f, i){
 			if(Math.random() < 0.25){
 				var dropFunc = Block.getDropFunction(block.id);
 				var drop = dropFunc(coords, block.id, block.data, 99, {});

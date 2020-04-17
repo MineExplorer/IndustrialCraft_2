@@ -98,6 +98,7 @@ var NANO_ARMOR_FUNCS = {
 			}
 			if(type==5 && index==3){
 				var damage = 0;
+				var vel = Player.getVelocity().y;
 				var time = vel / -0.06;
 				var height = 0.06 * time*time / 2;
 				if(height < 22){

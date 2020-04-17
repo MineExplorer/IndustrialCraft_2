@@ -6,7 +6,7 @@ Block.createBlock("luminator", [
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false}
-], {renderlayer: 2});
+], {renderlayer: 7});
 
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 15/16, z: 0}, {x: 1, y: 1, z: 1}, 0);
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1, y: 1/16, z: 1}, 1);
@@ -31,7 +31,8 @@ Block.createBlock("luminator_on", [
 ], {
 	destroytime: 2,
 	explosionres: 0.5,
-	lightlevel: 15
+	lightlevel: 15,
+	renderlayer: 7
 });
 
 Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 15/16, z: 0}, {x: 1, y: 1, z: 1}, 0);
@@ -117,7 +118,6 @@ MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 });
 
 Block.registerPlaceFunction("luminator", function(coords, item, block){
-	Game.prevent();
 	var x = coords.relative.x
 	var y = coords.relative.y
 	var z = coords.relative.z

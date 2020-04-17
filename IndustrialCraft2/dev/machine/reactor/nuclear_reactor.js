@@ -117,7 +117,6 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		if(this.chambers.indexOf(chamber) == -1){
 			this.chambers.push(chamber);
 			chamber.core = this;
-			chamber.container = this.container;
 			chamber.data.x = this.x;
 			chamber.data.y = this.y;
 			chamber.data.z = this.z;
@@ -405,6 +404,17 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 		return null;
 	},
 	
+	onItemClick: function(id, count, data, coords){
+		if (id == ItemID.debugItem || id == ItemID.EUMeter) return false;
+		if (this.click(id, count, data, coords)) return true;
+		if (Entity.getSneaking(player)) return false;
+		var gui = this.getGuiScreen();
+		if (gui){
+			this.core.container.openAs(gui);
+			return true;
+		}
+	},
+	
 	init: function(){
 		if(this.data.y >= 0 && World.getBlockID(this.data.x, this.data.y, this.data.z) == BlockID.nuclearReactor){
 			let tileEnt = World.getTileEntity(this.data.x, this.data.y, this.data.z);
@@ -426,10 +436,6 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 	
 	destroy: function(){
 		this.removed = true;
-		this.container = new UI.Container();
-		if(this.core){
-			this.core.removeChamber(this);
-		}
 	}
 });
 

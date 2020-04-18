@@ -22,7 +22,7 @@ Callback.addCallback("PreLoaded", function(){
 	]);
 });
 
-
+GUI_SCALE = 3; // lvl 80 costyl'
 var guiCanner = new UI.StandartWindow({
 	standart: {
 		header: {text: {text: Translation.translate("Fluid/Solid Canning Machine")}},
@@ -84,6 +84,7 @@ var guiCanner = new UI.StandartWindow({
 		}}
 	}
 });
+GUI_SCALE = 3.2;
 
 function isValidCannerSource(id, data, tile){
 	if(tile.data.mode == 0 && MachineRecipeRegistry.hasRecipeFor("solidCanner", id)){

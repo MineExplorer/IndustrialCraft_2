@@ -23,7 +23,7 @@ IMPORT("LiquidLib");
 IMPORT("BackpackAPI");
 
 // constants
-const GUI_SCALE = 3.2;
+var GUI_SCALE = 3.2;
 const fallVelocity = -0.0784;
 
 // import functions

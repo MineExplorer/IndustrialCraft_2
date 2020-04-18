@@ -88,4 +88,6 @@ for(let i = 0; i < 16; i++){
 	TileRenderer.setupWireModel(BlockID.cableIron3, i, 12/16, "ic-wire");
 }
 
-TileRenderer.setupWireModel(BlockID.cableOptic, -1, 1/4, "ic-wire");
+for(let i = 0; i < 16; i++){
+	TileRenderer.setupWireModel(BlockID.cableOptic, i, 1/4, "ic-wire");
+}

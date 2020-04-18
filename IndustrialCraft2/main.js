@@ -41,15 +41,6 @@ const fallVelocity = -0.0784;
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var Color = android.graphics.Color;
 
-// temporary fix
-Block.registerPopResourcesFunction = function(nameID, func) {
-    var numericID = this.getNumericId(nameID);
-    if (numericID == -1) {
-        return false;
-    }
-    return this.registerPopResourcesFunctionForID(numericID, func);
-}
-
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 
@@ -1126,7 +1117,8 @@ var UpgradeAPI = {
 // file: core/wiring/cableAPI.js
 
 let CableRegistry = {
-	data: {},
+	insulation_data: {},
+	paint_data: [],
 	
 	createBlock: function(nameID, properties, blockType){
 		var variations = [];
@@ -1134,13 +1126,14 @@ let CableRegistry = {
 			variations.push({name: properties.name, texture: [[properties.texture, i]]});
 		}
 		Block.createBlock(nameID, variations, blockType);
+		this.paint_data.push(BlockID[nameID]);
 	},
 	
 	registerCable: function(nameID, maxVoltage, maxInsulationLevel){
 		if(maxInsulationLevel){
 			for(let i = 0; i <= maxInsulationLevel; i++){
 				let id = BlockID[nameID+i];
-				this.data[id] = {name: nameID, insulation: i, maxInsulation: maxInsulationLevel};
+				this.insulation_data[id] = {name: nameID, insulation: i, maxInsulation: maxInsulationLevel};
 				EU.registerWire(id, maxVoltage, this.cableBurnoutFunc);
 
 				Block.registerDropFunction(nameID + i, function(coords, id, data){
@@ -1169,7 +1162,11 @@ let CableRegistry = {
 	},
 
 	getCableData: function(id){
-		return this.data[id];
+		return this.insulation_data[id];
+	},
+
+	canBePainted: function(id){
+		return this.paint_data.indexOf(id) != -1;
 	},
 
 	cableBurnoutFunc: function(voltage){
@@ -1216,32 +1213,36 @@ function isHostileMob(type){
 	return false;
 }
 
-function canTakeElectricDamage(ent){
-	var type = Entity.getType(ent);
-	if(ent == player){
+function canTakeDamage(entity, damageSource){
+	var type = Entity.getType(entity);
+	if(entity == player){
 		if(Game.getGameMode() == 1) return false;
-		if(Player.getArmorSlot(0).id == ItemID.hazmatHelmet && Player.getArmorSlot(1).id == ItemID.hazmatChestplate &&
-		Player.getArmorSlot(2).id == ItemID.hazmatLeggings && Player.getArmorSlot(3).id == ItemID.rubberBoots){
-			return false;
+		switch(damageSource){
+		case "electricity":
+			if(Player.getArmorSlot(0).id == ItemID.hazmatHelmet && Player.getArmorSlot(1).id == ItemID.hazmatChestplate &&
+			Player.getArmorSlot(2).id == ItemID.hazmatLeggings && Player.getArmorSlot(3).id == ItemID.rubberBoots){
+				return false;
+			}
+		break;
+		case "radiation":
+			return RadiationAPI.checkPlayerArmor();
 		}
 		return true;
 	}
 	return isFriendlyMob(type) || isHostileMob(type);
 }
 
-function damageEntityInR(x, y, z, ent){
+function damageEntityInR(entity, x, y, z){
 	for(var yy = y-2; yy <= y+1; yy++)
 	for(var xx = x-1; xx <= x+1; xx++)
 	for(var zz = z-1; zz <= z+1; zz++){
 		var blockID = World.getBlockID(xx, yy, zz);
 		var cableData = CableRegistry.getCableData(blockID);
-		
 		if(cableData && cableData.insulation < cableData.maxInsulation){
-			Game.message(cableData.name + ":" + cableData.insulation)
 			var net = EnergyNetBuilder.getNetOnCoords(xx, yy, zz);
 			if(net && net.energyName == "Eu" && net.lastVoltage > insulationMaxVolt[cableData.insulation]){
 				var damage = Math.ceil(net.lastVoltage / 32);
-				Entity.damageEntity(ent, damage);
+				Entity.damageEntity(entity, damage);
 				return;
 			}
 		}
@@ -1263,9 +1264,9 @@ Callback.addCallback("tick", function(){
 		}
 		for(var i in entities){
 			var ent = entities[i];
-			if(canTakeElectricDamage(ent) && Entity.getHealth(ent) > 0){
+			if(canTakeDamage(ent, "electricity") && Entity.getHealth(ent) > 0){
 				var coords = Entity.getPosition(ent);
-				damageEntityInR(Math.floor(coords.x), Math.floor(coords.y), Math.floor(coords.z), ent);
+				damageEntityInR(ent, Math.floor(coords.x), Math.floor(coords.y), Math.floor(coords.z));
 			}
 		}
 	}
@@ -1500,7 +1501,7 @@ let RadiationAPI = {
 		let entities = Entity.getAll();
 		for(let i in entities){
 			let ent = entities[i];
-			if(isMob(ent) && Entity.getHealth(ent) > 0){
+			if(canTakeDamage(ent, "radiation") && Entity.getHealth(ent) > 0){
 				let c = Entity.getPosition(ent);
 				let xx = Math.abs(x - c.x), yy = Math.abs(y - c.y), zz = Math.abs(z - c.z);
 				if(Math.sqrt(xx*xx + yy*yy + zz*zz) <= radius){
@@ -3267,7 +3268,7 @@ IDRegistry.genBlockID("miningPipe");
 Block.createBlock("miningPipe", [
 	{name: "Mining Pipe", texture: [["mining_pipe", 0]], inCreative: true},
 	{name: "tile.mining_pipe.name", texture: [["mining_pipe", 1]], inCreative: false}
-], {base: 1, destroytime: 2, renderlayer: 2});
+], {base: 1, destroytime: 2, renderlayer: 7});
 Block.setBlockShape(BlockID.miningPipe, {x: 5/16, y: 0, z: 5/16}, {x: 11/16, y: 1, z: 11/16}, 0);
 ToolAPI.registerBlockMaterial(BlockID.miningPipe, "stone", 1, true);
 Block.setDestroyLevel("miningPipe", 1);
@@ -5948,6 +5949,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	init: function(){
 		this.chambers = [];
 		this.renderModel();
+		this.__initialized = true;
 		this.rebuildEnergyNet();
 	},
 	
@@ -5970,13 +5972,12 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	addChamber: function(chamber){
-		if(chamber.removed || (chamber.core && chamber.core != this)){
+		if(!this.__initialized || chamber.removed || (chamber.core && chamber.core != this)){
 			return;
 		}
 		if(this.chambers.indexOf(chamber) == -1){
 			this.chambers.push(chamber);
 			chamber.core = this;
-			chamber.container = this.container;
 			chamber.data.x = this.x;
 			chamber.data.y = this.y;
 			chamber.data.z = this.z;
@@ -6211,7 +6212,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			let entities = Entity.getAll();
 			for(let i in entities){
 				let ent = entities[i];
-				if(canTakeElectricDamage(ent)){
+				if(canTakeDamage(ent, "radiation")){
 					let c = Entity.getPosition(ent);
 					if(Math.abs(this.x + 0.5 - c.x) <= 3 && Math.abs(this.y + 0.5 - c.y) <= 3 && Math.abs(this.z + 0.5 - c.z) <= 3){
 						RadiationAPI.addEffect(ent, parseInt(4 * this.data.hem));
@@ -6264,6 +6265,17 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 		return null;
 	},
 	
+	onItemClick: function(id, count, data, coords){
+		if (id == ItemID.debugItem || id == ItemID.EUMeter) return false;
+		if (this.click(id, count, data, coords)) return true;
+		if (Entity.getSneaking(player)) return false;
+		var gui = this.getGuiScreen();
+		if (gui){
+			this.core.container.openAs(gui);
+			return true;
+		}
+	},
+	
 	init: function(){
 		if(this.data.y >= 0 && World.getBlockID(this.data.x, this.data.y, this.data.z) == BlockID.nuclearReactor){
 			let tileEnt = World.getTileEntity(this.data.x, this.data.y, this.data.z);
@@ -6285,10 +6297,6 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 	
 	destroy: function(){
 		this.removed = true;
-		this.container = new UI.Container();
-		if(this.core){
-			this.core.removeChamber(this);
-		}
 	}
 });
 
@@ -7241,7 +7249,7 @@ StorageInterface.createInterface(BlockID.ironFurnace, {
 	slots: {
 		"slotSource": {input: true,
 			isValid: function(item, side){
-				return side != 0 && Recipes.getFurnaceRecipeResult(item.id, "iron");
+				return side == 1 && Recipes.getFurnaceRecipeResult(item.id, "iron");
 			}
 		},
 		"slotFuel": {input: true, 
@@ -10618,7 +10626,7 @@ var guiMiner = new UI.StandartWindow({
 		},
 		"slotPipe": {type: "slot", x: 541, y: 75,
 			isValid: function(id){
-				if(id < 256 || id >= 8192) return true;
+				if(ToolLib.isBlock(id) && !TileEntity.isTileEntityBlock(id)) return true;
 				return false;
 			}
 		},
@@ -10897,7 +10905,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				if(this.data.progress >= 20){
 					this.drop([{id: BlockID.miningPipe, count: 1, data: 0}]);
 					var pipeSlot = this.container.getSlot("slotPipe");
-					if(pipeSlot.id != 0 && (pipeSlot.id < 256 || pipeSlot.id >= 8192 && pipeSlot.id != BlockID.miningPipe)){
+					if(pipeSlot.id != 0 && ToolLib.isBlock(pipeSlot.id) && !TileEntity.isTileEntityBlock(id) && pipeSlot.id != BlockID.miningPipe){
 						var blockId = Block.covertItemToBlockId(pipeSlot.id);
 						World.setBlock(this.x, this.data.y, this.z, blockId, pipeSlot.data);
 						pipeSlot.count--;
@@ -11675,7 +11683,7 @@ Block.createBlock("luminator", [
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false}
-], {renderlayer: 2});
+], {renderlayer: 7});
 
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 15/16, z: 0}, {x: 1, y: 1, z: 1}, 0);
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1, y: 1/16, z: 1}, 1);
@@ -11700,7 +11708,8 @@ Block.createBlock("luminator_on", [
 ], {
 	destroytime: 2,
 	explosionres: 0.5,
-	lightlevel: 15
+	lightlevel: 15,
+	renderlayer: 7
 });
 
 Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 15/16, z: 0}, {x: 1, y: 1, z: 1}, 0);
@@ -11786,7 +11795,6 @@ MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 });
 
 Block.registerPlaceFunction("luminator", function(coords, item, block){
-	Game.prevent();
 	var x = coords.relative.x
 	var y = coords.relative.y
 	var z = coords.relative.z
@@ -11836,7 +11844,7 @@ MachineRegistry.registerElectricMachine(BlockID.teslaCoil, {
 					var dx = this.x + 0.5 - coords.x;
 					var dy = this.y + 0.5 - coords.y;
 					var dz = this.z + 0.5 - coords.z;
-					if(Math.sqrt(dx*dx + dy*dy + dz*dz) < 4.5 && canTakeElectricDamage(ent) && Entity.getHealth(ent) > 0){
+					if(Math.sqrt(dx*dx + dy*dy + dz*dz) < 4.5 && canTakeDamage(ent, "electricity") && Entity.getHealth(ent) > 0){
 						discharge = true;
 						if(damage >= 24){
 							Entity.setFire(ent, 1, true);
@@ -14395,7 +14403,7 @@ ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");
 Item.createItem("debugItem", "Debug Item", {name: "debug_item", meta: 0}, {isTech: !Config.debugMode});
-ChargeItemRegistry.registerExtraItem(ItemID.debugItem, "Eu", -1, 0, "storage");
+ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, 0, "storage");
 
 Item.addCreativeGroup("batteryEU", Translation.translate("Batteries"), [
 	ItemID.storageBattery,
@@ -15684,6 +15692,7 @@ var NANO_ARMOR_FUNCS = {
 			}
 			if(type==5 && index==3){
 				var damage = 0;
+				var vel = Player.getVelocity().y;
 				var time = vel / -0.06;
 				var height = 0.06 * time*time / 2;
 				if(height < 22){
@@ -16946,17 +16955,19 @@ ToolType.drill = {
 		for(let i = 9; i < 45; i++){
 			let slot = Player.getInventorySlot(i);
 			if(slot.id == 50){
-				slot.count--;
-				if(!slot.count) slot.id = 0;
-				Player.setInventorySlot(i, slot.id, slot.count, 0);
-				if(block.id >= 8192 || !GenerationUtils.isTransparentBlock(block.id)){
+				if(Block.isSolid(block.id)){
 					World.setBlock(place.x, place.y, place.z, 50, (6 - coords.side)%6);
 				} else {
 					block = World.getBlock(place.x, place.y - 1, place.z);
-					if(!GenerationUtils.isTransparentBlock(block.id) || ((block.id == 44 || block.id == 158 || block.id == 182) && block.data > 7)){
+					if(Block.isSolid(block.id)){
 						World.setBlock(place.x, place.y, place.z, 50, 5);
+					} else {
+						break;
 					}
 				}
+				slot.count--;
+				if(slot.count == 0) slot.id = 0;
+				Player.setInventorySlot(i, slot.id, slot.count, 0);
 				break;
 			}
 		}
@@ -17293,10 +17304,10 @@ ChargeItemRegistry.registerExtraItem(ItemID.miningLaser, "Eu", 1000000, 2048, 3,
 
 ItemName.setRarity(ItemID.miningLaser, 1);
 Item.registerNameOverrideFunction(ItemID.miningLaser, function(item, name){
-	name = "(WIP) " + ItemName.showItemStorage(item, name);
-	var mode = item.extra? item.extra.getInt("mode") : 0;
-	name += "\n"+MiningLaser.getModeInfo(mode);
-	return name;
+	//name =  ItemName.showItemStorage(item, name);
+	//var mode = item.extra? item.extra.getInt("mode") : 0;
+	//name += "\n"+MiningLaser.getModeInfo(mode);
+	return "§e" + name +" (WIP)" + ItemName.getItemStorageText(item);
 });
 
 Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: 27}, [
@@ -17845,13 +17856,47 @@ Item.registerUseFunction("weeding_trowel",function(coords, item, block){
 // file: items/tool/painter.js
 
 IDRegistry.genItemID("icPainter");
-Item.createItem("icPainter", "Painter", {name: "painter", meta: 0});
+Item.createItem("icPainter", "Painter", {name: "ic_painter", meta: 0});
+
+let painterCreativeGroup = [ItemID.icPainter];
+for(let i = 1; i <= 16; i++){
+	IDRegistry.genItemID("icPainter"+i);
+	Item.createItem("icPainter"+i, "Painter", {name: "ic_painter", meta: i});
+	Item.setMaxDamage(ItemID["icPanter"+i], 32);
+	painterCreativeGroup.push(ItemID["icPainter"+i]);
+}
+
+Item.addCreativeGroup("ic2_painter", Translation.translate("Painter"), painterCreativeGroup);
 
 Recipes.addShaped({id: ItemID.icPainter, count: 1, data: 0}, [
 	" aa",
 	" xa",
 	"x  "
 ], ['x', 265, -1, 'a', 35, 0]);
+
+Recipes.addShapeless({id: ItemID.icPainter1, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 16}]);
+Recipes.addShapeless({id: ItemID.icPainter2, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 1}]);
+Recipes.addShapeless({id: ItemID.icPainter3, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 2}]);
+Recipes.addShapeless({id: ItemID.icPainter4, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 17}]);
+Recipes.addShapeless({id: ItemID.icPainter5, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 18}]);
+
+for(let i = 6; i <= 15; i++){
+	Recipes.addShapeless({id: ItemID["icPainter"+i], count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: i-1}]);
+}
+
+Recipes.addShapeless({id: ItemID.icPainter16, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 19}]);
+
+for(let i = 1; i <= 16; i++){
+	Item.registerUseFunction("icPainter"+i, function(coords, item, block){
+		if(CableRegistry.canBePainted(block.id)){
+			World.setBlock(coords.x, coords.y, coords.z, block.id, i);
+			item.data++;
+			if(item.data >= Item.getMaxDamage(item.id))
+				item.id = ItemID.icPainter;
+			Player.setCarriedItem(item.id, 1, item.data);
+		}
+	});
+}
 
 
 

@@ -1,5 +1,6 @@
 let CableRegistry = {
-	data: {},
+	insulation_data: {},
+	paint_data: [],
 	
 	createBlock: function(nameID, properties, blockType){
 		var variations = [];
@@ -7,13 +8,14 @@ let CableRegistry = {
 			variations.push({name: properties.name, texture: [[properties.texture, i]]});
 		}
 		Block.createBlock(nameID, variations, blockType);
+		this.paint_data.push(BlockID[nameID]);
 	},
 	
 	registerCable: function(nameID, maxVoltage, maxInsulationLevel){
 		if(maxInsulationLevel){
 			for(let i = 0; i <= maxInsulationLevel; i++){
 				let id = BlockID[nameID+i];
-				this.data[id] = {name: nameID, insulation: i, maxInsulation: maxInsulationLevel};
+				this.insulation_data[id] = {name: nameID, insulation: i, maxInsulation: maxInsulationLevel};
 				EU.registerWire(id, maxVoltage, this.cableBurnoutFunc);
 
 				Block.registerDropFunction(nameID + i, function(coords, id, data){
@@ -42,7 +44,11 @@ let CableRegistry = {
 	},
 
 	getCableData: function(id){
-		return this.data[id];
+		return this.insulation_data[id];
+	},
+
+	canBePainted: function(id){
+		return this.paint_data.indexOf(id) != -1;
 	},
 
 	cableBurnoutFunc: function(voltage){

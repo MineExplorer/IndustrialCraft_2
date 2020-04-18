@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("ironFurnace");
 Block.createBlock("ironFurnace", [
 	{name: "Iron Furnace", texture: [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.ironFurnace, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.ironFurnace, 0, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.ironFurnace, 4, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 1], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
@@ -125,7 +125,7 @@ StorageInterface.createInterface(BlockID.ironFurnace, {
 	slots: {
 		"slotSource": {input: true,
 			isValid: function(item, side){
-				return side != 0 && Recipes.getFurnaceRecipeResult(item.id, "iron");
+				return side == 1 && Recipes.getFurnaceRecipeResult(item.id, "iron");
 			}
 		},
 		"slotFuel": {input: true, 

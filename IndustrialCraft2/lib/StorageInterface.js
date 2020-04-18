@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "StorageInterface",
-	version: 5,
+	version: 6,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -134,6 +134,7 @@ let StorageInterface = {
 			Logger.Log("failed to create storage interface: no tile entity for id "+id, "ERROR");
 		}
 	},
+
 	// doesn't override native container slot (only slot object)
 	addItemToSlot: function(item, slot, count){
 		if(slot.id == 0 || slot.id == item.id && slot.data == item.data){
@@ -223,7 +224,7 @@ let StorageInterface = {
 			}
 		}
 		if(!slotsInitialized){
-			slots = this.getContainerSlots(container, 0, side);
+			slots = this.getContainerSlots(container, 1, side);
 		}
 		for(let i in slots){
 			let slot = container.getSlot(slots[i]);
@@ -257,7 +258,7 @@ let StorageInterface = {
 			}
 		}
 		if(!slotsInitialized){
-			slots = this.getContainerSlots(container, 1, outputSide);
+			slots = this.getContainerSlots(container, 2, outputSide);
 		}
 		for(let i in slots){
 			let slot = container.getSlot(slots[i]);
@@ -311,21 +312,32 @@ let StorageInterface = {
 				slots.push(name);
 			}
 		} else {
-			if(mode !== undefined){
-				if(container.getType() == 1){
-					if(mode == 1){
-						return [2];
-					}
-					if(side == 1){
-						return [0];
-					}
-					if(side > 1){
-						return[1];
-					}
+			var type = mode? container.getType() : 0;
+			Game.tipMessage(type)
+			switch(type){
+			case 1:
+			case 38:
+			case 39:
+				if(mode == 1){
+					slots.push((side == 1)? 0 : 1);
 				}
-			}
-			for(let i = 0; i < container.getSize(); i++){
-				slots.push(i);
+				if(mode == 2){
+					slots.push(2);
+				}
+			break;
+			case 8:
+				if(mode == 1){
+					slots.push((side == 1)? 0 : 4);
+				}
+				if(mode == 2){
+					slots.push(1, 2, 3);
+				}
+			break;
+			default:
+				for(let i = 0; i < container.getSize(); i++){
+					slots.push(i);
+				}
+			break;
 			}
 		}
 		return slots;
@@ -391,7 +403,7 @@ let StorageInterface = {
 					}
 				}
 				if(!slotsInitialized){
-					slots = this.getContainerSlots(container, 1, outputSide);
+					slots = this.getContainerSlots(container, 2, outputSide);
 				}
 				for(let i in slots){
 					let slot = container.getSlot(slots[i]);

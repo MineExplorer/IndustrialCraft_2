@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("nuclearReactor");
 Block.createBlock("nuclearReactor", [
 	{name: "Nuclear Reactor", texture: [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]], inCreative: true},
-], "stone");
+], "machine");
 ItemName.setRarity(BlockID.nuclearReactor, 1, true);
 TileRenderer.setStandartModel(BlockID.nuclearReactor, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1]]);
@@ -9,7 +9,7 @@ TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 
 IDRegistry.genBlockID("reactorChamber");
 Block.createBlock("reactorChamber", [
 	{name: "Reactor Chamber", texture: [["machine_bottom", 0], ["machine_top", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0]], inCreative: true},
-], "stone");
+], "machine");
 ItemName.setRarity(BlockID.reactorChamber, 1, true);
 
 Block.registerDropFunction("nuclearReactor", function(coords, blockID, blockData, level){

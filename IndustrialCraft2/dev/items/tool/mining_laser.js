@@ -5,10 +5,10 @@ ChargeItemRegistry.registerExtraItem(ItemID.miningLaser, "Eu", 1000000, 2048, 3,
 
 ItemName.setRarity(ItemID.miningLaser, 1);
 Item.registerNameOverrideFunction(ItemID.miningLaser, function(item, name){
-	name = "(WIP) " + ItemName.showItemStorage(item, name);
-	var mode = item.extra? item.extra.getInt("mode") : 0;
-	name += "\n"+MiningLaser.getModeInfo(mode);
-	return name;
+	//name =  ItemName.showItemStorage(item, name);
+	//var mode = item.extra? item.extra.getInt("mode") : 0;
+	//name += "\n"+MiningLaser.getModeInfo(mode);
+	return "§e" + name +" (WIP)" + ItemName.getItemStorageText(item);
 });
 
 Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: 27}, [

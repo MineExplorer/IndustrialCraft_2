@@ -1,7 +1,7 @@
 IDRegistry.genBlockID("solarPanel");
 Block.createBlock("solarPanel", [
 	{name: "Solar Panel", texture: [["machine_bottom", 0], ["solar_panel", 0], ["machine", 0], ["machine", 0], ["machine", 0], ["machine", 0]], inCreative: true}
-], "stone");
+], "machine");
 
 MachineRegistry.setMachineDrop("solarPanel", BlockID.machineBlockBasic);
 

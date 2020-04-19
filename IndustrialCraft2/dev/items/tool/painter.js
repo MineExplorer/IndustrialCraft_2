@@ -2,14 +2,16 @@ IDRegistry.genItemID("icPainter");
 Item.createItem("icPainter", "Painter", {name: "ic_painter", meta: 0});
 
 let painterCreativeGroup = [ItemID.icPainter];
+const colors = ["Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Light Grey", "Dark Grey", "Pink", "Lime", "Yellow", "Light Blue", "Magenta", "Orange", "White"];
+
 for(let i = 1; i <= 16; i++){
 	IDRegistry.genItemID("icPainter"+i);
-	Item.createItem("icPainter"+i, "Painter", {name: "ic_painter", meta: i});
+	Item.createItem("icPainter"+i, colors[i - 1] + " Painter", {name: "ic_painter", meta: i});
 	Item.setMaxDamage(ItemID["icPainter"+i], 32);
 	painterCreativeGroup.push(ItemID["icPainter"+i]);
 }
 
-Item.addCreativeGroup("ic2_painter", Translation.translate("Painter"), painterCreativeGroup);
+Item.addCreativeGroup("ic2_painter", Translation.translate("Painters"), painterCreativeGroup);
 
 Recipes.addShaped({id: ItemID.icPainter, count: 1, data: 0}, [
 	" aa",

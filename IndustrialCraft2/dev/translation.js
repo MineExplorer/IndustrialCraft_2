@@ -432,6 +432,26 @@ Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt
 Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna III", zh: "时运 III"});
 Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
 
+//Painter
+
+Translation.addTranslation("Painter", {ru: "Валик"});
+Translation.addTranslation("Black Painter", {ru: "Чёрный валик"});
+Translation.addTranslation("Blue Painter", {ru: "Синий валик"});
+Translation.addTranslation("Brown Painter", {ru: "Коричневый валик"});
+Translation.addTranslation("Light Blue Painter", {ru: "Светло-голубой валик"});
+Translation.addTranslation("Cyan Painter", {ru: "Бирюзовый валик"});
+Translation.addTranslation("Dark Grey Painter", {ru: "Тёмно-серый валик"});
+Translation.addTranslation("Green Painter", {ru: "Зелёный валик"});
+Translation.addTranslation("Light Grey Painter", {ru: "Светло-серый валик"});
+Translation.addTranslation("Lime Painter", {ru: "Лаймовый валик"});
+Translation.addTranslation("Magenta Painter", {ru: "Сиреневый валик"});
+Translation.addTranslation("Orange Painter", {ru: "Оранжевый валик"});
+Translation.addTranslation("Pink Painter", {ru: "Розовый валик"});
+Translation.addTranslation("Purple Painter", {ru: "Фиолетовый валик"});
+Translation.addTranslation("Red Painter", {ru: "Красный валик"});
+Translation.addTranslation("White Painter", {ru: "Белый валик"});
+Translation.addTranslation("Yellow Painter", {ru: "Жёлтый валик"});
+
 // Messages
 Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
 Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
@@ -482,3 +502,4 @@ Translation.addTranslation("Reactor Heat Vents", {ru: "Теплоотводы"})
 Translation.addTranslation("Reactor Heat Exchangers", {ru: "Теплообменники"});
 Translation.addTranslation("Reactor Coolants", {ru: "Охлаждающие капсулы"});
 Translation.addTranslation("Seed Bags", {ru: "Мешки с семенами"});
+Translation.addTranslation("Painters", {ru: "Валики"});

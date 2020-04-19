@@ -30,6 +30,15 @@ const fallVelocity = -0.0784;
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var Color = android.graphics.Color;
 
+// temporary fix
+Block.registerPopResourcesFunction = function(nameID, func) {
+    var numericID = this.getNumericId(nameID);
+    if (numericID == -1) {
+        return false;
+    }
+    return this.registerPopResourcesFunctionForID(numericID, func);
+}
+
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 

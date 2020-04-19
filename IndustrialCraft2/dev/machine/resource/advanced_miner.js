@@ -134,7 +134,7 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 	},
 	
 	harvestBlock: function(x, y, z, block){
-		var drop = getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, 100, {silk: this.data.silk_touch});
+		var drop = ToolLib.getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, 100, {silk: this.data.silk_touch});
 		if(this.checkDrop(drop)) return false;
 		World.setBlock(x, y, z, 0);
 		var items = [];
@@ -189,7 +189,8 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 			if(scanner.id == ItemID.scanner) scanR = 16;
 			if(scanner.id == ItemID.scannerAdvanced) scanR = 32;
 		}
-		if(scanR > 0 && scanner.data + 64 <= Item.getMaxDamage(scanner.id)){
+		var energyStored = ChargeItemRegistry.getEnergyStored(scanner);
+		if(scanR > 0 && energyStored >= 64){
 			if(World.getThreadTime()%20==0){
 				if(this.data.y == 0){
 					this.data.x = -scanR;
@@ -205,7 +206,7 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 						this.data.z = -scanR;
 						this.data.y--;
 					}
-					scanner.data += 64;
+					energyStored -= 64;
 					var x = this.x + this.data.x, y = this.y + this.data.y, z = this.z + this.data.z;
 					this.data.x++;
 					var block = World.getBlock(x, y, z);
@@ -213,8 +214,9 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 						if(this.harvestBlock(x, y, z, block))
 						break;
 					}
-					if(scanner.data + 64 > Item.getMaxDamage(scanner.id)) break;
+					if(energyStored < 64) break;
 				}
+				ChargeItemRegistry.setEnergyStored(scanner, energyStored);
 			}
 			this.activate();
 		} else {

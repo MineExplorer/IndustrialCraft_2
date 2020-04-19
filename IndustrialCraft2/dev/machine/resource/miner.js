@@ -59,54 +59,11 @@ var guiMiner = new UI.StandartWindow({
 		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
 	}
 });
+
 Callback.addCallback("LevelLoaded", function(){
 	MachineRegistry.updateGuiHeader(guiMiner, "Miner");
 });
 
-
-var dropData0 = [3, 25, 39, 40, 46, 50, 53, 54, 58, 65, 72, 96, 107, 134, 135, 136, 143, 146, 163, 164, 165, 170, 183, 184, 185, 186, 187];
-// noDrop = [6, 18, 30, 31, 32, 59, 81, 83, 86, 92, 99, 100, 103, 104, 105, 106, 111, 115, 127, 131, 132, 140, 141, 142, 161, 175, 244];
-
-function getBlockDrop(coords, id, data, level, enchant, smelt){
-	if(smelt){
-		if(id == 78) return [];
-		if(id == 80){
-			World.setBlock(coords.x, coords.y, coords.z, 8);
-			return [];
-		}
-	}
-	var dropFunc = Block.dropFunctions[id];
-	if(dropFunc){
-		return dropFunc(coords, id, data, level, enchant || {});
-	}
-	if(id==5 || id == 19 || id==35 || id==85 || id==144 || id==171) return [[id, 1, data]];
-	if(id == 17 || id == 162) return [[id, 1, data%4]];
-	if(id == 26) return [[355, 1, 0]];
-	if(id == 47){
-		if(enchant.silk) return [[47, 1, 0]];
-		return [[340, 3, 0]];
-	}
-	if(id == 55) return [[331, 1, 0]];
-	if(id == 60) return [[3, 1, 0]];
-	if(id == 63 || id == 68) return [[338, 1, 0]];
-	if(id == 64) return [[324, 1, 0]];
-	if(id == 75 || id == 76) return [[76, 1, 0]];
-	if(id == 79 || id == 174){
-		World.setBlock(coords.x, coords.y, coords.z, 8);
-		return [];
-	}
-	if(id == 93 || id == 94) return [[356, 1, 0]];
-	if(id == 149 || id == 150) return [[404, 1, 0]];
-	if(id == 151 || id == 178) return [[151, 1, 0]];
-	if(id == 158) return [[158, 1, data%8]];
-	if(id == 193) return [[427, 1, 0]];
-	if(id == 194) return [[428, 1, 0]];
-	if(id == 195) return [[429, 1, 0]];
-	if(id == 196) return [[430, 1, 0]];
-	if(id == 197) return [[431, 1, 0]];
-	if(dropData0.indexOf(id) != -1) return [[id, 1, 0]];
-	return [];
-}
 
 MachineRegistry.registerElectricMachine(BlockID.miner, {
 	defaultValues: {
@@ -165,12 +122,12 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	
 	findPath: function(x, y, z, sprc, level){
 		var block = World.getBlock(x, y, z);
-		if(block.id==BlockID.miningPipe || this.isValid(block)){
+		if(block.id == BlockID.miningPipe || this.isValid(block)){
 			var dx = this.data.x - x;
 			var dz = this.data.z - z;
 			if(Math.abs(dx) == Math.abs(dz)){
 				var prc = sprc;
-			}else if(Math.abs(dx) > Math.abs(dz)){
+			} else if(Math.abs(dx) > Math.abs(dz)){
 				var prc = 0;
 			} else {
 				var prc = 1;
@@ -191,7 +148,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	},
 	
 	mineBlock: function(x, y, z, block, level){
-		var drop = getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, level);
+		var drop = ToolLib.getBlockDrop({x: x, y: y, z: z}, block.id, block.data, level);
 		var items = [];
 		for(var i in drop){
 			items.push({id: drop[i][0], count: drop[i][1], data: drop[i][2]});
@@ -227,9 +184,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	
 	drop: function(items){
 		var containers = StorageInterface.getNearestContainers(this, 0, true);
-		if(containers){
-			StorageInterface.putItems(items, containers, this);
-		}
+		StorageInterface.putItems(items, containers);
 		for(var i in items){
 			var item = items[i]
 			if(item.count > 0){
@@ -254,11 +209,12 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 			if(this.data.y < this.y && this.data.scanY != this.data.y){
 				var r = 0;
 				var scanner = this.container.getSlot("slotScanner");
-				if(scanner.id == ItemID.scanner && scanner.data + 50 <= Item.getMaxDamage(scanner.id)){
-					scanner.data += 50;
+				var energyStored = ChargeItemRegistry.getEnergyStored(scanner);
+				if(scanner.id == ItemID.scanner && energyStored >= 50){
+					ChargeItemRegistry.setEnergyStored(scanner, energyStored - 50);
 					r = scan_radius;
-				}else if(scanner.id == ItemID.scannerAdvanced && scanner.data + 250 <= Item.getMaxDamage(scanner.id)){
-					scanner.data += 250;
+				} else if(scanner.id == ItemID.scannerAdvanced && energyStored >= 250){
+					ChargeItemRegistry.setEnergyStored(scanner, energyStored - 250);
 					r = adv_scan_radius;
 				}
 				this.data.x = this.x - r;

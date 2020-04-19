@@ -34,12 +34,21 @@ IMPORT("LiquidLib");
 IMPORT("BackpackAPI");
 
 // constants
-const GUI_SCALE = 3.2;
+var GUI_SCALE = 3.2;
 const fallVelocity = -0.0784;
 
 // import functions
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var Color = android.graphics.Color;
+
+// temporary fix
+Block.registerPopResourcesFunction = function(nameID, func) {
+    var numericID = this.getNumericId(nameID);
+    if (numericID == -1) {
+        return false;
+    }
+    return this.registerPopResourcesFunctionForID(numericID, func);
+}
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
@@ -520,6 +529,25 @@ Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt
 Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna III", zh: "时运 III"});
 Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
 
+//Painter
+Translation.addTranslation("Painter", {ru: "Валик"});
+Translation.addTranslation("Black Painter", {ru: "Чёрный валик"});
+Translation.addTranslation("Blue Painter", {ru: "Синий валик"});
+Translation.addTranslation("Brown Painter", {ru: "Коричневый валик"});
+Translation.addTranslation("Light Blue Painter", {ru: "Светло-голубой валик"});
+Translation.addTranslation("Cyan Painter", {ru: "Бирюзовый валик"});
+Translation.addTranslation("Dark Grey Painter", {ru: "Тёмно-серый валик"});
+Translation.addTranslation("Green Painter", {ru: "Зелёный валик"});
+Translation.addTranslation("Light Grey Painter", {ru: "Светло-серый валик"});
+Translation.addTranslation("Lime Painter", {ru: "Лаймовый валик"});
+Translation.addTranslation("Magenta Painter", {ru: "Сиреневый валик"});
+Translation.addTranslation("Orange Painter", {ru: "Оранжевый валик"});
+Translation.addTranslation("Pink Painter", {ru: "Розовый валик"});
+Translation.addTranslation("Purple Painter", {ru: "Фиолетовый валик"});
+Translation.addTranslation("Red Painter", {ru: "Красный валик"});
+Translation.addTranslation("White Painter", {ru: "Белый валик"});
+Translation.addTranslation("Yellow Painter", {ru: "Жёлтый валик"});
+
 // Messages
 Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
 Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
@@ -570,6 +598,7 @@ Translation.addTranslation("Reactor Heat Vents", {ru: "Теплоотводы"})
 Translation.addTranslation("Reactor Heat Exchangers", {ru: "Теплообменники"});
 Translation.addTranslation("Reactor Coolants", {ru: "Охлаждающие капсулы"});
 Translation.addTranslation("Seed Bags", {ru: "Мешки с семенами"});
+Translation.addTranslation("Painters", {ru: "Валики"});
 
 
 
@@ -3257,7 +3286,9 @@ for(let i = 0; i < 16; i++){
 	TileRenderer.setupWireModel(BlockID.cableIron3, i, 12/16, "ic-wire");
 }
 
-TileRenderer.setupWireModel(BlockID.cableOptic, -1, 1/4, "ic-wire");
+for(let i = 0; i < 16; i++){
+	TileRenderer.setupWireModel(BlockID.cableOptic, i, 1/4, "ic-wire");
+}
 
 
 
@@ -4132,7 +4163,7 @@ Callback.addCallback("DestroyBlockStart", function(coords, block){
 IDRegistry.genBlockID("primalGenerator");
 Block.createBlock("primalGenerator", [
 	{name: "Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.primalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.primalGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.primalGenerator, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -4267,7 +4298,7 @@ StorageInterface.createInterface(BlockID.primalGenerator, {
 IDRegistry.genBlockID("geothermalGenerator");
 Block.createBlock("geothermalGenerator", [
 	{name: "Geothermal Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.geothermalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.geothermalGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.geothermalGenerator, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -4395,7 +4426,7 @@ StorageInterface.createInterface(BlockID.geothermalGenerator, {
 IDRegistry.genBlockID("semifluidGenerator");
 Block.createBlock("semifluidGenerator", [
 	{name: "Semifluid Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.semifluidGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.semifluidGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.semifluidGenerator, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
@@ -4548,7 +4579,7 @@ StorageInterface.createInterface(BlockID.semifluidGenerator, {
 IDRegistry.genBlockID("solarPanel");
 Block.createBlock("solarPanel", [
 	{name: "Solar Panel", texture: [["machine_bottom", 0], ["solar_panel", 0], ["machine", 0], ["machine", 0], ["machine", 0], ["machine", 0]], inCreative: true}
-], "stone");
+], "machine");
 
 MachineRegistry.setMachineDrop("solarPanel", BlockID.machineBlockBasic);
 
@@ -4638,7 +4669,7 @@ MachineRegistry.registerGenerator(BlockID.solarPanel, {
 IDRegistry.genBlockID("genWindmill");
 Block.createBlock("genWindmill", [
 	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.genWindmill, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.genWindmill, 0, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
 
@@ -4741,7 +4772,7 @@ Saver.addSavesScope("windSim",
 IDRegistry.genBlockID("genWatermill");
 Block.createBlock("genWatermill", [
 	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.genWatermill, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]]);
 TileRenderer.registerRotationModel(BlockID.genWatermill, 0, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]]);
 
@@ -4821,7 +4852,7 @@ TileRenderer.setRotationPlaceFunction(BlockID.genWatermill);
 IDRegistry.genBlockID("rtGenerator");
 Block.createBlock("rtGenerator", [
 	{name: "Radioisotope Thermoelectric Generator", texture: [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], inCreative: true},
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.rtGenerator, [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top", 1], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 
@@ -4910,7 +4941,7 @@ MachineRegistry.registerGenerator(BlockID.rtGenerator, {
 IDRegistry.genBlockID("stirlingGenerator");
 Block.createBlock("stirlingGenerator", [
 	{name: "Stirling Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator", 0], ["heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.stirlingGenerator, [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator", 0], ["heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.stirlingGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator", 0], ["heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]]);
 
@@ -4969,7 +5000,7 @@ TileRenderer.setRotationPlaceFunction(BlockID.stirlingGenerator, true);
 IDRegistry.genBlockID("solidHeatGenerator");
 Block.createBlock("solidHeatGenerator", [
 	{name: "Solid Fuel Firebox", texture: [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]], inCreative: true},
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.solidHeatGenerator, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 0, [["heat_pipe", 0], ["generator", 0], ["machine_bottom", 0], ["machine_top", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
 TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 1, [["generator", 0], ["heat_pipe", 0], ["machine_top", 0], ["machine_bottom", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
@@ -5115,7 +5146,7 @@ StorageInterface.createInterface(BlockID.solidHeatGenerator, {
 IDRegistry.genBlockID("fluidHeatGenerator");
 Block.createBlock("fluidHeatGenerator", [
 	{name: "Liquid Fuel Firebox", texture: [["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_back", 0], ["heat_pipe", 0], ["fluid_heat_generator_side", 0], ["fluid_heat_generator_side", 0]], inCreative: true},
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.fluidHeatGenerator, [["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_back", 0], ["heat_pipe", 0], ["fluid_heat_generator_side", 0], ["fluid_heat_generator_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 0, [["heat_pipe", 0], ["fluid_heat_generator_back", 0], ["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_side", 2], ["fluid_heat_generator_side", 2]]);
 TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 1, [["fluid_heat_generator_back", 0], ["heat_pipe", 0], ["machine_top", 0], ["machine_bottom", 0], ["fluid_heat_generator_side", 2], ["fluid_heat_generator_side", 2]]);
@@ -5281,7 +5312,7 @@ StorageInterface.createInterface(BlockID.fluidHeatGenerator, {
 IDRegistry.genBlockID("electricHeatGenerator");
 Block.createBlock("electricHeatGenerator", [
 	{name: "Electric Heater", texture: [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.electricHeatGenerator, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 6, [["machine_bottom", 0], ["ind_furnace_side", 1], ["heat_generator_side", 1], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
@@ -5862,7 +5893,7 @@ let ReactorAPI = {
 IDRegistry.genBlockID("nuclearReactor");
 Block.createBlock("nuclearReactor", [
 	{name: "Nuclear Reactor", texture: [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]], inCreative: true},
-], "stone");
+], "machine");
 ItemName.setRarity(BlockID.nuclearReactor, 1, true);
 TileRenderer.setStandartModel(BlockID.nuclearReactor, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1]]);
@@ -5870,7 +5901,7 @@ TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 
 IDRegistry.genBlockID("reactorChamber");
 Block.createBlock("reactorChamber", [
 	{name: "Reactor Chamber", texture: [["machine_bottom", 0], ["machine_top", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0]], inCreative: true},
-], "stone");
+], "machine");
 ItemName.setRarity(BlockID.reactorChamber, 1, true);
 
 Block.registerDropFunction("nuclearReactor", function(coords, blockID, blockData, level){
@@ -6347,7 +6378,7 @@ Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block
 IDRegistry.genBlockID("storageBatBox");
 Block.createBlock("storageBatBox", [
 	{name: "BatBox", texture: [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_back", 0], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.storageBatBox, [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_back", 0], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.storageBatBox, 0, [["batbox_front", 0], ["batbox_back", 0], ["batbox_top", 0], ["batbox_bottom", 0], ["batbox_side", 1], ["batbox_side", 2]]);
 TileRenderer.registerRenderModel(BlockID.storageBatBox, 1, [["batbox_back", 0], ["batbox_front", 0], ["batbox_top", 0], ["batbox_bottom", 0], ["batbox_side", 1], ["batbox_side", 2]]);
@@ -6492,7 +6523,7 @@ StorageInterface.createInterface(BlockID.storageBatBox, {
 IDRegistry.genBlockID("storageCESU");
 Block.createBlock("storageCESU", [
 	{name: "CESU", texture: [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.storageCESU, [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.storageCESU, 0, [["cesu_front", 0], ["cesu_back", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);
 TileRenderer.registerRenderModel(BlockID.storageCESU, 1, [["cesu_back", 0], ["cesu_front", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);
@@ -6632,7 +6663,7 @@ StorageInterface.createInterface(BlockID.storageCESU, {
 IDRegistry.genBlockID("storageMFE");
 Block.createBlock("storageMFE", [
 	{name: "MFE", texture: [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.storageMFE, [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.storageMFE, 0, [["mfe_front", 0], ["mfe_back", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
 TileRenderer.registerRenderModel(BlockID.storageMFE, 1, [["mfe_back", 0], ["mfe_front", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
@@ -6772,7 +6803,7 @@ StorageInterface.createInterface(BlockID.storageMFE, {
 IDRegistry.genBlockID("storageMFSU");
 Block.createBlock("storageMFSU", [
 	{name: "MFSU", texture: [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.storageMFSU, [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.storageMFSU, 0, [["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 1], ["mfsu_side", 1]]);
 TileRenderer.registerRenderModel(BlockID.storageMFSU, 1, [["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 1], ["mfsu_side", 1]]);
@@ -7000,7 +7031,7 @@ MachineRegistry.registerTransformer = function(id, tier){
 IDRegistry.genBlockID("transformerLV");
 Block.createBlock("transformerLV", [
 	{name: "LV Transformer", texture: [["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.transformerLV, [["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.transformerLV, 0, [["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0]]);
 
@@ -7028,7 +7059,7 @@ MachineRegistry.registerTransformer(BlockID.transformerLV, 2);
 IDRegistry.genBlockID("transformerMV");
 Block.createBlock("transformerMV", [
 	{name: "MV Transformer", texture: [["mv_transformer_side", 0], ["mv_transformer_side", 0], ["mv_transformer_side", 0], ["mv_transformer_front", 0], ["mv_transformer_side", 0], ["mv_transformer_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.transformerMV, [["mv_transformer_side", 0], ["mv_transformer_side", 0], ["mv_transformer_side", 0], ["mv_transformer_front", 0], ["mv_transformer_side", 0], ["mv_transformer_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.transformerMV, 0, [["mv_transformer_side", 0], ["mv_transformer_side", 0], ["mv_transformer_side", 0], ["mv_transformer_front", 0], ["mv_transformer_side", 0], ["mv_transformer_side", 0]]);
 
@@ -7056,7 +7087,7 @@ MachineRegistry.registerTransformer(BlockID.transformerMV, 3);
 IDRegistry.genBlockID("transformerHV");
 Block.createBlock("transformerHV", [
 	{name: "HV Transformer", texture: [["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_front", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 ItemName.setRarity(BlockID.transformerHV, 1, true);
 TileRenderer.setStandartModel(BlockID.transformerHV, [["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_front", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.transformerHV, 0, [["hv_transformer_front", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 1], ["hv_transformer_side", 1]]);
@@ -7087,7 +7118,7 @@ MachineRegistry.registerTransformer(BlockID.transformerHV, 4);
 IDRegistry.genBlockID("transformerEV");
 Block.createBlock("transformerEV", [
 	{name: "EV Transformer", texture: [["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 ItemName.setRarity(BlockID.transformerEV, 1, true);
 TileRenderer.setStandartModel(BlockID.transformerEV, [["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.transformerEV, 0, [["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 1], ["ev_transformer_side", 1]]);
@@ -7125,7 +7156,7 @@ MachineRegistry.registerTransformer(BlockID.transformerEV, 5);
 IDRegistry.genBlockID("ironFurnace");
 Block.createBlock("ironFurnace", [
 	{name: "Iron Furnace", texture: [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.ironFurnace, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.ironFurnace, 0, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.ironFurnace, 4, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 1], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
@@ -7269,7 +7300,7 @@ StorageInterface.createInterface(BlockID.ironFurnace, {
 IDRegistry.genBlockID("electricFurnace");
 Block.createBlock("electricFurnace", [
 	{name: "Electric Furnace", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.electricFurnace, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.electricFurnace, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.electricFurnace, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -7422,7 +7453,7 @@ StorageInterface.createInterface(BlockID.electricFurnace, {
 IDRegistry.genBlockID("inductionFurnace");
 Block.createBlock("inductionFurnace", [
 	{name: "Induction Furnace", texture: [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.inductionFurnace, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.inductionFurnace, 0, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.inductionFurnace, 4, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
@@ -7616,7 +7647,7 @@ StorageInterface.createInterface(BlockID.inductionFurnace, {
 ﻿IDRegistry.genBlockID("macerator");
 Block.createBlock("macerator", [
 {name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.macerator, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.macerator, 0, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.macerator, 4, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -7850,7 +7881,7 @@ StorageInterface.createInterface(BlockID.macerator, {
 IDRegistry.genBlockID("compressor");
 Block.createBlock("compressor", [
 	{name: "Compressor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.compressor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.compressor, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.compressor, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -8048,7 +8079,7 @@ StorageInterface.createInterface(BlockID.compressor, {
 IDRegistry.genBlockID("extractor");
 Block.createBlock("extractor", [
 	{name: "Extractor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.extractor, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], true);
 TileRenderer.registerRotationModel(BlockID.extractor, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.extractor, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 1], ["extractor_side", 1], ["extractor_side", 1]]);
@@ -8205,7 +8236,7 @@ StorageInterface.createInterface(BlockID.extractor, {
 IDRegistry.genBlockID("solidCanner");
 Block.createBlock("solidCanner", [
 	{name: "Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.solidCanner, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.solidCanner, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.solidCanner, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -8407,7 +8438,7 @@ StorageInterface.createInterface(BlockID.solidCanner, {
 IDRegistry.genBlockID("canner");
 Block.createBlock("canner", [
 	{name: "Fluid/Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.canner, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.canner, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.canner, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 1], ["canner_side", 1], ["canner_side", 0]]);
@@ -8428,7 +8459,7 @@ Callback.addCallback("PreLoaded", function(){
 	]);
 });
 
-
+GUI_SCALE = 3; // lvl 80 costyl'
 var guiCanner = new UI.StandartWindow({
 	standart: {
 		header: {text: {text: Translation.translate("Fluid/Solid Canning Machine")}},
@@ -8490,6 +8521,7 @@ var guiCanner = new UI.StandartWindow({
 		}}
 	}
 });
+GUI_SCALE = 3.2;
 
 function isValidCannerSource(id, data, tile){
 	if(tile.data.mode == 0 && MachineRecipeRegistry.hasRecipeFor("solidCanner", id)){
@@ -8751,7 +8783,7 @@ StorageInterface.createInterface(BlockID.canner, {
 IDRegistry.genBlockID("recycler");
 Block.createBlock("recycler", [
 	{name: "Recycler", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.recycler, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.recycler, 0, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.recycler, 4, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["recycler_front", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -8898,7 +8930,7 @@ StorageInterface.createInterface(BlockID.recycler, {
 IDRegistry.genBlockID("metalFormer");
 Block.createBlock("metalFormer", [
 	{name: "Metal Former", texture: [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.metalFormer, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.metalFormer, 0, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.metalFormer, 4, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -9090,7 +9122,7 @@ StorageInterface.createInterface(BlockID.metalFormer, {
 IDRegistry.genBlockID("oreWasher");
 Block.createBlock("oreWasher", [
 	{name: "Ore Washing Plant", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.oreWasher, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.oreWasher, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.oreWasher, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 1], ["ore_washer_side", 1], ["ore_washer_side", 1]]);
@@ -9310,7 +9342,7 @@ StorageInterface.createInterface(BlockID.oreWasher, {
 IDRegistry.genBlockID("thermalCentrifuge");
 Block.createBlock("thermalCentrifuge", [
 	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.thermalCentrifuge, [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.thermalCentrifuge, 0, [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.thermalCentrifuge, 4, [["machine_advanced", 0], ["thermal_centrifuge_top", 1], ["machine_side", 0], ["thermal_centrifuge_front", 1], ["thermal_centrifuge_side", 1], ["thermal_centrifuge_side", 1]]);
@@ -9543,7 +9575,7 @@ StorageInterface.createInterface(BlockID.thermalCentrifuge, {
 IDRegistry.genBlockID("blastFurnace");
 Block.createBlock("blastFurnace", [
 	{name: "Blast Furnace", texture: [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.blastFurnace, [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.blastFurnace, 0, [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.blastFurnace, 6, [["machine_advanced", 0], ["ind_furnace_side", 1], ["machine_back", 0], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
@@ -9787,7 +9819,7 @@ StorageInterface.createInterface(BlockID.blastFurnace, {
 IDRegistry.genBlockID("icFermenter");
 Block.createBlock("icFermenter", [
 	{name: "Fermenter", texture: [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], inCreative: true},
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.icFermenter, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.icFermenter, 6, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 1], ["heat_pipe", 1], ["ic_fermenter_side", 1], ["ic_fermenter_side", 1]]);
@@ -9968,7 +10000,7 @@ StorageInterface.createInterface(BlockID.icFermenter, {
 IDRegistry.genBlockID("massFabricator");
 Block.createBlock("massFabricator", [
 	{name: "Mass Fabricator", texture: [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.massFabricator, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.massFabricator, 0, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.massFabricator, 4, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
@@ -10152,7 +10184,7 @@ StorageInterface.createInterface(BlockID.massFabricator, {
 IDRegistry.genBlockID("pump");
 Block.createBlock("pump", [
 	{name: "Pump", texture: [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.pump, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.pump, 0, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.pump, 4, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 1], ["pump_side", 1], ["pump_side", 1]]);
@@ -10342,7 +10374,7 @@ StorageInterface.createInterface(BlockID.pump, {
 IDRegistry.genBlockID("fluidDistributor");
 Block.createBlock("fluidDistributor", [
 	{name: "Fluid Distributor", texture: [["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.fluidDistributor, [["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1]]);
 TileRenderer.registerFullRotationModel(BlockID.fluidDistributor, 0, [["fluid_distributor", 1], ["fluid_distributor", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.fluidDistributor, 6, [["fluid_distributor", 0], ["fluid_distributor", 1]]);
@@ -10477,7 +10509,7 @@ StorageInterface.createInterface(BlockID.fluidDistributor, {
 IDRegistry.genBlockID("tank");
 Block.createBlock("tank", [
 	{name: "Tank", texture: [["machine_bottom", 0], ["machine_top", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 
 MachineRegistry.setMachineDrop("tank");
 
@@ -10581,7 +10613,7 @@ StorageInterface.createInterface(BlockID.tank, {
 IDRegistry.genBlockID("miner");
 Block.createBlock("miner", [
 	{name: "Miner", texture: [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.miner, [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.miner, 0, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.miner, 4, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 1], ["miner_side", 1], ["miner_side", 1]]);
@@ -10639,54 +10671,11 @@ var guiMiner = new UI.StandartWindow({
 		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
 	}
 });
+
 Callback.addCallback("LevelLoaded", function(){
 	MachineRegistry.updateGuiHeader(guiMiner, "Miner");
 });
 
-
-var dropData0 = [3, 25, 39, 40, 46, 50, 53, 54, 58, 65, 72, 96, 107, 134, 135, 136, 143, 146, 163, 164, 165, 170, 183, 184, 185, 186, 187];
-// noDrop = [6, 18, 30, 31, 32, 59, 81, 83, 86, 92, 99, 100, 103, 104, 105, 106, 111, 115, 127, 131, 132, 140, 141, 142, 161, 175, 244];
-
-function getBlockDrop(coords, id, data, level, enchant, smelt){
-	if(smelt){
-		if(id == 78) return [];
-		if(id == 80){
-			World.setBlock(coords.x, coords.y, coords.z, 8);
-			return [];
-		}
-	}
-	var dropFunc = Block.dropFunctions[id];
-	if(dropFunc){
-		return dropFunc(coords, id, data, level, enchant || {});
-	}
-	if(id==5 || id == 19 || id==35 || id==85 || id==144 || id==171) return [[id, 1, data]];
-	if(id == 17 || id == 162) return [[id, 1, data%4]];
-	if(id == 26) return [[355, 1, 0]];
-	if(id == 47){
-		if(enchant.silk) return [[47, 1, 0]];
-		return [[340, 3, 0]];
-	}
-	if(id == 55) return [[331, 1, 0]];
-	if(id == 60) return [[3, 1, 0]];
-	if(id == 63 || id == 68) return [[338, 1, 0]];
-	if(id == 64) return [[324, 1, 0]];
-	if(id == 75 || id == 76) return [[76, 1, 0]];
-	if(id == 79 || id == 174){
-		World.setBlock(coords.x, coords.y, coords.z, 8);
-		return [];
-	}
-	if(id == 93 || id == 94) return [[356, 1, 0]];
-	if(id == 149 || id == 150) return [[404, 1, 0]];
-	if(id == 151 || id == 178) return [[151, 1, 0]];
-	if(id == 158) return [[158, 1, data%8]];
-	if(id == 193) return [[427, 1, 0]];
-	if(id == 194) return [[428, 1, 0]];
-	if(id == 195) return [[429, 1, 0]];
-	if(id == 196) return [[430, 1, 0]];
-	if(id == 197) return [[431, 1, 0]];
-	if(dropData0.indexOf(id) != -1) return [[id, 1, 0]];
-	return [];
-}
 
 MachineRegistry.registerElectricMachine(BlockID.miner, {
 	defaultValues: {
@@ -10745,12 +10734,12 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	
 	findPath: function(x, y, z, sprc, level){
 		var block = World.getBlock(x, y, z);
-		if(block.id==BlockID.miningPipe || this.isValid(block)){
+		if(block.id == BlockID.miningPipe || this.isValid(block)){
 			var dx = this.data.x - x;
 			var dz = this.data.z - z;
 			if(Math.abs(dx) == Math.abs(dz)){
 				var prc = sprc;
-			}else if(Math.abs(dx) > Math.abs(dz)){
+			} else if(Math.abs(dx) > Math.abs(dz)){
 				var prc = 0;
 			} else {
 				var prc = 1;
@@ -10771,7 +10760,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	},
 	
 	mineBlock: function(x, y, z, block, level){
-		var drop = getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, level);
+		var drop = ToolLib.getBlockDrop({x: x, y: y, z: z}, block.id, block.data, level);
 		var items = [];
 		for(var i in drop){
 			items.push({id: drop[i][0], count: drop[i][1], data: drop[i][2]});
@@ -10807,9 +10796,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	
 	drop: function(items){
 		var containers = StorageInterface.getNearestContainers(this, 0, true);
-		if(containers){
-			StorageInterface.putItems(items, containers, this);
-		}
+		StorageInterface.putItems(items, containers);
 		for(var i in items){
 			var item = items[i]
 			if(item.count > 0){
@@ -10834,11 +10821,12 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 			if(this.data.y < this.y && this.data.scanY != this.data.y){
 				var r = 0;
 				var scanner = this.container.getSlot("slotScanner");
-				if(scanner.id == ItemID.scanner && scanner.data + 50 <= Item.getMaxDamage(scanner.id)){
-					scanner.data += 50;
+				var energyStored = ChargeItemRegistry.getEnergyStored(scanner);
+				if(scanner.id == ItemID.scanner && energyStored >= 50){
+					ChargeItemRegistry.setEnergyStored(scanner, energyStored - 50);
 					r = scan_radius;
-				}else if(scanner.id == ItemID.scannerAdvanced && scanner.data + 250 <= Item.getMaxDamage(scanner.id)){
-					scanner.data += 250;
+				} else if(scanner.id == ItemID.scannerAdvanced && energyStored >= 250){
+					ChargeItemRegistry.setEnergyStored(scanner, energyStored - 250);
 					r = adv_scan_radius;
 				}
 				this.data.x = this.x - r;
@@ -10947,7 +10935,7 @@ TileRenderer.setRotationPlaceFunction(BlockID.miner);
 IDRegistry.genBlockID("advancedMiner");
 Block.createBlock("advancedMiner", [
 	{name: "Advanced Miner", texture: [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.advancedMiner, [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], true);
 TileRenderer.registerRotationModel(BlockID.advancedMiner, 0, [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.advancedMiner, 4, [["teleporter_top", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
@@ -11080,7 +11068,7 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 	},
 	
 	harvestBlock: function(x, y, z, block){
-		var drop = getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, 100, {silk: this.data.silk_touch});
+		var drop = ToolLib.getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, 100, {silk: this.data.silk_touch});
 		if(this.checkDrop(drop)) return false;
 		World.setBlock(x, y, z, 0);
 		var items = [];
@@ -11103,6 +11091,12 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 				nativeDropItem(this.x+0.5, this.y+1, this.z+0.5, 1, item.id, item.count, item.data);
 			}
 		}
+	},
+
+	getScanRadius: function(itemID){
+		if(itemID == ItemID.scanner) return 16;
+		if(itemID == ItemID.scannerAdvanced) return 32;
+		return 0;
 	},
 
 	tick: function(){
@@ -11130,42 +11124,43 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 		}
 		
 		var scanR = 0;
+		var newActive = false;
 		if(this.data.isEnabled && this.y + this.data.y >= 0 && this.data.energy >= 512){
 			var scanner = this.container.getSlot("slotScanner");
-			if(scanner.id == ItemID.scanner) scanR = 16;
-			if(scanner.id == ItemID.scannerAdvanced) scanR = 32;
-		}
-		if(scanR > 0 && scanner.data + 64 <= Item.getMaxDamage(scanner.id)){
-			if(World.getThreadTime()%20==0){
-				if(this.data.y == 0){
-					this.data.x = -scanR;
-					this.data.y = -1;
-					this.data.z = -scanR;
-				}
-				for(var i = 0; i < max_scan_count; i++){
-					if(this.data.x > scanR){
+			var scanR = this.getScanRadius(scanner.id);
+			var energyStored = ChargeItemRegistry.getEnergyStored(scanner);
+			if(scanR > 0 && energyStored >= 64){
+				newActive = true;
+				if(World.getThreadTime()%20 == 0){
+					if(this.data.y == 0){
 						this.data.x = -scanR;
-						this.data.z++;
-					}
-					if(this.data.z > scanR){
+						this.data.y = -1;
 						this.data.z = -scanR;
-						this.data.y--;
 					}
-					scanner.data += 64;
-					var x = this.x + this.data.x, y = this.y + this.data.y, z = this.z + this.data.z;
-					this.data.x++;
-					var block = World.getBlock(x, y, z);
-					if(this.isValidBlock(block.id, block.data)){
-						if(this.harvestBlock(x, y, z, block))
-						break;
+					for(var i = 0; i < max_scan_count; i++){
+						if(this.data.x > scanR){
+							this.data.x = -scanR;
+							this.data.z++;
+						}
+						if(this.data.z > scanR){
+							this.data.z = -scanR;
+							this.data.y--;
+						}
+						energyStored -= 64;
+						var x = this.x + this.data.x, y = this.y + this.data.y, z = this.z + this.data.z;
+						this.data.x++;
+						var block = World.getBlock(x, y, z);
+						if(this.isValidBlock(block.id, block.data)){
+							if(this.harvestBlock(x, y, z, block))
+							break;
+						}
+						if(energyStored < 64) break;
 					}
-					if(scanner.data + 64 > Item.getMaxDamage(scanner.id)) break;
+					ChargeItemRegistry.setEnergyStored(scanner, energyStored);
 				}
 			}
-			this.activate();
-		} else {
-			this.deactivate();
 		}
+		this.setActive(newActive);
 		
 		if(this.data.y < 0)
 			this.container.setText("textInfoXYZ", "X: "+ this.data.x + ", Y: "+ Math.min(this.data.y, -1) + ", Z: "+ this.data.z);
@@ -11213,7 +11208,7 @@ MachineRegistry.setStoragePlaceFunction("advancedMiner");
 IDRegistry.genBlockID("cropHarvester");
 Block.createBlock("cropHarvester", [
 	{name: "Crop Harvester", texture: [["machine_bottom", 0], ["crop_harvester", 0]], inCreative: true}
-], "stone");
+], "machine");
 ItemName.addTierTooltip("cropHarvester", 1);
 
 MachineRegistry.setMachineDrop("cropHarvester", BlockID.machineBlockBasic);
@@ -11375,7 +11370,7 @@ StorageInterface.createInterface(BlockID.cropHarvester, {
 IDRegistry.genBlockID("cropMatron");
 Block.createBlock("cropMatron", [
 	{name: "Crop Matron", texture: [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0]], inCreative: true}
-], "stone");
+], "machine");
 TileRenderer.setStandartModel(BlockID.cropMatron, [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0]], true);
 TileRenderer.registerRotationModel(BlockID.cropMatron, 0, [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0]]);
 TileRenderer.registerRotationModel(BlockID.cropMatron, 4, [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 3], ["cropmatron_side", 1], ["cropmatron_side", 2], ["cropmatron_side", 2]]);
@@ -11579,7 +11574,7 @@ StorageInterface.createInterface(BlockID.cropMatron, {
 IDRegistry.genBlockID("teleporter");
 Block.createBlock("teleporter", [
 	{name: "Teleporter", texture: [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]], inCreative: true},
-], "stone");
+], "machine");
 ItemName.setRarity(BlockID.teleporter, 2, true);
 TileRenderer.setStandartModel(BlockID.teleporter, [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.teleporter, 0, [["machine_advanced_bottom", 0], ["teleporter_top", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1]]);
@@ -11813,7 +11808,7 @@ Block.registerPlaceFunction("luminator", function(coords, item, block){
 IDRegistry.genBlockID("teslaCoil");
 Block.createBlock("teslaCoil", [
 	{name: "Tesla Coil", texture: [["tesla_coil", 0], ["tesla_coil", 0], ["tesla_coil", 1], ["tesla_coil", 1], ["tesla_coil", 1], ["tesla_coil", 1]], inCreative: true},
-], "stone");
+], "machine");
 ItemName.addTierTooltip("teslaCoil", 3);
 
 MachineRegistry.setMachineDrop("teslaCoil", BlockID.machineBlockBasic);
@@ -11876,7 +11871,7 @@ MachineRegistry.registerElectricMachine(BlockID.teslaCoil, {
 IDRegistry.genBlockID("nuke");
 Block.createBlock("nuke", [
 	{name: "Nuke", texture: [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]], inCreative: true}
-], "stone");
+], "machine");
 ItemName.setRarity(BlockID.nuke, 1, true);
 TileRenderer.setStandartModel(BlockID.nuke, [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]]);
 TileRenderer.registerRenderModel(BlockID.nuke, 0, [["tnt_active", 0]]);
@@ -11931,7 +11926,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 				if(Block.getExplosionResistance(block.id) < 10000){
 					World.setBlock(x + dx, y + dy, z + dz, 0);
 					if(Math.random() < 0.01){
-						let drop = getBlockDrop({x: x + dx, y: y + dy, z: z + dz}, block.id, block.data, 100);
+						let drop = ToolLib.getBlockDrop({x: x + dx, y: y + dy, z: z + dz}, block.id, block.data, 100);
 						if(drop)
 						for(let i in drop){
 							let item = drop[i];
@@ -17307,7 +17302,7 @@ Item.registerNameOverrideFunction(ItemID.miningLaser, function(item, name){
 	//name =  ItemName.showItemStorage(item, name);
 	//var mode = item.extra? item.extra.getInt("mode") : 0;
 	//name += "\n"+MiningLaser.getModeInfo(mode);
-	return "§e" + name +" (WIP)" + ItemName.getItemStorageText(item);
+	return "§e" + name +" (WIP)\n" + ItemName.getItemStorageText(item);
 });
 
 Recipes.addShaped({id: ItemID.miningLaser, count: 1, data: 27}, [
@@ -17859,14 +17854,16 @@ IDRegistry.genItemID("icPainter");
 Item.createItem("icPainter", "Painter", {name: "ic_painter", meta: 0});
 
 let painterCreativeGroup = [ItemID.icPainter];
+const colorNames = ["Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Light Grey", "Dark Grey", "Pink", "Lime", "Yellow", "Light Blue", "Magenta", "Orange", "White"];
+
 for(let i = 1; i <= 16; i++){
 	IDRegistry.genItemID("icPainter"+i);
-	Item.createItem("icPainter"+i, "Painter", {name: "ic_painter", meta: i});
-	Item.setMaxDamage(ItemID["icPanter"+i], 32);
+	Item.createItem("icPainter"+i, colorNames[i - 1] + " Painter", {name: "ic_painter", meta: i});
+	Item.setMaxDamage(ItemID["icPainter"+i], 32);
 	painterCreativeGroup.push(ItemID["icPainter"+i]);
 }
 
-Item.addCreativeGroup("ic2_painter", Translation.translate("Painter"), painterCreativeGroup);
+Item.addCreativeGroup("ic2_painter", Translation.translate("Painters"), painterCreativeGroup);
 
 Recipes.addShaped({id: ItemID.icPainter, count: 1, data: 0}, [
 	" aa",
@@ -17887,9 +17884,10 @@ for(let i = 6; i <= 15; i++){
 Recipes.addShapeless({id: ItemID.icPainter16, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 19}]);
 
 for(let i = 1; i <= 16; i++){
+	let index = i-1;
 	Item.registerUseFunction("icPainter"+i, function(coords, item, block){
-		if(CableRegistry.canBePainted(block.id)){
-			World.setBlock(coords.x, coords.y, coords.z, block.id, i);
+		if(CableRegistry.canBePainted(block.id) && block.data != index){
+			World.setBlock(coords.x, coords.y, coords.z, block.id, index);
 			item.data++;
 			if(item.data >= Item.getMaxDamage(item.id))
 				item.id = ItemID.icPainter;

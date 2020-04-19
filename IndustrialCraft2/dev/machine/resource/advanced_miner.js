@@ -159,6 +159,12 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 		}
 	},
 
+	getScanRadius: function(itemID){
+		if(itemID == ItemID.scanner) return 16;
+		if(itemID == ItemID.scannerAdvanced) return 32;
+		return 0;
+	},
+
 	tick: function(){
 		var content = this.container.getGuiContent();
 		if(content){
@@ -183,45 +189,43 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 			}
 		}
 		
-		var scanR = 0;
+		var newActive = false;
 		if(this.data.isEnabled && this.y + this.data.y >= 0 && this.data.energy >= 512){
 			var scanner = this.container.getSlot("slotScanner");
-			if(scanner.id == ItemID.scanner) scanR = 16;
-			if(scanner.id == ItemID.scannerAdvanced) scanR = 32;
-		}
-		var energyStored = ChargeItemRegistry.getEnergyStored(scanner);
-		if(scanR > 0 && energyStored >= 64){
-			if(World.getThreadTime()%20==0){
-				if(this.data.y == 0){
-					this.data.x = -scanR;
-					this.data.y = -1;
-					this.data.z = -scanR;
-				}
-				for(var i = 0; i < max_scan_count; i++){
-					if(this.data.x > scanR){
+			var scanR = this.getScanRadius(scanner.id);
+			var energyStored = ChargeItemRegistry.getEnergyStored(scanner);
+			if(scanR > 0 && energyStored >= 64){
+				newActive = true;
+				if(World.getThreadTime()%20 == 0){
+					if(this.data.y == 0){
 						this.data.x = -scanR;
-						this.data.z++;
-					}
-					if(this.data.z > scanR){
+						this.data.y = -1;
 						this.data.z = -scanR;
-						this.data.y--;
 					}
-					energyStored -= 64;
-					var x = this.x + this.data.x, y = this.y + this.data.y, z = this.z + this.data.z;
-					this.data.x++;
-					var block = World.getBlock(x, y, z);
-					if(this.isValidBlock(block.id, block.data)){
-						if(this.harvestBlock(x, y, z, block))
-						break;
+					for(var i = 0; i < max_scan_count; i++){
+						if(this.data.x > scanR){
+							this.data.x = -scanR;
+							this.data.z++;
+						}
+						if(this.data.z > scanR){
+							this.data.z = -scanR;
+							this.data.y--;
+						}
+						energyStored -= 64;
+						var x = this.x + this.data.x, y = this.y + this.data.y, z = this.z + this.data.z;
+						this.data.x++;
+						var block = World.getBlock(x, y, z);
+						if(this.isValidBlock(block.id, block.data)){
+							if(this.harvestBlock(x, y, z, block))
+							break;
+						}
+						if(energyStored < 64) break;
 					}
-					if(energyStored < 64) break;
+					ChargeItemRegistry.setEnergyStored(scanner, energyStored);
 				}
-				ChargeItemRegistry.setEnergyStored(scanner, energyStored);
 			}
-			this.activate();
-		} else {
-			this.deactivate();
 		}
+		this.setActive(newActive);
 		
 		if(this.data.y < 0)
 			this.container.setText("textInfoXYZ", "X: "+ this.data.x + ", Y: "+ Math.min(this.data.y, -1) + ", Z: "+ this.data.z);

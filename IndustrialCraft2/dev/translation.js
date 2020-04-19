@@ -433,7 +433,6 @@ Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna II
 Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
 
 //Painter
-
 Translation.addTranslation("Painter", {ru: "Валик"});
 Translation.addTranslation("Black Painter", {ru: "Чёрный валик"});
 Translation.addTranslation("Blue Painter", {ru: "Синий валик"});

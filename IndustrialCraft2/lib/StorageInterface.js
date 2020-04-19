@@ -313,7 +313,6 @@ let StorageInterface = {
 			}
 		} else {
 			var type = mode? container.getType() : 0;
-			Game.tipMessage(type)
 			switch(type){
 			case 1:
 			case 38:

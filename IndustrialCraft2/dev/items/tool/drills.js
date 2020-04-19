@@ -182,12 +182,12 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 2
 				let X = 1;
 				let Y = 1;
 				let Z = 1;
-				if(side==BlockSide.EAST || side==BlockSide.WEST){
-				X = 0;}
-				if(side==BlockSide.UP || side==BlockSide.DOWN){
-				Y = 0;}
-				if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-				Z = 0;}
+				if(side == BlockSide.EAST || side == BlockSide.WEST)
+					X = 0;
+				if(side == BlockSide.UP || side == BlockSide.DOWN)
+					Y = 0;
+				if(side == BlockSide.NORTH || side == BlockSide.SOUTH)
+					Z = 0;
 				for(let xx = coords.x - X; xx <= coords.x + X; xx++){
 					for(let yy = coords.y - Y; yy <= coords.y + Y; yy++){
 						for(let zz = coords.z - Z; zz <= coords.z + Z; zz++){

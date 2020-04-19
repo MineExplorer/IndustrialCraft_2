@@ -82,7 +82,7 @@ function random(min, max){
 
 // data for ToolLib.getBlockDrop
 // drop from some plants are not added
-var noDropBlocks = [6, 26, 30, 31, 32, 51, 59, 92, 99, 100, 104, 105, 106, 115, 127, 132, 141, 142, 161, 175, 244, 385, 386, 388, 389, 390, 391, 392, 462];
+var noDropBlocks = [26, 30, 31, 32, 51, 59, 92, 99, 100, 104, 105, 106, 115, 127, 132, 141, 142, 144, 161, 175, 199, 244, 385, 386, 388, 389, 390, 391, 392, 462];
 
 var ToolLib = {
 	setTool: function(id, toolMaterial, toolType, brokenId){
@@ -147,7 +147,7 @@ var ToolLib = {
 		if(dropFunc){
 			return dropFunc(coords, id, data, level, enchant);
 		}
-		if(id == 5 || id == 6 || id == 19 || id == 35 || id == 85 || id == 144 || id == 158 || id == 171 || id == 467) return [[id, 1, data]];
+		if(id == 5 || id == 6 || id == 19 || id == 35 || id == 85 || id == 158 || id == 171 || id == 467) return [[id, 1, data]];
 		if(id == 17 || id == 162) return [[id, 1, data]]; // log
 		if(id == 18 || id == 161){ // leaves
 			if(enchant.silk) return [[id, 1, data]];
@@ -157,31 +157,30 @@ var ToolLib = {
 			if(enchant.silk) return [[47, 1, 0]];
 			return [[340, 3, 0]];
 		}
-		if(id == 55) return [[331, 1, 0]];
-		if(id == 60) return [[3, 1, 0]];
+		if(id == 55) return [[331, 1, 0]]; // redstone wire
+		if(id == 60) return [[3, 1, 0]]; // farmland
 		if(id == 63 || id == 68) return [[338, 1, 0]]; // sign
 		if(id == 64) return [[324, 1, 0]]; // door
 		if(id == 75 || id == 76) return [[76, 1, 0]]; // redstone torch
-		if(id == 79){
-			World.setBlock(coords.x, coords.y, coords.z, 8);
+		if(id == 79){ // ice
+			if(enchant.silk) return [[79, 1, 0]];
 			return [];
 		}
 		if(id == 83) return [[338, 1, 0]]; // sugar canes
-		if(id == 89) return [[348, random(2, 4)]]; // glowstone
+		if(id == 89) return [[348, random(2, 4), 0]]; // glowstone
 		if(id == 93 || id == 94) return [[356, 1, 0]]; // repeater
-		if(id == 103) return [[360, random(3, 7)]]; // melon
+		if(id == 103) return [[360, random(3, 7), 0]]; // melon
 		if(id == 123 || id == 124) return [[123, 1, 0]]; // redstone lamp
 		if(id == 140) return [[390, 1, 0]]; // pot
 		if(id == 149 || id == 150) return [[404, 1, 0]]; // comparator
 		if(id == 151 || id == 178) return [[151, 1, 0]]; // daylight detector
-		if(id == 199) return [[389, 1, 0]]; // item frame
 		// doors
 		if(id == 193) return [[427, 1, 0]];
 		if(id == 194) return [[428, 1, 0]];
 		if(id == 195) return [[429, 1, 0]];
 		if(id == 196) return [[430, 1, 0]];
 		if(id == 197) return [[431, 1, 0]];
-		
+
 		if(id == 393) return [[335, 1, 0]]; // kelp
 		if(id == 464) return [[720, 1, 0]]; // campfire
 		// signs

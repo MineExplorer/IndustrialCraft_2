@@ -168,7 +168,11 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				}
 			}
 		}
-		World.setBlock(x, y, z, 0);
+		if(block.id == 79){
+			World.setBlock(x, y, z, 8);
+		} else {
+			World.setBlock(x, y, z, 0);
+		}
 		this.drop(items);
 		this.data.progress = 0;
 	},

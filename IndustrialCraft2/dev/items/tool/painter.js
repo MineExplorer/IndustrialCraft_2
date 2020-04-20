@@ -7,7 +7,7 @@ const colorNames = ["Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", 
 for(let i = 1; i <= 16; i++){
 	IDRegistry.genItemID("icPainter"+i);
 	Item.createItem("icPainter"+i, colorNames[i - 1] + " Painter", {name: "ic_painter", meta: i});
-	Item.setMaxDamage(ItemID["icPainter"+i], 32);
+	Item.setMaxDamage(ItemID["icPainter"+i], 16);
 	painterCreativeGroup.push(ItemID["icPainter"+i]);
 }
 

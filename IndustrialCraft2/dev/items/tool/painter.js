@@ -40,6 +40,7 @@ for(let i = 1; i <= 16; i++){
 			if(item.data >= Item.getMaxDamage(item.id))
 				item.id = ItemID.icPainter;
 			Player.setCarriedItem(item.id, 1, item.data);
+			SoundAPI.playSound("Tools/Painters.ogg");
 		}
 	});
 }

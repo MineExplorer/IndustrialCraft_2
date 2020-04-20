@@ -40,16 +40,16 @@ var newGuiMatronObject = {
 	drawing: [
 		{type: "background", color: Color.parseColor("#b3b3b3")},
         {type: "bitmap", x: 870, y: 270, bitmap: "energy_small_background", scale: GUI_SCALE},
-        {type: "bitmap", x: 511, y: 243, bitmap: "water_storage", scale: GUI_SCALE}
+        {type: "bitmap", x: 511, y: 243, bitmap: "water_storage_background", scale: GUI_SCALE}
 	],
 
 	elements: {
         "energyScale": {type: "scale", x: 870, y: 270, direction: 1, value: .5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-        "liquidScale": {type: "scale", x: 572, y: 256, direction: 1, value: 1, bitmap: "matron_water_storage", scale: GUI_SCALE},
+        "liquidScale": {type: "scale", x: 572, y: 256, direction: 1, value: 1, bitmap: "water_storage_scale", scale: GUI_SCALE},
         "slotEnergy": {type: "slot", x: 804, y: 265, isValid: MachineRegistry.isValidEUStorage},
-        "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "dust_slot", isValid: isFertilizer},
-        "slotWeedEx0": {type: "slot", x: 441, y: 155, bitmap: "weedEx_slot", isValid: isWeedEx},
-        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "cell_slot", isValid: function(id, count, data){
+        "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "slot_dust", isValid: isFertilizer},
+        "slotWeedEx0": {type: "slot", x: 441, y: 155, bitmap: "slot_weedEx", isValid: isWeedEx},
+        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "slot_cell", isValid: function(id, count, data){
             return LiquidLib.getItemLiquid(id, data) == "water";
         }},
         "slotWaterOut": {type: "slot", x: 441, y: 295, isValid: function(){

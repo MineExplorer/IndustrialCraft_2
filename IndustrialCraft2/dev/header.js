@@ -78,3 +78,16 @@ Callback.addCallback("tick", function(){
 		}
 	}
 });
+/*
+var workbenchAddShaped = Recipes.addShaped;
+Recipes.addShaped = function(result, scheme, keys){
+	Logger.Log("Shaped recipe: "+result.id+", "+result.count+", "+result.data, "DEBUG");
+	workbenchAddShaped(result, scheme, keys);
+}
+
+var workbenchAddShapeless = Recipes.addShapeless;
+Recipes.addShapeless = function(result, input){
+	Logger.Log("Shapeless recipe: "+result.id+", "+result.count+", "+result.data, "DEBUG");
+	workbenchAddShapeless(result, input);
+}
+*/

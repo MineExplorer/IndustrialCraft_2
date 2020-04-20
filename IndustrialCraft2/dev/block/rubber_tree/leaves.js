@@ -4,6 +4,7 @@ Block.createBlock("rubberTreeLeaves", [
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false},
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: true}
 ], {
+	base: 18,
 	destroytime: 0.2,
 	explosionres: 1,
 	renderallfaces: true, 

@@ -14,7 +14,7 @@ Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.canner, count: 1, data: 0}, [
 		"c#c",
 		"cxc",
-	], ['#', BlockID.conserver, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
+	], ['#', BlockID.solidCanner, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
 	
 	MachineRecipeRegistry.registerRecipesFor("fluidCanner", [
 		{input: ["water", {id: ItemID.bioChaff, count: 1}], output: "biomass"},

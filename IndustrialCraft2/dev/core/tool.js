@@ -50,10 +50,10 @@ let ICTool = {
 	dischargeItem: function(item, consume){
 		let energy = 0;
 		let armor = Player.getArmorSlot(1);
+		let itemChargeLevel = ChargeItemRegistry.getItemData(item.id).level;
 		let armorChargeData = ChargeItemRegistry.getItemData(armor.id);
-		if(armorChargeData){
-			let itemChargeLevel = ChargeItemRegistry.getItemData(item.id).level;
-			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, consume, itemChargeLevel);
+		if(armorChargeData && armorChargeData.level >= itemChargeLevel){
+			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, consume, 100);
 			consume -= energy;
 		}
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);

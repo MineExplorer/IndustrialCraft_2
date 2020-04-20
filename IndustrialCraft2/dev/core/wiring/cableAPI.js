@@ -13,18 +13,19 @@ let CableRegistry = {
 	
 	registerCable: function(nameID, maxVoltage, maxInsulationLevel){
 		if(maxInsulationLevel){
-			for(let i = 0; i <= maxInsulationLevel; i++){
-				let id = BlockID[nameID+i];
-				this.insulation_data[id] = {name: nameID, insulation: i, maxInsulation: maxInsulationLevel};
-				EU.registerWire(id, maxVoltage, this.cableBurnoutFunc);
-
-				Block.registerDropFunction(nameID + i, function(coords, id, data){
-					return [[ItemID[nameID+i], 1, 0]];
+			for(let index = 0; index <= maxInsulationLevel; index++){
+				let blockID = BlockID[nameID + index];
+				this.insulation_data[blockID] = {name: nameID, insulation: index, maxInsulation: maxInsulationLevel};
+				EU.registerWire(blockID, maxVoltage, this.cableBurnoutFunc);
+				
+				let itemID = ItemID[nameID + index];
+				Block.registerDropFunction(nameID + index, function(coords, id, data){
+					return [[itemID, 1, 0]];
 				});
 
-				Block.registerPopResourcesFunction(nameID + i, function(coords, block){
+				Block.registerPopResourcesFunction(nameID + index, function(coords, block){
 					if(Math.random() < 0.25){
-						World.drop(coords.x + .5, coords.y + .5, coords.z + .5, ItemID[nameID+i], 1, 0);
+						World.drop(coords.x + .5, coords.y + .5, coords.z + .5, itemID, 1, 0);
 					}
 					EnergyTypeRegistry.onWireDestroyed(coords.x, coords.y, coords.z, block.id);
 				});

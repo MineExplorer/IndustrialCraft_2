@@ -400,11 +400,11 @@ Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt
 // TEXT
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 // Induction Furnace
-Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh:"热量:"});
+Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
 // Charging Batteries
-Translation.addTranslation("Mode: Disabled", {ru: "Режим: Выключен", pt: "Modo: Desabilitado", zh:"模式: 禁用"});
-Translation.addTranslation("Mode: Charge items not in hand", {ru: "Режим: Заряжать предметы, которые не в руке", pt: "Modo: Carregar itens que não estão nas mãos", zh:"模式: 手里没有要充电的东西"});
-Translation.addTranslation("Mode: Enabled", {ru: "Режим: Включён", pt: "Modo: Habilitado", zh:"模式: 启用"});
+Translation.addTranslation("Mode: Disabled", {ru: "Режим: Выключен", pt: "Modo: Desabilitado", zh: "模式: 禁用"});
+Translation.addTranslation("Mode: Charge items not in hand", {ru: "Режим: Заряжать предметы, которые не в руке", pt: "Modo: Carregar itens que não estão nas mãos", zh: "模式: 手里没有要充电的东西"});
+Translation.addTranslation("Mode: Enabled", {ru: "Режим: Включён", pt: "Modo: Habilitado", zh: "模式: 启用"});
 // Fluid Distributor
 Translation.addTranslation("Mode:", {ru: "Режим:", es: "Modo:", pt: "Modo:", zh: "模式:"});
 Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "分配模式"});
@@ -432,24 +432,24 @@ Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt
 Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna III", zh: "时运 III"});
 Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
 
-//Painter
-Translation.addTranslation("Painter", {ru: "Валик"});
-Translation.addTranslation("Black Painter", {ru: "Чёрный валик"});
-Translation.addTranslation("Blue Painter", {ru: "Синий валик"});
-Translation.addTranslation("Brown Painter", {ru: "Коричневый валик"});
-Translation.addTranslation("Light Blue Painter", {ru: "Светло-голубой валик"});
-Translation.addTranslation("Cyan Painter", {ru: "Бирюзовый валик"});
-Translation.addTranslation("Dark Grey Painter", {ru: "Тёмно-серый валик"});
-Translation.addTranslation("Green Painter", {ru: "Зелёный валик"});
-Translation.addTranslation("Light Grey Painter", {ru: "Светло-серый валик"});
-Translation.addTranslation("Lime Painter", {ru: "Лаймовый валик"});
-Translation.addTranslation("Magenta Painter", {ru: "Сиреневый валик"});
-Translation.addTranslation("Orange Painter", {ru: "Оранжевый валик"});
-Translation.addTranslation("Pink Painter", {ru: "Розовый валик"});
-Translation.addTranslation("Purple Painter", {ru: "Фиолетовый валик"});
-Translation.addTranslation("Red Painter", {ru: "Красный валик"});
-Translation.addTranslation("White Painter", {ru: "Белый валик"});
-Translation.addTranslation("Yellow Painter", {ru: "Жёлтый валик"});
+// Painter
+Translation.addTranslation("Painter", {ru: "Валик", pt: "Rolo de Pintura", zh: "刷子"});
+Translation.addTranslation("Black Painter", {ru: "Чёрный валик", pt: "Rolo de Pintura Preto", zh: "黑色刷子"});
+Translation.addTranslation("Blue Painter", {ru: "Синий валик", pt: "Rolo de Pintura Azul", zh: "蓝色刷子"});
+Translation.addTranslation("Brown Painter", {ru: "Коричневый валик", pt: "Rolo de Pintura Marrom", zh: "棕色刷子"});
+Translation.addTranslation("Light Blue Painter", {ru: "Светло-голубой валик", pt: "Rolo de Pintura Azul Claro", zh: "淡蓝色刷子"});
+Translation.addTranslation("Cyan Painter", {ru: "Бирюзовый валик", pt: "Rolo de Pintura Ciano", zh: "青色刷子"});
+Translation.addTranslation("Dark Grey Painter", {ru: "Тёмно-серый валик", pt: "Rolo de Pintura Cinza", zh: "灰色刷子"});
+Translation.addTranslation("Green Painter", {ru: "Зелёный валик", pt: "Rolo de Pintura Verde", zh: "绿色刷子"});
+Translation.addTranslation("Light Grey Painter", {ru: "Светло-серый валик", pt: "Rolo de Pintura Cinza Claro", zh: "淡灰色刷子"});
+Translation.addTranslation("Lime Painter", {ru: "Лаймовый валик", pt: "Rolo de Pintura Verde-Limão", zh: "柠檬色刷子"});
+Translation.addTranslation("Magenta Painter", {ru: "Сиреневый валик", pt: "Rolo de Pintura Lilás", zh: "品红色刷子"});
+Translation.addTranslation("Orange Painter", {ru: "Оранжевый валик", pt: "Rolo de Pintura Laranjado", zh: "橙色刷子"});
+Translation.addTranslation("Pink Painter", {ru: "Розовый валик", pt: "Rolo de Pintura Rosa", zh: "粉色刷子"});
+Translation.addTranslation("Purple Painter", {ru: "Фиолетовый валик", pt: "Rolo de Pintura Roxo", zh: "紫色刷子"});
+Translation.addTranslation("Red Painter", {ru: "Красный валик", pt: "Rolo de Pintura Vermelho", zh: "红色刷子"});
+Translation.addTranslation("White Painter", {ru: "Белый валик", pt: "Rolo de Pintura Branco", zh: "白色刷子"});
+Translation.addTranslation("Yellow Painter", {ru: "Жёлтый валик", pt: "Rolo de Pintura Amarelo", zh: "黄色刷子"});
 
 // Messages
 Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
@@ -469,36 +469,36 @@ Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Авт
 // side names are translated in core/item_name.js
 
 // Recipe Viewer
-Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "Calor: ", zh:"热量: "});
+Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "Calor: ", zh: "热量: "});
 
-//Creative Groups
-Translation.addTranslation("Ores", {ru: "Руды"});
-Translation.addTranslation("Metal Blocks", {ru: "Блоки металлов"});
-Translation.addTranslation("Transformers", {ru: "Трансформаторы"});
-Translation.addTranslation("Cables", {ru: "Провода"});
-Translation.addTranslation("Battery Packs", {ru: "Аккумуляторные ранцы"});
-Translation.addTranslation("Charging Batteries", {ru: "Заряжающие аккумуляторы"});
-Translation.addTranslation("Crafting Components", {ru: "Компоненты крафта"});
-Translation.addTranslation("Materials", {ru: "Материалы"});
-Translation.addTranslation("Batteries", {ru: "Аккумуляторы"});
-Translation.addTranslation("Machine Upgrades", {ru: "Улучшения"});
-Translation.addTranslation("Coffee", {ru: "Кофе"});
-Translation.addTranslation("Crushed Ores", {ru: "Измельчённые руды"});
-Translation.addTranslation("Purified Crushed Ores", {ru: "Очищенные измельчённые руды"});
-Translation.addTranslation("Dusts", {ru: "Пыль"});
-Translation.addTranslation("Small Dusts", {ru: "Небольшие кучки пыли"});
-Translation.addTranslation("Ingots", {ru: "Слитки"});
-Translation.addTranslation("Plates", {ru: "Пластины"});
-Translation.addTranslation("Desne Plates", {ru: "Плотные пластины"});
-Translation.addTranslation("Metal Casings", {ru: "Металлические оболочки"});
-Translation.addTranslation("Nuclear", {ru: "Радиоактивные"});
-Translation.addTranslation("Mining Drills", {ru: "Шахтёрские буры"});
-Translation.addTranslation("Cells", {ru: "Капсулы"});
-Translation.addTranslation("Nuclear Fuel Rods", {ru: "Топливные стержни"});
-Translation.addTranslation("Neutron Reflectors", {ru: "Отражатели нейтронов"});
-Translation.addTranslation("Reactor Platings", {ru: "Обшивки реактора"});
-Translation.addTranslation("Reactor Heat Vents", {ru: "Теплоотводы"});
-Translation.addTranslation("Reactor Heat Exchangers", {ru: "Теплообменники"});
-Translation.addTranslation("Reactor Coolants", {ru: "Охлаждающие капсулы"});
-Translation.addTranslation("Seed Bags", {ru: "Мешки с семенами"});
-Translation.addTranslation("Painters", {ru: "Валики"});
+// Creative Groups
+Translation.addTranslation("Ores", {ru: "Руды", pt: "Minério", zh: "矿石"});
+Translation.addTranslation("Metal Blocks", {ru: "Блоки металлов", pt: "Blocos de metal", zh: "金属块"});
+Translation.addTranslation("Transformers", {ru: "Трансформаторы", pt: "Transformador", zh: "变压器"});
+Translation.addTranslation("Cables", {ru: "Провода", pt: "Cabos", zh: "导线"});
+Translation.addTranslation("Battery Packs", {ru: "Аккумуляторные ранцы", pt: "Mochila", zh: "电池背包"});
+Translation.addTranslation("Charging Batteries", {ru: "Заряжающие аккумуляторы", pt: "", zh: "充电电池"});
+Translation.addTranslation("Crafting Components", {ru: "Компоненты крафта", pt: "", zh: "电子元部件"});
+Translation.addTranslation("Materials", {ru: "Материалы", pt: "Materiais", zh: "材料"});
+Translation.addTranslation("Batteries", {ru: "Аккумуляторы", pt: "Baterias", zh: "电池"});
+Translation.addTranslation("Machine Upgrades", {ru: "Улучшения", pt: "Melhorias", zh: "机器升级组件"});
+Translation.addTranslation("Coffee", {ru: "Кофе", pt: "Café", zh: "咖啡"});
+Translation.addTranslation("Crushed Ores", {ru: "Измельчённые руды", pt: "Minérios Triturados", zh: "粉碎矿石"});
+Translation.addTranslation("Purified Crushed Ores", {ru: "Очищенные измельчённые руды", pt: "Purificado Minério Triturados", zh: "纯净的粉碎矿石"});
+Translation.addTranslation("Dusts", {ru: "Пыль", pt: "Poeiras", zh: "矿粉"});
+Translation.addTranslation("Small Dusts", {ru: "Небольшие кучки пыли", pt: "Poeiras pequenas", zh: "小撮矿粉"});
+Translation.addTranslation("Ingots", {ru: "Слитки", pt: "Lingotes", zh: "锭"});
+Translation.addTranslation("Plates", {ru: "Пластины", pt: "Placas", zh: "金属板"});
+Translation.addTranslation("Desne Plates", {ru: "Плотные пластины", pt: "Placa Densas", zh: "致密金属板"});
+Translation.addTranslation("Metal Casings", {ru: "Металлические оболочки", pt: "Invólucros", zh: "金属外壳"});
+Translation.addTranslation("Nuclear", {ru: "Радиоактивные", pt: "Nuclear", zh: "核材料"});
+Translation.addTranslation("Mining Drills", {ru: "Шахтёрские буры", pt: "Brocas de Mineração", zh: "采矿钻头"});
+Translation.addTranslation("Cells", {ru: "Капсулы", pt: "Células", zh: "单元"});
+Translation.addTranslation("Nuclear Fuel Rods", {ru: "Топливные стержни", pt: "Haste de Combustível", zh: "核燃料棒"});
+Translation.addTranslation("Neutron Reflectors", {ru: "Отражатели нейтронов", pt: "Refletor de Neutrons", zh: "中子反射板"});
+Translation.addTranslation("Reactor Platings", {ru: "Обшивки реактора", pt: "Placa de Reator", zh: "反应堆隔板"});
+Translation.addTranslation("Reactor Heat Vents", {ru: "Теплоотводы", pt: "Ventilação de Calor", zh: "反应堆散热片"});
+Translation.addTranslation("Reactor Heat Exchangers", {ru: "Теплообменники", pt: "Trocador de Calor", zh: "反应堆热交换器"});
+Translation.addTranslation("Reactor Coolants", {ru: "Охлаждающие капсулы", pt: "Célula Refrigerantes", zh: "反应堆冷却单元"});
+Translation.addTranslation("Seed Bags", {ru: "Мешки с семенами", pt: "Sacos De Sementes", zh: "种子包"});
+Translation.addTranslation("Painters", {ru: "Валики", pt: "Rolo de Pintura", zh: "刷子"});

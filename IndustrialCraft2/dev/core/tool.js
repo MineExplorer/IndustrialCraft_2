@@ -108,7 +108,7 @@ let ICTool = {
 Callback.addCallback("DestroyBlockStart", function(coords, block){
 	if(MachineRegistry.machineIDs[block.id]){
 		let item = Player.getCarriedItem();
-		if(ICTool.isValidWrench(item.id, item.data, 10)){
+		if(ICTool.isValidWrench(item, item.data, 10)){
 			Block.setTempDestroyTime(block.id, 0);
 		}
 	}

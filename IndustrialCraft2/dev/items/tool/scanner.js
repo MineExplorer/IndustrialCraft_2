@@ -39,7 +39,7 @@ Item.registerUseFunction("scanner", function(coords, item, block){
 		ChargeItemRegistry.setEnergyStored(item, energyStored - 50);
 		Player.setCarriedItem(item.id, 1, item.data, item.extra);
 		SoundAPI.playSound("Tools/ODScanner.ogg");
-		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
+		Game.message(Translation.translate("Scan Result:") + coords.x + ", " + coords.y + ", " + coords.z);
 		let ores = {};
 		for(let x = coords.x - scan_radius; x <= coords.x + scan_radius; x++){
 			for(let y = coords.y - scan_radius; y <= coords.y + scan_radius; y++){
@@ -63,7 +63,7 @@ Item.registerUseFunction("scannerAdvanced", function(coords, item, block){
 		ChargeItemRegistry.setEnergyStored(item, energyStored - 200);
 		Player.setCarriedItem(item.id, 1, item.data, item.extra);
 		SoundAPI.playSound("Tools/ODScanner.ogg");
-		Game.message("Scan result for: " + coords.x + ", " + coords.y + ", " + coords.z);
+		Game.message(Translation.translate("Scan Result:") + coords.x + ", " + coords.y + ", " + coords.z);
 		let ores = {};
 		for(let x = coords.x - adv_scan_radius; x <= coords.x + adv_scan_radius; x++){
 			for(let y = coords.y - adv_scan_radius; y <= coords.y + adv_scan_radius; y++){

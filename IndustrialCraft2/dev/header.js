@@ -78,6 +78,8 @@ Callback.addCallback("tick", function(){
 		}
 	}
 });
+
+// Recipe debug
 /*
 var workbenchAddShaped = Recipes.addShaped;
 Recipes.addShaped = function(result, scheme, keys){

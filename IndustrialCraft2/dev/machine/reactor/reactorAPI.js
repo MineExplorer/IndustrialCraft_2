@@ -59,7 +59,7 @@ let ReactorAPI = {
 		
 		this.setCustomDamage = function(item, damage){
 			if(!item.extra) item.extra = new ItemExtraData();
-			item.extra.setInt("damage", damage);
+			item.extra.putInt("damage", damage);
 			item.data = 1 + Math.ceil(damage / this.maxDamage * 26);
 		}
 		

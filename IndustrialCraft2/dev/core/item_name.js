@@ -35,7 +35,7 @@ ItemName = {
 	
 	addStoredLiquidTooltip: function(id){
 		Item.registerNameOverrideFunction(id, function(item, name){
-			return name += "\n§7Stored: " + (1000 - item.data) + " mB";
+			return name += "\n§7" + (1000 - item.data) + " mB";
 		});
 	},
 	

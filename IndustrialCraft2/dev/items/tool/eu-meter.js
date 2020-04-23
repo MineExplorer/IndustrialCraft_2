@@ -167,7 +167,7 @@ Callback.addCallback("tick", function(){
 			elements.textAvgValue.text = r(EUReader.sum / EUReader.time) + unit;
 			elements.textMax.text = EUReader.maxValue + unit;
 			elements.textMin.text = EUReader.minValue + unit;
-			elements.textTime.text = Translation.translate("Cycle: ") + Math.floor(EUReader.time/20) + " sec";
+			elements.textTime.text = Translation.translate("Cycle: ") + Math.floor(EUReader.time/20) + " " + Translation.translate("sec");
 		}
 	}
 });

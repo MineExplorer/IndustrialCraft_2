@@ -41,7 +41,7 @@ const fallVelocity = -0.0784;
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var Color = android.graphics.Color;
 
-// temporary fix
+// temporary fixes
 Block.registerPopResourcesFunction = function(nameID, func) {
     var numericID = this.getNumericId(nameID);
     if (numericID == -1) {
@@ -49,6 +49,8 @@ Block.registerPopResourcesFunction = function(nameID, func) {
     }
     return this.registerPopResourcesFunctionForID(numericID, func);
 }
+
+if(!Block.convertItemToBlockId) Block.convertItemToBlockId = Block.covertItemToBlockId;
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
@@ -89,6 +91,21 @@ Callback.addCallback("tick", function(){
 		}
 	}
 });
+
+// Recipe debug
+/*
+var workbenchAddShaped = Recipes.addShaped;
+Recipes.addShaped = function(result, scheme, keys){
+	Logger.Log("Shaped recipe: "+result.id+", "+result.count+", "+result.data, "DEBUG");
+	workbenchAddShaped(result, scheme, keys);
+}
+
+var workbenchAddShapeless = Recipes.addShapeless;
+Recipes.addShapeless = function(result, input){
+	Logger.Log("Shapeless recipe: "+result.id+", "+result.count+", "+result.data, "DEBUG");
+	workbenchAddShapeless(result, input);
+}
+*/
 
 
 
@@ -497,11 +514,11 @@ Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt
 // TEXT
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 // Induction Furnace
-Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh:"热量:"});
+Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
 // Charging Batteries
-Translation.addTranslation("Mode: Disabled", {ru: "Режим: Выключен", pt: "Modo: Desabilitado", zh:"模式: 禁用"});
-Translation.addTranslation("Mode: Charge items not in hand", {ru: "Режим: Заряжать предметы, которые не в руке", pt: "Modo: Carregar itens que não estão nas mãos", zh:"模式: 手里没有要充电的东西"});
-Translation.addTranslation("Mode: Enabled", {ru: "Режим: Включён", pt: "Modo: Habilitado", zh:"模式: 启用"});
+Translation.addTranslation("Mode: Disabled", {ru: "Режим: Выключен", pt: "Modo: Desabilitado", zh: "模式: 禁用"});
+Translation.addTranslation("Mode: Charge items not in hand", {ru: "Режим: Заряжать предметы, которые не в руке", pt: "Modo: Carregar itens que não estão nas mãos", zh: "模式: 手里没有要充电的东西"});
+Translation.addTranslation("Mode: Enabled", {ru: "Режим: Включён", pt: "Modo: Habilitado", zh: "模式: 启用"});
 // Fluid Distributor
 Translation.addTranslation("Mode:", {ru: "Режим:", es: "Modo:", pt: "Modo:", zh: "模式:"});
 Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "分配模式"});
@@ -529,24 +546,24 @@ Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt
 Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna III", zh: "时运 III"});
 Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
 
-//Painter
-Translation.addTranslation("Painter", {ru: "Валик"});
-Translation.addTranslation("Black Painter", {ru: "Чёрный валик"});
-Translation.addTranslation("Blue Painter", {ru: "Синий валик"});
-Translation.addTranslation("Brown Painter", {ru: "Коричневый валик"});
-Translation.addTranslation("Light Blue Painter", {ru: "Светло-голубой валик"});
-Translation.addTranslation("Cyan Painter", {ru: "Бирюзовый валик"});
-Translation.addTranslation("Dark Grey Painter", {ru: "Тёмно-серый валик"});
-Translation.addTranslation("Green Painter", {ru: "Зелёный валик"});
-Translation.addTranslation("Light Grey Painter", {ru: "Светло-серый валик"});
-Translation.addTranslation("Lime Painter", {ru: "Лаймовый валик"});
-Translation.addTranslation("Magenta Painter", {ru: "Сиреневый валик"});
-Translation.addTranslation("Orange Painter", {ru: "Оранжевый валик"});
-Translation.addTranslation("Pink Painter", {ru: "Розовый валик"});
-Translation.addTranslation("Purple Painter", {ru: "Фиолетовый валик"});
-Translation.addTranslation("Red Painter", {ru: "Красный валик"});
-Translation.addTranslation("White Painter", {ru: "Белый валик"});
-Translation.addTranslation("Yellow Painter", {ru: "Жёлтый валик"});
+// Painter
+Translation.addTranslation("Painter", {ru: "Валик", pt: "Rolo de Pintura", zh: "刷子"});
+Translation.addTranslation("Black Painter", {ru: "Чёрный валик", pt: "Rolo de Pintura Preto", zh: "黑色刷子"});
+Translation.addTranslation("Blue Painter", {ru: "Синий валик", pt: "Rolo de Pintura Azul", zh: "蓝色刷子"});
+Translation.addTranslation("Brown Painter", {ru: "Коричневый валик", pt: "Rolo de Pintura Marrom", zh: "棕色刷子"});
+Translation.addTranslation("Light Blue Painter", {ru: "Светло-голубой валик", pt: "Rolo de Pintura Azul Claro", zh: "淡蓝色刷子"});
+Translation.addTranslation("Cyan Painter", {ru: "Бирюзовый валик", pt: "Rolo de Pintura Ciano", zh: "青色刷子"});
+Translation.addTranslation("Dark Grey Painter", {ru: "Тёмно-серый валик", pt: "Rolo de Pintura Cinza", zh: "灰色刷子"});
+Translation.addTranslation("Green Painter", {ru: "Зелёный валик", pt: "Rolo de Pintura Verde", zh: "绿色刷子"});
+Translation.addTranslation("Light Grey Painter", {ru: "Светло-серый валик", pt: "Rolo de Pintura Cinza Claro", zh: "淡灰色刷子"});
+Translation.addTranslation("Lime Painter", {ru: "Лаймовый валик", pt: "Rolo de Pintura Verde-Limão", zh: "柠檬色刷子"});
+Translation.addTranslation("Magenta Painter", {ru: "Сиреневый валик", pt: "Rolo de Pintura Lilás", zh: "品红色刷子"});
+Translation.addTranslation("Orange Painter", {ru: "Оранжевый валик", pt: "Rolo de Pintura Laranjado", zh: "橙色刷子"});
+Translation.addTranslation("Pink Painter", {ru: "Розовый валик", pt: "Rolo de Pintura Rosa", zh: "粉色刷子"});
+Translation.addTranslation("Purple Painter", {ru: "Фиолетовый валик", pt: "Rolo de Pintura Roxo", zh: "紫色刷子"});
+Translation.addTranslation("Red Painter", {ru: "Красный валик", pt: "Rolo de Pintura Vermelho", zh: "红色刷子"});
+Translation.addTranslation("White Painter", {ru: "Белый валик", pt: "Rolo de Pintura Branco", zh: "白色刷子"});
+Translation.addTranslation("Yellow Painter", {ru: "Жёлтый валик", pt: "Rolo de Pintura Amarelo", zh: "黄色刷子"});
 
 // Messages
 Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
@@ -566,39 +583,39 @@ Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Авт
 // side names are translated in core/item_name.js
 
 // Recipe Viewer
-Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "Calor: ", zh:"热量: "});
+Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "Calor: ", zh: "热量: "});
 
-//Creative Groups
-Translation.addTranslation("Ores", {ru: "Руды"});
-Translation.addTranslation("Metal Blocks", {ru: "Блоки металлов"});
-Translation.addTranslation("Transformers", {ru: "Трансформаторы"});
-Translation.addTranslation("Cables", {ru: "Провода"});
-Translation.addTranslation("Battery Packs", {ru: "Аккумуляторные ранцы"});
-Translation.addTranslation("Charging Batteries", {ru: "Заряжающие аккумуляторы"});
-Translation.addTranslation("Crafting Components", {ru: "Компоненты крафта"});
-Translation.addTranslation("Materials", {ru: "Материалы"});
-Translation.addTranslation("Batteries", {ru: "Аккумуляторы"});
-Translation.addTranslation("Machine Upgrades", {ru: "Улучшения"});
-Translation.addTranslation("Coffee", {ru: "Кофе"});
-Translation.addTranslation("Crushed Ores", {ru: "Измельчённые руды"});
-Translation.addTranslation("Purified Crushed Ores", {ru: "Очищенные измельчённые руды"});
-Translation.addTranslation("Dusts", {ru: "Пыль"});
-Translation.addTranslation("Small Dusts", {ru: "Небольшие кучки пыли"});
-Translation.addTranslation("Ingots", {ru: "Слитки"});
-Translation.addTranslation("Plates", {ru: "Пластины"});
-Translation.addTranslation("Desne Plates", {ru: "Плотные пластины"});
-Translation.addTranslation("Metal Casings", {ru: "Металлические оболочки"});
-Translation.addTranslation("Nuclear", {ru: "Радиоактивные"});
-Translation.addTranslation("Mining Drills", {ru: "Шахтёрские буры"});
-Translation.addTranslation("Cells", {ru: "Капсулы"});
-Translation.addTranslation("Nuclear Fuel Rods", {ru: "Топливные стержни"});
-Translation.addTranslation("Neutron Reflectors", {ru: "Отражатели нейтронов"});
-Translation.addTranslation("Reactor Platings", {ru: "Обшивки реактора"});
-Translation.addTranslation("Reactor Heat Vents", {ru: "Теплоотводы"});
-Translation.addTranslation("Reactor Heat Exchangers", {ru: "Теплообменники"});
-Translation.addTranslation("Reactor Coolants", {ru: "Охлаждающие капсулы"});
-Translation.addTranslation("Seed Bags", {ru: "Мешки с семенами"});
-Translation.addTranslation("Painters", {ru: "Валики"});
+// Creative Groups
+Translation.addTranslation("Ores", {ru: "Руды", pt: "Minérios", zh: "矿石"});
+Translation.addTranslation("Metal Blocks", {ru: "Блоки металлов", pt: "Blocos de metal", zh: "金属块"});
+Translation.addTranslation("Transformers", {ru: "Трансформаторы", pt: "Transformadores", zh: "变压器"});
+Translation.addTranslation("Cables", {ru: "Провода", pt: "Cabos", zh: "导线"});
+Translation.addTranslation("Battery Packs", {ru: "Аккумуляторные ранцы", pt: "Mochilas de Baterias", zh: "电池背包"});
+Translation.addTranslation("Charging Batteries", {ru: "Заряжающие аккумуляторы", pt: "Carregadores", zh: "充电电池"});
+Translation.addTranslation("Crafting Components", {ru: "Компоненты крафта", pt: "Componentes Elétricos", zh: "电子元部件"});
+Translation.addTranslation("Materials", {ru: "Материалы", pt: "Materiais", zh: "材料"});
+Translation.addTranslation("Batteries", {ru: "Аккумуляторы", pt: "Baterias", zh: "电池"});
+Translation.addTranslation("Machine Upgrades", {ru: "Улучшения", pt: "Melhorias", zh: "机器升级组件"});
+Translation.addTranslation("Coffee", {ru: "Кофе", pt: "Café", zh: "咖啡"});
+Translation.addTranslation("Crushed Ores", {ru: "Измельчённые руды", pt: "Minérios Triturados", zh: "粉碎矿石"});
+Translation.addTranslation("Purified Crushed Ores", {ru: "Очищенные измельчённые руды", pt: "Minérios Triturados Purificados", zh: "纯净的粉碎矿石"});
+Translation.addTranslation("Dusts", {ru: "Пыль", pt: "Pós", zh: "矿粉"});
+Translation.addTranslation("Small Dusts", {ru: "Небольшие кучки пыли", pt: "Pequenas Pilhas de Pó", zh: "小撮矿粉"});
+Translation.addTranslation("Ingots", {ru: "Слитки", pt: "Lingotes", zh: "锭"});
+Translation.addTranslation("Plates", {ru: "Пластины", pt: "Placas", zh: "金属板"});
+Translation.addTranslation("Desne Plates", {ru: "Плотные пластины", pt: "Placas Densas", zh: "致密金属板"});
+Translation.addTranslation("Metal Casings", {ru: "Металлические оболочки", pt: "Invólucros", zh: "金属外壳"});
+Translation.addTranslation("Nuclear", {ru: "Радиоактивные", pt: "Nuclear", zh: "核材料"});
+Translation.addTranslation("Mining Drills", {ru: "Шахтёрские буры", pt: "Brocas de Mineração", zh: "采矿钻头"});
+Translation.addTranslation("Cells", {ru: "Капсулы", pt: "Células", zh: "单元"});
+Translation.addTranslation("Nuclear Fuel Rods", {ru: "Топливные стержни", pt: "Hastes de Combustível", zh: "核燃料棒"});
+Translation.addTranslation("Neutron Reflectors", {ru: "Отражатели нейтронов", pt: "Refletores de Neutrons", zh: "中子反射板"});
+Translation.addTranslation("Reactor Platings", {ru: "Обшивки реактора", pt: "Placas de Reator", zh: "反应堆隔板"});
+Translation.addTranslation("Reactor Heat Vents", {ru: "Теплоотводы", pt: "Ventilações de Calor", zh: "反应堆散热片"});
+Translation.addTranslation("Reactor Heat Exchangers", {ru: "Теплообменники", pt: "Trocadores de Calor", zh: "反应堆热交换器"});
+Translation.addTranslation("Reactor Coolants", {ru: "Охлаждающие капсулы", pt: "Células Refrigerantes", zh: "反应堆冷却单元"});
+Translation.addTranslation("Seed Bags", {ru: "Мешки с семенами", pt: "Sacos De Sementes", zh: "种子包"});
+Translation.addTranslation("Painters", {ru: "Валики", pt: "Rolos de Pintura", zh: "刷子"});
 
 
 
@@ -618,7 +635,7 @@ var MachineRegistry = {
 		this.machineIDs[id] = true;
 		
 		// click fix
-		Prototype.onItemClick = function(id, count, data, coords){
+		Prototype.onItemClick = Prototype.onItemClick || function(id, count, data, coords){
 			if (id == ItemID.debugItem || id == ItemID.EUMeter) return false;
 			if (this.click(id, count, data, coords)) return true;
 			if (Entity.getSneaking(player)) return false;
@@ -1160,18 +1177,19 @@ let CableRegistry = {
 	
 	registerCable: function(nameID, maxVoltage, maxInsulationLevel){
 		if(maxInsulationLevel){
-			for(let i = 0; i <= maxInsulationLevel; i++){
-				let id = BlockID[nameID+i];
-				this.insulation_data[id] = {name: nameID, insulation: i, maxInsulation: maxInsulationLevel};
-				EU.registerWire(id, maxVoltage, this.cableBurnoutFunc);
-
-				Block.registerDropFunction(nameID + i, function(coords, id, data){
-					return [[ItemID[nameID+i], 1, 0]];
+			for(let index = 0; index <= maxInsulationLevel; index++){
+				let blockID = BlockID[nameID + index];
+				this.insulation_data[blockID] = {name: nameID, insulation: index, maxInsulation: maxInsulationLevel};
+				EU.registerWire(blockID, maxVoltage, this.cableBurnoutFunc);
+				
+				let itemID = ItemID[nameID + index];
+				Block.registerDropFunction(nameID + index, function(coords, id, data){
+					return [[itemID, 1, 0]];
 				});
 
-				Block.registerPopResourcesFunction(nameID + i, function(coords, block){
+				Block.registerPopResourcesFunction(nameID + index, function(coords, block){
 					if(Math.random() < 0.25){
-						World.drop(coords.x + .5, coords.y + .5, coords.z + .5, ItemID[nameID+i], 1, 0);
+						World.drop(coords.x + .5, coords.y + .5, coords.z + .5, itemID, 1, 0);
 					}
 					EnergyTypeRegistry.onWireDestroyed(coords.x, coords.y, coords.z, block.id);
 				});
@@ -1392,10 +1410,10 @@ let ICTool = {
 	dischargeItem: function(item, consume){
 		let energy = 0;
 		let armor = Player.getArmorSlot(1);
+		let itemChargeLevel = ChargeItemRegistry.getItemData(item.id).level;
 		let armorChargeData = ChargeItemRegistry.getItemData(armor.id);
-		if(armorChargeData){
-			let itemChargeLevel = ChargeItemRegistry.getItemData(item.id).level;
-			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, consume, itemChargeLevel);
+		if(armorChargeData && armorChargeData.level >= itemChargeLevel){
+			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, consume, 100);
 			consume -= energy;
 		}
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
@@ -1448,9 +1466,9 @@ let ICTool = {
 }
 
 Callback.addCallback("DestroyBlockStart", function(coords, block){
-	if(MachineRegistry.machineIDs[block.id]){
+	if(MachineRegistry.isMachine(block.id)){
 		let item = Player.getCarriedItem();
-		if(ICTool.isValidWrench(item.id, item.data, 10)){
+		if(ICTool.isValidWrench(item, 10)){
 			Block.setTempDestroyTime(block.id, 0);
 		}
 	}
@@ -1961,7 +1979,7 @@ ItemName = {
 	
 	addStoredLiquidTooltip: function(id){
 		Item.registerNameOverrideFunction(id, function(item, name){
-			return name += "\n§7Stored: " + (1000 - item.data) + " mB";
+			return name += "\n§7" + (1000 - item.data) + " mB";
 		});
 	},
 	
@@ -2560,6 +2578,7 @@ Block.createBlock("rubberTreeLeaves", [
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false},
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: true}
 ], {
+	base: 18,
 	destroytime: 0.2,
 	explosionres: 1,
 	renderallfaces: true, 
@@ -5904,13 +5923,8 @@ Block.createBlock("reactorChamber", [
 ], "machine");
 ItemName.setRarity(BlockID.reactorChamber, 1, true);
 
-Block.registerDropFunction("nuclearReactor", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
-});
-
-Block.registerDropFunction("reactorChamber", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
+MachineRegistry.setMachineDrop("nuclearReactor", BlockID.primalGenerator);
+MachineRegistry.setMachineDrop("reactorChamber");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.nuclearReactor, count: 1, data: 0}, [
@@ -6350,7 +6364,6 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block
 });
 
 Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block){
-	Game.prevent();
 	let x = coords.relative.x;
 	let y = coords.relative.y;
 	let z = coords.relative.z;
@@ -7307,7 +7320,7 @@ TileRenderer.registerRotationModel(BlockID.electricFurnace, 4, [["machine_bottom
 
 ItemName.addTierTooltip("electricFurnace", 1);
 
-Block.registerDropFunction("electricFurnace", BlockID.ironFurnace);
+MachineRegistry.setMachineDrop("electricFurnace", BlockID.ironFurnace);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.electricFurnace, count: 1, data: 0}, [
@@ -8451,7 +8464,7 @@ Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.canner, count: 1, data: 0}, [
 		"c#c",
 		"cxc",
-	], ['#', BlockID.conserver, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
+	], ['#', BlockID.solidCanner, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
 	
 	MachineRecipeRegistry.registerRecipesFor("fluidCanner", [
 		{input: ["water", {id: ItemID.bioChaff, count: 1}], output: "biomass"},
@@ -10705,11 +10718,11 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	findOre: function(level){
 		var r = this.data.scanR;
 		while (r){
-			if(this.data.x > this.x+r){
-				this.data.x = this.x-r;
+			if(this.data.x > this.x + r){
+				this.data.x = this.x - r;
 				this.data.z++;
 			}
-			if(this.data.z > this.z+r) break;
+			if(this.data.z > this.z + r) break;
 			var blockID = World.getBlockID(this.data.x, this.data.scanY, this.data.z);
 			if(ore_blocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)){
 				return true;
@@ -10719,14 +10732,15 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		return false;
 	},
 	
-	isValid: function(block){
-		if(block.id == 0 || block.id > 7 && block.id < 12 && block.data > 0) return true;
+	isEmptyBlock: function(block){
+		if(block.id == 0 || block.id == 51 || block.id >= 8 && block.id <= 11 && block.data > 0) return true;
 		return false;
 	},
 
 	canBeDestroyed: function(blockID, level){
-		var material = ToolAPI.getBlockMaterial(blockID);
-		if(!material || material.name != "unbreaking" && level >= ToolAPI.getBlockDestroyLevel(blockID)){
+		var material = ToolAPI.getBlockMaterialName(blockID);
+		Game.message(blockID+" - "+material);
+		if(material  != "unbreaking" && level >= ToolAPI.getBlockDestroyLevel(blockID)){
 			return true;
 		}
 		return false;
@@ -10734,7 +10748,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	
 	findPath: function(x, y, z, sprc, level){
 		var block = World.getBlock(x, y, z);
-		if(block.id == BlockID.miningPipe || this.isValid(block)){
+		if(block.id == BlockID.miningPipe || this.isEmptyBlock(block)){
 			var dx = this.data.x - x;
 			var dz = this.data.z - z;
 			if(Math.abs(dx) == Math.abs(dz)){
@@ -10780,7 +10794,11 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				}
 			}
 		}
-		World.setBlock(x, y, z, 0);
+		if(block.id == 79){
+			World.setBlock(x, y, z, 8);
+		} else {
+			World.setBlock(x, y, z, 0);
+		}
 		this.drop(items);
 		this.data.progress = 0;
 	},
@@ -10842,7 +10860,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				if(Math.abs(dx) > Math.abs(dz)){
 					prc = 1;
 				}
-				var coords  = this.findPath(this.x, this.data.y, this.z, prc, level);
+				var coords = this.findPath(this.x, this.data.y, this.z, prc, level);
 				if(coords){
 					var block = World.getBlock(coords.x, coords.y, coords.z);
 					var params = this.getMiningValues(drillSlot);
@@ -10852,13 +10870,14 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 						newActive = true;
 					}
 					if(this.data.progress >= params.time){
+						level = ToolAPI.getToolLevelViaBlock(drillSlot.id, block.id);
 						this.mineBlock(coords.x, coords.y, coords.z, block, level);
 					}
 				}
 			}
 			else if(this.data.y > 0 && pipeSlot.id == BlockID.miningPipe){
 				var block = World.getBlock(this.x, this.data.y-1, this.z);
-				if(this.isValid(block)){
+				if(this.isEmptyBlock(block)){
 					if(this.data.energy >= 3){
 						this.data.energy -= 3;
 						this.data.progress++;
@@ -10877,6 +10896,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 						newActive = true;
 					}
 					if(this.data.progress >= params.time){
+						level = ToolAPI.getToolLevelViaBlock(drillSlot.id, block.id);
 						this.mineBlock(this.x, this.data.y-1, this.z, block, level);
 						this.setPipe(this.data.y, pipeSlot);
 					}
@@ -10893,11 +10913,11 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				if(this.data.progress >= 20){
 					this.drop([{id: BlockID.miningPipe, count: 1, data: 0}]);
 					var pipeSlot = this.container.getSlot("slotPipe");
-					if(pipeSlot.id != 0 && ToolLib.isBlock(pipeSlot.id) && !TileEntity.isTileEntityBlock(id) && pipeSlot.id != BlockID.miningPipe){
-						var blockId = Block.covertItemToBlockId(pipeSlot.id);
+					if(pipeSlot.id != 0 && pipeSlot.id != BlockID.miningPipe && ToolLib.isBlock(pipeSlot.id) && !TileEntity.isTileEntityBlock(id)){
+						var blockId = Block.convertItemToBlockId(pipeSlot.id);
 						World.setBlock(this.x, this.data.y, this.z, blockId, pipeSlot.data);
 						pipeSlot.count--;
-						if(!pipeSlot.count) pipeSlot.id = 0;
+						if(pipeSlot.count == 0) pipeSlot.id = 0;
 					}
 					else{World.setBlock(this.x, this.data.y, this.z, 0);}
 					this.data.progress = 0;
@@ -11123,7 +11143,6 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 			}
 		}
 		
-		var scanR = 0;
 		var newActive = false;
 		if(this.data.isEnabled && this.y + this.data.y >= 0 && this.data.energy >= 512){
 			var scanner = this.container.getSlot("slotScanner");
@@ -11409,16 +11428,16 @@ var newGuiMatronObject = {
 	drawing: [
 		{type: "background", color: Color.parseColor("#b3b3b3")},
         {type: "bitmap", x: 870, y: 270, bitmap: "energy_small_background", scale: GUI_SCALE},
-        {type: "bitmap", x: 511, y: 243, bitmap: "water_storage", scale: GUI_SCALE}
+        {type: "bitmap", x: 511, y: 243, bitmap: "water_storage_background", scale: GUI_SCALE}
 	],
 
 	elements: {
         "energyScale": {type: "scale", x: 870, y: 270, direction: 1, value: .5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-        "liquidScale": {type: "scale", x: 572, y: 256, direction: 1, value: 1, bitmap: "matron_water_storage", scale: GUI_SCALE},
+        "liquidScale": {type: "scale", x: 572, y: 256, direction: 1, value: 1, bitmap: "water_storage_scale", scale: GUI_SCALE},
         "slotEnergy": {type: "slot", x: 804, y: 265, isValid: MachineRegistry.isValidEUStorage},
-        "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "dust_slot", isValid: isFertilizer},
-        "slotWeedEx0": {type: "slot", x: 441, y: 155, bitmap: "weedEx_slot", isValid: isWeedEx},
-        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "cell_slot", isValid: function(id, count, data){
+        "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "slot_dust", isValid: isFertilizer},
+        "slotWeedEx0": {type: "slot", x: 441, y: 155, bitmap: "slot_weedEx", isValid: isWeedEx},
+        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "slot_cell", isValid: function(id, count, data){
             return LiquidLib.getItemLiquid(id, data) == "water";
         }},
         "slotWaterOut": {type: "slot", x: 441, y: 295, isValid: function(){
@@ -17014,12 +17033,12 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 2
 				let X = 1;
 				let Y = 1;
 				let Z = 1;
-				if(side==BlockSide.EAST || side==BlockSide.WEST){
-				X = 0;}
-				if(side==BlockSide.UP || side==BlockSide.DOWN){
-				Y = 0;}
-				if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-				Z = 0;}
+				if(side == BlockSide.EAST || side == BlockSide.WEST)
+					X = 0;
+				if(side == BlockSide.UP || side == BlockSide.DOWN)
+					Y = 0;
+				if(side == BlockSide.NORTH || side == BlockSide.SOUTH)
+					Z = 0;
 				for(let xx = coords.x - X; xx <= coords.x + X; xx++){
 					for(let yy = coords.y - Y; yy <= coords.y + Y; yy++){
 						for(let zz = coords.z - Z; zz <= coords.z + Z; zz++){
@@ -17851,15 +17870,15 @@ Item.registerUseFunction("weeding_trowel",function(coords, item, block){
 // file: items/tool/painter.js
 
 IDRegistry.genItemID("icPainter");
-Item.createItem("icPainter", "Painter", {name: "ic_painter", meta: 0});
+Item.createItem("icPainter", "Painter", {name: "ic_painter", meta: 0}, {stack: 1});
 
 let painterCreativeGroup = [ItemID.icPainter];
 const colorNames = ["Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Light Grey", "Dark Grey", "Pink", "Lime", "Yellow", "Light Blue", "Magenta", "Orange", "White"];
 
 for(let i = 1; i <= 16; i++){
 	IDRegistry.genItemID("icPainter"+i);
-	Item.createItem("icPainter"+i, colorNames[i - 1] + " Painter", {name: "ic_painter", meta: i});
-	Item.setMaxDamage(ItemID["icPainter"+i], 32);
+	Item.createItem("icPainter"+i, colorNames[i - 1] + " Painter", {name: "ic_painter", meta: i}, {stack: 1});
+	Item.setMaxDamage(ItemID["icPainter"+i], 16);
 	painterCreativeGroup.push(ItemID["icPainter"+i]);
 }
 
@@ -17892,6 +17911,7 @@ for(let i = 1; i <= 16; i++){
 			if(item.data >= Item.getMaxDamage(item.id))
 				item.id = ItemID.icPainter;
 			Player.setCarriedItem(item.id, 1, item.data);
+			SoundAPI.playSound("Tools/Painters.ogg");
 		}
 	});
 }

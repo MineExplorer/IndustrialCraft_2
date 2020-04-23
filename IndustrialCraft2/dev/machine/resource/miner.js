@@ -93,11 +93,11 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	findOre: function(level){
 		var r = this.data.scanR;
 		while (r){
-			if(this.data.x > this.x+r){
-				this.data.x = this.x-r;
+			if(this.data.x > this.x + r){
+				this.data.x = this.x - r;
 				this.data.z++;
 			}
-			if(this.data.z > this.z+r) break;
+			if(this.data.z > this.z + r) break;
 			var blockID = World.getBlockID(this.data.x, this.data.scanY, this.data.z);
 			if(ore_blocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)){
 				return true;
@@ -107,14 +107,12 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		return false;
 	},
 	
-	isValid: function(block){
-		if(block.id == 0 || block.id > 7 && block.id < 12 && block.data > 0) return true;
-		return false;
+	isEmptyBlock: function(block){
+		return block.id == 0 || block.id == 51 || block.id >= 8 && block.id <= 11 && block.data > 0;
 	},
 
 	canBeDestroyed: function(blockID, level){
-		var material = ToolAPI.getBlockMaterial(blockID);
-		if(!material || material.name != "unbreaking" && level >= ToolAPI.getBlockDestroyLevel(blockID)){
+		if(ToolAPI.getBlockMaterialName(blockID) != "unbreaking" && level >= ToolAPI.getBlockDestroyLevel(blockID)){
 			return true;
 		}
 		return false;
@@ -122,7 +120,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	
 	findPath: function(x, y, z, sprc, level){
 		var block = World.getBlock(x, y, z);
-		if(block.id == BlockID.miningPipe || this.isValid(block)){
+		if(block.id == BlockID.miningPipe || this.isEmptyBlock(block)){
 			var dx = this.data.x - x;
 			var dz = this.data.z - z;
 			if(Math.abs(dx) == Math.abs(dz)){
@@ -251,7 +249,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 			}
 			else if(this.data.y > 0 && pipeSlot.id == BlockID.miningPipe){
 				var block = World.getBlock(this.x, this.data.y-1, this.z);
-				if(this.isValid(block)){
+				if(this.isEmptyBlock(block)){
 					if(this.data.energy >= 3){
 						this.data.energy -= 3;
 						this.data.progress++;
@@ -294,6 +292,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 						if(pipeSlot.count == 0) pipeSlot.id = 0;
 					}
 					else{World.setBlock(this.x, this.data.y, this.z, 0);}
+					this.data.scanY = 0;
 					this.data.progress = 0;
 				}
 			}

@@ -234,7 +234,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				if(Math.abs(dx) > Math.abs(dz)){
 					prc = 1;
 				}
-				var coords  = this.findPath(this.x, this.data.y, this.z, prc, level);
+				var coords = this.findPath(this.x, this.data.y, this.z, prc, level);
 				if(coords){
 					var block = World.getBlock(coords.x, coords.y, coords.z);
 					var params = this.getMiningValues(drillSlot);
@@ -244,6 +244,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 						newActive = true;
 					}
 					if(this.data.progress >= params.time){
+						level = ToolAPI.getToolLevelViaBlock(drillSlot.id, block.id);
 						this.mineBlock(coords.x, coords.y, coords.z, block, level);
 					}
 				}
@@ -269,6 +270,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 						newActive = true;
 					}
 					if(this.data.progress >= params.time){
+						level = ToolAPI.getToolLevelViaBlock(drillSlot.id, block.id);
 						this.mineBlock(this.x, this.data.y-1, this.z, block, level);
 						this.setPipe(this.data.y, pipeSlot);
 					}
@@ -285,11 +287,11 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				if(this.data.progress >= 20){
 					this.drop([{id: BlockID.miningPipe, count: 1, data: 0}]);
 					var pipeSlot = this.container.getSlot("slotPipe");
-					if(pipeSlot.id != 0 && ToolLib.isBlock(pipeSlot.id) && !TileEntity.isTileEntityBlock(id) && pipeSlot.id != BlockID.miningPipe){
-						var blockId = Block.covertItemToBlockId(pipeSlot.id);
+					if(pipeSlot.id != 0 && pipeSlot.id != BlockID.miningPipe && ToolLib.isBlock(pipeSlot.id) && !TileEntity.isTileEntityBlock(id)){
+						var blockId = Block.convertItemToBlockId(pipeSlot.id);
 						World.setBlock(this.x, this.data.y, this.z, blockId, pipeSlot.data);
 						pipeSlot.count--;
-						if(!pipeSlot.count) pipeSlot.id = 0;
+						if(pipeSlot.count == 0) pipeSlot.id = 0;
 					}
 					else{World.setBlock(this.x, this.data.y, this.z, 0);}
 					this.data.progress = 0;

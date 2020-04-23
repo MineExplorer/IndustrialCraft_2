@@ -13,7 +13,7 @@ By using the library you automatically agree to these rules.
 
 LIBRARY({
 	name: "ToolLib",
-	version: 17,
+	version: 18,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -142,55 +142,58 @@ var ToolLib = {
 	},
 	
 	getBlockDrop: function(coords, id, data, level, enchant){
-		enchant = enchant || {};
+		enchant = enchant || ToolAPI.getEnchantExtraData();
 		var dropFunc = Block.dropFunctions[id];
-		if(dropFunc){
+		if (dropFunc) {
 			return dropFunc(coords, id, data, level, enchant);
 		}
-		if(id == 5 || id == 6 || id == 19 || id == 35 || id == 85 || id == 158 || id == 171 || id == 467) return [[id, 1, data]];
-		if(id == 17 || id == 162) return [[id, 1, data]]; // log
-		if(id == 18 || id == 161){ // leaves
-			if(enchant.silk) return [[id, 1, data]];
+
+		if (id == 5 || id == 6 || id == 19 || id == 35 || id == 85 || id == 158 || id == 171) return [[id, 1, data]];
+		if (id == 17 || id == 162) return [[id, 1, data]]; // log
+		if (id == 18 || id == 161) { // leaves
+			if (enchant.silk) return [[id, 1, data]];
 			return [];
 		}
-		if(id == 47){ // bookshelf
-			if(enchant.silk) return [[47, 1, 0]];
+		if (id == 47) { // bookshelf
+			if (enchant.silk) return [[47, 1, 0]];
 			return [[340, 3, 0]];
 		}
-		if(id == 55) return [[331, 1, 0]]; // redstone wire
-		if(id == 60) return [[3, 1, 0]]; // farmland
-		if(id == 63 || id == 68) return [[338, 1, 0]]; // sign
-		if(id == 64) return [[324, 1, 0]]; // door
-		if(id == 75 || id == 76) return [[76, 1, 0]]; // redstone torch
-		if(id == 79){ // ice
-			if(enchant.silk) return [[79, 1, 0]];
+		if (id == 55) return [[331, 1, 0]]; // redstone wire
+		if (id == 60) return [[3, 1, 0]]; // farmland
+		if (id == 63 || id == 68) return [[338, 1, 0]]; // sign
+		if (id == 64) return [[324, 1, 0]]; // door
+		if (id == 75 || id == 76) return [[76, 1, 0]]; // redstone torch
+		if (id == 79) { // ice
+			if (enchant.silk) return [[79, 1, 0]];
 			return [];
 		}
-		if(id == 83) return [[338, 1, 0]]; // sugar canes
-		if(id == 89) return [[348, random(2, 4), 0]]; // glowstone
-		if(id == 93 || id == 94) return [[356, 1, 0]]; // repeater
-		if(id == 103) return [[360, random(3, 7), 0]]; // melon
-		if(id == 123 || id == 124) return [[123, 1, 0]]; // redstone lamp
-		if(id == 140) return [[390, 1, 0]]; // pot
-		if(id == 149 || id == 150) return [[404, 1, 0]]; // comparator
-		if(id == 151 || id == 178) return [[151, 1, 0]]; // daylight detector
+		if (id == 83) return [[338, 1, 0]]; // sugar canes
+		if (id == 89) return [[348, random(2, 4), 0]]; // glowstone
+		if (id == 93 || id == 94) return [[356, 1, 0]]; // repeater
+		if (id == 103) return [[360, random(3, 7), 0]]; // melon
+		if (id == 123 || id == 124) return [[123, 1, 0]]; // redstone lamp
+		if (id == 140) return [[390, 1, 0]]; // pot
+		if (id == 149 || id == 150) return [[404, 1, 0]]; // comparator
+		if (id == 151 || id == 178) return [[151, 1, 0]]; // daylight detector
 		// doors
-		if(id == 193) return [[427, 1, 0]];
-		if(id == 194) return [[428, 1, 0]];
-		if(id == 195) return [[429, 1, 0]];
-		if(id == 196) return [[430, 1, 0]];
-		if(id == 197) return [[431, 1, 0]];
+		if (id == 193) return [[427, 1, 0]];
+		if (id == 194) return [[428, 1, 0]];
+		if (id == 195) return [[429, 1, 0]];
+		if (id == 196) return [[430, 1, 0]];
+		if (id == 197) return [[431, 1, 0]];
 
-		if(id == 393) return [[335, 1, 0]]; // kelp
-		if(id == 464) return [[720, 1, 0]]; // campfire
+		if (id == 393) return [[335, 1, 0]]; // kelp
+		if (id == 464) return [[720, 1, 0]]; // campfire
 		// signs
-		if(id == 436 || id == 437) return [[472, 1, 0]];
-		if(id == 441 || id == 442) return [[473, 1, 0]];
-		if(id == 443 || id == 444) return [[474, 1, 0]];
-		if(id == 445 || id == 446) return [[475, 1, 0]];
-		if(id == 447 || id == 448) return [[476, 1, 0]];
-		if(noDropBlocks.indexOf(id) != -1) return [];
-		return [[id, 1, 0]];
+		if (id == 436 || id == 437) return [[472, 1, 0]];
+		if (id == 441 || id == 442) return [[473, 1, 0]];
+		if (id == 443 || id == 444) return [[474, 1, 0]];
+		if (id == 445 || id == 446) return [[475, 1, 0]];
+		if (id == 447 || id == 448) return [[476, 1, 0]];
+		if (id == 467) return [[-212, 1, data]]; // wood
+		if (noDropBlocks.indexOf(id) != -1) return [];
+		
+		return [[Block.convertBlockToItemId(id), 1, 0]];
 	},
 	
 	isBlock: function(id){
@@ -214,6 +217,57 @@ var ToolLib = {
 // old versions compatibility
 ToolAPI.setTool = ToolLib.setTool;
 ToolAPI.breakCarriedTool = ToolLib.breakCarriedTool;
+
+// ToolAPI fix
+ToolAPI.fortuneDropModifier = function(drop, level) {
+	var len = drop.length;
+	for (var i = 0; i < len; i++) {
+		var extraCount = parseInt(Math.random() * (level + 2)) - 1;
+		for (var j = 0; j < extraCount; j++) {
+			drop.push(drop[i]);
+		}
+	}
+	return drop;
+}
+
+ToolAPI.getBlockDropViaItem = function(block, item, coords) {
+    var enchantData = ToolAPI.getEnchantExtraData(item.extra);
+    var toolData = ToolAPI.getToolData(item.id);
+    this.__func = this.getDropFunction(block.id);
+    if (toolData && toolData.modifyEnchant) {
+        toolData.modifyEnchant(enchantData, item, coords, block);
+    }
+    return this.__func(coords, block.id, block.data, ToolAPI.getToolLevelViaBlock(item.id, block.id), enchantData);
+}
+
+ToolAPI.getEnchantExtraData = function(extra) {
+	var enchant = {
+		silk: false,
+		fortune: 0,
+		efficiency: 0,
+		unbreaking: 0,
+		experience: 0
+    }
+
+	if(extra){
+		var enchants = extra.getEnchants();
+		for(var i in enchants){
+			if(i == 15){
+				enchant.efficiency = enchants[i];
+			}
+			if(i == 16){
+				enchant.silk = true;
+			}
+			if(i == 17){
+				enchant.unbreaking = enchants[i];
+			}
+			if(i == 18){
+				enchant.fortune = enchants[i];
+			}
+		}
+	}
+	return enchant;
+}
 
 EXPORT("ToolLib", ToolLib);
 EXPORT("ToolType", ToolType);

@@ -30,7 +30,7 @@ const fallVelocity = -0.0784;
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var Color = android.graphics.Color;
 
-// temporary fix
+// temporary fixes
 Block.registerPopResourcesFunction = function(nameID, func) {
     var numericID = this.getNumericId(nameID);
     if (numericID == -1) {
@@ -38,6 +38,8 @@ Block.registerPopResourcesFunction = function(nameID, func) {
     }
     return this.registerPopResourcesFunctionForID(numericID, func);
 }
+
+if(!Block.convertItemToBlockId) Block.convertItemToBlockId = Block.covertItemToBlockId;
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
@@ -78,6 +80,8 @@ Callback.addCallback("tick", function(){
 		}
 	}
 });
+
+// Recipe debug
 /*
 var workbenchAddShaped = Recipes.addShaped;
 Recipes.addShaped = function(result, scheme, keys){

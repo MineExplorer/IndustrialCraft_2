@@ -458,7 +458,6 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block
 });
 
 Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block){
-	Game.prevent();
 	let x = coords.relative.x;
 	let y = coords.relative.y;
 	let z = coords.relative.z;

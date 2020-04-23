@@ -11,7 +11,7 @@ var MachineRegistry = {
 		this.machineIDs[id] = true;
 		
 		// click fix
-		Prototype.onItemClick = function(id, count, data, coords){
+		Prototype.onItemClick = Prototype.onItemClick || function(id, count, data, coords){
 			if (id == ItemID.debugItem || id == ItemID.EUMeter) return false;
 			if (this.click(id, count, data, coords)) return true;
 			if (Entity.getSneaking(player)) return false;

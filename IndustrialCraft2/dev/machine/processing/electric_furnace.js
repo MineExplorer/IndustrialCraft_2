@@ -8,7 +8,7 @@ TileRenderer.registerRotationModel(BlockID.electricFurnace, 4, [["machine_bottom
 
 ItemName.addTierTooltip("electricFurnace", 1);
 
-Block.registerDropFunction("electricFurnace", BlockID.ironFurnace);
+MachineRegistry.setMachineDrop("electricFurnace", BlockID.ironFurnace);
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.electricFurnace, count: 1, data: 0}, [

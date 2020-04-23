@@ -12,13 +12,8 @@ Block.createBlock("reactorChamber", [
 ], "machine");
 ItemName.setRarity(BlockID.reactorChamber, 1, true);
 
-Block.registerDropFunction("nuclearReactor", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level, BlockID.primalGenerator);
-});
-
-Block.registerDropFunction("reactorChamber", function(coords, blockID, blockData, level){
-	return MachineRegistry.getMachineDrop(coords, blockID, level);
-});
+MachineRegistry.setMachineDrop("nuclearReactor", BlockID.primalGenerator);
+MachineRegistry.setMachineDrop("reactorChamber");
 
 Callback.addCallback("PreLoaded", function(){
 	Recipes.addShaped({id: BlockID.nuclearReactor, count: 1, data: 0}, [

@@ -401,6 +401,8 @@ Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
+// Scanner
+Translation.addTranslation("Scan Result:", {ru: "Результат сканирования:", es: "Resultado de la exploración:", pt: "Resultado do Escaneamento:", zh: "扫描结果:"});
 // Charging Batteries
 Translation.addTranslation("Mode: Disabled", {ru: "Режим: Выключен", pt: "Modo: Desabilitado", zh: "模式: 禁用"});
 Translation.addTranslation("Mode: Charge items not in hand", {ru: "Режим: Заряжать предметы, которые не в руке", pt: "Modo: Carregar itens que não estão nas mãos", zh: "模式: 手里没有要充电的东西"});
@@ -421,6 +423,7 @@ Translation.addTranslation("Avg:", {ru: "Средн.:", es: "Promedio:", pt: "M�
 Translation.addTranslation("Max/Min", {ru: "Макс./Мин.", pt: "Máx/Min", zh: "最大/最小"});
 Translation.addTranslation("Cycle: ", {ru: "Цикл: ", es: "Ciclo: ", pt: "Cíclo: ", zh: "周期: "});
 Translation.addTranslation("Reset", {ru: "Сброс", pt: "Resetar", zh: "重置"});
+Translation.addTranslation("sec", {ru: "сек", es: "sec", pt: "seg", zh: "秒"});
 // Mining Laser
 Translation.addTranslation("Mining", {ru: "Добыча", es: "Taladrando", pt: "Mineração", zh: "挖矿模式"});
 Translation.addTranslation("Low-Focus", {ru: "Короткого фокуса", es: "Baja Potencia", pt: "Baixo-Foco", zh: "低聚焦模式"});
@@ -491,7 +494,7 @@ Translation.addTranslation("Ingots", {ru: "Слитки", pt: "Lingotes", zh: "�
 Translation.addTranslation("Plates", {ru: "Пластины", pt: "Placas", zh: "金属板"});
 Translation.addTranslation("Desne Plates", {ru: "Плотные пластины", pt: "Placas Densas", zh: "致密金属板"});
 Translation.addTranslation("Metal Casings", {ru: "Металлические оболочки", pt: "Invólucros", zh: "金属外壳"});
-Translation.addTranslation("Nuclear", {ru: "Радиоактивные", pt: "Nuclear", zh: "核材料"});
+Translation.addTranslation("Nuclear", {ru: "Радиоактивные", pt: "Nuclear", zh: "核原料"});
 Translation.addTranslation("Mining Drills", {ru: "Шахтёрские буры", pt: "Brocas de Mineração", zh: "采矿钻头"});
 Translation.addTranslation("Cells", {ru: "Капсулы", pt: "Células", zh: "单元"});
 Translation.addTranslation("Nuclear Fuel Rods", {ru: "Топливные стержни", pt: "Hastes de Combustível", zh: "核燃料棒"});

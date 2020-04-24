@@ -133,6 +133,7 @@ items/reactor/heat_exchanger.js
 items/reactor/heat_vent.js
 items/reactor/condensator.js
 
+items/armor/fall_damage.js
 items/armor/hazmat.js
 items/armor/bronze.js
 items/armor/composite.js

@@ -14,24 +14,16 @@ UIbuttons.setArmorButton(ItemID.jetpack, "button_hover");
 
 Armor.registerFuncs("jetpack", {
 	hurt: function(params, slot, index, maxDamage){
-		if(params.type==5){
-			var vel = Player.getVelocity().y;
-			var time = vel / -0.06;
-			var height = 0.06 * time*time / 2;
-			if(height < 22){
-				if(height < 17){
-					var damage = Math.floor(height) - 3;
+		if(params.type == 5){
+			var damage = parseInt(fallHeight - Player.getPosition().y);
+			if(damage < params.damage){
+				if(damage <= 0){
+					Game.prevent();
 				} else {
-					var damage = Math.ceil(height) - 3;
+					Entity.setHealth(player, Entity.getHealth(player) + params.damage - damage);
 				}
 			}
-			//Game.message(height + ", "+damage+", "+params.damage)
-			if(damage <= 0 && height < 22){
-				Game.prevent();
-			}
-			else if(params.damage > damage){
-				Entity.setHealth(player, Entity.getHealth(player) + params.damage - damage);
-			}
+			Game.message(damage+", "+params.damage)
 		}
 		return false;
 	},

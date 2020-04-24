@@ -97,22 +97,12 @@ var NANO_ARMOR_FUNCS = {
 				return true;
 			}
 			if(type==5 && index==3){
-				var damage = 0;
-				var vel = Player.getVelocity().y;
-				var time = vel / -0.06;
-				var height = 0.06 * time*time / 2;
-				if(height < 22){
-					if(height < 17){
-						var damage = Math.floor(height) - 3;
-					} else {
-						var damage = Math.ceil(height)- 3;
-					}
-				}
-				if(damage > 0 || height >= 22){
-					params.damage = damage;
-					damage = Math.min(Math.min(params.damage, 9), Math.floor((maxDamage - slot.data)/2000));
-					if(params.damage > damage){
-						Entity.setHealth(player, Entity.getHealth(player) + damage);
+				var damage = parseInt(fallHeight - Player.getPosition().y);
+				if(damage > 0){
+					damage = Math.min(damage, params.damage);
+					var damageReduce = Math.min(Math.min(9, damage), parseInt(energyStored / 2000));
+					if(damageReduce < damage){
+						Entity.setHealth(player, Entity.getHealth(player) + damageReduce);
 					} else {
 						Game.prevent();
 					}

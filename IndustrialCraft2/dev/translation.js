@@ -401,8 +401,6 @@ Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
-// Scanner
-Translation.addTranslation("Scan Result:", {ru: "Результат сканирования:", es: "Resultado de la exploración:", pt: "Resultado do Escaneamento:", zh: "扫描结果:"});
 // Charging Batteries
 Translation.addTranslation("Mode: Disabled", {ru: "Режим: Выключен", pt: "Modo: Desabilitado", zh: "模式: 禁用"});
 Translation.addTranslation("Mode: Charge items not in hand", {ru: "Режим: Заряжать предметы, которые не в руке", pt: "Modo: Carregar itens que não estão nas mãos", zh: "模式: 手里没有要充电的东西"});
@@ -459,6 +457,7 @@ Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночн
 Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
 Translation.addTranslation("Hover mode disabled", {ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
 Translation.addTranslation("Hover mode enabled", {ru: "Режим парения включен", zh: "已启用悬浮模式"});
+Translation.addTranslation("Scan Result: ", {ru: "Результат сканирования: ", es: "Resultado de la exploración: ", pt: "Resultado do Escaneamento: ", zh: "扫描结果: "});
 
 // Tooltips
 Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: ", zh: "能量等级: "});

@@ -23,7 +23,6 @@ Armor.registerFuncs("jetpack", {
 					Entity.setHealth(player, Entity.getHealth(player) + params.damage - damage);
 				}
 			}
-			Game.message(damage+", "+params.damage)
 		}
 		return false;
 	},

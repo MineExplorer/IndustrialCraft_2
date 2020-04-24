@@ -1,7 +1,7 @@
 var currentUIscreen;
 Callback.addCallback("NativeGuiChanged", function(screenName){
-	currentUIscreen = screenName;
-	if(screenName != "in_game_play_screen"){
+	currentUIscreen = screenName.split(' ')[0];
+	if(screenName != "in_game_play_screen" && screenName != "screen_world_controls_and_settings"){
 		if(UIbuttons.container){
 			UIbuttons.container.close();
 			UIbuttons.container = null;
@@ -220,7 +220,7 @@ Callback.addCallback("tick", function(){
 			UIbuttons.isEnabled = true;
 		}
 	}
-	if(UIbuttons.isEnabled && (currentUIscreen == "hud_screen" || currentUIscreen == "in_game_play_screen")){
+	if(UIbuttons.isEnabled && (currentUIscreen == "in_game_play_screen" || currentUIscreen == "screen_world_controls_and_settings")){
 		updateUIbuttons();
 		if(!UIbuttons.container){
 			UIbuttons.container = new UI.Container();

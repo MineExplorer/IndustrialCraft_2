@@ -36,7 +36,7 @@ Callback.addCallback("PreLoaded", function(coords, item, block){
 function scanOres(coords, item, energy, radius){
 	if(ICTool.useElectricItem(item, energy)){
 		SoundAPI.playSound("Tools/ODScanner.ogg");
-		Game.message(Translation.translate("Scan Result:") + coords.x + ", " + coords.y + ", " + coords.z);
+		Game.message(Translation.translate("Scan Result: ") + coords.x + ", " + coords.y + ", " + coords.z);
 		let ores = {};
 		for(let x = coords.x - radius; x <= coords.x + radius; x++){
 			for(let y = coords.y - radius; y <= coords.y + radius; y++){

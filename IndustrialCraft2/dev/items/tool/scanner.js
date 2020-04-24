@@ -33,7 +33,7 @@ Callback.addCallback("PreLoaded", function(coords, item, block){
 	}
 });
 
-function scanOres(energy, radius){
+function scanOres(coords, item, energy, radius){
 	if(ICTool.useElectricItem(item, energy)){
 		SoundAPI.playSound("Tools/ODScanner.ogg");
 		Game.message(Translation.translate("Scan Result:") + coords.x + ", " + coords.y + ", " + coords.z);
@@ -56,9 +56,9 @@ function scanOres(energy, radius){
 }
 
 Item.registerUseFunction("scanner", function(coords, item, block){
-	scanOres(50, scan_radius);
+	scanOres(coords, item, 50, scan_radius);
 });
 
 Item.registerUseFunction("scannerAdvanced", function(coords, item, block){
-	scanOres(200, adv_scan_radius);
+	scanOres(coords, item, 200, adv_scan_radius);
 });

@@ -4,7 +4,6 @@ Callback.addCallback("NativeGuiChanged", function(screenName){
 	if(screenName != "in_game_play_screen" && screenName != "screen_world_controls_and_settings"){
 		if(UIbuttons.container){
 			UIbuttons.container.close();
-			UIbuttons.container = null;
 		}
 	}
 });
@@ -222,7 +221,7 @@ Callback.addCallback("tick", function(){
 	}
 	if(UIbuttons.isEnabled && (currentUIscreen == "in_game_play_screen" || currentUIscreen == "screen_world_controls_and_settings")){
 		updateUIbuttons();
-		if(!UIbuttons.container){
+		if(!UIbuttons.container || !UIbuttons.container.isOpened()){
 			UIbuttons.container = new UI.Container();
 			UIbuttons.container.openAs(UIbuttons.Window);
 		}

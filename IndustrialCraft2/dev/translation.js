@@ -399,6 +399,11 @@ Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt
 
 // TEXT
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
+// Liquid Fuel Firebox
+Translation.addTranslation("Emit: ", {ru: "Выход: ", es: "Emite: ", pt: "Emitindo: ", zh: "发热: "});
+Translation.addTranslation("Max Emit: ", {ru: "Макс. выход: ", es: "MaxEmision: ", pt: "Emissão Máx: ", zh: "最大发热: "});
+Translation.addTranslation("Emit: 0", {ru: "Выход: 0", es: "Emite: 0", pt: "Emitindo: 0", zh: "发热: 0"});
+Translation.addTranslation("Max Emit: 0", {ru: "Макс. выход: 0", es: "MaxEmision: 0", pt: "Emissão Máx: 0", zh: "最大发热: 0"});
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
 // Charging Batteries

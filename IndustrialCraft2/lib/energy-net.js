@@ -337,7 +337,7 @@ var EnergyNetBuilder = {
 		for (var side = 0; side < 6; side++) {
 			if (tile.canExtractEnergy(side, type.name)) {
 				var c = this.getRelativeCoords(tile.x, tile.y, tile.z, side);
-				this.buildTileNet(net, c.x, c.y, c.z, side + Math.pow(-1, side));
+				this.buildTileNet(net, c.x, c.y, c.z, side ^ 1);
 			}
 		}
 		
@@ -468,7 +468,7 @@ var EnergyNetBuilder = {
 					var c = this.getRelativeCoords(x, y, z, side);
 					var tileSource = TileEntityRegistry.accessMachineAtCoords(c.x, c.y, c.z);
 					if (tileSource && tileSource.__energyTypes[name]) {
-						if (tileSource.canExtractEnergy(side + Math.pow(-1, side), name)) {
+						if (tileSource.canExtractEnergy(side ^ 1, name)) {
 							var net = tileSource.__energyNets[name];
 							if (net) net.addTileEntity(tile);
 						}

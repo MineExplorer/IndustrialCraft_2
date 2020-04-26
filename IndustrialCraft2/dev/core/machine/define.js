@@ -254,7 +254,7 @@ var MachineRegistry = {
 	
 	setFacing: function(coords){
 		if(Entity.getSneaking(player)){
-			var facing = coords.side + Math.pow(-1, coords.side);
+			var facing = coords.side ^ 1;
 		} else {
 			var facing = coords.side;
 		}

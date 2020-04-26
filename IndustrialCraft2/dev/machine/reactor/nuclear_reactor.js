@@ -124,7 +124,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		} else {
 			for (let side = 0; side < 6; side++) {
 				let c = StorageInterface.getRelativeCoords(chamber, side);
-				EnergyNetBuilder.buildTileNet(net, c.x, c.y, c.z, side + Math.pow(-1, side));
+				EnergyNetBuilder.buildTileNet(net, c.x, c.y, c.z, side ^ 1);
 			}
 		}
 		chamberNets.Eu = net;

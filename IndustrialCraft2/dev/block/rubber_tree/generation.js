@@ -62,14 +62,14 @@ var RubberTreeGenerationHelper = {
 	
 	getHeight: function(x, y, z, max){
 		var height = 0;
-		while(height < max){
+		while(height < max + 2){
 			var blockID = World.getBlockID(x, y + height, z);
 			if(blockID != 0 && ToolAPI.getBlockMaterialName(blockID) != "plant"){
 				break;
 			}
 			height++;
 		}
-		return height;
+		return height > 2 ? height - 2 : 0;
 	},
 	
 	setLeaves: function(x, y, z, leaves){

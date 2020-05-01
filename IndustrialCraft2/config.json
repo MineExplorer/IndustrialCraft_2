@@ -41,7 +41,7 @@
     "minHeight":0,
     "maxHeight":64
   },
-  "iridium":{
+  "iridium_ore":{
     "chance":0.2,
     "minHeight":1,
     "maxHeight":64

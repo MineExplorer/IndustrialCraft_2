@@ -82,7 +82,7 @@ AgricultureAPI.registerCropCard({
         return 200;
     },
     getSeed: function(){
-        return {id: 361, count: random(1, 4), data: 0}
+        return {id: 361, count: randomInt(1, 4), data: 0}
     },
     getSizeAfterHarvest: function(te){
         return this.maxSize - 1;
@@ -113,7 +113,7 @@ AgricultureAPI.registerCropCard({
         if(Math.random() < 0.5){
             return {id: 103, count: 1, data: 0}
         }
-        return {id: 360, count: random(2, 6), data: 0}
+        return {id: 360, count: randomInt(2, 6), data: 0}
     },
     getGrowthDuration: function(te) {
         if (te.currentSize == 3) {
@@ -125,7 +125,7 @@ AgricultureAPI.registerCropCard({
         return this.maxSize - 1;
     },
     getSeed: function(){
-        return {id: 362, count: random(1, 3), data: 0}
+        return {id: 362, count: randomInt(1, 3), data: 0}
     }
 });
 
@@ -228,10 +228,10 @@ AgricultureAPI.registerCropCard({
     onEntityCollision: function(crop) {
         if (crop.data.currentSize == 5) {
             var armorSlot = Player.getArmorSlot(3);
-            if (random(0,50)&&armorSlot.id){
+            if (randomInt(0,50)&&armorSlot.id){
                 return AgricultureAPI.abstractFunctions["IC2CropCard"].onEntityCollision(crop);
             }
-            Entity.addEffect(Player.get(), MobEffect.poison, 1, (random(0,10) + 5) * 20);
+            Entity.addEffect(Player.get(), MobEffect.poison, 1, (randomInt(0,10) + 5) * 20);
             crop.data.currentSize = 4;
             crop.updateRender();
         }
@@ -304,7 +304,7 @@ AgricultureAPI.registerCropCard({
         return {id: ItemID.latex, count: 1, data: 0};
     },
     getSizeAfterHarvest: function(crop) {
-        if (crop.data.currentSize == 4) {return random(0, 3)}
+        if (crop.data.currentSize == 4) {return randomInt(0, 3)}
         return 1;
     },
     onEntityCollision: function(crop) {return false},

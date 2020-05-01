@@ -19,17 +19,17 @@ var RubberTreeGenerationHelper = {
 		 radius: 
 	 }
 	*/
-	generateCustomTree: function(x, y, z, params){
+	generateCustomTree: function(x, y, z, params, random){
 		var leaves = params.leaves;
 		var log = params.log;
 		
-		var height = this.getHeight(x, y, z, random(params.height.min, params.height.max) + 2);
-		if(height >= 5){
-			height -= 2;
+		var min = params.height.min, max = params.height.max;
+		var height = this.getHeight(x, y, z, random.nextInt(max - min + 1) + min);
+		if(height >= min){
 			var k = 0.25;
 			for(var ys = 0; ys < height; ys++){
-				if(log.resin && Math.random() < k){
-					World.setBlock(x, y + ys, z, log.resin, parseInt(Math.random()*4) + 4);
+				if(log.resin && random.nextDouble() < k){
+					World.setBlock(x, y + ys, z, log.resin, 4 + random.nextInt(4));
 					k -= 0.1;
 				}
 				else{
@@ -43,10 +43,9 @@ var RubberTreeGenerationHelper = {
 			for(var ys = leavesStart; ys <= leavesEnd; ys++){
 				for(var xs = -params.radius; xs <= params.radius; xs++){
 					for(var zs = -params.radius; zs <= params.radius; zs++){
-						var d = Math.sqrt(xs*xs + zs*zs);
-						var radius = params.radius + 0.5 + Math.random() * Math.abs(leavesEnd - ys + 1) / leavesHeight;
+						var radius = params.radius + 0.5 + random.nextDouble() * Math.abs(leavesEnd - ys + 1) / leavesHeight;
 						if(ys == leavesEnd) radius /= 2;
-						if(d <= radius){
+						if(Math.sqrt(xs*xs + zs*zs) <= radius){
 							this.setLeaves(x + xs, y + ys, z + zs, leaves);
 						}
 					}
@@ -58,7 +57,9 @@ var RubberTreeGenerationHelper = {
 					this.setLeaves(x, y + ys + height, z, leaves);
 				}
 			}
+			return true;
 		}
+		return false;
 	},
 	
 	getHeight: function(x, y, z, max){
@@ -75,13 +76,14 @@ var RubberTreeGenerationHelper = {
 	
 	setLeaves: function(x, y, z, leaves){
 		var blockID = World.getBlockID(x, y, z);
-		if(blockID==0 || blockID==106){
+		if(blockID == 0 || blockID == 106){
 			World.setFullBlock(x, y, z, leaves);
 		}
 	},
 
-	generateRubberTree: function(x, y, z){
-		this.generateCustomTree(x, y, z, {
+	generateRubberTree: function(x, y, z, random){
+		if(!random) random = new java.util.Random(Debug.sysTime());
+		return this.generateCustomTree(x, y, z, {
 			log: {
 				id: BlockID.rubberTreeLog,
 				data: 0,
@@ -95,9 +97,9 @@ var RubberTreeGenerationHelper = {
 				min: 3,
 				max: 8,
 			},
-			pike: 2 + parseInt(Math.random() * 1.5),
+			pike: 2 + parseInt(random.nextDouble() * 1.5),
 			radius: 2
-		});
+		}, random);
 	}
 }
 
@@ -125,15 +127,18 @@ if(chance){
 	RUBBER_TREE_BIOME_DATA[SwampBiomeIDs[id]] = chance;}
 }
 
-Callback.addCallback("GenerateChunk", function(chunkX, chunkZ){
-	if(Math.random() < RUBBER_TREE_BIOME_DATA[World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16)]){
-		for(var i = 0; i < 1 + Math.random() * 5; i++){
-			var coords = GenerationUtils.randomCoords(chunkX, chunkZ, 64, 128);
-			coords = GenerationUtils.findSurface(coords.x, coords.y, coords.z);
+Callback.addCallback("GenerateChunk", function(chunkX, chunkZ, random){
+	var biome = World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16);
+	if(random.nextDouble() < RUBBER_TREE_BIOME_DATA[biome]){
+		var treeCount = 1 + random.nextInt(6);
+		var totalCount = 0;
+		for(var i = 0; i < treeCount; i++){
+			var coords = GenerationUtils.findSurface(chunkX*16 + random.nextInt(16), 96, chunkZ*16 + random.nextInt(16));
 			if(World.getBlockID(coords.x, coords.y, coords.z) == 2){
-				coords.y++;
-				RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y, coords.z);
+				if(RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y + 1, coords.z, random))
+				totalCount++;
 			}
 		}
+		Game.message("Generate "+totalCount+"/"+treeCount+" trees in chunk "+chunkX*16+":"+chunkZ*16);
 	}
 });

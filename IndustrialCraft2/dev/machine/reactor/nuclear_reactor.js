@@ -378,7 +378,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 
 	getRandCoord: function(r) {
-		return {x: this.x + random(-r, r), y: this.y + random(-r, r), z: this.z + random(-r, r)};
+		return {x: this.x + randomInt(-r, r), y: this.y + randomInt(-r, r), z: this.z + randomInt(-r, r)};
 	}
 });
 

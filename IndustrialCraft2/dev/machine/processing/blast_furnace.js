@@ -31,18 +31,12 @@ var guiBlastFurnace = new UI.StandartWindow({
 		inventory: {standart: true},
 		background: {standart: true}
 	},
-	
-	params: {       
-		slot: "default_slot",
-		invSlot: "default_slot"              
-	},
-	
+
 	drawing: [
-		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 400, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, bitmap: "progress_scale_background", scale: GUI_SCALE*1.01}
 	],
-	
+
 	elements: {
 		"progressScale": {type: "scale", x: 540 + 6*GUI_SCALE, y: 110 + 8*GUI_SCALE, direction: 1, value: 0.5, bitmap: "progress_scale", scale: GUI_SCALE*1.01},
 		"heatScale": {type: "scale", x: 336 + 66*GUI_SCALE, y: 47 + 64*GUI_SCALE, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE},

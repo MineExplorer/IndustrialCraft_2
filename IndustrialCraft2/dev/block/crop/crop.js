@@ -164,8 +164,8 @@ TileEntity.registerPrototype(BlockID.crop, {
 		}
 
 		if (!this.crop  && (!this.data.crossingBase || !this.attemptCrossing())) {
-			if (random(0, 100) != 0 || this.data.storageWeedEX > 0) {
-				if (this.data.storageWeedEX  > 0 && random(0, 10)  == 0) {
+			if (randomInt(0, 100) != 0 || this.data.storageWeedEX > 0) {
+				if (this.data.storageWeedEX  > 0 && randomInt(0, 10)  == 0) {
 					this.data.storageWeedEX--;
 				}
 				return;
@@ -196,7 +196,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 		if (this.data.storageNutrients > 0) this.data.storageNutrients--;
 		if (this.data.storageWater > 0) this.data.storageWater--;
 
-		if (this.crop.isWeed(this) && random(0, 50) - this.data.statGrowth <= 2){
+		if (this.crop.isWeed(this) && randomInt(0, 50) - this.data.statGrowth <= 2){
 			this.performWeedWork();
 		}
 	},
@@ -244,7 +244,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 		if (!this.crop) return;
 
 		var totalGrowth = 0;
-		var baseGrowth = 3 + random(0, 7) + this.data.statGrowth;
+		var baseGrowth = 3 + randomInt(0, 7) + this.data.statGrowth;
 		var properties = this.crop.properties;
 		var sumOfStats = this.data.statGrowth + this.data.statGain + this.data.statResistance;
 		var minimumQuality = (properties.tier - 1) * 4 + sumOfStats;
@@ -256,7 +256,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 		}
 		else{
 			var aux = (minimumQuality - providedQuality) * 4;
-			if (aux > 100 && random(0, 32) > this.data.statResistance) {
+			if (aux > 100 && randomInt(0, 32) > this.data.statResistance) {
 				totalGrowth = 0;
 
 				this.reset();
@@ -271,13 +271,13 @@ TileEntity.registerPrototype(BlockID.crop, {
 	},
 
 	performWeedWork: function(){
-		var coords = this.relativeCropCoords[random(0, 3)];
+		var coords = this.relativeCropCoords[randomInt(0, 3)];
 		var preCoords = [this.x + coords[0], this.y + coords[0], this.z + coords[0]];
 		if(World.getBlockID(preCoords[0], preCoords[1], preCoords[2]) == BlockID.crop){
 			var TE = World.getTileEntity(preCoords[0], preCoords[1], preCoords[2]);
-			if(!TE.crop || (!TE.crop.isWeed(this) && !TE.hasWeedEX() && random(0, 32) >= TE.data.statResistance)){
+			if(!TE.crop || (!TE.crop.isWeed(this) && !TE.hasWeedEX() && randomInt(0, 32) >= TE.data.statResistance)){
 				var newGrowth = Math.max(this.data.statGrowth, TE.data.statGrowth);
-				if (newGrowth < 31 && random(0, 1)) newGrowth++;
+				if (newGrowth < 31 && randomInt(0, 1)) newGrowth++;
 
 				TE.reset();
 				TE.data.crop = AgricultureAPI.getCardIndexFromID("weed");
@@ -316,7 +316,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 	},
 
 	attemptCrossing: function(){ // modified from the original
-		if (random(0, 3) != 0) return false;
+		if (randomInt(0, 3) != 0) return false;
 
 		var cropCoords = this.askCropJoinCross(this.relativeCropCoords);
 		if (cropCoords.length < 2) return false;
@@ -333,7 +333,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 			}
 			ratios[j] = total;
 		}
-		var search = random(0, total);
+		var search = randomInt(0, total);
 		var min = 0;
 		var max = ratios.length - 1;
 		while (min < max) {
@@ -368,9 +368,9 @@ TileEntity.registerPrototype(BlockID.crop, {
 		this.data.statResistance = Math.floor(this.data.statResistance / count);
 		this.data.statGain = Math.floor(this.data.statGain / count);
 
-		this.data.statGrowth += Math.round(random(0, 1 + 2 * count) - count);
-		this.data.statGain += Math.round(random(0, 1 + 2 * count) - count);
-		this.data.statResistance += Math.round(random(0, 1 + 2 * count) - count);
+		this.data.statGrowth += Math.round(randomInt(0, 1 + 2 * count) - count);
+		this.data.statGain += Math.round(randomInt(0, 1 + 2 * count) - count);
+		this.data.statResistance += Math.round(randomInt(0, 1 + 2 * count) - count);
 
 		this.data.statGrowth = this.lim(this.data.statGrowth, 0, 31);
 		this.data.statGain = this.lim(this.data.statGain, 0, 31);
@@ -405,7 +405,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 			if (sideTileEntity.data.statResistance >= 28){
 				base += 27 - sideTileEntity.data.statResistance;
 			}
-			if (base >= random(0, 20)) cropsCoords.push(coords);
+			if (base >= randomInt(0, 20)) cropsCoords.push(coords);
 		}
 		return cropsCoords;
 	},
@@ -496,7 +496,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 		var ret = [];
 		for (var i = 0; i < dropCount2; i++) {
 			ret[i] = this.crop.getGain(this);
-			if (ret[i] && random(0, 100) <= this.data.statGain) {
+			if (ret[i] && randomInt(0, 100) <= this.data.statGain) {
 				ret[i] = ret[i].count++;
 			}
 		}

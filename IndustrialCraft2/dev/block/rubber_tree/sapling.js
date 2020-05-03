@@ -49,7 +49,7 @@ Callback.addCallback("ItemUse", function(coords, item, block){
 			var py = coords.y + Math.random();
 			Particles.addFarParticle(ParticleType.happyVillager, px, py, pz, 0, 0, 0);
 		}
-		if(Math.random() < 0.25){
+		if(Math.random() < 0.25 || !Game.isItemSpendingAllowed()){
 			RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y, coords.z);
 		}
 	}

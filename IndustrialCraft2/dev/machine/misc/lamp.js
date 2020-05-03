@@ -124,6 +124,7 @@ Block.registerPlaceFunction("luminator", function(coords, item, block){
 	block = World.getBlockID(x, y, z)
 	if(GenerationUtils.isTransparentBlock(block)){
 		World.setBlock(x, y, z, item.id, coords.side);
+		World.playSound(x, y, z, "dig.stone", 1, 0.8)
 		World.addTileEntity(x, y, z);
 	}
 });

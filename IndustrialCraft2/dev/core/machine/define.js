@@ -204,6 +204,7 @@ var MachineRegistry = {
 		Block.registerPlaceFunction(BlockID[id], function(coords, item, block){
 			var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
 			World.setBlock(place.x, place.y, place.z, item.id, 0);
+			World.playSound(place.x, place.y, place.z, "dig.stone", 1, 0.8)
 			var rotation = TileRenderer.getBlockRotation(fullRotation);
 			var tile = World.addTileEntity(place.x, place.y, place.z);
 			tile.data.meta = rotation;

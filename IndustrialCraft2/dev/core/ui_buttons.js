@@ -1,10 +1,8 @@
 var currentUIscreen;
 Callback.addCallback("NativeGuiChanged", function(screenName){
-	currentUIscreen = screenName.split(' ')[0];
-	if(screenName != "in_game_play_screen" && screenName != "screen_world_controls_and_settings"){
-		if(UIbuttons.container){
-			UIbuttons.container.close();
-		}
+	currentUIscreen = screenName;
+	if(screenName != "in_game_play_screen" && UIbuttons.container){
+		UIbuttons.container.close();
 	}
 });
 
@@ -219,7 +217,7 @@ Callback.addCallback("LocalTick", function(){
 			UIbuttons.isEnabled = true;
 		}
 	}
-	if(UIbuttons.isEnabled && (currentUIscreen == "in_game_play_screen" || currentUIscreen == "screen_world_controls_and_settings")){
+	if(UIbuttons.isEnabled && currentUIscreen == "in_game_play_screen"){
 		updateUIbuttons();
 		if(!UIbuttons.container || !UIbuttons.container.isOpened()){
 			UIbuttons.container = new UI.Container();

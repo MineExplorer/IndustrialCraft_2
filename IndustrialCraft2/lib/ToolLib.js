@@ -13,7 +13,7 @@ By using the library you automatically agree to these rules.
 
 LIBRARY({
 	name: "ToolLib",
-	version: 18,
+	version: 19,
 	shared: true,
 	api: "CoreEngine"
 });

@@ -449,6 +449,7 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block
 		}
 	}
 	World.setBlock(x, y, z, item.id, 0);
+	World.playSound(x, y, z, "dig.stone", 1, 0.8)
 	World.addTileEntity(x, y, z);
 });
 
@@ -466,6 +467,7 @@ Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block
 	}
 	if(reactorConnect == 1){
 		World.setBlock(x, y, z, item.id, 0);
+		World.playSound(x, y, z, "dig.stone", 1, 0.8)
 		World.addTileEntity(x, y, z);
 	} else {
 		item.count++;

@@ -49,9 +49,11 @@ var MiningLaser = {
 	},
 	lasers: [],
 	shootLaser: function(pos, vel, mode){
-		var ent = Entity.spawn(pos.x, pos.y, pos.z, EntityType.ARROW);
+		var ent = Entity.spawn(pos.x + vel.x, pos.y + vel.y, pos.z + vel.z, EntityType.ARROW);
 		Entity.setSkin(ent, "models/laser.png");
 		Entity.setVelocity(ent, vel.x, vel.y, vel.z);
+		//var angle = Entity.getLookAngle(Player.get());
+		//Entity.setLookAngle(ent, angle.yaw, angle.pitch);
 		this.lasers.push({ent: ent, start: pos, vel: vel, range: mode.range || 64, power: mode.power, blockBreaks: mode.blockBreaks || 128, smelt: mode.smelt || false, dropChance: mode.dropChance || 0.9, hitblock: false});
 	},
 	useItem: function(item){
@@ -150,7 +152,7 @@ var MiningLaser = {
 		} else {
 			World.setBlock(x, y, z, 0);
 		}
-		var drop = getBlockDrop({x: x, y: y, z: z}, block.id, block.data, 100, true);
+		var drop = ToolLib.getBlockDrop({x: x, y: y, z: z}, block.id, block.data, 100);
 		if(drop)
 		for(var i in drop){
 			var item = drop[i];
@@ -191,8 +193,7 @@ var MiningLaser = {
 	},
 	checkBlock: function(laser, x, y, z){
 		var block = World.getBlock(x, y, z);
-		var material = ToolAPI.getBlockMaterialName(block.id);
-		if(material == "unbreaking"){
+		if(ToolAPI.getBlockMaterialName(block.id) == "unbreaking"){
 			laser.power = 0;
 		}
 		else if(block.id > 0 && block.id != 50 && block.id != 51){
@@ -252,4 +253,5 @@ Item.registerUseFunction("miningLaser", function(coords, item, block){
 
 Item.registerNoTargetUseFunction("miningLaser", function(item){
 	MiningLaser.useItem(item);
-});*/
+});
+*/

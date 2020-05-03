@@ -15,14 +15,7 @@ UIbuttons.setArmorButton(ItemID.jetpack, "button_hover");
 Armor.registerFuncs("jetpack", {
 	hurt: function(params, slot, index, maxDamage){
 		if(params.type == 5){
-			var damage = parseInt(fallHeight - Player.getPosition().y);
-			if(damage < params.damage){
-				if(damage <= 0){
-					Game.prevent();
-				} else {
-					Entity.setHealth(player, Entity.getHealth(player) + params.damage - damage);
-				}
-			}
+			Utils.fixFallDamage(params.damage);
 		}
 		return false;
 	},
@@ -30,6 +23,7 @@ Armor.registerFuncs("jetpack", {
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		var hover = slot.extra? slot.extra.getBoolean("hover") : false;
 		if(hover){
+			Utils.resetFallHeight();
 			var vel = Player.getVelocity();
 			if(vel.y.toFixed(4) == fallVelocity || energyStored < 8){
 				slot.extra.putBoolean("hover", false);
@@ -37,7 +31,7 @@ Armor.registerFuncs("jetpack", {
 				Game.message("§4" + Translation.translate("Hover mode disabled"));
 			}
 			else if(vel.y < -0.1){
-				Player.setVelocity(vel.x, -0.1, vel.z);
+				Player.addVelocity(0, Math.min(0.25, -0.1 - vel.y), 0);
 				if(World.getThreadTime()%5 == 0){
 					ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
 					Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);

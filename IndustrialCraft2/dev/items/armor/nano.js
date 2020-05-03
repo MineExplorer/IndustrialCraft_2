@@ -91,22 +91,23 @@ var NANO_ARMOR_FUNCS = {
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		var type = params.type;
 		if(energyStored >= 2000){
-			if(type==2 || type==3 || type==11){
+			if(type == 2 || type == 3 || type == 11){
 				var energy = params.damage * 2000;
 				ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - energy, 0));
 				return true;
 			}
-			if(type==5 && index==3){
-				var damage = parseInt(fallHeight - Player.getPosition().y);
+			if(index == 3 && type == 5){
+				var damage = Utils.getFallDamage();
 				if(damage > 0){
 					damage = Math.min(damage, params.damage);
-					var damageReduce = Math.min(Math.min(9, damage), parseInt(energyStored / 2000));
-					if(damageReduce < damage){
-						Entity.setHealth(player, Entity.getHealth(player) + damageReduce);
+					var damageReduce = Math.min(Math.min(9, damage), parseInt(energyStored / 2500));
+					var damageTaken = damage - damageReduce;
+					if(damageTaken > 0){
+						Entity.setHealth(player, Entity.getHealth(player) + params.damage - damageTaken);
 					} else {
 						Game.prevent();
 					}
-					ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - damage * 2000, 0));
+					ChargeItemRegistry.setEnergyStored(slot, energyStored - damageReduce * 2500);
 					return true;
 				}
 			}

@@ -132,7 +132,6 @@ let CableRegistry = {
 
 	cableConnectFunc: function(block, coord1, coord2, side){
 		var block2 = World.getBlock(coord2.x, coord2.y, coord2.z);
-		Game.message(coord1+" - "+block.id+":"+block.data+", side: "+side+" - "+block2.id+":"+block2.data);
 		if(!CableRegistry.canBePainted(block2.id) || block2.data == 0 || block2.data == block.data){
 			return true;
 		}

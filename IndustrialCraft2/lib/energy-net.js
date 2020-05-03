@@ -9,7 +9,7 @@
 
 LIBRARY({
 	name: "EnergyNet",
-	version: 4,
+	version: 5,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -24,18 +24,25 @@ function EnergyType(name) {
 
 	this.wireData = {};
 
-	this.registerWire = function(id, maxValue, overloadFunc) {
+	this.registerWire = function(id, maxValue, overloadFunc, canConnectFunc) {
 		this.wireData[id] = maxValue;
-		EnergyRegistry.wireData[id] = {type: this.name, value: maxValue, onOverload: overloadFunc};
+		var wireData = {type: this.name, value: maxValue};
+		wireData.onOverload = overloadFunc || function(){};
+		wireData.canConnect = canConnectFunc || function(wireBlock, coord1, coord2, side) {
+			return true;
+		}
+		EnergyRegistry.wireData[id] = wireData;
 		
-		Block.registerPlaceFunction(id, function(coords, item, block){
+		Block.registerPlaceFunction(id, function(coords, item, block) {
 			var place = coords.relative;
-			if(World.getBlockID(place.x, place.y, place.z) == 0){
+			if(World.getBlockID(place.x, place.y, place.z) == 0) {
 				World.setBlock(place.x, place.y, place.z, item.id, item.data);
 				Player.setCarriedItem(item.id, item.count - 1, item.data);
 				EnergyRegistry.onWirePlaced(place.x, place.y, place.z);
 			}
 		});
+
+		return wireData;
 	}
 }
 
@@ -95,29 +102,25 @@ var EnergyRegistry = {
 	isWire: function(id, type) {
 		var wireData = this.getWireData(id);
 		if (wireData) {
-			if (!type) return true;
-			if (wireData.type == type) return true;
+			if (!type || wireData.type == type) return true;
 		}
 		return false;
 	},
 	
 	onWirePlaced: function(x, y, z) {
-		var id = World.getBlockID(x, y, z);
-		var net;
-		for(var s = 0; s < 6; s++){
-			var c = EnergyNetBuilder.getRelativeCoords(x, y, z, s);
-			if (!net) {
-				net = EnergyNetBuilder.getNetByBlock(c.x, c.y, c.z, id);
+		var block = World.getBlock(x, y, z);
+		var wireData = this.getWireData(block.id);
+		var coord1 = {x: x, y: y, z: z};
+		for(var side = 0; side < 6; side++) {
+			var coord2 = EnergyNetBuilder.getRelativeCoords(x, y, z, side);
+			var net = EnergyNetBuilder.getNetByBlock(coord2.x, coord2.y, coord2.z, block.id);
+			if(net && wireData.canConnect(block, coord1, coord2, side)) {
+				EnergyNetBuilder.rebuildRecursive(net, block.id, x, y, z);
+				return;
 			}
-			if (net) break;
 		}
 		
-		if (net) {
-			EnergyNetBuilder.rebuildRecursive(net, id, x, y, z);
-		}
-		else {
-			EnergyNetBuilder.buildForWire(x, y, z, id);
-		}
+		EnergyNetBuilder.buildForWire(x, y, z, block.id);
 	},
 
 	onWireDestroyed: function(x, y, z, id) {
@@ -361,9 +364,9 @@ var EnergyNetBuilder = {
 				}
 			}
 			else {
-				var block = World.getBlockID(x, y, z);
-				if (EnergyRegistry.isWire(block, type)) {
-					var wireNet = this.buildForWire(x, y, z, block);
+				var blockID = World.getBlockID(x, y, z);
+				if (EnergyRegistry.isWire(blockID, type)) {
+					var wireNet = this.buildForWire(x, y, z, blockID);
 					net.addConnection(wireNet);
 					wireNet.addConnection(net);
 				}
@@ -374,7 +377,7 @@ var EnergyNetBuilder = {
 	
 	buildForWire: function(x, y, z, id) {
 		var wireData = EnergyRegistry.getWireData(id);
-		if(!wireData) return null;
+		if (!wireData) return null;
 		var type = EnergyRegistry.getEnergyType(wireData.type);
 		var net = new EnergyNet(type, wireData.value, wireData.onOverload);
 		net.wireId = id;
@@ -384,13 +387,14 @@ var EnergyNetBuilder = {
 	},
 
 	rebuildForWire: function(x, y, z, id) {
-		if (World.getBlockID(x, y, z) == id && !EnergyNetBuilder.getNetOnCoords(x, y, z)) {
-			this.buildForWire(x, y, z, id);
+		var blockID = World.getBlock(x, y, z);
+		if (blockID == id && !EnergyNetBuilder.getNetOnCoords(x, y, z)) {
+			this.buildForWire(x, y, z, blockID);
 		}
 	},
 	
 	rebuildRecursive: function(net, wireId, x, y, z, side) {
-		if(net.removed) return;
+		if (net.removed) return;
 		
 		var coordKey = x + ":" + y + ":" + z;
 		if (net.wireMap[coordKey]) {
@@ -416,14 +420,15 @@ var EnergyNetBuilder = {
 			if (otherNet == net) {
 				return;
 			}
-			var block = World.getBlockID(x, y, z);
-			if (wireId == block) {
+			
+			var block = World.getBlock(x, y, z);
+			if (wireId == block.id) {
 				if (otherNet) {
 					this.mergeNets(net, otherNet);
 				}
 				else {
 					net.wireMap[coordKey] = true;
-					this.rebuildFor6Sides(net, wireId, x, y, z);
+					this.rebuildFor6Sides(net, block, x, y, z);
 				}
 			}
 			else if (otherNet) {
@@ -432,30 +437,32 @@ var EnergyNetBuilder = {
 					otherNet.addConnection(net);
 				}
 			}
-			else if (EnergyRegistry.isWire(block, type)) {
-				this.buildForWire(x, y, z, block);
+			else if (EnergyRegistry.isWire(block.id, type)) {
+				this.buildForWire(x, y, z, block.id);
 			}
 		}
 	},
 
-	rebuildFor6Sides: function(net, wireId, x, y, z) {
-		this.rebuildRecursive(net, wireId, x, y + 1, z, 0);
-		this.rebuildRecursive(net, wireId, x, y - 1, z, 1);
-		this.rebuildRecursive(net, wireId, x, y, z + 1, 2);
-		this.rebuildRecursive(net, wireId, x, y, z - 1, 3);
-		this.rebuildRecursive(net, wireId, x + 1, y, z, 4);
-		this.rebuildRecursive(net, wireId, x - 1, y, z, 5);
+	rebuildFor6Sides: function(net, wireBlock, x, y, z) {
+		var wireData = EnergyRegistry.getWireData(wireBlock.id);
+		var coord1 = {x: x, y: y, z: z};
+		for(var side = 0; side < 6; side++) {
+			var coord2 = this.getRelativeCoords(x, y, z, side);
+			if(wireData.canConnect(wireBlock, coord1, coord2, side)) {
+				this.rebuildRecursive(net, wireBlock.id, coord2.x, coord2.y, coord2.z, side ^ 1);
+			}
+		}
 	},
 	
 	
-	rebuildTileNet: function(tile){
+	rebuildTileNet: function(tile) {
 		var nets = tile.__energyNets;
 		for (var i in nets) {
 			EnergyNetBuilder.removeNet(nets[i]);
 			delete nets[i];
 		}
 		
-		for(var i in tile.__connetedNets){
+		for(var i in tile.__connetedNets) {
 			tile.__connetedNets[i].removeTileEntity();
 		}
 		EnergyNetBuilder.rebuildTileConnections(tile.x, tile.y, tile.z, tile);
@@ -561,7 +568,7 @@ function EnergyNet(energyType, maxPacketSize, overloadFunc) {
 		
 		addAll: function(amount, voltage) {
 			if (!voltage) voltage = amount;
-			if(self.connectionsCount == 1 && self.tileEntities.length == 0){
+			if(self.connectionsCount == 1 && self.tileEntities.length == 0) {
 				for(var i in self.connectedNets)
 				self.connectedNets[i].addToBuffer(amount, voltage);
 				self.transfered = amount;
@@ -576,7 +583,7 @@ function EnergyNet(energyType, maxPacketSize, overloadFunc) {
 	this.connectedNets = {};
 	this.connectionsCount = 0;
 	this.addConnection = function(net) {
-		if(!this.connectedNets[net.netId]){
+		if(!this.connectedNets[net.netId]) {
 			this.connectedNets[net.netId] = net;
 			this.connectionsCount++;
 		}
@@ -641,8 +648,8 @@ function EnergyNet(energyType, maxPacketSize, overloadFunc) {
 			}
 		}
 		
-		if (inAmount > amount){
-			if (inVoltage > voltage){
+		if (inAmount > amount) {
+			if (inVoltage > voltage) {
 				this.onOverload(inVoltage);
 			}
 			this.voltage = Math.max(this.voltage, voltage);

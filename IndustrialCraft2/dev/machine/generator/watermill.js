@@ -48,9 +48,9 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 					output *= 1.5*Math.sin(World.getWorldTime()%6000/(6000/Math.PI));
 				}
 				var tile = World.getBlockID(
-					this.x - random(-radius, radius),
-					this.y - random(-radius, radius),
-					this.z - random(-radius, radius)
+					this.x - randomInt(-radius, radius),
+					this.y - randomInt(-radius, radius),
+					this.z - randomInt(-radius, radius)
 				);
 				if(tile == 8 || tile == 9){
 					this.data.output = Math.round(output)/20;

@@ -22,17 +22,11 @@ var guiFluidDistributor = new UI.StandartWindow({
 		inventory: {standart: true},
 		background: {standart: true},
 	},
-	
-	params: {
-		slot: "default_slot",
-		invSlot: "default_slot"
-	},
-	
+
 	drawing: [
-		{type: "background", color: Color.parseColor("#b3b3b3")},
-		{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "fluid_distributor_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "fluid_distributor_background", scale: GUI_SCALE}
 	],
-	
+
 	elements: {
 		"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, value: 0, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE, isValid: function(id, count, data){

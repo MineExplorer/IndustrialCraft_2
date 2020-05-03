@@ -15,6 +15,7 @@ Item.registerUseFunction("rubberSapling", function(coords, item, block){
 	if (World.canTileBeReplaced(tile1.id, tile1.data) && DIRT_TILES[tile2.id]) {
 		World.setBlock(place.x, place.y, place.z, BlockID.rubberTreeSapling);
 		Player.setCarriedItem(item.id, item.count - 1, item.data);
+		World.playSound(place.x, place.y, place.z, "dig.grass", 1, 0.8)
 	}
 });
 
@@ -49,14 +50,14 @@ Callback.addCallback("ItemUse", function(coords, item, block){
 			var py = coords.y + Math.random();
 			Particles.addFarParticle(ParticleType.happyVillager, px, py, pz, 0, 0, 0);
 		}
-		if(Math.random() < 0.25){
+		if(Math.random() < 0.25 || !Game.isItemSpendingAllowed()){
 			RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y, coords.z);
 		}
 	}
 });
 
 Callback.addCallback("DestroyBlock", function(coords, block, player){
-	if(World.getBlockID(coords.x, coords.y+1, coords.z) == BlockID.rubberTreeSapling){
-		World.destroyBlock(coords.x, coords.y+1, coords.z, true);
+	if(World.getBlockID(coords.x, coords.y + 1, coords.z) == BlockID.rubberTreeSapling){
+		World.destroyBlock(coords.x, coords.y + 1, coords.z, true);
 	}
 });

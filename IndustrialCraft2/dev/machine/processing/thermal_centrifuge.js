@@ -53,13 +53,7 @@ var guiCentrifuge = new UI.StandartWindow({
 		background: {standart: true},
 	},
 
-	params: {
-		slot: "default_slot",
-		invSlot: "default_slot"
-	},
-
 	drawing: [
-		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 400, y: 50, bitmap: "thermal_centrifuge_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 400 + 8*GUI_SCALE, y: 50 + 38*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],

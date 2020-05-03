@@ -66,28 +66,18 @@ CableRegistry.registerCable("cableOptic", 8192);
 
 // block model
 TileRenderer.setupWireModel(BlockID.cableTin0, -1, 4/16, "ic-wire");
-for(let i = 0; i < 16; i++){
-	TileRenderer.setupWireModel(BlockID.cableTin1, i, 6/16, "ic-wire");
-}
+CableRegistry.setupModel(BlockID.cableTin1, 6/16);
 
 TileRenderer.setupWireModel(BlockID.cableCopper0, -1, 4/16, "ic-wire");
-for(let i = 0; i < 16; i++){
-	TileRenderer.setupWireModel(BlockID.cableCopper1, i, 6/16, "ic-wire");
-}
+CableRegistry.setupModel(BlockID.cableCopper1, 6/16);
 
 TileRenderer.setupWireModel(BlockID.cableGold0, -1, 3/16, "ic-wire");
-for(let i = 0; i < 16; i++){
-	TileRenderer.setupWireModel(BlockID.cableGold1, i, 5/16, "ic-wire");
-	TileRenderer.setupWireModel(BlockID.cableGold2, i, 7/16, "ic-wire");
-}
+CableRegistry.setupModel(BlockID.cableGold1, 5/16);
+CableRegistry.setupModel(BlockID.cableGold2, 7/16);
 
 TileRenderer.setupWireModel(BlockID.cableIron0, -1, 6/16, "ic-wire");
-for(let i = 0; i < 16; i++){
-	TileRenderer.setupWireModel(BlockID.cableIron1, i, 8/16, "ic-wire");
-	TileRenderer.setupWireModel(BlockID.cableIron2, i, 10/16, "ic-wire");
-	TileRenderer.setupWireModel(BlockID.cableIron3, i, 12/16, "ic-wire");
-}
+CableRegistry.setupModel(BlockID.cableIron1, 8/16);
+CableRegistry.setupModel(BlockID.cableIron2, 10/16);
+CableRegistry.setupModel(BlockID.cableIron3, 12/16);
 
-for(let i = 0; i < 16; i++){
-	TileRenderer.setupWireModel(BlockID.cableOptic, i, 1/4, "ic-wire");
-}
+CableRegistry.setupModel(BlockID.cableOptic, 1/4);

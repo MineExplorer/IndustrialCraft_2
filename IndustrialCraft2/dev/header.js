@@ -30,22 +30,14 @@ const fallVelocity = -0.0784;
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var Color = android.graphics.Color;
 
-// temporary fixes
-Block.registerPopResourcesFunction = function(nameID, func) {
-    var numericID = this.getNumericId(nameID);
-    if (numericID == -1) {
-        return false;
-    }
-    return this.registerPopResourcesFunctionForID(numericID, func);
-}
-
+// temporary fix
 if(!Block.convertItemToBlockId) Block.convertItemToBlockId = Block.covertItemToBlockId;
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 
 // API
-function random(min, max){
+function randomInt(min, max){
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 

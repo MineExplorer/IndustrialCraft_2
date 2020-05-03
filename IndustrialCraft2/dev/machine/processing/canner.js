@@ -29,14 +29,8 @@ var guiCanner = new UI.StandartWindow({
 		inventory: {standart: true},
 		background: {standart: true}
 	},
-	
-	params: {
-		slot: "default_slot",
-		invSlot: "default_slot"
-	},
-	
+
 	drawing: [
-		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 406, y: 60 + 58*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 400 + 67*GUI_SCALE, y: 60 + 18*GUI_SCALE, bitmap: "extractor_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 496, y: 60 + 38*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE},

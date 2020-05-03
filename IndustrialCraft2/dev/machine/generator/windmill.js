@@ -89,7 +89,7 @@ Callback.addCallback("tick", function (){
 
 Saver.addSavesScope("windSim",
     function read(scope){
-        windStrength = scope.strength || random(5, 25);
+        windStrength = scope.strength || randomInt(5, 25);
     },
     function save(){
         return {strength: windStrength};

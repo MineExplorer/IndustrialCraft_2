@@ -212,7 +212,7 @@ let StorageInterface = {
 		let count = 0;
 		let slots = [];
 		let slotsInitialized = false;
-		side = side + Math.pow(-1, side);
+		side ^= 1; // opposite side
 		
 		if(tileEntity){
 			if(tileEntity.interface){
@@ -245,7 +245,7 @@ let StorageInterface = {
 		let count = 0;
 		let slots = [];
 		let slotsInitialized = false;
-		let outputSide = side + Math.pow(-1, side);
+		let outputSide = side ^ 1;
 		
 		if(outputTile){
 			if(outputTile.interface){
@@ -285,7 +285,7 @@ let StorageInterface = {
 			}
 		}
 		if(liquid){
-			let outputSide = inputSide + Math.pow(-1, inputSide);
+			let outputSide = inputSide ^ 1;
 			if(!output.interface || output.interface.canTransportLiquid(liquid, outputSide)){
 				this.transportLiquid(liquid, maxAmount, output, input, outputSide);
 			}
@@ -294,7 +294,7 @@ let StorageInterface = {
 	
 	transportLiquid: function(liquid, maxAmount, output, input, outputSide){
 		if(liquid){
-			let inputSide = outputSide + Math.pow(-1, outputSide);
+			let inputSide = outputSide ^ 1;
 			let inputStorage = input.interface || input.liquidStorage;
 			let outputStorage = output.interface || output.liquidStorage;
 			if(!input.interface && inputStorage.getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT || input.interface && input.interface.canReceiveLiquid(liquid, inputSide)){
@@ -389,7 +389,7 @@ let StorageInterface = {
 				let tileEntity = container.tileEntity;
 				let slots = [];
 				let slotsInitialized = false;
-				let outputSide = parseInt(side) + Math.pow(-1, parseInt(side));
+				let outputSide = parseInt(side) ^ 1;
 				
 				if(tileEntity){
 					if(tileEntity.interface){

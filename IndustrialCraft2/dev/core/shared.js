@@ -11,6 +11,7 @@ ModAPI.registerAPI("ICore", {
 	Agriculture: AgricultureAPI,
 	ItemName: ItemName,
 	UI: UIbuttons,
+	Utils: Utils,
 	Config: Config,
 	Ore: OreGenerator,
 	Integration: IntegrationAPI,

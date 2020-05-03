@@ -103,40 +103,33 @@ var QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params, slot, index, maxDamage){
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		var type = params.type;
-		if(energyStored >= 2500 && (type==2 || type==3 || type==11)){
+		if(energyStored >= 2500 && (type == 2 || type == 3 || type == 11)){
 			var energy = params.damage * 2500;
 			ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - energy, 0));
 			return true;
 		}
-		if(type==5 && (index==1 || index==3)){
-			var damage = parseInt(fallHeight - Player.getPosition().y);
-
-			if(index==1){
-				if(damage < params.damage){
-					if(damage <= 0){
-						Game.prevent();
-					} else {
-						Entity.setHealth(player, Entity.getHealth(player) + params.damage - damage);
-					}
-				}
-			}
-			else if(energyStored >= 2500 && damage > 0){
-				damage = Math.min(damage, params.damage);
-				var damageReduce = Math.min(damage, parseInt(energyStored / 2500));
-				if(damageReduce < damage){
-					Entity.setHealth(player, Entity.getHealth(player) + damageReduce);
-				} else {
-					Game.prevent();
-				}
-				ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - damage * 2500, 0));
-				return true;
-			}
-		}
-		if(type==9 && index==0 && energyStored >= 500){
+		if(index == 0 && type == 9 && energyStored >= 500){
 			Game.prevent();
 			Entity.addEffect(player, MobEffect.waterBreathing, 1, 2);
 			ChargeItemRegistry.setEnergyStored(slot, energyStored - 500);
 			return true;
+		}
+		if(index == 1 && type == 5){
+			Utils.fixFallDamage(params.damage);
+		}
+		if(index == 3 && type == 5 && energyStored >= 2500){
+			var damage = Math.min(Utils.getFallDamage(), params.damage);
+			if(damage > 0){
+				var damageReduce = Math.min(damage, parseInt(energyStored / 2500));
+				var damageTaken = damage - damageReduce;
+				if(damageTaken > 0){
+					Entity.setHealth(player, Entity.getHealth(player) + params.damage - damageTaken);
+				} else {
+					Game.prevent();
+				}
+				ChargeItemRegistry.setEnergyStored(slot, energyStored - damageReduce * 2500);
+				return true;
+			}
 		}
 		return false;
 	},
@@ -206,6 +199,7 @@ var QUANTUM_ARMOR_FUNCS = {
 			case 1:
 				var hover = slot.extra? slot.extra.getBoolean("hover") : false;
 				if(hover){
+					Utils.resetFallHeight();
 					var vel = Player.getVelocity();
 					if(vel.y.toFixed(4) == fallVelocity || energyStored < 8){
 						slot.extra.putBoolean("hover", false);
@@ -213,7 +207,7 @@ var QUANTUM_ARMOR_FUNCS = {
 						Game.message("§4" + Translation.translate("Hover mode disabled"));
 					}
 					else if(vel.y < -0.1){
-						Player.setVelocity(vel.x, -0.1, vel.z);
+						Player.addVelocity(0, Math.min(0.25, -0.1 - vel.y), 0);
 						if(World.getThreadTime()%5 == 0){
 							ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
 							Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
@@ -231,7 +225,7 @@ var QUANTUM_ARMOR_FUNCS = {
 				else{runTime = 0;}
 				if(runTime > 2 && !Player.getFlying()){
 					Entity.addEffect(player, MobEffect.movementSpeed, 6, 5);
-					if(World.getThreadTime()%5==0){
+					if(World.getThreadTime()%5 == 0){
 						ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - Math.floor(horizontalVel*600)));
 						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 					}

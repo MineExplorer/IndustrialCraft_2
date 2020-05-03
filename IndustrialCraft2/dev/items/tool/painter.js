@@ -33,13 +33,21 @@ Recipes.addShapeless({id: ItemID.icPainter16, count: 1, data: 0}, [{id: ItemID.i
 
 for(let i = 1; i <= 16; i++){
 	let index = i-1;
-	Item.registerUseFunction("icPainter"+i, function(coords, item, block){
+	Item.registerUseFunction("icPainter"+i, function(pos, item, block){
 		if(CableRegistry.canBePainted(block.id) && block.data != index){
-			World.setBlock(coords.x, coords.y, coords.z, block.id, index);
-			item.data++;
-			if(item.data >= Item.getMaxDamage(item.id))
-				item.id = ItemID.icPainter;
-			Player.setCarriedItem(item.id, 1, item.data);
+			World.setBlock(pos.x, pos.y, pos.z, 0, 0);
+			World.setBlock(pos.x, pos.y, pos.z, block.id, index);
+			var net = EnergyNetBuilder.getNetOnCoords(pos.x, pos.y, pos.z);
+			if (net) {
+				EnergyNetBuilder.removeNet(net);
+				EnergyNetBuilder.rebuildForWire(pos.x, pos.y, pos.z, block.id);
+			}
+			if(Game.isItemSpendingAllowed()){
+				item.data++;
+				if(item.data >= Item.getMaxDamage(item.id))
+					item.id = ItemID.icPainter;
+				Player.setCarriedItem(item.id, 1, item.data);
+			}
 			SoundAPI.playSound("Tools/Painters.ogg");
 		}
 	});

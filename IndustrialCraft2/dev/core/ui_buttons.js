@@ -1,11 +1,8 @@
 var currentUIscreen;
 Callback.addCallback("NativeGuiChanged", function(screenName){
-	currentUIscreen = screenName.split(' ')[0];
-	if(screenName != "in_game_play_screen" && screenName != "screen_world_controls_and_settings"){
-		if(UIbuttons.container){
-			UIbuttons.container.close();
-			UIbuttons.container = null;
-		}
+	currentUIscreen = screenName;
+	if(screenName != "in_game_play_screen" && UIbuttons.container){
+		UIbuttons.container.close();
 	}
 });
 
@@ -199,7 +196,7 @@ function updateUIbuttons(){
 }
 
 let jetpackLoop = SoundAPI.addSoundPlayer("Tools/JetpackLoop.ogg", true, 1);
-Callback.addCallback("tick", function(){
+Callback.addCallback("LocalTick", function(){
 	var armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
 	for(var i in armor){
 		var buttons = UIbuttons.getButtons(armor[i].id);
@@ -220,9 +217,9 @@ Callback.addCallback("tick", function(){
 			UIbuttons.isEnabled = true;
 		}
 	}
-	if(UIbuttons.isEnabled && (currentUIscreen == "in_game_play_screen" || currentUIscreen == "screen_world_controls_and_settings")){
+	if(UIbuttons.isEnabled && currentUIscreen == "in_game_play_screen"){
 		updateUIbuttons();
-		if(!UIbuttons.container){
+		if(!UIbuttons.container || !UIbuttons.container.isOpened()){
 			UIbuttons.container = new UI.Container();
 			UIbuttons.container.openAs(UIbuttons.Window);
 		}
@@ -231,22 +228,26 @@ Callback.addCallback("tick", function(){
 		var hover = armor.extra? armor.extra.getBoolean("hover") : false;
 		var energyStored = ChargeItemRegistry.getEnergyStored(armor);
 		if(energyStored >= 8 && UIbuttons.container.isElementTouched("button_fly")){
+			var vel = Player.getVelocity();
+			if(vel.y > -1.2){
+				Utils.resetFallHeight();
+			}
+
 			var y = Player.getPosition().y;
 			if(y < 256){
-				var vel = Player.getVelocity();
-				var vy = Math.min(32, 264-y) / 160;
+				var vy = Math.min(32, 265 - y) / 160; // max 0.2
 				if(hover){
 					ChargeItemRegistry.setEnergyStored(armor, energyStored - 2);
 					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 					if(vel.y < 0.2){
-						Player.addVelocity(0, Math.min(vy, 0.2-vel.y), 0);
+						Player.addVelocity(0, Math.min(vy, 0.2 - vel.y), 0);
 					}
 				}
 				else {
 					ChargeItemRegistry.setEnergyStored(armor, energyStored - 8);
 					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 					if(vel.y < 0.67){
-						Player.addVelocity(0, Math.min(vy, 0.67-vel.y), 0);
+						Player.addVelocity(0, Math.min(vy, 0.67 - vel.y), 0);
 					}
 				}
 			}

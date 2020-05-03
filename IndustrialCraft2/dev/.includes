@@ -14,8 +14,9 @@ core/radiation.js
 core/sound_engine.js
 core/item_name.js
 core/ui_buttons.js
-core/integration.js
 core/harvestAPI.js
+core/utils.js
+core/integration.js
 
 block/rubber_tree/sapling.js
 block/rubber_tree/log.js
@@ -133,7 +134,6 @@ items/reactor/heat_exchanger.js
 items/reactor/heat_vent.js
 items/reactor/condensator.js
 
-items/armor/fall_damage.js
 items/armor/hazmat.js
 items/armor/bronze.js
 items/armor/composite.js

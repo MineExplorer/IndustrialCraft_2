@@ -13,7 +13,7 @@ By using the library you automatically agree to these rules.
 
 LIBRARY({
 	name: "ToolLib",
-	version: 18,
+	version: 19,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -230,7 +230,7 @@ ToolAPI.fortuneDropModifier = function(drop, level) {
 	return drop;
 }
 
-ToolAPI.getBlockDropViaItem = function(block, item, coords) {
+Block.getBlockDropViaItem = function(block, item, coords) {
     var enchantData = ToolAPI.getEnchantExtraData(item.extra);
     var toolData = ToolAPI.getToolData(item.id);
     this.__func = this.getDropFunction(block.id);

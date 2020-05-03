@@ -124,7 +124,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		} else {
 			for (let side = 0; side < 6; side++) {
 				let c = StorageInterface.getRelativeCoords(chamber, side);
-				EnergyNetBuilder.buildTileNet(net, c.x, c.y, c.z, side + Math.pow(-1, side));
+				EnergyNetBuilder.buildTileNet(net, c.x, c.y, c.z, side ^ 1);
 			}
 		}
 		chamberNets.Eu = net;
@@ -378,7 +378,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 
 	getRandCoord: function(r) {
-		return {x: this.x + random(-r, r), y: this.y + random(-r, r), z: this.z + random(-r, r)};
+		return {x: this.x + randomInt(-r, r), y: this.y + randomInt(-r, r), z: this.z + randomInt(-r, r)};
 	}
 });
 
@@ -449,6 +449,7 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block
 		}
 	}
 	World.setBlock(x, y, z, item.id, 0);
+	World.playSound(x, y, z, "dig.stone", 1, 0.8)
 	World.addTileEntity(x, y, z);
 });
 
@@ -466,6 +467,7 @@ Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block
 	}
 	if(reactorConnect == 1){
 		World.setBlock(x, y, z, item.id, 0);
+		World.playSound(x, y, z, "dig.stone", 1, 0.8)
 		World.addTileEntity(x, y, z);
 	} else {
 		item.count++;

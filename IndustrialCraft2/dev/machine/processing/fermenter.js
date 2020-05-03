@@ -140,7 +140,7 @@ MachineRegistry.registerPrototype(BlockID.icFermenter, {
     },
 	
 	canReceiveHeat: function(side){
-		return this.data.meta == side + Math.pow(-1, side);
+		return this.data.meta == side ^ 1;
 	},
 	
 	heatReceive: function(amount){

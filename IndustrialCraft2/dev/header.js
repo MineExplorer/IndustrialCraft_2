@@ -24,6 +24,7 @@ IMPORT("BackpackAPI");
 
 // constants
 var GUI_SCALE = 3.2;
+var GUI_SCALE_NEW = 3;
 const fallVelocity = -0.0784;
 
 // import functions

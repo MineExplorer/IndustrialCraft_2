@@ -124,7 +124,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 		contents: {
 			icon: BlockID.solidCanner,
 			drawing: [
-				{type: "bitmap", x: 325, y: 205, scale: 6, bitmap: "canner_arrow"},
+				{type: "bitmap", x: 325, y: 205, scale: 6, bitmap: "solid_canner_arrow"},
 				{type: "bitmap", x: 520, y: 205, scale: 6, bitmap: "arrow_bar_scale"}
 			],
 			elements: {
@@ -283,7 +283,6 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 	cvs.drawBitmap(source, new Rect(80, 34, 119, 55), new Rect(24, 17, 63, 38), null);
 	cvs.drawBitmap(UI.TextureSource.get("gui_water_scale"), 4, 4, null);
 	cvs.drawBitmap(UI.TextureSource.get("ore_washer_bar_scale"), 42, 18, null);
-	RecipeViewer.transparentBackground(bmp, Color.parseColor("#b3b3b3"));
 	UI.TextureSource.put("ore_washer_background_edit", bmp);
 
 	RecipeViewer.registerRecipeType("icpe_ore_washer", {
@@ -332,20 +331,14 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 	});
 
 
-	bmp = Bitmap.createBitmap(80, 60, Bitmap.Config.ARGB_8888);
-	cvs = new Canvas(bmp);
-	cvs.drawBitmap(UI.TextureSource.get("thermal_centrifuge_background"), -36, -15, null);
-	cvs.drawBitmap(UI.TextureSource.get("thermal_centrifuge_scale"), 44, 7, null);
-	cvs.drawBitmap(UI.TextureSource.get("heat_scale"), 28, 48, null);
-	cvs.drawBitmap(UI.TextureSource.get("indicator_green"), 52, 44, null);
-	RecipeViewer.transparentBackground(bmp, Color.parseColor("#b3b3b3"));
-	UI.TextureSource.put("thermal_centrifuge_background_edit", bmp);
-
 	RecipeViewer.registerRecipeType("icpe_thermal_centrifuge", {
 		contents: {
 			icon: BlockID.thermalCentrifuge,
 			drawing: [
-				{type: "bitmap", x: 300, y: 100, scale: 5, bitmap: "thermal_centrifuge_background_edit"}
+				{type: "bitmap", x: 300, y: 100, scale: 5, bitmap: "thermal_centrifuge_background"},
+				{type: "bitmap", x: 520, y: 135, scale: 5, bitmap: "thermal_centrifuge_scale"},
+				{type: "bitmap", x: 440, y: 340, scale: 5, bitmap: "heat_scale"},
+				{type: "bitmap", x: 560, y: 320, scale: 5, bitmap: "indicator_green"}
 			],
 			elements: {
 				input0: {type: "slot", x: 200, y: 110, size: 90},
@@ -400,7 +393,6 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 	cvs.drawBitmap(UI.TextureSource.get("progress_scale"), 50, 16, null);
 	cvs.drawBitmap(UI.TextureSource.get("heat_scale"), 46, 52, null);
 	cvs.drawBitmap(UI.TextureSource.get("indicator_green"), 70, 48, null);
-	RecipeViewer.transparentBackground(bmp, Color.parseColor("#b3b3b3"));
 	UI.TextureSource.put("blast_furnace_background_edit", bmp);
 
 	RecipeViewer.registerRecipeType("icpe_blast_furnace", {

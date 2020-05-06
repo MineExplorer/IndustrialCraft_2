@@ -15,7 +15,7 @@ Callback.addCallback("PreLoaded", function(){
         "cxc",
         "a#a",
         "nnn"
-    ], ['#', BlockID.machineBlockBasic, 0, 'x', 54, 0, 'c', ItemID.circuitBasic, 0, 'a', ItemID.cellEmpty, 0, 'n', ItemID.cropStick, 0]);
+    ], ['#', BlockID.machineBlockBasic, 0, 'x', 54, -1, 'c', ItemID.circuitBasic, 0, 'a', ItemID.cellEmpty, 0, 'n', ItemID.cropStick, 0]);
 });
 
 function isFertilizer(id){

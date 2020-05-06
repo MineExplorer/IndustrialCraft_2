@@ -4,7 +4,7 @@ Item.createItem("toolbox", "Tool Box", {name: "tool_box", meta: 0}, {stack: 1});
 Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
 	"axa",
 	"aaa",
-], ['x', 54, 0, 'a', ItemID.casingBronze, 0]);
+], ['x', 54, -1, 'a', ItemID.casingBronze, 0]);
 
 let toolbox_items = [
 	ItemID.treetap, ItemID.craftingHammer, ItemID.cutter, ItemID.electricHoe, ItemID.electricTreetap, ItemID.EUMeter,

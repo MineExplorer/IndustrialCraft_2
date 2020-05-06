@@ -5,7 +5,7 @@ Recipes.addShaped({id: ItemID.containmentBox, count: 1, data: 0}, [
 	"aaa",
 	"axa",
 	"aaa",
-], ['x', 54, 0, 'a', ItemID.casingLead, 0]);
+], ['x', 54, -1, 'a', ItemID.casingLead, 0]);
 
 let guiContainmentBox = new UI.StandartWindow({
 	standart: {

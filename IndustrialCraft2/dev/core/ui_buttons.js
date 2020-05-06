@@ -6,7 +6,8 @@ Callback.addCallback("NativeGuiChanged", function(screenName){
 	}
 });
 
-var button_scale = __config__.access("button_scale");
+var button_scale = __config__.getNumber("button_scale");
+alert(UI.getScreenHeight())
 var UIbuttons = {
 	data: {},
 	onSwitch: {},
@@ -16,7 +17,7 @@ var UIbuttons = {
 	Window: new UI.Window({
 		location: {
 			x: 1000 - button_scale,
-			y: UI.getScreenHeight()/2 - button_scale*2,
+			y: UI.getScreenHeight()/2 - 130,
 			width: button_scale,
 			height: button_scale*5
 		},

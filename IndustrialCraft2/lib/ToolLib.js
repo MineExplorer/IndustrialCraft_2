@@ -148,7 +148,7 @@ var ToolLib = {
 			return dropFunc(coords, id, data, level, enchant);
 		}
 
-		if (id == 3 || id == 5 || id == 6 || id == 19 || id == 35 || id == 85 || id == 158 || id == 171) return [[id, 1, data]];
+		if (id == 3 || id == 5 || id == 6 || id == 12 || id == 19 || id == 35 || id == 85 || id == 158 || id == 171) return [[id, 1, data]];
 		if (id == 17 || id == 162) return [[id, 1, data]]; // log
 		if (id == 18 || id == 161) { // leaves
 			if (enchant.silk) return [[id, 1, data]];

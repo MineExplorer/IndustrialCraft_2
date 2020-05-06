@@ -25,23 +25,22 @@ BackpackRegistry.register(ItemID.toolbox, {
 	}
 });
 
-Callback.addCallback("ItemUse", function(coords, item, block){
-	if(block.id == 58){
-		for(let i = 9; i < 45; i++){
-			let slot = Player.getInventorySlot(i);
-			if(item.id == ItemID.toolbox){
-				let container = BackpackRegistry.containers["d" + slot.data];
-				if(container){
-					let isEmpty = true;
-					for(let i = 1; i <= 10; i++){
-						if(container.getSlot("slot"+i).id != 0){
-							isEmpty = false;
-						}
+Callback.addCallback("ContainerOpened", function(container, window){
+	if(!isLevelDisplayed) return;
+	for(let i = 0; i < 36; i++){
+		let slot = Player.getInventorySlot(i);
+		if(slot.id == ItemID.toolbox){
+			let container = BackpackRegistry.containers["d" + slot.data];
+			if(container){
+				let isEmpty = true;
+				for(let j = 1; j <= 10; j++){
+					if(container.getSlot("slot"+j).id != 0){
+						isEmpty = false;
 					}
-					if(isEmpty){
-						delete BackpackRegistry.containers["d" + slot.data];
-						Player.setInventorySlot(i, slot.id, 1, 0);
-					}
+				}
+				if(isEmpty){
+					delete BackpackRegistry.containers["d" + slot.data];
+					Player.setInventorySlot(i, slot.id, 1, 0);
 				}
 			}
 		}

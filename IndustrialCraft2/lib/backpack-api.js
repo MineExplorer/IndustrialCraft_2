@@ -21,7 +21,7 @@
  */
 LIBRARY({
     name: "BackpackAPI",
-    version: 5,
+    version: 6,
     shared: true,
     api: "CoreEngine",
 });
@@ -86,9 +86,7 @@ var BackpackRegistry = {
             obj.gui = new UI.StandartWindow({
                 standart: {
                     header: {
-                        text: {
-                            text: ""
-                        }
+                        text: {text: obj.title || "Backpack"}
                     },
                     inventory: {
                         standart: true
@@ -106,11 +104,11 @@ var BackpackRegistry = {
         }
 
         Item.registerUseFunctionForID(id, function (coords, item) {
-            BackpackRegistry.openGuiFor(item.id, item.data);
+            BackpackRegistry.openGuiFor(item);
         });
 
         Item.registerNoTargetUseFunction(id, function (item) {
-            BackpackRegistry.openGuiFor(item.id, item.data);
+            BackpackRegistry.openGuiFor(item);
         });
 
         this.prototypes[id] = obj;
@@ -170,31 +168,42 @@ var BackpackRegistry = {
 
     /**
      * Открытие интерфейса рюкзака
-     * @param id айди рюкзака
-     * @param data дата рюкзака
+     * @param item - стак рюкзака
      * @param notUpdateData если значение false и для переданной даты не создан контейнер, в руку игрока будет установлен
      * новый предмет
-     * @returns {*} дата. Может возвратить отличное от переданной значение
+     * @returns {*} ID контейнера рюкзака.
      */
-    openGuiFor: function (id, data, notUpdateData) {
-        let prototype = this.prototypes[id];
-
+    openGuiFor: function (item, notUpdateData) {
+        let prototype = this.prototypes[item.id];
+		let containerID = item.data;
+		let container;
+		
         if (prototype) {
-            let container = this.containers["d" + data];
-
-            if (!container) {
-                data = BackpackRegistry.nextUnique++;
-                container = this.containers["d" + data] = new UI.Container();
-
-                if (!notUpdateData)
-                    Player.setCarriedItem(id, 1, data);
+        	if (prototype.useExtraData) {
+				let extra = item.extra || new ItemExtraData();
+				containerID = extra.getInt("container");
+				container = this.containers["e" + containerID];
+				if (!container) {
+					containerID = this.nextUnique++;
+					extra.putInt("container", containerID);
+					container = this.containers["e" + containerID] = new UI.Container();
+					
+					if (!notUpdateData)
+						Player.setCarriedItem(item.id, 1, item.data, extra);
+				}
+			} else {
+	            container = this.containers["d" + containerID];
+				if (!container) {
+					containerID = this.nextUnique++;
+					container = this.containers["d" + containerID] = new UI.Container();
+					
+					if (!notUpdateData)
+						Player.setCarriedItem(item.id, 1, containerID);
+				}
             }
-
-            let gui = prototype.gui;
-            let header = gui.getWindow("header");
-            header.contentProvider.drawing[1].text = Translation.translate(prototype.title || "Backpack");
-            container.openAs(gui);
-            return data;
+			
+            container.openAs(prototype.gui);
+            return containerID;
         }
 
         Logger.Log("item is not a backpack", "ERROR");
@@ -240,5 +249,13 @@ var BackpackRegistry = {
         return gui;
     }
 };
+
+Callback.addCallback("LevelLoaded", function(){
+	for (let id in BackpackRegistry.prototypes) {
+		let prototype = BackpackRegistry.prototypes[id];
+		let header = prototype.gui.getWindow("header");
+		header.contentProvider.drawing[1].text = Translation.translate(prototype.title || "Backpack");
+	}
+});
 
 EXPORT("BackpackRegistry", BackpackRegistry);

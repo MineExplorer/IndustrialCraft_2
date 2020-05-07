@@ -20,16 +20,7 @@ var guiSolarPanel = new UI.StandartWindow({
 		inventory: {standart: true},
 		background: {standart: true}
 	},
-	
-	params: {
-		slot: "default_slot",
-		invSlot: "default_slot"
-	},
-	
-	drawing: [
-		{type: "background", color: Color.parseColor("#b3b3b3")},
-	],
-	
+
 	elements: {
 		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
 		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}

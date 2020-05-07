@@ -32,13 +32,7 @@ var newGuiMatronObject = {
 		background: {standart: true}
 	},
 
-	params: {
-		slot: "default_slot",
-		invSlot: "default_slot"
-	},
-
 	drawing: [
-		{type: "background", color: Color.parseColor("#b3b3b3")},
         {type: "bitmap", x: 870, y: 270, bitmap: "energy_small_background", scale: GUI_SCALE},
         {type: "bitmap", x: 511, y: 243, bitmap: "water_storage_background", scale: GUI_SCALE}
 	],

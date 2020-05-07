@@ -23,14 +23,8 @@ var guiFermenter = new UI.StandartWindow({
 		inventory: {standart: true},
 		background: {standart: true}
 	},
-	
-	params: {
-		slot: "default_slot",
-		invSlot: "default_slot"
-	},
-	
+
 	drawing: [
-		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 390, y: 80, bitmap: "fermenter_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 758, y: 95, bitmap: "liquid_bar", scale: GUI_SCALE}
 	],

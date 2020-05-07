@@ -22,7 +22,7 @@ Callback.addCallback("PreLoaded", function(){
 	]);
 });
 
-GUI_SCALE = 3; // lvl 80 costyl'
+
 var guiCanner = new UI.StandartWindow({
 	standart: {
 		header: {text: {text: Translation.translate("Fluid/Solid Canning Machine")}},
@@ -31,35 +31,35 @@ var guiCanner = new UI.StandartWindow({
 	},
 
 	drawing: [
-		{type: "bitmap", x: 406, y: 60 + 58*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 400 + 67*GUI_SCALE, y: 60 + 18*GUI_SCALE, bitmap: "extractor_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 496, y: 60 + 38*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE},
-		{type: "bitmap", x: 730, y: 60 + 38*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE}
+		{type: "bitmap", x: 406, y: 50 + 58*GUI_SCALE_NEW, bitmap: "energy_small_background", scale: GUI_SCALE_NEW},
+		{type: "bitmap", x: 400 + 67*GUI_SCALE_NEW, y: 50 + 18*GUI_SCALE_NEW, bitmap: "extractor_bar_background", scale: GUI_SCALE_NEW},
+		{type: "bitmap", x: 496, y: 50 + 38*GUI_SCALE_NEW, bitmap: "liquid_bar", scale: GUI_SCALE_NEW},
+		{type: "bitmap", x: 730, y: 50 + 38*GUI_SCALE_NEW, bitmap: "liquid_bar", scale: GUI_SCALE_NEW}
 	],
 
 	elements: {
-		"background": {type: "image", x: 400 + 51*GUI_SCALE, y: 60 + 12*GUI_SCALE, bitmap: "canner_background_0", scale: GUI_SCALE},
-		"liquidInputScale": {type: "scale", x: 496 + 4*GUI_SCALE, y: 60 + 42*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"liquidOutputScale": {type: "scale", x: 730 + 4*GUI_SCALE, y: 60 + 42*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"progressScale": {type: "scale", x: 400 + 67*GUI_SCALE, y: 60 + 18*GUI_SCALE, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
-		"energyScale": {type: "scale", x: 406, y: 60 + 58*GUI_SCALE, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotEnergy": {type: "slot", x: 400, y: 60 + 75*GUI_SCALE, size: 54, isValid: MachineRegistry.isValidEUStorage},
-		"slotSource": {type: "slot", x: 400 + 72*GUI_SCALE, y: 60 + 39*GUI_SCALE, size: 54, visual: false, bitmap: "canner_slot_source_0",
+		"background": {type: "image", x: 400 + 51*GUI_SCALE_NEW, y: 50 + 12*GUI_SCALE_NEW, bitmap: "canner_background_0", scale: GUI_SCALE_NEW},
+		"liquidInputScale": {type: "scale", x: 496 + 4*GUI_SCALE_NEW, y: 50 + 42*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE_NEW},
+		"liquidOutputScale": {type: "scale", x: 730 + 4*GUI_SCALE_NEW, y: 50 + 42*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE_NEW},
+		"progressScale": {type: "scale", x: 400 + 67*GUI_SCALE_NEW, y: 50 + 18*GUI_SCALE_NEW, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE_NEW},
+		"energyScale": {type: "scale", x: 406, y: 50 + 58*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE_NEW},
+		"slotEnergy": {type: "slot", x: 400, y: 50 + 75*GUI_SCALE_NEW, size: 54, isValid: MachineRegistry.isValidEUStorage},
+		"slotSource": {type: "slot", x: 400 + 72*GUI_SCALE_NEW, y: 50 + 39*GUI_SCALE_NEW, size: 54, visual: false, bitmap: "canner_slot_source_0",
 			isValid: function(id, count, data, container){
 				return isValidCannerSource(id, data, container.tileEntity);
 			}
 		},
-		"slotCan": {type: "slot", x: 400 + 33*GUI_SCALE, y: 60 + 12*GUI_SCALE, size: 54, 
+		"slotCan": {type: "slot", x: 400 + 33*GUI_SCALE_NEW, y: 50 + 12*GUI_SCALE_NEW, size: 54, 
 			isValid: function(id, count, data, container){
 				return isValidCannerCan(id, data, container.tileEntity);
 			}
 		},
-		"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE, y: 60 + 12*GUI_SCALE, size: 54, isValid: function(){return false;}},
-		"slotUpgrade1": {type: "slot", x: 850, y: 60 + 21*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade2": {type: "slot", x: 850, y: 60 + 39*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade3": {type: "slot", x: 850, y: 60 + 57*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade4": {type: "slot", x: 850, y: 60 + 75*GUI_SCALE, size: 54, isValid: UpgradeAPI.isValidUpgrade},
-		"buttonSwitch": {type: "button", x: 400 + 70*GUI_SCALE, y: 60 + 60*GUI_SCALE, bitmap: "canner_switch_button", scale: GUI_SCALE, clicker: {
+		"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE_NEW, y: 50 + 12*GUI_SCALE_NEW, size: 54, isValid: function(){return false;}},
+		"slotUpgrade1": {type: "slot", x: 850, y: 113, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade2": {type: "slot", x: 850, y: 167, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade3": {type: "slot", x: 850, y: 221, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade4": {type: "slot", x: 850, y: 275, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"buttonSwitch": {type: "button", x: 400 + 70*GUI_SCALE_NEW, y: 50 + 60*GUI_SCALE_NEW, bitmap: "canner_switch_button", scale: GUI_SCALE_NEW, clicker: {
 			onClick: function(container, tile){
 				if(tile.data.progress == 0){
 					var liquidData = tile.inputTank.data;
@@ -68,7 +68,7 @@ var guiCanner = new UI.StandartWindow({
 				}
 			}
 		}},
-		"buttonMode": {type: "button", x: 400 + 54*GUI_SCALE, y: 60 + 75*GUI_SCALE, bitmap: "canner_mode_0", scale: GUI_SCALE, clicker: {
+		"buttonMode": {type: "button", x: 400 + 54*GUI_SCALE_NEW, y: 50 + 75*GUI_SCALE_NEW, bitmap: "canner_mode_0", scale: GUI_SCALE_NEW, clicker: {
 			onClick: function(container, tile){
 				if(tile.data.progress == 0){
 					tile.data.mode = (tile.data.mode + 1) % 4;
@@ -78,7 +78,6 @@ var guiCanner = new UI.StandartWindow({
 		}}
 	}
 });
-GUI_SCALE = 3.2;
 
 function isValidCannerSource(id, data, tile){
 	if(tile.data.mode == 0 && MachineRecipeRegistry.hasRecipeFor("solidCanner", id)){

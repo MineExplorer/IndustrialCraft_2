@@ -26,13 +26,7 @@ var guiMiner = new UI.StandartWindow({
 		background: {standart: true},
 	},
 
-	params: {
-		slot: "default_slot",
-		invSlot: "default_slot"
-	},
-
 	drawing: [
-		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
 

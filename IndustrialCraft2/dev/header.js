@@ -23,15 +23,16 @@ IMPORT("LiquidLib");
 IMPORT("BackpackAPI");
 
 // constants
-var GUI_SCALE = 3.2;
+const GUI_SCALE = 3.2;
+const GUI_SCALE_NEW = 3;
 const fallVelocity = -0.0784;
 
 // import functions
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var Color = android.graphics.Color;
 
-// temporary fix
-if(!Block.convertItemToBlockId) Block.convertItemToBlockId = Block.covertItemToBlockId;
+// old Inner Core versions compatibility
+if(!World.addGenerationCallback) World.addGenerationCallback = Callback.addCallback;
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);

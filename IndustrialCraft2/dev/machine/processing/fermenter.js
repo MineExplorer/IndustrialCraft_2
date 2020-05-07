@@ -23,14 +23,8 @@ var guiFermenter = new UI.StandartWindow({
 		inventory: {standart: true},
 		background: {standart: true}
 	},
-	
-	params: {
-		slot: "default_slot",
-		invSlot: "default_slot"
-	},
-	
+
 	drawing: [
-		{type: "background", color: Color.parseColor("#b3b3b3")},
 		{type: "bitmap", x: 390, y: 80, bitmap: "fermenter_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 758, y: 95, bitmap: "liquid_bar", scale: GUI_SCALE}
 	],
@@ -44,7 +38,7 @@ var guiFermenter = new UI.StandartWindow({
             return LiquidLib.getItemLiquid(id, data) == "biomass";
         }},
 		"slotBiomass1": {type: "slot", x: 400, y: 222, isValid: function(){return false;}},
-		"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "black_border_slot", isValid: function(){return false;}},
+		"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "slot_black", isValid: function(){return false;}},
 		"slotBiogas0": {type: "slot", x: 832, y: 155, isValid: function(id, count, data){
             return LiquidLib.getFullItem(id, data, "biogas") ? true : false;
         }},

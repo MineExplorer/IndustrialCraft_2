@@ -81,7 +81,7 @@ if(chance){
 	RUBBER_TREE_BIOME_DATA[SwampBiomeIDs[id]] = chance;}
 }
 
-Callback.addCallback("GenerateChunk", function(chunkX, chunkZ, random){
+World.addGenerationCallback("GenerateChunk", function(chunkX, chunkZ, random){
 	var biome = World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16);
 	if(random.nextInt(100) < RUBBER_TREE_BIOME_DATA[biome]){
 		var treeCount = 1 + random.nextInt(6);
@@ -92,4 +92,4 @@ Callback.addCallback("GenerateChunk", function(chunkX, chunkZ, random){
 			}
 		}
 	}
-});
+}, "rubber_tree");

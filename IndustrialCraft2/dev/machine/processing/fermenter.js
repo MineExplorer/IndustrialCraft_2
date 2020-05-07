@@ -44,7 +44,7 @@ var guiFermenter = new UI.StandartWindow({
             return LiquidLib.getItemLiquid(id, data) == "biomass";
         }},
 		"slotBiomass1": {type: "slot", x: 400, y: 222, isValid: function(){return false;}},
-		"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "black_border_slot", isValid: function(){return false;}},
+		"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "slot_black", isValid: function(){return false;}},
 		"slotBiogas0": {type: "slot", x: 832, y: 155, isValid: function(id, count, data){
             return LiquidLib.getFullItem(id, data, "biogas") ? true : false;
         }},

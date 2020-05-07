@@ -138,12 +138,14 @@ Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ, random
 			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreTin, 0, OreGenerator.tin.size, false, random.nextInt());
 		}
 	}
+	
 	if(OreGenerator.lead.enabled){
 		for(var i = 0; i < OreGenerator.lead.count; i++){
 			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.lead.minHeight, OreGenerator.lead.maxHeight);
 			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreLead, 0, OreGenerator.lead.size, false, random.nextInt());
 		}
 	}
+
 	if(OreGenerator.uranium.enabled){
 		for(var i = 0; i < OreGenerator.uranium.count; i++){
 			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.uranium.minHeight, OreGenerator.uranium.maxHeight);

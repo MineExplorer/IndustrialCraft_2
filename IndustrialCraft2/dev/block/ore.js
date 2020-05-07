@@ -128,26 +128,26 @@ Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ, random
 	if(OreGenerator.copper.enabled){
 		for(var i = 0; i < OreGenerator.copper.count; i++){
 			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.copper.minHeight, OreGenerator.copper.maxHeight);
-			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreCopper, 0, OreGenerator.copper.size, random.nextInt());
+			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreCopper, 0, OreGenerator.copper.size, false, random.nextInt());
 		}
 	}
 
 	if(OreGenerator.tin.enabled){
 		for(var i = 0; i < OreGenerator.tin.count; i++){
 			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.tin.minHeight, OreGenerator.tin.maxHeight);
-			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreTin, 0, OreGenerator.tin.size, random.nextInt());
+			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreTin, 0, OreGenerator.tin.size, false, random.nextInt());
 		}
 	}
 	if(OreGenerator.lead.enabled){
 		for(var i = 0; i < OreGenerator.lead.count; i++){
 			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.lead.minHeight, OreGenerator.lead.maxHeight);
-			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreLead, 0, OreGenerator.lead.size, random.nextInt());
+			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreLead, 0, OreGenerator.lead.size, false, random.nextInt());
 		}
 	}
 	if(OreGenerator.uranium.enabled){
 		for(var i = 0; i < OreGenerator.uranium.count; i++){
 			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.uranium.minHeight, OreGenerator.uranium.maxHeight);
-			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreUranium, 0, OreGenerator.uranium.size, random.nextInt());
+			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreUranium, 0, OreGenerator.uranium.size, false, random.nextInt());
 		}
 	}
 	

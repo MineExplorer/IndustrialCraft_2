@@ -1,7 +1,7 @@
 # IndustrialCraft2 PE
-Port of IC2 for PC to Minecraft on Android for Inner Core modloader
+Port of IC2 Experimental for PC to Minecraft on Android for Inner Core modloader
 
-## Hot to play?
+## How to play?
 1. Install Horizon app in Play Market: https://play.google.com/store/apps/details?id=com.zheka.horizon
 2. Open app and install Inner Core
 3. Install mod in Mod manager or download it from github and extract mod folder to games/Horizon/packs/Inner_Core/innercore/mods/

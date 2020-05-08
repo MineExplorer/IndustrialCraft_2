@@ -24,26 +24,3 @@ BackpackRegistry.register(ItemID.toolbox, {
 		return false;
 	}
 });
-
-Callback.addCallback("ContainerOpened", function(container, window){
-	if(!isLevelDisplayed) return;
-	for(let i = 0; i < 36; i++){
-		let slot = Player.getInventorySlot(i);
-		if(slot.id == ItemID.toolbox){
-			let container = BackpackRegistry.containers["d" + slot.data];
-			if(container){
-				let isEmpty = true;
-				for(let j = 1; j <= 10; j++){
-					if(container.getSlot("slot"+j).id != 0){
-						isEmpty = false;
-					}
-				}
-				if(isEmpty){
-					delete BackpackRegistry.containers["d" + slot.data];
-					Player.setInventorySlot(i, slot.id, 1, 0);
-				}
-			}
-		}
-	}
-});
-

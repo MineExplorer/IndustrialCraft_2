@@ -11,11 +11,32 @@ ItemName.addTierTooltip("metalFormer", 1);
 MachineRegistry.setMachineDrop("metalFormer", BlockID.machineBlockBasic);
 
 Callback.addCallback("PreLoaded", function(){
+	function isToolboxEmpty(slot){
+		let container = BackpackRegistry.containers["d" + slot.data];
+		if(container){
+			for(let i = 1; i <= 10; i++){
+				if(container.getSlot("slot"+i).id != 0){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 	Recipes.addShaped({id: BlockID.metalFormer, count: 1, data: 0}, [
 		" x ",
 		"b#b",
 		"ccc"
-	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'b', ItemID.toolbox, 0, 'c', ItemID.coil, 0]);
+	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'b', ItemID.toolbox, -1, 'c', ItemID.coil, 0],
+	function(api, field, result){
+		if(isToolboxEmpty(field[3]) && isToolboxEmpty(field[5])){
+			for (var i in field){
+				api.decreaseFieldSlot(i);
+			}
+		}
+		else {
+			result.id = result.count = 0;
+		}
+	});
 	
 	// rolling
 	MachineRecipeRegistry.registerRecipesFor("metalFormer0", {

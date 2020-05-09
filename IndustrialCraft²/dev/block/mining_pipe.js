@@ -13,5 +13,5 @@ Callback.addCallback("PreLoaded", function(){
 		"p p",
 		"p p",
 		"pxp",
-	], ['x', 54, 0, 'p', ItemID.plateIron, 0]);
+	], ['x', ItemID.treetap, 0, 'p', ItemID.plateIron, 0]);
 });

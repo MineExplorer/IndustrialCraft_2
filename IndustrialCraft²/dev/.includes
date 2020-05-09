@@ -17,7 +17,7 @@ core/integration.js
 block/rubber_tree/sapling.js
 block/rubber_tree/log.js
 block/rubber_tree/leaves.js
-block/rubber_tree/generator.js
+block/rubber_tree/generation.js
 block/ore.js
 block/metal.js
 block/basic.js

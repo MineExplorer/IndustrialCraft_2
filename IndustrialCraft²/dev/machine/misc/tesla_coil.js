@@ -55,5 +55,7 @@ MachineRegistry.registerElectricMachine(BlockID.teslaCoil, {
 
 	getEnergyStorage: function(){
 		return 10000;
-	}
+	},
+	
+	energyReceive: MachineRegistry.basicEnergyReceiveFunc
 });

@@ -397,7 +397,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 			var blockId = World.getBlockID(coords.x, coords.y, coords.z)
 
 			if(!sideTileEntity || !sideTileEntity.crop || blockId != BlockID.crop) continue;
-			if(sideTileEntity.data.currentSize <= 3) continue;
+			if(sideTileEntity.crop.canGrow(sideTileEntity) || !sideTileEntity.crop.canCross(sideTileEntity)) continue;
 
 			var base = 4;
 			if (sideTileEntity.data.statGrowth >= 16) base++;

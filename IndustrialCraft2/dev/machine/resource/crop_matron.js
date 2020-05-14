@@ -147,8 +147,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
             }
             if(weedExSlot && tileentity.applyWeedEx(weedExSlot.id, false)){
                 this.data.energy -= 10;
-                weedExSlot.data++;
-                if(weedExSlot.data >= 10) weedExSlot.id = 0;
+                if(++weedExSlot.data >= Item.getMaxDamage(weedExSlot.id)) weedExSlot.id = 0;
             }
             this.container.validateAll();
         }

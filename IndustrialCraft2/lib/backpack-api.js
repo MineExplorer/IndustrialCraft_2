@@ -86,7 +86,7 @@ var BackpackRegistry = {
             obj.gui = new UI.StandartWindow({
                 standart: {
                     header: {
-                        text: {text: obj.title || "Backpack"}
+                        text: {text: Translation.translate(obj.title || "Backpack")}
                     },
                     inventory: {
                         standart: true
@@ -254,7 +254,7 @@ Callback.addCallback("LevelLoaded", function(){
 	for (let id in BackpackRegistry.prototypes) {
 		let prototype = BackpackRegistry.prototypes[id];
 		let header = prototype.gui.getWindow("header");
-		header.contentProvider.drawing[1].text = Translation.translate(prototype.title || "Backpack");
+		header.contentProvider.drawing[2].text = Translation.translate(prototype.title || "Backpack");
 	}
 });
 

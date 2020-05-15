@@ -218,56 +218,5 @@ var ToolLib = {
 ToolAPI.setTool = ToolLib.setTool;
 ToolAPI.breakCarriedTool = ToolLib.breakCarriedTool;
 
-// ToolAPI fix
-ToolAPI.fortuneDropModifier = function(drop, level) {
-	var len = drop.length;
-	for (var i = 0; i < len; i++) {
-		var extraCount = parseInt(Math.random() * (level + 2)) - 1;
-		for (var j = 0; j < extraCount; j++) {
-			drop.push(drop[i]);
-		}
-	}
-	return drop;
-}
-
-Block.getBlockDropViaItem = function(block, item, coords) {
-    var enchantData = ToolAPI.getEnchantExtraData(item.extra);
-    var toolData = ToolAPI.getToolData(item.id);
-    this.__func = this.getDropFunction(block.id);
-    if (toolData && toolData.modifyEnchant) {
-        toolData.modifyEnchant(enchantData, item, coords, block);
-    }
-    return this.__func(coords, block.id, block.data, ToolAPI.getToolLevelViaBlock(item.id, block.id), enchantData);
-}
-
-ToolAPI.getEnchantExtraData = function(extra) {
-	var enchant = {
-		silk: false,
-		fortune: 0,
-		efficiency: 0,
-		unbreaking: 0,
-		experience: 0
-    }
-
-	if(extra){
-		var enchants = extra.getEnchants();
-		for(var i in enchants){
-			if(i == 15){
-				enchant.efficiency = enchants[i];
-			}
-			if(i == 16){
-				enchant.silk = true;
-			}
-			if(i == 17){
-				enchant.unbreaking = enchants[i];
-			}
-			if(i == 18){
-				enchant.fortune = enchants[i];
-			}
-		}
-	}
-	return enchant;
-}
-
 EXPORT("ToolLib", ToolLib);
 EXPORT("ToolType", ToolType);

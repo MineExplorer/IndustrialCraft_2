@@ -390,6 +390,7 @@ AgricultureAPI.registerCropCard({
 
 AgricultureAPI.registerCropCard({
     id: "nether_wart",
+    texture: "ic2_nether_wart",
     attributes: [ "Red", "Nether", "Ingredient", "Soulsand"],
     properties: {
         tier: 5,

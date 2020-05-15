@@ -261,6 +261,18 @@ var AgriculturalAnalyser = {
     }
 };
 
+Callback.addCallback("LevelLoaded", function() {
+	var content = guiAgriculturalAnalyzer.getContent();
+	content.elements.textName.text = Translation.translate("Crop Analyzer");
+});
+
+Callback.addCallback("MinecraftActivityStopped", function() {
+	if(AgriculturalAnalyser.container && AgriculturalAnalyser.container.isOpened()){
+		AgriculturalAnalyser.container.close();
+		AgriculturalAnalyser.container = null;
+	}
+});
+
 Item.registerUseFunction("agriculturalAnalyzer", AgriculturalAnalyser.useFunction);
 Item.registerNoTargetUseFunction("agriculturalAnalyzer", AgriculturalAnalyser.noTargetUseFunction);
 Callback.addCallback("tick", AgriculturalAnalyser.tick);

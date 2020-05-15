@@ -20,22 +20,22 @@ Callback.addCallback("LevelLoaded", function(){
 		
 		drawing: [
 			{type: "background", color: 0},
-			{type: "bitmap", x: 218, y: 50, bitmap: "eu_meter_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 218, y: 30, bitmap: "eu_meter_background", scale: GUI_SCALE},
 		],
 		
 		elements: {
-			"arrow": {type: "image", x: 576, y: 226, bitmap: "eu_meter_arrow_0", scale: GUI_SCALE},
-			"textName": {type: "text", font: {size: 36}, x: 378, y: 66, width: 256, height: 42, text: Translation.translate("EU Meter")},
-			"textAvg": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 184, width: 256, height: 42, text: Translation.translate("Avg:")},
-			"textAvgValue": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 214, width: 256, height: 42, text: "0 EU/t"},
-			"textMaxMin": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 260, width: 256, height: 42, text: Translation.translate("Max/Min")},
-			"textMax": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 290, width: 256, height: 42, text: "0 EU/t"},
-			"textMin": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 320, width: 256, height: 42, text: "0 EU/t"},
-			"textMode1": {type: "text", font: {size: 22, color: Color.GREEN}, x: 554, y: 184, width: 100, height: 42, text: Translation.translate("Mode:")},
-			"textMode2": {type: "text", font: {size: 22, color: Color.GREEN}, x: 554, y: 368, width: 256, height: 42, text: Translation.translate("EnergyIn")},
-			"textTime": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 368, width: 256, height: 42, text: "Cycle: 0 sec"},
-			"textReset": {type: "text", font: {size: 22, color: Color.GREEN}, x: 330, y: 412, width: 256, height: 42, text: Translation.translate("Reset")},
-			"closeButton": {type: "button", x: 727, y: 60, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {
+			"arrow": {type: "image", x: 576, y: 206, bitmap: "eu_meter_arrow_0", scale: GUI_SCALE},
+			"textName": {type: "text", font: {size: 36}, x: 378, y: 46, width: 256, height: 42, text: Translation.translate("EU Meter")},
+			"textAvg": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 164, width: 256, height: 42, text: Translation.translate("Avg:")},
+			"textAvgValue": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 194, width: 256, height: 42, text: "0 EU/t"},
+			"textMaxMin": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 240, width: 256, height: 42, text: Translation.translate("Max/Min")},
+			"textMax": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 270, width: 256, height: 42, text: "0 EU/t"},
+			"textMin": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 300, width: 256, height: 42, text: "0 EU/t"},
+			"textMode1": {type: "text", font: {size: 22, color: Color.GREEN}, x: 554, y: 164, width: 100, height: 42, text: Translation.translate("Mode:")},
+			"textMode2": {type: "text", font: {size: 22, color: Color.GREEN}, x: 554, y: 348, width: 256, height: 42, text: Translation.translate("EnergyIn")},
+			"textTime": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 348, width: 256, height: 42, text: "Cycle: 0 sec"},
+			"textReset": {type: "text", font: {size: 22, color: Color.GREEN}, x: 330, y: 392, width: 256, height: 42, text: Translation.translate("Reset")},
+			"closeButton": {type: "button", x: 727, y: 40, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					container.close();
 					EUReader.container = null;
@@ -43,12 +43,12 @@ Callback.addCallback("LevelLoaded", function(){
 					EUReader.tile = null;
 				}
 			}},
-			"resetButton": {type: "button", x: 298, y: 405, bitmap: "eu_meter_reset_button", scale: GUI_SCALE, clicker: {
+			"resetButton": {type: "button", x: 298, y: 385, bitmap: "eu_meter_reset_button", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					EUReader.resetValues();
 				}
 			}},
-			"arrowButton0": {type: "button", x: 576, y: 226, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
+			"arrowButton0": {type: "button", x: 576, y: 206, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					EUReader.mode = 0;
 					EUReader.resetValues();
@@ -57,7 +57,7 @@ Callback.addCallback("LevelLoaded", function(){
 					elements.textMode2.text = Translation.translate("EnergyIn");
 				}
 			}},
-			"arrowButton1": {type: "button", x: 640, y: 226, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
+			"arrowButton1": {type: "button", x: 640, y: 206, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					EUReader.mode = 1;
 					EUReader.resetValues();
@@ -66,7 +66,7 @@ Callback.addCallback("LevelLoaded", function(){
 					elements.textMode2.text = Translation.translate("EnergyOut");
 				}
 			}},
-			"arrowButton2": {type: "button", x: 576, y: 290, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
+			"arrowButton2": {type: "button", x: 576, y: 270, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					EUReader.mode = 2;
 					EUReader.resetValues();
@@ -75,7 +75,7 @@ Callback.addCallback("LevelLoaded", function(){
 					elements.textMode2.text = Translation.translate("EnergyGain");
 				}
 			}},
-			"arrowButton3": {type: "button", x: 640, y: 290, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
+			"arrowButton3": {type: "button", x: 640, y: 270, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(container){
 					EUReader.mode = 3;
 					EUReader.resetValues();

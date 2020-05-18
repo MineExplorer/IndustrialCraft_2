@@ -197,7 +197,8 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	energyTick: function(type, src){
-		src.add(this.getEnergyOutput());
+		var output = this.getEnergyOutput();
+		src.add(output, Math.min(output, 8192));
 	},
 	
 	redstone: function(signal){

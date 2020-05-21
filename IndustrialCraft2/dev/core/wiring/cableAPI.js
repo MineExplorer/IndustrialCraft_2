@@ -126,7 +126,7 @@ let CableRegistry = {
 			var px = x + Math.random();
 			var pz = z + Math.random();
 			var py = y + Math.random();
-			Particles.addFarParticle(ParticleType.smoke, px, py, pz, 0, 0.01, 0);
+			Particles.addParticle(ParticleType.smoke, px, py, pz, 0, 0.01, 0);
 		}
 	},
 

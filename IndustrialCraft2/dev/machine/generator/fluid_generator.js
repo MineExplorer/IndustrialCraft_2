@@ -9,7 +9,7 @@ TileRenderer.registerRotationModel(BlockID.semifluidGenerator, 4, [["machine_bot
 MachineRegistry.setMachineDrop("semifluidGenerator", BlockID.primalGenerator);
 
 Callback.addCallback("PreLoaded", function(){
-	Recipes.addShaped({id: BlockID.fluidHeatGenerator, count: 1, data: 0}, [
+	Recipes.addShaped({id: BlockID.semifluidGenerator, count: 1, data: 0}, [
 		"pcp",
 		"cxc",
 		"pcp"

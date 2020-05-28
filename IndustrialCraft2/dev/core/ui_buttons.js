@@ -195,7 +195,7 @@ function updateUIbuttons(){
 	}
 }
 
-let jetpackLoop = SoundAPI.addSoundPlayer("Tools/JetpackLoop.ogg", true, 1);
+
 Callback.addCallback("LocalTick", function(){
 	var armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
 	for(var i in armor){
@@ -223,9 +223,9 @@ Callback.addCallback("LocalTick", function(){
 			UIbuttons.container = new UI.Container();
 			UIbuttons.container.openAs(UIbuttons.Window);
 		}
-		var playSound = false;
 		var armor = armor[1];
-		var hover = armor.extra? armor.extra.getBoolean("hover") : false;
+		var hoverMode = armor.extra? armor.extra.getBoolean("hover") : false;
+		var playSound = hoverMode;
 		var energyStored = ChargeItemRegistry.getEnergyStored(armor);
 		if(energyStored >= 8 && UIbuttons.container.isElementTouched("button_fly")){
 			var vel = Player.getVelocity();
@@ -236,7 +236,7 @@ Callback.addCallback("LocalTick", function(){
 			var y = Player.getPosition().y;
 			if(y < 256){
 				var vy = Math.min(32, 265 - y) / 160; // max 0.2
-				if(hover){
+				if(hoverMode){
 					ChargeItemRegistry.setEnergyStored(armor, energyStored - 2);
 					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
 					if(vel.y < 0.2){
@@ -252,19 +252,16 @@ Callback.addCallback("LocalTick", function(){
 				}
 			}
 			playSound = true;
-		} else if(hover){
-			playSound = true;
 		}
-		if(playSound && SoundAPI.isSoundEnabled() && !jetpackLoop.isPlaying()){
-			if(hover){
-				jetpackLoop.setVolume(0.8);
+		if(playSound && Config.soundEnabled && !ICAudioManager.isPlaying("JetpackLoop.ogg")){
+			if(hoverMode){
+				ICAudioManager.createSource(Player.get(), "JetpackLoop.ogg", true, 0.8);
 			} else {
-				jetpackLoop.setVolume(1);
+				ICAudioManager.createSource(Player.get(), "JetpackLoop.ogg", true, 1);
 			}
-			jetpackLoop.start();
 		}
-		if(!playSound && jetpackLoop.isPlaying()){
-			jetpackLoop.stop();
+		if(!playSound && ICAudioManager.isPlaying("JetpackLoop.ogg")){
+			ICAudioManager.removeSourceAt(Player.get(), "JetpackLoop.ogg");
 		}
 	}
 	else if(UIbuttons.container){

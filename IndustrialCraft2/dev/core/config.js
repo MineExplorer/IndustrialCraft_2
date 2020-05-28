@@ -1,13 +1,12 @@
 let Config = {
+	debugMode: __config__.getBool("debug_mode"),
+	soundEnabled: __config__.getBool("sound_enabled"),
+	machineSoundEnabled: __config__.getBool("machine_sounds"),
+	voltageEnabled: __config__.getBool("voltage_enabled"),
+	wireDamageEnabled: __config__.getBool("wire_damage_enabled"),
 	reload: function(){
-		this.debugMode = __config__.getBool("debug_mode");
-		this.soundEnabled = __config__.getBool("sound_enabled");
-		this.machineSoundEnabled = __config__.getBool("machine_sounds");
-		this.voltageEnabled = __config__.getBool("voltage_enabled");
-		this.wireDamageEnabled = __config__.getBool("wire_damage_enabled");
-		
 		var lang = FileTools.ReadKeyValueFile("games/com.mojang/minecraftpe/options.txt").game_language;
-		this.language = (lang || "en_US").substring(0, 2);
+		this.gameLanguage = (lang || "en_US").substring(0, 2);
 	}
 }
 
@@ -26,3 +25,20 @@ Callback.addCallback("LevelDisplayed", function(){
 Callback.addCallback("LevelLeft", function(){
 	isLevelDisplayed = false;
 });
+
+// debug
+var lasttime = -1
+var frame = 0
+
+if(Config.debugMode){
+	Callback.addCallback("tick", function(){
+		var t = Debug.sysTime();
+		if(frame++ % 20 == 0){
+			if(lasttime != -1){
+				tps = 1000 / (t - lasttime) * 20
+				Game.tipMessage(Math.round(tps * 10) / 10 + "tps")
+			}
+			lasttime = t
+		}
+	});
+}

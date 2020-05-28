@@ -105,7 +105,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 			this.data.progress = 0;
 		}
 		if(!newActive)
-			this.stopPlaySound(true);
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var energyStorage = this.getEnergyStorage();
@@ -120,14 +120,14 @@ MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 		return this.data.energy_storage;
 	},
 	
-	getStartingSoundFile: function(){
-		return "Machines/Electro Furnace/ElectroFurnaceStart.ogg";
+	getStartingSound: function(){
+		return "ElectroFurnaceStart.ogg";
     },
-	getStartSoundFile: function(){
-		return "Machines/Electro Furnace/ElectroFurnaceLoop.ogg";
+	getOperationSound: function(){
+		return "lectroFurnaceLoop.ogg";
     },
-	getInterruptSoundFile: function(){
-		return "Machines/Electro Furnace/ElectroFurnaceStop.ogg";
+	getInterruptSound: function(){
+		return "ElectroFurnaceStop.ogg";
     },
 	
 	renderModel: MachineRegistry.renderModelWithRotation

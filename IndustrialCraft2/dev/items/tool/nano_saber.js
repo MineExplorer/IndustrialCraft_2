@@ -50,7 +50,7 @@ let NanoSaber = {
 	noTargetUse: function(item){
 		if(ChargeItemRegistry.getEnergyStored(item) >= 64){
 			Player.setCarriedItem(ItemID.nanoSaberActive, 1, item.data, item.extra);
-			this.startSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberPowerup.ogg");
+			//this.startSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberPowerup.ogg");
 			this.activationTime = World.getThreadTime();
 		}
 	},
@@ -62,16 +62,16 @@ let NanoSaber = {
 			ChargeItemRegistry.setEnergyStored(Math.max(energyStored - discharge*64, 0));
 			this.activationTime = 0;
 		}
-		if(this.idleSound){
+		/*if(this.idleSound){
 			this.idleSound.stop();
 			this.idleSound = null;
-		}
+		}*/
 		Player.setCarriedItem(ItemID.nanoSaber, 1, item.data, item.extra);
 	},
 	
 	tick: function(){
 		let item = Player.getCarriedItem();
-		if(SoundAPI.isSoundEnabled()){
+		/*if(Config.soundEnabled){
 			if(item.id == ItemID.nanoSaberActive){
 				if(!this.idleSound && (!this.startSound || !this.startSound.isPlaying())){
 					this.idleSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberIdle.ogg", true, true);
@@ -82,7 +82,7 @@ let NanoSaber = {
 				this.idleSound.stop();
 				this.idleSound = null;
 			}
-		}
+		}*/
 		
 		if(World.getThreadTime() % 20 == 0){
 			for(let i = 0; i < 36; i++){

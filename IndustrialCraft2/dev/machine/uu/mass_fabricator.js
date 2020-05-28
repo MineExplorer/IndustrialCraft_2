@@ -93,7 +93,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 				this.data.energy -= transfer;
 				this.data.catalyser -= transfer;
 				if(World.getThreadTime()%40 == 0 && transfer > 0){
-					SoundAPI.playSoundAt(this, "Generators/MassFabricator/MassFabScrapSolo.ogg", false, 16);
+					ICAudioManager.playSoundAtTileEntity(this, "MassFabScrapSolo.ogg", 1);
 				}
 			}
 			else{
@@ -131,7 +131,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		if(this.data.isEnabled){
 			if(Config.voltageEnabled && voltage > this.getMaxPacketSize()){
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 15, true);
-				SoundAPI.playSoundAt(this, "Machines/MachineOverload.ogg", false, 32);
+				ICAudioManager.playSoundAtTileEntity(this, "MachineOverload.ogg", 1, 32);
 				this.selfDestroy();
 				return 1;
 			}

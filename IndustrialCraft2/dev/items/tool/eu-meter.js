@@ -13,7 +13,7 @@ var guiEUReader = new UI.Window({
 		x: 0,
 		y: 0,
 		width: 1000,
-		height: 1000
+		height: 750
 	},
 	
 	drawing: [

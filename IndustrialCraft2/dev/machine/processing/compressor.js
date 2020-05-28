@@ -154,7 +154,7 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 			this.data.progress = 0;
 		}
 		if(!newActive)
-			this.stopPlaySound(true);
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var energyStorage = this.getEnergyStorage();
@@ -169,11 +169,11 @@ MachineRegistry.registerElectricMachine(BlockID.compressor, {
 		return this.data.energy_storage;
 	},
 	
-	getStartSoundFile: function(){
-		return "Machines/CompressorOp.ogg";
+	getOperationSound: function(){
+		return "CompressorOp.ogg";
     },
-	getInterruptSoundFile: function(){
-		return "Machines/InterruptOne.ogg";
+	getInterruptSound: function(){
+		return "InterruptOne.ogg";
     },
 	
 	renderModel: MachineRegistry.renderModelWithRotation

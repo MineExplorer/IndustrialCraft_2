@@ -151,6 +151,10 @@ var MachineRegistry = {
 		
 		Prototype.energyReceive = Prototype.energyReceive || this.basicEnergyReceiveFunc;
 		
+		Prototype.getExplosionPower = Prototype.getExplosionPower || function(){
+			return 1.2;
+		}
+
 		this.registerPrototype(id, Prototype);
 		// register for energy net
 		EnergyTileRegistry.addEnergyTypeForId(id, EU);
@@ -291,7 +295,7 @@ var MachineRegistry = {
 		if(voltage > maxVoltage){
 			if(Config.voltageEnabled){
 				World.setBlock(this.x, this.y, this.z, 0);
-				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 1.2, true);
+				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.getExplosionPower(), true);
 				ICAudioManager.playSoundAtBlock(this, "MachineOverload.ogg", 1, 32);
 				this.selfDestroy();
 				return 1;

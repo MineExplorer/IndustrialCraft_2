@@ -292,7 +292,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 			}
 		}
 		if(newActive){
-			this.startPlaySound("Machines/MinerOp.ogg");
+			this.startPlaySound();
 		} else {
 			this.stopPlaySound();
 		}
@@ -303,6 +303,10 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 2);
 		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 2);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
+	},
+
+	getOperationSound: function() {
+		return "MinerOp.ogg";
 	},
 
 	getEnergyStorage: function(){

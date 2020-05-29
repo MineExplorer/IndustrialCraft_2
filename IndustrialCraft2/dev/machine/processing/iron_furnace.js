@@ -58,6 +58,32 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 	getGuiScreen: function(){
 		return guiIronFurnace;
 	},
+
+	getFuelRatio: function() {
+		if (this.data.burn <= 0) {
+			return 0;
+		}
+		return this.data.burn / this.data.burnMax;
+	},
+
+	consumeFuel: function(slotName){
+		var fuelSlot = this.container.getSlot(slotName);
+		if(fuelSlot.id > 0){
+			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
+			if(burn){
+				if(LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)){
+					var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
+					fuelSlot.id = empty.id;
+					fuelSlot.data = empty.data;
+					return burn;
+				}
+				fuelSlot.count--;
+				this.container.validateSlot(slotName);
+				return burn;
+			}
+		}
+		return 0;
+	},
 	
 	tick: function(){
 		StorageInterface.checkHoppers(this);
@@ -66,7 +92,7 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		var result = Recipes.getFurnaceRecipeResult(sourceSlot.id, "iron");
 		
 		if(this.data.burn == 0 && result){
-			this.data.burn = this.data.burnMax = this.getFuel("slotFuel");
+			this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel");
 		}
 		
 		if(this.data.burn > 0 && result){
@@ -87,33 +113,18 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		if(this.data.burn > 0){
 			this.data.burn--;
 			this.activate();
-			this.startPlaySound("Machines/IronFurnaceOp.ogg");
+			this.startPlaySound();
 		} else {
 			this.stopPlaySound();
 			this.deactivate();
 		}
 		
-		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
+		this.container.setScale("burningScale", this.getFuelRatio());
 		this.container.setScale("progressScale", this.data.progress / 160);
 	},
 	
-	getFuel: function(slotName){
-		var fuelSlot = this.container.getSlot(slotName);
-		if(fuelSlot.id > 0){
-			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
-			if(burn){
-				if(LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)){
-					var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
-					fuelSlot.id = empty.id;
-					fuelSlot.data = empty.data;
-					return burn;
-				}
-				fuelSlot.count--;
-				this.container.validateSlot(slotName);
-				return burn;
-			}
-		}
-		return 0;
+	getOperationSound: function() {
+		return "IronFurnaceOp.ogg";
 	},
 	
 	renderModel: MachineRegistry.renderModelWithRotation,

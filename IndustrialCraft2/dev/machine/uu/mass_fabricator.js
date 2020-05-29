@@ -122,27 +122,19 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		this.data.isEnabled = (signal.power == 0);
 	},
 	
+	getOperationSound: function() {
+		return "MinerOp.ogg";
+	},
+
 	getEnergyStorage: function(){
 		return ENERGY_PER_MATTER - this.data.progress;
 	},
 	
-	renderModel: MachineRegistry.renderModelWithRotation,
-	energyReceive: function(type, amount, voltage) {
-		if(this.data.isEnabled){
-			if(Config.voltageEnabled && voltage > this.getMaxPacketSize()){
-				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 15, true);
-				ICAudioManager.playSoundAtBlock(this, "MachineOverload.ogg", 1, 32);
-				this.selfDestroy();
-				return 1;
-			}
-			var add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
-			this.data.energy += add;
-			this.data.energy_receive += add;
-			this.data.voltage = Math.max(this.data.voltage, voltage);
-			return add;
-		}
-		return 0;
-	}
+	getExplosionPower: function(){
+		return 15;
+	},
+
+	renderModel: MachineRegistry.renderModelWithRotation
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.massFabricator);

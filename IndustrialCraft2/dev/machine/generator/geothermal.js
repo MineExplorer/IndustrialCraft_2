@@ -82,7 +82,7 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 			this.data.energy += 20;
 			this.liquidStorage.getLiquid("lava", 0.001);
 			this.activate();
-			this.startPlaySound("Generators/GeothermalLoop.ogg");
+			this.startPlaySound();
 		}
 		else {
 			this.stopPlaySound();
@@ -93,6 +93,10 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 		
 		this.liquidStorage.updateUiScale("liquidScale", "lava");
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
+	},
+
+	getOperationSound: function() {
+		return "GeothermalLoop.ogg";
 	},
 	
 	getEnergyStorage: function(){

@@ -75,7 +75,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		
 		if(this.data.isEnabled && this.data.energy > 0){
 			this.activate();
-			this.startPlaySound("Generators/MassFabricator/MassFabLoop.ogg");
+			this.startPlaySound();
 			if(this.data.catalyser < Math.max(1000, this.data.energy)){
 				var catalyserSlot = this.container.getSlot("catalyserSlot");
 				var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
@@ -123,7 +123,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 	},
 	
 	getOperationSound: function() {
-		return "MinerOp.ogg";
+		return "MassFabLoop.ogg";
 	},
 
 	getEnergyStorage: function(){

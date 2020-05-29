@@ -124,7 +124,7 @@ MachineRegistry.registerElectricMachine(BlockID.electricFurnace, {
 		return "ElectroFurnaceStart.ogg";
     },
 	getOperationSound: function(){
-		return "lectroFurnaceLoop.ogg";
+		return "ElectroFurnaceLoop.ogg";
     },
 	getInterruptSound: function(){
 		return "ElectroFurnaceStop.ogg";

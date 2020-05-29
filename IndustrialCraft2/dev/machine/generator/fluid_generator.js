@@ -102,7 +102,7 @@ MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
 			this.data.energy += fuel.power;
 			this.data.fuel -= fuel.amount/20;
 			this.activate();
-			this.startPlaySound("Generators/GeothermalLoop.ogg");
+			this.startPlaySound();
 		}
 		else {
 			this.data.liquid = null;
@@ -116,6 +116,10 @@ MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 	
+	getOperationSound: function(){
+		return "GeothermalLoop.ogg";
+	},
+
 	getEnergyStorage: function(){
 		return 10000;
 	},

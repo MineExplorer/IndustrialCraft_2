@@ -166,7 +166,7 @@ var SoundManager = /** @class */ (function () {
     };
     SoundManager.prototype.stopAll = function () {
         this.soundPool.autoPause();
-        this.audioSources = [];
+        this.audioSources.splice(0);
         this.playingStreams = 0;
     };
     SoundManager.prototype.autoPause = function () {
@@ -257,7 +257,6 @@ var AudioSource = /** @class */ (function () {
     AudioSource.prototype.setSound = function (soundName) {
         this.stop();
         this.soundName = soundName;
-        this.play();
     };
     AudioSource.prototype.setNextSound = function (soundName) {
     };

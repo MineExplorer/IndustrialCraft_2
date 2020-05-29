@@ -27,7 +27,7 @@ let ICTool = {
 		} else {
 			this.useElectricItem(item, wrench.energy * damage);
 		}
-		ICAudioManager.playSoundAt(coords.x + .5, coords.y + .5, coords.z + .5, "Wrench.ogg");
+		ICAudioManager.playSoundAtBlock(coords, "Wrench.ogg");
 	},
 	
 	addRecipe: function(result, data, tool) {

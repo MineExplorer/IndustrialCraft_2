@@ -67,7 +67,7 @@ var MachineRegistry = {
 					ICAudioManager.removeSource(this.audioSource);
 					this.audioSource = null;
 					if (this.getInterruptSound()) {
-						this.finishingSound = ICAudioManager.playSoundAtTileEntity(this, this.getInterruptSound());
+						this.finishingSound = ICAudioManager.playSoundAtBlock(this, this.getInterruptSound());
 					}
 				}
 			}
@@ -292,7 +292,7 @@ var MachineRegistry = {
 			if(Config.voltageEnabled){
 				World.setBlock(this.x, this.y, this.z, 0);
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 1.2, true);
-				ICAudioManager.playSoundAtTileEntity(this, "MachineOverload.ogg", 1, 32);
+				ICAudioManager.playSoundAtBlock(this, "MachineOverload.ogg", 1, 32);
 				this.selfDestroy();
 				return 1;
 			}

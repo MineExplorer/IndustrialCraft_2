@@ -100,9 +100,9 @@ var SoundManager = /** @class */ (function () {
         var pos = Entity.getPosition(entity);
         return this.playSoundAt(pos.x, pos.y, pos.z, soundName, volume, pitch, isLooping, radius);
     };
-    SoundManager.prototype.playSoundAtTileEntity = function (tile, soundName, volume, radius) {
+    SoundManager.prototype.playSoundAtBlock = function (tile, soundName, volume, radius) {
         if (radius === void 0) { radius = 16; }
-        if (tile.dimension != Player.getDimension())
+        if (tile.dimension != undefined && tile.dimension != Player.getDimension())
             return 0;
         return this.playSoundAt(tile.x + .5, tile.y + .5, tile.z + .5, soundName, volume, 1, false, radius);
     };
@@ -116,6 +116,23 @@ var SoundManager = /** @class */ (function () {
         this.audioSources.push(audioSource);
         return audioSource;
     };
+    SoundManager.prototype.getSource = function (source, soundName) {
+        for (var i in this.audioSources) {
+            var audio = this.audioSources[i];
+            if (audio.source == source && (!soundName || audio.soundName == soundName))
+                return audio;
+        }
+        return null;
+    };
+    SoundManager.prototype.getAllSources = function (source, soundName) {
+        var sources = [];
+        for (var i in this.audioSources) {
+            var audio = this.audioSources[i];
+            if (audio.source == source && (!soundName || audio.soundName == soundName))
+                sources.push(audio);
+        }
+        return sources;
+    };
     SoundManager.prototype.removeSource = function (audioSource) {
         for (var i in this.audioSources) {
             var audio = this.audioSources[i];
@@ -125,7 +142,7 @@ var SoundManager = /** @class */ (function () {
             }
         }
     };
-    SoundManager.prototype.removeSourceAt = function (source, soundName) {
+    SoundManager.prototype.removeSourceFrom = function (source, soundName) {
         for (var i in this.audioSources) {
             var audio = this.audioSources[i];
             if (audio.source == source && (!soundName || audio.soundName == soundName)) {
@@ -133,14 +150,6 @@ var SoundManager = /** @class */ (function () {
                 return;
             }
         }
-    };
-    SoundManager.prototype.isPlaying = function (soundName, source) {
-        for (var i in this.audioSources) {
-            var audio = this.audioSources[i];
-            if (audio.soundName == soundName && (!source || audio.source == source))
-                return true;
-        }
-        return false;
     };
     SoundManager.prototype.setVolume = function (streamID, leftVolume, rightVolume) {
         if (rightVolume === void 0) { rightVolume = leftVolume; }

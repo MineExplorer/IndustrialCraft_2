@@ -55,12 +55,15 @@ Callback.addCallback("LocalTick", function() {
 	let item = Player.getCarriedItem();
 	let tool = ToolAPI.getToolData(item.id);
 	if (item.id == ItemID.chainsaw && ChargeItemRegistry.getEnergyStored(item) >= tool.toolMaterial.energyPerUse) {
-		if (!ICAudioManager.isPlaying("ChainsawIdle.ogg")) {
+		if (!ICAudioManager.getSource(Player.get(), "ChainsawIdle.ogg")) {
 			ICAudioManager.createSource(Player.get(), "ChainsawIdle.ogg", true);
 		}
 	}
-	else if (ICAudioManager.isPlaying("ChainsawIdle.ogg")) {
-		ICAudioManager.removeSourceAt(Player.get(), "ChainsawIdle.ogg");
-		ICAudioManager.playSound("ChainsawStop.ogg");
+	else {
+		var audioSource = ICAudioManager.getSource(Player.get(), "ChainsawIdle.ogg");
+		if (audioSource) {
+			ICAudioManager.removeSource(audioSource);
+			ICAudioManager.playSound("ChainsawStop.ogg");
+		}
 	}
 });

@@ -253,15 +253,15 @@ Callback.addCallback("LocalTick", function(){
 			}
 			playSound = true;
 		}
-		if(playSound && Config.soundEnabled && !ICAudioManager.isPlaying("JetpackLoop.ogg")){
-			if(hoverMode){
+		if (playSound && Config.soundEnabled && !ICAudioManager.getSource(Player.get(), "JetpackLoop.ogg")) {
+			if (hoverMode) {
 				ICAudioManager.createSource(Player.get(), "JetpackLoop.ogg", true, 0.8);
 			} else {
 				ICAudioManager.createSource(Player.get(), "JetpackLoop.ogg", true, 1);
 			}
 		}
-		if(!playSound && ICAudioManager.isPlaying("JetpackLoop.ogg")){
-			ICAudioManager.removeSourceAt(Player.get(), "JetpackLoop.ogg");
+		if (!playSound) {
+			ICAudioManager.removeSourceFrom(Player.get(), "JetpackLoop.ogg");
 		}
 	}
 	else if(UIbuttons.container){

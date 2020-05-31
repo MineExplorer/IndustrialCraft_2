@@ -98,12 +98,12 @@ UIbuttons.setArmorButton(ItemID.quantumChestplate, "button_hover");
 UIbuttons.setArmorButton(ItemID.quantumBoots, "button_jump");
 
 var runTime = 0;
-var quantumArmor = [ItemID.quantumHelmet, ItemID.quantumChestplate, ItemID.quantumLeggings, ItemID.quantumBoots];
+var quantumArmorList = [ItemID.quantumHelmet, ItemID.quantumChestplate, ItemID.quantumLeggings, ItemID.quantumBoots];
 
 function isFullQuantumArmor(damage){
 	for(var i = 0; i < 4; i++){
 		var slot = Player.getArmorSlot(i);
-		if(quantumArmor.indexOf(slot.id) == -1 || damage && ChargeItemRegistry.getEnergyStored(slot) < 2500 * damage)
+		if(quantumArmorList.indexOf(slot.id) == -1 || damage && ChargeItemRegistry.getEnergyStored(slot) < 2500 * damage)
 			return false;
 	}
 	return true;

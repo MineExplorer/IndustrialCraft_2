@@ -396,7 +396,7 @@ var MachineRegistry = {
 	
 	updateGuiHeader: function(gui, text){
 		var header = gui.getWindow("header");
-		header.contentProvider.drawing[1].text = Translation.translate(text);
+		header.contentProvider.drawing[2].text = Translation.translate(text);
 	}
 }
 

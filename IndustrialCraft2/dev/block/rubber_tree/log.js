@@ -20,8 +20,8 @@ ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
 
 IDRegistry.genBlockID("rubberTreeLogLatex");
 Block.createBlockWithRotation("rubberTreeLogLatex", [
-	{name: "tile.rubberTreeLog.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_with_latex", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
-	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_with_latex", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
+	{name: "tile.rubberTreeLog.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
+	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
 ], "log");
 Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID){
 	return [[BlockID.rubberTreeLog, 1, 0], [ItemID.latex, 1, 0]];

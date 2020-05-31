@@ -98,36 +98,81 @@ UIbuttons.setArmorButton(ItemID.quantumChestplate, "button_hover");
 UIbuttons.setArmorButton(ItemID.quantumBoots, "button_jump");
 
 var runTime = 0;
+var quantumArmorList = [ItemID.quantumHelmet, ItemID.quantumChestplate, ItemID.quantumLeggings, ItemID.quantumBoots];
+
+function isFullQuantumArmor(damage){
+	for(var i = 0; i < 4; i++){
+		var slot = Player.getArmorSlot(i);
+		if(quantumArmorList.indexOf(slot.id) == -1 || damage && ChargeItemRegistry.getEnergyStored(slot) < 2500 * damage)
+			return false;
+	}
+	return true;
+}
+
+Callback.addCallback("EntityHurt", function(attacker, victim, damage, type){
+	if(victim == player && Game.getGameMode() != 1 && damage > 0 && (type == 2 || type == 3 || type == 11) && isFullQuantumArmor(damage)){
+		Game.prevent();
+		if(type == 2){	
+			runOnMainThread(function(){
+				Entity.damageEntity(player, 0, type, {attacker: attacker, bool1: true});
+			});
+		}
+		if(type == 3){	
+			runOnMainThread(function(){
+				Entity.damageEntity(player, 0, type, {attacker: -1, bool1: true});
+			});
+			var vel = Entity.getVelocity(attacker);
+			var hs = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
+			Player.addVelocity(vel.x * 0.3 / hs, 0.25, vel.z * 0.3 / hs);
+			Entity.remove(attacker);
+		}
+	}
+});
+
+Callback.addCallback("Explosion", function(coords, params){
+	var pos = Player.getPosition();
+	var distance = Entity.getDistanceBetweenCoords(coords, pos);
+	if(distance <= params.power && isFullQuantumArmor()){
+		Entity.damageEntity(Player.get(), 0, 11, {attacker: params.entity, bool1: true});
+	}
+});
 
 var QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params, slot, index, maxDamage){
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		var type = params.type;
-		if(energyStored >= 2500 && (type == 2 || type == 3 || type == 11)){
+		if(energyStored >= 2500 && (type == 2 || type == 3 || type == 11) && params.damage > 0){
 			var energy = params.damage * 2500;
 			ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - energy, 0));
 			return true;
 		}
 		if(index == 0 && type == 9 && energyStored >= 500){
 			Game.prevent();
-			Entity.addEffect(player, MobEffect.waterBreathing, 1, 2);
+			Entity.addEffect(player, MobEffect.waterBreathing, 1, 60);
 			ChargeItemRegistry.setEnergyStored(slot, energyStored - 500);
 			return true;
 		}
 		if(index == 1 && type == 5){
 			Utils.fixFallDamage(params.damage);
 		}
-		if(index == 3 && type == 5 && energyStored >= 2500){
-			var damage = Math.min(Utils.getFallDamage(), params.damage);
-			if(damage > 0){
-				var damageReduce = Math.min(damage, parseInt(energyStored / 2500));
-				var damageTaken = damage - damageReduce;
-				if(damageTaken > 0){
-					Entity.setHealth(player, Entity.getHealth(player) + params.damage - damageTaken);
-				} else {
-					Game.prevent();
+		if(index == 3){
+			if(type == 5 && energyStored >= 2500){
+				var damage = Math.min(Utils.getFallDamage(), params.damage);
+				if(damage > 0){
+					var damageReduce = Math.min(damage, parseInt(energyStored / 2500));
+					var damageTaken = damage - damageReduce;
+					if(damageTaken > 0){
+						Entity.setHealth(player, Entity.getHealth(player) + params.damage - damageTaken);
+					} else {
+						Game.prevent();
+					}
+					ChargeItemRegistry.setEnergyStored(slot, energyStored - damageReduce * 2500);
+					return true;
 				}
-				ChargeItemRegistry.setEnergyStored(slot, energyStored - damageReduce * 2500);
+			}
+			if(type == 22 && energyStored >= 2500){
+				Game.prevent();
+				ChargeItemRegistry.setEnergyStored(slot, energyStored - 2500);
 				return true;
 			}
 		}

@@ -38,7 +38,7 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 
 	getWeight: function(ent){
 		var type = Entity.getType(ent);
-		if(ent == player || type == EntityType.MINECART) return 1000;
+		if(type == 1 || type == EntityType.MINECART) return 1000;
 		if(type == EntityType.ITEM) return 100;
 		if(isFriendlyMob(type)) return 200;
 		if(isHostileMob(type)) return 500;
@@ -75,7 +75,7 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 									if(energyNeed <= 0){break;}
 								}
 								SoundAPI.playSound("Machines/Teleporter/TeleUse.ogg")
-								Entity.setPosition(ent, receive.x+0.5, receive.y+3, receive.z+0.5);
+								Entity.setPosition(ent, receive.x + .5, receive.y + 3, receive.z + .5);
 							}
 						}
 					}

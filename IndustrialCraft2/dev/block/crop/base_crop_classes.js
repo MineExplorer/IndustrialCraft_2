@@ -20,6 +20,9 @@ AgricultureAPI.abstractFunctions["IC2CropCard"] = {
     canGrow: function(te){
         return te.data.currentSize < te.crop.maxSize;
     },
+    canCross: function(te){
+        return te.data.currentSize >= 3;
+    },
     canBeHarvested: function(te){
         return te.data.currentSize == te.crop.maxSize;
     },

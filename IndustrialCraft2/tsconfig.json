@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "lib": ["es2018"],
+    // "outDir": "build",
+    "outFile": "build/main.js",
+    "allowJs": true,
+    "experimentalDecorators": true
+  },
+  "exclude": [
+    "typedoc",
+    "node_modules",
+    "**/node_modules/*",
+    "dom"
+  ],
+  "include": [
+    "dev/**/*"
+  ],
+  "files": [
+    "../declarations/core-engine.d.ts",
+    "../declarations/chargeitem.d.ts",
+    "../declarations/LiquidLib.d.ts",
+    "../declarations/StorageInterface.d.ts",
+    "../declarations/TileRender.d.ts",
+  ]
+}
+

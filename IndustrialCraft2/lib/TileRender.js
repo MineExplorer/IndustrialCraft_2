@@ -41,8 +41,7 @@ var TileRenderer = {
 		this.data[id][data] = render;
 	},
 	
-	registerRotationModel: function(id, data, texture, reverse){
-		reverse = reverse || 0;
+	registerRotationModel: function(id, data, texture){
 		var textures = [
 			[texture[0], texture[1], texture[3], texture[2], texture[5], texture[4]],
 			[texture[0], texture[1], texture[2], texture[3], texture[4], texture[5]],
@@ -50,7 +49,7 @@ var TileRenderer = {
 			[texture[0], texture[1], texture[5], texture[4], texture[2], texture[3]]
 		]
 		for(var i = 0; i < 4; i++){
-			this.registerRenderModel(id, i + data + reverse * Math.pow(-1, i), textures[i]);
+			this.registerRenderModel(id, data + i, textures[i]);
 		}
 	},
 	

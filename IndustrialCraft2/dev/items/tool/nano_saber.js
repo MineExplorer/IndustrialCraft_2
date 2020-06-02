@@ -44,13 +44,12 @@ ToolAPI.registerSword(ItemID.nanoSaberActive, {level: 0, durability: 27, damage:
 
 let NanoSaber = {
 	activationTime: 0,
-	startSound: null,
 	idleSound: null,
 	
 	noTargetUse: function(item){
 		if(ChargeItemRegistry.getEnergyStored(item) >= 64){
 			Player.setCarriedItem(ItemID.nanoSaberActive, 1, item.data, item.extra);
-			//this.startSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberPowerup.ogg");
+			ICAudioManager.playSound("NanosaberPowerup.ogg");
 			this.activationTime = World.getThreadTime();
 		}
 	},
@@ -113,11 +112,6 @@ Item.registerNoTargetUseFunction("nanoSaber", function(item){
 
 Item.registerNoTargetUseFunction("nanoSaberActive", function(item){
 	NanoSaber.noTargetUseActive(item);
-});
-
-Callback.addCallback("LevelLeft", function(){
-	NanoSaber.startSound = null;
-	NanoSaber.idleSound = null;
 });
 
 Callback.addCallback("tick", function(){

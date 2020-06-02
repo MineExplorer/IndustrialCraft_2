@@ -139,8 +139,8 @@ Callback.addCallback("Explosion", function(coords, params){
 
 var QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params, slot, index, maxDamage){
-		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		var type = params.type;
+		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		if(energyStored >= 2500 && (type == 2 || type == 3 || type == 11) && params.damage > 0){
 			var energy = params.damage * 2500;
 			ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - energy, 0));

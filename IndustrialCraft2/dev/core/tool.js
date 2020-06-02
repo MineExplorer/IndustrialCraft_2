@@ -102,6 +102,28 @@ let ICTool = {
 				);
 			}
 		});
+	},
+
+	setOnHandSound: function(itemID, idleSound, stopSound) {
+		Callback.addCallback("LocalTick", function() {
+			if (!Config.soundEnabled) {return;}
+			let item = Player.getCarriedItem();
+			let tool = ToolAPI.getToolData(item.id);
+			if (item.id == itemID && (!tool || ChargeItemRegistry.getEnergyStored(item) >= tool.toolMaterial.energyPerUse)) {
+				if (!ICAudioManager.getSource(item.id)) {
+					ICAudioManager.createSource(AudioSource.PLAYER, item.id, idleSound, true);
+				}
+			}
+			else {
+				var audioSource = ICAudioManager.getSource(itemID);
+				if (audioSource) {
+					ICAudioManager.removeSource(audioSource);
+					if (stopSound) {
+						ICAudioManager.playSound(stopSound);
+					}
+				}
+			}
+		});
 	}
 }
 

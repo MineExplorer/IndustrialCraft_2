@@ -106,13 +106,22 @@ var SoundManager = /** @class */ (function () {
             return 0;
         return this.playSoundAt(tile.x + .5, tile.y + .5, tile.z + .5, soundName, volume, 1, false, radius);
     };
-    SoundManager.prototype.createSource = function (source, soundName, isLooping, volume) {
-        var soundID = this.getSoundID(soundName);
-        if (!soundID) {
-            Logger.Log("Cannot find sound: " + soundName, "ERROR");
+    SoundManager.prototype.createSource = function (sourceType, source, soundName, isLooping, volume, radius) {
+        if (sourceType == AudioSourceType.PLAYER && typeof (source) != "number") {
+            volume = isLooping;
+            isLooping = soundName;
+            soundName = source;
+            source = Player.get();
+        }
+        if (sourceType == AudioSourceType.ENTITY && typeof (source) != "number") {
+            Logger.Log("Invalid source type " + typeof (source) + "for AudioSource.ENTITY", "ERROR");
             return null;
         }
-        var audioSource = new AudioSource(this, source, soundName, isLooping, volume);
+        if (sourceType == AudioSourceType.TILEENTITY && typeof (source) != "object") {
+            Logger.Log("Invalid source type " + typeof (source) + "for AudioSource.TILEENTITY", "ERROR");
+            return null;
+        }
+        var audioSource = new AudioSource(this, sourceType, source, soundName, isLooping, volume, radius);
         this.audioSources.push(audioSource);
         return audioSource;
     };
@@ -219,7 +228,8 @@ var AudioSourceType;
     AudioSourceType[AudioSourceType["TILEENTITY"] = 2] = "TILEENTITY";
 })(AudioSourceType || (AudioSourceType = {}));
 var AudioSource = /** @class */ (function () {
-    function AudioSource(soundManager, source, soundName, isLooping, volume, radius) {
+    function AudioSource(soundManager, sourceType, source, soundName, isLooping, volume, radius) {
+        if (isLooping === void 0) { isLooping = false; }
         if (volume === void 0) { volume = 1; }
         if (radius === void 0) { radius = 16; }
         this.streamID = 0;
@@ -228,14 +238,12 @@ var AudioSource = /** @class */ (function () {
         this.soundManager = soundManager;
         this.soundName = soundName;
         this.source = source;
-        if (source.class == java.lang.Long) {
-            this.sourceType = AudioSourceType.ENTITY;
+        this.sourceType = sourceType;
+        if (sourceType == AudioSourceType.ENTITY) {
             this.position = Entity.getPosition(source);
             this.dimension = Player.getDimension();
-            Game.message(source);
         }
-        else {
-            this.sourceType = AudioSourceType.TILEENTITY;
+        if (sourceType = AudioSourceType.TILEENTITY) {
             this.position = { x: source.x + .5, y: source.y + .5, z: source.z + .5 };
             this.dimension = source.dimension;
         }
@@ -251,9 +259,6 @@ var AudioSource = /** @class */ (function () {
         this.updateVolume();
         return this;
     };
-    AudioSource.prototype.setDimension = function (dimensionId) {
-        this.dimension = dimensionId;
-    };
     AudioSource.prototype.setSound = function (soundName) {
         this.stop();
         this.soundName = soundName;
@@ -262,8 +267,13 @@ var AudioSource = /** @class */ (function () {
     };
     AudioSource.prototype.play = function () {
         if (!this.isPlaying) {
-            var pos = this.position;
-            this.streamID = this.soundManager.playSoundAt(pos.x, pos.y, pos.z, this.soundName, this.volume, 1, this.isLooping, this.radius);
+            if (this.sourceType == AudioSourceType.PLAYER) {
+                this.streamID = this.soundManager.playSound(this.soundName, this.volume, 1, this.isLooping);
+            }
+            else {
+                var pos = this.position;
+                this.streamID = this.soundManager.playSoundAt(pos.x, pos.y, pos.z, this.soundName, this.volume, 1, this.isLooping, this.radius);
+            }
             if (this.streamID != 0) {
                 this.isPlaying = true;
             }
@@ -286,6 +296,8 @@ var AudioSource = /** @class */ (function () {
         this.soundManager.resume(this.streamID);
     };
     AudioSource.prototype.updateVolume = function () {
+        if (this.sourceType == AudioSourceType.PLAYER)
+            return;
         var s = this.position;
         var p = Player.getPosition();
         var distance = Math.sqrt(Math.pow(s.x - p.x, 2) + Math.pow(s.y - p.y, 2) + Math.pow(s.z - p.z, 2));
@@ -297,4 +309,4 @@ var AudioSource = /** @class */ (function () {
     return AudioSource;
 }());
 EXPORT("SoundManager", SoundManager);
-//EXPORT("AudioSource", AudioSource);
+EXPORT("AudioSource", AudioSourceType);

@@ -54,10 +54,10 @@ var MachineRegistry = {
 						ICAudioManager.stop(this.finishingSound);
 					}
 					if (this.getStartingSound()) {
-						this.audioSource = ICAudioManager.createSource(this, this.getStartingSound(), false);
-						this.audioSource.setNextSound(this.getOperatonSound(), true);
+						this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, this.getStartingSound());
+						this.audioSource.setNextSound(this.getOperationSound(), true);
 					} else {
-						this.audioSource = ICAudioManager.createSource(this, this.getOperationSound(), true);
+						this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, this.getOperationSound(), true);
 					}
 				}
 			}

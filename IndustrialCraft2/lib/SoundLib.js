@@ -12,7 +12,6 @@ Callback.addCallback("NativeGuiChanged", function (screenName) {
     if (prevScreen && !currentScreen) {
         SoundAPI.soundVolume = FileTools.ReadKeyValueFile(settings_path)["audio_sound"];
         SoundAPI.musicVolume = FileTools.ReadKeyValueFile(settings_path)["audio_music"];
-        //SoundAPI.updateVolume();
     }
     prevScreen = currentScreen;
 });
@@ -21,7 +20,6 @@ var SoundAPI;
     SoundAPI.soundVolume = FileTools.ReadKeyValueFile(settings_path)["audio_sound"];
     SoundAPI.musicVolume = FileTools.ReadKeyValueFile(settings_path)["audio_music"];
     SoundAPI.soundManagers = [];
-    //export var soundPlayers: Array<SoundPlayer> = [];
     function addSoundManager(soundManager) {
         this.soundManagers.push(soundManager);
     }
@@ -36,7 +34,7 @@ var SoundAPI;
 var SoundManager = /** @class */ (function () {
     function SoundManager(maxStreams) {
         this.playingStreams = 0;
-        this.soundIDs = {};
+        this.soundData = {};
         this.audioSources = [];
         this.soundPool = new android.media.SoundPool.Builder().setMaxStreams(maxStreams).build();
         this.maxStreams = maxStreams;
@@ -44,7 +42,7 @@ var SoundManager = /** @class */ (function () {
     }
     SoundManager.prototype.loadSound = function (soundName, path) {
         var soundID = this.soundPool.load(path, 1);
-        this.soundIDs[soundName] = soundID;
+        this.soundData[soundName] = { id: soundID, path: path };
         return soundID;
     };
     SoundManager.prototype.loadSoundsFromDir = function (path) {
@@ -61,7 +59,24 @@ var SoundManager = /** @class */ (function () {
         }
     };
     SoundManager.prototype.getSoundID = function (soundName) {
-        return this.soundIDs[soundName] || 0;
+        var soundData = this.soundData[soundName];
+        if (soundData) {
+            return soundData.id;
+        }
+        return 0;
+    };
+    SoundManager.prototype.getSoundDuration = function (soundName) {
+        var soundData = this.soundData[soundName];
+        if (soundData) {
+            if (!soundData.duration) {
+                var mmr = new android.media.MediaMetadataRetriever();
+                mmr.setDataSource(soundData.path);
+                var durationStr = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+                soundData.duration = parseInt(durationStr);
+            }
+            return soundData.duration;
+        }
+        return 0;
     };
     SoundManager.prototype.playSound = function (soundName, volume, pitch, isLooping) {
         if (volume === void 0) { volume = 1; }
@@ -120,7 +135,12 @@ var SoundManager = /** @class */ (function () {
         if (sourceType == AudioSourceType.TILEENTITY && typeof (source) != "object") {
             Logger.Log("Invalid source type " + typeof (source) + "for AudioSource.TILEENTITY", "ERROR");
             return null;
-        }
+        } /*
+        var soundID = this.getSoundID(soundName);
+        if (!soundID) {
+            Logger.Log("Cannot find sound: "+ soundName, "ERROR");
+            return null;
+        }*/
         var audioSource = new AudioSource(this, sourceType, source, soundName, isLooping, volume, radius);
         this.audioSources.push(audioSource);
         return audioSource;
@@ -154,7 +174,7 @@ var SoundManager = /** @class */ (function () {
     SoundManager.prototype.removeSourceFrom = function (source, soundName) {
         for (var i in this.audioSources) {
             var audio = this.audioSources[i];
-            if (!audio.remove && audio.source == source && (!soundName || audio.soundName == soundName)) {
+            if (audio.source == source && (!soundName || audio.soundName == soundName)) {
                 audio.remove = true;
                 return true;
             }
@@ -191,16 +211,19 @@ var SoundManager = /** @class */ (function () {
     SoundManager.prototype.tick = function () {
         for (var i in this.audioSources) {
             var sound = this.audioSources[i];
-            if (sound.remove) {
+            if (sound.remove || sound.sourceType == AudioSourceType.TILEENTITY && sound.source.remove) {
                 sound.stop();
                 this.audioSources.splice(i, 1);
                 i--;
                 continue;
             }
+            // TODO:
+            // check dimension
+            // check duration
             if (sound.sourceType == AudioSourceType.ENTITY && Entity.isExist(sound.source)) {
                 sound.position = Entity.getPosition(sound.source);
             }
-            if (!sound.isPlaying && this.playingStreams < this.maxStreams) {
+            if (!sound.isPlaying && sound.isLooping && this.playingStreams < this.maxStreams) {
                 Game.message("Start play sound: " + sound.soundName);
                 sound.play();
             }

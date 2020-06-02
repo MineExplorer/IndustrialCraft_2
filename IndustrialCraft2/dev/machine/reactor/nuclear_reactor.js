@@ -106,7 +106,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	addChamber: function(chamber){
-		if(!this.__initialized || chamber.removed || (chamber.core && chamber.core != this)){
+		if(!this.__initialized || chamber.remove || (chamber.core && chamber.core != this)){
 			return;
 		}
 		if(this.chambers.indexOf(chamber) == -1){
@@ -388,8 +388,7 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 	},
 	
 	core: null,
-	removed: false,
-	
+
 	getGuiScreen: function(){
 		if(this.core){
 			return guiNuclearReactor;
@@ -425,10 +424,6 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 				}
 			}
 		}
-	},
-	
-	destroy: function(){
-		this.removed = true;
 	}
 });
 

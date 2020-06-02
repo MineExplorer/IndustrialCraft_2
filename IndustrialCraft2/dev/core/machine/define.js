@@ -89,7 +89,6 @@ var MachineRegistry = {
 			}
 			Prototype.destroy = Prototype.destroy || function(){
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-				this.stopPlaySound();
 			}
 		}
 		

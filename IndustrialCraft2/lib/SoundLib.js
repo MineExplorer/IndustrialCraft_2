@@ -146,7 +146,7 @@ var SoundManager = /** @class */ (function () {
         for (var i in this.audioSources) {
             var audio = this.audioSources[i];
             if (audio == audioSource) {
-                audio.isRemoved = true;
+                audio.remove = true;
                 return;
             }
         }
@@ -154,11 +154,12 @@ var SoundManager = /** @class */ (function () {
     SoundManager.prototype.removeSourceFrom = function (source, soundName) {
         for (var i in this.audioSources) {
             var audio = this.audioSources[i];
-            if (audio.source == source && (!soundName || audio.soundName == soundName)) {
-                audio.isRemoved = true;
-                return;
+            if (!audio.remove && audio.source == source && (!soundName || audio.soundName == soundName)) {
+                audio.remove = true;
+                return true;
             }
         }
+        return false;
     };
     SoundManager.prototype.setVolume = function (streamID, leftVolume, rightVolume) {
         if (rightVolume === void 0) { rightVolume = leftVolume; }
@@ -190,7 +191,7 @@ var SoundManager = /** @class */ (function () {
     SoundManager.prototype.tick = function () {
         for (var i in this.audioSources) {
             var sound = this.audioSources[i];
-            if (sound.isRemoved) {
+            if (sound.remove) {
                 sound.stop();
                 this.audioSources.splice(i, 1);
                 i--;
@@ -234,7 +235,7 @@ var AudioSource = /** @class */ (function () {
         if (radius === void 0) { radius = 16; }
         this.streamID = 0;
         this.isPlaying = false;
-        this.isRemoved = false;
+        this.remove = false;
         this.soundManager = soundManager;
         this.soundName = soundName;
         this.source = source;

@@ -44,7 +44,6 @@ ToolAPI.registerSword(ItemID.nanoSaberActive, {level: 0, durability: 27, damage:
 
 let NanoSaber = {
 	activationTime: 0,
-	idleSound: null,
 	
 	noTargetUse: function(item){
 		if(ChargeItemRegistry.getEnergyStored(item) >= 64){
@@ -61,28 +60,10 @@ let NanoSaber = {
 			ChargeItemRegistry.setEnergyStored(Math.max(energyStored - discharge*64, 0));
 			this.activationTime = 0;
 		}
-		/*if(this.idleSound){
-			this.idleSound.stop();
-			this.idleSound = null;
-		}*/
 		Player.setCarriedItem(ItemID.nanoSaber, 1, item.data, item.extra);
 	},
 	
 	tick: function(){
-		let item = Player.getCarriedItem();
-		/*if(Config.soundEnabled){
-			if(item.id == ItemID.nanoSaberActive){
-				if(!this.idleSound && (!this.startSound || !this.startSound.isPlaying())){
-					this.idleSound = SoundAPI.playSound("Tools/Nanosaber/NanosaberIdle.ogg", true, true);
-					this.startSound = null;
-				}
-			}
-			else if(this.idleSound){
-				this.idleSound.stop();
-				this.idleSound = null;
-			}
-		}*/
-		
 		if(World.getThreadTime() % 20 == 0){
 			for(let i = 0; i < 36; i++){
 				let item = Player.getInventorySlot(i);
@@ -117,3 +98,5 @@ Item.registerNoTargetUseFunction("nanoSaberActive", function(item){
 Callback.addCallback("tick", function(){
 	NanoSaber.tick();
 });
+
+ICTool.setOnHandSound(ItemID.nanoSaberActive, "NanosaberIdle.ogg");

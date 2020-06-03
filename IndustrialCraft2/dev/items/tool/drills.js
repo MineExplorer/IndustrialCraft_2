@@ -147,10 +147,12 @@ ToolType.drill = {
 		if(Config.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.toolMaterial.energyPerUse){
 			let hardness = Block.getDestroyTime(block.id);
 			if(hardness > 1 || hardness < 0){
-				//SoundAPI.playSound("Tools/Drill/DrillHard.ogg", false, true);
+				if (!ICAudioManager.getSource(Player.get(), "DrillHard.ogg"))
+				ICAudioManager.createSource(AudioSource.PLAYER, "DrillHard.ogg");
 			}
 			else if(hardness > 0){
-				//SoundAPI.playSound("Tools/Drill/DrillSoft.ogg", false, true);
+				if (!ICAudioManager.getSource(Player.get(), "DrillSoft.ogg"))
+				ICAudioManager.createSource(AudioSource.PLAYER, "DrillSoft.ogg");
 			}
 		}
 	}

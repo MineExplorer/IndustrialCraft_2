@@ -111,7 +111,7 @@ let ICTool = {
 			let tool = ToolAPI.getToolData(item.id);
 			if (item.id == itemID && (!tool || !tool.toolMaterial.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.toolMaterial.energyPerUse)) {
 				if (!ICAudioManager.getSource(item.id)) {
-					ICAudioManager.createSource(AudioSource.PLAYER, item.id, idleSound, true);
+					ICAudioManager.createSource(AudioSource.PLAYER, item.id, idleSound);
 				}
 			}
 			else if(ICAudioManager.removeSourceFrom(itemID) && stopSound) {

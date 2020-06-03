@@ -57,7 +57,7 @@ var MachineRegistry = {
 						this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, this.getStartingSound());
 						this.audioSource.setNextSound(this.getOperationSound(), true);
 					} else {
-						this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, this.getOperationSound(), true);
+						this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, this.getOperationSound());
 					}
 				}
 			}

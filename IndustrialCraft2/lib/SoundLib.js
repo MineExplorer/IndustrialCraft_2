@@ -40,30 +40,19 @@ var SoundManager = /** @class */ (function () {
         this.maxStreams = maxStreams;
         SoundAPI.addSoundManager(this);
     }
-    SoundManager.prototype.loadSound = function (soundName, path) {
+    SoundManager.prototype.setSoundPath = function (path) {
+        this.soundPath = path;
+    };
+    SoundManager.prototype.registerSound = function (soundName, path, looping) {
+        if (looping === void 0) { looping = false; }
+        if (this.soundPath) {
+            path = this.soundPath + path;
+        }
         var soundID = this.soundPool.load(path, 1);
-        this.soundData[soundName] = { id: soundID, path: path };
-        return soundID;
+        this.soundData[soundName] = { id: soundID, path: path, looping: looping };
     };
-    SoundManager.prototype.loadSoundsFromDir = function (path) {
-        var dir = new java.io.File(path);
-        var files = dir.listFiles();
-        for (var i in files) {
-            var item = files[i];
-            if (item.isDirectory()) {
-                this.loadSoundsFromDir(item.getAbsolutePath());
-            }
-            else {
-                this.loadSound(item.getName(), item.getAbsolutePath());
-            }
-        }
-    };
-    SoundManager.prototype.getSoundID = function (soundName) {
-        var soundData = this.soundData[soundName];
-        if (soundData) {
-            return soundData.id;
-        }
-        return 0;
+    SoundManager.prototype.getSoundData = function (soundName) {
+        return this.soundData[soundName];
     };
     SoundManager.prototype.getSoundDuration = function (soundName) {
         var soundData = this.soundData[soundName];
@@ -72,59 +61,57 @@ var SoundManager = /** @class */ (function () {
                 var mmr = new android.media.MediaMetadataRetriever();
                 mmr.setDataSource(soundData.path);
                 var durationStr = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
-                soundData.duration = parseInt(durationStr);
+                var duration = parseInt(durationStr);
+                soundData.duration = duration - duration % 50;
+                Game.message(soundName + " - " + soundData.duration);
             }
             return soundData.duration;
         }
         return 0;
     };
-    SoundManager.prototype.playSound = function (soundName, volume, pitch, isLooping) {
+    SoundManager.prototype.playSound = function (soundName, volume, pitch) {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
-        if (isLooping === void 0) { isLooping = false; }
-        var soundID = this.getSoundID(soundName);
-        if (!soundID) {
+        var soundData = this.getSoundData(soundName);
+        if (!soundData) {
             Logger.Log("Cannot find sound: " + soundName, "ERROR");
             return 0;
         }
         if (this.playingStreams >= this.maxStreams)
             return 0;
-        if (isLooping)
+        if (soundData.looping)
             this.playingStreams++;
         volume *= SoundAPI.soundVolume;
-        var streamID = this.soundPool.play(soundID, volume, volume, isLooping ? 1 : 0, isLooping ? -1 : 0, pitch);
+        var streamID = this.soundPool.play(soundData.id, volume, volume, soundData.looping ? 1 : 0, soundData.looping ? -1 : 0, pitch);
         Game.message(streamID + " - " + soundName + ", volume: " + volume);
         return streamID;
     };
-    SoundManager.prototype.playSoundAt = function (x, y, z, soundName, volume, pitch, isLooping, radius) {
+    SoundManager.prototype.playSoundAt = function (x, y, z, soundName, volume, pitch, radius) {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
-        if (isLooping === void 0) { isLooping = false; }
         if (radius === void 0) { radius = 16; }
         var p = Player.getPosition();
         var distance = Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(y - p.y, 2) + Math.pow(z - p.z, 2));
         if (distance >= radius)
             return 0;
         volume *= 1 - distance / radius;
-        var streamID = this.playSound(soundName, volume, pitch, isLooping);
+        var streamID = this.playSound(soundName, volume, pitch);
         return streamID;
     };
-    SoundManager.prototype.playSoundAtEntity = function (entity, soundName, volume, pitch, isLooping, radius) {
-        if (isLooping === void 0) { isLooping = false; }
+    SoundManager.prototype.playSoundAtEntity = function (entity, soundName, volume, pitch, radius) {
         if (radius === void 0) { radius = 16; }
         var pos = Entity.getPosition(entity);
-        return this.playSoundAt(pos.x, pos.y, pos.z, soundName, volume, pitch, isLooping, radius);
+        return this.playSoundAt(pos.x, pos.y, pos.z, soundName, volume, pitch, radius);
     };
     SoundManager.prototype.playSoundAtBlock = function (tile, soundName, volume, radius) {
         if (radius === void 0) { radius = 16; }
         if (tile.dimension != undefined && tile.dimension != Player.getDimension())
             return 0;
-        return this.playSoundAt(tile.x + .5, tile.y + .5, tile.z + .5, soundName, volume, 1, false, radius);
+        return this.playSoundAt(tile.x + .5, tile.y + .5, tile.z + .5, soundName, volume, 1, radius);
     };
-    SoundManager.prototype.createSource = function (sourceType, source, soundName, isLooping, volume, radius) {
+    SoundManager.prototype.createSource = function (sourceType, source, soundName, volume, radius) {
         if (sourceType == AudioSourceType.PLAYER && typeof (source) != "number") {
-            volume = isLooping;
-            isLooping = soundName;
+            volume = soundName;
             soundName = source;
             source = Player.get();
         }
@@ -141,7 +128,7 @@ var SoundManager = /** @class */ (function () {
             Logger.Log("Cannot find sound: "+ soundName, "ERROR");
             return null;
         }*/
-        var audioSource = new AudioSource(this, sourceType, source, soundName, isLooping, volume, radius);
+        var audioSource = new AudioSource(this, sourceType, source, soundName, volume, radius);
         this.audioSources.push(audioSource);
         return audioSource;
     };
@@ -217,9 +204,19 @@ var SoundManager = /** @class */ (function () {
                 i--;
                 continue;
             }
+            if (!sound.isLooping && Debug.sysTime() - sound.startTime > this.getSoundDuration(sound.soundName)) {
+                if (sound.nextSound) {
+                    sound.playNextSound();
+                }
+                else {
+                    sound.stop();
+                    this.audioSources.splice(i, 1);
+                    i--;
+                    continue;
+                }
+            }
             // TODO:
             // check dimension
-            // check duration
             if (sound.sourceType == AudioSourceType.ENTITY && Entity.isExist(sound.source)) {
                 sound.position = Entity.getPosition(sound.source);
             }
@@ -252,12 +249,13 @@ var AudioSourceType;
     AudioSourceType[AudioSourceType["TILEENTITY"] = 2] = "TILEENTITY";
 })(AudioSourceType || (AudioSourceType = {}));
 var AudioSource = /** @class */ (function () {
-    function AudioSource(soundManager, sourceType, source, soundName, isLooping, volume, radius) {
-        if (isLooping === void 0) { isLooping = false; }
+    function AudioSource(soundManager, sourceType, source, soundName, volume, radius) {
         if (volume === void 0) { volume = 1; }
         if (radius === void 0) { radius = 16; }
+        this.nextSound = "";
         this.streamID = 0;
         this.isPlaying = false;
+        this.startTime = 0;
         this.remove = false;
         this.soundManager = soundManager;
         this.soundName = soundName;
@@ -273,7 +271,9 @@ var AudioSource = /** @class */ (function () {
         }
         this.radius = radius;
         this.volume = volume;
-        this.isLooping = isLooping;
+        var soundData = soundManager.getSoundData(soundName);
+        this.isLooping = soundData.looping;
+        this.startTime = Debug.sysTime();
         this.play();
     }
     AudioSource.prototype.setPosition = function (x, y, z) {
@@ -288,15 +288,25 @@ var AudioSource = /** @class */ (function () {
         this.soundName = soundName;
     };
     AudioSource.prototype.setNextSound = function (soundName) {
+        this.nextSound = soundName;
+    };
+    AudioSource.prototype.playNextSound = function () {
+        this.stop();
+        if (this.soundName) {
+            this.soundName = this.nextSound;
+            this.isLooping = this.soundManager.getSoundData(this.soundName).looping;
+            this.nextSound = "";
+            this.play();
+        }
     };
     AudioSource.prototype.play = function () {
         if (!this.isPlaying) {
             if (this.sourceType == AudioSourceType.PLAYER) {
-                this.streamID = this.soundManager.playSound(this.soundName, this.volume, 1, this.isLooping);
+                this.streamID = this.soundManager.playSound(this.soundName, this.volume, 1);
             }
             else {
                 var pos = this.position;
-                this.streamID = this.soundManager.playSoundAt(pos.x, pos.y, pos.z, this.soundName, this.volume, 1, this.isLooping, this.radius);
+                this.streamID = this.soundManager.playSoundAt(pos.x, pos.y, pos.z, this.soundName, this.volume, 1, this.radius);
             }
             if (this.streamID != 0) {
                 this.isPlaying = true;

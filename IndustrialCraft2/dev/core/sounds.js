@@ -1,5 +1,5 @@
 var ICAudioManager = new SoundManager(16);
-ICAudioManager.setSoundPath(__dir__ + "res/sounds/");
+ICAudioManager.setResourcePath(__dir__ + "res/sounds/");
 
 ICAudioManager.registerSound("GeneratorLoop.ogg", "Generators/GeneratorLoop.ogg", true);
 ICAudioManager.registerSound("GeothermalLoop.ogg", "Generators/GeothermalLoop.ogg", true);
@@ -58,7 +58,5 @@ ICAudioManager.registerSound("MiningLaserLowFocus.ogg", "Tools/MiningLaser/Minin
 ICAudioManager.registerSound("MiningLaserScatter.ogg", "Tools/MiningLaser/MiningLaserScatter.ogg");
 ICAudioManager.registerSound("NanosaberIdle.ogg", "Tools/Nanosaber/NanosaberIdle.ogg", true);
 ICAudioManager.registerSound("NanosaberPowerup.ogg", "Tools/Nanosaber/NanosaberPowerup.ogg");
-ICAudioManager.registerSound("NanosaberSwing1.ogg", "Tools/Nanosaber/NanosaberSwing1.ogg");
-ICAudioManager.registerSound("NanosaberSwing2.ogg", "Tools/Nanosaber/NanosaberSwing2.ogg");
-ICAudioManager.registerSound("NanosaberSwing3.ogg", "Tools/Nanosaber/NanosaberSwing3.ogg");
+ICAudioManager.registerSound("NanosaberSwing.ogg", ["Tools/Nanosaber/NanosaberSwing1.ogg", "Tools/Nanosaber/NanosaberSwing2.ogg", "Tools/Nanosaber/NanosaberSwing3.ogg"]);
 ICAudioManager.registerSound("QuantumsuitBoots.ogg", "Tools/QuantumSuit/QuantumsuitBoots.ogg");

@@ -40,16 +40,25 @@ var SoundManager = /** @class */ (function () {
         this.maxStreams = maxStreams;
         SoundAPI.addSoundManager(this);
     }
-    SoundManager.prototype.setSoundPath = function (path) {
+    SoundManager.prototype.setResourcePath = function (path) {
         this.soundPath = path;
     };
     SoundManager.prototype.registerSound = function (soundName, path, looping) {
         if (looping === void 0) { looping = false; }
-        if (this.soundPath) {
-            path = this.soundPath + path;
+        if (Array.isArray(path)) {
+            var soundID = [];
+            for (var i in path) {
+                soundID.push(this.soundPool.load(this.soundPath + path[i], 1));
+            }
         }
-        var soundID = this.soundPool.load(path, 1);
+        else {
+            if (this.soundPath) {
+                path = this.soundPath + path;
+            }
+            var soundID = this.soundPool.load(path, 1);
+        }
         this.soundData[soundName] = { id: soundID, path: path, looping: looping };
+        return soundID;
     };
     SoundManager.prototype.getSoundData = function (soundName) {
         return this.soundData[soundName];
@@ -81,8 +90,12 @@ var SoundManager = /** @class */ (function () {
             return 0;
         if (soundData.looping)
             this.playingStreams++;
+        var soundID = soundData.id;
+        if (Array.isArray(soundID)) {
+            soundID = soundID[Math.floor(Math.random() * soundID.length)];
+        }
         volume *= SoundAPI.soundVolume;
-        var streamID = this.soundPool.play(soundData.id, volume, volume, soundData.looping ? 1 : 0, soundData.looping ? -1 : 0, pitch);
+        var streamID = this.soundPool.play(soundID, volume, volume, soundData.looping ? 1 : 0, soundData.looping ? -1 : 0, pitch);
         Game.message(streamID + " - " + soundName + ", volume: " + volume);
         return streamID;
     };
@@ -110,11 +123,6 @@ var SoundManager = /** @class */ (function () {
         return this.playSoundAt(tile.x + .5, tile.y + .5, tile.z + .5, soundName, volume, 1, radius);
     };
     SoundManager.prototype.createSource = function (sourceType, source, soundName, volume, radius) {
-        if (sourceType == AudioSourceType.PLAYER && typeof (source) != "number") {
-            volume = soundName;
-            soundName = source;
-            source = Player.get();
-        }
         if (sourceType == AudioSourceType.ENTITY && typeof (source) != "number") {
             Logger.Log("Invalid source type " + typeof (source) + "for AudioSource.ENTITY", "ERROR");
             return null;
@@ -150,15 +158,21 @@ var SoundManager = /** @class */ (function () {
         return sources;
     };
     SoundManager.prototype.removeSource = function (audioSource) {
-        for (var i in this.audioSources) {
-            var audio = this.audioSources[i];
-            if (audio == audioSource) {
-                audio.remove = true;
-                return;
-            }
-        }
+        audioSource.remove = true;
     };
-    SoundManager.prototype.removeSourceFrom = function (source, soundName) {
+    SoundManager.prototype.startPlaySound = function (sourceType, source, soundName, volume, radius) {
+        if (sourceType == AudioSourceType.PLAYER && typeof (source) != "number") {
+            volume = soundName;
+            soundName = source;
+            source = Player.get();
+        }
+        var audioSource = this.getSource(source, soundName);
+        if (audioSource) {
+            return audioSource;
+        }
+        return this.createSource(sourceType, source, soundName, volume, radius);
+    };
+    SoundManager.prototype.stopPlaySound = function (source, soundName) {
         for (var i in this.audioSources) {
             var audio = this.audioSources[i];
             if (audio.source == source && (!soundName || audio.soundName == soundName)) {
@@ -204,7 +218,7 @@ var SoundManager = /** @class */ (function () {
                 i--;
                 continue;
             }
-            if (!sound.isLooping && Debug.sysTime() - sound.startTime > this.getSoundDuration(sound.soundName)) {
+            if (!sound.isLooping && Debug.sysTime() - sound.startTime >= this.getSoundDuration(sound.soundName)) {
                 if (sound.nextSound) {
                     sound.playNextSound();
                 }
@@ -242,6 +256,11 @@ Callback.addCallback("MinecraftActivityStopped", function () {
 Callback.addCallback("LevelLeft", function () {
     SoundAPI.stopAllSounds();
 });
+var Sound = /** @class */ (function () {
+    function Sound() {
+    }
+    return Sound;
+}());
 var AudioSourceType;
 (function (AudioSourceType) {
     AudioSourceType[AudioSourceType["PLAYER"] = 0] = "PLAYER";

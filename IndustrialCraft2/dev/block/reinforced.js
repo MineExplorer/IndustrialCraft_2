@@ -8,7 +8,8 @@ Block.createBlock("reinforcedStone", [
 	explosionres: 150,
 	lightopacity: 15,
 	renderlayer: 2,
-	translucency: 0
+	translucency: 0,
+	sound: "stone"
 });
 ToolAPI.registerBlockMaterial(BlockID.reinforcedStone, "stone", 2, true);
 Block.setDestroyLevel("reinforcedStone", 2);
@@ -21,7 +22,8 @@ Block.createBlock("reinforcedGlass", [
 	base: 1,
 	destroytime: 25,
 	explosionres: 150,
-	renderlayer: 1
+	renderlayer: 1,
+	sound: "stone"
 });
 ToolAPI.registerBlockMaterial(BlockID.reinforcedGlass, "stone", 2, true);
 Block.setDestroyLevel("reinforcedGlass", 2);

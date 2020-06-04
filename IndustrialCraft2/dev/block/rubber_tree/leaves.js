@@ -10,7 +10,8 @@ Block.createBlock("rubberTreeLeaves", [
 	renderallfaces: true, 
 	renderlayer: 1,
 	lightopacity: 1,
-	translucency: 0.5
+	translucency: 0.5,
+	sound: "grass"
 });
 
 Block.registerDropFunction("rubberTreeLeaves", function(coords, blockID, blockData, level, enchant){

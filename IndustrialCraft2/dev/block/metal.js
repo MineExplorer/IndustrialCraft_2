@@ -4,7 +4,8 @@ Block.createSpecialType({
 	destroytime: 5,
 	explosionres: 30,
 	lightopacity: 15,
-	renderlayer: 2
+	renderlayer: 2,
+	sound: "stone"
 }, "stone");
 
 IDRegistry.genBlockID("blockCopper");

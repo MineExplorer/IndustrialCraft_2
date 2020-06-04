@@ -5,7 +5,8 @@ Block.createSpecialType({
 	explosionres: 15,
 	lightopacity: 15,
 	renderlayer: 2,
-	translucency: 0
+	translucency: 0,
+	sound: "stone"
 }, "ore");
 
 IDRegistry.genBlockID("oreCopper");

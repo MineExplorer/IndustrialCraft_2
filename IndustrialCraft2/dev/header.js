@@ -20,6 +20,7 @@ IMPORT("ChargeItem");
 IMPORT("TileRender");
 IMPORT("StorageInterface");
 IMPORT("LiquidLib");
+IMPORT("SoundLib");
 IMPORT("BackpackAPI");
 
 // constants
@@ -56,23 +57,6 @@ function addShapelessRecipe(result, source){
 // vanilla items
 Recipes.addFurnaceFuel(325, 10, 2000); // lava bucket
 ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone
-
-// debug
-var lasttime = -1
-var frame = 0
-
-Callback.addCallback("tick", function(){
-	if(Config.debugMode){
-		var t = Debug.sysTime();
-		if(frame++ % 20 == 0){
-			if(lasttime != -1){
-				tps = 1000 / (t - lasttime) * 20
-				Game.tipMessage(Math.round(tps * 10) / 10 + "tps")
-			}
-			lasttime = t
-		}
-	}
-});
 
 // Recipe debug
 /*

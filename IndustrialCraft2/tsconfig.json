@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "lib": ["ESNext"],
+    // "outDir": "build",
+    "outFile": "build/main.js",
+    "allowJs": true,
+    "experimentalDecorators": true
+  },
+  "exclude": [
+    "typedoc",
+    "node_modules",
+    "**/node_modules/*",
+    "dom"
+  ],
+  "include": [
+    "dev/**/*"
+  ],
+  "files": [
+    "../global.d.ts"
+  ]
+}
+

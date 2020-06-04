@@ -113,7 +113,7 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 			this.data.progress = 0;
 		}
 		if(!newActive)
-			this.stopPlaySound(true);
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var energyStorage = this.getEnergyStorage();
@@ -128,11 +128,11 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 		return this.data.energy_storage;
 	},
 	
-	getStartSoundFile: function(){
-		return "Machines/ExtractorOp.ogg";
+	getOperationSound: function(){
+		return "ExtractorOp.ogg";
     },
-	getInterruptSoundFile: function(){
-		return "Machines/InterruptOne.ogg";
+	getInterruptSound: function(){
+		return "InterruptOne.ogg";
     },
 	
 	renderModel: MachineRegistry.renderModelWithRotation

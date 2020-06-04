@@ -110,7 +110,7 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 			this.data.fuel -= fuel.amount/20;
 			this.activate();
 			this.container.setText("textInfo2", "Max Emit: " + fuel.power * 2);
-			this.startPlaySound("Generators/GeothermalLoop.ogg");
+			this.startPlaySound();
 		}
 		else {
 			this.data.liquid = null;
@@ -121,6 +121,10 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 		}
 		
 		this.liquidStorage.updateUiScale("liquidScale", liquid);
+	},
+
+	getOperationSound: function() {
+		return "GeothermalLoop.ogg";
 	},
 	
 	getEnergyStorage: function(){

@@ -4,5 +4,8 @@ var IntegrationAPI = {
 	},
 	addToolBooxValidItem: function(id){
 		toolbox_items.push(id);
+	},
+	registerQuantumArmorItem: function(id){
+		quantumArmorList.push(id);
 	}
 }

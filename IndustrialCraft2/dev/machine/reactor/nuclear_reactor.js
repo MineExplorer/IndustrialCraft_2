@@ -106,7 +106,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	addChamber: function(chamber){
-		if(!this.__initialized || chamber.removed || (chamber.core && chamber.core != this)){
+		if(!this.__initialized || chamber.remove || (chamber.core && chamber.core != this)){
 			return;
 		}
 		if(this.chambers.indexOf(chamber) == -1){
@@ -210,35 +210,32 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	startPlaySound: function(){
-		if(!Config.machineSoundEnabled){return;}
-		if(!this.remove){
-			if(!this.audioSource){
-				let sound = SoundAPI.playSoundAt(this, "Generators/NuclearReactor/NuclearReactorLoop.ogg", true, 16);
-				this.audioSource = sound;
-			}
-			if(this.data.output < 40){
-				var geigerSound = "Generators/NuclearReactor/GeigerLowEU.ogg";
-			} else if(this.data.output < 80){
-				var geigerSound = "Generators/NuclearReactor/GeigerMedEU.ogg";
-			} else {
-				var geigerSound = "Generators/NuclearReactor/GeigerHighEU.ogg";
-			}
-			if(!this.audioSourceGeiger){
-				this.audioSourceGeiger = SoundAPI.playSoundAt(this, geigerSound, true, 16);
-			}
-			else if(this.audioSourceGeiger.name != geigerSound){
-				this.audioSourceGeiger.stop();
-				this.audioSourceGeiger = SoundAPI.playSoundAt(this, geigerSound, true, 16);
-			}
+		if (!Config.machineSoundEnabled || this.remove) return;
+		if (!this.audioSource) {
+			this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, "NuclearReactorLoop.ogg");;
+		}
+		if (this.data.output < 40) {
+			var geigerSound = "GeigerLowEU.ogg";
+		} else if(this.data.output < 80) {
+			var geigerSound = "GeigerMedEU.ogg";
+		} else {
+			var geigerSound = "GeigerHighEU.ogg";
+		}
+		if (!this.audioSourceGeiger) {
+			this.audioSourceGeiger = ICAudioManager.createSource(AudioSource.TILEENTITY, this, geigerSound);
+		}
+		else if(this.audioSourceGeiger.soundName != geigerSound) {
+			this.audioSourceGeiger.setSound(geigerSound, true);
 		}
 	},
-	stopPlaySound: function(){
-		if(this.audioSource && this.audioSource.isPlaying()){
-			this.audioSource.stop();
+	
+	stopPlaySound: function() {
+		if (this.audioSource) {
+			ICAudioManager.removeSource(this.audioSource);
 			this.audioSource = null;
 		}
-		if(this.audioSourceGeiger && this.audioSourceGeiger.isPlaying()){
-			this.audioSourceGeiger.stop();
+		if (this.audioSourceGeiger) {
+			ICAudioManager.removeSource(this.audioSourceGeiger);
 			this.audioSourceGeiger = null;
 		}
 	},
@@ -391,8 +388,7 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 	},
 	
 	core: null,
-	removed: false,
-	
+
 	getGuiScreen: function(){
 		if(this.core){
 			return guiNuclearReactor;
@@ -428,10 +424,6 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 				}
 			}
 		}
-	},
-	
-	destroy: function(){
-		this.removed = true;
 	}
 });
 

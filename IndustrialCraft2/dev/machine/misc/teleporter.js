@@ -74,7 +74,9 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
 									energyNeed -= energyChange;
 									if(energyNeed <= 0){break;}
 								}
-								SoundAPI.playSound("Machines/Teleporter/TeleUse.ogg")
+								if(ent == Player.get()){
+									ICAudioManager.playSound("TeleUse.ogg");
+								}
 								Entity.setPosition(ent, receive.x + .5, receive.y + 3, receive.z + .5);
 							}
 						}

@@ -131,7 +131,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 				newActive = true;
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
-				this.startPlaySound("Machines/PumpOp.ogg");
+				this.startPlaySound();
 				if(this.data.progress.toFixed(3) >= 1){
 					var coords = this.data.coords;
 					var block = World.getBlock(coords.x, coords.y, coords.z);
@@ -162,6 +162,10 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		this.container.setScale("progressScale", this.data.progress);
 		this.liquidStorage.updateUiScale("liquidScale", liquid);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
+	},
+
+	getOperationSound: function(){
+		return "PumpOp.ogg";
 	},
 
 	getEnergyStorage: function(){

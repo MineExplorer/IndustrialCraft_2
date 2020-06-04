@@ -140,7 +140,7 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 			}
 		}
 		if(!newActive)
-			this.stopPlaySound(true);
+			this.stopPlaySound();
 		this.setActive(newActive);
 		
 		var energyStorage = this.getEnergyStorage();
@@ -160,14 +160,14 @@ MachineRegistry.registerElectricMachine(BlockID.inductionFurnace, {
 		return this.data.energy_storage;
 	},
 	
-	getStartingSoundFile: function(){
-		return "Machines/Induction Furnace/InductionStart.ogg";
+	getStartingSound: function(){
+		return "InductionStart.ogg";
     },
-	getStartSoundFile: function(){
-		return "Machines/Induction Furnace/InductionLoop.ogg";
+	getOperationSound: function(){
+		return "InductionLoop.ogg";
     },
-	getInterruptSoundFile: function(){
-		return "Machines/Induction Furnace/InductionStop.ogg";
+	getInterruptSound: function(){
+		return "InductionStop.ogg";
     },
 	
 	renderModel: MachineRegistry.renderModelWithRotation

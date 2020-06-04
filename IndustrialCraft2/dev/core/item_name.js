@@ -129,8 +129,8 @@ ItemName = {
 				"o oeste"
 			]
 		}
-		if(sideNames[Config.language]){
-			return sideNames[Config.language][side+1];
+		if(sideNames[Config.gameLanguage]){
+			return sideNames[Config.gameLanguage][side+1];
 		} else {
 			return sideNames["en"][side+1];
 		}

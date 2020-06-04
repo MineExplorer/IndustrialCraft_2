@@ -75,7 +75,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		
 		if(this.data.isEnabled && this.data.energy > 0){
 			this.activate();
-			this.startPlaySound("Generators/MassFabricator/MassFabLoop.ogg");
+			this.startPlaySound();
 			if(this.data.catalyser < Math.max(1000, this.data.energy)){
 				var catalyserSlot = this.container.getSlot("catalyserSlot");
 				var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
@@ -92,8 +92,8 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 				this.data.progress += transfer * 6;
 				this.data.energy -= transfer;
 				this.data.catalyser -= transfer;
-				if(World.getThreadTime()%40 == 0 && transfer > 0){
-					SoundAPI.playSoundAt(this, "Generators/MassFabricator/MassFabScrapSolo.ogg", false, 16);
+				if(World.getThreadTime() % 40 == 0 && transfer > 0){
+					ICAudioManager.playSoundAtBlock(this, "MassFabScrapSolo.ogg", 1);
 				}
 			}
 			else{
@@ -122,27 +122,19 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		this.data.isEnabled = (signal.power == 0);
 	},
 	
+	getOperationSound: function() {
+		return "MassFabLoop.ogg";
+	},
+
 	getEnergyStorage: function(){
 		return ENERGY_PER_MATTER - this.data.progress;
 	},
 	
-	renderModel: MachineRegistry.renderModelWithRotation,
-	energyReceive: function(type, amount, voltage) {
-		if(this.data.isEnabled){
-			if(Config.voltageEnabled && voltage > this.getMaxPacketSize()){
-				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 15, true);
-				SoundAPI.playSoundAt(this, "Machines/MachineOverload.ogg", false, 32);
-				this.selfDestroy();
-				return 1;
-			}
-			var add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
-			this.data.energy += add;
-			this.data.energy_receive += add;
-			this.data.voltage = Math.max(this.data.voltage, voltage);
-			return add;
-		}
-		return 0;
-	}
+	getExplosionPower: function(){
+		return 15;
+	},
+
+	renderModel: MachineRegistry.renderModelWithRotation
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.massFabricator);

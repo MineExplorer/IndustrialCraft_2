@@ -156,9 +156,9 @@ let StorageInterface = {
 		return 0;
 	},
 	
-	getNearestContainers: function(coords, side, sideExcluded){
+	getNearestContainers: function(coords, side, excludeSide){
 		let containers = {};
-		if(side >= 0 && !sideExcluded){
+		if(side >= 0 && !excludeSide){
 			let dir = this.getRelativeCoords(coords, side);
 			let container = World.getContainer(dir.x, dir.y, dir.z);
 			if(container){
@@ -166,7 +166,7 @@ let StorageInterface = {
 			}
 		}
 		else for(let s = 0; s < 6; s++){
-			if(sideExcluded && s == side) continue;
+			if(excludeSide && s == side) continue;
 			let dir = this.getRelativeCoords(coords, s);
 			let container = World.getContainer(dir.x, dir.y, dir.z);
 			if(container){
@@ -176,9 +176,9 @@ let StorageInterface = {
 		return containers;
 	},
 	
-	getNearestLiquidStorages: function(coords, side, sideExcluded){
+	getNearestLiquidStorages: function(coords, side, excludeSide){
 		let storages = {};
-		if(side >= 0 && !sideExcluded){
+		if(side >= 0 && !excludeSide){
 			let dir = this.getRelativeCoords(coords, side);
 			let tileEntity = World.getTileEntity(dir.x, dir.y, dir.z);
 			if(tileEntity && tileEntity.liquidStorage){
@@ -186,7 +186,7 @@ let StorageInterface = {
 			}
 		}
 		else for(let s = 0; s < 6; s++){
-			if(sideExcluded && s == side) continue;
+			if(excludeSide && s == side) continue;
 			let dir = this.getRelativeCoords(coords, s);
 			let tileEntity = World.getTileEntity(dir.x, dir.y, dir.z);
 			if(tileEntity && tileEntity.liquidStorage){

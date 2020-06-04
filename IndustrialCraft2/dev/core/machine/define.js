@@ -25,9 +25,9 @@ var MachineRegistry = {
 		if(Prototype.wrenchClick){
 			Prototype.click = function(id, count, data, coords){
 				var item = Player.getCarriedItem();
-				if(ICTool.isValidWrench(item, 10)){
+				if(ICTool.isValidWrench(item, 1)){
 					if(this.wrenchClick(id, count, data, coords))
-						ICTool.useWrench(item, 10);
+						ICTool.useWrench(coords, item, 1);
 					return true;
 				}
 				return false;
@@ -35,59 +35,44 @@ var MachineRegistry = {
 		}
 		
 		// audio
-		if(Prototype.getStartSoundFile){
-			if(!Prototype.getStartingSoundFile){
-				Prototype.getStartingSoundFile = function(){return null;}
+		if (Prototype.getOperationSound) {
+			Prototype.audioSource = null;
+			Prototype.finishingSound = 0;
+
+			if (!Prototype.getStartingSound) {
+				Prototype.getStartingSound = function(){return null;}
 			}
-			if(!Prototype.getInterruptSoundFile){
-				Prototype.getInterruptSoundFile = function(){return null;}
+
+			if (!Prototype.getInterruptSound) {
+				Prototype.getInterruptSound = function(){return null;}
 			}
-			Prototype.startPlaySound = Prototype.startPlaySound || function(){
-				if(!Config.machineSoundEnabled){return;}
-				let audio = this.audioSource;
-				if(audio && audio.isFinishing){
-					audio.stop();
-					audio.media = audio.startingSound || audio.startSound;
-					audio.start();
-					audio.isFinishing = false;
-				}
-				else if(!this.remove && (!audio || !audio.isPlaying()) && this.dimension == Player.getDimension()){
-					this.audioSource = SoundAPI.createSource([this.getStartingSoundFile(), this.getStartSoundFile(), this.getInterruptSoundFile()], this, 16);
-				}
-			}
-			Prototype.stopPlaySound = Prototype.stopPlaySound || function(playInterruptSound){
-				let audio = this.audioSource;
-				if(audio){
-					if(!audio.isPlaying()){
-						this.audioSource = null;
+			
+			Prototype.startPlaySound = Prototype.startPlaySound || function() {
+				if (!Config.machineSoundEnabled) return;
+				if (!this.audioSource && !this.remove) {
+					if (this.finishingSound != 0) {
+						ICAudioManager.stop(this.finishingSound);
 					}
-					else if(!audio.isFinishing){
-						audio.stop();
-						if(playInterruptSound){
-							audio.playFinishingSound();
-						}
+					if (this.getStartingSound()) {
+						this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, this.getStartingSound());
+						this.audioSource.setNextSound(this.getOperationSound(), true);
+					} else {
+						this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, this.getOperationSound());
+					}
+				}
+			}
+			
+			Prototype.stopPlaySound = Prototype.stopPlaySound || function() {
+				if (this.audioSource) {
+					ICAudioManager.removeSource(this.audioSource);
+					this.audioSource = null;
+					if (this.getInterruptSound()) {
+						this.finishingSound = ICAudioManager.playSoundAtBlock(this, this.getInterruptSound());
 					}
 				}
 			}
 		} 
-		else {
-			Prototype.startPlaySound = Prototype.startPlaySound || function(name){
-				if(!Config.machineSoundEnabled){return;}
-				let audio = this.audioSource;
-				if(!this.remove && (!audio || !audio.isPlaying()) && this.dimension == Player.getDimension()){
-					let sound = SoundAPI.playSoundAt(this, name, true, 16);
-					this.audioSource = sound;
-				}
-			}
-			Prototype.stopPlaySound = Prototype.stopPlaySound || function(){
-				if(this.audioSource && this.audioSource.isPlaying()){
-					this.audioSource.stop();
-					this.audioSource = null;
-				}
-			}
-		}
-		
-		
+
 		// machine activation
 		if(Prototype.defaultValues && Prototype.defaultValues.isActive !== undefined){
 			if(!Prototype.renderModel){
@@ -104,7 +89,6 @@ var MachineRegistry = {
 			}
 			Prototype.destroy = Prototype.destroy || function(){
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-				this.stopPlaySound();
 			}
 		}
 		
@@ -166,6 +150,10 @@ var MachineRegistry = {
 		
 		Prototype.energyReceive = Prototype.energyReceive || this.basicEnergyReceiveFunc;
 		
+		Prototype.getExplosionPower = Prototype.getExplosionPower || function(){
+			return 1.2;
+		}
+
 		this.registerPrototype(id, Prototype);
 		// register for energy net
 		EnergyTileRegistry.addEnergyTypeForId(id, EU);
@@ -220,7 +208,7 @@ var MachineRegistry = {
 		var item = Player.getCarriedItem();
 		var dropID = 0;
 		if(ICTool.isValidWrench(item, 10)){
-			ICTool.useWrench(item, 10);
+			ICTool.useWrench(coords, item, 10);
 			World.setBlock(coords.x, coords.y, coords.z, 0);
 			var chance = ICTool.getWrenchData(item.id).chance;
 			if(Math.random() < chance){
@@ -235,7 +223,7 @@ var MachineRegistry = {
 		if(dropID == blockID && saveEnergyAmount){
 			var extra = new ItemExtraData();
 			extra.putInt("energy", saveEnergyAmount);
-			World.drop(coords.x, coords.y, coords.z, dropID, 1, 0, extra);
+			World.drop(coords.x + .5, coords.y + .5, coords.z + .5, dropID, 1, 0, extra);
 			return [];
 		}
 		if(dropID) return [[dropID, 1, 0]];
@@ -306,11 +294,8 @@ var MachineRegistry = {
 		if(voltage > maxVoltage){
 			if(Config.voltageEnabled){
 				World.setBlock(this.x, this.y, this.z, 0);
-				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, 1.2, true);
-				var sound = SoundAPI.playSound("Machines/MachineOverload.ogg", false, true);
-				if(sound && !sound.source){
-					sound.setSource(this, 32);
-				}
+				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.getExplosionPower(), true);
+				ICAudioManager.playSoundAtBlock(this, "MachineOverload.ogg", 1, 32);
 				this.selfDestroy();
 				return 1;
 			}

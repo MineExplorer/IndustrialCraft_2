@@ -24,7 +24,7 @@ Callback.addCallback("DestroyBlockStart", function(coords, block){
 	if(item.id == ItemID.cutter && cableData && cableData.insulation > 0){
 		Game.prevent();
 		ToolAPI.breakCarriedTool(1);
-		SoundAPI.playSound("Tools/InsulationCutters.ogg");
+		ICAudioManager.playSoundAtBlock(coords, "InsulationCutters.ogg");
 		var blockID = BlockID[cableData.name + (cableData.insulation - 1)]
 		World.setBlock(coords.x, coords.y, coords.z, blockID, 0);
 		World.drop(coords.x + 0.5, coords.y + 1, coords.z + 0.5, ItemID.rubber, 1);

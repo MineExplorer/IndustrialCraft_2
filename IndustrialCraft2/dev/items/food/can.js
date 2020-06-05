@@ -36,6 +36,6 @@ Item.registerNoTargetUseFunction("tinCanFull", function(){
 			Player.setCarriedItem(item.id, item.count - count, item.data);
 			Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
 		}
-		ICAudioManager.playSound("eat.ogg");
+		SoundManager.playSound("eat.ogg");
 	}
 });

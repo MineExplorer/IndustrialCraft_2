@@ -7,7 +7,7 @@ ModAPI.registerAPI("ICore", {
 	Reactor: ReactorAPI,
 	Radiation: RadiationAPI,
 	Tool: ICTool,
-	Sound: ICAudioManager,
+	Sound: SoundManager,
 	Agriculture: AgricultureAPI,
 	ItemName: ItemName,
 	UI: UIbuttons,

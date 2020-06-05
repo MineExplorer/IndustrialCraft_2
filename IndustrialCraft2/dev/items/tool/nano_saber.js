@@ -38,7 +38,7 @@ ToolAPI.registerSword(ItemID.nanoSaberActive, {level: 0, durability: 27, damage:
 		return true;
 	},
 	onAttack: function(item, mob){
-		ICAudioManager.playSound("NanosaberSwing.ogg");
+		SoundManager.playSound("NanosaberSwing.ogg");
 		return true;
 	}
 });
@@ -49,7 +49,7 @@ let NanoSaber = {
 	noTargetUse: function(item){
 		if(ChargeItemRegistry.getEnergyStored(item) >= 64){
 			Player.setCarriedItem(ItemID.nanoSaberActive, 1, item.data, item.extra);
-			ICAudioManager.playSound("NanosaberPowerup.ogg");
+			SoundManager.playSound("NanosaberPowerup.ogg");
 			this.activationTime = World.getThreadTime();
 		}
 	},

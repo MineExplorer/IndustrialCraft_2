@@ -255,13 +255,13 @@ Callback.addCallback("LocalTick", function(){
 		}
 		if (playSound && Config.soundEnabled) {
 			if (hoverMode) {
-				ICAudioManager.startPlaySound(AudioSource.PLAYER, "JetpackLoop.ogg", 0.8);
+				SoundManager.startPlaySound(AudioSource.PLAYER, "JetpackLoop.ogg", 0.8);
 			} else {
-				ICAudioManager.startPlaySound(AudioSource.PLAYER, "JetpackLoop.ogg", 1);
+				SoundManager.startPlaySound(AudioSource.PLAYER, "JetpackLoop.ogg", 1);
 			}
 		}
 		if (!playSound) {
-			ICAudioManager.stopPlaySound(Player.get(), "JetpackLoop.ogg");
+			SoundManager.stopPlaySound(Player.get(), "JetpackLoop.ogg");
 		}
 	}
 	else if(UIbuttons.container){

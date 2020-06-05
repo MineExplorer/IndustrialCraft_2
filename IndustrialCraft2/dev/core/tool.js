@@ -27,7 +27,7 @@ let ICTool = {
 		} else {
 			this.useElectricItem(item, wrench.energy * damage);
 		}
-		ICAudioManager.playSoundAtBlock(coords, "Wrench.ogg");
+		SoundManager.playSoundAtBlock(coords, "Wrench.ogg");
 	},
 	
 	addRecipe: function(result, data, tool) {
@@ -87,7 +87,7 @@ let ICTool = {
 	registerElectricTreerap: function(nameID) {
 		Item.registerUseFunction(nameID, function(coords, item, block) {
 			if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, 50)) {
-				ICAudioManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");
+				SoundManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");
 				World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLogLatex, block.data - 4);
 				Entity.setVelocity(
 					World.drop(
@@ -110,10 +110,10 @@ let ICTool = {
 			let item = Player.getCarriedItem();
 			let tool = ToolAPI.getToolData(item.id);
 			if (item.id == itemID && (!tool || !tool.toolMaterial.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.toolMaterial.energyPerUse)) {
-				ICAudioManager.startPlaySound(AudioSource.PLAYER, item.id, idleSound);
+				SoundManager.startPlaySound(AudioSource.PLAYER, item.id, idleSound);
 			}
-			else if(ICAudioManager.stopPlaySound(itemID) && stopSound) {
-				ICAudioManager.playSound(stopSound);
+			else if(SoundManager.stopPlaySound(itemID) && stopSound) {
+				SoundManager.playSound(stopSound);
 			}
 		});
 	}

@@ -93,7 +93,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 				this.data.energy -= transfer;
 				this.data.catalyser -= transfer;
 				if(World.getThreadTime() % 40 == 0 && transfer > 0){
-					ICAudioManager.playSoundAtBlock(this, "MassFabScrapSolo.ogg", 1);
+					SoundManager.playSoundAtBlock(this, "MassFabScrapSolo.ogg", 1);
 				}
 			}
 			else{

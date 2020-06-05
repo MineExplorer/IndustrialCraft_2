@@ -4,7 +4,7 @@ Item.setMaxDamage(ItemID.treetap, 17);
 
 Item.registerUseFunction("treetap", function(coords, item, block) {
 	if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2) {
-		ICAudioManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");
+		SoundManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");
 		World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLogLatex, block.data - 4);
 		Player.setCarriedItem(item.id, ++item.data < 17 ? item.count : 0, item.data);
 		Entity.setVelocity(

@@ -212,7 +212,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	startPlaySound: function(){
 		if (!Config.machineSoundEnabled || this.remove) return;
 		if (!this.audioSource) {
-			this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, "NuclearReactorLoop.ogg");;
+			this.audioSource = SoundManager.createSource(AudioSource.TILEENTITY, this, "NuclearReactorLoop.ogg");;
 		}
 		if (this.data.output < 40) {
 			var geigerSound = "GeigerLowEU.ogg";
@@ -222,7 +222,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			var geigerSound = "GeigerHighEU.ogg";
 		}
 		if (!this.audioSourceGeiger) {
-			this.audioSourceGeiger = ICAudioManager.createSource(AudioSource.TILEENTITY, this, geigerSound);
+			this.audioSourceGeiger = SoundManager.createSource(AudioSource.TILEENTITY, this, geigerSound);
 		}
 		else if(this.audioSourceGeiger.soundName != geigerSound) {
 			this.audioSourceGeiger.setSound(geigerSound, true);
@@ -231,11 +231,11 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	
 	stopPlaySound: function() {
 		if (this.audioSource) {
-			ICAudioManager.removeSource(this.audioSource);
+			SoundManager.removeSource(this.audioSource);
 			this.audioSource = null;
 		}
 		if (this.audioSourceGeiger) {
-			ICAudioManager.removeSource(this.audioSourceGeiger);
+			SoundManager.removeSource(this.audioSourceGeiger);
 			this.audioSourceGeiger = null;
 		}
 	},

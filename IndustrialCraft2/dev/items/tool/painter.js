@@ -48,7 +48,7 @@ for(let i = 1; i <= 16; i++){
 					item.id = ItemID.icPainter;
 				Player.setCarriedItem(item.id, 1, item.data);
 			}
-			ICAudioManager.playSoundAt(coords.x + .5, coords.y + .5, coords.z + .5, "Painters.ogg");
+			SoundManager.playSoundAt(coords.x + .5, coords.y + .5, coords.z + .5, "Painters.ogg");
 		}
 	});
 }

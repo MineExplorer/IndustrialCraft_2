@@ -51,23 +51,23 @@ var MachineRegistry = {
 				if (!Config.machineSoundEnabled) return;
 				if (!this.audioSource && !this.remove) {
 					if (this.finishingSound != 0) {
-						ICAudioManager.stop(this.finishingSound);
+						SoundManager.stop(this.finishingSound);
 					}
 					if (this.getStartingSound()) {
-						this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, this.getStartingSound());
+						this.audioSource = SoundManager.createSource(AudioSource.TILEENTITY, this, this.getStartingSound());
 						this.audioSource.setNextSound(this.getOperationSound(), true);
 					} else {
-						this.audioSource = ICAudioManager.createSource(AudioSource.TILEENTITY, this, this.getOperationSound());
+						this.audioSource = SoundManager.createSource(AudioSource.TILEENTITY, this, this.getOperationSound());
 					}
 				}
 			}
 			
 			Prototype.stopPlaySound = Prototype.stopPlaySound || function() {
 				if (this.audioSource) {
-					ICAudioManager.removeSource(this.audioSource);
+					SoundManager.removeSource(this.audioSource);
 					this.audioSource = null;
 					if (this.getInterruptSound()) {
-						this.finishingSound = ICAudioManager.playSoundAtBlock(this, this.getInterruptSound());
+						this.finishingSound = SoundManager.playSoundAtBlock(this, this.getInterruptSound());
 					}
 				}
 			}
@@ -295,7 +295,7 @@ var MachineRegistry = {
 			if(Config.voltageEnabled){
 				World.setBlock(this.x, this.y, this.z, 0);
 				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.getExplosionPower(), true);
-				ICAudioManager.playSoundAtBlock(this, "MachineOverload.ogg", 1, 32);
+				SoundManager.playSoundAtBlock(this, "MachineOverload.ogg", 1, 32);
 				this.selfDestroy();
 				return 1;
 			}

@@ -66,7 +66,7 @@ var MiningLaser = {
 		if (laserSetting == 3 || laserSetting == 6) return;
 		var mode = this.getModeData(laserSetting);
 		if (ICTool.useElectricItem(item, mode.energy)) {
-			ICAudioManager.playSound(mode.sound || "MiningLaser.ogg");
+			SoundManager.playSound(mode.sound || "MiningLaser.ogg");
 			var pos = Player.getPosition();
 			var angle = Entity.getLookAngle(Player.get());
 			var dir = new Vector3(Entity.getLookVectorByAngle(angle));
@@ -100,7 +100,7 @@ var MiningLaser = {
 		}
 		var mode = this.getModeData(laserSetting);
 		if (ICTool.useElectricItem(item, mode.energy)) {
-			ICAudioManager.playSound(mode.sound || "MiningLaser.ogg");
+			SoundManager.playSound(mode.sound || "MiningLaser.ogg");
 			var pos = Player.getPosition();
 			var angle = Entity.getLookAngle(Player.get());
 			var dir = new Vector3(Entity.getLookVectorByAngle(angle));

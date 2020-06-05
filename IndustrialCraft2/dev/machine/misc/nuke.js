@@ -28,7 +28,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 	},
 	
 	explode: function(radius) {
-		ICAudioManager.playSound("NukeExplosion.ogg");
+		SoundManager.playSound("NukeExplosion.ogg");
 		let entities = Entity.getAll();
 		let rad = radius * 1.5;
 		for (let i in entities) {

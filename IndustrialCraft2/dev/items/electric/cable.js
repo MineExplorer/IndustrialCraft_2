@@ -82,7 +82,6 @@ function registerCablePlaceFunc(nameID, blockID, blockData){
 		World.setBlock(place.x, place.y, place.z, blockID, blockData);
 		Player.setCarriedItem(item.id, item.count - 1, item.data);
 		EnergyTypeRegistry.onWirePlaced(place.x, place.y, place.z);
-		Game.prevent();
 	});
 }
 

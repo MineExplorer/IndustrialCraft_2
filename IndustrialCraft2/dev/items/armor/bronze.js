@@ -3,15 +3,15 @@ IDRegistry.genItemID("bronzeChestplate");
 IDRegistry.genItemID("bronzeLeggings");
 IDRegistry.genItemID("bronzeBoots");
 
-Item.createArmorItem("bronzeHelmet", "Bronze Helmet", {name: "bronze_helmet"}, {type: "helmet", armor: 2, durability: 149, texture: "armor/bronze_1.png"});
-Item.createArmorItem("bronzeChestplate", "Bronze Chestplate", {name: "bronze_chestplate"}, {type: "chestplate", armor: 6, durability: 216, texture: "armor/bronze_1.png"});
-Item.createArmorItem("bronzeLeggings", "Bronze Leggings", {name: "bronze_leggings"}, {type: "leggings", armor: 5, durability: 203, texture: "armor/bronze_2.png"});
-Item.createArmorItem("bronzeBoots", "Bronze Boots", {name: "bronze_boots"}, {type: "boots", armor: 2, durability: 176, texture: "armor/bronze_1.png"});
+Item.createArmorItem("bronzeHelmet", "Bronze Helmet", {name: "bronze_helmet"}, {type: "helmet", armor: 2, durability: 154, texture: "armor/bronze_1.png"});
+Item.createArmorItem("bronzeChestplate", "Bronze Chestplate", {name: "bronze_chestplate"}, {type: "chestplate", armor: 6, durability: 224, texture: "armor/bronze_1.png"});
+Item.createArmorItem("bronzeLeggings", "Bronze Leggings", {name: "bronze_leggings"}, {type: "leggings", armor: 5, durability: 210, texture: "armor/bronze_2.png"});
+Item.createArmorItem("bronzeBoots", "Bronze Boots", {name: "bronze_boots"}, {type: "boots", armor: 2, durability: 182, texture: "armor/bronze_1.png"});
 
-Item.setEnchantType(ItemID.bronzeHelmet, EnchantType.helmet, 14);
-Item.setEnchantType(ItemID.bronzeChestplate, EnchantType.chestplate, 14);
-Item.setEnchantType(ItemID.bronzeLeggings, EnchantType.leggings, 14);
-Item.setEnchantType(ItemID.bronzeBoots, EnchantType.boots, 14);
+Item.setEnchantType(ItemID.bronzeHelmet, EnchantType.helmet, 10);
+Item.setEnchantType(ItemID.bronzeChestplate, EnchantType.chestplate, 10);
+Item.setEnchantType(ItemID.bronzeLeggings, EnchantType.leggings, 10);
+Item.setEnchantType(ItemID.bronzeBoots, EnchantType.boots, 10);
 
 Item.addRepairItemIds(ItemID.bronzeHelmet, [ItemID.ingotBronze]);
 Item.addRepairItemIds(ItemID.bronzeChestplate, [ItemID.ingotBronze]);

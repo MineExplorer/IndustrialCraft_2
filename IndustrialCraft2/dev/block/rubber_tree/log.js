@@ -6,13 +6,13 @@ Block.createSpecialType({
 	lightopacity: 15,
 	renderlayer: 2,
 	translucency: 0,
-	sound: "log"
-}, "log");
+	sound: "wood"
+}, "wood");
 
 IDRegistry.genBlockID("rubberTreeLog");
 Block.createBlock("rubberTreeLog", [
 	{name: "Rubber Tree Log", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: true}
-], "log");
+], "wood");
 Block.registerDropFunction("rubberTreeLog", function(coords, blockID){
 	return [[blockID, 1, 0]];
 });
@@ -21,9 +21,9 @@ ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
 
 IDRegistry.genBlockID("rubberTreeLogLatex");
 Block.createBlockWithRotation("rubberTreeLogLatex", [
-	{name: "tile.rubberTreeLog.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
+	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
-], "log");
+], "wood");
 Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID){
 	return [[BlockID.rubberTreeLog, 1, 0], [ItemID.latex, 1, 0]];
 });

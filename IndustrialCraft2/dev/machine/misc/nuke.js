@@ -91,5 +91,9 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 		if (signal.power > 0) {
 			this.data.activated = true; 
 		}
+	},
+
+	destroy: function(){
+		Block.unmapAtCoords(this.x, this.y, this.z);
 	}
 });

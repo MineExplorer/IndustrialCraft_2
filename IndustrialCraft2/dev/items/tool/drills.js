@@ -158,7 +158,7 @@ ToolType.drill = {
 
 ToolLib.setTool(ItemID.drill, {energyPerUse: 50, level: 3, efficiency: 8, damage: 3},  ToolType.drill);
 ToolLib.setTool(ItemID.diamondDrill, {energyPerUse: 80, level: 4, efficiency: 16, damage: 4}, ToolType.drill);
-ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 24, damage: 5}, {
+ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 100, efficiency: 24, damage: 5}, {
 	damage: 0,
 	blockTypes: ["stone", "dirt"],
 	soundType: "drill",
@@ -213,12 +213,12 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 2
 			let X = 1;
 			let Y = 1;
 			let Z = 1;
-			if(side==BlockSide.EAST || side==BlockSide.WEST){
-			X = 0;}
-			if(side==BlockSide.UP || side==BlockSide.DOWN){
-			Y = 0;}
-			if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-			Z = 0;}
+			if(side == BlockSide.EAST || side == BlockSide.WEST)
+				X = 0;
+			if(side == BlockSide.UP || side == BlockSide.DOWN)
+				Y = 0;
+			if(side == BlockSide.NORTH || side == BlockSide.SOUTH)
+				Z = 0;
 			for(let xx = coords.x - X; xx <= coords.x + X; xx++){
 				for(let yy = coords.y - Y; yy <= coords.y + Y; yy++){
 					for(let zz = coords.z - Z; zz <= coords.z + Z; zz++){

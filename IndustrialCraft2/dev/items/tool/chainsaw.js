@@ -48,6 +48,6 @@ ToolType.chainsaw = {
 	},
 }
 
-ToolLib.setTool(ItemID.chainsaw, {energyPerUse: 100, level: 3, efficiency: 16, damage: 6}, ToolType.chainsaw);
+ToolLib.setTool(ItemID.chainsaw, {energyPerUse: 100, level: 3, efficiency: 12, damage: 6}, ToolType.chainsaw);
 
 ICTool.setOnHandSound(ItemID.chainsaw, "ChainsawIdle.ogg", "ChainsawStop.ogg");

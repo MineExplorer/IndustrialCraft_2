@@ -1,8 +1,8 @@
 let ICTool = {
 	wrenchData: {},
 	
-	registerWrench: function(id, chance, energyOnUse) {
-		this.wrenchData[id] = {chance: chance, energy: energyOnUse}
+	registerWrench: function(id, chance, energyPerUse) {
+		this.wrenchData[id] = {chance: chance, energy: energyPerUse}
 	},
 	
 	getWrenchData: function(id) {
@@ -84,7 +84,7 @@ let ICTool = {
 		});
 	},
 	
-	registerElectricTreerap: function(nameID) {
+	registerElectricTreetap: function(nameID) {
 		Item.registerUseFunction(nameID, function(coords, item, block) {
 			if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, 50)) {
 				SoundManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");
@@ -118,6 +118,10 @@ let ICTool = {
 		});
 	}
 }
+
+// temporary for reverse compatibility
+// it's very fun misspelling
+ICTool.registerElectricTreerap = ICTool.registerElectricTreetap;
 
 Callback.addCallback("DestroyBlockStart", function(coords, block) {
 	if (MachineRegistry.isMachine(block.id)) {

@@ -140,9 +140,9 @@ var buttonContent = {
 				var armor = Player.getArmorSlot(3);
 				var energyStored = ChargeItemRegistry.getEnergyStored(armor);
 				var vel = Player.getVelocity();
-				if(energyStored >= 1000 && vel.y.toFixed(4) == fallVelocity){
-					Player.addVelocity(vel.x*2, 1.4, vel.z*2);
-					ChargeItemRegistry.setEnergyStored(armor, energyStored - 1000);
+				if(energyStored >= 4000 && vel.y.toFixed(4) == fallVelocity){
+					Player.setVelocity(vel.x*3.5, 1.3, vel.z*3.5);
+					ChargeItemRegistry.setEnergyStored(armor, energyStored - 4000);
 					Player.setArmorSlot(3, armor.id, 1, armor.data, armor.extra);
 				}
 			}

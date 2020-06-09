@@ -9,7 +9,7 @@ Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: 
 Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 27, texture: "armor/lappack_1.png", isTech: true});
 ItemName.setRarity(ItemID.lappack, 1);
 
-ChargeItemRegistry.registerExtraItem(ItemID.batpack, "Eu",  60000, 128, 1, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.batpack, "Eu",  60000, 100, 1, "storage", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.advBatpack, "Eu",  600000, 512, 2, "storage", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.energypack, "Eu", 2000000, 2048, 3, "storage", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.lappack, "Eu", 10000000, 8192, 4, "storage", true, true);
@@ -78,7 +78,7 @@ var ENERGY_PACK_TICK = function(slot, level, transfer){
 	}
 }
 
-registerStoragePack("batpack", 1, 128);
+registerStoragePack("batpack", 1, 100);
 registerStoragePack("advBatpack", 2, 512);
 registerStoragePack("energypack", 3, 2048);
 registerStoragePack("lappack", 4, 8192);

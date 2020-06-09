@@ -4,6 +4,7 @@ LIBRARY({
     shared: false,
     api: "CoreEngine"
 });
+var settings_path = "/storage/emulated/0/games/Horizon/minecraftpe/options.txt";
 var SoundManager = /** @class */ (function () {
     function SoundManager() {
     }
@@ -63,7 +64,6 @@ var SoundManager = /** @class */ (function () {
         if (Array.isArray(soundID)) {
             soundID = soundID[Math.floor(Math.random() * soundID.length)];
         }
-        Game.message(volume + " - " + this.soundVolume);
         volume *= this.soundVolume;
         var streamID = this.soundPool.play(soundID, volume, volume, soundData.looping ? 1 : 0, soundData.looping ? -1 : 0, pitch);
         Game.message(streamID + " - " + soundName + ", volume: " + volume);
@@ -93,11 +93,11 @@ var SoundManager = /** @class */ (function () {
         return this.playSoundAt(tile.x + .5, tile.y + .5, tile.z + .5, soundName, volume, 1, radius);
     };
     SoundManager.createSource = function (sourceType, source, soundName, volume, radius) {
-        if (sourceType == AudioSourceType.ENTITY && typeof (source) != "number") {
+        if (sourceType == SourceType.ENTITY && typeof (source) != "number") {
             Logger.Log("Invalid source type " + typeof (source) + "for AudioSource.ENTITY", "ERROR");
             return null;
         }
-        if (sourceType == AudioSourceType.TILEENTITY && typeof (source) != "object") {
+        if (sourceType == SourceType.TILEENTITY && typeof (source) != "object") {
             Logger.Log("Invalid source type " + typeof (source) + "for AudioSource.TILEENTITY", "ERROR");
             return null;
         } /*
@@ -131,7 +131,7 @@ var SoundManager = /** @class */ (function () {
         audioSource.remove = true;
     };
     SoundManager.startPlaySound = function (sourceType, source, soundName, volume, radius) {
-        if (sourceType == AudioSourceType.PLAYER && typeof (source) != "number") {
+        if (sourceType == SourceType.PLAYER && typeof (source) != "number") {
             volume = soundName;
             soundName = source;
             source = Player.get();
@@ -180,9 +180,9 @@ var SoundManager = /** @class */ (function () {
         this.soundPool.release();
     };
     SoundManager.tick = function () {
-        for (var i in this.audioSources) {
+        for (var i = 0; i < this.audioSources.length; i++) {
             var sound = this.audioSources[i];
-            if (sound.remove || sound.sourceType == AudioSourceType.TILEENTITY && sound.source.remove) {
+            if (sound.remove || sound.sourceType == SourceType.TILEENTITY && sound.source.remove) {
                 sound.stop();
                 this.audioSources.splice(i, 1);
                 i--;
@@ -201,7 +201,7 @@ var SoundManager = /** @class */ (function () {
             }
             // TODO:
             // check dimension
-            if (sound.sourceType == AudioSourceType.ENTITY && Entity.isExist(sound.source)) {
+            if (sound.sourceType == SourceType.ENTITY && Entity.isExist(sound.source)) {
                 sound.position = Entity.getPosition(sound.source);
             }
             if (!sound.isPlaying && sound.isLooping && this.playingStreams < this.maxStreams) {
@@ -232,7 +232,6 @@ Callback.addCallback("LevelLeft", function () {
     SoundManager.stopAll();
 });
 /*Volume in the settings*/
-var settings_path = "/storage/emulated/0/games/Horizon/minecraftpe/options.txt";
 var prevScreen = false;
 Callback.addCallback("NativeGuiChanged", function (screenName) {
     var currentScreen = screenName.includes("controls_and_settings");
@@ -247,12 +246,12 @@ var Sound = /** @class */ (function () {
     }
     return Sound;
 }());
-var AudioSourceType;
-(function (AudioSourceType) {
-    AudioSourceType[AudioSourceType["PLAYER"] = 0] = "PLAYER";
-    AudioSourceType[AudioSourceType["ENTITY"] = 1] = "ENTITY";
-    AudioSourceType[AudioSourceType["TILEENTITY"] = 2] = "TILEENTITY";
-})(AudioSourceType || (AudioSourceType = {}));
+var SourceType;
+(function (SourceType) {
+    SourceType[SourceType["PLAYER"] = 0] = "PLAYER";
+    SourceType[SourceType["ENTITY"] = 1] = "ENTITY";
+    SourceType[SourceType["TILEENTITY"] = 2] = "TILEENTITY";
+})(SourceType || (SourceType = {}));
 var AudioSource = /** @class */ (function () {
     function AudioSource(sourceType, source, soundName, volume, radius) {
         if (volume === void 0) { volume = 1; }
@@ -265,11 +264,11 @@ var AudioSource = /** @class */ (function () {
         this.soundName = soundName;
         this.source = source;
         this.sourceType = sourceType;
-        if (sourceType == AudioSourceType.ENTITY) {
+        if (sourceType == SourceType.ENTITY) {
             this.position = Entity.getPosition(source);
             this.dimension = Player.getDimension();
         }
-        if (sourceType = AudioSourceType.TILEENTITY) {
+        if (sourceType = SourceType.TILEENTITY) {
             this.position = { x: source.x + .5, y: source.y + .5, z: source.z + .5 };
             this.dimension = source.dimension;
         }
@@ -305,7 +304,7 @@ var AudioSource = /** @class */ (function () {
     };
     AudioSource.prototype.play = function () {
         if (!this.isPlaying) {
-            if (this.sourceType == AudioSourceType.PLAYER) {
+            if (this.sourceType == SourceType.PLAYER) {
                 this.streamID = SoundManager.playSound(this.soundName, this.volume, 1);
             }
             else {
@@ -334,7 +333,7 @@ var AudioSource = /** @class */ (function () {
         SoundManager.resume(this.streamID);
     };
     AudioSource.prototype.updateVolume = function () {
-        if (this.sourceType == AudioSourceType.PLAYER)
+        if (this.sourceType == SourceType.PLAYER)
             return;
         var s = this.position;
         var p = Player.getPosition();
@@ -347,4 +346,4 @@ var AudioSource = /** @class */ (function () {
     return AudioSource;
 }());
 EXPORT("SoundManager", SoundManager);
-EXPORT("AudioSource", AudioSourceType);
+EXPORT("AudioSource", SourceType);

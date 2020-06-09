@@ -6,6 +6,6 @@ var IntegrationAPI = {
 		toolbox_items.push(id);
 	},
 	registerQuantumArmorItem: function(id){
-		quantumArmorList.push(id);
+		QuantumArmor.chargedIDs.push(id);
 	}
 }

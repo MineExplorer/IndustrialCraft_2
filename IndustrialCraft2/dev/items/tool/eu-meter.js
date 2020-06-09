@@ -134,20 +134,20 @@ Callback.addCallback("tick", function(){
 	var item = Player.getCarriedItem()
 	if(item.id == ItemID.EUMeter){
 		if(EUReader.container){
-			var r = function(x) {return Math.round(x * 100) / 100};
+			var r = function(x) {return Math.round(x * 100) / 100 || 0};
 			var currentValue = 0;
 			var elements = guiEUReader.content.elements;
 			if(EUReader.mode < 3){
 				var unit = " EU/t";
 				var energyIn = energyOut = 0;
 				if(EUReader.tile){
-					energyIn = r(EUReader.tile.data.last_energy_receive) || 0;
+					energyIn = r(EUReader.tile.data.last_energy_receive);
 					if(EUReader.net){
-						energyOut = r(EUReader.net.lastTransfered) || 0;
+						energyOut = r(EUReader.net.lastTransfered);
 					}
 				}
 				else if(EUReader.net){
-					energyIn = energyOut = r(EUReader.net.lastTransfered) || 0;
+					energyIn = energyOut = r(EUReader.net.lastTransfered);
 				}
 				switch (EUReader.mode) {
 					case 0:
@@ -163,10 +163,10 @@ Callback.addCallback("tick", function(){
 			} else {
 				var unit = " V";
 				if(EUReader.tile){
-					currentValue = r(EUReader.tile.data.last_voltage) || 0;
+					currentValue = r(EUReader.tile.data.last_voltage);
 				}
 				else if(EUReader.net){
-					currentValue = r(EUReader.net.lastVoltage) || 0;
+					currentValue = r(EUReader.net.lastVoltage);
 				}
 			}
 			EUReader.time++;

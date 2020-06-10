@@ -8,10 +8,10 @@ Item.createArmorItem("compositeChestplate", "Composite Chestplate", {name: "comp
 Item.createArmorItem("compositeLeggings", "Composite Leggings", {name: "composite_leggings"}, {type: "leggings", armor: 6, durability: 450, texture: "armor/composite_2.png"});
 Item.createArmorItem("compositeBoots", "Composite Boots", {name: "composite_boots"}, {type: "boots", armor: 3, durability: 390, texture: "armor/composite_1.png"});
 
-Item.setEnchantType(ItemID.compositeHelmet, EnchantType.helmet, 7);
-Item.setEnchantType(ItemID.compositeChestplate, EnchantType.chestplate, 7);
-Item.setEnchantType(ItemID.compositeLeggings, EnchantType.leggings, 7);
-Item.setEnchantType(ItemID.compositeBoots, EnchantType.boots, 7);
+Item.setEnchantType(ItemID.compositeHelmet, EnchantType.helmet, 8);
+Item.setEnchantType(ItemID.compositeChestplate, EnchantType.chestplate, 8);
+Item.setEnchantType(ItemID.compositeLeggings, EnchantType.leggings, 8);
+Item.setEnchantType(ItemID.compositeBoots, EnchantType.boots, 8);
 
 Item.addRepairItemIds(ItemID.compositeHelmet, [ItemID.plateAlloy]);
 Item.addRepairItemIds(ItemID.compositeChestplate, [ItemID.plateAlloy]);

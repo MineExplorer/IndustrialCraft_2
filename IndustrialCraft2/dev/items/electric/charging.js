@@ -6,17 +6,17 @@ ChargeItemRegistry.registerExtraItem(ItemID.chargingBattery, "Eu", 40000, 128, 1
 IDRegistry.genItemID("chargingAdvBattery");
 Item.createItem("chargingAdvBattery", "Advanced Charging Battery", {name: "adv_charging_battery", meta: 0}, {stack: 1, isTech: true});
 Item.addToCreative(ItemID.chargingAdvBattery, 1, 27);
-ChargeItemRegistry.registerExtraItem(ItemID.chargingAdvBattery, "Eu", 400000, 512, 2, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.chargingAdvBattery, "Eu", 400000, 1024, 2, "storage", true, true);
 
 IDRegistry.genItemID("chargingCrystal");
 Item.createItem("chargingCrystal", "Charging Energy Crystal", {name: "charging_energy_crystal", meta: 0}, {stack: 1, isTech: true});
 Item.addToCreative(ItemID.chargingCrystal, 1, 27);
-ChargeItemRegistry.registerExtraItem(ItemID.chargingCrystal, "Eu", 4000000, 2048, 3, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.chargingCrystal, "Eu", 4000000, 8192, 3, "storage", true, true);
 
 IDRegistry.genItemID("chargingLapotronCrystal");
 Item.createItem("chargingLapotronCrystal", "Charging Lapotron Crystal", {name: "charging_lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
 Item.addToCreative(ItemID.chargingLapotronCrystal, 1, 27);
-ChargeItemRegistry.registerExtraItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 8192, 4, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.chargingLapotronCrystal, "Eu", 4e7, 32768, 4, "storage", true, true);
 ItemName.setRarity(ItemID.chargingLapotronCrystal, 1);
 
 Item.addCreativeGroup("chargingBatteryEU", Translation.translate("Charging Batteries") , [

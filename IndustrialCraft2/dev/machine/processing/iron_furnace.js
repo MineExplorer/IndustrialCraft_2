@@ -134,14 +134,14 @@ TileRenderer.setRotationPlaceFunction(BlockID.ironFurnace);
 
 StorageInterface.createInterface(BlockID.ironFurnace, {
 	slots: {
-		"slotSource": {input: true,
+		"slotSource": {input: true, side: "up",
 			isValid: function(item, side){
-				return side == 1 && Recipes.getFurnaceRecipeResult(item.id, "iron");
+				return Recipes.getFurnaceRecipeResult(item.id, "iron");
 			}
 		},
-		"slotFuel": {input: true, 
-			isValid: function(item, side){
-				return side != 1 && Recipes.getFuelBurnDuration(item.id, item.data) > 0;
+		"slotFuel": {input: true, side: "horizontal",
+			isValid: function(item){
+				return Recipes.getFuelBurnDuration(item.id, item.data) > 0;
 			}
 		},
 		"slotResult": {output: true}

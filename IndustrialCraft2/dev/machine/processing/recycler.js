@@ -10,7 +10,7 @@ ItemName.addTierTooltip("recycler", 1);
 
 MachineRegistry.setMachineDrop("recycler", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.recycler, count: 1, data: 0}, [
 		" a ",
 		"x#x",
@@ -38,7 +38,7 @@ var guiRecycler = new UI.StandartWindow({
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 79},
 		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function() {return false;}},
 		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isValidUpgrade},
@@ -46,7 +46,7 @@ var guiRecycler = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiRecycler, "Recycler");
 });
 
@@ -63,38 +63,38 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 	
 	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"],
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiRecycler;
 	},
 	
-	getTier: function(){
+	getTier: function() {
 		return this.data.power_tier;
 	},
 	
-	resetValues: function(){
+	resetValues: function() {
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
 		this.data.work_time = this.defaultValues.work_time;
 	},
 	
-	tick: function(){
+	tick: function() {
 		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
-		if(sourceSlot.id > 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)){
-			if(this.data.energy >= this.data.energy_consumption){
+		if (sourceSlot.id > 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)) {
+			if (this.data.energy >= this.data.energy_consumption) {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
 				this.startPlaySound();
 			}
-			if(this.data.progress.toFixed(3) >= 1){
+			if (this.data.progress.toFixed(3) >= 1) {
 				sourceSlot.count--;
-				if(Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1){
+				if (Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1) {
 					resultSlot.id = ItemID.scrap;
 					resultSlot.count++;
 				}
@@ -105,7 +105,7 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 		else {
 			this.data.progress = 0;
 		}
-		if(!newActive)
+		if (!newActive)
 			this.stopPlaySound();
 		this.setActive(newActive);
 		
@@ -117,14 +117,14 @@ MachineRegistry.registerElectricMachine(BlockID.recycler, {
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 	
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return this.data.energy_storage;
 	},
 	
-	getOperationSound: function(){
+	getOperationSound: function() {
 		return "RecyclerOp.ogg";
     },
-	getInterruptSound: function(){
+	getInterruptSound: function() {
 		return "InterruptOne.ogg";
     },
 	

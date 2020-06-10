@@ -159,7 +159,7 @@ var MiningLaser = {
 		}
 		var drop = ToolLib.getBlockDrop({x: x, y: y, z: z}, block.id, block.data, 100);
 		if (drop)
-		for(var i in drop) {
+		for (var i in drop) {
 			var item = drop[i];
 			if (laser.smelt && material == "stone") {
 				laser.power = 0;
@@ -177,7 +177,7 @@ var MiningLaser = {
 	},
 
 	update: function() {
-		for(var i in this.lasers) {
+		for (var i in this.lasers) {
 			laser = this.lasers[i];
 			var distance = Entity.getDistanceBetweenCoords(Entity.getPosition(laser.ent), laser.start)
 			if (laser.power <= 0 || laser.blockBreaks <= 0 || distance > laser.range) {
@@ -209,7 +209,7 @@ var MiningLaser = {
 	},
 
 	projectileHit: function(projectile, target) {
-		for(var i in this.lasers) {
+		for (var i in this.lasers) {
 			var laser = this.lasers[i];
 			if (laser.ent==projectile) {
 				if (laser.power <= 0 || laser.blockBreaks <= 0) {

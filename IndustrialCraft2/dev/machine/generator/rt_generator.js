@@ -7,7 +7,7 @@ TileRenderer.registerRenderModel(BlockID.rtGenerator, 0, [["machine_bottom", 0],
 
 MachineRegistry.setMachineDrop("rtGenerator", BlockID.primalGenerator);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.rtGenerator, count: 1, data: 0}, [
 		"ccc",
 		"c#c",
@@ -27,12 +27,12 @@ var guiRTGenerator = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"slot0": {type: "slot", x: 420, y: 120, isValid: function(id){return id == ItemID.rtgPellet}},
-		"slot1": {type: "slot", x: 480, y: 120, isValid: function(id){return id == ItemID.rtgPellet}},
-		"slot2": {type: "slot", x: 540, y: 120, isValid: function(id){return id == ItemID.rtgPellet}},
-		"slot3": {type: "slot", x: 420, y: 180, isValid: function(id){return id == ItemID.rtgPellet}},
-		"slot4": {type: "slot", x: 480, y: 180, isValid: function(id){return id == ItemID.rtgPellet}},
-		"slot5": {type: "slot", x: 540, y: 180, isValid: function(id){return id == ItemID.rtgPellet}},
+		"slot0": {type: "slot", x: 420, y: 120, isValid: function(id) {return id == ItemID.rtgPellet}},
+		"slot1": {type: "slot", x: 480, y: 120, isValid: function(id) {return id == ItemID.rtgPellet}},
+		"slot2": {type: "slot", x: 540, y: 120, isValid: function(id) {return id == ItemID.rtgPellet}},
+		"slot3": {type: "slot", x: 420, y: 180, isValid: function(id) {return id == ItemID.rtgPellet}},
+		"slot4": {type: "slot", x: 480, y: 180, isValid: function(id) {return id == ItemID.rtgPellet}},
+		"slot5": {type: "slot", x: 540, y: 180, isValid: function(id) {return id == ItemID.rtgPellet}},
 		
 		"energyScale": {type: "scale", x: 630 + GUI_SCALE * 4, y: 150, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", x: 742, y: 148, width: 300, height: 30, text: "0/"},
@@ -40,7 +40,7 @@ var guiRTGenerator = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiRTGenerator, "Radioisotope Thermoelectric Generator");
 });
 
@@ -50,16 +50,16 @@ MachineRegistry.registerGenerator(BlockID.rtGenerator, {
 		isActive: false
 	},
     
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiRTGenerator;
 	},
 	
-	tick: function(){
+	tick: function() {
 		var energyStorage = this.getEnergyStorage();
 		var output = 0.5;
-		for(var i = 0; i < 6; i++){
+		for (var i = 0; i < 6; i++) {
 			var slot = this.container.getSlot("slot"+i);
-			if(slot.id == ItemID.rtgPellet){
+			if (slot.id == ItemID.rtgPellet) {
 				output *= 2;
 			}
 		}
@@ -70,11 +70,11 @@ MachineRegistry.registerGenerator(BlockID.rtGenerator, {
 		this.container.setText("textInfo1", this.data.energy + "/");
 	},
 	
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return 10000;
 	},
 	
-	energyTick: function(type, src){
+	energyTick: function(type, src) {
 		var output = Math.min(32, this.data.energy);
 		this.data.energy += src.add(output) - output;
 	},

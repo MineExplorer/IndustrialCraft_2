@@ -39,19 +39,19 @@ Recipes.addShaped({id: ItemID.rubberBoots, count: 1, data: 0}, [
 
 
 var RUBBER_ARMOR_FUNC = {
-	hurt: function(params, item, index, maxDamage){
+	hurt: function(params, item, index, maxDamage) {
 		var type = params.type;
-		if(type==2 || type==3 || type==11){
+		if (type==2 || type==3 || type==11) {
 			item.data += params.damage;
-			if(item.data >= maxDamage){
+			if (item.data >= maxDamage) {
 				item.id = item.count = 0;
 			}
 			return true;
 		}
-		if(type==9 && index==0){
-			for(var i = 0; i < 36; i++){
+		if (type==9 && index==0) {
+			for (var i = 0; i < 36; i++) {
 				var slot = Player.getInventorySlot(i);
-				if(slot.id==ItemID.cellAir){
+				if (slot.id==ItemID.cellAir) {
 					Game.prevent();
 					Entity.addEffect(player, MobEffect.waterBreathing, 1, 2);
 					Player.setInventorySlot(i, slot.count > 1 ? slot.id : 0, slot.count - 1, 0);
@@ -60,25 +60,25 @@ var RUBBER_ARMOR_FUNC = {
 				}
 			}
 		}
-		if(type==5 && index==3){
+		if (type==5 && index==3) {
 			var Dp = Math.floor(params.damage/8);
 			var Db = Math.floor(params.damage*7/16);
-			if(Dp < 1){
+			if (Dp < 1) {
 				Game.prevent();
 			} else {
 				Entity.setHealth(player, Entity.getHealth(player) + params.damage - Dp);
 			}
 			item.data += Db;
-			if(item.data >= maxDamage){
+			if (item.data >= maxDamage) {
 				item.id = item.count = 0;
 			}
 			return true;
 		}
 		return false;
 	},
-	tick: function(slot, index, maxDamage){
-		if(index==0 && Player.getArmorSlot(1).id==ItemID.hazmatChestplate && Player.getArmorSlot(2).id==ItemID.hazmatLeggings && Player.getArmorSlot(3).id==ItemID.rubberBoots){
-			if(RadiationAPI.playerRad <= 0){
+	tick: function(slot, index, maxDamage) {
+		if (index==0 && Player.getArmorSlot(1).id==ItemID.hazmatChestplate && Player.getArmorSlot(2).id==ItemID.hazmatLeggings && Player.getArmorSlot(3).id==ItemID.rubberBoots) {
+			if (RadiationAPI.playerRad <= 0) {
 				Entity.clearEffect(player, MobEffect.poison);
 			}
 			Entity.clearEffect(player, MobEffect.wither);

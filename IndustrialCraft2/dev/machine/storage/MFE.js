@@ -7,13 +7,13 @@ TileRenderer.registerRenderModel(BlockID.storageMFE, 0, [["mfe_front", 0], ["mfe
 TileRenderer.registerRenderModel(BlockID.storageMFE, 1, [["mfe_back", 0], ["mfe_front", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
 TileRenderer.registerRotationModel(BlockID.storageMFE, 2, [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
 
-Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, level){
+Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, level) {
 	return [];
 });
 
 ItemName.addStorageBlockTooltip("storageMFE", 3, "4M");
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.storageMFE, count: 1, data: 0}, [
 		"bab",
 		"axa",
@@ -42,7 +42,7 @@ var guiMFE = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiMFE, "MFE");
 });
 
@@ -51,16 +51,16 @@ MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 		meta: 0
 	},
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiMFE;
 	},
 	
-	getTier: function(){
+	getTier: function() {
 		return 3;
 	},
 	
-	wrenchClick: function(id, count, data, coords){
-		if(this.setFacing(coords)){
+	wrenchClick: function(id, count, data, coords) {
+		if (this.setFacing(coords)) {
 			EnergyNetBuilder.rebuildTileNet(this);
 			return true;
 		}
@@ -69,7 +69,7 @@ MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 		
 	setFacing: MachineRegistry.setFacing,
 	
-	tick: function(){
+	tick: function() {
 		StorageInterface.checkHoppers(this);
 		
 		var energyStorage = this.getEnergyStorage();
@@ -81,31 +81,31 @@ MachineRegistry.registerEUStorage(BlockID.storageMFE, {
 		this.container.setText("textInfo2", energyStorage);
 	},
 	
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return 4000000;
 	},
 	
-	canReceiveEnergy: function(side){
+	canReceiveEnergy: function(side) {
 		return side != this.data.meta;
 	},
 	
-	canExtractEnergy: function(side){
+	canExtractEnergy: function(side) {
 		return side == this.data.meta;
 	},
 	
-	destroyBlock: function(coords, player){
+	destroyBlock: function(coords, player) {
 		var itemID = Player.getCarriedItem().id;
 		var level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID)
 		var drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, BlockID.machineBlockBasic, this.data.energy);
-		if(drop.length > 0){
+		if (drop.length > 0) {
 			World.drop(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
 		}
 	},
 	
-	renderModel: function(){
+	renderModel: function() {
 		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta);
 	},
-	destroy: function(){
+	destroy: function() {
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	}
 });
@@ -115,18 +115,18 @@ MachineRegistry.setStoragePlaceFunction("storageMFE", true);
 StorageInterface.createInterface(BlockID.storageMFE, {
 	slots: {
 		"slot1": {input: true, output: true, 
-			isValid: function(item, side, tileEntity){
+			isValid: function(item, side, tileEntity) {
 				return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", 3);
 			},
-			canOutput: function(item, side, tileEntity){
+			canOutput: function(item, side, tileEntity) {
 				return ChargeItemRegistry.getEnergyStored(item) >= ChargeItemRegistry.getMaxCharge(item);
 			}
 		},
 		"slot2": {input: true, output: true,
-			isValid: function(item, side, tileEntity){
+			isValid: function(item, side, tileEntity) {
 				return side > 1 && ChargeItemRegistry.isValidStorage(item.id, "Eu", 3);
 			},
-			canOutput: function(item, side, tileEntity){
+			canOutput: function(item, side, tileEntity) {
 				return ChargeItemRegistry.getEnergyStored(item) <= 0;
 			}
 		}

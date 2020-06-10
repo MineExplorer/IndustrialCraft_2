@@ -6,7 +6,7 @@ ItemName.addTierTooltip("cropHarvester", 1);
 
 MachineRegistry.setMachineDrop("cropHarvester", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
     Recipes.addShaped({id: BlockID.cropHarvester, count: 1, data: 0}, [
         "zcz",
         "s#s",
@@ -34,7 +34,7 @@ var cropHarvesterGuiObject = {
     }
 };
 
-for(let i = 0; i < 15; i++){
+for (let i = 0; i < 15; i++) {
     let x = i % 5;
     let y = Math.floor(i / 5) + 1;
     cropHarvesterGuiObject.elements["outSlot" + i] = {type: "slot", x: 520 + x*60, y: 50 + y*60};
@@ -42,7 +42,7 @@ for(let i = 0; i < 15; i++){
 
 
 var guiCropHarvester = new UI.StandartWindow(cropHarvesterGuiObject);
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiCropHarvester, "Crop Harvester");
 });
 
@@ -57,25 +57,25 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
 	
     upgrades: ["transformer", "energyStorage", "itemEjector"],
 	
-    getGuiScreen: function(){
+    getGuiScreen: function() {
         return guiCropHarvester;
     },
 	
-    getTier: function(){
+    getTier: function() {
         return this.data.power_tier;
     },
 	
-    resetValues: function(){
+    resetValues: function() {
         this.data.power_tier = this.defaultValues.power_tier;
         this.data.energy_storage = this.defaultValues.energy_storage;
     },
 	
-    tick: function(){
+    tick: function() {
         this.resetValues();
         UpgradeAPI.executeUpgrades(this);
         StorageInterface.checkHoppers(this);
 
-        if(this.data.energy > 100) this.scan();
+        if (this.data.energy > 100) this.scan();
 
         var energyStorage = this.getEnergyStorage();
         this.data.energy = Math.min(this.data.energy, energyStorage);
@@ -85,7 +85,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         this.container.validateAll();
 	},
 	
-	scan: function(){
+	scan: function() {
         this.data.scanX++;
         if (this.data.scanX > 5) {
             this.data.scanX = -5;
@@ -100,21 +100,21 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         }
         this.data.energy -= 1;
         var cropTile = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
-        if(cropTile && cropTile.crop && !this.isInvFull()){
+        if (cropTile && cropTile.crop && !this.isInvFull()) {
             var drops = null;
-            if(cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)){
+            if (cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)) {
                 drops = cropTile.performHarvest();
             }
             else if (cropTile.data.currentSize == cropTile.crop.maxSize) {
                 drops = cropTile.performHarvest();
             }
-            if(drops && drops.length){
-                for(let i in drops){
+            if (drops && drops.length) {
+                for (let i in drops) {
                     var item = drops[i];
                     this.putItem(item);
                     this.data.energy -= 100;
 
-                    if(item.count > 0){
+                    if (item.count > 0) {
                         World.drop(this.x, this.y + 1, this.z, item.id, item.count, item.data);
                     }
                 }
@@ -122,10 +122,10 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         }
     },
 	
-    putItem: function(item){
-        for(var i = 0; i < 15; i++){
+    putItem: function(item) {
+        for (var i = 0; i < 15; i++) {
             var slot = this.container.getSlot("outSlot" + i);
-            if(!slot.id || slot.id == item.id && slot.count < Item.getMaxStack(item.id)){
+            if (!slot.id || slot.id == item.id && slot.count < Item.getMaxStack(item.id)) {
                 var add = Math.min(Item.getMaxStack(item.id) - slot.count, item.count);
                 slot.id = item.id;
                 slot.count += add;
@@ -135,16 +135,16 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
         }
     },
 	
-    isInvFull: function(){
-        for(var i = 0; i < 15; i++){
+    isInvFull: function() {
+        for (var i = 0; i < 15; i++) {
             var slot = this.container.getSlot("outSlot" + i);
             var maxStack = Item.getMaxStack(slot.id);
-            if(!slot.id || slot.count < maxStack) return false;
+            if (!slot.id || slot.count < maxStack) return false;
         }
         return true;
     },
 	
-    getEnergyStorage: function(){
+    getEnergyStorage: function() {
         return this.data.energy_storage;
     }
 });

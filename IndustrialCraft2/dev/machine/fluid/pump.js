@@ -10,7 +10,7 @@ ItemName.addTierTooltip("pump", 1);
 
 MachineRegistry.setMachineDrop("pump", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.pump, count: 1, data: 0}, [
 		"cxc",
 		"c#c",
@@ -39,11 +39,11 @@ var guiPump = new UI.StandartWindow({
 		"liquidScale": {type: "scale", x: 400 + 67*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slotEnergy": {type: "slot", x: 400, y: 50 + 39*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
 		"slotLiquid1": {type: "slot", x: 400 + 91*GUI_SCALE, y: 50 + 12*GUI_SCALE,
-			isValid: function(id, count, data){
+			isValid: function(id, count, data) {
 				return LiquidLib.getFullItem(id, data, "water")? true : false;
 			}
 		},
-		"slotLiquid2": {type: "slot", x: 400 + 125*GUI_SCALE, y: 50 + 29*GUI_SCALE, isValid: function(){return false;}},
+		"slotLiquid2": {type: "slot", x: 400 + 125*GUI_SCALE, y: 50 + 29*GUI_SCALE, isValid: function() {return false;}},
 		"slotUpgrade1": {type: "slot", x: 880, y: 50 + 2*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade2": {type: "slot", x: 880, y: 50 + 21*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
@@ -51,7 +51,7 @@ var guiPump = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiPump, "Pump");
 });
 
@@ -68,15 +68,15 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 	
 	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector"],
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiPump;
 	},
 	
-	getTier: function(){
+	getTier: function() {
 		return this.data.power_tier;
 	},
 	
-	resetValues: function(){
+	resetValues: function() {
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -86,27 +86,27 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 	renderModel: MachineRegistry.renderModelWithRotation,
 	addLiquidToItem: MachineRegistry.addLiquidToItem,
 	
-	init: function(){
+	init: function() {
 		this.liquidStorage.setLimit("water", 8);
 		this.liquidStorage.setLimit("lava", 8);
 		this.renderModel();
 	},
 	
-	getLiquidType: function(liquid, block){
-		if((!liquid || liquid=="water") && (block.id == 8 || block.id == 9)){
+	getLiquidType: function(liquid, block) {
+		if ((!liquid || liquid=="water") && (block.id == 8 || block.id == 9)) {
 			return "water";
 		}
-		if((!liquid || liquid=="lava") && (block.id == 10 || block.id == 11)){
+		if ((!liquid || liquid=="lava") && (block.id == 10 || block.id == 11)) {
 			return "lava";
 		}
 		return null;
 	},
 	
-	recursiveSearch: function(liquid, x, y, z, map){
+	recursiveSearch: function(liquid, x, y, z, map) {
 		var block = World.getBlock(x, y, z);
 		var scoords = x+':'+y+':'+z;
-		if(!map[scoords] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)){
-			if(block.data == 0) return {x: x, y: y, z: z};
+		if (!map[scoords] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
+			if (block.data == 0) return {x: x, y: y, z: z};
 			map[scoords] = true;
 			return this.recursiveSearch(liquid, x, y+1, z, map) ||
 			this.recursiveSearch(liquid, x+1, y, z, map) ||
@@ -117,26 +117,26 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		return null;
 	},
 	
-	tick: function(){
+	tick: function() {
 		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
 		var newActive = false;
 		var liquid = this.liquidStorage.getLiquidStored();
-		if(this.y > 0 && this.liquidStorage.getAmount(liquid) <= 7 && this.data.energy >= this.data.energy_consumption){
-			if(this.data.progress == 0){
+		if (this.y > 0 && this.liquidStorage.getAmount(liquid) <= 7 && this.data.energy >= this.data.energy_consumption) {
+			if (this.data.progress == 0) {
 				this.data.coords = this.recursiveSearch(liquid, this.x, this.y-1, this.z, {});
 			}
-			if(this.data.coords){
+			if (this.data.coords) {
 				newActive = true;
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				this.startPlaySound();
-				if(this.data.progress.toFixed(3) >= 1){
+				if (this.data.progress.toFixed(3) >= 1) {
 					var coords = this.data.coords;
 					var block = World.getBlock(coords.x, coords.y, coords.z);
 					liquid = this.getLiquidType(liquid, block);
-					if(liquid && block.data == 0){
+					if (liquid && block.data == 0) {
 						World.setBlock(coords.x, coords.y, coords.z, 0);
 						this.liquidStorage.addLiquid(liquid, 1);
 					}
@@ -147,7 +147,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		else {
 			this.data.progress = 0;
 		}
-		if(!newActive)
+		if (!newActive)
 			this.stopPlaySound();
 		this.setActive(newActive);
 		
@@ -164,11 +164,11 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 
-	getOperationSound: function(){
+	getOperationSound: function() {
 		return "PumpOp.ogg";
 	},
 
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return this.data.energy_storage;
 	}
 });
@@ -180,9 +180,9 @@ StorageInterface.createInterface(BlockID.pump, {
 		"slotLiquid1": {input: true},
 		"slotLiquid2": {output: true}
 	},
-	isValidInput: function(item){
+	isValidInput: function(item) {
 		return LiquidLib.getFullItem(item.id, item.data, "water")? true : false;
 	},
-	canReceiveLiquid: function(liquid, side){ return false; },
-	canTransportLiquid: function(liquid, side){ return true; }
+	canReceiveLiquid: function(liquid, side) { return false; },
+	canTransportLiquid: function(liquid, side) { return true; }
 });

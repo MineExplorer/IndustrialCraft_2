@@ -17,11 +17,11 @@ AgricultureAPI.registerCropCard({
         resistance: 1
     },
     maxSize: 5,
-    getOptimalHarvestSize: function(crop){return 1},
-    canBeHarvested: function(tileentity){return false},
-    getGrowthDuration: function(){return 300},
-    getGain: function(tileentity){return null},
-    onLeftClick: function(te){return false}
+    getOptimalHarvestSize: function(crop) {return 1},
+    canBeHarvested: function(tileentity) {return false},
+    getGrowthDuration: function() {return 300},
+    getGain: function(tileentity) {return null},
+    onLeftClick: function(te) {return false}
 });
 
 AgricultureAPI.registerCropCard({
@@ -46,10 +46,10 @@ AgricultureAPI.registerCropCard({
     },
     maxSize: 7,
     sizeAfterHarvest: 2,
-    getProduct: function(){
+    getProduct: function() {
         return {id: 296, count: 1, data: 0};
     },
-    getSeed: function(){
+    getSeed: function() {
         return {id: 295, count: 1, data: 0};
     }
 });
@@ -74,17 +74,17 @@ AgricultureAPI.registerCropCard({
         resistance: 1
     },
     maxSize: 4,
-    getProduct: function(){
+    getProduct: function() {
         return {id: 86, count: 1, data: 0}
     },
     getGrowthDuration: function(te) {
         if (te.data.currentSize == 3) return 600;
         return 200;
     },
-    getSeed: function(){
+    getSeed: function() {
         return {id: 361, count: randomInt(1, 4), data: 0}
     },
-    getSizeAfterHarvest: function(te){
+    getSizeAfterHarvest: function(te) {
         return this.maxSize - 1;
     }
 });
@@ -109,8 +109,8 @@ AgricultureAPI.registerCropCard({
         resistance: 1
     },
     maxSize: 4,
-    getProduct: function(){
-        if(Math.random() < 0.5){
+    getProduct: function() {
+        if (Math.random() < 0.5) {
             return {id: 103, count: 1, data: 0}
         }
         return {id: 360, count: randomInt(2, 6), data: 0}
@@ -121,10 +121,10 @@ AgricultureAPI.registerCropCard({
         }
         return 250;
     },
-    getSizeAfterHarvest: function(te){
+    getSizeAfterHarvest: function(te) {
         return this.maxSize - 1;
     },
-    getSeed: function(){
+    getSeed: function() {
         return {id: 362, count: randomInt(1, 3), data: 0}
     }
 });
@@ -190,11 +190,11 @@ AgricultureAPI.registerCropCard({
         weed: 3
     },
     maxSize: 6,
-    getOptimalHarvestSize: function(crop){return 4},
+    getOptimalHarvestSize: function(crop) {return 4},
     getDiscoveredBy: function() {
         return "raGan";
     },
-    canGrow: function(tileentity){
+    canGrow: function(tileentity) {
         var light = World.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
         return (tileentity.data.currentSize <= 4 && light >= 12) || tileentity.data.currentSize == 5;
     },
@@ -228,7 +228,7 @@ AgricultureAPI.registerCropCard({
     onEntityCollision: function(crop) {
         if (crop.data.currentSize == 5) {
             var armorSlot = Player.getArmorSlot(3);
-            if (randomInt(0,50)&&armorSlot.id){
+            if (randomInt(0,50)&&armorSlot.id) {
                 return AgricultureAPI.abstractFunctions["IC2CropCard"].onEntityCollision(crop);
             }
             Entity.addEffect(Player.get(), MobEffect.poison, 1, (randomInt(0,10) + 5) * 20);
@@ -336,14 +336,14 @@ AgricultureAPI.registerCropCard({
     },
     maxSize: 4,
     getDiscoveredBy: AgricultureAPI.abstractFunctions["IC2CropCard"].getDiscoveredBy,
-    getOptimalHarvestSize: function(crop){return 4},
+    getOptimalHarvestSize: function(crop) {return 4},
     canGrow: function(crop) {
         return crop.data.currentSize <= 3 && crop.data.storageNutrients >= 3;
     },
     canBeHarvested: function(crop) {
         return crop.data.currentSize == 4;
     },
-    getGain: function(tileentity){
+    getGain: function(tileentity) {
         return {id: 351, count: 1, data: 3};
     },
     getGrowthDuration: function(crop) {
@@ -351,7 +351,7 @@ AgricultureAPI.registerCropCard({
             return 900;
         }return 400;
     },
-    getSizeAfterHarvest: function(crop){
+    getSizeAfterHarvest: function(crop) {
         return 3;
     }
 });
@@ -367,7 +367,7 @@ AgricultureAPI.registerCropCard({
         gain: 1,
         resistance: 1
     },
-    getGain: function(te){
+    getGain: function(te) {
         return {id: 40, count: 1, data: 0}
     }
 });
@@ -383,7 +383,7 @@ AgricultureAPI.registerCropCard({
         gain: 1,
         resistance: 1
     },
-    getGain: function(te){
+    getGain: function(te) {
         return {id: 39, count: 1, data: 0}
     }
 });
@@ -410,14 +410,14 @@ AgricultureAPI.registerCropCard({
     maxSize: 3,
     getDiscoveredBy: AgricultureAPI.abstractFunctions["CropVanilla"].getDiscoveredBy,
     dropGainChance: function(te) {return 2},
-    getGain: function(te){
+    getGain: function(te) {
         return {id: 372, count: 1, data: 0}
     },
-    tick: function(te){
-        if(te.isBlockBelow(88)){
+    tick: function(te) {
+        if (te.isBlockBelow(88)) {
             if (te.crop.canGrow(te)) {
                 te.data.growthPoints += 100;
-            }else if(te.isBlockBelow(80) && Math.random() < 1 / 300){
+            }else if (te.isBlockBelow(80) && Math.random() < 1 / 300) {
                 te.data.crop = AgricultureAPI.getCardIndexFromid("terra_wart");
                 te.crop = AgricultureAPI.cropCards[te.data.crop];
             }
@@ -445,15 +445,15 @@ AgricultureAPI.registerCropCard({
     },
     maxSize: 3,
     dropGainChance: function(te) {return .8},
-    getGain: function(te){
+    getGain: function(te) {
         return {id: ItemID.terraWart, count: 1, data: 0}
     },
-    tick: function(te){
-        if(te.isBlockBelow(80)){
+    tick: function(te) {
+        if (te.isBlockBelow(80)) {
             if (te.crop.canGrow(te)) {
                 te.data.growthPoints += 100;
             }
-			else if(te.isBlockBelow(88) && Math.random() < 1 / 300){
+			else if (te.isBlockBelow(88) && Math.random() < 1 / 300) {
                 te.data.crop = AgricultureAPI.getCardIndexFromid("nether_wart");
                 te.crop = AgricultureAPI.cropCards[te.data.crop];
             }
@@ -533,7 +533,7 @@ AgricultureAPI.registerCropCard({
         weed: 0
     },
     maxSize: 7,
-    getOptimalHarvestSize: function(crop){return 7},
+    getOptimalHarvestSize: function(crop) {return 7},
     getDiscoveredBy: function() {
         return "raa1337";
     },
@@ -546,7 +546,7 @@ AgricultureAPI.registerCropCard({
         if (Math.random() < 0.5) return {id: 331, count: 1, data: 0};
         return {id: 295, count: 1, data: 0}
     },
-    getGrowthDuration: function(crop){return 600},
+    getGrowthDuration: function(crop) {return 600},
     getSizeAfterHarvest: function(crop) {return 2}
 });
 
@@ -645,7 +645,7 @@ AgricultureAPI.registerCropCard({
         resistance: 1
     },
     maxSize: 3,
-    getProduct: function(){
+    getProduct: function() {
         return {id: 391, count: 1, data: 0}
     },
     getSeed: this.getProduct
@@ -671,7 +671,7 @@ AgricultureAPI.registerCropCard({
     },
     maxSize: 4,
     canGrow: AgricultureAPI.abstractFunctions["IC2CropCard"].canGrow,
-    getOptimalHarvestSize: function(crop){return 3},
+    getOptimalHarvestSize: function(crop) {return 3},
     canBeHarvested: function(crop) {
         return crop.data.currentSize >= 3;
     },
@@ -684,7 +684,7 @@ AgricultureAPI.registerCropCard({
         }
         return null;
     },
-    getSizeAfterHarvest: function(te){return 1}
+    getSizeAfterHarvest: function(te) {return 1}
 });
 
 AgricultureAPI.registerCropCard({
@@ -706,7 +706,7 @@ AgricultureAPI.registerCropCard({
         resistance: 1
     },
     maxSize: 6,
-    getOptimalHarvestSize: function(crop){return 4},
+    getOptimalHarvestSize: function(crop) {return 4},
     getDiscoveredBy: function() {
         return "Hasudako";
     },
@@ -726,17 +726,17 @@ AgricultureAPI.registerCropCard({
         }
         return null;
     },
-    tick: function(te){
-        if(te.data.currentSize == 1) return;
+    tick: function(te) {
+        if (te.data.currentSize == 1) return;
 
         var entity = Entity.findNearest({x: this.x + .5, y: this.y + .5, z: this.z + .5}, null, 2);
-        if(!entity)return;
+        if (!entity)return;
 
         Entity.damageEntity(entity, te.data.currentSize * 2);
-        if(entity == player && !this.hasMetalArmor()){
+        if (entity == player && !this.hasMetalArmor()) {
             Entity.addEffect(player, MobEffect.poison, 1, 50);
         }
-        if(te.crop.canGrow(te)) te.data.growthPoints += 100;
+        if (te.crop.canGrow(te)) te.data.growthPoints += 100;
         nativeDropItem(this.x, this.y, this.z, 0, 367, 1, 0, null);
     },
     nonMetalCheck: {
@@ -745,10 +745,10 @@ AgricultureAPI.registerCropCard({
         300: true,
         301: true
     },
-    hasMetalArmor: function(){
-        for(var i = 0; i < 4; i++){
+    hasMetalArmor: function() {
+        for (var i = 0; i < 4; i++) {
             var armorSlot = Player.getArmorSlot(i);
-            if(!armorSlot.id || this.nonMetalCheck[armorSlot.id]) return false;
+            if (!armorSlot.id || this.nonMetalCheck[armorSlot.id]) return false;
         }
         return true;
     },
@@ -758,8 +758,8 @@ AgricultureAPI.registerCropCard({
         //todo: compare with PC version when BiomeDictionary will be available
         return Math.round(base.getGrowthDuration(crop) * multiplier);
     },
-    getSizeAfterHarvest: function(te){return 1},
-    getRootsLength: function(crop){return 5}
+    getSizeAfterHarvest: function(te) {return 1},
+    getRootsLength: function(crop) {return 5}
 });
 
 
@@ -783,10 +783,10 @@ AgricultureAPI.registerCropCard({
         resistance: 1
     },
     maxSize: 4,
-    getProduct: function(){
+    getProduct: function() {
         return {id: 457, count: 1, data: 0};
     },
-    getSeed: function(){
+    getSeed: function() {
         return {id: 458, count: 1, data: 0};
     }
 });

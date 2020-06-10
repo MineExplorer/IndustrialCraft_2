@@ -40,10 +40,10 @@ Recipes.addShaped({id: 49, count: 1, data: 0}, [
 	"bb"
 ], ['a', ItemID.cellLava, 0, 'b', ItemID.cellWater, 0]);
 
-Item.registerUseFunction("cellEmpty",function(coords, item, block){
-	if(block.id > 7 && block.id < 12 && block.data == 0){
+Item.registerUseFunction("cellEmpty",function(coords, item, block) {
+	if (block.id > 7 && block.id < 12 && block.data == 0) {
 		World.setBlock(coords.x, coords.y, coords.z, 0);
-		if(block.id == 8 || block.id == 9){
+		if (block.id == 8 || block.id == 9) {
 			Player.addItemToInventory(ItemID.cellWater, 1);
 		} else {
 			Player.addItemToInventory(ItemID.cellLava, 1);
@@ -52,26 +52,26 @@ Item.registerUseFunction("cellEmpty",function(coords, item, block){
 	}
 });
 
-Item.registerUseFunction("cellWater", function(coords, item, block){
-	if(item.data > 0 || block.id == BlockID.crop) return;
+Item.registerUseFunction("cellWater", function(coords, item, block) {
+	if (item.data > 0 || block.id == BlockID.crop) return;
 	var x = coords.relative.x
 	var y = coords.relative.y
 	var z = coords.relative.z
 	var block = World.getBlockID(x,y,z)
-	if(block == 0 || block > 7 && block < 12){
+	if (block == 0 || block > 7 && block < 12) {
 		World.setBlock(x, y, z, 8);
 		Player.addItemToInventory(ItemID.cellEmpty, 1);
 		Player.decreaseCarriedItem(1);
 	}
 });
 
-Item.registerUseFunction("cellLava", function(coords, item, block){
-	if(item.data > 0) return;
+Item.registerUseFunction("cellLava", function(coords, item, block) {
+	if (item.data > 0) return;
 	var x = coords.relative.x
 	var y = coords.relative.y
 	var z = coords.relative.z
 	var block = World.getBlockID(x,y,z)
-	if(block == 0 || block > 7 && block < 12){
+	if (block == 0 || block > 7 && block < 12) {
 		World.setBlock(x, y, z, 10);
 		Player.addItemToInventory(ItemID.cellEmpty, 1);
 		Player.decreaseCarriedItem(1);

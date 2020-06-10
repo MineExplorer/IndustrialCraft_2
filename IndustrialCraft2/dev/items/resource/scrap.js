@@ -53,16 +53,16 @@ var SCRAP_BOX_RANDOM_DROP = [
 	{chance: 2.5, id: ItemID.tinCanFull, data: 0},
 ];
 
-function getScrapDropItem(){
+function getScrapDropItem() {
 	var total = 0;
-	for (var i in SCRAP_BOX_RANDOM_DROP){
+	for (var i in SCRAP_BOX_RANDOM_DROP) {
 		total += SCRAP_BOX_RANDOM_DROP[i].chance;
 	}
 	var random = Math.random() * total * 1.35;
 	var current = 0;
-	for (var i in SCRAP_BOX_RANDOM_DROP){
+	for (var i in SCRAP_BOX_RANDOM_DROP) {
 		var drop = SCRAP_BOX_RANDOM_DROP[i];
-		if (current < random && current + drop.chance > random){
+		if (current < random && current + drop.chance > random) {
 			return drop;
 		}
 		current += drop.chance;
@@ -71,7 +71,7 @@ function getScrapDropItem(){
 	return {id: ItemID.scrap, data: 0};
 }
 
-Item.registerUseFunction("scrapBox", function(coords, item, block){
+Item.registerUseFunction("scrapBox", function(coords, item, block) {
 	var drop = getScrapDropItem();
 	World.drop(coords.relative.x + 0.5, coords.relative.y + 0.1, coords.relative.z + 0.5, drop.id, 1, drop.data);
 	Player.decreaseCarriedItem(1);

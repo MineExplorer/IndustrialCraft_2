@@ -33,21 +33,21 @@ var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var Color = android.graphics.Color;
 
 // old Inner Core versions compatibility
-if(!World.addGenerationCallback) World.addGenerationCallback = Callback.addCallback;
+if (!World.addGenerationCallback) World.addGenerationCallback = Callback.addCallback;
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 
 // API
-function randomInt(min, max){
+function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function addShapelessRecipe(result, source){
+function addShapelessRecipe(result, source) {
 	var ingredients = [];
-	for(var i in source){
+	for (var i in source) {
 		var item = source[i];
-		for(var n = 0; n < item.count; n++){
+		for (var n = 0; n < item.count; n++) {
 			ingredients.push(item);
 		}
 	}
@@ -61,13 +61,13 @@ ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone
 // Recipe debug
 /*
 var workbenchAddShaped = Recipes.addShaped;
-Recipes.addShaped = function(result, scheme, keys){
+Recipes.addShaped = function(result, scheme, keys) {
 	Logger.Log("Shaped recipe: "+result.id+", "+result.count+", "+result.data, "DEBUG");
 	workbenchAddShaped(result, scheme, keys);
 }
 
 var workbenchAddShapeless = Recipes.addShapeless;
-Recipes.addShapeless = function(result, input){
+Recipes.addShapeless = function(result, input) {
 	Logger.Log("Shapeless recipe: "+result.id+", "+result.count+", "+result.data, "DEBUG");
 	workbenchAddShapeless(result, input);
 }

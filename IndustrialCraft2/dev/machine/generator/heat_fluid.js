@@ -12,7 +12,7 @@ TileRenderer.registerRotationModel(BlockID.fluidHeatGenerator, 8, [["machine_bot
 
 MachineRegistry.setMachineDrop("fluidHeatGenerator");
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.fluidHeatGenerator, count: 1, data: 0}, [
 		"pcp",
 		"cxc",
@@ -38,20 +38,20 @@ var guiFluidHeatGenerator = new UI.StandartWindow({
 	elements: {
 		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 440, y: 75,
-			isValid: function(id, count, data){
+			isValid: function(id, count, data) {
 				var empty = LiquidLib.getEmptyItem(id, data);
-				if(!empty) return false;
+				if (!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			}
 		},
-		"slot2": {type: "slot", x: 440, y: 183, isValid: function(){return false;}},
+		"slot2": {type: "slot", x: 440, y: 183, isValid: function() {return false;}},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 112, width: 300, height: 30, text: "Emit: 0"},
 		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 186, width: 300, height: 30, text: "Max Emit: 0"}
 	}
 });
 
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiFluidHeatGenerator, "Liquid Fuel Firebox");
 });
 
@@ -64,33 +64,33 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 		isActive: false
 	},
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiFluidHeatGenerator;
 	},
 	
 	setFacing: MachineRegistry.setFacing,
 	
-	init: function(){
+	init: function() {
 		this.liquidStorage.setLimit(null, 10);
 		this.renderModel();
 	},
 	
 	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
 	
-	click: function(id, count, data, coords){
+	click: function(id, count, data, coords) {
 		var liquid = this.liquidStorage.getLiquidStored();
-		if(Entity.getSneaking(player) && this.getLiquidFromItem(liquid, {id: id, count: count, data: data}, null, true)){
+		if (Entity.getSneaking(player) && this.getLiquidFromItem(liquid, {id: id, count: count, data: data}, null, true)) {
 			return true;
 		}
-		if(ICTool.isValidWrench(id, data, 10)){
-			if(this.setFacing(coords))
+		if (ICTool.isValidWrench(id, data, 10)) {
+			if (this.setFacing(coords))
 				ICTool.useWrench(id, data, 10);
 			return true;
 		}
 		return false;
 	},
 	
-	tick: function(){
+	tick: function() {
 		StorageInterface.checkHoppers(this);
 		var liquid = this.liquidStorage.getLiquidStored();
 		var slot1 = this.container.getSlot("slot1");
@@ -98,13 +98,13 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 		this.getLiquidFromItem(liquid, slot1, slot2);
 		
 		var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid || liquid);
-		if(fuel && this.data.fuel <= 0 && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)){
+		if (fuel && this.data.fuel <= 0 && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)) {
 			this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
 			this.data.fuel = fuel.amount;
 			this.data.liquid = liquid;
 		}
-		if(fuel && this.data.fuel > 0){
-			if(this.data.fuel < fuel.amount){
+		if (fuel && this.data.fuel > 0) {
+			if (this.data.fuel < fuel.amount) {
 				this.spreadHeat(fuel.power*2);
 			}
 			this.data.fuel -= fuel.amount/20;
@@ -127,14 +127,14 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 		return "GeothermalLoop.ogg";
 	},
 	
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return 10000;
 	},
 	
-	spreadHeat: function(heat){
+	spreadHeat: function(heat) {
 		var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
 		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-		if(TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)){
+		if (TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)) {
 			var output = TE.heatReceive(heat);
 			this.container.setText("textInfo1", "Emit: " + output);
 			return output;
@@ -152,13 +152,13 @@ StorageInterface.createInterface(BlockID.fluidHeatGenerator, {
 		"slot1": {input: true},
 		"slot2": {output: true}
 	},
-	isValidInput: function(item){
+	isValidInput: function(item) {
 		var empty = LiquidLib.getEmptyItem(item.id, item.data);
-		if(!empty) return false;
+		if (!empty) return false;
 		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 	},
-	canReceiveLiquid: function(liquid, side){
+	canReceiveLiquid: function(liquid, side) {
 		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid)
 	},
-	canTransportLiquid: function(liquid, side){ return false; }
+	canTransportLiquid: function(liquid, side) { return false; }
 });

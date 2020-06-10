@@ -5,7 +5,7 @@ Block.createBlock("solarDistiller", [
 
 MachineRegistry.setMachineDrop("solarDistiller", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.solarDistiller, count: 1, data: 0}, [
 		"aaa",
 		"a a",
@@ -31,12 +31,12 @@ var guiSolarDistiller = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
+		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id) {return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
 		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiSolarDistiller, "Solar Distiller");
 });
 
@@ -45,26 +45,26 @@ MachineRegistry.registerPrototype(BlockID.solarDistiller, {
 		canSeeSky: false
 	},
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiSolarDistiller;
 	},
 	
-	init: function(){
+	init: function() {
 		this.data.canSeeSky = GenerationUtils.canSeeSky(this.x, this.y + 1, this.z);
 	},
 	
-	tick: function(){
+	tick: function() {
 		var content = this.container.getGuiContent();
-		if(World.getThreadTime()%100 == 0){
+		if (World.getThreadTime()%100 == 0) {
 			this.data.canSeeSky = GenerationUtils.canSeeSky(this.x, this.y + 1, this.z);
 		}
-		if(this.data.canSeeSky && World.getLightLevel(this.x, this.y + 1, this.z) == 15){
+		if (this.data.canSeeSky && World.getLightLevel(this.x, this.y + 1, this.z) == 15) {
 			
-			if(content){ 
+			if (content) { 
 				content.elements["sun"].bitmap = "sun_on";
 			}
 		}
-		else if(content){ 
+		else if (content) { 
 			content.elements["sun"].bitmap = "sun_off";
 		}
 	}

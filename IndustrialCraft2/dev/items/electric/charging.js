@@ -26,23 +26,23 @@ Item.addCreativeGroup("chargingBatteryEU", Translation.translate("Charging Batte
 	ItemID.chargingLapotronCrystal
 ]);
 
-Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name){
+Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name) {
 	return {name: "charging_re_battery", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
-Item.registerIconOverrideFunction(ItemID.chargingAdvBattery, function(item, name){
+Item.registerIconOverrideFunction(ItemID.chargingAdvBattery, function(item, name) {
 	return {name: "adv_charging_battery", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
-Item.registerIconOverrideFunction(ItemID.chargingCrystal, function(item, name){
+Item.registerIconOverrideFunction(ItemID.chargingCrystal, function(item, name) {
 	return {name: "charging_energy_crystal", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
-Item.registerIconOverrideFunction(ItemID.chargingLapotronCrystal, function(item, name){
+Item.registerIconOverrideFunction(ItemID.chargingLapotronCrystal, function(item, name) {
 	return {name: "charging_lapotron_crystal", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: ItemID.chargingBattery, count: 1, data: Item.getMaxDamage(ItemID.chargingBattery)}, [
 		"xbx",
 		"b b",
@@ -71,41 +71,41 @@ Callback.addCallback("PreLoaded", function(){
 var ChargingBattery = {
 	itemIDs: {},
 	
-	registerItem: function(nameID){
+	registerItem: function(nameID) {
 		var id = ItemID[nameID];
 		this.itemIDs[id] = true;
 		Item.registerNoTargetUseFunction(nameID, this.switchFunction);
 		Item.registerNameOverrideFunction(id, this.getName);
 	},
 	
-	switchFunction: function(item){
+	switchFunction: function(item) {
 		var extra = item.extra;
-		if(!extra){
+		if (!extra) {
 			extra = new ItemExtraData();
 		}
 		var mode = (extra.getInt("mode")+1)%3;
 		extra.putInt("mode", mode);
-		if(mode == 0){
+		if (mode == 0) {
 			Game.message(Translation.translate("Mode: Enabled"));
 		}
-		if(mode == 1){
+		if (mode == 1) {
 			Game.message(Translation.translate("Mode: Charge items not in hand"));
 		}
-		if(mode == 2){
+		if (mode == 2) {
 			Game.message(Translation.translate("Mode: Disabled"));
 		}
 		Player.setCarriedItem(item.id, 1, item.data, extra);
 	},
 	
-	getName: function(item, name){
+	getName: function(item, name) {
 		var mode = item.extra? item.extra.getInt("mode") : 0;
-		if(mode == 0){
+		if (mode == 0) {
 			var tooltip = Translation.translate("Mode: Enabled");
 		}
-		if(mode == 1){
+		if (mode == 1) {
 			var tooltip = Translation.translate("Mode: Charge items not in hand");
 		}
-		if(mode == 2){
+		if (mode == 2) {
 			var tooltip = Translation.translate("Mode: Disabled");
 		}
 		name = ItemName.showItemStorage(item, name);
@@ -118,20 +118,20 @@ ChargingBattery.registerItem("chargingAdvBattery");
 ChargingBattery.registerItem("chargingCrystal");
 ChargingBattery.registerItem("chargingLapotronCrystal");
 
-function checkCharging(){
-	for(var i = 0; i < 36; i++){
+function checkCharging() {
+	for (var i = 0; i < 36; i++) {
 		var slot = Player.getInventorySlot(i);
-		if(ChargingBattery.itemIDs[slot.id]){
+		if (ChargingBattery.itemIDs[slot.id]) {
 			var mode = slot.extra? slot.extra.getInt("mode") : 0;
 			var energyStored = ChargeItemRegistry.getEnergyStored(slot);
-			if(mode == 2 || energyStored <= 0) continue;
+			if (mode == 2 || energyStored <= 0) continue;
 			var chargeData = ChargeItemRegistry.getItemData(slot.id);
-			for(var index = 0; index < 9; index++){
-				if(mode == 1 && Player.getSelectedSlotId() == index) continue;
+			for (var index = 0; index < 9; index++) {
+				if (mode == 1 && Player.getSelectedSlotId() == index) continue;
 				var item = Player.getInventorySlot(index);
-				if(!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)){
+				if (!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)) {
 					var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", energyStored, chargeData.transferLimit*20, chargeData.level);
-					if(energyAdd > 0){
+					if (energyAdd > 0) {
 						energyStored -= energyAdd;
 						Player.setInventorySlot(index, item.id, 1, item.data, item.extra);
 					}
@@ -143,8 +143,8 @@ function checkCharging(){
 	}
 }
 
-Callback.addCallback("tick", function(){
-	if(World.getThreadTime() % 20 == 0){
+Callback.addCallback("tick", function() {
+	if (World.getThreadTime() % 20 == 0) {
 		checkCharging();
 	}
 });

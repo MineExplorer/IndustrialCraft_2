@@ -17,7 +17,7 @@ ModAPI.registerAPI("ICore", {
 	Integration: IntegrationAPI,
 	
 	registerEnergyPack: registerStoragePack,
-	requireGlobal: function(command){
+	requireGlobal: function(command) {
 		return eval(command);
 	}
 });

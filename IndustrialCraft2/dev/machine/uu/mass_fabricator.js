@@ -11,7 +11,7 @@ ItemName.addTierTooltip("massFabricator", 4);
 
 MachineRegistry.setMachineDrop("massFabricator", BlockID.machineBlockAdvanced);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.massFabricator, count: 1, data: 0}, [
 		"xax",
 		"b#b",
@@ -35,8 +35,8 @@ var guiMassFabricator = new UI.StandartWindow({
 	
 	elements: {
 		"energyScale": {type: "scale", x: 850, y: 190, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"matterSlot": {type: "slot", x: 821, y: 75, size: 100, isValid: function(){return false;}},
-		"catalyserSlot": {type: "slot", x: 841, y: 252, isValid: function(id){
+		"matterSlot": {type: "slot", x: 821, y: 75, size: 100, isValid: function() {return false;}},
+		"catalyserSlot": {type: "slot", x: 841, y: 252, isValid: function(id) {
 			return MachineRecipeRegistry.hasRecipeFor("catalyser", id);
 		}},
 		"textInfo1": {type: "text", x: 542, y: 142, width: 200, height: 30, text: "Progress:"},
@@ -46,7 +46,7 @@ var guiMassFabricator = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiMassFabricator, "Mass Fabricator");
 });
 
@@ -59,40 +59,40 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		isActive: false
 	},
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiMassFabricator;
 	},
 	
-	getTier: function(){
+	getTier: function() {
 		return 4;
 	},
 	
-	tick: function(){
+	tick: function() {
 		StorageInterface.checkHoppers(this);
 		
 		this.container.setScale("energyScale", this.data.progress / ENERGY_PER_MATTER);
 		this.container.setText("textInfo2", parseInt(100 * this.data.progress / ENERGY_PER_MATTER) + "%");
 		
-		if(this.data.isEnabled && this.data.energy > 0){
+		if (this.data.isEnabled && this.data.energy > 0) {
 			this.activate();
 			this.startPlaySound();
-			if(this.data.catalyser < Math.max(1000, this.data.energy)){
+			if (this.data.catalyser < Math.max(1000, this.data.energy)) {
 				var catalyserSlot = this.container.getSlot("catalyserSlot");
 				var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
-				if(catalyserData){
+				if (catalyserData) {
 					this.data.catalyser += catalyserData.input;
 					catalyserSlot.count--;
 					this.container.validateAll();
 				}
 			}
-			if(this.data.catalyser > 0){
+			if (this.data.catalyser > 0) {
 				this.container.setText("textInfo3", "Catalyser:");
 				this.container.setText("textInfo4", parseInt(this.data.catalyser));
 				var transfer = Math.min((ENERGY_PER_MATTER - this.data.progress) / 6, Math.min(this.data.catalyser, this.data.energy));
 				this.data.progress += transfer * 6;
 				this.data.energy -= transfer;
 				this.data.catalyser -= transfer;
-				if(World.getThreadTime() % 40 == 0 && transfer > 0){
+				if (World.getThreadTime() % 40 == 0 && transfer > 0) {
 					SoundManager.playSoundAtBlock(this, "MassFabScrapSolo.ogg", 1);
 				}
 			}
@@ -108,9 +108,9 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 			this.stopPlaySound();
 			this.deactivate();
 		}
-		if(this.data.progress >= ENERGY_PER_MATTER){
+		if (this.data.progress >= ENERGY_PER_MATTER) {
 			var matterSlot = this.container.getSlot("matterSlot");
-			if(matterSlot.id == ItemID.matter && matterSlot.count < 64 || matterSlot.id == 0){
+			if (matterSlot.id == ItemID.matter && matterSlot.count < 64 || matterSlot.id == 0) {
 				matterSlot.id = ItemID.matter;
 				matterSlot.count++;
 				this.data.progress = 0;
@@ -118,7 +118,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		}
 	},
 	
-	redstone: function(signal){
+	redstone: function(signal) {
 		this.data.isEnabled = (signal.power == 0);
 	},
 	
@@ -126,11 +126,11 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		return "MassFabLoop.ogg";
 	},
 
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return ENERGY_PER_MATTER - this.data.progress;
 	},
 	
-	getExplosionPower: function(){
+	getExplosionPower: function() {
 		return 15;
 	},
 
@@ -144,7 +144,7 @@ StorageInterface.createInterface(BlockID.massFabricator, {
 		"catalyserSlot": {input: true},
 		"matterSlot": {output: true}
 	},
-	isValidInput: function(item){
+	isValidInput: function(item) {
 		return MachineRecipeRegistry.hasRecipeFor("catalyser", item.id);
 	}
 });

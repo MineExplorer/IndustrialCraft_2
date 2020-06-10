@@ -24,7 +24,7 @@ ToolAPI.registerBlockMaterial(BlockID.machineBlockAdvanced, "stone", 1, true);
 Block.setDestroyLevel("machineBlockAdvanced", 1);
 ToolLib.addBlockDropOnExplosion("machineBlockAdvanced");
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.machineBlockBasic, count: 1, data: 0}, [
 		"xxx",
 		"x x",

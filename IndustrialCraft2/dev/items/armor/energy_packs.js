@@ -51,25 +51,25 @@ Recipes.addShaped({id: ItemID.lappack, count: 1, data: 27}, [
 ], ['e', ItemID.energypack, -1, 'a', ItemID.storageLapotronCrystal, -1, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
 
 
-function registerStoragePack(id, level, tranfer){
+function registerStoragePack(id, level, tranfer) {
 	Armor.registerFuncs(id, {
-		hurt: function(){
+		hurt: function() {
 			return false;
 		},
-		tick: function(slot){
+		tick: function(slot) {
 			ENERGY_PACK_TICK(slot, level, tranfer);
 			return false;
 		}
 	});
 }
 
-var ENERGY_PACK_TICK = function(slot, level, transfer){
-	if(World.getThreadTime()%20==0){
+var ENERGY_PACK_TICK = function(slot, level, transfer) {
+	if (World.getThreadTime()%20==0) {
 		var item = Player.getCarriedItem();
-		if(ChargeItemRegistry.isValidItem(item.id, "Eu", level, "tool")){
+		if (ChargeItemRegistry.isValidItem(item.id, "Eu", level, "tool")) {
 			var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 			var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", energyStored, transfer*20, level);
-			if(energyAdd > 0){
+			if (energyAdd > 0) {
 				ChargeItemRegistry.setEnergyStored(slot, energyStored - energyAdd);
 				Player.setCarriedItem(item.id, 1, item.data, item.extra);
 				Player.setArmorSlot(1, slot.id, 1, slot.data, slot.extra);

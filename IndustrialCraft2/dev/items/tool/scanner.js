@@ -25,40 +25,40 @@ let scan_radius = 3;
 let adv_scan_radius = 6;
 let ore_blocks = [14, 15, 16, 21, 73, 74, 56, 129, 153];
 
-Callback.addCallback("PreLoaded", function(coords, item, block){
-	for(let id in BlockID){
-		if(id.startsWith("ore") && !TileEntity.isTileEntityBlock(BlockID[id])){
+Callback.addCallback("PreLoaded", function(coords, item, block) {
+	for (let id in BlockID) {
+		if (id.startsWith("ore") && !TileEntity.isTileEntityBlock(BlockID[id])) {
 			ore_blocks.push(BlockID[id]);
 		}
 	}
 });
 
-function scanOres(coords, item, energy, radius){
-	if(ICTool.useElectricItem(item, energy)){
+function scanOres(coords, item, energy, radius) {
+	if (ICTool.useElectricItem(item, energy)) {
 		SoundManager.playSound("ODScanner.ogg");
 		Game.message(Translation.translate("Scan Result: ") + coords.x + ", " + coords.y + ", " + coords.z);
 		let ores = {};
-		for(let x = coords.x - radius; x <= coords.x + radius; x++){
-			for(let y = coords.y - radius; y <= coords.y + radius; y++){
-				for(let z = coords.z - radius; z <= coords.z + radius; z++){
+		for (let x = coords.x - radius; x <= coords.x + radius; x++) {
+			for (let y = coords.y - radius; y <= coords.y + radius; y++) {
+				for (let z = coords.z - radius; z <= coords.z + radius; z++) {
 					let blockID = World.getBlockID(x, y, z);
-					if(ore_blocks.indexOf(blockID) != -1){
+					if (ore_blocks.indexOf(blockID) != -1) {
 						ores[blockID] = ores[blockID] || 0;
 						ores[blockID]++;
 					}
 				}
 			}
 		}
-		for(let id in ores){
+		for (let id in ores) {
 			Game.message(Item.getName(id) + " - " + ores[id]);
 		}
 	}
 }
 
-Item.registerUseFunction("scanner", function(coords, item, block){
+Item.registerUseFunction("scanner", function(coords, item, block) {
 	scanOres(coords, item, 50, scan_radius);
 });
 
-Item.registerUseFunction("scannerAdvanced", function(coords, item, block){
+Item.registerUseFunction("scannerAdvanced", function(coords, item, block) {
 	scanOres(coords, item, 200, adv_scan_radius);
 });

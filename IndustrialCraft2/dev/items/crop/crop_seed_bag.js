@@ -1,9 +1,9 @@
 IDRegistry.genItemID("cropSeedBag");
 Item.createItem("cropSeedBag", "Seed Bag (%s)", {name: "crop_seed_bag"}, {stack: 1, isTech: true});
-Item.registerUseFunction("cropSeedBag", function(coords, item, block){
-    if(block.id == BlockID.crop){
+Item.registerUseFunction("cropSeedBag", function(coords, item, block) {
+    if (block.id == BlockID.crop) {
         var te = World.getTileEntity(coords.x,coords.y,coords.z);
-        if(!te.data.crop){
+        if (!te.data.crop) {
             var data = {
                 statGrowth: item.extra.getInt("growth"),
                 statGain: item.extra.getInt("gain"),
@@ -11,7 +11,7 @@ Item.registerUseFunction("cropSeedBag", function(coords, item, block){
                 scanLevel: item.extra.getInt("scan")
             };
             let isCropPlanted = te.tryPlantIn(item.data, 1, data.statGrowth, data.statGain, data.statResistance, data.scanLevel);
-            if(isCropPlanted && Game.getGameMode() != 1){
+            if (isCropPlanted && Game.getGameMode() != 1) {
 				Player.decreaseCarriedItem(1);
 			}
         }
@@ -20,19 +20,19 @@ Item.registerUseFunction("cropSeedBag", function(coords, item, block){
 
 Item.addCreativeGroup("cropSeedBag", Translation.translate("Seed Bags"), [ItemID.cropSeedBag]);
 
-Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name){
+Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name) {
     var extra = item.extra;
     var scanLvl = extra.getInt("scan");
     var cropClassName = scanLvl > 0 ? AgricultureAPI.cropCards[item.data].id : "Unknown";
     var translatedCropName = Translation.translate(cropClassName);
 
     var newName = Translation.translate("Seed Bag (%s)").replace("%s", translatedCropName) + '\n';
-    if(scanLvl >= 4){
+    if (scanLvl >= 4) {
         newName += "§2Gr: " + extra.getInt("growth") + '\n';
         newName += "§6Ga: " + extra.getInt("gain") + '\n';
         newName += "§bRe: " + extra.getInt("resistance");
     }
-    if(Config.debugMode){
+    if (Config.debugMode) {
 		newName += "[DEBUG]scanLevel: " + scanLvl;
 	}
     return newName;

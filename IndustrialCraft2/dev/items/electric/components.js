@@ -26,7 +26,7 @@ Item.addCreativeGroup("ic2_component", Translation.translate("Crafting Component
 	ItemID.heatConductor
 ]);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: ItemID.circuitBasic, count: 1, data: 0}, [
 		"xxx",
 		"a#a",

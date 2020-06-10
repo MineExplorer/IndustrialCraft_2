@@ -7,11 +7,11 @@ Recipes.addShaped({id: ItemID.freqTransmitter, count: 1, data: 0}, [
 	"b"
 ], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'b', ItemID.casingIron, 0]);
 
-Item.registerNameOverrideFunction(ItemID.freqTransmitter, function(item, name){
+Item.registerNameOverrideFunction(ItemID.freqTransmitter, function(item, name) {
 	var carried = Player.getCarriedItem();
-	if(carried.id == item.id){
+	if (carried.id == item.id) {
 		var extra = carried.extra;
-		if(extra){
+		if (extra) {
 			var x = extra.getInt("x");
 			var y = extra.getInt("y");
 			var z = extra.getInt("z");
@@ -21,10 +21,10 @@ Item.registerNameOverrideFunction(ItemID.freqTransmitter, function(item, name){
 	return name;
 });
 
-Item.registerUseFunction("freqTransmitter", function(coords, item, block){
+Item.registerUseFunction("freqTransmitter", function(coords, item, block) {
 	var receiveCoords;
 	var extra = item.extra;
-	if(!extra){
+	if (!extra) {
 		extra = new ItemExtraData();
 		item.extra = extra;
 	} else {
@@ -33,8 +33,8 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 		var z = extra.getInt("z");
 		receiveCoords = {x: x, z: z, y: y};
 	}
-	if(block.id == BlockID.teleporter){
-		if(!receiveCoords){
+	if (block.id == BlockID.teleporter) {
+		if (!receiveCoords) {
 			extra.putInt("x", coords.x);
 			extra.putInt("y", coords.y);
 			extra.putInt("z", coords.z);
@@ -42,7 +42,7 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 			Game.message("Frequency Transmitter linked to Teleporter");
 		}
 		else{
-			if(x == coords.x && y == coords.y && z == coords.z){
+			if (x == coords.x && y == coords.y && z == coords.z) {
 				Game.message("Can`t link Teleporter to itself");
 			}
 			else{
@@ -50,7 +50,7 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 				var distance = Entity.getDistanceBetweenCoords(coords, receiveCoords);
 				var basicTeleportCost = Math.floor(5 * Math.pow((distance+10), 0.7));
 				receiver = World.getTileEntity(x, y, z);
-				if(receiver){
+				if (receiver) {
 					data.frequency = receiveCoords;
 					data.frequency.energy = basicTeleportCost;
 					data = receiver.data;
@@ -61,7 +61,7 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block){
 			}
 		}
 	}
-	else if(receiveCoords){
+	else if (receiveCoords) {
 		Player.setCarriedItem(item.id, 1, item.data);
 		Game.message("Frequency Transmitter unlinked");
 	}

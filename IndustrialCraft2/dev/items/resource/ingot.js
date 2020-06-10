@@ -29,7 +29,7 @@ Item.addCreativeGroup("ingot", Translation.translate("Ingots"), [
 	ItemID.ingotAlloy
 ]);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	// from ore
 	Recipes.addFurnace(BlockID.oreCopper, ItemID.ingotCopper, 0);
 	Recipes.addFurnace(BlockID.oreTin, ItemID.ingotTin, 0);

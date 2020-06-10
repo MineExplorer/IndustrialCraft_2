@@ -112,7 +112,7 @@ let ICTool = {
 			if (item.id == itemID && (!tool || !tool.toolMaterial.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.toolMaterial.energyPerUse)) {
 				SoundManager.startPlaySound(AudioSource.PLAYER, item.id, idleSound);
 			}
-			else if(SoundManager.stopPlaySound(itemID) && stopSound) {
+			else if (SoundManager.stopPlaySound(itemID) && stopSound) {
 				SoundManager.playSound(stopSound);
 			}
 		});

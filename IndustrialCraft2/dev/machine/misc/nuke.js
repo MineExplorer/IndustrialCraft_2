@@ -93,7 +93,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 		}
 	},
 
-	destroy: function(){
+	destroy: function() {
 		Block.unmapAtCoords(this.x, this.y, this.z);
 	}
 });

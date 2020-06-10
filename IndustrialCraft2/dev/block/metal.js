@@ -74,7 +74,7 @@ Item.addCreativeGroup("blockMetal", Translation.translate("Metal Blocks"), [
 	BlockID.blockUranium
 ]);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.blockCopper, count: 1, data: 0}, [
 		"xxx",
 		"xxx",

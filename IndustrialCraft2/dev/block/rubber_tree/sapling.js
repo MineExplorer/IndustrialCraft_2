@@ -46,7 +46,7 @@ Block.setRandomTickCallback(BlockID.rubberTreeSapling, function(x, y, z) {
 Callback.addCallback("ItemUse", function(coords, item, block) {
 	if (item.id == 351 && item.data == 15 && block.id == BlockID.rubberTreeSapling) {
 		Player.setCarriedItem(item.id, item.count - 1, item.data);
-		for(var i = 0; i < 16; i++) {
+		for (var i = 0; i < 16; i++) {
 			var px = coords.x + Math.random();
 			var pz = coords.z + Math.random();
 			var py = coords.y + Math.random();

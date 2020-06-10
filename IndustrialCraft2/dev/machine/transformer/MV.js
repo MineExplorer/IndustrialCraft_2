@@ -7,11 +7,11 @@ TileRenderer.registerFullRotationModel(BlockID.transformerMV, 0, [["mv_transform
 
 MachineRegistry.setMachineDrop("transformerMV", BlockID.machineBlockBasic);
 
-Item.registerNameOverrideFunction(BlockID.transformerMV, function(item, name){
+Item.registerNameOverrideFunction(BlockID.transformerMV, function(item, name) {
 	return name + "\n§7Low: 128 EU/t High: 512 EU/t";
 });
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.transformerMV, count: 1, data: 0}, [
 		"b",
 		"x",

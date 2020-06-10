@@ -8,7 +8,7 @@ TileRenderer.registerRotationModel(BlockID.ironFurnace, 4, [["iron_furnace_botto
 
 MachineRegistry.setMachineDrop("ironFurnace");
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.ironFurnace, count: 1, data: 0}, [
 		" x ",
 		"x x",
@@ -32,17 +32,17 @@ var guiIronFurnace = new UI.StandartWindow({
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
 		"burningScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-		"slotSource": {type: "slot", x: 441, y: 79, isValid: function(id, count, data){
+		"slotSource": {type: "slot", x: 441, y: 79, isValid: function(id, count, data) {
 			return Recipes.getFurnaceRecipeResult(id, "iron")? true : false;
 		}},
-		"slotFuel": {type: "slot", x: 441, y: 218, isValid: function(id, count, data){
+		"slotFuel": {type: "slot", x: 441, y: 218, isValid: function(id, count, data) {
 			return Recipes.getFuelBurnDuration(id, data) > 0;
 		}},
-		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function() {return false;}},
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiIronFurnace, "Iron Furnace");
 });
 
@@ -55,7 +55,7 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		isActive: false
 	},
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiIronFurnace;
 	},
 
@@ -66,12 +66,12 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		return this.data.burn / this.data.burnMax;
 	},
 
-	consumeFuel: function(slotName){
+	consumeFuel: function(slotName) {
 		var fuelSlot = this.container.getSlot(slotName);
-		if(fuelSlot.id > 0){
+		if (fuelSlot.id > 0) {
 			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
-			if(burn){
-				if(LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)){
+			if (burn) {
+				if (LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
 					var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
 					fuelSlot.id = empty.id;
 					fuelSlot.data = empty.data;
@@ -85,19 +85,19 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		return 0;
 	},
 	
-	tick: function(){
+	tick: function() {
 		StorageInterface.checkHoppers(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = Recipes.getFurnaceRecipeResult(sourceSlot.id, "iron");
 		
-		if(this.data.burn == 0 && result){
+		if (this.data.burn == 0 && result) {
 			this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel");
 		}
 		
-		if(this.data.burn > 0 && result){
+		if (this.data.burn > 0 && result) {
 			var resultSlot = this.container.getSlot("slotResult");
-			if((resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0) && this.data.progress++ >= 160){
+			if ((resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0) && this.data.progress++ >= 160) {
 				sourceSlot.count--;
 				resultSlot.id = result.id;
 				resultSlot.data = result.data;
@@ -110,7 +110,7 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 			this.data.progress = 0;
 		}
 		
-		if(this.data.burn > 0){
+		if (this.data.burn > 0) {
 			this.data.burn--;
 			this.activate();
 			this.startPlaySound();
@@ -135,12 +135,12 @@ TileRenderer.setRotationPlaceFunction(BlockID.ironFurnace);
 StorageInterface.createInterface(BlockID.ironFurnace, {
 	slots: {
 		"slotSource": {input: true, side: "up",
-			isValid: function(item, side){
+			isValid: function(item, side) {
 				return Recipes.getFurnaceRecipeResult(item.id, "iron");
 			}
 		},
 		"slotFuel": {input: true, side: "horizontal",
-			isValid: function(item){
+			isValid: function(item) {
 				return Recipes.getFuelBurnDuration(item.id, item.data) > 0;
 			}
 		},

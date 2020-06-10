@@ -188,7 +188,7 @@ var QUANTUM_ARMOR_FUNCS = {
 		var armor = MachineRecipeRegistry.getRecipeResult("quantum-armor-charge", slot.id);
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		var newId = energyStored < 2500 ? armor.uncharged : armor.charged;
-		if(slot.id != newId){
+		if (slot.id != newId) {
 			slot.id = newId;
 			Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 		}

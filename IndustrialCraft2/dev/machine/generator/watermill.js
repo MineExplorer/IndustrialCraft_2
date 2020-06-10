@@ -7,7 +7,7 @@ TileRenderer.registerRotationModel(BlockID.genWatermill, 0, [["machine_bottom", 
 
 MachineRegistry.setMachineDrop("genWatermill", BlockID.primalGenerator);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.genWatermill, count: 1, data: 0}, [
 		"x x",
 		"a#a",
@@ -22,29 +22,29 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 		output: 0
 	},
 	
-	biomeCheck: function(x, z){
+	biomeCheck: function(x, z) {
 		var coords = [[x, z], [x-7, z], [x+7, z], [x, z-7], [x, z+7]];
-		for(var c in coords){
+		for (var c in coords) {
 			var biome = World.getBiome(c[0], c[1]);
-			if(biome==0 || biome==24){return "ocean";}
-			if(biome==7){return "river";}
+			if (biome==0 || biome==24) {return "ocean";}
+			if (biome==7) {return "river";}
 		}
 		return 0;
 	},
 
-	energyTick: function(type, src){
-		if(World.getThreadTime()%20 == 0){
+	energyTick: function(type, src) {
+		if (World.getThreadTime()%20 == 0) {
 			this.data.output = 0;
 			var biome = this.biomeCheck(this.x, this.z);
-			if(biome && this.y >= 32 && this.y < 64){
+			if (biome && this.y >= 32 && this.y < 64) {
 				var output = 50;
 				var radius = 1;
 				var wether = World.getWeather();
-				if(wether.thunder && wether.rain){
-					if(wether.thunder){output *= 2;}
+				if (wether.thunder && wether.rain) {
+					if (wether.thunder) {output *= 2;}
 					else{output *= 1.5;}
 				}
-				else if(biome=="ocean"){
+				else if (biome=="ocean") {
 					output *= 1.5*Math.sin(World.getWorldTime()%6000/(6000/Math.PI));
 				}
 				var tile = World.getBlockID(
@@ -52,7 +52,7 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 					this.y - randomInt(-radius, radius),
 					this.z - randomInt(-radius, radius)
 				);
-				if(tile == 8 || tile == 9){
+				if (tile == 8 || tile == 9) {
 					this.data.output = Math.round(output)/20;
 				}
 				else{
@@ -63,10 +63,10 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 		src.addAll(this.data.output);
 	},
 	
-	renderModel: function(){
+	renderModel: function() {
 		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta);
 	},
-	destroy: function(){
+	destroy: function() {
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	},
 });

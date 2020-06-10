@@ -7,7 +7,7 @@ TileRenderer.registerFullRotationModel(BlockID.stirlingGenerator, 0, [["machine_
 
 MachineRegistry.setMachineDrop("stirlingGenerator", BlockID.primalGenerator);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.stirlingGenerator, count: 1, data: 0}, [
 		"cxc",
 		"c#c",
@@ -21,31 +21,31 @@ MachineRegistry.registerGenerator(BlockID.stirlingGenerator, {
 		heat: 0
 	},
 	
-	wrenchClick: function(id, count, data, coords){
+	wrenchClick: function(id, count, data, coords) {
 		this.setFacing(coords);
 	},
 	
 	setFacing: MachineRegistry.setFacing,
 	
-	canReceiveHeat: function(side){
+	canReceiveHeat: function(side) {
 		return this.data.meta == side ^ 1;
 	},
 	
-	heatReceive: function(amount){
-		if(this.data.energy == 0){
+	heatReceive: function(amount) {
+		if (this.data.energy == 0) {
 			this.data.energy = Math.round(amount / 2);
 			return amount;
 		}
 		return 0;
 	},
 	
-	energyTick: function(type, src){
-		if(src.add(this.data.energy) < this.data.energy){
+	energyTick: function(type, src) {
+		if (src.add(this.data.energy) < this.data.energy) {
 			this.data.energy = 0;
 		}
 	},
 	
-	renderModel: function(){
+	renderModel: function() {
 		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta);
 	}
 });

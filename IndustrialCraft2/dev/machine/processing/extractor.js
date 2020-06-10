@@ -10,7 +10,7 @@ ItemName.addTierTooltip("extractor", 1);
 
 MachineRegistry.setMachineDrop("extractor", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.extractor, count: 1, data: 0}, [
 		"x#x",
 		"xax"
@@ -42,11 +42,11 @@ var guiExtractor = new UI.StandartWindow({
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotSource": {type: "slot", x: 441, y: 79, isValid: function(id, count, data){
+		"slotSource": {type: "slot", x: 441, y: 79, isValid: function(id, count, data) {
 			return MachineRecipeRegistry.hasRecipeFor("extractor", id);
 		}},
 		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-		"slotResult": {type: "slot", x: 625, y: 148, isValid: function(){return false;}},
+		"slotResult": {type: "slot", x: 625, y: 148, isValid: function() {return false;}},
 		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isValidUpgrade},
@@ -54,7 +54,7 @@ var guiExtractor = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiExtractor, "Extractor");
 });
 
@@ -71,22 +71,22 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 	
 	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"],
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiExtractor;
 	},
 	
-	getTier: function(){
+	getTier: function() {
 		return this.data.power_tier;
 	},
 	
-	resetValues: function(){
+	resetValues: function() {
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
 		this.data.work_time = this.defaultValues.work_time;
 	},
 	
-	tick: function(){
+	tick: function() {
 		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
@@ -94,14 +94,14 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
 		var result = MachineRecipeRegistry.getRecipeResult("extractor", sourceSlot.id);
-		if(result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)){
-			if(this.data.energy >= this.data.energy_consumption){
+		if (result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
+			if (this.data.energy >= this.data.energy_consumption) {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
 				this.startPlaySound();
 			}
-			if(this.data.progress.toFixed(3) >= 1){
+			if (this.data.progress.toFixed(3) >= 1) {
 				sourceSlot.count--;
 				resultSlot.id = result.id;
 				resultSlot.count += result.count;
@@ -112,7 +112,7 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 		else {
 			this.data.progress = 0;
 		}
-		if(!newActive)
+		if (!newActive)
 			this.stopPlaySound();
 		this.setActive(newActive);
 		
@@ -124,14 +124,14 @@ MachineRegistry.registerElectricMachine(BlockID.extractor, {
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 	
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return this.data.energy_storage;
 	},
 	
-	getOperationSound: function(){
+	getOperationSound: function() {
 		return "ExtractorOp.ogg";
     },
-	getInterruptSound: function(){
+	getInterruptSound: function() {
 		return "InterruptOne.ogg";
     },
 	
@@ -145,7 +145,7 @@ StorageInterface.createInterface(BlockID.extractor, {
 		"slotSource": {input: true},
 		"slotResult": {output: true}
 	},
-	isValidInput: function(item){
+	isValidInput: function(item) {
 		return MachineRecipeRegistry.hasRecipeFor("extractor", item.id);
 	}
 });

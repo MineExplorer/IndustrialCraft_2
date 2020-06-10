@@ -1,4 +1,4 @@
-ModAPI.addAPICallback("RecipeViewer", function(api){
+ModAPI.addAPICallback("RecipeViewer", function(api) {
 	let RecipeViewer = api.Core;
 	const Bitmap = android.graphics.Bitmap;
 	const Canvas = android.graphics.Canvas;
@@ -19,9 +19,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				output0: {type: "slot", x: 600, y: 190, size: 120}
 			}
 		},
-		getList: function(id, data, isUsage){
+		getList: function(id, data, isUsage) {
 			let result;
-			if(isUsage){
+			if (isUsage) {
 				result = MachineRecipeRegistry.getRecipeResult("macerator", id, data);
 				return result ? [{
 					input: [{id: id, count: 1, data: data}],
@@ -31,9 +31,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 			let list = [];
 			let recipe = MachineRecipeRegistry.requireRecipesFor("macerator");
 			let item;
-			for(let key in recipe){
+			for (let key in recipe) {
 				result = recipe[key];
-				if(result.id == id && (result.data == data || data == -1)){
+				if (result.id == id && (result.data == data || data == -1)) {
 					item = key.split(":");
 					list.push({
 						input: [{id: parseInt(item[0]), count: result.sourceCount || 1, data: parseInt(item[1] || 0)}],
@@ -57,9 +57,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				output0: {type: "slot", x: 600, y: 190, size: 120}
 			}
 		},
-		getList: function(id, data, isUsage){
+		getList: function(id, data, isUsage) {
 			let result;
-			if(isUsage){
+			if (isUsage) {
 				result = MachineRecipeRegistry.getRecipeResult("compressor", id, data);
 				return result ? [{
 					input: [{id: id, count: result.sourceCount || 1, data: data}],
@@ -69,9 +69,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 			let list = [];
 			let recipe = MachineRecipeRegistry.requireRecipesFor("compressor");
 			let item;
-			for(let key in recipe){
+			for (let key in recipe) {
 				result = recipe[key];
-				if(result.id == id && (result.data == data || data == -1)){
+				if (result.id == id && (result.data == data || data == -1)) {
 					item = key.split(":");
 					list.push({
 						input: [{id: parseInt(item[0]), count: result.sourceCount || 1, data: parseInt(item[1] || 0)}],
@@ -95,9 +95,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				output0: {type: "slot", x: 600, y: 190, size: 120}
 			}
 		},
-		getList: function(id, data, isUsage){
+		getList: function(id, data, isUsage) {
 			let result;
-			if(isUsage){
+			if (isUsage) {
 				result = MachineRecipeRegistry.getRecipeResult("extractor", id);
 				return result ? [{
 					input: [{id: id, count: 1, data: data}],
@@ -106,9 +106,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 			}
 			let list = [];
 			let recipe = MachineRecipeRegistry.requireRecipesFor("extractor");
-			for(let key in recipe){
+			for (let key in recipe) {
 				result = recipe[key];
-				if(result.id == id){
+				if (result.id == id) {
 					list.push({
 						input: [{id: parseInt(key), count: 1, data: 0}],
 						output: [{id: result.id, count: result.count, data: 0}]
@@ -133,21 +133,21 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				output0: {type: "slot", x: 660, y: 190, size: 120}
 			}
 		},
-		getList: function(id, data, isUsage){
+		getList: function(id, data, isUsage) {
 			let list = [];
 			let recipe = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 			let result;
-			if(isUsage){
+			if (isUsage) {
 				result = MachineRecipeRegistry.getRecipeResult("solidCanner", id);
-				if(result){
+				if (result) {
 					return [{
 						input: [{id: id, count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
 						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
 					}];
 				}
-				for(let key in recipe){
+				for (let key in recipe) {
 					result = recipe[key];
-					if(result.storage[0] == id){
+					if (result.storage[0] == id) {
 						list.push({
 							input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
 							output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
@@ -156,9 +156,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				}
 				return list;
 			}
-			for(let key in recipe){
+			for (let key in recipe) {
 				result = recipe[key];
-				if(result.result[0] == id){
+				if (result.result[0] == id) {
 					list.push({
 						input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
 						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
@@ -184,21 +184,21 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				output0: {type: "slot", x: 668, y: 50, size: 108, bitmap: "default_slot"}
 			}
 		},
-		getList: function(id, data, isUsage){
+		getList: function(id, data, isUsage) {
 			let list = [];
 			let recipe = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 			let result;
-			if(isUsage){
+			if (isUsage) {
 				result = MachineRecipeRegistry.getRecipeResult("solidCanner", id);
-				if(result){
+				if (result) {
 					return [{
 						input: [{id: id, count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
 						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
 					}];
 				}
-				for(let key in recipe){
+				for (let key in recipe) {
 					result = recipe[key];
-					if(result.storage[0] == id){
+					if (result.storage[0] == id) {
 						list.push({
 							input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
 							output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
@@ -207,9 +207,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				}
 				return list;
 			}
-			for(let key in recipe){
+			for (let key in recipe) {
 				result = recipe[key];
-				if(result.result[0] == id){
+				if (result.result[0] == id) {
 					list.push({
 						input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
 						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
@@ -235,13 +235,13 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				output0: {type: "slot", x: 660, y: 190, size: 120}
 			}
 		},
-		getList: function(id, data, isUsage){
+		getList: function(id, data, isUsage) {
 			let list = [];
 			let result;
-			if(isUsage){
-				for(let mode = 0; mode < 3; mode++){
+			if (isUsage) {
+				for (let mode = 0; mode < 3; mode++) {
 					result = MachineRecipeRegistry.getRecipeResult("metalFormer" + mode, id);
-					if(result){
+					if (result) {
 						list.push({
 							input: [{id: id, count: 1, data: data}],
 							output: [{id: result.id, count: result.count, data: 0}],
@@ -251,11 +251,11 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				}
 				return list;
 			}
-			for(let mode = 0; mode < 3; mode++){
+			for (let mode = 0; mode < 3; mode++) {
 				let recipe = MachineRecipeRegistry.requireRecipesFor("metalFormer" + mode);
-				for(let key in recipe){
+				for (let key in recipe) {
 					result = recipe[key];
-					if(result.id == id){
+					if (result.id == id) {
 						list.push({
 							input: [{id: parseInt(key), count: 1, data: 0}],
 							output: [{id: result.id, count: result.count, data: 0}],
@@ -266,8 +266,8 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 			}
 			return list;
 		},
-		onOpen: function(elements, data){
-			if(!data){
+		onOpen: function(elements, data) {
+			if (!data) {
 				return;
 			}
 			let elem = elements.get("slotMode");
@@ -298,9 +298,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				output2: {type: "slot", x: 605, y: 315, size: 90}
 			}
 		},
-		getList: function(id, data, isUsage){
+		getList: function(id, data, isUsage) {
 			let result;
-			if(isUsage){
+			if (isUsage) {
 				result = MachineRecipeRegistry.getRecipeResult("oreWasher", id);
 				return result ? [{
 					input: [{id: id, count: 1, data: data}],
@@ -313,9 +313,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 			}
 			let list = [];
 			let recipe = MachineRecipeRegistry.requireRecipesFor("oreWasher");
-			for(let key in recipe){
+			for (let key in recipe) {
 				result = recipe[key];
-				if(result[0] == id || result[2] == id || result[4] == id){
+				if (result[0] == id || result[2] == id || result[4] == id) {
 					list.push({
 						input: [{id: parseInt(key), count: 1, data: 0}],
 						output: [
@@ -352,9 +352,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				textHeat: {type: "text", x: 430, y: 410}
 			}
 		},
-		getList: function(id, data, isUsage){
+		getList: function(id, data, isUsage) {
 			let result;
-			if(isUsage){
+			if (isUsage) {
 				result = MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", id);
 				return result ? [{
 					input: [{id: id, count: 1, data: data}],
@@ -368,9 +368,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 			}
 			let list = [];
 			let recipe = MachineRecipeRegistry.requireRecipesFor("thermalCentrifuge");
-			for(let key in recipe){
+			for (let key in recipe) {
 				result = recipe[key];
-				if(result.result[0] == id || result.result[2] == id || result.result[4] == id){
+				if (result.result[0] == id || result.result[2] == id || result.result[4] == id) {
 					list.push({
 						input: [{id: parseInt(key), count: 1, data: 0}],
 						output: [
@@ -384,7 +384,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 			}
 			return list;
 		},
-		onOpen: function(elements, data){
+		onOpen: function(elements, data) {
 			let elem = elements.get("textHeat");
 			elem.onBindingUpdated("text", data ? Translation.translate("Heat: ") + data.heat : "");
 		}
@@ -412,12 +412,12 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				output1: {type: "slot", x: 820, y: 284, size: 90}
 			}
 		},
-		getList: function(id, data, isUsage){
+		getList: function(id, data, isUsage) {
 			let list = [];
 			let result, recipe;
-			if(isUsage){
+			if (isUsage) {
 				result = MachineRecipeRegistry.getRecipeResult("blastFurnace", id);
-				if(result){
+				if (result) {
 					return [{
 						input: [
 							{id: id, count: 1, data: 0},
@@ -429,9 +429,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 						]
 					}];
 				}
-				if(id == ItemID.cellAir){
+				if (id == ItemID.cellAir) {
 					recipe = MachineRecipeRegistry.requireRecipesFor("blastFurnace");
-					for(let key in recipe){
+					for (let key in recipe) {
 						result = recipe[key];
 						list.push({
 							input: [
@@ -449,9 +449,9 @@ ModAPI.addAPICallback("RecipeViewer", function(api){
 				return [];
 			}
 			recipe = MachineRecipeRegistry.requireRecipesFor("blastFurnace");
-			for(let key in recipe){
+			for (let key in recipe) {
 				result = recipe[key];
-				if(result.result[0] == id || result.result[2] == id){
+				if (result.result[0] == id || result.result[2] == id) {
 					list.push({
 						input: [
 							{id: parseInt(key), count: 1, data: 0},

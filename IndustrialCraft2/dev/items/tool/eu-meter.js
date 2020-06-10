@@ -34,7 +34,7 @@ var guiEUReader = new UI.Window({
 		"textTime": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 348, width: 256, height: 42, text: "Cycle: 0 sec"},
 		"textReset": {type: "text", font: {size: 22, color: Color.GREEN}, x: 330, y: 392, width: 256, height: 42, text: Translation.translate("Reset")},
 		"closeButton": {type: "button", x: 727, y: 40, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {
-			onClick: function(container){
+			onClick: function(container) {
 				container.close();
 				EUReader.container = null;
 				EUReader.net = null;
@@ -42,12 +42,12 @@ var guiEUReader = new UI.Window({
 			}
 		}},
 		"resetButton": {type: "button", x: 298, y: 385, bitmap: "eu_meter_reset_button", scale: GUI_SCALE, clicker: {
-			onClick: function(container){
+			onClick: function(container) {
 				EUReader.resetValues();
 			}
 		}},
 		"arrowButton0": {type: "button", x: 576, y: 206, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-			onClick: function(container){
+			onClick: function(container) {
 				EUReader.mode = 0;
 				EUReader.resetValues();
 				var elements = container.getGuiContent().elements;
@@ -56,7 +56,7 @@ var guiEUReader = new UI.Window({
 			}
 		}},
 		"arrowButton1": {type: "button", x: 640, y: 206, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-			onClick: function(container){
+			onClick: function(container) {
 				EUReader.mode = 1;
 				EUReader.resetValues();
 				var elements = container.getGuiContent().elements;
@@ -65,7 +65,7 @@ var guiEUReader = new UI.Window({
 			}
 		}},
 		"arrowButton2": {type: "button", x: 576, y: 270, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-			onClick: function(container){
+			onClick: function(container) {
 				EUReader.mode = 2;
 				EUReader.resetValues();
 				var elements = container.getGuiContent().elements;
@@ -74,7 +74,7 @@ var guiEUReader = new UI.Window({
 			}
 		}},
 		"arrowButton3": {type: "button", x: 640, y: 270, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-			onClick: function(container){
+			onClick: function(container) {
 				EUReader.mode = 3;
 				EUReader.resetValues();
 				var elements = container.getGuiContent().elements;
@@ -91,7 +91,7 @@ Callback.addCallback("LevelLoaded", function() {
 });
 
 Callback.addCallback("MinecraftActivityStopped", function() {
-	if(EUReader.container && EUReader.container.isOpened()){
+	if (EUReader.container && EUReader.container.isOpened()) {
 		EUReader.container.close();
 		EUReader.container = null;
 	}
@@ -106,7 +106,7 @@ var EUReader = {
 	maxValue: 0,
 	net: null,
 	tile: null,
-	resetValues: function(){
+	resetValues: function() {
 		this.time = 0;
 		this.sum = 0;
 		this.minValue = 2e9;
@@ -114,14 +114,14 @@ var EUReader = {
 	}
 }
 
-Item.registerUseFunction("EUMeter", function(coords, item, block){
+Item.registerUseFunction("EUMeter", function(coords, item, block) {
 	var tile = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z);
-	if(tile){
+	if (tile) {
 		var net = tile.__energyNets.Eu;
 	} else {
 		var net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
 	}
-	if(!EUReader.container && (net || tile)){
+	if (!EUReader.container && (net || tile)) {
 		EUReader.net = net;
 		EUReader.tile = tile;
 		EUReader.resetValues();
@@ -130,23 +130,23 @@ Item.registerUseFunction("EUMeter", function(coords, item, block){
 	}
 });
 
-Callback.addCallback("tick", function(){
+Callback.addCallback("tick", function() {
 	var item = Player.getCarriedItem()
-	if(item.id == ItemID.EUMeter){
-		if(EUReader.container){
+	if (item.id == ItemID.EUMeter) {
+		if (EUReader.container) {
 			var r = function(x) {return Math.round(x * 100) / 100 || 0};
 			var currentValue = 0;
 			var elements = guiEUReader.content.elements;
-			if(EUReader.mode < 3){
+			if (EUReader.mode < 3) {
 				var unit = " EU/t";
 				var energyIn = energyOut = 0;
-				if(EUReader.tile){
+				if (EUReader.tile) {
 					energyIn = r(EUReader.tile.data.last_energy_receive);
-					if(EUReader.net){
+					if (EUReader.net) {
 						energyOut = r(EUReader.net.lastTransfered);
 					}
 				}
-				else if(EUReader.net){
+				else if (EUReader.net) {
 					energyIn = energyOut = r(EUReader.net.lastTransfered);
 				}
 				switch (EUReader.mode) {
@@ -162,10 +162,10 @@ Callback.addCallback("tick", function(){
 				}
 			} else {
 				var unit = " V";
-				if(EUReader.tile){
+				if (EUReader.tile) {
 					currentValue = r(EUReader.tile.data.last_voltage);
 				}
-				else if(EUReader.net){
+				else if (EUReader.net) {
 					currentValue = r(EUReader.net.lastVoltage);
 				}
 			}

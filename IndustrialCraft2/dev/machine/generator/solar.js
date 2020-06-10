@@ -5,7 +5,7 @@ Block.createBlock("solarPanel", [
 
 MachineRegistry.setMachineDrop("solarPanel", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
 		"aaa",
 		"xxx",
@@ -22,12 +22,12 @@ var guiSolarPanel = new UI.StandartWindow({
 	},
 
 	elements: {
-		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
+		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id) {return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
 		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiSolarPanel, "Solar Panel");
 });
 
@@ -37,37 +37,37 @@ MachineRegistry.registerGenerator(BlockID.solarPanel, {
 		canSeeSky: false
 	},
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiSolarPanel;
 	},
 	
-	init: function(){
+	init: function() {
 		this.data.canSeeSky = GenerationUtils.canSeeSky(this.x, this.y + 1, this.z);
 	},
 	
-	tick: function(){
+	tick: function() {
 		var content = this.container.getGuiContent();
-		if(World.getThreadTime()%100 == 0){
+		if (World.getThreadTime()%100 == 0) {
 			this.data.canSeeSky = GenerationUtils.canSeeSky(this.x, this.y + 1, this.z);
 		}
-		if(this.data.canSeeSky && World.getLightLevel(this.x, this.y + 1, this.z) == 15){
+		if (this.data.canSeeSky && World.getLightLevel(this.x, this.y + 1, this.z) == 15) {
 			this.data.energy = 1;
 			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", 1, 1);
-			if(content){ 
+			if (content) { 
 				content.elements["sun"].bitmap = "sun_on";
 			}
 		}
-		else if(content){ 
+		else if (content) { 
 			content.elements["sun"].bitmap = "sun_off";
 		}
 	},
 	
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return 1;
 	},
 	
-	energyTick: function(type, src){
-		if(this.data.energy){
+	energyTick: function(type, src) {
+		if (this.data.energy) {
 			src.addAll(1);
 			this.data.energy = 0;
 		}

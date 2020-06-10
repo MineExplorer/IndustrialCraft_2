@@ -56,7 +56,6 @@ Callback.addCallback("LevelLoaded", function() {
 MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
     defaultValues: {
 		meta: 0,
-		energy_storage: 2000,
 		isActive: false
 	},
     
@@ -72,6 +71,8 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		this.setFacing(coords.side);
 	},
 	
+	setFacing: MachineRegistry.setFacing,
+
 	calcOutput: function() {
 		var maxOutput = 0;
 		for (var i = 0; i < 10; i++) {

@@ -200,7 +200,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 	heatReceive: function(amount) {
 		var slot = this.container.getSlot("slotSource");
 		if (this.data.isHeating || this.data.sourceID > 0 || MachineRecipeRegistry.getRecipeResult("blastFurnace", slot.id)) {
-			amount = Math.min(this.getMaxHeat() - this.data.heat, Math.min(amount, 20));
+			amount = Math.min(this.getMaxHeat() - this.data.heat, amount);
 			this.data.heat += amount;
 			return amount;
 		}

@@ -116,7 +116,7 @@ StorageInterface.createInterface(BlockID.storageMFSU, {
 				return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", 4);
 			},
 			canOutput: function(item, side, tileEntity){
-				return item.data <= 1;
+				return ChargeItemRegistry.getEnergyStored(item) >= ChargeItemRegistry.getMaxCharge(item);
 			}
 		},
 		"slot2": {input: true, output: true,
@@ -124,7 +124,7 @@ StorageInterface.createInterface(BlockID.storageMFSU, {
 				return side > 1 && ChargeItemRegistry.isValidStorage(item.id, "Eu", 4);
 			},
 			canOutput: function(item, side, tileEntity){
-				return item.data == Item.getMaxDamage(item.id);
+				return ChargeItemRegistry.getEnergyStored(item) <= 0;
 			}
 		}
 	}

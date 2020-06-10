@@ -90,11 +90,9 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 	},
 	
 	wrenchClick: function(id, count, data, coords) {
-		this.setFacing(coords);
+		this.setFacing(coords.side);
 	},
-	
-	setFacing: MachineRegistry.setFacing,
-	
+		
 	renderModel: function() {
 		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + 6*this.data.inverted);
 	},

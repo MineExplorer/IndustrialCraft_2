@@ -83,7 +83,7 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 			return true;
 		}
 		if (ICTool.isValidWrench(id, data, 10)) {
-			if (this.setFacing(coords))
+			if (this.setFacing(coords.side))
 				ICTool.useWrench(id, data, 10);
 			return true;
 		}
@@ -132,9 +132,10 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 	},
 	
 	spreadHeat: function(heat) {
-		var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
+		var side = this.data.meta;
+		var coords = StorageInterface.getRelativeCoords(this, side);
 		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-		if (TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)) {
+		if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 			var output = TE.heatReceive(heat);
 			this.container.setText("textInfo1", "Emit: " + output);
 			return output;

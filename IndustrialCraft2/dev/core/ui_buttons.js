@@ -81,7 +81,7 @@ var buttonContent = {
 				if (extra) {
 					var nightvision = extra.getBoolean("nv");
 				}
-				else{
+				else {
 					var nightvision = false;
 					extra = new ItemExtraData();
 				}
@@ -89,7 +89,7 @@ var buttonContent = {
 					extra.putBoolean("nv", false);
 					Game.message("§4" + Translation.translate("Nightvision mode disabled"));
 				}
-				else{
+				else {
 					extra.putBoolean("nv", true);
 					Game.message("§2" + Translation.translate("Nightvision mode enabled"));
 				}
@@ -120,7 +120,7 @@ var buttonContent = {
 						extra.putBoolean("hover", false);
 						Game.message("§4" + Translation.translate("Hover mode disabled"));
 					}
-					else{
+					else {
 						extra.putBoolean("hover", true);
 						Game.message("§2" + Translation.translate("Hover mode enabled"));
 					}
@@ -190,7 +190,7 @@ function updateUIbuttons() {
 			element.x = 0;
 			buttonMap[name] = false;
 		}
-		else{
+		else {
 			elements[name] = null;
 		}
 	}

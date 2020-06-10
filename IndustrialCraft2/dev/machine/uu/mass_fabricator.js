@@ -96,7 +96,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 					SoundManager.playSoundAtBlock(this, "MassFabScrapSolo.ogg", 1);
 				}
 			}
-			else{
+			else {
 				this.container.setText("textInfo3", "");
 				this.container.setText("textInfo4", "");
 			}
@@ -104,7 +104,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 			this.data.progress += transfer;
 			this.data.energy -= transfer;
 		}
-		else{
+		else {
 			this.stopPlaySound();
 			this.deactivate();
 		}

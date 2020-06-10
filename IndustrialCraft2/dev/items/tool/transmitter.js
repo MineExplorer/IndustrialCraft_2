@@ -41,11 +41,11 @@ Item.registerUseFunction("freqTransmitter", function(coords, item, block) {
 			Player.setCarriedItem(item.id, 1, item.data, extra);
 			Game.message("Frequency Transmitter linked to Teleporter");
 		}
-		else{
+		else {
 			if (x == coords.x && y == coords.y && z == coords.z) {
 				Game.message("Can`t link Teleporter to itself");
 			}
-			else{
+			else {
 				var data = World.getTileEntity(coords.x, coords.y, coords.z).data;
 				var distance = Entity.getDistanceBetweenCoords(coords, receiveCoords);
 				var basicTeleportCost = Math.floor(5 * Math.pow((distance+10), 0.7));

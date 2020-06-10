@@ -164,7 +164,7 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 100, efficiency:
 		let mode = item.extra? item.extra.getInt("mode") : 0;
 		if (mode%2) {
 		enchant.silk = true;}
-		else{
+		else {
 		enchant.fortune = 3;}
 	},
 	onDestroy: ToolType.drill.onDestroy,

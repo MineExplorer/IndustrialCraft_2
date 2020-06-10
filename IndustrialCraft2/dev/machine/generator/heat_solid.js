@@ -69,7 +69,7 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
     },
 	
 	wrenchClick: function(id, count, data, coords) {
-		this.setFacing(coords);
+		this.setFacing(coords.side);
 	},
 	
 	setFacing: MachineRegistry.setFacing,
@@ -92,9 +92,10 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 	},
 	
 	spreadHeat: function() {
-		var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
+		var side = this.data.meta;
+		var coords = StorageInterface.getRelativeCoords(this, side);
 		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-		if (TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)) {
+		if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 			return this.data.output = TE.heatReceive(20);
 		}
 		return false;
@@ -118,7 +119,7 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 				this.deactivate();
 			}
 		}
-		else{
+		else {
 			this.data.burn--;
 			if (this.data.burn == 0 && Math.random() < 0.5) {
 				slot.id = ItemID.ashes;

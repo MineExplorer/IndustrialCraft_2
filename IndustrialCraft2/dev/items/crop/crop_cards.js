@@ -417,10 +417,10 @@ AgricultureAPI.registerCropCard({
         if (te.isBlockBelow(88)) {
             if (te.crop.canGrow(te)) {
                 te.data.growthPoints += 100;
-            }else if (te.isBlockBelow(80) && Math.random() < 1 / 300) {
-                te.data.crop = AgricultureAPI.getCardIndexFromid("terra_wart");
-                te.crop = AgricultureAPI.cropCards[te.data.crop];
             }
+        } else if (te.isBlockBelow(80) && Math.random() < 1 / 300) {
+            te.data.crop = AgricultureAPI.getCardIndexFromid("terra_wart");
+            te.crop = AgricultureAPI.cropCards[te.data.crop];
         }
     }
 });
@@ -453,10 +453,9 @@ AgricultureAPI.registerCropCard({
             if (te.crop.canGrow(te)) {
                 te.data.growthPoints += 100;
             }
-			else if (te.isBlockBelow(88) && Math.random() < 1 / 300) {
-                te.data.crop = AgricultureAPI.getCardIndexFromid("nether_wart");
-                te.crop = AgricultureAPI.cropCards[te.data.crop];
-            }
+        } else if (te.isBlockBelow(88) && Math.random() < 1 / 300) {
+             te.data.crop = AgricultureAPI.getCardIndexFromid("nether_wart");
+            te.crop = AgricultureAPI.cropCards[te.data.crop];
         }
     }
 });

@@ -42,7 +42,7 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 				var wether = World.getWeather();
 				if (wether.thunder && wether.rain) {
 					if (wether.thunder) {output *= 2;}
-					else{output *= 1.5;}
+					else {output *= 1.5;}
 				}
 				else if (biome=="ocean") {
 					output *= 1.5*Math.sin(World.getWorldTime()%6000/(6000/Math.PI));
@@ -55,7 +55,7 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 				if (tile == 8 || tile == 9) {
 					this.data.output = Math.round(output)/20;
 				}
-				else{
+				else {
 					this.data.output = 0;
 				}
 			}

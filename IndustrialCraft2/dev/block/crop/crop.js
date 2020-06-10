@@ -254,7 +254,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 		if (providedQuality >= minimumQuality) {
 			totalGrowth = baseGrowth * (100 + (providedQuality - minimumQuality)) / 100;
 		}
-		else{
+		else {
 			var aux = (minimumQuality - providedQuality) * 4;
 			if (aux > 100 && randomInt(0, 32) > this.data.statResistance) {
 				totalGrowth = 0;

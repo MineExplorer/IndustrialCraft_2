@@ -75,7 +75,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
     },
 	
 	wrenchClick: function(id, count, data, coords) {
-		this.setFacing(coords);
+		this.setFacing(coords.side);
 	},
 	
 	setFacing: MachineRegistry.setFacing,
@@ -179,14 +179,14 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 			this.deactivate();
 		}
 		
-		this.data.heat = Math.max(this.data.heat - 1, 0);
+		if (this.data.heat > 0) this.data.heat--;
 		if (this.data.sourceID == 0) {
 			this.container.setScale("progressScale", 0);
 		}
     },
 	
 	getMaxHeat: function() {
-		return 47500;
+		return 50000;
 	},
 	
 	redstone: function(signal) {
@@ -194,7 +194,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 	},
 	
 	canReceiveHeat: function(side) {
-		return this.data.meta == side ^ 1;
+		return this.data.meta == side;
 	},
 	
 	heatReceive: function(amount) {

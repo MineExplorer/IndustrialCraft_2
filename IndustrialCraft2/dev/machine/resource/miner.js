@@ -285,7 +285,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 						pipeSlot.count--;
 						if (pipeSlot.count == 0) pipeSlot.id = 0;
 					}
-					else{World.setBlock(this.x, this.data.y, this.z, 0);}
+					else {World.setBlock(this.x, this.data.y, this.z, 0);}
 					this.data.scanY = 0;
 					this.data.progress = 0;
 				}

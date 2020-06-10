@@ -113,7 +113,7 @@ var MachineRegistry = {
 			Prototype.defaultValues.voltage = 0;
 			Prototype.defaultValues.last_voltage = 0;
 		}
-		else{
+		else {
 			Prototype.defaultValues = {
 				energy: 0,
 				energy_receive: 0,
@@ -241,14 +241,12 @@ var MachineRegistry = {
 		});
 	},
 	
-	setFacing: function(coords) {
+	setFacing: function(side) {
 		if (Entity.getSneaking(player)) {
-			var facing = coords.side ^ 1;
-		} else {
-			var facing = coords.side;
+			side ^= 1;
 		}
-		if (facing != this.data.meta) {
-			this.data.meta = facing;
+		if (this.data.meta != side) {
+			this.data.meta = side;
 			this.renderModel();
 			return true;
 		}

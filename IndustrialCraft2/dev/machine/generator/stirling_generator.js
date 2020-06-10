@@ -22,13 +22,13 @@ MachineRegistry.registerGenerator(BlockID.stirlingGenerator, {
 	},
 	
 	wrenchClick: function(id, count, data, coords) {
-		this.setFacing(coords);
+		this.setFacing(coords.side);
 	},
 	
 	setFacing: MachineRegistry.setFacing,
 	
 	canReceiveHeat: function(side) {
-		return this.data.meta == side ^ 1;
+		return this.data.meta == side;
 	},
 	
 	heatReceive: function(amount) {

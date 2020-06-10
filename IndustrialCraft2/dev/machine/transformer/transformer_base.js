@@ -62,7 +62,7 @@ MachineRegistry.registerTransformer = function(id, tier) {
 		},
 		
 		wrenchClick: function(id, count, data, coords) {
-			if (this.setFacing(coords)) {
+			if (this.setFacing(coords.side)) {
 				EnergyNetBuilder.rebuildTileNet(this);
 				return true;
 			}

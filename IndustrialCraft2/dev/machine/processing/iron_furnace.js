@@ -106,7 +106,7 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 				this.data.progress = 0;
 			}
 		}
-		else{
+		else {
 			this.data.progress = 0;
 		}
 		

@@ -11,7 +11,7 @@ var RubberTreeGenerationHelper = {
 					treeholechance -= 0.1;
 					World.setBlock(x, y + ys, z, BlockID.rubberTreeLogLatex, 4 + random.nextInt(4));
 				}
-				else{
+				else {
 					World.setBlock(x, y + ys, z, BlockID.rubberTreeLog, 0);
 				}
 			}

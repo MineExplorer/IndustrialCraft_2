@@ -69,10 +69,8 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 	},
 	
 	wrenchClick: function(id, count, data, coords) {
-		this.setFacing(coords);
+		this.setFacing(coords.side);
 	},
-	
-	setFacing: MachineRegistry.setFacing,
 	
 	calcOutput: function() {
 		var maxOutput = 0;
@@ -90,9 +88,10 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 		var output = 0;
 		
 		if (this.data.energy >= 1) {
-			var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
+			var side = this.data.meta;
+			var coords = StorageInterface.getRelativeCoords(this, side);
 			var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)) {
+			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 				output = TE.heatReceive(Math.min(maxOutput, this.data.energy));
 				if (output > 0) {
 					this.activate();

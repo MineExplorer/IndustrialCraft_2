@@ -186,7 +186,7 @@ MachineRegistry.registerElectricMachine(BlockID.thermalCentrifuge, {
 		if (content) {
 			if (this.data.heat >= this.data.maxHeat) {
 			content.elements["indicator"].bitmap = "indicator_green";}
-			else{
+			else {
 			content.elements["indicator"].bitmap = "indicator_red";}
 		}
 		this.container.setScale("progressScale", this.data.progress);

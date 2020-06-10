@@ -69,7 +69,7 @@ var AgriculturalAnalyser = {
 
             AgriculturalAnalyser.showAllValues(container, slotOut);
             container.validateAll();
-        }else if (!slotOut.id) {
+        } else if (!slotOut.id) {
             AgriculturalAnalyser.hideAllValues(container);
         }
     },

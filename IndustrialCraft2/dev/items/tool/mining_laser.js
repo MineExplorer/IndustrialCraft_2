@@ -231,7 +231,7 @@ var MiningLaser = {
 						this.lasers.splice(i, 1);
 					}
 				}
-				else{
+				else {
 					var damage = laser.power;
 					if (damage > 0) {
 						if (laser.smelt) damage *= 2;

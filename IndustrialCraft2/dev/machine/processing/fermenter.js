@@ -67,10 +67,6 @@ MachineRegistry.registerPrototype(BlockID.icFermenter, {
        return guiFermenter;
     },
 	
-	wrenchClick: function(id, count, data, coords) {
-		this.setFacing(coords);
-	},
-	
 	setFacing: MachineRegistry.setFacing,
 	
 	init: function() {
@@ -88,7 +84,7 @@ MachineRegistry.registerPrototype(BlockID.icFermenter, {
 			return true;
 		}
 		if (ICTool.isValidWrench(id, data, 10)) {
-			if (this.setFacing(coords))
+			if (this.setFacing(coords.side))
 				ICTool.useWrench(id, data, 10);
 			return true;
 		}
@@ -134,7 +130,7 @@ MachineRegistry.registerPrototype(BlockID.icFermenter, {
     },
 	
 	canReceiveHeat: function(side) {
-		return this.data.meta == side ^ 1;
+		return this.data.meta == side;
 	},
 	
 	heatReceive: function(amount) {

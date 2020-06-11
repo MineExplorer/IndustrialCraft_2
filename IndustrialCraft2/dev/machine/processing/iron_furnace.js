@@ -135,7 +135,7 @@ TileRenderer.setRotationPlaceFunction(BlockID.ironFurnace);
 StorageInterface.createInterface(BlockID.ironFurnace, {
 	slots: {
 		"slotSource": {input: true, side: "up",
-			isValid: function(item, side) {
+			isValid: function(item) {
 				return Recipes.getFurnaceRecipeResult(item.id, "iron");
 			}
 		},

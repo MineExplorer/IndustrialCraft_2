@@ -145,6 +145,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		UpgradeAPI.executeUpgrades(this);
 		
 		var maxHeat = this.getMaxHeat();
+		this.data.heat = Math.min(this.data.heat, maxHeat);
 		this.container.setScale("heatScale", this.data.heat / maxHeat);
 		var content = this.container.getGuiContent();
 		

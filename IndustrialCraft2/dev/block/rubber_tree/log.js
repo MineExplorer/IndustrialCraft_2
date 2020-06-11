@@ -11,13 +11,21 @@ Block.createSpecialType({
 
 IDRegistry.genBlockID("rubberTreeLog");
 Block.createBlock("rubberTreeLog", [
-	{name: "Rubber Tree Log", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: true}
+	{name: "Rubber Tree Log", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: true},
+	{name: "Rubber Tree Log", texture: [["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood", 2], ["rubber_wood", 2]], inCreative: false},
+	{name: "Rubber Tree Log", texture: [["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 1], ["rubber_wood", 1]], inCreative: false}
 ], "wood");
-Block.registerDropFunction("rubberTreeLog", function(coords, blockID) {
+Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID) {
 	return [[blockID, 1, 0]];
 });
 ToolLib.addBlockDropOnExplosion("rubberTreeLog");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
+Block.registerPlaceFunction("rubberTreeLog", function(coords, item, block){
+	var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
+	var rotation = parseInt(coords.side / 2);
+	World.setBlock(place.x, place.y, place.z, item.id, rotation);
+	World.playSound(place.x, place.y, place.z, "dig.wood", 1, 0.8)
+});
 
 IDRegistry.genBlockID("rubberTreeLogLatex");
 Block.createBlockWithRotation("rubberTreeLogLatex", [

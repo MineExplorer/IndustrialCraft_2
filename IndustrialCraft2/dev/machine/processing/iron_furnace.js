@@ -59,13 +59,6 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		return guiIronFurnace;
 	},
 
-	getFuelRatio: function() {
-		if (this.data.burn <= 0) {
-			return 0;
-		}
-		return this.data.burn / this.data.burnMax;
-	},
-
 	consumeFuel: function(slotName) {
 		var fuelSlot = this.container.getSlot(slotName);
 		if (fuelSlot.id > 0) {
@@ -119,7 +112,7 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 			this.deactivate();
 		}
 		
-		this.container.setScale("burningScale", this.getFuelRatio());
+		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
 		this.container.setScale("progressScale", this.data.progress / 160);
 	},
 	

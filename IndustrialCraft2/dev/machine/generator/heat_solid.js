@@ -84,13 +84,6 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 		return 0;
 	},
 
-	getFuelRatio: function() {
-		if (this.data.burn <= 0) {
-			return 0;
-		}
-		return this.data.burn / this.data.burnMax;
-	},
-	
 	spreadHeat: function() {
 		var side = this.data.meta;
 		var coords = StorageInterface.getRelativeCoords(this, side);
@@ -129,7 +122,7 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 		}
 		
 		this.container.setText("textInfo1", this.data.output + "    /");
-		this.container.setScale("burningScale", this.getFuelRatio());
+		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
     },
 	
 	renderModel: MachineRegistry.renderModelWith6Sides,

@@ -68,13 +68,6 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 	getGuiScreen: function() {
 		return guiGenerator;
 	},
-
-	getFuelRatio: function() {
-		if (this.data.burn <= 0) {
-			return 0;
-		}
-		return this.data.burn / this.data.burnMax;
-	},
 	
 	consumeFuel: function(slotName) {
 		var fuelSlot = this.container.getSlot(slotName);
@@ -108,7 +101,7 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 		
 		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
 		
-		this.container.setScale("burningScale", this.getFuelRatio());
+		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", this.data.energy + "/");
 	},

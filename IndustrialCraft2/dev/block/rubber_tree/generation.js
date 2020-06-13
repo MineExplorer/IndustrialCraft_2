@@ -1,4 +1,10 @@
-var RubberTreeGenerationHelper = {
+var RubberTreeGenerator = {
+	biomeData: {},
+	getBiomeChance: function(biomeID) {
+		var chance = this.biomeData[biomeID] || 0;
+		return chance / 100;
+	},
+
 	generateRubberTree: function(x, y, z, random) {
 		if (!random) random = new java.util.Random(Debug.sysTime());
 		
@@ -41,9 +47,7 @@ var RubberTreeGenerationHelper = {
 		var height = 0;
 		while(height < max + 2) {
 			var blockID = World.getBlockID(x, y + height, z);
-			if (blockID != 0 && ToolAPI.getBlockMaterialName(blockID) != "plant") {
-				break;
-			}
+			if (blockID != 0) break;
 			height++;
 		}
 		return height > 2 ? height - 2 : 0;
@@ -58,37 +62,36 @@ var RubberTreeGenerationHelper = {
 }
 
 
-var ForestBiomeIDs = [4, 18, 27, 28];
+var ForestBiomeIDs = [4, 18, 27, 28, 132, 155, 156];
 var JungleBiomeIDs = [21, 22, 23, 149, 151];
 var SwampBiomeIDs = [6, 134];
 
-var RUBBER_TREE_BIOME_DATA = {
-	1: __config__.getNumber("rubber_tree_gen.plains")
-}
-var chance = __config__.getNumber("rubber_tree_gen.forest");
-if (chance) {
-	for (var id in ForestBiomeIDs) {
-	RUBBER_TREE_BIOME_DATA[ForestBiomeIDs[id]] = chance;}
-}
+var chance = __config__.getNumber("rubber_tree_gen.plains");
+RubberTreeGenerator.biomeData[1] = chance;
+
+chance = __config__.getNumber("rubber_tree_gen.forest");
+ForestBiomeIDs.forEach(function(id) {
+	RubberTreeGenerator.biomeData[id] = chance;
+});
+
 chance = __config__.getNumber("rubber_tree_gen.jungle");
-if (chance) {
-	for (var id in JungleBiomeIDs) {
-	RUBBER_TREE_BIOME_DATA[JungleBiomeIDs[id]] = chance;}
-}
+JungleBiomeIDs.forEach(function(id) {
+	RubberTreeGenerator.biomeData[id] = chance;
+});
+
 chance = __config__.getNumber("rubber_tree_gen.swamp");
-if (chance) {
-	for (var id in SwampBiomeIDs) {
-	RUBBER_TREE_BIOME_DATA[SwampBiomeIDs[id]] = chance;}
-}
+SwampBiomeIDs.forEach(function(id) {
+	RubberTreeGenerator.biomeData[id] = chance;
+});
 
 World.addGenerationCallback("GenerateChunk", function(chunkX, chunkZ, random) {
 	var biome = World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16);
-	if (random.nextInt(100) < RUBBER_TREE_BIOME_DATA[biome]) {
+	if (random.nextDouble() < RubberTreeGenerator.getBiomeChance(biome)) {
 		var treeCount = 1 + random.nextInt(6);
 		for (var i = 0; i < treeCount; i++) {
 			var coords = GenerationUtils.findSurface(chunkX*16 + random.nextInt(16), 96, chunkZ*16 + random.nextInt(16));
 			if (World.getBlockID(coords.x, coords.y, coords.z) == 2) {
-				RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y + 1, coords.z, random)
+				RubberTreeGenerator.generateRubberTree(coords.x, coords.y + 1, coords.z, random)
 			}
 		}
 	}

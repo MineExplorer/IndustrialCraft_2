@@ -21,10 +21,15 @@ Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID) {
 ToolLib.addBlockDropOnExplosion("rubberTreeLog");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
 Block.registerPlaceFunction("rubberTreeLog", function(coords, item, block){
-	var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
-	var rotation = parseInt(coords.side / 2);
+	if (World.canTileBeReplaced(block.id, block.data)) {
+		var place = coords;
+		var rotation = 0;
+	} else {
+		var place = coords.relative;
+		var rotation = parseInt(coords.side / 2);
+	}
 	World.setBlock(place.x, place.y, place.z, item.id, rotation);
-	World.playSound(place.x, place.y, place.z, "dig.wood", 1, 0.8)
+	World.playSound(place.x + .5, place.y + .5, place.z + .5, "dig.wood", 1, 0.8)
 });
 
 IDRegistry.genBlockID("rubberTreeLogLatex");

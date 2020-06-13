@@ -38,7 +38,7 @@ Block.setRandomTickCallback(BlockID.rubberTreeSapling, function(x, y, z) {
 		World.destroyBlock(x, y, z, true);
 	}
 	else if (Math.random() < 0.05 && World.getLightLevel(x, y, z) >= 9) {
-		RubberTreeGenerationHelper.generateRubberTree(x, y, z);
+		RubberTreeGenerator.generateRubberTree(x, y, z);
 	}
 });
 
@@ -53,7 +53,7 @@ Callback.addCallback("ItemUse", function(coords, item, block) {
 			Particles.addParticle(ParticleType.happyVillager, px, py, pz, 0, 0, 0);
 		}
 		if (Math.random() < 0.25 || !Game.isItemSpendingAllowed()) {
-			RubberTreeGenerationHelper.generateRubberTree(coords.x, coords.y, coords.z);
+			RubberTreeGenerator.generateRubberTree(coords.x, coords.y, coords.z);
 		}
 	}
 });

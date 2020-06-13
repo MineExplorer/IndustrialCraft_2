@@ -13,7 +13,7 @@ By using the library you automatically agree to these rules.
 
 LIBRARY({
 	name: "ToolLib",
-	version: 20,
+	version: 21,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -223,5 +223,13 @@ var ToolLib = {
 ToolAPI.setTool = ToolLib.setTool;
 ToolAPI.breakCarriedTool = ToolLib.breakCarriedTool;
 
+var MiningLevel = {
+	STONE: 1,
+	IRON: 2,
+	DIAMOND: 3,
+	OBSIDIAN: 4
+}
+
 EXPORT("ToolLib", ToolLib);
 EXPORT("ToolType", ToolType);
+EXPORT("MiningLevel", MiningLevel);

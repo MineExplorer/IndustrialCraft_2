@@ -142,7 +142,7 @@ MachineRegistry.registerPrototype(BlockID.icFermenter, {
 		return 0;
 	},
 	
-	renderModel: MachineRegistry.renderModelWith6Sides
+	renderModel: MachineRegistry.renderModelWith6Variations
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.icFermenter, true);

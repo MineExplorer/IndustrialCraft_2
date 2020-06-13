@@ -208,7 +208,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 		return 0;
 	},
 	
-	renderModel: MachineRegistry.renderModelWith6Sides,
+	renderModel: MachineRegistry.renderModelWith6Variations,
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.blastFurnace, true);

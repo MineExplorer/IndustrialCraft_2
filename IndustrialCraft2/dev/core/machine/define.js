@@ -265,7 +265,7 @@ var MachineRegistry = {
 		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + (this.data.isActive? 4 : 0));
 	},
 	
-	renderModelWith6Sides: function() {
+	renderModelWith6Variations: function() {
 		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + (this.data.isActive? 6 : 0));
 	},
 	

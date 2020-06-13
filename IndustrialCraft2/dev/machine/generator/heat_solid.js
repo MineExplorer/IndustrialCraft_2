@@ -60,7 +60,7 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 		meta: 0,
 		burn: 0,
 		burnMax: 0,
-		maxOutput:20,
+		output: 0,
 		isActive: false
 	},
 	
@@ -125,7 +125,7 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
     },
 	
-	renderModel: MachineRegistry.renderModelWith6Sides,
+	renderModel: MachineRegistry.renderModelWith6Variations,
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.solidHeatGenerator, true);

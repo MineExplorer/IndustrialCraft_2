@@ -44,6 +44,7 @@ machine/generator/stirling_generator.js
 machine/generator/heat_solid.js
 machine/generator/heat_fluid.js
 machine/generator/heat_electric.js
+machine/generator/rt_heat_generator.js
 
 machine/reactor/reactorAPI.js
 machine/reactor/nuclear_reactor.js

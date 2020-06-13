@@ -143,7 +143,7 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 		return false;
 	},
 	
-	renderModel: MachineRegistry.renderModelWith6Sides
+	renderModel: MachineRegistry.renderModelWith6Variations
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.fluidHeatGenerator, true);

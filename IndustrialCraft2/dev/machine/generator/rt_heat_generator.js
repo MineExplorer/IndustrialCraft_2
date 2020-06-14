@@ -24,18 +24,18 @@ var guiRTHeatGenerator = new UI.StandartWindow({
 	},
 	
 	drawing: [
-		{type: "bitmap", x: 380, y: 330, bitmap: "heat_generator_info", scale: GUI_SCALE}
+		{type: "bitmap", x: 380, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],
 	
 	elements: {
-		"slot0": {type: "slot", x: 420, y: 120, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"slot1": {type: "slot", x: 480, y: 120, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"slot2": {type: "slot", x: 540, y: 120, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"slot3": {type: "slot", x: 420, y: 180, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"slot4": {type: "slot", x: 480, y: 180, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"slot5": {type: "slot", x: 540, y: 180, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 460, y: 344, width: 300, height: 30, text: "0    /"},
-		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 560, y: 344, width: 300, height: 30, text: "0"}
+		"slot0": {type: "slot", x: 420, y: 100, isValid: function(id){ return id == ItemID.rtgPellet }},
+		"slot1": {type: "slot", x: 480, y: 100, isValid: function(id){ return id == ItemID.rtgPellet }},
+		"slot2": {type: "slot", x: 540, y: 100, isValid: function(id){ return id == ItemID.rtgPellet }},
+		"slot3": {type: "slot", x: 420, y: 160, isValid: function(id){ return id == ItemID.rtgPellet }},
+		"slot4": {type: "slot", x: 480, y: 160, isValid: function(id){ return id == ItemID.rtgPellet }},
+		"slot5": {type: "slot", x: 540, y: 160, isValid: function(id){ return id == ItemID.rtgPellet }},
+		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 450, y: 264, width: 300, height: 30, text: "0     /"},
+		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 550, y: 264, width: 300, height: 30, text: "0"}
 	}
 });
 
@@ -80,7 +80,11 @@ MachineRegistry.registerGenerator(BlockID.rtHeatGenerator, {
 		}
 
 		this.setActive(output > 0);
-		this.container.setText("textInfo1", output + "    /");
+		var outputText = output.toString();
+		for (var i = outputText.length; i < 6; i++) {
+			outputText += " ";
+		}
+		this.container.setText("textInfo1", outputText + "/");
 		this.container.setText("textInfo2", maxOutput);
 	},
 	

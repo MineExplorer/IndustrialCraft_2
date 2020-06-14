@@ -121,7 +121,11 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 			this.spreadHeat();
 		}
 		
-		this.container.setText("textInfo1", this.data.output + "    /");
+		var outputText = this.data.output.toString();
+		for (var i = outputText.length; i < 6; i++) {
+			outputText += " ";
+		}
+		this.container.setText("textInfo1", outputText + "/");
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
     },
 	

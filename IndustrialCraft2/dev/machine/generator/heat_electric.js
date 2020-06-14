@@ -97,13 +97,17 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 				if (output > 0) {
 					this.activate();
 					this.data.energy -= output;
-					this.container.setText("textInfo1", output + "    /");
+					var outputText = output.toString();
+					for (var i = outputText.length; i < 6; i++) {
+						outputText += " ";
+					}
+					this.container.setText("textInfo1", outputText + "/");
 				}
 			}
 		}
 		if (output == 0) {
 			this.deactivate();
-			this.container.setText("textInfo1", "0    /");
+			this.container.setText("textInfo1", "0     /");
 		}
 		
 		var energyStorage = this.getEnergyStorage()

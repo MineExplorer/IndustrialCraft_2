@@ -48,8 +48,8 @@ var CoffeeMug = {
             case ItemID.terraWart :
                 if (this.amplifier < 3) return;
                 this.amplifier = 2;
-                break;
-            case 351:
+                return;
+            case VanillaItemID.bucket :
                 this.amplifier = 0;
                 this.effectTimer = 0;
                 break;
@@ -76,12 +76,12 @@ var CoffeeMug = {
     },
     craftFunction: function(api, field, result) {
         for (let i in field) {
-            if (field[i].id == 325) {
+            if (field[i].id == VanillaItemID.bucket) {
                 if(field[i].count == 1) {
                     field[i].data = 0;
                 } else {
                     api.decreaseFieldSlot(i);
-                    Player.addItemToInventory(325, 1, 0);
+                    Player.addItemToInventory(VanillaItemID.bucket, 1, 0);
                 }
             }
             else {

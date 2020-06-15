@@ -73,6 +73,21 @@ var CoffeeMug = {
         }
 
         Player.addItemToInventory(ItemID.mugEmpty, 1, 0);
+    },
+    craftFunction: function(api, field, result) {
+        for (let i in field) {
+            if (field[i].id == 325) {
+                if(field[i].count == 1) {
+                    field[i].data = 0;
+                } else {
+                    api.decreaseFieldSlot(i);
+                    Player.addItemToInventory(325, 1, 0);
+                }
+            }
+            else {
+                api.decreaseFieldSlot(i);
+            }
+        }
     }
 };
 
@@ -101,16 +116,13 @@ Callback.addCallback("PreLoaded", function() {
 		"x",
 		"y",
 		"z",
-	], ['x', ItemID.coffeePowder, 0, 'y', 325, 8, 'z', ItemID.mugEmpty, 0],
-	function(api, field, result) {
-		Player.addItemToInventory(325, 1, 0);
-	});
+	], ['x', ItemID.coffeePowder, 0, 'y', 325, 8, 'z', ItemID.mugEmpty, 0], CoffeeMug.craftFunction);
 
 	Recipes.addShaped({id: ItemID.mugCoffee, count: 1, data: 0}, [
 		"x",
 		"y",
 		"z",
-	], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0]);
+	], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0], CoffeeMug.craftFunction);
 
 	Recipes.addFurnace(ItemID.mugColdCoffee, ItemID.mugDarkCoffee, 0);
 });

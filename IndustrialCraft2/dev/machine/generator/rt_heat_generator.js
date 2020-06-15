@@ -40,7 +40,7 @@ var guiRTHeatGenerator = new UI.StandartWindow({
 });
 
 Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiRTGenerator, "Radioisotope Heat Generator");
+	MachineRegistry.updateGuiHeader(guiRTHeatGenerator, "Radioisotope Heat Generator");
 });
 
 MachineRegistry.registerGenerator(BlockID.rtHeatGenerator, {

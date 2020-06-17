@@ -7,7 +7,7 @@ Port of IC2 Experimental for PC to Minecraft on Android for Inner Core modloader
 3. Install mod in Mod manager or download it from github and extract mod folder to games/Horizon/packs/Inner_Core/innercore/mods/
 
 ## Discord server
-Join our [Discord server](https://discord.gg/jPFntnP0)!
+Join our [Discord server](https://discord.gg/jPFntnP)!
 
 ## Note
 I'm not associated with IC2 developer team which develop original mod for PC, this is unofficial port of their mod to Minecraft on Android.

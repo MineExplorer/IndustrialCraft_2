@@ -57,7 +57,7 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 		return drop;
 	}
 	return [];
-}, 4);
+});
 ToolLib.addBlockDropOnExplosion("oreIridium");
 
 Item.addCreativeGroup("ores", Translation.translate("Ores"), [

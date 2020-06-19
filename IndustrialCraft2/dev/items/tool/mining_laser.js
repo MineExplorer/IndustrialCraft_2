@@ -72,7 +72,7 @@ var MiningLaser = {
 			var dir = new Vector3(Entity.getLookVectorByAngle(angle));
 			if (laserSetting == 5) {
 				var look = dir;
-				right = look.copy().cross(Vector.UP);
+				right = look.copy().cross(Vector3.UP);
 				if (right.lengthSquared() < 1e-4) {
 					right.set(Math.sin(angle.yaw), 0.0, -Math.cos(angle.yaw));
 				} else {

@@ -94,6 +94,6 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 	},
 
 	destroy: function() {
-		Block.unmapAtCoords(this.x, this.y, this.z);
+		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	}
 });

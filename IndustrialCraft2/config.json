@@ -44,6 +44,6 @@
   "iridium_ore":{
     "chance":0.2,
     "minHeight":1,
-    "maxHeight":64
+    "maxHeight":72
   }
 }

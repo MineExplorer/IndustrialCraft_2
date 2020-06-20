@@ -193,7 +193,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		}
 		
 		this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
-		this.container.setText("textInfo", "Generating: " + this.getEnergyOutput() + " EU/t");
+		this.container.setText("textInfo", Translation.translate("Generating: ") + this.getEnergyOutput() + " EU/t");
 	},
 	
 	energyTick: function(type, src){

@@ -159,7 +159,6 @@ ToolLib.setTool(ItemID.diamondDrill, {energyPerUse: 80, level: 4, efficiency: 16
 ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 100, efficiency: 24, damage: 5}, {
 	damage: 0,
 	blockTypes: ["stone", "dirt"],
-	soundType: "drill",
 	modifyEnchant: function(enchant, item) {
 		let mode = item.extra? item.extra.getInt("mode") : 0;
 		if (mode%2) {

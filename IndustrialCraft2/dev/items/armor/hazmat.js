@@ -5,7 +5,7 @@ IDRegistry.genItemID("rubberBoots");
 
 Item.createArmorItem("hazmatHelmet", "Scuba Helmet", {name: "hazmat_helmet"}, {type: "helmet", armor: 1, durability: 64, texture: "armor/hazmat_1.png"});
 Item.createArmorItem("hazmatChestplate", "Hazmat Suit", {name: "hazmat_chestplate"}, {type: "chestplate", armor: 1, durability: 64, texture: "armor/hazmat_1.png"});
-Item.createArmorItem("hazmatLeggings", "Hazmat Suit Leggings", {name: "hazmat_leggins"}, {type: "leggings", armor: 1, durability: 64, texture: "armor/hazmat_2.png"});
+Item.createArmorItem("hazmatLeggings", "Hazmat Suit Leggings", {name: "hazmat_leggings"}, {type: "leggings", armor: 1, durability: 64, texture: "armor/hazmat_2.png"});
 Item.createArmorItem("rubberBoots", "Rubber Boots", {name: "rubber_boots"}, {type: "boots", armor: 1, durability: 64, texture: "armor/rubber_1.png"});
 
 RadiationAPI.registerHazmatArmor(ItemID.hazmatHelmet);
@@ -42,7 +42,7 @@ var RUBBER_ARMOR_FUNC = {
 	hurt: function(params, item, index, maxDamage) {
 		var type = params.type;
 		if (type==2 || type==3 || type==11) {
-			item.data += params.damage;
+			item.data += Math.ceil(params.damage / 4);
 			if (item.data >= maxDamage) {
 				item.id = item.count = 0;
 			}
@@ -51,9 +51,9 @@ var RUBBER_ARMOR_FUNC = {
 		if (type==9 && index==0) {
 			for (var i = 0; i < 36; i++) {
 				var slot = Player.getInventorySlot(i);
-				if (slot.id==ItemID.cellAir) {
+				if (slot.id == ItemID.cellAir) {
 					Game.prevent();
-					Entity.addEffect(player, MobEffect.waterBreathing, 1, 2);
+					Entity.addEffect(player, MobEffect.waterBreathing, 1, 60);
 					Player.setInventorySlot(i, slot.count > 1 ? slot.id : 0, slot.count - 1, 0);
 					Player.addItemToInventory(ItemID.cellEmpty, 1, 0);
 					break;
@@ -77,7 +77,7 @@ var RUBBER_ARMOR_FUNC = {
 		return false;
 	},
 	tick: function(slot, index, maxDamage) {
-		if (index==0 && Player.getArmorSlot(1).id==ItemID.hazmatChestplate && Player.getArmorSlot(2).id==ItemID.hazmatLeggings && Player.getArmorSlot(3).id==ItemID.rubberBoots) {
+		if (index==0 && Player.getArmorSlot(1).id == ItemID.hazmatChestplate && Player.getArmorSlot(2).id == ItemID.hazmatLeggings && Player.getArmorSlot(3).id == ItemID.rubberBoots) {
 			if (RadiationAPI.playerRad <= 0) {
 				Entity.clearEffect(player, MobEffect.poison);
 			}

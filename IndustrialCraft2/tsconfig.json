@@ -2,8 +2,7 @@
   "compilerOptions": {
     "target": "ES5",
     "lib": ["ESNext"],
-    // "outDir": "build",
-    "outFile": "build/main.js",
+    "outFile": "main.js",
     "allowJs": true,
     "experimentalDecorators": true
   },
@@ -17,7 +16,15 @@
     "dev/**/*"
   ],
   "files": [
-    "../global.d.ts"
+    "../declarations/BackpackAPI.d.ts",
+    "../declarations/chargeitem.d.ts",
+    "../declarations/energy-net.d.ts",
+    "../declarations/LiquidLib.d.ts",
+    "../declarations/StorageInterface.d.ts",
+    "../declarations/TileRender.d.ts",
+    "../declarations/ToolLib.d.ts",
+    "../declarations/vector.d.ts",
+    "../declarations/SoundLib.d.ts"
   ]
 }
 

@@ -66,7 +66,7 @@ Translation.addTranslation("Ore Washing Plant", {ru: "Рудопромывочн
 Translation.addTranslation("Thermal Centrifuge", {ru: "Термальная центрифуга", es: "Centrífuga Térmica", pt: "Centrífuga Térmica", zh: "热能离心机"});
 Translation.addTranslation("Blast Furnace", {ru: "Доменная печь", es: "Alto Horno", pt: "Fornalha de Aquecimento", zh: "高炉"});
 Translation.addTranslation("Miner", {ru: "Буровая установка", es: "Perforadora", pt: "Minerador", zh: "采矿机"});
-Translation.addTranslation("Advanced Miner", {ru: "Продвинутая буровая установка", es: "Minero Avanzado", pt: "Minerador Avançado", zh: "高级采矿机"});
+Translation.addTranslation("Advanced Miner", {ru: "Продвинутый автошахтёр", es: "Minero Avanzado", pt: "Minerador Avançado", zh: "高级采矿机"});
 Translation.addTranslation("Tesla Coil", {ru: "Катушка теслы", es: "Bobina de Tesla", pt: "Bobina Tesla", zh: "特斯拉线圈"});
 Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Teletransportador", pt: "Teletransportador", zh: "传送机"});
 Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", pt: "Fabricador de Massa", zh: "物质生成机"});

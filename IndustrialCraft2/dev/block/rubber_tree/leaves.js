@@ -18,7 +18,7 @@ Block.registerDropFunction("rubberTreeLeaves", function(coords, blockID, blockDa
 		return [[blockID, 1, 2]];
 	}
 	if (Math.random() < .04) {
-		return [[ItemID.rubberSapling, 1, 0]]
+		return [[BlockID.rubberTreeSapling, 1, 0]]
 	}
 	return [];
 });

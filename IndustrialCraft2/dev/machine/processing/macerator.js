@@ -79,8 +79,8 @@ Callback.addCallback("PreLoaded", function() {
 		369: {id: 377, count: 5, data: 0},
 		// plants
 		5: {id: ItemID.bioChaff, count: 1, sourceCount: 4},
-		"ItemID.rubberSapling": {id: ItemID.bioChaff, count: 1, sourceCount: 4},
-		"ItemID.rubberTreeLeaves": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		"BlockID.rubberTreeSapling": {id: ItemID.bioChaff, count: 1, sourceCount: 4},
+		"BlockID.rubberTreeLeaves": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		18: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		161: {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		32: {id: ItemID.bioChaff, count: 1, sourceCount: 8},

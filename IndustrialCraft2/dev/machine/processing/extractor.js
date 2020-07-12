@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 	
 	MachineRecipeRegistry.registerRecipesFor("extractor", {
 		"ItemID.latex": {id: ItemID.rubber, count: 3},
-		"ItemID.rubberSapling": {id: ItemID.rubber, count: 1},
+		"BlockID.rubberTreeSapling": {id: ItemID.rubber, count: 1},
 		"BlockID.rubberTreeLog": {id: ItemID.rubber, count: 1},
 		35: {id: 35, count: 1},
 		289: {id: ItemID.dustSulfur, count: 1},

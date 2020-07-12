@@ -21,8 +21,7 @@ Item.registerUseFunction("cropSeedBag", function(coords, item, block) {
 Item.addCreativeGroup("cropSeedBag", Translation.translate("Seed Bags"), [ItemID.cropSeedBag]);
 
 Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name) {
-    var extra = item.extra;
-    if (!extra) return name;
+    var extra = item.extra || new ItemExtraData();
     var scanLvl = extra.getInt("scan");
     var cropClassName = scanLvl > 0 ? AgricultureAPI.cropCards[item.data].id : "Unknown";
     var translatedCropName = Translation.translate(cropClassName);

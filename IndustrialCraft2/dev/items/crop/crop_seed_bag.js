@@ -22,11 +22,12 @@ Item.addCreativeGroup("cropSeedBag", Translation.translate("Seed Bags"), [ItemID
 
 Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name) {
     var extra = item.extra;
+    if (!extra) return name;
     var scanLvl = extra.getInt("scan");
     var cropClassName = scanLvl > 0 ? AgricultureAPI.cropCards[item.data].id : "Unknown";
     var translatedCropName = Translation.translate(cropClassName);
 
-    var newName = Translation.translate("Seed Bag (%s)").replace("%s", translatedCropName) + '\n';
+    var newName = name.replace("%s", translatedCropName) + '\n';
     if (scanLvl >= 4) {
         newName += "§2Gr: " + extra.getInt("growth") + '\n';
         newName += "§6Ga: " + extra.getInt("gain") + '\n';

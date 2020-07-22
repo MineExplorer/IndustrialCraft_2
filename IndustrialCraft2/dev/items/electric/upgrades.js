@@ -82,17 +82,17 @@ Item.addCreativeGroup("ic2_upgrade", Translation.translate("Machine Upgrades"), 
 
 
 Callback.addCallback("PreLoaded", function() {
-	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 1, data: 0}, [
+	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 2, data: 0}, [
 		"aaa",
 		"x#x",
 	], ['#', ItemID.circuitBasic, -1, 'x', ItemID.cableCopper1, -1, 'a', ItemID.coolantCell, 1]);
 
-	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 3, data: 0}, [
+	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 6, data: 0}, [
 		"aaa",
 		"x#x",
 	], ['#', ItemID.circuitBasic, -1, 'x', ItemID.cableCopper1, -1, 'a', ItemID.coolantCell3, 1]);
 	
-	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 6, data: 0}, [
+	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 12, data: 0}, [
 		"aaa",
 		"x#x",
 	], ['#', ItemID.circuitBasic, -1, 'x', ItemID.cableCopper1, -1, 'a', ItemID.coolantCell6, 1]);

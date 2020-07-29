@@ -12,6 +12,7 @@
 */
 
 // libraries
+IMPORT("TypeEngine");
 IMPORT("flags");
 IMPORT("Vector");
 IMPORT("ToolLib");
@@ -27,13 +28,15 @@ IMPORT("BackpackAPI");
 const GUI_SCALE = 3.2;
 const GUI_SCALE_NEW = 3;
 const fallVelocity = -0.0784;
+const ELECTRIC_ITEM_MAX_DAMAGE = 27;
 
-// import functions
+// import values
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var Color = android.graphics.Color;
-
-// old Inner Core versions compatibility
-if (!World.addGenerationCallback) World.addGenerationCallback = Callback.addCallback;
+var PotionEffect = Native.PotionEffect;
+var ParticleType = Native.ParticleType,
+var BlockSide = Native.BlockSide,
+var EntityType = Native.EntityType,
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);

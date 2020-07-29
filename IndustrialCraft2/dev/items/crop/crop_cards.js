@@ -231,7 +231,7 @@ AgricultureAPI.registerCropCard({
             if (randomInt(0,50)&&armorSlot.id) {
                 return AgricultureAPI.abstractFunctions["IC2CropCard"].onEntityCollision(crop);
             }
-            Entity.addEffect(Player.get(), MobEffect.poison, 1, (randomInt(0,10) + 5) * 20);
+            Entity.addEffect(Player.get(), PotionEffect.poison, 1, (randomInt(0,10) + 5) * 20);
             crop.data.currentSize = 4;
             crop.updateRender();
         }
@@ -733,7 +733,7 @@ AgricultureAPI.registerCropCard({
 
         Entity.damageEntity(entity, te.data.currentSize * 2);
         if (entity == player && !this.hasMetalArmor()) {
-            Entity.addEffect(player, MobEffect.poison, 1, 50);
+            Entity.addEffect(player, PotionEffect.poison, 1, 50);
         }
         if (te.crop.canGrow(te)) te.data.growthPoints += 100;
         nativeDropItem(this.x, this.y, this.z, 0, 367, 1, 0, null);

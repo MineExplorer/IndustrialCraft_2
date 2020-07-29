@@ -1,4 +1,4 @@
-ItemName = {
+var ItemName = {
 	itemRarity: {},
 	
 	setRarity: function(id, lvl, regFunc) {

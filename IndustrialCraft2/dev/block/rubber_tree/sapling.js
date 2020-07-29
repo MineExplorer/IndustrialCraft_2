@@ -4,7 +4,7 @@ var DIRT_TILES = {
 	60: true
 };
 
-function placeRubberSapling(coords, item){
+function placeRubberSapling(coords, item) {
 	var place = coords.relative;
 	var tile1 = World.getBlock(place.x, place.y, place.z);
 	var tile2 = World.getBlock(place.x, place.y - 1, place.z);

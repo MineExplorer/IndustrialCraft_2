@@ -52,11 +52,11 @@ let RadiationAPI = {
 	addEffect: function(ent, duration) {
 		if (ent == player) {
 			if (this.checkPlayerArmor()) {
-				Entity.addEffect(player, MobEffect.poison, 1, duration * 20);
+				Entity.addEffect(player, PotionEffect.poison, 1, duration * 20);
 				this.setRadiation(duration);
 			}
 		} else {
-			Entity.addEffect(ent, MobEffect.poison, 1, duration * 20);
+			Entity.addEffect(ent, PotionEffect.poison, 1, duration * 20);
 			if (Entity.getHealth(ent) == 1) {
 				Entity.damageEntity(ent, 1);
 			}
@@ -103,7 +103,7 @@ let RadiationAPI = {
 			}
 			let armor = Player.getArmorSlot(0);
 			if (this.playerRad > 0 && !(armor.id == ItemID.quantumHelmet && ChargeItemRegistry.getEnergyStored(armor) >= 100000)) {
-				Entity.addEffect(player, MobEffect.poison, 1, this.playerRad * 20);
+				Entity.addEffect(player, PotionEffect.poison, 1, this.playerRad * 20);
 				if (Entity.getHealth(player) == 1) {
 					Entity.damageEntity(player, 1);
 				}

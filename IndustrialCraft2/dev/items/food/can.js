@@ -25,10 +25,10 @@ Item.registerNoTargetUseFunction("tinCanFull", function() {
 		Player.setHunger(hunger + count);
 		Player.setSaturation(Math.min(20, saturation + count*0.6));
 		if (item.data == 1 && Math.random() < 0.2*count) {
-			Entity.addEffect(Player.get(), MobEffect.hunger, 1, 600);
+			Entity.addEffect(Player.get(), PotionEffect.hunger, 1, 600);
 		}
 		if (item.data == 2) {
-			Entity.addEffect(Player.get(), MobEffect.poison, 1, 80);
+			Entity.addEffect(Player.get(), PotionEffect.poison, 1, 80);
 		}
 		if (item.count == count) {
 			Player.setCarriedItem(ItemID.tinCanEmpty, count, 0);

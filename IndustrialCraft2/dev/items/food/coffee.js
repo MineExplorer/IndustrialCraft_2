@@ -56,19 +56,19 @@ var CoffeeMug = {
             default : return;
         }
         var highest = 0;
-        var x = CoffeeMug.amplifyEffect(MobEffect.movementSpeed, maxAmplifier, extraDuration);
+        var x = CoffeeMug.amplifyEffect(PotionEffect.movementSpeed, maxAmplifier, extraDuration);
         if (x > highest) highest = x;
-        x = CoffeeMug.amplifyEffect(MobEffect.digSpeed, maxAmplifier, extraDuration);
+        x = CoffeeMug.amplifyEffect(PotionEffect.digSpeed, maxAmplifier, extraDuration);
 
         if (x > highest) highest = x;
         if (itemId == ItemID.mugCoffee) highest -= 2;
 
         if (highest >= 3) {
             var badEffectTime = (highest - 2) * 200;
-            Entity.addEffect(Player.get(), MobEffect.confusion, 1, badEffectTime);
+            Entity.addEffect(Player.get(), PotionEffect.confusion, 1, badEffectTime);
             this.effectTimer = badEffectTime;
             if (highest >= 4) {
-                Entity.addEffect(Player.get(), MobEffect.harm, highest - 3, 1);
+                Entity.addEffect(Player.get(), PotionEffect.harm, highest - 3, 1);
             }
         }
 
@@ -77,7 +77,7 @@ var CoffeeMug = {
     craftFunction: function(api, field, result) {
         for (let i in field) {
             if (field[i].id == VanillaItemID.bucket) {
-                if(field[i].count == 1) {
+                if (field[i].count == 1) {
                     field[i].data = 0;
                 } else {
                     api.decreaseFieldSlot(i);

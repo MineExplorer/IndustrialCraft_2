@@ -1,12 +1,12 @@
 var negativePotions = [
-    MobEffect.movementSlowdown,
-    MobEffect.digSlowdown,
-    MobEffect.confusion,
-    MobEffect.blindness,
-    MobEffect.hunger,
-    MobEffect.weakness,
-    MobEffect.poison,
-    MobEffect.wither
+    PotionEffect.movementSlowdown,
+    PotionEffect.digSlowdown,
+    PotionEffect.confusion,
+    PotionEffect.blindness,
+    PotionEffect.hunger,
+    PotionEffect.weakness,
+    PotionEffect.poison,
+    PotionEffect.wither
 ];
 
 IDRegistry.genItemID("terraWart");

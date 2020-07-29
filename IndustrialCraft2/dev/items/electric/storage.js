@@ -36,19 +36,19 @@ Item.registerNameOverrideFunction(ItemID.storageAdvBattery, ItemName.showItemSto
 Item.registerNameOverrideFunction(ItemID.storageCrystal, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.storageLapotronCrystal, ItemName.showItemStorage);
 
-Item.registerIconOverrideFunction(ItemID.storageBattery, function(item, name) {
+Item.registerIconOverrideFunction(ItemID.storageBattery, function(item) {
 	return {name: "re_battery", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
-Item.registerIconOverrideFunction(ItemID.storageAdvBattery, function(item, name) {
+Item.registerIconOverrideFunction(ItemID.storageAdvBattery, function(item) {
 	return {name: "adv_re_battery", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
-Item.registerIconOverrideFunction(ItemID.storageCrystal, function(item, name) {
+Item.registerIconOverrideFunction(ItemID.storageCrystal, function(item) {
 	return {name: "energy_crystal", meta: Math.round((27 - item.data) / 26 * 4)};
 });
 
-Item.registerIconOverrideFunction(ItemID.storageLapotronCrystal, function(item, name) {
+Item.registerIconOverrideFunction(ItemID.storageLapotronCrystal, function(item) {
 	return {name: "lapotron_crystal", meta: Math.round((27 - item.data) / 26 * 4)};
 });
 

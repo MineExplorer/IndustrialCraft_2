@@ -26,19 +26,19 @@ Item.addCreativeGroup("chargingBatteryEU", Translation.translate("Charging Batte
 	ItemID.chargingLapotronCrystal
 ]);
 
-Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name) {
+Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item) {
 	return {name: "charging_re_battery", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
-Item.registerIconOverrideFunction(ItemID.chargingAdvBattery, function(item, name) {
+Item.registerIconOverrideFunction(ItemID.chargingAdvBattery, function(item) {
 	return {name: "adv_charging_battery", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
-Item.registerIconOverrideFunction(ItemID.chargingCrystal, function(item, name) {
+Item.registerIconOverrideFunction(ItemID.chargingCrystal, function(item) {
 	return {name: "charging_energy_crystal", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 
-Item.registerIconOverrideFunction(ItemID.chargingLapotronCrystal, function(item, name) {
+Item.registerIconOverrideFunction(ItemID.chargingLapotronCrystal, function(item) {
 	return {name: "charging_lapotron_crystal", meta: Math.round((27 - item.data) / 26 * 4)}
 });
 

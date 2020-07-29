@@ -60,3 +60,7 @@ SoundManager.registerSound("NanosaberIdle.ogg", "Tools/Nanosaber/NanosaberIdle.o
 SoundManager.registerSound("NanosaberPowerup.ogg", "Tools/Nanosaber/NanosaberPowerup.ogg");
 SoundManager.registerSound("NanosaberSwing.ogg", ["Tools/Nanosaber/NanosaberSwing1.ogg", "Tools/Nanosaber/NanosaberSwing2.ogg", "Tools/Nanosaber/NanosaberSwing3.ogg"]);
 SoundManager.registerSound("QuantumsuitBoots.ogg", "Tools/QuantumSuit/QuantumsuitBoots.ogg");
+
+Callback.addCallback("PlayerAttack", function (attacker, victim, item) {
+    SoundManager.startPlaySound(AudioSource.ENTITY, victim, "NanosaberIdle.ogg");
+});

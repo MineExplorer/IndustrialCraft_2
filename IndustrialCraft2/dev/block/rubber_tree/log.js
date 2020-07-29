@@ -20,7 +20,7 @@ Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID) {
 });
 ToolLib.addBlockDropOnExplosion("rubberTreeLog");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
-Block.registerPlaceFunction("rubberTreeLog", function(coords, item, block){
+Block.registerPlaceFunction("rubberTreeLog", function(coords, item, block) {
 	if (World.canTileBeReplaced(block.id, block.data)) {
 		var place = coords;
 		var rotation = 0;

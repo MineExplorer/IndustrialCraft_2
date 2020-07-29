@@ -201,8 +201,17 @@ var SoundManager = /** @class */ (function () {
             }
             // TODO:
             // check dimension
-            if (sound.sourceType == SourceType.ENTITY && Entity.isExist(sound.source)) {
-                sound.position = Entity.getPosition(sound.source);
+            if (sound.sourceType == SourceType.ENTITY) {
+                if (Entity.getDimension(sound.source) != Player.getDimension()) {
+                    Game.message(sound.source + ' in ' + Entity.getDimension(sound.source));
+                }
+                if (!Entity.isExist(sound.source)) {
+                    Game.message(sound.source + ' removed');
+                    sound.remove = true;
+                }
+                else {
+                    sound.position = Entity.getPosition(sound.source);
+                }
             }
             if (!sound.isPlaying && sound.isLooping && this.playingStreams < this.maxStreams) {
                 Game.message("Start play sound: " + sound.soundName);

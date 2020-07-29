@@ -75,7 +75,7 @@ declare namespace Block {
      * you can also pass special type name, if the type was previously 
      * registered
      */
-    function createBlock(namedID: string, defineData: BlockVariation[], blockType: SpecialType|string): void;
+    function createBlock(namedID: string, defineData: BlockVariation[], blockType?: SpecialType|string): void;
 
     /**
      * Creates new block using specified params, creating four variations for 
@@ -92,7 +92,7 @@ declare namespace Block {
      * you can also pass special type name, if the type was previously 
      * registered
      */
-    function createBlockWithRotation(namedID: string, defineData: BlockVariation[], blockType: SpecialType|string): void;
+    function createBlockWithRotation(namedID: string, defineData: BlockVariation[], blockType?: SpecialType|string): void;
 
     /**
      * @param id numeric block id
@@ -282,7 +282,7 @@ declare namespace Block {
      * @param pos2 block upper conner position, in voxels (1/16 of the block)
      * @param data block data
      */
-    function setBlockShape(id: number, pos1: Vector, pos2: Vector, data: number): void;
+    function setBlockShape(id: number, pos1: Vector, pos2: Vector, data?: number): void;
 
     /**
      * Same as [[Block.setBlockShape]], but accepts coordinates as scalar 
@@ -290,7 +290,7 @@ declare namespace Block {
      * @param id block numeric id
      * @param data  block data
      */
-    function setShape(id: number, x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, data: number): void;
+    function setShape(id: number, x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, data?: number): void;
 
     /**
      * Creates a new special type using specified params and registers it by 
@@ -1297,7 +1297,7 @@ declare class Config {
      * @return number config value specified in config or 0 if no value was
      * specified
      */
-    public getNumber(name: string): number;
+    public getNumber(name: string): java.lang.Number;
 
     /**
      * @param name option name, supports multi-layer calls, separated by '.'
@@ -1474,8 +1474,15 @@ declare namespace Animation {
 
     function Item(x: number, y: number, z: number): any;
 }
-declare namespace Particles {}
-declare namespace IDRegistry {}
+declare namespace Particles {
+    class ParticleEmitter {
+
+    }
+}
+declare namespace IDRegistry {
+    function genBlockID(nameID: string): number
+    function genItemID(nameID: string): number
+}
 declare namespace IDData {
     namespace item {}
     namespace block {}
@@ -1528,16 +1535,20 @@ declare function __debug_typecheck__(): void;
 declare function runCustomSource(name: string, scope?: object): void;
 
 /**
- * Object containing string custom block string ids as keys and their numeric
+ * Object containing string ids of custom blocks as keys and their numeric
  * ids as values
  */
-declare const BlockID: object;
+declare const BlockID: {
+	[key: string]: number
+};
 
 /**
- * Object containing string custom block string ids as keys and their numeric
+ * Object containing string ids of custom items as keys and their numeric
  * ids as values
  */
-declare const ItemID: object;
+declare const ItemID: {
+	[key: string]: number
+};
 
 /**
  * Same as [[IMPORT]], consider using [[IMPORT]] instead 
@@ -1727,7 +1738,32 @@ type ItemInstanceArray = number[];
  * Class representing item extra data
  */
 declare class ItemExtra {
+	getCustomName(): string
+	setCustomName(name: string): void
+	
+	isEnchanted(): boolean
+	addEnchant(id: number, level: number): void
+	getEnchantLevel(id: number): number
+	removeEnchant(id: number): void
+	removeAllEnchants(): void
+	getEnchantCount(): number
+	getEnchants(): { [key: number]: number }
+	getEnchantName(id: number, level: number): string
+	getAllEnchantNames(): string
 
+	putInt(name: string, value: number): ItemExtra
+	putLong(name: string, value: number): ItemExtra
+	putFloat(name: string, value: number): ItemExtra
+	putString(name: string, value: string): ItemExtra
+	putBoolean(name: string, value: boolean): ItemExtra
+	getInt(name: string, fallback?: number): number
+	getLong(name: string, fallback?: number): number
+	getFloat(name: string, fallback?: number): number
+	getString(name: string, fallback?: string): string
+	getBoolean(name: string, fallback?: boolean): boolean
+	removeCustomData(): void
+	copy(): ItemExtra
+	isEmpty(): boolean
 }
 
 /**
@@ -2504,7 +2540,7 @@ declare namespace Entity {
      * @param bool2 parameter is no longer supported and should not be used
      * @returns entity's current carried item information
      */
-    function getCarriedItem(ent: number, bool1?: boolean, bool2?: boolean): ItemInstance;
+    function getCarriedItem(ent: number): ItemInstance;
 
     /**
      * Sets currena carried item for the entity
@@ -3111,19 +3147,19 @@ declare namespace GenerationUtils {
      * @param id numeric tile id
      * @returns true if block is solid and light blocking block, false otherwise
      */
-    function isTerrainBlock(id: number): void;
+    function isTerrainBlock(id: number): boolean;
 
     /**
      * @param id numeric tile id
      * @returns true if block is transparent, false otherwise
      */
-    function isTransparentBlock(id: number): void;
+    function isTransparentBlock(id: number): boolean;
 
     /**
      * @returns true, if one can see sky from the specified position, false 
      * othrwise
      */
-    function canSeeSky(x: number, y: number, z: number): void;
+    function canSeeSky(x: number, y: number, z: number): boolean;
 
     /**
      * Generates random x and z coordinates inside specified chunk
@@ -3145,19 +3181,19 @@ declare namespace GenerationUtils {
      * Finds nearest to the specified y coordinate empty space on the specified 
      * x and z coordinates
      */
-    function findSurface(x: number, y: number, z: number): void;
+    function findSurface(x: number, y: number, z: number): number;
 
     /**
      * Finds nearest to y=128 coordinate empty space on the specified x and z 
      * coordinates
      */
-    function findHighSurface(x: number, z: number): void;
+    function findHighSurface(x: number, z: number): number;
 
     /**
      * Finds nearest to y=64 coordinate empty space on the specified x and z 
      * coordinates
      */
-    function findLowSurface(x: number, z: number): void;
+    function findLowSurface(x: number, z: number): number;
 
     function lockInBlock(id: number, data: number, checkerTile: any, checkerMode: any): void;
 
@@ -3270,8 +3306,10 @@ declare namespace Item {
      * value is 'textures/logo.png'
      * @param params.type armor type, should be one of the 'helmet', 
      * 'chestplate', 'leggings' or 'boots'
+     * @param params.isTech if true, the item will not be added to creative. 
+     * Default value is false 
      */
-    function createArmorItem(namedID: string, name: string, texture: TextureData, params: {durability: number, armor: number, texture: string, type: string}): void;
+    function createArmorItem(namedID: string, name: string, texture: TextureData, params: {type: string, armor: number, durability: number, texture: string, isTech?: boolean}): void;
 
     /**
      * Creates throwable item using specified parameters
@@ -3340,10 +3378,7 @@ declare namespace Item {
     }): void;
 
     /**
-     * Sets item creative category
-     * @param id string or numeric item id
-     * @param category item category, should be one of the 
-     * [[Native.ItemCategory]] values
+     * @deprecated No longer supported
      */
     function setCategory(id: number|string, category: number): void;
 
@@ -3496,6 +3531,14 @@ declare namespace Item {
      * @param func function that is called when such an event occures
      */
     function registerDispenseFunction(nameID: string|number, func: Callback.ItemDispensedFunction): void;
+
+	/**
+     * Creates group of creative items.
+     * @param name name of group
+     * @param displayedName name of group in game
+     * @param ids array of items in group
+     */
+	function addCreativeGroup(name: string, displayedName: string, ids: number[]): void
 
     /**
      * @deprecated Should not be used in new mods, consider using [[Item]] 
@@ -4200,7 +4243,7 @@ declare namespace Player {
      * @param handleNames No longer supported and should not be passed
      * @returns item in player's hand 
      */
-    function getCarriedItem(handleEnchant: boolean, handleNames: boolean): ItemInstance;
+    function getCarriedItem(): ItemInstance;
 
     /**
      * Sets item in player's hand
@@ -4255,7 +4298,7 @@ declare namespace Player {
     /**
      * @returns currently selected inventory slot, from 0 to 8
      */
-    function getSelectedSlotId(): void;
+    function getSelectedSlotId(): number;
 
     /**
      * Selects currently selected inventory slot
@@ -4290,7 +4333,7 @@ declare namespace Player {
      * Get player's velocity
      * @returns [[Vector]] containing player's velocity
      */
-    function getVelocity(): void;
+    function getVelocity(): Vector;
 
     /**
      * Updates current entity's velocity by specified valus
@@ -4331,7 +4374,7 @@ declare namespace Player {
     /**
      * @returns player's current level
      */
-    function getLevel(): void;
+    function getLevel(): number;
 
     /**
      * Sets player's level
@@ -4404,7 +4447,7 @@ declare namespace Player {
     /**
      * @returns player's current hunger
      */
-    function getHunger(): void;
+    function getHunger(): number;
 
     /**
      * Sets player's hunger
@@ -9057,7 +9100,7 @@ declare namespace World {
      * not initialized, initializes it and returns created [[TileEntity]] object
      * @returns [[TileEntity]] if one was created, void otherwise
      */
-    function addTileEntity(x: number, y: number, z: number): TileEntity|void;
+    function addTileEntity(x: number, y: number, z: number): TileEntity|null;
 
     /**
      * If the block on the specified coordinates is a [[TileEntity]], destroys 
@@ -9204,3 +9247,22 @@ declare namespace World {
      */
     function registerBlockChangeCallback(ids: number|string|(string|number)[], callback: Callback.BlockChangedFunction): void;
 }
+
+declare class RenderMesh {
+    addVertex(x: number, y: number, z: number, u: number, v: number): void
+    setColor(r: number, g: number, b: number): void
+    resetColor(): void
+    setBlockTexture(name: string, index: number): void
+    resetTexture(): void
+    clear(): void
+    translate(x: number, y: number, z: number): void
+    scale(x: number, y: number, z: number): void
+    rebuild(): void
+    importFromFile(path: string, type: string, params: {
+        clear?: boolean,
+        invertV: boolean,
+        translate?: [number, number, number],
+        scale?: [number, number, number]
+    }): void
+}
+

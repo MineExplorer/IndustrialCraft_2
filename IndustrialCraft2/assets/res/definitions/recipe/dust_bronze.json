@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shapeless",
+  "tags": [ "crafting_table" ],
+  "ingredients": [
+    {
+      "item": "minecraft:item_dust_tin",
+      "data": 0
+    },
+    {
+      "item": "minecraft:item_dust_copper",
+      "data": 0
+    },
+    {
+      "item": "minecraft:item_dust_copper",
+      "data": 0
+    },
+    {
+      "item": "minecraft:item_dust_copper",
+      "data": 0
+    }
+  ],
+  "result": {
+	"item": "minecraft:item_dust_bronze",
+	"count": 4
+  }
+}

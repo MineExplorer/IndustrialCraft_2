@@ -10,6 +10,23 @@ declare class BlockBase {
     setShape(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number): this;
     registerTileEntity(prototype: any): void;
 }
+interface INameOverrideable {
+    onNameOverride(item: ItemInstance, translation: string, name: string): string;
+}
+interface IIconOverrideable {
+    onIconOverride(item: ItemInstance): Item.TextureData;
+}
+interface IUseable {
+    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal?: boolean): void;
+}
+interface INoTargetUseable {
+    onUseNoTarget(item: ItemInstance, ticks: number): void;
+    onUsingReleased(item: ItemInstance, ticks: number): void;
+    onUsingComplete(item: ItemInstance): void;
+}
+interface IDispenceBehavior {
+    onDispense(coords: Callback.ItemUseCoordinates, item: ItemInstance): void;
+}
 declare class ItemBasic {
     readonly nameID: string;
     readonly id: number;
@@ -33,13 +50,6 @@ declare class ItemBasic {
     allowInOffHand(): this;
     addRepairItem(itemID: number): this;
     setRarity(rarity: number): this;
-    overrideName(item: ItemInstance, translation: string, name: string): string;
-    overrideIcon(item: ItemInstance): Item.TextureData;
-    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal?: boolean): void;
-    onUseNoTarget(item: ItemInstance, ticks: number): void;
-    onUsingReleased(item: ItemInstance, ticks: number): void;
-    onUsingComplete(item: ItemInstance): void;
-    onDispense(coords: Callback.ItemUseCoordinates, item: ItemInstance): void;
     getRarityCode(rarity: number): string;
 }
 interface IArmorFuncs {
@@ -79,7 +89,7 @@ declare class ItemArmor extends ItemBasic {
 declare namespace ItemRegistry {
     function addArmorMaterial(name: string, material: ArmorMaterial): void;
     function getArmorMaterial(name: string): ArmorMaterial;
-    function registerItem(item: BlockBase | ItemBasic): void;
+    function register(itemInstance: ItemBasic): void;
     function getInstanceOf(itemID: number): ItemBasic;
     function createItem(nameID: string, params: {
         name?: string;
@@ -96,11 +106,4 @@ declare namespace ItemRegistry {
         material?: string | ArmorMaterial;
         inCreative?: boolean;
     }): ItemArmor;
-    function registerNameOverrideFunction(itemInstance: ItemBasic): void;
-    function registerIconOverrideFunction(itemInstance: ItemBasic): void;
-    function registerUseFunction(itemInstance: ItemBasic): void;
-    function registerNoTargetUseFunction(itemInstance: ItemBasic): void;
-    function registerUsingReleasedFunction(itemInstance: ItemBasic): void;
-    function registerUsingCompleteFunction(itemInstance: ItemBasic): void;
-    function registerDispenseFunction(itemInstance: ItemBasic): void;
 }

@@ -1,11 +1,11 @@
-var IntegrationAPI = {
-    addToRecyclerBlacklist: function (id) {
+var IntegrationAPI;
+(function (IntegrationAPI) {
+    function addToRecyclerBlacklist(id) {
         recyclerBlacklist.push(id);
-    },
-    addToolBooxValidItem: function (id) {
-        toolbox_items.push(id);
-    },
-    registerQuantumArmorItem: function (id) {
-        QuantumArmor.chargedIDs.push(id);
     }
-};
+    IntegrationAPI.addToRecyclerBlacklist = addToRecyclerBlacklist;
+    function addToolBooxValidItem(id) {
+        toolbox_items.push(id);
+    }
+    IntegrationAPI.addToolBooxValidItem = addToolBooxValidItem;
+})(IntegrationAPI || (IntegrationAPI = {}));

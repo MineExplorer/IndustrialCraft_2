@@ -29,6 +29,17 @@ ItemName.addStoredLiquidTooltip(ItemID.cellBiomass);
 ItemName.addStoredLiquidTooltip(ItemID.cellBiogas);
 ItemName.addStoredLiquidTooltip(ItemID.cellCoolant);
 
+Item.addCreativeGroup("cells", Translation.translate("Cells"), [
+	ItemID.cellEmpty,
+	ItemID.cellWater,
+	ItemID.cellLava,
+	ItemID.cellBiomass,
+	ItemID.cellBiogas,
+	ItemID.cellCoolant,
+	ItemID.cellMatter,
+	ItemID.cellAir
+]);
+
 Recipes.addShaped({id: ItemID.cellEmpty, count: 1, data: 0}, [
 	" x ",
 	"xgx",
@@ -77,15 +88,3 @@ Item.registerUseFunction("cellLava", function(coords, item, block) {
 		Player.decreaseCarriedItem(1);
 	}
 });
-
-// creative group
-Item.addCreativeGroup("cells", Translation.translate("Cells"), [
-	ItemID.cellEmpty,
-	ItemID.cellWater,
-	ItemID.cellLava,
-	ItemID.cellBiomass,
-	ItemID.cellBiogas,
-	ItemID.cellCoolant,
-	ItemID.cellMatter,
-	ItemID.cellAir
-]);

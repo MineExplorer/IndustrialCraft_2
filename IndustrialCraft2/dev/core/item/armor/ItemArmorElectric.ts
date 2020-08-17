@@ -10,7 +10,6 @@ implements IArmorFuncs {
 	constructor(nameID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, maxCharge: number, transferLimit: number, tier: number, inCreative?: boolean) {
 		super(nameID, name, params, false);
 		ItemArmor.registerFuncs(nameID, this);
-		ItemRegistry.registerNameOverrideFunction(this);
 		this.maxCharge = maxCharge;
 		this.transferLimit = transferLimit;
 		this.tier = tier;

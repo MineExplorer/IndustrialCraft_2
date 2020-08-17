@@ -8,9 +8,9 @@ TileRenderer.registerFullRotationModel(BlockID.fluidDistributor, 6, [["fluid_dis
 MachineRegistry.setMachineDrop("fluidDistributor", BlockID.machineBlockBasic);
 Callback.addCallback("PreLoaded", function () {
     Recipes.addShaped({ id: BlockID.fluidDistributor, count: 1, data: 0 }, [
-        " a ",
-        " # ",
-        " c "
+        "a",
+        "#",
+        "c"
     ], ['#', BlockID.machineBlockBasic, 0, 'a', ItemID.upgradeFluidPulling, 0, 'c', ItemID.cellEmpty, 0]);
 });
 var guiFluidDistributor = new UI.StandartWindow({

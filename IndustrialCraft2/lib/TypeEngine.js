@@ -22,7 +22,7 @@ var BlockBase = /** @class */ (function () {
         this.variants = [];
         this.nameID = nameID;
         this.id = IDRegistry.genBlockID(nameID);
-        ItemRegistry.registerItem(this);
+        //ItemRegistry.register(this);
     }
     BlockBase.prototype.addVariant = function (name, texture, inCreative) {
         this.variants.push();
@@ -59,7 +59,7 @@ var ItemBasic = /** @class */ (function () {
             this.setIcon(icon.name, icon.meta || icon.data);
         else
             this.setIcon("missing_icon");
-        ItemRegistry.registerItem(this);
+        ItemRegistry.register(this);
     }
     ItemBasic.prototype.setName = function (name) {
         this.name = name;
@@ -111,17 +111,25 @@ var ItemBasic = /** @class */ (function () {
         this.rarity = rarity;
         return this;
     };
-    ItemBasic.prototype.overrideName = function (item, translation, name) {
+    /*
+    onNameOverride(item: ItemInstance, translation: string, name: string): string {
         return this.getRarityCode(this.rarity) + translation;
-    };
-    ItemBasic.prototype.overrideIcon = function (item) {
+    }
+
+    onIconOverride(item: ItemInstance): Item.TextureData {
         return this.icon;
-    };
-    ItemBasic.prototype.onItemUse = function (coords, item, block, isExternal) { };
-    ItemBasic.prototype.onUseNoTarget = function (item, ticks) { };
-    ItemBasic.prototype.onUsingReleased = function (item, ticks) { };
-    ItemBasic.prototype.onUsingComplete = function (item) { };
-    ItemBasic.prototype.onDispense = function (coords, item) { };
+    }
+    
+    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal?: boolean): void {}
+
+    onUseNoTarget(item: ItemInstance, ticks: number): void {}
+
+    onUsingReleased(item: ItemInstance, ticks: number): void {}
+
+    onUsingComplete(item: ItemInstance): void {}
+
+    onDispense(coords: Callback.ItemUseCoordinates, item: ItemInstance): void {}
+    */
     ItemBasic.prototype.getRarityCode = function (rarity) {
         if (rarity == 1)
             return "§e";
@@ -136,13 +144,12 @@ var ItemBasic = /** @class */ (function () {
 /// <reference path="./ItemBasic.ts" />
 var ItemArmor = /** @class */ (function (_super) {
     __extends(ItemArmor, _super);
-    //constructor(nameID: string, type: ArmorType, defence: number)
-    //constructor(nameID: string, name: string, icon: string|Item.TextureData, params?: {type: ArmorType, defence: number, texture: string})
     function ItemArmor(nameID, name, icon, params) {
         var _this = _super.call(this, nameID, name, icon) || this;
         _this.armorType = params.type;
         _this.defence = params.defence;
-        _this.setArmorTexture(params.texture);
+        if (params.texture)
+            _this.setArmorTexture(params.texture);
         if (params.material)
             _this.setMaterial(params.material);
         return _this;
@@ -204,10 +211,56 @@ var ItemRegistry;
         return armorMaterials[name];
     }
     ItemRegistry.getArmorMaterial = getArmorMaterial;
-    function registerItem(item) {
-        items[item.id] = item;
+    function isNameOverrideable(object) {
+        return 'onNameOverride' in object;
     }
-    ItemRegistry.registerItem = registerItem;
+    function isIconOverrideable(object) {
+        return 'onIconOverride' in object;
+    }
+    function isUseable(object) {
+        return 'onItemUse' in object;
+    }
+    function isNoTargetUseable(object) {
+        return 'onUseNoTarget' in object;
+    }
+    function hasDispenceBehavior(object) {
+        return 'onDispence' in object;
+    }
+    function register(itemInstance) {
+        items[itemInstance.id] = itemInstance;
+        if (isNameOverrideable(itemInstance)) {
+            Item.registerNameOverrideFunction(itemInstance.id, function (item, translation, name) {
+                return itemInstance.onNameOverride(item, translation, name);
+            });
+        }
+        if (isIconOverrideable(itemInstance)) {
+            Item.registerIconOverrideFunction(itemInstance.id, function (item) {
+                return itemInstance.onIconOverride(item);
+            });
+        }
+        if (isUseable(itemInstance)) {
+            Item.registerUseFunction(itemInstance.id, function (coords, item, block, isExternal) {
+                itemInstance.onItemUse(coords, item, block, isExternal);
+            });
+        }
+        if (isNoTargetUseable(itemInstance)) {
+            Item.registerNoTargetUseFunction(itemInstance.id, function (item, ticks) {
+                itemInstance.onUseNoTarget(item, ticks);
+            });
+            Item.registerUsingReleasedFunction(itemInstance.id, function (item, ticks) {
+                itemInstance.onUsingReleased(item, ticks);
+            });
+            Item.registerUsingCompleteFunction(itemInstance.id, function (item) {
+                itemInstance.onUsingComplete(item);
+            });
+        }
+        if (hasDispenceBehavior(itemInstance)) {
+            Item.registerDispenseFunction(itemInstance.id, function (coords, item) {
+                itemInstance.onDispense(coords, item);
+            });
+        }
+    }
+    ItemRegistry.register = register;
     function getInstanceOf(itemID) {
         return items[itemID] || null;
     }
@@ -228,48 +281,6 @@ var ItemRegistry;
         return item;
     }
     ItemRegistry.createArmorItem = createArmorItem;
-    function registerNameOverrideFunction(itemInstance) {
-        Item.registerNameOverrideFunction(itemInstance.id, function (item, translation, name) {
-            return itemInstance.overrideName(item, translation, name);
-        });
-    }
-    ItemRegistry.registerNameOverrideFunction = registerNameOverrideFunction;
-    function registerIconOverrideFunction(itemInstance) {
-        Item.registerIconOverrideFunction(itemInstance.id, function (item) {
-            return itemInstance.overrideIcon(item);
-        });
-    }
-    ItemRegistry.registerIconOverrideFunction = registerIconOverrideFunction;
-    function registerUseFunction(itemInstance) {
-        Item.registerUseFunction(itemInstance.id, function (coords, item, block, isExternal) {
-            itemInstance.onItemUse(coords, item, block, isExternal);
-        });
-    }
-    ItemRegistry.registerUseFunction = registerUseFunction;
-    function registerNoTargetUseFunction(itemInstance) {
-        Item.registerNoTargetUseFunction(itemInstance.id, function (item, ticks) {
-            itemInstance.onUseNoTarget(item, ticks);
-        });
-    }
-    ItemRegistry.registerNoTargetUseFunction = registerNoTargetUseFunction;
-    function registerUsingReleasedFunction(itemInstance) {
-        Item.registerUsingReleasedFunction(itemInstance.id, function (item, ticks) {
-            itemInstance.onUsingReleased(item, ticks);
-        });
-    }
-    ItemRegistry.registerUsingReleasedFunction = registerUsingReleasedFunction;
-    function registerUsingCompleteFunction(itemInstance) {
-        Item.registerUsingCompleteFunction(itemInstance.id, function (item) {
-            itemInstance.onUsingComplete(item);
-        });
-    }
-    ItemRegistry.registerUsingCompleteFunction = registerUsingCompleteFunction;
-    function registerDispenseFunction(itemInstance) {
-        Item.registerDispenseFunction(itemInstance.id, function (coords, item) {
-            itemInstance.onDispense(coords, item);
-        });
-    }
-    ItemRegistry.registerDispenseFunction = registerDispenseFunction;
 })(ItemRegistry || (ItemRegistry = {}));
 EXPORT("BlockBase", BlockBase);
 EXPORT("ItemBasic", ItemBasic);

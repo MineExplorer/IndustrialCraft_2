@@ -1,5 +1,5 @@
 SoundManager.init(16);
-SoundManager.setResourcePath(__dir__ + "res/sounds/");
+SoundManager.setResourcePath(__dir__ + "assets/sounds/");
 
 SoundManager.registerSound("GeneratorLoop.ogg", "Generators/GeneratorLoop.ogg", true);
 SoundManager.registerSound("GeothermalLoop.ogg", "Generators/GeothermalLoop.ogg", true);

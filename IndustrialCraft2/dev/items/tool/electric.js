@@ -15,7 +15,9 @@ Recipes.addShaped({id: ItemID.electricHoe, count: 1, data: 27}, [
 	" x"
 ], ['x', ItemID.powerUnitSmall, 0, 'p', ItemID.plateIron, 0]);
 
-Recipes.addShapeless({id: ItemID.electricTreetap, count: 1, data: 27}, [{id: ItemID.powerUnitSmall, data: 0}, {id: ItemID.treetap, data: 0}]);
+Recipes.addShapeless({id: ItemID.electricTreetap, count: 1, data: 27}, [
+	{id: ItemID.powerUnitSmall, data: 0}, {id: ItemID.treetap, data: 0}
+]);
 
 ICTool.registerElectricHoe("electricHoe");
 ICTool.registerElectricTreetap("electricTreetap");

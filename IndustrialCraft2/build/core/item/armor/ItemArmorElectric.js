@@ -17,7 +17,6 @@ var ItemArmorElectric = /** @class */ (function (_super) {
     function ItemArmorElectric(nameID, name, params, maxCharge, transferLimit, tier, inCreative) {
         var _this = _super.call(this, nameID, name, params, false) || this;
         ItemArmor.registerFuncs(nameID, _this);
-        ItemRegistry.registerNameOverrideFunction(_this);
         _this.maxCharge = maxCharge;
         _this.transferLimit = transferLimit;
         _this.tier = tier;
@@ -29,10 +28,8 @@ var ItemArmorElectric = /** @class */ (function (_super) {
         return false;
     };
     ItemArmorElectric.prototype.overrideName = function (item, name) {
-        if (this.rarity > 0) {
-            name = ItemName.getRarityCode(this.rarity) + name;
-        }
-        return name + '\n' + ItemName.getItemStorageText(item);
+        name = this.getRarityCode(this.rarity) + name + '\n' + ItemName.getItemStorageText(item);
+        return name;
     };
     ItemArmorElectric.prototype.onHurt = function (params, slot, index, maxDamage) {
         return false;

@@ -16,7 +16,10 @@ var ItemArmorQuantumSuit = /** @class */ (function (_super) {
     __extends(ItemArmorQuantumSuit, _super);
     function ItemArmorQuantumSuit(nameID, name, params, isDischarged) {
         if (isDischarged === void 0) { isDischarged = false; }
-        var _this = _super.call(this, nameID, name, params, 1e7, 12000, 4, !isDischarged) || this;
+        var _this = this;
+        if (!params.texture)
+            params.texture = "quantum";
+        _this = _super.call(this, nameID, name, params, 1e7, 12000, 4, !isDischarged) || this;
         _this.setRarity(2);
         _this.isCharged = !isDischarged;
         RadiationAPI.registerHazmatArmor(_this.id);

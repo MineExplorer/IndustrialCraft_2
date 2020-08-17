@@ -1,0 +1,13 @@
+{
+    "content": [
+        {
+            "path": "manifest.json"
+        },
+        {
+            "path": "pack_icon.png"
+        }
+        {
+            "path": "loot_tables/chests/spawn_bonus_chest.json"
+        }
+    ]
+}

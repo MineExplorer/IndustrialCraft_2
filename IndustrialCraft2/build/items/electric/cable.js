@@ -55,6 +55,7 @@ Callback.addCallback("PreLoaded", function () {
     Recipes.addShapeless({ id: ItemID.cableIron1, count: 1, data: 0 }, [{ id: ItemID.cableIron0, data: 0 }, { id: ItemID.rubber, data: 0 }]);
     Recipes.addShapeless({ id: ItemID.cableIron2, count: 1, data: 0 }, [{ id: ItemID.cableIron1, data: 0 }, { id: ItemID.rubber, data: 0 }]);
     Recipes.addShapeless({ id: ItemID.cableIron3, count: 1, data: 0 }, [{ id: ItemID.cableIron2, data: 0 }, { id: ItemID.rubber, data: 0 }]);
+    addShapelessRecipe({ id: ItemID.cableIron3, count: 1, data: 0 }, [{ id: ItemID.cableIron1, count: 1, data: 0 }, { id: ItemID.rubber, count: 2, data: 0 }]);
     addShapelessRecipe({ id: ItemID.cableIron3, count: 1, data: 0 }, [{ id: ItemID.cableIron0, count: 1, data: 0 }, { id: ItemID.rubber, count: 3, data: 0 }]);
 });
 function registerCablePlaceFunc(nameID, blockID, blockData) {

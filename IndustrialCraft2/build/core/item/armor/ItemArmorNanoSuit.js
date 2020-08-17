@@ -16,7 +16,10 @@ var ItemArmorNanoSuit = /** @class */ (function (_super) {
     __extends(ItemArmorNanoSuit, _super);
     function ItemArmorNanoSuit(nameID, name, params, isDischarged) {
         if (isDischarged === void 0) { isDischarged = false; }
-        var _this = _super.call(this, nameID, name, params, 1000000, 2048, 3, !isDischarged) || this;
+        var _this = this;
+        if (!params.texture)
+            params.texture = "nano";
+        _this = _super.call(this, nameID, name, params, 1000000, 2048, 3, !isDischarged) || this;
         _this.setRarity(1);
         _this.isCharged = !isDischarged;
         if (!isDischarged) {

@@ -14,26 +14,26 @@ new ItemArmorHazmat("hazmatLeggings", "hazmat_leggings", { type: "leggings", def
 new ItemArmorHazmat("rubberBoots", "rubber_boots", { type: "boots", defence: 1, texture: "rubber" });
 new ItemArmorJetpackElectric();
 new ItemArmorBatpack("batpack", "batpack", 60000, 100, 1);
-new ItemArmorBatpack("advBatpack", "advbatpack", 600000, 512, 2);
+new ItemArmorBatpack("advBatpack", "advanced_batpack", 600000, 512, 2);
 new ItemArmorBatpack("energypack", "energypack", 2000000, 2048, 3);
 new ItemArmorBatpack("lappack", "lappack", 10000000, 8192, 4).setRarity(1);
-new ItemArmorNightvisionGoggles();
-new ItemArmorNanoSuit("nanoHelmet", "nano_helmet", { type: "helmet", defence: 4, texture: "nano" });
-new ItemArmorNanoSuit("nanoChestplate", "nano_chestplate", { type: "chestplate", defence: 9, texture: "nano" });
-new ItemArmorNanoSuit("nanoLeggings", "nano_leggings", { type: "leggings", defence: 7, texture: "nano" });
-new ItemArmorNanoSuit("nanoBoots", "nano_boots", { type: "boots", defence: 4, texture: "nano" });
-new ItemArmorQuantumSuit("quantumHelmet", "quantum_helmet", { type: "helmet", defence: 4, texture: "quantum" });
-new ItemArmorQuantumSuit("quantumChestplate", "quantum_chestplate", { type: "chestplate", defence: 9, texture: "quantum" });
-new ItemArmorQuantumSuit("quantumLeggings", "quantum_leggings", { type: "leggings", defence: 7, texture: "quantum" });
-new ItemArmorQuantumSuit("quantumBoots", "quantum_boots", { type: "boots", defence: 4, texture: "quantum" });
-UIbuttons.setArmorButton(ItemID.quantumHelmet, "button_nightvision");
-UIbuttons.setArmorButton(ItemID.quantumChestplate, "button_fly");
-UIbuttons.setArmorButton(ItemID.quantumChestplate, "button_hover");
-UIbuttons.setArmorButton(ItemID.quantumBoots, "button_jump");
-new ItemArmorSolarHelmet("solarHelmet", "solar_helmet", { type: "helmet", defence: 2, texture: "solar" });
 Item.addCreativeGroup("batteryPack", Translation.translate("Battery Packs"), [
     ItemID.batpack,
     ItemID.advBatpack,
     ItemID.energypack,
     ItemID.lappack
 ]);
+new ItemArmorNightvisionGoggles();
+new ItemArmorNanoSuit("nanoHelmet", "nano_helmet", { type: "helmet", defence: 4 });
+new ItemArmorNanoSuit("nanoChestplate", "nano_chestplate", { type: "chestplate", defence: 9 });
+new ItemArmorNanoSuit("nanoLeggings", "nano_leggings", { type: "leggings", defence: 7 });
+new ItemArmorNanoSuit("nanoBoots", "nano_boots", { type: "boots", defence: 4 });
+new ItemArmorQuantumSuit("quantumHelmet", "quantum_helmet", { type: "helmet", defence: 4 });
+new ItemArmorQuantumSuit("quantumChestplate", "quantum_chestplate", { type: "chestplate", defence: 9 });
+new ItemArmorQuantumSuit("quantumLeggings", "quantum_leggings", { type: "leggings", defence: 7 });
+new ItemArmorQuantumSuit("quantumBoots", "quantum_boots", { type: "boots", defence: 4 });
+UIbuttons.setArmorButton(ItemID.quantumHelmet, "button_nightvision");
+UIbuttons.setArmorButton(ItemID.quantumChestplate, "button_fly");
+UIbuttons.setArmorButton(ItemID.quantumChestplate, "button_hover");
+UIbuttons.setArmorButton(ItemID.quantumBoots, "button_jump");
+new ItemArmorSolarHelmet("solarHelmet", "solar_helmet", { type: "helmet", defence: 2, texture: "solar" });

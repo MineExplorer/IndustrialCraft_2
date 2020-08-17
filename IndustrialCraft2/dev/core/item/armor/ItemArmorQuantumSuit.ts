@@ -226,3 +226,13 @@ Callback.addCallback("Explosion", function(coords: Vector, params: {power: numbe
 		Entity.damageEntity(Player.get(), 0, 11, {attacker: params.entity, bool1: true});
 	}
 });
+
+// deprecated
+var QUANTUM_ARMOR_FUNCS = {
+	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
+		return ItemArmorQuantumSuit.prototype.onHurt(params, item, index)
+	},
+	tick: function(item: ItemInstance, index: number): boolean {
+		return ItemArmorQuantumSuit.prototype.onTick(item, index)
+	}
+}

@@ -65,7 +65,7 @@ extends ItemArmorElectric {
 		return false;
 	}
 
-	onTick(slot: ItemInstance, index: number, maxDamage: number): boolean {
+	onTick(slot: ItemInstance, index: number): boolean {
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		if (this.isCharged && energyStored < this.getEnergyPerDamage()) {
 			slot.id = this.getDischargedID();
@@ -92,5 +92,15 @@ extends ItemArmorElectric {
 			}
 		}
 		return false;
+	}
+}
+
+// deprecated
+var NANO_ARMOR_FUNCS = {
+	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
+		return ItemArmorNanoSuit.prototype.onHurt(params, item, index)
+	},
+	tick: function(item: ItemInstance, index: number): boolean {
+		return ItemArmorNanoSuit.prototype.onTick(item, index)
 	}
 }

@@ -254,7 +254,7 @@ Callback.addCallback("LocalTick", function() {
 			}
 			playSound = true;
 		}
-		if (playSound && Config.soundEnabled) {
+		if (playSound && ConfigIC.soundEnabled) {
 			if (hoverMode) {
 				SoundManager.startPlaySound(AudioSource.PLAYER, "JetpackLoop.ogg", 0.8);
 			} else {

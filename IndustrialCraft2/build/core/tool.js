@@ -87,7 +87,7 @@ var ICTool = {
     },
     setOnHandSound: function (itemID, idleSound, stopSound) {
         Callback.addCallback("LocalTick", function () {
-            if (!Config.soundEnabled) {
+            if (!ConfigIC.soundEnabled) {
                 return;
             }
             var item = Player.getCarriedItem();

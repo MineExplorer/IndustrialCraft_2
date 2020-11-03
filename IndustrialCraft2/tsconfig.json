@@ -3,6 +3,7 @@
     "target": "ES5",
     "lib": ["ESNext"],
     "outDir": "build/",
+    //"outFile": "main.js",
     "allowJs": true,
     "experimentalDecorators": true
   },
@@ -17,8 +18,8 @@
     "dev/core/**/*",
     "dev/block/**/*",
     "dev/machine/**/*",
-	"dev/items/**/*", 
-	"dev/recipes/*"
+	  "dev/items/**/*", 
+	  "dev/integration/*"
   ],
   "files": [
 	"dev/header.js",

@@ -12,7 +12,7 @@ ModAPI.registerAPI("ICore", {
     ItemName: ItemName,
     UI: UIbuttons,
     Utils: Utils,
-    Config: Config,
+    ConfigIC: ConfigIC,
     Ore: OreGenerator,
     Integration: IntegrationAPI,
     registerEnergyPack: function () { },

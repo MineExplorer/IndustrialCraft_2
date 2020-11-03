@@ -1,7 +1,9 @@
+/// <reference path="./TileEntityTransformer.ts" />
 IDRegistry.genBlockID("transformerEV");
 Block.createBlock("transformerEV", [
     { name: "EV Transformer", texture: [["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0]], inCreative: true }
 ], "machine");
+ToolAPI.registerBlockMaterial(BlockID.transformerEV, "stone", 1, true);
 ItemName.setRarity(BlockID.transformerEV, 1, true);
 TileRenderer.setStandartModel(BlockID.transformerEV, [["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.transformerEV, 0, [["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 1], ["ev_transformer_side", 1]]);
@@ -24,4 +26,4 @@ Callback.addCallback("PreLoaded", function () {
         " b "
     ], ['x', BlockID.transformerHV, 0, 'a', ItemID.storageLapotronCrystal, -1, 'b', ItemID.cableIron3, 0, 'c', ItemID.circuitAdvanced, 0]);
 });
-MachineRegistry.registerTransformer(BlockID.transformerEV, 5);
+MachineRegistry.registerPrototype(BlockID.transformerEV, new TileEntityTransformer(5));

@@ -106,7 +106,7 @@ let ICTool = {
 
 	setOnHandSound: function(itemID, idleSound, stopSound) {
 		Callback.addCallback("LocalTick", function() {
-			if (!Config.soundEnabled) {return;}
+			if (!ConfigIC.soundEnabled) {return;}
 			let item = Player.getCarriedItem();
 			let tool = ToolAPI.getToolData(item.id);
 			if (item.id == itemID && (!tool || !tool.toolMaterial.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.toolMaterial.energyPerUse)) {

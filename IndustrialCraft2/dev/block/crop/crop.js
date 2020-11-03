@@ -49,7 +49,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 				this.updateRender();
 				return;
 			}
-			if (Config.debugMode && id == 351 && this.data.crossingBase) {
+			if (ConfigIC.debugMode && id == 351 && this.data.crossingBase) {
 				this.attemptCrossing();
 				return;
 			}

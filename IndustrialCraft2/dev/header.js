@@ -75,3 +75,19 @@ Recipes.addShapeless = function(result, input) {
 	workbenchAddShapeless(result, input);
 }
 */
+
+// delete temporary files
+let File = java.io.File;
+let FileWriter = java.io.FileWriter;
+
+let target_path = __packdir__ + "assets/definitions/recipe";
+let source_path = __dir__ + "assets/res/definitions/recipe";
+let files = new File(source_path).list();
+for (let i in files) {
+	try {
+		let fileName = files[i];
+		new File(target_path, fileName).delete();
+	} catch(e) {
+		Logger.Log(e, "ERROR")
+	}
+}

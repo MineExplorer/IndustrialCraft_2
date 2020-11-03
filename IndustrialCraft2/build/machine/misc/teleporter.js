@@ -62,7 +62,7 @@ MachineRegistry.registerPrototype(BlockID.teleporter, {
                         var weight = this.getWeight(ent);
                         if (weight) {
                             var energyNeed = weight * receive.energy;
-                            if (Config.debugMode) {
+                            if (ConfigIC.debugMode) {
                                 Debug.m(energyNeed);
                             }
                             if (energyNeed < energyAvailable) {

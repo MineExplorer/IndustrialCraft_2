@@ -23,6 +23,8 @@ declare namespace LiquidLib {
         id: number;
         data: number;
         liquid: string;
+        amount: number;
+        storage: number;
     };
     function getFullItem(id: number, data: number, liquid: string): {
         id: number;

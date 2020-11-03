@@ -20,7 +20,7 @@ ChargeItemRegistry.registerExtraItem(ItemID.storageLapotronCrystal, "Eu", 100000
 ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");
-Item.createItem("debugItem", "Debug Item", {name: "debug_item", meta: 0}, {isTech: !Config.debugMode});
+Item.createItem("debugItem", "Debug Item", {name: "debug_item", meta: 0}, {isTech: !ConfigIC.debugMode});
 ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, -1, 0, "storage");
 
 Item.addCreativeGroup("batteryEU", Translation.translate("Batteries"), [

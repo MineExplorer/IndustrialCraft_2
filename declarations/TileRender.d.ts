@@ -1,16 +1,29 @@
+/// <reference path="./core-engine.d.ts" />
+
 declare namespace TileRenderer {
     const data: {};
-    function setStandartModel(id: number, texture: any[], data?: number): void;
-    function registerRenderModel(id: number, data: number, texture: any[]): void;
-    function registerRotationModel(id: number, data: number, texture: any[]): void;
-    function registerFullRotationModel(id: number, data: number, texture: any[]): void;
-    function getRenderModel(id: number, data: number | string): any;
+    type BoxVertexes = [number, number, number, number, number, number];
+    function createBlockModel(id: number, data: number, boxes: BoxVertexes[]): ICRender.Model;
+    function setStaticModel(id: number, data: number, boxes: BoxVertexes[]): void;
+    function setStaticModelWithRotation(id: number, boxes: BoxVertexes[]): void;
+    function getRotatedBoxVertexes(rotation: number, box: BoxVertexes): BoxVertexes;
+    function setStandardModel(id: number, data: number, texture: [string, number][]): void;
+    function setStandardModelWithRotation(id: number, data: number, texture: [string, number][], hasVertical?: boolean): void;
+    /** @deprecated use setStandardModel instead*/
+    function setStandartModel(id: number, texture: [string, number][], data?: number): void;
+    function registerRenderModel(id: number, data: number, texture: [string, number][]): void;
+    function registerModelWithRotation(id: number, data: number, texture: [string, number][], hasVertical?: boolean): void;
+    /** @deprecated use registerModelWithRotation instead*/
+    function registerRotationModel(id: number, data: number, texture: [string, number][]): void;
+    /** @deprecated use registerModelWithRotation instead*/
+    function registerFullRotationModel(id: number, data: number, texture: [string, number][]): void;
+    function getRenderModel(id: number, data: number | string): ICRender.Model;
     function mapAtCoords(x: number, y: number, z: number, id: number, data: number | string): void;
-    function getBlockRotation(isFullRotation?: boolean): number;
-    function setRotationPlaceFunction(id: number, fullRotation?: boolean, placeSound?: string): void;
+    function getBlockRotation(hasVertical?: boolean): number;
+    function setRotationFunction(id: number, hasVertical?: boolean, placeSound?: string): void;
+    /** @deprecated use setRotationFunction instead*/
+    function setRotationPlaceFunction(id: number, hasVertical?: boolean, placeSound?: string): void;
     function setupWireModel(id: number, data: number, width: number, groupName: string, preventSelfAdd?: boolean): void;
     function setEmptyCollisionShape(id: number): void;
-    function getCropModel(texture: any[]): any;
-    function setSlabShape(id: number, count: number): void;
-    function setSlabPlaceFunction(id: number, count: number, fullBlockID: number): void;
+    function getCropModel(texture: [string, number]): ICRender.Model;
 }

@@ -1,11 +1,25 @@
+/// <reference path="./BatBox.ts" />
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 IDRegistry.genBlockID("storageCESU");
 Block.createBlock("storageCESU", [
     { name: "CESU", texture: [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]], inCreative: true }
 ], "machine");
-TileRenderer.setStandartModel(BlockID.storageCESU, [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]]);
-TileRenderer.registerRenderModel(BlockID.storageCESU, 0, [["cesu_front", 0], ["cesu_back", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);
-TileRenderer.registerRenderModel(BlockID.storageCESU, 1, [["cesu_back", 0], ["cesu_front", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);
-TileRenderer.registerRotationModel(BlockID.storageCESU, 2, [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]]);
+ToolAPI.registerBlockMaterial(BlockID.storageCESU, "stone", 1, true);
+TileRenderer.setStandardModel(BlockID.storageCESU, 0, [["cesu_front", 0], ["cesu_back", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);
+TileRenderer.setStandardModel(BlockID.storageCESU, 1, [["cesu_back", 0], ["cesu_front", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.storageCESU, 2, [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]]);
 Block.registerDropFunction("storageCESU", function (coords, blockID, blockData, level) {
     return [];
 });
@@ -37,75 +51,13 @@ var guiCESU = new UI.StandartWindow({
 Callback.addCallback("LevelLoaded", function () {
     MachineRegistry.updateGuiHeader(guiCESU, "CESU");
 });
-MachineRegistry.registerEUStorage(BlockID.storageCESU, {
-    defaultValues: {
-        meta: 0
-    },
-    getGuiScreen: function () {
-        return guiCESU;
-    },
-    getTier: function () {
-        return 2;
-    },
-    wrenchClick: function (id, count, data, coords) {
-        if (this.setFacing(coords.side)) {
-            EnergyNetBuilder.rebuildTileNet(this);
-            return true;
-        }
-        return false;
-    },
-    setFacing: MachineRegistry.setFacing,
-    tick: function () {
-        StorageInterface.checkHoppers(this);
-        var energyStorage = this.getEnergyStorage();
-        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, 2);
-        this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, 2);
-        this.container.setScale("energyScale", this.data.energy / energyStorage);
-        this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-        this.container.setText("textInfo2", energyStorage);
-    },
-    getEnergyStorage: function () {
-        return 300000;
-    },
-    canReceiveEnergy: function (side) {
-        return side != this.data.meta;
-    },
-    canExtractEnergy: function (side) {
-        return side == this.data.meta;
-    },
-    destroyBlock: function (coords, player) {
-        var itemID = Player.getCarriedItem().id;
-        var level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID);
-        var drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, this.blockID, this.data.energy);
-        if (drop.length > 0) {
-            World.drop(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
-        }
-    },
-    renderModel: function () {
-        TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta);
-    },
-    destroy: function () {
-        BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+var TileEntityCESU = /** @class */ (function (_super) {
+    __extends(TileEntityCESU, _super);
+    function TileEntityCESU() {
+        return _super.call(this, 2, 300000, BlockID.storageCESU, guiCESU) || this;
     }
-});
+    return TileEntityCESU;
+}(TileEntityBatteryBlock));
+MachineRegistry.registerPrototype(BlockID.storageCESU, new TileEntityCESU());
 MachineRegistry.setStoragePlaceFunction("storageCESU", true);
-StorageInterface.createInterface(BlockID.storageCESU, {
-    slots: {
-        "slot1": { input: true, output: true,
-            isValid: function (item, side, tileEntity) {
-                return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", 2);
-            },
-            canOutput: function (item, side, tileEntity) {
-                return ChargeItemRegistry.getEnergyStored(item) >= ChargeItemRegistry.getMaxCharge(item);
-            }
-        },
-        "slot2": { input: true, output: true,
-            isValid: function (item, side, tileEntity) {
-                return side > 1 && ChargeItemRegistry.isValidStorage(item.id, "Eu", 2);
-            },
-            canOutput: function (item, side, tileEntity) {
-                return ChargeItemRegistry.getEnergyStored(item) <= 0;
-            }
-        }
-    }
-});
+StorageInterface.createInterface(BlockID.storageCESU, BatteryBlockInterface);

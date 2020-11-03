@@ -1,11 +1,24 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 IDRegistry.genBlockID("storageMFE");
 Block.createBlock("storageMFE", [
     { name: "MFE", texture: [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]], inCreative: true }
 ], "machine");
-TileRenderer.setStandartModel(BlockID.storageMFE, [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
-TileRenderer.registerRenderModel(BlockID.storageMFE, 0, [["mfe_front", 0], ["mfe_back", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
-TileRenderer.registerRenderModel(BlockID.storageMFE, 1, [["mfe_back", 0], ["mfe_front", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
-TileRenderer.registerRotationModel(BlockID.storageMFE, 2, [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
+ToolAPI.registerBlockMaterial(BlockID.storageMFE, "stone", 1, true);
+TileRenderer.setStandardModel(BlockID.storageMFE, 0, [["mfe_front", 0], ["mfe_back", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
+TileRenderer.setStandardModel(BlockID.storageMFE, 1, [["mfe_back", 0], ["mfe_front", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.storageMFE, 2, [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
 Block.registerDropFunction("storageMFE", function (coords, blockID, blockData, level) {
     return [];
 });
@@ -37,75 +50,13 @@ var guiMFE = new UI.StandartWindow({
 Callback.addCallback("LevelLoaded", function () {
     MachineRegistry.updateGuiHeader(guiMFE, "MFE");
 });
-MachineRegistry.registerEUStorage(BlockID.storageMFE, {
-    defaultValues: {
-        meta: 0
-    },
-    getGuiScreen: function () {
-        return guiMFE;
-    },
-    getTier: function () {
-        return 3;
-    },
-    wrenchClick: function (id, count, data, coords) {
-        if (this.setFacing(coords.side)) {
-            EnergyNetBuilder.rebuildTileNet(this);
-            return true;
-        }
-        return false;
-    },
-    setFacing: MachineRegistry.setFacing,
-    tick: function () {
-        StorageInterface.checkHoppers(this);
-        var energyStorage = this.getEnergyStorage();
-        this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, 3);
-        this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, 3);
-        this.container.setScale("energyScale", this.data.energy / energyStorage);
-        this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
-        this.container.setText("textInfo2", energyStorage);
-    },
-    getEnergyStorage: function () {
-        return 4000000;
-    },
-    canReceiveEnergy: function (side) {
-        return side != this.data.meta;
-    },
-    canExtractEnergy: function (side) {
-        return side == this.data.meta;
-    },
-    destroyBlock: function (coords, player) {
-        var itemID = Player.getCarriedItem().id;
-        var level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID);
-        var drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, BlockID.machineBlockBasic, this.data.energy);
-        if (drop.length > 0) {
-            World.drop(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
-        }
-    },
-    renderModel: function () {
-        TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta);
-    },
-    destroy: function () {
-        BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+var TileEntityMFE = /** @class */ (function (_super) {
+    __extends(TileEntityMFE, _super);
+    function TileEntityMFE() {
+        return _super.call(this, 3, 4000000, BlockID.machineBlockBasic, guiMFE) || this;
     }
-});
+    return TileEntityMFE;
+}(TileEntityBatteryBlock));
+MachineRegistry.registerPrototype(BlockID.storageMFE, new TileEntityMFE());
 MachineRegistry.setStoragePlaceFunction("storageMFE", true);
-StorageInterface.createInterface(BlockID.storageMFE, {
-    slots: {
-        "slot1": { input: true, output: true,
-            isValid: function (item, side, tileEntity) {
-                return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", 3);
-            },
-            canOutput: function (item, side, tileEntity) {
-                return ChargeItemRegistry.getEnergyStored(item) >= ChargeItemRegistry.getMaxCharge(item);
-            }
-        },
-        "slot2": { input: true, output: true,
-            isValid: function (item, side, tileEntity) {
-                return side > 1 && ChargeItemRegistry.isValidStorage(item.id, "Eu", 3);
-            },
-            canOutput: function (item, side, tileEntity) {
-                return ChargeItemRegistry.getEnergyStored(item) <= 0;
-            }
-        }
-    }
-});
+StorageInterface.createInterface(BlockID.storageMFE, BatteryBlockInterface);

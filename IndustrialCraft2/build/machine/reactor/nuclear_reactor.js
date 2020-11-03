@@ -187,7 +187,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
         return parseInt(this.data.output * EUReactorModifier);
     },
     startPlaySound: function () {
-        if (!Config.machineSoundEnabled || this.remove)
+        if (!ConfigIC.machineSoundEnabled || this.remove)
             return;
         if (!this.audioSource) {
             this.audioSource = SoundManager.createSource(AudioSource.TILEENTITY, this, "NuclearReactorLoop.ogg");

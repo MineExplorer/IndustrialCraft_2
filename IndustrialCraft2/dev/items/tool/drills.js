@@ -142,7 +142,7 @@ ToolType.drill = {
 		}
 	},
 	playDestroySound: function(item, block) {
-		if (Config.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.toolMaterial.energyPerUse) {
+		if (ConfigIC.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.toolMaterial.energyPerUse) {
 			let hardness = Block.getDestroyTime(block.id);
 			if (hardness > 1 || hardness < 0) {
 				SoundManager.startPlaySound(AudioSource.PLAYER, "DrillHard.ogg");

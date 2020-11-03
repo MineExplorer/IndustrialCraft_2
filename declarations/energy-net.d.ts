@@ -1,4 +1,4 @@
-declare namespace EnergyRegistry {
+declare namespace EnergyTypeRegistry {
     const energyTypes: {};
     function createEnergyType(name: any, value: any, wireParams: any): EnergyType;
     function assureEnergyType(name: any, value: any, wireParams: any): any;
@@ -20,7 +20,7 @@ declare class EnergyType {
         value: any;
     };
 }
-declare namespace TileEntityRegistry {
+declare namespace EnergyTileRegistry {
     function addEnergyType(Prototype: any, energyType: any): void;
     function addEnergyTypeForId(id: any, energyType: any): void;
     function setupInitialParams(Prototype: any): void;

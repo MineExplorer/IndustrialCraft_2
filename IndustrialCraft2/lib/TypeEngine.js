@@ -17,6 +17,15 @@ LIBRARY({
     shared: false,
     api: "CoreEngine"
 });
+var ItemStack = /** @class */ (function () {
+    function ItemStack(id, count, data, extra) {
+        this.id = id;
+        this.data = data;
+        this.count = count;
+        this.extra = extra;
+    }
+    return ItemStack;
+}());
 var BlockBase = /** @class */ (function () {
     function BlockBase(nameID) {
         this.variants = [];
@@ -38,8 +47,8 @@ var BlockBase = /** @class */ (function () {
         Block.setBlockMaterial(this.nameID, material, level);
         return this;
     };
-    BlockBase.prototype.setShape = function (x1, y1, z1, x2, y2, z2) {
-        Block.setShape(this.id, x1, y1, z1, x2, y2, z2);
+    BlockBase.prototype.setShape = function (x1, y1, z1, x2, y2, z2, data) {
+        Block.setShape(this.id, x1, y1, z1, x2, y2, z2, data);
         return this;
     };
     BlockBase.prototype.registerTileEntity = function (prototype) {
@@ -111,25 +120,6 @@ var ItemBasic = /** @class */ (function () {
         this.rarity = rarity;
         return this;
     };
-    /*
-    onNameOverride(item: ItemInstance, translation: string, name: string): string {
-        return this.getRarityCode(this.rarity) + translation;
-    }
-
-    onIconOverride(item: ItemInstance): Item.TextureData {
-        return this.icon;
-    }
-    
-    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal?: boolean): void {}
-
-    onUseNoTarget(item: ItemInstance, ticks: number): void {}
-
-    onUsingReleased(item: ItemInstance, ticks: number): void {}
-
-    onUsingComplete(item: ItemInstance): void {}
-
-    onDispense(coords: Callback.ItemUseCoordinates, item: ItemInstance): void {}
-    */
     ItemBasic.prototype.getRarityCode = function (rarity) {
         if (rarity == 1)
             return "§e";
@@ -184,13 +174,17 @@ var ItemArmor = /** @class */ (function (_super) {
         return this;
     };
     ItemArmor.registerFuncs = function (id, armorFuncs) {
-        Armor.registerFuncs(id, {
-            hurt: function (params, item, index, maxDamage) {
-                return armorFuncs.onHurt(params, item, index, maxDamage);
-            },
-            tick: function (item, index, maxDamage) {
-                return armorFuncs.onTick(item, index, maxDamage);
-            }
+        Armor.registerOnHurtListener(id, function (item, slot, player, value, type, attacker, bool1, bool2) {
+            return armorFuncs.onHurt({ attacker: attacker, damage: value, type: type, bool1: bool1, bool2: bool2 }, item, slot, player);
+        });
+        Armor.registerOnTickListener(id, function (item, slot, player) {
+            return armorFuncs.onTick(item, slot, player);
+        });
+        Armor.registerOnTakeOnListener(id, function (item, slot, player) {
+            armorFuncs.onTakeOn(item, slot, player);
+        });
+        Armor.registerOnTakeOffListener(id, function (item, slot, player) {
+            armorFuncs.onTakeOff(item, slot, player);
         });
     };
     ItemArmor.maxDamageArray = [11, 16, 15, 13];
@@ -211,50 +205,39 @@ var ItemRegistry;
         return armorMaterials[name];
     }
     ItemRegistry.getArmorMaterial = getArmorMaterial;
-    function isNameOverrideable(object) {
-        return 'onNameOverride' in object;
-    }
-    function isIconOverrideable(object) {
-        return 'onIconOverride' in object;
-    }
-    function isUseable(object) {
-        return 'onItemUse' in object;
-    }
-    function isNoTargetUseable(object) {
-        return 'onUseNoTarget' in object;
-    }
-    function hasDispenceBehavior(object) {
-        return 'onDispence' in object;
-    }
     function register(itemInstance) {
         items[itemInstance.id] = itemInstance;
-        if (isNameOverrideable(itemInstance)) {
+        if ('onNameOverride' in itemInstance) {
             Item.registerNameOverrideFunction(itemInstance.id, function (item, translation, name) {
                 return itemInstance.onNameOverride(item, translation, name);
             });
         }
-        if (isIconOverrideable(itemInstance)) {
+        if ('onIconOverride' in itemInstance) {
             Item.registerIconOverrideFunction(itemInstance.id, function (item) {
                 return itemInstance.onIconOverride(item);
             });
         }
-        if (isUseable(itemInstance)) {
-            Item.registerUseFunction(itemInstance.id, function (coords, item, block, isExternal) {
-                itemInstance.onItemUse(coords, item, block, isExternal);
+        if ('onItemUse' in itemInstance) {
+            Item.registerUseFunction(itemInstance.id, function (coords, item, block, player) {
+                itemInstance.onItemUse(coords, item, block, player);
             });
         }
-        if (isNoTargetUseable(itemInstance)) {
+        if ('onUseNoTarget' in itemInstance) {
             Item.registerNoTargetUseFunction(itemInstance.id, function (item, ticks) {
                 itemInstance.onUseNoTarget(item, ticks);
             });
+        }
+        if ('onUsingReleased' in itemInstance) {
             Item.registerUsingReleasedFunction(itemInstance.id, function (item, ticks) {
                 itemInstance.onUsingReleased(item, ticks);
             });
+        }
+        if ('onUsingComplete' in itemInstance) {
             Item.registerUsingCompleteFunction(itemInstance.id, function (item) {
                 itemInstance.onUsingComplete(item);
             });
         }
-        if (hasDispenceBehavior(itemInstance)) {
+        if ('onDispense' in itemInstance) {
             Item.registerDispenseFunction(itemInstance.id, function (coords, item) {
                 itemInstance.onDispense(coords, item);
             });
@@ -286,3 +269,49 @@ EXPORT("BlockBase", BlockBase);
 EXPORT("ItemBasic", ItemBasic);
 EXPORT("ItemArmor", ItemArmor);
 EXPORT("ItemRegistry", ItemRegistry);
+var TileEntityBase = /** @class */ (function () {
+    function TileEntityBase() {
+    }
+    TileEntityBase.prototype.created = function () {
+    };
+    TileEntityBase.prototype.load = function () {
+    };
+    TileEntityBase.prototype.unload = function () {
+    };
+    TileEntityBase.prototype.init = function () {
+    };
+    TileEntityBase.prototype.tick = function () {
+    };
+    TileEntityBase.prototype.onCheckerTick = function (isInitialized, isLoaded, wasLoaded) {
+    };
+    TileEntityBase.prototype.onItemUse = function (coords, item, player) {
+        return false;
+    };
+    TileEntityBase.prototype.click = function (id, count, data, coords, player, extra) {
+        return this.onItemUse(coords, new ItemStack(id, count, data, extra), player);
+    };
+    TileEntityBase.prototype.destroyBlock = function (coords, player) {
+    };
+    TileEntityBase.prototype.redstone = function (params) {
+    };
+    TileEntityBase.prototype.projectileHit = function (coords, target) {
+    };
+    TileEntityBase.prototype.destroy = function () {
+        return false;
+    };
+    TileEntityBase.prototype.getScreenName = function (player, coords) {
+        return "main";
+    };
+    TileEntityBase.prototype.getScreenByName = function (screenName) {
+        return null;
+    };
+    TileEntityBase.prototype.selfDestroy = function () {
+        TileEntity.destroyTileEntity(this);
+    };
+    TileEntityBase.prototype.requireMoreLiquid = function (liquid, amount) { };
+    TileEntityBase.prototype.sendPacket = function (name, data) { };
+    ;
+    TileEntityBase.prototype.sendResponse = function (packetName, someData) { };
+    ;
+    return TileEntityBase;
+}());

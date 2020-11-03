@@ -1,3 +1,10 @@
+declare class ItemStack implements ItemInstance {
+    id: number;
+    count: number;
+    data: number;
+    extra?: ItemExtraData;
+    constructor(id: number, count: number, data: number, extra?: ItemExtraData);
+}
 declare class BlockBase {
     nameID: string;
     id: number;
@@ -7,26 +14,31 @@ declare class BlockBase {
     create(blockType?: Block.SpecialType | string): void;
     setDestroyTime(destroyTime: number): this;
     setBlockMaterial(material: string, level: number): this;
-    setShape(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number): this;
+    setShape(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, data?: number): this;
     registerTileEntity(prototype: any): void;
 }
 interface INameOverrideable {
-    onNameOverride(item: ItemInstance, translation: string, name: string): string;
+    onNameOverride(item: ItemStack, translation: string, name: string): string;
 }
 interface IIconOverrideable {
-    onIconOverride(item: ItemInstance): Item.TextureData;
+    onIconOverride(item: ItemStack): Item.TextureData;
 }
 interface IUseable {
-    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal?: boolean): void;
+    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void;
 }
-interface INoTargetUseable {
-    onUseNoTarget(item: ItemInstance, ticks: number): void;
-    onUsingReleased(item: ItemInstance, ticks: number): void;
-    onUsingComplete(item: ItemInstance): void;
+interface INoTargetUse {
+    onUseNoTarget(item: ItemStack, ticks: number): void;
+}
+interface IUsingReleased {
+    onUsingReleased(item: ItemStack, ticks: number): void;
+}
+interface IUsingComplete {
+    onUsingComplete(item: ItemStack): void;
 }
 interface IDispenceBehavior {
-    onDispense(coords: Callback.ItemUseCoordinates, item: ItemInstance): void;
+    onDispense(coords: Callback.ItemUseCoordinates, item: ItemStack): void;
 }
+declare type ItemFuncs = INameOverrideable & IIconOverrideable & IUseable & INoTargetUse & IUsingReleased & IUsingComplete & IDispenceBehavior;
 declare class ItemBasic {
     readonly nameID: string;
     readonly id: number;
@@ -57,10 +69,12 @@ interface IArmorFuncs {
         attacker: number;
         damage: number;
         type: number;
-        b1: boolean;
-        b2: boolean;
-    }, item: ItemInstance, index: number, maxDamage: number) => boolean;
-    onTick: (item: ItemInstance, index: number, maxDamage: number) => boolean;
+        bool1: boolean;
+        bool2: boolean;
+    }, item: ItemStack, slot: number, player: number) => void | ItemStack;
+    onTick: (item: ItemStack, slot: number, player: number) => void | ItemStack;
+    onTakeOn: (item: ItemStack, slot: number, player: number) => void;
+    onTakeOff: (item: ItemStack, slot: number, player: number) => void;
 }
 declare type ArmorMaterial = {
     durabilityFactor: number;
@@ -89,7 +103,7 @@ declare class ItemArmor extends ItemBasic {
 declare namespace ItemRegistry {
     function addArmorMaterial(name: string, material: ArmorMaterial): void;
     function getArmorMaterial(name: string): ArmorMaterial;
-    function register(itemInstance: ItemBasic): void;
+    function register(itemInstance: ItemBasic | (ItemBasic & ItemFuncs)): void;
     function getInstanceOf(itemID: number): ItemBasic;
     function createItem(nameID: string, params: {
         name?: string;
@@ -106,4 +120,44 @@ declare namespace ItemRegistry {
         material?: string | ArmorMaterial;
         inCreative?: boolean;
     }): ItemArmor;
+}
+declare abstract class TileEntityBase implements TileEntity {
+    x: number;
+    y: number;
+    z: number;
+    dimension: number;
+    blockID: number;
+    data: any;
+    defaultValues: {};
+    container: ItemContainer;
+    liquidStorage: any;
+    remove: boolean;
+    isLoaded: boolean;
+    private __initialized;
+    useNetworkItemContainer: true;
+    blockSource: BlockSource;
+    networkData: SyncedNetworkData;
+    networkEntity: NetworkEntity;
+    created(): void;
+    load(): void;
+    unload(): void;
+    init(): void;
+    tick(): void;
+    onCheckerTick(isInitialized: boolean, isLoaded: boolean, wasLoaded: boolean): void;
+    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean;
+    click(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean;
+    destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void;
+    redstone(params: {
+        power: number;
+        signal: number;
+        onLoad: boolean;
+    }): void;
+    projectileHit(coords: Callback.ItemUseCoordinates, target: Callback.ProjectileHitTarget): void;
+    destroy(): boolean;
+    getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
+    getScreenByName(screenName: string): any;
+    selfDestroy(): void;
+    requireMoreLiquid(liquid: string, amount: number): void;
+    sendPacket(name: string, data: object): void;
+    sendResponse(packetName: string, someData: object): void;
 }

@@ -59,7 +59,7 @@ var insulationMaxVolt = {
 
 Callback.addCallback("tick", function() {
 	if (World.getThreadTime()%20 == 0) {
-		if (Config.wireDamageEnabled) {
+		if (ConfigIC.wireDamageEnabled) {
 			var entities = Entity.getAll();
 		} else {
 			var entities = [player];

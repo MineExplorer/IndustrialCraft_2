@@ -66,4 +66,19 @@ Recipes.addShapeless = function(result, input) {
     Logger.Log("Shapeless recipe: "+result.id+", "+result.count+", "+result.data, "DEBUG");
     workbenchAddShapeless(result, input);
 }
-*/ 
+*/
+// delete temporary files
+var File = java.io.File;
+var FileWriter = java.io.FileWriter;
+var target_path = __packdir__ + "assets/definitions/recipe";
+var source_path = __dir__ + "assets/res/definitions/recipe";
+var files = new File(source_path).list();
+for (var i_1 in files) {
+    try {
+        var fileName = files[i_1];
+        new File(target_path, fileName).delete();
+    }
+    catch (e) {
+        Logger.Log(e, "ERROR");
+    }
+}

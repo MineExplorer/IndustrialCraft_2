@@ -1,17 +1,20 @@
-var ItemName = {
-    itemRarity: {},
-    setRarity: function (id, lvl, regFunc) {
-        this.itemRarity[id] = lvl;
+var ItemName;
+(function (ItemName) {
+    var itemRarity = {};
+    function setRarity(id, lvl, regFunc) {
+        itemRarity[id] = lvl;
         if (regFunc) {
             Item.registerNameOverrideFunction(id, function (item, name) {
                 return ItemName.getRarityCode(lvl) + name;
             });
         }
-    },
-    getRarity: function (id) {
-        return this.itemRarity[id] || 0;
-    },
-    getRarityCode: function (lvl) {
+    }
+    ItemName.setRarity = setRarity;
+    function getRarity(id) {
+        return itemRarity[id] || 0;
+    }
+    ItemName.getRarity = getRarity;
+    function getRarityCode(lvl) {
         if (lvl == 1)
             return "§e";
         if (lvl == 2)
@@ -19,48 +22,56 @@ var ItemName = {
         if (lvl == 3)
             return "§d";
         return "";
-    },
-    addTierTooltip: function (id, tier) {
+    }
+    ItemName.getRarityCode = getRarityCode;
+    function addTooltip(id, tooltip) {
         Item.registerNameOverrideFunction(BlockID[id], function (item, name) {
-            return name + "\n§7" + Translation.translate("Power Tier: ") + tier;
+            return name + "\n§7" + tooltip;
         });
-    },
-    addStorageBlockTooltip: function (id, tier, capacity) {
-        Item.registerNameOverrideFunction(BlockID[id], function (item, name) {
+    }
+    ItemName.addTooltip = addTooltip;
+    function addTierTooltip(id, tier) {
+        addTooltip(id, Translation.translate("Power Tier: ") + tier);
+    }
+    ItemName.addTierTooltip = addTierTooltip;
+    function addStorageBlockTooltip(stringID, tier, capacity) {
+        Item.registerNameOverrideFunction(BlockID[stringID], function (item, name) {
             return ItemName.showBlockStorage(item, name, tier, capacity);
         });
-    },
-    addStoredLiquidTooltip: function (id) {
+    }
+    ItemName.addStorageBlockTooltip = addStorageBlockTooltip;
+    function addStoredLiquidTooltip(id) {
         Item.registerNameOverrideFunction(id, function (item, name) {
             return name += "\n§7" + (1000 - item.data) + " mB";
         });
-    },
-    showBlockStorage: function (item, name, tier, capacity) {
+    }
+    ItemName.addStoredLiquidTooltip = addStoredLiquidTooltip;
+    function showBlockStorage(item, name, tier, capacity) {
         var tierText = "§7" + Translation.translate("Power Tier: ") + tier;
         var energy = 0;
         if (item.extra) {
             energy = item.extra.getInt("energy");
         }
-        var energyText = this.displayEnergy(energy) + "/" + capacity + " EU";
+        var energyText = displayEnergy(energy) + "/" + capacity + " EU";
         return name + "\n" + tierText + "\n" + energyText;
-    },
-    getTooltip: function (name, tooltip) {
-        return "\n" + tooltip;
-    },
-    getItemStorageText: function (item) {
+    }
+    ItemName.showBlockStorage = showBlockStorage;
+    function getItemStorageText(item) {
         var capacity = ChargeItemRegistry.getMaxCharge(item.id);
         var energy = ChargeItemRegistry.getEnergyStored(item);
-        return "§7" + this.displayEnergy(energy) + "/" + this.displayEnergy(capacity) + " EU";
-    },
-    showItemStorage: function (item, name) {
+        return "§7" + displayEnergy(energy) + "/" + displayEnergy(capacity) + " EU";
+    }
+    ItemName.getItemStorageText = getItemStorageText;
+    function showItemStorage(item, name) {
         var rarity = ItemName.getRarity(item.id);
         if (rarity > 0) {
             name = ItemName.getRarityCode(rarity) + name;
         }
         return name + '\n' + ItemName.getItemStorageText(item);
-    },
-    displayEnergy: function (energy) {
-        if (!Config.debugMode) {
+    }
+    ItemName.showItemStorage = showItemStorage;
+    function displayEnergy(energy) {
+        if (!ConfigIC.debugMode) {
             if (energy >= 1e6) {
                 return Math.floor(energy / 1e5) / 10 + "M";
             }
@@ -69,8 +80,9 @@ var ItemName = {
             }
         }
         return energy;
-    },
-    getSideName: function (side) {
+    }
+    ItemName.displayEnergy = displayEnergy;
+    function getSideName(side) {
         var sideNames = {
             en: [
                 "first valid",
@@ -118,11 +130,12 @@ var ItemName = {
                 "o oeste"
             ]
         };
-        if (sideNames[Config.gameLanguage]) {
-            return sideNames[Config.gameLanguage][side + 1];
+        if (sideNames[ConfigIC.gameLanguage]) {
+            return sideNames[ConfigIC.gameLanguage][side + 1];
         }
         else {
             return sideNames["en"][side + 1];
         }
     }
-};
+    ItemName.getSideName = getSideName;
+})(ItemName || (ItemName = {}));

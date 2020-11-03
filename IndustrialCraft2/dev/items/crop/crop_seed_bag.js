@@ -32,7 +32,7 @@ Item.registerNameOverrideFunction(ItemID.cropSeedBag, function(item, name) {
         newName += "§6Ga: " + extra.getInt("gain") + '\n';
         newName += "§bRe: " + extra.getInt("resistance");
     }
-    if (Config.debugMode) {
+    if (ConfigIC.debugMode) {
 		newName += "[DEBUG]scanLevel: " + scanLvl;
 	}
     return newName;

@@ -25,11 +25,11 @@ implements OnHurtListener, OnTickListener {
 		return name;
 	}
 
-	onHurt(params: {attacker: number, damage: number, type: number}, slot: ItemInstance, index: number, player: number): boolean {
-		return false;
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {
+		return item;
 	}
 
-	onTick(slot: ItemInstance, index: number, player: number): boolean {
-		return false;
+	onTick(item: ItemInstance, index: number, player: number): ItemInstance {
+		return null;
 	}
 }

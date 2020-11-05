@@ -9,28 +9,21 @@ implements OnHurtListener, OnTickListener {
 		RadiationAPI.registerHazmatArmor(this.id);
 	}
 
-	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): boolean {
-		var type = params.type;
-		if (type == 2 || type == 3 || type == 11) {
-			item.data += Math.ceil(params.damage / 4);
-			if (item.data >= Item.getMaxDamage(this.id)) {
-				item.id = item.count = 0;
-			}
-			return true;
-		}
-		if (type == 9 && index == 0) {
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerEnt: number): ItemInstance {
+		if (params.type == 9 && index == 0) {
+			let player = new PlayerActor(playerEnt);
 			for (var i = 0; i < 36; i++) {
-				var slot = Player.getInventorySlot(i);
+				var slot = player.getInventorySlot(i);
 				if (slot.id == ItemID.cellAir) {
 					Game.prevent();
-					Entity.addEffect(player, PotionEffect.waterBreathing, 1, 60);
-					Player.setInventorySlot(i, slot.count > 1 ? slot.id : 0, slot.count - 1, 0);
-					Player.addItemToInventory(ItemID.cellEmpty, 1, 0);
+					Entity.addEffect(playerEnt, PotionEffect.waterBreathing, 1, 60);
+					player.setInventorySlot(i, slot.id, slot.count - 1, 0);
+					player.addItemToInventory(ItemID.cellEmpty, 1, 0, null, true);
 					break;
 				}
 			}
 		}
-		if (type == 5 && index == 3) {
+		if (params.type == 5 && index == 3) {
 			var Dp = Math.floor(params.damage/8);
 			var Db = Math.floor(params.damage*7/16);
 			if (Dp < 1) {
@@ -42,21 +35,21 @@ implements OnHurtListener, OnTickListener {
 			if (item.data >= Item.getMaxDamage(this.id)) {
 				item.id = item.count = 0;
 			}
-			return true;
+			return item;
 		}
-		return false;
+		return null;
 	}
 
-	onTick(item: ItemInstance, index: number, player: number): boolean {
+	onTick(item: ItemInstance, index: number, playerEnt: number): void {
+		let player = new PlayerActor(playerEnt);
 		if (index == 0
-			&& Entity.getArmorSlot(player, 1).id == ItemID.hazmatChestplate
-			&& Entity.getArmorSlot(player, 2).id == ItemID.hazmatLeggings
-			&& Entity.getArmorSlot(player, 3).id == ItemID.rubberBoots) {
+			&& player.getArmor(1).id == ItemID.hazmatChestplate
+			&& player.getArmor(2).id == ItemID.hazmatLeggings
+			&& player.getArmor(3).id == ItemID.rubberBoots) {
 			if (RadiationAPI.playerRad <= 0) {
-				Entity.clearEffect(player, PotionEffect.poison);
+				Entity.clearEffect(playerEnt, PotionEffect.poison);
 			}
-			Entity.clearEffect(player, PotionEffect.wither);
+			Entity.clearEffect(playerEnt, PotionEffect.wither);
 		}
-		return false;
 	}
 }

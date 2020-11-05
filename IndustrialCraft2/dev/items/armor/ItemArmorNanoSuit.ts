@@ -36,7 +36,7 @@ extends ItemArmorElectric {
 		return 2000;
 	}
 	
-	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): boolean {
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		let type = params.type;
 		let energyPerDamage = this.getEnergyPerDamage();
@@ -44,7 +44,6 @@ extends ItemArmorElectric {
 			if (type == 2 || type == 3 || type == 11) {
 				let energy = params.damage * energyPerDamage;
 				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
-				return true;
 			}
 			if (index == 3 && type == 5) {
 				let damage = Utils.getFallDamage();
@@ -58,31 +57,28 @@ extends ItemArmorElectric {
 						Game.prevent();
 					}
 					ChargeItemRegistry.setEnergyStored(item, energyStored - damageReduce * energyPerDamage);
-					return true;
 				}
 			}
 		}
-		return false;
+		return item;
 	}
 
-	onTick(item: ItemInstance, index: number, player: number): boolean {
+	onTick(item: ItemInstance, index: number, player: number): ItemInstance {
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
-		let wasChanged = false;
 		if (this.isCharged && energyStored < this.getEnergyPerDamage()) {
 			item.id = this.getDischargedID();
-			wasChanged = true;
+			return item;
 		}
 		if (!this.isCharged && energyStored >= this.getEnergyPerDamage()) {
 			item.id = this.getChargedID();
-			wasChanged = true;
+			return item;
 		}
 		// night vision
 		if (index == 0 && energyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
-			let coords = Entity.getPosition(player);
+			let pos = Entity.getPosition(player);
 			let time = World.getWorldTime()%24000;
-			// let region = BlockSource.getDefaultForActor(player);
-			// TODO: change to block source after Inner Core update
-			if (World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
+			let region = BlockSource.getDefaultForActor(player);
+			if (region.getLightLevel(pos.x, pos.y, pos.z) > 13 && time <= 12000) {
 				Entity.addEffect(player, PotionEffect.blindness, 1, 25);
 				Entity.clearEffect(player, PotionEffect.nightVision);
 			} else {
@@ -91,10 +87,10 @@ extends ItemArmorElectric {
 			Entity.addEffect(player, PotionEffect.nightVision, 1, 225);
 			if (World.getThreadTime()%20 == 0) {
 				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
-				return true;
+				return item;
 			}
 		}
-		return wasChanged;
+		return null;
 	}
 }
 
@@ -103,7 +99,7 @@ let NANO_ARMOR_FUNCS = {
 	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
 		return ItemArmorNanoSuit.prototype.onHurt(params, item, index, Player.get())
 	},
-	tick: function(item: ItemInstance, index: number): boolean {
+	tick: function(item: ItemInstance, index: number) {
 		return ItemArmorNanoSuit.prototype.onTick(item, index, Player.get())
 	}
 }

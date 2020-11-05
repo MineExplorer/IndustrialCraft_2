@@ -13088,10 +13088,10 @@ var ItemArmorElectric = /** @class */ (function (_super) {
         return name;
     };
     ItemArmorElectric.prototype.onHurt = function (params, slot, index, player) {
-        return false;
+        return null;
     };
     ItemArmorElectric.prototype.onTick = function (slot, index, player) {
-        return false;
+        return null;
     };
     return ItemArmorElectric;
 }(ItemArmorIC2));
@@ -13116,11 +13116,11 @@ var ItemArmorBatpack = /** @class */ (function (_super) {
                 if (energyAdd > 0) {
                     ChargeItemRegistry.setEnergyStored(item, energyStored - energyAdd);
                     Entity.setCarriedItem(player, carried.id, 1, carried.data, carried.extra);
-                    Entity.setArmorSlot(player, 1, item.id, 1, item.data, item.extra);
+                    return item;
                 }
             }
         }
-        return false;
+        return null;
     };
     return ItemArmorBatpack;
 }(ItemArmorElectric));
@@ -13133,28 +13133,21 @@ var ItemArmorHazmat = /** @class */ (function (_super) {
         RadiationAPI.registerHazmatArmor(_this.id);
         return _this;
     }
-    ItemArmorHazmat.prototype.onHurt = function (params, item, index, player) {
-        var type = params.type;
-        if (type == 2 || type == 3 || type == 11) {
-            item.data += Math.ceil(params.damage / 4);
-            if (item.data >= Item.getMaxDamage(this.id)) {
-                item.id = item.count = 0;
-            }
-            return true;
-        }
-        if (type == 9 && index == 0) {
+    ItemArmorHazmat.prototype.onHurt = function (params, item, index, playerEnt) {
+        if (params.type == 9 && index == 0) {
+            var player_1 = new PlayerActor(playerEnt);
             for (var i = 0; i < 36; i++) {
-                var slot = Player.getInventorySlot(i);
+                var slot = player_1.getInventorySlot(i);
                 if (slot.id == ItemID.cellAir) {
                     Game.prevent();
-                    Entity.addEffect(player, PotionEffect.waterBreathing, 1, 60);
-                    Player.setInventorySlot(i, slot.count > 1 ? slot.id : 0, slot.count - 1, 0);
-                    Player.addItemToInventory(ItemID.cellEmpty, 1, 0);
+                    Entity.addEffect(playerEnt, PotionEffect.waterBreathing, 1, 60);
+                    player_1.setInventorySlot(i, slot.id, slot.count - 1, 0);
+                    player_1.addItemToInventory(ItemID.cellEmpty, 1, 0, null, true);
                     break;
                 }
             }
         }
-        if (type == 5 && index == 3) {
+        if (params.type == 5 && index == 3) {
             var Dp = Math.floor(params.damage / 8);
             var Db = Math.floor(params.damage * 7 / 16);
             if (Dp < 1) {
@@ -13167,21 +13160,21 @@ var ItemArmorHazmat = /** @class */ (function (_super) {
             if (item.data >= Item.getMaxDamage(this.id)) {
                 item.id = item.count = 0;
             }
-            return true;
+            return item;
         }
-        return false;
+        return null;
     };
-    ItemArmorHazmat.prototype.onTick = function (item, index, player) {
+    ItemArmorHazmat.prototype.onTick = function (item, index, playerEnt) {
+        var player = new PlayerActor(playerEnt);
         if (index == 0
-            && Entity.getArmorSlot(player, 1).id == ItemID.hazmatChestplate
-            && Entity.getArmorSlot(player, 2).id == ItemID.hazmatLeggings
-            && Entity.getArmorSlot(player, 3).id == ItemID.rubberBoots) {
+            && player.getArmor(1).id == ItemID.hazmatChestplate
+            && player.getArmor(2).id == ItemID.hazmatLeggings
+            && player.getArmor(3).id == ItemID.rubberBoots) {
             if (RadiationAPI.playerRad <= 0) {
-                Entity.clearEffect(player, PotionEffect.poison);
+                Entity.clearEffect(playerEnt, PotionEffect.poison);
             }
-            Entity.clearEffect(player, PotionEffect.wither);
+            Entity.clearEffect(playerEnt, PotionEffect.wither);
         }
-        return false;
     };
     return ItemArmorHazmat;
 }(ItemArmorIC2));
@@ -13201,7 +13194,7 @@ var ItemArmorJetpackElectric = /** @class */ (function (_super) {
         if (params.type == 5) {
             Utils.fixFallDamage(params.damage);
         }
-        return false;
+        return item;
     };
     ItemArmorJetpackElectric.prototype.onTick = function (item, index, player) {
         var energyStored = ChargeItemRegistry.getEnergyStored(item);
@@ -13211,17 +13204,17 @@ var ItemArmorJetpackElectric = /** @class */ (function (_super) {
             if (Utils.isPlayerOnGround() || energyStored < 8) {
                 item.extra.putBoolean("hover", false);
                 Game.message("§4" + Translation.translate("Hover mode disabled"));
-                return true;
+                return item;
             }
             else if (vel.y < -0.1) {
                 Entity.addVelocity(player, 0, Math.min(0.25, -0.1 - vel.y), 0);
                 if (World.getThreadTime() % 5 == 0) {
                     ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
-                    return true;
+                    return item;
                 }
             }
         }
-        return false;
+        return null;
     };
     return ItemArmorJetpackElectric;
 }(ItemArmorElectric));
@@ -13266,7 +13259,6 @@ var ItemArmorNanoSuit = /** @class */ (function (_super) {
             if (type == 2 || type == 3 || type == 11) {
                 var energy = params.damage * energyPerDamage;
                 ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
-                return true;
             }
             if (index == 3 && type == 5) {
                 var damage = Utils.getFallDamage();
@@ -13281,30 +13273,27 @@ var ItemArmorNanoSuit = /** @class */ (function (_super) {
                         Game.prevent();
                     }
                     ChargeItemRegistry.setEnergyStored(item, energyStored - damageReduce * energyPerDamage);
-                    return true;
                 }
             }
         }
-        return false;
+        return item;
     };
     ItemArmorNanoSuit.prototype.onTick = function (item, index, player) {
         var energyStored = ChargeItemRegistry.getEnergyStored(item);
-        var wasChanged = false;
         if (this.isCharged && energyStored < this.getEnergyPerDamage()) {
             item.id = this.getDischargedID();
-            wasChanged = true;
+            return item;
         }
         if (!this.isCharged && energyStored >= this.getEnergyPerDamage()) {
             item.id = this.getChargedID();
-            wasChanged = true;
+            return item;
         }
         // night vision
         if (index == 0 && energyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
             var coords = Entity.getPosition(player);
             var time = World.getWorldTime() % 24000;
-            // let region = BlockSource.getDefaultForActor(player);
-            // TODO: change to block source after Inner Core update
-            if (World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
+            var region = BlockSource.getDefaultForActor(player);
+            if (region.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
                 Entity.addEffect(player, PotionEffect.blindness, 1, 25);
                 Entity.clearEffect(player, PotionEffect.nightVision);
             }
@@ -13314,10 +13303,10 @@ var ItemArmorNanoSuit = /** @class */ (function (_super) {
             Entity.addEffect(player, PotionEffect.nightVision, 1, 225);
             if (World.getThreadTime() % 20 == 0) {
                 ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
-                return true;
+                return item;
             }
         }
-        return wasChanged;
+        return null;
     };
     return ItemArmorNanoSuit;
 }(ItemArmorElectric));
@@ -13343,9 +13332,8 @@ var ItemArmorNightvisionGoggles = /** @class */ (function (_super) {
         if (energyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
             var coords = Entity.getPosition(player);
             var time = World.getWorldTime() % 24000;
-            // let region = BlockSource.getDefaultForActor(player);
-            // TODO: change to block source after Inner Core update
-            if (World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
+            var region = BlockSource.getDefaultForActor(player);
+            if (region.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
                 Entity.clearEffect(player, PotionEffect.nightVision);
                 Entity.addEffect(player, PotionEffect.blindness, 1, 25);
             }
@@ -13354,10 +13342,10 @@ var ItemArmorNightvisionGoggles = /** @class */ (function (_super) {
             }
             if (World.getThreadTime() % 20 == 0) {
                 ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
-                return true;
+                return item;
             }
         }
-        return false;
+        return null;
     };
     return ItemArmorNightvisionGoggles;
 }(ItemArmorElectric));
@@ -13395,19 +13383,18 @@ var ItemArmorQuantumSuit = /** @class */ (function (_super) {
     };
     ItemArmorQuantumSuit.prototype.canAbsorbDamage = function (item, damage) {
         if (this.isCharged || ChargeItemRegistry.getEnergyStored(item) >= this.getEnergyPerDamage() * damage) {
-            return true;
+            return item;
         }
         return false;
     };
-    ItemArmorQuantumSuit.prototype.onHurt = function (params, slot, index, player) {
+    ItemArmorQuantumSuit.prototype.onHurt = function (params, item, index, player) {
         var type = params.type;
-        var energyStored = ChargeItemRegistry.getEnergyStored(slot);
+        var energyStored = ChargeItemRegistry.getEnergyStored(item);
         var energyPerDamage = this.getEnergyPerDamage();
         if (energyStored >= energyPerDamage) {
             if ((type == 2 || type == 3 || type == 11) && params.damage > 0) {
                 var energy = params.damage * energyPerDamage;
-                ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - energy, 0));
-                return true;
+                ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
             }
             if (index == 3 && type == 5) {
                 var damage = Math.min(Utils.getFallDamage(), params.damage);
@@ -13420,36 +13407,33 @@ var ItemArmorQuantumSuit = /** @class */ (function (_super) {
                     else {
                         Game.prevent();
                     }
-                    ChargeItemRegistry.setEnergyStored(slot, energyStored - damageReduce * energyPerDamage);
-                    return true;
+                    ChargeItemRegistry.setEnergyStored(item, energyStored - damageReduce * energyPerDamage);
                 }
             }
             if (index == 3 && type == 22) {
                 Game.prevent();
-                ChargeItemRegistry.setEnergyStored(slot, energyStored - energyPerDamage);
-                return true;
+                ChargeItemRegistry.setEnergyStored(item, energyStored - energyPerDamage);
             }
         }
         if (index == 0 && type == 9 && energyStored >= 500) {
             Game.prevent();
             Entity.addEffect(player, PotionEffect.waterBreathing, 1, 60);
-            ChargeItemRegistry.setEnergyStored(slot, energyStored - 500);
-            return true;
+            ChargeItemRegistry.setEnergyStored(item, energyStored - 500);
         }
         if (index == 1 && type == 5) {
             Utils.fixFallDamage(params.damage);
         }
-        return false;
+        return item;
     };
-    ItemArmorQuantumSuit.prototype.onTick = function (slot, index, player) {
-        var energyStored = ChargeItemRegistry.getEnergyStored(slot);
+    ItemArmorQuantumSuit.prototype.onTick = function (item, index, player) {
+        var energyStored = ChargeItemRegistry.getEnergyStored(item);
         if (this.isCharged && energyStored < this.getEnergyPerDamage()) {
-            slot.id = this.getDischarged();
-            Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+            item.id = this.getDischarged();
+            return item;
         }
         if (!this.isCharged && energyStored >= this.getEnergyPerDamage()) {
-            slot.id = this.getCharged();
-            Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+            item.id = this.getCharged();
+            return item;
         }
         if (energyStored > 0) {
             switch (index) {
@@ -13469,24 +13453,23 @@ var ItemArmorQuantumSuit = /** @class */ (function (_super) {
                     var hunger = Player.getHunger();
                     if (hunger < 20 && newEnergyStored >= 500) {
                         var i = World.getThreadTime() % 36;
-                        var item = Player.getInventorySlot(i);
-                        if (item.id == ItemID.tinCanFull) {
-                            var count = Math.min(20 - hunger, item.count);
+                        var slot = Player.getInventorySlot(i);
+                        if (slot.id == ItemID.tinCanFull) {
+                            var count = Math.min(20 - hunger, slot.count);
                             Player.setHunger(hunger + count);
-                            item.count -= count;
-                            Player.setInventorySlot(i, item.count ? item.id : 0, item.count, item.data);
+                            slot.count -= count;
+                            Player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data);
                             Player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
                             newEnergyStored -= 500;
                             break;
                         }
                     }
                     // night vision
-                    if (newEnergyStored > 0 && slot.extra && slot.extra.getBoolean("nv")) {
+                    if (newEnergyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
                         var coords = Entity.getPosition(player);
                         var time = World.getWorldTime() % 24000;
-                        // let region = BlockSource.getDefaultForActor(player);
-                        // TODO: change to block source after Inner Core update
-                        if (World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
+                        var region = BlockSource.getDefaultForActor(player);
+                        if (region.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
                             Entity.addEffect(player, PotionEffect.blindness, 1, 25);
                             Entity.clearEffect(player, PotionEffect.nightVision);
                         }
@@ -13498,24 +13481,24 @@ var ItemArmorQuantumSuit = /** @class */ (function (_super) {
                         }
                     }
                     if (energyStored != newEnergyStored) {
-                        ChargeItemRegistry.setEnergyStored(slot, newEnergyStored);
-                        Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+                        ChargeItemRegistry.setEnergyStored(item, newEnergyStored);
+                        return item;
                     }
                     break;
                 case 1:
-                    if (slot.extra && slot.extra.getBoolean("hover")) {
+                    if (item.extra && item.extra.getBoolean("hover")) {
                         Utils.resetFallHeight();
                         var vel = Entity.getVelocity(player);
                         if (Utils.isPlayerOnGround() || energyStored < 8) {
-                            slot.extra.putBoolean("hover", false);
+                            item.extra.putBoolean("hover", false);
                             Game.message("§4" + Translation.translate("Hover mode disabled"));
-                            return true;
+                            return item;
                         }
                         else if (vel.y < -0.1) {
                             Entity.addVelocity(player, 0, Math.min(0.25, -0.1 - vel.y), 0);
                             if (World.getThreadTime() % 5 == 0) {
-                                ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
-                                return true;
+                                ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
+                                return item;
                             }
                         }
                     }
@@ -13534,14 +13517,14 @@ var ItemArmorQuantumSuit = /** @class */ (function (_super) {
                     if (ItemArmorQuantumSuit.runTime > 2 && !Player.getFlying()) {
                         Entity.addEffect(player, PotionEffect.movementSpeed, 6, 5);
                         if (World.getThreadTime() % 5 == 0) {
-                            ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - Math.floor(horizontalVel * 600)));
-                            Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+                            ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - Math.floor(horizontalVel * 600)));
+                            return item;
                         }
                     }
                     break;
             }
         }
-        return false;
+        return null;
     };
     ItemArmorQuantumSuit.runTime = 0;
     return ItemArmorQuantumSuit;
@@ -13553,7 +13536,7 @@ function canAbsorbDamage(damage) {
         if (!(armor instanceof ItemArmorQuantumSuit && armor.canAbsorbDamage(slot, damage)))
             return false;
     }
-    return true;
+    return slot;
 }
 Callback.addCallback("EntityHurt", function (attacker, victim, damage, type) {
     if (victim == player && Game.getGameMode() != 1 && damage > 0 && (type == 2 || type == 3 || type == 11) && canAbsorbDamage(damage)) {
@@ -13594,16 +13577,14 @@ var QUANTUM_ARMOR_FUNCS = {
 var ItemArmorSolarHelmet = /** @class */ (function (_super) {
     __extends(ItemArmorSolarHelmet, _super);
     function ItemArmorSolarHelmet(nameID, name, params) {
-        var _this = _super.call(this, nameID, name, params) || this;
-        _this.canSeeSky = false;
-        return _this;
+        return _super.call(this, nameID, name, params) || this;
     }
     ItemArmorSolarHelmet.prototype.onTick = function (item, index, player) {
         var time = World.getWorldTime() % 24000;
         var p = Entity.getPosition(player);
         var region = BlockSource.getDefaultForActor(player);
         if (World.getThreadTime() % 20 == 0 && region.canSeeSky(p.x, p.y + 1, p.z) &&
-            (time >= 23500 || time < 12550) && (!World.getWeather().rain || World.getLightLevel(p.x, p.y + 1, p.z) > 14)) {
+            (time >= 23500 || time < 12550) && (!World.getWeather().rain || region.getLightLevel(p.x, p.y + 1, p.z) > 14)) {
             for (var i_31 = 1; i_31 < 4; i_31++) {
                 var energy = 20;
                 var armor = Entity.getArmorSlot(player, i_31);
@@ -13616,7 +13597,6 @@ var ItemArmorSolarHelmet = /** @class */ (function (_super) {
                 }
             }
         }
-        return false;
     };
     return ItemArmorSolarHelmet;
 }(ItemArmorIC2));

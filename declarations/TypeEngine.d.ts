@@ -71,10 +71,10 @@ interface OnHurtListener {
         type: number;
         bool1: boolean;
         bool2: boolean;
-    }, item: ItemInstance, slot: number, player: number) => boolean;
+    }, item: ItemInstance, slot: number, player: number) => ItemInstance | void;
 }
 interface OnTickListener {
-    onTick: (item: ItemInstance, slot: number, player: number) => boolean;
+    onTick: (item: ItemInstance, slot: number, player: number) => ItemInstance | void;
 }
 interface OnTakeOnListener {
     onTakeOn: (item: ItemInstance, slot: number, player: number) => void;
@@ -104,7 +104,7 @@ declare class ItemArmor extends ItemBasic {
     createItem(inCreative?: boolean): this;
     setArmorTexture(texture: string): this;
     setMaterial(armorMaterial: string | ArmorMaterial): this;
-    static registerListeners(id: string, armorFuncs: ItemArmor | OnHurtListener | OnTickListener | OnTakeOnListener | OnTakeOffListener): void;
+    static registerListeners(id: number, armorFuncs: ItemArmor | OnHurtListener | OnTickListener | OnTakeOnListener | OnTakeOffListener): void;
 }
 declare namespace ItemRegistry {
     function addArmorMaterial(name: string, material: ArmorMaterial): void;

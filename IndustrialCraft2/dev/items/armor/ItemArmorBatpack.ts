@@ -14,7 +14,7 @@ extends ItemArmorElectric {
 		return true;
 	}
 
-	onTick(item: ItemInstance, index: number, player: number): boolean {
+	onTick(item: ItemInstance, index: number, player: number): ItemInstance {
 		if (World.getThreadTime() % 20 == 0) {
 			let carried = Entity.getCarriedItem(player);
 			if (ChargeItemRegistry.isValidItem(carried.id, "Eu", this.tier, "tool")) {
@@ -23,10 +23,10 @@ extends ItemArmorElectric {
 				if (energyAdd > 0) {
 					ChargeItemRegistry.setEnergyStored(item, energyStored - energyAdd);
 					Entity.setCarriedItem(player, carried.id, 1, carried.data, carried.extra);
-					Entity.setArmorSlot(player, 1, item.id, 1, item.data, item.extra);
+					return item;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 }

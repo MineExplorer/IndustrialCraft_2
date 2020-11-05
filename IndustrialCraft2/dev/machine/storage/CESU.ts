@@ -1,4 +1,4 @@
-/// <reference path="./BatBox.ts" />
+/// <reference path="./TileEntityBatteryBlock.ts" />
 
 IDRegistry.genBlockID("storageCESU");
 Block.createBlock("storageCESU", [

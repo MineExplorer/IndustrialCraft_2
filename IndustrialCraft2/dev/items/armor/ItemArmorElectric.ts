@@ -2,14 +2,13 @@
 
 abstract class ItemArmorElectric
 extends ItemArmorIC2
-implements IArmorFuncs {
+implements OnHurtListener, OnTickListener {
 	maxCharge: number
 	transferLimit: number
 	tier: number
 
 	constructor(nameID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, maxCharge: number, transferLimit: number, tier: number, inCreative?: boolean) {
 		super(nameID, name, params, false);
-		ItemArmor.registerFuncs(nameID, this);
 		this.maxCharge = maxCharge;
 		this.transferLimit = transferLimit;
 		this.tier = tier;
@@ -26,11 +25,11 @@ implements IArmorFuncs {
 		return name;
 	}
 
-	onHurt(params: {attacker: number, damage: number, type: number}, slot: ItemInstance, index: number, maxDamage: number): boolean {
+	onHurt(params: {attacker: number, damage: number, type: number}, slot: ItemInstance, index: number, player: number): boolean {
 		return false;
 	}
 
-	onTick(slot: ItemInstance, index: number, maxDamage: number): boolean {
+	onTick(slot: ItemInstance, index: number, player: number): boolean {
 		return false;
 	}
 }

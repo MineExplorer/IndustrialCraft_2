@@ -44,7 +44,7 @@ extends ItemArmorElectric {
 		return false;
 	}
 
-	onHurt(params: {attacker: number, damage: number, type: number}, slot: ItemInstance, index: number): boolean {
+	onHurt(params: {attacker: number, damage: number, type: number}, slot: ItemInstance, index: number, player: number): boolean {
 		var type = params.type;
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		var energyPerDamage = this.getEnergyPerDamage();
@@ -86,7 +86,7 @@ extends ItemArmorElectric {
 		return false;
 	}
 
-	onTick(slot: ItemInstance, index: number): boolean {
+	onTick(slot: ItemInstance, index: number, player: number): boolean {
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		if (this.isCharged && energyStored < this.getEnergyPerDamage()) {
 			slot.id = this.getDischarged();
@@ -127,13 +127,15 @@ extends ItemArmorElectric {
 				}
 				// night vision
 				if (newEnergyStored > 0 && slot.extra && slot.extra.getBoolean("nv")) {
-					var coords = Player.getPosition();
+					var coords = Entity.getPosition(player);
 					var time = World.getWorldTime()%24000;
+					// let region = BlockSource.getDefaultForActor(player);
+					// TODO: change to block source after Inner Core update
 					if (World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
-						Entity.addEffect(Player.get(), PotionEffect.blindness, 1, 25);
-						Entity.clearEffect(Player.get(), PotionEffect.nightVision);
+						Entity.addEffect(player, PotionEffect.blindness, 1, 25);
+						Entity.clearEffect(player, PotionEffect.nightVision);
 					} else {
-						Entity.addEffect(Player.get(), PotionEffect.nightVision, 1, 225);
+						Entity.addEffect(player, PotionEffect.nightVision, 1, 225);
 					}
 					if (World.getThreadTime()%20 == 0) {
 						newEnergyStored = Math.max(newEnergyStored - 20, 0);
@@ -148,24 +150,24 @@ extends ItemArmorElectric {
 			case 1:
 				if (slot.extra && slot.extra.getBoolean("hover")) {
 					Utils.resetFallHeight();
-					var vel = Player.getVelocity();
+					var vel = Entity.getVelocity(player);
 					if (Utils.isPlayerOnGround() || energyStored < 8) {
 						slot.extra.putBoolean("hover", false);
-						Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 						Game.message("§4" + Translation.translate("Hover mode disabled"));
+						return true;
 					}
 					else if (vel.y < -0.1) {
-						Player.addVelocity(0, Math.min(0.25, -0.1 - vel.y), 0);
+						Entity.addVelocity(player, 0, Math.min(0.25, -0.1 - vel.y), 0);
 						if (World.getThreadTime()%5 == 0) {
 							ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
-							Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+							return true;
 						}
 					}
 				}
 				Entity.setFire(player, 0, true);
 			break;
 			case 2:
-				var vel = Player.getVelocity();
+				var vel = Entity.getVelocity(player);
 				var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z);
 				// Game.tipMessage(horizontalVel);
 				if (horizontalVel <= 0.15) {
@@ -227,12 +229,12 @@ Callback.addCallback("Explosion", function(coords: Vector, params: {power: numbe
 	}
 });
 
-// deprecated
+/** @deprecated */
 var QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
-		return ItemArmorQuantumSuit.prototype.onHurt(params, item, index)
+		return ItemArmorQuantumSuit.prototype.onHurt(params, item, index, Player.get())
 	},
 	tick: function(item: ItemInstance, index: number): boolean {
-		return ItemArmorQuantumSuit.prototype.onTick(item, index)
+		return ItemArmorQuantumSuit.prototype.onTick(item, index, Player.get())
 	}
 }

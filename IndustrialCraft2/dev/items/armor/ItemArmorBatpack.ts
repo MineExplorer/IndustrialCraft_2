@@ -16,10 +16,10 @@ extends ItemArmorElectric {
 
 	onTick(item: ItemInstance, index: number, player: number): boolean {
 		if (World.getThreadTime() % 20 == 0) {
-			var carried = Entity.getCarriedItem(player);
+			let carried = Entity.getCarriedItem(player);
 			if (ChargeItemRegistry.isValidItem(carried.id, "Eu", this.tier, "tool")) {
-				var energyStored = ChargeItemRegistry.getEnergyStored(item);
-				var energyAdd = ChargeItemRegistry.addEnergyTo(carried, "Eu", energyStored, this.transferLimit*20, this.tier);
+				let energyStored = ChargeItemRegistry.getEnergyStored(item);
+				let energyAdd = ChargeItemRegistry.addEnergyTo(carried, "Eu", energyStored, this.transferLimit*20, this.tier);
 				if (energyAdd > 0) {
 					ChargeItemRegistry.setEnergyStored(item, energyStored - energyAdd);
 					Entity.setCarriedItem(player, carried.id, 1, carried.data, carried.extra);

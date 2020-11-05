@@ -1,3 +1,5 @@
+/// <reference path="./TileEntityBatteryBlock.ts" />
+
 IDRegistry.genBlockID("storageMFSU");
 Block.createBlock("storageMFSU", [
 	{name: "MFSU", texture: [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]], inCreative: true}
@@ -12,7 +14,7 @@ Block.registerDropFunction("storageMFSU", function(coords, blockID, blockData, l
 	return [];
 });
 
-ItemName.setRarity(BlockID.storageMFSU, 1, true);
+ItemName.setRarity(BlockID.storageMFSU, 1);
 ItemName.addStorageBlockTooltip("storageMFSU", 4, "60M");
 
 Callback.addCallback("PreLoaded", function() {

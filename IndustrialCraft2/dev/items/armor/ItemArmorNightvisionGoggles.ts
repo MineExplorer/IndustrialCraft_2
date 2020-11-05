@@ -7,20 +7,22 @@ extends ItemArmorElectric {
 		UIbuttons.setArmorButton(this.id, "button_nightvision");
 	}
 
-	onTick(slot: ItemInstance): boolean {
-		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
-		if (energyStored > 0 && slot.extra && slot.extra.getBoolean("nv")) {
-			var coords = Player.getPosition();
-			var time = World.getWorldTime()%24000;
+	onTick(item: ItemInstance, index: number, player: number): boolean {
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		if (energyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
+			let coords = Entity.getPosition(player);
+			let time = World.getWorldTime()%24000;
+			// let region = BlockSource.getDefaultForActor(player);
+			// TODO: change to block source after Inner Core update
 			if (World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
-				Entity.clearEffect(Player.get(), PotionEffect.nightVision);
-				Entity.addEffect(Player.get(), PotionEffect.blindness, 1, 25);
+				Entity.clearEffect(player, PotionEffect.nightVision);
+				Entity.addEffect(player, PotionEffect.blindness, 1, 25);
 			} else {
-				Entity.addEffect(Player.get(), PotionEffect.nightVision, 1, 225);
+				Entity.addEffect(player, PotionEffect.nightVision, 1, 225);
 			}
 			if (World.getThreadTime()%20 == 0) {
-				ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
-				Player.setArmorSlot(0, slot.id, 1, slot.data, slot.extra);
+				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
+				return true;
 			}
 		}
 		return false;

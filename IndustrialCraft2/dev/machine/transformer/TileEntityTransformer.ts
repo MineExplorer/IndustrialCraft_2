@@ -1,3 +1,5 @@
+/// <reference path="../TileEntityElectricMachine.ts" />
+
 class TileEntityTransformer 
 extends TileEntityElectricMachine {
 	defaultValues = {

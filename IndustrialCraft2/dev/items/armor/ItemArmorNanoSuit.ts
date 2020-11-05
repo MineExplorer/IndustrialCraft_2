@@ -26,8 +26,8 @@ extends ItemArmorElectric {
 	}
 
 	createDischarged(defence: number, texture: string) {
-		var nameID = this.nameID + "Discharged";
-		var instance = new ItemArmorNanoSuit(nameID, this.name, {type: this.armorType, defence: defence, texture: texture}, true);
+		let nameID = this.nameID + "Discharged";
+		let instance = new ItemArmorNanoSuit(nameID, this.name, {type: this.armorType, defence: defence, texture: texture}, true);
 		instance.chargedID = this.id;
 		this.dischargedID = instance.id;
 	}
@@ -36,28 +36,28 @@ extends ItemArmorElectric {
 		return 2000;
 	}
 	
-	onHurt(params: {attacker: number, damage: number, type: number}, slot: ItemInstance, index: number): boolean {
-		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
-		var type = params.type;
-		var energyPerDamage = this.getEnergyPerDamage();
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): boolean {
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		let type = params.type;
+		let energyPerDamage = this.getEnergyPerDamage();
 		if (energyStored >= energyPerDamage) {
 			if (type == 2 || type == 3 || type == 11) {
-				var energy = params.damage * energyPerDamage;
-				ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - energy, 0));
+				let energy = params.damage * energyPerDamage;
+				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
 				return true;
 			}
 			if (index == 3 && type == 5) {
-				var damage = Utils.getFallDamage();
+				let damage = Utils.getFallDamage();
 				if (damage > 0) {
 					damage = Math.min(damage, params.damage);
-					var damageReduce = Math.min(Math.min(9, damage), Math.floor(energyStored / energyPerDamage));
-					var damageTaken = damage - damageReduce;
+					let damageReduce = Math.min(Math.min(9, damage), Math.floor(energyStored / energyPerDamage));
+					let damageTaken = damage - damageReduce;
 					if (damageTaken > 0) {
 						Entity.setHealth(player, Entity.getHealth(player) + params.damage - damageTaken);
 					} else {
 						Game.prevent();
 					}
-					ChargeItemRegistry.setEnergyStored(slot, energyStored - damageReduce * energyPerDamage);
+					ChargeItemRegistry.setEnergyStored(item, energyStored - damageReduce * energyPerDamage);
 					return true;
 				}
 			}
@@ -65,42 +65,45 @@ extends ItemArmorElectric {
 		return false;
 	}
 
-	onTick(slot: ItemInstance, index: number): boolean {
-		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
+	onTick(item: ItemInstance, index: number, player: number): boolean {
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		let wasChanged = false;
 		if (this.isCharged && energyStored < this.getEnergyPerDamage()) {
-			slot.id = this.getDischargedID();
-			Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+			item.id = this.getDischargedID();
+			wasChanged = true;
 		}
 		if (!this.isCharged && energyStored >= this.getEnergyPerDamage()) {
-			slot.id = this.getChargedID();
-			Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+			item.id = this.getChargedID();
+			wasChanged = true;
 		}
 		// night vision
-		if (index == 0 && energyStored > 0 && slot.extra && slot.extra.getBoolean("nv")) {
-			var coords = Player.getPosition();
-			var time = World.getWorldTime()%24000;
+		if (index == 0 && energyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
+			let coords = Entity.getPosition(player);
+			let time = World.getWorldTime()%24000;
+			// let region = BlockSource.getDefaultForActor(player);
+			// TODO: change to block source after Inner Core update
 			if (World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
-				Entity.addEffect(Player.get(), PotionEffect.blindness, 1, 25);
-				Entity.clearEffect(Player.get(), PotionEffect.nightVision);
+				Entity.addEffect(player, PotionEffect.blindness, 1, 25);
+				Entity.clearEffect(player, PotionEffect.nightVision);
 			} else {
-				Entity.addEffect(Player.get(), PotionEffect.nightVision, 1, 225);
+				Entity.addEffect(player, PotionEffect.nightVision, 1, 225);
 			}
-			Entity.addEffect(Player.get(), PotionEffect.nightVision, 1, 225);
+			Entity.addEffect(player, PotionEffect.nightVision, 1, 225);
 			if (World.getThreadTime()%20 == 0) {
-				ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
-				Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
+				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
+				return true;
 			}
 		}
-		return false;
+		return wasChanged;
 	}
 }
 
-// deprecated
-var NANO_ARMOR_FUNCS = {
+/** @deprecated */
+let NANO_ARMOR_FUNCS = {
 	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
-		return ItemArmorNanoSuit.prototype.onHurt(params, item, index)
+		return ItemArmorNanoSuit.prototype.onHurt(params, item, index, Player.get())
 	},
 	tick: function(item: ItemInstance, index: number): boolean {
-		return ItemArmorNanoSuit.prototype.onTick(item, index)
+		return ItemArmorNanoSuit.prototype.onTick(item, index, Player.get())
 	}
 }

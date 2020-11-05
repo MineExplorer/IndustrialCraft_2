@@ -359,7 +359,7 @@ declare namespace Armor {
      * @returns the {id: , count: , data: , extra: } object to change armor item,
      * if nothing is returned, armor will not be changed.
      */
-    function registerOnTickListener(id: string, func: (
+    function registerOnTickListener(id: number, func: (
         item: ItemInstance, slot: number, player: number
     ) => void): ItemInstance | void;
 
@@ -368,21 +368,21 @@ declare namespace Armor {
      * @returns the {id: , count: , data: , extra: } object to change armor item,
      * if nothing is returned, armor will be damaged by default.
      */
-    function registerOnHurtListener(id: string, func: (
+    function registerOnHurtListener(id: number, func: (
         item: ItemInstance, slot: number, player: number, value: number, type: number, attacker: number, bool1: boolean, bool2: boolean
     ) => void): ItemInstance | void;
 
     /**
      * This event is called when player takes on this armor, or spawns with it.
      */
-    function registerOnTakeOnListener(id: string, func: (
+    function registerOnTakeOnListener(id: number, func: (
         item: ItemInstance, slot: number, player: number
     ) => void): void;
 
     /**
      * This event is called when player takes off or changes this armor item.
      */
-    function registerOnTakeOffListener(id: string, func: (
+    function registerOnTakeOffListener(id: number, func: (
         item: ItemInstance, slot: number, player: number
     ) => void): void;
 }
@@ -399,7 +399,7 @@ declare namespace Block {
 	 * @returns block numeric id by its string id or just returns its numeric id 
 	 * if input was a numeric id
 	 */
-	function getNumericId(id: string): number;
+	function getNumericId(id: string | number): number;
 
 	/**
 	 * Creates new block using specified params
@@ -1557,7 +1557,7 @@ declare namespace Callback {
      * @param player player actor uID
      */
     interface ItemUseFunction {
-        (coords: ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal:boolean, player: number): void
+        (coords: ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void
     }
 
     /**

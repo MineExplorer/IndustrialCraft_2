@@ -11,9 +11,7 @@ TileRenderer.setRotationFunction(BlockID.transformerMV, true);
 
 MachineRegistry.setMachineDrop("transformerMV", BlockID.machineBlockBasic);
 
-Item.registerNameOverrideFunction(BlockID.transformerMV, function(item, name) {
-	return name + "\n§7Low: 128 EU/t High: 512 EU/t";
-});
+ItemName.addTooltip(BlockID.transformerMV, "Low: 128 EU/t High: 512 EU/t");
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.transformerMV, count: 1, data: 0}, [

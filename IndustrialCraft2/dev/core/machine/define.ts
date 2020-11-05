@@ -1,3 +1,7 @@
+/// <reference path="../../machine/TileEntityMachine.ts" />
+/// <reference path="../../machine/TileEntityElectricMachine.ts" />
+/// <reference path="../../machine/TileEntityGenerator.ts" />
+
 namespace MachineRegistry {
 	var machineIDs = {}
 
@@ -12,6 +16,66 @@ namespace MachineRegistry {
 		ToolAPI.registerBlockMaterial(id, "stone", 1, true);
 		Block.setDestroyTime(id, 3);
 		TileEntity.registerPrototype(id, Prototype);
+
+		// audio
+		if (Prototype.getOperationSound) {
+			Prototype.audioSource = null;
+			Prototype.finishingSound = 0;
+
+			if (!Prototype.getStartingSound) {
+				Prototype.getStartingSound = function() {return null;}
+			}
+
+			if (!Prototype.getInterruptSound) {
+				Prototype.getInterruptSound = function() {return null;}
+			}
+			
+			Prototype.startPlaySound = Prototype.startPlaySound || function() {
+				if (!ConfigIC.machineSoundEnabled) return;
+				if (!this.audioSource && !this.remove) {
+					if (this.finishingSound != 0) {
+						SoundManager.stop(this.finishingSound);
+					}
+					if (this.getStartingSound()) {
+						this.audioSource = SoundManager.createSource(AudioSource.TILEENTITY, this, this.getStartingSound());
+						this.audioSource.setNextSound(this.getOperationSound(), true);
+					} else {
+						this.audioSource = SoundManager.createSource(AudioSource.TILEENTITY, this, this.getOperationSound());
+					}
+				}
+			}
+			
+			Prototype.stopPlaySound = Prototype.stopPlaySound || function() {
+				if (this.audioSource) {
+					SoundManager.removeSource(this.audioSource);
+					this.audioSource = null;
+					if (this.getInterruptSound()) {
+						this.finishingSound = SoundManager.playSoundAtBlock(this, this.getInterruptSound());
+					}
+				}
+			}
+		}
+
+		// machine activation
+		if (Prototype.defaultValues && Prototype.defaultValues.isActive !== undefined) {
+			if (!Prototype.renderModel) {
+				Prototype.renderModel = Prototype.renderModelWithRotation;
+			}
+			
+			Prototype.setActive = Prototype.setActive || Prototype.setActive;
+			
+			Prototype.activate = Prototype.activate || function() {
+				this.setActive(true);
+			}
+			Prototype.deactivate = Prototype.deactivate || function() {
+				this.setActive(false);
+			}
+			
+		}
+		
+		if (!Prototype.init && Prototype.renderModel) {
+			Prototype.init = Prototype.renderModel;
+		}
 
 		if (Prototype instanceof TileEntityElectricMachine) {
 			// wire connection

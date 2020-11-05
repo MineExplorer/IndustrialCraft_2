@@ -1,7 +1,5 @@
 class ItemArmorIC2
 extends ItemArmor {
-	rarity: number
-
 	constructor(nameID: string, name: string, params: ArmorParams, inCreative?: boolean) {
 		super(nameID, name, name, params);
 		this.createItem(inCreative);

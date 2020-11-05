@@ -276,7 +276,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api) {
 	});
 
 
-	bmp = new Bitmap.createBitmap(63, 55, Bitmap.ConfigIC.ARGB_8888);
+	bmp = new Bitmap.createBitmap(63, 55, Bitmap.Config.ARGB_8888);
 	cvs = new Canvas(bmp);
 	source = UI.TextureSource.get("ore_washer_background");
 	cvs.drawBitmap(source, new Rect(56, 17, 80, 72), new Rect(0, 0, 24, 55), null);
@@ -330,7 +330,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api) {
 		}
 	});
 
-	bmp = Bitmap.createBitmap(80, 60, Bitmap.ConfigIC.ARGB_8888);
+	bmp = Bitmap.createBitmap(80, 60, Bitmap.Config.ARGB_8888);
 	cvs = new Canvas(bmp);
 	cvs.drawBitmap(UI.TextureSource.get("thermal_centrifuge_background"), 0, 0, null);
 	cvs.drawBitmap(UI.TextureSource.get("thermal_centrifuge_scale"), 44, 7, null);
@@ -391,7 +391,7 @@ ModAPI.addAPICallback("RecipeViewer", function(api) {
 	});
 
 
-	bmp = Bitmap.createBitmap(104, 64, Bitmap.ConfigIC.ARGB_8888);
+	bmp = Bitmap.createBitmap(104, 64, Bitmap.Config.ARGB_8888);
 	cvs = new Canvas(bmp);
 	cvs.drawBitmap(UI.TextureSource.get("blast_furnace_background"), 0, -11, null);
 	cvs.drawBitmap(UI.TextureSource.get("blast_furnace_scale"), 50, 16, null);

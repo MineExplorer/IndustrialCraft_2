@@ -18,25 +18,25 @@ declare class BlockBase {
     registerTileEntity(prototype: any): void;
 }
 interface INameOverrideable {
-    onNameOverride(item: ItemStack, translation: string, name: string): string;
+    onNameOverride(item: ItemInstance, translation: string, name: string): string;
 }
 interface IIconOverrideable {
-    onIconOverride(item: ItemStack): Item.TextureData;
+    onIconOverride(item: ItemInstance): Item.TextureData;
 }
 interface IUseable {
-    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void;
+    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void;
 }
 interface INoTargetUse {
-    onUseNoTarget(item: ItemStack, ticks: number): void;
+    onUseNoTarget(item: ItemInstance, ticks: number): void;
 }
 interface IUsingReleased {
-    onUsingReleased(item: ItemStack, ticks: number): void;
+    onUsingReleased(item: ItemInstance, ticks: number): void;
 }
 interface IUsingComplete {
-    onUsingComplete(item: ItemStack): void;
+    onUsingComplete(item: ItemInstance): void;
 }
 interface IDispenceBehavior {
-    onDispense(coords: Callback.ItemUseCoordinates, item: ItemStack): void;
+    onDispense(coords: Callback.ItemUseCoordinates, item: ItemInstance): void;
 }
 declare type ItemFuncs = INameOverrideable & IIconOverrideable & IUseable & INoTargetUse & IUsingReleased & IUsingComplete & IDispenceBehavior;
 declare class ItemBasic {
@@ -64,17 +64,23 @@ declare class ItemBasic {
     setRarity(rarity: number): this;
     getRarityCode(rarity: number): string;
 }
-interface IArmorFuncs {
+interface OnHurtListener {
     onHurt: (params: {
         attacker: number;
         damage: number;
         type: number;
         bool1: boolean;
         bool2: boolean;
-    }, item: ItemStack, slot: number, player: number) => void | ItemStack;
-    onTick: (item: ItemStack, slot: number, player: number) => void | ItemStack;
-    onTakeOn: (item: ItemStack, slot: number, player: number) => void;
-    onTakeOff: (item: ItemStack, slot: number, player: number) => void;
+    }, item: ItemInstance, slot: number, player: number) => boolean;
+}
+interface OnTickListener {
+    onTick: (item: ItemInstance, slot: number, player: number) => boolean;
+}
+interface OnTakeOnListener {
+    onTakeOn: (item: ItemInstance, slot: number, player: number) => void;
+}
+interface OnTakeOffListener {
+    onTakeOff: (item: ItemInstance, slot: number, player: number) => void;
 }
 declare type ArmorMaterial = {
     durabilityFactor: number;
@@ -98,7 +104,7 @@ declare class ItemArmor extends ItemBasic {
     createItem(inCreative?: boolean): this;
     setArmorTexture(texture: string): this;
     setMaterial(armorMaterial: string | ArmorMaterial): this;
-    static registerFuncs(id: string, armorFuncs: IArmorFuncs): void;
+    static registerListeners(id: string, armorFuncs: ItemArmor | OnHurtListener | OnTickListener | OnTakeOnListener | OnTakeOffListener): void;
 }
 declare namespace ItemRegistry {
     function addArmorMaterial(name: string, material: ArmorMaterial): void;
@@ -134,7 +140,7 @@ declare abstract class TileEntityBase implements TileEntity {
     remove: boolean;
     isLoaded: boolean;
     private __initialized;
-    useNetworkItemContainer: true;
+    useNetworkItemContainer: boolean;
     blockSource: BlockSource;
     networkData: SyncedNetworkData;
     networkEntity: NetworkEntity;
@@ -144,6 +150,8 @@ declare abstract class TileEntityBase implements TileEntity {
     init(): void;
     tick(): void;
     onCheckerTick(isInitialized: boolean, isLoaded: boolean, wasLoaded: boolean): void;
+    getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
+    getScreenByName(screenName: string): any;
     onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean;
     click(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean;
     destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void;
@@ -154,8 +162,6 @@ declare abstract class TileEntityBase implements TileEntity {
     }): void;
     projectileHit(coords: Callback.ItemUseCoordinates, target: Callback.ProjectileHitTarget): void;
     destroy(): boolean;
-    getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
-    getScreenByName(screenName: string): any;
     selfDestroy(): void;
     requireMoreLiquid(liquid: string, amount: number): void;
     sendPacket(name: string, data: object): void;

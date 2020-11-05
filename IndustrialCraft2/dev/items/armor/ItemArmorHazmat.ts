@@ -2,19 +2,18 @@
 
 class ItemArmorHazmat
 extends ItemArmorIC2
-implements IArmorFuncs {
+implements OnHurtListener, OnTickListener {
 	constructor(nameID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}) {
 		super(nameID, name, params);
 		this.setMaxDamage(64);
-		ItemArmor.registerFuncs(nameID, this);
 		RadiationAPI.registerHazmatArmor(this.id);
 	}
 
-	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, maxDamage: number): boolean {
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): boolean {
 		var type = params.type;
 		if (type == 2 || type == 3 || type == 11) {
 			item.data += Math.ceil(params.damage / 4);
-			if (item.data >= maxDamage) {
+			if (item.data >= Item.getMaxDamage(this.id)) {
 				item.id = item.count = 0;
 			}
 			return true;
@@ -40,7 +39,7 @@ implements IArmorFuncs {
 				Entity.setHealth(player, Entity.getHealth(player) + params.damage - Dp);
 			}
 			item.data += Db;
-			if (item.data >= maxDamage) {
+			if (item.data >= Item.getMaxDamage(this.id)) {
 				item.id = item.count = 0;
 			}
 			return true;
@@ -48,8 +47,11 @@ implements IArmorFuncs {
 		return false;
 	}
 
-	onTick(item: ItemInstance, index: number, maxDamage: number): boolean {
-		if (index == 0 && Player.getArmorSlot(1).id == ItemID.hazmatChestplate && Player.getArmorSlot(2).id == ItemID.hazmatLeggings && Player.getArmorSlot(3).id == ItemID.rubberBoots) {
+	onTick(item: ItemInstance, index: number, player: number): boolean {
+		if (index == 0
+			&& Entity.getArmorSlot(player, 1).id == ItemID.hazmatChestplate
+			&& Entity.getArmorSlot(player, 2).id == ItemID.hazmatLeggings
+			&& Entity.getArmorSlot(player, 3).id == ItemID.rubberBoots) {
 			if (RadiationAPI.playerRad <= 0) {
 				Entity.clearEffect(player, PotionEffect.poison);
 			}

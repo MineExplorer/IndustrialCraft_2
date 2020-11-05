@@ -149,6 +149,7 @@ var ItemArmor = /** @class */ (function (_super) {
         this.item = Item.createArmorItem(this.nameID, this.name, this.icon, { type: this.armorType, armor: this.defence, durability: 0, texture: this.texture, isTech: !inCreative });
         if (this.armorMaterial)
             this.setMaterial(this.armorMaterial);
+        ItemArmor.registerListeners(this.id, this);
         return this;
     };
     ItemArmor.prototype.setArmorTexture = function (texture) {
@@ -173,19 +174,27 @@ var ItemArmor = /** @class */ (function (_super) {
         }
         return this;
     };
-    ItemArmor.registerFuncs = function (id, armorFuncs) {
-        Armor.registerOnHurtListener(id, function (item, slot, player, value, type, attacker, bool1, bool2) {
-            return armorFuncs.onHurt({ attacker: attacker, damage: value, type: type, bool1: bool1, bool2: bool2 }, item, slot, player);
-        });
-        Armor.registerOnTickListener(id, function (item, slot, player) {
-            return armorFuncs.onTick(item, slot, player);
-        });
-        Armor.registerOnTakeOnListener(id, function (item, slot, player) {
-            armorFuncs.onTakeOn(item, slot, player);
-        });
-        Armor.registerOnTakeOffListener(id, function (item, slot, player) {
-            armorFuncs.onTakeOff(item, slot, player);
-        });
+    ItemArmor.registerListeners = function (id, armorFuncs) {
+        if ('onHurt' in armorFuncs) {
+            Armor.registerOnHurtListener(id, function (item, slot, player, value, type, attacker, bool1, bool2) {
+                return armorFuncs.onHurt({ attacker: attacker, damage: value, type: type, bool1: bool1, bool2: bool2 }, item, slot, player);
+            });
+        }
+        if ('onTick' in armorFuncs) {
+            Armor.registerOnTickListener(id, function (item, slot, player) {
+                return armorFuncs.onTick(item, slot, player);
+            });
+        }
+        if ('onTakeOn' in armorFuncs) {
+            Armor.registerOnTakeOnListener(id, function (item, slot, player) {
+                armorFuncs.onTakeOn(item, slot, player);
+            });
+        }
+        if ('onTakeOff' in armorFuncs) {
+            Armor.registerOnTakeOffListener(id, function (item, slot, player) {
+                armorFuncs.onTakeOff(item, slot, player);
+            });
+        }
     };
     ItemArmor.maxDamageArray = [11, 16, 15, 13];
     return ItemArmor;
@@ -265,24 +274,21 @@ var ItemRegistry;
     }
     ItemRegistry.createArmorItem = createArmorItem;
 })(ItemRegistry || (ItemRegistry = {}));
-EXPORT("BlockBase", BlockBase);
-EXPORT("ItemBasic", ItemBasic);
-EXPORT("ItemArmor", ItemArmor);
-EXPORT("ItemRegistry", ItemRegistry);
 var TileEntityBase = /** @class */ (function () {
     function TileEntityBase() {
+        this.useNetworkItemContainer = true;
     }
-    TileEntityBase.prototype.created = function () {
+    TileEntityBase.prototype.created = function () { };
+    TileEntityBase.prototype.load = function () { };
+    TileEntityBase.prototype.unload = function () { };
+    TileEntityBase.prototype.init = function () { };
+    TileEntityBase.prototype.tick = function () { };
+    TileEntityBase.prototype.onCheckerTick = function (isInitialized, isLoaded, wasLoaded) { };
+    TileEntityBase.prototype.getScreenName = function (player, coords) {
+        return "main";
     };
-    TileEntityBase.prototype.load = function () {
-    };
-    TileEntityBase.prototype.unload = function () {
-    };
-    TileEntityBase.prototype.init = function () {
-    };
-    TileEntityBase.prototype.tick = function () {
-    };
-    TileEntityBase.prototype.onCheckerTick = function (isInitialized, isLoaded, wasLoaded) {
+    TileEntityBase.prototype.getScreenByName = function (screenName) {
+        return null;
     };
     TileEntityBase.prototype.onItemUse = function (coords, item, player) {
         return false;
@@ -290,28 +296,22 @@ var TileEntityBase = /** @class */ (function () {
     TileEntityBase.prototype.click = function (id, count, data, coords, player, extra) {
         return this.onItemUse(coords, new ItemStack(id, count, data, extra), player);
     };
-    TileEntityBase.prototype.destroyBlock = function (coords, player) {
-    };
-    TileEntityBase.prototype.redstone = function (params) {
-    };
-    TileEntityBase.prototype.projectileHit = function (coords, target) {
-    };
+    TileEntityBase.prototype.destroyBlock = function (coords, player) { };
+    TileEntityBase.prototype.redstone = function (params) { };
+    TileEntityBase.prototype.projectileHit = function (coords, target) { };
     TileEntityBase.prototype.destroy = function () {
         return false;
-    };
-    TileEntityBase.prototype.getScreenName = function (player, coords) {
-        return "main";
-    };
-    TileEntityBase.prototype.getScreenByName = function (screenName) {
-        return null;
     };
     TileEntityBase.prototype.selfDestroy = function () {
         TileEntity.destroyTileEntity(this);
     };
     TileEntityBase.prototype.requireMoreLiquid = function (liquid, amount) { };
     TileEntityBase.prototype.sendPacket = function (name, data) { };
-    ;
     TileEntityBase.prototype.sendResponse = function (packetName, someData) { };
-    ;
     return TileEntityBase;
 }());
+EXPORT("BlockBase", BlockBase);
+EXPORT("ItemBasic", ItemBasic);
+EXPORT("ItemArmor", ItemArmor);
+EXPORT("ItemRegistry", ItemRegistry);
+EXPORT("TileEntityBase", TileEntityBase);

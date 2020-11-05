@@ -141,7 +141,7 @@ Callback.addCallback("tick", function() {
 				var unit = " EU/t";
 				var energyIn = energyOut = 0;
 				if (EUReader.tile) {
-					energyIn = r(EUReader.tile.data.last_energy_receive);
+					energyIn = r(EUReader.tile.last_energy_receive);
 					if (EUReader.net) {
 						energyOut = r(EUReader.net.lastTransfered);
 					}
@@ -163,7 +163,7 @@ Callback.addCallback("tick", function() {
 			} else {
 				var unit = " V";
 				if (EUReader.tile) {
-					currentValue = r(EUReader.tile.data.last_voltage);
+					currentValue = r(EUReader.tile.last_voltage);
 				}
 				else if (EUReader.net) {
 					currentValue = r(EUReader.net.lastVoltage);

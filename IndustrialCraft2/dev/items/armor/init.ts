@@ -1,3 +1,12 @@
+/// <reference path="./ItemArmorIC2.ts" />
+/// <reference path="./ItemArmorHazmat.ts" />
+/// <reference path="./ItemArmorJetpackElectric.ts" />
+/// <reference path="./ItemArmorBatpack.ts" />
+/// <reference path="./ItemArmorNightvisionGoggles.ts" />
+/// <reference path="./ItemArmorNanoSuit.ts" />
+/// <reference path="./ItemArmorQuantumSuit.ts" />
+/// <reference path="./ItemArmorSolarHelmet.ts" />
+
 ItemRegistry.addArmorMaterial("bronze", {durabilityFactor: 14, enchantability: 10, repairItem: ItemID.ingotBronze});
 
 new ItemArmorIC2("bronzeHelmet", "bronze_helmet", {type: "helmet", defence: 2, texture: "bronze", material: "bronze"});

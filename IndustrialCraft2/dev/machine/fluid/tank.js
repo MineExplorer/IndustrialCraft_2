@@ -2,6 +2,7 @@ IDRegistry.genBlockID("tank");
 Block.createBlock("tank", [
 	{name: "Tank", texture: [["machine_bottom", 0], ["machine_top", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0]], inCreative: true}
 ], "machine");
+ToolAPI.registerBlockMaterial(BlockID.tank, "stone", 1, true);
 
 MachineRegistry.setMachineDrop("tank");
 

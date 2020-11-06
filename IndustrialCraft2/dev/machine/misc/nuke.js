@@ -2,8 +2,10 @@ IDRegistry.genBlockID("nuke");
 Block.createBlock("nuke", [
 	{name: "Nuke", texture: [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]], inCreative: true}
 ], "machine");
+ToolAPI.registerBlockMaterial(BlockID.nuke, "stone", 1, true);
 ItemName.setRarity(BlockID.nuke, 1, true);
-TileRenderer.setStandartModel(BlockID.nuke, [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]]);
+
+TileRenderer.setStandardModel(BlockID.nuke, 0, [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]]);
 TileRenderer.registerRenderModel(BlockID.nuke, 0, [["tnt_active", 0]]);
 
 Callback.addCallback("PreLoaded", function() {

@@ -117,14 +117,14 @@ MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 	}
 });
 
-Block.registerPlaceFunction("luminator", function(coords, item, block) {
+Block.registerPlaceFunction("luminator", function(coords, item, block, player, region) {
 	var x = coords.relative.x;
 	var y = coords.relative.y;
 	var z = coords.relative.z;
-	block = this.blockSource.getBlockID(x, y, z)
+	block = region.getBlockID(x, y, z)
 	if (GenerationUtils.isTransparentBlock(block)) {
-		this.blockSource.setBlock(x, y, z, item.id, coords.side);
+		region.setBlock(x, y, z, item.id, coords.side);
 		//World.playSound(x, y, z, "dig.stone", 1, 0.8)
-		World.addTileEntity(x, y, z, this.blockSource);
+		World.addTileEntity(x, y, z, region);
 	}
 });

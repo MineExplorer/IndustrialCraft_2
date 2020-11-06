@@ -2,6 +2,7 @@ IDRegistry.genBlockID("solarDistiller");
 Block.createBlock("solarDistiller", [
 	{name: "Solar Distiller", texture: [["machine_bottom", 0], ["solar_distiller", 0], ["solar_distiller", 0], ["solar_distiller", 0], ["solar_distiller", 0], ["solar_distiller", 0]], inCreative: true}
 ], "machine");
+ToolAPI.registerBlockMaterial(BlockID.solarDistiller, "stone", 1, true);
 
 MachineRegistry.setMachineDrop("solarDistiller", BlockID.machineBlockBasic);
 

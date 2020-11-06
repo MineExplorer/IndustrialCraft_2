@@ -2,6 +2,8 @@ IDRegistry.genBlockID("stirlingGenerator");
 Block.createBlock("stirlingGenerator", [
 	{name: "Stirling Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator", 0], ["heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
+ToolAPI.registerBlockMaterial(BlockID.stirlingGenerator, "stone", 1, true);
+
 TileRenderer.setStandartModel(BlockID.stirlingGenerator, [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator", 0], ["heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerFullRotationModel(BlockID.stirlingGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator", 0], ["heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]]);
 

@@ -13,7 +13,7 @@ By using the library you automatically agree to these rules.
 
 LIBRARY({
 	name: "ToolLib",
-	version: 20,
+	version: 22,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -47,7 +47,7 @@ var ToolType = {
 		useItem: function(coords, item, block) {
 			if (block.id == 2 && coords.side == 1) { 
 				World.setBlock(coords.x, coords.y, coords.z, 198);
-				World.playSoundAt(coords.x + .5, coords.y + 1, coords.z + .5, "step.grass", 0.5, 0.8);
+				World.playSound(coords.x + .5, coords.y + 1, coords.z + .5, "step.grass", 0.5, 0.8);
 				ToolLib.breakCarriedTool(1);
 			}
 		}
@@ -63,13 +63,29 @@ var ToolType = {
 		enchantType: Native.EnchantType.axe,
 		damage: 3,
 		blockTypes: ["wood"],
+		useItem: function(coords, item, block) {
+			if (block.id == 17) {
+				if (block.data == 0) logID = VanillaTileID.stripped_oak_log;
+				if (block.data == 1) logID = VanillaTileID.stripped_spruce_log;
+				if (block.data == 2) logID = VanillaTileID.stripped_birch_log;
+				if (block.data == 3) logID = VanillaTileID.stripped_jungle_log;
+				World.setBlock(coords.x, coords.y, coords.z, logID, 0);
+				ToolLib.breakCarriedTool(1);
+			}
+			else if (block.id == 162) {
+				if (block.data == 0) logID = VanillaTileID.stripped_acacia_log;
+				else logID = VanillaTileID.stripped_dark_oak_log;
+				World.setBlock(coords.x, coords.y, coords.z, logID, 0);
+				ToolLib.breakCarriedTool(1);
+			}
+		}
 	},
 	
 	hoe: {
 		useItem: function(coords, item, block) {
 			if ((block.id == 2 || block.id == 3) && coords.side == 1) { 
 				World.setBlock(coords.x, coords.y, coords.z, 60);
-				World.playSoundAt(coords.x + .5, coords.y + 1, coords.z + .5, "step.gravel", 1, 0.8);
+				World.playSound(coords.x + .5, coords.y + 1, coords.z + .5, "step.gravel", 1, 0.8);
 				ToolLib.breakCarriedTool(1);
 			}
 		}
@@ -223,5 +239,13 @@ var ToolLib = {
 ToolAPI.setTool = ToolLib.setTool;
 ToolAPI.breakCarriedTool = ToolLib.breakCarriedTool;
 
+var MiningLevel = {
+	STONE: 1,
+	IRON: 2,
+	DIAMOND: 3,
+	OBSIDIAN: 4
+}
+
 EXPORT("ToolLib", ToolLib);
 EXPORT("ToolType", ToolType);
+EXPORT("MiningLevel", MiningLevel);

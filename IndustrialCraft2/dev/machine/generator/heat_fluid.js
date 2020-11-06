@@ -134,7 +134,7 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 	spreadHeat: function(heat) {
 		var side = this.data.meta;
 		var coords = StorageInterface.getRelativeCoords(this, side);
-		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
+		var TE = World.getTileEntity(coords.x, coords.y, coords.z, this.blockSource);
 		if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 			var output = TE.heatReceive(heat);
 			this.container.setText("textInfo1", "Emit: " + output);

@@ -99,7 +99,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
             }
         }
         this.data.energy -= 1;
-        var cropTile = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
+        var cropTile = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ, this.blockSource);
         if (cropTile && cropTile.crop && !this.isInvFull()) {
             var drops = null;
             if (cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)) {
@@ -115,7 +115,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
                     this.data.energy -= 100;
 
                     if (item.count > 0) {
-                        World.drop(this.x, this.y + 1, this.z, item.id, item.count, item.data);
+                        this.blockSource.spawnDroppedItem(this.x, this.y + 1, this.z, item.id, item.count, item.data);
                     }
                 }
             }

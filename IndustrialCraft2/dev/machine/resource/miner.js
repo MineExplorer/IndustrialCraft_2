@@ -92,7 +92,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				this.data.z++;
 			}
 			if (this.data.z > this.z + r) break;
-			var blockID = World.getBlockID(this.data.x, this.data.scanY, this.data.z);
+			var blockID = this.blockSource.getBlockID(this.data.x, this.data.scanY, this.data.z);
 			if (ore_blocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)) {
 				return true;
 			}
@@ -113,7 +113,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	},
 	
 	findPath: function(x, y, z, sprc, level) {
-		var block = World.getBlock(x, y, z);
+		var block = this.blockSource.getBlock(x, y, z);
 		if (block.id == BlockID.miningPipe || this.isEmptyBlock(block)) {
 			var dx = this.data.x - x;
 			var dz = this.data.z - z;
@@ -145,7 +145,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		for (var i in drop) {
 			items.push({id: drop[i][0], count: drop[i][1], data: drop[i][2]});
 		}
-		var container = World.getContainer(x, y, z);
+		var container = World.getContainer(x, y, z, this.blockSource);
 		if (container) {
 			slots = StorageInterface.getContainerSlots(container);
 			for (var i in slots) {
@@ -161,9 +161,9 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 			}
 		}
 		if (block.id == 79) {
-			World.setBlock(x, y, z, 8);
+			this.blockSource.setBlock(x, y, z, 8);
 		} else {
-			World.setBlock(x, y, z, 0);
+			this.blockSource.setBlock(x, y, z, 0);
 		}
 		this.drop(items);
 		this.data.progress = 0;
@@ -171,8 +171,8 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	
 	setPipe: function(y, slot) {
 		if (y < this.y)
-			World.setBlock(this.x, y, this.z, BlockID.miningPipe, 0);
-		World.setBlock(this.x, y-1, this.z, BlockID.miningPipe, 1);
+			this.blockSource.setBlock(this.x, y, this.z, BlockID.miningPipe, 0);
+		this.blockSource.setBlock(this.x, y-1, this.z, BlockID.miningPipe, 1);
 		slot.count--;
 		if (!slot.count) slot.id = 0;
 		this.data.progress = 0;
@@ -190,9 +190,10 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 	},
 	
 	tick: function() {
+		let region = this.blockSource;
 		if (this.data.progress == 0) {
 			var y = this.y;
-			while(World.getBlockID(this.x, y-1, this.z) == BlockID.miningPipe) {
+			while(region.getBlockID(this.x, y-1, this.z) == BlockID.miningPipe) {
 				y--;
 			}
 			this.data.y = y;
@@ -228,7 +229,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				}
 				var coords = this.findPath(this.x, this.data.y, this.z, prc, level);
 				if (coords) {
-					var block = World.getBlock(coords.x, coords.y, coords.z);
+					var block = region.getBlock(coords.x, coords.y, coords.z);
 					var params = this.getMiningValues(drillSlot);
 					if (this.data.energy >= params.energy) {
 						this.data.energy -= params.energy;
@@ -242,7 +243,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				}
 			}
 			else if (this.data.y > 0 && pipeSlot.id == BlockID.miningPipe) {
-				var block = World.getBlock(this.x, this.data.y-1, this.z);
+				var block = region.getBlock(this.x, this.data.y-1, this.z);
 				if (this.isEmptyBlock(block)) {
 					if (this.data.energy >= 3) {
 						this.data.energy -= 3;
@@ -254,7 +255,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 					}
 				}
 				else if (this.canBeDestroyed(block.id, level)) {
-					var block = World.getBlock(this.x, this.data.y-1, this.z);
+					var block = region.getBlock(this.x, this.data.y-1, this.z);
 					var params = this.getMiningValues(drillSlot);
 					if (this.data.energy >= params.energy) {
 						this.data.energy -= params.energy;
@@ -270,7 +271,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 			}
 		}
 		else {
-			if (World.getBlockID(this.x, this.data.y, this.z) == BlockID.miningPipe) {
+			if (region.getBlockID(this.x, this.data.y, this.z) == BlockID.miningPipe) {
 				if (this.data.energy >= 3) {
 					this.data.energy -= 3;
 					this.data.progress++;
@@ -281,11 +282,11 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 					var pipeSlot = this.container.getSlot("slotPipe");
 					if (pipeSlot.id != 0 && pipeSlot.id != BlockID.miningPipe && ToolLib.isBlock(pipeSlot.id) && !TileEntity.isTileEntityBlock(id)) {
 						var blockId = Block.convertItemToBlockId(pipeSlot.id);
-						World.setBlock(this.x, this.data.y, this.z, blockId, pipeSlot.data);
+						region.setBlock(this.x, this.data.y, this.z, blockId, pipeSlot.data);
 						pipeSlot.count--;
 						if (pipeSlot.count == 0) pipeSlot.id = 0;
 					}
-					else {World.setBlock(this.x, this.data.y, this.z, 0);}
+					else {region.setBlock(this.x, this.data.y, this.z, 0);}
 					this.data.scanY = 0;
 					this.data.progress = 0;
 				}

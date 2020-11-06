@@ -25,7 +25,7 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 	biomeCheck: function(x, z) {
 		var coords = [[x, z], [x-7, z], [x+7, z], [x, z-7], [x, z+7]];
 		for (var c in coords) {
-			var biome = World.getBiome(c[0], c[1]);
+			var biome = this.blockSource.getBiome(c[0], c[1]);
 			if (biome==0 || biome==24) {return "ocean";}
 			if (biome==7) {return "river";}
 		}
@@ -47,7 +47,7 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 				else if (biome=="ocean") {
 					output *= 1.5*Math.sin(World.getWorldTime()%6000/(6000/Math.PI));
 				}
-				var tile = World.getBlockID(
+				var tile = this.blockSource.getBlockID(
 					this.x - randomInt(-radius, radius),
 					this.y - randomInt(-radius, radius),
 					this.z - randomInt(-radius, radius)

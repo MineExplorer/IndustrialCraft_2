@@ -130,7 +130,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
         }
         this.data.energy -= 1;
 
-        var tileentity = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
+        var tileentity = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ, this.blockSource);
         if (tileentity && tileentity.crop) {
             var slotFertilizer = this.getSlot("slotFertilizer");
             var weedExSlot = this.getSlot("slotWeedEx");

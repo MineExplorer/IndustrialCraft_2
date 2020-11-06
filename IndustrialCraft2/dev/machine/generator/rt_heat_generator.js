@@ -73,7 +73,7 @@ MachineRegistry.registerGenerator(BlockID.rtHeatGenerator, {
 		if (output > 0) {
 			var side = this.data.meta;
 			var coords = StorageInterface.getRelativeCoords(this, side);
-			var TE = World.getTileEntity(coords.x, coords.y, coords.z);
+			var TE = World.getTileEntity(coords.x, coords.y, coords.z, this.blockSource);
 			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 				output = TE.heatReceive(output);
 			}

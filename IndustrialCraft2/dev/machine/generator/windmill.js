@@ -28,7 +28,7 @@ MachineRegistry.registerGenerator(BlockID.genWindmill, {
 		for (var x = -4; x <= 4; x++) {
 			for (var y = -2; y <= 2; y++) {
 				for (var z = -4; z <= 4; z++) {
-					if (World.getBlockID(this.x + x, this.y + y, this.z + z) != 0)
+					if (this.blockSource.getBlockID(this.x + x, this.y + y, this.z + z) != 0)
 					blockCount++;
 				}
 			}

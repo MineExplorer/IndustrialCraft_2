@@ -73,11 +73,11 @@ MachineRegistry.registerElectricMachine(BlockID.luminator, {
 	tick: function(type, src) {
 		if (this.data.isActive && this.data.energy >= 0.25) {
 			var x = this.x, y = this.y, z = this.z;
-			var blockData = World.getBlock(x, y, z).data;
+			var blockData = this.blockSource.getBlock(x, y, z).data;
 			var data = this.data;
 			this.selfDestroy();
-			World.setBlock(x, y, z, BlockID.luminator_on, blockData);
-			var tile = World.addTileEntity(x, y, z);
+			this.blockSource.setBlock(x, y, z, BlockID.luminator_on, blockData);
+			var tile = World.addTileEntity(x, y, z, this.blockSource);
 			tile.data = data;
 		}
 	}
@@ -94,11 +94,11 @@ MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 	
 	disable: function() {
 		var x = this.x, y = this.y, z = this.z;
-		var blockData = World.getBlock(x, y, z).data;
+		var blockData = this.blockSource.getBlock(x, y, z).data;
 		var data = this.data;
 		this.selfDestroy();
-		World.setBlock(x, y, z, BlockID.luminator, blockData);
-		tile = World.addTileEntity(x, y, z);
+		this.blockSource.setBlock(x, y, z, BlockID.luminator, blockData);
+		tile = World.addTileEntity(x, y, z, this.blockSource);
 		tile.data = data;
 	},
 	
@@ -118,13 +118,13 @@ MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 });
 
 Block.registerPlaceFunction("luminator", function(coords, item, block) {
-	var x = coords.relative.x
-	var y = coords.relative.y
-	var z = coords.relative.z
-	block = World.getBlockID(x, y, z)
+	var x = coords.relative.x;
+	var y = coords.relative.y;
+	var z = coords.relative.z;
+	block = this.blockSource.getBlockID(x, y, z)
 	if (GenerationUtils.isTransparentBlock(block)) {
-		World.setBlock(x, y, z, item.id, coords.side);
-		World.playSound(x, y, z, "dig.stone", 1, 0.8)
-		World.addTileEntity(x, y, z);
+		this.blockSource.setBlock(x, y, z, item.id, coords.side);
+		//World.playSound(x, y, z, "dig.stone", 1, 0.8)
+		World.addTileEntity(x, y, z, this.blockSource);
 	}
 });

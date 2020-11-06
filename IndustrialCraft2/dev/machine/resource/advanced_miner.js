@@ -130,7 +130,7 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 	harvestBlock: function(x, y, z, block) {
 		var drop = ToolLib.getBlockDrop({x: x,  y: y, z: z}, block.id, block.data, 100, {silk: this.data.silk_touch});
 		if (this.checkDrop(drop)) return false;
-		World.setBlock(x, y, z, 0);
+		this.blockSource.setBlock(x, y, z, 0);
 		var items = [];
 		for (var i in drop) {
 			items.push({id: drop[i][0], count: drop[i][1], data: drop[i][2]});
@@ -208,7 +208,7 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 						energyStored -= 64;
 						var x = this.x + this.data.x, y = this.y + this.data.y, z = this.z + this.data.z;
 						this.data.x++;
-						var block = World.getBlock(x, y, z);
+						var block = this.blockSource.getBlock(x, y, z);
 						if (this.isValidBlock(block.id, block.data)) {
 							if (this.harvestBlock(x, y, z, block))
 							break;
@@ -238,7 +238,7 @@ MachineRegistry.registerElectricMachine(BlockID.advancedMiner, {
 		var level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID)
 		var drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, BlockID.machineBlockAdvanced, this.data.energy);
 		if (drop.length > 0) {
-			World.drop(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
+			this.blockSource.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
 		}
 	},
 	

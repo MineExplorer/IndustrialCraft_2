@@ -103,7 +103,7 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 	},
 	
 	recursiveSearch: function(liquid, x, y, z, map) {
-		var block = World.getBlock(x, y, z);
+		var block = this.blockSource.getBlock(x, y, z);
 		var scoords = x+':'+y+':'+z;
 		if (!map[scoords] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
 			if (block.data == 0) return {x: x, y: y, z: z};
@@ -134,10 +134,10 @@ MachineRegistry.registerElectricMachine(BlockID.pump, {
 				this.startPlaySound();
 				if (this.data.progress.toFixed(3) >= 1) {
 					var coords = this.data.coords;
-					var block = World.getBlock(coords.x, coords.y, coords.z);
+					var block = this.blockSource.getBlock(coords.x, coords.y, coords.z);
 					liquid = this.getLiquidType(liquid, block);
 					if (liquid && block.data == 0) {
-						World.setBlock(coords.x, coords.y, coords.z, 0);
+						this.blockSource.setBlock(coords.x, coords.y, coords.z, 0);
 						this.liquidStorage.addLiquid(liquid, 1);
 					}
 					this.data.progress = 0;

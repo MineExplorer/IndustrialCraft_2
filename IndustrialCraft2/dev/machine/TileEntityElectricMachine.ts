@@ -40,8 +40,8 @@ extends TileEntityMachine {
 		var maxVoltage = this.getMaxPacketSize();
 		if (voltage > maxVoltage) {
 			if (ConfigIC.voltageEnabled) {
-				World.setBlock(this.x, this.y, this.z, 0, 0);
-				World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.getExplosionPower(), true);
+				this.blockSource.setBlock(this.x, this.y, this.z, 0, 0);
+				this.blockSource.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.getExplosionPower(), true);
 				SoundManager.playSoundAtBlock(this, "MachineOverload.ogg", 1, 32);
 				this.selfDestroy();
 				return 1;

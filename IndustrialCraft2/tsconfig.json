@@ -19,10 +19,10 @@
     
     "dev/core/**/*",
     
-    "dev/block/rubber_tree/sapling.js",
-    "dev/block/rubber_tree/log.js",
-    "dev/block/rubber_tree/leaves.js",
-    "dev/block/rubber_tree/generation.js",
+    "dev/block/rubber_tree/sapling.ts",
+    "dev/block/rubber_tree/log.ts",
+    "dev/block/rubber_tree/leaves.ts",
+    "dev/block/rubber_tree/generation.ts",
     "dev/block/ore.js",
     "dev/block/metal.js",
     "dev/block/basic.js",

@@ -99,7 +99,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		this.__energyNets.Eu = net;
 		for (let i = 0; i < 6; i++) {
 			let c = StorageInterface.getRelativeCoords(this, i);
-			if (this.blockSource.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber) {
+			if (this.blockSource.getBlockId(c.x, c.y, c.z) == BlockID.reactorChamber) {
 				let tileEnt = World.getTileEntity(c.x, c.y, c.z, this.blockSource);
 				if (tileEnt) {
 					this.addChamber(tileEnt);
@@ -332,7 +332,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
         }
 		if (power >= 0.85 && Math.random() <= 0.2 * this.data.hem) {
 			let coord = this.getRandCoord(2);
-			let block = region.getBlockID(coord.x, coord.y, coord.z);
+			let block = region.getBlockId(coord.x, coord.y, coord.z);
 			let material = ToolAPI.getBlockMaterialName(block);
 			if (block == BlockID.nuclearReactor) {
 				let tileEntity = World.getTileEntity(coord.x, coord.y, coord.z, region);
@@ -358,19 +358,19 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		}
 		if (power >= 0.5 && Math.random() <= this.data.hem) {
 			let coord = this.getRandCoord(2);
-			let block = region.getBlockID(coord.x, coord.y, coord.z);
+			let block = region.getBlockId(coord.x, coord.y, coord.z);
 			if (block == 8 || block == 9) {
 				region.setBlock(coord.x, coord.y, coord.z, 0);
 			}
 		}
 		if (power >= 0.4 && Math.random() <= this.data.hem) {
 			let coord = this.getRandCoord(2);
-			let block = region.getBlockID(coord.x, coord.y, coord.z);
+			let block = region.getBlockId(coord.x, coord.y, coord.z);
 			let material = ToolAPI.getBlockMaterialName(block);
 			if (block != 49 && (material == "wood" || material == "wool" || material == "fibre" || material == "plant")) {
 				for (let i = 0; i < 6; i++) {
 					let c = World.getRelativeCoords(coord.x, coord.y, coord.z, i);
-					if (region.getBlockID(c.x, c.y, c.z) == 0) {
+					if (region.getBlockId(c.x, c.y, c.z) == 0) {
 						region.setBlock(c.x, c.y, c.z, 51);
 						break;
 					}
@@ -413,7 +413,7 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 	
 	init: function() {
 		let region = this.blockSource;
-		if (this.data.y >= 0 && region.getBlockID(this.data.x, this.data.y, this.data.z) == BlockID.nuclearReactor) {
+		if (this.data.y >= 0 && region.getBlockId(this.data.x, this.data.y, this.data.z) == BlockID.nuclearReactor) {
 			let tileEnt = World.getTileEntity(this.data.x, this.data.y, this.data.z, region);
 			if (tileEnt) {
 				tileEnt.addChamber(this);
@@ -421,7 +421,7 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 		}
 		else for (let i = 0; i < 6; i++) {
 			let c = StorageInterface.getRelativeCoords(this, i);
-			if (region.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor) {
+			if (region.getBlockId(c.x, c.y, c.z) == BlockID.nuclearReactor) {
 				let tileEnt = World.getTileEntity(c.x, c.y, c.z, region);
 				if (tileEnt) {
 					tileEnt.addChamber(this);
@@ -438,7 +438,7 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block
 	let z = coords.relative.z;
 	for (let i = 0; i < 6; i++) {
 		let c = World.getRelativeCoords(x, y, z, i);
-		if (region.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber) {
+		if (region.getBlockId(c.x, c.y, c.z) == BlockID.reactorChamber) {
 			let tileEnt = World.getTileEntity(c.x, c.y, c.z, region);
 			if (tileEnt.core) {
 				item.count++;
@@ -458,7 +458,7 @@ Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block
 	let reactorConnect = 0;
 	for (let i = 0; i < 6; i++) {
 		let c = World.getRelativeCoords(x, y, z, i);
-		if (region.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor) {
+		if (region.getBlockId(c.x, c.y, c.z) == BlockID.nuclearReactor) {
 			reactorConnect++;
 			if (reactorConnect > 1) break;
 		}

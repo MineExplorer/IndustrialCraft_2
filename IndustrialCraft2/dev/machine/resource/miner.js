@@ -92,7 +92,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 				this.data.z++;
 			}
 			if (this.data.z > this.z + r) break;
-			var blockID = this.blockSource.getBlockID(this.data.x, this.data.scanY, this.data.z);
+			var blockID = this.blockSource.getBlockId(this.data.x, this.data.scanY, this.data.z);
 			if (ore_blocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)) {
 				return true;
 			}
@@ -193,7 +193,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 		let region = this.blockSource;
 		if (this.data.progress == 0) {
 			var y = this.y;
-			while(region.getBlockID(this.x, y-1, this.z) == BlockID.miningPipe) {
+			while(region.getBlockId(this.x, y-1, this.z) == BlockID.miningPipe) {
 				y--;
 			}
 			this.data.y = y;
@@ -271,7 +271,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
 			}
 		}
 		else {
-			if (region.getBlockID(this.x, this.data.y, this.z) == BlockID.miningPipe) {
+			if (region.getBlockId(this.x, this.data.y, this.z) == BlockID.miningPipe) {
 				if (this.data.energy >= 3) {
 					this.data.energy -= 3;
 					this.data.progress++;

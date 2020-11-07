@@ -121,7 +121,7 @@ Block.registerPlaceFunction("luminator", function(coords, item, block, player, r
 	var x = coords.relative.x;
 	var y = coords.relative.y;
 	var z = coords.relative.z;
-	block = region.getBlockID(x, y, z)
+	block = region.getBlockId(x, y, z)
 	if (GenerationUtils.isTransparentBlock(block)) {
 		region.setBlock(x, y, z, item.id, coords.side);
 		//World.playSound(x, y, z, "dig.stone", 1, 0.8)

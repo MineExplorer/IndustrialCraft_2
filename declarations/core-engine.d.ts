@@ -862,6 +862,8 @@ declare namespace Block {
 	 * @param blockID numeric tile id
 	 * @param blockData block data value
 	 * @param diggingLevel level of the tool the block was digged with
+	 * @param enchant enchant data of the tool held in player's hand
+	 * @param item item stack held in player's hand
 	 * @param region BlockSource object
 	 * @returns block drop, the array of arrays, each containing three or four values: 
 	 * id, count, data and extra respectively
@@ -2041,6 +2043,9 @@ declare namespace Config {
          */
         toString(): string;
     }
+}
+declare class ConnectedClientList {
+	setupDistancePolicy(x: number, y: number, z: number, dimension: number, distance: number): void;
 }
 declare namespace MobRegistry {
     namespace customEntities { }
@@ -4280,7 +4285,7 @@ declare namespace Game {
     /**
      * @returns true if item spending allowed
      */
-    function isItemSpendingAllowed(): boolean;
+    function isItemSpendingAllowed(player?: number): boolean;
 }
 /**
  * Class used to create and manipulate game objects. Game objects are [[Updatable]]s 
@@ -4883,7 +4888,7 @@ declare namespace Item {
      * @param count amount of the item to be added, generally should be 1
      * @param data item data
      */
-    function addToCreative(id: number | string, count: number, data: number): void;
+    function addToCreative(id: number | string, count: number, data: number, extra?: ItemExtraData): void;
 
     /**
      * Applies several properties via one method call
@@ -6759,7 +6764,21 @@ declare namespace Network {
  * Class that represents network entity of the block, currently is not learned
  */
 declare class NetworkEntity {
-
+	constructor(type: NetworkEntityType, context: any);
+	remove(): void;
+	send(name: string, data: any): void;
+	getClients(): ConnectedClientList;
+}
+/**
+ * Class that represents network entity type
+ */
+declare class NetworkEntityType {
+	constructor(name: string);
+	setClientListSetupListener(action: (list: ConnectedClientList, target: object, entity) => void): this;
+	setClientEntityAddedListener<T = any>(action: (entity: number, packet: any) => T): this;
+	setClientEntityRemovedListener(action: (target: any, entity: number) => void): this;
+	setClientAddPacketFactory(action: (target: any, entity: number, client: any) => any): this;
+	addClientPacketListener(name: string, action: (target: any, entity: number, packetData: any) => void): this;
 }
 declare namespace Particles {
     function addParticle(type: number, x: number, y: number, z: number, vx: number, vy: number, vz: number, params?: number): void;
@@ -8531,7 +8550,7 @@ declare class SyncedNetworkData {
      * false, if change had happened by calling put from this object, 
      * true, if it came by network from other connected data object.
      */
-    addOnDataChangeListener(func: (networkData: SyncedNetworkData, isExternalChange: boolean) => void): void;
+    addOnDataChangedListener(func: (networkData: SyncedNetworkData, isExternalChange: boolean) => void): void;
 
     /**
      * Adds data validator to the object
@@ -11320,7 +11339,12 @@ declare namespace UI {
 				 * Specifies additional padding for the inventory in units. 
 				 * Defaults to 20 units
 				 */
-				padding?: number
+				padding?: number,
+
+				/**
+				 * If true, default window is created
+				 */
+				standard?: boolean
 			}
 		}
 
@@ -11476,7 +11500,13 @@ declare namespace Updatable {
      * Adds object to updatables list
      * @param obj object to be added to updatables list
      */
-    function addUpdatable(obj: Updatable): any;
+	function addUpdatable(obj: Updatable): any;
+	
+	/**
+     * Adds object to updatables list
+     * @param obj object to be added to updatables list
+     */
+    function addLocalUpdatable(obj: Updatable): any;
 
     /**
      * @returns java.util.ArrayList instance containing all defined 
@@ -11498,18 +11528,13 @@ interface Updatable {
     /**
      * Called every tick
      */
-    update: () => void,
+    update: () => void;
 
     /**
      * Once true, the object will be removed from updatables list and will no 
      * longer receive update calls
      */
-    remove?: boolean
-
-    /**
-     * Any other user-defined methods and properties
-     */
-    [key: string]: any
+    remove?: boolean;
 }
 
 /**

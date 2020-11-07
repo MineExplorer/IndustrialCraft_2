@@ -49,7 +49,7 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 				else if (biome=="ocean") {
 					output *= 1.5*Math.sin(World.getWorldTime()%6000/(6000/Math.PI));
 				}
-				var tile = this.blockSource.getBlockID(
+				var tile = this.blockSource.getBlockId(
 					this.x - randomInt(-radius, radius),
 					this.y - randomInt(-radius, radius),
 					this.z - randomInt(-radius, radius)

@@ -20,15 +20,15 @@ Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID) {
 });
 ToolLib.addBlockDropOnExplosion("rubberTreeLog");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
-Block.registerPlaceFunction("rubberTreeLog", function(coords, item, block) {
+Block.registerPlaceFunction("rubberTreeLog", function(coords, item, block, player, region) {
 	if (World.canTileBeReplaced(block.id, block.data)) {
-		var place = coords;
+		var place = coords as Vector;
 		var rotation = 0;
 	} else {
 		var place = coords.relative;
-		var rotation = parseInt(coords.side / 2);
+		var rotation = Math.floor(coords.side / 2);
 	}
-	World.setBlock(place.x, place.y, place.z, item.id, rotation);
+	region.setBlock(place.x, place.y, place.z, item.id, rotation);
 	World.playSound(place.x + .5, place.y + .5, place.z + .5, "dig.wood", 1, 0.8)
 });
 
@@ -42,9 +42,9 @@ Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID) {
 });
 ToolLib.addBlockDropOnExplosion("rubberTreeLogLatex");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
-Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, data) {
+Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, data, region) {
 	if (data < 4 && Math.random() < 1/7) {
-		World.setBlock(x, y, z, id, data + 4);
+		region.setBlock(x, y, z, id, data + 4);
 	}
 });
 

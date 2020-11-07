@@ -106,7 +106,7 @@ extends ItemArmorElectric {
 					Entity.clearEffect(playerEnt, PotionEffect.poison);
 				}
 				Entity.clearEffect(playerEnt, PotionEffect.wither);
-				
+
 				let player = new PlayerActor(playerEnt);
 				var hunger = player.getHunger();
 				if (hunger < 20 && newEnergyStored >= 500) {
@@ -137,7 +137,7 @@ extends ItemArmorElectric {
 						newEnergyStored = Math.max(newEnergyStored - 20, 0);
 					}
 				}
-				
+
 				if (energyStored != newEnergyStored) {
 					ChargeItemRegistry.setEnergyStored(item, newEnergyStored);
 					return item;
@@ -200,12 +200,12 @@ function canAbsorbDamage(damage: number) {
 Callback.addCallback("EntityHurt", function(attacker: number, victim: number, damage: number, type: number) {
 	if (victim == player && Game.getGameMode() != 1 && damage > 0 && (type == 2 || type == 3 || type == 11) && canAbsorbDamage(damage)) {
 		Game.prevent();
-		if (type == 2) {	
+		if (type == 2) {
 			runOnMainThread(function() {
 				Entity.damageEntity(player, 0, type, {attacker: attacker, bool1: true});
 			});
 		}
-		if (type == 3) {	
+		if (type == 3) {
 			runOnMainThread(function() {
 				Entity.damageEntity(player, 0, type, {attacker: -1, bool1: true});
 			});

@@ -2,8 +2,8 @@ IDRegistry.genItemID("scanner");
 IDRegistry.genItemID("scannerAdvanced");
 Item.createItem("scanner", "OD Scanner", {name: "scanner", meta: 0}, {stack: 1, isTech: true});
 Item.createItem("scannerAdvanced", "OV Scanner", {name: "scanner", meta: 1}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerExtraItem(ItemID.scanner, "Eu", 10000, 100, 1, "tool", true, true);
-ChargeItemRegistry.registerExtraItem(ItemID.scannerAdvanced, "Eu", 100000, 256, 2, "tool", true, true);
+ChargeItemRegistry.registerItem(ItemID.scanner, "Eu", 10000, 100, 1);
+ChargeItemRegistry.registerItem(ItemID.scannerAdvanced, "Eu", 100000, 256, 2);
 
 Item.registerNameOverrideFunction(ItemID.scanner, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.scannerAdvanced, ItemName.showItemStorage);

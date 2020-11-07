@@ -1,27 +1,33 @@
 IDRegistry.genItemID("storageBattery");
 Item.createItem("storageBattery", "RE-Battery", {name: "re_battery", meta: 0}, {stack: 1, isTech: true});
-Item.addToCreative(ItemID.storageBattery, 1, 27);
-ChargeItemRegistry.registerExtraItem(ItemID.storageBattery, "Eu", 10000, 100, 1, "storage", true, true);
+ChargeItemRegistry.addToCreative(ItemID.storageBattery, 27, 0);
+ChargeItemRegistry.registerItem(ItemID.storageBattery, "Eu", 10000, 100, 1, true);
 
 IDRegistry.genItemID("storageAdvBattery");
 Item.createItem("storageAdvBattery", "Advanced RE-Battery", {name: "adv_re_battery", meta: 0}, {stack: 1, isTech: true});
-Item.addToCreative(ItemID.storageAdvBattery, 1, 27);
-ChargeItemRegistry.registerExtraItem(ItemID.storageAdvBattery, "Eu", 100000, 256, 2, "storage", true, true);
+ChargeItemRegistry.addToCreative(ItemID.storageAdvBattery, 27, 0);
+ChargeItemRegistry.registerItem(ItemID.storageAdvBattery, "Eu", 100000, 256, 2, true);
 
 IDRegistry.genItemID("storageCrystal");
 Item.createItem("storageCrystal", "Energy Crystal", {name: "energy_crystal", meta: 0}, {stack: 1, isTech: true});
-Item.addToCreative(ItemID.storageCrystal, 1, 27);
-ChargeItemRegistry.registerExtraItem(ItemID.storageCrystal, "Eu", 1000000, 2048, 3, "storage", true, true);
+ChargeItemRegistry.addToCreative(ItemID.storageCrystal, 27, 0);
+ChargeItemRegistry.registerItem(ItemID.storageCrystal, "Eu", 1000000, 2048, 3, true);
 
 IDRegistry.genItemID("storageLapotronCrystal");
 Item.createItem("storageLapotronCrystal", "Lapotron Crystal", {name: "lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
-Item.addToCreative(ItemID.storageLapotronCrystal, 1, 27);
-ChargeItemRegistry.registerExtraItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 8192, 4, "storage", true, true);
+ChargeItemRegistry.addToCreative(ItemID.storageLapotronCrystal, 27, 0);
+ChargeItemRegistry.registerItem(ItemID.storageLapotronCrystal, "Eu", 10000000, 8192, 4, true);
 ItemName.setRarity(ItemID.storageLapotronCrystal, 1);
 
 IDRegistry.genItemID("debugItem");
 Item.createItem("debugItem", "Debug Item", {name: "debug_item", meta: 0}, {isTech: !ConfigIC.debugMode});
-ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, -1, 0, "storage");
+ChargeItemRegistry.registerItem(ItemID.debugItem, "Eu", -1, -1, 0, true, true);
+ChargeItemRegistry.registerChargeFunction(ItemID.debugItem, function(item, amount, transf, level) {
+	return amount;
+});
+ChargeItemRegistry.registerDischargeFunction(ItemID.debugItem, function(item, amount, transf, level) {
+	return amount;
+});
 
 Item.addCreativeGroup("batteryEU", Translation.translate("Batteries"), [
 	ItemID.storageBattery,
@@ -70,14 +76,6 @@ Callback.addCallback("PreLoaded", function() {
 		"xax",
 		"x#x"
 	], ['a', ItemID.storageCrystal, -1, 'x', ItemID.dustLapis, 0, '#', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
-});
-
-ChargeItemRegistry.registerChargeFunction(ItemID.debugItem, function(item, amount, transf, level) {
-	return amount;
-});
-
-ChargeItemRegistry.registerDischargeFunction(ItemID.debugItem, function(item, amount, transf, level) {
-	return amount;
 });
 
 Item.registerUseFunction("debugItem", function(coords, item, block) {

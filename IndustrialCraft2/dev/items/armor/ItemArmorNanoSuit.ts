@@ -35,7 +35,7 @@ extends ItemArmorElectric {
 	getEnergyPerDamage(): number {
 		return 2000;
 	}
-	
+
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		let type = params.type;

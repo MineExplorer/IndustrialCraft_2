@@ -2,11 +2,11 @@
 
 class ItemArmorSolarHelmet
 extends ItemArmorIC2
-implements OnHurtListener, OnTickListener {	
+implements OnHurtListener, OnTickListener {
 	constructor(nameID: string, name: string, params: ArmorParams) {
 		super(nameID, name, params);
 	}
-	
+
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance): ItemInstance {
 		return item;
 	}

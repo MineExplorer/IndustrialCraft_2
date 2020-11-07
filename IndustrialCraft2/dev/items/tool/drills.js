@@ -15,9 +15,9 @@ Item.addCreativeGroup("ic2_drills", Translation.translate("Mining Drills"), [
 	ItemID.iridiumDrill
 ]);
 
-ChargeItemRegistry.registerExtraItem(ItemID.drill, "Eu", 30000, 100, 1, "tool", true, true);
-ChargeItemRegistry.registerExtraItem(ItemID.diamondDrill, "Eu", 30000, 100, 1, "tool", true, true);
-ChargeItemRegistry.registerExtraItem(ItemID.iridiumDrill, "Eu", 1000000, 2048, 3, "tool", true, true);
+ChargeItemRegistry.registerItem(ItemID.drill, "Eu", 30000, 100, 1);
+ChargeItemRegistry.registerItem(ItemID.diamondDrill, "Eu", 30000, 100, 1);
+ChargeItemRegistry.registerItem(ItemID.iridiumDrill, "Eu", 1000000, 2048, 3);
 
 Item.registerNameOverrideFunction(ItemID.drill, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.diamondDrill, ItemName.showItemStorage);

@@ -11,11 +11,11 @@ class TileEntityBatteryBlock extends TileEntityElectricMachine {
 		this.defaultDrop = defaultDrop;
 		this.guiScreen = guiScreen;
 	}
-	
+
 	getScreenByName(screenName: string): UI.StandartWindow {
 		return screenName == "main" ? this.guiScreen : null;
 	}
-	
+
 	init(): void {
 		if (this.data.meta != undefined) {
 			this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, this.data.meta + 2);
@@ -55,32 +55,33 @@ class TileEntityBatteryBlock extends TileEntityElectricMachine {
 		}
 		return false;
 	}
-	
+
 	tick(): void {
 		StorageInterface.checkHoppers(this);
-		
+
 		var tier = this.getTier();
 		var energyStorage = this.getEnergyStorage();
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, tier);
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slot1"), "Eu", this.data.energy, tier);
-		
+		this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, tier);
+		this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slot1"), "Eu", this.data.energy, tier);
+
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
 		this.container.setText("textInfo2", energyStorage);
+		this.container.sendChanges();
 	}
-	
+
 	getEnergyStorage(): number {
 		return this.capacity;
 	}
-	
+
 	canReceiveEnergy(side: number): boolean {
 		return side != this.data.meta;
 	}
-	
+
 	canExtractEnergy(side: number): boolean {
 		return side == this.data.meta;
 	}
-	
+
 	destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
 		var itemID = Entity.getCarriedItem(player).id;
 		var level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID)
@@ -93,7 +94,7 @@ class TileEntityBatteryBlock extends TileEntityElectricMachine {
 
 let BatteryBlockInterface = {
 	slots: {
-		"slot1": {input: true, output: true, 
+		"slot1": {input: true, output: true,
 			isValid: function(item: ItemStack, side: number, tileEntity: TileEntityBatteryBlock) {
 				return side == 1 && ChargeItemRegistry.isValidItem(item.id, "Eu", tileEntity.getTier());
 			},

@@ -1,7 +1,7 @@
 IDRegistry.genItemID("miningLaser");
 Item.createItem("miningLaser", "Mining Laser", {name: "mining_laser", meta: 0}, {stack: 1, isTech: true});
 Item.setToolRender(ItemID.miningLaser, true);
-ChargeItemRegistry.registerExtraItem(ItemID.miningLaser, "Eu", 1000000, 2048, 3, "tool", true, true);
+ChargeItemRegistry.registerItem(ItemID.miningLaser, "Eu", 1000000, 2048, 3);
 
 ItemName.setRarity(ItemID.miningLaser, 1);
 Item.registerNameOverrideFunction(ItemID.miningLaser, function(item, name) {

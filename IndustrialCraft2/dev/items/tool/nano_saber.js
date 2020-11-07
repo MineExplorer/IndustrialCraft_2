@@ -1,14 +1,14 @@
 IDRegistry.genItemID("nanoSaber");
 Item.createItem("nanoSaber", "Nano Saber", {name: "nano_saber", meta: 0}, {stack: 1, isTech: true});
 Item.setToolRender(ItemID.nanoSaber, true);
-ChargeItemRegistry.registerExtraItem(ItemID.nanoSaber, "Eu", 1000000, 2048, 3, "tool", true, true);
+ChargeItemRegistry.registerItem(ItemID.nanoSaber, "Eu", 1000000, 2048, 3);
 ItemName.setRarity(ItemID.nanoSaber, 1);
 Item.registerNameOverrideFunction(ItemID.nanoSaber, ItemName.showItemStorage);
 
 IDRegistry.genItemID("nanoSaberActive");
 Item.createItem("nanoSaberActive", "Nano Saber", {name: "nano_saber_active", meta: 0}, {stack: 1, isTech: true});
 Item.setToolRender(ItemID.nanoSaberActive, true);
-ChargeItemRegistry.registerExtraItem(ItemID.nanoSaberActive, "Eu", 1000000, 2048, 3, "tool", true);
+ChargeItemRegistry.registerItem(ItemID.nanoSaberActive, "Eu", 1000000, 2048, 3, false, true);
 ItemName.setRarity(ItemID.nanoSaberActive, 1);
 Item.registerNameOverrideFunction(ItemID.nanoSaberActive, ItemName.showItemStorage);
 

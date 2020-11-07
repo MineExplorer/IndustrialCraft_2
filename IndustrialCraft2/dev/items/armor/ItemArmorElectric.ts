@@ -2,22 +2,19 @@
 
 abstract class ItemArmorElectric
 extends ItemArmorIC2
-implements OnHurtListener, OnTickListener {
-	maxCharge: number
-	transferLimit: number
-	tier: number
+implements IElectricItem, OnHurtListener, OnTickListener {
+	energy: string = "Eu";
+	maxCharge: number;
+	transferLimit: number;
+	tier: number;
+	canProvideEnergy: boolean = false;
 
 	constructor(nameID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, maxCharge: number, transferLimit: number, tier: number, inCreative?: boolean) {
 		super(nameID, name, params, false);
 		this.maxCharge = maxCharge;
 		this.transferLimit = transferLimit;
 		this.tier = tier;
-		var chargeType = this.canProvideEnergy() ? "storage" : "armor";
-		ChargeItemRegistry.registerExtraItem(this.id, "Eu", maxCharge, transferLimit, tier, chargeType, true, inCreative);
-	}
-
-	canProvideEnergy(): boolean {
-		return false;
+		ChargeItemRegistry.registerItem(this.id, this, !inCreative);
 	}
 
 	overrideName(item: ItemInstance, name: string) {

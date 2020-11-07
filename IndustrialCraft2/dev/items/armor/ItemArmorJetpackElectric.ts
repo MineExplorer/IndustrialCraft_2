@@ -18,7 +18,7 @@ extends ItemArmorElectric {
 		}
 		return item;
 	}
-	
+
 	onTick(item: ItemInstance, index: number, player: number): ItemInstance {
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (item.extra && item.extra.getBoolean("hover")) {

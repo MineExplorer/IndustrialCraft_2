@@ -55,7 +55,7 @@ namespace RubberTreeGenerator {
 	}
 
 	export function setLeaves(x: number, y: number, z: number, region: BlockSource): void {
-		let blockID = World.getBlockID(x, y, z);
+		let blockID = region.getBlockId(x, y, z);
 		if (blockID == 0 || blockID == 106) {
 			region.setBlock(x, y, z, BlockID.rubberTreeLeaves, 0);
 		}

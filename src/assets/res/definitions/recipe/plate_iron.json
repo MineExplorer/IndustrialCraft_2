@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "tags": [ "crafting_table" ],
+  "pattern": [
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:block_machine_block_basic"
+    }
+  },
+  "result": {
+    "item": "minecraft:item_plate_iron",
+    "count": 9
+  }
+}

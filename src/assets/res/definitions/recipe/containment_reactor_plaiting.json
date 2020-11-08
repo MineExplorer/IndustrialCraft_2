@@ -1,0 +1,22 @@
+{
+  "type": "crafting_shapeless",
+  "tags": [ "crafting_table" ],
+  "ingredients": [
+    {
+      "item": "minecraft:item_reactor_plating",
+      "data": 0
+    },
+    {
+      "item": "minecraft:item_plate_alloy",
+      "data": 0
+    },
+    {
+      "item": "minecraft:item_plate_alloy",
+      "data": 0
+    }
+  ],
+  "result": {
+	"item": "minecraft:item_reactor_plating_containment",
+	"count": 4
+  }
+}

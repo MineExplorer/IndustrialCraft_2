@@ -13,9 +13,6 @@ namespace MachineRegistry {
 	export function registerPrototype(id: number, Prototype: any) {
 		// register ID
 		machineIDs[id] = true;
-		ToolAPI.registerBlockMaterial(id, "stone", 1, true);
-		Block.setDestroyTime(id, 3);
-		TileEntity.registerPrototype(id, Prototype);
 
 		// audio
 		if (Prototype.getOperationSound) {
@@ -37,10 +34,10 @@ namespace MachineRegistry {
 						SoundManager.stop(this.finishingSound);
 					}
 					if (this.getStartingSound()) {
-						this.audioSource = SoundManager.createSource(AudioSource.TILEENTITY, this, this.getStartingSound());
+						this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getStartingSound());
 						this.audioSource.setNextSound(this.getOperationSound(), true);
 					} else {
-						this.audioSource = SoundManager.createSource(AudioSource.TILEENTITY, this, this.getOperationSound());
+						this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getOperationSound());
 					}
 				}
 			}
@@ -50,7 +47,7 @@ namespace MachineRegistry {
 					SoundManager.removeSource(this.audioSource);
 					this.audioSource = null;
 					if (this.getInterruptSound()) {
-						this.finishingSound = SoundManager.playSoundAtBlock(this, this.getInterruptSound());
+						this.finishingSound = SoundManager.playSoundAtBlock(this, this.getInterruptSound(), 1);
 					}
 				}
 			}
@@ -59,10 +56,10 @@ namespace MachineRegistry {
 		// machine activation
 		if (Prototype.defaultValues && Prototype.defaultValues.isActive !== undefined) {
 			if (!Prototype.renderModel) {
-				Prototype.renderModel = Prototype.renderModelWithRotation;
+				Prototype.renderModel = this.renderModelWithRotation;
 			}
 			
-			Prototype.setActive = Prototype.setActive || Prototype.setActive;
+			Prototype.setActive = Prototype.setActive || this.setActive;
 			
 			Prototype.activate = Prototype.activate || function() {
 				this.setActive(true);
@@ -76,6 +73,8 @@ namespace MachineRegistry {
 		if (!Prototype.init && Prototype.renderModel) {
 			Prototype.init = Prototype.renderModel;
 		}
+
+		TileEntity.registerPrototype(id, Prototype);
 
 		if (Prototype instanceof TileEntityElectricMachine) {
 			// wire connection
@@ -143,13 +142,13 @@ namespace MachineRegistry {
 	}
 	
 	// standard functions
-	export function setStoragePlaceFunction(id, fullRotation) {
-		Block.registerPlaceFunction(BlockID[id], function(coords, item, block) {
+	export function setStoragePlaceFunction(blockID: string | number, hasVerticalRotation?: boolean) {
+		Block.registerPlaceFunction(Block.getNumericId(blockID), function(coords, item, block, player, region) {
 			var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
-			World.setBlock(place.x, place.y, place.z, item.id, 0);
-			World.playSound(place.x, place.y, place.z, "dig.stone", 1, 0.8)
-			var rotation = TileRenderer.getBlockRotation(fullRotation);
-			var tile = World.addTileEntity(place.x, place.y, place.z);
+			region.setBlock(place.x, place.y, place.z, item.id, 0);
+			// World.playSound(place.x, place.y, place.z, "dig.stone", 1, 0.8)
+			var rotation = TileRenderer.getBlockRotation(hasVerticalRotation);
+			var tile = World.addTileEntity(place.x, place.y, place.z, region);
 			tile.data.meta = rotation;
 			TileRenderer.mapAtCoords(place.x, place.y, place.z, item.id, rotation);
 			if (item.extra) {
@@ -211,7 +210,7 @@ namespace MachineRegistry {
 		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + (this.data.isActive? 6 : 0));
 	}
 	
-	export function setActive(isActive) {
+	export function setActive(isActive: boolean) {
 		if (this.data.isActive != isActive) {
 			this.data.isActive = isActive;
 			this.renderModel();

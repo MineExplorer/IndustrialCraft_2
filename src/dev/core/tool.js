@@ -110,7 +110,7 @@ let ICTool = {
 			let item = Player.getCarriedItem();
 			let tool = ToolAPI.getToolData(item.id);
 			if (item.id == itemID && (!tool || !tool.toolMaterial.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.toolMaterial.energyPerUse)) {
-				SoundManager.startPlaySound(AudioSource.PLAYER, item.id, idleSound);
+				SoundManager.startPlaySound(SourceType.PLAYER, item.id, idleSound);
 			}
 			else if (SoundManager.stopPlaySound(itemID) && stopSound) {
 				SoundManager.playSound(stopSound);

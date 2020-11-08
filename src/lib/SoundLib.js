@@ -355,4 +355,4 @@ var AudioSource = /** @class */ (function () {
     return AudioSource;
 }());
 EXPORT("SoundManager", SoundManager);
-EXPORT("AudioSource", SourceType);
+EXPORT("SourceType", SourceType);

@@ -1,5 +1,5 @@
-header.js
-translation.js
+header.ts
+translation.ts
 
 core/**/*
 

@@ -1,7 +1,7 @@
 declare namespace EnergyTypeRegistry {
     const energyTypes: {};
-    function createEnergyType(name: any, value: any, wireParams: any): EnergyType;
-    function assureEnergyType(name: any, value: any, wireParams: any): any;
+    function createEnergyType(name: any, value: any, wireParams?: any): EnergyType;
+    function assureEnergyType(name: any, value: any, wireParams?: any): any;
     function getEnergyType(name: any): any;
     function getValueRatio(name1: any, name2: any): number;
     const wireData: {};

@@ -34,9 +34,9 @@ const ELECTRIC_ITEM_MAX_DAMAGE = 27;
 var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
 var Color = android.graphics.Color;
 var PotionEffect = Native.PotionEffect;
-var ParticleType = Native.ParticleType,
-var BlockSide = Native.BlockSide,
-var EntityType = Native.EntityType,
+var ParticleType = Native.ParticleType;
+var BlockSide = Native.BlockSide;
+var EntityType = Native.EntityType;
 
 // energy (Eu)
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);

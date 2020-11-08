@@ -2176,24 +2176,18 @@ var DIRT_TILES = {
     3: true,
     60: true
 };
-function placeRubberSapling(coords, item) {
+function placeRubberSapling(coords, item, region) {
     var place = coords.relative;
-    var tile1 = World.getBlock(place.x, place.y, place.z);
-    var tile2 = World.getBlock(place.x, place.y - 1, place.z);
+    var tile1 = region.getBlock(place.x, place.y, place.z);
+    var tile2 = region.getBlock(place.x, place.y - 1, place.z);
     if (World.canTileBeReplaced(tile1.id, tile1.data) && DIRT_TILES[tile2.id]) {
-        World.setBlock(place.x, place.y, place.z, BlockID.rubberTreeSapling);
-        if (Game.isItemSpendingAllowed()) {
-            Player.setCarriedItem(BlockID.rubberTreeSapling, item.count - 1, 0);
+        region.setBlock(place.x, place.y, place.z, BlockID.rubberTreeSapling, 0);
+        if (Game.isItemSpendingAllowed(player)) {
+            Entity.setCarriedItem(player, BlockID.rubberTreeSapling, item.count - 1, 0);
         }
         World.playSound(place.x, place.y, place.z, "dig.grass", 1, 0.8);
     }
 }
-// legacy
-IDRegistry.genItemID("rubberSapling");
-Item.createItem("rubberSapling", "Rubber Tree Sapling", { name: "rubber_tree_sapling", data: 0 }, { isTech: true });
-Item.registerUseFunction("rubberSapling", function (coords, item, block) {
-    placeRubberSapling(coords, item);
-});
 IDRegistry.genBlockID("rubberTreeSapling");
 Block.createBlock("rubberTreeSapling", [
     { name: "Rubber Tree Sapling", texture: [["rubber_tree_sapling", 0]], inCreative: true }
@@ -2206,36 +2200,43 @@ Recipes.addFurnaceFuel(BlockID.rubberTreeSapling, -1, 100);
 Block.registerDropFunction("rubberTreeSapling", function () {
     return [[BlockID.rubberTreeSapling, 1, 0]];
 });
-Item.registerUseFunctionForID(BlockID.rubberTreeSapling, function (coords, item, block) {
-    placeRubberSapling(coords, item);
+Block.registerNeighbourChangeFunction("rubberTreeSapling", function (coords, block, changeCoords, region) {
+    if (changeCoords.y < coords.y && !DIRT_TILES[region.getBlockId(coords.x, coords.y - 1, coords.z)]) {
+        region.destroyBlock(coords.x, coords.y, coords.z, true);
+    }
 });
-Block.setRandomTickCallback(BlockID.rubberTreeSapling, function (x, y, z) {
-    if (!DIRT_TILES[World.getBlockID(x, y - 1, z)]) {
-        World.destroyBlock(x, y, z, true);
+Block.setRandomTickCallback(BlockID.rubberTreeSapling, function (x, y, z, id, data, region) {
+    if (!DIRT_TILES[region.getBlockId(x, y - 1, z)]) {
+        region.destroyBlock(x, y, z, true);
     }
-    else if (Math.random() < 0.05 && World.getLightLevel(x, y, z) >= 9) {
-        RubberTreeGenerator.generateRubberTree(x, y, z);
+    else if (Math.random() < 0.05 && region.getLightLevel(x, y, z) >= 9) {
+        RubberTreeGenerator.generateRubberTree(x, y, z, region);
     }
+});
+Item.registerUseFunctionForID(BlockID.rubberTreeSapling, function (coords, item, block, player) {
+    placeRubberSapling(coords, item, BlockSource.getDefaultForActor(player));
 });
 // bone use
-Callback.addCallback("ItemUse", function (coords, item, block) {
+Callback.addCallback("ItemUse", function (coords, item, block, isExternal, player) {
     if (item.id == 351 && item.data == 15 && block.id == BlockID.rubberTreeSapling) {
-        Player.setCarriedItem(item.id, item.count - 1, item.data);
-        for (var i = 0; i < 16; i++) {
+        Entity.setCarriedItem(player, item.id, item.count - 1, item.data);
+        for (var i_8 = 0; i_8 < 16; i_8++) {
             var px = coords.x + Math.random();
             var pz = coords.z + Math.random();
             var py = coords.y + Math.random();
             Particles.addParticle(ParticleType.happyVillager, px, py, pz, 0, 0, 0);
         }
-        if (Math.random() < 0.25 || !Game.isItemSpendingAllowed()) {
-            RubberTreeGenerator.generateRubberTree(coords.x, coords.y, coords.z);
+        if (Math.random() < 0.25 || !Game.isItemSpendingAllowed(player)) {
+            var region = BlockSource.getDefaultForActor(player);
+            RubberTreeGenerator.generateRubberTree(coords.x, coords.y, coords.z, region);
         }
     }
 });
-Callback.addCallback("DestroyBlock", function (coords, block, player) {
-    if (World.getBlockID(coords.x, coords.y + 1, coords.z) == BlockID.rubberTreeSapling) {
-        World.destroyBlock(coords.x, coords.y + 1, coords.z, true);
-    }
+// legacy
+IDRegistry.genItemID("rubberSapling");
+Item.createItem("rubberSapling", "Rubber Tree Sapling", { name: "rubber_tree_sapling", data: 0 }, { isTech: true });
+Item.registerUseFunction("rubberSapling", function (coords, item, block, player) {
+    placeRubberSapling(coords, item, BlockSource.getDefaultForActor(player));
 });
 Block.createSpecialType({
     base: 17,
@@ -2258,16 +2259,16 @@ Block.registerDropFunction("rubberTreeLogLatex", function (coords, blockID) {
 });
 ToolLib.addBlockDropOnExplosion("rubberTreeLog");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
-Block.registerPlaceFunction("rubberTreeLog", function (coords, item, block) {
+Block.registerPlaceFunction("rubberTreeLog", function (coords, item, block, player, region) {
     if (World.canTileBeReplaced(block.id, block.data)) {
         var place = coords;
         var rotation = 0;
     }
     else {
         var place = coords.relative;
-        var rotation = parseInt(coords.side / 2);
+        var rotation = Math.floor(coords.side / 2);
     }
-    World.setBlock(place.x, place.y, place.z, item.id, rotation);
+    region.setBlock(place.x, place.y, place.z, item.id, rotation);
     World.playSound(place.x + .5, place.y + .5, place.z + .5, "dig.wood", 1, 0.8);
 });
 IDRegistry.genBlockID("rubberTreeLogLatex");
@@ -2280,9 +2281,9 @@ Block.registerDropFunction("rubberTreeLogLatex", function (coords, blockID) {
 });
 ToolLib.addBlockDropOnExplosion("rubberTreeLogLatex");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
-Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function (x, y, z, id, data) {
+Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function (x, y, z, id, data, region) {
     if (data < 4 && Math.random() < 1 / 7) {
-        World.setBlock(x, y, z, id, data + 4);
+        region.setBlock(x, y, z, id, data + 4);
     }
 });
 Recipes.addFurnace(BlockID.rubberTreeLog, 17, 3);
@@ -2301,8 +2302,8 @@ Block.createBlock("rubberTreeLeaves", [
     translucency: 0.5,
     sound: "grass"
 });
-Block.registerDropFunction("rubberTreeLeaves", function (coords, blockID, blockData, level, enchant) {
-    if (level > 0 || Player.getCarriedItem().id == 359) {
+Block.registerDropFunction("rubberTreeLeaves", function (coords, blockID, blockData, level, enchant, item) {
+    if (level > 0 || item.id == 359) {
         return [[blockID, 1, 2]];
     }
     if (Math.random() < .04) {
@@ -2311,8 +2312,8 @@ Block.registerDropFunction("rubberTreeLeaves", function (coords, blockID, blockD
     return [];
 });
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLeaves, "plant");
-function checkLeaves(x, y, z, explored) {
-    var blockID = World.getBlockID(x, y, z);
+function checkLeaves(x, y, z, region, explored) {
+    var blockID = region.getBlockId(x, y, z);
     if (blockID == BlockID.rubberTreeLog || blockID == BlockID.rubberTreeLogLatex) {
         return true;
     }
@@ -2321,76 +2322,76 @@ function checkLeaves(x, y, z, explored) {
     }
     return false;
 }
-function checkLeavesFor6Sides(x, y, z, explored) {
-    return checkLeaves(x - 1, y, z, explored) ||
-        checkLeaves(x + 1, y, z, explored) ||
-        checkLeaves(x, y, z - 1, explored) ||
-        checkLeaves(x, y, z + 1, explored) ||
-        checkLeaves(x, y - 1, z, explored) ||
-        checkLeaves(x, y + 1, z, explored);
+function checkLeavesFor6Sides(x, y, z, region, explored) {
+    return checkLeaves(x - 1, y, z, region, explored) ||
+        checkLeaves(x + 1, y, z, region, explored) ||
+        checkLeaves(x, y, z - 1, region, explored) ||
+        checkLeaves(x, y, z + 1, region, explored) ||
+        checkLeaves(x, y - 1, z, region, explored) ||
+        checkLeaves(x, y + 1, z, region, explored);
 }
-function updateLeaves(x, y, z) {
+function updateLeaves(x, y, z, region) {
     for (var xx = x - 1; xx <= x + 1; xx++) {
         for (var yy = y - 1; yy <= y + 1; yy++) {
             for (var zz = z - 1; zz <= z + 1; zz++) {
-                var block = World.getBlock(xx, yy, zz);
+                var block = region.getBlock(xx, yy, zz);
                 if (block.id == BlockID.rubberTreeLeaves && block.data == 0) {
-                    World.setBlock(xx, yy, zz, BlockID.rubberTreeLeaves, 1);
+                    region.setBlock(xx, yy, zz, BlockID.rubberTreeLeaves, 1);
                 }
             }
         }
     }
 }
-Block.setRandomTickCallback(BlockID.rubberTreeLeaves, function (x, y, z, id, data) {
+Block.setRandomTickCallback(BlockID.rubberTreeLeaves, function (x, y, z, id, data, region) {
     if (data == 1) {
         var explored = {};
         explored[x + ':' + y + ':' + z] = true;
-        for (var i_8 = 0; i_8 < 4; i_8++) {
+        for (var i_9 = 0; i_9 < 4; i_9++) {
             var checkingLeaves = explored;
             explored = {};
             for (var coords in checkingLeaves) {
                 var c = coords.split(':');
-                if (checkLeavesFor6Sides(parseInt(c[0]), parseInt(c[1]), parseInt(c[2]), explored)) {
-                    World.setBlock(x, y, z, BlockID.rubberTreeLeaves, 0);
+                if (checkLeavesFor6Sides(parseInt(c[0]), parseInt(c[1]), parseInt(c[2]), region, explored)) {
+                    region.setBlock(x, y, z, BlockID.rubberTreeLeaves, 0);
                     return;
                 }
             }
         }
-        World.setBlock(x, y, z, 0);
-        updateLeaves(x, y, z);
-        var dropFunc = Block.dropFunctions[id];
-        var drop = dropFunc(null, id, data, 0, {});
-        for (var i_9 in drop) {
-            World.drop(x, y, z, drop[i_9][0], drop[i_9][1], drop[i_9][2]);
+        region.setBlock(x, y, z, 0, 0);
+        updateLeaves(x, y, z, region);
+        if (Math.random() < .04) {
+            region.spawnDroppedItem(x, y, z, BlockID.rubberTreeSapling, 1, 0);
         }
     }
 });
 Callback.addCallback("DestroyBlock", function (coords, block, player) {
-    updateLeaves(coords.x, coords.y, coords.z);
+    updateLeaves(coords.x, coords.y, coords.z, BlockSource.getDefaultForActor(player));
 });
-var RubberTreeGenerator = {
-    biomeData: {},
-    getBiomeChance: function (biomeID) {
-        var chance = this.biomeData[biomeID] || 0;
+var RubberTreeGenerator;
+(function (RubberTreeGenerator) {
+    RubberTreeGenerator.biomeData = {};
+    function getBiomeChance(biomeID) {
+        var chance = RubberTreeGenerator.biomeData[biomeID] || 0;
         return chance / 100;
-    },
-    generateRubberTree: function (x, y, z, random) {
+    }
+    RubberTreeGenerator.getBiomeChance = getBiomeChance;
+    function generateRubberTree(x, y, z, region, random) {
         if (!random)
             random = new java.util.Random(Debug.sysTime());
         var minHeight = 3, maxHeight = 8;
-        var height = this.getGrowHeight(x, y, z, random.nextInt(maxHeight - minHeight + 1) + minHeight);
+        var height = getGrowHeight(x, y, z, random.nextInt(maxHeight - minHeight + 1) + minHeight, region);
         if (height >= minHeight) {
-            var treeholechance = 0.25;
+            var treeholeChance = 0.25;
             for (var ys = 0; ys < height; ys++) {
-                if (random.nextDouble() < treeholechance) {
-                    treeholechance -= 0.1;
-                    World.setBlock(x, y + ys, z, BlockID.rubberTreeLogLatex, 4 + random.nextInt(4));
+                if (random.nextDouble() < treeholeChance) {
+                    treeholeChance -= 0.1;
+                    region.setBlock(x, y + ys, z, BlockID.rubberTreeLogLatex, 4 + random.nextInt(4));
                 }
                 else {
-                    World.setBlock(x, y + ys, z, BlockID.rubberTreeLog, 0);
+                    region.setBlock(x, y + ys, z, BlockID.rubberTreeLog, 0);
                 }
             }
-            var leavesStart = parseInt(height / 2);
+            var leavesStart = Math.floor(height / 2);
             var leavesEnd = height;
             for (var ys = leavesStart; ys <= leavesEnd; ys++) {
                 for (var xs = -2; xs <= 2; xs++) {
@@ -2399,34 +2400,37 @@ var RubberTreeGenerator = {
                         if (ys == leavesEnd)
                             radius /= 2;
                         if (Math.sqrt(xs * xs + zs * zs) <= radius) {
-                            this.setLeaves(x + xs, y + ys, z + zs);
+                            setLeaves(x + xs, y + ys, z + zs, region);
                         }
                     }
                 }
             }
-            var pikeHeight = 2 + parseInt(random.nextDouble() * 2);
+            var pikeHeight = 2 + Math.floor(random.nextDouble() * 2);
             for (var ys = 1; ys <= pikeHeight; ys++) {
-                this.setLeaves(x, y + ys + height, z);
+                setLeaves(x, y + ys + height, z, region);
             }
         }
-    },
-    getGrowHeight: function (x, y, z, max) {
+    }
+    RubberTreeGenerator.generateRubberTree = generateRubberTree;
+    function getGrowHeight(x, y, z, max, region) {
         var height = 0;
         while (height < max + 2) {
-            var blockID = World.getBlockID(x, y + height, z);
+            var blockID = region.getBlockId(x, y + height, z);
             if (blockID != 0)
                 break;
             height++;
         }
         return height > 2 ? height - 2 : 0;
-    },
-    setLeaves: function (x, y, z, leaves) {
+    }
+    RubberTreeGenerator.getGrowHeight = getGrowHeight;
+    function setLeaves(x, y, z, region) {
         var blockID = World.getBlockID(x, y, z);
         if (blockID == 0 || blockID == 106) {
-            World.setBlock(x, y, z, BlockID.rubberTreeLeaves, 0);
+            region.setBlock(x, y, z, BlockID.rubberTreeLeaves, 0);
         }
     }
-};
+    RubberTreeGenerator.setLeaves = setLeaves;
+})(RubberTreeGenerator || (RubberTreeGenerator = {}));
 var ForestBiomeIDs = [4, 18, 27, 28, 132, 155, 156];
 var JungleBiomeIDs = [21, 22, 23, 149, 151];
 var SwampBiomeIDs = [6, 134];
@@ -2445,13 +2449,14 @@ SwampBiomeIDs.forEach(function (id) {
     RubberTreeGenerator.biomeData[id] = chance;
 });
 World.addGenerationCallback("GenerateChunk", function (chunkX, chunkZ, random) {
-    var biome = World.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16);
+    var region = BlockSource.getCurrentWorldGenRegion();
+    var biome = region.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16);
     if (random.nextDouble() < RubberTreeGenerator.getBiomeChance(biome)) {
         var treeCount = 1 + random.nextInt(6);
-        for (var i = 0; i < treeCount; i++) {
+        for (var i_10 = 0; i_10 < treeCount; i_10++) {
             var coords = GenerationUtils.findSurface(chunkX * 16 + random.nextInt(16), 96, chunkZ * 16 + random.nextInt(16));
-            if (World.getBlockID(coords.x, coords.y, coords.z) == 2) {
-                RubberTreeGenerator.generateRubberTree(coords.x, coords.y + 1, coords.z, random);
+            if (region.getBlockId(coords.x, coords.y, coords.z) == 2) {
+                RubberTreeGenerator.generateRubberTree(coords.x, coords.y + 1, coords.z, region, random);
             }
         }
     }
@@ -4119,7 +4124,7 @@ MachineRegistry.registerGenerator(BlockID.genWindmill, {
         for (var x = -4; x <= 4; x++) {
             for (var y = -2; y <= 2; y++) {
                 for (var z = -4; z <= 4; z++) {
-                    if (this.blockSource.getBlockID(this.x + x, this.y + y, this.z + z) != 0)
+                    if (this.blockSource.getBlockId(this.x + x, this.y + y, this.z + z) != 0)
                         blockCount++;
                 }
             }
@@ -4235,7 +4240,7 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
                 else if (biome == "ocean") {
                     output *= 1.5 * Math.sin(World.getWorldTime() % 6000 / (6000 / Math.PI));
                 }
-                var tile = this.blockSource.getBlockID(this.x - randomInt(-radius, radius), this.y - randomInt(-radius, radius), this.z - randomInt(-radius, radius));
+                var tile = this.blockSource.getBlockId(this.x - randomInt(-radius, radius), this.y - randomInt(-radius, radius), this.z - randomInt(-radius, radius));
                 if (tile == 8 || tile == 9) {
                     this.data.output = Math.round(output) / 20;
                 }
@@ -4890,11 +4895,11 @@ var ReactorAPI = {
         this.depletedItem = depleted;
         this.processChamber = function (item, reactor, x, y, heatRun) {
             var basePulses = parseInt(1 + this.numberOfCells / 2);
-            for (var i_10 = 0; i_10 < this.numberOfCells; i_10++) {
+            for (var i_11 = 0; i_11 < this.numberOfCells; i_11++) {
                 var dheat = 0;
                 var pulses = basePulses;
                 if (!heatRun) {
-                    for (var i_11 = 0; i_11 < pulses; i_11++) {
+                    for (var i_12 = 0; i_12 < pulses; i_12++) {
                         this.acceptUraniumPulse(item, reactor, item, x, y, x, y, heatRun);
                     }
                     pulses += this.checkPulseable(reactor, x - 1, y, item, x, y, heatRun) + this.checkPulseable(reactor, x + 1, y, item, x, y, heatRun) + this.checkPulseable(reactor, x, y - 1, item, x, y, heatRun) + this.checkPulseable(reactor, x, y + 1, item, x, y, heatRun);
@@ -5085,8 +5090,8 @@ var ReactorAPI = {
                 this.checkHeatAcceptor(reactor, x + 1, y, heatAcceptors);
                 this.checkHeatAcceptor(reactor, x, y - 1, heatAcceptors);
                 this.checkHeatAcceptor(reactor, x, y + 1, heatAcceptors);
-                for (var i_12 in heatAcceptors) {
-                    var acceptor = heatAcceptors[i_12];
+                for (var i_13 in heatAcceptors) {
+                    var acceptor = heatAcceptors[i_13];
                     var heatable = acceptor.comp;
                     var mymed = this.getCurrentHeat(item) * 100 / this.getMaxHeat(item);
                     var heatablemed = heatable.getCurrentHeat(acceptor.item) * 100 / heatable.getMaxHeat(acceptor.item);
@@ -5264,8 +5269,8 @@ var reactorElements = {
 };
 for (var y = 0; y < 6; y++) {
     for (var x = 0; x < 9; x++) {
-        var i_13 = y * 9 + x;
-        reactorElements["slot" + i_13] = { type: "slot", x: 400 + 54 * x, y: 40 + 54 * y, size: 54, maxStackSize: 1, isValid: function (id, count, data) {
+        var i_14 = y * 9 + x;
+        reactorElements["slot" + i_14] = { type: "slot", x: 400 + 54 * x, y: 40 + 54 * y, size: 54, maxStackSize: 1, isValid: function (id, count, data) {
                 return ReactorAPI.isReactorItem(id);
             } };
     }
@@ -5312,9 +5317,9 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
         }
         net = EnergyNetBuilder.buildForTile(this, EU);
         this.__energyNets.Eu = net;
-        for (var i_14 = 0; i_14 < 6; i_14++) {
-            var c = StorageInterface.getRelativeCoords(this, i_14);
-            if (this.blockSource.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber) {
+        for (var i_15 = 0; i_15 < 6; i_15++) {
+            var c = StorageInterface.getRelativeCoords(this, i_15);
+            if (this.blockSource.getBlockId(c.x, c.y, c.z) == BlockID.reactorChamber) {
                 var tileEnt = World.getTileEntity(c.x, c.y, c.z, this.blockSource);
                 if (tileEnt) {
                     this.addChamber(tileEnt);
@@ -5490,8 +5495,8 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
         this.data.output += energy;
     },
     destroyBlock: function (coords, player) {
-        for (var i_15 in this.chambers) {
-            var c = this.chambers[i_15];
+        for (var i_16 in this.chambers) {
+            var c = this.chambers[i_16];
             this.blockSource.destroyBlock(c.x, c.y, c.z, true);
         }
     },
@@ -5500,8 +5505,8 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
         var explode = false;
         var boomPower = 10;
         var boomMod = 1;
-        for (var i_16 = 0; i_16 < this.getReactorSize() * 6; i_16++) {
-            var slot = this.container.getSlot("slot" + i_16);
+        for (var i_17 = 0; i_17 < this.getReactorSize() * 6; i_17++) {
+            var slot = this.container.getSlot("slot" + i_17);
             var component = ReactorAPI.getComponent(slot.id);
             if (component) {
                 var f = component.influenceExplosion(slot, this);
@@ -5514,7 +5519,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
                     boomPower += f;
                 }
             }
-            this.container.setSlot("slot" + i_16, 0, 0, 0);
+            this.container.setSlot("slot" + i_17, 0, 0, 0);
         }
         if (explode) {
             this.data.boomPower = Math.min(boomPower * this.data.hem * boomMod, __config__.access("reactor_explosion_max_power"));
@@ -5531,7 +5536,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
         }
         if (power >= 0.85 && Math.random() <= 0.2 * this.data.hem) {
             var coord = this.getRandCoord(2);
-            var block = region.getBlockID(coord.x, coord.y, coord.z);
+            var block = region.getBlockId(coord.x, coord.y, coord.z);
             var material = ToolAPI.getBlockMaterialName(block);
             if (block == BlockID.nuclearReactor) {
                 var tileEntity = World.getTileEntity(coord.x, coord.y, coord.z, region);
@@ -5545,8 +5550,8 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
         }
         if (power >= 0.7 && World.getThreadTime() % 20 == 0) {
             var entities = Entity.getAll();
-            for (var i_17 in entities) {
-                var ent = entities[i_17];
+            for (var i_18 in entities) {
+                var ent = entities[i_18];
                 if (canTakeDamage(ent, "radiation")) {
                     var c = Entity.getPosition(ent);
                     if (Math.abs(this.x + 0.5 - c.x) <= 3 && Math.abs(this.y + 0.5 - c.y) <= 3 && Math.abs(this.z + 0.5 - c.z) <= 3) {
@@ -5557,19 +5562,19 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
         }
         if (power >= 0.5 && Math.random() <= this.data.hem) {
             var coord = this.getRandCoord(2);
-            var block = region.getBlockID(coord.x, coord.y, coord.z);
+            var block = region.getBlockId(coord.x, coord.y, coord.z);
             if (block == 8 || block == 9) {
                 region.setBlock(coord.x, coord.y, coord.z, 0);
             }
         }
         if (power >= 0.4 && Math.random() <= this.data.hem) {
             var coord = this.getRandCoord(2);
-            var block = region.getBlockID(coord.x, coord.y, coord.z);
+            var block = region.getBlockId(coord.x, coord.y, coord.z);
             var material = ToolAPI.getBlockMaterialName(block);
             if (block != 49 && (material == "wood" || material == "wool" || material == "fibre" || material == "plant")) {
-                for (var i_18 = 0; i_18 < 6; i_18++) {
-                    var c = World.getRelativeCoords(coord.x, coord.y, coord.z, i_18);
-                    if (region.getBlockID(c.x, c.y, c.z) == 0) {
+                for (var i_19 = 0; i_19 < 6; i_19++) {
+                    var c = World.getRelativeCoords(coord.x, coord.y, coord.z, i_19);
+                    if (region.getBlockId(c.x, c.y, c.z) == 0) {
                         region.setBlock(c.x, c.y, c.z, 51);
                         break;
                     }
@@ -5609,16 +5614,16 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
     },
     init: function () {
         var region = this.blockSource;
-        if (this.data.y >= 0 && region.getBlockID(this.data.x, this.data.y, this.data.z) == BlockID.nuclearReactor) {
+        if (this.data.y >= 0 && region.getBlockId(this.data.x, this.data.y, this.data.z) == BlockID.nuclearReactor) {
             var tileEnt = World.getTileEntity(this.data.x, this.data.y, this.data.z, region);
             if (tileEnt) {
                 tileEnt.addChamber(this);
             }
         }
         else
-            for (var i_19 = 0; i_19 < 6; i_19++) {
-                var c = StorageInterface.getRelativeCoords(this, i_19);
-                if (region.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor) {
+            for (var i_20 = 0; i_20 < 6; i_20++) {
+                var c = StorageInterface.getRelativeCoords(this, i_20);
+                if (region.getBlockId(c.x, c.y, c.z) == BlockID.nuclearReactor) {
                     var tileEnt = World.getTileEntity(c.x, c.y, c.z, region);
                     if (tileEnt) {
                         tileEnt.addChamber(this);
@@ -5632,9 +5637,9 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function (coords, item, bloc
     var x = coords.relative.x;
     var y = coords.relative.y;
     var z = coords.relative.z;
-    for (var i_20 = 0; i_20 < 6; i_20++) {
-        var c = World.getRelativeCoords(x, y, z, i_20);
-        if (region.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber) {
+    for (var i_21 = 0; i_21 < 6; i_21++) {
+        var c = World.getRelativeCoords(x, y, z, i_21);
+        if (region.getBlockId(c.x, c.y, c.z) == BlockID.reactorChamber) {
             var tileEnt = World.getTileEntity(c.x, c.y, c.z, region);
             if (tileEnt.core) {
                 item.count++;
@@ -5651,9 +5656,9 @@ Block.registerPlaceFunction(BlockID.reactorChamber, function (coords, item, bloc
     var y = coords.relative.y;
     var z = coords.relative.z;
     var reactorConnect = 0;
-    for (var i_21 = 0; i_21 < 6; i_21++) {
-        var c = World.getRelativeCoords(x, y, z, i_21);
-        if (region.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor) {
+    for (var i_22 = 0; i_22 < 6; i_22++) {
+        var c = World.getRelativeCoords(x, y, z, i_22);
+        if (region.getBlockId(c.x, c.y, c.z) == BlockID.nuclearReactor) {
             reactorConnect++;
             if (reactorConnect > 1)
                 break;
@@ -5681,11 +5686,23 @@ var TileEntityBatteryBlock = /** @class */ (function (_super) {
     TileEntityBatteryBlock.prototype.getScreenByName = function (screenName) {
         return screenName == "main" ? this.guiScreen : null;
     };
+    TileEntityBatteryBlock.prototype.isValidInputItem = function (slotName, id, amount) {
+        var tier = this.getTier();
+        if (slotName == "slot1" && ChargeItemRegistry.isValidItem(id, "Eu", tier)) {
+            return amount;
+        }
+        if (slotName == "slot2" && ChargeItemRegistry.isValidStorage(id, "Eu", tier)) {
+            return amount;
+        }
+        return 0;
+    };
     TileEntityBatteryBlock.prototype.init = function () {
+        var _this = this;
         if (this.data.meta != undefined) {
             this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, this.data.meta + 2);
             delete this.data.meta;
         }
+        this.container.setGlobalAddTransferPolicy(function (container, name, id, amount) { return _this.isValidInputItem(name, id, amount); });
     };
     TileEntityBatteryBlock.prototype.onItemUse = function (coords, item, player) {
         if (ICTool.isValidWrench(item, 1)) {
@@ -5788,18 +5805,18 @@ Callback.addCallback("PreLoaded", function () {
     ], ['a', ItemID.cableTin1, 0, 'x', 5, -1, 'b', ItemID.storageBattery, -1]);
 });
 var guiBatBox = new UI.StandartWindow({
-    standart: {
+    standard: {
         header: { text: { text: Translation.translate("BatBox") } },
-        inventory: { standart: true },
-        background: { standart: true }
+        inventory: { standard: true },
+        background: { standard: true }
     },
     drawing: [
         { type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE },
     ],
     elements: {
         "energyScale": { type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE },
-        "slot1": { type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem },
-        "slot2": { type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage },
+        "slot1": { type: "slot", x: 441, y: 75 },
+        "slot2": { type: "slot", x: 441, y: 212 },
         "textInfo1": { type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/" },
         "textInfo2": { type: "text", x: 642, y: 172, width: 350, height: 30, text: "40000" }
     }
@@ -5838,18 +5855,18 @@ Callback.addCallback("PreLoaded", function () {
     ], ['x', ItemID.cableCopper1, 0, 'a', ItemID.storageAdvBattery, -1, 'b', ItemID.plateBronze, 0]);
 });
 var guiCESU = new UI.StandartWindow({
-    standart: {
+    standard: {
         header: { text: { text: Translation.translate("CESU") } },
-        inventory: { standart: true },
-        background: { standart: true }
+        inventory: { standard: true },
+        background: { standard: true }
     },
     drawing: [
         { type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE },
     ],
     elements: {
         "energyScale": { type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE },
-        "slot1": { type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem },
-        "slot2": { type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage },
+        "slot1": { type: "slot", x: 441, y: 75 },
+        "slot2": { type: "slot", x: 441, y: 212 },
         "textInfo1": { type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/" },
         "textInfo2": { type: "text", x: 642, y: 172, width: 300, height: 30, text: "300000" }
     }
@@ -5888,18 +5905,18 @@ Callback.addCallback("PreLoaded", function () {
     ], ['x', BlockID.machineBlockBasic, 0, 'a', ItemID.storageCrystal, -1, 'b', ItemID.cableGold2, -1]);
 });
 var guiMFE = new UI.StandartWindow({
-    standart: {
+    standard: {
         header: { text: { text: Translation.translate("MFE") } },
-        inventory: { standart: true },
-        background: { standart: true }
+        inventory: { standard: true },
+        background: { standard: true }
     },
     drawing: [
         { type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE },
     ],
     elements: {
         "energyScale": { type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE },
-        "slot1": { type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem },
-        "slot2": { type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage },
+        "slot1": { type: "slot", x: 441, y: 75 },
+        "slot2": { type: "slot", x: 441, y: 212 },
         "textInfo1": { type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/" },
         "textInfo2": { type: "text", x: 642, y: 172, width: 300, height: 30, text: "4000000" }
     }
@@ -5939,18 +5956,18 @@ Callback.addCallback("PreLoaded", function () {
     ], ['b', BlockID.storageMFE, -1, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, 0]);
 });
 var guiMFSU = new UI.StandartWindow({
-    standart: {
+    standard: {
         header: { text: { text: Translation.translate("MFSU") } },
-        inventory: { standart: true },
-        background: { standart: true }
+        inventory: { standard: true },
+        background: { standard: true }
     },
     drawing: [
         { type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE },
     ],
     elements: {
         "energyScale": { type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE },
-        "slot1": { type: "slot", x: 441, y: 75, isValid: MachineRegistry.isValidEUItem },
-        "slot2": { type: "slot", x: 441, y: 212, isValid: MachineRegistry.isValidEUStorage },
+        "slot1": { type: "slot", x: 441, y: 75 },
+        "slot2": { type: "slot", x: 441, y: 212 },
         "textInfo1": { type: "text", x: 642, y: 142, width: 350, height: 30, text: "0/" },
         "textInfo2": { type: "text", x: 642, y: 172, width: 350, height: 30, text: "60000000" }
     }
@@ -7676,8 +7693,8 @@ Callback.addCallback("PreLoaded", function () {
     function isToolboxEmpty(slot) {
         var container = BackpackRegistry.containers["d" + slot.data];
         if (container) {
-            for (var i_22 = 1; i_22 <= 10; i_22++) {
-                if (container.getSlot("slot" + i_22).id != 0) {
+            for (var i_23 = 1; i_23 <= 10; i_23++) {
+                if (container.getSlot("slot" + i_23).id != 0) {
                     return false;
                 }
             }
@@ -9137,7 +9154,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
             }
             if (this.data.z > this.z + r)
                 break;
-            var blockID = this.blockSource.getBlockID(this.data.x, this.data.scanY, this.data.z);
+            var blockID = this.blockSource.getBlockId(this.data.x, this.data.scanY, this.data.z);
             if (ore_blocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)) {
                 return true;
             }
@@ -9242,7 +9259,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
         var region = this.blockSource;
         if (this.data.progress == 0) {
             var y = this.y;
-            while (region.getBlockID(this.x, y - 1, this.z) == BlockID.miningPipe) {
+            while (region.getBlockId(this.x, y - 1, this.z) == BlockID.miningPipe) {
                 y--;
             }
             this.data.y = y;
@@ -9320,7 +9337,7 @@ MachineRegistry.registerElectricMachine(BlockID.miner, {
             }
         }
         else {
-            if (region.getBlockID(this.x, this.data.y, this.z) == BlockID.miningPipe) {
+            if (region.getBlockId(this.x, this.data.y, this.z) == BlockID.miningPipe) {
                 if (this.data.energy >= 3) {
                     this.data.energy -= 3;
                     this.data.progress++;
@@ -9635,10 +9652,10 @@ var cropHarvesterGuiObject = {
         "slotUpgrade2": { type: "slot", x: 880, y: 230, isValid: UpgradeAPI.isValidUpgrade }
     }
 };
-for (var i_23 = 0; i_23 < 15; i_23++) {
-    var x = i_23 % 5;
-    var y = Math.floor(i_23 / 5) + 1;
-    cropHarvesterGuiObject.elements["outSlot" + i_23] = { type: "slot", x: 520 + x * 60, y: 50 + y * 60 };
+for (var i_24 = 0; i_24 < 15; i_24++) {
+    var x = i_24 % 5;
+    var y = Math.floor(i_24 / 5) + 1;
+    cropHarvesterGuiObject.elements["outSlot" + i_24] = { type: "slot", x: 520 + x * 60, y: 50 + y * 60 };
 }
 ;
 var guiCropHarvester = new UI.StandartWindow(cropHarvesterGuiObject);
@@ -9700,8 +9717,8 @@ MachineRegistry.registerElectricMachine(BlockID.cropHarvester, {
                 drops = cropTile.performHarvest();
             }
             if (drops && drops.length) {
-                for (var i_24 in drops) {
-                    var item = drops[i_24];
+                for (var i_25 in drops) {
+                    var item = drops[i_25];
                     this.putItem(item);
                     this.data.energy -= 100;
                     if (item.count > 0) {
@@ -9787,11 +9804,11 @@ var newGuiMatronObject = {
             } }
     }
 };
-for (var i_25 = 1; i_25 < 7; i_25++) {
-    newGuiMatronObject.elements["slotWeedEx" + i_25] = { type: "slot", x: 441 + 60 * i_25, y: 155, isValid: isWeedEx };
-}
 for (var i_26 = 1; i_26 < 7; i_26++) {
-    newGuiMatronObject.elements["slotFertilizer" + i_26] = { type: "slot", x: 441 + 60 * i_26, y: 75, isValid: isFertilizer };
+    newGuiMatronObject.elements["slotWeedEx" + i_26] = { type: "slot", x: 441 + 60 * i_26, y: 155, isValid: isWeedEx };
+}
+for (var i_27 = 1; i_27 < 7; i_27++) {
+    newGuiMatronObject.elements["slotFertilizer" + i_27] = { type: "slot", x: 441 + 60 * i_27, y: 75, isValid: isFertilizer };
 }
 var guiCropMatron = new UI.StandartWindow(newGuiMatronObject);
 Callback.addCallback("LevelLoaded", function () {
@@ -9876,8 +9893,8 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
         }
     },
     getSlot: function (type) {
-        for (var i_27 = 0; i_27 < 7; i_27++) {
-            var slot = this.container.getSlot(type + i_27);
+        for (var i_28 = 0; i_28 < 7; i_28++) {
+            var slot = this.container.getSlot(type + i_28);
             if (slot.id)
                 return slot;
         }
@@ -10106,7 +10123,7 @@ Block.registerPlaceFunction("luminator", function (coords, item, block, player, 
     var x = coords.relative.x;
     var y = coords.relative.y;
     var z = coords.relative.z;
-    block = region.getBlockID(x, y, z);
+    block = region.getBlockId(x, y, z);
     if (GenerationUtils.isTransparentBlock(block)) {
         region.setBlock(x, y, z, item.id, coords.side);
         //World.playSound(x, y, z, "dig.stone", 1, 0.8)
@@ -10195,8 +10212,8 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
         SoundManager.playSound("NukeExplosion.ogg");
         var entities = Entity.getAll();
         var rad = radius * 1.5;
-        for (var i_28 in entities) {
-            var ent = entities[i_28];
+        for (var i_29 in entities) {
+            var ent = entities[i_29];
             var dist = Entity.getDistanceBetweenCoords(this, Entity.getPosition(ent));
             if (dist <= rad) {
                 var damage = Math.ceil(rad * rad * 25 / (dist * dist));
@@ -10220,8 +10237,8 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
                             if (Math.random() < 0.01) {
                                 var drop = ToolLib.getBlockDrop({ x: xx, y: yy, z: zz }, block.id, block.data, 100);
                                 if (drop)
-                                    for (var i_29 in drop) {
-                                        var item = drop[i_29];
+                                    for (var i_30 in drop) {
+                                        var item = drop[i_30];
                                         this.blockSource.spawnDroppedItem(xx, yy, zz, item[0], item[1], item[2]);
                                     }
                             }
@@ -12030,18 +12047,18 @@ var CoffeeMug = {
         Player.addItemToInventory(ItemID.mugEmpty, 1, 0);
     },
     craftFunction: function (api, field, result) {
-        for (var i_30 in field) {
-            if (field[i_30].id == VanillaItemID.bucket) {
-                if (field[i_30].count == 1) {
-                    field[i_30].data = 0;
+        for (var i_31 in field) {
+            if (field[i_31].id == VanillaItemID.bucket) {
+                if (field[i_31].count == 1) {
+                    field[i_31].data = 0;
                 }
                 else {
-                    api.decreaseFieldSlot(i_30);
+                    api.decreaseFieldSlot(i_31);
                     Player.addItemToInventory(VanillaItemID.bucket, 1, 0);
                 }
             }
             else {
-                api.decreaseFieldSlot(i_30);
+                api.decreaseFieldSlot(i_31);
             }
         }
     }
@@ -13624,13 +13641,13 @@ var ItemArmorSolarHelmet = /** @class */ (function (_super) {
         var region = BlockSource.getDefaultForActor(player);
         if (World.getThreadTime() % 20 == 0 && region.canSeeSky(pos.x, pos.y + 1, pos.z) &&
             (time >= 23500 || time < 12550) && (!World.getWeather().rain || region.getLightLevel(pos.x, pos.y + 1, pos.z) > 14)) {
-            for (var i_31 = 1; i_31 < 4; i_31++) {
+            for (var i_32 = 1; i_32 < 4; i_32++) {
                 var energy = 20;
-                var armor = Entity.getArmorSlot(player, i_31);
+                var armor = Entity.getArmorSlot(player, i_32);
                 var energyAdd = ChargeItemRegistry.addEnergyTo(armor, "Eu", energy, 4);
                 if (energyAdd > 0) {
                     energy -= energyAdd;
-                    Entity.setArmorSlot(player, i_31, armor.id, 1, armor.data, armor.extra);
+                    Entity.setArmorSlot(player, i_32, armor.id, 1, armor.data, armor.extra);
                     if (energy <= 0)
                         break;
                 }
@@ -14434,8 +14451,8 @@ ToolType.drill = {
                 return;
             }
         }
-        for (var i_32 = 9; i_32 < 45; i_32++) {
-            var slot = Player.getInventorySlot(i_32);
+        for (var i_33 = 9; i_33 < 45; i_33++) {
+            var slot = Player.getInventorySlot(i_33);
             if (slot.id == 50) {
                 if (Block.isSolid(block.id)) {
                     World.setBlock(place.x, place.y, place.z, 50, (6 - coords.side) % 6);
@@ -14452,7 +14469,7 @@ ToolType.drill = {
                 slot.count--;
                 if (slot.count == 0)
                     slot.id = 0;
-                Player.setInventorySlot(i_32, slot.id, slot.count, 0);
+                Player.setInventorySlot(i_33, slot.id, slot.count, 0);
                 break;
             }
         }
@@ -14673,8 +14690,8 @@ var NanoSaber = {
     },
     tick: function () {
         if (World.getThreadTime() % 20 == 0) {
-            for (var i_33 = 0; i_33 < 36; i_33++) {
-                var item = Player.getInventorySlot(i_33);
+            for (var i_34 = 0; i_34 < 36; i_34++) {
+                var item = Player.getInventorySlot(i_34);
                 if (item.id == ItemID.nanoSaberActive) {
                     var energyStored = ChargeItemRegistry.getEnergyStored(item);
                     if (this.activationTime > 0) {
@@ -14689,7 +14706,7 @@ var NanoSaber = {
                         item.id = ItemID.nanoSaber;
                     }
                     ChargeItemRegistry.setEnergyStored(item, energyStored);
-                    Player.setInventorySlot(i_33, item.id, 1, item.data, item.extra);
+                    Player.setInventorySlot(i_34, item.id, 1, item.data, item.extra);
                 }
             }
         }
@@ -15253,11 +15270,11 @@ IDRegistry.genItemID("icPainter");
 Item.createItem("icPainter", "Painter", { name: "ic_painter", meta: 0 }, { stack: 1 });
 var painterCreativeGroup = [ItemID.icPainter];
 var colorNames = ["Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Light Grey", "Dark Grey", "Pink", "Lime", "Yellow", "Light Blue", "Magenta", "Orange", "White"];
-for (var i_34 = 1; i_34 <= 16; i_34++) {
-    IDRegistry.genItemID("icPainter" + i_34);
-    Item.createItem("icPainter" + i_34, colorNames[i_34 - 1] + " Painter", { name: "ic_painter", meta: i_34 }, { stack: 1 });
-    Item.setMaxDamage(ItemID["icPainter" + i_34], 16);
-    painterCreativeGroup.push(ItemID["icPainter" + i_34]);
+for (var i_35 = 1; i_35 <= 16; i_35++) {
+    IDRegistry.genItemID("icPainter" + i_35);
+    Item.createItem("icPainter" + i_35, colorNames[i_35 - 1] + " Painter", { name: "ic_painter", meta: i_35 }, { stack: 1 });
+    Item.setMaxDamage(ItemID["icPainter" + i_35], 16);
+    painterCreativeGroup.push(ItemID["icPainter" + i_35]);
 }
 Item.addCreativeGroup("ic2_painter", Translation.translate("Painters"), painterCreativeGroup);
 Recipes.addShaped({ id: ItemID.icPainter, count: 1, data: 0 }, [
@@ -15270,13 +15287,13 @@ Recipes.addShapeless({ id: ItemID.icPainter2, count: 1, data: 0 }, [{ id: ItemID
 Recipes.addShapeless({ id: ItemID.icPainter3, count: 1, data: 0 }, [{ id: ItemID.icPainter, data: 0 }, { id: 351, data: 2 }]);
 Recipes.addShapeless({ id: ItemID.icPainter4, count: 1, data: 0 }, [{ id: ItemID.icPainter, data: 0 }, { id: 351, data: 17 }]);
 Recipes.addShapeless({ id: ItemID.icPainter5, count: 1, data: 0 }, [{ id: ItemID.icPainter, data: 0 }, { id: 351, data: 18 }]);
-for (var i_35 = 6; i_35 <= 15; i_35++) {
-    Recipes.addShapeless({ id: ItemID["icPainter" + i_35], count: 1, data: 0 }, [{ id: ItemID.icPainter, data: 0 }, { id: 351, data: i_35 - 1 }]);
+for (var i_36 = 6; i_36 <= 15; i_36++) {
+    Recipes.addShapeless({ id: ItemID["icPainter" + i_36], count: 1, data: 0 }, [{ id: ItemID.icPainter, data: 0 }, { id: 351, data: i_36 - 1 }]);
 }
 Recipes.addShapeless({ id: ItemID.icPainter16, count: 1, data: 0 }, [{ id: ItemID.icPainter, data: 0 }, { id: 351, data: 19 }]);
-var _loop_2 = function (i_36) {
-    var index = i_36 - 1;
-    Item.registerUseFunction("icPainter" + i_36, function (pos, item, block) {
+var _loop_2 = function (i_37) {
+    var index = i_37 - 1;
+    Item.registerUseFunction("icPainter" + i_37, function (pos, item, block) {
         if (CableRegistry.canBePainted(block.id) && block.data != index) {
             World.setBlock(pos.x, pos.y, pos.z, 0, 0);
             World.setBlock(pos.x, pos.y, pos.z, block.id, index);
@@ -15295,8 +15312,8 @@ var _loop_2 = function (i_36) {
         }
     });
 };
-for (var i_36 = 1; i_36 <= 16; i_36++) {
-    _loop_2(i_36);
+for (var i_37 = 1; i_37 <= 16; i_37++) {
+    _loop_2(i_37);
 }
 ModAPI.addAPICallback("RecipeViewer", function (api) {
     var RecipeViewer = api.Core;

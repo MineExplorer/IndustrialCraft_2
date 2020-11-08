@@ -2,7 +2,7 @@ namespace RubberTreeGenerator {
 	export let biomeData = {};
 
 	export function getBiomeChance(biomeID: number): number {
-		let chance = this.biomeData[biomeID] || 0;
+		let chance = biomeData[biomeID] || 0;
 		return chance / 100;
 	}
 
@@ -10,7 +10,7 @@ namespace RubberTreeGenerator {
 		if (!random) random = new java.util.Random(Debug.sysTime());
 
 		const minHeight = 3, maxHeight = 8;
-		let height = this.getGrowHeight(x, y, z, random.nextInt(maxHeight - minHeight + 1) + minHeight);
+		let height = getGrowHeight(x, y, z, random.nextInt(maxHeight - minHeight + 1) + minHeight, region);
 		if (height >= minHeight) {
 			let treeholeChance = 0.25;
 			for (let ys = 0; ys < height; ys++) {
@@ -31,7 +31,7 @@ namespace RubberTreeGenerator {
 						let radius = 2.5 + random.nextDouble() * 0.5;
 						if (ys == leavesEnd) radius /= 2;
 						if (Math.sqrt(xs*xs + zs*zs) <= radius) {
-							this.setLeaves(x + xs, y + ys, z + zs);
+							setLeaves(x + xs, y + ys, z + zs, region);
 						}
 					}
 				}
@@ -39,7 +39,7 @@ namespace RubberTreeGenerator {
 
 			let pikeHeight = 2 + Math.floor(random.nextDouble()*2);
 			for (let ys = 1; ys <= pikeHeight; ys++) {
-				this.setLeaves(x, y + ys + height, z, region);
+				setLeaves(x, y + ys + height, z, region);
 			}
 		}
 	}

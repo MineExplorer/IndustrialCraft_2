@@ -16,11 +16,24 @@ class TileEntityBatteryBlock extends TileEntityElectricMachine {
 		return screenName == "main" ? this.guiScreen : null;
 	}
 
+	isValidInputItem(slotName: string, id: number, amount: number) {
+		var tier = this.getTier();
+		if (slotName == "slot1" && ChargeItemRegistry.isValidItem(id, "Eu", tier)) {
+			return amount;
+		}
+		if (slotName == "slot2" && ChargeItemRegistry.isValidStorage(id, "Eu", tier)) {
+			return amount;
+		}
+		return 0;
+	}
+
 	init(): void {
 		if (this.data.meta != undefined) {
 			this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, this.data.meta + 2);
 			delete this.data.meta;
 		}
+
+		this.container.setGlobalAddTransferPolicy((container, name, id, amount, data, extra, playerUid) => this.isValidInputItem(name, id, amount));
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {

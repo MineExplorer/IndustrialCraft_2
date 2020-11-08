@@ -5213,15 +5213,26 @@ declare class ItemContainer {
 	 * @param name element name
 	 * @param value value to be set for the element
 	 */
-	setText(name: string, value: string): void;
+	setText(name: string, value: string | number): void;
 
 	/**
-	 * 
 	 * @param name element name
 	 * @returns "text" binding value, usually the text displayed on the 
 	 * element, or null if no element with specified name exist
 	 */
 	getText(name: string): Nullable<string>;
+
+	setGlobalAddTransferPolicy(transferPolicy: TransferPolicy): void;
+
+	setGlobalGetTransferPolicy(transferPolicy: TransferPolicy): void;
+
+	setSlotAddTransferPolicy(slotName: string, transferPolicy: TransferPolicy): void;
+
+	setSlotGetTransferPolicy(slotName: string, transferPolicy: TransferPolicy): void;
+}
+
+interface TransferPolicy {
+	(container: ItemContainer, name: string, id: number, amount: number, data: number, extra: ItemExtraData, playerUid: number): number;
 }
 /**
  * Class representing item extra data. Used to store additional information 

@@ -24,18 +24,22 @@ extends TileEntityMachine {
 	getEnergyStorage(): number {
 		return 0;
 	}
-		
+
+	getMaxPacketSize(): number {
+		return 8 << this.getTier()*2;
+	}
+
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
+		return (item.id == ItemID.debugItem || item.id == ItemID.EUMeter);
+	}
+	
 	energyTick(type: string, src: any): void {
 		this.last_energy_receive = this.energy_receive;
 		this.energy_receive = 0;
 		this.last_voltage = this.voltage;
 		this.voltage = 0;
 	}
-		
-	getMaxPacketSize(): number {
-		return 8 << this.getTier()*2;
-	}
-		
+
 	energyReceive(type: string, amount: number, voltage: number): number {
 		var maxVoltage = this.getMaxPacketSize();
 		if (voltage > maxVoltage) {

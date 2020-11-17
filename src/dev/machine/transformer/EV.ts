@@ -6,9 +6,11 @@ Block.createBlock("transformerEV", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.transformerEV, "stone", 1, true);
 
+TileRenderer.setHandAndUiModel(BlockID.transformerEV, 0, [["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0]]);
 TileRenderer.setStandardModel(BlockID.transformerEV, 0, [["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 1], ["ev_transformer_side", 1]]);
 TileRenderer.setStandardModel(BlockID.transformerEV, 1, [["ev_transformer_side", 0], ["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 1], ["ev_transformer_side", 1]]);
 TileRenderer.setStandardModelWithRotation(BlockID.transformerEV, 2, [["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0]]);
+TileRenderer.setRotationFunction(BlockID.transformerEV, true);
 
 MachineRegistry.setMachineDrop("transformerEV", BlockID.machineBlockBasic);
 

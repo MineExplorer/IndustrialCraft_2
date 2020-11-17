@@ -16,10 +16,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiSolarDistiller = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Solar Distiller")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	params: {       

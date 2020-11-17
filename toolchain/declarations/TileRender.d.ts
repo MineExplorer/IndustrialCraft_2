@@ -11,6 +11,7 @@ declare namespace TileRenderer {
     function setStandardModelWithRotation(id: number, data: number, texture: [string, number][], hasVertical?: boolean): void;
     /** @deprecated use setStandardModel instead*/
     function setStandartModel(id: number, texture: [string, number][], data?: number): void;
+    function setHandAndUiModel(id: number, data: number, texture: [string, number][]): void;
     function registerRenderModel(id: number, data: number, texture: [string, number][]): void;
     function registerModelWithRotation(id: number, data: number, texture: [string, number][], hasVertical?: boolean): void;
     /** @deprecated use registerModelWithRotation instead*/
@@ -19,7 +20,7 @@ declare namespace TileRenderer {
     function registerFullRotationModel(id: number, data: number, texture: [string, number][]): void;
     function getRenderModel(id: number, data: number | string): ICRender.Model;
     function mapAtCoords(x: number, y: number, z: number, id: number, data: number | string): void;
-    function getBlockRotation(hasVertical?: boolean): number;
+    function getBlockRotation(player: number, hasVertical?: boolean): number;
     function setRotationFunction(id: number, hasVertical?: boolean, placeSound?: string): void;
     /** @deprecated use setRotationFunction instead*/
     function setRotationPlaceFunction(id: number, hasVertical?: boolean, placeSound?: string): void;

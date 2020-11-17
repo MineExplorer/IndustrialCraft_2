@@ -21,10 +21,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiElectricFurnace = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Electric Furnace")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [

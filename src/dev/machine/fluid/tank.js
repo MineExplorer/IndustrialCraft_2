@@ -16,10 +16,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiTank = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Tank")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [

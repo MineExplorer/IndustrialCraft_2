@@ -18,23 +18,24 @@ block/crop/biome_bonuses.js
 block/crop/base_crop_classes.js
 block/crop/crop.js
 
-machine/generator/generator.js
-machine/generator/geothermal.js
-machine/generator/fluid_generator.js
-machine/generator/solar.js
-machine/generator/windmill.js
-machine/generator/watermill.js
-machine/generator/rt_generator.js
-machine/generator/stirling_generator.js
-machine/generator/heat_solid.js
-machine/generator/heat_fluid.js
-machine/generator/heat_electric.js
-machine/generator/rt_heat_generator.js
+machine/generator/generator.ts
+machine/generator/geothermal.ts
+machine/generator/fluid_generator.ts
+machine/generator/solar.ts
+machine/generator/windmill.ts
+machine/generator/watermill.ts
+machine/generator/rt_generator.ts
+machine/generator/stirling_generator.ts
+
+machine/heatgenerator/heat_solid.ts
+machine/heatgenerator/heat_fluid.ts
+machine/heatgenerator/heat_electric.ts
+machine/heatgenerator/rt_heat_generator.ts
 
 machine/reactor/reactorAPI.js
 machine/reactor/nuclear_reactor.js
 
-machine/storage/bat_box.ts
+machine/storage/BatBox.ts
 machine/storage/CESU.ts
 machine/storage/MFE.ts
 machine/storage/MFSU.ts
@@ -153,3 +154,7 @@ integration/recipe_viewer.js
 integration/tree_capitator.js
 
 api.ts
+
+*/**
+
+#downlevelIteration: false

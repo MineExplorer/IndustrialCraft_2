@@ -48,10 +48,10 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 var guiCentrifuge = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Thermal Centrifuge")}},
-		inventory: {standart: true},
-		background: {standart: true},
+		inventory: {standard: true},
+		background: {standard: true},
 	},
 
 	drawing: [

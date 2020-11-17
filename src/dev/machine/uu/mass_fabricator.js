@@ -23,10 +23,10 @@ Callback.addCallback("PreLoaded", function() {
 var ENERGY_PER_MATTER = 1000000;
 
 var guiMassFabricator = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Mass Fabricator")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [
@@ -74,7 +74,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		this.container.setText("textInfo2", parseInt(100 * this.data.progress / ENERGY_PER_MATTER) + "%");
 		
 		if (this.data.isEnabled && this.data.energy > 0) {
-			this.activate();
+			this.setActive(true);
 			this.startPlaySound();
 			if (this.data.catalyser < Math.max(1000, this.data.energy)) {
 				var catalyserSlot = this.container.getSlot("catalyserSlot");
@@ -106,7 +106,7 @@ MachineRegistry.registerElectricMachine(BlockID.massFabricator, {
 		}
 		else {
 			this.stopPlaySound();
-			this.deactivate();
+			this.setActive(false);
 		}
 		if (this.data.progress >= ENERGY_PER_MATTER) {
 			var matterSlot = this.container.getSlot("matterSlot");

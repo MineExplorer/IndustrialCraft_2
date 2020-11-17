@@ -26,10 +26,10 @@ function isWeedEx(id) {
 }
 
 var newGuiMatronObject = {
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Crop Matron")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 
 	drawing: [

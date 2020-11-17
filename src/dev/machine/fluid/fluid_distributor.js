@@ -19,10 +19,10 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 var guiFluidDistributor = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Fluid Distributor")}},
-		inventory: {standart: true},
-		background: {standart: true},
+		inventory: {standard: true},
+		background: {standard: true},
 	},
 
 	drawing: [

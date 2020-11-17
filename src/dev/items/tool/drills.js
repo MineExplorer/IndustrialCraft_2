@@ -201,8 +201,9 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 100, efficiency:
 		}
 		return params.base;
 	},
-	destroyBlock: function(coords, side, item, block) {
+	destroyBlock: function(coords, side, item, block, player) {
 		this.playDestroySound(item, block);
+		let region = WorldRegion.getForActor(player);
 		let mode = item.extra? item.extra.getInt("mode") : 0;
 		let material = ToolAPI.getBlockMaterialName(block.id);
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
@@ -222,14 +223,14 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 100, efficiency:
 						if (xx == coords.x && yy == coords.y && zz == coords.z) {
 							continue;
 						}
-						let blockID = World.getBlockID(xx, yy, zz);
+						let blockID = region.getBlockId(xx, yy, zz);
 						material = ToolAPI.getBlockMaterialName(blockID);
 						if (material == "dirt" || material == "stone") {
 							energyStored -= 800;
-							World.destroyBlock(xx, yy, zz, true);
+							region.destroyBlock(xx, yy, zz, true, player);
 							if (energyStored < 800) {
 								ChargeItemRegistry.setEnergyStored(item, energyStored);
-								Player.setCarriedItem(item.id, 1, item.data, item.extra);
+								Entity.setCarriedItem(player, item.id, 1, item.data, item.extra);
 								return;
 							}
 						}
@@ -237,7 +238,7 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 100, efficiency:
 				}
 			}
 			ChargeItemRegistry.setEnergyStored(item, energyStored);
-			Player.setCarriedItem(item.id, 1, item.data, item.extra);
+			Entity.setCarriedItem(player, item.id, 1, item.data, item.extra);
 		}
 	},
 	useItem: ToolType.drill.useItem,

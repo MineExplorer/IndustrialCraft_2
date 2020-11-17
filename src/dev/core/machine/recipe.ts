@@ -1,7 +1,7 @@
 namespace MachineRecipeRegistry {
 	export var recipeData = {};
 
-	export function registerRecipesFor(name: string, data: any, validateKeys: boolean) {
+	export function registerRecipesFor(name: string, data: any, validateKeys?: boolean) {
 		if (validateKeys) {
 			var newData = {};
 			for (var key in data) {
@@ -35,7 +35,7 @@ namespace MachineRecipeRegistry {
 		return this.recipeData[name];
 	}
 
-	export function getRecipeResult(name: string, key1: number, key2?: number) {
+	export function getRecipeResult(name: string, key1: string|number, key2?: string|number) {
 		var data = this.requireRecipesFor(name);
 		if (data) {
 			return data[key1] || data[key1+":"+key2];
@@ -43,7 +43,7 @@ namespace MachineRecipeRegistry {
 		return null;
 	}
 
-	export function hasRecipeFor(name: string, key1: number, key2?: number) {
+	export function hasRecipeFor(name: string, key1: string|number, key2?: string|number) {
 		return this.getRecipeResult(name, key1, key2)? true : false;
 	}
 }

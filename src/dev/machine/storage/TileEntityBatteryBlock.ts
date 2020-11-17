@@ -12,8 +12,8 @@ class TileEntityBatteryBlock extends TileEntityElectricMachine {
 		this.guiScreen = guiScreen;
 	}
 
-	getScreenByName(screenName: string): UI.StandartWindow {
-		return screenName == "main" ? this.guiScreen : null;
+	getScreenByName(): UI.StandartWindow {
+		return this.guiScreen;
 	}
 
 	isValidInputItem(slotName: string, id: number, amount: number) {
@@ -42,7 +42,7 @@ class TileEntityBatteryBlock extends TileEntityElectricMachine {
 				ICTool.useWrench(coords, item, 1);
 			return true;
 		}
-		return false;
+		return super.onItemUse(coords, item, player);
 	}
 
 	onWrenchUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
@@ -50,11 +50,7 @@ class TileEntityBatteryBlock extends TileEntityElectricMachine {
 		if (Entity.getSneaking(player)) {
 			newFacing ^= 1;
 		}
-		if (this.setFacing(newFacing)) {
-			EnergyNetBuilder.rebuildTileNet(this);
-			return true;
-		}
-		return false;
+		return this.setFacing(newFacing);
 	}
 
 	getFacing(): number {
@@ -64,6 +60,7 @@ class TileEntityBatteryBlock extends TileEntityElectricMachine {
 	setFacing(side: number): boolean {
 		if (this.getFacing() != side) {
 			this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, side);
+			EnergyNetBuilder.rebuildTileNet(this);
 			return true;
 		}
 		return false;

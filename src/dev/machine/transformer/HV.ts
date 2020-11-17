@@ -6,9 +6,11 @@ Block.createBlock("transformerHV", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.transformerHV, "stone", 1, true);
 
+TileRenderer.setHandAndUiModel(BlockID.transformerHV, 0, [["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_front", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0]]);
 TileRenderer.setStandardModel(BlockID.transformerHV, 0, [["hv_transformer_front", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 1], ["hv_transformer_side", 1]]);
 TileRenderer.setStandardModel(BlockID.transformerHV, 1, [["hv_transformer_side", 0], ["hv_transformer_front", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 1], ["hv_transformer_side", 1]]);
 TileRenderer.setStandardModelWithRotation(BlockID.transformerHV, 2, [["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_front", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0]]);
+TileRenderer.setRotationFunction(BlockID.transformerHV, true);
 
 MachineRegistry.setMachineDrop("transformerHV", BlockID.machineBlockBasic);
 
@@ -23,4 +25,4 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', BlockID.transformerMV, 0, 'a', ItemID.storageAdvBattery, -1, 'b', ItemID.cableGold2, -1, 'c', ItemID.circuitBasic, -1]);
 });
 
-MachineRegistry.registerPrototype(BlockID.transformerEV, new TileEntityTransformer(4));
+MachineRegistry.registerPrototype(BlockID.transformerHV, new TileEntityTransformer(4));

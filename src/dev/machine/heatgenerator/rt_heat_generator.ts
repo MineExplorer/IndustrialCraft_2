@@ -4,9 +4,10 @@ Block.createBlock("rtHeatGenerator", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.rtHeatGenerator, "stone", 1, true);
 
-TileRenderer.setStandartModel(BlockID.rtHeatGenerator, [["machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.rtHeatGenerator, 6, [["machine_bottom", 0], ["rt_heat_generator_top", 1], ["rt_generator_side", 0], ["heat_pipe", 1], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
+TileRenderer.setHandAndUiModel(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top", 1], ["rt_generator_side", 0], ["heat_pipe", 1], ["rt_generator_side", 0], ["rt_generator_side", 0]], true);
+TileRenderer.setRotationFunction(BlockID.rtHeatGenerator, true);
 
 MachineRegistry.setMachineDrop("rtHeatGenerator");
 
@@ -19,10 +20,10 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 var guiRTHeatGenerator = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Radioisotope Heat Generator")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [
@@ -45,23 +46,23 @@ Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiRTHeatGenerator, "Radioisotope Heat Generator");
 });
 
-MachineRegistry.registerGenerator(BlockID.rtHeatGenerator, {
-    defaultValues: {
-		meta: 0,
+
+class TileEntityRTHeatGenerator extends TileEntityMachine {
+	defaultValues: {
 		isActive: false
-	},
+	}
     
-	getGuiScreen: function() {
+	getScreenByName() {
 		return guiRTHeatGenerator;
-	},
+	}
 
-	wrenchClick: function(id, count, data, coords) {
-		this.setFacing(coords.side);
-	},
-	
-	setFacing: MachineRegistry.setFacing,
+	setupContainer() {
+		this.container.setGlobalAddTransferPolicy((contaier, name, id, amount, data) => {
+			return (id == ItemID.rtgPellet)? amount : 0
+		});
+	}
 
-	tick: function() {
+	tick() {
 		var output = 1;
 		for (var i = 0; i < 6; i++) {
 			var slot = this.container.getSlot("slot"+i);
@@ -88,9 +89,9 @@ MachineRegistry.registerGenerator(BlockID.rtHeatGenerator, {
 		}
 		this.container.setText("textInfo1", outputText + "/");
 		this.container.setText("textInfo2", maxOutput);
-	},
-	
-	renderModel: MachineRegistry.renderModelWith6Variations
-});
+		this.container.sendChanges();
+	}
+}
 
-TileRenderer.setRotationPlaceFunction(BlockID.rtHeatGenerator, true);
+MachineRegistry.registerGenerator(BlockID.rtHeatGenerator, new TileEntityRTHeatGenerator());
+

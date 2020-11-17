@@ -4,9 +4,9 @@ Block.createBlock("semifluidGenerator", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.semifluidGenerator, "stone", 1, true);
 
-TileRenderer.setStandartModel(BlockID.semifluidGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.semifluidGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.semifluidGenerator, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
+TileRenderer.setRotationFunction(BlockID.semifluidGenerator);
 
 MachineRegistry.setMachineDrop("semifluidGenerator", BlockID.primalGenerator);
 
@@ -26,10 +26,10 @@ MachineRecipeRegistry.registerRecipesFor("fluidFuel", {
 });
 
 var guiSemifluidGenerator = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Semifluid Generator")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [
@@ -41,15 +41,9 @@ var guiSemifluidGenerator = new UI.StandartWindow({
 	elements: {
 		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
 		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"slot1": {type: "slot", x: 440, y: 75,
-			isValid: function(id, count, data) {
-				var empty = LiquidLib.getEmptyItem(id, data);
-				if (!empty) return false;
-				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
-			}
-		},
-		"slot2": {type: "slot", x: 440, y: 183, isValid: function() {return false;}},
-		"slotEnergy": {type: "slot", x: 725, y: 165, isValid: function(id) {return ChargeItemRegistry.isValidItem(id, "Eu", 1);}}
+		"slot1": {type: "slot", x: 440, y: 75},
+		"slot2": {type: "slot", x: 440, y: 183},
+		"slotEnergy": {type: "slot", x: 725, y: 165}
 	}
 });
 
@@ -57,33 +51,50 @@ Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiSemifluidGenerator, "Semifluid Generator");
 });
 
-MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
-	defaultValues: {
-		meta: 0,
+class TileEntityFluidGenerator extends TileEntityGenerator {
+	constructor() {
+		super(1);
+	}
+
+	defaultValues = {
+		energy: 0,
 		fuel: 0,
 		liquid: null,
 		isActive: false,
-	},
+	}
 	
-	getGuiScreen: function() {
+	getGuiScreen() {
 		return guiSemifluidGenerator;
-	},
+	}
 	
-	init: function() {
+	init() {
+		super.init();
 		this.liquidStorage.setLimit(null, 10);
-		this.renderModel();
-	},
+	}
+
+	setupContainer() {
+		StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (id, count, data) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
+		StorageInterface.setSlotValidatePolicy(this.container, "slot1", (id, count, data) => {
+			var empty = LiquidLib.getEmptyItem(id, data);
+			if (!empty) return false;
+			return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+		});
+		this.container.setSlotAddTransferPolicy("slot2", () => 0);
+	}
 	
-	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
+		return MachineRegistry.getLiquidFromItem(liquid, inputItem, outputItem, byHand);
+	}
 	
-	click: function(id, count, data, coords) {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 		if (Entity.getSneaking(player)) {
-			var liquid = this.liquidStorage.getLiquidStored();
-			return this.getLiquidFromItem(liquid, {id: id, count: count, data: data}, null, true);
+			let liquid = this.liquidStorage.getLiquidStored();
+			return this.getLiquidFromItem(liquid, item, null, true);
 		}
-	},
+		return false;
+	}
 	
-	tick: function() {
+	tick() {
 		StorageInterface.checkHoppers(this);
 		var energyStorage = this.getEnergyStorage();
 		var liquid = this.liquidStorage.getLiquidStored();
@@ -103,51 +114,43 @@ MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
 			var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid);
 			this.data.energy += fuel.power;
 			this.data.fuel -= fuel.amount/20;
-			this.activate();
-			this.startPlaySound();
+			this.setActive(true);
+			//this.startPlaySound();
 		}
 		else {
 			this.data.liquid = null;
-			this.stopPlaySound();
-			this.deactivate();
+			//this.stopPlaySound();
+			this.setActive(false);
 		}
     
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
+		this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
 		
 		this.liquidStorage.updateUiScale("liquidScale", liquid);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
-	},
+		this.container.sendChanges();
+	}
 	
-	getOperationSound: function() {
+	getOperationSound() {
 		return "GeothermalLoop.ogg";
-	},
+	}
 
-	getEnergyStorage: function() {
-		return 10000;
-	},
-	
-	energyTick: function(type, src) {
-		var output = Math.min(32, this.data.energy);
-		this.data.energy += src.add(output) - output;
-	},
-	
-	renderModel: MachineRegistry.renderModelWithRotation
-});
+	getEnergyStorage() {
+		return 1000
+	}
+}
 
-TileRenderer.setRotationPlaceFunction(BlockID.semifluidGenerator);
+MachineRegistry.registerGenerator(BlockID.semifluidGenerator, new TileEntityFluidGenerator());
 
 StorageInterface.createInterface(BlockID.semifluidGenerator, {
 	slots: {
 		"slot1": {input: true},
 		"slot2": {output: true}
 	},
-	isValidInput: function(item) {
+	isValidInput: (item: ItemInstance) => {
 		var empty = LiquidLib.getEmptyItem(item.id, item.data);
 		if (!empty) return false;
 		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 	},
-	canReceiveLiquid: function(liquid, side) {
-		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid)
-	},
-	canTransportLiquid: function(liquid, side) { return false; }
+	canReceiveLiquid: (liquid: string) => MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid),
+	canTransportLiquid: (liquid: string) => false
 });

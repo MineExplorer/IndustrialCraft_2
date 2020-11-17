@@ -10,11 +10,9 @@ extends TileEntityElectricMachine {
 		return true;
 	}
 	
-	energyTick(type: string, src) {
+	energyTick(type: string, src: any) {
 		super.energyTick(type, src);
-		var output = this.getMaxPacketSize();
-		if (this.data.energy >= output) {
-			this.data.energy += src.add(output) - output;
-		}
+		var output = Math.min(this.data.energy, this.getMaxPacketSize());
+		this.data.energy += src.add(output) - output;
 	}
 }

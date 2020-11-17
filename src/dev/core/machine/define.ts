@@ -107,7 +107,7 @@ namespace MachineRegistry {
 		}
 		
 		for (var key in TileEntityElectricMachine.prototype) {
-			if (!Prototype.hasOwnProperty(key)) {
+			if (!Prototype[key]) {
 				Prototype[key] = TileEntityElectricMachine.prototype[key];
 			}
 		}
@@ -119,7 +119,7 @@ namespace MachineRegistry {
 	
 	export function registerGenerator(id: number, Prototype: any) {
 		for (var key in TileEntityGenerator.prototype) {
-			if (!Prototype.hasOwnProperty(key)) {
+			if (!Prototype[key]) {
 				Prototype[key] = TileEntityGenerator.prototype[key];
 			}
 		}
@@ -145,12 +145,11 @@ namespace MachineRegistry {
 	export function setStoragePlaceFunction(blockID: string | number, hasVerticalRotation?: boolean) {
 		Block.registerPlaceFunction(Block.getNumericId(blockID), function(coords, item, block, player, region) {
 			var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
-			region.setBlock(place.x, place.y, place.z, item.id, 0);
+			var rotation = TileRenderer.getBlockRotation(player, hasVerticalRotation);
+			region.setBlock(place.x, place.y, place.z, item.id, rotation);
 			// World.playSound(place.x, place.y, place.z, "dig.stone", 1, 0.8)
-			var rotation = TileRenderer.getBlockRotation(hasVerticalRotation);
 			var tile = World.addTileEntity(place.x, place.y, place.z, region);
 			tile.data.meta = rotation;
-			TileRenderer.mapAtCoords(place.x, place.y, place.z, item.id, rotation);
 			if (item.extra) {
 				tile.data.energy = item.extra.getInt("energy");
 			}
@@ -187,38 +186,12 @@ namespace MachineRegistry {
 		Block.registerDropFunction(nameID, function(coords, blockID, blockData, level) {
 			return MachineRegistry.getMachineDrop(coords, blockID, level, basicDrop);
 		});
-		Block.registerPopResourcesFunction(nameID, function(coords, block) { // drop on explosion
+		Block.registerPopResourcesFunction(nameID, function(coords, block, region) { // drop on explosion
 			if (Math.random() < 0.25) {
-				World.drop(coords.x + .5, coords.y + .5, coords.z + .5, basicDrop || block.id, 1, 0);
+				region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, basicDrop || block.id, 1, 0);
 			}
 		});
 	}
-	
-	export function renderModel() {
-		if (this.data.isActive) {
-			TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, 0);
-		} else {
-			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-		}
-	}
-	
-	export function renderModelWithRotation() {
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + (this.data.isActive? 4 : 0));
-	}
-	
-	export function renderModelWith6Variations() {
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + (this.data.isActive? 6 : 0));
-	}
-	
-	export function setActive(isActive: boolean) {
-		if (this.data.isActive != isActive) {
-			this.data.isActive = isActive;
-			this.renderModel();
-		}
-	}
-	
-	export var basicEnergyOutFunc = TileEntityGenerator.prototype.energyTick;
-	export var basicEnergyReceiveFunc = TileEntityElectricMachine.prototype.energyTick;
 	
 	export function getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand: boolean) {
 		if (byHand) outputItem = {id: 0, count: 0, data: 0};

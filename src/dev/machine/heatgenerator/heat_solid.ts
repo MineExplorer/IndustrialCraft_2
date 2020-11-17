@@ -4,13 +4,14 @@ Block.createBlock("solidHeatGenerator", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.solidHeatGenerator, "stone", 1, true);
 
-TileRenderer.setStandartModel(BlockID.solidHeatGenerator, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
-TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 0, [["heat_pipe", 0], ["generator", 0], ["machine_bottom", 0], ["machine_top", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
-TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 1, [["generator", 0], ["heat_pipe", 0], ["machine_top", 0], ["machine_bottom", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
-TileRenderer.registerRotationModel(BlockID.solidHeatGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
-TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 6, [["heat_pipe", 1], ["generator", 0], ["machine_bottom", 0], ["machine_top", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
-TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 7, [["generator", 0], ["heat_pipe", 1], ["machine_top", 0], ["machine_bottom", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
-TileRenderer.registerRotationModel(BlockID.solidHeatGenerator, 8, [["machine_bottom", 0], ["machine_top", 0], ["generator", 1], ["heat_pipe", 1], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
+TileRenderer.setHandAndUiModel(BlockID.solidHeatGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
+TileRenderer.setStandardModel(BlockID.solidHeatGenerator, 0, [["heat_pipe", 0], ["generator", 0], ["machine_bottom", 0], ["machine_top", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
+TileRenderer.setStandardModel(BlockID.solidHeatGenerator, 1, [["generator", 0], ["heat_pipe", 0], ["machine_top", 0], ["machine_bottom", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
+TileRenderer.setStandardModelWithRotation(BlockID.solidHeatGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 0, [["heat_pipe", 1], ["generator", 0], ["machine_bottom", 0], ["machine_top", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 1, [["generator", 0], ["heat_pipe", 1], ["machine_top", 0], ["machine_bottom", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
+TileRenderer.registerModelWithRotation(BlockID.solidHeatGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["generator", 1], ["heat_pipe", 1], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
+TileRenderer.setRotationFunction(BlockID.solidHeatGenerator, true);
 
 MachineRegistry.setMachineDrop("solidHeatGenerator");
 
@@ -30,10 +31,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiSolidHeatGenerator = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Solid Fuel Firebox")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [
@@ -57,26 +58,19 @@ Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiSolidHeatGenerator, "Solid Fuel Firebox");
 });
 
-MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
+class TIleEntitySolidHeatGenerator extends TileEntityMachine {
 	defaultValues:{
-		meta: 0,
 		burn: 0,
 		burnMax: 0,
 		output: 0,
 		isActive: false
-	},
+	}
 	
-	getGuiScreen: function() {
-       return guiSolidHeatGenerator;
-    },
+	getScreenByName() {
+		return guiSolidHeatGenerator;
+	}
 	
-	wrenchClick: function(id, count, data, coords) {
-		this.setFacing(coords.side);
-	},
-	
-	setFacing: MachineRegistry.setFacing,
-	
-	getFuel: function(fuelSlot) {
+	getFuel(fuelSlot: ItemInstance) {
 		if (fuelSlot.id > 0) {
 			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 			if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
@@ -84,9 +78,9 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 			}
 		}
 		return 0;
-	},
+	}
 
-	spreadHeat: function() {
+	spreadHeat() {
 		var side = this.data.meta;
 		var coords = StorageInterface.getRelativeCoords(this, side);
 		var TE = World.getTileEntity(coords.x, coords.y, coords.z, this.blockSource);
@@ -94,9 +88,14 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 			return this.data.output = TE.heatReceive(20);
 		}
 		return false;
-	},
+	}
 	
-    tick: function() {
+	setupContainer(): void {
+		StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (id, count, data) => Recipes.getFuelBurnDuration(id, data) > 0);
+		this.container.setSlotAddTransferPolicy("slotAshes", () => 0);
+	}
+	
+    tick(): void {
 		StorageInterface.checkHoppers(this);
 		
 		this.data.output = 0;
@@ -105,13 +104,13 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 			var fuelSlot = this.container.getSlot("slotFuel");
 			var burn = this.getFuel(fuelSlot) / 4;
 			if (burn && ((slot.id == ItemID.ashes && slot.count < 64) || slot.id == 0) && this.spreadHeat()) {
-				this.activate();
+				this.setActive(true);
 				this.data.burnMax = burn;
 				this.data.burn = burn - 1;
 				fuelSlot.count--;
 				this.container.validateSlot("slotFuel");
 			} else {
-				this.deactivate();
+				this.setActive(false);
 			}
 		}
 		else {
@@ -129,19 +128,15 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 		}
 		this.container.setText("textInfo1", outputText + "/");
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
-    },
-	
-	renderModel: MachineRegistry.renderModelWith6Variations,
-});
+    }
+}
 
-TileRenderer.setRotationPlaceFunction(BlockID.solidHeatGenerator, true);
+MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, new TIleEntitySolidHeatGenerator());
 
 StorageInterface.createInterface(BlockID.solidHeatGenerator, {
 	slots: {
 		"slotFuel": {input: true},
 		"slotAshes": {output: true}
 	},
-	isValidInput: function(item) {
-		return Recipes.getFuelBurnDuration(item.id, item.data) > 0;
-	}
+	isValidInput: (item: ItemInstance) => Recipes.getFuelBurnDuration(item.id, item.data) > 0
 });

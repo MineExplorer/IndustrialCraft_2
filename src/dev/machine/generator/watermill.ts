@@ -4,8 +4,8 @@ Block.createBlock("genWatermill", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.genWatermill, "stone", 1, true);
 
-TileRenderer.setStandartModel(BlockID.genWatermill, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]]);
-TileRenderer.registerRotationModel(BlockID.genWatermill, 0, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.genWatermill, 2, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]]);
+TileRenderer.setRotationFunction(BlockID.genWatermill);
 
 MachineRegistry.setMachineDrop("genWatermill", BlockID.primalGenerator);
 
@@ -17,24 +17,28 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0, 'a', ItemID.casingSteel, 0, 'c', ItemID.coil, 0]);
 });
 
+class TileEntityWatermill extends TileEntityGenerator {
+	constructor() {
+		super(1);
+	}
 
-MachineRegistry.registerGenerator(BlockID.genWatermill, {
 	defaultValues: {
-		meta: 0,
+		energy: 0,
 		output: 0
-	},
+	}
 	
-	biomeCheck: function(x, z) {
+	biomeCheck(x: number, z: number) {
 		var coords = [[x, z], [x-7, z], [x+7, z], [x, z-7], [x, z+7]];
-		for (var c in coords) {
+		for (var c of coords) {
 			var biome = this.blockSource.getBiome(c[0], c[1]);
 			if (biome==0 || biome==24) {return "ocean";}
 			if (biome==7) {return "river";}
 		}
 		return 0;
-	},
+	}
 
-	energyTick: function(type, src) {
+	energyTick(type: string, src: any) {
+		super.energyTick(type, src)
 		if (World.getThreadTime()%20 == 0) {
 			this.data.output = 0;
 			var biome = this.biomeCheck(this.x, this.z);
@@ -63,14 +67,7 @@ MachineRegistry.registerGenerator(BlockID.genWatermill, {
 			}
 		}
 		src.addAll(this.data.output);
-	},
-	
-	renderModel: function() {
-		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta);
-	},
-	destroy: function() {
-		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-	},
-});
+	}
+}
 
-TileRenderer.setRotationPlaceFunction(BlockID.genWatermill);
+MachineRegistry.registerPrototype(BlockID.genWatermill, new TileEntityWatermill());

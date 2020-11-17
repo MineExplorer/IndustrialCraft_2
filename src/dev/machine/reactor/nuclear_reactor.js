@@ -47,10 +47,10 @@ for (let y = 0; y < 6; y++) {
 }
 
 let guiNuclearReactor = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Nuclear Reactor")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [
@@ -79,7 +79,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	
 	chambers: [],
 		
-	getGuiScreen: function() {
+	getNameByScreen: function() {
 		return guiNuclearReactor;
 	},
 	
@@ -325,23 +325,23 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	calculateHeatEffects: function() {
-		let region = this.blockSource;
+		let region = new WorldRegion(this.blockSource);
         let power = this.data.heat / this.data.maxHeat;
         if (power >= 1) {
             this.explode();
         }
 		if (power >= 0.85 && Math.random() <= 0.2 * this.data.hem) {
 			let coord = this.getRandCoord(2);
-			let block = region.getBlockId(coord.x, coord.y, coord.z);
+			let block = region.getBlockId(coord);
 			let material = ToolAPI.getBlockMaterialName(block);
 			if (block == BlockID.nuclearReactor) {
-				let tileEntity = World.getTileEntity(coord.x, coord.y, coord.z, region);
+				let tileEntity = World.getTileEntity(coord, region);
 				if (tileEntity) {
 					tileEntity.explode();
 				}
 			}
 			else if (material == "stone" || material == "dirt") {
-				region.setBlock(coord.x, coord.y, coord.z, 11, 1);
+				region.setBlock(coord, 11, 1);
 			}
 		}
 		if (power >= 0.7 && World.getThreadTime()%20 == 0) {
@@ -358,20 +358,20 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		}
 		if (power >= 0.5 && Math.random() <= this.data.hem) {
 			let coord = this.getRandCoord(2);
-			let block = region.getBlockId(coord.x, coord.y, coord.z);
+			let block = region.getBlockId(coord);
 			if (block == 8 || block == 9) {
-				region.setBlock(coord.x, coord.y, coord.z, 0);
+				region.setBlock(coord, 0);
 			}
 		}
 		if (power >= 0.4 && Math.random() <= this.data.hem) {
 			let coord = this.getRandCoord(2);
-			let block = region.getBlockId(coord.x, coord.y, coord.z);
+			let block = region.getBlockId(coord);
 			let material = ToolAPI.getBlockMaterialName(block);
 			if (block != 49 && (material == "wood" || material == "wool" || material == "fibre" || material == "plant")) {
 				for (let i = 0; i < 6; i++) {
-					let c = World.getRelativeCoords(coord.x, coord.y, coord.z, i);
-					if (region.getBlockId(c.x, c.y, c.z) == 0) {
-						region.setBlock(c.x, c.y, c.z, 51);
+					let coord2 = World.getRelativeCoords(coord, i);
+					if (region.getBlockId(coord2) == 0) {
+						region.setBlock(coord2, 51);
 						break;
 					}
 				}
@@ -393,7 +393,7 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 	
 	core: null,
 
-	getGuiScreen: function() {
+	getNameByScreen: function() {
 		if (this.core) {
 			return guiNuclearReactor;
 		}

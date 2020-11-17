@@ -22,10 +22,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiPump = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Pump")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 
 	drawing: [

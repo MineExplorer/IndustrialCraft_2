@@ -4,9 +4,9 @@ Block.createBlock("electricHeatGenerator", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.electricHeatGenerator, "stone", 1, true);
 
-TileRenderer.setStandartModel(BlockID.electricHeatGenerator, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
-TileRenderer.registerFullRotationModel(BlockID.electricHeatGenerator, 6, [["machine_bottom", 0], ["ind_furnace_side", 1], ["heat_generator_side", 1], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 1], ["heat_generator_side", 1], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], true);
+TileRenderer.setRotationFunction(BlockID.electricHeatGenerator, true);
 
 ItemName.addTierTooltip("electricHeatGenerator", 4);
 
@@ -22,10 +22,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiElectricHeatGenerator = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Electric Heater")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [
@@ -34,17 +34,17 @@ var guiElectricHeatGenerator = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"slot0": {type: "slot", x: 440, y: 120, maxStackSize: 1, isValid: function(id) {return id == ItemID.coil}},
-		"slot1": {type: "slot", x: 500, y: 120, maxStackSize: 1, isValid: function(id) {return id == ItemID.coil}},
-		"slot2": {type: "slot", x: 560, y: 120, maxStackSize: 1, isValid: function(id) {return id == ItemID.coil}},
-		"slot3": {type: "slot", x: 620, y: 120, maxStackSize: 1, isValid: function(id) {return id == ItemID.coil}},
-		"slot4": {type: "slot", x: 680, y: 120, maxStackSize: 1, isValid: function(id) {return id == ItemID.coil}},
-		"slot5": {type: "slot", x: 440, y: 180, maxStackSize: 1, isValid: function(id) {return id == ItemID.coil}},
-		"slot6": {type: "slot", x: 500, y: 180, maxStackSize: 1, isValid: function(id) {return id == ItemID.coil}},
-		"slot7": {type: "slot", x: 560, y: 180, maxStackSize: 1, isValid: function(id) {return id == ItemID.coil}},
-		"slot8": {type: "slot", x: 620, y: 180, maxStackSize: 1, isValid: function(id) {return id == ItemID.coil}},
-		"slot9": {type: "slot", x: 680, y: 180, maxStackSize: 1, isValid: function(id) {return id == ItemID.coil}},
-		"slotEnergy": {type: "slot", x: 340, y: 180, isValid: MachineRegistry.isValidEUStorage},
+		"slot0": {type: "slot", x: 440, y: 120},
+		"slot1": {type: "slot", x: 500, y: 120},
+		"slot2": {type: "slot", x: 560, y: 120},
+		"slot3": {type: "slot", x: 620, y: 120},
+		"slot4": {type: "slot", x: 680, y: 120},
+		"slot5": {type: "slot", x: 440, y: 180},
+		"slot6": {type: "slot", x: 500, y: 180},
+		"slot7": {type: "slot", x: 560, y: 180},
+		"slot8": {type: "slot", x: 620, y: 180},
+		"slot9": {type: "slot", x: 680, y: 180},
+		"slotEnergy": {type: "slot", x: 340, y: 180},
 		"energyScale": {type: "scale", x: 342, y: 110, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 530, y: 264, width: 300, height: 30, text: "0    /"},
 		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 630, y: 264, width: 300, height: 30, text: "0"}
@@ -55,27 +55,33 @@ Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiElectricHeatGenerator, "Electric Heater");
 });
 
-MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
-    defaultValues: {
-		meta: 0,
-		isActive: false
-	},
-    
-	getGuiScreen: function() {
-		return guiElectricHeatGenerator;
-	},
-	
-	getTier: function() {
-		return 4;
-	},
-	
-	wrenchClick: function(id, count, data, coords) {
-		this.setFacing(coords.side);
-	},
-	
-	setFacing: MachineRegistry.setFacing,
+class TileEntityElectricHeatGenerator extends TileEntityElectricMachine {
+	constructor() {
+		super(4);
+	}
 
-	calcOutput: function() {
+	getScreenByName() {
+		return guiElectricHeatGenerator;
+	}
+
+	init() {
+		if (this.data.meta !== undefined) {
+			Game.message(`Update outdated tile with ID ${this.blockID}, data ${this.data.meta}`);
+			this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, this.data.meta);
+			delete this.data.meta;
+		}
+		this.container.setGlobalAddTransferPolicy((container, name, id, amount, data) => {
+			if (name == "slotEnergy") {
+				return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier())? amount : 0;
+			}
+			if (id == ItemID.coil && container.getSlot(name).count == 0) {
+				return 1;
+			}
+			return 0;
+		});
+	}
+
+	calcOutput() {
 		var maxOutput = 0;
 		for (var i = 0; i < 10; i++) {
 			var slot = this.container.getSlot("slot"+i);
@@ -84,20 +90,20 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 			}
 		}
 		return maxOutput;
-	},
+	}
 	
-	tick: function() {
+	tick() {
 		var maxOutput = this.calcOutput();
 		var output = 0;
 		
 		if (this.data.energy >= 1) {
-			var side = this.data.meta;
+			var side = this.getFacing();
 			var coords = StorageInterface.getRelativeCoords(this, side);
 			var TE = World.getTileEntity(coords.x, coords.y, coords.z, this.blockSource);
 			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 				output = TE.heatReceive(Math.min(maxOutput, this.data.energy));
 				if (output > 0) {
-					this.activate();
+					this.setActive(true);
 					this.data.energy -= output;
 					var outputText = output.toString();
 					for (var i = outputText.length; i < 6; i++) {
@@ -108,21 +114,29 @@ MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
 			}
 		}
 		if (output == 0) {
-			this.deactivate();
+			this.setActive(false);
 			this.container.setText("textInfo1", "0     /");
 		}
 		
 		var energyStorage = this.getEnergyStorage()
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 4);
+		this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 4);
+		
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo2", maxOutput);
-	},
+		this.container.sendChanges();
+	}
 	
-	getEnergyStorage: function() {
+	getEnergyStorage() {
 		return 2000;
-	},
-	
-	renderModel: MachineRegistry.renderModelWith6Variations
-});
+	}
 
-TileRenderer.setRotationPlaceFunction(BlockID.electricHeatGenerator, true);
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
+		if (ICTool.isWrench(item.id)) {
+			ICTool.rotateMachine(this, coords.side, item, player)
+			return true;
+		}
+		return super.onItemUse(coords, item, player);
+	}
+}
+
+MachineRegistry.registerPrototype(BlockID.electricHeatGenerator, new TileEntityElectricHeatGenerator());

@@ -20,10 +20,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiIronFurnace = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Iron Furnace")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [
@@ -107,11 +107,11 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		
 		if (this.data.burn > 0) {
 			this.data.burn--;
-			this.activate();
+			this.setActive(true);
 			this.startPlaySound();
 		} else {
 			this.stopPlaySound();
-			this.deactivate();
+			this.setActive(false);
 		}
 		
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);

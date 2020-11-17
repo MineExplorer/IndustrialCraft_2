@@ -80,10 +80,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiMetalFormer = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Metal Former")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [

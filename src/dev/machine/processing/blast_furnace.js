@@ -28,10 +28,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiBlastFurnace = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Blast Furnace")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 
 	drawing: [
@@ -161,7 +161,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 					this.controlAirImage(content, true);
 					this.data.progress++;
 					this.container.setScale("progressScale", this.data.progress / result.duration);
-					this.activate();
+					this.setActive(true);
 					
 					if (!this.data.sourceID) {
 						this.data.sourceID = source;
@@ -179,7 +179,7 @@ MachineRegistry.registerPrototype(BlockID.blastFurnace, {
 			}
 		} else {
 			this.setIndicator(content, false);
-			this.deactivate();
+			this.setActive(false);
 		}
 		
 		if (this.data.heat > 0) this.data.heat--;

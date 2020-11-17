@@ -8,6 +8,10 @@ let ICTool = {
 	getWrenchData: function(id) {
 		return this.wrenchData[id];
 	},
+
+	isWrench: function(id) {
+		return this.getWrenchData(id)? true : false;
+	},
 	
 	isValidWrench: function(item, damage) {
 		let wrench = this.getWrenchData(item.id);
@@ -20,14 +24,23 @@ let ICTool = {
 		return false;
 	},
 	
-	useWrench: function(coords, item, damage) {
+	useWrench: function(item, player, damage) {
 		let wrench = this.getWrenchData(item.id);
 		if (!wrench.energy) {
-			ToolAPI.breakCarriedTool(damage);
-		} else {
-			this.useElectricItem(item, wrench.energy * damage);
+			ToolLib.breakCarriedTool(damage, player);
+			return true;
 		}
-		SoundManager.playSoundAtBlock(coords, "Wrench.ogg");
+		return this.useElectricItem(item, wrench.energy * damage);
+	},
+
+	rotateMachine: function(tileEntity, side, item, player) {
+		if (this.useWrench(item, player, 1)) {
+			if (Entity.getSneaking(player)) {
+				side ^= 1;
+			}
+			tileEntity.setFacing(side);
+			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg");
+		}
 	},
 	
 	addRecipe: function(result, data, tool) {

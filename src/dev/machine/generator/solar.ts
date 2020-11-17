@@ -16,14 +16,14 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiSolarPanel = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Solar Panel")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 
 	elements: {
-		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id) {return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
+		"slotEnergy": {type: "slot", x: 600, y: 130},
 		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
 	}
 });
@@ -33,44 +33,46 @@ Callback.addCallback("LevelLoaded", function() {
 });
 
 
-MachineRegistry.registerGenerator(BlockID.solarPanel, {
-	defaultValues: {
+class TileEntitySolarGenerator extends TileEntityGenerator {
+	constructor() {
+		super(1);
+	}
+
+	defaultValues = {
+		energy: 0,
 		canSeeSky: false
-	},
+	}
 	
-	getGuiScreen: function() {
+	getScreenByName() {
 		return guiSolarPanel;
-	},
+	}
 	
-	init: function() {
+	init() {
 		this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
-	},
+		StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (id, count, data) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
+	}
 	
-	tick: function() {
-		var content = this.container.getGuiContent();
+	tick() {
+		// TODO: rewrite sun element to container events
 		if (World.getThreadTime()%100 == 0) {
 			this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
 		}
 		if (this.data.canSeeSky && this.blockSource.getLightLevel(this.x, this.y + 1, this.z) == 15) {
 			this.data.energy = 1;
-			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", 1, 1);
-			if (content) { 
+			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", 1, 1);
+			/*if (content) { 
 				content.elements["sun"].bitmap = "sun_on";
-			}
+			}*/
 		}
-		else if (content) { 
+		/*else if (content) { 
 			content.elements["sun"].bitmap = "sun_off";
-		}
-	},
-	
-	getEnergyStorage: function() {
-		return 1;
-	},
-	
-	energyTick: function(type, src) {
-		if (this.data.energy) {
-			src.addAll(1);
-			this.data.energy = 0;
-		}
+		}*/
+		this.container.sendChanges();
 	}
-});
+	
+	getEnergyStorage() {
+		return 1;
+	}
+}
+
+MachineRegistry.registerPrototype(BlockID.solarPanel, new TileEntitySolarGenerator());

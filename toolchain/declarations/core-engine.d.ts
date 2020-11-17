@@ -602,7 +602,7 @@ declare namespace Block {
 	 * @returns block drop, the array of arrays, each containing three values: 
 	 * id, count and data respectively
 	 */
-	function getBlockDropViaItem(block: Tile, item: ItemInstance, coords: Vector): [number, number, number][];
+	function getBlockDropViaItem(block: Tile, item: ItemInstance, coords: Vector, region: BlockSource): [number, number, number, ItemExtraData?][];
 
 	/**
 	 * Same as [[Block.registerPlaceFunction]] but accepts only numeric 
@@ -869,7 +869,7 @@ declare namespace Block {
 	 * id, count, data and extra respectively
 	 */
 	interface DropFunction {
-		(blockCoords: Callback.ItemUseCoordinates, blockID: number, blockData: number, diggingLevel: number, enchant: ToolAPI.EnchantData, item: ItemInstance, region: BlockSource): [number, number, number, number?][]
+		(blockCoords: Callback.ItemUseCoordinates, blockID: number, blockData: number, diggingLevel: number, enchant: ToolAPI.EnchantData, item: ItemInstance, region: BlockSource): [number, number, number, ItemExtraData?][]
 	}
 
 	interface EntityInsideFunction {
@@ -941,7 +941,12 @@ declare namespace Block {
 	interface NeighbourChangeFunction {
 		(coords: Vector, block: Tile, changedCoords: Vector, region: BlockSource): void
 	}
+        /**
+         * @returns drop function of the block with given numeric id
+         */
+        function getDropFunction(id: number): Block.DropFunction;
 }
+
 /**
  * Module used to create blocks with any custom model
  */
@@ -1392,6 +1397,109 @@ declare namespace Callback {
      * @param func function to be called when an event occures
      */
     function addCallback(name: string, func: Function): void;
+
+    function addCallback(name: "CraftRecipePreProvided", func: CraftRecipePreProvidedFunction): void;
+
+    function addCallback(name: "CraftRecipeProvidedFunction", func: CraftRecipeProvidedFunction): void;
+
+    function addCallback(name: "VanillaWorkbenchCraft", func: VanillaWorkbenchCraftFunction): void;
+
+    function addCallback(name: "VanillaWorkbenchPostCraft", func: VanillaWorkbenchCraftFunction): void;
+
+    function addCallback(name: "VanillaWorkbenchRecipeSelected", func: VanillaWorkbenchRecipeSelectedFunction): void;
+
+    function addCallback(name: "ContainerClosed", func: ContainerClosedFunction): void;
+
+    function addCallback(name: "ContainerOpened", func: ContainerOpenedFunction): void;
+
+    function addCallback(name: "CustomWindowOpened", func: CustomWindowOpenedFunction): void;
+
+    function addCallback(name: "CustomWindowClosed", func: CustomWindowClosedFunction): void;
+
+    function addCallback(name: "CoreConfigured", func: CoreConfiguredFunction): void;
+
+    function addCallback(name: "LevelSelected", func: LevelSelectedFunction): void;
+
+    function addCallback(name: "DimensionLoaded", func: DimensionLoadedFunction): void;
+
+    function addCallback(name: "DestroyBlock", func: DestroyBlockFunction): void;
+
+    function addCallback(name: "DestroyBlockStart", func: DestroyBlockFunction): void;
+
+    function addCallback(name: "DestroyBlockContinue", func: DestroyBlockContinueFunction): void;
+
+    function addCallback(name: "BuildBlock", func: BuildBlockFunction): void;
+
+    function addCallback(name: "BlockChanged", func: BlockChangedFunction): void;
+
+    function addCallback(name: "ItemUse", func: ItemUseFunction): void;
+
+    function addCallback(name: "ItemUseLocalServer", func: ItemUseFunction): void;
+
+    function addCallback(name: "Explosion", func: ExplosionFunction): void;
+
+    function addCallback(name: "FoodEaten", func: FoodEatenFunction): void;
+
+    function addCallback(name: "ExpAdd", func: ExpAddFunciton): void;
+
+    function addCallback(name: "ExpLevelAdd", func: ExpLevelAddFunciton): void;
+
+    function addCallback(name: "NativeCommand", func: NativeCommandFunciton): void;
+
+    function addCallback(name: "PlayerAttack", func: PlayerAttackFunction): void;
+
+    function addCallback(name: "EntityAdded", func: EntityAddedFunction): void;
+
+    function addCallback(name: "EntityRemoved", func: EntityRemovedFunction): void;
+
+    function addCallback(name: "EntityDeath", func: EntityDeathFunction): void;
+
+    function addCallback(name: "EntityHurt", func: EntityHurtFunction): void;
+
+    function addCallback(name: "EntityInteract", func: EntityInteractFunction): void;
+
+    function addCallback(name: "ProjectileHit", func: ProjectileHitFunction): void;
+
+    function addCallback(name: "RedstoneSignal", func: RedstoneSignalFunction): void;
+
+    function addCallback(name: "PopBlockResources", func: PopBlockResourcesFunction): void;
+
+    function addCallback(name: "ItemIconOverride", func: ItemIconOverrideFunction): void;
+
+    function addCallback(name: "ItemNameOverride", func: ItemNameOverrideFunction): void;
+
+    function addCallback(name: "ItemUseNoTarget", func: ItemUseNoTargetFunction): void;
+
+    function addCallback(name: "ItemUsingReleased", func: ItemUsingReleasedFunction): void;
+
+    function addCallback(name: "ItemUsingComplete", func: ItemUsingCompleteFunction): void;
+
+    function addCallback(name: "ItemDispensed", func: ItemDispensedFunction): void;
+
+    function addCallback(name: "NativeGuiChanged", func: NativeGuiChangedFunction): void;
+
+    function addCallback(name: "GenerateChunk", func: GenerateChunkFunction): void;
+
+    /**
+     * @deprecated
+     */
+    function addCallback(name: "GenerateChunkUnderground", func: GenerateChunkFunction): void;
+
+    function addCallback(name: "GenerateNetherChunk", func: GenerateChunkFunction): void;
+
+    function addCallback(name: "GenerateEndChunk", func: GenerateChunkFunction): void;
+
+    function addCallback(name: "GenerateChunkUniversal", func: GenerateChunkFunction): void;
+
+    function addCallback(name: "GenerateBiomeMap", func: GenerateChunkFunction): void;
+
+    function addCallback(name: "ReadSaves", func: SavesFunction): void;
+
+    function addCallback(name: "WriteSaves", func: SavesFunction): void;
+
+    function addCallback(name: "CustomBlockTessellation", func: CustomBlockTessellationFunction): void;
+
+    function addCallback(name: "ServerPlayerTick", func: ServerPlayerTickFunction): void;
 
     /**
      * Invokes callback with any name and up to 10 additional parameters. You
@@ -5137,6 +5245,13 @@ declare class ItemContainer {
 	 * Getter for [[Container.parent]] field
 	 */
 	getParent(): Nullable<TileEntity> | any;
+
+	/**
+	 * Opens UI for client
+	 * @param client client in which UI will be open
+	 * @param screenName name of the screen to open
+	 */
+	openFor(client: Network.Client, screenName: string): void;
 
 	/**
 	 * Gets the slot by its name. If a slot with specified name doesn't 
@@ -9765,6 +9880,11 @@ declare namespace UI {
 		 * the window canvas
 		 */
 		setDebugEnabled(enabled: boolean): void;
+
+		/**
+		 * @returns whether the window can be closed on pressing back navigation button
+		 */
+		onBackPressed(): boolean;
 	}
 
 
@@ -10021,6 +10141,18 @@ declare namespace UI {
 		 * Writes debug information about current window to the log
 		 */
 		debug(): void;
+
+		/**
+		 * @returns whether the window can be closed on pressing back navigation button
+		 */
+		onBackPressed(): boolean;
+
+		/**
+		 * Gives the property to be closed on pressing back navigation button to the given window
+		 */
+		setCloseOnBackPressed(val: boolean): void;
+
+
 	}
 
 
@@ -10195,6 +10327,16 @@ declare namespace UI {
 		 * the window canvas
 		 */
 		setDebugEnabled(enabled: boolean): void;
+
+		/**
+		 * @returns whether the window group can be closed on pressing back navigation button
+		 */
+		onBackPressed(): boolean;
+
+		/**
+		 * Gives the property to be closed on pressing back navigation button to the given window group
+		 */
+		setCloseOnBackPressed(val: boolean): void;
 	}
 
 
@@ -11360,10 +11502,9 @@ declare namespace UI {
 		}
 
 		/**
-		 * Array of [[DrawingElement]] instances to be used as drawing 
-		 * components for the window
+		 * Array of drawings
 		 */
-		drawing?: DrawingElement[],
+		drawing?: DrawingSet,
 
 		/**
 		 * Object containing keys as gui elements names and [[UIElement]] 
@@ -11373,107 +11514,359 @@ declare namespace UI {
 		elements: UIElementSet,
 	}
 
-	interface DrawingElement {
-		/**
-		 * Type of a [[DrawingElement]]
-		 */
-		type: string,
+	interface ColorDrawing {
+		type: "background",
+
+		color: number,
+
+		mode?: android.graphics.PorterDuff.Mode,
 
 		/**
-		 * X-axis position of a [[DrawingElement]]
+		 * @deprecated
 		 */
-		x?: number;
-
-		/**
-		 * Y-axis position of a [[DrawingElement]]
-		 */
-		y?: number;
-
-		/**
-		 * Scale of a [[UIElement]]
-		 */
-		scale?: number;
-
-		/**
-		 * Bitmap of [[UIElement]]
-		 */
-		bitmap?: string;
-
-		color?: number
+		colorMode?: android.graphics.PorterDuff.Mode
 	}
 
+	interface CustomDrawing {
+		type: "custom",
+
+		onDraw?: (canvas: android.graphics.Canvas, scale: number) => void,
+
+		[key: string]: any
+	}
+
+	interface FrameDrawing {
+		type: "frame",
+
+		x: number,
+
+		y: number,
+
+		bitmap: string
+
+		sides?: boolean[],
+
+		scale?: number,
+
+		width?: number,
+
+		height?: number,
+
+		color?: number,
+
+		/**
+		 * @deprecated
+		 */
+		bg?: number
+	}
+
+	interface ImageDrawing {
+		type?: "bitmap",
+
+		x: number,
+
+		y: number,
+
+		bitmap: string,
+
+		width?: number,
+
+		height?: number,
+
+		scale?: number
+	}
+
+	interface LineDrawing {
+		type?: "line",
+
+		x1: number,
+
+		y1: number,
+
+		x2: number,
+
+		y2: number,
+
+		color?: number,
+
+		width?: number
+	}
+
+	interface TextDrawing {
+		type: "text",
+
+		x: number,
+
+		y: number,
+
+		text: string,
+
+		font?: FontParams
+	}
+
+
 	interface UIElement {
-		/**
-		 * Type of a [[UIElement]]
-		 */
-		type: string;
+		x: number,
 
-		/**
-		 * X-axis position of a [[UIElement]]
-		 */
-		x: number;
+		y: number,
 
-		/**
-		 * Y-axis position of a [[UIElement]]
-		 */
-		y: number;
+		z?: number,
 
-		/**
-		 * Scale of a [[UIElement]]
-		 */
-		scale?: number;
+		clicker?: UIClickEvent
+	}
 
-		/**
-		 * Width of a [[UIElement]]
-		 * Works only if [[type]] equals "text"
-		 */
-		width?: number;
+	interface UICustomElement extends UIElement {
+		type: "custom",
 
-		/**
-		 * Height of a [[UIElement]]
-		 * Works only if [[type]] equals "text"
-		 */
-		height?: number;
+		onSetup?: (element: Element) => void,
 
-		/**
-		 * Text of a [[UIElement]]
-		 * Works only if [[type]] equals "text"
-		 */
-		text?: string;
+		onDraw?: (element: Element, canvas: android.graphics.Canvas, scale: number) => void,
 
-		/**
-		 * Bitmap of [[UIElement]]
-		 */
-		bitmap?: string;
+		onTouchReleased?: (element: Element) => void,
 
-		/**
-		 * Second bitmap of [[UIElement]]
-		 * Visible only if [[UIElement]] is touched
-		 */
-		bitmap2?: string;
+		onBindingUpdated?: (element: Element, name: string, value: any) => void,
 
-		/**
-		 * On click event of [[UIElement]]
-		 */
-		clicker?: UIClickEvent,
+		onReset?: (element: Element) => void,
 
-		/**
-		 * Direction of [[UIElement]]
-		 * Works only if [[type]] equals "scale"
-		 */
+		onRelease?: (element: Element) => void,
+
+		onContainerInit?: (element: Element, container: Container, elementName: string) => void,
+
+		[key: string]: any
+	}
+
+	interface UIButtonElement extends UIElement {
+		type: "button",
+
+		bitmap?: string,
+
+		bitmap2?: string,
+
+		scale?: number
+	}
+
+	interface UICloseButtonElement extends UIElement {
+		type: "close_button" | "closeButton",
+
+		bitmap?: string,
+
+		bitmap2?: string,
+
+		scale?: number
+	}
+
+	interface UIFrameElement extends UIElement {
+		type: "frame",
+
+		bitmap?: string,
+
+		width?: number,
+
+		height?: number,
+
+		scale?: number,
+
+		color?: number,
+
+		sides?: boolean[]
+	}
+
+	interface UIImageElement extends UIElement {
+		type: "image",
+
+		width?: number,
+
+		height?: number,
+
+		scale?: number,
+
+		bitmap?: string,
+
+		overlay?: string
+	}
+
+	interface UIScaleElement extends UIElement {
+		type: "scale",
+
+		scale?: number,
+
 		direction?: number,
 
-		/**
-		 * Value of [[UIElement]]
-		 * Works only if [[type]] equals "scale"
-		 */
+		invert?: boolean,
+
+		pixelate?: boolean,
+
 		value?: number,
 
-		/**
-		 * Overlay bitmap of [[UIElement]]
-		 * Works only if [[type]] equals "scale"
-		 */
-		overlay?: string
+		bitmap?: string
+
+		width?: number,
+
+		height?: number,
+
+		background?: string,
+
+		overlay?: string,
+
+		backgroundOffset?: { x?: number, y?: number },
+
+		overlayOffset?: { x?: number, y?: number }
+	}
+
+	interface UIScrollElement extends UIElement {
+		type: "scroll",
+
+		isInt?: boolean,
+
+		width?: number,
+
+		height?: number,
+
+		length?: number,
+
+		min?: number,
+
+		max?: number,
+
+		divider?: number,
+
+		bindingObject?: any,
+
+		bindingProperty?: string
+
+		configValue?: Config.ConfigValue,
+
+		bitmapHandle?: string,
+
+		bitmapHandleHover?: string,
+
+		bitmapBg?: string,
+
+		bitmapBgHover?: string,
+
+		ratio?: number,
+
+		onNewValue?: (value: number, container: Container, element: Element) => void
+	}
+
+	interface UISlotElement extends UIElement {
+		type: "slot",
+
+		bitmap?: string,
+
+		size?: number,
+
+		maxStackSize?: number,
+
+		visual?: boolean,
+
+		darken?: boolean,
+
+		isDarkenAtZero?: boolean,
+
+		text?: string,
+
+		onItemChanged?: (container: Container, oldId: number, oldData: number, oldCount: number) => void,
+
+		isValid?: (id: number, count: number, data: number, container: Container, item: ItemInstance) => boolean
+	}
+
+	interface UISwitchElement extends UIElement {
+		type: "switch",
+
+		bindingObject?: any,
+
+		bindingProperty?: string,
+
+		configValue?: Config.ConfigValue,
+
+		bitmapOn?: string,
+
+		bitmapOnHover?: string,
+
+		bitmapOff?: string,
+
+		bitmapOffHover?: string,
+
+		scale?: number,
+
+		onNewState?: (value: number, container: Container, element: Element) => void
+	}
+
+	interface UITabElement extends UIElement {
+		type: "tab"
+
+		selectedColor?: number,
+
+		deselectedColor?: number,
+
+		tabIndex?: number,
+
+		isAlwaysSelected?: boolean,
+
+		isSelected?: boolean,
+
+		bitmap?: string,
+
+		width?: number,
+
+		height?: number,
+
+		scale?: number,
+
+		color?: number,
+
+		sides?: boolean[]
+	}
+
+	interface UITextElement extends UIElement{
+		type: "text",
+
+		text: string
+
+		font?: FontParams,
+
+		multiline?: boolean,
+
+		format?: boolean,
+
+		maxCharsPerLine?: number,
+
+		width?: number,
+
+		height?: number
+	}
+
+	interface UIFPSTextElement extends UIElement {
+		type: "fps",
+
+		interpolate?: boolean,
+
+		period?: number,
+
+		font?: FontParams,
+
+		multiline?: boolean,
+
+		format?: boolean,
+
+		maxCharsPerLine?: number
+	}
+
+	interface UIInvSlotElement extends UIElement {
+		type: "invSlot" | "invslot",
+
+		index?: number
+
+		size?: number,
+
+		darken?: boolean,
+
+		isDarkenAtZero?: boolean,
+
+		text?: string,
+
+		onItemChanged?: (container: Container, oldId: number, oldData: number, oldCount: number) => void
 	}
 
 
@@ -11488,8 +11881,27 @@ declare namespace UI {
 	 * [[UIElement]] instance to be used
 	 */
 	interface UIElementSet {
-		[key: string]: UIElement
+		[key: string]: UICustomElement
+			| UIButtonElement
+			| UICloseButtonElement
+			| UIFrameElement
+			| UIImageElement
+			| UIScaleElement
+			| UIScrollElement
+			| UISlotElement
+			| UISwitchElement
+			| UITabElement
+			| UITextElement
+			| UIFPSTextElement
+			| UIInvSlotElement
 	}
+
+	type DrawingSet = (ColorDrawing
+		| CustomDrawing
+		| FrameDrawing
+		| ImageDrawing
+		| LineDrawing
+		| TextDrawing)[]
 
 
 	/**

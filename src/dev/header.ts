@@ -12,7 +12,7 @@
 */
 
 // libraries
-IMPORT("TypeEngine");
+IMPORT("BlockEngine");
 IMPORT("flags");
 IMPORT("Vector");
 IMPORT("ToolLib");
@@ -42,7 +42,7 @@ var EntityType = Native.EntityType;
 var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 
 // API
-function randomInt(min, max) {
+function randomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 

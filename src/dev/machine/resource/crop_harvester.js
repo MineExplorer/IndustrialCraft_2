@@ -15,10 +15,10 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 var cropHarvesterGuiObject = {
-    standart: {
+    standard: {
         header: {text: {text: Translation.translate("Crop Harvester")}},
-        inventory: {standart: true},
-        background: {standart: true}
+        inventory: {standard: true},
+        background: {standard: true}
     },
 
     drawing: [

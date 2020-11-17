@@ -21,4 +21,4 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', BlockID.machineBlockBasic, 0, 'b', ItemID.cableCopper1, 0]);
 });
 
-MachineRegistry.registerPrototype(BlockID.transformerEV, new TileEntityTransformer(3));
+MachineRegistry.registerPrototype(BlockID.transformerMV, new TileEntityTransformer(3));

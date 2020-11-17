@@ -21,4 +21,4 @@ Callback.addCallback("PreLoaded", function() {
 	], ['o', ItemID.coil, 0, 'a', 5, -1, 'b', ItemID.cableTin1, 0]);
 });
 
-MachineRegistry.registerPrototype(BlockID.transformerEV, new TileEntityTransformer(2));
+MachineRegistry.registerPrototype(BlockID.transformerLV, new TileEntityTransformer(2));

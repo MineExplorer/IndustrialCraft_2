@@ -59,10 +59,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiSolidCanner = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Solid Canning Machine")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 
 	drawing: [

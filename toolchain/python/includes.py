@@ -221,10 +221,10 @@ class Includes:
 			json.dump(template, tsconfig, indent="\t")
 
 	def build_source(self, temp_path):
-		result = os.system(f'tsc -p "{self.get_tsconfig()}" --noEmitOnError')
+		os.system(f'tsc -p "{self.get_tsconfig()}"')
 
 		declaration_path = f"{splitext(temp_path)[0]}.d.ts"
 		if(isfile(declaration_path)):
 			move_file(declaration_path, join(make_config.get_path("toolchain/build/project/declarations"), basename(declaration_path)))
 
-		return result
+		return 0

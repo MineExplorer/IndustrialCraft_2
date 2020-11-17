@@ -23,10 +23,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiInductionFurnace = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Induction Furnace")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [

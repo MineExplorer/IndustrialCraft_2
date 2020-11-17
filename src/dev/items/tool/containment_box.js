@@ -8,10 +8,10 @@ Recipes.addShaped({id: ItemID.containmentBox, count: 1, data: 0}, [
 ], ['x', 54, -1, 'a', ItemID.casingLead, 0]);
 
 let guiContainmentBox = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Containment Box")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	drawing: [
 		{type: "background", color: Color.parseColor("#d5d9b9")},

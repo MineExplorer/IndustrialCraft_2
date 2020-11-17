@@ -4,9 +4,9 @@ Block.createBlock("geothermalGenerator", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.geothermalGenerator, "stone", 1, true);
 
-TileRenderer.setStandartModel(BlockID.geothermalGenerator, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.geothermalGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.geothermalGenerator, 4, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.geothermalGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.geothermalGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setRotationFunction(BlockID.geothermalGenerator);
 
 MachineRegistry.setMachineDrop("geothermalGenerator", BlockID.primalGenerator);
 
@@ -20,10 +20,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiGeothermalGenerator = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Geothermal Generator")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [
@@ -35,13 +35,9 @@ var guiGeothermalGenerator = new UI.StandartWindow({
 	elements: {
 		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
 		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"slot1": {type: "slot", x: 440, y: 75,
-			isValid: function(id, count, data) {
-				return LiquidLib.getItemLiquid(id, data) == "lava";
-			}
-		},
-		"slot2": {type: "slot", x: 440, y: 183, isValid: function() {return false;}},
-		"slotEnergy": {type: "slot", x: 725, y: 165, isValid: function(id) {return ChargeItemRegistry.isValidItem(id, "Eu", 1);}}
+		"slot1": {type: "slot", x: 440, y: 75},
+		"slot2": {type: "slot", x: 440, y: 183},
+		"slotEnergy": {type: "slot", x: 725, y: 165}
 	}
 });
 
@@ -49,30 +45,40 @@ Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiGeothermalGenerator, "Geothermal Generator");
 });
 
-MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
-	defaultValues: {
-		meta: 0,
+class TileEntityGeoGenerator extends TileEntityGenerator {
+	constructor() {
+		super(1);
+	}
+
+	defaultValues = {
+		energy: 0,
 		isActive: false,
-	},
+	}
 	
-	getGuiScreen: function() {
+	getScreenByName() {
 		return guiGeothermalGenerator;
-	},
+	}
 	
-	init: function() {
+	init() {
+		super.init();
 		this.liquidStorage.setLimit("lava", 8);
-		this.renderModel();
-	},
+		StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (id, count, data) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
+		StorageInterface.setSlotValidatePolicy(this.container, "slot1", (id, count, data) => LiquidLib.getItemLiquid(id, data) == "lava");
+		this.container.setSlotAddTransferPolicy("slot2", () => 0);
+	}
 	
-	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
+	getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
+		return MachineRegistry.getLiquidFromItem(liquid, inputItem, outputItem, byHand);
+	}
 	
-	click: function(id, count, data, coords) {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 		if (Entity.getSneaking(player)) {
-			return this.getLiquidFromItem("lava", {id: id, count: count, data: data}, null, true);
+			return this.getLiquidFromItem("lava", item, null, true);
 		}
-	},
+		return false;
+	}
 	
-	tick: function() {
+	tick() {
 		StorageInterface.checkHoppers(this);
 		
 		var slot1 = this.container.getSlot("slot1");
@@ -83,46 +89,40 @@ MachineRegistry.registerGenerator(BlockID.geothermalGenerator, {
 		if (this.liquidStorage.getAmount("lava").toFixed(3) >= 0.001 && this.data.energy + 20 <= energyStorage) {
 			this.data.energy += 20;
 			this.liquidStorage.getLiquid("lava", 0.001);
-			this.activate();
-			this.startPlaySound();
+			this.setActive(true);
+			//this.startPlaySound();
 		}
 		else {
-			this.stopPlaySound();
-			this.deactivate();
+			//this.stopPlaySound();
+			this.setActive(false);
 		}
 		
-		this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
+		this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
 		
 		this.liquidStorage.updateUiScale("liquidScale", "lava");
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
-	},
+		this.container.sendChanges();
+	}
 
-	getOperationSound: function() {
+	getOperationSound() {
 		return "GeothermalLoop.ogg";
-	},
+	}
 	
-	getEnergyStorage: function() {
+	getEnergyStorage() {
 		return 10000;
-	},
-	
-	energyTick: function(type, src) {
-		var output = Math.min(32, this.data.energy);
-		this.data.energy += src.add(output) - output;
-	},
-	
-	renderModel: MachineRegistry.renderModelWithRotation
-});
+	}
+}
 
-TileRenderer.setRotationPlaceFunction(BlockID.geothermalGenerator);
+MachineRegistry.registerPrototype(BlockID.geothermalGenerator, new TileEntityGeoGenerator());
 
 StorageInterface.createInterface(BlockID.geothermalGenerator, {
 	slots: {
 		"slot1": {input: true},
 		"slot2": {output: true}
 	},
-	isValidInput: function(item) {
-		return LiquidLib.getItemLiquid(item.id, item.data) == "lava";
-	},
-	canReceiveLiquid: function(liquid, side) { return liquid == "lava"; },
-	canTransportLiquid: function(liquid, side) { return false; }
+	isValidInput: (item: ItemInstance) => (
+		LiquidLib.getItemLiquid(item.id, item.data) == "lava"
+	),
+	canReceiveLiquid: (liquid: string) => liquid == "lava",
+	canTransportLiquid: (liquid: string) => false
 });

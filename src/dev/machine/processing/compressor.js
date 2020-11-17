@@ -68,10 +68,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiCompressor = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Compressor")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [

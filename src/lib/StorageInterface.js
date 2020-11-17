@@ -1,6 +1,6 @@
 LIBRARY({
 	name: "StorageInterface",
-	version: 7,
+	version: 8,
 	shared: true,
 	api: "CoreEngine"
 });
@@ -22,6 +22,18 @@ let StorageInterface = {
 	getRelativeCoords: function(coords, side) {
 		let dir = this.directionsBySide[side];
 		return {x: coords.x + dir.x, y: coords.y + dir.y, z: coords.z + dir.z};
+	},
+	
+	setSlotMaxStackPolicy: function(container, slotName, maxCount) {
+		container.setSlotAddTransferPolicy(slotName, function(container, name, id, amount, data) {
+			return Math.max(0, Math.min(amount, maxCount - container.getSlot(name).count));
+		});
+	},
+	
+	setSlotValidatePolicy: function(container, slotName, func) {
+		container.setSlotAddTransferPolicy(slotName, function(container, name, id, amount, data, extra, playerUid) {
+			return func(id, amount, data, extra, container, name, playerUid) ? amount : 0;
+		});
 	},
 	
 	newInstance: function(id, tileEntity) {
@@ -146,7 +158,7 @@ let StorageInterface = {
 			
 			this.data[id] = interface;			
 		} else {
-			Logger.Log("failed to create storage interface: no tile entity for id "+id, "ERROR");
+			Logger.Log("Failed to create storage interface: cannot find tile entity prototype for id "+id, "ERROR");
 		}
 	},
 

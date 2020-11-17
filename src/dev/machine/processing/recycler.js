@@ -24,10 +24,10 @@ Callback.addCallback("PreLoaded", function() {
 var recyclerBlacklist = [102, 280, 78, 80, 332];
 
 var guiRecycler = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Recycler")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 
 	drawing: [

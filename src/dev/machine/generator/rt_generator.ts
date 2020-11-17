@@ -4,7 +4,7 @@ Block.createBlock("rtGenerator", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.rtGenerator, "stone", 1, true);
 
-TileRenderer.setStandartModel(BlockID.rtGenerator, [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
+TileRenderer.setStandardModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top", 1], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 
 MachineRegistry.setMachineDrop("rtGenerator", BlockID.primalGenerator);
@@ -18,10 +18,10 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 var guiRTGenerator = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Radioisotope Thermoelectric Generator")}},
-		inventory: {standart: true},
-		background: {standart: true}
+		inventory: {standard: true},
+		background: {standard: true}
 	},
 	
 	drawing: [
@@ -29,12 +29,12 @@ var guiRTGenerator = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"slot0": {type: "slot", x: 420, y: 120, isValid: function(id) {return id == ItemID.rtgPellet}},
-		"slot1": {type: "slot", x: 480, y: 120, isValid: function(id) {return id == ItemID.rtgPellet}},
-		"slot2": {type: "slot", x: 540, y: 120, isValid: function(id) {return id == ItemID.rtgPellet}},
-		"slot3": {type: "slot", x: 420, y: 180, isValid: function(id) {return id == ItemID.rtgPellet}},
-		"slot4": {type: "slot", x: 480, y: 180, isValid: function(id) {return id == ItemID.rtgPellet}},
-		"slot5": {type: "slot", x: 540, y: 180, isValid: function(id) {return id == ItemID.rtgPellet}},
+		"slot0": {type: "slot", x: 420, y: 120},
+		"slot1": {type: "slot", x: 480, y: 120},
+		"slot2": {type: "slot", x: 540, y: 120},
+		"slot3": {type: "slot", x: 420, y: 180},
+		"slot4": {type: "slot", x: 480, y: 180},
+		"slot5": {type: "slot", x: 540, y: 180},
 		
 		"energyScale": {type: "scale", x: 630 + GUI_SCALE * 4, y: 150, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", x: 742, y: 148, width: 300, height: 30, text: "0/"},
@@ -46,17 +46,27 @@ Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiRTGenerator, "Radioisotope Thermoelectric Generator");
 });
 
-MachineRegistry.registerGenerator(BlockID.rtGenerator, {
+class TileEntityRTGenerator extends TileEntityGenerator {
+	constructor() {
+		super(1);
+	}
+
     defaultValues: {
-		meta: 0,
+		energy: 0,
 		isActive: false
-	},
+	}
+
+	setupContainer() {
+		this.container.setGlobalAddTransferPolicy((contaier, name, id, amount, data) => {
+			return (id == ItemID.rtgPellet)? amount : 0
+		});
+	}
     
-	getGuiScreen: function() {
+	getGuiScreen() {
 		return guiRTGenerator;
-	},
+	}
 	
-	tick: function() {
+	tick() {
 		var energyStorage = this.getEnergyStorage();
 		var output = 0.5;
 		for (var i = 0; i < 6; i++) {
@@ -65,21 +75,17 @@ MachineRegistry.registerGenerator(BlockID.rtGenerator, {
 				output *= 2;
 			}
 		}
-		output = parseInt(output);
+		output = Math.floor(output);
 		this.setActive(output > 0);
 		this.data.energy = Math.min(this.data.energy + output, energyStorage);
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", this.data.energy + "/");
-	},
+		this.container.sendChanges();
+	}
 	
-	getEnergyStorage: function() {
+	getEnergyStorage() {
 		return 10000;
-	},
-	
-	energyTick: function(type, src) {
-		var output = Math.min(32, this.data.energy);
-		this.data.energy += src.add(output) - output;
-	},
-	
-	renderModel: MachineRegistry.renderModel
-});
+	}
+}
+
+MachineRegistry.registerGenerator(BlockID.rtGenerator, new TileEntityRTGenerator());

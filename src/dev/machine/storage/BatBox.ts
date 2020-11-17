@@ -6,6 +6,7 @@ Block.createBlock("storageBatBox", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.storageBatBox, "wood");
 
+TileRenderer.setHandAndUiModel(BlockID.storageBatBox, 0, [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_back", 0], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]]);
 TileRenderer.setStandardModel(BlockID.storageBatBox, 0, [["batbox_front", 0], ["batbox_back", 0], ["batbox_top", 0], ["batbox_bottom", 0], ["batbox_side", 1], ["batbox_side", 2]]);
 TileRenderer.setStandardModel(BlockID.storageBatBox, 1, [["batbox_back", 0], ["batbox_front", 0], ["batbox_top", 0], ["batbox_bottom", 0], ["batbox_side", 1], ["batbox_side", 2]]);
 TileRenderer.setStandardModel(BlockID.storageBatBox, 2, [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_front", 0], ["batbox_back", 0], ["batbox_side", 0], ["batbox_side", 0]]);

@@ -20,10 +20,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiMiner = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Miner")}},
-		inventory: {standart: true},
-		background: {standart: true},
+		inventory: {standard: true},
+		background: {standard: true},
 	},
 
 	drawing: [

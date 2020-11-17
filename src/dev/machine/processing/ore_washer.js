@@ -34,10 +34,10 @@ Callback.addCallback("PreLoaded", function() {
 
 
 var guiOreWasher = new UI.StandartWindow({
-	standart: {
+	standard: {
 		header: {text: {text: Translation.translate("Ore Washing Plant")}},
-		inventory: {standart: true},
-		background: {standart: true},
+		inventory: {standard: true},
+		background: {standard: true},
 	},
 
 	drawing: [

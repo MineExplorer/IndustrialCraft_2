@@ -3,10 +3,7 @@ translation.ts
 
 core/**/*
 
-block/rubber_tree/sapling.ts
-block/rubber_tree/log.ts
-block/rubber_tree/leaves.ts
-block/rubber_tree/generation.ts
+block/rubber_tree/**
 block/ore.js
 block/metal.ts
 block/basic.ts
@@ -18,19 +15,16 @@ block/crop/biome_bonuses.js
 block/crop/base_crop_classes.js
 block/crop/crop.js
 
-machine/generator/generator.ts
-machine/generator/geothermal.ts
-machine/generator/fluid_generator.ts
-machine/generator/solar.ts
-machine/generator/windmill.ts
-machine/generator/watermill.ts
-machine/generator/rt_generator.ts
-machine/generator/stirling_generator.ts
+machine/generator/FuelGenerator.ts
+machine/generator/GeothermalGenerator.ts
+machine/generator/FluidGenerator.ts
+machine/generator/SolarGenerator.ts
+machine/generator/Windmill.ts
+machine/generator/Watermill.ts
+machine/generator/RTGenerator.ts
+machine/generator/StirlingGenerator.ts
 
-machine/heatgenerator/heat_solid.ts
-machine/heatgenerator/heat_fluid.ts
-machine/heatgenerator/heat_electric.ts
-machine/heatgenerator/rt_heat_generator.ts
+machine/heat_generator/**
 
 machine/reactor/reactorAPI.js
 machine/reactor/nuclear_reactor.js
@@ -65,9 +59,9 @@ machine/uu/scanner.js
 machine/uu/pattern_storage.js
 machine/uu/replicator.js
 
-machine/fluid/pump.js
-machine/fluid/fluid_distributor.js
-machine/fluid/tank.js
+machine/fluid/Pump.ts
+machine/fluid/FluidDistributor.ts
+machine/fluid/Tank.ts
 
 machine/resource/miner.js
 machine/resource/advanced_miner.js
@@ -154,7 +148,5 @@ integration/recipe_viewer.js
 integration/tree_capitator.js
 
 api.ts
-
-*/**
 
 #downlevelIteration: false

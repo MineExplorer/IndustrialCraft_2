@@ -1,4 +1,4 @@
-/// <reference path="./TileEntityTransformer.ts" />
+/// <reference path="./Transformer.ts" />
 
 IDRegistry.genBlockID("transformerHV");
 Block.createBlock("transformerHV", [
@@ -25,4 +25,4 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', BlockID.transformerMV, 0, 'a', ItemID.storageAdvBattery, -1, 'b', ItemID.cableGold2, -1, 'c', ItemID.circuitBasic, -1]);
 });
 
-MachineRegistry.registerPrototype(BlockID.transformerHV, new TileEntityTransformer(4));
+MachineRegistry.registerPrototype(BlockID.transformerHV, new Machine.Transformer(4));

@@ -1,4 +1,4 @@
-/// <reference path="./TileEntityBatteryBlock.ts" />
+/// <reference path="./BatteryBlock.ts" />
 
 IDRegistry.genBlockID("storageMFE");
 Block.createBlock("storageMFE", [
@@ -26,38 +26,17 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiMFE = new UI.StandartWindow({
-	standard: {
-		header: {text: {text: Translation.translate("MFE")}},
-		inventory: {standard: true},
-		background: {standard: true}
-	},
+var guiMFE = BatteryBlockWindow("MFE");
 
-	drawing: [
-		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
-	],
-
-	elements: {
-		"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
-		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "4000000"}
+namespace Machine {
+	class MFE extends BatteryBlock {
+		constructor() {
+			super(3, 4000000, BlockID.machineBlockBasic, guiMFE);
+		}
 	}
-});
 
-Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiMFE, "MFE");
-});
+	MachineRegistry.registerPrototype(BlockID.storageMFE, new MFE());
+	MachineRegistry.setStoragePlaceFunction("storageMFE", true);
 
-class TileEntityMFE extends TileEntityBatteryBlock {
-	constructor() {
-		super(3, 4000000, BlockID.machineBlockBasic, guiMFE);
-	}
+	StorageInterface.createInterface(BlockID.storageMFE, BatteryBlockInterface);
 }
-
-MachineRegistry.registerPrototype(BlockID.storageMFE, new TileEntityMFE());
-
-MachineRegistry.setStoragePlaceFunction("storageMFE", true);
-
-StorageInterface.createInterface(BlockID.storageMFE, BatteryBlockInterface);

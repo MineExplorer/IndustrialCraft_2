@@ -35,6 +35,12 @@ let StorageInterface = {
 			return func(id, amount, data, extra, container, name, playerUid) ? amount : 0;
 		});
 	},
+
+	setGlobalValidatePolicy: function(container, func) {
+		container.setGlobalAddTransferPolicy(function(container, name, id, amount, data, extra, playerUid) {
+			return func(id, amount, data, extra, container, name, playerUid) ? amount : 0;
+		});
+	},
 	
 	newInstance: function(id, tileEntity) {
 		let instance = {};

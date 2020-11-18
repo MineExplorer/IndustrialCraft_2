@@ -19,79 +19,83 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.reactorChamber, 0, 'x', ItemID.heatConductor, 0, 'c', ItemID.casingIron, 0]);
 });
 
-var guiRTHeatGenerator = new UI.StandartWindow({
-	standard: {
-		header: {text: {text: Translation.translate("Radioisotope Heat Generator")}},
-		inventory: {standard: true},
-		background: {standard: true}
-	},
-	
+var guiRTHeatGenerator = InventoryWindow("Radioisotope Heat Generator", {
 	drawing: [
 		{type: "bitmap", x: 380, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],
 	
 	elements: {
-		"slot0": {type: "slot", x: 420, y: 100, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"slot1": {type: "slot", x: 480, y: 100, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"slot2": {type: "slot", x: 540, y: 100, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"slot3": {type: "slot", x: 420, y: 160, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"slot4": {type: "slot", x: 480, y: 160, isValid: function(id){ return id == ItemID.rtgPellet }},
-		"slot5": {type: "slot", x: 540, y: 160, isValid: function(id){ return id == ItemID.rtgPellet }},
+		"slot0": {type: "slot", x: 420, y: 100},
+		"slot1": {type: "slot", x: 480, y: 100},
+		"slot2": {type: "slot", x: 540, y: 100},
+		"slot3": {type: "slot", x: 420, y: 160},
+		"slot4": {type: "slot", x: 480, y: 160},
+		"slot5": {type: "slot", x: 540, y: 160},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 450, y: 264, width: 300, height: 30, text: "0     /"},
 		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 550, y: 264, width: 300, height: 30, text: "0"}
 	}
 });
 
-Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiRTHeatGenerator, "Radioisotope Heat Generator");
-});
+namespace Machine {
+	export class RTHeatGenerator
+	extends MachineBase {
+		hasVerticalRotation: boolean = true;
 
-
-class TileEntityRTHeatGenerator extends TileEntityMachine {
-	defaultValues: {
-		isActive: false
-	}
-    
-	getScreenByName() {
-		return guiRTHeatGenerator;
-	}
-
-	setupContainer() {
-		this.container.setGlobalAddTransferPolicy((contaier, name, id, amount, data) => {
-			return (id == ItemID.rtgPellet)? amount : 0
-		});
-	}
-
-	tick() {
-		var output = 1;
-		for (var i = 0; i < 6; i++) {
-			var slot = this.container.getSlot("slot"+i);
-			if (slot.id == ItemID.rtgPellet) {
-				output *= 2;
-			}
+		defaultValues = {
+			isActive: false
 		}
-		if (output < 2) output = 0;
-		var maxOutput = output;
+		
+		getScreenByName() {
+			return guiRTHeatGenerator;
+		}
 
-		if (output > 0) {
-			var side = this.data.meta;
+		setupContainer() {
+			StorageInterface.setGlobalValidatePolicy(this.container, (id) => (id == ItemID.rtgPellet));
+		}
+
+		tick() {
+			var output = 1;
+			for (var i = 0; i < 6; i++) {
+				var slot = this.container.getSlot("slot"+i);
+				if (slot.id == ItemID.rtgPellet) {
+					output *= 2;
+				}
+			}
+			if (output < 2) output = 0;
+			var maxOutput = output;
+
+			if (output > 0) {
+				output = this.spreadHeat(output);
+			}
+
+			this.setActive(output > 0);
+			var outputText = output.toString();
+			for (var i = outputText.length; i < 6; i++) {
+				outputText += " ";
+			}
+			this.container.setText("textInfo1", outputText + "/");
+			this.container.setText("textInfo2", maxOutput);
+			this.container.sendChanges();
+		}
+
+		spreadHeat(heat: number){
+			var side = this.getFacing();
 			var coords = StorageInterface.getRelativeCoords(this, side);
 			var TE = World.getTileEntity(coords.x, coords.y, coords.z, this.blockSource);
 			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
-				output = TE.heatReceive(output);
+				return TE.heatReceive(heat);
 			}
+			return 0;
 		}
 
-		this.setActive(output > 0);
-		var outputText = output.toString();
-		for (var i = outputText.length; i < 6; i++) {
-			outputText += " ";
+		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
+			if (ICTool.isValidWrench(item)) {
+				ICTool.rotateMachine(this, coords.side, item, player)
+				return true;
+			}
+			return super.onItemUse(coords, item, player);
 		}
-		this.container.setText("textInfo1", outputText + "/");
-		this.container.setText("textInfo2", maxOutput);
-		this.container.sendChanges();
 	}
+
+	MachineRegistry.registerPrototype(BlockID.rtHeatGenerator, new RTHeatGenerator());
 }
-
-MachineRegistry.registerGenerator(BlockID.rtHeatGenerator, new TileEntityRTHeatGenerator());
-

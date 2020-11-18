@@ -2,7 +2,7 @@
 
 declare namespace ToolLib {
     function setTool(id: number, toolMaterial: string | ToolAPI.ToolMaterial, toolType: any, brokenId?: number): void;
-    function breakCarriedTool(damage: number): void;
+    function breakCarriedTool(damage: number, player?: number): void;
     function getBlockDrop(coords: Vector, id: number, data: number, level: number, enchant?: ToolAPI.EnchantData): ItemInstanceArray[];
     function isBlock(id: number): boolean;
     function isItem(id: number): boolean;

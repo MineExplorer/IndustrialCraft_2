@@ -1,6 +1,6 @@
-/// <reference path="../../machine/TileEntityMachine.ts" />
-/// <reference path="../../machine/TileEntityElectricMachine.ts" />
-/// <reference path="../../machine/TileEntityGenerator.ts" />
+/// <reference path="../../machine/MachineBase.ts" />
+/// <reference path="../../machine/ElectricMachine.ts" />
+/// <reference path="../../machine/Generator.ts" />
 
 namespace MachineRegistry {
 	var machineIDs = {}
@@ -76,7 +76,7 @@ namespace MachineRegistry {
 
 		TileEntity.registerPrototype(id, Prototype);
 
-		if (Prototype instanceof TileEntityElectricMachine) {
+		if (Prototype instanceof Machine.ElectricMachine) {
 			// wire connection
 			ICRender.getGroup("ic-wire").add(id, -1);
 			// register for energy net
@@ -106,9 +106,9 @@ namespace MachineRegistry {
 			};
 		}
 		
-		for (var key in TileEntityElectricMachine.prototype) {
+		for (var key in Machine.ElectricMachine.prototype) {
 			if (!Prototype[key]) {
-				Prototype[key] = TileEntityElectricMachine.prototype[key];
+				Prototype[key] = Machine.ElectricMachine.prototype[key];
 			}
 		}
 
@@ -118,9 +118,9 @@ namespace MachineRegistry {
 	}
 	
 	export function registerGenerator(id: number, Prototype: any) {
-		for (var key in TileEntityGenerator.prototype) {
+		for (var key in Machine.Generator.prototype) {
 			if (!Prototype[key]) {
-				Prototype[key] = TileEntityGenerator.prototype[key];
+				Prototype[key] = Machine.Generator.prototype[key];
 			}
 		}
 		
@@ -160,7 +160,7 @@ namespace MachineRegistry {
 		var item = Player.getCarriedItem();
 		var dropID = 0;
 		if (ICTool.isValidWrench(item, 10)) {
-			ICTool.useWrench(coords, item, 10);
+			ICTool.useWrench(item, Player.get(), 10);
 			World.setBlock(coords.x, coords.y, coords.z, 0, 0);
 			var chance = ICTool.getWrenchData(item.id).chance;
 			if (Math.random() < chance) {
@@ -193,35 +193,38 @@ namespace MachineRegistry {
 		});
 	}
 	
-	export function getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand: boolean) {
-		if (byHand) outputItem = {id: 0, count: 0, data: 0};
+	export function getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
 		var empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
-		if (empty && (!liquid && this.interface.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid)) {
-			if (outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0) {
-				var liquidLimit = this.liquidStorage.getLimit(empty.liquid);
-				var storedAmount = this.liquidStorage.getAmount(liquid).toFixed(3);
-				var count = Math.min(byHand? inputItem.count : 1, Math.floor((liquidLimit - storedAmount) / empty.amount));
-				if (count > 0) {
-					this.liquidStorage.addLiquid(empty.liquid, empty.amount * count);
-					inputItem.count -= count;
-					outputItem.id = empty.id;
-					outputItem.data = empty.data;
-					outputItem.count += count;
-					if (!byHand) this.container.validateAll();
+		if (empty && (!liquid && this.interface.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid) &&
+			(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0)) {
+			var liquidLimit = this.liquidStorage.getLimit(empty.liquid);
+			var storedAmount = this.liquidStorage.getAmount(liquid).toFixed(3);
+			var count = Math.min(byHand? inputItem.count : 1, Math.floor((liquidLimit - storedAmount) / empty.amount));
+			if (count > 0) {
+				this.liquidStorage.addLiquid(empty.liquid, empty.amount * count);
+				inputItem.count -= count;
+				outputItem.id = empty.id;
+				outputItem.data = empty.data;
+				outputItem.count += count;
+				if (!byHand) this.container.validateAll();
+			}
+			else if (inputItem.count == 1 && empty.storage) {
+				var amount = Math.min(liquidLimit - storedAmount, empty.amount);
+				this.liquidStorage.addLiquid(empty.liquid, amount);
+				inputItem.data += amount * 1000;
+			}
+			if (byHand) {
+				if (outputItem.id) {
+					Player.addItemToInventory(outputItem.id, outputItem.count, outputItem.data);
 				}
-				else if (inputItem.count == 1 && empty.storage) {
-					var amount = Math.min(liquidLimit - storedAmount, empty.amount);
-					this.liquidStorage.addLiquid(empty.liquid, amount);
-					inputItem.data += amount * 1000;
-				}
-				if (byHand) {
-					if (outputItem.id) {
-						Player.addItemToInventory(outputItem.id, outputItem.count, outputItem.data);
-					}
-					if (inputItem.count == 0) inputItem.id = inputItem.data = 0;
-					Player.setCarriedItem(inputItem.id, inputItem.count, inputItem.data);
-					return true;
-				}
+				if (inputItem.count == 0) inputItem.id = inputItem.data = 0;
+				Player.setCarriedItem(inputItem.id, inputItem.count, inputItem.data);
+				return true;
+			} else {
+				// @ts-ignore
+				inputItem.markDirty();
+				// @ts-ignore
+				outputItem.markDirty();
 			}
 		}
 	}
@@ -249,6 +252,10 @@ namespace MachineRegistry {
 						inputItem.data = (full.storage - amount)*1000;
 					}
 				}
+				// @ts-ignore
+				inputItem.markDirty();
+				// @ts-ignore
+				outputItem.markDirty();
 			}
 		}
 	}

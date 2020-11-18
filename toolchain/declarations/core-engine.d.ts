@@ -9216,7 +9216,7 @@ declare namespace ToolAPI {
      * @returns tool information stored in slightly modified 
      * [[ToolAPI.ToolParams]] object or null if no tool data was specified
      */
-    function getToolData(itemID: number): Nullable<ToolParams>;
+    function getToolData(itemID: number): any;
 
     /**
      * @param itemID numeric item id
@@ -11561,7 +11561,7 @@ declare namespace UI {
 	}
 
 	interface ImageDrawing {
-		type?: "bitmap",
+		type: "bitmap",
 
 		x: number,
 
@@ -11577,7 +11577,7 @@ declare namespace UI {
 	}
 
 	interface LineDrawing {
-		type?: "line",
+		type: "line",
 
 		x1: number,
 

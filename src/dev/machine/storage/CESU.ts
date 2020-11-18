@@ -1,4 +1,4 @@
-/// <reference path="./TileEntityBatteryBlock.ts" />
+/// <reference path="./BatteryBlock.ts" />
 
 IDRegistry.genBlockID("storageCESU");
 Block.createBlock("storageCESU", [
@@ -26,38 +26,17 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiCESU = new UI.StandartWindow({
-	standard: {
-		header: {text: {text: Translation.translate("CESU")}},
-		inventory: {standard: true},
-		background: {standard: true}
-	},
+var guiCESU = BatteryBlockWindow("CESU");
 
-	drawing: [
-		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
-	],
-
-	elements: {
-		"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-		"slot1": {type: "slot", x: 441, y: 75},
-		"slot2": {type: "slot", x: 441, y: 212},
-		"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 642, y: 172, width: 300, height: 30, text: "300000"}
+namespace Machine {
+	class CESU extends BatteryBlock {
+		constructor() {
+			super(2, 300000, BlockID.storageCESU, guiCESU);
+		}
 	}
-});
 
-Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiCESU, "CESU");
-});
+	MachineRegistry.registerPrototype(BlockID.storageCESU, new CESU());
+	MachineRegistry.setStoragePlaceFunction("storageCESU", true);
 
-class TileEntityCESU extends TileEntityBatteryBlock {
-	constructor() {
-		super(2, 300000, BlockID.storageCESU, guiCESU);
-	}
+	StorageInterface.createInterface(BlockID.storageCESU, BatteryBlockInterface);
 }
-
-MachineRegistry.registerPrototype(BlockID.storageCESU, new TileEntityCESU());
-
-MachineRegistry.setStoragePlaceFunction("storageCESU", true);
-
-StorageInterface.createInterface(BlockID.storageCESU, BatteryBlockInterface);

@@ -1,19 +1,19 @@
-let ICTool = {
-	wrenchData: {},
+namespace ICTool {
+	let wrenchData = {}
 	
-	registerWrench: function(id, chance, energyPerUse) {
-		this.wrenchData[id] = {chance: chance, energy: energyPerUse}
-	},
+	export function registerWrench(id: number, chance: number, energyPerUse: number) {
+		wrenchData[id] = {chance: chance, energy: energyPerUse}
+	}
 	
-	getWrenchData: function(id) {
-		return this.wrenchData[id];
-	},
+	export function getWrenchData(id: number) {
+		return wrenchData[id];
+	}
 
-	isWrench: function(id) {
+	export function isWrench(id: number) {
 		return this.getWrenchData(id)? true : false;
-	},
+	}
 	
-	isValidWrench: function(item, damage) {
+	export function isValidWrench(item: ItemInstance, damage: number = 1) {
 		let wrench = this.getWrenchData(item.id);
 		if (wrench) {
 			let energyStored = ChargeItemRegistry.getEnergyStored(item);
@@ -22,31 +22,31 @@ let ICTool = {
 			}
 		}
 		return false;
-	},
+	}
 	
-	useWrench: function(item, player, damage) {
+	export function useWrench(item: ItemInstance, player: number, damage: number) {
 		let wrench = this.getWrenchData(item.id);
 		if (!wrench.energy) {
 			ToolLib.breakCarriedTool(damage, player);
 			return true;
 		}
 		return this.useElectricItem(item, wrench.energy * damage);
-	},
+	}
 
-	rotateMachine: function(tileEntity, side, item, player) {
+	export function rotateMachine(tileEntity: TileEntity, side: number, item: ItemInstance, player: number) {
 		if (this.useWrench(item, player, 1)) {
 			if (Entity.getSneaking(player)) {
 				side ^= 1;
 			}
 			tileEntity.setFacing(side);
-			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg");
+			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg", 1);
 		}
-	},
+	}
 	
-	addRecipe: function(result, data, tool) {
+	export function addRecipe(result: ItemInstance, data: {id: number, data: number}[], tool: number) {
 		data.push({id: tool, data: -1});
 		Recipes.addShapeless(result, data, function(api, field, result) {
-			for (let i in field) {
+			for (let i = 0; i < field.length; i++) {
 				if (field[i].id == tool) {
 					field[i].data++;
 					if (field[i].data >= Item.getMaxDamage(tool)) {
@@ -58,15 +58,15 @@ let ICTool = {
 				}
 			}
 		});
-	},
+	}
 	
-	dischargeItem: function(item, consume) {
+	export function dischargeItem(item: ItemInstance, consume: number) {
 		let energy = 0;
 		let armor = Player.getArmorSlot(1);
-		let itemChargeLevel = ChargeItemRegistry.getItemData(item.id).level;
+		let itemChargeLevel = ChargeItemRegistry.getItemData(item.id).tier;
 		let armorChargeData = ChargeItemRegistry.getItemData(armor.id);
-		if (armorChargeData && armorChargeData.level >= itemChargeLevel) {
-			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, consume, 100);
+		if (armorChargeData && armorChargeData.tier >= itemChargeLevel) {
+			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, 100, true);
 			consume -= energy;
 		}
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
@@ -78,26 +78,26 @@ let ICTool = {
 			return true;
 		}
 		return false;
-	},
+	}
 	
-	useElectricItem: function(item, consume) {
+	export function useElectricItem(item: ItemInstance, consume: number) {
 		if (this.dischargeItem(item, consume)) {
 			Player.setCarriedItem(item.id, 1, item.data, item.extra);
 			return true;
 		}
 		return false;
-	},
+	}
 	
-	registerElectricHoe: function(nameID) {
+	export function registerElectricHoe(nameID: string) {
 		Item.registerUseFunction(nameID, function(coords, item, block) {
 			if ((block.id == 2 || block.id == 3 || block.id == 110 || block.id == 243) && coords.side == 1 && ICTool.useElectricItem(item, 50)) { 
-				World.setBlock(coords.x, coords.y, coords.z, 60);
-				World.playSoundAt(coords.x + .5, coords.y + 1, coords.z + .5, "step.gravel", 1, 0.8);
+				World.setBlock(coords.x, coords.y, coords.z, 60, 0);
+				World.playSound(coords.x + .5, coords.y + 1, coords.z + .5, "step.gravel", 1, 0.8);
 			}
 		});
-	},
+	}
 	
-	registerElectricTreetap: function(nameID) {
+	export function registerElectricTreetap(nameID) {
 		Item.registerUseFunction(nameID, function(coords, item, block) {
 			if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, 50)) {
 				SoundManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");
@@ -115,9 +115,9 @@ let ICTool = {
 				);
 			}
 		});
-	},
+	}
 
-	setOnHandSound: function(itemID, idleSound, stopSound) {
+	export function setOnHandSound(itemID: number, idleSound: string, stopSound: string) {
 		Callback.addCallback("LocalTick", function() {
 			if (!ConfigIC.soundEnabled) {return;}
 			let item = Player.getCarriedItem();
@@ -132,11 +132,7 @@ let ICTool = {
 	}
 }
 
-// temporary for reverse compatibility
-// it's very fun misspelling
-ICTool.registerElectricTreerap = ICTool.registerElectricTreetap;
-
-Callback.addCallback("DestroyBlockStart", function(coords, block) {
+Callback.addCallback("DestroyBlockStart", function(coords: Callback.ItemUseCoordinates, block: Tile) {
 	if (MachineRegistry.isMachine(block.id)) {
 		let item = Player.getCarriedItem();
 		if (ICTool.isValidWrench(item, 10)) {

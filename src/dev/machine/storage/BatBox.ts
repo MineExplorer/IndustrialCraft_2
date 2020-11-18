@@ -1,4 +1,4 @@
-/// <reference path="./TileEntityBatteryBlock.ts" />
+/// <reference path="./BatteryBlock.ts" />
 
 IDRegistry.genBlockID("storageBatBox");
 Block.createBlock("storageBatBox", [
@@ -29,13 +29,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiBatBox = new UI.StandartWindow({
-	standard: {
-		header: {text: {text: Translation.translate("BatBox")}},
-		inventory: {standard: true},
-		background: {standard: true}
-	},
-
+var guiBatBox = InventoryWindow("BatBox", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
 	],
@@ -49,18 +43,17 @@ var guiBatBox = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiBatBox, "BatBox");
-});
+guiBatBox = BatteryBlockWindow("BatBox");
 
-class TileEntityBatBox extends TileEntityBatteryBlock {
-	constructor() {
-		super(1, 40000, BlockID.storageBatBox, guiBatBox);
+namespace Machine {
+	class BatBox extends Machine.BatteryBlock {
+		constructor() {
+			super(1, 40000, BlockID.storageBatBox, guiBatBox);
+		}
 	}
+
+	MachineRegistry.registerPrototype(BlockID.storageBatBox, new BatBox());
+	MachineRegistry.setStoragePlaceFunction("storageBatBox", true);
+
+	StorageInterface.createInterface(BlockID.storageBatBox, BatteryBlockInterface);
 }
-
-MachineRegistry.registerPrototype(BlockID.storageBatBox, new TileEntityBatBox());
-
-MachineRegistry.setStoragePlaceFunction("storageBatBox", true);
-
-StorageInterface.createInterface(BlockID.storageBatBox, BatteryBlockInterface);

@@ -17,13 +17,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.reactorChamber, 0, 'x', BlockID.primalGenerator, 0, 'c', ItemID.casingIron, 0]);
 });
 
-var guiRTGenerator = new UI.StandartWindow({
-	standard: {
-		header: {text: {text: Translation.translate("Radioisotope Thermoelectric Generator")}},
-		inventory: {standard: true},
-		background: {standard: true}
-	},
-	
+var guiRTGenerator = InventoryWindow("Radioisotope Thermoelectric Generator", {
 	drawing: [
 		{type: "bitmap", x: 630, y: 150, bitmap: "energy_bar_background", scale: GUI_SCALE},
 	],
@@ -42,50 +36,50 @@ var guiRTGenerator = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiRTGenerator, "Radioisotope Thermoelectric Generator");
-});
 
-class TileEntityRTGenerator extends TileEntityGenerator {
-	constructor() {
-		super(1);
-	}
-
-    defaultValues: {
-		energy: 0,
-		isActive: false
-	}
-
-	setupContainer() {
-		this.container.setGlobalAddTransferPolicy((contaier, name, id, amount, data) => {
-			return (id == ItemID.rtgPellet)? amount : 0
-		});
-	}
-    
-	getGuiScreen() {
-		return guiRTGenerator;
-	}
-	
-	tick() {
-		var energyStorage = this.getEnergyStorage();
-		var output = 0.5;
-		for (var i = 0; i < 6; i++) {
-			var slot = this.container.getSlot("slot"+i);
-			if (slot.id == ItemID.rtgPellet) {
-				output *= 2;
-			}
+namespace Machine {
+	export class RTGenerator
+	extends Generator {
+		constructor() {
+			super(1);
 		}
-		output = Math.floor(output);
-		this.setActive(output > 0);
-		this.data.energy = Math.min(this.data.energy + output, energyStorage);
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-		this.container.setText("textInfo1", this.data.energy + "/");
-		this.container.sendChanges();
-	}
-	
-	getEnergyStorage() {
-		return 10000;
-	}
-}
 
-MachineRegistry.registerGenerator(BlockID.rtGenerator, new TileEntityRTGenerator());
+		defaultValues = {
+			energy: 0,
+			isActive: false
+		}
+
+		setupContainer() {
+			this.container.setGlobalAddTransferPolicy((contaier, name, id, amount, data) => {
+				return (id == ItemID.rtgPellet)? amount : 0
+			});
+		}
+		
+		getScreenByName() {
+			return guiRTGenerator;
+		}
+		
+		tick() {
+			var energyStorage = this.getEnergyStorage();
+			var output = 0.5;
+			for (var i = 0; i < 6; i++) {
+				var slot = this.container.getSlot("slot"+i);
+				if (slot.id == ItemID.rtgPellet) {
+					output *= 2;
+				}
+			}
+			output = Math.floor(output);
+			this.setActive(output > 0);
+			this.data.energy = Math.min(this.data.energy + output, energyStorage);
+			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setText("textInfo1", this.data.energy + "/");
+			this.container.sendChanges();
+		}
+		
+		getEnergyStorage() {
+			return 10000;
+		}
+	}
+
+	MachineRegistry.registerPrototype(BlockID.rtGenerator, new RTGenerator());
+}

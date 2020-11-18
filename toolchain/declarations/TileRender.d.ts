@@ -18,12 +18,12 @@ declare namespace TileRenderer {
     function registerRotationModel(id: number, data: number, texture: [string, number][]): void;
     /** @deprecated use registerModelWithRotation instead*/
     function registerFullRotationModel(id: number, data: number, texture: [string, number][]): void;
-    function getRenderModel(id: number, data: number | string): ICRender.Model;
-    function mapAtCoords(x: number, y: number, z: number, id: number, data: number | string): void;
+    function getRenderModel(id: number, data: string | number): ICRender.Model;
+    function mapAtCoords(x: number, y: number, z: number, id: number, data: string | number): void;
     function getBlockRotation(player: number, hasVertical?: boolean): number;
-    function setRotationFunction(id: number, hasVertical?: boolean, placeSound?: string): void;
+    function setRotationFunction(id: string | number, hasVertical?: boolean, placeSound?: string): void;
     /** @deprecated use setRotationFunction instead*/
-    function setRotationPlaceFunction(id: number, hasVertical?: boolean, placeSound?: string): void;
+    function setRotationPlaceFunction(id: string | number, hasVertical?: boolean, placeSound?: string): void;
     function setupWireModel(id: number, data: number, width: number, groupName: string, preventSelfAdd?: boolean): void;
     function setEmptyCollisionShape(id: number): void;
     function getCropModel(texture: [string, number]): ICRender.Model;

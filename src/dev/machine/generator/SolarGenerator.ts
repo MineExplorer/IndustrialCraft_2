@@ -38,7 +38,11 @@ namespace Machine {
 		}
 		
 		init() {
+			super.init();
 			this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
+		}
+
+		setupContainer() {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (id, count, data) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
 		}
 		

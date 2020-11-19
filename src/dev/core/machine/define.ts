@@ -53,27 +53,6 @@ namespace MachineRegistry {
 			}
 		}
 
-		// machine activation
-		if (Prototype.defaultValues && Prototype.defaultValues.isActive !== undefined) {
-			if (!Prototype.renderModel) {
-				Prototype.renderModel = this.renderModelWithRotation;
-			}
-			
-			Prototype.setActive = Prototype.setActive || this.setActive;
-			
-			Prototype.activate = Prototype.activate || function() {
-				this.setActive(true);
-			}
-			Prototype.deactivate = Prototype.deactivate || function() {
-				this.setActive(false);
-			}
-			
-		}
-		
-		if (!Prototype.init && Prototype.renderModel) {
-			Prototype.init = Prototype.renderModel;
-		}
-
 		TileEntity.registerPrototype(id, Prototype);
 
 		if (Prototype instanceof Machine.ElectricMachine) {
@@ -127,20 +106,6 @@ namespace MachineRegistry {
 		this.registerPrototype(id, Prototype);
 	}
 	
-	export function registerEUStorage(id: number, Prototype: any) {
-		Prototype.isEnergySource = function() {
-			return true;
-		}
-		
-		Prototype.energyReceive = Prototype.energyReceive || this.basicEnergyReceiveFunc;
-		
-		Prototype.energyTick = Prototype.energyTick || this.basicEnergyOutFunc;
-		
-		Prototype.isTeleporterCompatible = true;
-		
-		this.registerElectricMachine(id, Prototype);
-	}
-	
 	// standard functions
 	export function setStoragePlaceFunction(blockID: string | number, hasVerticalRotation?: boolean) {
 		Block.registerPlaceFunction(Block.getNumericId(blockID), function(coords, item, block, player, region) {
@@ -149,7 +114,6 @@ namespace MachineRegistry {
 			region.setBlock(place.x, place.y, place.z, item.id, rotation);
 			// World.playSound(place.x, place.y, place.z, "dig.stone", 1, 0.8)
 			var tile = World.addTileEntity(place.x, place.y, place.z, region);
-			tile.data.meta = rotation;
 			if (item.extra) {
 				tile.data.energy = item.extra.getInt("energy");
 			}

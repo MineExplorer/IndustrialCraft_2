@@ -25,7 +25,7 @@ var guiFluidDistributor = InventoryWindow("Fluid Distributor", {
 	],
 
 	elements: {
-		"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, value: 0, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
+		"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE},
 		"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE},
 		"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "fluid_distributor_button", scale: GUI_SCALE, /*clicker: {
@@ -64,6 +64,7 @@ namespace Machine {
 		}
 
 		init(): void {
+			this.region = new WorldRegion(this.blockSource);
 			if (this.data.meta !== undefined) {
 				Logger.Log(`Update tile with ID ${this.blockID}, data ${this.data.meta}`, "IC2");
 				let facing = this.data.meta;

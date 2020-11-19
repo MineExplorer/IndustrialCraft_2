@@ -54,24 +54,21 @@ machine/processing/thermal_centrifuge.js
 machine/processing/blast_furnace.js
 machine/processing/fermenter.js
 
-machine/uu/mass_fabricator.js
-machine/uu/scanner.js
-machine/uu/pattern_storage.js
-machine/uu/replicator.js
+machine/uu/MassFabricator.ts
+machine/uu/Scanner.ts
+machine/uu/PatternStorage.ts
+machine/uu/Replicator.ts
 
 machine/fluid/Pump.ts
 machine/fluid/FluidDistributor.ts
 machine/fluid/Tank.ts
 
-machine/resource/miner.js
-machine/resource/advanced_miner.js
-machine/resource/crop_harvester.js
-machine/resource/crop_matron.js
+machine/resource/Miner.ts
+machine/resource/AdvancedMiner.ts
+machine/resource/CropHarvester.ts
+machine/resource/CropMatron.ts
 
-machine/misc/teleporter.js
-machine/misc/lamp.js
-machine/misc/tesla_coil.js
-machine/misc/nuke.js
+machine/misc/**
 
 items/resource/rubber.js
 items/resource/crushed.js

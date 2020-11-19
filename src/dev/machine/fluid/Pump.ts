@@ -99,7 +99,7 @@ namespace Machine {
 		}
 		
 		recursiveSearch(liquid: string, x: number, y: number, z: number, map: {}): Vector {
-			var block = this.blockSource.getBlock(x, y, z);
+			var block = this.region.getBlock(x, y, z);
 			var scoords = x+':'+y+':'+z;
 			if (!map[scoords] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
 				if (block.data == 0) return new Vector(x, y, z);
@@ -130,10 +130,10 @@ namespace Machine {
 					//this.startPlaySound();
 					if (this.data.progress.toFixed(3) >= 1) {
 						var coords = this.data.coords;
-						var block = this.blockSource.getBlock(coords.x, coords.y, coords.z);
+						var block = this.region.getBlock(coords);
 						liquid = this.getLiquidType(liquid, block);
 						if (liquid && block.data == 0) {
-							this.blockSource.setBlock(coords.x, coords.y, coords.z, 0, 0);
+							this.region.setBlock(coords, 0, 0);
 							this.liquidStorage.addLiquid(liquid, 1);
 						}
 						this.data.progress = 0;

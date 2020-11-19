@@ -3,7 +3,7 @@ declare class ItemStack implements ItemInstance {
     count: number;
     data: number;
     extra?: ItemExtraData;
-    constructor(id: number, count: number, data: number, extra?: ItemExtraData);
+    constructor(id?: number, count?: number, data?: number, extra?: ItemExtraData);
 }
 declare class Vector {
     x: number;
@@ -311,12 +311,16 @@ declare abstract class TileEntityBase implements TileEntity {
     z: number;
     dimension: number;
     blockID: number;
-    data: any;
+    data: {
+        [key: string]: any;
+    };
     defaultValues: {};
+    useNetworkItemContainer: boolean;
     container: ItemContainer;
     liquidStorage: any;
     remove: boolean;
     isLoaded: boolean;
+    private __initialized;
     client?: {
         load?: () => void;
         unload?: () => void;
@@ -330,8 +334,6 @@ declare abstract class TileEntityBase implements TileEntity {
     };
     events?: {};
     containerEvents?: {};
-    private __initialized;
-    useNetworkItemContainer: boolean;
     blockSource: BlockSource;
     networkData: SyncedNetworkData;
     networkEntity: NetworkEntity;
@@ -347,7 +349,7 @@ declare abstract class TileEntityBase implements TileEntity {
     getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
     getScreenByName(screenName: string): any;
     onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean;
-    onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean;
+    private onItemClick;
     destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void;
     redstone(params: {
         power: number;

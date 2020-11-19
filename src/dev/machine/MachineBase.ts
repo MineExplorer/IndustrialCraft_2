@@ -5,10 +5,12 @@ namespace Machine {
 
 	export abstract class MachineBase
 	extends TileEntityBase {
+		region: WorldRegion;
 		hasVerticalRotation: boolean = false;
 		upgrades?: string[];
 
 		init(): void {
+			this.region = new WorldRegion(this.blockSource);
 			if (this.data.meta !== undefined) {
 				Logger.Log(`Update tile with ID ${this.blockID}, data ${this.data.meta}`, "IC2");
 				let facing = this.data.meta;
@@ -36,7 +38,7 @@ namespace Machine {
 		@NetworkEvent(Side.Client)
 		renderModel(data: {isActive: boolean}): void {
 			if (data.isActive) {
-				let blockData = this.blockSource.getBlockData(this.x, this.y, this.z);
+				let blockData = this.region.getBlockData(this);
 				TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, blockData);
 			} else {
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
@@ -48,12 +50,12 @@ namespace Machine {
 		}
 
 		getFacing(): number {
-			return this.blockSource.getBlockData(this.x, this.y, this.z);
+			return this.region.getBlockData(this);
 		}
 
 		setFacing(side: number): boolean {
 			if (this.getFacing() != side) {
-				this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, side);
+				this.region.setBlock(this, this.blockID, side);
 				return true;
 			}
 			return false;

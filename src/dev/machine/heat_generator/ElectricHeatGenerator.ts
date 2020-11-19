@@ -57,8 +57,7 @@ namespace Machine {
 			return guiElectricHeatGenerator;
 		}
 
-		init() {
-			super.init();
+		setupContainer() {
 			this.container.setGlobalAddTransferPolicy((container, name, id, amount, data) => {
 				if (name == "slotEnergy") {
 					return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier())? amount : 0;
@@ -88,7 +87,7 @@ namespace Machine {
 			if (this.data.energy >= 1) {
 				var side = this.getFacing();
 				var coords = StorageInterface.getRelativeCoords(this, side);
-				var TE = World.getTileEntity(coords.x, coords.y, coords.z, this.blockSource);
+				var TE = this.region.getTileEntity(coords);
 				if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 					output = TE.heatReceive(Math.min(maxOutput, this.data.energy));
 					if (output > 0) {

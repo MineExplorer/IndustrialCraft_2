@@ -60,7 +60,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 						if (drop)
 						for (let i in drop) {
 							let item = drop[i];
-							this.blockSource.spawnDroppedItem(xx, yy, zz, item[0], item[1], item[2]);
+							this.blockSource.spawnDroppedItem(xx + .5, yy + .5, zz + .5, item[0], item[1], item[2]);
 						}
 					}
 				}

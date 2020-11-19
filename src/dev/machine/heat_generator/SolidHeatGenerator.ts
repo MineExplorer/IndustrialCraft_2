@@ -87,7 +87,7 @@ namespace Machine {
 		spreadHeat() {
 			var side = this.data.meta;
 			var coords = StorageInterface.getRelativeCoords(this, side);
-			var TE = World.getTileEntity(coords.x, coords.y, coords.z, this.blockSource);
+			var TE = this.region.getTileEntity(coords);
 			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 				return this.data.output = TE.heatReceive(20);
 			}

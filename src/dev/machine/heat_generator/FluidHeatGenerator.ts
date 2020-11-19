@@ -32,7 +32,7 @@ var guiFluidHeatGenerator = InventoryWindow("Liquid Fuel Firebox", {
 	],
 	
 	elements: {
-		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 440, y: 75},
 		"slot2": {type: "slot", x: 440, y: 183},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 112, width: 300, height: 30, text: "Emit: 0"},
@@ -74,7 +74,7 @@ namespace Machine {
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 			if (Entity.getSneaking(player)) {
 				let liquid = this.liquidStorage.getLiquidStored();
-				return this.getLiquidFromItem(liquid, item, new ItemStack(0, 0, 0), true);
+				return this.getLiquidFromItem(liquid, item, new ItemStack(), true);
 			}
 			if (ICTool.isValidWrench(item)) {
 				ICTool.rotateMachine(this, coords.side, item, player)
@@ -129,7 +129,7 @@ namespace Machine {
 		spreadHeat(heat: number): number {
 			var side = this.getFacing();
 			var coords = StorageInterface.getRelativeCoords(this, side);
-			var TE = World.getTileEntity(coords.x, coords.y, coords.z, this.blockSource);
+			var TE = this.region.getTileEntity(coords);
 			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 				this.data.output = TE.heatReceive(heat);
 			} else {

@@ -1,7 +1,7 @@
 /// <reference path="../ElectricMachine.ts" />
 
 namespace Machine {
-	export class BatteryBlock 
+	export class BatteryBlock
 	extends ElectricMachine {
 		hasVerticalRotation: boolean = true;
 
@@ -20,24 +20,9 @@ namespace Machine {
 			return this.guiScreen;
 		}
 
-		isValidInputItem(slotName: string, id: number, amount: number) {
-			var tier = this.getTier();
-			if (slotName == "slot1" && ChargeItemRegistry.isValidItem(id, "Eu", tier)) {
-				return amount;
-			}
-			if (slotName == "slot2" && ChargeItemRegistry.isValidStorage(id, "Eu", tier)) {
-				return amount;
-			}
-			return 0;
-		}
-
-		init(): void {
-			if (this.data.meta != undefined) {
-				this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, this.data.meta + 2);
-				delete this.data.meta;
-			}
-
-			this.container.setGlobalAddTransferPolicy((container, name, id, amount, data, extra, playerUid) => this.isValidInputItem(name, id, amount));
+		setupContainer(): void {
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (id, count, data) => ChargeItemRegistry.isValidItem(id, "Eu", this.getTier()));
+			StorageInterface.setSlotValidatePolicy(this.container, "slot2", (id, count, data) => ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier()));
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
@@ -70,8 +55,20 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
+		energyTick(type: string, src: any) {
+			super.energyTick(type, src);
+			var output = this.getMaxPacketSize();
+			if (this.data.energy >= output) {
+				this.data.energy += src.add(output) - output;
+			}
+		}
+
 		getEnergyStorage(): number {
 			return this.capacity;
+		}
+
+		isEnergySource(): boolean {
+			return true;
 		}
 
 		canReceiveEnergy(side: number): boolean {
@@ -87,7 +84,7 @@ namespace Machine {
 			var level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID);
 			var drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, this.defaultDrop, this.data.energy);
 			if (drop.length > 0) {
-				this.blockSource.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
+				this.region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
 			}
 		}
 	}

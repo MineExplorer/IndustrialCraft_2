@@ -7,7 +7,7 @@ declare namespace StorageInterface {
         y: number;
         z: number;
     }[];
-    function getRelativeCoords(coords: Vector | TileEntity, side: number): {
+    function getRelativeCoords(coords: Vector, side: number): {
         x: number;
         y: number;
         z: number;
@@ -22,14 +22,14 @@ declare namespace StorageInterface {
     };
     function createInterface(id: number, interface: any): void;
     function addItemToSlot(item: ItemInstance, slot: ItemInstance, count: number): number;
-    function getNearestContainers(coords: Vector | TileEntity, side: number, excludeSide?: boolean): {};
-    function getNearestLiquidStorages(coords: Vector | TileEntity, side: number, excludeSide?: boolean): {};
+    function getNearestContainers(coords: Vector, side: number, excludeSide?: boolean): {};
+    function getNearestLiquidStorages(coords: Vector, side: number, excludeSide?: boolean): {};
     function putItems(items: ItemInstance[], containers: any): void;
-    function putItemToContainer(item: ItemInstance, container: NativeTileEntity | UI.Container, side: number, maxCount?: number): number;
-    function extractItemsFromContainer(inputTile: TileEntity, container: NativeTileEntity | UI.Container, side: number, maxCount?: number, oneStack?: boolean): number;
+    function putItemToContainer(item: ItemInstance, container: NativeTileEntity | UI.Container | ItemContainer, side: number, maxCount?: number): number;
+    function extractItemsFromContainer(inputTile: TileEntity, container: NativeTileEntity | UI.Container | ItemContainer, side: number, maxCount?: number, oneStack?: boolean): number;
     function extractLiquid(liquid: string, maxAmount: number, input: TileEntity, output: TileEntity, inputSide: number): void;
     function transportLiquid(liquid: string, maxAmount: number, output: TileEntity, input: TileEntity, outputSide: number): void;
-    function getContainerSlots(container: NativeTileEntity | UI.Container, mode: number, side: number): (string | number)[];
+    function getContainerSlots(container: NativeTileEntity | UI.Container | ItemContainer, mode?: number, side?: number): (string | number)[];
     function checkHoppers(tile: TileEntity): void;
     function extractItems(items: ItemInstance[], containers: any, tile: TileEntity): void;
 }

@@ -9,7 +9,7 @@ namespace Machine {
 		isEnergySource() {
 			return true;
 		}
-		
+
 		energyTick(type: string, src: any) {
 			super.energyTick(type, src);
 			var output = Math.min(this.data.energy, this.getMaxPacketSize());

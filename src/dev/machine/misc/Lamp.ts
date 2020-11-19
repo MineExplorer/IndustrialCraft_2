@@ -55,74 +55,69 @@ Callback.addCallback("PreLoaded", function() {
 	], ['a', 20, 0, 'x', ItemID.cableCopper1, 0, 'b', ItemID.cableTin0, 0, 'c', ItemID.casingIron, 0]);
 });
 
+namespace Machine {
+	class Lamp
+	extends ElectricMachine {
+		constructor() {
+			super(1);
+		}
 
-MachineRegistry.registerElectricMachine(BlockID.luminator, {
-	defaultValues: {
-		isActive: false
-	},
-	
-	getEnergyStorage: function() {
-		return 100;
-	},
-	
-	click: function(id, count, data, coords) {
-		this.data.isActive = true;
-		return true;
-	},
-	
-	tick: function(type, src) {
-		if (this.data.isActive && this.data.energy >= 0.25) {
-			var x = this.x, y = this.y, z = this.z;
-			var blockData = this.blockSource.getBlock(x, y, z).data;
-			var data = this.data;
+		defaultValues = {
+			energy: 0,
+			isActive: false
+		}
+		
+		getEnergyStorage(): number {
+			return 100;
+		}
+		
+		onItemUse(): boolean {
+			this.data.isActive = true;
+			return true;
+		}
+
+		setBlock(blockID: number) {
 			this.selfDestroy();
-			this.blockSource.setBlock(x, y, z, BlockID.luminator_on, blockData);
-			var tile = World.addTileEntity(x, y, z, this.blockSource);
-			tile.data = data;
+			let blockData = this.region.getBlockData(this);
+			this.region.setBlock(this, blockID, blockData);
+			let tile = this.region.addTileEntity(this);
+			tile.data = this.data;
+		}
+		
+		tick(): void {
+			if (this.data.isActive && this.data.energy >= 0.25) {
+				this.setBlock(BlockID.luminator_on)
+			}
 		}
 	}
-});
 
-MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
-	defaultValues: {
-		isActive: true
-	},
-	
-	getEnergyStorage: function() {
-		return 100;
-	},
-	
-	disable: function() {
-		var x = this.x, y = this.y, z = this.z;
-		var blockData = this.blockSource.getBlock(x, y, z).data;
-		var data = this.data;
-		this.selfDestroy();
-		this.blockSource.setBlock(x, y, z, BlockID.luminator, blockData);
-		tile = World.addTileEntity(x, y, z, this.blockSource);
-		tile.data = data;
-	},
-	
-	click: function(id, count, data, coords) {
-		this.data.isActive = false;
-		this.disable();
-		return true;
-	},
-	
-	tick: function(type, src) {
-		if (this.data.energy < 0.25) {
-			this.disable();
-		} else {
-			this.data.energy -= 0.25;
+	class LampOn
+	extends Lamp {
+		onItemUse(): boolean {
+			this.data.isActive = false;
+			this.setBlock(BlockID.luminator);
+			return true;
+		}
+		
+		tick() {
+			if (this.data.energy < 0.25) {
+				this.setBlock(BlockID.luminator);
+			} else {
+				this.data.energy -= 0.25;
+			}
 		}
 	}
-});
+
+	MachineRegistry.registerPrototype(BlockID.luminator, new Lamp());
+	MachineRegistry.registerPrototype(BlockID.luminator_on, new LampOn());
+}
 
 Block.registerPlaceFunction("luminator", function(coords, item, block, player, region) {
-	var x = coords.relative.x;
-	var y = coords.relative.y;
-	var z = coords.relative.z;
-	block = region.getBlockId(x, y, z)
-	if (GenerationUtils.isTransparentBlock(block)) {
+	let x = coords.relative.x;
+	let y = coords.relative.y;
+	let z = coords.relative.z;
+	let blockID = region.getBlockId(x, y, z)
+	if (GenerationUtils.isTransparentBlock(blockID)) {
 		region.setBlock(x, y, z, item.id, coords.side);
 		//World.playSound(x, y, z, "dig.stone", 1, 0.8)
 		World.addTileEntity(x, y, z, region);

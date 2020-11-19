@@ -1,10 +1,10 @@
 namespace ICTool {
 	let wrenchData = {}
-	
+
 	export function registerWrench(id: number, chance: number, energyPerUse: number) {
 		wrenchData[id] = {chance: chance, energy: energyPerUse}
 	}
-	
+
 	export function getWrenchData(id: number) {
 		return wrenchData[id];
 	}
@@ -12,7 +12,7 @@ namespace ICTool {
 	export function isWrench(id: number) {
 		return this.getWrenchData(id)? true : false;
 	}
-	
+
 	export function isValidWrench(item: ItemInstance, damage: number = 1) {
 		let wrench = this.getWrenchData(item.id);
 		if (wrench) {
@@ -23,7 +23,7 @@ namespace ICTool {
 		}
 		return false;
 	}
-	
+
 	export function useWrench(item: ItemInstance, player: number, damage: number) {
 		let wrench = this.getWrenchData(item.id);
 		if (!wrench.energy) {
@@ -34,15 +34,15 @@ namespace ICTool {
 	}
 
 	export function rotateMachine(tileEntity: TileEntity, side: number, item: ItemInstance, player: number) {
-		if (this.useWrench(item, player, 1)) {
-			if (Entity.getSneaking(player)) {
-				side ^= 1;
-			}
-			tileEntity.setFacing(side);
+		if (Entity.getSneaking(player)) {
+			side ^= 1;
+		}
+		if (tileEntity.setFacing(side)) {
+			this.useWrench(item, player, 1);
 			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg", 1);
 		}
 	}
-	
+
 	export function addRecipe(result: ItemInstance, data: {id: number, data: number}[], tool: number) {
 		data.push({id: tool, data: -1});
 		Recipes.addShapeless(result, data, function(api, field, result) {
@@ -59,7 +59,7 @@ namespace ICTool {
 			}
 		});
 	}
-	
+
 	export function dischargeItem(item: ItemInstance, consume: number) {
 		let energy = 0;
 		let armor = Player.getArmorSlot(1);
@@ -79,7 +79,7 @@ namespace ICTool {
 		}
 		return false;
 	}
-	
+
 	export function useElectricItem(item: ItemInstance, consume: number) {
 		if (this.dischargeItem(item, consume)) {
 			Player.setCarriedItem(item.id, 1, item.data, item.extra);
@@ -87,7 +87,7 @@ namespace ICTool {
 		}
 		return false;
 	}
-	
+
 	export function registerElectricHoe(nameID: string) {
 		Item.registerUseFunction(nameID, function(coords, item, block) {
 			if ((block.id == 2 || block.id == 3 || block.id == 110 || block.id == 243) && coords.side == 1 && ICTool.useElectricItem(item, 50)) { 
@@ -96,7 +96,7 @@ namespace ICTool {
 			}
 		});
 	}
-	
+
 	export function registerElectricTreetap(nameID) {
 		Item.registerUseFunction(nameID, function(coords, item, block) {
 			if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, 50)) {

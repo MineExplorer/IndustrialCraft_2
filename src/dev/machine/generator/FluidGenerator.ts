@@ -34,7 +34,7 @@ var guiSemifluidGenerator = InventoryWindow("Semifluid Generator", {
 	
 	elements: {
 		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 440, y: 75},
 		"slot2": {type: "slot", x: 440, y: 183},
 		"slotEnergy": {type: "slot", x: 725, y: 165}
@@ -78,7 +78,7 @@ namespace Machine {
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 			if (Entity.getSneaking(player)) {
 				let liquid = this.liquidStorage.getLiquidStored();
-				return this.getLiquidFromItem(liquid, item, new ItemStack(0, 0, 0), true);
+				return this.getLiquidFromItem(liquid, item, new ItemStack(), true);
 			}
 			return false;
 		}

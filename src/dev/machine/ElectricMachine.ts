@@ -32,7 +32,7 @@ namespace Machine {
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			return (item.id == ItemID.debugItem || item.id == ItemID.EUMeter);
 		}
-		
+
 		energyTick(type: string, src: any): void {
 			this.last_energy_receive = this.energy_receive;
 			this.energy_receive = 0;
@@ -59,7 +59,7 @@ namespace Machine {
 			this.voltage = Math.max(this.voltage, voltage);
 			return add;
 		}
-			
+
 		getExplosionPower(): number {
 			return 1.2;
 		}

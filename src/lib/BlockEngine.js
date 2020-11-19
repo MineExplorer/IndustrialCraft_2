@@ -19,6 +19,10 @@ LIBRARY({
 });
 var ItemStack = /** @class */ (function () {
     function ItemStack(id, count, data, extra) {
+        if (id === void 0) { id = 0; }
+        if (count === void 0) { count = 0; }
+        if (data === void 0) { data = 0; }
+        if (extra === void 0) { extra = null; }
         this.id = id;
         this.data = data;
         this.count = count;
@@ -77,7 +81,7 @@ var WorldRegion = /** @class */ (function () {
                 var item = Entity.getCarriedItem(player);
             }
             else {
-                var item = new ItemStack(0, 0, 0);
+                var item = new ItemStack();
             }
             var result = Block.getBlockDropViaItem(block, item, new Vector(x, y, z), this.blockSource);
             if (result) {
@@ -214,6 +218,7 @@ var WorldRegion = /** @class */ (function () {
      * @returns drop entity id
      */
     WorldRegion.prototype.dropItem = function (x, y, z, id, count, data, extra) {
+        if (extra === void 0) { extra = null; }
         return this.blockSource.spawnDroppedItem(x, y, z, id, count, data, extra);
     };
     WorldRegion.prototype.spawnEntity = function (x, y, z, namespace, type, init_data) {

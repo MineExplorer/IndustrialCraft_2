@@ -61,8 +61,7 @@ namespace Machine {
 			return guiGenerator;
 		}
 
-		init() {
-			super.init();
+		setupContainer() {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (id, count, data) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
 			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (id, count, data) => Recipes.getFuelBurnDuration(id, data) > 0);
 		}

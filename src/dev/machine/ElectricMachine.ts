@@ -1,8 +1,8 @@
-/// <reference path="./MachineBase.ts" />
+/// <reference path="MachineBase.ts" />
+
 namespace Machine {
 	export abstract class ElectricMachine
 	extends MachineBase {
-		private readonly tier: number
 		energy_receive: number = 0;
 		last_energy_receive: number = 0;
 		voltage: number = 0;
@@ -12,13 +12,12 @@ namespace Machine {
 			energy: 0
 		};
 
-		constructor(tier: number) {
+		constructor() {
 			super();
-			this.tier = tier;
 		}
 
 		getTier(): number {
-			return this.tier;
+			return 1;
 		}
 
 		getEnergyStorage(): number {

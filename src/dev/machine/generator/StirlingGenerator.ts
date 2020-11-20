@@ -28,11 +28,14 @@ namespace Machine {
 			energy: 0,
 			heat: 0
 		}
-			
-		canReceiveHeat(side: number) {
-			return this.data.meta == side;
+
+		getTier(): number {
+			return 4;
 		}
-		
+		canReceiveHeat(side: number) {
+			return side == this.getFacing();
+		}
+
 		heatReceive(amount: number) {
 			if (this.data.energy == 0) {
 				this.data.energy = Math.round(amount / 2);
@@ -40,7 +43,7 @@ namespace Machine {
 			}
 			return 0;
 		}
-		
+
 		energyTick(type: string, src: any) {
 			if (src.add(this.data.energy) < this.data.energy) {
 				this.data.energy = 0;
@@ -56,5 +59,5 @@ namespace Machine {
 		}
 	}
 
-	MachineRegistry.registerGenerator(BlockID.stirlingGenerator, new StirlingGenerator(4));
+	MachineRegistry.registerGenerator(BlockID.stirlingGenerator, new StirlingGenerator());
 }

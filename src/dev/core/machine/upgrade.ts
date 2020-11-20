@@ -1,36 +1,36 @@
-var UpgradeAPI = {
-	data: {},
-	
-	getUpgradeData: function(id) {
-		return this.data[id];
-	},
-	
-	isUpgrade: function(id) {
-		return UpgradeAPI.data[id]? true : false;
-	},
-	
-	isValidUpgrade: function(id, count, data, container) {
-		var upgrades = container.tileEntity.upgrades;
+namespace UpgradeAPI {
+	let data = {};
+
+	export function getUpgradeData(id: number) {
+		return data[id];
+	}
+
+	export function isUpgrade(id: number) {
+		return data[id]? true : false;
+	}
+
+	export function isValidUpgrade(id: number, tileEntity: Machine.MachineBase) {
+		var upgrades = tileEntity.upgrades;
 		var upgradeData = UpgradeAPI.getUpgradeData(id);
 		if (upgradeData && (!upgrades || upgrades.indexOf(upgradeData.type) != -1)) {
 			return true;
 		}
 		return false;
-	},
+	}
 
-	registerUpgrade: function(id, type, func) {
-		this.data[id] = {type: type, func: func};
-	},
+	export function registerUpgrade(id: number, type: string, func) {
+		data[id] = {type: type, func: func};
+	}
 
-	callUpgrade: function(item, machine, container, data) {
+	export function callUpgrade(item: ItemInstance, machine: Machine.MachineBase, container, data) {
 		var upgrades = machine.upgrades;
 		var upgrade = this.getUpgradeData(item.id);
 		if (upgrade && (!upgrades || upgrades.indexOf(upgrade.type) != -1)) {
 			upgrade.func(item, machine, container, data);
 		}
-	},
-	
-	getUpgrades: function(machine, container) {
+	}
+
+	export function getUpgrades(machine, container) {
 		var upgrades = [];
 		for (var slotName in container.slots) {
 			if (slotName.match(/Upgrade/)) {
@@ -53,9 +53,9 @@ var UpgradeAPI = {
 			}
 		}
 		return upgrades;
-	},
+	}
 
-	executeUpgrades: function(machine) {
+	export function executeUpgrades(machine: Machine.MachineBase) {
 		var container = machine.container;
 		var data = machine.data;
 		var upgrades = this.getUpgrades(machine, container);
@@ -63,5 +63,5 @@ var UpgradeAPI = {
 			this.callUpgrade(upgrades[i], machine, container, data);
 		}
 		StorageInterface.checkHoppers(machine);
-	},
+	}
 }

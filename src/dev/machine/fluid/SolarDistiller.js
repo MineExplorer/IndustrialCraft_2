@@ -46,7 +46,7 @@ MachineRegistry.registerPrototype(BlockID.solarDistiller, {
 		canSeeSky: false
 	},
 	
-	getGuiScreen: function() {
+	getScreenByName: function() {
 		return guiSolarDistiller;
 	},
 	

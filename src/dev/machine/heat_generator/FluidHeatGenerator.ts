@@ -30,7 +30,7 @@ var guiFluidHeatGenerator = InventoryWindow("Liquid Fuel Firebox", {
 		{type: "bitmap", x: 660, y: 102, bitmap: "fluid_heat_generator_info", scale: GUI_SCALE},
 		{type: "bitmap", x: 660, y: 176, bitmap: "fluid_heat_generator_info", scale: GUI_SCALE}
 	],
-	
+
 	elements: {
 		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 440, y: 75},
@@ -51,7 +51,7 @@ namespace Machine {
 			liquid: null,
 			isActive: false
 		}
-		
+
 		getScreenByName() {
 			return guiFluidHeatGenerator;
 		}
@@ -59,18 +59,18 @@ namespace Machine {
 		setupContainer() {
 			this.liquidStorage.setLimit(null, 10);
 
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (id, count, data) => {
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
 				var empty = LiquidLib.getEmptyItem(id, data);
 				if (!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			});
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
-		
+
 		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
 			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
-		
+
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 			if (Entity.getSneaking(player)) {
 				let liquid = this.liquidStorage.getLiquidStored();
@@ -82,14 +82,14 @@ namespace Machine {
 			}
 			return super.onItemUse(coords, item, player);
 		}
-		
+
 		tick(): void {
 			StorageInterface.checkHoppers(this);
 			var liquid = this.liquidStorage.getLiquidStored();
 			var slot1 = this.container.getSlot("slot1");
 			var slot2 = this.container.getSlot("slot2");
 			this.getLiquidFromItem(liquid, slot1, slot2);
-			
+
 			var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid || liquid);
 			if (fuel && this.data.fuel <= 0 && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)) {
 				this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
@@ -112,7 +112,7 @@ namespace Machine {
 				this.container.setText("textInfo1", "Emit: 0");
 				this.container.setText("textInfo2", "Max Emit: 0");
 			}
-			
+
 			this.container.setText("textInfo1", "Emit: " + this.data.output);
 			this.liquidStorage.updateUiScale("liquidScale", liquid);
 			this.container.sendChanges();
@@ -121,7 +121,7 @@ namespace Machine {
 		getOperationSound(): string {
 			return "GeothermalLoop.ogg";
 		}
-		
+
 		getEnergyStorage(): number {
 			return 10000;
 		}

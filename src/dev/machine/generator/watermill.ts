@@ -20,15 +20,11 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	export class Watermill
 	extends Generator {
-		constructor() {
-			super(1);
-		}
-
 		defaultValues = {
 			energy: 0,
 			output: 0
 		}
-		
+
 		biomeCheck(x: number, z: number) {
 			var coords = [[x, z], [x-7, z], [x+7, z], [x, z-7], [x, z+7]];
 			for (var c of coords) {

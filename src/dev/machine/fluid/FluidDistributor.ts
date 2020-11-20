@@ -94,7 +94,7 @@ namespace Machine {
 			
 			liquid = storage.getLiquidStored();
 			if (liquid) {
-				var input = StorageInterface.getNearestLiquidStorages(this, this.data.meta, !this.data.inverted);
+				var input = StorageInterface.getNearestLiquidStorages(this, this.getFacing(), !this.data.inverted);
 				for (var side in input) {
 					StorageInterface.transportLiquid(liquid, 0.25, this, input[side], parseInt(side));
 				}

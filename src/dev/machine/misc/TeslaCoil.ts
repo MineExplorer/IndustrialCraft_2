@@ -18,10 +18,10 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	export class TeslaCoil
 	extends ElectricMachine {
-		constructor() {
-			super(3);
+		getTier() {
+			return 3;
 		}
-		
+
 		tick(): void {
 			if (this.data.energy >= 400 && this.data.isActive) {
 				if (World.getThreadTime()%32 == 0) {
@@ -58,5 +58,5 @@ namespace Machine {
 		}
 	}
 
-	MachineRegistry.registerElectricMachine(BlockID.teslaCoil, new TeslaCoil());
+	MachineRegistry.registerPrototype(BlockID.teslaCoil, new TeslaCoil());
 }

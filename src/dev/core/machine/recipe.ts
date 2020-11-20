@@ -28,7 +28,7 @@ namespace MachineRecipeRegistry {
 		}
 	}
 
-	export function requireRecipesFor(name: string, createIfNotFound: boolean) {
+	export function requireRecipesFor(name: string, createIfNotFound?: boolean) {
 		if (!this.recipeData[name] && createIfNotFound) {
 			this.recipeData[name] = {};
 		}
@@ -45,5 +45,12 @@ namespace MachineRecipeRegistry {
 
 	export function hasRecipeFor(name: string, key1: string|number, key2?: string|number) {
 		return this.getRecipeResult(name, key1, key2)? true : false;
+	}
+
+	export type RecipeData = {
+		id: number,
+		count: number,
+		data?: number,
+		sourceCount?: number
 	}
 }

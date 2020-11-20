@@ -1,6 +1,7 @@
-/// <reference path="./ElectricMachine.ts" />
+/// <reference path="ElectricMachine.ts" />
+
 namespace Machine {
-	export class Generator
+	export abstract class Generator
 	extends ElectricMachine {
 		canReceiveEnergy() {
 			return false;

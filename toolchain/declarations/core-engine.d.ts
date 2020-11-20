@@ -2152,9 +2152,6 @@ declare namespace Config {
         toString(): string;
     }
 }
-declare class ConnectedClientList {
-	setupDistancePolicy(x: number, y: number, z: number, dimension: number, distance: number): void;
-}
 declare namespace MobRegistry {
     namespace customEntities { }
     namespace loadedEntities { }
@@ -5225,7 +5222,7 @@ declare class ItemContainer {
 	/**
 	 * Sends packet from client container copy to server.
 	 */
-	sendEvent(eventName: string, someData: object): void;
+	sendEvent(eventName: string, someData: object | string): void;
 
 	/**
 	 * Sends packet from server container. 
@@ -5251,7 +5248,7 @@ declare class ItemContainer {
 	 * @param client client in which UI will be open
 	 * @param screenName name of the screen to open
 	 */
-	openFor(client: Network.Client, screenName: string): void;
+	openFor(client: NetworkClient, screenName: string): void;
 
 	/**
 	 * Gets the slot by its name. If a slot with specified name doesn't 
@@ -5260,14 +5257,7 @@ declare class ItemContainer {
 	 * @returns contents of the slot in a [[Slot]] object. You can modify it
 	 * to change the contents of the slot
 	 */
-	getSlot(name: string): UI.Slot;
-
-	/**
-	 * Set slot's content by its name. If a slot with specified name doesn't 
-	 * exists, creates an empty one with specified name and item
-	 * @param name slot name
-	 */
-	setSlot(name: string, id: number, count: number, data: number): void;
+	getSlot(name: string): ItemContainerSlot;
 
 	/**
 	 * Set slot's content by its name. If a slot with specified name doesn't 
@@ -5275,7 +5265,7 @@ declare class ItemContainer {
 	 * @param name slot name
 	 * @param extra item extra data.
 	 */
-	setSlot(name: string, id: number, count: number, data: number, extra: ItemExtraData): void;
+	setSlot(name: string, id: number, count: number, data: number, extra?: ItemExtraData): void;
 
 	/**
 	 * Validates slot contents. If the data value is less then 0, it becomes
@@ -5348,6 +5338,27 @@ declare class ItemContainer {
 
 interface TransferPolicy {
 	(container: ItemContainer, name: string, id: number, amount: number, data: number, extra: ItemExtraData, playerUid: number): number;
+}
+
+declare class ItemContainerSlot {
+	id: number;
+	count: number;
+	data: number;
+	extra: ItemExtraData;
+	
+	getName(): string;
+	getContainer(): ItemContainer;
+	setSlot(id: number, count: number, data: number, extra?: ItemExtraData): boolean;
+	set(id: number, count: number, data: number, extra: ItemExtraData): boolean;
+	dropAt(region: BlockSource, x: number, y: number, z: number): void;
+	getId(): number;
+	getCount(): number;
+	getData(): number;
+	getExtra(): ItemExtraData;
+	isEmpty(): boolean;
+	markDirty(): void;
+	clear(): void;
+	validate(): void;
 }
 /**
  * Class representing item extra data. Used to store additional information 
@@ -6845,35 +6856,28 @@ declare namespace Network {
      * Event that is called when a client receives a packet with given name
      * @param name name of the packet
      */
-    function addClientPacket(name: string, func: (packetData: any) => void): void;
+    function addClientPacket(name: string, func: (packetData: object) => void): void;
 
     /**
      * Event that is called when server receives a packet with the specified name from client
      * @param name name of the packet
      */
-    function addServerPacket(name: string, func: (client: any, data: any) => void): void;
-
-    /**
-     * Client class
-     */
-    class Client {
-        send(name: string, packetData: any): void;
-    }
+    function addServerPacket(name: string, func: (client: any, data: object) => void): void;
 
     /**
      * Sends packet object with specified name to all clients
      */
-    function sendToAllClients(name: string, packetData: any): void;
+    function sendToAllClients(name: string, packetData: object): void;
 
     /**
      * Sends packet object with the specified name from client to server
      */
-    function sendToServer(name: string, packetData: any): void;
+    function sendToServer(name: string, packetData: object): void;
 
     /**
      * @returns Client object for player by player's entity id
      */
-    function getClientForPlayer(player: number): Client;
+    function getClientForPlayer(player: number): NetworkClient;
 
     /**
      * Converts item or block id from server to local value
@@ -6887,20 +6891,138 @@ declare namespace Network {
 }
 
 /**
+ * Class that represents network client
+ */
+declare class NetworkClient {
+
+    /**
+     * Sends given packet to the following client
+     * @param name name of the packet to send
+     * @param packetData packet data object
+     */
+    send(name: string, packetData: object): void;
+
+    /**
+     * @returns unique numeric entity ID of the player
+     */
+    getPlayerUid(): number;
+
+    getDisconnectCause(): java.io.IOException;
+
+    getDisconnectPacket(): string;
+
+    /**
+     * Sends a packet to the client with a text like a system message
+     */
+    sendMessage(message: string): void;
+
+    /**
+     * Disconnects player from the server and sends a packet with given reason
+     */
+    disconnect(reason: string): void;
+
+    /**
+     * Disconnects player from the server with no further information
+     */
+    disconnect(): void;
+
+}
+/**
+ * Class to work with definite couple of clients,
+ * bound by certain conditions
+ */
+declare class NetworkConnectedClientList {
+    
+    /**
+     * @param addToGlobalRefreshList if true, the object will be added to the
+     * global list for updating periodically, default is true
+     */
+    constructor(addToGlobalRefreshList: boolean);
+    constructor();
+
+    /**
+     * Condition to bound clients to the list.
+     * All clients in a given dimension at a distance of no more than maxDistance from x, y, z
+     * @param x X coord of the conditional centre point of the area where clients are located
+     * @param y Y coord of the conditional centre point of the area where clients are located
+     * @param z Z coord of the conditional centre point of the area where clients are located
+     * @param dimensionID numeric id of the dimension where clients are located
+     * @param maxDistance max distance from the client to the conditional centre, to bound the client to the list
+     * @returns the client list itself
+     */
+    setupDistancePolicy(x: number, y: number, z: number, dimensionID: number, maxDistance: number): NetworkConnectedClientList;
+
+    /**
+     * Sends packet to all clients from the following list.
+     * @param packetName name of the packet to send
+     * @param packetData packet data object
+     */
+    send(packetName: string, packetData: object): void;
+
+    /**
+     * Adds given client to the list
+     */
+    add(client: NetworkClient): void;
+
+    /**
+     * Removes given client from the list
+     */
+    remove(client: NetworkClient): void;
+
+    /**
+     * @returns whether the list contains given client
+     */
+    contains(client: NetworkClient): boolean;
+
+    /**
+     * Sets up policy to add all players to the list
+     * @returns the client list itself
+     */
+    setupAllPlayersPolicy(): NetworkConnectedClientList;
+
+    /**
+     * Sets up policy to add all players to the list
+     * @param updateRate how many milliseconds will have to pass between list updates
+     * @returns the client list itself
+     */
+    setupAllPlayersPolicy(updateRate: number): NetworkConnectedClientList;
+
+    /**
+     * Sets up policy to add players from the same given dimension to the list
+     * @param dimensionID numeric id of the dimension where the clients have to be located to be included into the list
+     * @param updateRate how many milliseconds will have to pass between list updates
+     * @returns the client list itself
+     */
+    setupAllInDimensionPolicy(dimensionID: number, updateRate: number): NetworkConnectedClientList;
+
+    /**
+     * Sets up policy to add players from the same given dimension to the list
+     * @param dimensionID numeric id of the dimension where the clients have to be located to be included into the list
+     * @returns the client list itself
+     */
+    setupAllInDimensionPolicy(dimensionID: number): NetworkConnectedClientList;
+
+    /**
+     * @returns the iterator across clients' objects that the list consists of
+     */
+    iterator(): java.util.Iterator<NetworkClient>
+
+}
+/**
  * Class that represents network entity of the block, currently is not learned
  */
 declare class NetworkEntity {
 	constructor(type: NetworkEntityType, context: any);
 	remove(): void;
 	send(name: string, data: any): void;
-	getClients(): ConnectedClientList;
+	getClients(): NetworkConnectedClientList;
 }
 /**
  * Class that represents network entity type
  */
 declare class NetworkEntityType {
 	constructor(name: string);
-	setClientListSetupListener(action: (list: ConnectedClientList, target: object, entity) => void): this;
+	setClientListSetupListener(action: (list: NetworkConnectedClientList, target: object, entity) => void): this;
 	setClientEntityAddedListener<T = any>(action: (entity: number, packet: any) => T): this;
 	setClientEntityRemovedListener(action: (target: any, entity: number) => void): this;
 	setClientAddPacketFactory(action: (target: any, entity: number, client: any) => any): this;
@@ -7798,7 +7920,7 @@ declare namespace Recipes {
          * @param targetCon target container
          * @param field workbench field
          */
-        constructor(target: UI.UIElementSet, targetCon: UI.Container, field: WorkbenchField);
+        constructor(target: UI.ElementSet, targetCon: UI.Container, field: WorkbenchField);
 
         /**
          * Sets custom workbench prefix
@@ -8920,7 +9042,7 @@ declare namespace TileEntity {
              * Example of the server packet event function. 
              * 'this.sendResponse' method is only available here.
              */
-            [packetName: string]: (packetData: any, packetExtra: any, connectedClient: Network.Client) => void;
+            [packetName: string]: (packetData: any, packetExtra: any, connectedClient: NetworkClient) => void;
         },
 
         /**
@@ -9216,7 +9338,7 @@ declare namespace ToolAPI {
      * @returns tool information stored in slightly modified 
      * [[ToolAPI.ToolParams]] object or null if no tool data was specified
      */
-    function getToolData(itemID: number): any;
+    function getToolData(itemID: number): Nullable<ToolParams>;
 
     /**
      * @param itemID numeric item id
@@ -10153,6 +10275,11 @@ declare namespace UI {
 		setCloseOnBackPressed(val: boolean): void;
 
 
+		/**
+		 * Set background color of window
+		 * @param color integer color value (you can specify it using hex value)
+		 */
+		setBackgroundColor(color: number);
 	}
 
 
@@ -10238,9 +10365,10 @@ declare namespace UI {
 		 * @param name window name
 		 */
 		moveOnTop(name: string): void;
+
 		/**
-				 * Opens window wihout container. It is usually mor
-				 */
+		 * Opens window wihout container. It is usually mor
+		 */
 		open(): void;
 
 		/**
@@ -10458,7 +10586,7 @@ declare namespace UI {
 		 * @param isAlwaysSelected if true, tab is always displayed as selected.
 		 * Default value is false
 		 */
-		setTab(index: number, tabOverlay: UIElementSet, tabContent: WindowContent, isAlwaysSelected?: boolean): void;
+		setTab(index: number, tabOverlay: ElementSet, tabContent: WindowContent, isAlwaysSelected?: boolean): void;
 
 		/**
 		 * Creates fake tab with no content
@@ -10466,7 +10594,7 @@ declare namespace UI {
 		 * details
 		 * @param tabOverlay content of the tab selector
 		 */
-		setFakeTab(index: number, tabOverlay: UIElementSet): void;
+		setFakeTab(index: number, tabOverlay: ElementSet): void;
 
 		/**
 		 * @param index index of the tab
@@ -10641,7 +10769,7 @@ declare namespace UI {
 		 * [[ConfigVisualizer]] instance
 		 * @param elements target [[WindowContent.elements]] section
 		 */
-		clearVisualContent(elements: UIElementSet): void;
+		clearVisualContent(elements: ElementSet): void;
 
 		/**
 		 * Creates elements in the window to visualize configuration file
@@ -10649,7 +10777,7 @@ declare namespace UI {
 		 * @param pos top left position of the first element. Default position 
 		 * is (0, 0, 0)
 		 */
-		createVisualContent(elements: UIElementSet, pos?: { x?: number, y?: number, z?: number }): void;
+		createVisualContent(elements: ElementSet, pos?: { x?: number, y?: number, z?: number }): void;
 	}
 
 
@@ -10979,6 +11107,46 @@ declare namespace UI {
 		 * Constant used to represent right padding
 		 */
 		PADDING_RIGHT: number;
+
+		/**
+		 * Window width
+		 */
+		width: number;
+
+		/**
+		 * Height of window
+		 */
+		height: number;
+
+		/**
+		 * Scale of window
+		 */
+		scale: number;
+
+		/**
+		 * Horizontal window scroll
+		 */
+		scrollX: number;
+
+		/**
+		 * Vertical window scroll
+		 */
+		scrollY: number;
+
+		/**
+		 * Window horizontal position
+		 */
+		x: number;
+
+		/**
+		 * Window vertical position
+		 */
+		y: number;
+
+		/**
+		 * Window position on layers
+		 */
+		zIndex: number;
 
 		/**
 		 * Sets padding of the window
@@ -11511,11 +11679,11 @@ declare namespace UI {
 		 * instances as values. Gui elements are interactive components that are
 		 * used to create interfaces functionality
 		 */
-		elements: UIElementSet,
+		elements: ElementSet,
 	}
 
 	interface ColorDrawing {
-		type: "background",
+		type: "background" | "color",
 
 		color: number,
 
@@ -11698,7 +11866,7 @@ declare namespace UI {
 
 		value?: number,
 
-		bitmap?: string
+		bitmap?: string,
 
 		width?: number,
 
@@ -11880,29 +12048,35 @@ declare namespace UI {
 	 * Object containing ui elements with key as the name and value as the 
 	 * [[UIElement]] instance to be used
 	 */
-	interface UIElementSet {
-		[key: string]: UICustomElement
-			| UIButtonElement
-			| UICloseButtonElement
-			| UIFrameElement
-			| UIImageElement
-			| UIScaleElement
-			| UIScrollElement
-			| UISlotElement
-			| UISwitchElement
-			| UITabElement
-			| UITextElement
-			| UIFPSTextElement
-			| UIInvSlotElement
-	}
+	type Elements = (
+		UICustomElement
+		| UIButtonElement
+		| UICloseButtonElement
+		| UIFrameElement
+		| UIImageElement
+		| UIScaleElement
+		| UIScrollElement
+		| UISlotElement
+		| UISwitchElement
+		| UITabElement
+		| UITextElement
+		| UIFPSTextElement
+		| UIInvSlotElement
+	);
 
-	type DrawingSet = (ColorDrawing
+	type DrawingElements = (
+		ColorDrawing
 		| CustomDrawing
 		| FrameDrawing
 		| ImageDrawing
 		| LineDrawing
-		| TextDrawing)[]
+		| TextDrawing
+	);
+	interface ElementSet {
+		[key: string]: Elements;
+	}
 
+	type DrawingSet = DrawingElements[];
 
 	/**
 	 * Object containing binding names as keys and string values as gui textures

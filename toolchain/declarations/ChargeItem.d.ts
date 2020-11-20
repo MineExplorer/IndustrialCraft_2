@@ -40,8 +40,8 @@ declare namespace ChargeItemRegistry {
     function getEnergyStored(item: ItemInstance, energyType?: string): number;
     function setEnergyStored(item: ItemInstance, amount: number): void;
     function getEnergyFrom(item: ItemInstance, energyType: string, amount: number, tier: number, getAll?: boolean): number;
-    function getEnergyFromSlot(slot: any, energyType: string, amount: number, tier: number, getAll?: boolean): number;
+    function getEnergyFromSlot(slot: ItemContainerSlot, energyType: string, amount: number, tier: number, getAll?: boolean): number;
     function addEnergyTo(item: ItemInstance, energyType: string, amount: number, tier: number, addAll?: boolean): number;
-    function addEnergyToSlot(slot: any, energyType: string, amount: number, tier: number, addAll?: boolean): number;
+    function addEnergyToSlot(slot: ItemContainerSlot, energyType: string, amount: number, tier: number, addAll?: boolean): number;
     function transferEnergy(api: any, field: any, result: ItemInstance): void;
 }

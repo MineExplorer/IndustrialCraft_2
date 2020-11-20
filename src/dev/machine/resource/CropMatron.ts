@@ -59,22 +59,15 @@ var guiCropMatron = InventoryWindow("Crop Matron", newGuiMatronObject);
 namespace Machine {
     export class CropMatron
     extends ElectricMachine {
-        constructor() {
-            super(1);
-        }
-
         defaultValues = {
             energy: 0,
-            power_tier: 1,
-            energy_storage: 10000,
-            meta: 0,
             isActive: false,
             scanX: -5,
             scanY: -1,
             scanZ: -5
         }
 
-        getGuiScreen() {
+        getScreenByName() {
             return guiCropMatron;
         }
 
@@ -109,7 +102,7 @@ namespace Machine {
 
             var energyStorage = this.getEnergyStorage();
             this.data.energy = Math.min(this.data.energy, energyStorage);
-            this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
+            this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 
             this.container.setScale("energyScale", this.data.energy / energyStorage);
             this.liquidStorage.updateUiScale("liquidScale", "water");
@@ -161,16 +154,12 @@ namespace Machine {
             return null;
         }
 
-        getTier() {
-            return this.data.power_tier;
-        }
-
         getEnergyStorage() {
-            return this.data.energy_storage;
+            return 10000;
         }
     }
 
-    MachineRegistry.registerElectricMachine(BlockID.cropMatron, new CropMatron());
+    MachineRegistry.registerPrototype(BlockID.cropMatron, new CropMatron());
 
     StorageInterface.createInterface(BlockID.cropMatron, {
         slots: {

@@ -32,13 +32,13 @@ let StorageInterface = {
 	
 	setSlotValidatePolicy: function(container, slotName, func) {
 		container.setSlotAddTransferPolicy(slotName, function(container, name, id, amount, data, extra, playerUid) {
-			return func(id, amount, data, extra, container, name, playerUid) ? amount : 0;
+			return func(name, id, amount, data, extra, container, playerUid) ? amount : 0;
 		});
 	},
 
 	setGlobalValidatePolicy: function(container, func) {
 		container.setGlobalAddTransferPolicy(function(container, name, id, amount, data, extra, playerUid) {
-			return func(id, amount, data, extra, container, name, playerUid) ? amount : 0;
+			return func(name, id, amount, data, extra, container, playerUid) ? amount : 0;
 		});
 	},
 	

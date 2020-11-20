@@ -1,13 +1,23 @@
 /// <reference path="../ElectricMachine.ts" />
 
 namespace Machine {
-	export class Transformer 
+	export class Transformer
 	extends ElectricMachine {
 		hasVerticalRotation: boolean = true;
+		private readonly tier: number
+
+		constructor(tier: number) {
+			super();
+			this.tier = tier;
+		}
 
 		defaultValues = {
 			energy: 0,
 			increaseMode: false
+		}
+
+		getTier(): number {
+			return this.tier;
 		}
 
 		getEnergyStorage(): number {
@@ -19,7 +29,7 @@ namespace Machine {
 			this.data.energy_receive = 0;
 			this.data.last_voltage = this.data.voltage;
 			this.data.voltage = 0;
-		
+
 			var maxVoltage = this.getMaxPacketSize();
 			if (this.data.increaseMode) {
 				if (this.data.energy >= maxVoltage) {
@@ -47,14 +57,14 @@ namespace Machine {
 		}
 
 		canReceiveEnergy(side: number): boolean {
-			if (side == this.data.meta) {
+			if (side == this.getFacing()) {
 				return !this.data.increaseMode;
 			}
 			return this.data.increaseMode;
 		}
 
 		canExtractEnergy(side: number): boolean {
-			if (side == this.data.meta) {
+			if (side == this.getFacing()) {
 				return this.data.increaseMode;
 			}
 			return !this.data.increaseMode;

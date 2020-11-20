@@ -49,8 +49,8 @@ namespace Machine {
 	extends ElectricMachine {
 		hasVerticalRotation: boolean = true;
 
-		constructor() {
-			super(4);
+		getTier() {
+			return 4;
 		}
 
 		getScreenByName() {

@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 		"#",
 		"a"
 	], ['#', BlockID.machineBlockBasic, 0, 'a', 61, 0, 'x', ItemID.storageBattery, -1]);
-	
+
 	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
 		" x ",
 		"###",
@@ -32,7 +32,7 @@ var guiGenerator = InventoryWindow("Generator", {
 		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 150, bitmap: "fire_background", scale: GUI_SCALE},
 	],
-	
+
 	elements: {
 		"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
 		"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
@@ -46,24 +46,20 @@ var guiGenerator = InventoryWindow("Generator", {
 namespace Machine {
 	export class FuelGenerator
 	extends Generator {
-		constructor() {
-			super(1);
-		}
-
 		defaultValues = {
 			energy: 0,
 			burn: 0,
 			burnMax: 0,
 			isActive: false
 		}
-		
-		getScreenByName(): UI.StandartWindow {
+
+		getScreenByName() {
 			return guiGenerator;
 		}
 
 		setupContainer() {
-			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (id, count, data) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
-			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (id, count, data) => Recipes.getFuelBurnDuration(id, data) > 0);
+			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
+			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (name, id, count, data) => Recipes.getFuelBurnDuration(id, data) > 0);
 		}
 
 		consumeFuel(slotName: string) {
@@ -82,7 +78,7 @@ namespace Machine {
 		tick() {
 			StorageInterface.checkHoppers(this);
 			var energyStorage = this.getEnergyStorage();
-			
+
 			if (this.data.burn <= 0 && this.data.energy + 10 <= energyStorage) {
 				this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel") / 4;
 			}
@@ -95,9 +91,9 @@ namespace Machine {
 				this.setActive(false);
 				//this.stopPlaySound();
 			}
-			
+
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
-			
+
 			this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.setText("textInfo1", this.data.energy + "/");
@@ -107,7 +103,7 @@ namespace Machine {
 		getOperationSound() {
 			return "GeneratorLoop.ogg";
 		}
-		
+
 		getEnergyStorage() {
 			return 10000;
 		}

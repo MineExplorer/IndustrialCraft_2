@@ -1,4 +1,4 @@
-function InventoryWindow(header: string, uiDescriptor: {drawing?: UI.DrawingSet, elements: UI.UIElementSet}){
+function InventoryWindow(header: string, uiDescriptor: {drawing?: UI.DrawingSet, elements: UI.ElementSet}){
 	let gui = new UI.StandartWindow({
 		standard: {
 			header: {text: {text: Translation.translate(header)}},
@@ -9,7 +9,7 @@ function InventoryWindow(header: string, uiDescriptor: {drawing?: UI.DrawingSet,
 		drawing: uiDescriptor.drawing || [],
 		elements: uiDescriptor.elements
 	});
-	
+
 	Callback.addCallback("LevelLoaded", function() {
 		MachineRegistry.updateGuiHeader(gui, header);
 	});

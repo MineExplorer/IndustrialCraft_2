@@ -24,48 +24,42 @@ var guiSolarPanel = InventoryWindow("Solar Panel", {
 namespace Machine {
 	export class SolarGenerator
 	extends Generator {
-		constructor() {
-			super(1);
-		}
-
 		defaultValues = {
 			energy: 0,
 			canSeeSky: false
 		}
-		
+
 		getScreenByName() {
 			return guiSolarPanel;
 		}
-		
+
 		init() {
-			super.init();
 			this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
+			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (namr, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
 		}
 
-		setupContainer() {
-			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (id, count, data) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
-		}
-		
 		tick() {
-			// TODO: rewrite sun element to container events
 			if (World.getThreadTime()%100 == 0) {
 				this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
 			}
 			if (this.data.canSeeSky && this.blockSource.getLightLevel(this.x, this.y + 1, this.z) == 15) {
 				this.data.energy = 1;
 				this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", 1, 1);
-				/*if (content) { 
-					content.elements["sun"].bitmap = "sun_on";
-				}*/
+				this.container.sendEvent("setSolarElement", "on")
 			}
-			/*else if (content) { 
-				content.elements["sun"].bitmap = "sun_off";
-			}*/
+			this.container.sendEvent("setSolarElement", "off")
 			this.container.sendChanges();
 		}
 		
 		getEnergyStorage() {
 			return 1;
+		}
+
+		@ContainerEvent(Side.Client)
+		setSolarElement(contaier: any, window: any, content: any, data: string) {
+			if (content) { 
+				content.elements["sun"].bitmap = "sun_" + data;
+			}
 		}
 	}
 

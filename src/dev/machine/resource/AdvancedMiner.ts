@@ -49,8 +49,8 @@ let guiAdvancedMiner = InventoryWindow("Advanced Miner", {
 		"slot13": {type: "slot", x: 400 + 66*GUI_SCALE, y: 290},
 		"slot14": {type: "slot", x: 400 + 85*GUI_SCALE, y: 290},
 		"slot15": {type: "slot", x: 400 + 104*GUI_SCALE, y: 290},
-		"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE},
+		"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE},
 		"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
 			onClick: function(container, tile) {
 				//tile.data.whitelist = !tile.data.whitelist;
@@ -74,10 +74,6 @@ let guiAdvancedMiner = InventoryWindow("Advanced Miner", {
 namespace Machine {
 	export class AdvancedMiner
 	extends ElectricMachine {
-		constructor() {
-			super(3);
-		}
-
 		defaultValues = {
 			power_tier: 3,
 			energy: 0,
@@ -90,19 +86,25 @@ namespace Machine {
 			isActive: false
 		}
 		
-		upgrades = ["overclocker", "transformer"]
+		upgrades = ["overclocker", "transformer"];
 		
 		getScreenByName() {
 			return guiAdvancedMiner;
 		}
+		
+		getTier() {
+			return this.data.power_tier;
+		}
 
 		setupContainer() {
-			StorageInterface.setSlotValidatePolicy(this.container, "slotScanner", (id, count, data) => {
+			StorageInterface.setSlotValidatePolicy(this.container, "slotScanner", (name, id) => {
 				return (id == ItemID.scanner || id == ItemID.scannerAdvanced);
 			});
-			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (id, count, data) => {
+			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 			});
+			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade1", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
+			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade2", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
 		}
 
 		getTransportSlots() {
@@ -231,8 +233,8 @@ namespace Machine {
 			
 			let tier = this.getTier();
 			let energyStorage = this.getEnergyStorage();
-			this.data.energy -= ChargeItemRegistry.addEnergyTo(this.container.getSlot("slotScanner"), "Eu", this.data.energy, tier);
-			this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, tier);
+			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotScanner"), "Eu", this.data.energy, tier);
+			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, tier);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 		}
 
@@ -249,14 +251,10 @@ namespace Machine {
 			this.data.isEnabled = (signal.power == 0);
 		}
 		
-		getTier() {
-			return this.data.power_tier;
-		}
-		
 		getEnergyStorage() {
 			return 4000000;
 		}
 	}
 
-	MachineRegistry.registerElectricMachine(BlockID.advancedMiner, new AdvancedMiner());
+	MachineRegistry.registerPrototype(BlockID.advancedMiner, new AdvancedMiner());
 }

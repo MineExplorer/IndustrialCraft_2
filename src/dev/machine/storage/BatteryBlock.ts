@@ -5,12 +5,14 @@ namespace Machine {
 	extends ElectricMachine {
 		hasVerticalRotation: boolean = true;
 
+		private readonly tier: number;
 		private readonly capacity: number;
 		private readonly defaultDrop: number;
 		private readonly guiScreen: UI.StandartWindow;
 
 		constructor(tier: number, capacity: number, defaultDrop: number, guiScreen: UI.StandartWindow) {
-			super(tier);
+			super();
+			this.tier = tier;
 			this.capacity = capacity;
 			this.defaultDrop = defaultDrop;
 			this.guiScreen = guiScreen;
@@ -20,9 +22,13 @@ namespace Machine {
 			return this.guiScreen;
 		}
 
+		getTier(): number {
+			return this.tier;
+		}
+
 		setupContainer(): void {
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (id, count, data) => ChargeItemRegistry.isValidItem(id, "Eu", this.getTier()));
-			StorageInterface.setSlotValidatePolicy(this.container, "slot2", (id, count, data) => ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier()));
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", this.getTier()));
+			StorageInterface.setSlotValidatePolicy(this.container, "slot2", (name, id) => ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier()));
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
@@ -72,11 +78,11 @@ namespace Machine {
 		}
 
 		canReceiveEnergy(side: number): boolean {
-			return side != this.data.meta;
+			return side != this.getFacing();
 		}
 
 		canExtractEnergy(side: number): boolean {
-			return side == this.data.meta;
+			return side == this.getFacing();
 		}
 
 		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {

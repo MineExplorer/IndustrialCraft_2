@@ -21,7 +21,7 @@ var guiRTGenerator = InventoryWindow("Radioisotope Thermoelectric Generator", {
 	drawing: [
 		{type: "bitmap", x: 630, y: 150, bitmap: "energy_bar_background", scale: GUI_SCALE},
 	],
-	
+
 	elements: {
 		"slot0": {type: "slot", x: 420, y: 120},
 		"slot1": {type: "slot", x: 480, y: 120},
@@ -29,7 +29,6 @@ var guiRTGenerator = InventoryWindow("Radioisotope Thermoelectric Generator", {
 		"slot3": {type: "slot", x: 420, y: 180},
 		"slot4": {type: "slot", x: 480, y: 180},
 		"slot5": {type: "slot", x: 540, y: 180},
-		
 		"energyScale": {type: "scale", x: 630 + GUI_SCALE * 4, y: 150, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", x: 742, y: 148, width: 300, height: 30, text: "0/"},
 		"textInfo2": {type: "text", x: 742, y: 178, width: 300, height: 30, text: "10000"}
@@ -40,10 +39,6 @@ var guiRTGenerator = InventoryWindow("Radioisotope Thermoelectric Generator", {
 namespace Machine {
 	export class RTGenerator
 	extends Generator {
-		constructor() {
-			super(1);
-		}
-
 		defaultValues = {
 			energy: 0,
 			isActive: false
@@ -54,11 +49,11 @@ namespace Machine {
 				return (id == ItemID.rtgPellet)? amount : 0
 			});
 		}
-		
+
 		getScreenByName() {
 			return guiRTGenerator;
 		}
-		
+
 		tick() {
 			var energyStorage = this.getEnergyStorage();
 			var output = 0.5;
@@ -75,7 +70,7 @@ namespace Machine {
 			this.container.setText("textInfo1", this.data.energy + "/");
 			this.container.sendChanges();
 		}
-		
+
 		getEnergyStorage() {
 			return 10000;
 		}

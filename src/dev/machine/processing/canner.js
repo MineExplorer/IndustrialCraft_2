@@ -57,10 +57,10 @@ var guiCanner = new UI.StandartWindow({
 			}
 		},
 		"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE_NEW, y: 50 + 12*GUI_SCALE_NEW, size: 54, isValid: function() {return false;}},
-		"slotUpgrade1": {type: "slot", x: 850, y: 113, size: 54, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade2": {type: "slot", x: 850, y: 167, size: 54, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade3": {type: "slot", x: 850, y: 221, size: 54, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade4": {type: "slot", x: 850, y: 275, size: 54, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade1": {type: "slot", x: 850, y: 113, size: 54},
+		"slotUpgrade2": {type: "slot", x: 850, y: 167, size: 54},
+		"slotUpgrade3": {type: "slot", x: 850, y: 221, size: 54},
+		"slotUpgrade4": {type: "slot", x: 850, y: 275, size: 54},
 		"buttonSwitch": {type: "button", x: 400 + 70*GUI_SCALE_NEW, y: 50 + 60*GUI_SCALE_NEW, bitmap: "canner_switch_button", scale: GUI_SCALE_NEW, clicker: {
 			onClick: function(container, tile) {
 				if (tile.data.progress == 0) {
@@ -129,7 +129,7 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 
 	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector", "fluidPulling"],
 
-	getGuiScreen: function() {
+	getScreenByName: function() {
 		return guiCanner;
 	},
 	
@@ -288,7 +288,7 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 		
 		var energyStorage = this.getEnergyStorage();
 		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
+		this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 		
 		this.inputTank.updateUiScale("liquidInputScale");
 		this.outputTank.updateUiScale("liquidOutputScale");
@@ -298,9 +298,7 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 	
 	getEnergyStorage: function() {
 		return this.data.energy_storage;
-	},
-
-	renderModel: MachineRegistry.renderModelWithRotation
+	}
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.canner);

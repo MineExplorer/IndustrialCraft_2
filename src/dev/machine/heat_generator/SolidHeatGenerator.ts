@@ -21,7 +21,7 @@ Callback.addCallback("PreLoaded", function() {
 		"x",
 		"f"
 	], ['a', ItemID.heatConductor, 0, 'x', BlockID.machineBlockBasic, 0, 'f', 61, -1]);
-	
+
 	Recipes.addShaped({id: BlockID.solidHeatGenerator, count: 1, data: 0}, [
 		" a ",
 		"ppp",
@@ -30,19 +30,13 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiSolidHeatGenerator = new UI.StandartWindow({
-	standard: {
-		header: {text: {text: Translation.translate("Solid Fuel Firebox")}},
-		inventory: {standard: true},
-		background: {standard: true}
-	},
-	
+var guiSolidHeatGenerator = InventoryWindow("Solid Fuel Firebox", {
 	drawing: [
 		{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},
 		{type: "bitmap", x: 441, y: 330, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],
-	
+
 	elements: {
 		"slotFuel": {type: "slot", x: 441, y: 212, isValid: function(id, count, data) {
 			return Recipes.getFuelBurnDuration(id, data) > 0;
@@ -69,11 +63,11 @@ namespace Machine {
 			output: 0,
 			isActive: false
 		}
-		
+
 		getScreenByName() {
 			return guiSolidHeatGenerator;
 		}
-		
+
 		getFuel(fuelSlot: ItemInstance) {
 			if (fuelSlot.id > 0) {
 				var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
@@ -85,7 +79,7 @@ namespace Machine {
 		}
 
 		spreadHeat() {
-			var side = this.data.meta;
+			var side = this.getFacing();
 			var coords = StorageInterface.getRelativeCoords(this, side);
 			var TE = this.region.getTileEntity(coords);
 			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
@@ -93,15 +87,15 @@ namespace Machine {
 			}
 			return false;
 		}
-		
+
 		setupContainer(): void {
-			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (id, count, data) => Recipes.getFuelBurnDuration(id, data) > 0);
+			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (name, id, count, data) => Recipes.getFuelBurnDuration(id, data) > 0);
 			this.container.setSlotAddTransferPolicy("slotAshes", () => 0);
 		}
-		
+
 		tick(): void {
 			StorageInterface.checkHoppers(this);
-			
+
 			this.data.output = 0;
 			var slot = this.container.getSlot("slotAshes");
 			if (this.data.burn <= 0) {
@@ -125,7 +119,7 @@ namespace Machine {
 				}
 				this.spreadHeat();
 			}
-			
+
 			var outputText = this.data.output.toString();
 			for (var i = outputText.length; i < 6; i++) {
 				outputText += " ";
@@ -133,7 +127,7 @@ namespace Machine {
 			this.container.setText("textInfo1", outputText + "/");
 			this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
 		}
-		
+
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (ICTool.isWrench(item.id)) {
 				ICTool.rotateMachine(this, coords.side, item, player)

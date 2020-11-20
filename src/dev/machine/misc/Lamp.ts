@@ -58,19 +58,15 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	class Lamp
 	extends ElectricMachine {
-		constructor() {
-			super(1);
-		}
-
 		defaultValues = {
 			energy: 0,
 			isActive: false
 		}
-		
+
 		getEnergyStorage(): number {
 			return 100;
 		}
-		
+
 		onItemUse(): boolean {
 			this.data.isActive = true;
 			return true;
@@ -83,7 +79,7 @@ namespace Machine {
 			let tile = this.region.addTileEntity(this);
 			tile.data = this.data;
 		}
-		
+
 		tick(): void {
 			if (this.data.isActive && this.data.energy >= 0.25) {
 				this.setBlock(BlockID.luminator_on)
@@ -98,7 +94,7 @@ namespace Machine {
 			this.setBlock(BlockID.luminator);
 			return true;
 		}
-		
+
 		tick() {
 			if (this.data.energy < 0.25) {
 				this.setBlock(BlockID.luminator);

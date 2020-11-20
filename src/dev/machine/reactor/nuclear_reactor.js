@@ -404,7 +404,7 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 		if (id == ItemID.debugItem || id == ItemID.EUMeter) return false;
 		if (this.click(id, count, data, coords)) return true;
 		if (Entity.getSneaking(player)) return false;
-		var gui = this.getGuiScreen();
+		var gui = this.getScreenByName();
 		if (gui) {
 			this.core.container.openAs(gui);
 			return true;

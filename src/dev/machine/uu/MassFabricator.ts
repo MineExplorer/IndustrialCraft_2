@@ -43,16 +43,16 @@ var guiMassFabricator = InventoryWindow("Mass Fabricator", {
 namespace Machine {
 	export class MassFabricator
 	extends ElectricMachine {
-		constructor() {
-			super(4);
-		}
-
 		defaultValues = {
 			energy: 0,
 			progress: 0,
 			catalyser: 0,
 			isEnabled: true,
 			isActive: false
+		}
+
+		getTier() {
+			return 4;
 		}
 
 		getScreenByName() {
@@ -127,7 +127,7 @@ namespace Machine {
 		}
 	}
 
-	MachineRegistry.registerElectricMachine(BlockID.massFabricator, new MassFabricator());
+	MachineRegistry.registerPrototype(BlockID.massFabricator, new MassFabricator());
 
 	StorageInterface.createInterface(BlockID.massFabricator, {
 		slots: {

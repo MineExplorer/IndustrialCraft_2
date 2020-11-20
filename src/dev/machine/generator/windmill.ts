@@ -20,10 +20,6 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	export class Windmill
 	extends Generator {
-		constructor() {
-			super(1);
-		}
-
 		defaultValues = {
 			energy: 0,
 			output: 0,

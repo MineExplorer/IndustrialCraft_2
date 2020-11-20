@@ -42,15 +42,11 @@ Callback.addCallback("LevelLoaded", function() {
 namespace Machine {
 	export class GeothermalGenerator
 	extends Generator {
-		constructor() {
-			super(1);
-		}
-
 		defaultValues = {
 			energy: 0,
 			isActive: false,
 		}
-		
+
 		getScreenByName() {
 			return guiGeothermalGenerator;
 		}
@@ -58,29 +54,29 @@ namespace Machine {
 		setupContainer() {
 			this.liquidStorage.setLimit("lava", 8);
 
-			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (id, count, data) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (id, count, data) => LiquidLib.getItemLiquid(id, data) == "lava");
+			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => LiquidLib.getItemLiquid(id, data) == "lava");
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
-		
+
 		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
 			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
-		
+
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 			if (Entity.getSneaking(player)) {
 				return this.getLiquidFromItem("lava", item, null, true);
 			}
 			return false;
 		}
-		
+
 		tick() {
 			StorageInterface.checkHoppers(this);
-			
+
 			var slot1 = this.container.getSlot("slot1");
 			var slot2 = this.container.getSlot("slot2");
 			this.getLiquidFromItem("lava", slot1, slot2);
-			
+
 			var energyStorage = this.getEnergyStorage();
 			if (this.liquidStorage.getAmount("lava").toFixed(3) >= 0.001 && this.data.energy + 20 <= energyStorage) {
 				this.data.energy += 20;
@@ -92,9 +88,9 @@ namespace Machine {
 				//this.stopPlaySound();
 				this.setActive(false);
 			}
-			
+
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
-			
+
 			this.liquidStorage.updateUiScale("liquidScale", "lava");
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.sendChanges();
@@ -103,7 +99,7 @@ namespace Machine {
 		getOperationSound() {
 			return "GeothermalLoop.ogg";
 		}
-		
+
 		getEnergyStorage() {
 			return 10000;
 		}

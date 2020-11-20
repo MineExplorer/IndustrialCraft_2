@@ -13,8 +13,8 @@ declare namespace StorageInterface {
         z: number;
     };
     function setSlotMaxStackPolicy(container: ItemContainer, slotName: string, maxCount: number): void;
-    function setSlotValidatePolicy(container: ItemContainer, slotName: string, func: (id: number, amount: number, data: number, extra: ItemExtraData, container: ItemContainer, name: string, playerUid: number) => boolean): void;
-    function setGlobalValidatePolicy(container: ItemContainer, func: (id: number, amount: number, data: number, extra: ItemExtraData, container: ItemContainer, name: string, playerUid: number) => boolean): void;
+    function setSlotValidatePolicy(container: ItemContainer, slotName: string, func: (name: string, id: number, amount: number, data: number, extra: ItemExtraData, container: ItemContainer, playerUid: number) => boolean): void;
+    function setGlobalValidatePolicy(container: ItemContainer, func: (name: string, id: number, amount: number, data: number, extra: ItemExtraData, container: ItemContainer, playerUid: number) => boolean): void;
     function newInstance(id: number, tileEntity: TileEntity): {
         tileEntity: TileEntity;
         container: ItemContainer;

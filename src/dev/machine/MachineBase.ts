@@ -38,7 +38,7 @@ namespace Machine {
 		@NetworkEvent(Side.Client)
 		renderModel(data: {isActive: boolean}): void {
 			if (data.isActive) {
-				let blockData = this.region.getBlockData(this);
+				let blockData = this.blockSource.getBlockData(this.x, this.y, this.z);
 				TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, blockData);
 			} else {
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
@@ -50,12 +50,12 @@ namespace Machine {
 		}
 
 		getFacing(): number {
-			return this.region.getBlockData(this);
+			return this.blockSource.getBlockData(this.x, this.y, this.z);
 		}
 
 		setFacing(side: number): boolean {
 			if (this.getFacing() != side) {
-				this.region.setBlock(this, this.blockID, side);
+				this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, side);
 				return true;
 			}
 			return false;

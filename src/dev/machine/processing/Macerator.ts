@@ -1,12 +1,14 @@
-﻿IDRegistry.genBlockID("macerator");
+﻿/// <reference path="ProcessingMachine.ts" />
+
+IDRegistry.genBlockID("macerator");
 Block.createBlock("macerator", [
 {name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.macerator, "stone", 1, true);
 
-TileRenderer.setStandartModel(BlockID.macerator, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.macerator, 0, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerRotationModel(BlockID.macerator, 4, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.macerator, 2, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.macerator, 2, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setRotationFunction(BlockID.macerator);
 
 ItemName.addTierTooltip("macerator", 1);
 
@@ -18,8 +20,7 @@ Callback.addCallback("PreLoaded", function() {
 		"b#b",
 		" a "
 	], ['#', BlockID.machineBlockBasic, 0, 'x', 318, 0, 'b', 4, -1, 'a', ItemID.circuitBasic, 0]);
-	
-	
+
 	MachineRecipeRegistry.registerRecipesFor("macerator", {
 		// ores
 		14: {id: ItemID.crushedGold, count: 2, data: 0},
@@ -77,7 +78,7 @@ Callback.addCallback("PreLoaded", function() {
 		156: {id: 406, count: 6, data: 0},
 		179: {id: 12, count: 2, data: 1},
 		180: {id: 12, count: 3, data: 1},
-		352: {id: 351, count: 5, data: 15}, 
+		352: {id: 351, count: 5, data: 15},
 		369: {id: 377, count: 5, data: 0},
 		// plants
 		5: {id: ItemID.bioChaff, count: 1, sourceCount: 4},
@@ -102,13 +103,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiMacerator = new UI.StandartWindow({
-	standard: {
-		header: {text: {text: Translation.translate("Macerator")}},
-		inventory: {standard: true},
-		background: {standard: true}
-	},
-
+var guiMacerator = InventoryWindow("Macerator", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 155, bitmap: "macerator_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
@@ -117,114 +112,57 @@ var guiMacerator = new UI.StandartWindow({
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, value: 0.5, bitmap: "macerator_bar_scale", scale: GUI_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotSource": {type: "slot", x: 441, y: 79, isValid: function(id, count, data) {
-			return MachineRecipeRegistry.hasRecipeFor("macerator", id, data);
-		}},
-		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-		"slotResult": {type: "slot", x: 625, y: 148, isValid: function() {return false;}},
-		"slotUpgrade1": {type: "slot", x: 820, y: 60, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade2": {type: "slot", x: 820, y: 119, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade3": {type: "slot", x: 820, y: 178, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade4": {type: "slot", x: 820, y: 237, isValid: UpgradeAPI.isValidUpgrade},
+		"slotSource": {type: "slot", x: 441, y: 79},
+		"slotEnergy": {type: "slot", x: 441, y: 218},
+		"slotResult": {type: "slot", x: 625, y: 148},
+		"slotUpgrade1": {type: "slot", x: 820, y: 60},
+		"slotUpgrade2": {type: "slot", x: 820, y: 119},
+		"slotUpgrade3": {type: "slot", x: 820, y: 178},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237},
 	}
 });
 
-Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiMacerator, "Macerator");
-});
-
-MachineRegistry.registerElectricMachine(BlockID.macerator, {
-	defaultValues: {
-		power_tier: 1,
-		energy_storage: 1200,
-		energy_consumption: 2,
-		work_time: 300,
-		meta: 0,
-		progress: 0,
-		isActive: false
-	},
-	
-	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"],
-
-	getGuiScreen: function() {
-		return guiMacerator;
-	},
-	
-	getTier: function() {
-		return this.data.power_tier;
-	},
-	
-	resetValues: function() {
-		this.data.power_tier = this.defaultValues.power_tier;
-		this.data.energy_storage = this.defaultValues.energy_storage;
-		this.data.energy_consumption = this.defaultValues.energy_consumption;
-		this.data.work_time = this.defaultValues.work_time;
-	},
-
-	tick: function() {
-		this.resetValues();
-		UpgradeAPI.executeUpgrades(this);
-		
-		var newActive = false;
-		var sourceSlot = this.container.getSlot("slotSource");
-		var resultSlot = this.container.getSlot("slotResult");
-		var result = MachineRecipeRegistry.getRecipeResult("macerator", sourceSlot.id, sourceSlot.data);
-		if (result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)) {
-			var resultSlot = this.container.getSlot("slotResult");
-			if (resultSlot.id == result.id && (!result.data || resultSlot.data == result.data) && resultSlot.count <= 64 - result.count || resultSlot.id == 0) {
-				if (this.data.energy >= this.data.energy_consumption) {
-					this.data.energy -= this.data.energy_consumption;
-					this.data.progress += 1/this.data.work_time;
-					newActive = true;
-					this.startPlaySound();
-				}
-				if (this.data.progress.toFixed(3) >= 1) {
-					sourceSlot.count -= result.sourceCount || 1;
-					resultSlot.id = result.id;
-					resultSlot.data = result.data || 0;
-					resultSlot.count += result.count;
-					this.container.validateAll();
-					this.data.progress = 0;
-				}
-			}
+namespace Machine {
+	export class Macerator
+	extends ProcessingMachine {
+		defaultValues = {
+			energy: 0,
+			power_tier: 1,
+			energy_storage: 1200,
+			energy_consumption: 2,
+			work_time: 300,
+			progress: 0,
+			isActive: false
 		}
-		else {
-			this.data.progress = 0;
+
+		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
+
+		getScreenByName() {
+			return guiMacerator;
 		}
-		if (!newActive)
-			this.stopPlaySound();
-		this.setActive(newActive);
-		
-		var energyStorage = this.getEnergyStorage();
-		this.data.energy = Math.min(this.data.energy, energyStorage);
-		this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
-		
-		this.container.setScale("progressScale", this.data.progress);
-		this.container.setScale("energyScale", this.data.energy / energyStorage);
-	},
 
-	getEnergyStorage: function() {
-		return this.data.energy_storage;
-	},
-	
-	getOperationSound: function() {
-		return "MaceratorOp.ogg";
-    },
-	getInterruptSound: function() {
-		return "InterruptOne.ogg";
-    },
-	
-	renderModel: MachineRegistry.renderModelWithRotation
-});
+		getRecipeResult(id: number, data: number) {
+			return MachineRecipeRegistry.getRecipeResult("macerator", id, data);
+		}
 
-TileRenderer.setRotationPlaceFunction(BlockID.macerator);
+		getOperationSound() {
+			return "MaceratorOp.ogg";
+		}
 
-StorageInterface.createInterface(BlockID.macerator, {
-	slots: {
-		"slotSource": {input: true},
-		"slotResult": {output: true}
-	},
-	isValidInput: function(item) {
-		return MachineRecipeRegistry.hasRecipeFor("macerator", item.id, item.data);
+		getInterruptSound() {
+			return "InterruptOne.ogg";
+		}
 	}
-});
+
+	MachineRegistry.registerPrototype(BlockID.macerator, new Macerator());
+
+	StorageInterface.createInterface(BlockID.macerator, {
+		slots: {
+			"slotSource": {input: true},
+			"slotResult": {output: true}
+		},
+		isValidInput: (item: ItemInstance) => {
+			return MachineRecipeRegistry.hasRecipeFor("macerator", item.id, item.data);
+		}
+	});
+}

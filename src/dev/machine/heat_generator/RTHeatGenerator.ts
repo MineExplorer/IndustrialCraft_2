@@ -44,13 +44,13 @@ namespace Machine {
 		defaultValues = {
 			isActive: false
 		}
-		
+
 		getScreenByName() {
 			return guiRTHeatGenerator;
 		}
 
 		setupContainer() {
-			StorageInterface.setGlobalValidatePolicy(this.container, (id) => (id == ItemID.rtgPellet));
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id) => (id == ItemID.rtgPellet));
 		}
 
 		tick() {

@@ -45,10 +45,6 @@ var guiCropHarvester = InventoryWindow("Crop Harvester", cropHarvesterGuiObject)
 namespace Machine {
     export class CropHarvester 
     extends ElectricMachine {
-        constructor() {
-            super(1);
-        }
-
         defaultValues = {
             energy: 0,
             power_tier: 1,
@@ -82,7 +78,7 @@ namespace Machine {
 
             var energyStorage = this.getEnergyStorage();
             this.data.energy = Math.min(this.data.energy, energyStorage);
-            this.data.energy += ChargeItemRegistry.getEnergyFrom(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
+            this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 
             this.container.setScale("energyScale", this.data.energy / energyStorage);
             this.container.validateAll();

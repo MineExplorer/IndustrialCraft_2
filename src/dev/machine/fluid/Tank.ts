@@ -19,15 +19,15 @@ var guiTank = InventoryWindow("Tank", {
 	drawing: [
 		{type: "bitmap", x: 611, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
 	],
-	
+
 	elements: {
 		"liquidScale": {type: "scale", x: 400 + 70*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slotLiquid1": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 16*GUI_SCALE},
 		"slotLiquid2": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 40*GUI_SCALE},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
-		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
+		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE},
+		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE},
+		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE},
+		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE},
 	}
 });
 
@@ -43,10 +43,13 @@ namespace Machine {
 		setupContainer() {
 			this.liquidStorage.setLimit(null, 16);
 
-			this.container.setSlotAddTransferPolicy("slotLiquid1", (container, name, id, amount, data) => (
-				(LiquidRegistry.getFullItem(id, data, "water") || LiquidLib.getEmptyItem(id, data))? amount : 0
-			));
-			this.container.setSlotAddTransferPolicy("slotLiquid2", () => 0);
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
+				if (name == "slotLiquid1") {
+					return (LiquidRegistry.getFullItem(id, data, "water") || LiquidLib.getEmptyItem(id, data))? true : false;
+				}
+				if (name == "slotLiquid2") return false;
+				return UpgradeAPI.isValidUpgrade(id, this);
+			});
 		}
 
 		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
@@ -69,6 +72,7 @@ namespace Machine {
 			var slot1 = this.container.getSlot("slotLiquid1");
 			var slot2 = this.container.getSlot("slotLiquid2");
 			this.getLiquidFromItem(liquid, slot1, slot2);
+			// TODO: rewrite
 			if (liquid) {
 				var full = LiquidLib.getFullItem(slot1.id, slot1.data, liquid);
 				if (full && storage.getAmount(liquid) >= full.storage && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)) {

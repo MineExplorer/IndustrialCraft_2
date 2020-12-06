@@ -114,7 +114,7 @@ Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiCanner, "Fluid/Solid Canning Machine");
 });
 
-
+/*
 MachineRegistry.registerElectricMachine(BlockID.canner, {
 	defaultValues: {
 		power_tier: 1,
@@ -330,3 +330,4 @@ StorageInterface.createInterface(BlockID.canner, {
 		return this.tileEntity.outputTank.getLiquidStored();
 	}
 });
+*/

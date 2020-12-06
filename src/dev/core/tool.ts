@@ -121,7 +121,7 @@ namespace ICTool {
 		Callback.addCallback("LocalTick", function() {
 			if (!ConfigIC.soundEnabled) {return;}
 			let item = Player.getCarriedItem();
-			let tool = ToolAPI.getToolData(item.id);
+			let tool = ToolAPI.getToolData(item.id) as any;
 			if (item.id == itemID && (!tool || !tool.toolMaterial.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.toolMaterial.energyPerUse)) {
 				SoundManager.startPlaySound(SourceType.PLAYER, item.id, idleSound);
 			}

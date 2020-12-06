@@ -52,18 +52,18 @@ let guiAdvancedMiner = InventoryWindow("Advanced Miner", {
 		"slotUpgrade1": {type: "slot", x: 871, y: 50 + 37*GUI_SCALE},
 		"slotUpgrade2": {type: "slot", x: 871, y: 50 + 56*GUI_SCALE},
 		"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
-			onClick: function(container, tile) {
-				//tile.data.whitelist = !tile.data.whitelist;
+			onClick: function(_, container: ItemContainer) {
+				container.sendEvent("switchWhitelist", {});
 			}
 		}},
 		"button_restart": {type: "button", x: 400 + 125*GUI_SCALE, y: 50 + 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
-			onClick: function(container, tile) {
-				//tile.data.x = tile.data.y = tile.data.z =  0;
+			onClick: function(_, container: ItemContainer) {
+				container.sendEvent("restart", {});
 			}
 		}},
 		"button_silk": {type: "button", x: 400 + 126*GUI_SCALE, y: 50 + 41*GUI_SCALE, bitmap: "miner_button_silk_0", scale: GUI_SCALE, clicker: {
-			onClick: function(container, tile) {
-				//tile.data.silk_touch = (tile.data.silk_touch+1)%2;
+			onClick: function(_, container: ItemContainer) {
+				container.sendEvent("switchSilktouch", {});
 			}
 		}},
 		"textInfoMode": {type: "text", font: {size: 24, color: Color.GREEN}, x: 400 + 32*GUI_SCALE, y: 50+24*GUI_SCALE, width: 256, height: 42, text: Translation.translate("Mode: Blacklist")},
@@ -85,13 +85,13 @@ namespace Machine {
 			isEnabled: true,
 			isActive: false
 		}
-		
+
 		upgrades = ["overclocker", "transformer"];
-		
+
 		getScreenByName() {
 			return guiAdvancedMiner;
 		}
-		
+
 		getTier() {
 			return this.data.power_tier;
 		}
@@ -110,7 +110,7 @@ namespace Machine {
 		getTransportSlots() {
 			return {input: []};
 		}
-		
+
 		isValidBlock(id: number, data: number): boolean {
 			let material = ToolAPI.getBlockMaterial(id);
 			if (id > 0 && (!material || material.name != "unbreaking")) {
@@ -118,7 +118,7 @@ namespace Machine {
 			}
 			return false;
 		}
-		
+
 		checkDrop(drop: ItemInstanceArray[]): boolean {
 			if (drop.length == 0) return true;
 			for (let i in drop) {
@@ -129,7 +129,7 @@ namespace Machine {
 			}
 			return this.data.whitelist;
 		}
-		
+
 		harvestBlock(x: number, y: number, z: number, block: Tile) {
 			// @ts-ignore
 			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, 100, {silk: this.data.silk_touch});
@@ -169,12 +169,12 @@ namespace Machine {
 			if (content) {
 				content.elements.button_silk.bitmap = "miner_button_silk_" + this.data.silk_touch;
 			}*/
-			
+
 			if (this.data.whitelist)
 				this.container.setText("textInfoMode", Translation.translate("Mode: Whitelist"));
 			else
 				this.container.setText("textInfoMode", Translation.translate("Mode: Blacklist"));
-			
+
 			this.data.power_tier = this.defaultValues.power_tier;
 			let max_scan_count = 5;
 			let upgrades = UpgradeAPI.getUpgrades(this, this.container);
@@ -187,7 +187,7 @@ namespace Machine {
 					this.data.power_tier += item.count;
 				}
 			}
-			
+
 			let newActive = false;
 			if (this.data.isEnabled && this.y + this.data.y >= 0 && this.data.energy >= 512) {
 				let scanner = this.container.getSlot("slotScanner");
@@ -225,17 +225,18 @@ namespace Machine {
 				}
 			}
 			this.setActive(newActive);
-			
+
 			if (this.data.y < 0)
 				this.container.setText("textInfoXYZ", "X: "+ this.data.x + ", Y: "+ Math.min(this.data.y, -1) + ", Z: "+ this.data.z);
 			else
 				this.container.setText("textInfoXYZ", "");
-			
+
 			let tier = this.getTier();
 			let energyStorage = this.getEnergyStorage();
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotScanner"), "Eu", this.data.energy, tier);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, tier);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.sendChanges();
 		}
 
 		destroyBlock(coords: Callback.ItemUseCoordinates, player: number) {
@@ -246,13 +247,28 @@ namespace Machine {
 				this.region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
 			}
 		}
-		
+
 		redstone(signal) {
 			this.data.isEnabled = (signal.power == 0);
 		}
-		
+
 		getEnergyStorage() {
 			return 4000000;
+		}
+
+		@ContainerEvent(Side.Server)
+		switchWhitelist() {
+			this.data.whitelist = !this.data.whitelist;
+		}
+
+		@ContainerEvent(Side.Server)
+		switchSilktouch() {
+			this.data.silk_touch = (this.data.silk_touch + 1)%2;
+		}
+
+		@ContainerEvent(Side.Server)
+		restart() {
+			this.data.x = this.data.y = this.data.z =  0;
 		}
 	}
 

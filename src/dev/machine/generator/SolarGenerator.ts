@@ -35,7 +35,7 @@ namespace Machine {
 
 		init() {
 			this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
-			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (namr, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
+			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
 		}
 
 		tick() {
@@ -45,19 +45,20 @@ namespace Machine {
 			if (this.data.canSeeSky && this.blockSource.getLightLevel(this.x, this.y + 1, this.z) == 15) {
 				this.data.energy = 1;
 				this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", 1, 1);
-				this.container.sendEvent("setSolarElement", "on")
+				this.container.sendEvent("setSolarElement", "on");
+				this.container.sendChanges();
+			} else {
+				this.container.sendEvent("setSolarElement", "off")
 			}
-			this.container.sendEvent("setSolarElement", "off")
-			this.container.sendChanges();
 		}
-		
+
 		getEnergyStorage() {
 			return 1;
 		}
 
 		@ContainerEvent(Side.Client)
 		setSolarElement(contaier: any, window: any, content: any, data: string) {
-			if (content) { 
+			if (content) {
 				content.elements["sun"].bitmap = "sun_" + data;
 			}
 		}

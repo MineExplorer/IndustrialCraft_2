@@ -5213,6 +5213,30 @@ declare namespace Item {
  * New type of TileEntity container that supports multiplayer
  */
 declare class ItemContainer {
+	slots: {
+		[key: string]: ItemContainerSlot;
+	}
+
+	/**
+	 * If container is a part of [[TileEntity]], this field stores reference 
+	 * to it, otherwise null. Consider using [[Container.getParent]] instead 
+	 * of direct field access
+	 */
+	parent: Nullable<TileEntity> | any;
+
+	/**
+	 * Sets container's parent object, for [[TileEntity]]'s container it 
+	 * should be a [[TileEntity]] reference, otherwise you can pass any 
+	 * value to be used in your code later
+	 * @param parent an object to be set as container's parent
+	 */
+	setParent(parent: Nullable<TileEntity> | any): void;
+
+	/**
+	 * Getter for [[Container.parent]] field
+	 */
+	getParent(): Nullable<TileEntity> | any;
+
 	/**
 	 * Sends changes in container to all clients.
 	 * Needs to be used every time when something changes in container.
@@ -5228,7 +5252,7 @@ declare class ItemContainer {
 	 * Sends packet from server container. 
 	 * ONLY AVAILABLE IN SERVER CONTAINER EVENTS
 	 */
-	sendResponseEvent(eventName: string, someData: object): void;
+	sendResponseEvent(eventName: string, someData: object | string): void;
 
 	/**
 	 * Sets container's parent object, for [[TileEntity]]'s container it 
@@ -5257,7 +5281,7 @@ declare class ItemContainer {
 	 * @returns contents of the slot in a [[Slot]] object. You can modify it
 	 * to change the contents of the slot
 	 */
-	getSlot(name: string): ItemContainerSlot;
+	getSlot(name: UI.ElementName): ItemContainerSlot;
 
 	/**
 	 * Set slot's content by its name. If a slot with specified name doesn't 
@@ -5265,7 +5289,7 @@ declare class ItemContainer {
 	 * @param name slot name
 	 * @param extra item extra data.
 	 */
-	setSlot(name: string, id: number, count: number, data: number, extra?: ItemExtraData): void;
+	setSlot(name: UI.ElementName, id: number, count: number, data: number, extra?: ItemExtraData): void;
 
 	/**
 	 * Validates slot contents. If the data value is less then 0, it becomes
@@ -5273,20 +5297,20 @@ declare class ItemContainer {
 	 * to an empty one
 	 * @param name slot name
 	 */
-	validateSlot(name: string): void;
+	validateSlot(name: UI.ElementName): void;
 
 	/**
 	 * Clears slot's contents
 	 * @param name slot name
 	 */
-	clearSlot(name: string): void;
+	clearSlot(name: UI.ElementName): void;
 
 	/**
 	 * Drops slot's contents on the specified coordinates and clears the 
 	 * slot
 	 * @param name slot name
 	 */
-	dropSlot(region: BlockSource, name: string, x: number, y: number, z: number): void;
+	dropSlot(region: BlockSource, name: UI.ElementName, x: number, y: number, z: number): void;
 
 	/**
 	 * Drops the contents of all the slots in the container on the specified
@@ -5345,7 +5369,7 @@ declare class ItemContainerSlot {
 	count: number;
 	data: number;
 	extra: ItemExtraData;
-	
+
 	getName(): string;
 	getContainer(): ItemContainer;
 	setSlot(id: number, count: number, data: number, extra?: ItemExtraData): boolean;
@@ -6676,17 +6700,17 @@ declare namespace NBT {
         /**
          * Puts value of string type into compound tag
          */
-        putString(key: string, value: number): void;
+        putString(key: string, value: string): void;
 
         /**
          * Puts value of compound type into compound tag
          */
-        putCompoundTag(key: string, value: number): void;
+        putCompoundTag(key: string, value: CompoundTag): void;
 
         /**
          * Puts value of list type into compound tag
          */
-        putListTag(key: string, value: number): void;
+        putListTag(key: string, value: ListTag): void;
 
         /**
          * Removes tag by its key
@@ -6830,17 +6854,17 @@ declare namespace NBT {
         /**
          * Puts value of string type into list tag
          */
-        putString(index: number, value: number): void;
+        putString(index: number, value: string): void;
 
         /**
          * Puts value of compound type into list tag
          */
-        putCompoundTag(index: number, value: number): void;
+        putCompoundTag(index: number, value: CompoundTag): void;
 
         /**
          * Puts value of list type into list tag
          */
-        putListTag(index: number, value: number): void;
+        putListTag(index: number, value: ListTag): void;
 
         /**
          * Removes all the tags from the compound tags
@@ -6856,13 +6880,13 @@ declare namespace Network {
      * Event that is called when a client receives a packet with given name
      * @param name name of the packet
      */
-    function addClientPacket(name: string, func: (packetData: object) => void): void;
+    function addClientPacket<T extends object>(name: string, func: (packetData: T) => void): void;
 
     /**
      * Event that is called when server receives a packet with the specified name from client
      * @param name name of the packet
      */
-    function addServerPacket(name: string, func: (client: any, data: object) => void): void;
+    function addServerPacket<T extends object>(name: string, func: (client: NetworkClient, data: T) => void): void;
 
     /**
      * Sends packet object with specified name to all clients
@@ -6888,6 +6912,8 @@ declare namespace Network {
      * Converts item or block id from local to server value
      */
     function localToServerId(id: string | number): number;
+
+    function inRemoteWorld(): boolean;
 }
 
 /**
@@ -7603,6 +7629,11 @@ declare class PlayerActor {
     constructor(playerUid: number);
 
     /**
+     * @returns player's unique numeric entity id
+     */
+    getUid(): number;
+    
+    /**
      * @returns the id of dimension where player is.
      */
     getDimension(): number;
@@ -7729,6 +7760,7 @@ declare class PlayerActor {
      */
     setScore(value: number): void;
 }
+
 /**
  * Module used to manipulate crafring recipes for vanilla and custom workbenches
  */
@@ -9665,7 +9697,9 @@ declare namespace UI {
 		 */
 		tileEntity: Nullable<TileEntity> | any;
 
-		slots: Slot[];
+		slots: {
+			[key: string]: Slot;
+		}
 
 		/**
 		 * Sets container's parent object, for [[TileEntity]]'s container it 
@@ -11934,6 +11968,11 @@ declare namespace UI {
 
 		text?: string,
 
+		/**
+		 * @deprecated
+		 */
+		isTransparentBackground?: boolean,
+
 		onItemChanged?: (container: Container, oldId: number, oldData: number, oldCount: number) => void,
 
 		isValid?: (id: number, count: number, data: number, container: Container, item: ItemInstance) => boolean
@@ -12039,8 +12078,8 @@ declare namespace UI {
 
 
 	interface UIClickEvent {
-		onClick?(position: Vector, container: UI.Container, tileEntity: TileEntity, window: UI.Window, canvas: android.graphics.Canvas, scale: number): void;
-		onLongClick?(position: Vector, container: UI.Container, tileEntity: TileEntity, window: UI.Window, canvas: android.graphics.Canvas, scale: number): void;
+		onClick?(position: Vector, container: Container | ItemContainer, tileEntity: TileEntity, window: UI.Window, canvas: android.graphics.Canvas, scale: number): void;
+		onLongClick?(position: Vector, container: Container | ItemContainer, tileEntity: TileEntity, window: UI.Window, canvas: android.graphics.Canvas, scale: number): void;
 	}
 
 

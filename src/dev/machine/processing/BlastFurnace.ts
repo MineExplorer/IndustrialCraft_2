@@ -121,21 +121,20 @@ namespace Machine {
 			return false;
 		}
 
-		controlAirImage(content, set) {
+		@ContainerEvent(Side.Client)
+		showAirImage(contaier: any, window: any, content: any, data: {show: boolean}) {
 			if (content) {
-				if (set)
-				content.elements["indicatorAir"] = null;
+				if (data.show)
+					content.elements["indicatorAir"] = {type: "image", x: 344 + 110*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
 				else
-				content.elements["indicatorAir"] = {type: "image", x: 344 + 110*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
+					content.elements["indicatorAir"] = null;
 			}
 		}
 
-		setIndicator(content,set) {
+		@ContainerEvent(Side.Client)
+		setIndicator(contaier: any, window: any, content: any, data: string) {
 			if (content) {
-				if (set)
-				content.elements["indicator"].bitmap = "indicator_green";
-				else
-				content.elements["indicator"].bitmap = "indicator_red";
+				content.elements["indicator"].bitmap = "indicator_" + data;
 			}
 		}
 
@@ -146,16 +145,15 @@ namespace Machine {
 			var maxHeat = this.getMaxHeat();
 			this.data.heat = Math.min(this.data.heat, maxHeat);
 			this.container.setScale("heatScale", this.data.heat / maxHeat);
-			//var content = this.container.getGuiContent();
 
 			if (this.data.heat >= maxHeat) {
-				//this.setIndicator(content, true);
+				this.container.sendEvent("setIndicator", "green");
 				var sourceSlot = this.container.getSlot("slotSource");
 				var source = this.data.sourceID || sourceSlot.id;
 				var result = MachineRecipeRegistry.getRecipeResult("blastFurnace", source);
 				if (result && this.checkResult(result.result)) {
 					if (this.controlAir()) {
-						//this.controlAirImage(content, true);
+						this.container.sendEvent("showAirImage", {show: true});
 						this.data.progress++;
 						this.container.setScale("progressScale", this.data.progress / result.duration);
 						this.setActive(true);
@@ -171,11 +169,12 @@ namespace Machine {
 							this.data.progress = 0;
 							this.data.sourceID = 0;
 						}
+					} else {
+						this.container.sendEvent("showAirImage", {show: false});
 					}
-					//else this.controlAirImage(content, false);
 				}
 			} else {
-				//this.setIndicator(content, false);
+				this.container.sendEvent("setIndicator", "red");
 				this.setActive(false);
 			}
 
@@ -221,11 +220,9 @@ namespace Machine {
 
 	StorageInterface.createInterface(BlockID.blastFurnace, {
 		slots: {
-			"slotSource": {input: true,
-				isValid: function(item) {
-					return MachineRecipeRegistry.hasRecipeFor("blastFurnace", item.id);
-				}
-			},
+			"slotSource": {input: true, isValid: (item: ItemInstance) => {
+				return MachineRecipeRegistry.hasRecipeFor("blastFurnace", item.id);
+			}},
 			"slotAir1": {input: true, isValid: (item: ItemInstance) => item.id == ItemID.cellAir},
 			"slotAir2": {output: true},
 			"slotResult1": {output: true},

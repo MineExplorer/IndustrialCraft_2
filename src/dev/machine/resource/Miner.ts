@@ -130,7 +130,7 @@ namespace Machine {
 			this.data.x++;
 			return null;
 		}
-		
+
 		mineBlock(x: number, y: number, z: number, block: Tile, level: number) {
 			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, level);
 			let items = [];
@@ -139,16 +139,12 @@ namespace Machine {
 			}
 			let container = this.region.getContainer(x, y, z);
 			if (container) {
-				let slots = StorageInterface.getContainerSlots(container);
+				let slots = StorageInterface.getContainerSlots(container) as any[];
 				for (let i in slots) {
 					let slot = container.getSlot(slots[i]);
 					if (slot.id > 0) {
-						items.push({id: slot.id, count: slot.count, data: slot.data, extra: slot.extra});
-						if (container.slots) {
-							slot.id = slot.count = slot.data = 0;
-						} else {
-							container.setSlot(i, 0, 0, 0);
-						}
+						items.push(new ItemStack(slot.id, slot.count, slot.data, slot.extra));
+						container.setSlot(slots[i], 0, 0, 0);
 					}
 				}
 			}
@@ -160,7 +156,7 @@ namespace Machine {
 			this.drop(items);
 			this.data.progress = 0;
 		}
-		
+
 		setPipe(y: number, slot) {
 			if (y < this.y)
 				this.region.setBlock(this.x, y, this.z, BlockID.miningPipe, 0);
@@ -169,7 +165,7 @@ namespace Machine {
 			if (!slot.count) slot.id = 0;
 			this.data.progress = 0;
 		}
-		
+
 		drop(items: ItemInstance[]) {
 			let containers = StorageInterface.getNearestContainers(this, 0, true);
 			StorageInterface.putItems(items, containers);
@@ -180,7 +176,7 @@ namespace Machine {
 				}
 			}
 		}
-		
+
 		tick(): void {
 			let region = this.region;
 			if (this.data.progress == 0) {
@@ -190,7 +186,7 @@ namespace Machine {
 				}
 				this.data.y = y;
 			}
-			
+
 			let newActive = false;
 			let drillSlot = this.container.getSlot("slotDrill");
 			let pipeSlot = this.container.getSlot("slotPipe");

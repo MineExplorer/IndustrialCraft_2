@@ -65,7 +65,7 @@ Callback.addCallback("LevelLoaded", function() {
 });
 
 let EUReactorModifier = 5;
-
+/*
 MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	defaultValues: {
 		isEnabled: false,
@@ -296,8 +296,6 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		}
 	},
 	
-	renderModel: MachineRegistry.renderModel,
-	
 	explode: function() {
 		let explode = false;
 		let boomPower = 10;
@@ -471,3 +469,4 @@ Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block
 		item.count++;
 	}
 });
+*/

@@ -114,7 +114,19 @@ namespace Machine {
 		}
 
 		setupContainer() {
-			// TODO
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
+				if (name == "slotSource") return this.getRecipeResult(id)? true : false;
+				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
+				if (name == "slotCan") {
+					var recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+					for (var i in recipes) {
+						if (recipes[i].storage[0] == id) return true;
+					}
+					return false;
+				}
+				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
+				return false;
+			});
 		}
 
 		resetValues() {
@@ -122,6 +134,10 @@ namespace Machine {
 			this.data.energy_storage = this.defaultValues.energy_storage;
 			this.data.energy_consumption = this.defaultValues.energy_consumption;
 			this.data.work_time = this.defaultValues.work_time;
+		}
+
+		getRecipeResult(id: number) {
+			return MachineRecipeRegistry.getRecipeResult("solidCanner", id);
 		}
 
 		tick() {

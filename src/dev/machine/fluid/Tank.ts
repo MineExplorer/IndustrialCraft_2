@@ -72,15 +72,12 @@ namespace Machine {
 			var slot1 = this.container.getSlot("slotLiquid1");
 			var slot2 = this.container.getSlot("slotLiquid2");
 			this.getLiquidFromItem(liquid, slot1, slot2);
-			// TODO: rewrite
 			if (liquid) {
 				var full = LiquidLib.getFullItem(slot1.id, slot1.data, liquid);
 				if (full && storage.getAmount(liquid) >= full.storage && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)) {
 					storage.getLiquid(liquid, full.storage);
-					slot1.count--;
-					slot2.id = full.id;
-					slot2.data = full.data;
-					slot2.count++;
+					slot1.setSlot(slot1.id, slot1.count - 1, slot1.data);
+					slot2.setSlot(full.id, slot2.count + 1, full.data);
 					this.container.validateAll();
 				}
 			}
@@ -97,8 +94,8 @@ StorageInterface.createInterface(BlockID.tank, {
 		"slotLiquid1": {input: true},
 		"slotLiquid2": {output: true}
 	},
-	isValidInput: function(item: ItemInstance) {
-		return LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidLib.getEmptyItem(item.id, item.data);
+	isValidInput: (item: ItemInstance) => {
+		return (LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidLib.getEmptyItem(item.id, item.data))? true : false;
 	},
 	canReceiveLiquid: () => true,
 	canTransportLiquid: () => true

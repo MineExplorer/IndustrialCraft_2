@@ -4,9 +4,9 @@ Block.createBlock("fluidDistributor", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.fluidDistributor, "stone", 1, true);
 
-TileRenderer.setHandAndUiModel(BlockID.fluidDistributor, 0, [["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1]]);
-TileRenderer.setStandardModelWithRotation(BlockID.fluidDistributor, 0, [["fluid_distributor", 1], ["fluid_distributor", 0]], true);
-TileRenderer.registerModelWithRotation(BlockID.fluidDistributor, 0, [["fluid_distributor", 0], ["fluid_distributor", 1]], true);
+TileRenderer.setHandAndUiModel(BlockID.fluidDistributor, 0, [["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.fluidDistributor, 0, [["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1]], true);
+TileRenderer.registerModelWithRotation(BlockID.fluidDistributor, 0, [["fluid_distributor", 0], ["fluid_distributor", 0], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 0]], true);
 TileRenderer.setRotationFunction("fluidDistributor", true);
 
 MachineRegistry.setMachineDrop("fluidDistributor", BlockID.machineBlockBasic);
@@ -74,24 +74,24 @@ namespace Machine {
 			this.setupContainer();
 			this.sendPacket("renderModel", {isActive: this.data.inverted});
 		}
-		
+
 		addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance) {
 			return MachineRegistry.addLiquidToItem.call(this, liquid, inputItem, outputItem);
 		}
-		
+
 		tick() {
 			if (this.data.inverted) {
 				this.container.setText("text2", Translation.translate("Concentrate"));
 			} else {
 				this.container.setText("text2", Translation.translate("Distribute"));
 			}
-			
+
 			var storage = this.liquidStorage;
 			var liquid = storage.getLiquidStored();
 			var slot1 = this.container.getSlot("slot1");
 			var slot2 = this.container.getSlot("slot2");
 			this.addLiquidToItem(liquid, slot1, slot2);
-			
+
 			liquid = storage.getLiquidStored();
 			if (liquid) {
 				var input = StorageInterface.getNearestLiquidStorages(this, this.getFacing(), !this.data.inverted);
@@ -99,7 +99,7 @@ namespace Machine {
 					StorageInterface.transportLiquid(liquid, 0.25, this, input[side], parseInt(side));
 				}
 			}
-			
+
 			storage.updateUiScale("liquidScale", liquid);
 		}
 
@@ -122,7 +122,7 @@ namespace Machine {
 		isValidInput: (item: ItemInstance) => (
 			LiquidLib.getFullItem(item.id, item.data, "water")? true : false
 		),
-		canReceiveLiquid: function(liquid: string, side: number) {
+		canReceiveLiquid: function(liquid: string, side: number): boolean {
 			let data = this.tileEntity.data;
 			// @ts-ignore
 			return (side == this.tileEntity.getFacing()) ^ data.inverted;

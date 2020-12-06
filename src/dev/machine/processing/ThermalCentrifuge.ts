@@ -119,8 +119,7 @@ namespace Machine {
 				var count = result[(i-1)*2+1];
 				var resultSlot = this.container.getSlot("slotResult"+i);
 				if (id) {
-					resultSlot.id = id;
-					resultSlot.count += count;
+					resultSlot.setSlot(id, resultSlot.count + count, 0);
 				}
 			}
 		}
@@ -170,14 +169,11 @@ namespace Machine {
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 
-			// TODO
-			/*var content = this.container.getGuiContent();
-			if (content) {
-				if (this.data.heat >= this.data.maxHeat) {
-				content.elements["indicator"].bitmap = "indicator_green";}
-				else {
-				content.elements["indicator"].bitmap = "indicator_red";}
-			}*/
+			if (this.data.heat >= this.data.maxHeat) {
+				this.container.sendEvent("setIndicator", "green");
+			} else {
+				this.container.sendEvent("setIndicator", "red");
+			}
 			this.container.setScale("progressScale", this.data.progress);
 			this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
@@ -186,6 +182,13 @@ namespace Machine {
 
 		redstone(signal) {
 			this.data.signal = signal.power > 0;
+		}
+
+		@ContainerEvent(Side.Client)
+		setIndicator(contaier: any, window: any, content: any, data: string) {
+			if (content) {
+				content.elements["indicator"].bitmap = "indicator_" + data;
+			}
 		}
 	}
 

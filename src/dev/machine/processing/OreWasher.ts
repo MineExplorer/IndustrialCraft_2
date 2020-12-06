@@ -81,7 +81,7 @@ namespace Machine {
 				if (name == "slotSource") return this.getRecipeResult(id)? true : false;
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotLiquid1") return LiquidLib.getItemLiquid(id, data) == "water";
-				if (name.startsWith("slotUpgrade")) UpgradeAPI.isValidUpgrade(id, this);
+				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
 			});
 		}

@@ -43,7 +43,7 @@ for (let i = 0; i < 15; i++) {
 var guiCropHarvester = InventoryWindow("Crop Harvester", cropHarvesterGuiObject);
 
 namespace Machine {
-    export class CropHarvester 
+    export class CropHarvester
     extends ElectricMachine {
         defaultValues = {
             energy: 0,
@@ -53,22 +53,22 @@ namespace Machine {
             scanY: -1,
             scanZ: -5
         };
-        
+
         upgrades = ["transformer", "energyStorage", "itemEjector"];
-        
+
         getScreenByName() {
             return guiCropHarvester;
         }
-        
+
         getTier() {
             return this.data.power_tier;
         }
-        
+
         resetValues() {
             this.data.power_tier = this.defaultValues.power_tier;
             this.data.energy_storage = this.defaultValues.energy_storage;
         }
-        
+
         tick() {
             this.resetValues();
             UpgradeAPI.executeUpgrades(this);
@@ -83,7 +83,7 @@ namespace Machine {
             this.container.setScale("energyScale", this.data.energy / energyStorage);
             this.container.validateAll();
         }
-        
+
         scan() {
             this.data.scanX++;
             if (this.data.scanX > 5) {
@@ -99,7 +99,7 @@ namespace Machine {
             }
             this.data.energy -= 1;
             var cropTile = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ, this.blockSource);
-            if (cropTile && cropTile.crop && !this.isInvFull()) {
+            if (cropTile && cropTile.crop && !this.isInventoryFull()) {
                 var drops = null;
                 if (cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)) {
                     drops = cropTile.performHarvest();
@@ -120,8 +120,8 @@ namespace Machine {
                 }
             }
         }
-        
-        putItem(item) {
+
+        putItem(item: ItemInstance) {
             for (var i = 0; i < 15; i++) {
                 var slot = this.container.getSlot("outSlot" + i);
                 if (!slot.id || slot.id == item.id && slot.count < Item.getMaxStack(item.id)) {
@@ -133,8 +133,8 @@ namespace Machine {
                 }
             }
         }
-        
-        isInvFull(): boolean {
+
+        isInventoryFull(): boolean {
             for (var i = 0; i < 15; i++) {
                 var slot = this.container.getSlot("outSlot" + i);
                 var maxStack = Item.getMaxStack(slot.id);
@@ -142,7 +142,7 @@ namespace Machine {
             }
             return true;
         }
-        
+
         getEnergyStorage(): number {
             return this.data.energy_storage;
         }

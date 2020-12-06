@@ -8,7 +8,7 @@ namespace MachineRegistry {
 	export function isMachine(id: number) {
 		return machineIDs[id];
 	}
-	
+
 	// register IC2 Machine
 	export function registerPrototype(id: number, Prototype: any) {
 		// register ID
@@ -62,7 +62,7 @@ namespace MachineRegistry {
 			EnergyTileRegistry.addEnergyTypeForId(id, EU);
 		}
 	}
-	
+
 	// for reverse compatibility
 	export function registerElectricMachine(id: number, Prototype: any) {
 		// wire connection
@@ -84,7 +84,7 @@ namespace MachineRegistry {
 				last_voltage: 0
 			};
 		}
-		
+
 		for (var key in Machine.ElectricMachine.prototype) {
 			if (!Prototype[key]) {
 				Prototype[key] = Machine.ElectricMachine.prototype[key];
@@ -95,17 +95,17 @@ namespace MachineRegistry {
 		// register for energy net
 		EnergyTileRegistry.addEnergyTypeForId(id, EU);
 	}
-	
+
 	export function registerGenerator(id: number, Prototype: any) {
 		for (var key in Machine.Generator.prototype) {
 			if (!Prototype[key]) {
 				Prototype[key] = Machine.Generator.prototype[key];
 			}
 		}
-		
+
 		this.registerPrototype(id, Prototype);
 	}
-	
+
 	// standard functions
 	export function setStoragePlaceFunction(blockID: string | number, hasVerticalRotation?: boolean) {
 		Block.registerPlaceFunction(Block.getNumericId(blockID), function(coords, item, block, player, region) {
@@ -119,7 +119,7 @@ namespace MachineRegistry {
 			}
 		});
 	}
-	
+
 	export function getMachineDrop(coords: Vector, blockID: number, level: number, basicDrop?: number, saveEnergyAmount?: number): [number, number, number][] {
 		var item = Player.getCarriedItem();
 		var dropID = 0;
@@ -145,7 +145,7 @@ namespace MachineRegistry {
 		if (dropID) return [[dropID, 1, 0]];
 		return [];
 	}
-	
+
 	export function setMachineDrop(nameID: string, basicDrop?: number) {
 		Block.registerDropFunction(nameID, function(coords, blockID, blockData, level) {
 			return MachineRegistry.getMachineDrop(coords, blockID, level, basicDrop);
@@ -156,8 +156,8 @@ namespace MachineRegistry {
 			}
 		});
 	}
-	
-	export function getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
+
+	export function getLiquidFromItem(liquid: string, inputItem: ItemContainerSlot | ItemInstance, outputItem: ItemContainerSlot | ItemInstance, byHand?: boolean) {
 		var empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
 		if (empty && (!liquid && this.interface.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid) &&
 			(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0)) {
@@ -168,9 +168,9 @@ namespace MachineRegistry {
 				this.liquidStorage.addLiquid(empty.liquid, empty.amount * count);
 				inputItem.count -= count;
 				outputItem.id = empty.id;
-				outputItem.data = empty.data;
 				outputItem.count += count;
-				if (!byHand) this.container.validateAll();
+				outputItem.data = empty.data;
+				if (inputItem.count == 0) inputItem.id = inputItem.data = 0;
 			}
 			else if (inputItem.count == 1 && empty.storage) {
 				var amount = Math.min(liquidLimit - storedAmount, empty.amount);
@@ -181,59 +181,49 @@ namespace MachineRegistry {
 				if (outputItem.id) {
 					Player.addItemToInventory(outputItem.id, outputItem.count, outputItem.data);
 				}
-				if (inputItem.count == 0) inputItem.id = inputItem.data = 0;
 				Player.setCarriedItem(inputItem.id, inputItem.count, inputItem.data);
 				return true;
 			} else {
-				// @ts-ignore
-				inputItem.markDirty();
-				// @ts-ignore
-				outputItem.markDirty();
+				(inputItem as ItemContainerSlot).markDirty();
+				(outputItem as ItemContainerSlot).markDirty();
 			}
 		}
 	}
-	
-	export function addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance) {
+
+	export function addLiquidToItem(liquid: string, inputItem: ItemContainerSlot, outputItem: ItemContainerSlot) {
 		var amount = this.liquidStorage.getAmount(liquid).toFixed(3);
 		if (amount > 0) {
 			var full = LiquidLib.getFullItem(inputItem.id, inputItem.data, liquid);
 			if (full && (outputItem.id == full.id && outputItem.data == full.data && outputItem.count < Item.getMaxStack(full.id) || outputItem.id == 0)) {
 				if (amount >= full.amount) {
 					this.liquidStorage.getLiquid(liquid, full.amount);
-					inputItem.count--;
-					outputItem.id = full.id;
-					outputItem.data = full.data;
-					outputItem.count++;
-					this.container.validateAll();
+					inputItem.setSlot(inputItem.id, inputItem.count - 1, inputItem.data);
+					inputItem.validate();
+					outputItem.setSlot(full.id, outputItem.count + 1, full.data);
 				}
 				else if (inputItem.count == 1 && full.storage) {
 					if (inputItem.id == full.id) {
 						amount = this.liquidStorage.getLiquid(liquid, full.amount);
-						inputItem.data -= amount * 1000;
+						inputItem.setSlot(inputItem.id, 1, inputItem.data - amount * 1000);
 					} else {
 						amount = this.liquidStorage.getLiquid(liquid, full.storage);
-						inputItem.id = full.id;
-						inputItem.data = (full.storage - amount)*1000;
+						inputItem.setSlot(full.id, 1, (full.storage - amount)*1000);
 					}
 				}
-				// @ts-ignore
-				inputItem.markDirty();
-				// @ts-ignore
-				outputItem.markDirty();
 			}
 		}
 	}
-	
+
 	export function isValidEUItem(id: number, count: number, data: number, container: UI.Container) {
 		var level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidItem(id, "Eu", level);
 	}
-	
+
 	export function isValidEUStorage(id: number, count: number, data: number, container: UI.Container) {
 		var level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidStorage(id, "Eu", level);
 	}
-	
+
 	export function updateGuiHeader(gui: any, text: string) {
 		var header = gui.getWindow("header");
 		header.contentProvider.drawing[2].text = Translation.translate(text);

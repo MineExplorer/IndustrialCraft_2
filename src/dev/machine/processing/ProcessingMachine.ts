@@ -69,7 +69,7 @@ namespace Machine {
 			else {
 				this.data.progress = 0;
 			}
-			if (!newActive)
+			//if (!newActive)
 				//this.stopPlaySound();
 			this.setActive(newActive);
 

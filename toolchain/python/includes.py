@@ -227,5 +227,5 @@ class Includes:
 		if(isfile(declaration_path)):
 			move_file(declaration_path, join(make_config.get_path("toolchain/build/project/declarations"), basename(declaration_path)))
 
-		result = 0
+		#result = 0
 		return result

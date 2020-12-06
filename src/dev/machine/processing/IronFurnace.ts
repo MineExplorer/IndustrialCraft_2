@@ -127,7 +127,7 @@ namespace Machine {
 	StorageInterface.createInterface(BlockID.ironFurnace, {
 		slots: {
 			"slotSource": {input: true, side: "up", isValid: (item: ItemInstance) => {
-				return Recipes.getFurnaceRecipeResult(item.id, item.data, "iron");
+				return Recipes.getFurnaceRecipeResult(item.id, item.data, "iron")? true : false;
 			}},
 			"slotFuel": {input: true, side: "horizontal", isValid: (item: ItemInstance) => {
 				return Recipes.getFuelBurnDuration(item.id, item.data) > 0;

@@ -622,6 +622,7 @@ var BlockEngine;
                     if (!target.client.events)
                         target.client.events = {};
                     target.client.events[propertyName] = target[propertyName];
+                    delete target[propertyName];
                 }
                 else {
                     if (!target.events)
@@ -643,7 +644,7 @@ var BlockEngine;
                 }
                 else {
                     if (!target.containerEvents)
-                        target.client = {};
+                        target.containerEvents = {};
                     target.containerEvents[propertyName] = target[propertyName];
                 }
             };

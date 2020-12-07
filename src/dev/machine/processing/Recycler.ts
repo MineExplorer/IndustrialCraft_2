@@ -86,12 +86,10 @@ namespace Machine {
 					//this.startPlaySound();
 				}
 				if (this.data.progress.toFixed(3) >= 1) {
-					sourceSlot.count--;
+					this.decreaseSlot(sourceSlot, 1);
 					if (Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1) {
-						resultSlot.id = ItemID.scrap;
-						resultSlot.count++;
+						resultSlot.setSlot(ItemID.scrap, resultSlot.count + 1, 0);
 					}
-					this.container.validateAll();
 					this.data.progress = 0;
 				}
 			}

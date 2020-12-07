@@ -157,11 +157,9 @@ namespace Machine {
 					newActive = true;
 				}
 				if (this.data.progress.toFixed(3) >= 1) {
-					sourceSlot.count--;
-					canSlot.count -= recipe.storage[1];
-					resultSlot.id = recipe.result[0];
-					resultSlot.data = recipe.result[2];
-					resultSlot.count += recipe.result[1];
+					sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - 1, 0);
+					canSlot.setSlot(canSlot.id, canSlot.count - recipe.storage[1], 0);
+					resultSlot.setSlot(recipe.result[0], recipe.result[1], recipe.result[2]);
 					this.container.validateAll();
 					this.data.progress = 0;
 				}

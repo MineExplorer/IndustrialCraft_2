@@ -19,7 +19,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'a', ItemID.upgradeFluidPulling, 0, 'c', ItemID.cellEmpty, 0]);
 });
 
-var guiFluidDistributor = InventoryWindow("Fluid Distributor", {
+let guiFluidDistributor = InventoryWindow("Fluid Distributor", {
 	drawing: [
 		{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "fluid_distributor_background", scale: GUI_SCALE}
 	],
@@ -86,21 +86,24 @@ namespace Machine {
 				this.container.setText("text2", Translation.translate("Distribute"));
 			}
 
-			var storage = this.liquidStorage;
-			var liquid = storage.getLiquidStored();
-			var slot1 = this.container.getSlot("slot1");
-			var slot2 = this.container.getSlot("slot2");
+			let liquid = this.liquidStorage.getLiquidStored();
+			let slot1 = this.container.getSlot("slot1");
+			let slot2 = this.container.getSlot("slot2");
 			this.addLiquidToItem(liquid, slot1, slot2);
 
-			liquid = storage.getLiquidStored();
+			liquid = this.liquidStorage.getLiquidStored();
 			if (liquid) {
-				var input = StorageInterface.getNearestLiquidStorages(this, this.getFacing(), !this.data.inverted);
-				for (var side in input) {
-					StorageInterface.transportLiquid(liquid, 0.25, this, input[side], parseInt(side));
+				let facing = this.getFacing();
+				for (let side = 0; side < 6; side++) {
+					if (this.data.inverted == (side != facing)) continue;
+					let storage = StorageInterface.getNeighbourLiquidStorage(this.blockSource, this, side);
+					if (storage) {
+						StorageInterface.transportLiquid(liquid, 0.25, this, storage, side);
+					}
 				}
 			}
 
-			storage.updateUiScale("liquidScale", liquid);
+			this.liquidStorage.updateUiScale("liquidScale", liquid);
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {

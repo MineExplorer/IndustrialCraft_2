@@ -105,8 +105,7 @@ namespace Machine {
 					this.setActive(true);
 					this.data.burnMax = burn;
 					this.data.burn = burn - 1;
-					fuelSlot.count--;
-					this.container.validateSlot("slotFuel");
+					this.decreaseSlot(fuelSlot, 1);
 				} else {
 					this.setActive(false);
 				}
@@ -114,8 +113,7 @@ namespace Machine {
 			else {
 				this.data.burn--;
 				if (this.data.burn == 0 && Math.random() < 0.5) {
-					slot.id = ItemID.ashes;
-					slot.count++;
+					slot.setSlot(ItemID.ashes, slot.count + 1, 0);
 				}
 				this.spreadHeat();
 			}

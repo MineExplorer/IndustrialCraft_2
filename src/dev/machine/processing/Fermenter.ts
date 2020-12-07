@@ -88,8 +88,7 @@ namespace Machine {
 				var outputSlot = this.container.getSlot("slotFertilizer");
 				if (this.data.fertilizer >= 25) {
 					this.data.fertilizer = 0;
-					outputSlot.id = ItemID.fertilizer;
-					outputSlot.count++;
+					outputSlot.setSlot(ItemID.fertilizer, outputSlot.count + 1, 0);
 				}
 			}
 

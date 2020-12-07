@@ -32,7 +32,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiOreWasher = InventoryWindow("Ore Washing Plant", {
+let guiOreWasher = InventoryWindow("Ore Washing Plant", {
 	drawing: [
 		{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_SCALE_NEW},
 		{type: "bitmap", x: 415, y: 170, bitmap: "energy_small_background", scale: GUI_SCALE_NEW}
@@ -86,28 +86,27 @@ namespace Machine {
 			});
 		}
 
-		checkResult(result) {
-			for (var i = 1; i < 4; i++) {
-				var id = result[(i-1)*2];
-				var count = result[(i-1)*2+1];
-				var resultSlot = this.container.getSlot("slotResult"+i);
-				if ((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0) {
+		checkResult(result: number[]) {
+			for (let i = 1; i < 4; i++) {
+				let id = result[(i-1) * 2];
+				if (!id) return true;
+				let count = result[(i-1) * 2 + 1];
+				let resultSlot = this.container.getSlot("slotResult"+i);
+				if (resultSlot.id != 0 && (resultSlot.id != id || resultSlot.count + count > 64)) {
 					return false;
 				}
 			}
 			return true;
 		}
 
-		putResult(result) {
+		putResult(result: number[]) {
 			this.liquidStorage.getLiquid("water", 1);
-			for (var i = 1; i < 4; i++) {
-				var id = result[(i-1)*2];
-				var count = result[(i-1)*2+1];
-				var resultSlot = this.container.getSlot("slotResult"+i);
-				if (id) {
-					resultSlot.id = id;
-					resultSlot.count += count;
-				}
+			for (let i = 1; i < 4; i++) {
+				let id = result[(i-1) * 2];
+				if (!id) break;
+				let count = result[(i-1) * 2 + 1];
+				let resultSlot = this.container.getSlot("slotResult"+i);
+				resultSlot.setSlot(id, resultSlot.count + count, 0);
 			}
 		}
 
@@ -119,13 +118,13 @@ namespace Machine {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
-			var slot1 = this.container.getSlot("slotLiquid1");
-			var slot2 = this.container.getSlot("slotLiquid2");
+			let slot1 = this.container.getSlot("slotLiquid1");
+			let slot2 = this.container.getSlot("slotLiquid2");
 			this.getLiquidFromItem("water", slot1, slot2);
 
-			var newActive = false;
-			var sourceSlot = this.container.getSlot("slotSource");
-			var result = this.getRecipeResult(sourceSlot.id);
+			let newActive = false;
+			let sourceSlot = this.container.getSlot("slotSource");
+			let result = this.getRecipeResult(sourceSlot.id);
 			if (result && this.checkResult(result) && this.liquidStorage.getAmount("water") >= 1) {
 				if (this.data.energy >= this.data.energy_consumption) {
 					this.data.energy -= this.data.energy_consumption;
@@ -133,9 +132,8 @@ namespace Machine {
 					newActive = true;
 				}
 				if (this.data.progress.toFixed(3) >= 1) {
-					sourceSlot.count--;
+					this.decreaseSlot(sourceSlot, 1);
 					this.putResult(result);
-					this.container.validateAll();
 					this.data.progress = 0;
 				}
 			}
@@ -144,7 +142,7 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			var energyStorage = this.getEnergyStorage();
+			let energyStorage = this.getEnergyStorage();
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 

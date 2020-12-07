@@ -101,7 +101,7 @@ items/electric/cable.js
 items/electric/components.js
 items/electric/storage.js
 items/electric/charging.js
-items/electric/upgrades.js
+items/electric/upgrades.ts
 
 items/reactor/fuel_rod.js
 items/reactor/plating.js
@@ -111,17 +111,8 @@ items/reactor/heat_exchanger.js
 items/reactor/heat_vent.js
 items/reactor/condensator.js
 
-items/armor/ItemArmorIC2.js
-items/armor/ItemArmorHazmat.js
-items/armor/ItemArmorElectric.js
-items/armor/ItemArmorJetpackElectric.js
-items/armor/ItemArmorNightvisionGoggles.js
-items/armor/ItemArmorBatpack.js
-items/armor/ItemArmorNanoSuit.js
-items/armor/ItemArmorQuantumSuit.js
-items/armor/ItemArmorSolarHelmet.js
-items/armor/init.js
-items/armor/recipes.js
+items/armor/init.ts
+items/armor/recipes.ts
 
 items/tool/eu-meter.js
 items/tool/transmitter.js

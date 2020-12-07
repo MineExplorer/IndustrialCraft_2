@@ -67,8 +67,7 @@ namespace Machine {
 			if (fuelSlot.id > 0) {
 				var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 				if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
-					this.container.setSlot(slotName, fuelSlot.id, fuelSlot.count - 1, fuelSlot.data);
-					this.container.validateSlot(slotName);
+					this.decreaseSlot(fuelSlot, 1);
 					return burn;
 				}
 			}

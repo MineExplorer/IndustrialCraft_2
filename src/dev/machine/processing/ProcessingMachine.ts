@@ -59,9 +59,10 @@ namespace Machine {
 						//this.startPlaySound();
 					}
 					if (this.data.progress.toFixed(3) >= 1) {
-						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - (result.sourceCount || 1), sourceSlot.data);
+						let sourceCount = result.sourceCount || 1;
+						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - sourceCount, sourceSlot.data);
+						sourceSlot.validate();
 						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);
-						this.container.validateAll();
 						this.data.progress = 0;
 					}
 				}

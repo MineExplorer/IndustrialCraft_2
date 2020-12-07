@@ -82,7 +82,7 @@ namespace Machine {
 		putResult(result: MachineRecipeRegistry.RecipeData, sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot) {
 			if (result) {
 				if (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0) {
-					sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - 1, sourceSlot.data);
+					this.decreaseSlot(sourceSlot, 1);
 					resultSlot.setSlot(result.id, resultSlot.count + 1, result.data);
 					return true;
 				}

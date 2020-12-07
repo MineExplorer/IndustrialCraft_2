@@ -3,18 +3,21 @@ interface StorageDescriptor {
         [key: string]: SlotInterface;
     };
     isValidInput?(item: ItemInstance, side: number, tileEntity: TileEntity): boolean;
-    addItem?(item: ItemInstance, side: number, maxCount: number): number;
+    addItem?(item: ItemInstance, side: number, maxCount?: number): number;
     getOutputSlots?(side: number): string[] | number[];
     canReceiveLiquid?(liquid: string, side?: number): boolean;
     canTransportLiquid?(liquid: string, side?: number): boolean;
     addLiquid?(liquid: string, amount: number): number;
     getLiquid?(liquid: string, amount: number): number;
-    getLiquidStored?(storage: string, side: number): string;
+    getLiquidStored?(storageName: string): string;
+    getLiquidStorage?(storageName: string): string;
 }
 interface IStorage extends StorageDescriptor {
     isNativeContainer(): boolean;
     getSlot(name: string | number): ItemInstance;
     setSlot(name: string | number, id: number, count: number, data: number, extra?: ItemExtraData): void;
+    addItem(item: ItemInstance, side: number, maxCount?: number): number;
+    getOutputSlots(side: number): string[] | number[];
 }
 interface SlotInterface {
     input?: boolean;
@@ -52,7 +55,8 @@ declare class TileEntityInterface implements IStorage {
     canTransportLiquid(liquid: string, side?: number): boolean;
     addLiquid(liquid: string, amount: number): number;
     getLiquid(liquid: string, amount: number): number;
-    getLiquidStored(storage?: string, side?: number): string;
+    getLiquidStored(storageName?: string): string;
+    getLiquidStorage(storageName?: string): any;
 }
 declare let LIQUID_STORAGE_MAX_LIMIT: number;
 declare type Container = NativeTileEntity | UI.Container | ItemContainer;
@@ -67,17 +71,20 @@ declare namespace StorageInterface {
     function setSlotMaxStackPolicy(container: ItemContainer, slotName: string, maxCount: number): void;
     function setSlotValidatePolicy(container: ItemContainer, slotName: string, func: (name: string, id: number, amount: number, data: number, extra: ItemExtraData, container: ItemContainer, playerUid: number) => boolean): void;
     function setGlobalValidatePolicy(container: ItemContainer, func: (name: string, id: number, amount: number, data: number, extra: ItemExtraData, container: ItemContainer, playerUid: number) => boolean): void;
-    function newInstance(storage: TileEntity | Container): IStorage;
-    function createInterface(id: number, interface: StorageDescriptor): void;
+    function newStorage(storage: TileEntity | Container): IStorage;
+    function createInterface(id: number, descriptor: StorageDescriptor): void;
     function addItemToSlot(item: ItemInstance, slot: ItemInstance, count: number): number;
-    function getStorage(region: BlockSource, x: number, y: number, z: number): IStorage;
-    function getNearestContainers(coords: Vector, side: number, excludeSide?: boolean): object;
-    function getNearestLiquidStorages(coords: Vector, side: number, excludeSide?: boolean): object;
+    function getStorage(region: BlockSource, x: number, y: number, z: number): Nullable<IStorage>;
+    function getLiquidStorage(region: BlockSource, x: number, y: number, z: number): Nullable<TileEntityInterface>;
+    function getNeighbourStorage(region: BlockSource, coords: Vector, side: number): Nullable<IStorage>;
+    function getNeighbourLiquidStorage(region: BlockSource, coords: Vector, side: number): Nullable<TileEntityInterface>;
+    function getNearestContainers(coords: Vector, side?: number, region?: BlockSource): object;
+    function getNearestLiquidStorages(coords: Vector, side?: number, region?: BlockSource): object;
     function getContainerSlots(container: Container): string[] | number[];
     function putItems(items: ItemInstance[], containers: object): void;
     function putItemToContainer(item: ItemInstance, container: Container, side: number, maxCount?: number): number;
-    function extractItemsFromContainer(inputContainer: TileEntity | Container, outputContainer: Container, side: number, maxCount?: number, oneStack?: boolean): number;
-    function extractLiquid(liquid: string, maxAmount: number, input: TileEntity, output: TileEntity, inputSide: number): void;
-    function transportLiquid(liquid: string, maxAmount: number, output: TileEntity, input: TileEntity, outputSide: number): void;
+    function extractItemsFromContainer(inputContainer: TileEntity | Container, outputContainer: TileEntity | Container, side: number, maxCount?: number, oneStack?: boolean): number;
+    function extractLiquid(liquid: Nullable<string>, maxAmount: number, inputStorage: TileEntity | IStorage, outputStorage: TileEntity | IStorage, inputSide: number): number;
+    function transportLiquid(liquid: string, maxAmount: number, outputStorage: TileEntity | IStorage, inputStorage: TileEntity | IStorage, outputSide: number): number;
     function checkHoppers(tile: TileEntity): void;
 }

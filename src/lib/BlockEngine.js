@@ -18,15 +18,20 @@ LIBRARY({
     api: "CoreEngine"
 });
 var ItemStack = /** @class */ (function () {
-    function ItemStack(id, count, data, extra) {
-        if (id === void 0) { id = 0; }
+    function ItemStack(item, count, data, extra) {
+        if (item === void 0) { item = 0; }
         if (count === void 0) { count = 0; }
         if (data === void 0) { data = 0; }
         if (extra === void 0) { extra = null; }
-        this.id = id;
-        this.data = data;
-        this.count = count;
-        this.extra = extra;
+        if (typeof item == "object") {
+            return new ItemStack(item.id, item.count, item.data, item.extra);
+        }
+        else {
+            this.id = item;
+            this.data = data;
+            this.count = count;
+            this.extra = extra;
+        }
     }
     return ItemStack;
 }());

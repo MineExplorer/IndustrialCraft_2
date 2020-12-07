@@ -9,28 +9,28 @@ namespace UpgradeAPI {
 		return data[id]? true : false;
 	}
 
-	export function isValidUpgrade(id: number, tileEntity: Machine.MachineBase) {
-		var upgrades = tileEntity.upgrades;
-		var upgradeData = UpgradeAPI.getUpgradeData(id);
+	export function isValidUpgrade(id: number, machine: Machine.MachineBase) {
+		var upgrades = machine.upgrades;
+		var upgradeData = getUpgradeData(id);
 		if (upgradeData && (!upgrades || upgrades.indexOf(upgradeData.type) != -1)) {
 			return true;
 		}
 		return false;
 	}
 
-	export function registerUpgrade(id: number, type: string, func) {
+	export function registerUpgrade(id: number, type: string, func: (item: ItemInstance, machine: Machine.MachineBase, data: any) => void) {
 		data[id] = {type: type, func: func};
 	}
 
-	export function callUpgrade(item: ItemInstance, machine: Machine.MachineBase, container, data) {
+	export function callUpgrade(item: ItemInstance, machine: Machine.MachineBase, data: any) {
 		var upgrades = machine.upgrades;
-		var upgrade = this.getUpgradeData(item.id);
-		if (upgrade && (!upgrades || upgrades.indexOf(upgrade.type) != -1)) {
-			upgrade.func(item, machine, container, data);
+		var upgradeData = getUpgradeData(item.id);
+		if (upgradeData && (!upgrades || upgrades.indexOf(upgradeData.type) != -1)) {
+			upgradeData.func(item, machine, data);
 		}
 	}
 
-	export function getUpgrades(machine, container) {
+	export function getUpgrades(container: ItemContainer) {
 		var upgrades = [];
 		for (var slotName in container.slots) {
 			if (slotName.match(/Upgrade/)) {
@@ -46,7 +46,7 @@ namespace UpgradeAPI {
 						}
 					}
 					if (!find) {
-						item = {id: slot.id, count: slot.count, data: slot.data};
+						item = new ItemStack(slot.id, slot.count, slot.data);
 						upgrades.push(item);
 					}
 				}
@@ -58,9 +58,9 @@ namespace UpgradeAPI {
 	export function executeUpgrades(machine: Machine.MachineBase) {
 		var container = machine.container;
 		var data = machine.data;
-		var upgrades = this.getUpgrades(machine, container);
+		var upgrades = getUpgrades(container);
 		for (var i in upgrades) {
-			this.callUpgrade(upgrades[i], machine, container, data);
+			callUpgrade(upgrades[i], machine, data);
 		}
 		StorageInterface.checkHoppers(machine);
 	}

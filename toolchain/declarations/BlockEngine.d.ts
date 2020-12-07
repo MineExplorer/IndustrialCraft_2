@@ -3,7 +3,9 @@ declare class ItemStack implements ItemInstance {
     count: number;
     data: number;
     extra?: ItemExtraData;
-    constructor(id?: number, count?: number, data?: number, extra?: ItemExtraData);
+    constructor();
+    constructor(item: ItemInstance);
+    constructor(id: number, count: number, data: number, extra?: ItemExtraData);
 }
 declare class Vector {
     x: number;

@@ -77,8 +77,8 @@ namespace Machine {
 				if (full && storage.getAmount(liquid) >= full.storage && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)) {
 					storage.getLiquid(liquid, full.storage);
 					slot1.setSlot(slot1.id, slot1.count - 1, slot1.data);
+					slot1.validate();
 					slot2.setSlot(full.id, slot2.count + 1, full.data);
-					this.container.validateAll();
 				}
 			}
 			storage.updateUiScale("liquidScale", storage.getLiquidStored());

@@ -149,10 +149,8 @@ namespace Machine {
 					newActive = true;
 				}
 				if (this.data.progress.toFixed(3) >= 1) {
-					sourceSlot.count -= 1;
-					resultSlot.id = result.id;
-					resultSlot.count += result.count;
-					this.container.validateAll();
+					this.decreaseSlot(sourceSlot, 1);
+					resultSlot.setSlot(result.id, resultSlot.count + result.count, 0);
 					this.data.progress = 0;
 				}
 			}

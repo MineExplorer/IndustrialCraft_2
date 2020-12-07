@@ -73,8 +73,7 @@ namespace Machine {
 					var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
 					if (catalyserData) {
 						this.data.catalyser += catalyserData.input;
-						catalyserSlot.count--;
-						this.container.validateAll();
+						this.decreaseSlot(catalyserSlot, 1);
 					}
 				}
 				if (this.data.catalyser > 0) {
@@ -103,8 +102,7 @@ namespace Machine {
 			if (this.data.progress >= ENERGY_PER_MATTER) {
 				var matterSlot = this.container.getSlot("matterSlot");
 				if (matterSlot.id == ItemID.matter && matterSlot.count < 64 || matterSlot.id == 0) {
-					matterSlot.id = ItemID.matter;
-					matterSlot.count++;
+					matterSlot.setSlot(ItemID.matter, matterSlot.count + 1, 0);
 					this.data.progress = 0;
 				}
 			}

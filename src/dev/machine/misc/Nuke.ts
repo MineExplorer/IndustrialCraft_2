@@ -14,7 +14,7 @@ Callback.addCallback("PreLoaded", function() {
 		"x#x",
 		"ncn"
 	], ['#', 46, -1, 'x', ItemID.uranium235, 0, 'c', ItemID.circuitAdvanced, 0, 'n', ItemID.neutronReflectorThick, 0]);
-	
+
 	Recipes.addShaped({id: BlockID.nuke, count: 1, data: 0}, [
 		"ncn",
 		"x#x",
@@ -28,8 +28,8 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 		activated: false,
 		timer: 300
 	},
-	
-	explode: function(radius) {
+
+	explode: function(radius: number) {
 		SoundManager.playSound("NukeExplosion.ogg");
 		let entities = Entity.getAll();
 		let rad = radius * 1.5;
@@ -45,7 +45,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 				}
 			}
 		}
-		
+
 		let height = radius/2;
 		for (let dx = -radius; dx <= radius; dx++)
 		for (let dy = -height; dy <= height; dy++)
@@ -72,7 +72,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 
 		RadiationAPI.addRadiationSource(this.x + .5, this.y + .5, this.z + .5, radius * 2, 600);
 	},
-	
+
 	tick: function() {
 		if (this.data.activated) {
 			if (this.data.timer <= 0) {
@@ -88,10 +88,10 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 			this.data.timer--;
 		}
 	},
-	
+
 	redstone: function(signal) {
 		if (signal.power > 0) {
-			this.data.activated = true; 
+			this.data.activated = true;
 		}
 	},
 

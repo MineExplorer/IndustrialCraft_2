@@ -98,7 +98,7 @@ namespace Machine {
                 }
             }
             this.data.energy -= 1;
-            var cropTile = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ, this.blockSource);
+            var cropTile = this.region.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
             if (cropTile && cropTile.crop && !this.isInventoryFull()) {
                 var drops = null;
                 if (cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)) {
@@ -114,7 +114,7 @@ namespace Machine {
                         this.data.energy -= 100;
 
                         if (item.count > 0) {
-                            this.blockSource.spawnDroppedItem(this.x, this.y + 1, this.z, item.id, item.count, item.data);
+                            this.region.dropItem(this.x, this.y + 1, this.z, item.id, item.count, item.data);
                         }
                     }
                 }
@@ -126,9 +126,7 @@ namespace Machine {
                 var slot = this.container.getSlot("outSlot" + i);
                 if (!slot.id || slot.id == item.id && slot.count < Item.getMaxStack(item.id)) {
                     var add = Math.min(Item.getMaxStack(item.id) - slot.count, item.count);
-                    slot.id = item.id;
-                    slot.count += add;
-                    slot.data = item.data;
+                    slot.setSlot(item.id, item.count + add, item.data);
                     item.count -= add;
                 }
             }

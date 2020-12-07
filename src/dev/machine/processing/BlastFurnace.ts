@@ -79,27 +79,26 @@ namespace Machine {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade2", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
 		}
 
-		checkResult(result) {
+		checkResult(result: number[]) {
 			for (var i = 1; i < 3; i++) {
-				var id = result[(i-1)*2];
-				var count = result[(i-1)*2+1];
+				var id = result[(i-1) *2 ];
+				if (!id) break;
+				var count = result[(i-1) * 2 + 1];
 				var resultSlot = this.container.getSlot("slotResult"+i);
-				if ((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0) {
+				if (resultSlot.id != 0 && (resultSlot.id != id || resultSlot.count + count > 64)) {
 					return false;
 				}
 			}
 			return true;
 		}
 
-		putResult(result) {
+		putResult(result: number[]) {
 			for (var i = 1; i < 3; i++) {
-				var id = result[(i-1)*2];
-				var count = result[(i-1)*2+1];
+				var id = result[(i-1) *2];
+				if (!id) break;
+				var count = result[(i-1) * 2 + 1];
 				var resultSlot = this.container.getSlot("slotResult"+i);
-				if (id) {
-					resultSlot.id = id;
-					resultSlot.count += count;
-				}
+				resultSlot.setSlot(id, resultSlot.count + count, 0);
 			}
 		}
 
@@ -108,9 +107,9 @@ namespace Machine {
 			var slot2 = this.container.getSlot("slotAir2");
 			if (this.data.air == 0) {
 				if (slot1.id == ItemID.cellAir && (slot2.id == 0 || slot2.id == ItemID.cellEmpty && slot2.count < 64)) {
-					slot1.count--;
-					slot2.id = ItemID.cellEmpty;
-					slot2.count++;
+					slot1.setSlot(slot1.id, slot1.count - 1, 0);
+					slot1.validate();
+					slot2.setSlot(ItemID.cellEmpty, slot2.count + 1, 0);
 					this.data.air = 1000;
 				}
 			}
@@ -160,8 +159,7 @@ namespace Machine {
 
 						if (!this.data.sourceID) {
 							this.data.sourceID = source;
-							this.container.setSlot("slotSource", sourceSlot.id, sourceSlot.count - 1, sourceSlot.data);
-							this.container.validateSlot("slotSource");
+							this.decreaseSlot(sourceSlot, 1);
 						}
 
 						if (this.data.progress >= result.duration) {

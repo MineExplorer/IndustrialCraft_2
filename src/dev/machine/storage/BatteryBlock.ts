@@ -90,7 +90,7 @@ namespace Machine {
 			var level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID);
 			var drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, this.defaultDrop, this.data.energy);
 			if (drop.length > 0) {
-				this.region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
+				this.region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2], drop[0][3]);
 			}
 		}
 	}

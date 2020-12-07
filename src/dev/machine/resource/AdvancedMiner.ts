@@ -112,8 +112,7 @@ namespace Machine {
 		}
 
 		isValidBlock(id: number, data: number): boolean {
-			let material = ToolAPI.getBlockMaterial(id);
-			if (id > 0 && (!material || material.name != "unbreaking")) {
+			if (id > 0 && ToolAPI.getBlockMaterialName(id) != "unbreaking") {
 				return true;
 			}
 			return false;
@@ -137,7 +136,7 @@ namespace Machine {
 			this.region.setBlock(x, y, z, 0, 0);
 			let items = [];
 			for (let i in drop) {
-				items.push({id: drop[i][0], count: drop[i][1], data: drop[i][2]});
+				items.push(new ItemStack(drop[i][0], drop[i][1], drop[i][2], drop[i][3]));
 			}
 			this.drop(items);
 			this.data.energy -= 512;
@@ -145,14 +144,14 @@ namespace Machine {
 		}
 
 		drop(items: ItemInstance[]) {
-			let containers = StorageInterface.getNearestContainers(this, 0, true);
+			let containers = StorageInterface.getNearestContainers(this);
 			if (containers) {
 				StorageInterface.putItems(items, containers);
 			}
 			for (let i in items) {
 				let item = items[i]
 				if (item.count > 0) {
-					nativeDropItem(this.x+0.5, this.y+1, this.z+0.5, 1, item.id, item.count, item.data);
+					this.region.dropItem(this.x + .5, this.y + 1, this.z + .5, item.id, item.count, item.data, item.extra);
 				}
 			}
 		}
@@ -177,7 +176,7 @@ namespace Machine {
 
 			this.data.power_tier = this.defaultValues.power_tier;
 			let max_scan_count = 5;
-			let upgrades = UpgradeAPI.getUpgrades(this, this.container);
+			let upgrades = UpgradeAPI.getUpgrades(this.container);
 			for (let i in upgrades) {
 				let item = upgrades[i];
 				if (item.id == ItemID.upgradeOverclocker) {
@@ -244,7 +243,7 @@ namespace Machine {
 			let level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID)
 			let drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, BlockID.machineBlockAdvanced, this.data.energy);
 			if (drop.length > 0) {
-				this.region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2]);
+				this.region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2], drop[0][3]);
 			}
 		}
 

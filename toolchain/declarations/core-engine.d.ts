@@ -602,7 +602,7 @@ declare namespace Block {
 	 * @returns block drop, the array of arrays, each containing three values: 
 	 * id, count and data respectively
 	 */
-	function getBlockDropViaItem(block: Tile, item: ItemInstance, coords: Vector, region: BlockSource): [number, number, number, ItemExtraData?][];
+	function getBlockDropViaItem(block: Tile, item: ItemInstance, coords: Vector, region: BlockSource): ItemInstanceArray[];
 
 	/**
 	 * Same as [[Block.registerPlaceFunction]] but accepts only numeric 
@@ -869,7 +869,7 @@ declare namespace Block {
 	 * id, count, data and extra respectively
 	 */
 	interface DropFunction {
-		(blockCoords: Callback.ItemUseCoordinates, blockID: number, blockData: number, diggingLevel: number, enchant: ToolAPI.EnchantData, item: ItemInstance, region: BlockSource): [number, number, number, ItemExtraData?][]
+		(blockCoords: Callback.ItemUseCoordinates, blockID: number, blockData: number, diggingLevel: number, enchant: ToolAPI.EnchantData, item: ItemInstance, region: BlockSource): ItemInstanceArray[]
 	}
 
 	interface EntityInsideFunction {
@@ -2615,10 +2615,10 @@ interface ItemInstance {
 }
 
 /**
- * Array of three elements representing item id, count and data respectively. 
- * Used in many old functions and when extra data is not required
+ * Array of three or four elements representing item id, count, data and extra respectively. 
+ * Uses in block drop functions
  */
-type ItemInstanceArray = number[];
+type ItemInstanceArray = [number, number, number, ItemExtraData?];
 
 /**
  * Object representing block in the world
@@ -9721,7 +9721,7 @@ declare namespace UI {
 		 * @returns contents of the slot in a [[Slot]] object. You can modify it
 		 * to change the contents of the slot
 		 */
-		getSlot(name: ElementName): Nullable<Slot>;
+		getSlot(name: ElementName): Slot;
 
 		/**
 		 * Gets the slot by its name. If a slot with specified name doesn't 

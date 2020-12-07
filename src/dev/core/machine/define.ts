@@ -120,7 +120,7 @@ namespace MachineRegistry {
 		});
 	}
 
-	export function getMachineDrop(coords: Vector, blockID: number, level: number, basicDrop?: number, saveEnergyAmount?: number): [number, number, number][] {
+	export function getMachineDrop(coords: Vector, blockID: number, level: number, basicDrop?: number, saveEnergyAmount?: number): ItemInstanceArray[] {
 		var item = Player.getCarriedItem();
 		var dropID = 0;
 		if (ICTool.isValidWrench(item, 10)) {
@@ -139,8 +139,7 @@ namespace MachineRegistry {
 		if (dropID == blockID && saveEnergyAmount) {
 			var extra = new ItemExtraData();
 			extra.putInt("energy", saveEnergyAmount);
-			World.drop(coords.x + .5, coords.y + .5, coords.z + .5, dropID, 1, 0, extra);
-			return [];
+			return [[dropID, 1, 0, extra]];
 		}
 		if (dropID) return [[dropID, 1, 0]];
 		return [];
@@ -158,8 +157,9 @@ namespace MachineRegistry {
 	}
 
 	export function getLiquidFromItem(liquid: string, inputItem: ItemContainerSlot | ItemInstance, outputItem: ItemContainerSlot | ItemInstance, byHand?: boolean) {
+		var storage = StorageInterface.newStorage(this);
 		var empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
-		if (empty && (!liquid && this.interface.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid) &&
+		if (empty && (!liquid && storage.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid) &&
 			(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0)) {
 			var liquidLimit = this.liquidStorage.getLimit(empty.liquid);
 			var storedAmount = this.liquidStorage.getAmount(liquid).toFixed(3);

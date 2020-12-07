@@ -123,12 +123,12 @@ namespace Machine {
             }
             this.data.energy -= 1;
 
-            var tileentity = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ, this.blockSource);
+            var tileentity = this.region.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
             if (tileentity && tileentity.crop) {
                 var slotFertilizer = this.getSlot("slotFertilizer");
                 var weedExSlot = this.getSlot("slotWeedEx");
                 if (slotFertilizer && tileentity.applyFertilizer(false)) {
-                    slotFertilizer.count--;
+                    this.decreaseSlot(slotFertilizer, 1);
                     this.data.energy -= 10;
                 }
                 var liquidAmount = this.liquidStorage.getAmount("water");
@@ -138,15 +138,17 @@ namespace Machine {
                         this.liquidStorage.getLiquid("water", amount / 1000);
                     }
                 }
-                if (weedExSlot && tileentity.applyWeedEx(weedExSlot.id, false)) {
+                if (weedExSlot.id && tileentity.applyWeedEx(weedExSlot.id, false)) {
                     this.data.energy -= 10;
-                    if (++weedExSlot.data >= Item.getMaxDamage(weedExSlot.id)) weedExSlot.id = 0;
+                    if (++weedExSlot.data >= Item.getMaxDamage(weedExSlot.id)) {
+                        weedExSlot.clear();
+                    }
+                    weedExSlot.markDirty();
                 }
-                this.container.validateAll();
             }
         }
 
-        getSlot(type) {
+        getSlot(type: string) {
             for (let i = 0; i < 7; i++) {
                 var slot = this.container.getSlot(type + i);
                 if (slot.id) return slot;

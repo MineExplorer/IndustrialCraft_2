@@ -146,9 +146,8 @@ namespace Machine {
 					newActive = true;
 				}
 				if (this.data.progress.toFixed(3) >= 1) {
-					sourceSlot.count--;
+					this.decreaseSlot(sourceSlot, 1);
 					this.putResult(result.result);
-					this.container.validateAll();
 					this.data.progress = 0;
 				}
 			}

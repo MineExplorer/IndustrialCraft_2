@@ -145,109 +145,102 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, "overclocker", function(item, machine, container, data) {
+UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, "overclocker", function(item, machine, data) {
 	if (data.work_time) {
 		data.energy_consumption = Math.round(data.energy_consumption * Math.pow(1.6, item.count));
 		data.work_time = Math.round(data.work_time * Math.pow(0.7, item.count));
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, "transformer", function(item, machine, container, data) {
-	var tier = data.power_tier + item.count
-	if (tier > 14) tier = 14;
-	data.power_tier = tier;
+UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, "transformer", function(item, machine, data) {
+	let tier = data.power_tier + item.count;
+	data.power_tier = Math.min(tier, 14);
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, "energyStorage", function(item, machine, container, data) {
+UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, "energyStorage", function(item, machine, data) {
 	data.energy_storage += 10000 * item.count;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, machine, container, data) {
+UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, machine, data) {
 	data.isHeating = !data.isHeating;
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, machine, container, data) {
-	var items = [];
-	var slots = machine.getTransportSlots().output;
-	for (var i in slots) {
-		var slot = container.getSlot(slots[i]);
-		if (slot.id) items.push(slot);
-	}
-	if (items.length) {
-		var containers = StorageInterface.getNearestContainers(machine, item.data-1);
-		StorageInterface.putItems(items, containers);
+UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, machine, data) {
+	let containers = StorageInterface.getNearestContainers(machine, item.data-1);
+	for (let side in containers) {
+		StorageInterface.extractItemsFromContainer(containers[side], machine, parseInt(side));
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, machine, container, data) {
+UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, machine, data) {
 	if (World.getThreadTime()%20 == 0) {
-		var containers = StorageInterface.getNearestContainers(machine, item.data-1);
-		for (var side in containers) {
+		let containers = StorageInterface.getNearestContainers(machine, item.data-1);
+		for (let side in containers) {
 			StorageInterface.extractItemsFromContainer(machine, containers[side], parseInt(side));
 		}
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(item, machine, container, data) {
-	var input = StorageInterface.getNearestLiquidStorages(machine, item.data-1);
-	for (var side in input) {
-		var liquid = machine.interface.getLiquidStored("output", side);
-		if (liquid) {
-			StorageInterface.transportLiquid(liquid, 0.25, machine, input[side], parseInt(side));
-		}
+UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(item, machine, data) {
+	let machineStorage = StorageInterface.newStorage(machine);
+	let liquid = machineStorage.getLiquidStored("output");
+	if (!liquid) return;
+
+	let storages = StorageInterface.getNearestLiquidStorages(machine, item.data - 1, machine.blockSource);
+	for (let side in storages) {
+		StorageInterface.transportLiquid(liquid, 0.25, machine, storages[side], parseInt(side));
 	}
 });
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, container, data) {
-	var output = StorageInterface.getNearestLiquidStorages(machine, item.data-1);
-	for (var side in output) {
-		var liquid = machine.interface.getLiquidStored("input", side);
-		StorageInterface.extractLiquid(liquid, 0.25, machine, output[side], parseInt(side));
+UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, data) {
+	let machineStorage = StorageInterface.newStorage(machine);
+	let storages = StorageInterface.getNearestLiquidStorages(machine, item.data - 1, machine.blockSource);
+	for (let side in storages) {
+		let liquid = machineStorage.getLiquidStored("input");
+		StorageInterface.extractLiquid(liquid, 0.25, machine, storages[side], parseInt(side));
 	}
 });
 
 
-Item.registerUseFunction("upgradeMFSU", function(coords, item, block) {
+Item.registerUseFunction("upgradeMFSU", function(coords, item, block, player) {
 	if (block.id == BlockID.storageMFE) {
-		var tile = World.getTileEntity(coords.x ,coords.y, coords.z);
-		var data = tile.data;
+		let tile = World.getTileEntity(coords.x ,coords.y, coords.z);
 		tile.selfDestroy();
-		World.setBlock(coords.x, coords.y, coords.z, BlockID.storageMFSU, 0);
-		block = World.addTileEntity(coords.x, coords.y, coords.z);
-		block.data = data;
-		TileRenderer.mapAtCoords(coords.x, coords.y, coords.z, BlockID.storageMFSU, data.meta);
-		Player.decreaseCarriedItem(1);
+		World.setBlock(coords.x, coords.y, coords.z, BlockID.storageMFSU, tile.getFacing());
+		let newTile = World.addTileEntity(coords.x, coords.y, coords.z);
+		newTile.data = tile.data;
+		Entity.setCarriedItem(player, item.id, item.count - 1, 0);
 	}
 });
 
-Item.registerUseFunction("upgradePulling", function(coords, item, block) {
+Item.registerUseFunction("upgradePulling", function(coords, item, block, player) {
 	if (item.data == 0) {
-		Player.setCarriedItem(ItemID.upgradePulling, item.count, coords.side+1);
+		Entity.setCarriedItem(player, ItemID.upgradePulling, item.count, coords.side+1);
 	} else {
-		Player.setCarriedItem(ItemID.upgradePulling, item.count);
+		Entity.setCarriedItem(player, ItemID.upgradePulling, item.count, 0);
 	}
 });
 
-Item.registerUseFunction("upgradeEjector", function(coords, item, block) {
+Item.registerUseFunction("upgradeEjector", function(coords, item, block, player) {
 	if (item.data == 0) {
-		Player.setCarriedItem(ItemID.upgradeEjector, item.count, coords.side+1);
+		Entity.setCarriedItem(player, ItemID.upgradeEjector, item.count, coords.side+1);
 	} else {
-		Player.setCarriedItem(ItemID.upgradeEjector, item.count);
+		Entity.setCarriedItem(player, ItemID.upgradeEjector, item.count, 0);
 	}
 });
 
-Item.registerUseFunction("upgradeFluidEjector", function(coords, item, block) {
+Item.registerUseFunction("upgradeFluidEjector", function(coords, item, block, player) {
 	if (item.data == 0) {
-		Player.setCarriedItem(ItemID.upgradeFluidEjector, item.count, coords.side+1);
+		Entity.setCarriedItem(player, ItemID.upgradeFluidEjector, item.count, coords.side+1);
 	} else {
-		Player.setCarriedItem(ItemID.upgradeFluidEjector, item.count);
+		Entity.setCarriedItem(player, ItemID.upgradeFluidEjector, item.count, 0);
 	}
 });
 
-Item.registerUseFunction("upgradeFluidPulling", function(coords, item, block) {
+Item.registerUseFunction("upgradeFluidPulling", function(coords, item, block, player) {
 	if (item.data == 0) {
-		Player.setCarriedItem(ItemID.upgradeFluidPulling, item.count, coords.side+1);
+		Entity.setCarriedItem(player, ItemID.upgradeFluidPulling, item.count, coords.side+1);
 	} else {
-		Player.setCarriedItem(ItemID.upgradeFluidPulling, item.count, 0);
+		Entity.setCarriedItem(player, ItemID.upgradeFluidPulling, item.count, 0);
 	}
 });

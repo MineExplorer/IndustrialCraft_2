@@ -68,8 +68,7 @@ namespace Machine {
 						fuelSlot.setSlot(empty.id, fuelSlot.count, empty.data);
 						return burn;
 					}
-					fuelSlot.setSlot(fuelSlot.id, fuelSlot.count - 1, fuelSlot.data);
-					fuelSlot.validate();
+					this.decreaseSlot(fuelSlot, 1);
 					return burn;
 				}
 			}
@@ -93,9 +92,8 @@ namespace Machine {
 			if (this.data.burn > 0 && result) {
 				var resultSlot = this.container.getSlot("slotResult");
 				if ((resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0) && this.data.progress++ >= 160) {
-					sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - 1, sourceSlot.data);
+					this.decreaseSlot(sourceSlot, 1);
 					resultSlot.setSlot(result.id, resultSlot.count + 1, result.data);
-					this.container.validateAll();
 					this.data.progress = 0;
 				}
 			}

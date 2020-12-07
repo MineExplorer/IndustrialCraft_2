@@ -60,5 +60,11 @@ namespace Machine {
 			}
 			return false;
 		}
+
+		decreaseSlot(slot: ItemContainerSlot, count: number) {
+			slot.count -= count;
+			slot.markDirty();
+			slot.validate();
+		}
 	}
 }

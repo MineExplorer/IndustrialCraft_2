@@ -166,7 +166,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, ma
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, machine, data) {
-	let containers = StorageInterface.getNearestContainers(machine, item.data-1);
+	let containers = StorageInterface.getNearestContainers(machine, item.data - 1, machine.blockSource);
 	for (let side in containers) {
 		StorageInterface.extractItemsFromContainer(containers[side], machine, parseInt(side));
 	}
@@ -174,7 +174,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, 
 
 UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, machine, data) {
 	if (World.getThreadTime()%20 == 0) {
-		let containers = StorageInterface.getNearestContainers(machine, item.data-1);
+		let containers = StorageInterface.getNearestContainers(machine, item.data - 1, machine.blockSource);
 		for (let side in containers) {
 			StorageInterface.extractItemsFromContainer(machine, containers[side], parseInt(side));
 		}
@@ -188,7 +188,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(
 
 	let storages = StorageInterface.getNearestLiquidStorages(machine, item.data - 1, machine.blockSource);
 	for (let side in storages) {
-		StorageInterface.transportLiquid(liquid, 0.25, machine, storages[side], parseInt(side));
+		StorageInterface.transportLiquid(liquid, 0.25, machineStorage, storages[side], parseInt(side));
 	}
 });
 
@@ -197,7 +197,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(
 	let storages = StorageInterface.getNearestLiquidStorages(machine, item.data - 1, machine.blockSource);
 	for (let side in storages) {
 		let liquid = machineStorage.getLiquidStored("input");
-		StorageInterface.extractLiquid(liquid, 0.25, machine, storages[side], parseInt(side));
+		StorageInterface.extractLiquid(liquid, 0.25, machineStorage, storages[side], parseInt(side));
 	}
 });
 

@@ -149,11 +149,7 @@ namespace Machine {
 					}
 				}
 			}
-			if (block.id == 79) {
-				this.region.setBlock(x, y, z, 8, 0);
-			} else {
-				this.region.setBlock(x, y, z, 0, 0);
-			}
+			this.region.setBlock(x, y, z, (block.id == 79)? 8 : 0, 0);
 			this.drop(items);
 			this.data.progress = 0;
 		}
@@ -167,7 +163,7 @@ namespace Machine {
 		}
 
 		drop(items: ItemInstance[]): void {
-			let containers = StorageInterface.getNearestContainers(this);
+			let containers = StorageInterface.getNearestContainers(this, -1, this.blockSource);
 			StorageInterface.putItems(items, containers);
 			for (let i in items) {
 				let item = items[i]

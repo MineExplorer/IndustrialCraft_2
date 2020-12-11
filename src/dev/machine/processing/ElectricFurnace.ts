@@ -37,7 +37,7 @@ var guiElectricFurnace = InventoryWindow("Electric Furnace", {
 		"slotUpgrade1": {type: "slot", x: 820, y: 60},
 		"slotUpgrade2": {type: "slot", x: 820, y: 119},
 		"slotUpgrade3": {type: "slot", x: 820, y: 178},
-		"slotUpgrade4": {type: "slot", x: 820, y: 23},
+		"slotUpgrade4": {type: "slot", x: 820, y: 237},
 	}
 });
 

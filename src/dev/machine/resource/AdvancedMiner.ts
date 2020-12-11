@@ -144,12 +144,10 @@ namespace Machine {
 		}
 
 		drop(items: ItemInstance[]) {
-			let containers = StorageInterface.getNearestContainers(this);
-			if (containers) {
-				StorageInterface.putItems(items, containers);
-			}
+			let containers = StorageInterface.getNearestContainers(this, -1, this.blockSource);
+			StorageInterface.putItems(items, containers);
 			for (let i in items) {
-				let item = items[i]
+				let item = items[i];
 				if (item.count > 0) {
 					this.region.dropItem(this.x + .5, this.y + 1, this.z + .5, item.id, item.count, item.data, item.extra);
 				}

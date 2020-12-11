@@ -56,7 +56,7 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 				if (block.id > 0 && Block.getExplosionResistance(block.id) < 10000) {
 					this.blockSource.setBlock(xx, yy, zz, 0);
 					if (Math.random() < 0.01) {
-						let drop = ToolLib.getBlockDrop({x: xx, y: yy, z: zz}, block.id, block.data, 100);
+						let drop = ToolLib.getBlockDrop(new Vector3(xx, yy, zz), block.id, block.data, 100);
 						if (drop)
 						for (let i in drop) {
 							let item = drop[i];

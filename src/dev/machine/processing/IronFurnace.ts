@@ -36,7 +36,7 @@ var guiIronFurnace = InventoryWindow("Iron Furnace", {
 namespace Machine {
 	export class IronFurnace
 	extends MachineBase {
-		defaultValues: {
+		defaultValues = {
 			meta: 0,
 			progress: 0,
 			burn: 0,
@@ -58,17 +58,17 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slotResult", () => 0);
 		}
 
-		consumeFuel(slotName: string) {
-			var fuelSlot = this.container.getSlot(slotName);
+		consumeFuel() {
+			var fuelSlot = this.container.getSlot("slotFuel");
 			if (fuelSlot.id > 0) {
 				var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
-				if (burn) {
+				if (burn > 0) {
 					if (LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
 						var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
-						fuelSlot.setSlot(empty.id, fuelSlot.count, empty.data);
-						return burn;
+						fuelSlot.setSlot(empty.id, 1, empty.data);
+					} else {
+						this.decreaseSlot(fuelSlot, 1);
 					}
-					this.decreaseSlot(fuelSlot, 1);
 					return burn;
 				}
 			}
@@ -86,7 +86,7 @@ namespace Machine {
 			var result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
 
 			if (this.data.burn == 0 && result) {
-				this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel");
+				this.data.burn = this.data.burnMax = this.consumeFuel();
 			}
 
 			if (this.data.burn > 0 && result) {

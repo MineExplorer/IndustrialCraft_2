@@ -45,7 +45,7 @@ namespace Machine {
 	export class Fermenter
 	extends MachineBase
 	implements IHeatConsumer {
-		defaultValues:{
+		defaultValues = {
 			heat: 0,
 			progress: 0,
 			fertilizer: 0,

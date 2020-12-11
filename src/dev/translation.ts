@@ -312,7 +312,7 @@ Translation.addTranslation("hazmat_helmet", {en: "Scuba Helmet", ru: "Шлем-�
 Translation.addTranslation("hazmat_chestplate", {en: "Hazmat Suit", ru: "Защитная куртка", es: "Traje para Materiales Peligrosos", pt: "Roupa Anti-Radiação", zh: "防化服"});
 Translation.addTranslation("hazmat_leggings", {en: "Hazmat Suit Leggings", ru: "Защитные штаны", es: "Pantalones para Materiales Peligrosos", pt: "Calças Anti-Radiação", zh: "防化裤"});
 Translation.addTranslation("rubber_boots", {en: "Rubber Boots", ru: "Резиновые ботинки", es: "Botas de Goma", pt: "Botas de Borracha", zh: "橡胶靴"});
-Translation.addTranslation("jetpack", {en: "Jetpack", ru: "Реактивный ранец", es: "Jetpack Eléctrico", pt: "Mochila à Jato Elétrica", zh: "电力喷气背包"});
+Translation.addTranslation("electric_jetpack", {en: "Jetpack", ru: "Реактивный ранец", es: "Jetpack Eléctrico", pt: "Mochila à Jato Elétrica", zh: "电力喷气背包"});
 Translation.addTranslation("batpack", {en: "Batpack", ru: "Аккумуляторный ранец", es: "Mochila de Baterías", pt: "Mochila de Baterias", zh: "电池背包"});
 Translation.addTranslation("advanced_batpack", {en: "Advanced Batpack", ru: "Продвинутый аккумуляторный ранец", es: "Mochila de Baterías Avanzada", pt: "Mochila de Baterias Avançada", zh: "高级电池背包"});
 Translation.addTranslation("energypack", {en: "Energy Pack", ru: "Энергетический ранец", es: "Pack de Energía", pt: "Mochila de Energia", zh: "能量水晶储电背包"});

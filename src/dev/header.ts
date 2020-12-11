@@ -14,7 +14,6 @@
 // libraries
 IMPORT("BlockEngine");
 IMPORT("flags");
-IMPORT("Vector");
 IMPORT("ToolLib");
 IMPORT("EnergyNet");
 IMPORT("ChargeItem");

@@ -79,11 +79,11 @@ namespace Machine {
 			}
 			return maxOutput;
 		}
-		
+
 		tick() {
 			var maxOutput = this.calcOutput();
 			var output = 0;
-			
+
 			if (this.data.energy >= 1) {
 				var side = this.getFacing();
 				var coords = StorageInterface.getRelativeCoords(this, side);
@@ -105,15 +105,15 @@ namespace Machine {
 				this.setActive(false);
 				this.container.setText("textInfo1", "0     /");
 			}
-			
+
 			var energyStorage = this.getEnergyStorage()
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 4);
-			
+
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.setText("textInfo2", maxOutput);
 			this.container.sendChanges();
 		}
-		
+
 		getEnergyStorage() {
 			return 2000;
 		}

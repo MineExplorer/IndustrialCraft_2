@@ -3,7 +3,7 @@
 class ItemArmorNightvisionGoggles
 extends ItemArmorElectric {
 	constructor() {
-		super("nightvisionGoggles", "nightvision", {type: "helmet", defence: 1, texture: "nightvision"}, 100000, 256, 2, true);
+		super("nightvisionGoggles", "nightvision", {type: "helmet", defence: 1, texture: "nightvision"}, 100000, 256, 2);
 		UIbuttons.setArmorButton(this.id, "button_nightvision");
 	}
 

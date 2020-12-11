@@ -70,7 +70,7 @@ namespace Machine {
 		}
 
 		setupContainer() {
-			StorageInterface.setSlotValidatePolicy(this.container, "sourceSlot", (name, id) => MachineRecipeRegistry.hasRecipeFor("blastFurnace", id));
+			StorageInterface.setSlotValidatePolicy(this.container, "slotSource", (name, id) => MachineRecipeRegistry.hasRecipeFor("blastFurnace", id));
 			StorageInterface.setSlotValidatePolicy(this.container, "slotAir1", (name, id) => id == ItemID.cellAir);
 			this.container.setSlotAddTransferPolicy("slotAir2", () => 0);
 			this.container.setSlotAddTransferPolicy("slotResult1", () => 0);
@@ -124,7 +124,7 @@ namespace Machine {
 		showAirImage(contaier: any, window: any, content: any, data: {show: boolean}) {
 			if (content) {
 				if (data.show)
-					content.elements["indicatorAir"] = {type: "image", x: 344 + 110*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
+					content.elements["indicatorAir"] = {type: "image", x: 344 + 128*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
 				else
 					content.elements["indicatorAir"] = null;
 			}
@@ -152,7 +152,7 @@ namespace Machine {
 				var result = MachineRecipeRegistry.getRecipeResult("blastFurnace", source);
 				if (result && this.checkResult(result.result)) {
 					if (this.controlAir()) {
-						this.container.sendEvent("showAirImage", {show: true});
+						this.container.sendEvent("showAirImage", {show: false});
 						this.data.progress++;
 						this.container.setScale("progressScale", this.data.progress / result.duration);
 						this.setActive(true);
@@ -168,7 +168,7 @@ namespace Machine {
 							this.data.sourceID = 0;
 						}
 					} else {
-						this.container.sendEvent("showAirImage", {show: false});
+						this.container.sendEvent("showAirImage", {show: true});
 					}
 				}
 			} else {

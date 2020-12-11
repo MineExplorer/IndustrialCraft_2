@@ -7,11 +7,42 @@ declare class ItemStack implements ItemInstance {
     constructor(item: ItemInstance);
     constructor(id: number, count: number, data: number, extra?: ItemExtraData);
 }
-declare class Vector {
+declare class Vector3 implements Vector {
+    static readonly DOWN: Vector3;
+    static readonly UP: Vector3;
+    static readonly NORTH: Vector3;
+    static readonly SOUTH: Vector3;
+    static readonly EAST: Vector3;
+    static readonly WEST: Vector3;
+    static getDirection(side: number): Vector3;
     x: number;
     y: number;
     z: number;
-    constructor(x: number, y: number, z: number);
+    constructor(vx: number, vy: number, vz: number);
+    constructor(vx: Vector);
+    copy(dst?: Vector3): Vector3;
+    set(vx: number, vy: number, vz: number): Vector3;
+    set(vx: Vector): Vector3;
+    add(vx: number, vy: number, vz: number): Vector3;
+    add(vx: Vector): Vector3;
+    addScaled(v: Vector, scale: number): Vector3;
+    sub(vx: number, vy: number, vz: number): Vector3;
+    sub(vx: Vector): Vector3;
+    cross(vx: number, vy: number, vz: number): Vector3;
+    cross(vx: Vector): Vector3;
+    dot(vx: number, vy: number, vz: number): Vector3;
+    dot(vx: any): Vector3;
+    normalize(): Vector3;
+    lengthSquared(): number;
+    length(): number;
+    negate(): Vector3;
+    distanceSquared(vx: number, vy: number, vz: number): number;
+    distanceSquared(vx: Vector): number;
+    distance(vx: number, vy: number, vz: number): number;
+    distance(vx: Vector): number;
+    scale(factor: number): Vector3;
+    scaleTo(len: number): Vector3;
+    toString(): string;
 }
 declare class WorldRegion {
     blockSource: BlockSource;

@@ -104,7 +104,7 @@ namespace Machine {
 			var block = this.region.getBlock(x, y, z);
 			var scoords = x+':'+y+':'+z;
 			if (!map[scoords] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
-				if (block.data == 0) return new Vector(x, y, z);
+				if (block.data == 0) return new Vector3(x, y, z);
 				map[scoords] = true;
 				return this.recursiveSearch(liquid, x, y+1, z, map) ||
 				this.recursiveSearch(liquid, x+1, y, z, map) ||

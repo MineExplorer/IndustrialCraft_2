@@ -25,7 +25,7 @@ namespace Machine {
 			isActive: false,
 			frequency: null
 		}
-		
+
 		getNearestStorages(x: number, y: number, z: number) {
 			var directions = StorageInterface.directionsBySide;
 			var storages = [];
@@ -38,7 +38,7 @@ namespace Machine {
 			}
 			return storages;
 		}
-	
+
 		getWeight(ent: number): number {
 			var type = Entity.getType(ent);
 			if (type == 1 || type == EntityType.MINECART) return 1000;
@@ -47,7 +47,7 @@ namespace Machine {
 			if (isHostileMob(type)) return 500;
 			return 0;
 		}
-		
+
 		tick(): void {
 			if (World.getThreadTime()%11 == 0 && this.data.isActive && this.data.frequency) {
 				var entities = Entity.getAll();
@@ -87,7 +87,7 @@ namespace Machine {
 				}
 			}
 		}
-		
+
 		redstone(signal): void {
 			this.setActive(signal.power > 0);
 		}

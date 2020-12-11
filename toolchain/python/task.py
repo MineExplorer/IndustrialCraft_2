@@ -195,7 +195,7 @@ def task_exclude_directories():
 def task_build_package():
 	import shutil
 	output_dir = get_make_config().get_path("output")
-	output_file = get_make_config().get_path("mod.icmod")
+	output_file = get_make_config().get_path("IndustrialCraft2.icmod")
 	output_file_tmp = get_make_config().get_path("toolchain/build/mod.zip")
 	ensure_directory(output_dir)
 	ensure_file_dir(output_file_tmp)

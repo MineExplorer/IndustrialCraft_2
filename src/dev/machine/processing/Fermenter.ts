@@ -67,7 +67,7 @@ namespace Machine {
 				if (name == "slotBiogas0") return LiquidLib.getFullItem(id, data, "biogas") ? true : false;
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
-			})
+			});
 		}
 
 		tick() {
@@ -107,11 +107,11 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		canReceiveHeat(side: number) {
+		canReceiveHeat(side: number): boolean {
 			return side == this.getFacing();
 		}
 
-		heatReceive(amount: number) {
+		heatReceive(amount: number): number {
 			var outputSlot = this.container.getSlot("slotFertilizer");
 			if (this.liquidStorage.getAmount("biomass").toFixed(3) >= 0.02 && this.liquidStorage.getAmount("biogas") <= 1.6 && outputSlot.count < 64) {
 				this.data.heat = amount;
@@ -120,23 +120,26 @@ namespace Machine {
 			return 0;
 		}
 
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
+		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
 			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
 
-		addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance) {
+		addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance): void {
 			return MachineRegistry.addLiquidToItem.call(this, liquid, inputItem, outputItem);
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
+		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				let liquid = this.liquidStorage.getLiquidStored();
-				return this.getLiquidFromItem(liquid, item, new ItemStack(), true);
+				if (this.getLiquidFromItem(liquid, item, new ItemStack(), true)) {
+					return true;
+				}
 			}
 			if (ICTool.isValidWrench(item)) {
 				ICTool.rotateMachine(this, coords.side, item, player)
 				return true;
 			}
+			return super.onItemUse(coords, item, player);
 		}
 	}
 

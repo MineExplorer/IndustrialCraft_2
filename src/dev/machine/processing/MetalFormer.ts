@@ -98,8 +98,8 @@ var guiMetalFormer = InventoryWindow("Metal Former", {
 		"slotUpgrade3": {type: "slot", x: 870, y: 178},
 		"slotUpgrade4": {type: "slot", x: 870, y: 237},
 		"button": {type: "button", x: 572, y: 210, bitmap: "metal_former_button_0", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container) {
-				//tile.data.mode = (tile.data.mode + 1) % 3;
+			onClick: function(_, container: ItemContainer) {
+				container.sendEvent("switchMode", {});
 			}
 		}}
 	}
@@ -114,8 +114,8 @@ namespace Machine {
 			energy_storage: 4000,
 			energy_consumption: 10,
 			work_time: 200,
-			meta: 0,
 			progress: 0,
+			mode: 0,
 			isActive: false
 		}
 
@@ -130,11 +130,6 @@ namespace Machine {
 		}
 
 		tick() {
-			// TODO
-			/*var content = this.container.getGuiContent();
-			if (content) {
-				content.elements.button.bitmap = "metal_former_button_" + this.data.mode;
-			}*/
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
@@ -165,7 +160,20 @@ namespace Machine {
 
 			this.container.setScale("progressScale", this.data.progress);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.sendEvent("setModeIcon", {mode: this.data.mode});
 			this.container.sendChanges();
+		}
+
+		@ContainerEvent(Side.Server)
+		switchMode() {
+			this.data.mode = (this.data.mode + 1) % 3;
+		}
+
+		@ContainerEvent(Side.Client)
+		setModeIcon(contaier: any, window: any, content: any, data: {mode: number}) {
+			if (content) {
+				content.elements.button.bitmap = "metal_former_button_" + data.mode;
+			}
 		}
 	}
 

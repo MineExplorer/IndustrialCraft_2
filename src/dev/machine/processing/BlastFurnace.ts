@@ -36,9 +36,7 @@ var guiBlastFurnace = InventoryWindow("Blast Furnace", {
 	elements: {
 		"progressScale": {type: "scale", x: 450 + 50*GUI_SCALE_NEW, y: 50 + 27*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "blast_furnace_scale", scale: GUI_SCALE_NEW},
 		"heatScale": {type: "scale", x: 450 + 46*GUI_SCALE_NEW, y: 50 + 63*GUI_SCALE_NEW, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE_NEW},
-		"slotSource": {type: "slot", x: 450 + 9*GUI_SCALE_NEW, y: 50 + 25*GUI_SCALE_NEW, isValid: function(id) {
-			return MachineRecipeRegistry.hasRecipeFor("blastFurnace", id);
-		}},
+		"slotSource": {type: "slot", x: 450 + 9*GUI_SCALE_NEW, y: 50 + 25*GUI_SCALE_NEW},
 		"slotResult1": {type: "slot", x: 450 + 108*GUI_SCALE_NEW, y: 50 + 48*GUI_SCALE_NEW, size: 54},
 		"slotResult2": {type: "slot", x: 450 + 126*GUI_SCALE_NEW, y: 50 + 48*GUI_SCALE_NEW, size: 54},
 		"slotAir1": {type: "slot", x: 450, y: 50 + 48*GUI_SCALE_NEW, bitmap: "slot_black", size: 54},
@@ -70,13 +68,17 @@ namespace Machine {
 		}
 
 		setupContainer() {
-			StorageInterface.setSlotValidatePolicy(this.container, "slotSource", (name, id) => MachineRecipeRegistry.hasRecipeFor("blastFurnace", id));
+			StorageInterface.setSlotValidatePolicy(this.container, "slotSource", (name, id) => this.getRecipeResult(id)? true : false);
 			StorageInterface.setSlotValidatePolicy(this.container, "slotAir1", (name, id) => id == ItemID.cellAir);
 			this.container.setSlotAddTransferPolicy("slotAir2", () => 0);
 			this.container.setSlotAddTransferPolicy("slotResult1", () => 0);
 			this.container.setSlotAddTransferPolicy("slotResult2", () => 0);
 			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade1", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
 			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade2", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
+		}
+
+		getRecipeResult(id: number) {
+			return MachineRecipeRegistry.getRecipeResult("blastFurnace", id);
 		}
 
 		checkResult(result: number[]) {
@@ -149,7 +151,7 @@ namespace Machine {
 				this.container.sendEvent("setIndicator", "green");
 				var sourceSlot = this.container.getSlot("slotSource");
 				var source = this.data.sourceID || sourceSlot.id;
-				var result = MachineRecipeRegistry.getRecipeResult("blastFurnace", source);
+				var result = this.getRecipeResult(source);
 				if (result && this.checkResult(result.result)) {
 					if (this.controlAir()) {
 						this.container.sendEvent("showAirImage", {show: false});

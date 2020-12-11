@@ -156,7 +156,7 @@ namespace MachineRegistry {
 		});
 	}
 
-	export function getLiquidFromItem(liquid: string, inputItem: ItemContainerSlot | ItemInstance, outputItem: ItemContainerSlot | ItemInstance, byHand?: boolean) {
+	export function getLiquidFromItem(liquid: string, inputItem: ItemContainerSlot | ItemInstance, outputItem: ItemContainerSlot | ItemInstance, byHand?: boolean): boolean {
 		var storage = StorageInterface.newStorage(this);
 		var empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
 		if (empty && (!liquid && storage.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid) &&
@@ -182,15 +182,16 @@ namespace MachineRegistry {
 					Player.addItemToInventory(outputItem.id, outputItem.count, outputItem.data);
 				}
 				Player.setCarriedItem(inputItem.id, inputItem.count, inputItem.data);
-				return true;
 			} else {
 				(inputItem as ItemContainerSlot).markDirty();
 				(outputItem as ItemContainerSlot).markDirty();
 			}
+			return true;
 		}
+		return false;
 	}
 
-	export function addLiquidToItem(liquid: string, inputItem: ItemContainerSlot, outputItem: ItemContainerSlot) {
+	export function addLiquidToItem(liquid: string, inputItem: ItemContainerSlot, outputItem: ItemContainerSlot): void {
 		var amount = this.liquidStorage.getAmount(liquid).toFixed(3);
 		if (amount > 0) {
 			var full = LiquidLib.getFullItem(inputItem.id, inputItem.data, liquid);
@@ -214,17 +215,19 @@ namespace MachineRegistry {
 		}
 	}
 
-	export function isValidEUItem(id: number, count: number, data: number, container: UI.Container) {
+	/** @deprecated */
+	export function isValidEUItem(id: number, count: number, data: number, container: UI.Container): boolean {
 		var level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidItem(id, "Eu", level);
 	}
 
-	export function isValidEUStorage(id: number, count: number, data: number, container: UI.Container) {
+	/** @deprecated */
+	export function isValidEUStorage(id: number, count: number, data: number, container: UI.Container): boolean {
 		var level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidStorage(id, "Eu", level);
 	}
 
-	export function updateGuiHeader(gui: any, text: string) {
+	export function updateGuiHeader(gui: any, text: string): void {
 		var header = gui.getWindow("header");
 		header.contentProvider.drawing[2].text = Translation.translate(text);
 	}

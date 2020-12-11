@@ -67,7 +67,7 @@ namespace Machine {
 			if (Entity.getSneaking(player)) {
 				return this.getLiquidFromItem("lava", item, null, true);
 			}
-			return false;
+			return super.onItemUse(coords, item, player);
 		}
 
 		tick() {

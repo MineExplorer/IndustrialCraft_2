@@ -27,8 +27,12 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", this.getTier()));
-			StorageInterface.setSlotValidatePolicy(this.container, "slot2", (name, id) => ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier()));
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id) => {
+				return ChargeItemRegistry.isValidItem(id, "Eu", this.getTier());
+			});
+			StorageInterface.setSlotValidatePolicy(this.container, "slot2", (name, id) => {
+				return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
+			});
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {

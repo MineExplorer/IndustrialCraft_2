@@ -30,7 +30,7 @@ let guiMiner = InventoryWindow("Miner", {
 		"slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill"},
 		"slotPipe": {type: "slot", x: 541, y: 75},
 		"slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner"},
-		"slotEnergy": {type: "slot", x: 541, y: 212, isValid: MachineRegistry.isValidEUStorage},
+		"slotEnergy": {type: "slot", x: 541, y: 212},
 	}
 });
 

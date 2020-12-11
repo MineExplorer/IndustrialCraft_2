@@ -104,6 +104,7 @@ namespace Machine {
 			}
 
 			this.liquidStorage.updateUiScale("liquidScale", liquid);
+			this.container.sendChanges();
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {

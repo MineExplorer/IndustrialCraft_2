@@ -81,7 +81,7 @@ namespace Machine {
 			y: 0,
 			z: 0,
 			whitelist: false,
-			silk_touch: 0,
+			silk_touch: false,
 			isEnabled: true,
 			isActive: false
 		}
@@ -161,12 +161,6 @@ namespace Machine {
 		}
 
 		tick(): void {
-			// TODO: rewrite to container events
-			/*let content = this.container.getGuiContent();
-			if (content) {
-				content.elements.button_silk.bitmap = "miner_button_silk_" + this.data.silk_touch;
-			}*/
-
 			if (this.data.whitelist)
 				this.container.setText("textInfoMode", Translation.translate("Mode: Whitelist"));
 			else
@@ -233,6 +227,7 @@ namespace Machine {
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotScanner"), "Eu", this.data.energy, tier);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, tier);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.sendEvent("setSilktouchIcon", {mode: this.data.silk_touch});
 			this.container.sendChanges();
 		}
 
@@ -260,12 +255,20 @@ namespace Machine {
 
 		@ContainerEvent(Side.Server)
 		switchSilktouch() {
-			this.data.silk_touch = (this.data.silk_touch + 1)%2;
+			this.data.silk_touch = !this.data.silk_touch;
 		}
 
 		@ContainerEvent(Side.Server)
 		restart() {
 			this.data.x = this.data.y = this.data.z =  0;
+		}
+
+		@ContainerEvent(Side.Client)
+		setSilktouchIcon(contaier: any, window: any, content: any, data: {mode: boolean}) {
+			if (content) {
+				let iconIndex = data.mode? 1 : 0;
+				content.elements.button_silk.bitmap = "miner_button_silk_" + iconIndex;
+			}
 		}
 	}
 

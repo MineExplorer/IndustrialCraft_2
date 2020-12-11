@@ -38,10 +38,8 @@ var guiSolidHeatGenerator = InventoryWindow("Solid Fuel Firebox", {
 	],
 
 	elements: {
-		"slotFuel": {type: "slot", x: 441, y: 212, isValid: function(id, count, data) {
-			return Recipes.getFuelBurnDuration(id, data) > 0;
-		}},
-		"slotAshes": {type: "slot", x: 591, y: 212, isValid: function() {return false;}},
+		"slotFuel": {type: "slot", x: 441, y: 212},
+		"slotAshes": {type: "slot", x: 591, y: 212},
 		"burningScale": {type: "scale", x: 450, y: 160, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
 		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 600, y: 344, width: 300, height: 30, text: "20"}
@@ -68,6 +66,11 @@ namespace Machine {
 			return guiSolidHeatGenerator;
 		}
 
+		setupContainer(): void {
+			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (name, id, count, data) => Recipes.getFuelBurnDuration(id, data) > 0);
+			this.container.setSlotAddTransferPolicy("slotAshes", () => 0);
+		}
+
 		getFuel(fuelSlot: ItemInstance) {
 			if (fuelSlot.id > 0) {
 				var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
@@ -86,11 +89,6 @@ namespace Machine {
 				return this.data.output = TE.heatReceive(20);
 			}
 			return false;
-		}
-
-		setupContainer(): void {
-			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (name, id, count, data) => Recipes.getFuelBurnDuration(id, data) > 0);
-			this.container.setSlotAddTransferPolicy("slotAshes", () => 0);
 		}
 
 		tick(): void {
@@ -124,6 +122,7 @@ namespace Machine {
 			}
 			this.container.setText("textInfo1", outputText + "/");
 			this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
+			this.container.sendChanges();
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {

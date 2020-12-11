@@ -48,11 +48,11 @@ namespace Machine {
 				this.data.energy--;
 			}
 		}
-	
+
 		redstone(signal): void {
 			this.data.isActive = signal.power > 0;
 		}
-	
+
 		getEnergyStorage(): number {
 			return 10000;
 		}

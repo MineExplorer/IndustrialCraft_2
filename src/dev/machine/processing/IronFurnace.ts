@@ -37,7 +37,6 @@ namespace Machine {
 	export class IronFurnace
 	extends MachineBase {
 		defaultValues = {
-			meta: 0,
 			progress: 0,
 			burn: 0,
 			burnMax: 0,

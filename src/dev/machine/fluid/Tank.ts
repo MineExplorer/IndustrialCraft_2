@@ -61,7 +61,7 @@ namespace Machine {
 				let liquid = this.liquidStorage.getLiquidStored();
 				return this.getLiquidFromItem(liquid, item, new ItemStack());
 			}
-			return false;
+			return super.onItemUse(coords, item, player);
 		}
 
 		tick() {

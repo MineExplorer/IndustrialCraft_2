@@ -27,10 +27,10 @@ var cropHarvesterGuiObject = {
 
     elements: {
         "energyScale": {type: "scale", x: 409, y: 167, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-        "slotEnergy": {type: "slot", x: 400, y: 230, isValid: MachineRegistry.isValidEUStorage},
-        "slotUpgrade0": {type: "slot", x: 880, y: 110, isValid: UpgradeAPI.isValidUpgrade},
-        "slotUpgrade1": {type: "slot", x: 880, y: 170, isValid: UpgradeAPI.isValidUpgrade},
-        "slotUpgrade2": {type: "slot", x: 880, y: 230, isValid: UpgradeAPI.isValidUpgrade}
+        "slotEnergy": {type: "slot", x: 400, y: 230},
+        "slotUpgrade0": {type: "slot", x: 880, y: 110},
+        "slotUpgrade1": {type: "slot", x: 880, y: 170},
+        "slotUpgrade2": {type: "slot", x: 880, y: 230}
     }
 };
 
@@ -69,6 +69,13 @@ namespace Machine {
             this.data.energy_storage = this.defaultValues.energy_storage;
         }
 
+        setupContainer() {
+            StorageInterface.setGlobalValidatePolicy(this.container, (name, id, count, data) => {
+				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
+                return UpgradeAPI.isValidUpgrade(id, this);
+			});
+        }
+
         tick() {
             this.resetValues();
             UpgradeAPI.executeUpgrades(this);
@@ -82,6 +89,7 @@ namespace Machine {
 
             this.container.setScale("energyScale", this.data.energy / energyStorage);
             this.container.validateAll();
+            this.container.sendChanges();
         }
 
         scan() {

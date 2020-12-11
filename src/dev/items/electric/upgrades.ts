@@ -166,17 +166,25 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, ma
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, machine, data) {
-	let containers = StorageInterface.getNearestContainers(machine, item.data - 1, machine.blockSource);
-	for (let side in containers) {
-		StorageInterface.extractItemsFromContainer(containers[side], machine, parseInt(side));
+	let checkSide = item.data - 1;
+	let machineStorage = StorageInterface.newStorage(machine);
+	for (let side = 0; side < 6; side++) {
+		if (checkSide > 0 && checkSide != side) continue;
+		let storage = StorageInterface.getNeighbourStorage(machine.blockSource, machine, side);
+		if (storage)
+			StorageInterface.extractItemsFromStorage(storage, machineStorage, side);
 	}
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, machine, data) {
 	if (World.getThreadTime()%20 == 0) {
-		let containers = StorageInterface.getNearestContainers(machine, item.data - 1, machine.blockSource);
-		for (let side in containers) {
-			StorageInterface.extractItemsFromContainer(machine, containers[side], parseInt(side));
+		let checkSide = item.data - 1;
+		let machineStorage = StorageInterface.newStorage(machine);
+		for (let side = 0; side < 6; side++) {
+			if (checkSide > 0 && checkSide != side) continue;
+			let storage = StorageInterface.getNeighbourStorage(machine.blockSource, machine, side);
+			if (storage)
+				StorageInterface.extractItemsFromStorage(machineStorage, storage, side);
 		}
 	}
 });

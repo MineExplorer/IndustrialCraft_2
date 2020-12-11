@@ -19,13 +19,6 @@ Callback.addCallback("PreLoaded", function() {
     ], ['#', BlockID.machineBlockBasic, 0, 'x', 54, -1, 'c', ItemID.circuitBasic, 0, 'a', ItemID.cellEmpty, 0, 'n', ItemID.cropStick, 0]);
 });
 
-function isFertilizer(id) {
-	return id == ItemID.fertilizer;
-}
-function isWeedEx(id) {
-	return id == ItemID.weedEx;
-}
-
 var newGuiMatronObject = {
 	drawing: [
         {type: "bitmap", x: 870, y: 270, bitmap: "energy_small_background", scale: GUI_SCALE},
@@ -35,23 +28,19 @@ var newGuiMatronObject = {
 	elements: {
         "energyScale": {type: "scale", x: 870, y: 270, direction: 1, value: .5, bitmap: "energy_small_scale", scale: GUI_SCALE},
         "liquidScale": {type: "scale", x: 572, y: 256, direction: 1, bitmap: "water_storage_scale", scale: GUI_SCALE},
-        "slotEnergy": {type: "slot", x: 804, y: 265, isValid: MachineRegistry.isValidEUStorage},
-        "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "slot_dust", isValid: isFertilizer},
-        "slotWeedEx0": {type: "slot", x: 441, y: 155, bitmap: "slot_weedEx", isValid: isWeedEx},
-        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "slot_cell", isValid: function(id, count, data) {
-            return LiquidLib.getItemLiquid(id, data) == "water";
-        }},
-        "slotWaterOut": {type: "slot", x: 441, y: 295, isValid: function() {
-            return false;
-        }}
+        "slotEnergy": {type: "slot", x: 804, y: 265},
+        "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "slot_dust"},
+        "slotWeedEx0": {type: "slot", x: 441, y: 155, bitmap: "slot_weedEx"},
+        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "slot_cell"},
+        "slotWaterOut": {type: "slot", x: 441, y: 295}
 	}
 };
 
 for (let i = 1; i < 7; i++) {
-    newGuiMatronObject.elements["slotWeedEx" + i] = {type: "slot", x: 441 + 60*i, y: 155, isValid: isWeedEx};
+    newGuiMatronObject.elements["slotWeedEx" + i] = {type: "slot", x: 441 + 60*i, y: 155};
 }
 for (let i = 1; i < 7; i++) {
-    newGuiMatronObject.elements["slotFertilizer" + i] = {type: "slot", x: 441 + 60*i, y: 75, isValid: isFertilizer};
+    newGuiMatronObject.elements["slotFertilizer" + i] = {type: "slot", x: 441 + 60*i, y: 75};
 }
 // @ts-ignore
 var guiCropMatron = InventoryWindow("Crop Matron", newGuiMatronObject);
@@ -73,26 +62,33 @@ namespace Machine {
 
         setupContainer() {
             this.liquidStorage.setLimit("water", 2);
+            StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
+                if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
+                if (name == "slotWaterIn") return LiquidLib.getItemLiquid(id, data) == "water";
+				if (name.startsWith("slotFertilizer")) return id == ItemID.fertilizer;
+				if (name.startsWith("slotWeedEx")) return id == ItemID.weedEx;
+				return false;
+			});
         }
-        
+
         getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
 			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
-        
+
         onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 			if (Entity.getSneaking(player)) {
 				return this.getLiquidFromItem("water", item, new ItemStack(), true);
 			}
-			return false;
+			return super.onItemUse(coords, item, player);
 		}
-        
+
         tick() {
             StorageInterface.checkHoppers(this);
 
             var slot1 = this.container.getSlot("slotWaterIn");
             var slot2 = this.container.getSlot("slotWaterOut");
             this.getLiquidFromItem("water", slot1, slot2);
-            
+
             if (this.data.energy >= 31) {
                 this.scan();
                 this.setActive(true);
@@ -106,6 +102,7 @@ namespace Machine {
 
             this.container.setScale("energyScale", this.data.energy / energyStorage);
             this.liquidStorage.updateUiScale("liquidScale", "water");
+            this.container.sendChanges();
         }
 
         scan() {

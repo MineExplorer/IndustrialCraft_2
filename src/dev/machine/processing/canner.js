@@ -121,7 +121,6 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 		energy_storage: 1600,
 		energy_consumption: 1,
 		work_time: 200,
-		meta: 0,
 		progress: 0,
 		mode: 0,
 		isActive: false

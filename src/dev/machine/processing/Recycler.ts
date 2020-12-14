@@ -60,25 +60,25 @@ namespace Machine {
 			return guiRecycler;
 		}
 
-		getTier() {
+		getTier(): number {
 			return this.data.power_tier;
 		}
 
-		resetValues() {
+		resetValues(): void {
 			this.data.power_tier = this.defaultValues.power_tier;
 			this.data.energy_storage = this.defaultValues.energy_storage;
 			this.data.energy_consumption = this.defaultValues.energy_consumption;
 			this.data.work_time = this.defaultValues.work_time;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 			});
 			this.container.setSlotAddTransferPolicy("slotResult", () => 0);
 		}
 
-		tick() {
+		tick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
@@ -116,7 +116,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return this.data.energy_storage;
 		}
 

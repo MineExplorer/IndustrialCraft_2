@@ -13,17 +13,17 @@ namespace Machine {
 			isActive: boolean
 		}
 
-		getTier() {
+		getTier(): number {
 			return this.data.power_tier;
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return this.data.energy_storage;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name.startsWith("slotSource")) return this.getRecipeResult(id, data)? true : false;
+				if (name.startsWith("slotSource")) return !!this.getRecipeResult(id, data);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
@@ -34,14 +34,14 @@ namespace Machine {
 			return null;
 		}
 
-		resetValues() {
+		resetValues(): void {
 			this.data.power_tier = this.defaultValues.power_tier;
 			this.data.energy_storage = this.defaultValues.energy_storage;
 			this.data.energy_consumption = this.defaultValues.energy_consumption;
 			this.data.work_time = this.defaultValues.work_time;
 		}
 
-		tick() {
+		tick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 

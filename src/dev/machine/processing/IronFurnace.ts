@@ -47,9 +47,9 @@ namespace Machine {
 			return guiIronFurnace;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotSource", (name, id, count, data) => {
-				return this.getRecipeResult(id, data)? true : false;
+				return !!this.getRecipeResult(id, data);
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (name, id, count, data) => {
 				return Recipes.getFuelBurnDuration(id, data) > 0;
@@ -78,7 +78,7 @@ namespace Machine {
 			return Recipes.getFurnaceRecipeResult(id, data, "iron");
 		}
 
-		tick() {
+		tick(): void {
 			StorageInterface.checkHoppers(this);
 
 			var sourceSlot = this.container.getSlot("slotSource");
@@ -124,7 +124,7 @@ namespace Machine {
 	StorageInterface.createInterface(BlockID.ironFurnace, {
 		slots: {
 			"slotSource": {input: true, side: "up", isValid: (item: ItemInstance) => {
-				return Recipes.getFurnaceRecipeResult(item.id, item.data, "iron")? true : false;
+				return !!Recipes.getFurnaceRecipeResult(item.id, item.data, "iron");
 			}},
 			"slotFuel": {input: true, side: "horizontal", isValid: (item: ItemInstance) => {
 				return Recipes.getFuelBurnDuration(item.id, item.data) > 0;

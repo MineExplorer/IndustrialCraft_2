@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	export class TeslaCoil
 	extends ElectricMachine {
-		getTier() {
+		getTier(): number {
 			return 3;
 		}
 
@@ -49,7 +49,7 @@ namespace Machine {
 			}
 		}
 
-		redstone(signal): void {
+		redstone(signal: {power: number}): void {
 			this.data.isActive = signal.power > 0;
 		}
 

@@ -44,17 +44,15 @@ namespace Machine {
 			isActive: false
 		}
 
-		setupContainer() {
-			this.container.setGlobalAddTransferPolicy((contaier, name, id, amount, data) => {
-				return (id == ItemID.rtgPellet)? amount : 0
-			});
+		setupContainer(): void {
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id) => (id == ItemID.rtgPellet));
 		}
 
 		getScreenByName() {
 			return guiRTGenerator;
 		}
 
-		tick() {
+		tick(): void {
 			var energyStorage = this.getEnergyStorage();
 			var output = 0.5;
 			for (var i = 0; i < 6; i++) {
@@ -71,7 +69,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return 10000;
 		}
 	}

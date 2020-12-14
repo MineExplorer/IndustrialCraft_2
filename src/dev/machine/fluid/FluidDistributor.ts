@@ -49,17 +49,17 @@ namespace Machine {
 		defaultValues = {
 			inverted: false
 		}
-		
+
 		getScreenByName() {
 			return guiFluidDistributor;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			this.liquidStorage.setLimit(null, 1);
 
-			this.container.setSlotAddTransferPolicy("slot1", (container, name, id, amount, data) => (
-				LiquidLib.getFullItem(id, data, "water")? amount : 0
-			));
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, amount, data) => {
+				return !!LiquidLib.getFullItem(id, data, "water");
+			});
 			this.container.setSlotAddTransferPolicy("slotLiquid2", () => 0);
 		}
 
@@ -79,7 +79,7 @@ namespace Machine {
 			return MachineRegistry.addLiquidToItem.call(this, liquid, inputItem, outputItem);
 		}
 
-		tick() {
+		tick(): void {
 			if (this.data.inverted) {
 				this.container.setText("text2", Translation.translate("Concentrate"));
 			} else {
@@ -123,9 +123,9 @@ namespace Machine {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => (
-			LiquidLib.getFullItem(item.id, item.data, "water")? true : false
-		),
+		isValidInput: (item: ItemInstance) => {
+			return !!LiquidLib.getFullItem(item.id, item.data, "water")
+		},
 		canReceiveLiquid: function(liquid: string, side: number): boolean {
 			let data = this.tileEntity.data;
 			// @ts-ignore

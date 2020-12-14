@@ -56,7 +56,7 @@ namespace Machine {
 			return guiFluidHeatGenerator;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			this.liquidStorage.setLimit(null, 10);
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {

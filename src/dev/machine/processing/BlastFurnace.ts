@@ -67,14 +67,13 @@ namespace Machine {
 		   return guiBlastFurnace;
 		}
 
-		setupContainer() {
-			StorageInterface.setSlotValidatePolicy(this.container, "slotSource", (name, id) => this.getRecipeResult(id)? true : false);
-			StorageInterface.setSlotValidatePolicy(this.container, "slotAir1", (name, id) => id == ItemID.cellAir);
-			this.container.setSlotAddTransferPolicy("slotAir2", () => 0);
-			this.container.setSlotAddTransferPolicy("slotResult1", () => 0);
-			this.container.setSlotAddTransferPolicy("slotResult2", () => 0);
-			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade1", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
-			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade2", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
+		setupContainer(): void {
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, count, data) => {
+				if (name == "slotSource") return !!this.getRecipeResult(id);
+				if (name == "slotAir1") return id == ItemID.cellAir;
+				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
+				return false;
+			});
 		}
 
 		getRecipeResult(id: number) {
@@ -139,7 +138,7 @@ namespace Machine {
 			}
 		}
 
-		tick() {
+		tick(): void {
 			this.data.isHeating = this.data.signal > 0;
 			UpgradeAPI.executeUpgrades(this);
 
@@ -185,19 +184,19 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getMaxHeat() {
+		getMaxHeat(): number {
 			return 50000;
 		}
 
-		redstone(signal) {
+		redstone(signal: {power: number}): void {
 			this.data.signal = signal.power > 0;
 		}
 
-		canReceiveHeat(side: number) {
+		canReceiveHeat(side: number): boolean {
 			return side == this.getFacing();
 		}
 
-		heatReceive(amount: number) {
+		heatReceive(amount: number): number {
 			var slot = this.container.getSlot("slotSource");
 			if (this.data.isHeating || this.data.sourceID > 0 || MachineRecipeRegistry.getRecipeResult("blastFurnace", slot.id)) {
 				amount = Math.min(this.getMaxHeat() - this.data.heat, amount);

@@ -49,7 +49,7 @@ namespace Machine {
 			isActive: false
 		}
 
-		getTier() {
+		getTier(): number {
 			return 4;
 		}
 
@@ -57,14 +57,14 @@ namespace Machine {
 			return guiMassFabricator;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			StorageInterface.setSlotValidatePolicy(this.container, "catalyserSlot", (name, id) => {
 				return MachineRecipeRegistry.hasRecipeFor("catalyser", id);
 			});
 			this.container.setSlotAddTransferPolicy("matterSlot", () => 0);
 		}
 
-		tick() {
+		tick(): void {
 			StorageInterface.checkHoppers(this);
 
 			if (this.data.isEnabled && this.data.energy > 0) {
@@ -114,7 +114,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		redstone(signal) {
+		redstone(signal: {power: number}): void {
 			this.data.isEnabled = (signal.power == 0);
 		}
 
@@ -122,7 +122,7 @@ namespace Machine {
 			return "MassFabLoop.ogg";
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return ENERGY_PER_MATTER - this.data.progress;
 		}
 

@@ -57,12 +57,16 @@ namespace Machine {
 			return guiGenerator;
 		}
 
-		setupContainer() {
-			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
-			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (name, id, count, data) => Recipes.getFuelBurnDuration(id, data) > 0);
+		setupContainer(): void {
+			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
+				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
+			});
+			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (name, id, count, data) => {
+				return Recipes.getFuelBurnDuration(id, data) > 0;
+			});
 		}
 
-		consumeFuel(slotName: string) {
+		consumeFuel(slotName: string): number {
 			var fuelSlot = this.container.getSlot(slotName);
 			if (fuelSlot.id > 0) {
 				var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
@@ -74,7 +78,7 @@ namespace Machine {
 			return 0;
 		}
 
-		tick() {
+		tick(): void {
 			StorageInterface.checkHoppers(this);
 			var energyStorage = this.getEnergyStorage();
 
@@ -103,7 +107,7 @@ namespace Machine {
 			return "GeneratorLoop.ogg";
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return 10000;
 		}
 	}

@@ -88,7 +88,7 @@ namespace Machine {
 			}
 		}
 
-		redstone(signal): void {
+		redstone(signal: {power: number}): void {
 			this.setActive(signal.power > 0);
 		}
 	}

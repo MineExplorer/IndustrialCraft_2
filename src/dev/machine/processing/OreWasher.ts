@@ -75,10 +75,10 @@ namespace Machine {
 			return guiOreWasher;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			this.liquidStorage.setLimit("water", 8);
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name == "slotSource") return this.getRecipeResult(id)? true : false;
+				if (name == "slotSource") return !!this.getRecipeResult(id);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotLiquid1") return LiquidLib.getItemLiquid(id, data) == "water";
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
@@ -114,7 +114,7 @@ namespace Machine {
 			return MachineRecipeRegistry.getRecipeResult("oreWasher", id);
 		}
 
-		tick() {
+		tick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 

@@ -92,7 +92,7 @@ namespace Machine {
 			return guiCentrifuge;
 		}
 
-		resetValues() {
+		resetValues(): void {
 			super.resetValues();
 			this.data.isHeating = this.data.signal > 0;
 		}
@@ -124,7 +124,7 @@ namespace Machine {
 			}
 		}
 
-		tick() {
+		tick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 			if (this.data.isHeating) {
@@ -179,7 +179,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		redstone(signal) {
+		redstone(signal: {power: number}): void {
 			this.data.signal = signal.power > 0;
 		}
 

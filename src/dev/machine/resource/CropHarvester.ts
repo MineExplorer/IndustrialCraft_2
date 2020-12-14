@@ -60,23 +60,23 @@ namespace Machine {
             return guiCropHarvester;
         }
 
-        getTier() {
+        getTier(): number {
             return this.data.power_tier;
         }
 
-        resetValues() {
+        resetValues(): void {
             this.data.power_tier = this.defaultValues.power_tier;
             this.data.energy_storage = this.defaultValues.energy_storage;
         }
 
-        setupContainer() {
+        setupContainer(): void {
             StorageInterface.setGlobalValidatePolicy(this.container, (name, id, count, data) => {
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
                 return UpgradeAPI.isValidUpgrade(id, this);
 			});
         }
 
-        tick() {
+        tick(): void {
             this.resetValues();
             UpgradeAPI.executeUpgrades(this);
             StorageInterface.checkHoppers(this);
@@ -92,7 +92,7 @@ namespace Machine {
             this.container.sendChanges();
         }
 
-        scan() {
+        scan(): void {
             this.data.scanX++;
             if (this.data.scanX > 5) {
                 this.data.scanX = -5;
@@ -129,7 +129,7 @@ namespace Machine {
             }
         }
 
-        putItem(item: ItemInstance) {
+        putItem(item: ItemInstance): void {
             for (var i = 0; i < 15; i++) {
                 var slot = this.container.getSlot("outSlot" + i);
                 if (!slot.id || slot.id == item.id && slot.count < Item.getMaxStack(item.id)) {

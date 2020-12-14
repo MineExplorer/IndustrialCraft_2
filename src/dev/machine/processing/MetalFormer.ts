@@ -129,7 +129,7 @@ namespace Machine {
 			return MachineRecipeRegistry.getRecipeResult("metalFormer" + this.data.mode, id);
 		}
 
-		tick() {
+		tick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 

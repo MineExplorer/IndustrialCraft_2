@@ -33,12 +33,12 @@ namespace Machine {
 			return guiSolarPanel;
 		}
 
-		init() {
+		init(): void {
 			this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
 		}
 
-		tick() {
+		tick(): void {
 			if (World.getThreadTime()%100 == 0) {
 				this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
 			}
@@ -52,7 +52,7 @@ namespace Machine {
 			}
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return 1;
 		}
 

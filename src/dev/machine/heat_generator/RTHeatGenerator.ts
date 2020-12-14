@@ -49,11 +49,11 @@ namespace Machine {
 			return guiRTHeatGenerator;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id) => (id == ItemID.rtgPellet));
 		}
 
-		tick() {
+		tick(): void {
 			var output = 1;
 			for (var i = 0; i < 6; i++) {
 				var slot = this.container.getSlot("slot"+i);

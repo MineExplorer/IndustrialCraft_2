@@ -40,7 +40,7 @@ namespace Machine {
 			this.data.blockCount = blockCount;
 		}
 		
-		init() {
+		init(): void {
 			super.init();
 			if (this.dimension != 0) this.selfDestroy();
 		}

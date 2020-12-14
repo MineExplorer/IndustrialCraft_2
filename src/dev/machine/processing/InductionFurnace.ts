@@ -89,13 +89,13 @@ namespace Machine {
 			}
 		}
 
-		resetValues() {
+		resetValues(): void {
 			this.data.power_tier = this.defaultValues.power_tier;
 			this.data.energy_storage = this.defaultValues.energy_storage;
 			this.data.isHeating = this.data.signal > 0;
 		}
 
-		tick() {
+		tick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
@@ -142,11 +142,11 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		redstone(signal: any) {
+		redstone(signal: {power: number}): void {
 			this.data.signal = signal.power;
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return this.data.energy_storage;
 		}
 
@@ -173,7 +173,7 @@ namespace Machine {
 			"slotResult2": {output: true}
 		},
 		isValidInput: (item: ItemInstance) => {
-			return Recipes.getFurnaceRecipeResult(item.id, item.data, "iron")? true : false;
+			return !!Recipes.getFurnaceRecipeResult(item.id, item.data, "iron");
 		}
 	});
 }

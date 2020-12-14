@@ -52,19 +52,19 @@ namespace Machine {
 			return guiMiner;
 		}
 
-		getTier() {
+		getTier(): number {
 			return 2;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotDrill", (name, id) => {
-				return (id == ItemID.drill || id == ItemID.diamondDrill);
+				return id == ItemID.drill || id == ItemID.diamondDrill;
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slotPipe", (name, id) => {
-				return (ToolLib.isBlock(id) && !TileEntity.isTileEntityBlock(id));
+				return ToolLib.isBlock(id) && !TileEntity.isTileEntityBlock(id);
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slotScanner", (name, id) => {
-				return (id == ItemID.scanner || id == ItemID.scannerAdvanced);
+				return id == ItemID.scanner || id == ItemID.scannerAdvanced;
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());

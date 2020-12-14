@@ -49,7 +49,7 @@ namespace Machine {
 	extends ElectricMachine {
 		hasVerticalRotation: boolean = true;
 
-		getTier() {
+		getTier(): number {
 			return 4;
 		}
 
@@ -57,7 +57,7 @@ namespace Machine {
 			return guiElectricHeatGenerator;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			this.container.setGlobalAddTransferPolicy((container, name, id, amount, data) => {
 				if (name == "slotEnergy") {
 					return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier())? amount : 0;
@@ -80,7 +80,7 @@ namespace Machine {
 			return maxOutput;
 		}
 
-		tick() {
+		tick(): void {
 			var maxOutput = this.calcOutput();
 			var output = 0;
 
@@ -114,7 +114,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return 2000;
 		}
 

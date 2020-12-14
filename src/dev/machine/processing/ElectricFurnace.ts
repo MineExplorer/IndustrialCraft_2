@@ -83,7 +83,7 @@ namespace Machine {
 			"slotResult": {output: true}
 		},
 		isValidInput: (item: ItemInstance) => {
-			return Recipes.getFurnaceRecipeResult(item.id, item.data, "iron")? true : false;
+			return !!Recipes.getFurnaceRecipeResult(item.id, item.data, "iron");
 		}
 	});
 }

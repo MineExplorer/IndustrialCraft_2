@@ -40,23 +40,23 @@ namespace Machine {
 			return guiTank;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			this.liquidStorage.setLimit(null, 16);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotLiquid1") {
-					return (LiquidRegistry.getFullItem(id, data, "water") || LiquidLib.getEmptyItem(id, data))? true : false;
+					return !!(LiquidRegistry.getFullItem(id, data, "water") || LiquidLib.getEmptyItem(id, data));
 				}
 				if (name == "slotLiquid2") return false;
 				return UpgradeAPI.isValidUpgrade(id, this);
 			});
 		}
 
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
+		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
 			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
+		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				let liquid = this.liquidStorage.getLiquidStored();
 				return this.getLiquidFromItem(liquid, item, new ItemStack());
@@ -64,7 +64,7 @@ namespace Machine {
 			return super.onItemUse(coords, item, player);
 		}
 
-		tick() {
+		tick(): void {
 			UpgradeAPI.executeUpgrades(this);
 
 			var storage = this.liquidStorage;
@@ -95,7 +95,7 @@ StorageInterface.createInterface(BlockID.tank, {
 		"slotLiquid2": {output: true}
 	},
 	isValidInput: (item: ItemInstance) => {
-		return (LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidLib.getEmptyItem(item.id, item.data))? true : false;
+		return !!(LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidLib.getEmptyItem(item.id, item.data));
 	},
 	canReceiveLiquid: () => true,
 	canTransportLiquid: () => true

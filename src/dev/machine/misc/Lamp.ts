@@ -95,7 +95,7 @@ namespace Machine {
 			return true;
 		}
 
-		tick() {
+		tick(): void {
 			if (this.data.energy < 0.25) {
 				this.setBlock(BlockID.luminator);
 			} else {

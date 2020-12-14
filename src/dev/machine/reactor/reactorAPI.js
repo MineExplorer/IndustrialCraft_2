@@ -16,7 +16,7 @@ let ReactorAPI = {
 	},
 	
 	isReactorItem: function(id) {
-		return this.getComponent(id)? true : false;
+		return !!this.getComponent(id);
 	},
 	
 	reactorComponent: function() {

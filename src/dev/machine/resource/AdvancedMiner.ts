@@ -92,13 +92,13 @@ namespace Machine {
 			return guiAdvancedMiner;
 		}
 
-		getTier() {
+		getTier(): number {
 			return this.data.power_tier;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotScanner", (name, id) => {
-				return (id == ItemID.scanner || id == ItemID.scannerAdvanced);
+				return id == ItemID.scanner || id == ItemID.scannerAdvanced;
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
@@ -125,7 +125,7 @@ namespace Machine {
 			return this.data.whitelist;
 		}
 
-		harvestBlock(x: number, y: number, z: number, block: Tile) {
+		harvestBlock(x: number, y: number, z: number, block: Tile): boolean {
 			// @ts-ignore
 			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, 100, {silk: this.data.silk_touch});
 			if (this.checkDrop(drop)) return false;
@@ -139,7 +139,7 @@ namespace Machine {
 			return true;
 		}
 
-		drop(items: ItemInstance[]) {
+		drop(items: ItemInstance[]): void {
 			let containers = StorageInterface.getNearestContainers(this, this.blockSource);
 			StorageInterface.putItems(items, containers);
 			for (let i in items) {
@@ -227,7 +227,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		destroyBlock(coords: Callback.ItemUseCoordinates, player: number) {
+		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
 			let itemID = Entity.getCarriedItem(player).id;
 			let level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID)
 			let drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, BlockID.machineBlockAdvanced, this.data.energy);
@@ -236,11 +236,11 @@ namespace Machine {
 			}
 		}
 
-		redstone(signal) {
+		redstone(signal: {power: number}): void {
 			this.data.isEnabled = (signal.power == 0);
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return 4000000;
 		}
 

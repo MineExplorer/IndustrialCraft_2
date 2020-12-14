@@ -97,13 +97,13 @@ namespace Machine {
 			return guiSolidCanner;
 		}
 
-		getTier() {
+		getTier(): number {
 			return this.data.power_tier;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name == "slotSource") return this.getRecipeResult(id)? true : false;
+				if (name == "slotSource") return !this.getRecipeResult(id);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotCan") {
 					var recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
@@ -117,7 +117,7 @@ namespace Machine {
 			});
 		}
 
-		resetValues() {
+		resetValues(): void {
 			this.data.power_tier = this.defaultValues.power_tier;
 			this.data.energy_storage = this.defaultValues.energy_storage;
 			this.data.energy_consumption = this.defaultValues.energy_consumption;
@@ -128,7 +128,7 @@ namespace Machine {
 			return MachineRecipeRegistry.getRecipeResult("solidCanner", id);
 		}
 
-		tick() {
+		tick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
@@ -166,7 +166,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return this.data.energy_storage;
 		}
 	}

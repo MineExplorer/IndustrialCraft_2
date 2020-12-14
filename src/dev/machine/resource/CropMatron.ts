@@ -60,7 +60,7 @@ namespace Machine {
             return guiCropMatron;
         }
 
-        setupContainer() {
+        setupContainer(): void {
             this.liquidStorage.setLimit("water", 2);
             StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
                 if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
@@ -71,18 +71,18 @@ namespace Machine {
 			});
         }
 
-        getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
+        getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
 			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
 
-        onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
+        onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				return this.getLiquidFromItem("water", item, new ItemStack(), true);
 			}
 			return super.onItemUse(coords, item, player);
 		}
 
-        tick() {
+        tick(): void {
             StorageInterface.checkHoppers(this);
 
             var slot1 = this.container.getSlot("slotWaterIn");
@@ -105,7 +105,7 @@ namespace Machine {
             this.container.sendChanges();
         }
 
-        scan() {
+        scan(): void {
             this.data.scanX++;
             if (this.data.scanX > 5) {
                 this.data.scanX = -5;
@@ -145,7 +145,7 @@ namespace Machine {
             }
         }
 
-        getSlot(type: string) {
+        getSlot(type: string): ItemContainerSlot {
             for (let i = 0; i < 7; i++) {
                 var slot = this.container.getSlot(type + i);
                 if (slot.id) return slot;
@@ -153,7 +153,7 @@ namespace Machine {
             return null;
         }
 
-        getEnergyStorage() {
+        getEnergyStorage(): number {
             return 10000;
         }
     }

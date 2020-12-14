@@ -44,7 +44,7 @@ namespace Machine {
 			}
 		}
 
-		redstone(signal: {power: number, signal: number, onLoad: boolean}): void {
+		redstone(signal: {power: number}): void {
 			var newMode = signal.power > 0;
 			if (newMode != this.data.increaseMode) {
 				this.data.increaseMode = newMode;

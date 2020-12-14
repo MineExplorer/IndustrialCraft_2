@@ -51,26 +51,30 @@ namespace Machine {
 			return guiGeothermalGenerator;
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			this.liquidStorage.setLimit("lava", 8);
 
-			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => LiquidLib.getItemLiquid(id, data) == "lava");
+			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
+				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
+			});
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
+				return LiquidLib.getItemLiquid(id, data) == "lava";
+			});
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
 
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
+		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
 			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
+		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				return this.getLiquidFromItem("lava", item, null, true);
 			}
 			return super.onItemUse(coords, item, player);
 		}
 
-		tick() {
+		tick(): void {
 			StorageInterface.checkHoppers(this);
 
 			var slot1 = this.container.getSlot("slot1");
@@ -100,7 +104,7 @@ namespace Machine {
 			return "GeothermalLoop.ogg";
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return 10000;
 		}
 	}

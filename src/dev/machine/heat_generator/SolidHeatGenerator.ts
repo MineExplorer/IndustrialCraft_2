@@ -67,11 +67,13 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (name, id, count, data) => Recipes.getFuelBurnDuration(id, data) > 0);
+			StorageInterface.setSlotValidatePolicy(this.container, "slotFuel", (name, id, count, data) => {
+				return Recipes.getFuelBurnDuration(id, data) > 0;
+			});
 			this.container.setSlotAddTransferPolicy("slotAshes", () => 0);
 		}
 
-		getFuel(fuelSlot: ItemInstance) {
+		getFuel(fuelSlot: ItemInstance): number {
 			if (fuelSlot.id > 0) {
 				var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 				if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {

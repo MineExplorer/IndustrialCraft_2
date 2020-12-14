@@ -194,18 +194,24 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(
 	let liquid = machineStorage.getLiquidStored("output");
 	if (!liquid) return;
 
-	let storages = StorageInterface.getNearestLiquidStorages(machine, item.data - 1, machine.blockSource);
-	for (let side in storages) {
-		StorageInterface.transportLiquid(liquid, 0.25, machineStorage, storages[side], parseInt(side));
+	let checkSide = item.data - 1;
+	for (let side = 0; side < 6; side++) {
+		if (checkSide > 0 && checkSide != side) continue;
+		let storage = StorageInterface.getNeighbourLiquidStorage(machine.blockSource, machine, side);
+		if (storage)
+			StorageInterface.transportLiquid(liquid, 0.25, machineStorage, storage, side);
 	}
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, data) {
 	let machineStorage = StorageInterface.newStorage(machine);
-	let storages = StorageInterface.getNearestLiquidStorages(machine, item.data - 1, machine.blockSource);
-	for (let side in storages) {
+	let checkSide = item.data - 1;
+	for (let side = 0; side < 6; side++) {
+		if (checkSide > 0 && checkSide != side) continue;
 		let liquid = machineStorage.getLiquidStored("input");
-		StorageInterface.extractLiquid(liquid, 0.25, machineStorage, storages[side], parseInt(side));
+		let storage = StorageInterface.getNeighbourLiquidStorage(machine.blockSource, machine, side);
+		if (storage)
+			StorageInterface.extractLiquid(liquid, 0.25, machineStorage, storage, side);
 	}
 });
 

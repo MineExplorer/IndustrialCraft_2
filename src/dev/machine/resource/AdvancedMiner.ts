@@ -107,10 +107,6 @@ namespace Machine {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade2", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
 		}
 
-		getTransportSlots() {
-			return {input: []};
-		}
-
 		isValidBlock(id: number, data: number): boolean {
 			if (id > 0 && ToolAPI.getBlockMaterialName(id) != "unbreaking") {
 				return true;
@@ -144,7 +140,7 @@ namespace Machine {
 		}
 
 		drop(items: ItemInstance[]) {
-			let containers = StorageInterface.getNearestContainers(this, -1, this.blockSource);
+			let containers = StorageInterface.getNearestContainers(this, this.blockSource);
 			StorageInterface.putItems(items, containers);
 			for (let i in items) {
 				let item = items[i];

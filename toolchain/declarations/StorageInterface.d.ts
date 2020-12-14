@@ -3,11 +3,12 @@
 declare type Container = NativeTileEntity | UI.Container | ItemContainer;
 interface StorageDescriptor {
     slots?: {
-        [key: string]: SlotInterface;
+        [key: string]: SlotData;
     };
     isValidInput?(item: ItemInstance, side: number, tileEntity: TileEntity): boolean;
     addItem?(item: ItemInstance, side?: number, maxCount?: number): number;
-    getOutputSlots?(side: number): string[] | number[];
+    getInputSlots?(side?: number): string[] | number[];
+    getOutputSlots?(side?: number): string[] | number[];
     canReceiveLiquid?(liquid: string, side?: number): boolean;
     canTransportLiquid?(liquid: string, side?: number): boolean;
     addLiquid?(liquid: string, amount: number): number;
@@ -16,14 +17,19 @@ interface StorageDescriptor {
     getLiquidStorage?(storageName: string): string;
 }
 interface Storage extends StorageDescriptor {
+    container: Container;
     isNativeContainer: boolean;
     getSlot(name: string | number): ItemInstance;
     setSlot(name: string | number, id: number, count: number, data: number, extra?: ItemExtraData): void;
+    getContainerSlots(): string[] | number[];
+    getInputSlots(side?: number): string[] | number[];
+    getReceivingItemCount(item: ItemInstance, side?: number): number;
+    addItemToSlot(name: string | number, item: ItemInstance, maxCount?: number): number;
     addItem(item: ItemInstance, side?: number, maxCount?: number): number;
-    getOutputSlots(side: number): string[] | number[];
+    getOutputSlots(side?: number): string[] | number[];
     clearContainer(): void;
 }
-interface SlotInterface {
+interface SlotData {
     input?: boolean;
     output?: boolean;
     side?: number | "horizontal" | "verctical" | "down" | "up";
@@ -37,26 +43,36 @@ declare class NativeContainerInterface implements Storage {
     constructor(container: NativeTileEntity);
     getSlot(index: number): ItemInstance;
     setSlot(index: number, id: number, count: number, data: number, extra?: ItemExtraData): void;
-    private isValidInputSlot;
-    addItem(item: ItemInstance, side?: number, maxCount?: number): number;
+    getContainerSlots(): any[];
+    getInputSlots(side: number): number[];
+    getReceivingItemCount(item: ItemInstance, side: number): number;
+    addItemToSlot(index: number, item: ItemInstance, maxCount?: number): number;
+    addItem(item: ItemInstance, side: number, maxCount?: number): number;
     getOutputSlots(): number[];
     clearContainer(): void;
 }
 declare class TileEntityInterface implements Storage {
     readonly slots?: {
-        [key: string]: SlotInterface;
+        [key: string]: SlotData;
     };
     readonly container: UI.Container | ItemContainer;
     readonly tileEntity: TileEntity;
-    readonly liquidStorage: any;
     readonly isNativeContainer = false;
     constructor(tileEntity: TileEntity);
     getSlot(name: string): ItemInstance;
     setSlot(name: string, id: number, count: number, data: number, extra?: ItemExtraData): void;
+    getSlotData(name: string): SlotData;
+    getSlotMaxStack(name: string): number;
+    private isValidSlotSide;
+    private isValidSlotInput;
+    getContainerSlots(): string[];
+    private getDefaultSlots;
+    getInputSlots(side?: number): string[];
+    getReceivingItemCount(item: ItemInstance, side?: number): number;
     isValidInput(item: ItemInstance, side: number, tileEntity: TileEntity): boolean;
-    checkSide(slotSideTag: string | number, side: number): boolean;
+    addItemToSlot(name: string, item: ItemInstance, maxCount?: number): number;
     addItem(item: ItemInstance, side?: number, maxCount?: number): number;
-    getOutputSlots(side: number): string[];
+    getOutputSlots(side?: number): string[];
     clearContainer(): void;
     canReceiveLiquid(liquid: string, side?: number): boolean;
     canTransportLiquid(liquid: string, side?: number): boolean;
@@ -104,14 +120,14 @@ declare namespace StorageInterface {
     export function getNeighbourLiquidStorage(region: BlockSource, coords: Vector, side: number): Nullable<TileEntityInterface>;
     /**
      * Returns object containing neigbour containers where keys are block side numbers
-     * @side side to get container, use -1 to get from all sides
+     * @coords position from which check neighbour blocks
     */
-    export function getNearestContainers(coords: Vector, side: number, region: BlockSource): ContainersMap;
+    export function getNearestContainers(coords: Vector, region: BlockSource): ContainersMap;
     /**
      * Returns object containing neigbour liquid storages where keys are block side numbers
-     * @side side to get storage, use -1 to get from all sides
+     * @coords position from which check neighbour blocks
     */
-    export function getNearestLiquidStorages(coords: Vector, side: number, region: BlockSource): StoragesMap;
+    export function getNearestLiquidStorages(coords: Vector, region: BlockSource): StoragesMap;
     /**
      * Returns array of slot indexes for vanilla container or array of slot names for mod container
     */

@@ -163,7 +163,7 @@ namespace Machine {
 		}
 
 		drop(items: ItemInstance[]): void {
-			let containers = StorageInterface.getNearestContainers(this, -1, this.blockSource);
+			let containers = StorageInterface.getNearestContainers(this, this.blockSource);
 			StorageInterface.putItems(items, containers);
 			for (let i in items) {
 				let item = items[i]

@@ -23,7 +23,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.electricFurnace, -1, 'x', ItemID.ingotCopper, 0, 'a', BlockID.machineBlockAdvanced, 0]);
 });
 
-var guiInductionFurnace = InventoryWindow("Induction Furnace", {
+let guiInductionFurnace = InventoryWindow("Induction Furnace", {
 	drawing: [
 		{type: "bitmap", x: 630, y: 146, bitmap: "arrow_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
@@ -50,7 +50,7 @@ namespace Machine {
 	extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
-			power_tier: 2,
+			tier: 2,
 			energy_storage: 10000,
 			progress: 0,
 			isActive: false,
@@ -69,28 +69,19 @@ namespace Machine {
 			return Recipes.getFurnaceRecipeResult(id, data, "iron");
 		}
 
-		getResult() {
-			var sourceSlot1 = this.container.getSlot("slotSource1");
-			var sourceSlot2 = this.container.getSlot("slotSource2");
-			var result1 = this.getRecipeResult(sourceSlot1.id, sourceSlot1.data);
-			var result2 = this.getRecipeResult(sourceSlot2.id, sourceSlot2.data);
-			if (result1 || result2) {
-				return [result1, result2];
-			}
+		checkResult(result: MachineRecipeRegistry.RecipeData, slot: ItemContainerSlot): boolean {
+			return result && (slot.id == result.id && slot.data == result.data && slot.count < 64 || slot.id == 0);
 		}
 
-		putResult(result: MachineRecipeRegistry.RecipeData, sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot) {
-			if (result) {
-				if (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0) {
-					this.decreaseSlot(sourceSlot, 1);
-					resultSlot.setSlot(result.id, resultSlot.count + 1, result.data);
-					return true;
-				}
+		putResult(result: MachineRecipeRegistry.RecipeData, sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot): void {
+			if (this.checkResult(result, resultSlot)) {
+				this.decreaseSlot(sourceSlot, 1);
+				resultSlot.setSlot(result.id, resultSlot.count + 1, result.data);
 			}
 		}
 
 		resetValues(): void {
-			this.data.power_tier = this.defaultValues.power_tier;
+			this.data.tier = this.defaultValues.tier;
 			this.data.energy_storage = this.defaultValues.energy_storage;
 			this.data.isHeating = this.data.signal > 0;
 		}
@@ -99,23 +90,24 @@ namespace Machine {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
-			var newActive = false;
-			var result = this.getResult();
-			if (result) {
-				if (this.data.energy > 15 && this.data.progress < 100) {
+			let newActive = false;
+			let sourceSlot1 = this.container.getSlot("slotSource1");
+			let sourceSlot2 = this.container.getSlot("slotSource2");
+			let resultSlot1 = this.container.getSlot("slotResult1");
+			let resultSlot2 = this.container.getSlot("slotResult2");
+			let result1 = this.getRecipeResult(sourceSlot1.id, sourceSlot1.data);
+			let result2 = this.getRecipeResult(sourceSlot2.id, sourceSlot2.data);
+			if (this.checkResult(result1, resultSlot1) || this.checkResult(result2, resultSlot2)) {
+				if (this.data.energy >= 16 && this.data.progress < 100) {
 					this.data.energy -= 16;
 					if (this.data.heat < 10000) {this.data.heat++;}
 					this.data.progress += this.data.heat / 1200;
 					newActive = true;
-					//this.startPlaySound();
 				}
 				if (this.data.progress >= 100) {
-					var put1 = this.putResult(result[0], this.container.getSlot("slotSource1"), this.container.getSlot("slotResult1"));
-					var put2 = this.putResult(result[1], this.container.getSlot("slotSource2"), this.container.getSlot("slotResult2"));
-					if (put1 || put2) {
-						this.container.validateAll();
-						this.data.progress = 0;
-					}
+					this.putResult(result1, sourceSlot1, resultSlot1);
+					this.putResult(result2, sourceSlot2, resultSlot2);
+					this.data.progress = 0;
 				}
 			}
 			else {
@@ -128,11 +120,9 @@ namespace Machine {
 					this.data.heat -= 4;
 				}
 			}
-			if (!newActive)
-				//this.stopPlaySound();
 			this.setActive(newActive);
 
-			var energyStorage = this.getEnergyStorage();
+			let energyStorage = this.getEnergyStorage();
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 

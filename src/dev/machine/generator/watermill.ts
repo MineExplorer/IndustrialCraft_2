@@ -32,10 +32,10 @@ namespace Machine {
 				if (biome==0 || biome==24) {return "ocean";}
 				if (biome==7) {return "river";}
 			}
-			return 0;
+			return null;
 		}
 
-		energyTick(type: string, src: any) {
+		energyTick(type: string, src: any): void {
 			super.energyTick(type, src)
 			if (World.getThreadTime()%20 == 0) {
 				this.data.output = 0;
@@ -48,8 +48,8 @@ namespace Machine {
 						if (wether.thunder) {output *= 2;}
 						else {output *= 1.5;}
 					}
-					else if (biome=="ocean") {
-						output *= 1.5*Math.sin(World.getWorldTime()%6000/(6000/Math.PI));
+					else if (biome == "ocean") {
+						output *= 1.5 * Math.sin(World.getWorldTime()%6000 / (6000 / Math.PI));
 					}
 					var tile = this.blockSource.getBlockId(
 						this.x - randomInt(-radius, radius),
@@ -57,7 +57,7 @@ namespace Machine {
 						this.z - randomInt(-radius, radius)
 					);
 					if (tile == 8 || tile == 9) {
-						this.data.output = Math.round(output)/20;
+						this.data.output = Math.round(output) / 20;
 					}
 					else {
 						this.data.output = 0;

@@ -117,9 +117,9 @@ Callback.addCallback("LevelLoaded", function() {
 /*
 MachineRegistry.registerElectricMachine(BlockID.canner, {
 	defaultValues: {
-		power_tier: 1,
+		tier: 1,
 		energy_storage: 1600,
-		energy_consumption: 1,
+		energy_consume: 1,
 		work_time: 200,
 		progress: 0,
 		mode: 0,
@@ -133,13 +133,13 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 	},
 	
 	getTier: function() {
-		return this.data.power_tier;
+		return this.data.tier;
 	},
 	
 	resetValues: function() {
-		this.data.power_tier = this.defaultValues.power_tier;
+		this.data.tier = this.defaultValues.tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
-		this.data.energy_consumption = this.defaultValues.energy_consumption;
+		this.data.energy_consume = this.defaultValues.energy_consume;
 		this.data.work_time = this.defaultValues.work_time;
 		if (this.data.mode%3 > 0) this.data.work_time /= 5;
 	},
@@ -184,8 +184,8 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 		case 0:
 			var recipe = MachineRecipeRegistry.getRecipeResult("solidCanner", sourceSlot.id);
 			if (recipe && canSlot.id == recipe.storage[0] && canSlot.count >= recipe.storage[1] && (resultSlot.id == recipe.result[0] && resultSlot.data == recipe.result[2] && resultSlot.count <= 64 - recipe.result[1] || resultSlot.id == 0)) {
-				if (this.data.energy >= this.data.energy_consumption) {
-					this.data.energy -= this.data.energy_consumption;
+				if (this.data.energy >= this.data.energy_consume) {
+					this.data.energy -= this.data.energy_consume;
 					this.data.progress += 1/this.data.work_time;
 					newActive = true;
 				}
@@ -207,8 +207,8 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 			var liquid = this.outputTank.getLiquidStored();
 			var empty = LiquidLib.getEmptyItem(canSlot.id, canSlot.data);
 			if (empty && (!liquid || empty.liquid == liquid) && this.outputTank.getAmount() <= 8 - empty.amount) {
-				if (this.data.energy >= this.data.energy_consumption && (resultSlot.id == empty.id && resultSlot.data == empty.data && resultSlot.count < Item.getMaxStack(empty.id) || resultSlot.id == 0)) {
-					this.data.energy -= this.data.energy_consumption;
+				if (this.data.energy >= this.data.energy_consume && (resultSlot.id == empty.id && resultSlot.data == empty.data && resultSlot.count < Item.getMaxStack(empty.id) || resultSlot.id == 0)) {
+					this.data.energy -= this.data.energy_consume;
 					this.data.progress += 1/this.data.work_time;
 					newActive = true;
 				}
@@ -233,8 +233,8 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 				var full = LiquidLib.getFullItem(canSlot.id, canSlot.data, liquid);
 				if (full && this.inputTank.getAmount() >= full.storage) {
 					resetProgress = false;
-					if (this.data.energy >= this.data.energy_consumption && (resultSlot.id == full.id && resultSlot.data == full.data && resultSlot.count < Item.getMaxStack(full.id) || resultSlot.id == 0)) {
-						this.data.energy -= this.data.energy_consumption;
+					if (this.data.energy >= this.data.energy_consume && (resultSlot.id == full.id && resultSlot.data == full.data && resultSlot.count < Item.getMaxStack(full.id) || resultSlot.id == 0)) {
+						this.data.energy -= this.data.energy_consume;
 						this.data.progress += 1/this.data.work_time;
 						newActive = true;
 					}
@@ -263,8 +263,8 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 				if (this.inputTank.getAmount(liquid) >= 1 && source.id == sourceSlot.id && source.count <= sourceSlot.count) {
 					resetProgress = false;
 					var outputLiquid = this.outputTank.getLiquidStored()
-					if ((!outputLiquid || recipe.output == outputLiquid && this.outputTank.getAmount() <= 7) && this.data.energy >= this.data.energy_consumption) {
-						this.data.energy -= this.data.energy_consumption;
+					if ((!outputLiquid || recipe.output == outputLiquid && this.outputTank.getAmount() <= 7) && this.data.energy >= this.data.energy_consume) {
+						this.data.energy -= this.data.energy_consume;
 						this.data.progress += 1/this.data.work_time;
 						newActive = true;
 					}

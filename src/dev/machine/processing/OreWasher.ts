@@ -61,9 +61,9 @@ namespace Machine {
 	extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
-			power_tier: 1,
+			tier: 1,
 			energy_storage: 10000,
-			energy_consumption: 16,
+			energy_consume: 16,
 			work_time: 500,
 			progress: 0,
 			isActive: false
@@ -126,8 +126,8 @@ namespace Machine {
 			let sourceSlot = this.container.getSlot("slotSource");
 			let result = this.getRecipeResult(sourceSlot.id);
 			if (result && this.checkResult(result) && this.liquidStorage.getAmount("water") >= 1) {
-				if (this.data.energy >= this.data.energy_consumption) {
-					this.data.energy -= this.data.energy_consumption;
+				if (this.data.energy >= this.data.energy_consume) {
+					this.data.energy -= this.data.energy_consume;
 					this.data.progress += 1/this.data.work_time;
 					newActive = true;
 				}

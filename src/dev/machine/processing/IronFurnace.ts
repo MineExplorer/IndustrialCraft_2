@@ -57,7 +57,7 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slotResult", () => 0);
 		}
 
-		consumeFuel() {
+		consumeFuel(): number {
 			var fuelSlot = this.container.getSlot("slotFuel");
 			if (fuelSlot.id > 0) {
 				var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
@@ -103,9 +103,7 @@ namespace Machine {
 			if (this.data.burn > 0) {
 				this.data.burn--;
 				this.setActive(true);
-				//this.startPlaySound();
 			} else {
-				//this.stopPlaySound();
 				this.setActive(false);
 			}
 

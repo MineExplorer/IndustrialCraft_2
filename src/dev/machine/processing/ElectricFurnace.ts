@@ -46,9 +46,9 @@ namespace Machine {
 	extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
-			power_tier: 1,
+			tier: 1,
 			energy_storage: 1200,
-			energy_consumption: 3,
+			energy_consume: 3,
 			work_time: 130,
 			progress: 0,
 			isActive: false
@@ -60,7 +60,7 @@ namespace Machine {
 			return guiElectricFurnace;
 		}
 
-		getRecipeResult(id: number, data: number) {
+		getRecipeResult(id: number, data: number): ItemInstance {
 			return Recipes.getFurnaceRecipeResult(id, data, "iron");
 		}
 

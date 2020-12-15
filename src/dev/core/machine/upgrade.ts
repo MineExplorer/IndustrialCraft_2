@@ -55,6 +55,18 @@ namespace UpgradeAPI {
 		return upgrades;
 	}
 
+	export function getCountOfUpgrade(id: number, container: ItemContainer) {
+		let count = 0;
+		for (var slotName in container.slots) {
+			if (slotName.match(/Upgrade/)) {
+				let slot = container.getSlot("name");
+				if (slot.id == id)
+					count += slot.count;
+			}
+		}
+		return count;
+	}
+
 	export function executeUpgrades(machine: Machine.MachineBase) {
 		var container = machine.container;
 		var data = machine.data;

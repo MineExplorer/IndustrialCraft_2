@@ -72,7 +72,7 @@ namespace Machine {
 			return true;
 		}
 
-		setBlock(blockID: number) {
+		setBlock(blockID: number): void {
 			this.selfDestroy();
 			let blockData = this.region.getBlockData(this);
 			this.region.setBlock(this, blockID, blockData);

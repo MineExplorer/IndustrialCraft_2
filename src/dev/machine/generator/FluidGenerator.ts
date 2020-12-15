@@ -102,11 +102,9 @@ namespace Machine {
 				this.data.energy += fuel.power;
 				this.data.fuel -= fuel.amount/20;
 				this.setActive(true);
-				//this.startPlaySound();
 			}
 			else {
 				this.data.liquid = null;
-				//this.stopPlaySound();
 				this.setActive(false);
 			}
 

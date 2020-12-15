@@ -83,14 +83,14 @@ namespace Machine {
 			return 0;
 		}
 
-		spreadHeat() {
+		spreadHeat(): number {
 			var side = this.getFacing();
 			var coords = StorageInterface.getRelativeCoords(this, side);
 			var TE = this.region.getTileEntity(coords);
 			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 				return this.data.output = TE.heatReceive(20);
 			}
-			return false;
+			return 0;
 		}
 
 		tick(): void {

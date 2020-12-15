@@ -48,9 +48,9 @@ namespace Machine {
 	extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
-			power_tier: 1,
+			tier: 1,
 			energy_storage: 800,
-			energy_consumption: 1,
+			energy_consume: 1,
 			work_time: 20,
 			progress: 0,
 			isActive: false,
@@ -64,13 +64,13 @@ namespace Machine {
 		}
 
 		getTier(): number {
-			return this.data.power_tier;
+			return this.data.tier;
 		}
 
 		resetValues(): void {
-			this.data.power_tier = this.defaultValues.power_tier;
+			this.data.tier = this.defaultValues.tier;
 			this.data.energy_storage = this.defaultValues.energy_storage;
-			this.data.energy_consumption = this.defaultValues.energy_consumption;
+			this.data.energy_consume = this.defaultValues.energy_consume;
 			this.data.work_time = this.defaultValues.work_time;
 		}
 
@@ -121,15 +121,14 @@ namespace Machine {
 
 			var newActive = false;
 			var liquid = this.liquidStorage.getLiquidStored();
-			if (this.y > 0 && this.liquidStorage.getAmount(liquid) <= 7 && this.data.energy >= this.data.energy_consumption) {
+			if (this.y > 0 && this.liquidStorage.getAmount(liquid) <= 7 && this.data.energy >= this.data.energy_consume) {
 				if (this.data.progress == 0) {
 					this.data.coords = this.recursiveSearch(liquid, this.x, this.y-1, this.z, {});
 				}
 				if (this.data.coords) {
 					newActive = true;
-					this.data.energy -= this.data.energy_consumption;
+					this.data.energy -= this.data.energy_consume;
 					this.data.progress += 1/this.data.work_time;
-					//this.startPlaySound();
 					if (this.data.progress.toFixed(3) >= 1) {
 						var coords = this.data.coords;
 						var block = this.region.getBlock(coords);
@@ -145,8 +144,6 @@ namespace Machine {
 			else {
 				this.data.progress = 0;
 			}
-			if (!newActive)
-				//this.stopPlaySound();
 			this.setActive(newActive);
 
 			var slot1 = this.container.getSlot("slotLiquid1");

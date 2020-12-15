@@ -83,9 +83,9 @@ namespace Machine {
 	extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
-			power_tier: 1,
+			tier: 1,
 			energy_storage: 800,
-			energy_consumption: 1,
+			energy_consume: 1,
 			work_time: 200,
 			progress: 0,
 			isActive: false
@@ -98,7 +98,7 @@ namespace Machine {
 		}
 
 		getTier(): number {
-			return this.data.power_tier;
+			return this.data.tier;
 		}
 
 		setupContainer(): void {
@@ -118,9 +118,9 @@ namespace Machine {
 		}
 
 		resetValues(): void {
-			this.data.power_tier = this.defaultValues.power_tier;
+			this.data.tier = this.defaultValues.tier;
 			this.data.energy_storage = this.defaultValues.energy_storage;
-			this.data.energy_consumption = this.defaultValues.energy_consumption;
+			this.data.energy_consume = this.defaultValues.energy_consume;
 			this.data.work_time = this.defaultValues.work_time;
 		}
 
@@ -139,8 +139,8 @@ namespace Machine {
 			var newActive = false;
 			var recipe = MachineRecipeRegistry.getRecipeResult("solidCanner", sourceSlot.id);
 			if (recipe && canSlot.id == recipe.storage[0] && canSlot.count >= recipe.storage[1] && (resultSlot.id == recipe.result[0] && resultSlot.data == recipe.result[2] && resultSlot.count <= 64 - recipe.result[1] || resultSlot.id == 0)) {
-				if (this.data.energy >= this.data.energy_consumption) {
-					this.data.energy -= this.data.energy_consumption;
+				if (this.data.energy >= this.data.energy_consume) {
+					this.data.energy -= this.data.energy_consume;
 					this.data.progress += 1/this.data.work_time;
 					newActive = true;
 				}

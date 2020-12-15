@@ -28,7 +28,8 @@ namespace Machine {
 			return (item.id == ItemID.debugItem);
 		}
 
-		setActive(isActive: boolean) {
+		setActive(isActive: boolean): void {
+			// TODO: sounds
 			if (this.data.isActive != isActive) {
 				this.data.isActive = isActive;
 				this.sendPacket("renderModel", {isActive: isActive});

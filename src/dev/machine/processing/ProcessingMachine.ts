@@ -5,16 +5,16 @@ namespace Machine {
 	extends ElectricMachine {
 		defaultValues: {
 			energy: number,
-			power_tier: number,
+			tier: number,
 			energy_storage: number,
-			energy_consumption?: number,
+			energy_consume?: number,
 			work_time?: number,
 			progress?: number,
 			isActive: boolean
 		}
 
 		getTier(): number {
-			return this.data.power_tier;
+			return this.data.tier;
 		}
 
 		getEnergyStorage(): number {
@@ -35,9 +35,9 @@ namespace Machine {
 		}
 
 		resetValues(): void {
-			this.data.power_tier = this.defaultValues.power_tier;
+			this.data.tier = this.defaultValues.tier;
 			this.data.energy_storage = this.defaultValues.energy_storage;
-			this.data.energy_consumption = this.defaultValues.energy_consumption;
+			this.data.energy_consume = this.defaultValues.energy_consume;
 			this.data.work_time = this.defaultValues.work_time;
 		}
 
@@ -52,11 +52,10 @@ namespace Machine {
 			if (result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)) {
 				var resultSlot = this.container.getSlot("slotResult");
 				if (resultSlot.id == result.id && (!result.data || resultSlot.data == result.data) && resultSlot.count <= 64 - result.count || resultSlot.id == 0) {
-					if (this.data.energy >= this.data.energy_consumption) {
-						this.data.energy -= this.data.energy_consumption;
+					if (this.data.energy >= this.data.energy_consume) {
+						this.data.energy -= this.data.energy_consume;
 						this.data.progress += 1/this.data.work_time;
 						newActive = true;
-						//this.startPlaySound();
 					}
 					if (this.data.progress.toFixed(3) >= 1) {
 						let sourceCount = result.sourceCount || 1;
@@ -70,8 +69,6 @@ namespace Machine {
 			else {
 				this.data.progress = 0;
 			}
-			//if (!newActive)
-				//this.stopPlaySound();
 			this.setActive(newActive);
 
 			var energyStorage = this.getEnergyStorage();

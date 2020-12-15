@@ -147,14 +147,14 @@ Callback.addCallback("PreLoaded", function() {
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, "overclocker", function(item, machine, data) {
 	if (data.work_time) {
-		data.energy_consumption = Math.round(data.energy_consumption * Math.pow(1.6, item.count));
+		data.energy_consume = Math.round(data.energy_consume * Math.pow(1.6, item.count));
 		data.work_time = Math.round(data.work_time * Math.pow(0.7, item.count));
 	}
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeTransformer, "transformer", function(item, machine, data) {
-	let tier = data.power_tier + item.count;
-	data.power_tier = Math.min(tier, 14);
+	let tier = data.tier + item.count;
+	data.tier = Math.min(tier, 14);
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, "energyStorage", function(item, machine, data) {

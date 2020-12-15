@@ -47,7 +47,7 @@ namespace Machine {
     extends ElectricMachine {
         defaultValues = {
             energy: 0,
-            power_tier: 1,
+            tier: 1,
             energy_storage: 10000,
             scanX: -5,
             scanY: -1,
@@ -61,11 +61,11 @@ namespace Machine {
         }
 
         getTier(): number {
-            return this.data.power_tier;
+            return this.data.tier;
         }
 
         resetValues(): void {
-            this.data.power_tier = this.defaultValues.power_tier;
+            this.data.tier = this.defaultValues.tier;
             this.data.energy_storage = this.defaultValues.energy_storage;
         }
 

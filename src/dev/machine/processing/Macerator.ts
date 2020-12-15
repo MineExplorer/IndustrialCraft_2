@@ -127,9 +127,9 @@ namespace Machine {
 	extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
-			power_tier: 1,
+			tier: 1,
 			energy_storage: 1200,
-			energy_consumption: 2,
+			energy_consume: 2,
 			work_time: 300,
 			progress: 0,
 			isActive: false

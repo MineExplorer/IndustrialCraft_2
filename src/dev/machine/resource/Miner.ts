@@ -276,11 +276,6 @@ namespace Machine {
 					}
 				}
 			}
-			if (newActive) {
-				//this.startPlaySound();
-			} else {
-				//this.stopPlaySound();
-			}
 			this.setActive(newActive);
 
 			let energyStorage = this.getEnergyStorage();

@@ -67,11 +67,11 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
 
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
+		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
 			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
+		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				let liquid = this.liquidStorage.getLiquidStored();
 				return this.getLiquidFromItem(liquid, item, new ItemStack(), true);
@@ -103,11 +103,9 @@ namespace Machine {
 				this.data.fuel -= fuel.amount/20;
 				this.setActive(true);
 				this.container.setText("textInfo2", "Max Emit: " + fuel.power * 2);
-				//this.startPlaySound();
 			}
 			else {
 				this.data.liquid = null;
-				//this.stopPlaySound();
 				this.setActive(false);
 				this.container.setText("textInfo1", "Emit: 0");
 				this.container.setText("textInfo2", "Max Emit: 0");

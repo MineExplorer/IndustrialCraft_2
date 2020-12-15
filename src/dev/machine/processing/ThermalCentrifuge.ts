@@ -74,9 +74,9 @@ namespace Machine {
 	extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
-			power_tier: 2,
+			tier: 2,
 			energy_storage: 30000,
-			energy_consumption: 48,
+			energy_consume: 48,
 			work_time: 500,
 			progress: 0,
 			isActive: false,
@@ -140,8 +140,8 @@ namespace Machine {
 					this.data.energy--;
 					this.data.heat++;
 				}
-				else if (this.data.energy >= this.data.energy_consumption) {
-					this.data.energy -= this.data.energy_consumption;
+				else if (this.data.energy >= this.data.energy_consume) {
+					this.data.energy -= this.data.energy_consume;
 					this.data.progress += 1/this.data.work_time;
 					newActive = true;
 				}

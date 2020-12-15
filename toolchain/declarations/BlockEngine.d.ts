@@ -353,7 +353,7 @@ declare abstract class TileEntityBase implements TileEntity {
     liquidStorage: any;
     remove: boolean;
     isLoaded: boolean;
-    private __initialized;
+    __initialized: boolean;
     client?: {
         load?: () => void;
         unload?: () => void;
@@ -382,7 +382,7 @@ declare abstract class TileEntityBase implements TileEntity {
     getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
     getScreenByName(screenName: string): any;
     onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean;
-    private onItemClick;
+    onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean;
     destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void;
     redstone(params: {
         power: number;
@@ -393,8 +393,8 @@ declare abstract class TileEntityBase implements TileEntity {
     destroy(): boolean;
     selfDestroy(): void;
     requireMoreLiquid(liquid: string, amount: number): void;
-    sendPacket(name: string, data: object): void;
-    sendResponse(packetName: string, someData: object): void;
+    sendPacket: (name: string, data: object) => {};
+    sendResponse: (packetName: string, someData: object) => {};
 }
 declare enum Side {
     Client = 0,

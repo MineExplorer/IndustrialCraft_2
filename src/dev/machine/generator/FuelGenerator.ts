@@ -89,10 +89,8 @@ namespace Machine {
 				this.data.energy = Math.min(this.data.energy + 10, energyStorage);
 				this.data.burn--;
 				this.setActive(true);
-				//this.startPlaySound();
 			} else {
 				this.setActive(false);
-				//this.stopPlaySound();
 			}
 
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);

@@ -238,9 +238,9 @@ var WorldRegion = /** @class */ (function () {
             return this.getTileEntity(pos.x, pos.y, pos.z);
         }
         var tileEntity = TileEntity.getTileEntity(x, y, z, this.blockSource);
-        if (tileEntity && !tileEntity.__initialized)
-            tileEntity._runInit();
-        return tileEntity;
+        if (tileEntity && tileEntity.__initialized)
+            return tileEntity;
+        return null;
     };
     WorldRegion.prototype.addTileEntity = function (x, y, z) {
         if (typeof x === "object") {
@@ -729,8 +729,6 @@ var TileEntityBase = /** @class */ (function () {
         TileEntity.destroyTileEntity(this);
     };
     TileEntityBase.prototype.requireMoreLiquid = function (liquid, amount) { };
-    TileEntityBase.prototype.sendPacket = function (name, data) { };
-    TileEntityBase.prototype.sendResponse = function (packetName, someData) { };
     return TileEntityBase;
 }());
 var Side;

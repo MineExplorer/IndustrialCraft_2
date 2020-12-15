@@ -69,7 +69,7 @@ namespace Machine {
 			});
 		}
 
-		calcOutput() {
+		calcOutput(): number {
 			var maxOutput = 0;
 			for (var i = 0; i < 10; i++) {
 				var slot = this.container.getSlot("slot"+i);

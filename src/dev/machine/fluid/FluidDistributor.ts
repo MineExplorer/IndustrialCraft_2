@@ -75,7 +75,7 @@ namespace Machine {
 			this.sendPacket("renderModel", {isActive: this.data.inverted});
 		}
 
-		addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance) {
+		addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance): void {
 			return MachineRegistry.addLiquidToItem.call(this, liquid, inputItem, outputItem);
 		}
 

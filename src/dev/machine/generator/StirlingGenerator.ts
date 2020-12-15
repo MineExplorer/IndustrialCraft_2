@@ -32,11 +32,11 @@ namespace Machine {
 		getTier(): number {
 			return 4;
 		}
-		canReceiveHeat(side: number) {
+		canReceiveHeat(side: number): boolean {
 			return side == this.getFacing();
 		}
 
-		heatReceive(amount: number) {
+		heatReceive(amount: number): number {
 			if (this.data.energy == 0) {
 				this.data.energy = Math.round(amount / 2);
 				return amount;
@@ -44,7 +44,7 @@ namespace Machine {
 			return 0;
 		}
 
-		energyTick(type: string, src: any) {
+		energyTick(type: string, src: any): void {
 			if (src.add(this.data.energy) < this.data.energy) {
 				this.data.energy = 0;
 			}

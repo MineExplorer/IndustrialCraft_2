@@ -86,10 +86,8 @@ namespace Machine {
 				this.data.energy += 20;
 				this.liquidStorage.getLiquid("lava", 0.001);
 				this.setActive(true);
-				//this.startPlaySound();
 			}
 			else {
-				//this.stopPlaySound();
 				this.setActive(false);
 			}
 

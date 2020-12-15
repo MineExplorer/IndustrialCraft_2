@@ -76,11 +76,11 @@ namespace Machine {
 			});
 		}
 
-		getRecipeResult(id: number) {
+		getRecipeResult(id: number): {result: number[], duration: number} {
 			return MachineRecipeRegistry.getRecipeResult("blastFurnace", id);
 		}
 
-		checkResult(result: number[]) {
+		checkResult(result: number[]): boolean {
 			for (var i = 1; i < 3; i++) {
 				var id = result[(i-1) *2 ];
 				if (!id) break;
@@ -93,7 +93,7 @@ namespace Machine {
 			return true;
 		}
 
-		putResult(result: number[]) {
+		putResult(result: number[]): void {
 			for (var i = 1; i < 3; i++) {
 				var id = result[(i-1) *2];
 				if (!id) break;
@@ -103,7 +103,7 @@ namespace Machine {
 			}
 		}
 
-		controlAir() {
+		controlAir(): boolean {
 			var slot1 = this.container.getSlot("slotAir1");
 			var slot2 = this.container.getSlot("slotAir2");
 			if (this.data.air == 0) {
@@ -150,12 +150,12 @@ namespace Machine {
 				this.container.sendEvent("setIndicator", "green");
 				var sourceSlot = this.container.getSlot("slotSource");
 				var source = this.data.sourceID || sourceSlot.id;
-				var result = this.getRecipeResult(source);
-				if (result && this.checkResult(result.result)) {
+				var recipe = this.getRecipeResult(source);
+				if (recipe && this.checkResult(recipe.result)) {
 					if (this.controlAir()) {
 						this.container.sendEvent("showAirImage", {show: false});
 						this.data.progress++;
-						this.container.setScale("progressScale", this.data.progress / result.duration);
+						this.container.setScale("progressScale", this.data.progress / recipe.duration);
 						this.setActive(true);
 
 						if (!this.data.sourceID) {
@@ -163,8 +163,8 @@ namespace Machine {
 							this.decreaseSlot(sourceSlot, 1);
 						}
 
-						if (this.data.progress >= result.duration) {
-							this.putResult(result.result);
+						if (this.data.progress >= recipe.duration) {
+							this.putResult(recipe.result);
 							this.data.progress = 0;
 							this.data.sourceID = 0;
 						}

@@ -69,7 +69,6 @@ namespace Machine {
 
 			if (this.data.isEnabled && this.data.energy > 0) {
 				this.setActive(true);
-				//this.startPlaySound();
 				if (this.data.catalyser < Math.max(1000, this.data.energy)) {
 					var catalyserSlot = this.container.getSlot("catalyserSlot");
 					var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
@@ -98,7 +97,6 @@ namespace Machine {
 				this.data.energy -= transfer;
 			}
 			else {
-				//this.stopPlaySound();
 				this.setActive(false);
 			}
 			if (this.data.progress >= ENERGY_PER_MATTER) {

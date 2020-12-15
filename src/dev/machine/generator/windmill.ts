@@ -27,7 +27,7 @@ namespace Machine {
 			blockCount: 0
 		}
 
-		updateBlockCount() {
+		updateBlockCount(): void {
 			var blockCount = -1;
 			for (var x = -4; x <= 4; x++) {
 				for (var y = -2; y <= 2; y++) {
@@ -39,13 +39,13 @@ namespace Machine {
 			}
 			this.data.blockCount = blockCount;
 		}
-		
+
 		init(): void {
 			super.init();
 			if (this.dimension != 0) this.selfDestroy();
 		}
 
-		energyTick(type: string, src: any) {
+		energyTick(type: string, src: any): void {
 			if (++this.data.ticker % 128 == 0) {
 				if (this.data.ticker % 1024 == 0) {
 					this.updateBlockCount();

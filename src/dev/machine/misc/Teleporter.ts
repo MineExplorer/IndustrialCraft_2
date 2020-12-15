@@ -26,7 +26,7 @@ namespace Machine {
 			frequency: null
 		}
 
-		getNearestStorages(x: number, y: number, z: number) {
+		getNearestStorages(x: number, y: number, z: number): TileEntity[] {
 			var directions = StorageInterface.directionsBySide;
 			var storages = [];
 			for (var i in directions) {

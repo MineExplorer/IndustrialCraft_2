@@ -75,7 +75,7 @@ namespace Machine {
 	export class AdvancedMiner
 	extends ElectricMachine {
 		defaultValues = {
-			power_tier: 3,
+			tier: 3,
 			energy: 0,
 			x: 0,
 			y: 0,
@@ -93,7 +93,7 @@ namespace Machine {
 		}
 
 		getTier(): number {
-			return this.data.power_tier;
+			return this.data.tier;
 		}
 
 		setupContainer(): void {
@@ -162,18 +162,10 @@ namespace Machine {
 			else
 				this.container.setText("textInfoMode", Translation.translate("Mode: Blacklist"));
 
-			this.data.power_tier = this.defaultValues.power_tier;
 			let max_scan_count = 5;
-			let upgrades = UpgradeAPI.getUpgrades(this.container);
-			for (let i in upgrades) {
-				let item = upgrades[i];
-				if (item.id == ItemID.upgradeOverclocker) {
-					max_scan_count *= item.count+1;
-				}
-				if (item.id == ItemID.upgradeTransformer) {
-					this.data.power_tier += item.count;
-				}
-			}
+			max_scan_count *= UpgradeAPI.getCountOfUpgrade(ItemID.upgradeOverclocker, this.container);
+			this.data.tier = this.defaultValues.tier;
+			this.data.tier += UpgradeAPI.getCountOfUpgrade(ItemID.upgradeTransformer, this.container);
 
 			let newActive = false;
 			if (this.data.isEnabled && this.y + this.data.y >= 0 && this.data.energy >= 512) {

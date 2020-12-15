@@ -79,7 +79,6 @@ namespace Machine {
 			energy_consume: 48,
 			work_time: 500,
 			progress: 0,
-			isActive: false,
 			isHeating: false,
 			heat: 0,
 			maxHeat: 5000,

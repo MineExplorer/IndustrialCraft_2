@@ -29,19 +29,6 @@ MachineRegistry.registerPrototype(BlockID.nuke, {
 		timer: 300
 	},
 
-	init: function(){
-		Game.message("send");
-		this.sendPacket("renderModel2", {isActive: true});
-	},
-
-	client: {
-		events: {
-			renderModel: function(data) {
-				Game.message("Received "+data.isActive);
-			}
-		}
-	},
-
 	explode: function(radius: number) {
 		SoundManager.playSound("NukeExplosion.ogg");
 		let entities = Entity.getAll();

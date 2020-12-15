@@ -63,18 +63,6 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slotLiquid2", () => 0);
 		}
 
-		init(): void {
-			this.region = new WorldRegion(this.blockSource);
-			if (this.data.meta !== undefined) {
-				Logger.Log(`Update tile with ID ${this.blockID}, data ${this.data.meta}`, "IC2");
-				let facing = this.data.meta;
-				this.setFacing(facing);
-				delete this.data.meta;
-			}
-			this.setupContainer();
-			this.sendPacket("renderModel", {isActive: this.data.inverted});
-		}
-
 		addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance): void {
 			return MachineRegistry.addLiquidToItem.call(this, liquid, inputItem, outputItem);
 		}
@@ -128,8 +116,7 @@ namespace Machine {
 		},
 		canReceiveLiquid: function(liquid: string, side: number): boolean {
 			let data = this.tileEntity.data;
-			// @ts-ignore
-			return (side == this.tileEntity.getFacing()) ^ data.inverted;
+			return (side == this.tileEntity.getFacing()) != data.inverted;
 		},
 		canTransportLiquid: () => true
 	});

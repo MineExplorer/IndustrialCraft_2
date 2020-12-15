@@ -50,7 +50,6 @@ namespace Machine {
     extends ElectricMachine {
         defaultValues = {
             energy: 0,
-            isActive: false,
             scanX: -5,
             scanY: -1,
             scanZ: -5

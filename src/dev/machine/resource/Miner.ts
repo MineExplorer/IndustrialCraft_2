@@ -44,8 +44,7 @@ namespace Machine {
 			z: 0,
 			scanY: 0,
 			scanR: 0,
-			progress: 0,
-			isActive: false
+			progress: 0
 		}
 
 		getScreenByName() {

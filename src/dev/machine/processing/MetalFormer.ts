@@ -115,8 +115,7 @@ namespace Machine {
 			energy_consume: 10,
 			work_time: 200,
 			progress: 0,
-			mode: 0,
-			isActive: false
+			mode: 0
 		}
 
 		upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];

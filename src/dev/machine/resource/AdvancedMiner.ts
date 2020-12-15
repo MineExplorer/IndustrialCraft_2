@@ -82,8 +82,7 @@ namespace Machine {
 			z: 0,
 			whitelist: false,
 			silk_touch: false,
-			isEnabled: true,
-			isActive: false
+			isEnabled: true
 		}
 
 		upgrades = ["overclocker", "transformer"];

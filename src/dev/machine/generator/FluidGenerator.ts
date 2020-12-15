@@ -48,7 +48,6 @@ namespace Machine {
 			energy: 0,
 			fuel: 0,
 			liquid: null,
-			isActive: false,
 		}
 
 		getScreenByName() {

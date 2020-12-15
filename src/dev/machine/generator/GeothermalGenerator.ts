@@ -42,11 +42,6 @@ Callback.addCallback("LevelLoaded", function() {
 namespace Machine {
 	export class GeothermalGenerator
 	extends Generator {
-		defaultValues = {
-			energy: 0,
-			isActive: false,
-		}
-
 		getScreenByName() {
 			return guiGeothermalGenerator;
 		}

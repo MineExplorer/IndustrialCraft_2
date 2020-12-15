@@ -45,8 +45,7 @@ namespace Machine {
 			energy: 0,
 			progress: 0,
 			catalyser: 0,
-			isEnabled: true,
-			isActive: false
+			isEnabled: true
 		}
 
 		getTier(): number {

@@ -10,7 +10,6 @@ namespace Machine {
 			energy_consume?: number,
 			work_time?: number,
 			progress?: number,
-			isActive: boolean
 		}
 
 		getTier(): number {

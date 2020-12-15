@@ -69,7 +69,6 @@ let EUReactorModifier = 5;
 MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	defaultValues: {
 		isEnabled: false,
-		isActive: false,
 		heat: 0,
 		maxHeat: 10000,
 		hem: 1,

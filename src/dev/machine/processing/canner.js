@@ -122,8 +122,7 @@ MachineRegistry.registerElectricMachine(BlockID.canner, {
 		energy_consume: 1,
 		work_time: 200,
 		progress: 0,
-		mode: 0,
-		isActive: false
+		mode: 0
 	},
 
 	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector", "fluidPulling"],

@@ -50,8 +50,7 @@ namespace Machine {
 			energy_storage: 800,
 			energy_consume: 1,
 			work_time: 45,
-			progress: 0,
-			isActive: false
+			progress: 0
 		}
 
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];

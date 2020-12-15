@@ -58,8 +58,7 @@ namespace Machine {
 		defaultValues ={
 			burn: 0,
 			burnMax: 0,
-			output: 0,
-			isActive: false
+			output: 0
 		}
 
 		getScreenByName() {

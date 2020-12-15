@@ -53,7 +53,6 @@ namespace Machine {
 			tier: 2,
 			energy_storage: 10000,
 			progress: 0,
-			isActive: false,
 			isHeating: false,
 			heat: 0,
 			signal: 0

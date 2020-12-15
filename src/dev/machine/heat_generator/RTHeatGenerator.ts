@@ -41,10 +41,6 @@ namespace Machine {
 	extends MachineBase {
 		hasVerticalRotation: boolean = true;
 
-		defaultValues = {
-			isActive: false
-		}
-
 		getScreenByName() {
 			return guiRTHeatGenerator;
 		}

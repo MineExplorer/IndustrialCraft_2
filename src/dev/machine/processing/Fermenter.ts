@@ -49,7 +49,6 @@ namespace Machine {
 			heat: 0,
 			progress: 0,
 			fertilizer: 0,
-			isActive: false,
 		}
 
 		upgrades = ["itemEjector", "itemPulling", "fluidEjector", "fluidPulling"];

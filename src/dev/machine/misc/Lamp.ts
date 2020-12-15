@@ -59,8 +59,7 @@ namespace Machine {
 	class Lamp
 	extends ElectricMachine {
 		defaultValues = {
-			energy: 0,
-			isActive: false
+			energy: 0
 		}
 
 		getEnergyStorage(): number {

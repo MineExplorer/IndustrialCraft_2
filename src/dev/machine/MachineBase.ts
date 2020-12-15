@@ -19,7 +19,6 @@ namespace Machine {
 				delete this.data.meta;
 			}
 			this.setupContainer();
-			this.sendPacket("renderModel", {isActive: this.data.isActive});
 		}
 
 		setupContainer(): void {}
@@ -30,20 +29,27 @@ namespace Machine {
 
 		setActive(isActive: boolean): void {
 			// TODO: sounds
-			if (this.data.isActive != isActive) {
-				this.data.isActive = isActive;
-				this.sendPacket("renderModel", {isActive: isActive});
+			if (this.networkData.getBoolean("isActive") != isActive) {
+				this.networkData.putBoolean("isActive", isActive);
+				this.networkData.sendChanges();
 			}
 		}
 
-		@NetworkEvent(Side.Client)
-		renderModel(data: {isActive: boolean}): void {
-			if (data.isActive) {
-				let blockData = this.blockSource.getBlockData(this.x, this.y, this.z);
-				TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, blockData);
+		@ClientSide()
+		renderModel(): void {
+			if (this.networkData.getBoolean("isActive")) {
+				let block = World.getBlock(this.x, this.y, this.z);
+				TileRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
 			} else {
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 			}
+		}
+
+		clientLoad(): void {
+			this.renderModel();
+			this.networkData.addOnDataChangedListener((data, isExternal) => {
+				this.renderModel();
+			});
 		}
 
 		clientUnload(): void {

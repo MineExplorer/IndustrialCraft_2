@@ -55,7 +55,6 @@ namespace Machine {
 			progress: 0,
 			air: 0,
 			sourceID: 0,
-			isActive: false,
 			isHeating: false,
 			heat: 0,
 			signal: 0

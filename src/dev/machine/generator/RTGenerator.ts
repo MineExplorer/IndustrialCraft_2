@@ -39,11 +39,6 @@ var guiRTGenerator = InventoryWindow("Radioisotope Thermoelectric Generator", {
 namespace Machine {
 	export class RTGenerator
 	extends Generator {
-		defaultValues = {
-			energy: 0,
-			isActive: false
-		}
-
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id) => (id == ItemID.rtgPellet));
 		}

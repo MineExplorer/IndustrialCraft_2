@@ -18,6 +18,9 @@ namespace Machine {
 				this.setFacing(facing);
 				delete this.data.meta;
 			}
+			this.networkData.putInt("blockId", this.blockID);
+			this.networkData.putInt("blockData", this.getFacing());
+			this.networkData.sendChanges();
 			this.setupContainer();
 		}
 
@@ -38,8 +41,9 @@ namespace Machine {
 		@ClientSide()
 		renderModel(): void {
 			if (this.networkData.getBoolean("isActive")) {
-				let block = World.getBlock(this.x, this.y, this.z);
-				TileRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
+				let blockId = this.networkData.getInt("blockId");
+				let blockData = this.networkData.getInt("blockData");
+				TileRenderer.mapAtCoords(this.x, this.y, this.z, blockId, blockData);
 			} else {
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 			}
@@ -63,6 +67,8 @@ namespace Machine {
 		setFacing(side: number): boolean {
 			if (this.getFacing() != side) {
 				this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, side);
+				this.networkData.putInt("blockData", side);
+				this.networkData.sendChanges();
 				return true;
 			}
 			return false;

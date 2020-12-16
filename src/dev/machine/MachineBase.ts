@@ -41,7 +41,7 @@ namespace Machine {
 		@ClientSide()
 		renderModel(): void {
 			if (this.networkData.getBoolean("isActive")) {
-				let blockId = this.networkData.getInt("blockId");
+				let blockId = Network.serverToLocalId(this.networkData.getInt("blockId"));
 				let blockData = this.networkData.getInt("blockData");
 				TileRenderer.mapAtCoords(this.x, this.y, this.z, blockId, blockData);
 			} else {

@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', 61, -1, 'x', ItemID.plateIron, 0]);
 });
 
-var guiIronFurnace = InventoryWindow("Iron Furnace", {
+let guiIronFurnace = InventoryWindow("Iron Furnace", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 155, bitmap: "arrow_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "fire_background", scale: GUI_SCALE}
@@ -57,12 +57,12 @@ namespace Machine {
 		}
 
 		consumeFuel(): number {
-			var fuelSlot = this.container.getSlot("slotFuel");
+			let fuelSlot = this.container.getSlot("slotFuel");
 			if (fuelSlot.id > 0) {
-				var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
+				let burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 				if (burn > 0) {
 					if (LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
-						var empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
+						let empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
 						fuelSlot.setSlot(empty.id, 1, empty.data);
 					} else {
 						this.decreaseSlot(fuelSlot, 1);
@@ -80,15 +80,15 @@ namespace Machine {
 		tick(): void {
 			StorageInterface.checkHoppers(this);
 
-			var sourceSlot = this.container.getSlot("slotSource");
-			var result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
+			let sourceSlot = this.container.getSlot("slotSource");
+			let resultSlot = this.container.getSlot("slotResult");
+			let result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
 
 			if (result && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0)) {
 				if (this.data.burn == 0) {
 					this.data.burn = this.data.burnMax = this.consumeFuel();
 				}
 				if (this.data.burn > 0) {
-					var resultSlot = this.container.getSlot("slotResult");
 					if (this.data.progress++ >= 160) {
 						this.decreaseSlot(sourceSlot, 1);
 						resultSlot.setSlot(result.id, resultSlot.count + 1, result.data);

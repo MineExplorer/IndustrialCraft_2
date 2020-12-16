@@ -83,20 +83,21 @@ namespace Machine {
 			var sourceSlot = this.container.getSlot("slotSource");
 			var result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
 
-			if (this.data.burn == 0 && result) {
-				this.data.burn = this.data.burnMax = this.consumeFuel();
-			}
-
-			if (this.data.burn > 0 && result) {
-				var resultSlot = this.container.getSlot("slotResult");
-				if ((resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0) && this.data.progress++ >= 160) {
-					this.decreaseSlot(sourceSlot, 1);
-					resultSlot.setSlot(result.id, resultSlot.count + 1, result.data);
+			if (result && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0)) {
+				if (this.data.burn == 0) {
+					this.data.burn = this.data.burnMax = this.consumeFuel();
+				}
+				if (this.data.burn > 0) {
+					var resultSlot = this.container.getSlot("slotResult");
+					if (this.data.progress++ >= 160) {
+						this.decreaseSlot(sourceSlot, 1);
+						resultSlot.setSlot(result.id, resultSlot.count + 1, result.data);
+						this.data.progress = 0;
+					}
+				}
+				else {
 					this.data.progress = 0;
 				}
-			}
-			else {
-				this.data.progress = 0;
 			}
 
 			if (this.data.burn > 0) {

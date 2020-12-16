@@ -90,7 +90,7 @@ namespace Machine {
 
 			if (this.data.fuel <= 0) {
 				var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", liquid);
-				if (fuel && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= energyStorage) {
+				if (fuel && this.liquidStorage.getAmount(liquid).toFixed(3) as any >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= energyStorage) {
 					this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
 					this.data.fuel = fuel.amount;
 					this.data.liquid = liquid;

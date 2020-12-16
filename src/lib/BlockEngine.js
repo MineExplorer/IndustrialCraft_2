@@ -671,21 +671,13 @@ var TileEntityBase = /** @class */ (function () {
         this.client.tick = this.clientTick;
     }
     TileEntityBase.prototype.created = function () { };
-    ;
     TileEntityBase.prototype.load = function () { };
-    ;
     TileEntityBase.prototype.unload = function () { };
-    ;
     TileEntityBase.prototype.init = function () { };
-    ;
     TileEntityBase.prototype.tick = function () { };
-    ;
     TileEntityBase.prototype.clientLoad = function () { };
-    ;
     TileEntityBase.prototype.clientUnload = function () { };
-    ;
     TileEntityBase.prototype.clientTick = function () { };
-    ;
     TileEntityBase.prototype.onCheckerTick = function (isInitialized, isLoaded, wasLoaded) { };
     TileEntityBase.prototype.getScreenName = function (player, coords) {
         return "main";
@@ -698,7 +690,6 @@ var TileEntityBase = /** @class */ (function () {
     };
     TileEntityBase.prototype.onItemClick = function (id, count, data, coords, player, extra) {
         if (!this.__initialized) {
-            // @ts-ignore
             if (!this._runInit()) {
                 return false;
             }

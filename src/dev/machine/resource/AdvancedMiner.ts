@@ -251,7 +251,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		setSilktouchIcon(contaier: any, window: any, content: any, data: {mode: boolean}) {
+		setSilktouchIcon(container: any, window: any, content: any, data: {mode: boolean}) {
 			if (content) {
 				let iconIndex = data.mode? 1 : 0;
 				content.elements.button_silk.bitmap = "miner_button_silk_" + iconIndex;

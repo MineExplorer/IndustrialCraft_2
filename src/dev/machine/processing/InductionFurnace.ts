@@ -115,8 +115,8 @@ namespace Machine {
 					if (this.data.heat < 10000) {this.data.heat++;}
 					this.data.energy--;
 				}
-				else if (this.data.heat > 0) {
-					this.data.heat -= 4;
+				else {
+					this.data.heat = Math.max(0, this.data.heat - 4);
 				}
 			}
 			this.setActive(newActive);

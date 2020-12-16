@@ -112,7 +112,7 @@ namespace Machine {
 
 		heatReceive(amount: number): number {
 			var outputSlot = this.container.getSlot("slotFertilizer");
-			if (this.liquidStorage.getAmount("biomass").toFixed(3) >= 0.02 && this.liquidStorage.getAmount("biogas") <= 1.6 && outputSlot.count < 64) {
+			if (this.liquidStorage.getAmount("biomass").toFixed(3) as any >= 0.02 && this.liquidStorage.getAmount("biogas") <= 1.6 && outputSlot.count < 64) {
 				this.data.heat = amount;
 				return amount;
 			}

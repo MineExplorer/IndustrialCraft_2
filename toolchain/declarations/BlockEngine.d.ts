@@ -344,17 +344,15 @@ declare abstract class TileEntityBase implements TileEntity {
     z: number;
     dimension: number;
     blockID: number;
+    remove: boolean;
+    isLoaded: boolean;
+    private __initialized;
+    useNetworkItemContainer: boolean;
     data: {
         [key: string]: any;
     };
     defaultValues: {};
-    useNetworkItemContainer: boolean;
-    container: ItemContainer;
-    liquidStorage: any;
-    remove: boolean;
-    isLoaded: boolean;
-    __initialized: boolean;
-    client?: {
+    client: {
         load?: () => void;
         unload?: () => void;
         tick?: () => void;
@@ -365,11 +363,14 @@ declare abstract class TileEntityBase implements TileEntity {
             [eventName: string]: (container: ItemContainer, window: UI.Window | UI.StandartWindow | UI.TabbedWindow | null, windowContent: UI.WindowContent | null, eventData: any) => void;
         };
     };
-    events?: {};
-    containerEvents?: {};
+    events: {};
+    containerEvents: {};
+    container: ItemContainer;
+    liquidStorage: LiquidRegistry.Storage;
     blockSource: BlockSource;
     networkData: SyncedNetworkData;
     networkEntity: NetworkEntity;
+    private _runInit;
     created(): void;
     load(): void;
     unload(): void;

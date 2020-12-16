@@ -77,7 +77,7 @@ namespace Machine {
 			this.getLiquidFromItem("lava", slot1, slot2);
 
 			var energyStorage = this.getEnergyStorage();
-			if (this.liquidStorage.getAmount("lava").toFixed(3) >= 0.001 && this.data.energy + 20 <= energyStorage) {
+			if (this.liquidStorage.getAmount("lava").toFixed(3) as any >= 0.001 && this.data.energy + 20 <= energyStorage) {
 				this.data.energy += 20;
 				this.liquidStorage.getLiquid("lava", 0.001);
 				this.setActive(true);

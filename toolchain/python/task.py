@@ -196,15 +196,19 @@ def task_build_package():
 	import shutil
 	output_dir = get_make_config().get_path("output")
 	output_file = get_make_config().get_path("IndustrialCraft2.icmod")
-	output_file_tmp = get_make_config().get_path("toolchain/build/mod.zip")
+	output_root_tmp = get_make_config().get_path("toolchain/build")
+	output_dir_tmp = output_root_tmp + "/IndustrialCraft2"
+	output_file_tmp = output_root_tmp + "/mod.zip"
 	ensure_directory(output_dir)
 	ensure_file_dir(output_file_tmp)
 	if os.path.isfile(output_file):
 		os.remove(output_file)
 	if os.path.isfile(output_file_tmp):
 		os.remove(output_file_tmp)
-	shutil.make_archive(output_file_tmp[:-4], 'zip', output_dir)
+	shutil.move(output_dir, output_dir_tmp)
+	shutil.make_archive(output_file_tmp[:-4], 'zip', output_root_tmp, "IndustrialCraft2")
 	os.rename(output_file_tmp, output_file)
+	shutil.move(output_dir_tmp, output_dir)
 	return 0
 
 

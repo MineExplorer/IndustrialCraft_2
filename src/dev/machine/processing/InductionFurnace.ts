@@ -131,8 +131,8 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		redstone(signal: {power: number}): void {
-			this.data.signal = signal.power;
+		onRedstoneUpdate(signal: number): void {
+			this.data.signal = signal;
 		}
 
 		getEnergyStorage(): number {

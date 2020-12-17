@@ -6,6 +6,11 @@ declare class ItemStack implements ItemInstance {
     constructor();
     constructor(item: ItemInstance);
     constructor(id: number, count: number, data: number, extra?: ItemExtraData);
+    getMaxStack(): number;
+    getMaxDamage(): void;
+    isEmpty(): boolean;
+    decrease(count: number): void;
+    clear(): void;
 }
 declare class Vector3 implements Vector {
     static readonly DOWN: Vector3;
@@ -44,9 +49,24 @@ declare class Vector3 implements Vector {
     scaleTo(len: number): Vector3;
     toString(): string;
 }
+/**
+ * Class to work with world based on BlockSource
+ */
 declare class WorldRegion {
     blockSource: BlockSource;
     constructor(blockSource: BlockSource);
+    /**
+     * @returns interface to given dimension
+     * (null if given dimension is not loaded and this interface
+     * was not created yet)
+     */
+    static getForDimension(dimension: number): WorldRegion;
+    /**
+     * @returns interface to the dimension where the given entity is
+     * (null if given entity does not exist or the dimension is not loaded
+     * and interface was not created)
+     */
+    static getForActor(entityUid: number): WorldRegion;
     /**
      * @returns the dimension id to which the following object belongs
      */
@@ -113,9 +133,8 @@ declare class WorldRegion {
     getContainer(coords: Vector): NativeTileEntity | UI.Container | ItemContainer;
     getContainer(x: number, y: number, z: number): NativeTileEntity | UI.Container | ItemContainer;
     /**
-     * Creates an explosion on coords
-     * @param power defines how many blocks can the explosion destroy and what
-     * blocks can or cannot be destroyed
+     * Causes an explosion on coords
+     * @param power defines radius of the explosion and what blocks it can destroy
      * @param fire if true, puts the crater on fire
      */
     explode(x: number, y: number, z: number, power: number, fire?: boolean): void;
@@ -133,25 +152,25 @@ declare class WorldRegion {
      */
     getBiomeTemperatureAt(x: number, y: number, z: number): number;
     /**
-    * @param chunkX X coord of the chunk
+     * @param chunkX X coord of the chunk
      * @param chunkZ Z coord of the chunk
      * @returns true if chunk is loaded, false otherwise
      */
     isChunkLoaded(chunkX: number, chunkZ: number): boolean;
     /**
-    * @param x X coord of the position
+     * @param x X coord of the position
      * @param z Z coord of the position
      * @returns true if chunk on the position is loaded, false otherwise
      */
     isChunkLoadedAt(x: number, z: number): boolean;
     /**
-    * @param chunkX X coord of the chunk
+     * @param chunkX X coord of the chunk
      * @param chunkZ Z coord of the chunk
      * @returns the loading state of the chunk by chunk coords
      */
     getChunkState(chunkX: number, chunkZ: number): number;
     /**
-    * @param x X coord of the position
+     * @param x X coord of the position
      * @param z Z coord of the position
      * @returns the loading state of the chunk by coords
      */
@@ -202,18 +221,6 @@ declare class WorldRegion {
      * and all except the entities of the given type, if blacklist value is true
      */
     listEntitiesInAABB(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, type: number, blacklist?: boolean): number[];
-    /**
-     * @returns interface to given dimension
-     * (null if given dimension is not loaded and this interface
-     * was not created yet)
-     */
-    static getForDimension(dimension: number): WorldRegion;
-    /**
-     * @returns interface to the dimension where the given entity is
-     * (null if given entity does not exist or the dimension is not loaded
-     * and interface was not created)
-     */
-    static getForActor(entityUid: number): WorldRegion;
 }
 declare class BlockBase {
     nameID: string;
@@ -370,11 +377,15 @@ declare abstract class TileEntityBase implements TileEntity {
     blockSource: BlockSource;
     networkData: SyncedNetworkData;
     networkEntity: NetworkEntity;
+    /**
+     * Interface for BlockSource of the TileEntity. Provides more functionality.
+     */
+    region: WorldRegion;
     private _runInit;
     created(): void;
+    init(): void;
     load(): void;
     unload(): void;
-    init(): void;
     tick(): void;
     clientLoad(): void;
     clientUnload(): void;
@@ -382,6 +393,10 @@ declare abstract class TileEntityBase implements TileEntity {
     onCheckerTick(isInitialized: boolean, isLoaded: boolean, wasLoaded: boolean): void;
     getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
     getScreenByName(screenName: string): any;
+    /**
+     * Called when player uses some item on a TileEntity. Replaces "click" function.
+     * @returns true if should prevent opening UI.
+    */
     onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean;
     onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean;
     destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void;
@@ -390,6 +405,11 @@ declare abstract class TileEntityBase implements TileEntity {
         signal: number;
         onLoad: boolean;
     }): void;
+    /**
+     * Occurs when redstone signal on TileEntity block was updated. Replaces "redstone" function
+     * @param signal signal power (0-15)
+     */
+    onRedstoneUpdate(signal: number): void;
     projectileHit(coords: Callback.ItemUseCoordinates, target: Callback.ProjectileHitTarget): void;
     destroy(): boolean;
     selfDestroy(): void;

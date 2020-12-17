@@ -111,8 +111,8 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		redstone(signal: {power: number}): void {
-			this.data.isEnabled = (signal.power == 0);
+		onRedstoneUpdate(signal: number): void {
+			this.data.isEnabled = (signal == 0);
 		}
 
 		getOperationSound() {

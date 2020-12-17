@@ -178,8 +178,8 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		redstone(signal: {power: number}): void {
-			this.data.signal = signal.power > 0;
+		onRedstoneUpdate(signal: number): void {
+			this.data.signal = signal > 0;
 		}
 
 		@ContainerEvent(Side.Client)

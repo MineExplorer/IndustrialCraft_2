@@ -28,7 +28,7 @@ namespace Machine {
 		biomeCheck(x: number, z: number) {
 			var coords = [[x, z], [x-7, z], [x+7, z], [x, z-7], [x, z+7]];
 			for (var c of coords) {
-				var biome = this.blockSource.getBiome(c[0], c[1]);
+				var biome = this.region.getBiome(c[0], c[1]);
 				if (biome==0 || biome==24) {return "ocean";}
 				if (biome==7) {return "river";}
 			}
@@ -51,7 +51,7 @@ namespace Machine {
 					else if (biome == "ocean") {
 						output *= 1.5 * Math.sin(World.getWorldTime()%6000 / (6000 / Math.PI));
 					}
-					var tile = this.blockSource.getBlockId(
+					var tile = this.region.getBlockId(
 						this.x - randomInt(-radius, radius),
 						this.y - randomInt(-radius, radius),
 						this.z - randomInt(-radius, radius)

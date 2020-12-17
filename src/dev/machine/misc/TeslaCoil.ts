@@ -49,8 +49,8 @@ namespace Machine {
 			}
 		}
 
-		redstone(signal: {power: number}): void {
-			this.data.isActive = signal.power > 0;
+		onRedstoneUpdate(signal: number): void {
+			this.data.isActive = signal > 0;
 		}
 
 		getEnergyStorage(): number {

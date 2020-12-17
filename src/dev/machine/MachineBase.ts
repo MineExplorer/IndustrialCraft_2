@@ -5,12 +5,11 @@ namespace Machine {
 
 	export abstract class MachineBase
 	extends TileEntityBase {
-		region: WorldRegion;
 		hasVerticalRotation: boolean = false;
 		upgrades?: string[];
 
 		init(): void {
-			this.region = new WorldRegion(this.blockSource);
+			super.init();
 			if (this.data.meta !== undefined) {
 				Logger.Log(`Update tile with ID ${this.blockID}, data ${this.data.meta}`, "IC2");
 				let facing = this.data.meta;

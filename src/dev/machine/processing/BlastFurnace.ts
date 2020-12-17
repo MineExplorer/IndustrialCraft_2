@@ -187,8 +187,8 @@ namespace Machine {
 			return 50000;
 		}
 
-		redstone(signal: {power: number}): void {
-			this.data.signal = signal.power > 0;
+		onRedstoneUpdate(signal: number): void {
+			this.data.signal = signal > 0;
 		}
 
 		canReceiveHeat(side: number): boolean {

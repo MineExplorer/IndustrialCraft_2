@@ -24,13 +24,13 @@ Callback.addCallback("PreLoaded", function() {
 
 namespace Machine {
 	class Nuke
-	extends MachineBase {
+	extends TileEntityBase {
 		defaultValues = {
 			activated: false,
 			timer: 300
 		}
 
-		explode(radius: number) {
+		explode(radius: number): void {
 			SoundManager.playSound("NukeExplosion.ogg");
 			let entities = Entity.getAll();
 			let damageRad = radius * 1.5;
@@ -72,6 +72,33 @@ namespace Machine {
 			this.sendPacket("explodeAnimation", {rad: radius});
 		}
 
+		tick(): void {
+			if (this.data.activated) {
+				if (this.data.timer <= 0) {
+					this.explode(20);
+					this.selfDestroy();
+					return;
+				}
+				if (this.data.timer % 10 < 5) {
+					this.sendPacket("renderLitModel", {lit: true});
+				} else {
+					this.sendPacket("renderLitModel", {lit: false});
+				}
+				this.data.timer--;
+			}
+		}
+
+		onRedstoneUpdate(signal: number): void {
+			if (signal > 0) {
+				this.data.activated = true;
+			}
+		}
+
+		destroy(): boolean {
+			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+			return false;
+		}
+
 		@NetworkEvent(Side.Client)
 		explodeAnimation(data: {rad: number}) {
 			let radius = data.rad;
@@ -93,33 +120,6 @@ namespace Machine {
 			} else {
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 			}
-		}
-
-		tick() {
-			if (this.data.activated) {
-				if (this.data.timer <= 0) {
-					this.explode(20);
-					this.selfDestroy();
-					return;
-				}
-				if (this.data.timer % 10 < 5) {
-					this.sendPacket("renderLitModel", {lit: true});
-				} else {
-					this.sendPacket("renderLitModel", {lit: false});
-				}
-				this.data.timer--;
-			}
-		}
-
-		redstone(signal: {power: number}) {
-			if (signal.power > 0) {
-				this.data.activated = true;
-			}
-		}
-
-		destroy() {
-			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-			return false;
 		}
 	}
 

@@ -227,8 +227,8 @@ namespace Machine {
 			}
 		}
 
-		redstone(signal: {power: number}): void {
-			this.data.isEnabled = (signal.power == 0);
+		onRedstoneUpdate(signal: number): void {
+			this.data.isEnabled = (signal == 0);
 		}
 
 		getEnergyStorage(): number {

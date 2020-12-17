@@ -44,8 +44,8 @@ namespace Machine {
 			}
 		}
 
-		redstone(signal: {power: number}): void {
-			var newMode = signal.power > 0;
+		onRedstoneUpdate(signal: number): void {
+			var newMode = signal > 0;
 			if (newMode != this.data.increaseMode) {
 				this.data.increaseMode = newMode;
 				EnergyNetBuilder.rebuildTileNet(this);

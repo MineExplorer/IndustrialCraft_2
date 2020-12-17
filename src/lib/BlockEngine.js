@@ -33,6 +33,24 @@ var ItemStack = /** @class */ (function () {
             this.extra = extra;
         }
     }
+    ItemStack.prototype.getMaxStack = function () {
+        return Item.getMaxStack(this.id);
+    };
+    ItemStack.prototype.getMaxDamage = function () {
+        Item.getMaxDamage(this.id);
+    };
+    ItemStack.prototype.isEmpty = function () {
+        return this.id == 0 && this.count == 0 && this.data == 0 && this.extra == null;
+    };
+    ItemStack.prototype.decrease = function (count) {
+        this.count -= count;
+        if (this.count <= 0)
+            this.clear();
+    };
+    ItemStack.prototype.clear = function () {
+        this.id = this.data = this.count = 0;
+        this.extra = null;
+    };
     return ItemStack;
 }());
 var Vector3 = /** @class */ (function () {
@@ -171,10 +189,37 @@ var Vector3 = /** @class */ (function () {
     return Vector3;
 }());
 EXPORT("Vector3", Vector3);
+/**
+ * Class to work with world based on BlockSource
+ */
 var WorldRegion = /** @class */ (function () {
     function WorldRegion(blockSource) {
         this.blockSource = blockSource;
     }
+    /**
+     * @returns interface to given dimension
+     * (null if given dimension is not loaded and this interface
+     * was not created yet)
+     */
+    WorldRegion.getForDimension = function (dimension) {
+        var blockSource = BlockSource.getDefaultForDimension(dimension);
+        if (blockSource) {
+            return new WorldRegion(blockSource);
+        }
+        return null;
+    };
+    /**
+     * @returns interface to the dimension where the given entity is
+     * (null if given entity does not exist or the dimension is not loaded
+     * and interface was not created)
+     */
+    WorldRegion.getForActor = function (entityUid) {
+        var blockSource = BlockSource.getDefaultForDimension(entityUid);
+        if (blockSource) {
+            return new WorldRegion(blockSource);
+        }
+        return null;
+    };
     /**
      * @returns the dimension id to which the following object belongs
      */
@@ -210,12 +255,7 @@ var WorldRegion = /** @class */ (function () {
         var block = this.getBlock(x, y, z);
         this.blockSource.destroyBlock(x, y, z, drop);
         if (drop) {
-            if (player) {
-                var item = Entity.getCarriedItem(player);
-            }
-            else {
-                var item = new ItemStack();
-            }
+            var item = player ? Entity.getCarriedItem(player) : new ItemStack();
             var result = Block.getBlockDropViaItem(block, item, new Vector3(x, y, z), this.blockSource);
             if (result) {
                 for (var _i = 0, result_1 = result; _i < result_1.length; _i++) {
@@ -264,9 +304,8 @@ var WorldRegion = /** @class */ (function () {
         return World.getContainer(x, y, z, this.blockSource);
     };
     /**
-     * Creates an explosion on coords
-     * @param power defines how many blocks can the explosion destroy and what
-     * blocks can or cannot be destroyed
+     * Causes an explosion on coords
+     * @param power defines radius of the explosion and what blocks it can destroy
      * @param fire if true, puts the crater on fire
      */
     WorldRegion.prototype.explode = function (x, y, z, power, fire) {
@@ -293,7 +332,7 @@ var WorldRegion = /** @class */ (function () {
         return this.blockSource.getBiomeTemperatureAt(x, y, z);
     };
     /**
-    * @param chunkX X coord of the chunk
+     * @param chunkX X coord of the chunk
      * @param chunkZ Z coord of the chunk
      * @returns true if chunk is loaded, false otherwise
      */
@@ -301,7 +340,7 @@ var WorldRegion = /** @class */ (function () {
         return this.blockSource.isChunkLoaded(chunkX, chunkZ);
     };
     /**
-    * @param x X coord of the position
+     * @param x X coord of the position
      * @param z Z coord of the position
      * @returns true if chunk on the position is loaded, false otherwise
      */
@@ -309,7 +348,7 @@ var WorldRegion = /** @class */ (function () {
         return this.blockSource.isChunkLoadedAt(x, z);
     };
     /**
-    * @param chunkX X coord of the chunk
+     * @param chunkX X coord of the chunk
      * @param chunkZ Z coord of the chunk
      * @returns the loading state of the chunk by chunk coords
      */
@@ -317,7 +356,7 @@ var WorldRegion = /** @class */ (function () {
         return this.blockSource.getChunkState(chunkX, chunkZ);
     };
     /**
-    * @param x X coord of the position
+     * @param x X coord of the position
      * @param z Z coord of the position
      * @returns the loading state of the chunk by coords
      */
@@ -387,30 +426,6 @@ var WorldRegion = /** @class */ (function () {
     WorldRegion.prototype.listEntitiesInAABB = function (x1, y1, z1, x2, y2, z2, type, blacklist) {
         if (blacklist === void 0) { blacklist = false; }
         return this.blockSource.listEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
-    };
-    /**
-     * @returns interface to given dimension
-     * (null if given dimension is not loaded and this interface
-     * was not created yet)
-     */
-    WorldRegion.getForDimension = function (dimension) {
-        var blockSource = BlockSource.getDefaultForDimension(dimension);
-        if (blockSource) {
-            return new WorldRegion(blockSource);
-        }
-        return null;
-    };
-    /**
-     * @returns interface to the dimension where the given entity is
-     * (null if given entity does not exist or the dimension is not loaded
-     * and interface was not created)
-     */
-    WorldRegion.getForActor = function (entityUid) {
-        var blockSource = BlockSource.getDefaultForDimension(entityUid);
-        if (blockSource) {
-            return new WorldRegion(blockSource);
-        }
-        return null;
     };
     return WorldRegion;
 }());
@@ -671,9 +686,11 @@ var TileEntityBase = /** @class */ (function () {
         this.client.tick = this.clientTick;
     }
     TileEntityBase.prototype.created = function () { };
+    TileEntityBase.prototype.init = function () {
+        this.region = new WorldRegion(this.blockSource);
+    };
     TileEntityBase.prototype.load = function () { };
     TileEntityBase.prototype.unload = function () { };
-    TileEntityBase.prototype.init = function () { };
     TileEntityBase.prototype.tick = function () { };
     TileEntityBase.prototype.clientLoad = function () { };
     TileEntityBase.prototype.clientUnload = function () { };
@@ -685,6 +702,10 @@ var TileEntityBase = /** @class */ (function () {
     TileEntityBase.prototype.getScreenByName = function (screenName) {
         return null;
     };
+    /**
+     * Called when player uses some item on a TileEntity. Replaces "click" function.
+     * @returns true if should prevent opening UI.
+    */
     TileEntityBase.prototype.onItemUse = function (coords, item, player) {
         return false;
     };
@@ -711,7 +732,14 @@ var TileEntityBase = /** @class */ (function () {
         return false;
     };
     TileEntityBase.prototype.destroyBlock = function (coords, player) { };
-    TileEntityBase.prototype.redstone = function (params) { };
+    TileEntityBase.prototype.redstone = function (params) {
+        this.onRedstoneUpdate(params.power);
+    };
+    /**
+     * Occurs when redstone signal on TileEntity block was updated. Replaces "redstone" function
+     * @param signal signal power (0-15)
+     */
+    TileEntityBase.prototype.onRedstoneUpdate = function (signal) { };
     TileEntityBase.prototype.projectileHit = function (coords, target) { };
     TileEntityBase.prototype.destroy = function () {
         return false;

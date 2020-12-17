@@ -34,15 +34,19 @@ namespace Machine {
 		}
 
 		init(): void {
-			this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
+			super.init();
+			this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
+		}
+
+		setupContainer() {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
 		}
 
 		tick(): void {
 			if (World.getThreadTime()%100 == 0) {
-				this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
+				this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
 			}
-			if (this.data.canSeeSky && this.blockSource.getLightLevel(this.x, this.y + 1, this.z) == 15) {
+			if (this.data.canSeeSky && this.region.getLightLevel(this.x, this.y + 1, this.z) == 15) {
 				this.data.energy = 1;
 				this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", 1, 1);
 				this.container.sendEvent("setSolarElement", "on");

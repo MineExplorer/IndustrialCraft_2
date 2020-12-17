@@ -204,7 +204,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	},
 	
 	redstone: function(signal) {
-		this.data.isEnabled = signal.power > 0;
+		this.data.isEnabled = signal > 0;
 	},
 	
 	getEnergyOutput: function() {

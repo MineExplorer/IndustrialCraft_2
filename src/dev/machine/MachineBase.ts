@@ -78,5 +78,46 @@ namespace Machine {
 			slot.markDirty();
 			slot.validate();
 		}
+
+		// Audio
+		audioSource: AudioSource;
+		finishingSound: number;
+
+		getOperationSound() {
+			return null;
+		}
+
+		getStartingSound() {
+			return null;
+		}
+
+		getInterruptSound() {
+			return null;
+		}
+
+		startPlaySound() {
+			if (!ConfigIC.machineSoundEnabled) return;
+			if (!this.audioSource && !this.remove) {
+				if (this.finishingSound != 0) {
+					SoundManager.stop(this.finishingSound);
+				}
+				if (this.getStartingSound()) {
+					this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getStartingSound());
+					//this.audioSource.setNextSound(this.getOperationSound(), true);
+				} else if (this.getOperationSound()) {
+					this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getOperationSound());
+				}
+			}
+		}
+
+		stopPlaySound() {
+			if (this.audioSource) {
+				SoundManager.removeSource(this.audioSource);
+				this.audioSource = null;
+				if (this.getInterruptSound()) {
+					this.finishingSound = SoundManager.playSoundAtBlock(this, this.getInterruptSound(), 1);
+				}
+			}
+		}
 	}
 }

@@ -106,7 +106,7 @@ declare class WorldRegion {
     getNativeTileEntity(coords: Vector): NativeTileEntity;
     getNativeTileEntity(x: number, y: number, z: number): NativeTileEntity;
     /**
-     * @returns TileEntity located on the specified coordinates
+     * @returns TileEntity located on the specified coordinates if it is initialized
      */
     getTileEntity(coords: Vector): TileEntity;
     getTileEntity(x: number, y: number, z: number): TileEntity;
@@ -234,28 +234,15 @@ declare class BlockBase {
     setShape(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, data?: number): this;
     registerTileEntity(prototype: any): void;
 }
-interface INameOverrideable {
-    onNameOverride(item: ItemInstance, translation: string, name: string): string;
+interface ItemFuncs {
+    onNameOverride?(item: ItemInstance, translation: string, name: string): string;
+    onIconOverride?(item: ItemInstance): Item.TextureData;
+    onItemUse?(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void;
+    onUseNoTarget?(item: ItemInstance, ticks: number): void;
+    onUsingReleased?(item: ItemInstance, ticks: number): void;
+    onUsingComplete?(item: ItemInstance): void;
+    onDispense?(coords: Callback.ItemUseCoordinates, item: ItemInstance): void;
 }
-interface IIconOverrideable {
-    onIconOverride(item: ItemInstance): Item.TextureData;
-}
-interface IUseable {
-    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void;
-}
-interface INoTargetUse {
-    onUseNoTarget(item: ItemInstance, ticks: number): void;
-}
-interface IUsingReleased {
-    onUsingReleased(item: ItemInstance, ticks: number): void;
-}
-interface IUsingComplete {
-    onUsingComplete(item: ItemInstance): void;
-}
-interface IDispenceBehavior {
-    onDispense(coords: Callback.ItemUseCoordinates, item: ItemInstance): void;
-}
-declare type ItemFuncs = INameOverrideable & IIconOverrideable & IUseable & INoTargetUse & IUsingReleased & IUsingComplete & IDispenceBehavior;
 declare class ItemBasic {
     readonly nameID: string;
     readonly id: number;
@@ -326,7 +313,7 @@ declare class ItemArmor extends ItemBasic {
 declare namespace ItemRegistry {
     function addArmorMaterial(name: string, material: ArmorMaterial): void;
     function getArmorMaterial(name: string): ArmorMaterial;
-    function register(itemInstance: ItemBasic | (ItemBasic & ItemFuncs)): void;
+    function register(itemInstance: ItemBasic & ItemFuncs): void;
     function getInstanceOf(itemID: number): ItemBasic;
     function createItem(nameID: string, params: {
         name?: string;

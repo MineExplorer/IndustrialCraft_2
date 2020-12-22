@@ -45,7 +45,7 @@ function randomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function addShapelessRecipe(result, source) {
+function addShapelessRecipe(result: ItemInstance, source: ItemInstance[]) {
 	var ingredients = [];
 	for (var i in source) {
 		var item = source[i];

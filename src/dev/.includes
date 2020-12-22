@@ -1,3 +1,5 @@
+#downlevelIteration: false
+
 header.ts
 translation.ts
 
@@ -97,7 +99,7 @@ items/food/mug.js
 items/food/coffee.js
 items/food/can.js
 
-items/electric/cable.js
+items/electric/cable.ts
 items/electric/components.js
 items/electric/storage.js
 items/electric/charging.js
@@ -136,5 +138,3 @@ integration/recipe_viewer.js
 integration/tree_capitator.js
 
 api.ts
-
-#downlevelIteration: false

@@ -45,8 +45,8 @@ var guiFluidHeatGenerator = new UI.StandartWindow({
 			}
 		},
 		"slot2": {type: "slot", x: 440, y: 183, isValid: function() {return false;}},
-		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 112, width: 300, height: 30, text: "Emit: 0"},
-		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 186, width: 300, height: 30, text: "Max Emit: 0"}
+		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 112, width: 300, height: 30, text: Translation.translate("Emit: ") + "0"},
+		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 670, y: 186, width: 300, height: 30, text: Translation.translate("Max Emit: ") + "0"}
 	}
 });
 
@@ -109,15 +109,15 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 			}
 			this.data.fuel -= fuel.amount/20;
 			this.activate();
-			this.container.setText("textInfo2", "Max Emit: " + fuel.power * 2);
+			this.container.setText("textInfo2", Translation.translate("Max Emit: ") + fuel.power * 2);
 			this.startPlaySound();
 		}
 		else {
 			this.data.liquid = null;
 			this.stopPlaySound();
 			this.deactivate();
-			this.container.setText("textInfo1", "Emit: 0");
-			this.container.setText("textInfo2", "Max Emit: 0");
+				this.container.setText("textInfo1", Translation.translate("Emit: ") + "0");
+			this.container.setText("textInfo2", Translation.translate("Max Emit: ") + "0");
 		}
 		
 		this.liquidStorage.updateUiScale("liquidScale", liquid);
@@ -137,7 +137,7 @@ MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, {
 		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
 		if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 			var output = TE.heatReceive(heat);
-			this.container.setText("textInfo1", "Emit: " + output);
+			this.container.setText("textInfo1", Translation.translate("Emit: ") + output);
 			return output;
 		}
 		return false;

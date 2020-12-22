@@ -400,8 +400,15 @@ Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt
 
 // TEXT
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
+
+
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
+// Nuclear
+Translation.addTranslation("Generating: ", {ru: "Генерация: ", es: "Generando: ", pt: "Gerando: ", zh: "产生: "});
+// Liquid Fuel Firebox
+Translation.addTranslation("Emit: ", {ru: "Выход: ", es: "Emite: ", pt: "Emitindo: ", zh: "发热: "});
+Translation.addTranslation("Max Emit: ", {ru: "Макс. выход: ", es: "Max Emision: ", pt: "Emissão Máx: ", zh: "最大发热: "});
 // Charging Batteries
 Translation.addTranslation("Mode: Disabled", {ru: "Режим: Выключен", pt: "Modo: Desabilitado", zh: "模式: 禁用"});
 Translation.addTranslation("Mode: Charge items not in hand", {ru: "Режим: Заряжать предметы, которые не в руке", pt: "Modo: Carregar itens que não estão nas mãos", zh: "模式: 手里没有要充电的东西"});

@@ -100,9 +100,9 @@ items/food/coffee.js
 items/food/can.js
 
 items/electric/cable.ts
-items/electric/components.js
-items/electric/storage.js
-items/electric/charging.js
+items/electric/components.ts
+items/electric/battery.ts
+items/electric/charging.ts
 items/electric/upgrades.ts
 
 items/reactor/fuel_rod.js
@@ -116,6 +116,7 @@ items/reactor/condensator.js
 items/armor/init.ts
 items/armor/recipes.ts
 
+items/tool/DebugItem.ts
 items/tool/eu-meter.js
 items/tool/transmitter.js
 items/tool/scanner.js

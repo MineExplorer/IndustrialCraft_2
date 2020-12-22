@@ -1892,9 +1892,10 @@ declare namespace Callback {
      * Function used in "ItemDispensed" callback
      * @param coords coordinates of the spawned drop item entity
      * @param item item that was dispensed
+     * @param region BlockSource object
      */
     interface ItemDispensedFunction {
-        (coords: ItemUseCoordinates, item: ItemInstance, player: number): void
+        (coords: ItemUseCoordinates, item: ItemInstance, region: BlockSource): void
     }
 
 
@@ -5296,7 +5297,7 @@ declare class ItemContainer {
 
 	/**
 	 * Set slot's content by its name. If a slot with specified name doesn't 
-	 * exists, creates an empty one with specified name and item
+	 * exists, creates new with specified name and item
 	 * @param name slot name
 	 * @param extra item extra data.
 	 */
@@ -9775,7 +9776,7 @@ declare namespace UI {
 
 		/**
 		 * Set slot's content by its name. If a slot with specified name doesn't 
-		 * exists, creates an empty one with specified name and item
+		 * exists, creates new with specified name and item
 		 * @param name slot name
 		 * @param extra item extra value. Note that it should be an instance of
 		 * ItemExtraData and not its numeric id

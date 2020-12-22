@@ -74,7 +74,7 @@ Callback.addCallback("PreLoaded", function() {
 		"axe",
 		" cs"
 	], ['x', ItemID.circuitBasic, 0, 'e', ItemID.electricMotor, 0,  'a', ItemID.storageBattery, -1, 's', ItemID.casingIron, 0, 'c', ItemID.cableCopper0, 0]);
-	
+
 	Recipes.addShaped({id: ItemID.heatConductor, count: 1, data: 0}, [
 		"aсa",
 		"aсa",

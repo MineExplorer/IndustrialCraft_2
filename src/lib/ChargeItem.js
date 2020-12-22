@@ -26,7 +26,7 @@ var ChargeItemRegistry;
         }
         Item.setMaxDamage(id, 27);
         if (!notInCreative) {
-            addToCreative(id, 1, capacity);
+            addToCreative(id, capacity);
         }
     }
     ChargeItemRegistry.registerItem = registerItem;
@@ -45,8 +45,11 @@ var ChargeItemRegistry;
         registerItem(id, energyType, capacity, transferLimit, tier, itemType ? true : false, !addToCreative);
     }
     ChargeItemRegistry.registerExtraItem = registerExtraItem;
-    function addToCreative(id, data, energy) {
-        Item.addToCreative(id, 1, data, new ItemExtraData().putInt("energy", energy));
+    function addToCreative(id, energy) {
+        var data = getItemData(id);
+        if (data) {
+            Item.addToCreative(id, 1, getDisplayData(energy, data.maxCharge), new ItemExtraData().putInt("energy", energy));
+        }
     }
     ChargeItemRegistry.addToCreative = addToCreative;
     function registerChargeFunction(id, func) {
@@ -84,6 +87,10 @@ var ChargeItemRegistry;
         return data.maxCharge;
     }
     ChargeItemRegistry.getMaxCharge = getMaxCharge;
+    function getDisplayData(energy, maxCharge) {
+        return Math.round((maxCharge - energy) / maxCharge * 26 + 1);
+    }
+    ChargeItemRegistry.getDisplayData = getDisplayData;
     function getEnergyStored(item, energyType) {
         var data = getItemData(item.id);
         if (!data || energyType && data.energy != energyType) {
@@ -109,7 +116,7 @@ var ChargeItemRegistry;
         if (!item.extra)
             item.extra = new ItemExtraData();
         item.extra.putInt("energy", amount);
-        item.data = Math.round((data.maxCharge - amount) / data.maxCharge * 26 + 1);
+        item.data = getDisplayData(amount, data.maxCharge);
     }
     ChargeItemRegistry.setEnergyStored = setEnergyStored;
     function getEnergyFrom(item, energyType, amount, tier, getAll) {

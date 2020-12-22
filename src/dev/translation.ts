@@ -161,14 +161,14 @@ Translation.addTranslation("Power Unit", {ru: "Силовой агрегат", e
 Translation.addTranslation("Small Power Unit", {ru: "Малый силовой агрегат", es: "Pequeña Unidad de Potencia", pt: "Motor Pequeno", zh: "小型驱动把手"});
 
 // Energy Storage
-Translation.addTranslation("RE-Battery", {ru: "Аккумулятор", es: "Batería Recargable", pt: "Bateria Reutilizável", zh: "充电电池"});
-Translation.addTranslation("Advanced RE-Battery", {ru: "Продвинутый аккумулятор", es: "Bateria-RE Avanzada", pt: "Bateria Reutilizável Avançada", zh: "高级充电电池"});
-Translation.addTranslation("Energy Crystal", {ru: "Энергетический кристалл", es: "Cristal de Energía", pt: "Cristal de Energia", zh: "能量水晶"});
-Translation.addTranslation("Lapotron Crystal", {ru: "Лазуротроновый кристалл", es: "Cristal Lapotron", pt: "Cristal Lapotrônico", zh: "兰波顿水晶"});
-Translation.addTranslation("Charging RE-Battery", {ru: "Заряжающий аккумулятор", es: "Batería Cargadora", pt: "Bateria Reutilizável Carregadora", zh: "RE充电电池"});
-Translation.addTranslation("Advanced Charging Battery", {ru: "Продвинутый заряжающий аккумулятор", es: "Bateria Cargadora Avanzada", pt: "Bateria Carregadora Avançada", zh: "高级充电电池"});
-Translation.addTranslation("Charging Energy Crystal", {ru: "Заряжающий энергетический кристалл", es: "Cargador de Cristales de Energía", pt: "Carregador de Cristais de Energia", zh: "能量水晶充电电池"});
-Translation.addTranslation("Charging Lapotron Crystal", {ru: "Заряжающий лазуротроновый кристалл", es: "Cargador de Cristales Lapotron", pt: "Carregador de Cristais Lapotrônicos", zh: "兰波顿充电电池"});
+Translation.addTranslation("re_battery", {en: "RE-Battery", ru: "Аккумулятор", es: "Batería Recargable", pt: "Bateria Reutilizável", zh: "充电电池"});
+Translation.addTranslation("adv_re_battery", {en: "Advanced RE-Battery", ru: "Продвинутый аккумулятор", es: "Bateria-RE Avanzada", pt: "Bateria Reutilizável Avançada", zh: "高级充电电池"});
+Translation.addTranslation("energy_crystal", {en: "Energy Crystal", ru: "Энергетический кристалл", es: "Cristal de Energía", pt: "Cristal de Energia", zh: "能量水晶"});
+Translation.addTranslation("lapotron_crystal", {en: "Lapotron Crystal", ru: "Лазуротроновый кристалл", es: "Cristal Lapotron", pt: "Cristal Lapotrônico", zh: "兰波顿水晶"});
+Translation.addTranslation("charging_re_battery", {en: "Charging RE-Battery", ru: "Заряжающий аккумулятор", es: "Batería Cargadora", pt: "Bateria Reutilizável Carregadora", zh: "RE充电电池"});
+Translation.addTranslation("adv_charging_battery", {en: "Advanced Charging Battery", ru: "Продвинутый заряжающий аккумулятор", es: "Bateria Cargadora Avanzada", pt: "Bateria Carregadora Avançada", zh: "高级充电电池"});
+Translation.addTranslation("charging_energy_crystal", {en: "Charging Energy Crystal", ru: "Заряжающий энергетический кристалл", es: "Cargador de Cristales de Energía", pt: "Carregador de Cristais de Energia", zh: "能量水晶充电电池"});
+Translation.addTranslation("charging_lapotron_crystal", {en: "Charging Lapotron Crystal", ru: "Заряжающий лазуротроновый кристалл", es: "Cargador de Cristales Lapotron", pt: "Carregador de Cristais Lapotrônicos", zh: "兰波顿充电电池"});
 
 // Upgrades
 Translation.addTranslation("MFSU Upgrade Kit", {ru: "Набор улучшения МФСУ", es: "Kit de Actualización MFSU", pt: "Kit de Melhoria UAMF", zh: "MFSU升级组件"});

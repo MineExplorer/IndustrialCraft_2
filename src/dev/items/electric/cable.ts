@@ -1,11 +1,12 @@
+/// <reference path="../ItemIC2.ts" />
+
 class ItemCable
-extends ItemBasic
+extends ItemIC2
 implements ItemFuncs {
 	maxVoltage: number;
 
-	constructor(stringID: string, name: string, texture: Item.TextureData, maxVoltage: number) {
+	constructor(stringID: string, name: string, texture: string | Item.TextureData, maxVoltage: number) {
 		super(stringID, name, texture);
-		this.createItem();
 		this.maxVoltage = maxVoltage;
 	}
 
@@ -28,7 +29,7 @@ implements ItemFuncs {
 		EnergyTypeRegistry.onWirePlaced(place.x, place.y, place.z);
 	}
 
-	static createItem(stringID: string, name: string, texture: Item.TextureData, maxVoltage: number) {
+	static createItem(stringID: string, name: string, texture: string | Item.TextureData, maxVoltage: number) {
 		return new this(stringID, name, texture, maxVoltage);
 	}
 }
@@ -48,7 +49,7 @@ ItemCable.createItem("cableIron1", "Insulated HV Cable", {name: "cable_iron", me
 ItemCable.createItem("cableIron2", "2x Ins. HV Cable", {name: "cable_iron", meta: 2}, 2048);
 ItemCable.createItem("cableIron3", "3x Ins. HV Cable", {name: "cable_iron", meta: 3}, 2048);
 
-ItemCable.createItem("cableOptic", "Glass Fibre Cable", {name: "cable_optic", meta: 0}, 8192);
+ItemCable.createItem("cableOptic", "Glass Fibre Cable", "cable_optic", 8192);
 
 Item.addCreativeGroup("cableEU", Translation.translate("Cables"), [
 	ItemID.cableTin0,

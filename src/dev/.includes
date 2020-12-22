@@ -46,7 +46,7 @@ machine/processing/Macerator.ts
 machine/processing/Compressor.ts
 machine/processing/Extractor.ts
 machine/processing/SolidCanner.ts
-machine/processing/Canner.js
+machine/processing/Canner.ts
 machine/processing/Recycler.ts
 machine/processing/MetalFormer.ts
 machine/processing/OreWasher.ts

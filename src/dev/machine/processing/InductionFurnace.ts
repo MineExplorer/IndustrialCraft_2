@@ -30,7 +30,7 @@ let guiInductionFurnace = InventoryWindow("Induction Furnace", {
 	],
 
 	elements: {
-		"progressScale": {type: "scale", x: 630, y: 146, direction: 0, value: 0.5, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
+		"progressScale": {type: "scale", x: 630, y: 146, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
 		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotSource1": {type: "slot", x: 511, y: 75},
 		"slotSource2": {type: "slot", x: 571, y: 75},

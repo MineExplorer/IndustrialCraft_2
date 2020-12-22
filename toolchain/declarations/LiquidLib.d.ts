@@ -1,6 +1,8 @@
+/// <reference path="./core-engine.d.ts" />
+
 declare class LiquidTank {
-    constructor(tileEntity: any, name: string, limit: number);
-    tileEntity: any;
+    constructor(tileEntity: TileEntity, name: string, limit: number);
+    tileEntity: TileEntity;
     limit: number;
     data: any;
     getLiquidStored(): string;
@@ -13,7 +15,7 @@ declare class LiquidTank {
     getLiquid(liquid: string, amount: number): number;
     isFull(): boolean;
     isEmpty(): boolean;
-    updateUiScale(scale: any, container: any): void;
+    updateUiScale(scale: string, container?: any): void;
 }
 declare namespace LiquidLib {
     const itemData: {};

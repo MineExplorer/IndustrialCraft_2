@@ -31,7 +31,7 @@ Item.addCreativeGroup("casingMetal", Translation.translate("Metal Casings"), [
 ]);
 
 // recipes
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	ICTool.addRecipe({id: ItemID.casingCopper, count: 2, data: 0}, [{id: ItemID.plateCopper, data: 0}], ItemID.craftingHammer);
 	ICTool.addRecipe({id: ItemID.casingTin, count: 2, data: 0}, [{id: ItemID.plateTin, data: 0}], ItemID.craftingHammer);
 	ICTool.addRecipe({id: ItemID.casingBronze, count: 2, data: 0}, [{id: ItemID.plateBronze, data: 0}], ItemID.craftingHammer);

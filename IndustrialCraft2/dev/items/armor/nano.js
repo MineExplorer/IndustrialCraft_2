@@ -87,22 +87,22 @@ MachineRecipeRegistry.registerRecipesFor("nano-armor-charge", {
 UIbuttons.setArmorButton(ItemID.nanoHelmet, "button_nightvision");
 
 var NANO_ARMOR_FUNCS = {
-	hurt: function(params, slot, index, maxDamage){
+	hurt: function(params, slot, index, maxDamage) {
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 		var type = params.type;
-		if(energyStored >= 2000){
-			if(type == 2 || type == 3 || type == 11){
+		if (energyStored >= 2000) {
+			if (type == 2 || type == 3 || type == 11) {
 				var energy = params.damage * 2000;
 				ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - energy, 0));
 				return true;
 			}
-			if(index == 3 && type == 5){
+			if (index == 3 && type == 5) {
 				var damage = Utils.getFallDamage();
-				if(damage > 0){
+				if (damage > 0) {
 					damage = Math.min(damage, params.damage);
 					var damageReduce = Math.min(Math.min(9, damage), parseInt(energyStored / 2500));
 					var damageTaken = damage - damageReduce;
-					if(damageTaken > 0){
+					if (damageTaken > 0) {
 						Entity.setHealth(player, Entity.getHealth(player) + params.damage - damageTaken);
 					} else {
 						Game.prevent();
@@ -115,35 +115,28 @@ var NANO_ARMOR_FUNCS = {
 		return false;
 	},
 	
-	tick: function(slot, index, maxDamage){
+	tick: function(slot, index, maxDamage) {
 		var armor = MachineRecipeRegistry.getRecipeResult("nano-armor-charge", slot.id);
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
-		if(energyStored < 2000){
-			var newId = armor.uncharged;
-		} else {
-			var newId = armor.charged;
-		}
-		if(slot.id != newId){
+		var newId = energyStored < 2000 ? armor.uncharged : armor.charged;
+		if (slot.id != newId) {
 			slot.id = newId;
 			Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 		}
-		
-		if(index == 0 && energyStored > 0){
-			var nightvision = slot.extra? slot.extra.getBoolean("nv") : false;
-			if(nightvision){
-				var coords = Player.getPosition();
-				var time = World.getWorldTime()%24000;
-				if(World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000){
-					Entity.addEffect(Player.get(), MobEffect.blindness, 1, 25);
-					Entity.clearEffect(Player.get(), MobEffect.nightVision);
-				} else {
-					Entity.addEffect(Player.get(), MobEffect.nightVision, 1, 225);
-				}
+		// night vision
+		if (index == 0 && energyStored > 0 && slot.extra && slot.extra.getBoolean("nv")) {
+			var coords = Player.getPosition();
+			var time = World.getWorldTime()%24000;
+			if (World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
+				Entity.addEffect(Player.get(), MobEffect.blindness, 1, 25);
+				Entity.clearEffect(Player.get(), MobEffect.nightVision);
+			} else {
 				Entity.addEffect(Player.get(), MobEffect.nightVision, 1, 225);
-				if(World.getThreadTime()%20 == 0){
-					ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
-					Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
-				}
+			}
+			Entity.addEffect(Player.get(), MobEffect.nightVision, 1, 225);
+			if (World.getThreadTime()%20 == 0) {
+				ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
+				Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 			}
 		}
 		return false;

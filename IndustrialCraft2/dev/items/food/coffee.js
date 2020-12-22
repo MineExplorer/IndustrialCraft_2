@@ -1,8 +1,8 @@
 var CoffeeMug = {
     effectTimer: 0,
     amplifier: 0,
-    amplifyEffect: function(potionId, maxAmplifier, extraDuration){
-        if(this.effectTimer > 0){
+    amplifyEffect: function(potionId, maxAmplifier, extraDuration) {
+        if (this.effectTimer > 0) {
             this.effectTimer += extraDuration;
             if (this.amplifier < maxAmplifier) this.amplifier++;
 
@@ -13,26 +13,26 @@ var CoffeeMug = {
         this.effectTimer = 300;
         return 1;
     },
-    tick: function(){
-        if(this.effectTimer > 1){
+    tick: function() {
+        if (this.effectTimer > 1) {
             this.effectTimer--;
             return;
         }
-        if(this.effectTimer == 1){
+        if (this.effectTimer == 1) {
             this.effectTimer--;
             this.amplifier = 0;
         }
     },
-    onDeath: function(entity){
-        if(entity != Player.get()) return;
+    onDeath: function(entity) {
+        if (entity != Player.get()) return;
         this.effectTimer = 0;
         this.amplifier = 0;
     },
-    onFoodEaten: function(heal, satRatio){
+    onFoodEaten: function(heal, satRatio) {
         var maxAmplifier = 0;
         var extraDuration = 0;
         var itemId = Player.getCarriedItem().id;
-        switch(itemId){
+        switch(itemId) {
             case ItemID.mugCoffee :
                 maxAmplifier = 6;
                 extraDuration = 1200;
@@ -46,10 +46,10 @@ var CoffeeMug = {
                 extraDuration = 1200;
                 break;
             case ItemID.terraWart :
-                if(this.amplifier < 3) return;
+                if (this.amplifier < 3) return;
                 this.amplifier = 2;
-                break;
-            case 351:
+                return;
+            case VanillaItemID.bucket :
                 this.amplifier = 0;
                 this.effectTimer = 0;
                 break;
@@ -67,12 +67,27 @@ var CoffeeMug = {
             var badEffectTime = (highest - 2) * 200;
             Entity.addEffect(Player.get(), MobEffect.confusion, 1, badEffectTime);
             this.effectTimer = badEffectTime;
-            if (highest >= 4){
+            if (highest >= 4) {
                 Entity.addEffect(Player.get(), MobEffect.harm, highest - 3, 1);
             }
         }
 
         Player.addItemToInventory(ItemID.mugEmpty, 1, 0);
+    },
+    craftFunction: function(api, field, result) {
+        for (let i in field) {
+            if (field[i].id == VanillaItemID.bucket) {
+                if(field[i].count == 1) {
+                    field[i].data = 0;
+                } else {
+                    api.decreaseFieldSlot(i);
+                    Player.addItemToInventory(VanillaItemID.bucket, 1, 0);
+                }
+            }
+            else {
+                api.decreaseFieldSlot(i);
+            }
+        }
     }
 };
 
@@ -96,21 +111,18 @@ Callback.addCallback("FoodEaten", CoffeeMug.onFoodEaten);
 Callback.addCallback("tick", CoffeeMug.tick);
 Callback.addCallback("EntityDeath", CoffeeMug.onDeath);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: ItemID.mugColdCoffee, count: 1, data: 0}, [
 		"x",
 		"y",
 		"z",
-	], ['x', ItemID.coffeePowder, 0, 'y', 325, 8, 'z', ItemID.mugEmpty, 0],
-	function(api, field, result){
-		Player.addItemToInventory(325, 1, 0);
-	});
+	], ['x', ItemID.coffeePowder, 0, 'y', 325, 8, 'z', ItemID.mugEmpty, 0], CoffeeMug.craftFunction);
 
 	Recipes.addShaped({id: ItemID.mugCoffee, count: 1, data: 0}, [
 		"x",
 		"y",
 		"z",
-	], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0]);
+	], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0], CoffeeMug.craftFunction);
 
 	Recipes.addFurnace(ItemID.mugColdCoffee, ItemID.mugDarkCoffee, 0);
 });

@@ -10,7 +10,7 @@ ItemName.addTierTooltip("oreWasher", 1);
 
 MachineRegistry.setMachineDrop("oreWasher", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.oreWasher, count: 1, data: 0}, [
 		"aaa",
 		"b#b",
@@ -49,19 +49,19 @@ var guiOreWasher = new UI.StandartWindow({
 		"liquidScale": {type: "scale", x: 400 + 60*GUI_SCALE_NEW, y: 50 + 21*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE_NEW},
 		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE_NEW, y: 50 + 58*GUI_SCALE_NEW, size: 54, isValid: MachineRegistry.isValidEUStorage},
 		"slotLiquid1": {type: "slot", x: 400 + 33*GUI_SCALE_NEW, y: 50 + 13*GUI_SCALE_NEW, size: 54,
-			isValid: function(id, count, data){
+			isValid: function(id, count, data) {
 				return LiquidLib.getItemLiquid(id, data) == "water";
 			}
 		},
-		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE_NEW, y: 50 + 58*GUI_SCALE_NEW, size: 54, isValid: function(){return false;}},
+		"slotLiquid2": {type: "slot", x: 400 + 33*GUI_SCALE_NEW, y: 50 + 58*GUI_SCALE_NEW, size: 54, isValid: function() {return false;}},
 		"slotSource": {type: "slot", x: 400 + 99*GUI_SCALE_NEW, y: 50 + 13*GUI_SCALE_NEW, size: 54,
-			isValid: function(id, count, data){
+			isValid: function(id, count, data) {
 				return MachineRecipeRegistry.hasRecipeFor("oreWasher", id, data);
 			}
 		},
-		"slotResult1": {type: "slot", x: 400 + 81*GUI_SCALE_NEW, y: 50 + 58*GUI_SCALE_NEW, size: 54, isValid: function(){return false;}},
-		"slotResult2": {type: "slot", x: 400 + 99*GUI_SCALE_NEW, y: 50 + 58*GUI_SCALE_NEW, size: 54, isValid: function(){return false;}},
-		"slotResult3": {type: "slot", x: 400 + 117*GUI_SCALE_NEW, y: 50 + 58*GUI_SCALE_NEW, size: 54, isValid: function(){return false;}},
+		"slotResult1": {type: "slot", x: 400 + 81*GUI_SCALE_NEW, y: 50 + 58*GUI_SCALE_NEW, size: 54, isValid: function() {return false;}},
+		"slotResult2": {type: "slot", x: 400 + 99*GUI_SCALE_NEW, y: 50 + 58*GUI_SCALE_NEW, size: 54, isValid: function() {return false;}},
+		"slotResult3": {type: "slot", x: 400 + 117*GUI_SCALE_NEW, y: 50 + 58*GUI_SCALE_NEW, size: 54, isValid: function() {return false;}},
 		"slotUpgrade1": {type: "slot", x: 860, y: 50 + 3*GUI_SCALE_NEW, size: 54, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade2": {type: "slot", x: 860, y: 50 + 21*GUI_SCALE_NEW, size: 54, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade3": {type: "slot", x: 860, y: 50 + 39*GUI_SCALE_NEW, size: 54, isValid: UpgradeAPI.isValidUpgrade},
@@ -69,7 +69,7 @@ var guiOreWasher = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiOreWasher, "Ore Washing Plant");
 });
 
@@ -86,45 +86,45 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 	
 	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidPulling"],
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiOreWasher;
 	},
 	
-	getTier: function(){
+	getTier: function() {
 		return this.data.power_tier;
 	},
 	
-	resetValues: function(){
+	resetValues: function() {
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
 		this.data.work_time = this.defaultValues.work_time;
 	},
 	
-	init: function(){
+	init: function() {
 		this.liquidStorage.setLimit("water", 8);
 		this.renderModel();
 	},
 
-	checkResult: function(result){
-		for(var i = 1; i < 4; i++){
+	checkResult: function(result) {
+		for (var i = 1; i < 4; i++) {
 			var id = result[(i-1)*2];
 			var count = result[(i-1)*2+1];
 			var resultSlot = this.container.getSlot("slotResult"+i);
-			if((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0){
+			if ((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0) {
 				return false;
 			}
 		}
 		return true;
 	},
 
-	putResult: function(result){
+	putResult: function(result) {
 		this.liquidStorage.getLiquid("water", 1);
-		for(var i = 1; i < 4; i++){
+		for (var i = 1; i < 4; i++) {
 			var id = result[(i-1)*2];
 			var count = result[(i-1)*2+1];
 			var resultSlot = this.container.getSlot("slotResult"+i);
-			if(id){
+			if (id) {
 				resultSlot.id = id;
 				resultSlot.count += count;
 			}
@@ -133,13 +133,13 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 	
 	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
 	
-	click: function(id, count, data, coords){
-		if(Entity.getSneaking(player)){
+	click: function(id, count, data, coords) {
+		if (Entity.getSneaking(player)) {
 			return this.getLiquidFromItem("water", {id: id, count: count, data: data}, null, true);
 		}
 	},
 	
-	tick: function(){
+	tick: function() {
 		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
@@ -150,13 +150,13 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 		var newActive = false;
 		var sourceSlot = this.container.getSlot("slotSource");
 		var result = MachineRecipeRegistry.getRecipeResult("oreWasher", sourceSlot.id);
-		if(result && this.checkResult(result) && this.liquidStorage.getAmount("water") >= 1){
-			if(this.data.energy >= this.data.energy_consumption){
+		if (result && this.checkResult(result) && this.liquidStorage.getAmount("water") >= 1) {
+			if (this.data.energy >= this.data.energy_consumption) {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
 			}
-			if(this.data.progress.toFixed(3) >= 1){
+			if (this.data.progress.toFixed(3) >= 1) {
 				sourceSlot.count--;
 				this.putResult(result);
 				this.container.validateAll();
@@ -177,7 +177,7 @@ MachineRegistry.registerElectricMachine(BlockID.oreWasher, {
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return this.data.energy_storage;
 	},
 	
@@ -189,12 +189,12 @@ TileRenderer.setRotationPlaceFunction(BlockID.oreWasher);
 StorageInterface.createInterface(BlockID.oreWasher, {
 	slots: {
 		"slotSource": {input: true,
-			isValid: function(item){
+			isValid: function(item) {
 				return MachineRecipeRegistry.hasRecipeFor("oreWasher", item.id, item.data);
 			}
 		},
 		"slotLiquid1": {input: true, 
-			isValid: function(item){
+			isValid: function(item) {
 				return LiquidLib.getItemLiquid(item.id, item.data) == "water";
 			}
 		},
@@ -203,6 +203,6 @@ StorageInterface.createInterface(BlockID.oreWasher, {
 		"slotResult2": {output: true},
 		"slotResult3": {output: true}
 	},
-	canReceiveLiquid: function(liquid, side){ return liquid == "water"; },
-	canTransportLiquid: function(liquid, side){ return false; }
+	canReceiveLiquid: function(liquid, side) { return liquid == "water"; },
+	canTransportLiquid: function(liquid, side) { return false; }
 });

@@ -7,7 +7,7 @@ ModAPI.registerAPI("ICore", {
 	Reactor: ReactorAPI,
 	Radiation: RadiationAPI,
 	Tool: ICTool,
-	Sound: SoundAPI,
+	Sound: SoundManager,
 	Agriculture: AgricultureAPI,
 	ItemName: ItemName,
 	UI: UIbuttons,
@@ -17,7 +17,7 @@ ModAPI.registerAPI("ICore", {
 	Integration: IntegrationAPI,
 	
 	registerEnergyPack: registerStoragePack,
-	requireGlobal: function(command){
+	requireGlobal: function(command) {
 		return eval(command);
 	}
 });

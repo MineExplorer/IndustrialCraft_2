@@ -8,7 +8,7 @@ TileRenderer.registerFullRotationModel(BlockID.fluidDistributor, 6, [["fluid_dis
 
 MachineRegistry.setMachineDrop("fluidDistributor", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.fluidDistributor, count: 1, data: 0}, [
 		" a ",
 		" # ",
@@ -29,12 +29,12 @@ var guiFluidDistributor = new UI.StandartWindow({
 
 	elements: {
 		"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, value: 0, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
-		"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE, isValid: function(id, count, data){
+		"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE, isValid: function(id, count, data) {
 			return LiquidLib.getFullItem(id, data, "water")? true : false;
 		}},
-		"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE, isValid: function(){return false;}},
+		"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE, isValid: function() {return false;}},
 		"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "fluid_distributor_button", scale: GUI_SCALE, clicker: {
-			onClick: function(container, tile){
+			onClick: function(container, tile) {
 				tile.data.inverted = !tile.data.inverted;
 				TileRenderer.mapAtCoords(tile.x, tile.y, tile.z, BlockID.fluidDistributor, tile.data.meta + 6*tile.data.inverted);
 			}
@@ -44,7 +44,7 @@ var guiFluidDistributor = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiFluidDistributor, "Fluid Distributor");
 });
 
@@ -54,19 +54,19 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 		inverted: false
 	},
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiFluidDistributor;
 	},
 
-	init: function(){
+	init: function() {
 		this.liquidStorage.setLimit(null, 1);
 		this.renderModel();
 	},
 	
 	addLiquidToItem: MachineRegistry.addLiquidToItem,
 	
-	tick: function(){
-		if(this.data.inverted){
+	tick: function() {
+		if (this.data.inverted) {
 			this.container.setText("text2", Translation.translate("Concentrate"));
 		} else {
 			this.container.setText("text2", Translation.translate("Distribute"));
@@ -79,9 +79,9 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 		this.addLiquidToItem(liquid, slot1, slot2);
 		
 		liquid = storage.getLiquidStored();
-		if(liquid){
+		if (liquid) {
 			var input = StorageInterface.getNearestLiquidStorages(this, this.data.meta, !this.data.inverted);
-			for(var side in input){
+			for (var side in input) {
 				StorageInterface.transportLiquid(liquid, 0.25, this, input[side], parseInt(side));
 			}
 		}
@@ -89,16 +89,14 @@ MachineRegistry.registerPrototype(BlockID.fluidDistributor, {
 		storage.updateUiScale("liquidScale", liquid);
 	},
 	
-	wrenchClick: function(id, count, data, coords){
-		this.setFacing(coords);
+	wrenchClick: function(id, count, data, coords) {
+		this.setFacing(coords.side);
 	},
-	
-	setFacing: MachineRegistry.setFacing,
-	
-	renderModel: function(){
+		
+	renderModel: function() {
 		TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + 6*this.data.inverted);
 	},
-	destroy: function(){
+	destroy: function() {
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	},
 });
@@ -110,14 +108,14 @@ StorageInterface.createInterface(BlockID.fluidDistributor, {
 		"slot1": {input: true},
 		"slot2": {output: true}
 	},
-	isValidInput: function(item){
+	isValidInput: function(item) {
 		return LiquidLib.getFullItem(item.id, item.data, "water")? true : false;
 	},
-	canReceiveLiquid: function(liquid, side){
+	canReceiveLiquid: function(liquid, side) {
 		let data = this.tileEntity.data;
 		return (side == data.meta) ^ data.inverted;
 	},
-	canTransportLiquid: function(liquid, side){
+	canTransportLiquid: function(liquid, side) {
 		return true;
 	}
 });

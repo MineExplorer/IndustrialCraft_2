@@ -10,7 +10,7 @@ ItemName.addTierTooltip("cropMatron", 1);
 
 MachineRegistry.setMachineDrop("cropMatron", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
     Recipes.addShaped({id: BlockID.cropMatron, count: 1, data: 0}, [
         "cxc",
         "a#a",
@@ -18,10 +18,10 @@ Callback.addCallback("PreLoaded", function(){
     ], ['#', BlockID.machineBlockBasic, 0, 'x', 54, -1, 'c', ItemID.circuitBasic, 0, 'a', ItemID.cellEmpty, 0, 'n', ItemID.cropStick, 0]);
 });
 
-function isFertilizer(id){
+function isFertilizer(id) {
 	return id == ItemID.fertilizer;
 }
-function isWeedEx(id){
+function isWeedEx(id) {
 	return id == ItemID.weedEx;
 }
 
@@ -43,25 +43,25 @@ var newGuiMatronObject = {
         "slotEnergy": {type: "slot", x: 804, y: 265, isValid: MachineRegistry.isValidEUStorage},
         "slotFertilizer0": {type: "slot", x: 441, y: 75, bitmap: "slot_dust", isValid: isFertilizer},
         "slotWeedEx0": {type: "slot", x: 441, y: 155, bitmap: "slot_weedEx", isValid: isWeedEx},
-        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "slot_cell", isValid: function(id, count, data){
+        "slotWaterIn": {type: "slot", x: 441, y: 235,  bitmap: "slot_cell", isValid: function(id, count, data) {
             return LiquidLib.getItemLiquid(id, data) == "water";
         }},
-        "slotWaterOut": {type: "slot", x: 441, y: 295, isValid: function(){
+        "slotWaterOut": {type: "slot", x: 441, y: 295, isValid: function() {
             return false;
         }}
 	}
 };
 
-for(let i = 1; i < 7; i++){
+for (let i = 1; i < 7; i++) {
     newGuiMatronObject.elements["slotWeedEx" + i] = {type: "slot", x: 441 + 60*i, y: 155, isValid: isWeedEx};
 }
-for(let i = 1; i < 7; i++){
+for (let i = 1; i < 7; i++) {
     newGuiMatronObject.elements["slotFertilizer" + i] = {type: "slot", x: 441 + 60*i, y: 75, isValid: isFertilizer};
 }
 
 var guiCropMatron = new UI.StandartWindow(newGuiMatronObject);
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
     MachineRegistry.updateGuiHeader(guiCropMatron, "Crop Matron");
 });
 
@@ -76,31 +76,31 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
         scanZ: -5
     },
 
-    getGuiScreen: function(){
+    getGuiScreen: function() {
         return guiCropMatron;
     },
 
-    init: function(){
+    init: function() {
 		this.liquidStorage.setLimit("water", 2);
 		this.renderModel();
     },
 	
 	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
 	
-	click: function(id, count, data, coords){
-		if(Entity.getSneaking(player)){
+	click: function(id, count, data, coords) {
+		if (Entity.getSneaking(player)) {
 			return this.getLiquidFromItem("water", {id: id, count: count, data: data}, null, true);
 		}
 	},
 	
-    tick: function(){
+    tick: function() {
         StorageInterface.checkHoppers(this);
 
         var slot1 = this.container.getSlot("slotWaterIn");
 		var slot2 = this.container.getSlot("slotWaterOut");
 		this.getLiquidFromItem("water", slot1, slot2);
 		
-        if(this.data.energy >= 31){
+        if (this.data.energy >= 31) {
             this.scan();
             this.setActive(true);
         } else {
@@ -115,7 +115,7 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
         this.liquidStorage.updateUiScale("liquidScale", "water");
     },
 
-    scan: function(){
+    scan: function() {
         this.data.scanX++;
         if (this.data.scanX > 5) {
             this.data.scanX = -5;
@@ -131,41 +131,41 @@ MachineRegistry.registerElectricMachine(BlockID.cropMatron, {
         this.data.energy -= 1;
 
         var tileentity = World.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
-        if(tileentity && tileentity.crop){
+        if (tileentity && tileentity.crop) {
             var slotFertilizer = this.getSlot("slotFertilizer");
             var weedExSlot = this.getSlot("slotWeedEx");
-            if(slotFertilizer && tileentity.applyFertilizer(false)){
+            if (slotFertilizer && tileentity.applyFertilizer(false)) {
                 slotFertilizer.count--;
                 this.data.energy -= 10;
             }
             var liquidAmount = this.liquidStorage.getAmount("water");
-            if(liquidAmount > 0){
+            if (liquidAmount > 0) {
                 amount = tileentity.applyHydration(liquidAmount);
-                if(amount > 0){
+                if (amount > 0) {
                     this.liquidStorage.getLiquid("water", amount / 1000);
                 }
             }
-            if(weedExSlot && tileentity.applyWeedEx(weedExSlot.id, false)){
+            if (weedExSlot && tileentity.applyWeedEx(weedExSlot.id, false)) {
                 this.data.energy -= 10;
-                if(++weedExSlot.data >= Item.getMaxDamage(weedExSlot.id)) weedExSlot.id = 0;
+                if (++weedExSlot.data >= Item.getMaxDamage(weedExSlot.id)) weedExSlot.id = 0;
             }
             this.container.validateAll();
         }
     },
 
-    getSlot: function(type){
-        for(let i = 0; i < 7; i++){
+    getSlot: function(type) {
+        for (let i = 0; i < 7; i++) {
             var slot = this.container.getSlot(type + i);
-            if(slot.id) return slot;
+            if (slot.id) return slot;
         }
         return null;
     },
 
-    getTier: function(){
+    getTier: function() {
         return this.data.power_tier;
     },
 
-    getEnergyStorage: function(){
+    getEnergyStorage: function() {
         return this.data.energy_storage;
     },
 
@@ -176,16 +176,16 @@ TileRenderer.setRotationPlaceFunction(BlockID.cropMatron, true);
 
 StorageInterface.createInterface(BlockID.cropMatron, {
 	slots: {
-		"slotFertilizer^0-6": {input: true, isValid: function(item){
+		"slotFertilizer^0-6": {input: true, isValid: function(item) {
 			return item.id == ItemID.fertilizer;
 		}},
-		"slotWeedEx^0-6": {input: true, isValid: function(item){
+		"slotWeedEx^0-6": {input: true, isValid: function(item) {
 			return item.id == ItemID.weedEx;
         }},
-        "slotWaterIn": {input: true, isValid: function(item){
+        "slotWaterIn": {input: true, isValid: function(item) {
 			return LiquidLib.getItemLiquid(item.id, item.data) == "water";
         }},
         "slotWaterOut": {output: true}
     },
-    canReceiveLiquid: function(liquid, side){return liquid == "water"}
+    canReceiveLiquid: function(liquid, side) {return liquid == "water"}
 });

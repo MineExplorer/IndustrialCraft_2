@@ -1,7 +1,7 @@
 var currentUIscreen;
-Callback.addCallback("NativeGuiChanged", function(screenName){
+Callback.addCallback("NativeGuiChanged", function(screenName) {
 	currentUIscreen = screenName;
-	if(screenName != "in_game_play_screen" && UIbuttons.container){
+	if (screenName != "in_game_play_screen" && UIbuttons.container) {
 		UIbuttons.container.close();
 	}
 });
@@ -24,38 +24,38 @@ var UIbuttons = {
 		elements: {}
 	}),
 	
-	setArmorButton: function(id, name){
+	setArmorButton: function(id, name) {
 		var data = {type: 0, name: name};
-		if(!this.data[id]){
+		if (!this.data[id]) {
 			this.data[id] = [data]
 		} else {
 			this.data[id].push(data);
 		}
 	},
 	
-	setToolButton: function(id, name, notHidden){
+	setToolButton: function(id, name, notHidden) {
 		var data = {type: 1, name: name, hidden: !notHidden};
-		if(!this.data[id]){
+		if (!this.data[id]) {
 			this.data[id] = [data]
 		} else {
 			this.data[id].push(data);
 		}
 	},
 	
-	getButtons: function(id){
+	getButtons: function(id) {
 		return this.data[id];
 	},
 	
-	registerButton: function(name, properties){
+	registerButton: function(name, properties) {
 		buttonContent[name] = properties;
 		buttonMap[name] = false;
 	},
 	
-	registerSwitchFunction: function(id, func){
+	registerSwitchFunction: function(id, func) {
 		this.onSwitch[id] = func;
 	},
 	
-	onButtonUpdate: function(name, func){
+	onButtonUpdate: function(name, func) {
 		this.onUpdate[name] = func;
 	}
 }
@@ -75,21 +75,21 @@ var buttonContent = {
 		bitmap2: "button_nightvision_off",
 		scale: 50,
 		clicker: {
-			onClick: function(){
+			onClick: function() {
 				var armor = Player.getArmorSlot(0);
 				var extra = armor.extra;
-				if(extra){
+				if (extra) {
 					var nightvision = extra.getBoolean("nv");
 				}
-				else{
+				else {
 					var nightvision = false;
 					extra = new ItemExtraData();
 				}
-				if(nightvision){
+				if (nightvision) {
 					extra.putBoolean("nv", false);
 					Game.message("§4" + Translation.translate("Nightvision mode disabled"));
 				}
-				else{
+				else {
 					extra.putBoolean("nv", true);
 					Game.message("§2" + Translation.translate("Nightvision mode enabled"));
 				}
@@ -110,17 +110,17 @@ var buttonContent = {
 		bitmap: "button_hover_off",
 		scale: 50,
 		clicker: {
-			onClick: function(){
+			onClick: function() {
 				var vel = Player.getVelocity();
 				var armor = Player.getArmorSlot(1);
-				if(vel.y.toFixed(4) != fallVelocity && ChargeItemRegistry.getEnergyStored(armor) >= 8){
+				if (vel.y.toFixed(4) != fallVelocity && ChargeItemRegistry.getEnergyStored(armor) >= 8) {
 					var extra = armor.extra || new ItemExtraData();
 					var hover = extra.getBoolean("hover");
-					if(hover){
+					if (hover) {
 						extra.putBoolean("hover", false);
 						Game.message("§4" + Translation.translate("Hover mode disabled"));
 					}
-					else{
+					else {
 						extra.putBoolean("hover", true);
 						Game.message("§2" + Translation.translate("Hover mode enabled"));
 					}
@@ -136,12 +136,13 @@ var buttonContent = {
 		bitmap2: "button_jump_off",
 		scale: 50,
 		clicker: {
-			onClick: function(){
+			onClick: function() {
 				var armor = Player.getArmorSlot(3);
 				var energyStored = ChargeItemRegistry.getEnergyStored(armor);
-				if(energyStored >= 1000 && Player.getVelocity().y.toFixed(4) == fallVelocity){
-					Player.addVelocity(0, 1.4, 0);
-					ChargeItemRegistry.setEnergyStored(armor, energyStored - 1000);
+				var vel = Player.getVelocity();
+				if (energyStored >= 4000 && vel.y.toFixed(4) == fallVelocity) {
+					Player.setVelocity(vel.x*3.5, 1.3, vel.z*3.5);
+					ChargeItemRegistry.setEnergyStored(armor, energyStored - 4000);
 					Player.setArmorSlot(3, armor.id, 1, armor.data, armor.extra);
 				}
 			}
@@ -154,9 +155,9 @@ var buttonContent = {
 		bitmap2: "button_switch_touched",
 		scale: 25,
 		clicker: {
-			onClick: function(){
+			onClick: function() {
 				var item = Player.getCarriedItem();
-				if(UIbuttons.onSwitch[item.id]){
+				if (UIbuttons.onSwitch[item.id]) {
 					UIbuttons.onSwitch[item.id](item);
 				}
 			}
@@ -166,43 +167,43 @@ var buttonContent = {
 
 UIbuttons.Window.setAsGameOverlay(true);
 
-UIbuttons.onButtonUpdate("button_hover", function(element){
+UIbuttons.onButtonUpdate("button_hover", function(element) {
 	var armor = Player.getArmorSlot(1);
 	var extra = armor.extra;
-	if(extra && extra.getBoolean("hover")){
+	if (extra && extra.getBoolean("hover")) {
 		element.bitmap = "button_hover_on";
 	} else {
 		element.bitmap = "button_hover_off";
 	}
 });
 
-function updateUIbuttons(){
+function updateUIbuttons() {
 	var elements = UIbuttons.Window.content.elements;
-	for(var name in buttonMap){
-		if(buttonMap[name]){
-			if(!elements[name]){
+	for (var name in buttonMap) {
+		if (buttonMap[name]) {
+			if (!elements[name]) {
 				elements[name] = buttonContent[name];
 			}
 			var element = elements[name];
 			var func = UIbuttons.onUpdate[name];
-			if(func) func(element);
+			if (func) func(element);
 			element.x = 0;
 			buttonMap[name] = false;
 		}
-		else{
+		else {
 			elements[name] = null;
 		}
 	}
 }
 
-let jetpackLoop = SoundAPI.addSoundPlayer("Tools/JetpackLoop.ogg", true, 1);
-Callback.addCallback("LocalTick", function(){
+
+Callback.addCallback("LocalTick", function() {
 	var armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
-	for(var i in armor){
+	for (var i in armor) {
 		var buttons = UIbuttons.getButtons(armor[i].id);
-		for(var i in buttons){
+		for (var i in buttons) {
 			var button = buttons[i];
-			if(button.type == 0){
+			if (button.type == 0) {
 				buttonMap[button.name] = true;
 				UIbuttons.isEnabled = true;
 			}
@@ -210,64 +211,61 @@ Callback.addCallback("LocalTick", function(){
 	}
 	var item = Player.getCarriedItem();
 	var buttons = UIbuttons.getButtons(item.id);
-	for(var i in buttons){
+	for (var i in buttons) {
 		var button = buttons[i];
-		if(button.type == 1 && (!button.hidden || Entity.getSneaking(Player.get()))){
+		if (button.type == 1 && (!button.hidden || Entity.getSneaking(Player.get()))) {
 			buttonMap[button.name] = true;
 			UIbuttons.isEnabled = true;
 		}
 	}
-	if(UIbuttons.isEnabled && currentUIscreen == "in_game_play_screen"){
+	if (UIbuttons.isEnabled && currentUIscreen == "in_game_play_screen") {
 		updateUIbuttons();
-		if(!UIbuttons.container || !UIbuttons.container.isOpened()){
+		if (!UIbuttons.container || !UIbuttons.container.isOpened()) {
 			UIbuttons.container = new UI.Container();
 			UIbuttons.container.openAs(UIbuttons.Window);
 		}
-		var playSound = false;
 		var armor = armor[1];
-		var hover = armor.extra? armor.extra.getBoolean("hover") : false;
+		var hoverMode = armor.extra? armor.extra.getBoolean("hover") : false;
+		var playSound = hoverMode;
 		var energyStored = ChargeItemRegistry.getEnergyStored(armor);
-		if(energyStored >= 8 && UIbuttons.container.isElementTouched("button_fly")){
+		if (energyStored >= 8 && UIbuttons.container.isElementTouched("button_fly")) {
 			var vel = Player.getVelocity();
-			if(vel.y > -1.2){
+			if (vel.y > -1.2) {
 				Utils.resetFallHeight();
 			}
 
 			var y = Player.getPosition().y;
-			if(y < 256){
+			if (y < 256) {
 				var vy = Math.min(32, 265 - y) / 160; // max 0.2
-				if(hover){
+				if (hoverMode) {
 					ChargeItemRegistry.setEnergyStored(armor, energyStored - 2);
 					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
-					if(vel.y < 0.2){
+					if (vel.y < 0.2) {
 						Player.addVelocity(0, Math.min(vy, 0.2 - vel.y), 0);
 					}
 				}
 				else {
 					ChargeItemRegistry.setEnergyStored(armor, energyStored - 8);
 					Player.setArmorSlot(1, armor.id, 1, armor.data, armor.extra);
-					if(vel.y < 0.67){
+					if (vel.y < 0.67) {
 						Player.addVelocity(0, Math.min(vy, 0.67 - vel.y), 0);
 					}
 				}
 			}
 			playSound = true;
-		} else if(hover){
-			playSound = true;
 		}
-		if(playSound && SoundAPI.isSoundEnabled() && !jetpackLoop.isPlaying()){
-			if(hover){
-				jetpackLoop.setVolume(0.8);
+		if (playSound && Config.soundEnabled) {
+			if (hoverMode) {
+				SoundManager.startPlaySound(AudioSource.PLAYER, "JetpackLoop.ogg", 0.8);
 			} else {
-				jetpackLoop.setVolume(1);
+				SoundManager.startPlaySound(AudioSource.PLAYER, "JetpackLoop.ogg", 1);
 			}
-			jetpackLoop.start();
 		}
-		if(!playSound && jetpackLoop.isPlaying()){
-			jetpackLoop.stop();
+		if (!playSound) {
+			SoundManager.stopPlaySound(Player.get(), "JetpackLoop.ogg");
 		}
 	}
-	else if(UIbuttons.container){
+	else if (UIbuttons.container) {
 		UIbuttons.container.close();
 		UIbuttons.container = null;
 	}

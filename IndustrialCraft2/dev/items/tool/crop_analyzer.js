@@ -22,20 +22,20 @@ var guiAnalyserObject = {
 	],
 	
 	elements: {
-		"closeButton": {type: "button", x: 672, y: 77, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {onClick: function(container){
+		"closeButton": {type: "button", x: 672, y: 77, bitmap: "close_button_small", scale: GUI_SCALE, clicker: {onClick: function(container) {
 			AgriculturalAnalyser.dropItems(container);
             AgriculturalAnalyser.hideAllValues(container);
             container.close();
 		}}},
 		"textName": {type: "text", font: {size: 18}, x: 432, y: 86, width: 256, height: 42, text: Translation.translate("Crop Analyzer")},
-		"slotSeedIn": {type: "slot", x: 265, y: 75, size: GUI_SCALE * 16, isValid: function(id, count, data){
+		"slotSeedIn": {type: "slot", x: 265, y: 75, size: GUI_SCALE * 16, isValid: function(id, count, data) {
 			return id == ItemID.cropSeedBag;
 		}},
-		"slotSeedOut": {type: "slot", x: 360, y: 75, size: GUI_SCALE * 16, isValid: function(){return false;}},
+		"slotSeedOut": {type: "slot", x: 360, y: 75, size: GUI_SCALE * 16, isValid: function() {return false;}},
 		"slotEnergy": {type: "slot", x: 615, y: 75, size: GUI_SCALE * 16, isValid: MachineRegistry.isValidEUStorage}
 	}
 };
-for(var i = 0; i < 10; i++){
+for (var i = 0; i < 10; i++) {
 	guiAnalyserObject.elements["slot" + i] = {type: "invSlot", x: 270 + i * 45, y: 455, size:GUI_SCALE * guiAddConst, index: i};
 }
 var guiAgriculturalAnalyzer = new UI.Window(guiAnalyserObject);
@@ -43,20 +43,20 @@ guiAgriculturalAnalyzer.setInventoryNeeded(true);
 
 var AgriculturalAnalyser = {
     container: null,
-    tick: function(){
+    tick: function() {
         var container = AgriculturalAnalyser.container;
-        if(!container) return;
+        if (!container) return;
 
         var slotIn = container.getSlot("slotSeedIn");
         var slotOut = container.getSlot("slotSeedOut");
         var slotEnergy = container.getSlot("slotEnergy");
         var currentEnergy = ChargeItemRegistry.getEnergyStored(slotEnergy, "Eu");
 
-        if(slotIn.id && !slotOut.id && currentEnergy){
+        if (slotIn.id && !slotOut.id && currentEnergy) {
             var level = slotIn.extra.getInt("scan");
-            if(level < 4){
+            if (level < 4) {
                 var ned = AgriculturalAnalyser.energyForLevel(level);
-                if(currentEnergy > ned){
+                if (currentEnergy > ned) {
                     ICTool.dischargeItem(slotEnergy, ned);
                     slotIn.extra.putInt("scan", level + 1);
                 }
@@ -69,13 +69,13 @@ var AgriculturalAnalyser = {
 
             AgriculturalAnalyser.showAllValues(container, slotOut);
             container.validateAll();
-        }else if(!slotOut.id){
+        } else if (!slotOut.id) {
             AgriculturalAnalyser.hideAllValues(container);
         }
     },
-    hideAllValues: function(container){
+    hideAllValues: function(container) {
         var content = container.getGuiContent();
-        if(!content) return;
+        if (!content) return;
         var elements = content.elements;
         elements["cropName"] = null;
         elements["textTier"] = null;
@@ -91,13 +91,13 @@ var AgriculturalAnalyser = {
         elements["gainText"] = null;
         elements["resistText"] = null;
     },
-    showAllValues: function(container, seedBagSlot){
+    showAllValues: function(container, seedBagSlot) {
         var elements = container.getGuiContent().elements;
         var font = {size: 18, color: Color.WHITE}
         var level = seedBagSlot.extra.getInt("scan");
         var crop = AgricultureAPI.cropCards[seedBagSlot.data];
 
-        switch(level){
+        switch(level) {
             case 4:
                 this.showStats(seedBagSlot, elements);
             case 3:
@@ -109,7 +109,7 @@ var AgriculturalAnalyser = {
                 this.showName(crop, font, elements);
         }
     },
-    showStats: function(slot, elements){
+    showStats: function(slot, elements) {
         var growth = slot.extra.getInt("growth");
         var gain = slot.extra.getInt("gain");
         var resist = slot.extra.getInt("resistance");
@@ -122,26 +122,26 @@ var AgriculturalAnalyser = {
         elements["resistText"] = {type: "text", font: {size: 18, color: Color.rgb(0, 255, 255)}, x: statsXpos, y: 320, width: 256, height: 42, text: "Resistance: "};
         elements["resist"] = {type: "text", font: {size: 18, color: Color.rgb(0, 255, 255)}, x: statsXpos, y: 360, width: 256, height: 42, text: resist.toString()};
     },
-    showDiscoveredBy: function(crop, font, elements){
+    showDiscoveredBy: function(crop, font, elements) {
         var discBy = crop.getDiscoveredBy();
         elements["discoveredByText"] = {type: "text", font: font, x: 270, y: 240, width: 256, height: 42, text: "Discovered by: "};
         elements["discoveredBy"] = {type: "text", font: font, x: 270, y: 280, width: 256, height: 42, text: discBy};
     },
-    showTier: function(crop, font, elements){
+    showTier: function(crop, font, elements) {
         var tier = "Tier: " + AgriculturalAnalyser.getStringTier(crop.properties.tier);
         elements["textTier"] = {type: "text", font: font, x: 270, y: 200, width: 256, height: 42, text: tier};
     },
-    showAttributes: function(crop, font, elements){
+    showAttributes: function(crop, font, elements) {
         var arr = AgriculturalAnalyser.getAttributesText(crop.attributes)
-        for(var i in arr){
+        for (var i in arr) {
             elements["attributes"+i] = {type: "text", font: font, x: 270, y: 320 + 40 * i, width: 256, height: 42, text: arr[i]};
         }
     },
-    showName: function(crop, font, elements){
+    showName: function(crop, font, elements) {
         var name = AgriculturalAnalyser.getSeedName(crop.id);
         elements["cropName"] = {type: "text", font: font, x: 270, y: 160, width: 256, height: 42, text: name};
     },
-    getStringTier: function(tier){
+    getStringTier: function(tier) {
         switch (tier) {
             default: {
                 return "0";
@@ -196,7 +196,7 @@ var AgriculturalAnalyser = {
             }
         }
     },
-    energyForLevel: function(level){
+    energyForLevel: function(level) {
         switch (level) {
             default: {
                 return 10;
@@ -212,29 +212,29 @@ var AgriculturalAnalyser = {
             }
         }
     },
-    getSeedName: function(name){
+    getSeedName: function(name) {
         return Translation.translate(name);
     },
-    getAttributesText: function(attributes){
+    getAttributesText: function(attributes) {
         var arr = ["", "", ""];
-        for(var i in attributes){
+        for (var i in attributes) {
             var indForPush = Math.floor((i) / 3);
             arr[indForPush] += attributes[i]+' ';
         }
         return arr;
     },
-    dropItems: function(container){
+    dropItems: function(container) {
         var coords = Player.getPosition();
         var slots = ["slotSeedIn", "slotSeedOut", "slotEnergy"]
-        for(var i in slots){
+        for (var i in slots) {
             var slot = container.getSlot(slots[i]);
             nativeDropItem(coords.x, coords.y, coords.z, 0, slot.id, slot.count, slot.data, slot.extra);
             slot.id = 0;
         }
         container.validateAll();
     },
-    showCropValues: function(te){
-        switch(te.data.scanLevel){
+    showCropValues: function(te) {
+        switch(te.data.scanLevel) {
             case 4:
                 Game.message("Growth: " + te.data.statGrowth);
                 Game.message("Gain: " + te.data.statGain);
@@ -246,17 +246,17 @@ var AgriculturalAnalyser = {
                 Game.message(Translation.translate(te.crop.id));
         }
     },
-    useFunction: function(coords, item, block){
-        if(block.id == BlockID.crop){
+    useFunction: function(coords, item, block) {
+        if (block.id == BlockID.crop) {
             var tileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
-            if(!tileEntity.crop) return;
+            if (!tileEntity.crop) return;
             AgriculturalAnalyser.showCropValues(tileEntity);
         } else {
             AgriculturalAnalyser.noTargetUseFunction(item);
         }
     },
-    noTargetUseFunction: function(item){
-        if(!AgriculturalAnalyser.container) AgriculturalAnalyser.container = new UI.Container();
+    noTargetUseFunction: function(item) {
+        if (!AgriculturalAnalyser.container) AgriculturalAnalyser.container = new UI.Container();
         AgriculturalAnalyser.container.openAs(guiAgriculturalAnalyzer);
     }
 };
@@ -267,7 +267,7 @@ Callback.addCallback("LevelLoaded", function() {
 });
 
 Callback.addCallback("MinecraftActivityStopped", function() {
-	if(AgriculturalAnalyser.container && AgriculturalAnalyser.container.isOpened()){
+	if (AgriculturalAnalyser.container && AgriculturalAnalyser.container.isOpened()) {
 		AgriculturalAnalyser.container.close();
 		AgriculturalAnalyser.container = null;
 	}

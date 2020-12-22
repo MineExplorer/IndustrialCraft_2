@@ -19,4 +19,4 @@ Recipes.addShapeless({id: ItemID.electricWrench, count: 1, data: 27}, [
 ]);
 
 ICTool.registerWrench(ItemID.wrenchBronze, 0.8);
-ICTool.registerWrench(ItemID.electricWrench, 1, 50);
+ICTool.registerWrench(ItemID.electricWrench, 1, 100);

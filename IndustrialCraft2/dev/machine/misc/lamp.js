@@ -15,7 +15,7 @@ Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1, y: 1, z: 1/16}
 Block.setBlockShape(BlockID.luminator, {x: 15/16, y: 0, z: 0}, {x: 1, y: 1, z: 1}, 4);
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1/16, y: 1, z: 1}, 5);
 
-Block.registerDropFunction("luminator", function(coords, blockID, blockData, level, enchant){
+Block.registerDropFunction("luminator", function(coords, blockID, blockData, level, enchant) {
 	return [[blockID, 1, 1]];
 });
 
@@ -42,12 +42,12 @@ Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 0, z: 0}, {x: 1, y: 1, z: 1/
 Block.setBlockShape(BlockID.luminator_on, {x: 15/16, y: 0, z: 0}, {x: 1, y: 1, z: 1}, 4);
 Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 0, z: 0}, {x: 1/16, y: 1, z: 1}, 5);
 
-Block.registerDropFunction("luminator_on", function(coords, blockID, blockData, level, enchant){
+Block.registerDropFunction("luminator_on", function(coords, blockID, blockData, level, enchant) {
 	return [[BlockID.luminator, 1, 1]];
 });
 
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.luminator, count: 8, data: 1}, [
 		"cxc",
 		"aba",
@@ -61,17 +61,17 @@ MachineRegistry.registerElectricMachine(BlockID.luminator, {
 		isActive: false
 	},
 	
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return 100;
 	},
 	
-	click: function(id, count, data, coords){
+	click: function(id, count, data, coords) {
 		this.data.isActive = true;
 		return true;
 	},
 	
-	tick: function(type, src){
-		if(this.data.isActive && this.data.energy >= 0.25){
+	tick: function(type, src) {
+		if (this.data.isActive && this.data.energy >= 0.25) {
 			var x = this.x, y = this.y, z = this.z;
 			var blockData = World.getBlock(x, y, z).data;
 			var data = this.data;
@@ -88,11 +88,11 @@ MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 		isActive: true
 	},
 	
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return 100;
 	},
 	
-	disable: function(){
+	disable: function() {
 		var x = this.x, y = this.y, z = this.z;
 		var blockData = World.getBlock(x, y, z).data;
 		var data = this.data;
@@ -102,14 +102,14 @@ MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 		tile.data = data;
 	},
 	
-	click: function(id, count, data, coords){
+	click: function(id, count, data, coords) {
 		this.data.isActive = false;
 		this.disable();
 		return true;
 	},
 	
-	tick: function(type, src){
-		if(this.data.energy < 0.25){
+	tick: function(type, src) {
+		if (this.data.energy < 0.25) {
 			this.disable();
 		} else {
 			this.data.energy -= 0.25;
@@ -117,12 +117,12 @@ MachineRegistry.registerElectricMachine(BlockID.luminator_on, {
 	}
 });
 
-Block.registerPlaceFunction("luminator", function(coords, item, block){
+Block.registerPlaceFunction("luminator", function(coords, item, block) {
 	var x = coords.relative.x
 	var y = coords.relative.y
 	var z = coords.relative.z
 	block = World.getBlockID(x, y, z)
-	if(GenerationUtils.isTransparentBlock(block)){
+	if (GenerationUtils.isTransparentBlock(block)) {
 		World.setBlock(x, y, z, item.id, coords.side);
 		World.playSound(x, y, z, "dig.stone", 1, 0.8)
 		World.addTileEntity(x, y, z);

@@ -4,7 +4,8 @@ Block.createSpecialType({
 	destroytime: 5,
 	explosionres: 30,
 	lightopacity: 15,
-	renderlayer: 2
+	renderlayer: 2,
+	sound: "stone"
 }, "machine");
 
 IDRegistry.genBlockID("machineBlockBasic");
@@ -23,7 +24,7 @@ ToolAPI.registerBlockMaterial(BlockID.machineBlockAdvanced, "stone", 1, true);
 Block.setDestroyLevel("machineBlockAdvanced", 1);
 ToolLib.addBlockDropOnExplosion("machineBlockAdvanced");
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.machineBlockBasic, count: 1, data: 0}, [
 		"xxx",
 		"x x",

@@ -10,12 +10,12 @@ ItemName.addTierTooltip("metalFormer", 1);
 
 MachineRegistry.setMachineDrop("metalFormer", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
-	function isToolboxEmpty(slot){
+Callback.addCallback("PreLoaded", function() {
+	function isToolboxEmpty(slot) {
 		let container = BackpackRegistry.containers["d" + slot.data];
-		if(container){
-			for(let i = 1; i <= 10; i++){
-				if(container.getSlot("slot"+i).id != 0){
+		if (container) {
+			for (let i = 1; i <= 10; i++) {
+				if (container.getSlot("slot"+i).id != 0) {
 					return false;
 				}
 			}
@@ -27,9 +27,9 @@ Callback.addCallback("PreLoaded", function(){
 		"b#b",
 		"ccc"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'b', ItemID.toolbox, -1, 'c', ItemID.coil, 0],
-	function(api, field, result){
-		if(isToolboxEmpty(field[3]) && isToolboxEmpty(field[5])){
-			for (var i in field){
+	function(api, field, result) {
+		if (isToolboxEmpty(field[3]) && isToolboxEmpty(field[5])) {
+			for (var i in field) {
 				api.decreaseFieldSlot(i);
 			}
 		}
@@ -93,27 +93,27 @@ var guiMetalFormer = new UI.StandartWindow({
 		"progressScale": {type: "scale", x: 530, y: 164, direction: 0, value: 0.5, bitmap: "metalformer_bar_scale", scale: GUI_SCALE},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 79, 
-			isValid: function(id, count, data){
+			isValid: function(id, count, data) {
 				return MachineRecipeRegistry.hasRecipeFor("metalFormer0", id) ||
 				MachineRecipeRegistry.hasRecipeFor("metalFormer1", id) ||
 				MachineRecipeRegistry.hasRecipeFor("metalFormer2", id);
 			}
 		},
 		"slotEnergy": {type: "slot", x: 441, y: 218, isValid: MachineRegistry.isValidEUStorage},
-		"slotResult": {type: "slot", x: 717, y: 148, isValid: function(){return false;}},
+		"slotResult": {type: "slot", x: 717, y: 148, isValid: function() {return false;}},
 		"slotUpgrade1": {type: "slot", x: 870, y: 60, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade2": {type: "slot", x: 870, y: 119, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade3": {type: "slot", x: 870, y: 178, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade4": {type: "slot", x: 870, y: 237, isValid: UpgradeAPI.isValidUpgrade},
 		"button": {type: "button", x: 572, y: 210, bitmap: "metal_former_button_0", scale: GUI_SCALE, clicker: {
-			onClick: function(container, tile){
+			onClick: function(container, tile) {
 				tile.data.mode = (tile.data.mode + 1) % 3;
 			}
 		}}
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiMetalFormer, "Metal Former");
 });
 
@@ -131,24 +131,24 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 	
 	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"],
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiMetalFormer;
 	},
 	
-	getTier: function(){
+	getTier: function() {
 		return this.data.power_tier;
 	},
 	
-	resetValues: function(){
+	resetValues: function() {
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
 		this.data.work_time = this.defaultValues.work_time;
 	},
 	
-	tick: function(){
+	tick: function() {
 		var content = this.container.getGuiContent();
-		if(content){
+		if (content) {
 			content.elements.button.bitmap = "metal_former_button_" + this.data.mode;
 		}
 		this.resetValues();
@@ -158,13 +158,13 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		var sourceSlot = this.container.getSlot("slotSource");
 		var resultSlot = this.container.getSlot("slotResult");
 		var result = MachineRecipeRegistry.getRecipeResult("metalFormer" + this.data.mode, sourceSlot.id)
-		if(result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)){
-			if(this.data.energy >= this.data.energy_consumption){
+		if (result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
+			if (this.data.energy >= this.data.energy_consumption) {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
 			}
-			if(this.data.progress.toFixed(3) >= 1){
+			if (this.data.progress.toFixed(3) >= 1) {
 				sourceSlot.count -= 1;
 				resultSlot.id = result.id;
 				resultSlot.count += result.count;
@@ -185,7 +185,7 @@ MachineRegistry.registerElectricMachine(BlockID.metalFormer, {
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 	
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return this.data.energy_storage;
 	},
 	
@@ -199,7 +199,7 @@ StorageInterface.createInterface(BlockID.metalFormer, {
 		"slotSource": {input: true},
 		"slotResult": {output: true}
 	},
-	isValidInput: function(item){
+	isValidInput: function(item) {
 		return MachineRecipeRegistry.hasRecipeFor("metalFormer0", item.id) ||
 		MachineRecipeRegistry.hasRecipeFor("metalFormer1", item.id) ||
 		MachineRecipeRegistry.hasRecipeFor("metalFormer2", item.id);

@@ -18,9 +18,9 @@ BackpackRegistry.register(ItemID.toolbox, {
 	slots: 10,
 	inRow: 5,
 	slotsCenter: true,
-	isValidItem: function(id, count, data){
-		if(toolbox_items.indexOf(id) != -1) return true;
-		if(ToolAPI.getToolData(id) || ICTool.getWrenchData(id)) return true;
+	isValidItem: function(id, count, data) {
+		if (toolbox_items.indexOf(id) != -1) return true;
+		if (ToolAPI.getToolData(id) || ICTool.getWrenchData(id)) return true;
 		return false;
 	}
 });

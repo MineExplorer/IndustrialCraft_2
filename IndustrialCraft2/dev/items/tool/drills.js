@@ -21,10 +21,10 @@ ChargeItemRegistry.registerExtraItem(ItemID.iridiumDrill, "Eu", 1000000, 2048, 3
 
 Item.registerNameOverrideFunction(ItemID.drill, ItemName.showItemStorage);
 Item.registerNameOverrideFunction(ItemID.diamondDrill, ItemName.showItemStorage);
-Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name){
+Item.registerNameOverrideFunction(ItemID.iridiumDrill, function(item, name) {
 	name = ItemName.showItemStorage(item, name);
 	let mode = item.extra? item.extra.getInt("mode") : 0;
-	switch(mode){
+	switch(mode) {
 		case 0:
 			name += "\n" + Translation.translate("Mode: ") + Translation.translate("Fortune III");
 		break;
@@ -62,14 +62,14 @@ Recipes.addShaped({id: ItemID.iridiumDrill, count: 1, data: 27}, [
 
 UIbuttons.setToolButton(ItemID.iridiumDrill, "button_switch");
 
-UIbuttons.registerSwitchFunction(ItemID.iridiumDrill, function(item){
+UIbuttons.registerSwitchFunction(ItemID.iridiumDrill, function(item) {
 	let extra = item.extra;
-	if(!extra){
+	if (!extra) {
 		extra = new ItemExtraData();
 	}
 	let mode = (extra.getInt("mode")+1)%4;
 	extra.putInt("mode", mode);
-	switch(mode){
+	switch(mode) {
 	case 0:
 		Game.message("§e" + Translation.translate("Mode: ") + Translation.translate("Fortune III"));
 	break;
@@ -89,68 +89,66 @@ UIbuttons.registerSwitchFunction(ItemID.iridiumDrill, function(item){
 ToolType.drill = {
 	damage: 0,
 	blockTypes: ["stone", "dirt"],
-	onDestroy: function(item, coords, block){
-		if(Block.getDestroyTime(block.id) > 0){
+	onDestroy: function(item, coords, block) {
+		if (Block.getDestroyTime(block.id) > 0) {
 			ICTool.dischargeItem(item, this.toolMaterial.energyPerUse);
+			this.playDestroySound(item, block);
 		}
 		return true;
 	},
-	onBroke: function(item){return true;},
-	onAttack: function(item, mob){
+	onBroke: function(item) {return true;},
+	onAttack: function(item, mob) {
 		ICTool.dischargeItem(item, this.toolMaterial.energyPerUse);
 		return true;
 	},
-	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant){
-		if(ChargeItemRegistry.getEnergyStored(item) >= this.toolMaterial.energyPerUse){
+	calcDestroyTime: function(item, coords, block, params, destroyTime, enchant) {
+		if (ChargeItemRegistry.getEnergyStored(item) >= this.toolMaterial.energyPerUse) {
 			return destroyTime;
 		}
 		return params.base;
 	},
-	useItem: function(coords, item, block){
+	useItem: function(coords, item, block) {
 		let place = coords;
-		if(!World.canTileBeReplaced(block.id, block.data)){
+		if (!World.canTileBeReplaced(block.id, block.data)) {
 			place = coords.relative;
 			let tile = World.getBlock(place.x, place.y, place.z);
-			if(!World.canTileBeReplaced(tile.id, tile.data)){
+			if (!World.canTileBeReplaced(tile.id, tile.data)) {
 				return;
 			}
 		}
-		for(let i = 9; i < 45; i++){
+		for (let i = 9; i < 45; i++) {
 			let slot = Player.getInventorySlot(i);
-			if(slot.id == 50){
-				if(Block.isSolid(block.id)){
+			if (slot.id == 50) {
+				if (Block.isSolid(block.id)) {
 					World.setBlock(place.x, place.y, place.z, 50, (6 - coords.side)%6);
 				} else {
 					block = World.getBlock(place.x, place.y - 1, place.z);
-					if(Block.isSolid(block.id)){
+					if (Block.isSolid(block.id)) {
 						World.setBlock(place.x, place.y, place.z, 50, 5);
 					} else {
 						break;
 					}
 				}
 				slot.count--;
-				if(slot.count == 0) slot.id = 0;
+				if (slot.count == 0) slot.id = 0;
 				Player.setInventorySlot(i, slot.id, slot.count, 0);
 				break;
 			}
 		}
 	},
-	continueDestroyBlock: function(item, coords, block, progress){
-		if(progress > 0){
+	continueDestroyBlock: function(item, coords, block, progress) {
+		if (progress > 0) {
 			this.playDestroySound(item, block);
 		}
 	},
-	destroyBlock: function(coords, side, item, block){
-		this.playDestroySound(item, block);
-	},
-	playDestroySound: function(item, block){
-		if(Config.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.toolMaterial.energyPerUse){
+	playDestroySound: function(item, block) {
+		if (Config.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.toolMaterial.energyPerUse) {
 			let hardness = Block.getDestroyTime(block.id);
-			if(hardness > 1 || hardness < 0){
-				SoundAPI.playSound("Tools/Drill/DrillHard.ogg", false, true);
+			if (hardness > 1 || hardness < 0) {
+				SoundManager.startPlaySound(AudioSource.PLAYER, "DrillHard.ogg");
 			}
-			else if(hardness > 0){
-				SoundAPI.playSound("Tools/Drill/DrillSoft.ogg", false, true);
+			else if (hardness > 0) {
+				SoundManager.startPlaySound(AudioSource.PLAYER, "DrillSoft.ogg");
 			}
 		}
 	}
@@ -158,42 +156,41 @@ ToolType.drill = {
 
 ToolLib.setTool(ItemID.drill, {energyPerUse: 50, level: 3, efficiency: 8, damage: 3},  ToolType.drill);
 ToolLib.setTool(ItemID.diamondDrill, {energyPerUse: 80, level: 4, efficiency: 16, damage: 4}, ToolType.drill);
-ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 24, damage: 5}, {
+ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 100, efficiency: 24, damage: 5}, {
 	damage: 0,
 	blockTypes: ["stone", "dirt"],
-	soundType: "drill",
-	modifyEnchant: function(enchant, item){
+	modifyEnchant: function(enchant, item) {
 		let mode = item.extra? item.extra.getInt("mode") : 0;
-		if(mode%2){
+		if (mode%2) {
 		enchant.silk = true;}
-		else{
+		else {
 		enchant.fortune = 3;}
 	},
 	onDestroy: ToolType.drill.onDestroy,
-	onBroke: function(item){return true;},
+	onBroke: function(item) {return true;},
 	onAttack: ToolType.drill.onAttack,
-	calcDestroyTime: function(item, coords, block, params, destroyTime){
-		if(ChargeItemRegistry.getEnergyStored(item) >= 800){
+	calcDestroyTime: function(item, coords, block, params, destroyTime) {
+		if (ChargeItemRegistry.getEnergyStored(item) >= 800) {
 			let mode = item.extra? item.extra.getInt("mode") : 0;
 			let material = ToolAPI.getBlockMaterialName(block.id);
-			if(mode >= 2 && (material == "dirt" || material == "stone")){
+			if (mode >= 2 && (material == "dirt" || material == "stone")) {
 				destroyTime = 0;
 				let side = coords.side;
 				let X = 1;
 				let Y = 1;
 				let Z = 1;
-				if(side == BlockSide.EAST || side == BlockSide.WEST)
+				if (side == BlockSide.EAST || side == BlockSide.WEST)
 					X = 0;
-				if(side == BlockSide.UP || side == BlockSide.DOWN)
+				if (side == BlockSide.UP || side == BlockSide.DOWN)
 					Y = 0;
-				if(side == BlockSide.NORTH || side == BlockSide.SOUTH)
+				if (side == BlockSide.NORTH || side == BlockSide.SOUTH)
 					Z = 0;
-				for(let xx = coords.x - X; xx <= coords.x + X; xx++){
-					for(let yy = coords.y - Y; yy <= coords.y + Y; yy++){
-						for(let zz = coords.z - Z; zz <= coords.z + Z; zz++){
+				for (let xx = coords.x - X; xx <= coords.x + X; xx++) {
+					for (let yy = coords.y - Y; yy <= coords.y + Y; yy++) {
+						for (let zz = coords.z - Z; zz <= coords.z + Z; zz++) {
 							let blockID = World.getBlockID(xx, yy, zz);
-							material = ToolAPI.getBlockMaterial(blockID) || {};
-							if(material.name == "dirt" || material.name == "stone"){
+							material = ToolAPI.getBlockMaterialName(blockID);
+							if (material == "dirt" || material == "stone") {
 								destroyTime = Math.max(destroyTime, Block.getDestroyTime(blockID) / material.multiplier / 24);
 							}
 						}
@@ -204,33 +201,33 @@ ToolLib.setTool(ItemID.iridiumDrill, {energyPerUse: 800, level: 5, efficiency: 2
 		}
 		return params.base;
 	},
-	destroyBlock: function(coords, side, item, block){
+	destroyBlock: function(coords, side, item, block) {
 		this.playDestroySound(item, block);
 		let mode = item.extra? item.extra.getInt("mode") : 0;
 		let material = ToolAPI.getBlockMaterialName(block.id);
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
-		if(mode >= 2 && (material == "dirt" || material == "stone") && energyStored >= 800){
+		if (mode >= 2 && (material == "dirt" || material == "stone") && energyStored >= 800) {
 			let X = 1;
 			let Y = 1;
 			let Z = 1;
-			if(side==BlockSide.EAST || side==BlockSide.WEST){
-			X = 0;}
-			if(side==BlockSide.UP || side==BlockSide.DOWN){
-			Y = 0;}
-			if(side==BlockSide.NORTH || side==BlockSide.SOUTH){
-			Z = 0;}
-			for(let xx = coords.x - X; xx <= coords.x + X; xx++){
-				for(let yy = coords.y - Y; yy <= coords.y + Y; yy++){
-					for(let zz = coords.z - Z; zz <= coords.z + Z; zz++){
-						if(xx == coords.x && yy == coords.y && zz == coords.z){
+			if (side == BlockSide.EAST || side == BlockSide.WEST)
+				X = 0;
+			if (side == BlockSide.UP || side == BlockSide.DOWN)
+				Y = 0;
+			if (side == BlockSide.NORTH || side == BlockSide.SOUTH)
+				Z = 0;
+			for (let xx = coords.x - X; xx <= coords.x + X; xx++) {
+				for (let yy = coords.y - Y; yy <= coords.y + Y; yy++) {
+					for (let zz = coords.z - Z; zz <= coords.z + Z; zz++) {
+						if (xx == coords.x && yy == coords.y && zz == coords.z) {
 							continue;
 						}
-						blockID = World.getBlockID(xx, yy, zz);
-						let material = ToolAPI.getBlockMaterialName(blockID);
-						if(material == "dirt" || material == "stone"){
+						let blockID = World.getBlockID(xx, yy, zz);
+						material = ToolAPI.getBlockMaterialName(blockID);
+						if (material == "dirt" || material == "stone") {
 							energyStored -= 800;
 							World.destroyBlock(xx, yy, zz, true);
-							if(energyStored < 800){
+							if (energyStored < 800) {
 								ChargeItemRegistry.setEnergyStored(item, energyStored);
 								Player.setCarriedItem(item.id, 1, item.data, item.extra);
 								return;

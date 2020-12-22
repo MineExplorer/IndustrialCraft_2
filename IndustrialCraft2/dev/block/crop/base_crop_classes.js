@@ -12,59 +12,59 @@ AgricultureAPI.abstractFunctions["IC2CropCard"] = {
     getDiscoveredBy: function() {
         return "IC2 Team";
     },
-    isWeed: function(te){return false},
-    tick: function(te){},
-    dropGainChance: function(te){
+    isWeed: function(te) {return false},
+    tick: function(te) {},
+    dropGainChance: function(te) {
         return Math.pow(0.95, te.crop.properties.tier);
     },
-    canGrow: function(te){
+    canGrow: function(te) {
         return te.data.currentSize < te.crop.maxSize;
     },
-    canCross: function(te){
+    canCross: function(te) {
         return te.data.currentSize >= 3;
     },
-    canBeHarvested: function(te){
+    canBeHarvested: function(te) {
         return te.data.currentSize == te.crop.maxSize;
     },
-    getGrowthDuration: function(te){
+    getGrowthDuration: function(te) {
         return te.crop.properties.tier * 200;
     },
-    getSeeds: function(te){
+    getSeeds: function(te) {
         return te.generateSeeds(te.data);
     },
-    getSeedDropChance: function(te){
+    getSeedDropChance: function(te) {
         if (te.data.currentSize == 1) return 0;
         var base = .5;
         if (te.data.currentSize ==  2) base /= 2;
         base *= Math.pow(0.8, te.crop.properties.tier);
         return base;
     },
-    onLeftClick: function(te){return te.pick()},
-    onRightClick: function(te){return te.performManualHarvest()},
-    onEntityCollision: function(te){return true},
-    getSizeAfterHarvest: function(te){return 1},
-    getRootsLength: function(te){return 1}
+    onLeftClick: function(te) {return te.pick()},
+    onRightClick: function(te) {return te.performManualHarvest()},
+    onEntityCollision: function(te) {return true},
+    getSizeAfterHarvest: function(te) {return 1},
+    getRootsLength: function(te) {return 1}
 };
 
 AgricultureAPI.abstractFunctions["CropVanilla"] = {
     getDiscoveredBy: function() {
         return "Notch";
     },
-    getProduct: function(){return {id: 0, count: 1, data: 0}},
-    canGrow: function(tileentity){
+    getProduct: function() {return {id: 0, count: 1, data: 0}},
+    canGrow: function(tileentity) {
         var light = World.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
         return tileentity.data.currentSize < tileentity.crop.maxSize && light >= 9;
     },
-    getGain: function(te){
+    getGain: function(te) {
         return te.crop.getProduct();
     },
-    getSeeds: function(te){
+    getSeeds: function(te) {
         if (te.data.statGain <= 1 && te.data.statGrowth <= 1 && te.data.statResistance <= 1) {
             return AgricultureAPI.abstractFunctions["CropVanilla"].getSeed();
         }
         return AgricultureAPI.abstractFunctions["IC2CropCard"].getSeeds(te);
     },
-    getSeed: function(){return {id: 0, count: 0, data: 0}}
+    getSeed: function() {return {id: 0, count: 0, data: 0}}
 };
 
 AgricultureAPI.abstractFunctions["CropColorFlower"] = {
@@ -84,13 +84,13 @@ AgricultureAPI.abstractFunctions["CropColorFlower"] = {
     },
     maxSize: 4,
     color: 0,
-    getOptimalHarvestSize: function(crop){return 4},
+    getOptimalHarvestSize: function(crop) {return 4},
     canGrow(tileentity) {
         var light = World.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
         return tileentity.data.currentSize < tileentity.crop.maxSize &&  light >= 12;
     },
-    getGain: function(te){return {id: 351, count: 1, data: this.color}},
-    getSizeAfterHarvest: function(te){return 3},
+    getGain: function(te) {return {id: 351, count: 1, data: this.color}},
+    getSizeAfterHarvest: function(te) {return 3},
     getGrowthDuration(crop) {
         if (crop.data.currentSize  ==  3) {
             return 600;
@@ -112,7 +112,7 @@ AgricultureAPI.abstractFunctions["CropBaseMushroom"] = {
     canGrow: function(crop) {
         return crop.data.currentSize < this.maxSize && crop.data.storageWater > 0;
     },
-    getGrowthDuration: function(crop){return 200;}
+    getGrowthDuration: function(crop) {return 200;}
 };
 
 AgricultureAPI.abstractFunctions["CropBaseMetalCommon"] = {
@@ -126,15 +126,15 @@ AgricultureAPI.abstractFunctions["CropBaseMetalCommon"] = {
     },
     maxSize: 4,
     cropRootsRequirement: [],
-    getOptimalHarvestSize: function(crop){return 4},
+    getOptimalHarvestSize: function(crop) {return 4},
     getRootsLength: function(crop) {return 5},
     canGrow: function(crop) {
         if (crop.data.currentSize < 3) return true;
         if (crop.data.currentSize  ==  3) {
             if (!this.cropRootsRequirement || !this.cropRootsRequirement.length ) return true;
-            for(var ind in this.cropRootsRequirement){
+            for (var ind in this.cropRootsRequirement) {
                 var id = this.cropRootsRequirement[ind];
-                if(crop.isBlockBelow(eval(id))) return true;
+                if (crop.isBlockBelow(eval(id))) return true;
             }
         }
         return false;
@@ -167,15 +167,15 @@ AgricultureAPI.abstractFunctions["CropBaseMetalUncommon"] = {
     },
     maxSize: 5,
     cropRootsRequirement: [],
-    getOptimalHarvestSize: function(crop){return 5},
+    getOptimalHarvestSize: function(crop) {return 5},
     getRootsLength: function(crop) {return 5},
     canGrow: function(crop) {
         if (crop.data.currentSize < 4) return true;
         if (crop.data.currentSize == 4) {
             if (!this.cropRootsRequirement || !this.cropRootsRequirement.length) return true;
-            for(var ind in this.cropRootsRequirement){
+            for (var ind in this.cropRootsRequirement) {
                 var id = this.cropRootsRequirement[ind];
-                if(crop.isBlockBelow(eval(id))) return true;
+                if (crop.isBlockBelow(eval(id))) return true;
             }
         }
         return false;

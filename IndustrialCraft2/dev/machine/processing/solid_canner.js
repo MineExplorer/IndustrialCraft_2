@@ -10,7 +10,7 @@ ItemName.addTierTooltip("solidCanner", 1);
 
 MachineRegistry.setMachineDrop("solidCanner", BlockID.machineBlockBasic);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.solidCanner, count: 1, data: 0}, [
 		"c#c",
 		"cxc",
@@ -74,20 +74,20 @@ var guiSolidCanner = new UI.StandartWindow({
 		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE, isValid: MachineRegistry.isValidEUStorage},
 		"slotSource": {type: "slot", x: 400 + 32*GUI_SCALE, y: 50 + 32*GUI_SCALE,
-			isValid: function(id){
+			isValid: function(id) {
 				return MachineRecipeRegistry.hasRecipeFor("solidCanner", id);
 			}
 		},
 		"slotCan": {type: "slot", x: 400 + 63*GUI_SCALE, y: 50 + 32*GUI_SCALE, 
-			isValid: function(id){
+			isValid: function(id) {
 				var recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-				for(var i in recipes){
-					if(recipes[i].storage[0] == id) return true;
+				for (var i in recipes) {
+					if (recipes[i].storage[0] == id) return true;
 				}
 				return false;
 			}
 		},
-		"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE, y: 50 + 32*GUI_SCALE, isValid: function(){return false;}},
+		"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE, y: 50 + 32*GUI_SCALE, isValid: function() {return false;}},
 		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
 		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE, isValid: UpgradeAPI.isValidUpgrade},
@@ -95,7 +95,7 @@ var guiSolidCanner = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiSolidCanner, "Solid Canning Machine");
 });
 
@@ -112,22 +112,22 @@ MachineRegistry.registerElectricMachine(BlockID.solidCanner, {
 
 	upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"],
 
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiSolidCanner;
 	},
 	
-	getTier: function(){
+	getTier: function() {
 		return this.data.power_tier;
 	},
 	
-	resetValues: function(){
+	resetValues: function() {
 		this.data.power_tier = this.defaultValues.power_tier;
 		this.data.energy_storage = this.defaultValues.energy_storage;
 		this.data.energy_consumption = this.defaultValues.energy_consumption;
 		this.data.work_time = this.defaultValues.work_time;
 	},
 
-	tick: function(){
+	tick: function() {
 		this.resetValues();
 		UpgradeAPI.executeUpgrades(this);
 		
@@ -137,13 +137,13 @@ MachineRegistry.registerElectricMachine(BlockID.solidCanner, {
 		
 		var newActive = false;
 		var recipe = MachineRecipeRegistry.getRecipeResult("solidCanner", sourceSlot.id);
-		if(recipe && canSlot.id == recipe.storage[0] && canSlot.count >= recipe.storage[1] && (resultSlot.id == recipe.result[0] && resultSlot.data == recipe.result[2] && resultSlot.count <= 64 - recipe.result[1] || resultSlot.id == 0)){
-			if(this.data.energy >= this.data.energy_consumption){
+		if (recipe && canSlot.id == recipe.storage[0] && canSlot.count >= recipe.storage[1] && (resultSlot.id == recipe.result[0] && resultSlot.data == recipe.result[2] && resultSlot.count <= 64 - recipe.result[1] || resultSlot.id == 0)) {
+			if (this.data.energy >= this.data.energy_consumption) {
 				this.data.energy -= this.data.energy_consumption;
 				this.data.progress += 1/this.data.work_time;
 				newActive = true;
 			}
-			if(this.data.progress.toFixed(3) >= 1){
+			if (this.data.progress.toFixed(3) >= 1) {
 				sourceSlot.count--;
 				canSlot.count -= recipe.storage[1];
 				resultSlot.id = recipe.result[0];
@@ -166,7 +166,7 @@ MachineRegistry.registerElectricMachine(BlockID.solidCanner, {
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return this.data.energy_storage;
 	},
 
@@ -178,15 +178,15 @@ TileRenderer.setRotationPlaceFunction(BlockID.solidCanner);
 StorageInterface.createInterface(BlockID.solidCanner, {
 	slots: {
 		"slotSource": {input: true,
-			isValid: function(item){
+			isValid: function(item) {
 				return MachineRecipeRegistry.hasRecipeFor("solidCanner", item.id);
 			}
 		},
 		"slotCan": {input: true,
-			isValid: function(item){
+			isValid: function(item) {
 				var recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-				for(var i in recipes){
-					if(recipes[i].storage[0] == item.id) return true;
+				for (var i in recipes) {
+					if (recipes[i].storage[0] == item.id) return true;
 				}
 				return false;
 			}

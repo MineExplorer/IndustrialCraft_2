@@ -48,7 +48,7 @@ Recipes.addShaped({id: ItemID.cableOptic, count: 6, data: 0}, [
 	"aaa"
 ], ['#', ItemID.dustSilver, 0, 'x', ItemID.dustEnergium, 0, 'a', 20, -1]);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	// cutting recipes
 	ICTool.addRecipe({id: ItemID.cableTin0, count: 2, data: 0}, [{id: ItemID.plateTin, data: 0}], ItemID.cutter);
 	ICTool.addRecipe({id: ItemID.cableCopper0, count: 2, data: 0}, [{id: ItemID.plateCopper, data: 0}], ItemID.cutter);
@@ -69,51 +69,53 @@ Callback.addCallback("PreLoaded", function(){
 });
 
 
-function registerCablePlaceFunc(nameID, blockID, blockData){
-	Item.registerUseFunction(nameID, function(coords, item, block){
+function registerCablePlaceFunc(nameID, blockID, blockData) {
+	Item.registerUseFunction(nameID, function(coords, item, block) {
 		var place = coords;
-		if(!World.canTileBeReplaced(block.id, block.data)){
+		if (!World.canTileBeReplaced(block.id, block.data)) {
 			place = coords.relative;
 			block = World.getBlock(place.x, place.y, place.z);
-			if(!World.canTileBeReplaced(block.id, block.data)){
+			if (!World.canTileBeReplaced(block.id, block.data)) {
 				return;
 			}
 		}
 		World.setBlock(place.x, place.y, place.z, blockID, blockData);
-		Player.setCarriedItem(item.id, item.count - 1, item.data);
+		if (Game.isItemSpendingAllowed()) {
+			Player.setCarriedItem(item.id, item.count - 1, item.data);
+		}
 		EnergyTypeRegistry.onWirePlaced(place.x, place.y, place.z);
 	});
 }
 
-for(var i = 0; i < 2; i++){
+for (var i = 0; i < 2; i++) {
 	registerCablePlaceFunc("cableTin"+i, BlockID["cableTin"+i], 0);
-	Item.registerNameOverrideFunction(ItemID["cableTin"+i], function(item, name){
+	Item.registerNameOverrideFunction(ItemID["cableTin"+i], function(item, name) {
 		return name + "\n§7" + Translation.translate("Max voltage: ") + "32 EU/t";
 	});
 }
 
-for(var i = 0; i < 2; i++){
+for (var i = 0; i < 2; i++) {
 	registerCablePlaceFunc("cableCopper"+i, BlockID["cableCopper"+i], 0);
-	Item.registerNameOverrideFunction(ItemID["cableCopper"+i], function(item, name){
+	Item.registerNameOverrideFunction(ItemID["cableCopper"+i], function(item, name) {
 		return name + "\n§7" + Translation.translate("Max voltage: ") + "128 EU/t";
 	});
 }
 
-for(var i = 0; i < 3; i++){
+for (var i = 0; i < 3; i++) {
 	registerCablePlaceFunc("cableGold"+i, BlockID["cableGold"+i], 0);
-	Item.registerNameOverrideFunction(ItemID["cableGold"+i], function(item, name){
+	Item.registerNameOverrideFunction(ItemID["cableGold"+i], function(item, name) {
 		return name + "\n§7" + Translation.translate("Max voltage: ") + "512 EU/t";
 	});
 }
 
-for(var i = 0; i < 4; i++){
+for (var i = 0; i < 4; i++) {
 	registerCablePlaceFunc("cableIron"+i, BlockID["cableIron"+i], 0);
-	Item.registerNameOverrideFunction(ItemID["cableIron"+i], function(item, name){
+	Item.registerNameOverrideFunction(ItemID["cableIron"+i], function(item, name) {
 		return name + "\n§7" + Translation.translate("Max voltage: ") + "2048 EU/t";
 	});
 }
 
 registerCablePlaceFunc("cableOptic", BlockID.cableOptic, 0);
-Item.registerNameOverrideFunction(ItemID.cableOptic, function(item, name){
+Item.registerNameOverrideFunction(ItemID.cableOptic, function(item, name) {
 	return name + "\n§7" + Translation.translate("Max voltage: ") + "8192 EU/t";
 });

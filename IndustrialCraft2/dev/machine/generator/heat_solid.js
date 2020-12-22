@@ -12,7 +12,7 @@ TileRenderer.registerRotationModel(BlockID.solidHeatGenerator, 8, [["machine_bot
 
 MachineRegistry.setMachineDrop("solidHeatGenerator");
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.solidHeatGenerator, count: 1, data: 0}, [
 		"a",
 		"x",
@@ -41,17 +41,17 @@ var guiSolidHeatGenerator = new UI.StandartWindow({
 	],
 	
 	elements: {
-		"slotFuel": {type: "slot", x: 441, y: 212, isValid: function(id, count, data){
+		"slotFuel": {type: "slot", x: 441, y: 212, isValid: function(id, count, data) {
 			return Recipes.getFuelBurnDuration(id, data) > 0;
 		}},
-		"slotAshes": {type: "slot", x: 591, y: 212, isValid: function(){return false;}},
+		"slotAshes": {type: "slot", x: 591, y: 212, isValid: function() {return false;}},
 		"burningScale": {type: "scale", x: 450, y: 160, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
 		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 600, y: 344, width: 300, height: 30, text: "20"}
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiSolidHeatGenerator, "Solid Fuel Firebox");
 });
 
@@ -60,71 +60,76 @@ MachineRegistry.registerPrototype(BlockID.solidHeatGenerator, {
 		meta: 0,
 		burn: 0,
 		burnMax: 0,
-		maxOutput:20,
+		output: 0,
 		isActive: false
 	},
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
        return guiSolidHeatGenerator;
     },
 	
-	wrenchClick: function(id, count, data, coords){
-		this.setFacing(coords);
+	wrenchClick: function(id, count, data, coords) {
+		this.setFacing(coords.side);
 	},
 	
 	setFacing: MachineRegistry.setFacing,
 	
-	getFuel: function(fuelSlot){
-		if(fuelSlot.id > 0){
+	getFuel: function(fuelSlot) {
+		if (fuelSlot.id > 0) {
 			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
-			if(burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)){
+			if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
 				return burn;
 			}
 		}
 		return 0;
 	},
-	
-	spreadHeat: function(){
-		var coords = StorageInterface.getRelativeCoords(this, this.data.meta);
+
+	spreadHeat: function() {
+		var side = this.data.meta;
+		var coords = StorageInterface.getRelativeCoords(this, side);
 		var TE = World.getTileEntity(coords.x, coords.y, coords.z);
-		if(TE && TE.canReceiveHeat && TE.canReceiveHeat(this.data.meta)){
+		if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 			return this.data.output = TE.heatReceive(20);
 		}
 		return false;
 	},
 	
-    tick: function(){
+    tick: function() {
 		StorageInterface.checkHoppers(this);
 		
 		this.data.output = 0;
 		var slot = this.container.getSlot("slotAshes");
-		if(this.data.burn <= 0){
+		if (this.data.burn <= 0) {
 			var fuelSlot = this.container.getSlot("slotFuel");
 			var burn = this.getFuel(fuelSlot) / 4;
-			if(burn && ((slot.id == ItemID.ashes && slot.count < 64) || slot.id==0) && this.spreadHeat()){
+			if (burn && ((slot.id == ItemID.ashes && slot.count < 64) || slot.id == 0) && this.spreadHeat()) {
 				this.activate();
 				this.data.burnMax = burn;
 				this.data.burn = burn - 1;
 				fuelSlot.count--;
-				if(fuelSlot.count <= 0) fuelSlot.id = 0;
+				this.container.validateSlot("slotFuel");
 			} else {
 				this.deactivate();
 			}
 		}
-		else{
+		else {
 			this.data.burn--;
-			if(this.data.burn==0 && Math.random() < 0.5){
+			if (this.data.burn == 0 && Math.random() < 0.5) {
 				slot.id = ItemID.ashes;
 				slot.count++;
 			}
 			this.spreadHeat();
 		}
 		
-		this.container.setText("textInfo1", this.data.output + "    /");
+		var outputText = this.data.output.toString();
+		for (var i = outputText.length; i < 6; i++) {
+			outputText += " ";
+		}
+		this.container.setText("textInfo1", outputText + "/");
 		this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
     },
 	
-	renderModel: MachineRegistry.renderModelWith6Sides,
+	renderModel: MachineRegistry.renderModelWith6Variations,
 });
 
 TileRenderer.setRotationPlaceFunction(BlockID.solidHeatGenerator, true);
@@ -134,7 +139,7 @@ StorageInterface.createInterface(BlockID.solidHeatGenerator, {
 		"slotFuel": {input: true},
 		"slotAshes": {output: true}
 	},
-	isValidInput: function(item){
+	isValidInput: function(item) {
 		return Recipes.getFuelBurnDuration(item.id, item.data) > 0;
 	}
 });

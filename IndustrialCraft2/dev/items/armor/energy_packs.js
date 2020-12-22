@@ -9,7 +9,7 @@ Item.createArmorItem("energypack", "Energy Pack", {name: "energy_pack"}, {type: 
 Item.createArmorItem("lappack", "Lappack", {name: "lappack"}, {type: "chestplate", armor: 3, durability: 27, texture: "armor/lappack_1.png", isTech: true});
 ItemName.setRarity(ItemID.lappack, 1);
 
-ChargeItemRegistry.registerExtraItem(ItemID.batpack, "Eu",  60000, 128, 1, "storage", true, true);
+ChargeItemRegistry.registerExtraItem(ItemID.batpack, "Eu",  60000, 100, 1, "storage", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.advBatpack, "Eu",  600000, 512, 2, "storage", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.energypack, "Eu", 2000000, 2048, 3, "storage", true, true);
 ChargeItemRegistry.registerExtraItem(ItemID.lappack, "Eu", 10000000, 8192, 4, "storage", true, true);
@@ -51,25 +51,25 @@ Recipes.addShaped({id: ItemID.lappack, count: 1, data: 27}, [
 ], ['e', ItemID.energypack, -1, 'a', ItemID.storageLapotronCrystal, -1, 'c', ItemID.circuitAdvanced, 0], ChargeItemRegistry.transferEnergy);
 
 
-function registerStoragePack(id, level, tranfer){
+function registerStoragePack(id, level, tranfer) {
 	Armor.registerFuncs(id, {
-		hurt: function(){
+		hurt: function() {
 			return false;
 		},
-		tick: function(slot){
+		tick: function(slot) {
 			ENERGY_PACK_TICK(slot, level, tranfer);
 			return false;
 		}
 	});
 }
 
-var ENERGY_PACK_TICK = function(slot, level, transfer){
-	if(World.getThreadTime()%20==0){
+var ENERGY_PACK_TICK = function(slot, level, transfer) {
+	if (World.getThreadTime()%20==0) {
 		var item = Player.getCarriedItem();
-		if(ChargeItemRegistry.isValidItem(item.id, "Eu", level, "tool")){
+		if (ChargeItemRegistry.isValidItem(item.id, "Eu", level, "tool")) {
 			var energyStored = ChargeItemRegistry.getEnergyStored(slot);
 			var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", energyStored, transfer*20, level);
-			if(energyAdd > 0){
+			if (energyAdd > 0) {
 				ChargeItemRegistry.setEnergyStored(slot, energyStored - energyAdd);
 				Player.setCarriedItem(item.id, 1, item.data, item.extra);
 				Player.setArmorSlot(1, slot.id, 1, slot.data, slot.extra);
@@ -78,7 +78,7 @@ var ENERGY_PACK_TICK = function(slot, level, transfer){
 	}
 }
 
-registerStoragePack("batpack", 1, 128);
+registerStoragePack("batpack", 1, 100);
 registerStoragePack("advBatpack", 2, 512);
 registerStoragePack("energypack", 3, 2048);
 registerStoragePack("lappack", 4, 8192);

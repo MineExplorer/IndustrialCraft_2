@@ -4,7 +4,8 @@ Block.createSpecialType({
 	destroytime: 5,
 	explosionres: 30,
 	lightopacity: 15,
-	renderlayer: 2
+	renderlayer: 2,
+	sound: "stone"
 }, "stone");
 
 IDRegistry.genBlockID("blockCopper");
@@ -73,7 +74,7 @@ Item.addCreativeGroup("blockMetal", Translation.translate("Metal Blocks"), [
 	BlockID.blockUranium
 ]);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.blockCopper, count: 1, data: 0}, [
 		"xxx",
 		"xxx",

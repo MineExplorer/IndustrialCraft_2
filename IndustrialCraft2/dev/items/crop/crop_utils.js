@@ -5,7 +5,7 @@ IDRegistry.genItemID("weedEx");
 Item.createItem("weedEx", "Weed EX", {name: "weed_ex"}, {stack: 1});
 Item.setMaxDamage(ItemID.weedEx, 64);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShapeless({id: ItemID.fertilizer, count: 2, data: 0}, [{id: ItemID.scrap, data: 0}, {id: 351, data: 15}]);
 	Recipes.addShapeless({id: ItemID.fertilizer, count: 2, data: 0}, [{id: ItemID.scrap, data: 0}, {id: ItemID.ashes, data: 0}]);
 	Recipes.addShapeless({id: ItemID.fertilizer, count: 2, data: 0}, [{id: ItemID.scrap, data: 0}, {id: ItemID.scrap, data: 0}, {id: ItemID.fertilizer, data: 0}]);

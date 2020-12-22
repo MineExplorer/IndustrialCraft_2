@@ -10,11 +10,11 @@ TileRenderer.registerRotationModel(BlockID.transformerHV, 2, [["hv_transformer_s
 
 MachineRegistry.setMachineDrop("transformerHV", BlockID.machineBlockBasic);
 
-Item.registerNameOverrideFunction(BlockID.transformerHV, function(item, name){
+Item.registerNameOverrideFunction(BlockID.transformerHV, function(item, name) {
 	return name + "\n§7Low: 512 EU/t High: 2048 EU/t";
 });
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.transformerHV, count: 1, data: 0}, [
 		" b ",
 		"cxa",

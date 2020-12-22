@@ -38,6 +38,7 @@ Translation.addTranslation("Reactor Chamber", {ru: "Реакторная кам�
 Translation.addTranslation("Liquid Fuel Firebox", {ru: "Жидкостный теплогенератор", es: "Generador de Calor Líquido", pt: "Aquecedor à Combustível Líquido", zh: "流体加热机"});
 Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor à Combustível Sólido", zh: "固体加热机"});
 Translation.addTranslation("Electric Heater", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电力加热机"});
+Translation.addTranslation("Radioisotope Heat Generator", {ru: "Радиоизотопный теплогенератор", es: "Generador de Calor de Radioisótopos", pt: "Aquecedor à Radioisótopos", zh: "放射性同位素温差加热机"});
 
 // Energy storage
 Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", pt: "Caixa de Baterias (CB)", zh: "储电箱"});
@@ -65,7 +66,7 @@ Translation.addTranslation("Ore Washing Plant", {ru: "Рудопромывочн
 Translation.addTranslation("Thermal Centrifuge", {ru: "Термальная центрифуга", es: "Centrífuga Térmica", pt: "Centrífuga Térmica", zh: "热能离心机"});
 Translation.addTranslation("Blast Furnace", {ru: "Доменная печь", es: "Alto Horno", pt: "Fornalha de Aquecimento", zh: "高炉"});
 Translation.addTranslation("Miner", {ru: "Буровая установка", es: "Perforadora", pt: "Minerador", zh: "采矿机"});
-Translation.addTranslation("Advanced Miner", {ru: "Продвинутая буровая установка", es: "Minero Avanzado", pt: "Minerador Avançado", zh: "高级采矿机"});
+Translation.addTranslation("Advanced Miner", {ru: "Продвинутый автошахтёр", es: "Minero Avanzado", pt: "Minerador Avançado", zh: "高级采矿机"});
 Translation.addTranslation("Tesla Coil", {ru: "Катушка теслы", es: "Bobina de Tesla", pt: "Bobina Tesla", zh: "特斯拉线圈"});
 Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Teletransportador", pt: "Teletransportador", zh: "传送机"});
 Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", pt: "Fabricador de Massa", zh: "物质生成机"});

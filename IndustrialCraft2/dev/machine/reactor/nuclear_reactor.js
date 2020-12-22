@@ -15,7 +15,7 @@ ItemName.setRarity(BlockID.reactorChamber, 1, true);
 MachineRegistry.setMachineDrop("nuclearReactor", BlockID.primalGenerator);
 MachineRegistry.setMachineDrop("reactorChamber");
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.nuclearReactor, count: 1, data: 0}, [
 		"xcx",
 		"aaa",
@@ -34,10 +34,10 @@ let reactorElements = {
 	"textInfo": {type: "text", font: {size: 24, color: Color.GREEN}, x: 655, y: 382, width: 256, height: 42, text: Translation.translate("Generating: ")},
 }
 
-for(let y = 0; y < 6; y++){
-	for(let x = 0; x < 9; x++){
+for (let y = 0; y < 6; y++) {
+	for (let x = 0; x < 9; x++) {
 		let i = y*9+x;
-		reactorElements["slot"+i] = {type: "slot", x: 400 + 54 * x, y: 40 + 54 * y, size: 54, maxStackSize: 1, isValid: function(id, count, data){
+		reactorElements["slot"+i] = {type: "slot", x: 400 + 54 * x, y: 40 + 54 * y, size: 54, maxStackSize: 1, isValid: function(id, count, data) {
 			return ReactorAPI.isReactorItem(id);
 		}}
 	}
@@ -57,7 +57,7 @@ let guiNuclearReactor = new UI.StandartWindow({
 	elements: reactorElements
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiNuclearReactor, "Nuclear Reactor");
 });
 
@@ -76,18 +76,18 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 	
 	chambers: [],
 		
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiNuclearReactor;
 	},
 	
-	init: function(){
+	init: function() {
 		this.chambers = [];
 		this.renderModel();
 		this.__initialized = true;
 		this.rebuildEnergyNet();
 	},
 	
-	rebuildEnergyNet: function(){
+	rebuildEnergyNet: function() {
 		let net = this.__energyNets.Eu;
 		if (net) {
 			EnergyNetBuilder.removeNet(net);
@@ -96,20 +96,20 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		this.__energyNets.Eu = net;
 		for (let i = 0; i < 6; i++) {
 			let c = StorageInterface.getRelativeCoords(this, i);
-			if(World.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber){
+			if (World.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber) {
 				let tileEnt = World.getTileEntity(c.x, c.y, c.z);
-				if(tileEnt){
+				if (tileEnt) {
 					this.addChamber(tileEnt);
 				}
 			}
 		}
 	},
 	
-	addChamber: function(chamber){
-		if(!this.__initialized || chamber.removed || (chamber.core && chamber.core != this)){
+	addChamber: function(chamber) {
+		if (!this.__initialized || chamber.remove || (chamber.core && chamber.core != this)) {
 			return;
 		}
-		if(this.chambers.indexOf(chamber) == -1){
+		if (this.chambers.indexOf(chamber) == -1) {
 			this.chambers.push(chamber);
 			chamber.core = this;
 			chamber.data.x = this.x;
@@ -118,8 +118,8 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		}
 		let net = this.__energyNets.Eu;
 		let chamberNets = chamber.__energyNets;
-		if(chamberNets.Eu){
-			if(chamberNets.Eu != net){
+		if (chamberNets.Eu) {
+			if (chamberNets.Eu != net) {
 			EnergyNetBuilder.mergeNets(net, chamberNets.Eu);}
 		} else {
 			for (let side = 0; side < 6; side++) {
@@ -130,20 +130,20 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		chamberNets.Eu = net;
 	},
 	
-	removeChamber: function(chamber){
+	removeChamber: function(chamber) {
 		this.chambers.splice(this.chambers.indexOf(chamber), 1);
 		this.rebuildEnergyNet();
 		let x = this.getReactorSize();
-		for(let y = 0; y < 6; y++){
+		for (let y = 0; y < 6; y++) {
 			let slot = this.container.getSlot("slot"+(y*9+x));
-			if(slot.id > 0){
+			if (slot.id > 0) {
 				World.drop(chamber.x+.5, chamber.y+.5, chamber.z+.5, slot.id, slot.count, slot.data);
 				slot.id = slot.count = slot.data = 0;
 			}
 		}
 	},
 	
-	getReactorSize: function(){
+	getReactorSize: function() {
 		return 3 + this.chambers.length;
 	},
 	
@@ -154,7 +154,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
                 for (let x = 0; x < size; x++) {
                     let slot = this.container.getSlot("slot"+(y*9+x));
 					let component = ReactorAPI.getComponent(slot.id);
-                    if(component){
+                    if (component) {
 						component.processChamber(slot, this, x, y, pass == 0);
 					}
                 }
@@ -162,19 +162,19 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
         }
     },
 	
-	tick: function(){
+	tick: function() {
 		let content = this.container.getGuiContent();
 		let reactorSize = this.getReactorSize();
 		if (content) {
-			for(let y = 0; y < 6; y++){
-				for(let x = 0; x < 9; x++){
+			for (let y = 0; y < 6; y++) {
+				for (let x = 0; x < 9; x++) {
 					let newX = (x < reactorSize) ? 400 + 54 * x : 1400;
 					content.elements["slot"+(y*9+x)].x = newX;
 				}
 			}
 		}
 		if (this.data.isEnabled) {
-			if(World.getThreadTime()%20 == 0){
+			if (World.getThreadTime()%20 == 0) {
 				this.data.maxHeat = 10000;
 				this.data.hem = 1;
 				this.data.output = 0;
@@ -186,7 +186,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		}
 		this.setActive(this.data.heat >= 1000 || this.data.output > 0);
 		
-		if(this.data.output > 0){
+		if (this.data.output > 0) {
 			this.startPlaySound();
 		} else {
 			this.stopPlaySound();
@@ -196,78 +196,75 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		this.container.setText("textInfo", Translation.translate("Generating: ") + this.getEnergyOutput() + " EU/t");
 	},
 	
-	energyTick: function(type, src){
+	energyTick: function(type, src) {
 		var output = this.getEnergyOutput();
 		src.add(output, Math.min(output, 8192));
 	},
 	
-	redstone: function(signal){
+	redstone: function(signal) {
 		this.data.isEnabled = signal.power > 0;
 	},
 	
-	getEnergyOutput: function(){
+	getEnergyOutput: function() {
 		return parseInt(this.data.output * EUReactorModifier);
 	},
 	
-	startPlaySound: function(){
-		if(!Config.machineSoundEnabled){return;}
-		if(!this.remove){
-			if(!this.audioSource){
-				let sound = SoundAPI.playSoundAt(this, "Generators/NuclearReactor/NuclearReactorLoop.ogg", true, 16);
-				this.audioSource = sound;
-			}
-			if(this.data.output < 40){
-				var geigerSound = "Generators/NuclearReactor/GeigerLowEU.ogg";
-			} else if(this.data.output < 80){
-				var geigerSound = "Generators/NuclearReactor/GeigerMedEU.ogg";
-			} else {
-				var geigerSound = "Generators/NuclearReactor/GeigerHighEU.ogg";
-			}
-			if(!this.audioSourceGeiger){
-				this.audioSourceGeiger = SoundAPI.playSoundAt(this, geigerSound, true, 16);
-			}
-			else if(this.audioSourceGeiger.name != geigerSound){
-				this.audioSourceGeiger.stop();
-				this.audioSourceGeiger = SoundAPI.playSoundAt(this, geigerSound, true, 16);
-			}
+	startPlaySound: function() {
+		if (!Config.machineSoundEnabled || this.remove) return;
+		if (!this.audioSource) {
+			this.audioSource = SoundManager.createSource(AudioSource.TILEENTITY, this, "NuclearReactorLoop.ogg");;
+		}
+		if (this.data.output < 40) {
+			var geigerSound = "GeigerLowEU.ogg";
+		} else if (this.data.output < 80) {
+			var geigerSound = "GeigerMedEU.ogg";
+		} else {
+			var geigerSound = "GeigerHighEU.ogg";
+		}
+		if (!this.audioSourceGeiger) {
+			this.audioSourceGeiger = SoundManager.createSource(AudioSource.TILEENTITY, this, geigerSound);
+		}
+		else if (this.audioSourceGeiger.soundName != geigerSound) {
+			this.audioSourceGeiger.setSound(geigerSound, true);
 		}
 	},
-	stopPlaySound: function(){
-		if(this.audioSource && this.audioSource.isPlaying()){
-			this.audioSource.stop();
+	
+	stopPlaySound: function() {
+		if (this.audioSource) {
+			SoundManager.removeSource(this.audioSource);
 			this.audioSource = null;
 		}
-		if(this.audioSourceGeiger && this.audioSourceGeiger.isPlaying()){
-			this.audioSourceGeiger.stop();
+		if (this.audioSourceGeiger) {
+			SoundManager.removeSource(this.audioSourceGeiger);
 			this.audioSourceGeiger = null;
 		}
 	},
 
-	getHeat: function(){
+	getHeat: function() {
 		return this.data.heat;
 	},
 	
-	setHeat: function(heat){
+	setHeat: function(heat) {
 		this.data.heat = heat;
 	},
 	
-	addHeat: function(amount){
+	addHeat: function(amount) {
 		this.data.heat += amount;
 	},
 	
-	getMaxHeat: function(){
+	getMaxHeat: function() {
 		return this.data.maxHeat;
 	},
 	
-	setMaxHeat: function(newMaxHeat){
+	setMaxHeat: function(newMaxHeat) {
 		this.data.maxHeat = newMaxHeat;
 	},
 	
-	getHeatEffectModifier: function(){
+	getHeatEffectModifier: function() {
 		return this.data.hem;
 	},
 	
-	setHeatEffectModifier: function(newHEM){
+	setHeatEffectModifier: function(newHEM) {
 		this.data.hem = newHEM;
 	},
 	
@@ -285,12 +282,12 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
         this.container.setSlot("slot"+(y*9+x), id, count || 0, data || 0);
     },
 	
-	addOutput: function(energy){
+	addOutput: function(energy) {
 		this.data.output += energy;
 	},
 	
-	destroyBlock: function(coords, player){
-		for(let i in this.chambers){
+	destroyBlock: function(coords, player) {
+		for (let i in this.chambers) {
 			let c = this.chambers[i];
 			World.destroyBlock(c.x, c.y, c.z, true);
 		}
@@ -307,7 +304,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			let component = ReactorAPI.getComponent(slot.id);
 			if (component) {
 				let f = component.influenceExplosion(slot, this)
-				if(f > 0 && f < 1){
+				if (f > 0 && f < 1) {
 					boomMod *= f;
 				} else {
 					if (f >= 1) explode = true;
@@ -316,7 +313,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			}
 			this.container.setSlot("slot"+i, 0, 0, 0);
 		}
-		if(explode){
+		if (explode) {
 			this.data.boomPower = Math.min(boomPower * this.data.hem * boomMod, __config__.access("reactor_explosion_max_power"));
 			RadiationAPI.addRadiationSource(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.data.boomPower, 600);
 			World.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.data.boomPower);
@@ -333,9 +330,9 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			let coord = this.getRandCoord(2);
 			let block = World.getBlockID(coord.x, coord.y, coord.z);
 			let material = ToolAPI.getBlockMaterialName(block);
-			if (block == BlockID.nuclearReactor){
+			if (block == BlockID.nuclearReactor) {
 				let tileEntity = World.getTileEntity(coord.x, coord.y, coord.z);
-				if(tileEntity){
+				if (tileEntity) {
 					tileEntity.explode();
 				}
 			}
@@ -345,11 +342,11 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		}
 		if (power >= 0.7 && World.getThreadTime()%20 == 0) {
 			let entities = Entity.getAll();
-			for(let i in entities){
+			for (let i in entities) {
 				let ent = entities[i];
-				if(canTakeDamage(ent, "radiation")){
+				if (canTakeDamage(ent, "radiation")) {
 					let c = Entity.getPosition(ent);
-					if(Math.abs(this.x + 0.5 - c.x) <= 3 && Math.abs(this.y + 0.5 - c.y) <= 3 && Math.abs(this.z + 0.5 - c.z) <= 3){
+					if (Math.abs(this.x + 0.5 - c.x) <= 3 && Math.abs(this.y + 0.5 - c.y) <= 3 && Math.abs(this.z + 0.5 - c.z) <= 3) {
 						RadiationAPI.addEffect(ent, parseInt(4 * this.data.hem));
 					}
 				}
@@ -358,7 +355,7 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 		if (power >= 0.5 && Math.random() <= this.data.hem) {
 			let coord = this.getRandCoord(2);
 			let block = World.getBlockID(coord.x, coord.y, coord.z);
-			if(block == 8 || block == 9){
+			if (block == 8 || block == 9) {
 				World.setBlock(coord.x, coord.y, coord.z, 0);
 			}
 		}
@@ -366,10 +363,10 @@ MachineRegistry.registerGenerator(BlockID.nuclearReactor, {
 			let coord = this.getRandCoord(2);
 			let block = World.getBlockID(coord.x, coord.y, coord.z);
 			let material = ToolAPI.getBlockMaterialName(block);
-			if(block != 49 && (material == "wood" || material == "wool" || material == "fibre" || material == "plant")){
+			if (block != 49 && (material == "wood" || material == "wool" || material == "fibre" || material == "plant")) {
 				for (let i = 0; i < 6; i++) {
 					let c = World.getRelativeCoords(coord.x, coord.y, coord.z, i);
-					if(World.getBlockID(c.x, c.y, c.z) == 0){
+					if (World.getBlockID(c.x, c.y, c.z) == 0) {
 						World.setBlock(c.x, c.y, c.z, 51);
 						break;
 					}
@@ -391,59 +388,54 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 	},
 	
 	core: null,
-	removed: false,
-	
-	getGuiScreen: function(){
-		if(this.core){
+
+	getGuiScreen: function() {
+		if (this.core) {
 			return guiNuclearReactor;
 		}
 		return null;
 	},
 	
-	onItemClick: function(id, count, data, coords){
+	onItemClick: function(id, count, data, coords) {
 		if (id == ItemID.debugItem || id == ItemID.EUMeter) return false;
 		if (this.click(id, count, data, coords)) return true;
 		if (Entity.getSneaking(player)) return false;
 		var gui = this.getGuiScreen();
-		if (gui){
+		if (gui) {
 			this.core.container.openAs(gui);
 			return true;
 		}
 	},
 	
-	init: function(){
-		if(this.data.y >= 0 && World.getBlockID(this.data.x, this.data.y, this.data.z) == BlockID.nuclearReactor){
+	init: function() {
+		if (this.data.y >= 0 && World.getBlockID(this.data.x, this.data.y, this.data.z) == BlockID.nuclearReactor) {
 			let tileEnt = World.getTileEntity(this.data.x, this.data.y, this.data.z);
-			if(tileEnt){
+			if (tileEnt) {
 				tileEnt.addChamber(this);
 			}
 		}
 		else for (let i = 0; i < 6; i++) {
 			let c = StorageInterface.getRelativeCoords(this, i);
-			if(World.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor){
+			if (World.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor) {
 				let tileEnt = World.getTileEntity(c.x, c.y, c.z);
-				if(tileEnt){
+				if (tileEnt) {
 					tileEnt.addChamber(this);
 					break;
 				}
 			}
 		}
-	},
-	
-	destroy: function(){
-		this.removed = true;
 	}
 });
 
-Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block){
+Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block) {
 	let x = coords.relative.x;
 	let y = coords.relative.y;
 	let z = coords.relative.z;
 	for (let i = 0; i < 6; i++) {
 		let c = World.getRelativeCoords(x, y, z, i);
-		if(World.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber){
+		if (World.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber) {
 			let tileEnt = World.getTileEntity(c.x, c.y, c.z);
-			if(tileEnt.core){
+			if (tileEnt.core) {
 				item.count++;
 				return;
 			}
@@ -454,19 +446,19 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block
 	World.addTileEntity(x, y, z);
 });
 
-Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block){
+Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block) {
 	let x = coords.relative.x;
 	let y = coords.relative.y;
 	let z = coords.relative.z;
 	let reactorConnect = 0;
 	for (let i = 0; i < 6; i++) {
 		let c = World.getRelativeCoords(x, y, z, i);
-		if(World.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor){
+		if (World.getBlockID(c.x, c.y, c.z) == BlockID.nuclearReactor) {
 			reactorConnect++;
-			if(reactorConnect > 1) break;
+			if (reactorConnect > 1) break;
 		}
 	}
-	if(reactorConnect == 1){
+	if (reactorConnect == 1) {
 		World.setBlock(x, y, z, item.id, 0);
 		World.playSound(x, y, z, "dig.stone", 1, 0.8)
 		World.addTileEntity(x, y, z);

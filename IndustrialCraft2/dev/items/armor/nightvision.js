@@ -12,22 +12,21 @@ Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: 27}, [
 UIbuttons.setArmorButton(ItemID.nightvisionGoggles, "button_nightvision");
 
 Armor.registerFuncs("nightvisionGoggles", {
-	hurt: function(){
+	hurt: function() {
 		return false;
 	},
-	tick: function(slot, index, maxDamage){
-		var nightvision = slot.extra? slot.extra.getBoolean("nv") : false;
+	tick: function(slot, index, maxDamage) {
 		var energyStored = ChargeItemRegistry.getEnergyStored(slot);
-		if(nightvision && energyStored > 0){
+		if (energyStored > 0 && slot.extra && slot.extra.getBoolean("nv")) {
 			var coords = Player.getPosition();
 			var time = World.getWorldTime()%24000;
-			if(World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000){
-				Entity.addEffect(Player.get(), MobEffect.blindness, 1, 25);
+			if (World.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
 				Entity.clearEffect(Player.get(), MobEffect.nightVision);
+				Entity.addEffect(Player.get(), MobEffect.blindness, 1, 25);
 			} else {
 				Entity.addEffect(Player.get(), MobEffect.nightVision, 1, 225);
 			}
-			if(World.getThreadTime()%20 == 0){
+			if (World.getThreadTime()%20 == 0) {
 				ChargeItemRegistry.setEnergyStored(slot, Math.max(energyStored - 20, 0));
 				Player.setArmorSlot(index, slot.id, 1, slot.data, slot.extra);
 			}

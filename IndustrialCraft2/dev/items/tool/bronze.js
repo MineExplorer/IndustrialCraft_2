@@ -9,7 +9,7 @@ Item.createItem("bronzePickaxe", "Bronze Pickaxe", {name: "bronze_pickaxe", meta
 Item.createItem("bronzeAxe", "Bronze Axe", {name: "bronze_axe", meta: 0}, {stack: 1});
 Item.createItem("bronzeHoe", "Bronze Hoe", {name: "bronze_hoe", meta: 0}, {stack: 1});
 
-ToolAPI.addToolMaterial("bronze", {durability: 225, level: 3, efficiency: 6, damage: 2, enchantability: 14});
+ToolAPI.addToolMaterial("bronze", {durability: 225, level: 3, efficiency: 6, damage: 2, enchantability: 15});
 ToolLib.setTool(ItemID.bronzeSword, "bronze", ToolType.sword);
 ToolLib.setTool(ItemID.bronzeShovel, "bronze", ToolType.shovel);
 ToolLib.setTool(ItemID.bronzePickaxe, "bronze", ToolType.pickaxe);

@@ -2,7 +2,7 @@ IDRegistry.genItemID("matter");
 Item.createItem("matter", "UU-Matter", {name: "uu_matter"});
 ItemName.setRarity(ItemID.matter, 2, true);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: ItemID.iridiumChunk, count: 1, data: 0}, [
 		"xxx",
 		" x ",

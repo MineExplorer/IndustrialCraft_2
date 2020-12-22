@@ -8,7 +8,7 @@ TileRenderer.registerRotationModel(BlockID.primalGenerator, 4, [["machine_bottom
 
 MachineRegistry.setMachineDrop("primalGenerator");
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
 		"x",
 		"#",
@@ -38,9 +38,13 @@ var guiGenerator = new UI.StandartWindow({
 	elements: {
 		"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
 		"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-		"slotEnergy": {type: "slot", x: 441, y: 75, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}},
+		"slotEnergy": {type: "slot", x: 441, y: 75,
+			isValid: function(id) {
+				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
+			}
+		},
 		"slotFuel": {type: "slot", x: 441, y: 212,
-			isValid: function(id, count, data){
+			isValid: function(id, count, data) {
 				return Recipes.getFuelBurnDuration(id, data) > 0;
 			}
 		},
@@ -49,7 +53,7 @@ var guiGenerator = new UI.StandartWindow({
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiGenerator, "Generator");
 });
 
@@ -61,38 +65,35 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 		isActive: false
 	},
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiGenerator;
 	},
 	
-	getFuel: function(slotName){
+	consumeFuel: function(slotName) {
 		var fuelSlot = this.container.getSlot(slotName);
-		if (fuelSlot.id > 0){
+		if (fuelSlot.id > 0) {
 			var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
-			if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)){
+			if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
 				fuelSlot.count--;
 				this.container.validateSlot(slotName);
-				
 				return burn;
 			}
 		}
 		return 0;
 	},
-	
-	tick: function(){
+
+	tick: function() {
 		StorageInterface.checkHoppers(this);
 		var energyStorage = this.getEnergyStorage();
 		
-		if(this.data.burn <= 0 && this.data.energy + 10 < energyStorage){
-			this.data.burn = this.data.burnMax = this.getFuel("slotFuel") / 4;
+		if (this.data.burn <= 0 && this.data.energy + 10 <= energyStorage) {
+			this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel") / 4;
 		}
-		if(this.data.burn > 0 && 
-		  (!this.data.isActive && this.data.energy + 100 <= energyStorage ||
-		  this.data.isActive && this.data.energy + 10 <= energyStorage)){
-			this.data.energy += 10;
+		if (this.data.burn > 0) {
+			this.data.energy = Math.min(this.data.energy + 10, energyStorage);
 			this.data.burn--;
 			this.activate();
-			this.startPlaySound("Generators/GeneratorLoop.ogg");
+			this.startPlaySound();
 		} else {
 			this.deactivate();
 			this.stopPlaySound();
@@ -104,12 +105,16 @@ MachineRegistry.registerGenerator(BlockID.primalGenerator, {
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 		this.container.setText("textInfo1", this.data.energy + "/");
 	},
+
+	getOperationSound: function() {
+		return "GeneratorLoop.ogg";
+	},
 	
-	getEnergyStorage: function(){
+	getEnergyStorage: function() {
 		return 10000;
 	},
 	
-	energyTick: function(type, src){
+	energyTick: function(type, src) {
 		var output = Math.min(32, this.data.energy);
 		this.data.energy += src.add(output) - output;
 	},
@@ -123,7 +128,7 @@ StorageInterface.createInterface(BlockID.primalGenerator, {
 	slots: {
 		"slotFuel": {input: true}
 	},
-	isValidInput: function(item){
+	isValidInput: function(item) {
 		return Recipes.getFuelBurnDuration(item.id, item.data) > 0;
 	}
 });

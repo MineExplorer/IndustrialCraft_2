@@ -8,7 +8,7 @@ TileRenderer.registerRotationModel(BlockID.semifluidGenerator, 4, [["machine_bot
 
 MachineRegistry.setMachineDrop("semifluidGenerator", BlockID.primalGenerator);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.semifluidGenerator, count: 1, data: 0}, [
 		"pcp",
 		"cxc",
@@ -40,18 +40,18 @@ var guiSemifluidGenerator = new UI.StandartWindow({
 		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
 		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, value: 0.5, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
 		"slot1": {type: "slot", x: 440, y: 75,
-			isValid: function(id, count, data){
+			isValid: function(id, count, data) {
 				var empty = LiquidLib.getEmptyItem(id, data);
-				if(!empty) return false;
+				if (!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			}
 		},
-		"slot2": {type: "slot", x: 440, y: 183, isValid: function(){return false;}},
-		"slotEnergy": {type: "slot", x: 725, y: 165, isValid: function(id){return ChargeItemRegistry.isValidItem(id, "Eu", 1);}}
+		"slot2": {type: "slot", x: 440, y: 183, isValid: function() {return false;}},
+		"slotEnergy": {type: "slot", x: 725, y: 165, isValid: function(id) {return ChargeItemRegistry.isValidItem(id, "Eu", 1);}}
 	}
 });
 
-Callback.addCallback("LevelLoaded", function(){
+Callback.addCallback("LevelLoaded", function() {
 	MachineRegistry.updateGuiHeader(guiSemifluidGenerator, "Semifluid Generator");
 });
 
@@ -63,25 +63,25 @@ MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
 		isActive: false,
 	},
 	
-	getGuiScreen: function(){
+	getGuiScreen: function() {
 		return guiSemifluidGenerator;
 	},
 	
-	init: function(){
+	init: function() {
 		this.liquidStorage.setLimit(null, 10);
 		this.renderModel();
 	},
 	
 	getLiquidFromItem: MachineRegistry.getLiquidFromItem,
 	
-	click: function(id, count, data, coords){
-		if(Entity.getSneaking(player)){
+	click: function(id, count, data, coords) {
+		if (Entity.getSneaking(player)) {
 			var liquid = this.liquidStorage.getLiquidStored();
 			return this.getLiquidFromItem(liquid, {id: id, count: count, data: data}, null, true);
 		}
 	},
 	
-	tick: function(){
+	tick: function() {
 		StorageInterface.checkHoppers(this);
 		var energyStorage = this.getEnergyStorage();
 		var liquid = this.liquidStorage.getLiquidStored();
@@ -89,20 +89,20 @@ MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
 		var slot2 = this.container.getSlot("slot2");
 		this.getLiquidFromItem(liquid, slot1, slot2);
 		
-		if(this.data.fuel <= 0){
+		if (this.data.fuel <= 0) {
 			var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", liquid);
-			if(fuel && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= energyStorage){
+			if (fuel && this.liquidStorage.getAmount(liquid).toFixed(3) >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= energyStorage) {
 				this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
 				this.data.fuel = fuel.amount;
 				this.data.liquid = liquid;
 			}
 		}
-		if(this.data.fuel > 0){
+		if (this.data.fuel > 0) {
 			var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid);
 			this.data.energy += fuel.power;
 			this.data.fuel -= fuel.amount/20;
 			this.activate();
-			this.startPlaySound("Generators/GeothermalLoop.ogg");
+			this.startPlaySound();
 		}
 		else {
 			this.data.liquid = null;
@@ -116,11 +116,15 @@ MachineRegistry.registerGenerator(BlockID.semifluidGenerator, {
 		this.container.setScale("energyScale", this.data.energy / energyStorage);
 	},
 	
-	getEnergyStorage: function(){
+	getOperationSound: function() {
+		return "GeothermalLoop.ogg";
+	},
+
+	getEnergyStorage: function() {
 		return 10000;
 	},
 	
-	energyTick: function(type, src){
+	energyTick: function(type, src) {
 		var output = Math.min(32, this.data.energy);
 		this.data.energy += src.add(output) - output;
 	},
@@ -135,13 +139,13 @@ StorageInterface.createInterface(BlockID.semifluidGenerator, {
 		"slot1": {input: true},
 		"slot2": {output: true}
 	},
-	isValidInput: function(item){
+	isValidInput: function(item) {
 		var empty = LiquidLib.getEmptyItem(item.id, item.data);
-		if(!empty) return false;
+		if (!empty) return false;
 		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 	},
-	canReceiveLiquid: function(liquid, side){
+	canReceiveLiquid: function(liquid, side) {
 		return MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid)
 	},
-	canTransportLiquid: function(liquid, side){ return false; }
+	canTransportLiquid: function(liquid, side) { return false; }
 });

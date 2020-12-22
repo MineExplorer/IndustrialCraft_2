@@ -47,23 +47,23 @@ let ReactorAPI = {
 		}
 	},
 	
-	damageableReactorComponent: function(durability){
+	damageableReactorComponent: function(durability) {
 		this.parent = ReactorAPI.reactorComponent;
 		this.parent();
 		
 		this.maxDamage = durability;
 		
-		this.getCustomDamage = function(item){
+		this.getCustomDamage = function(item) {
 			return item.extra ? item.extra.getInt("damage") : 0;
 		}
 		
-		this.setCustomDamage = function(item, damage){
-			if(!item.extra) item.extra = new ItemExtraData();
+		this.setCustomDamage = function(item, damage) {
+			if (!item.extra) item.extra = new ItemExtraData();
 			item.extra.putInt("damage", damage);
 			item.data = 1 + Math.ceil(damage / this.maxDamage * 26);
 		}
 		
-		this.applyCustomDamage = function(item, damage){
+		this.applyCustomDamage = function(item, damage) {
 			this.setCustomDamage(item, this.getCustomDamage(item) + damage);
 		}
 	},
@@ -94,9 +94,9 @@ let ReactorAPI = {
 				this.checkHeatAcceptor(reactor, x, y - 1, heatAcceptors);
 				this.checkHeatAcceptor(reactor, x, y + 1, heatAcceptors);
 				heat = this.getFinalHeat(item, reactor, x, y, heat);
-				for(let j = 0; j < heatAcceptors.length; j++){
+				for (let j = 0; j < heatAcceptors.length; j++) {
 					heat += dheat;
-					if(heat <= 0) break;
+					if (heat <= 0) break;
 					dheat = heat / (heatAcceptors.length - j);
 					heat -= dheat;
 					let acceptor = heatAcceptors[j];
@@ -114,9 +114,9 @@ let ReactorAPI = {
 		
 		this.checkPulseable = function(reactor, x, y, slot, mex, mey, heatrun) {
 			let item = reactor.getItemAt(x, y);
-			if(item){
+			if (item) {
 				let component = ReactorAPI.getComponent(item.id);
-				if(component && component.acceptUraniumPulse(item, reactor, slot, x, y, mex, mey, heatrun)){
+				if (component && component.acceptUraniumPulse(item, reactor, slot, x, y, mex, mey, heatrun)) {
 					return 1;
 				}
 			}
@@ -129,9 +129,9 @@ let ReactorAPI = {
 
 		this.checkHeatAcceptor = function(reactor, x, y, heatAcceptors) {
 			let item = reactor.getItemAt(x, y);
-			if (item){
+			if (item) {
 				let component = ReactorAPI.getComponent(item.id);
-				if(component && component.canStoreHeat(item)){
+				if (component && component.canStoreHeat(item)) {
 					let acceptor = {comp: component, item: item, x: x, y: y}
 					heatAcceptors.push(acceptor);
 				}
@@ -250,7 +250,7 @@ let ReactorAPI = {
 			return this.maxDamage;
 		}
 		
-		this.getCurrentHeat = function(item){
+		this.getCurrentHeat = function(item) {
 			return this.getCustomDamage(item);
 		}
 
@@ -355,9 +355,9 @@ let ReactorAPI = {
 
 		this.checkHeatAcceptor = function(reactor, x, y, heatAcceptors) {
 			let item = reactor.getItemAt(x, y);
-			if (item){
+			if (item) {
 				let component = ReactorAPI.getComponent(item.id);
-				if(component && component.canStoreHeat(item)){
+				if (component && component.canStoreHeat(item)) {
 					let acceptor = {comp: component, item: item, x: x, y: y}
 					heatAcceptors.push(acceptor);
 				}
@@ -411,7 +411,7 @@ let ReactorAPI = {
 			let item = reactor.getItemAt(x, y);
 			if (item) {
 				let comp = ReactorAPI.getComponent(item.id);
-				if(comp && comp.canStoreHeat(item)){
+				if (comp && comp.canStoreHeat(item)) {
 					comp.alterHeat(item, reactor, x, y, -this.sideVent);
 					//reactor.addEmitHeat(self + this.sideVent);
 				}

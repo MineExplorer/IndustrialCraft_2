@@ -11,7 +11,7 @@ core/wiring/electric_damage.js
 core/config.js
 core/tool.js
 core/radiation.js
-core/sound_engine.js
+core/sounds.js
 core/item_name.js
 core/ui_buttons.js
 core/harvestAPI.js
@@ -44,6 +44,7 @@ machine/generator/stirling_generator.js
 machine/generator/heat_solid.js
 machine/generator/heat_fluid.js
 machine/generator/heat_electric.js
+machine/generator/rt_heat_generator.js
 
 machine/reactor/reactorAPI.js
 machine/reactor/nuclear_reactor.js

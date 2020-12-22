@@ -39,7 +39,7 @@ Item.addCreativeGroup("ic2_material", Translation.translate("Materials"), [
 	ItemID.coalChunk
 ]);
 
-Callback.addCallback("PreLoaded", function(){
+Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: ItemID.carbonFibre, count: 1, data: 0}, [
 		"xx",
 		"xx"

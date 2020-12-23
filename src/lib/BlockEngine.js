@@ -471,7 +471,6 @@ var ItemBasic = /** @class */ (function () {
             this.setIcon(icon.name, icon.meta || icon.data);
         else
             this.setIcon("missing_icon");
-        ItemRegistry.register(this);
     }
     ItemBasic.prototype.setName = function (name) {
         this.name = name;
@@ -492,7 +491,7 @@ var ItemBasic = /** @class */ (function () {
         return this;
     };
     ItemBasic.prototype.setMaxStack = function (maxStack) {
-        this.item.setMaxStack(maxStack);
+        this.item.setMaxStackSize(maxStack);
         return this;
     };
     ItemBasic.prototype.setHandEquipped = function (enabled) {
@@ -523,7 +522,7 @@ var ItemBasic = /** @class */ (function () {
         this.rarity = rarity;
         return this;
     };
-    ItemBasic.prototype.getRarityCode = function (rarity) {
+    ItemBasic.prototype.getRarityColor = function (rarity) {
         if (rarity == 1)
             return "§e";
         if (rarity == 2)
@@ -617,7 +616,9 @@ var ItemRegistry;
         return armorMaterials[name];
     }
     ItemRegistry.getArmorMaterial = getArmorMaterial;
-    function register(itemInstance) {
+    function registerItem(itemInstance, addToCreative) {
+        if (!itemInstance.item)
+            itemInstance.createItem(addToCreative);
         items[itemInstance.id] = itemInstance;
         if ('onNameOverride' in itemInstance) {
             Item.registerNameOverrideFunction(itemInstance.id, function (item, translation, name) {
@@ -625,8 +626,8 @@ var ItemRegistry;
             });
         }
         if ('onIconOverride' in itemInstance) {
-            Item.registerIconOverrideFunction(itemInstance.id, function (item) {
-                return itemInstance.onIconOverride(item);
+            Item.registerIconOverrideFunction(itemInstance.id, function (item, isModUi) {
+                return itemInstance.onIconOverride(item, isModUi);
             });
         }
         if ('onItemUse' in itemInstance) {
@@ -635,27 +636,28 @@ var ItemRegistry;
             });
         }
         if ('onUseNoTarget' in itemInstance) {
-            Item.registerNoTargetUseFunction(itemInstance.id, function (item, ticks) {
-                itemInstance.onUseNoTarget(item, ticks);
+            Item.registerNoTargetUseFunction(itemInstance.id, function (item, player) {
+                itemInstance.onUseNoTarget(item, player);
             });
         }
         if ('onUsingReleased' in itemInstance) {
-            Item.registerUsingReleasedFunction(itemInstance.id, function (item, ticks) {
-                itemInstance.onUsingReleased(item, ticks);
+            Item.registerUsingReleasedFunction(itemInstance.id, function (item, ticks, player) {
+                itemInstance.onUsingReleased(item, ticks, player);
             });
         }
         if ('onUsingComplete' in itemInstance) {
-            Item.registerUsingCompleteFunction(itemInstance.id, function (item) {
-                itemInstance.onUsingComplete(item);
+            Item.registerUsingCompleteFunction(itemInstance.id, function (item, player) {
+                itemInstance.onUsingComplete(item, player);
             });
         }
         if ('onDispense' in itemInstance) {
-            Item.registerDispenseFunction(itemInstance.id, function (coords, item) {
-                itemInstance.onDispense(coords, item);
+            Item.registerDispenseFunction(itemInstance.id, function (coords, item, blockSource) {
+                var region = new WorldRegion(blockSource);
+                itemInstance.onDispense(coords, item, region);
             });
         }
     }
-    ItemRegistry.register = register;
+    ItemRegistry.registerItem = registerItem;
     function getInstanceOf(itemID) {
         return items[itemID] || null;
     }

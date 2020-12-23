@@ -236,12 +236,13 @@ declare class BlockBase {
 }
 interface ItemFuncs {
     onNameOverride?(item: ItemInstance, translation: string, name: string): string;
-    onIconOverride?(item: ItemInstance): Item.TextureData;
+    onIconOverride?(item: ItemInstance, isModUi: boolean): Item.TextureData;
     onItemUse?(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void;
-    onUseNoTarget?(item: ItemInstance, ticks: number): void;
-    onUsingReleased?(item: ItemInstance, ticks: number): void;
-    onUsingComplete?(item: ItemInstance): void;
-    onDispense?(coords: Callback.ItemUseCoordinates, item: ItemInstance): void;
+    onUseNoTarget?(item: ItemInstance, player: number): void;
+    onUsingReleased?(item: ItemInstance, ticks: number, player: number): void;
+    onUsingComplete?(item: ItemInstance, player: number): void;
+    onDispense?(coords: Callback.ItemUseCoordinates, item: ItemInstance, region: WorldRegion): void;
+    inHandTick?(player: number): void;
 }
 declare class ItemBasic {
     readonly nameID: string;
@@ -252,7 +253,7 @@ declare class ItemBasic {
         meta: number;
     };
     rarity: number;
-    protected item: any;
+    item: any;
     constructor(nameID: string, name?: string, icon?: string | Item.TextureData);
     setName(name: string): this;
     setIcon(texture: string, index?: number): this;
@@ -266,7 +267,7 @@ declare class ItemBasic {
     allowInOffHand(): this;
     addRepairItem(itemID: number): this;
     setRarity(rarity: number): this;
-    getRarityCode(rarity: number): string;
+    getRarityColor(rarity: number): string;
 }
 interface OnHurtListener {
     onHurt: (params: {
@@ -313,7 +314,7 @@ declare class ItemArmor extends ItemBasic {
 declare namespace ItemRegistry {
     function addArmorMaterial(name: string, material: ArmorMaterial): void;
     function getArmorMaterial(name: string): ArmorMaterial;
-    function register(itemInstance: ItemBasic & ItemFuncs): void;
+    function registerItem(itemInstance: ItemBasic & ItemFuncs, addToCreative?: boolean): void;
     function getInstanceOf(itemID: number): ItemBasic;
     function createItem(nameID: string, params: {
         name?: string;

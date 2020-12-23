@@ -19,6 +19,7 @@ implements IElectricItem, ItemFuncs {
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
-		return ItemName.showItemStorage(item, name);
+		let color = this.getRarityColor(this.rarity);
+		return color + name + '\n' + ItemName.getItemStorageText(item);
 	}
 }

@@ -1,5 +1,5 @@
 namespace ItemName {
-	var itemRarity = {}
+	let itemRarity = {};
 
 	export function setRarity(id: number, lvl: number, regFunc?: boolean): void {
 		itemRarity[id] = lvl;
@@ -46,29 +46,27 @@ namespace ItemName {
 	}
 
 	export function showBlockStorage(item: ItemInstance, name: string, tier: number, capacity: string): string {
-		var tierText = "§7" + Translation.translate("Power Tier: ") + tier;
+		let tierText = "§7" + Translation.translate("Power Tier: ") + tier;
 
-		var energy = 0;
+		let energy = 0;
 		if (item.extra) {
 			energy = item.extra.getInt("energy");
 		}
-		var energyText = displayEnergy(energy) + "/" + capacity + " EU";
+		let energyText = displayEnergy(energy) + "/" + capacity + " EU";
 
 		return name + "\n" + tierText + "\n" +energyText;
 	}
 
 	export function getItemStorageText(item: ItemInstance): string {
-		var capacity = ChargeItemRegistry.getMaxCharge(item.id);
-		var energy = ChargeItemRegistry.getEnergyStored(item);
+		let capacity = ChargeItemRegistry.getMaxCharge(item.id);
+		let energy = ChargeItemRegistry.getEnergyStored(item);
 		return "§7" + displayEnergy(energy) + "/" + displayEnergy(capacity) + " EU";
 	}
 
 	export function showItemStorage(item: ItemInstance, name: string): string {
-		var rarity = ItemName.getRarity(item.id);
-		if (rarity > 0) {
-			name = ItemName.getRarityCode(rarity) + name;
-		}
-		return name + '\n' + ItemName.getItemStorageText(item);
+		let rarity = ItemName.getRarity(item.id);
+		let color = ItemName.getRarityCode(rarity);
+		return color + name + '\n' + ItemName.getItemStorageText(item);
 	}
 
 	export function displayEnergy(energy: number) {
@@ -84,7 +82,7 @@ namespace ItemName {
 	}
 
 	export function getSideName(side: number): string {
-		var sideNames = {
+		let sideNames = {
 			en: [
 				"first valid",
 				"bottom",

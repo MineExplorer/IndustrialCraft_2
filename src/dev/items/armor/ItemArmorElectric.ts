@@ -17,9 +17,9 @@ implements IElectricItem, OnHurtListener, OnTickListener {
 		ChargeItemRegistry.registerItem(this.id, this, !inCreative);
 	}
 
-	overrideName(item: ItemInstance, name: string) {
-		name = this.getRarityCode(this.rarity) + name + '\n' + ItemName.getItemStorageText(item);
-		return name;
+	onNameOverride(item: ItemInstance, name: string) {
+		let color = this.getRarityColor(this.rarity);
+		return color + name + '\n' + ItemName.getItemStorageText(item);
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {

@@ -14,59 +14,36 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'a', 20, -1, 'c', ItemID.cellEmpty, 0]);
 });
 
-
-var guiSolarDistiller = new UI.StandartWindow({
-	standard: {
-		header: {text: {text: Translation.translate("Solar Distiller")}},
-		inventory: {standard: true},
-		background: {standard: true}
-	},
-	
-	params: {       
-		slot: "default_slot",
-		invSlot: "default_slot"              
-	},
-	
+var guiSolarDistiller = InventoryWindow("Solar Distiller", {
 	drawing: [
 		{type: "background", color: Color.parseColor("#b3b3b3")},
 	],
-	
+
 	elements: {
-		"slotEnergy": {type: "slot", x: 600, y: 130, isValid: function(id) {return ChargeItemRegistry.isValidItem(id, "Eu", 0);}},
+		"slotEnergy": {type: "slot", x: 600, y: 130},
 		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
 	}
-});
-
-Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiSolarDistiller, "Solar Distiller");
 });
 
 MachineRegistry.registerPrototype(BlockID.solarDistiller, {
 	defaultValues: {
 		canSeeSky: false
 	},
-	
+
 	getScreenByName: function() {
 		return guiSolarDistiller;
 	},
-	
+
 	init: function() {
 		this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
 	},
-	
+
 	tick: function() {
-		var content = this.container.getGuiContent();
 		if (World.getThreadTime()%100 == 0) {
 			this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
 		}
 		if (this.data.canSeeSky && this.blockSource.getLightLevel(this.x, this.y + 1, this.z) == 15) {
-			
-			if (content) { 
-				content.elements["sun"].bitmap = "sun_on";
-			}
-		}
-		else if (content) { 
-			content.elements["sun"].bitmap = "sun_off";
+
 		}
 	}
 });

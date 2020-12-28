@@ -102,7 +102,7 @@ var OreGenerator = {
 		minHeight: __config__.getNumber("iridium_ore.minHeight"),
 		maxHeight: __config__.getNumber("iridium_ore.maxHeight")
 	},
-	
+
 	addFlag: function(name, flag, disableOre) {
 		if (this[name].enabled) {
 			var flag = !Flags.addFlag(flag)
@@ -125,7 +125,7 @@ OreGenerator.addFlag("tin", "oreGenTin");
 OreGenerator.addFlag("lead", "oreGenLead", true);
 OreGenerator.addFlag("uranium", "oreGenUranium", true);
 
-Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ, random) {
+Callback.addCallback("GenerateChunk", function(chunkX, chunkZ, random) {
 	if (OreGenerator.copper.enabled) {
 		for (var i = 0; i < OreGenerator.copper.count; i++) {
 			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.copper.minHeight, OreGenerator.copper.maxHeight);
@@ -139,7 +139,7 @@ Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ, random
 			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreTin, 0, OreGenerator.tin.size, false, random.nextInt());
 		}
 	}
-	
+
 	if (OreGenerator.lead.enabled) {
 		for (var i = 0; i < OreGenerator.lead.count; i++) {
 			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.lead.minHeight, OreGenerator.lead.maxHeight);
@@ -153,7 +153,7 @@ Callback.addCallback("GenerateChunkUnderground", function(chunkX, chunkZ, random
 			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreUranium, 0, OreGenerator.uranium.size, false, random.nextInt());
 		}
 	}
-	
+
 	if (random.nextDouble() < OreGenerator.iridium.chance) {
 		var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.iridium.minHeight, OreGenerator.iridium.maxHeight);
 		if (World.getBlockID(coords.x, coords.y, coords.z) == 1)

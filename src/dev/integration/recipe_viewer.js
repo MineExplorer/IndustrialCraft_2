@@ -135,41 +135,41 @@ ModAPI.addAPICallback("RecipeViewer", function(api) {
 		},
 		getList: function(id, data, isUsage) {
 			let list = [];
-			let recipe = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-			let result;
+			let recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+			let recipe;
 			if (isUsage) {
-				result = MachineRecipeRegistry.getRecipeResult("solidCanner", id);
-				if (result) {
+				recipe = MachineRecipeRegistry.getRecipeResult("solidCanner", id);
+				if (recipe) {
 					return [{
-						input: [{id: id, count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
-						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+						input: [{id: id, count: 1, data: 0}, {id: recipe.can, count: recipe.result.count, data: 0}],
+						output: [recipe.result]
 					}];
 				}
-				for (let key in recipe) {
-					result = recipe[key];
-					if (result.storage[0] == id) {
+				for (let key in recipes) {
+					recipe = recipes[key];
+					if (recipe.can == id) {
 						list.push({
-							input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
-							output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+							input: [{id: parseInt(key), count: 1, data: 0}, {id: recipe.can, count: recipe.result.count, data: 0}],
+							output: [recipe.result]
 						});
 					}
 				}
 				return list;
 			}
-			for (let key in recipe) {
-				result = recipe[key];
-				if (result.result[0] == id) {
+			for (let key in recipes) {
+				recipe = recipes[key];
+				if (recipe.result.id == id) {
 					list.push({
-						input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
-						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+						input: [{id: parseInt(key), count: 1, data: 0}, {id: recipe.can, count: recipe.result.count, data: 0}],
+						output: [recipe.result]
 					});
 				}
 			}
 			return list;
 		}
 	});
-	
-	
+
+
 	RecipeViewer.registerRecipeType("icpe_canner", {
 		contents: {
 			icon: BlockID.canner,
@@ -186,33 +186,33 @@ ModAPI.addAPICallback("RecipeViewer", function(api) {
 		},
 		getList: function(id, data, isUsage) {
 			let list = [];
-			let recipe = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-			let result;
+			let recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+			let recipe;
 			if (isUsage) {
-				result = MachineRecipeRegistry.getRecipeResult("solidCanner", id);
-				if (result) {
+				recipe = MachineRecipeRegistry.getRecipeResult("solidCanner", id);
+				if (recipe) {
 					return [{
-						input: [{id: id, count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
-						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+						input: [{id: id, count: 1, data: 0}, {id: recipe.can, count: recipe.result.count, data: 0}],
+						output: [recipe.result]
 					}];
 				}
-				for (let key in recipe) {
-					result = recipe[key];
-					if (result.storage[0] == id) {
+				for (let key in recipes) {
+					recipe = recipes[key];
+					if (recipe.can == id) {
 						list.push({
-							input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
-							output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+							input: [{id: parseInt(key), count: 1, data: 0}, {id: recipe.can, count: recipe.result.count, data: 0}],
+							output: [recipe.result]
 						});
 					}
 				}
 				return list;
 			}
-			for (let key in recipe) {
-				result = recipe[key];
-				if (result.result[0] == id) {
+			for (let key in recipes) {
+				recipe = recipes[key];
+				if (recipe.result.id == id) {
 					list.push({
-						input: [{id: parseInt(key), count: 1, data: 0}, {id: result.storage[0], count: result.storage[1], data: 0}],
-						output: [{id: result.result[0], count: result.result[1], data: result.result[2]}]
+						input: [{id: parseInt(key), count: 1, data: 0}, {id: recipe.can, count: recipe.result.count, data: 0}],
+						output: [recipe.result]
 					});
 				}
 			}

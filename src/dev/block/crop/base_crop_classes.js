@@ -64,7 +64,7 @@ AgricultureAPI.abstractFunctions["CropVanilla"] = {
         }
         return AgricultureAPI.abstractFunctions["IC2CropCard"].getSeeds(te);
     },
-    getSeed: function() {return {id: 0, count: 0, data: 0}}
+    getSeed: function() {return new ItemStack();}
 };
 
 AgricultureAPI.abstractFunctions["CropColorFlower"] = {

@@ -280,13 +280,13 @@ namespace Machine {
 		@ContainerEvent(Side.Client)
 		updateUI(container: any, window: any, content: any, data: {mode: number}) {
 			if (content) {
-				content.elements["buttonMode"].bitmap = "canner_mode_" + data.mode;
-				content.elements["background"].bitmap = "canner_background_" + data.mode;
 				let element = content.elements["slotSource"];
 				let texture = "canner_slot_source_" + data.mode;
 				if (element.bitmap != texture) {
+					content.elements["buttonMode"].bitmap = "canner_mode_" + data.mode;
+					content.elements["background"].bitmap = "canner_background_" + data.mode;
 					element.bitmap = texture;
-					element.visual = data.mode%3 > 0;
+					element.visual = data.mode % 3 > 0;
 				}
 			}
 		}

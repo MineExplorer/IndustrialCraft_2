@@ -120,7 +120,7 @@ items/tool/DebugItem.ts
 items/tool/eu-meter.js
 items/tool/ItemTransmitter.ts
 items/tool/ItemScanner.ts
-items/tool/treetap.js
+items/tool/ItemTreetap.ts
 items/tool/crafting.js
 items/tool/tool_box.js
 items/tool/containment_box.js

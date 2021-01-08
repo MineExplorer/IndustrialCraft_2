@@ -122,8 +122,8 @@ items/tool/ItemTransmitter.ts
 items/tool/ItemScanner.ts
 items/tool/ItemTreetap.ts
 items/tool/crafting.js
-items/tool/tool_box.js
-items/tool/containment_box.js
+items/tool/ToolBox.ts
+items/tool/ContainmentBox.ts
 items/tool/bronze.js
 items/tool/wrench.js
 items/tool/electric.js

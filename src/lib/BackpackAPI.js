@@ -9,23 +9,21 @@
      
     Условия использования:
       - Запрещено распространение библиотеки на сторонних источниках
-        без ссылки на официальное сообщество (https://vk.com/forestry_pe)
+        без ссылки на официальное сообщество(https://vk.com/forestry_pe)
       - Запрещено изменение кода библиотеки
       - Запрещено явное копирование кода в другие библиотеки или моды
       - Используя библиотеку вы автоматически соглашаетесь с описанными
         выше условиями
-    
-    Author:
+             
     ©DDCompany (https://vk.com/forestry_pe)
-    Contributor:
-    ©MineExplorer (https://vk.com/vlad.gr2027)
 */
 LIBRARY({
     name: "BackpackAPI",
-    version: 9,
+    version: 10,
     shared: true,
-    api: "CoreEngine",
+    api: "CoreEngine"
 });
+var LOG_TAG = "BACKPACK-API";
 var BackpackKind;
 (function (BackpackKind) {
     BackpackKind["EXTRA"] = "extra";
@@ -36,11 +34,24 @@ Translation.addTranslation("Backpack", { ru: "Рюкзак" });
 Saver.addSavesScope("BackpacksScope", function read(scope) {
     var _a, _b;
     BackpackRegistry.nextUnique = (_a = scope.nextUnique) !== null && _a !== void 0 ? _a : 1;
-    BackpackRegistry.containers = (_b = scope.containers) !== null && _b !== void 0 ? _b : {};
+    if (!scope._format) {
+        Logger.Log("Old saves detected. Converting...", LOG_TAG);
+        // @ts-ignore
+        var oldContainers = scope.containers;
+        var containers = {};
+        for (var key in oldContainers) {
+            containers[key[0] === "e" ? key = "d" + key.substr(1) : key] = new ItemContainer(oldContainers[key]);
+        }
+        BackpackRegistry.containers = containers;
+    }
+    else {
+        BackpackRegistry.containers = (_b = scope.containers) !== null && _b !== void 0 ? _b : {};
+    }
 }, function save() {
     return {
         nextUnique: BackpackRegistry.nextUnique,
-        containers: BackpackRegistry.containers
+        containers: BackpackRegistry.containers,
+        _format: 1
     };
 });
 var BackpackRegistry = /** @class */ (function () {
@@ -54,12 +65,10 @@ var BackpackRegistry = /** @class */ (function () {
     BackpackRegistry.register = function (id, prototype) {
         var _a, _b, _c, _d, _e;
         if (id <= 0) {
-            Logger.Log("id for backpack register function is not valid", "ERROR");
-            return;
+            throw "Invalid item id";
         }
         if (!prototype) {
-            Logger.Log("object for backpack register function is not valid", "ERROR");
-            return;
+            throw "Invalid backpack prototype";
         }
         prototype.title = (_a = prototype.title) !== null && _a !== void 0 ? _a : "Backpack";
         prototype.kind = prototype.useExtraData ? BackpackKind.EXTRA : ((_b = prototype.kind) !== null && _b !== void 0 ? _b : BackpackKind.META);
@@ -67,14 +76,9 @@ var BackpackRegistry = /** @class */ (function () {
         prototype.inRow = (_d = prototype.inRow) !== null && _d !== void 0 ? _d : prototype.slots;
         prototype.slotsCenter = (_e = prototype.slotsCenter) !== null && _e !== void 0 ? _e : true;
         var slots = prototype.slots;
-        var isValidFunc = prototype.isValidItem || function (id, count, data) {
-            return !BackpackRegistry.isBackpack(id) &&
-                (prototype.items ? BackpackRegistry.isValidFor(id, data, prototype.items) : true);
-        };
         if (!prototype.gui) {
             if (slots <= 0) {
-                Logger.Log("slots amount is not valid", "ERROR");
-                return;
+                throw "Amount of slots must be greater than zero";
             }
             prototype.gui = new UI.StandartWindow({
                 standart: {
@@ -94,15 +98,25 @@ var BackpackRegistry = /** @class */ (function () {
                 drawing: [],
                 elements: {}
             });
-            BackpackRegistry.addSlotsToGui(prototype.gui, slots, isValidFunc, prototype.inRow, prototype.slotsCenter);
+            BackpackRegistry.addSlotsToGui(prototype.gui, slots, prototype.inRow, prototype.slotsCenter);
         }
-        Item.registerUseFunctionForID(id, function (coords, item) {
-            BackpackRegistry.openGuiFor(item);
-        });
-        Item.registerNoTargetUseFunction(id, function (item) {
-            BackpackRegistry.openGuiFor(item);
-        });
+        Item.registerUseFunctionForID(id, function (coords, item, block, player) { return BackpackRegistry.openGuiFor(item, player); });
+        Item.registerNoTargetUseFunction(id, function (item, player) { return BackpackRegistry.openGuiFor(item, player); });
         this.prototypes[id] = prototype;
+    };
+    BackpackRegistry.setupClientSide = function () {
+        var _this = this;
+        ItemContainer.registerScreenFactory("backpack_api.ui", function (container, name) { var _a; return (_a = _this.prototypes[Network.serverToLocalId(parseInt(name))]) === null || _a === void 0 ? void 0 : _a.gui; });
+    };
+    BackpackRegistry.setupContainer = function (proto, container) {
+        var isValidFunc = proto.isValidItem || (function (id, count, data) {
+            return !BackpackRegistry.isBackpack(id)
+                && (proto.items ? BackpackRegistry.isValidFor(id, data, proto.items) : true);
+        });
+        container.setClientContainerTypeName("backpack_api.ui");
+        container.setGlobalAddTransferPolicy(function (container, name, id, amount, data) {
+            return isValidFunc(id, amount, data) ? Math.min(amount, Item.getMaxStack(id) - container.getSlot(name).count) : 0;
+        });
     };
     /**
      * Checks whether an item can be put in the backpack.
@@ -112,8 +126,8 @@ var BackpackRegistry = /** @class */ (function () {
      * @returns whether an item can be put in the backpack.
      */
     BackpackRegistry.isValidFor = function (id, data, items) {
-        if (data === void 0) { data = 0; }
         var _a, _b, _c;
+        if (data === void 0) { data = 0; }
         for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
             var item = items_1[_i];
             switch (typeof item) {
@@ -162,54 +176,57 @@ var BackpackRegistry = /** @class */ (function () {
     /**
      * Open backpack gui.
      * @param item - item
-     * @param notUpdateData - If false and no container has been created for the passed data, a new item will be set
-     * in the player’s hand
-     * @returns backpack container id.
+     * @param player - player entity id
+     * @returns backpack data. Can return a value other than passed one.
      */
-    BackpackRegistry.openGuiFor = function (item, notUpdateData) {
+    BackpackRegistry.openGuiFor = function (item, player) {
+        var client = Network.getClientForPlayer(player);
+        if (!client) {
+            return;
+        }
         var prototype = this.prototypes[item.id];
         if (prototype) {
-            var containerID = void 0;
+            var key = void 0;
             var container = void 0;
             switch (prototype.kind) {
                 case BackpackKind.META:
                     if (!item.data) {
                         item.data = BackpackRegistry.nextUnique++;
-                        if (!notUpdateData)
-                            Player.setCarriedItem(item.id, item.count, item.data);
+                        Entity.setCarriedItem(player, item.id, item.count, item.data);
                     }
-                    containerID = "d" + item.data;
-                    container = this.containers[containerID];
+                    key = "d" + item.data;
+                    container = this.containers[key];
                     break;
                 case BackpackKind.EXTRA:
                     if (!item.extra) {
                         item.extra = new ItemExtraData();
                     }
-                    var data = item.extra.getInt("container", -1); // For backward compatibility
-                    data = data === -1 ? item.extra.getInt("__backpack_id", -1) : data;
+                    var data = item.extra.getInt("container", -1); //For backward compatibility
+                    if (data !== -1) {
+                        item.extra.putInt("__backpack_id", data);
+                        item.extra.putInt("container", -1);
+                    }
+                    data = item.extra.getInt("__backpack_id", -1);
                     if (data === -1) {
                         data = BackpackRegistry.nextUnique++;
                         item.extra.putInt("__backpack_id", data);
-                        if (!notUpdateData)
-                            Player.setCarriedItem(item.id, item.count, item.data, item.extra);
+                        Entity.setCarriedItem(player, item.id, item.count, item.data, item.extra);
                     }
-                    containerID = "e" + data;
-                    container = this.containers[containerID];
-                    if (!container) { // For backward compatibility
-                        containerID = "d" + data;
-                        container = this.containers[containerID];
-                    }
+                    key = "d" + data;
+                    container = this.containers[key];
                     break;
             }
             if (!container) {
-                container = new UI.Container();
-                this.containers[containerID] = container;
+                container = new ItemContainer();
+                this.containers[key] = container;
             }
-            container.openAs(prototype.gui);
-            return containerID;
+            if (!container.getClientContainerTypeName()) {
+                this.setupContainer(BackpackRegistry.prototypes[item.id], container);
+            }
+            container.openFor(client, item.id + "");
+            return item.data;
         }
-        Logger.Log("item is not a backpack", "ERROR");
-        return null;
+        throw "Item is not a backpack";
     };
     ;
     /**
@@ -224,14 +241,13 @@ var BackpackRegistry = /** @class */ (function () {
      * Helper function for adding items to the gui.
      * @param gui - gui to which slots will be added
      * @param slots - amount of slots
-     * @param isValidFunc - validation function
      * @param inRow - Amount of slots in one row
      * @param center - Do the slots center?
      * @param x - Initial x coordinate. Ignored if the center argument is true
      * @param y - Initial y coordinate.
      * @returns gui.
      */
-    BackpackRegistry.addSlotsToGui = function (gui, slots, isValidFunc, inRow, center, x, y) {
+    BackpackRegistry.addSlotsToGui = function (gui, slots, inRow, center, x, y) {
         if (x === void 0) { x = 345; }
         if (y === void 0) { y = 70; }
         var content = gui.getContent();
@@ -240,8 +256,7 @@ var BackpackRegistry = /** @class */ (function () {
             content.elements["slot" + (i + 1)] = {
                 type: "slot",
                 x: x + i % inRow * 61,
-                y: y + Math.floor(i / inRow) * 61,
-                isValid: isValidFunc
+                y: y + Math.floor(i / inRow) * 61
             };
         }
         return gui;
@@ -261,7 +276,8 @@ var BackpackRegistry = /** @class */ (function () {
     return BackpackRegistry;
 }());
 EXPORT("BackpackRegistry", BackpackRegistry);
-Callback.addCallback("LevelLoaded", function () {
+BackpackRegistry.setupClientSide();
+Callback.addCallback("ServerPlayerLoaded", function () {
     for (var id in BackpackRegistry.prototypes) {
         var prototype = BackpackRegistry.prototypes[id];
         if (!prototype.title) {

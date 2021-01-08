@@ -1,7 +1,7 @@
-/// <reference path="./ItemArmorElectric.ts" />
+/// <reference path="./ArmorElectric.ts" />
 
-class ItemArmorQuantumSuit
-extends ItemArmorElectric {
+class ArmorQuantumSuit
+extends ArmorElectric {
 	static runTime: number = 0
 	isCharged: boolean
 	chargedID: number
@@ -28,7 +28,7 @@ extends ItemArmorElectric {
 
 	createDischarged(defence: number, texture: string) {
 		var nameID = this.nameID + "Discharged";
-		var instance = new ItemArmorQuantumSuit(nameID, this.name, {type: this.armorType, defence: defence, texture: texture}, true);
+		var instance = new ArmorQuantumSuit(nameID, this.name, {type: this.armorType, defence: defence, texture: texture}, true);
 		instance.chargedID = this.id;
 		this.dischargedID = instance.id;
 	}
@@ -42,7 +42,7 @@ extends ItemArmorElectric {
 		for (let i = 0; i < 4; i++) {
 			let item = Entity.getArmorSlot(player, i);
 			let armor = ItemRegistry.getInstanceOf(item.id);
-			if (armor instanceof ItemArmorQuantumSuit) {
+			if (armor instanceof ArmorQuantumSuit) {
 				var energyStored = ChargeItemRegistry.getEnergyStored(item);
 				absorbedDamage = Math.min(absorbedDamage, Math.floor(energyStored / armor.getEnergyPerDamage()));
 			}
@@ -179,12 +179,12 @@ extends ItemArmorElectric {
 				var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z);
 				// Game.tipMessage(horizontalVel);
 				if (horizontalVel <= 0.15) {
-					ItemArmorQuantumSuit.runTime = 0;
+					ArmorQuantumSuit.runTime = 0;
 				}
 				else if (Utils.isOnGround(playerUid)) {
-					ItemArmorQuantumSuit.runTime++;
+					ArmorQuantumSuit.runTime++;
 				}
-				if (ItemArmorQuantumSuit.runTime > 2 && !Player.getFlying()) {
+				if (ArmorQuantumSuit.runTime > 2 && !Player.getFlying()) {
 					Entity.addEffect(playerUid, PotionEffect.movementSpeed, 6, 5);
 					if (World.getThreadTime()%5 == 0) {
 						ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - Math.floor(horizontalVel*600)));
@@ -201,9 +201,9 @@ extends ItemArmorElectric {
 /** @deprecated */
 var QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
-		return ItemArmorQuantumSuit.prototype.onHurt(params, item, index, Player.get())
+		return ArmorQuantumSuit.prototype.onHurt(params, item, index, Player.get())
 	},
 	tick: function(item: ItemInstance, index: number) {
-		return ItemArmorQuantumSuit.prototype.onTick(item, index, Player.get())
+		return ArmorQuantumSuit.prototype.onTick(item, index, Player.get())
 	}
 }

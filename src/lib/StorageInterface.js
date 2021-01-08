@@ -1,6 +1,6 @@
 LIBRARY({
     name: "StorageInterface",
-    version: 9,
+    version: 10,
     shared: true,
     api: "CoreEngine"
 });
@@ -285,24 +285,27 @@ var StorageInterface;
     StorageInterface.getRelativeCoords = getRelativeCoords;
     function setSlotMaxStackPolicy(container, slotName, maxCount) {
         container.setSlotAddTransferPolicy(slotName, function (container, name, id, amount, data) {
-            return Math.max(0, Math.min(amount, maxCount - container.getSlot(name).count));
+            var maxStack = Math.min(maxCount, Item.getMaxStack(id));
+            return Math.max(0, Math.min(amount, maxStack - container.getSlot(name).count));
         });
     }
     StorageInterface.setSlotMaxStackPolicy = setSlotMaxStackPolicy;
     function setSlotValidatePolicy(container, slotName, func) {
         container.setSlotAddTransferPolicy(slotName, function (container, name, id, amount, data, extra, playerUid) {
+            amount = Math.min(amount, Item.getMaxStack(id) - container.getSlot(name).count);
             return func(name, id, amount, data, extra, container, playerUid) ? amount : 0;
         });
     }
     StorageInterface.setSlotValidatePolicy = setSlotValidatePolicy;
     function setGlobalValidatePolicy(container, func) {
         container.setGlobalAddTransferPolicy(function (container, name, id, amount, data, extra, playerUid) {
+            amount = Math.min(amount, Item.getMaxStack(id) - container.getSlot(name).count);
             return func(name, id, amount, data, extra, container, playerUid) ? amount : 0;
         });
     }
     StorageInterface.setGlobalValidatePolicy = setGlobalValidatePolicy;
     /** Creates new interface instance for TileEntity or Container */
-    function newStorage(storage) {
+    function getInterface(storage) {
         if ("container" in storage) {
             return new TileEntityInterface(storage);
         }
@@ -311,7 +314,7 @@ var StorageInterface;
         }
         return new NativeContainerInterface(storage);
     }
-    StorageInterface.newStorage = newStorage;
+    StorageInterface.getInterface = getInterface;
     /** Registers interface for block container */
     function createInterface(id, descriptor) {
         if (descriptor.slots) {
@@ -466,7 +469,7 @@ var StorageInterface;
      * @maxCount max count of item to transfer (optional)
     */
     function putItemToContainer(item, container, side, maxCount) {
-        var storage = newStorage(container);
+        var storage = getInterface(container);
         return storage.addItem(item, side, maxCount);
     }
     StorageInterface.putItemToContainer = putItemToContainer;
@@ -479,8 +482,8 @@ var StorageInterface;
      * @oneStack if true, will extract only 1 item
     */
     function extractItemsFromContainer(inputContainer, outputContainer, inputSide, maxCount, oneStack) {
-        var inputStorage = newStorage(inputContainer);
-        var outputStorage = newStorage(outputContainer);
+        var inputStorage = getInterface(inputContainer);
+        var outputStorage = getInterface(outputContainer);
         return extractItemsFromStorage(inputStorage, outputStorage, inputSide, maxCount, oneStack);
     }
     StorageInterface.extractItemsFromContainer = extractItemsFromContainer;
@@ -556,7 +559,7 @@ var StorageInterface;
         if (World.getThreadTime() % 8 > 0)
             return;
         var region = tile.blockSource;
-        var storage = StorageInterface.newStorage(tile);
+        var storage = StorageInterface.getInterface(tile);
         // input
         for (var side = 1; side < 6; side++) {
             var dir = getRelativeCoords(tile, side);

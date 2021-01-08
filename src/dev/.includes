@@ -119,7 +119,7 @@ items/armor/recipes.ts
 items/tool/DebugItem.ts
 items/tool/eu-meter.js
 items/tool/transmitter.js
-items/tool/scanner.js
+items/tool/ItemScanner.ts
 items/tool/treetap.js
 items/tool/crafting.js
 items/tool/tool_box.js

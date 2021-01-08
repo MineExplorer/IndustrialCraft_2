@@ -188,20 +188,18 @@ namespace Machine {
 			let params = this.getMiningValues(drillSlot.id);
 			if (params) {
 				if (this.data.y < this.y && this.data.scanY != this.data.y) {
-					let r = 0;
-					let scanner = this.container.getSlot("slotScanner");
-					let energyStored = ChargeItemRegistry.getEnergyStored(scanner);
-					if (scanner.id == ItemID.scanner && energyStored >= 50) {
-						ChargeItemRegistry.setEnergyStored(scanner, energyStored - 50);
-						r = scan_radius;
-					} else if (scanner.id == ItemID.scannerAdvanced && energyStored >= 250) {
-						ChargeItemRegistry.setEnergyStored(scanner, energyStored - 250);
-						r = adv_scan_radius;
+					let radius = 0;
+					let scannerSlot = this.container.getSlot("slotScanner");
+					let energyStored = ChargeItemRegistry.getEnergyStored(scannerSlot);
+					if (scannerSlot.id == ItemID.scanner || scannerSlot.id == ItemID.scannerAdvanced) {
+						let tool = ItemRegistry.getInstanceOf(scannerSlot.id) as ItemScanner;
+						ChargeItemRegistry.setEnergyStored(scannerSlot, energyStored - tool.getEnergyPerUse());
+						radius = tool.getScanRadius();
 					}
-					this.data.x = this.x - r;
-					this.data.z = this.z - r;
+					this.data.x = this.x - radius;
+					this.data.z = this.z - radius;
 					this.data.scanY = this.data.y;
-					this.data.scanR = r;
+					this.data.scanR = radius;
 				}
 				let level = ToolAPI.getToolLevel(drillSlot.id);
 				if (this.data.y < this.y && this.findOre(level)) {

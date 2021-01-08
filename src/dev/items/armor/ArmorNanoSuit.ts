@@ -1,7 +1,7 @@
-/// <reference path="./ItemArmorElectric.ts" />
+/// <reference path="./ArmorElectric.ts" />
 
-class ItemArmorNanoSuit
-extends ItemArmorElectric {
+class ArmorNanoSuit
+extends ArmorElectric {
 	isCharged: boolean
 	chargedID: number
 	dischargedID: number
@@ -27,7 +27,7 @@ extends ItemArmorElectric {
 
 	createDischarged(defence: number, texture: string) {
 		let nameID = this.nameID + "Discharged";
-		let instance = new ItemArmorNanoSuit(nameID, this.name, {type: this.armorType, defence: defence, texture: texture}, true);
+		let instance = new ArmorNanoSuit(nameID, this.name, {type: this.armorType, defence: defence, texture: texture}, true);
 		instance.chargedID = this.id;
 		this.dischargedID = instance.id;
 	}
@@ -97,9 +97,9 @@ extends ItemArmorElectric {
 /** @deprecated */
 let NANO_ARMOR_FUNCS = {
 	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
-		return ItemArmorNanoSuit.prototype.onHurt(params, item, index, Player.get())
+		return ArmorNanoSuit.prototype.onHurt(params, item, index, Player.get())
 	},
 	tick: function(item: ItemInstance, index: number) {
-		return ItemArmorNanoSuit.prototype.onTick(item, index, Player.get())
+		return ArmorNanoSuit.prototype.onTick(item, index, Player.get())
 	}
 }

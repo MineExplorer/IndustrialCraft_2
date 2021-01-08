@@ -9,8 +9,8 @@ implements IElectricItem, ItemFuncs {
 	tier: number;
 	canProvideEnergy: boolean = false;
 
-	constructor(stringID: string, name: string, maxCharge: number, transferLimit: number, tier: number, inCreative: boolean = true) {
-		super(stringID, name, name, false);
+	constructor(stringID: string, name: string, texture: string | Item.TextureData, maxCharge: number, transferLimit: number, tier: number, inCreative: boolean = true) {
+		super(stringID, name, texture, false);
 		this.setMaxStack(1);
 		this.maxCharge = maxCharge;
 		this.transferLimit = transferLimit;

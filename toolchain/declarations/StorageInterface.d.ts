@@ -102,7 +102,7 @@ declare namespace StorageInterface {
     export function setSlotValidatePolicy(container: ItemContainer, slotName: string, func: (name: string, id: number, amount: number, data: number, extra: ItemExtraData, container: ItemContainer, playerUid: number) => boolean): void;
     export function setGlobalValidatePolicy(container: ItemContainer, func: (name: string, id: number, amount: number, data: number, extra: ItemExtraData, container: ItemContainer, playerUid: number) => boolean): void;
     /** Creates new interface instance for TileEntity or Container */
-    export function newStorage(storage: TileEntity | Container): Storage;
+    export function getInterface(storage: TileEntity | Container): Storage;
     /** Registers interface for block container */
     export function createInterface(id: number, descriptor: StorageDescriptor): void;
     /** Trasfers item to slot

@@ -1,7 +1,7 @@
-/// <reference path="./ItemArmorIC2.ts" />
+/// <reference path="./ArmorIC2.ts" />
 
-class ItemArmorSolarHelmet
-extends ItemArmorIC2
+class ArmorSolarHelmet
+extends ArmorIC2
 implements OnHurtListener, OnTickListener {
 	constructor(nameID: string, name: string, params: ArmorParams) {
 		super(nameID, name, params);

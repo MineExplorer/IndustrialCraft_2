@@ -167,7 +167,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, ma
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, machine, data) {
 	let checkSide = item.data - 1;
-	let machineStorage = StorageInterface.newStorage(machine);
+	let machineStorage = StorageInterface.getInterface(machine);
 	for (let side = 0; side < 6; side++) {
 		if (checkSide > 0 && checkSide != side) continue;
 		let storage = StorageInterface.getNeighbourStorage(machine.blockSource, machine, side);
@@ -179,7 +179,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeEjector, "itemEjector", function(item, 
 UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, machine, data) {
 	if (World.getThreadTime()%20 == 0) {
 		let checkSide = item.data - 1;
-		let machineStorage = StorageInterface.newStorage(machine);
+		let machineStorage = StorageInterface.getInterface(machine);
 		for (let side = 0; side < 6; side++) {
 			if (checkSide > 0 && checkSide != side) continue;
 			let storage = StorageInterface.getNeighbourStorage(machine.blockSource, machine, side);
@@ -190,7 +190,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradePulling, "itemPulling", function(item, 
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(item, machine, data) {
-	let machineStorage = StorageInterface.newStorage(machine);
+	let machineStorage = StorageInterface.getInterface(machine);
 	let liquid = machineStorage.getLiquidStored("output");
 	if (!liquid) return;
 
@@ -204,7 +204,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeFluidEjector, "fluidEjector", function(
 });
 
 UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(item, machine, data) {
-	let machineStorage = StorageInterface.newStorage(machine);
+	let machineStorage = StorageInterface.getInterface(machine);
 	let checkSide = item.data - 1;
 	for (let side = 0; side < 6; side++) {
 		if (checkSide > 0 && checkSide != side) continue;

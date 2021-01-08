@@ -118,7 +118,7 @@ namespace MachineRegistry {
 	}
 
 	export function getLiquidFromItem(liquid: string, inputItem: ItemContainerSlot | ItemInstance, outputItem: ItemContainerSlot | ItemInstance, byHand?: boolean): boolean {
-		var storage = StorageInterface.newStorage(this);
+		var storage = StorageInterface.getInterface(this);
 		var empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
 		if (empty && (!liquid && storage.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid) &&
 			(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0)) {

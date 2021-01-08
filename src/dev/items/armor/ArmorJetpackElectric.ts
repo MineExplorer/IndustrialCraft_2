@@ -1,7 +1,7 @@
-/// <reference path="./ItemArmorElectric.ts" />
+/// <reference path="./ArmorElectric.ts" />
 
-class ItemArmorJetpackElectric
-extends ItemArmorElectric {
+class ArmorJetpackElectric
+extends ArmorElectric {
 	constructor() {
 		super("jetpack", "electric_jetpack", {type: "chestplate", defence: 3, texture: "electric_jetpack"}, 30000, 100, 1);
 		UIbuttons.setArmorButton(this.id, "button_fly");

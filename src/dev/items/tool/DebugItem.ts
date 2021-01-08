@@ -2,7 +2,7 @@ class DebugItem
 extends ElectricItem
 implements ItemFuncs {
 	constructor() {
-		super("debugItem", "debug_item", -1, -1, 0, !ConfigIC.debugMode);
+		super("debugItem", "debug_item", "debug_item", -1, -1, 0, !ConfigIC.debugMode);
 	}
 
 	onCharge(item: ItemInstance, amount: number, tier: number): number {
@@ -53,14 +53,6 @@ implements ItemFuncs {
 		} else {
 			var net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
 			if (net) Game.message(net.toString());
-		}
-	}
-
-	onNoTargetUse(item: ItemInstance, player: number): void {
-		let tag = Entity.getCompoundTag(player);
-		let tagData = tag.toScriptable();
-		for (let key in tagData) {
-			Game.message(`${key} (${tag.getValueType(key)}) - ${tagData[key]}`);
 		}
 	}
 }

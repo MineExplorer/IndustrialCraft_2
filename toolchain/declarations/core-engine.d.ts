@@ -4338,21 +4338,21 @@ declare namespace Game {
      * [[Native.Color]] values
      * @param msg message to be displayed
      */
-    function message(msg: string): void;
+    function message(msg: any): void;
 
     /**
      * Writes message above the hot bar. Message can be formatted using 
      * [[Native.Color]] values
      * @param msg message to be displayed
      */
-    function tipMessage(msg: string): void;
+    function tipMessage(msg: any): void;
 
     /**
      * Displays android AlertDialog with given message and dialog title
      * @param message message to be displayed
      * @param title title of the AlertDialog
      */
-    function dialogMessage(message: string, title: string): void;
+    function dialogMessage(message: any, title: string): void;
 
     /**
      * Sets game difficulty, one of [[Native.GameDifficulty]] values

@@ -56,15 +56,19 @@ Item.registerUseFunctionForID(BlockID.rubberTreeSapling, function(coords, item, 
 // bone use
 Callback.addCallback("ItemUse", function(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal: boolean, player: number) {
 	if (item.id == 351 && item.data == 15 && block.id == BlockID.rubberTreeSapling) {
-		Entity.setCarriedItem(player, item.id, item.count - 1, item.data);
+		Game.prevent();
+		if (Game.isItemSpendingAllowed(player)) {
+			Entity.setCarriedItem(player, item.id, item.count - 1, item.data);
+		}
 		for (let i = 0; i < 16; i++) {
 			let px = coords.x + Math.random();
 			let pz = coords.z + Math.random();
 			let py = coords.y + Math.random();
 			Particles.addParticle(ParticleType.happyVillager, px, py, pz, 0, 0, 0);
 		}
-		if (Math.random() < 0.25 || !Game.isItemSpendingAllowed(player)) {
+		if (Math.random() < 0.25) {
 			let region = BlockSource.getDefaultForActor(player);
+			region.setBlock(coords.x, coords.y, coords.z, 0, 0);
 			RubberTreeGenerator.generateRubberTree(coords.x, coords.y, coords.z, region);
 		}
 	}

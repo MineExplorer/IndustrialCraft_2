@@ -4,7 +4,7 @@ namespace Utils {
 
 	Callback.addCallback("LocalTick", function() {
 		isEnderPearlDamage = false;
-		if (Utils.isPlayerOnGround()) {
+		if (Utils.isOnGround(Player.get())) {
 			Utils.resetFallHeight();
 		}
 	})
@@ -28,19 +28,18 @@ namespace Utils {
 		} else {
 			height = Math.round(height + 3/8);
 		}
-		
+
 		var damage = height - 3;
 		return (damage > 0)? damage : 0;
 	}
-	
+
 	export function resetFallHeight(): void {
 		fallStartHeight = Player.getPosition().y;
 	}
-	
-	export function getFallDamageModifier(): number {
-		var slot = Player.getArmorSlot(3);
-		if (slot.id != 0 && slot.extra) {
-			var enchants = slot.extra.getEnchants();
+
+	export function getFallDamageModifier(armor: ItemInstance): number {
+		if (armor.id != 0 && armor.extra) {
+			var enchants = armor.extra.getEnchants();
 			var enchantLvl = enchants[Native.Enchantment.FEATHER_FALLING];
 			if (enchantLvl) {
 				return 1 - 0.12 * enchantLvl;
@@ -48,24 +47,24 @@ namespace Utils {
 		}
 		return 1;
 	}
-	
-	export function fixFallDamage(damage: number): void {
+
+	export function fixFallDamage(player: number, damage: number): void {
 		var newDamage = Utils.getFallDamage(damage);
 		if (newDamage < damage) {
-			var armor = Player.getArmorSlot(3);
+			var armor = Entity.getArmorSlot(player, 3);
 			if (newDamage == 0) {
 				Game.prevent();
-			} 
+			}
 			else if (armor.id != ItemID.quantumBoots && armor.id != ItemID.nanoBoots) {
-				var damageModifier = Utils.getFallDamageModifier();
+				var damageModifier = Utils.getFallDamageModifier(armor);
 				var damageReduce = Math.floor((damage - newDamage) * damageModifier);
 				Entity.setHealth(player, Entity.getHealth(player) + damageReduce);
 			}
 		}
 	}
 
-	export function isPlayerOnGround(): boolean {
-		var vel = Player.getVelocity();
-		return Math.abs(vel.y - fallVelocity) < 0.0001;
+	export function isOnGround(entity: number): boolean {
+		let tag = Entity.getCompoundTag(entity);
+		return !!tag.getByte("OnGround");
 	}
 }

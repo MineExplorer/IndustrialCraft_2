@@ -15,7 +15,7 @@ Block.createBlock("rubberTreeLog", [
 	{name: "Rubber Tree Log", texture: [["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood", 2], ["rubber_wood", 2]], inCreative: false},
 	{name: "Rubber Tree Log", texture: [["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 1], ["rubber_wood", 1]], inCreative: false}
 ], "wood");
-Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID) {
+Block.registerDropFunction("rubberTreeLog", function(coords, blockID) {
 	return [[blockID, 1, 0]];
 });
 ToolLib.addBlockDropOnExplosion("rubberTreeLog");

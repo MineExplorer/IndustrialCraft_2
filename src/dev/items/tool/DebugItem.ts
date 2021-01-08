@@ -1,14 +1,15 @@
 class DebugItem
-extends ElectricItem {
+extends ElectricItem
+implements ItemFuncs {
 	constructor() {
 		super("debugItem", "debug_item", -1, -1, 0, !ConfigIC.debugMode);
 	}
 
-	onCharge(item: ItemInstance, amount: number, tier: number) {
+	onCharge(item: ItemInstance, amount: number, tier: number): number {
 		return amount;
 	}
 
-	onDischarge(item: ItemInstance, amount: number, tier: number) {
+	onDischarge(item: ItemInstance, amount: number, tier: number): number {
 		return amount;
 	}
 
@@ -16,7 +17,7 @@ extends ElectricItem {
 		return name + "\n§7" + "Infinite EU";
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number) {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
 		Game.message(block.id+":"+block.data);
 		let region = WorldRegion.getForActor(player);
 		var tile = region.getTileEntity(coords);
@@ -52,6 +53,14 @@ extends ElectricItem {
 		} else {
 			var net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
 			if (net) Game.message(net.toString());
+		}
+	}
+
+	onNoTargetUse(item: ItemInstance, player: number): void {
+		let tag = Entity.getCompoundTag(player);
+		let tagData = tag.toScriptable();
+		for (let key in tagData) {
+			Game.message(`${key} (${tag.getValueType(key)}) - ${tagData[key]}`);
 		}
 	}
 }

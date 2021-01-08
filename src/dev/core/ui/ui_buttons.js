@@ -113,7 +113,7 @@ var buttonContent = {
 			onClick: function() {
 				var vel = Player.getVelocity();
 				var armor = Player.getArmorSlot(1);
-				if (vel.y.toFixed(4) != fallVelocity && ChargeItemRegistry.getEnergyStored(armor) >= 8) {
+				if (!Utils.isOnGround(Player.get()) && ChargeItemRegistry.getEnergyStored(armor) >= 8) {
 					var extra = armor.extra || new ItemExtraData();
 					var hover = extra.getBoolean("hover");
 					if (hover) {
@@ -140,7 +140,7 @@ var buttonContent = {
 				var armor = Player.getArmorSlot(3);
 				var energyStored = ChargeItemRegistry.getEnergyStored(armor);
 				var vel = Player.getVelocity();
-				if (energyStored >= 4000 && vel.y.toFixed(4) == fallVelocity) {
+				if (energyStored >= 4000 && Utils.isOnGround(Player.get())) {
 					Player.setVelocity(vel.x*3.5, 1.3, vel.z*3.5);
 					ChargeItemRegistry.setEnergyStored(armor, energyStored - 4000);
 					Player.setArmorSlot(3, armor.id, 1, armor.data, armor.extra);

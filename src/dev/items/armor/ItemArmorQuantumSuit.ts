@@ -37,11 +37,22 @@ extends ItemArmorElectric {
 		return 5000;
 	}
 
-	canAbsorbDamage(item: ItemInstance, damage: number) {
-		if (this.isCharged || ChargeItemRegistry.getEnergyStored(item) >= this.getEnergyPerDamage() * damage) {
-			return item;
+	absorbDamage(player: number, type: number, damage: number) {
+		let absorbedDamage = damage;
+		for (let i = 0; i < 4; i++) {
+			let item = Entity.getArmorSlot(player, i);
+			let armor = ItemRegistry.getInstanceOf(item.id);
+			if (armor instanceof ItemArmorQuantumSuit) {
+				var energyStored = ChargeItemRegistry.getEnergyStored(item);
+				absorbedDamage = Math.min(absorbedDamage, Math.floor(energyStored / armor.getEnergyPerDamage()));
+			}
+			else return;
 		}
-		return false;
+		if (absorbedDamage > 0) {
+			let receivedDamage = (type == 11)? Math.floor(absorbedDamage / 5) : Math.ceil(absorbedDamage / 5);
+			let playerHealth = Math.min(Entity.getMaxHealth(player), Entity.getHealth(player));
+			Entity.setHealth(player, playerHealth + receivedDamage);
+		}
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {
@@ -49,7 +60,8 @@ extends ItemArmorElectric {
 		var energyStored = ChargeItemRegistry.getEnergyStored(item);
 		var energyPerDamage = this.getEnergyPerDamage();
 		if (energyStored >= energyPerDamage) {
-			if ((type == 2 || type == 3 || type == 11) && params.damage > 0) {
+			if (type == 2 || type == 3 || type == 11) {
+				if (index == 0) this.absorbDamage(player, type, params.damage);
 				var energy = params.damage * energyPerDamage;
 				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
 			}
@@ -77,12 +89,12 @@ extends ItemArmorElectric {
 			ChargeItemRegistry.setEnergyStored(item, energyStored - 500);
 		}
 		if (index == 1 && type == 5) {
-			Utils.fixFallDamage(params.damage);
+			Utils.fixFallDamage(player, params.damage);
 		}
 		return item;
 	}
 
-	onTick(item: ItemInstance, index: number, playerEnt: number): ItemInstance {
+	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		var energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (this.isCharged && energyStored < this.getEnergyPerDamage()) {
 			item.id = this.getDischarged();
@@ -99,15 +111,15 @@ extends ItemArmorElectric {
 				if (RadiationAPI.playerRad > 0) {
 					if (energyStored >= 100000) {
 						RadiationAPI.playerRad = 0;
-						Entity.clearEffect(playerEnt, PotionEffect.poison);
+						Entity.clearEffect(playerUid, PotionEffect.poison);
 						newEnergyStored -= 100000;
 					}
 				} else {
-					Entity.clearEffect(playerEnt, PotionEffect.poison);
+					Entity.clearEffect(playerUid, PotionEffect.poison);
 				}
-				Entity.clearEffect(playerEnt, PotionEffect.wither);
+				Entity.clearEffect(playerUid, PotionEffect.wither);
 
-				let player = new PlayerActor(playerEnt);
+				let player = new PlayerActor(playerUid);
 				var hunger = player.getHunger();
 				if (hunger < 20 && newEnergyStored >= 500) {
 					var i = World.getThreadTime()%36;
@@ -116,22 +128,22 @@ extends ItemArmorElectric {
 						var count = Math.min(20 - hunger, slot.count);
 						player.setHunger(hunger + count);
 						slot.count -= count;
-						player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data);
-						player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+						player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data, slot.extra);
+						player.addItemToInventory(ItemID.tinCanEmpty, count, 0, null, true);
 						newEnergyStored -= 500;
 						break;
 					}
 				}
 				// night vision
 				if (newEnergyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
-					var coords = Entity.getPosition(playerEnt);
+					var coords = Entity.getPosition(playerUid);
 					var time = World.getWorldTime()%24000;
-					let region = BlockSource.getDefaultForActor(playerEnt);
+					let region = BlockSource.getDefaultForActor(playerUid);
 					if (region.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
-						Entity.addEffect(playerEnt, PotionEffect.blindness, 1, 25);
-						Entity.clearEffect(playerEnt, PotionEffect.nightVision);
+						Entity.addEffect(playerUid, PotionEffect.blindness, 1, 25);
+						Entity.clearEffect(playerUid, PotionEffect.nightVision);
 					} else {
-						Entity.addEffect(playerEnt, PotionEffect.nightVision, 1, 225);
+						Entity.addEffect(playerUid, PotionEffect.nightVision, 1, 225);
 					}
 					if (World.getThreadTime()%20 == 0) {
 						newEnergyStored = Math.max(newEnergyStored - 20, 0);
@@ -146,34 +158,34 @@ extends ItemArmorElectric {
 			case 1:
 				if (item.extra && item.extra.getBoolean("hover")) {
 					Utils.resetFallHeight();
-					var vel = Entity.getVelocity(playerEnt);
-					if (Utils.isPlayerOnGround() || energyStored < 8) {
+					var vel = Entity.getVelocity(playerUid);
+					if (energyStored < 8 || Utils.isOnGround(playerUid)) {
 						item.extra.putBoolean("hover", false);
 						Game.message("§4" + Translation.translate("Hover mode disabled"));
 						return item;
 					}
 					else if (vel.y < -0.1) {
-						Entity.addVelocity(playerEnt, 0, Math.min(0.25, -0.1 - vel.y), 0);
+						Entity.addVelocity(playerUid, 0, Math.min(0.25, -0.1 - vel.y), 0);
 						if (World.getThreadTime()%5 == 0) {
 							ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
 							return item;
 						}
 					}
 				}
-				Entity.setFire(playerEnt, 0, true);
+				Entity.setFire(playerUid, 0, true);
 			break;
 			case 2:
-				var vel = Entity.getVelocity(playerEnt);
+				var vel = Entity.getVelocity(playerUid);
 				var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z);
 				// Game.tipMessage(horizontalVel);
 				if (horizontalVel <= 0.15) {
 					ItemArmorQuantumSuit.runTime = 0;
 				}
-				else if (Utils.isPlayerOnGround()) {
+				else if (Utils.isOnGround(playerUid)) {
 					ItemArmorQuantumSuit.runTime++;
 				}
 				if (ItemArmorQuantumSuit.runTime > 2 && !Player.getFlying()) {
-					Entity.addEffect(playerEnt, PotionEffect.movementSpeed, 6, 5);
+					Entity.addEffect(playerUid, PotionEffect.movementSpeed, 6, 5);
 					if (World.getThreadTime()%5 == 0) {
 						ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - Math.floor(horizontalVel*600)));
 						return item;
@@ -185,45 +197,6 @@ extends ItemArmorElectric {
 		return null;
 	}
 }
-
-
-function canAbsorbDamage(damage: number) {
-	for (var i = 0; i < 4; i++) {
-		var slot = Player.getArmorSlot(i);
-		var armor = ItemRegistry.getInstanceOf(slot.id);
-		if (!(armor instanceof ItemArmorQuantumSuit && armor.canAbsorbDamage(slot, damage)))
-			return false;
-	}
-	return slot;
-}
-
-Callback.addCallback("EntityHurt", function(attacker: number, victim: number, damage: number, type: number) {
-	if (victim == player && Game.getGameMode() != 1 && damage > 0 && (type == 2 || type == 3 || type == 11) && canAbsorbDamage(damage)) {
-		Game.prevent();
-		if (type == 2) {
-			runOnMainThread(function() {
-				Entity.damageEntity(player, 0, type, {attacker: attacker, bool1: true});
-			});
-		}
-		if (type == 3) {
-			runOnMainThread(function() {
-				Entity.damageEntity(player, 0, type, {attacker: -1, bool1: true});
-			});
-			var vel = Entity.getVelocity(attacker);
-			var hs = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
-			Player.addVelocity(vel.x * 0.3 / hs, 0.25, vel.z * 0.3 / hs);
-			Entity.remove(attacker);
-		}
-	}
-});
-
-Callback.addCallback("Explosion", function(coords: Vector, params: {power: number, entity: number, onFire: boolean, someBool: boolean, someFloat: number}) {
-	var pos = Player.getPosition();
-	var distance = Entity.getDistanceBetweenCoords(coords, pos);
-	if (distance <= params.power && canAbsorbDamage(1)) {
-		Entity.damageEntity(Player.get(), 0, 11, {attacker: params.entity, bool1: true});
-	}
-});
 
 /** @deprecated */
 var QUANTUM_ARMOR_FUNCS = {

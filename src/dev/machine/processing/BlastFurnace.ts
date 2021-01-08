@@ -123,7 +123,7 @@ namespace Machine {
 		@ContainerEvent(Side.Client)
 		showAirImage(container: any, window: any, content: any, data: {show: boolean}) {
 			if (content) {
-				if (data.show)
+				if (data.show && !content.elements["indicatorAir"])
 					content.elements["indicatorAir"] = {type: "image", x: 344 + 128*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
 				else
 					content.elements["indicatorAir"] = null;

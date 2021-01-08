@@ -9,14 +9,14 @@ implements OnHurtListener, OnTickListener {
 		RadiationAPI.registerHazmatArmor(this.id);
 	}
 
-	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerEnt: number): ItemInstance {
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		if (params.type == 9 && index == 0) {
-			let player = new PlayerActor(playerEnt);
-			for (var i = 0; i < 36; i++) {
-				var slot = player.getInventorySlot(i);
+			let player = new PlayerActor(playerUid);
+			for (let i = 0; i < 36; i++) {
+				let slot = player.getInventorySlot(i);
 				if (slot.id == ItemID.cellAir) {
 					Game.prevent();
-					Entity.addEffect(playerEnt, PotionEffect.waterBreathing, 1, 60);
+					Entity.addEffect(playerUid, PotionEffect.waterBreathing, 1, 60);
 					player.setInventorySlot(i, slot.id, slot.count - 1, 0);
 					player.addItemToInventory(ItemID.cellEmpty, 1, 0, null, true);
 					break;
@@ -24,12 +24,12 @@ implements OnHurtListener, OnTickListener {
 			}
 		}
 		if (params.type == 5 && index == 3) {
-			var Dp = Math.floor(params.damage/8);
-			var Db = Math.floor(params.damage*7/16);
+			let Dp = Math.floor(params.damage/8);
+			let Db = Math.floor(params.damage*7/16);
 			if (Dp < 1) {
 				Game.prevent();
 			} else {
-				Entity.setHealth(player, Entity.getHealth(player) + params.damage - Dp);
+				Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - Dp);
 			}
 			item.data += Db;
 			if (item.data >= Item.getMaxDamage(this.id)) {
@@ -40,16 +40,16 @@ implements OnHurtListener, OnTickListener {
 		return null;
 	}
 
-	onTick(item: ItemInstance, index: number, playerEnt: number): void {
-		let player = new PlayerActor(playerEnt);
+	onTick(item: ItemInstance, index: number, playerUid: number): void {
+		let player = new PlayerActor(playerUid);
 		if (index == 0
 			&& player.getArmor(1).id == ItemID.hazmatChestplate
 			&& player.getArmor(2).id == ItemID.hazmatLeggings
 			&& player.getArmor(3).id == ItemID.rubberBoots) {
 			if (RadiationAPI.playerRad <= 0) {
-				Entity.clearEffect(playerEnt, PotionEffect.poison);
+				Entity.clearEffect(playerUid, PotionEffect.poison);
 			}
-			Entity.clearEffect(playerEnt, PotionEffect.wither);
+			Entity.clearEffect(playerUid, PotionEffect.wither);
 		}
 	}
 }

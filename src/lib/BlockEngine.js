@@ -214,7 +214,7 @@ var WorldRegion = /** @class */ (function () {
      * and interface was not created)
      */
     WorldRegion.getForActor = function (entityUid) {
-        var blockSource = BlockSource.getDefaultForDimension(entityUid);
+        var blockSource = BlockSource.getDefaultForActor(entityUid);
         if (blockSource) {
             return new WorldRegion(blockSource);
         }
@@ -578,8 +578,8 @@ var ItemArmor = /** @class */ (function (_super) {
     };
     ItemArmor.registerListeners = function (id, armorFuncs) {
         if ('onHurt' in armorFuncs) {
-            Armor.registerOnHurtListener(id, function (item, slot, player, value, type, attacker, bool1, bool2) {
-                return armorFuncs.onHurt({ attacker: attacker, damage: value, type: type, bool1: bool1, bool2: bool2 }, item, slot, player);
+            Armor.registerOnHurtListener(id, function (item, slot, player, type, value, attacker, bool1, bool2) {
+                return armorFuncs.onHurt({ attacker: attacker, type: type, damage: value, bool1: bool1, bool2: bool2 }, item, slot, player);
             });
         }
         if ('onTick' in armorFuncs) {
@@ -635,9 +635,9 @@ var ItemRegistry;
                 itemInstance.onItemUse(coords, item, block, player);
             });
         }
-        if ('onUseNoTarget' in itemInstance) {
+        if ('onNoTargetUse' in itemInstance) {
             Item.registerNoTargetUseFunction(itemInstance.id, function (item, player) {
-                itemInstance.onUseNoTarget(item, player);
+                itemInstance.onNoTargetUse(item, player);
             });
         }
         if ('onUsingReleased' in itemInstance) {

@@ -238,7 +238,7 @@ interface ItemFuncs {
     onNameOverride?(item: ItemInstance, translation: string, name: string): string;
     onIconOverride?(item: ItemInstance, isModUi: boolean): Item.TextureData;
     onItemUse?(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void;
-    onUseNoTarget?(item: ItemInstance, player: number): void;
+    onNoTargetUse?(item: ItemInstance, player: number): void;
     onUsingReleased?(item: ItemInstance, ticks: number, player: number): void;
     onUsingComplete?(item: ItemInstance, player: number): void;
     onDispense?(coords: Callback.ItemUseCoordinates, item: ItemInstance, region: WorldRegion): void;
@@ -272,8 +272,8 @@ declare class ItemBasic {
 interface OnHurtListener {
     onHurt: (params: {
         attacker: number;
-        damage: number;
         type: number;
+        damage: number;
         bool1: boolean;
         bool2: boolean;
     }, item: ItemInstance, slot: number, player: number) => ItemInstance | void;

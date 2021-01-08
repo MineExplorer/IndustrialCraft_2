@@ -14,7 +14,7 @@ extends ItemArmorElectric {
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {
 		if (params.type == 5) {
-			Utils.fixFallDamage(params.damage);
+			Utils.fixFallDamage(player, params.damage);
 		}
 		return item;
 	}
@@ -24,7 +24,7 @@ extends ItemArmorElectric {
 		if (item.extra && item.extra.getBoolean("hover")) {
 			Utils.resetFallHeight();
 			let vel = Entity.getVelocity(player);
-			if (Utils.isPlayerOnGround() || energyStored < 8) {
+			if (energyStored < 8 || Utils.isOnGround(player)) {
 				item.extra.putBoolean("hover", false);
 				Game.message("§4" + Translation.translate("Hover mode disabled"));
 				return item;

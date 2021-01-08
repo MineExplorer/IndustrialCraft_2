@@ -4,8 +4,9 @@ let DIRT_TILES = {
 	60: true
 };
 
-function placeRubberSapling(coords: Callback.ItemUseCoordinates, item: ItemInstance, region: BlockSource) {
+function placeRubberSapling(coords: Callback.ItemUseCoordinates, item: ItemInstance, player: number) {
 	let place = coords.relative;
+	let region = BlockSource.getDefaultForActor(player);
 	let tile1 = region.getBlock(place.x, place.y, place.z);
 	let tile2 = region.getBlock(place.x, place.y - 1, place.z);
 
@@ -49,7 +50,7 @@ Block.setRandomTickCallback(BlockID.rubberTreeSapling, function(x, y, z, id, dat
 });
 
 Item.registerUseFunctionForID(BlockID.rubberTreeSapling, function(coords, item, block, player) {
-	placeRubberSapling(coords, item, BlockSource.getDefaultForActor(player));
+	placeRubberSapling(coords, item, player);
 });
 
 // bone use
@@ -74,5 +75,5 @@ IDRegistry.genItemID("rubberSapling");
 Item.createItem("rubberSapling", "Rubber Tree Sapling", {name: "rubber_tree_sapling", data: 0}, {isTech: true});
 
 Item.registerUseFunction("rubberSapling", function(coords, item, block, player) {
-	placeRubberSapling(coords, item, BlockSource.getDefaultForActor(player));
+	placeRubberSapling(coords, item, player);
 });

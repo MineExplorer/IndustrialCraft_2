@@ -48,7 +48,7 @@ new ItemArmorNanoSuit("nanoLeggings", "nano_leggings", {type: "leggings", defenc
 new ItemArmorNanoSuit("nanoBoots", "nano_boots", {type: "boots", defence: 4});
 
 new ItemArmorQuantumSuit("quantumHelmet", "quantum_helmet", {type: "helmet", defence: 4});
-new ItemArmorQuantumSuit("quantumChestplate", "quantum_chestplate", {type: "chestplate", defence: 9});
+new ItemArmorQuantumSuit("quantumChestplate", "quantum_chestplate", {type: "chestplate", defence: 10});
 new ItemArmorQuantumSuit("quantumLeggings", "quantum_leggings", {type: "leggings", defence: 7});
 new ItemArmorQuantumSuit("quantumBoots", "quantum_boots", {type: "boots", defence: 4});
 

@@ -31,7 +31,7 @@ namespace Machine {
 
 		setActive(isActive: boolean): void {
 			// TODO: sounds
-			if (this.networkData.getBoolean("isActive") != isActive) {
+			if (this.networkData.getBoolean("isActive") !== isActive) {
 				this.networkData.putBoolean("isActive", isActive);
 				this.networkData.sendChanges();
 			}
@@ -73,7 +73,7 @@ namespace Machine {
 			return false;
 		}
 
-		decreaseSlot(slot: ItemContainerSlot, count: number) {
+		decreaseSlot(slot: ItemContainerSlot, count: number): void {
 			slot.count -= count;
 			slot.markDirty();
 			slot.validate();

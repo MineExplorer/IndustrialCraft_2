@@ -227,11 +227,11 @@ var WorldRegion = /** @class */ (function () {
         return this.blockSource.getDimension();
     };
     WorldRegion.prototype.getBlock = function (x, y, z) {
-        if (typeof x === "object") {
-            var pos = x;
-            return this.getBlock(pos.x, pos.y, pos.z);
+        if (typeof x === "number") {
+            return this.blockSource.getBlock(x, y, z);
         }
-        return this.blockSource.getBlock(x, y, z);
+        var pos = x;
+        return this.getBlock(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.getBlockId = function (x, y, z) {
         return this.getBlock(x, y, z).id;
@@ -240,16 +240,18 @@ var WorldRegion = /** @class */ (function () {
         return this.getBlock(x, y, z).data;
     };
     WorldRegion.prototype.setBlock = function (x, y, z, id, data) {
-        if (typeof x === "object") {
-            var pos = x, id = y, data = z;
-            return this.setBlock(pos.x, pos.y, pos.z, id, data);
+        if (typeof x === "number") {
+            return this.blockSource.setBlock(x, y, z, id, data);
         }
-        return this.blockSource.setBlock(x, y, z, id, data);
+        var pos = x;
+        id = y;
+        data = z;
+        return this.setBlock(pos.x, pos.y, pos.z, id, data);
     };
     WorldRegion.prototype.destroyBlock = function (x, y, z, drop, player) {
         if (typeof x === "object") {
-            var pos = x, drop = y, player = z;
-            this.destroyBlock(pos.x, pos.y, pos.z, drop, player);
+            var pos = x, drop_1 = y, player_1 = z;
+            this.destroyBlock(pos.x, pos.y, pos.z, drop_1, player_1);
             return;
         }
         var block = this.getBlock(x, y, z);
@@ -260,48 +262,48 @@ var WorldRegion = /** @class */ (function () {
             if (result) {
                 for (var _i = 0, result_1 = result; _i < result_1.length; _i++) {
                     var dropItem = result_1[_i];
-                    this.dropItem(x + 0.5, y + 0.5, z + 0.5, dropItem[0], dropItem[1], dropItem[2], dropItem[3] || null);
+                    this.dropItem(x + .5, y + .5, z + .5, dropItem[0], dropItem[1], dropItem[2], dropItem[3] || null);
                 }
             }
         }
     };
     WorldRegion.prototype.getNativeTileEntity = function (x, y, z) {
-        if (typeof x === "object") {
-            var pos = x;
-            return this.getNativeTileEntity(pos.x, pos.y, pos.z);
+        if (typeof x === "number") {
+            return this.blockSource.getBlockEntity(x, y, z);
         }
-        return this.blockSource.getBlockEntity(x, y, z);
+        var pos = x;
+        return this.getNativeTileEntity(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.getTileEntity = function (x, y, z) {
-        if (typeof x === "object") {
-            var pos = x;
-            return this.getTileEntity(pos.x, pos.y, pos.z);
+        if (typeof x === "number") {
+            var tileEntity = TileEntity.getTileEntity(x, y, z, this.blockSource);
+            if (tileEntity && tileEntity.__initialized)
+                return tileEntity;
+            return null;
         }
-        var tileEntity = TileEntity.getTileEntity(x, y, z, this.blockSource);
-        if (tileEntity && tileEntity.__initialized)
-            return tileEntity;
-        return null;
+        var pos = x;
+        return this.getTileEntity(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.addTileEntity = function (x, y, z) {
-        if (typeof x === "object") {
-            var pos = x;
-            return this.addTileEntity(pos.x, pos.y, pos.z);
+        if (typeof x === "number") {
+            return TileEntity.addTileEntity(x, y, z, this.blockSource);
         }
-        return TileEntity.addTileEntity(x, y, z, this.blockSource);
+        var pos = x;
+        return this.addTileEntity(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.removeTileEntity = function (x, y, z) {
-        if (typeof x === "object") {
-            var pos = x;
-            return this.removeTileEntity(pos.x, pos.y, pos.z);
+        if (typeof x === "number") {
+            return TileEntity.destroyTileEntityAtCoords(x, y, z, this.blockSource);
         }
-        return TileEntity.destroyTileEntityAtCoords(x, y, z, this.blockSource);
+        var pos = x;
+        return this.removeTileEntity(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.getContainer = function (x, y, z) {
-        if (typeof x === "object") {
-            var pos = x;
-            return this.getContainer(pos.x, pos.y, pos.z);
+        if (typeof x === "number") {
+            return World.getContainer(x, y, z, this.blockSource);
         }
-        return World.getContainer(x, y, z, this.blockSource);
+        var pos = x;
+        return this.getContainer(pos.x, pos.y, pos.z);
     };
     /**
      * Causes an explosion on coords
@@ -363,23 +365,26 @@ var WorldRegion = /** @class */ (function () {
     WorldRegion.prototype.getChunkStateAt = function (x, z) {
         return this.blockSource.getChunkStateAt(x, z);
     };
-    /**
-     * @returns light level on the specified coordinates, from 0 to 15
-     */
     WorldRegion.prototype.getLightLevel = function (x, y, z) {
-        return this.blockSource.getLightLevel(x, y, z);
+        if (typeof x === "number") {
+            return this.blockSource.getLightLevel(x, y, z);
+        }
+        var pos = x;
+        return this.getLightLevel(pos.x, pos.y, pos.z);
     };
-    /**
-     * @returns whether the sky can be seen from coords
-     */
     WorldRegion.prototype.canSeeSky = function (x, y, z) {
-        return this.blockSource.canSeeSky(x, y, z);
+        if (typeof x === "number") {
+            return this.blockSource.canSeeSky(x, y, z);
+        }
+        var pos = x;
+        return this.canSeeSky(pos.x, pos.y, pos.z);
     };
-    /**
-     * @returns grass color on coords
-     */
     WorldRegion.prototype.getGrassColor = function (x, y, z) {
-        return this.getGrassColor(x, y, z);
+        if (typeof x === "number") {
+            return this.blockSource.getGrassColor(x, y, z);
+        }
+        var pos = x;
+        return this.getGrassColor(pos.x, pos.y, pos.z);
     };
     /**
      * Creates dropped item and returns entity id
@@ -428,6 +433,201 @@ var WorldRegion = /** @class */ (function () {
         return this.blockSource.listEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
     };
     return WorldRegion;
+}());
+var PlayerManager = /** @class */ (function () {
+    function PlayerManager(playerUid) {
+        this.playerActor = new PlayerActor(playerUid);
+        this.playerUid = playerUid;
+    }
+    /**
+     * @returns player's unique numeric entity id
+     */
+    PlayerManager.prototype.getUid = function () {
+        return this.playerUid;
+    };
+    /**
+     * @returns the id of dimension where player is.
+     */
+    PlayerManager.prototype.getDimension = function () {
+        return this.playerActor.getDimension();
+    };
+    /**
+     * @returns player's gamemode.
+     */
+    PlayerManager.prototype.getGameMode = function () {
+        return this.playerActor.getGameMode();
+    };
+    /**
+     * Adds item to player's inventory
+     * @param dropRemainings if true, surplus will be dropped near player
+     */
+    PlayerManager.prototype.addItemToInventory = function (id, count, data, extra, dropRemainings) {
+        if (extra === void 0) { extra = null; }
+        if (dropRemainings === void 0) { dropRemainings = true; }
+        this.playerActor.addItemToInventory(id, count, data, extra, dropRemainings);
+    };
+    /**
+     * @returns inventory slot's contents.
+     */
+    PlayerManager.prototype.getInventorySlot = function (slot) {
+        return this.playerActor.getInventorySlot(slot);
+    };
+    /**
+     * Sets inventory slot's contents.
+     */
+    PlayerManager.prototype.setInventorySlot = function (slot, id, count, data, extra) {
+        if (extra === void 0) { extra = null; }
+        this.playerActor.setInventorySlot(slot, id, count, data, extra);
+    };
+    /**
+     * @returns item in player's hand
+    */
+    PlayerManager.prototype.getCarriedItem = function () {
+        return Entity.getCarriedItem(this.getUid());
+    };
+    /**
+     * Sets item in player's hand
+     * @param id item id
+     * @param count item count
+     * @param data item data
+     * @param extra item extra
+     */
+    PlayerManager.prototype.setCarriedItem = function (id, count, data, extra) {
+        if (extra === void 0) { extra = null; }
+        Entity.setCarriedItem(this.getUid(), id, count, data, extra);
+    };
+    /**
+     * Decreases carried item count by specified number
+     * @param amount amount of items to decrease, default is 1
+     */
+    PlayerManager.prototype.decreaseCarriedItem = function (amount) {
+        if (amount === void 0) { amount = 1; }
+        var item = this.getCarriedItem();
+        this.setCarriedItem(item.id, item.count - amount, item.data, item.extra);
+    };
+    /**
+     * @returns armor slot's contents.
+     */
+    PlayerManager.prototype.getArmor = function (slot) {
+        return this.playerActor.getArmor(slot);
+    };
+    /**
+     * Sets armor slot's contents.
+     */
+    PlayerManager.prototype.setArmor = function (slot, id, count, data, extra) {
+        if (extra === void 0) { extra = null; }
+        this.playerActor.setArmor(slot, id, count, data, extra);
+    };
+    /**
+     * Sets respawn coords for the player.
+     */
+    PlayerManager.prototype.setRespawnCoords = function (x, y, z) {
+        this.playerActor.setRespawnCoords(x, y, z);
+    };
+    /**
+     * Spawns exp on coords.
+     * @param value experience points value
+     */
+    PlayerManager.prototype.spawnExpOrbs = function (x, y, z, value) {
+        this.playerActor.spawnExpOrbs(x, y, z, value);
+    };
+    /**
+     * @returns whether the player is a valid entity.
+     */
+    PlayerManager.prototype.isValid = function () {
+        return this.playerActor.isValid();
+    };
+    /**
+     * @returns player's selected slot.
+     */
+    PlayerManager.prototype.getSelectedSlot = function () {
+        return this.playerActor.getSelectedSlot();
+    };
+    /**
+     * Sets player's selected slot.
+     */
+    PlayerManager.prototype.setSelectedSlot = function (slot) {
+        this.playerActor.setSelectedSlot(slot);
+    };
+    /**
+     * @returns player's experience.
+     */
+    PlayerManager.prototype.getExperience = function () {
+        return this.playerActor.getExperience();
+    };
+    /**
+     * Sets player's experience.
+     */
+    PlayerManager.prototype.setExperience = function (value) {
+        this.playerActor.setExperience(value);
+    };
+    /**
+     * Add experience to player.
+     */
+    PlayerManager.prototype.addExperience = function (amount) {
+        this.playerActor.addExperience(amount);
+    };
+    /**
+     * @returns player's xp level.
+     */
+    PlayerManager.prototype.getLevel = function () {
+        return this.playerActor.getLevel();
+    };
+    /**
+     * Sets player's xp level.
+     */
+    PlayerManager.prototype.setLevel = function (level) {
+        this.playerActor.setLevel(level);
+    };
+    /**
+     * @returns player's exhaustion.
+     */
+    PlayerManager.prototype.getExhaustion = function () {
+        return this.playerActor.getExhaustion();
+    };
+    /**
+     * Sets player's exhaustion.
+     */
+    PlayerManager.prototype.setExhaustion = function (value) {
+        this.playerActor.setExhaustion(value);
+    };
+    /**
+     * @returns player's hunger.
+     */
+    PlayerManager.prototype.getHunger = function () {
+        return this.playerActor.getHunger();
+    };
+    /**
+     * Sets player's hunger.
+     */
+    PlayerManager.prototype.setHunger = function (value) {
+        this.playerActor.setHunger(value);
+    };
+    /**
+     * @returns player's saturation.
+     */
+    PlayerManager.prototype.getSaturation = function () {
+        return this.playerActor.getSaturation();
+    };
+    /**
+     * Sets player's saturation.
+     */
+    PlayerManager.prototype.setSaturation = function (value) {
+        this.playerActor.setSaturation(value);
+    };
+    /**
+     * @returns player's score.
+     */
+    PlayerManager.prototype.getScore = function () {
+        return this.playerActor.getScore();
+    };
+    /**
+     * Sets player's score.
+     */
+    PlayerManager.prototype.setScore = function (value) {
+        this.playerActor.setScore(value);
+    };
+    return PlayerManager;
 }());
 var BlockBase = /** @class */ (function () {
     function BlockBase(nameID) {
@@ -810,6 +1010,7 @@ var BlockEngine;
 EXPORT("ItemStack", ItemStack);
 EXPORT("Vector3", Vector3);
 EXPORT("WorldRegion", WorldRegion);
+EXPORT("PlayerManager", PlayerManager);
 EXPORT("ItemBasic", ItemBasic);
 EXPORT("ItemArmor", ItemArmor);
 EXPORT("ItemRegistry", ItemRegistry);

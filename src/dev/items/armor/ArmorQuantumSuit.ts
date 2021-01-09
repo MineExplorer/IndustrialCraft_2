@@ -119,7 +119,7 @@ extends ArmorElectric {
 				}
 				Entity.clearEffect(playerUid, PotionEffect.wither);
 
-				let player = new PlayerActor(playerUid);
+				let player = new PlayerManager(playerUid);
 				var hunger = player.getHunger();
 				if (hunger < 20 && newEnergyStored >= 500) {
 					var i = World.getThreadTime()%36;
@@ -129,7 +129,7 @@ extends ArmorElectric {
 						player.setHunger(hunger + count);
 						slot.count -= count;
 						player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data, slot.extra);
-						player.addItemToInventory(ItemID.tinCanEmpty, count, 0, null, true);
+						player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
 						newEnergyStored -= 500;
 						break;
 					}

@@ -42,7 +42,7 @@ var SoundManager = /** @class */ (function () {
                 var durationStr = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
                 var duration = parseInt(durationStr);
                 soundData.duration = duration - duration % 50;
-                Game.message(soundName + " - " + soundData.duration);
+                //Game.message(soundName + " - " + soundData.duration);
             }
             return soundData.duration;
         }
@@ -66,7 +66,7 @@ var SoundManager = /** @class */ (function () {
         }
         volume *= this.soundVolume;
         var streamID = this.soundPool.play(soundID, volume, volume, soundData.looping ? 1 : 0, soundData.looping ? -1 : 0, pitch);
-        Game.message(streamID + " - " + soundName + ", volume: " + volume);
+        //Game.message(streamID + " - " + soundName + ", volume: " + volume);
         return streamID;
     };
     SoundManager.playSoundAt = function (x, y, z, soundName, volume, pitch, radius) {
@@ -203,10 +203,10 @@ var SoundManager = /** @class */ (function () {
             // check dimension
             if (sound.sourceType == SourceType.ENTITY) {
                 if (Entity.getDimension(sound.source) != Player.getDimension()) {
-                    Game.message(sound.source + ' in ' + Entity.getDimension(sound.source));
+                    ///Game.message(sound.source + ' in ' + Entity.getDimension(sound.source));
                 }
                 if (!Entity.isExist(sound.source)) {
-                    Game.message(sound.source + ' removed');
+                    //Game.message(sound.source + ' removed');
                     sound.remove = true;
                 }
                 else {
@@ -214,7 +214,7 @@ var SoundManager = /** @class */ (function () {
                 }
             }
             if (!sound.isPlaying && sound.isLooping && this.playingStreams < this.maxStreams) {
-                Game.message("Start play sound: " + sound.soundName);
+                //Game.message("Start play sound: " + sound.soundName);
                 sound.play();
             }
             if (sound.isPlaying) {

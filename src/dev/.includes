@@ -29,7 +29,8 @@ machine/generator/StirlingGenerator.ts
 machine/heat_generator/**
 
 machine/reactor/reactorAPI.js
-machine/reactor/nuclear_reactor.js
+machine/reactor/NuclearReactor.ts
+machine/reactor/ReactorChamber.ts
 
 machine/storage/BatBox.ts
 machine/storage/CESU.ts
@@ -84,7 +85,7 @@ items/resource/scrap.js
 items/resource/matter.js
 items/resource/material.js
 items/resource/liquid.js
-items/resource/cells.js
+items/resource/cells.ts
 items/resource/waste.js
 
 items/crop/crop_seed_bag.js

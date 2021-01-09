@@ -60,7 +60,7 @@ namespace Machine {
 						let sourceCount = result.sourceCount || 1;
 						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - sourceCount, sourceSlot.data);
 						sourceSlot.validate();
-						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);
+						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data || 0);
 						this.data.progress = 0;
 					}
 				}

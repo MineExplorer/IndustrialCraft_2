@@ -64,7 +64,7 @@ namespace Utils {
 	}
 
 	export function isOnGround(entity: number): boolean {
-		let tag = Entity.getCompoundTag(entity);
-		return !!tag.getByte("OnGround");
+		let vel = Entity.getVelocity(entity);
+		return Math.abs(vel.y - fallVelocity) < 0.0001;
 	}
 }

@@ -51,6 +51,7 @@ Block.setRandomTickCallback(BlockID.rubberTreeSapling, function(x, y, z, id, dat
 
 Item.registerUseFunctionForID(BlockID.rubberTreeSapling, function(coords, item, block, player) {
 	placeRubberSapling(coords, item, player);
+	Game.prevent();
 });
 
 // bone use

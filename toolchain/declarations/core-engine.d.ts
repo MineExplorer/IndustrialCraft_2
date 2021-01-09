@@ -7682,7 +7682,7 @@ declare class PlayerActor {
      * Adds item to player's inventory
      * @param dropRemainings if true, surplus will be dropped near player
      */
-    addItemToInventory(id: number, count: number, data: number, extra?: ItemExtraData | null, dropRemainings?: boolean): void;
+    addItemToInventory(id: number, count: number, data: number, extra: ItemExtraData | null, dropRemainings: boolean): void;
 
     /**
      * @returns inventory slot's contents.
@@ -7692,7 +7692,7 @@ declare class PlayerActor {
     /**
      * Sets inventory slot's contents.
      */
-    setInventorySlot(slot: number, id: number, count: number, data: number, extra?: ItemExtraData | null): void;
+    setInventorySlot(slot: number, id: number, count: number, data: number, extra: ItemExtraData | null): void;
 
     /**
      * @returns armor slot's contents.
@@ -7702,7 +7702,7 @@ declare class PlayerActor {
     /**
      * Sets armor slot's contents.
      */
-    setArmor(slot: number, id: number, count: number, data: number, extra?: ItemExtraData | null): void;
+    setArmor(slot: number, id: number, count: number, data: number, extra: ItemExtraData | null): void;
 
     /**
      * Sets respawn coords for the player.

@@ -51,40 +51,40 @@ Recipes.addShaped({id: 49, count: 1, data: 0}, [
 	"bb"
 ], ['a', ItemID.cellLava, 0, 'b', ItemID.cellWater, 0]);
 
-Item.registerUseFunction("cellEmpty",function(coords, item, block) {
+Item.registerUseFunction("cellEmpty",function(coords, item, block, playerUid) {
 	if (block.id > 7 && block.id < 12 && block.data == 0) {
-		World.setBlock(coords.x, coords.y, coords.z, 0);
+		let player = new PlayerManager(playerUid);
+		let region = WorldRegion.getForActor(playerUid);
+		region.setBlock(coords, 0, 0);
 		if (block.id == 8 || block.id == 9) {
-			Player.addItemToInventory(ItemID.cellWater, 1);
+			player.addItemToInventory(ItemID.cellWater, 1, 0);
 		} else {
-			Player.addItemToInventory(ItemID.cellLava, 1);
+			player.addItemToInventory(ItemID.cellLava, 1, 0);
 		}
-		Player.decreaseCarriedItem(1);
+		player.decreaseCarriedItem();
 	}
 });
 
-Item.registerUseFunction("cellWater", function(coords, item, block) {
+Item.registerUseFunction("cellWater", function(coords, item, block, playerUid) {
 	if (item.data > 0 || block.id == BlockID.crop) return;
-	var x = coords.relative.x
-	var y = coords.relative.y
-	var z = coords.relative.z
-	var block = World.getBlockID(x,y,z)
-	if (block == 0 || block > 7 && block < 12) {
-		World.setBlock(x, y, z, 8);
-		Player.addItemToInventory(ItemID.cellEmpty, 1);
-		Player.decreaseCarriedItem(1);
+	let player = new PlayerManager(playerUid);
+	let region = WorldRegion.getForActor(playerUid);
+	let blockID = region.getBlockId(coords.relative);
+	if (blockID == 0 || blockID > 7 && blockID < 12) {
+		region.setBlock(coords.relative, 8, 0);
+		player.addItemToInventory(ItemID.cellEmpty, 1, 0);
+		player.decreaseCarriedItem();
 	}
 });
 
-Item.registerUseFunction("cellLava", function(coords, item, block) {
+Item.registerUseFunction("cellLava", function(coords, item, block, playerUid) {
 	if (item.data > 0) return;
-	var x = coords.relative.x
-	var y = coords.relative.y
-	var z = coords.relative.z
-	var block = World.getBlockID(x,y,z)
-	if (block == 0 || block > 7 && block < 12) {
-		World.setBlock(x, y, z, 10);
-		Player.addItemToInventory(ItemID.cellEmpty, 1);
-		Player.decreaseCarriedItem(1);
+	let player = new PlayerManager(playerUid);
+	let region = WorldRegion.getForActor(playerUid);
+	let blockID = region.getBlockId(coords.relative);
+	if (blockID == 0 || blockID > 7 && blockID < 12) {
+		region.setBlock(coords.relative, 10, 0);
+		player.addItemToInventory(ItemID.cellEmpty, 1, 0);
+		player.decreaseCarriedItem();
 	}
 });

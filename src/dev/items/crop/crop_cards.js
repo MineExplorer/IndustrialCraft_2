@@ -194,9 +194,9 @@ AgricultureAPI.registerCropCard({
     getDiscoveredBy: function() {
         return "raGan";
     },
-    canGrow: function(tileentity) {
-        var light = World.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
-        return (tileentity.data.currentSize <= 4 && light >= 12) || tileentity.data.currentSize == 5;
+    canGrow: function(crop) {
+        var light = crop.region.getLightLevel(crop);
+        return (crop.data.currentSize <= 4 && light >= 12) || crop.data.currentSize == 5;
     },
     canBeHarvested: function(crop) {
         return crop.data.currentSize >= 4;
@@ -537,7 +537,7 @@ AgricultureAPI.registerCropCard({
         return "raa1337";
     },
     canGrow: function(crop) {
-        var light = World.getLightLevel(crop.x,crop.y,crop.z);
+        var light = crop.region.getLightLevel(crop);
         return crop.data.currentSize < 7 && light <= 10 && light >= 5;
     },
     dropGainChance: function() {return 0.5},
@@ -572,7 +572,7 @@ AgricultureAPI.registerCropCard({
         return "Snoochy";
     },
     canGrow: function(crop) {
-        var light = World.getLightLevel(crop.x,crop.y,crop.z);
+        var light = crop.region.getLightLevel(crop);
         return crop.data.currentSize < 5 && light >= 9;
     },
     getGrowthDuration(crop) {
@@ -608,7 +608,7 @@ AgricultureAPI.registerCropCard({
     },
     maxSize: 7,
     canGrow: function(crop) {
-        var light = World.getLightLevel(crop.x, crop.y, crop.z);
+        var light = crop.region.getLightLevel(crop);
         return crop.data.currentSize < 7 && light >= 9;
     },
     getGrowthDuration: function(crop) {
@@ -710,7 +710,7 @@ AgricultureAPI.registerCropCard({
         return "Hasudako";
     },
     canGrow: function(crop) {
-        var light = World.getLightLevel(crop.x, crop.y, crop.z);
+        var light = crop.region.getLightLevel(crop);
         if (crop.data.currentSize < 3) {
             return light > 10;
         }

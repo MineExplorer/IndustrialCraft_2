@@ -178,14 +178,17 @@ declare class WorldRegion {
     /**
      * @returns light level on the specified coordinates, from 0 to 15
      */
+    getLightLevel(coords: Vector): number;
     getLightLevel(x: number, y: number, z: number): number;
     /**
      * @returns whether the sky can be seen from coords
      */
+    canSeeSky(coords: Vector): boolean;
     canSeeSky(x: number, y: number, z: number): boolean;
     /**
      * @returns grass color on coords
      */
+    getGrassColor(coords: Vector): number;
     getGrassColor(x: number, y: number, z: number): number;
     /**
      * Creates dropped item and returns entity id
@@ -221,6 +224,134 @@ declare class WorldRegion {
      * and all except the entities of the given type, if blacklist value is true
      */
     listEntitiesInAABB(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, type: number, blacklist?: boolean): number[];
+}
+declare class PlayerManager {
+    playerActor: PlayerActor;
+    playerUid: number;
+    constructor(playerUid: number);
+    /**
+     * @returns player's unique numeric entity id
+     */
+    getUid(): number;
+    /**
+     * @returns the id of dimension where player is.
+     */
+    getDimension(): number;
+    /**
+     * @returns player's gamemode.
+     */
+    getGameMode(): number;
+    /**
+     * Adds item to player's inventory
+     * @param dropRemainings if true, surplus will be dropped near player
+     */
+    addItemToInventory(id: number, count: number, data: number, extra?: ItemExtraData, dropRemainings?: boolean): void;
+    /**
+     * @returns inventory slot's contents.
+     */
+    getInventorySlot(slot: number): ItemInstance;
+    /**
+     * Sets inventory slot's contents.
+     */
+    setInventorySlot(slot: number, id: number, count: number, data: number, extra?: ItemExtraData): void;
+    /**
+     * @returns item in player's hand
+    */
+    getCarriedItem(): ItemInstance;
+    /**
+     * Sets item in player's hand
+     * @param id item id
+     * @param count item count
+     * @param data item data
+     * @param extra item extra
+     */
+    setCarriedItem(id: number, count: number, data: number, extra?: ItemExtraData): void;
+    /**
+     * Decreases carried item count by specified number
+     * @param amount amount of items to decrease, default is 1
+     */
+    decreaseCarriedItem(amount?: number): void;
+    /**
+     * @returns armor slot's contents.
+     */
+    getArmor(slot: number): ItemInstance;
+    /**
+     * Sets armor slot's contents.
+     */
+    setArmor(slot: number, id: number, count: number, data: number, extra?: ItemExtraData): void;
+    /**
+     * Sets respawn coords for the player.
+     */
+    setRespawnCoords(x: number, y: number, z: number): void;
+    /**
+     * Spawns exp on coords.
+     * @param value experience points value
+     */
+    spawnExpOrbs(x: number, y: number, z: number, value: number): void;
+    /**
+     * @returns whether the player is a valid entity.
+     */
+    isValid(): boolean;
+    /**
+     * @returns player's selected slot.
+     */
+    getSelectedSlot(): number;
+    /**
+     * Sets player's selected slot.
+     */
+    setSelectedSlot(slot: number): void;
+    /**
+     * @returns player's experience.
+     */
+    getExperience(): number;
+    /**
+     * Sets player's experience.
+     */
+    setExperience(value: number): void;
+    /**
+     * Add experience to player.
+     */
+    addExperience(amount: number): void;
+    /**
+     * @returns player's xp level.
+     */
+    getLevel(): number;
+    /**
+     * Sets player's xp level.
+     */
+    setLevel(level: number): void;
+    /**
+     * @returns player's exhaustion.
+     */
+    getExhaustion(): number;
+    /**
+     * Sets player's exhaustion.
+     */
+    setExhaustion(value: number): void;
+    /**
+     * @returns player's hunger.
+     */
+    getHunger(): number;
+    /**
+     * Sets player's hunger.
+     */
+    setHunger(value: number): void;
+    /**
+     * @returns player's saturation.
+     */
+    getSaturation(): number;
+    /**
+     * Sets player's saturation.
+     */
+    setSaturation(value: number): void;
+    /**
+     * @returns player's score.
+     */
+    getScore(): number;
+    /**
+     * Sets player's score.
+     */
+    setScore(value: number): void;
 }
 declare class BlockBase {
     nameID: string;
@@ -341,7 +472,7 @@ declare abstract class TileEntityBase implements TileEntity {
     blockID: number;
     remove: boolean;
     isLoaded: boolean;
-    private __initialized;
+    __initialized: boolean;
     useNetworkItemContainer: boolean;
     data: {
         [key: string]: any;

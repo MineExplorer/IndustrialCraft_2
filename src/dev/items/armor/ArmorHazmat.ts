@@ -11,14 +11,14 @@ implements OnHurtListener, OnTickListener {
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		if (params.type == 9 && index == 0) {
-			let player = new PlayerActor(playerUid);
+			let player = new PlayerManager(playerUid);
 			for (let i = 0; i < 36; i++) {
 				let slot = player.getInventorySlot(i);
 				if (slot.id == ItemID.cellAir) {
 					Game.prevent();
 					Entity.addEffect(playerUid, PotionEffect.waterBreathing, 1, 60);
-					player.setInventorySlot(i, slot.id, slot.count - 1, 0);
-					player.addItemToInventory(ItemID.cellEmpty, 1, 0, null, true);
+					player.setInventorySlot(i, slot.id, slot.count - 1, 0, slot.extra);
+					player.addItemToInventory(ItemID.cellEmpty, 1, 0);
 					break;
 				}
 			}

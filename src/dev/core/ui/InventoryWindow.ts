@@ -1,4 +1,4 @@
-function InventoryWindow(header: string, uiDescriptor: {drawing?: UI.DrawingSet, elements: UI.ElementSet}){
+function InventoryWindow(header: string, uiDescriptor: {drawing?: UI.DrawingSet, elements: UI.ElementSet}) {
 	let gui = new UI.StandartWindow({
 		standard: {
 			header: {text: {text: Translation.translate(header)}},

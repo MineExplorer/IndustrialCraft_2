@@ -90,14 +90,14 @@ namespace ICTool {
 
 	export function registerElectricHoe(nameID: string) {
 		Item.registerUseFunction(nameID, function(coords, item, block) {
-			if ((block.id == 2 || block.id == 3 || block.id == 110 || block.id == 243) && coords.side == 1 && ICTool.useElectricItem(item, 50)) { 
+			if ((block.id == 2 || block.id == 3 || block.id == 110 || block.id == 243) && coords.side == 1 && ICTool.useElectricItem(item, 50)) {
 				World.setBlock(coords.x, coords.y, coords.z, 60, 0);
 				World.playSound(coords.x + .5, coords.y + 1, coords.z + .5, "step.gravel", 1, 0.8);
 			}
 		});
 	}
 
-	export function registerElectricTreetap(nameID) {
+	export function registerElectricTreetap(nameID: string) {
 		Item.registerUseFunction(nameID, function(coords, item, block) {
 			if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, 50)) {
 				SoundManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");

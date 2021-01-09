@@ -1,7 +1,7 @@
 class ItemTreetap
 extends ItemIC2 {
 	constructor() {
-		super("treetap", "Treetap", "treetap");
+		super("treetap");
 		this.setMaxStack(1);
 		this.setMaxDamage(17);
 	}

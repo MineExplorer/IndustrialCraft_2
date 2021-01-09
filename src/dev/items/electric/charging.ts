@@ -2,7 +2,7 @@
 
 class ItemBatteryCharging
 extends ItemBattery {
-	onUseNoTarget(item: ItemInstance, player: number) {
+	onNoTargetUse(item: ItemInstance, player: number) {
 		var extra = item.extra || new ItemExtraData();
 		var mode = (extra.getInt("mode") + 1) % 3;
 		extra.putInt("mode", mode);
@@ -31,6 +31,32 @@ extends ItemBattery {
 		}
 		name = super.onNameOverride(item, name);
 		return name + '\n' + tooltip;
+	}
+
+	static checkCharging(playerUid: number) {
+		let player = new PlayerActor(playerUid);
+		for (let i = 0; i < 36; i++) {
+			let slot = player.getInventorySlot(i);
+			let itemClass = ItemRegistry.getInstanceOf(slot.id);
+			if (itemClass instanceof ItemBatteryCharging) {
+				var mode = slot.extra? slot.extra.getInt("mode") : 0;
+				var energyStored = ChargeItemRegistry.getEnergyStored(slot);
+				if (mode == 2 || energyStored <= 0) continue;
+				for (var index = 0; index < 9; index++) {
+					if (mode == 1 && player.getSelectedSlot() == index) continue;
+					var item = player.getInventorySlot(index);
+					if (!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)) {
+						var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", Math.min(energyStored, itemClass.transferLimit*20), itemClass.tier, true);
+						if (energyAdd > 0) {
+							energyStored -= energyAdd;
+							player.setInventorySlot(index, item.id, 1, item.data, item.extra);
+						}
+					}
+				}
+				ChargeItemRegistry.setEnergyStored(slot, energyStored);
+				player.setInventorySlot(i, slot.id, 1, slot.data, slot.extra);
+			}
+		}
 	}
 }
 
@@ -71,35 +97,9 @@ Callback.addCallback("PreLoaded", function() {
 		"xbx"
 	], ['#', ItemID.chargingCrystal, -1, 'x', ItemID.heatExchangerAdv, 1, 'b', ItemID.storageLapotronCrystal, -1], ChargeItemRegistry.transferEnergy);
 });
-// TODO: in hand tick
-/*function checkCharging() {
-	for (var i = 0; i < 36; i++) {
-		var slot = Player.getInventorySlot(i);
-		if (ChargingBattery.itemIDs[slot.id]) {
-			var mode = slot.extra? slot.extra.getInt("mode") : 0;
-			var energyStored = ChargeItemRegistry.getEnergyStored(slot);
-			if (mode == 2 || energyStored <= 0) continue;
-			var chargeData = ChargeItemRegistry.getItemData(slot.id);
-			for (var index = 0; index < 9; index++) {
-				if (mode == 1 && Player.getSelectedSlotId() == index) continue;
-				var item = Player.getInventorySlot(index);
-				if (!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)) {
-					var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", energyStored, chargeData.transferLimit*20, chargeData.tier);
-					if (energyAdd > 0) {
-						energyStored -= energyAdd;
-						Player.setInventorySlot(index, item.id, 1, item.data, item.extra);
-					}
-				}
-			}
-			ChargeItemRegistry.setEnergyStored(slot, energyStored);
-			Player.setInventorySlot(i, slot.id, 1, slot.data, slot.extra);
-		}
-	}
-}
 
-Callback.addCallback("tick", function() {
-	if (World.getThreadTime() % 20 == 0) {
-		checkCharging();
+Callback.addCallback("ServerPlayerTick", function(playerUid: number, isPlayerDead?: boolean) {
+	if (World.getThreadTime() % 20 == 0 && !isPlayerDead) {
+		ItemBatteryCharging.checkCharging(playerUid);
 	}
 });
-*/

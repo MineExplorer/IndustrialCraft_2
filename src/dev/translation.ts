@@ -325,7 +325,7 @@ Translation.addTranslation("Containment Box", {ru: "Защитный конте�
 Translation.addTranslation("Frequency Transmitter", {ru: "Частотный связыватель", es: "Transmisor de Frecuencias", pt: "Transmissor de Frequência", zh: "遥控器"});
 Translation.addTranslation("OD Scanner", {ru: "Сканер КР", es: "Escaner de Densidad", zh: "OD扫描器"});
 Translation.addTranslation("OV Scanner", {ru: "Сканер ЦР", es: "Escaner de Riqueza", zh: "OV扫描器"});
-Translation.addTranslation("Treetap", {ru: "Краник", es: "Grifo para Resina", pt: "Drenador", zh: "木龙头"});
+Translation.addTranslation("treetap", {en: "Treetap", ru: "Краник", es: "Grifo para Resina", pt: "Drenador", zh: "木龙头"});
 Translation.addTranslation("Forge Hammer", {ru: "Кузнечный молот", es: "Martillo para Forja", pt: "Martelo de Forja", zh: "锻造锤"});
 Translation.addTranslation("Cutter", {ru: "Кусачки", es: "Pelacables Universal", pt: "Alicate", zh: "板材切割剪刀"});
 Translation.addTranslation("Bronze Sword", {ru: "Бронзовый меч", es: "Espada de Bronce", pt: "Espada de Bronze", zh: "青铜剑"});
@@ -346,7 +346,7 @@ Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер
 Translation.addTranslation("EU Meter", {ru: "Мультиметр", pt: "Leitor de EU", zh: "EU电表"});
 Translation.addTranslation("Debug Item", {ru: "Предмет отладки", pt: "Item de Depuração", zh:"测试工具"});
 Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh: "作物分析器"});
-Translation.addTranslation("Weeding Trowel", {ru: "Пропалыватель", pt: "Espátula Transplantadora", zh: "除草铲"});
+Translation.addTranslation("weeding_trowel", {en: "Weeding Trowel", ru: "Пропалыватель", pt: "Espátula Transplantadora", zh: "除草铲"});
 
 // Coffee
 Translation.addTranslation("Coffee Powder", {ru: "Молотый кофе", es: "Polvo de Café", pt: "Pó de Café", zh: "咖啡粉"});

@@ -16,6 +16,9 @@ extends ItemIC2 {
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number) {
+		let client = Network.getClientForPlayer(player);
+		if (!client) return;
+
 		var receiveCoords: Vector;
 		var extra = item.extra;
 		if (!extra) {
@@ -26,17 +29,18 @@ extends ItemIC2 {
 			var z = extra.getInt("z");
 			receiveCoords = {x: x, z: z, y: y};
 		}
+
 		if (block.id == BlockID.teleporter) {
 			if (!receiveCoords) {
 				extra.putInt("x", coords.x);
 				extra.putInt("y", coords.y);
 				extra.putInt("z", coords.z);
 				Entity.setCarriedItem(player, item.id, 1, item.data, extra);
-				Game.message("Frequency Transmitter linked to Teleporter");
+				client.sendMessage("Frequency Transmitter linked to Teleporter");
 			}
 			else {
 				if (x == coords.x && y == coords.y && z == coords.z) {
-					Game.message("Can`t link Teleporter to itself");
+					client.sendMessage("Can`t link Teleporter to itself");
 				}
 				else {
 					let region = WorldRegion.getForActor(player);
@@ -50,14 +54,14 @@ extends ItemIC2 {
 						data = receiver.data;
 						data.frequency = coords;
 						data.frequency.energy = basicTeleportCost;
-						Game.message("Teleportation link established");
+						client.sendMessage("Teleportation link established");
 					}
 				}
 			}
 		}
 		else if (receiveCoords) {
 			Entity.setCarriedItem(player, item.id, 1, item.data);
-			Game.message("Frequency Transmitter unlinked");
+			client.sendMessage("Frequency Transmitter unlinked");
 		}
 	}
 }

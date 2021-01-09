@@ -18,28 +18,31 @@ implements ItemFuncs {
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
-		Game.message(block.id+":"+block.data);
+		let client = Network.getClientForPlayer(player);
+		if (!client) return;
+
+		client.sendMessage(block.id+":"+block.data);
 		let region = WorldRegion.getForActor(player);
 		var tile = region.getTileEntity(coords);
 		if (tile) {
 			var liquid = tile.liquidStorage.getLiquidStored();
 			if (liquid) {
-				Game.message(liquid + " - " + tile.liquidStorage.getAmount(liquid)*1000 + "mB");
+				client.sendMessage(liquid + " - " + tile.liquidStorage.getAmount(liquid)*1000 + "mB");
 			}
 			for (var i in tile.data) {
 				if (i != "energy_storage") {
 					if (i == "__liquid_tanks") {
 						var tanks = tile.data[i];
-						Game.message(tanks.input.liquid + ": "+ tanks.input.amount*1000 + "mB");
-						Game.message(tanks.output.liquid + ": "+ tanks.output.amount*1000 + "mB");
+						client.sendMessage(tanks.input.liquid + ": "+ tanks.input.amount*1000 + "mB");
+						client.sendMessage(tanks.output.liquid + ": "+ tanks.output.amount*1000 + "mB");
 					}
 					else if (i == "energy") {
-						Game.message("energy: " + tile.data[i] + "/" + tile.getEnergyStorage());
+						client.sendMessage("energy: " + tile.data[i] + "/" + tile.getEnergyStorage());
 					}
 					else try {
-						Game.message(i + ": " + tile.data[i]);
+						client.sendMessage(i + ": " + tile.data[i]);
 					} catch(e) {
-						Game.message(i);
+						client.sendMessage(i);
 					}
 				}
 			}
@@ -48,11 +51,11 @@ implements ItemFuncs {
 		if (tile) {
 			for (var i in tile.__energyNets) {
 				var net = tile.__energyNets[i];
-				if (net) Game.message(net.toString());
+				if (net) client.sendMessage(net.toString());
 			}
 		} else {
 			var net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
-			if (net) Game.message(net.toString());
+			if (net) client.sendMessage(net.toString());
 		}
 	}
 }

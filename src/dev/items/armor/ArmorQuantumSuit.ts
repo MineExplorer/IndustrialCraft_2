@@ -161,7 +161,8 @@ extends ArmorElectric {
 					var vel = Entity.getVelocity(playerUid);
 					if (energyStored < 8 || Utils.isOnGround(playerUid)) {
 						item.extra.putBoolean("hover", false);
-						Game.message("§4" + Translation.translate("Hover mode disabled"));
+						let client = Network.getClientForPlayer(playerUid);
+						if (client) client.sendMessage("§4" + Translation.translate("Hover mode disabled"));
 						return item;
 					}
 					else if (vel.y < -0.1) {

@@ -88,6 +88,15 @@ namespace Machine {
 			this.renderModel();
 			this.__initialized = true;
 			this.rebuildEnergyNet();
+			for (let i = 0; i < 6; i++) {
+				let coords = StorageInterface.getRelativeCoords(this, i);
+				if (this.region.getBlockId(coords) == BlockID.reactorChamber) {
+					let tileEnt = this.region.getTileEntity(coords) as ReactorChamber;
+					if (tileEnt) {
+						this.addChamber(tileEnt);
+					}
+				}
+			}
 		}
 
 		setupContainer(): void {
@@ -104,15 +113,6 @@ namespace Machine {
 			}
 			net = EnergyNetBuilder.buildForTile(this, EU);
 			this.__energyNets.Eu = net;
-			for (let i = 0; i < 6; i++) {
-				let coords = StorageInterface.getRelativeCoords(this, i);
-				if (this.region.getBlockId(coords) == BlockID.reactorChamber) {
-					let tileEnt = this.region.getTileEntity(coords) as ReactorChamber;
-					if (tileEnt) {
-						this.addChamber(tileEnt);
-					}
-				}
-			}
 		}
 
 		addChamber(chamber: ReactorChamber) {

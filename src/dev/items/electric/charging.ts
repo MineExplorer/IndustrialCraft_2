@@ -6,16 +6,20 @@ extends ItemBattery {
 		var extra = item.extra || new ItemExtraData();
 		var mode = (extra.getInt("mode") + 1) % 3;
 		extra.putInt("mode", mode);
-		if (mode == 0) {
-			Game.message(Translation.translate("Mode: Enabled"));
-		}
-		if (mode == 1) {
-			Game.message(Translation.translate("Mode: Charge items not in hand"));
-		}
-		if (mode == 2) {
-			Game.message(Translation.translate("Mode: Disabled"));
-		}
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
+
+		let client = Network.getClientForPlayer(player);
+		if (client) {
+			if (mode == 0) {
+				client.sendMessage(Translation.translate("Mode: Enabled"));
+			}
+			if (mode == 1) {
+				client.sendMessage(Translation.translate("Mode: Charge items not in hand"));
+			}
+			if (mode == 2) {
+				client.sendMessage(Translation.translate("Mode: Disabled"));
+			}
+		}
 	}
 
 	onNameOverride(item: ItemInstance, name: string) {

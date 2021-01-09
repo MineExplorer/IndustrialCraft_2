@@ -26,9 +26,10 @@ extends ElectricItem {
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
-		if (ICTool.useElectricItem(item, this.getEnergyPerUse())) {
+		let client = Network.getClientForPlayer(player);
+		if (client && ICTool.useElectricItem(item, this.getEnergyPerUse())) {
 			SoundManager.playSound("ODScanner.ogg");
-			Game.message(Translation.translate("Scan Result: ") + coords.x + ", " + coords.y + ", " + coords.z);
+			client.sendMessage(Translation.translate("Scan Result: ") + coords.x + ", " + coords.y + ", " + coords.z);
 			let ores = {};
 			let radius = this.getScanRadius();
 			for (let x = coords.x - radius; x <= coords.x + radius; x++) {
@@ -43,7 +44,7 @@ extends ElectricItem {
 				}
 			}
 			for (let id in ores) {
-				Game.message(Item.getName(parseInt(id), 0) + " - " + ores[id]);
+				client.sendMessage(Item.getName(parseInt(id), 0) + " - " + ores[id])
 			}
 		}
 	}

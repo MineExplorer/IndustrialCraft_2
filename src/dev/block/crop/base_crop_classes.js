@@ -52,7 +52,7 @@ AgricultureAPI.abstractFunctions["CropVanilla"] = {
     },
     getProduct: function() {return {id: 0, count: 1, data: 0}},
     canGrow: function(tileentity) {
-        var light = World.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
+        var light = tileentity.region.getLightLevel(tileentity);
         return tileentity.data.currentSize < tileentity.crop.maxSize && light >= 9;
     },
     getGain: function(te) {
@@ -86,7 +86,7 @@ AgricultureAPI.abstractFunctions["CropColorFlower"] = {
     color: 0,
     getOptimalHarvestSize: function(crop) {return 4},
     canGrow(tileentity) {
-        var light = World.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
+        var light = tileentity.region.getLightLevel(tileentity);
         return tileentity.data.currentSize < tileentity.crop.maxSize &&  light >= 12;
     },
     getGain: function(te) {return {id: 351, count: 1, data: this.color}},

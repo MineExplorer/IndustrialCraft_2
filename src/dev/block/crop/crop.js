@@ -6,7 +6,7 @@ ToolAPI.registerBlockMaterial(BlockID.crop, "wood");
 TileRenderer.setEmptyCollisionShape(BlockID.crop);
 BlockRenderer.enableCoordMapping(BlockID.crop, 0, TileRenderer.getCropModel(["stick", 0]));
 
-Block.registerDropFunctionForID(BlockID.crop, function(coords, id, data, diggingLevel, toolLevel) { 
+Block.registerDropFunctionForID(BlockID.crop, function(coords, id, data, diggingLevel, toolLevel) {
 	return [];
 });
 
@@ -30,6 +30,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 	},
 
 	init: function() {
+		this.region = new WorldRegion(this.blockSource);
 		if (this.data.crop) this.crop = AgricultureAPI.cropCards[this.data.crop];
 		this.updateRender();
 	},
@@ -102,7 +103,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 
 	onLongClick: function() {
 		if (this.data.crossingBase) {
-			World.drop(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
+			this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
 			this.data.crossingBase = false;
 			this.data.dirty = true;
 			this.updateRender();
@@ -115,8 +116,8 @@ TileEntity.registerPrototype(BlockID.crop, {
 	},
 
 	destroyBlock: function(coords, player) {
-		World.drop(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
-		if (this.data.crossingBase) World.drop(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
+		this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
+		if (this.data.crossingBase) this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
 		if (this.crop) this.crop.onLeftClick(this);
 		BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 	},
@@ -145,14 +146,14 @@ TileEntity.registerPrototype(BlockID.crop, {
 			var vel = Player.getVelocity();
 			var horizontalVel = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
 			if (horizontalVel > 0.15 && this.crop.onEntityCollision(this)) {
-				World.destroyBlock(this.x, this.y, this.z);
+				this.region.destroyBlock(this);
 			}
 		}
 	},
 
 	checkGround: function() {
-		if (World.getBlockID(this.x, this.y - 1, this.z) != 60) {
-			World.destroyBlock(this.x, this.y, this.z);
+		if (this.region.getBlockId(this.x, this.y - 1, this.z) != 60) {
+			this.region.destroyBlock(this);
 		}
 	},
 
@@ -204,7 +205,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 	updateTerrainHumidity: function() {
 		var humidity = AgricultureAPI.getHumidityBiomeBonus(this.x, this.z);
 
-		if (World.getBlockData(this.x, this.y-1, this.z) == 7) humidity += 2
+		if (this.region.getBlockData(this.x, this.y - 1, this.z) == 7) humidity += 2
 		if (this.data.storageWater >= 5) humidity += 2;
 
 		humidity += (this.data.storageWater + 24) / 25;
@@ -216,7 +217,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 		nutrients += (this.data.terrainNutrients + 19) / 20;
 
 		for (var i = 2; i < 5; ++i) {
-			if (World.getBlockID(this.x, this.y - i, this.z) == 3) nutrients++;
+			if (this.region.getBlockId(this.x, this.y - i, this.z) == 3) nutrients++;
 		}
 		this.data.terrainNutrients = nutrients;
 	},
@@ -230,7 +231,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 		var fresh = 9;
 		for (var x = this.x - 1; x < this.x + 2; x++) {
 			for (var z = this.z - 1; z < this.z + 2; z++) {
-				if (World.getBlockID(x, this.y, z)) fresh--;
+				if (this.region.getBlockId(x, this.y, z)) fresh--;
 			}
 		}
 		if (GenerationUtils.canSeeSky(this.x, this.y + 1, this.z)) value += 2;
@@ -273,8 +274,8 @@ TileEntity.registerPrototype(BlockID.crop, {
 	performWeedWork: function() {
 		var coords = this.relativeCropCoords[randomInt(0, 3)];
 		var preCoords = [this.x + coords[0], this.y + coords[0], this.z + coords[0]];
-		if (World.getBlockID(preCoords[0], preCoords[1], preCoords[2]) == BlockID.crop) {
-			var TE = World.getTileEntity(preCoords[0], preCoords[1], preCoords[2]);
+		if (this.region.getBlockId(preCoords[0], preCoords[1], preCoords[2]) == BlockID.crop) {
+			var TE = this.region.getTileEntity(preCoords[0], preCoords[1], preCoords[2]);
 			if (!TE.crop || (!TE.crop.isWeed(this) && !TE.hasWeedEX() && randomInt(0, 32) >= TE.data.statResistance)) {
 				var newGrowth = Math.max(this.data.statGrowth, TE.data.statGrowth);
 				if (newGrowth < 31 && randomInt(0, 1)) newGrowth++;
@@ -287,8 +288,8 @@ TileEntity.registerPrototype(BlockID.crop, {
 				TE.updateRender();
 			}
 		}
-		else if (World.getBlockID(preCoords[0], preCoords[1] - 1, preCoords[2]) == 60) {
-			World.setBlock(preCoords[0], preCoords[1] - 1, preCoords[2] ,2 ,0);
+		else if (this.region.getBlockId(preCoords[0], preCoords[1] - 1, preCoords[2]) == 60) {
+			this.region.setBlock(preCoords[0], preCoords[1] - 1, preCoords[2] ,2 ,0);
 		}
 	},
 
@@ -328,7 +329,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 			var crop = cropCards[j];
 			for (var crd in cropCoords) {
 				var coords = cropCoords[crd];
-				var tileEnt = World.getTileEntity(coords.x, coords.y, coords.z);
+				var tileEnt = this.region.getTileEntity(coords.x, coords.y, coords.z);
 				total += this.calculateRatioFor(crop, tileEnt.crop);
 			}
 			ratios[j] = total;
@@ -357,7 +358,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 		this.data.statGain = 0;
 
 		for (var i in cropCoords) {
-			var te2 = World.getTileEntity(cropCoords[i].x, cropCoords[i].y, cropCoords[i].z);
+			var te2 = this.region.getTileEntity(cropCoords[i].x, cropCoords[i].y, cropCoords[i].z);
 			this.data.statGrowth += te2.data.statGrowth;
 			this.data.statResistance += te2.data.statResistance;
 			this.data.statGain += te2.data.statGain;
@@ -393,8 +394,8 @@ TileEntity.registerPrototype(BlockID.crop, {
 		for (var r in coordsArray) {
 			var pos = coordsArray[r];
 			var coords = { x: this.x + pos[0], y: this.y + pos[1], z: this.z + pos[2] };
-			var sideTileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
-			var blockId = World.getBlockID(coords.x, coords.y, coords.z)
+			var sideTileEntity = this.region.getTileEntity(coords.x, coords.y, coords.z);
+			var blockId = this.region.getBlockId(coords.x, coords.y, coords.z)
 
 			if (!sideTileEntity || !sideTileEntity.crop || blockId != BlockID.crop) continue;
 			if (sideTileEntity.crop.canGrow(sideTileEntity) || !sideTileEntity.crop.canCross(sideTileEntity)) continue;
@@ -564,7 +565,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 
 		var rootsLength = this.crop.getRootsLength(this);
 		for (var i = 1; i < rootsLength; i++) {
-			var blockID = World.getBlockID(this.x, this.y - i, this.z);
+			var blockID = this.region.getBlockId(this.x, this.y - i, this.z);
 			if (!blockID) return false;
 			if (reqBlockID == blockID) return true;
 		}
@@ -574,7 +575,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 
 Callback.addCallback("DestroyBlockStart", function(coords, block) {
 	if (block.id == BlockID.crop) {
-		var tileEntity = World.getTileEntity(coords.x, coords.y, coords.z);
+		var tileEntity = this.region.getTileEntity(coords.x, coords.y, coords.z);
 		if (tileEntity && tileEntity.onLongClick()) {
 			Game.prevent();
 		}

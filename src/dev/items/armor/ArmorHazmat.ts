@@ -3,8 +3,8 @@
 class ArmorHazmat
 extends ArmorIC2
 implements OnHurtListener, OnTickListener {
-	constructor(nameID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}) {
-		super(nameID, name, params);
+	constructor(stringID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}) {
+		super(stringID, name, params);
 		this.setMaxDamage(64);
 		RadiationAPI.registerHazmatArmor(this.id);
 	}

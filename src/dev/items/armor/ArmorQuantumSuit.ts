@@ -7,9 +7,9 @@ extends ArmorElectric {
 	chargedID: number
 	dischargedID: number
 
-	constructor(nameID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, isDischarged: boolean = false) {
+	constructor(stringID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, isDischarged: boolean = false) {
 		if (!params.texture) params.texture = "quantum";
-		super(nameID, name, params, 1e7, 12000, 4, !isDischarged);
+		super(stringID, name, params, 1e7, 12000, 4, !isDischarged);
 		this.setRarity(2);
 		this.isCharged = !isDischarged;
 		RadiationAPI.registerHazmatArmor(this.id);
@@ -27,8 +27,8 @@ extends ArmorElectric {
 	}
 
 	createDischarged(defence: number, texture: string) {
-		var nameID = this.nameID + "Discharged";
-		var instance = new ArmorQuantumSuit(nameID, this.name, {type: this.armorType, defence: defence, texture: texture}, true);
+		var stringID = this.stringID + "Discharged";
+		var instance = new ArmorQuantumSuit(stringID, this.name, {type: this.armorType, defence: defence, texture: texture}, true);
 		instance.chargedID = this.id;
 		this.dischargedID = instance.id;
 	}

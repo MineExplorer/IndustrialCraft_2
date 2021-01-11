@@ -2,8 +2,8 @@
 
 class ArmorBatpack
 extends ArmorElectric {
-	constructor(nameID: string, name: string, maxCharge: number, transferLimit: number, tier: number) {
-		super(nameID, name, {type: "chestplate", defence: 3, texture: name}, maxCharge, transferLimit, tier);
+	constructor(stringID: string, name: string, maxCharge: number, transferLimit: number, tier: number) {
+		super(stringID, name, {type: "chestplate", defence: 3, texture: name}, maxCharge, transferLimit, tier);
 		this.canProvideEnergy = true;
 	}
 

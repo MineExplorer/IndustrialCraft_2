@@ -3,8 +3,9 @@
 class ArmorSolarHelmet
 extends ArmorIC2
 implements OnHurtListener, OnTickListener {
-	constructor(nameID: string, name: string, params: ArmorParams) {
-		super(nameID, name, params);
+	constructor(stringID: string, name: string, params: ArmorParams) {
+		super(stringID, name, params);
+		Armor.preventDamaging(this.id);
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance): ItemInstance {

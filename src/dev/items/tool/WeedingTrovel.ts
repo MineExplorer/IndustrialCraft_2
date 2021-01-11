@@ -1,13 +1,13 @@
 class ItemWeedingTrowel
 extends ItemIC2 {
     constructor() {
-        super("weeding_trowel");
+        super("weedingTrowel", "weeding_trowel");
         this.setMaxStack(1);
     }
 
-    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number) {
+    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
         let region = WorldRegion.getForActor(player);
-        var te = region.getTileEntity(coords);
+        let te = region.getTileEntity(coords);
         if (block.id == BlockID.crop && te.crop && te.crop.id == "weed") {
             region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, ItemID.weed, te.data.currentSize, 0);
             te.reset();
@@ -19,7 +19,7 @@ extends ItemIC2 {
 new ItemWeedingTrowel();
 
 Callback.addCallback("PostLoaded", function() {
-	Recipes.addShaped({id: ItemID.weeding_trowel , count: 1 , data: 0}, [
+	Recipes.addShaped({id: ItemID.weedingTrowel , count: 1 , data: 0}, [
 		"c c",
 		" c ",
 		"zcz"

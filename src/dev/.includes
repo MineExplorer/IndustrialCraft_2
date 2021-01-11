@@ -119,15 +119,16 @@ items/armor/recipes.ts
 
 items/tool/DebugItem.ts
 items/tool/eu-meter.js
-items/tool/ItemTransmitter.ts
-items/tool/ItemScanner.ts
-items/tool/ItemTreetap.ts
+items/tool/Transmitter.ts
+items/tool/Scanner.ts
+items/tool/Treetap.ts
 items/tool/crafting.js
 items/tool/ToolBox.ts
 items/tool/ContainmentBox.ts
 items/tool/bronze.js
 items/tool/wrench.js
-items/tool/electric.js
+items/tool/ElectricHoe.ts
+items/tool/ElectricTreetap.ts
 items/tool/drills.js
 items/tool/chainsaw.js
 items/tool/nano_saber.js

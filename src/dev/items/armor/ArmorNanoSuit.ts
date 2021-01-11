@@ -6,9 +6,9 @@ extends ArmorElectric {
 	chargedID: number
 	dischargedID: number
 
-	constructor(nameID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, isDischarged: boolean = false) {
+	constructor(stringID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, isDischarged: boolean = false) {
 		if (!params.texture) params.texture = "nano";
-		super(nameID, name, params, 1000000, 2048, 3, !isDischarged);
+		super(stringID, name, params, 1000000, 2048, 3, !isDischarged);
 		this.setRarity(1);
 		this.isCharged = !isDischarged;
 		if (!isDischarged) {
@@ -26,8 +26,8 @@ extends ArmorElectric {
 	}
 
 	createDischarged(defence: number, texture: string) {
-		let nameID = this.nameID + "Discharged";
-		let instance = new ArmorNanoSuit(nameID, this.name, {type: this.armorType, defence: defence, texture: texture}, true);
+		let stringID = this.stringID + "Discharged";
+		let instance = new ArmorNanoSuit(stringID, this.name, {type: this.armorType, defence: defence, texture: texture}, true);
 		instance.chargedID = this.id;
 		this.dischargedID = instance.id;
 	}

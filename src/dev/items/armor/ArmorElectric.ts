@@ -9,17 +9,17 @@ implements IElectricItem, OnHurtListener, OnTickListener {
 	tier: number;
 	canProvideEnergy: boolean = false;
 
-	constructor(nameID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, maxCharge: number, transferLimit: number, tier: number, inCreative: boolean = true) {
-		super(nameID, name, params, false);
+	constructor(stringID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, maxCharge: number, transferLimit: number, tier: number, inCreative: boolean = true) {
+		super(stringID, name, params, false);
 		this.maxCharge = maxCharge;
 		this.transferLimit = transferLimit;
 		this.tier = tier;
+		Armor.preventDamaging(this.id);
 		ChargeItemRegistry.registerItem(this.id, this, !inCreative);
 	}
 
-	onNameOverride(item: ItemInstance, name: string) {
-		let color = this.getRarityColor(this.rarity);
-		return color + name + '\n' + ItemName.getItemStorageText(item);
+	onNameOverride(item: ItemInstance, name: string): string {
+		return name + '\n' + ItemName.getItemStorageText(item);
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {

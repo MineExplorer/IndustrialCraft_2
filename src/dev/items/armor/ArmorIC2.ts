@@ -1,8 +1,9 @@
 class ArmorIC2
 extends ItemArmor {
-	constructor(nameID: string, name: string, params: ArmorParams, inCreative?: boolean) {
-		super(nameID, name, name, params);
+	constructor(stringID: string, name: string, params: ArmorParams, inCreative?: boolean) {
+		super(stringID, name, name, params);
 		ItemRegistry.registerItem(this, inCreative);
+		this.setCategory(3);
 	}
 
 	setArmorTexture(name: string) {

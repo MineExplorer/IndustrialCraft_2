@@ -22,7 +22,7 @@ implements ItemFuncs {
 			block = region.getBlock(place.x, place.y, place.z);
 			if (!World.canTileBeReplaced(block.id, block.data)) return;
 		}
-		region.setBlock(place.x, place.y, place.z, BlockID[this.nameID], 0);
+		region.setBlock(place.x, place.y, place.z, BlockID[this.stringID], 0);
 		if (Game.isItemSpendingAllowed(player)) {
 			Entity.setCarriedItem(player, item.id, item.count - 1, item.data);
 		}

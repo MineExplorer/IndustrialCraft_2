@@ -88,34 +88,11 @@ namespace ICTool {
 		return false;
 	}
 
-	export function registerElectricHoe(nameID: string) {
-		Item.registerUseFunction(nameID, function(coords, item, block) {
-			if ((block.id == 2 || block.id == 3 || block.id == 110 || block.id == 243) && coords.side == 1 && ICTool.useElectricItem(item, 50)) {
-				World.setBlock(coords.x, coords.y, coords.z, 60, 0);
-				World.playSound(coords.x + .5, coords.y + 1, coords.z + .5, "step.gravel", 1, 0.8);
-			}
-		});
-	}
+	/** @deprecated */
+	export function registerElectricHoe(stringID: string) {}
 
-	export function registerElectricTreetap(nameID: string) {
-		Item.registerUseFunction(nameID, function(coords, item, block) {
-			if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, 50)) {
-				SoundManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");
-				World.setBlock(coords.x, coords.y, coords.z, BlockID.rubberTreeLogLatex, block.data - 4);
-				Entity.setVelocity(
-					World.drop(
-						coords.relative.x + 0.5,
-						coords.relative.y + 0.5,
-						coords.relative.z + 0.5,
-						ItemID.latex, randomInt(1, 3), 0
-					),
-					(coords.relative.x - coords.x) * 0.25,
-					(coords.relative.y - coords.y) * 0.25,
-					(coords.relative.z - coords.z) * 0.25
-				);
-			}
-		});
-	}
+	/** @deprecated */
+	export function registerElectricTreetap(stringID: string) {}
 
 	export function setOnHandSound(itemID: number, idleSound: string, stopSound: string) {
 		Callback.addCallback("LocalTick", function() {

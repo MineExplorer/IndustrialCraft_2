@@ -1,11 +1,11 @@
-/// <reference path="../ElectricItem.ts" />
+/// <reference path="../ItemElectric.ts" />
 
 class ItemBattery
-extends ElectricItem {
+extends ItemElectric {
 	canProvideEnergy: boolean = true;
 
 	constructor(stringID: string, name: string, maxCharge: number, transferLimit: number, tier: number) {
-		super(stringID, name, name, maxCharge, transferLimit, tier, false);
+		super(stringID, name, maxCharge, transferLimit, tier, false);
 		ChargeItemRegistry.addToCreative(this.id, 0);
 		ChargeItemRegistry.addToCreative(this.id, maxCharge);
 	}

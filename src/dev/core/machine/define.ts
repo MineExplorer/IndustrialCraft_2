@@ -106,11 +106,11 @@ namespace MachineRegistry {
 		return [];
 	}
 
-	export function setMachineDrop(nameID: string, basicDrop?: number) {
-		Block.registerDropFunction(nameID, function(coords, blockID, blockData, level) {
+	export function setMachineDrop(stringID: string, basicDrop?: number) {
+		Block.registerDropFunction(stringID, function(coords, blockID, blockData, level) {
 			return MachineRegistry.getMachineDrop(coords, blockID, level, basicDrop);
 		});
-		Block.registerPopResourcesFunction(nameID, function(coords, block, region) { // drop on explosion
+		Block.registerPopResourcesFunction(stringID, function(coords, block, region) { // drop on explosion
 			if (Math.random() < 0.25) {
 				region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, basicDrop || block.id, 1, 0);
 			}

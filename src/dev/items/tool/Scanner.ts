@@ -9,12 +9,12 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 class ItemScanner
-extends ElectricItem {
+extends ItemElectric {
 	energyPerUse: number;
 	radius: number;
 
 	constructor(stringID: string, name: string, maxCharge: number, transferLimit: number, tier: number) {
-		super(stringID, name, {name: "scanner", meta: tier - 1}, maxCharge, transferLimit, tier);
+		super(stringID, name, maxCharge, transferLimit, tier);
 	}
 
 	getScanRadius(): number {
@@ -50,8 +50,8 @@ extends ElectricItem {
 	}
 }
 
-new ItemScanner("scanner", "OD Scanner", 10000, 100, 1);
-new ItemScanner("scannerAdvanced", "OV Scanner", 100000, 256, 2);
+new ItemScanner("scanner", "scanner", 10000, 100, 1);
+new ItemScanner("scannerAdvanced", "scanner_advanced", 100000, 256, 2);
 
 Recipes.addShaped({id: ItemID.scanner, count: 1, data: 27}, [
 	"gdg",

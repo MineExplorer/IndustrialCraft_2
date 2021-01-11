@@ -376,29 +376,70 @@ interface ItemFuncs {
     inHandTick?(player: number): void;
 }
 declare class ItemBasic {
-    readonly nameID: string;
+    readonly stringID: string;
     readonly id: number;
     name: string;
     icon: {
         name: string;
         meta: number;
     };
+    maxStack: number;
+    maxDamage: number;
     rarity: number;
     item: any;
-    constructor(nameID: string, name?: string, icon?: string | Item.TextureData);
-    setName(name: string): this;
-    setIcon(texture: string, index?: number): this;
+    constructor(stringID: string, name?: string, icon?: string | Item.TextureData);
+    setName(name: string): void;
+    setIcon(texture: string, index?: number): void;
     createItem(inCreative?: boolean): this;
-    setMaxDamage(maxDamage: number): this;
-    setMaxStack(maxStack: number): this;
-    setHandEquipped(enabled: boolean): this;
-    setEnchantType(type: number, enchantability: number): this;
-    setLiquidClip(): this;
-    setGlint(enabled: boolean): this;
-    allowInOffHand(): this;
-    addRepairItem(itemID: number): this;
-    setRarity(rarity: number): this;
-    getRarityColor(rarity: number): string;
+    /**
+     * Sets item creative category
+     * @param category item category, should be integer from 1 to 4.
+     */
+    setCategory(category: number): void;
+    /**
+     * Sets item maximum stack size
+     * @param maxStack maximum stack size for the item
+     */
+    setMaxStack(maxStack: number): void;
+    /**
+     * Sets item maximum data value
+     * @param maxDamage maximum data value for the item
+     */
+    setMaxDamage(maxDamage: number): void;
+    /**
+    * Specifies how the player should hold the item
+    * @param enabled if true, player holds the item as a tool, not as a simple
+    * item
+    */
+    setHandEquipped(enabled: boolean): void;
+    /**
+     * Allows item to be put in off hand
+     */
+    allowInOffHand(): void;
+    /**
+     * Allows item to click on liquid blocks
+     */
+    setLiquidClip(): void;
+    /**
+     * Specifies how the item can be enchanted
+     * @param type enchant type defining whan enchants can or cannot be
+     * applied to this item, one of the Native.EnchantType
+     * @param enchantability quality of the enchants that are applied, the higher this
+     * value is, the better enchants you get with the same level
+     */
+    setEnchantType(type: number, enchantability: number): void;
+    /**
+     * Sets item as glint (like enchanted tools or golden apple)
+     * @param enabled if true, the item will be displayed as glint item
+     */
+    setGlint(enabled: boolean): void;
+    /**
+     * Adds material that can be used to repair the item in the anvil
+     * @param itemID item id to be used as repair material
+     */
+    addRepairItem(itemID: number): void;
+    setRarity(rarity: number): void;
+    getRarityColor(): string;
 }
 interface OnHurtListener {
     onHurt: (params: {
@@ -453,7 +494,7 @@ declare namespace ItemRegistry {
         maxStack?: number;
         inCreative?: boolean;
     }): ItemBasic;
-    function createArmorItem(nameID: string, params: {
+    function createArmor(nameID: string, params: {
         name?: string;
         icon: string | Item.TextureData;
         type: ArmorType;

@@ -311,11 +311,11 @@ declare namespace Animation {
 declare namespace Armor {
     /**
      * Registers armor's hurt and tick functions
-     * @param id armor item string id
+     * @param id armor item string or numeric id
      * @param funcs 
      * @deprecated, does not work in multiplayer
      */
-    function registerFuncs(id: string, funcs: {
+    function registerFuncs(id: number | string, funcs: {
         tick:
         /**
          * Called every tick if player wears the armor
@@ -349,11 +349,10 @@ declare namespace Armor {
 
     /**
      * Prevents armor from being damaged
-     * @deprecated Currently not implemented
-     * @param id armor item string id
+     * @param id armor item string or numeric id
      */
-	function preventDamaging(id: string): void;
-	
+	function preventDamaging(id: number | string): void;
+
 	/**
      * This event is called every tick for every player that has this armor put on.
      * @returns the {id: , count: , data: , extra: } object to change armor item,
@@ -4338,21 +4337,21 @@ declare namespace Game {
      * [[Native.Color]] values
      * @param msg message to be displayed
      */
-    function message(msg: any): void;
+    function message(msg: string): void;
 
     /**
      * Writes message above the hot bar. Message can be formatted using 
      * [[Native.Color]] values
      * @param msg message to be displayed
      */
-    function tipMessage(msg: any): void;
+    function tipMessage(msg: string): void;
 
     /**
      * Displays android AlertDialog with given message and dialog title
      * @param message message to be displayed
      * @param title title of the AlertDialog
      */
-    function dialogMessage(message: any, title: string): void;
+    function dialogMessage(message: string, title: string): void;
 
     /**
      * Sets game difficulty, one of [[Native.GameDifficulty]] values
@@ -7667,7 +7666,7 @@ declare class PlayerActor {
      * @returns player's unique numeric entity id
      */
     getUid(): number;
-    
+
     /**
      * @returns the id of dimension where player is.
      */

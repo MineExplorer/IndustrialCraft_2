@@ -12,28 +12,28 @@ namespace CableRegistry {
 		return paint_data.indexOf(id) != -1;
 	}
 
-	export function createBlock(nameID: string, properties: {name: string, texture: string}, blockType?: string | Block.SpecialType): void {
+	export function createBlock(stringID: string, properties: {name: string, texture: string}, blockType?: string | Block.SpecialType): void {
 		let variations = [];
 		for (let i = 0; i < 16; i++) {
 			variations.push({name: properties.name, texture: [[properties.texture, i]]});
 		}
-		Block.createBlock(nameID, variations, blockType);
-		paint_data.push(BlockID[nameID]);
+		Block.createBlock(stringID, variations, blockType);
+		paint_data.push(BlockID[stringID]);
 	}
 
-	export function registerCable(nameID: string, maxVoltage: number, maxInsulationLevel?: number): void {
+	export function registerCable(stringID: string, maxVoltage: number, maxInsulationLevel?: number): void {
 		if (maxInsulationLevel) {
 			for (let index = 0; index <= maxInsulationLevel; index++) {
-				let blockID = BlockID[nameID + index];
-				insulation_data[blockID] = {name: nameID, insulation: index, maxInsulation: maxInsulationLevel};
+				let blockID = BlockID[stringID + index];
+				insulation_data[blockID] = {name: stringID, insulation: index, maxInsulation: maxInsulationLevel};
 				EU.registerWire(blockID, maxVoltage, cableBurnoutFunc, cableConnectFunc);
 
-				let itemID = ItemID[nameID + index];
-				Block.registerDropFunction(nameID + index, function(coords, id, data) {
+				let itemID = ItemID[stringID + index];
+				Block.registerDropFunction(stringID + index, function(coords, id, data) {
 					return [[itemID, 1, 0]];
 				});
 
-				Block.registerPopResourcesFunction(nameID + index, function(coords, block) {
+				Block.registerPopResourcesFunction(stringID + index, function(coords, block) {
 					if (Math.random() < 0.25) {
 						World.drop(coords.x + .5, coords.y + .5, coords.z + .5, itemID, 1, 0);
 					}
@@ -41,13 +41,13 @@ namespace CableRegistry {
 				});
 			}
 		} else {
-			EU.registerWire(BlockID[nameID], maxVoltage, cableBurnoutFunc, cableConnectFunc);
-			Block.registerDropFunction(nameID, function(coords, id, data) {
-				return [[ItemID[nameID], 1, 0]];
+			EU.registerWire(BlockID[stringID], maxVoltage, cableBurnoutFunc, cableConnectFunc);
+			Block.registerDropFunction(stringID, function(coords, id, data) {
+				return [[ItemID[stringID], 1, 0]];
 			});
-			Block.registerPopResourcesFunction(nameID, function(coords, block) {
+			Block.registerPopResourcesFunction(stringID, function(coords, block) {
 				if (Math.random() < 0.25) {
-					World.drop(coords.x + .5, coords.y + .5, coords.z + .5, ItemID[nameID], 1, 0);
+					World.drop(coords.x + .5, coords.y + .5, coords.z + .5, ItemID[stringID], 1, 0);
 				}
 				EnergyTypeRegistry.onWireDestroyed(coords.x, coords.y, coords.z, block.id);
 			});

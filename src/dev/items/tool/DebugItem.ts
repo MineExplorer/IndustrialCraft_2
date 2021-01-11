@@ -1,8 +1,10 @@
 class DebugItem
-extends ElectricItem
-implements ItemFuncs {
+extends ItemElectric {
+	canProvideEnergy: boolean = true;
+
 	constructor() {
-		super("debugItem", "debug_item", "debug_item", -1, -1, 0, !ConfigIC.debugMode);
+		super("debugItem", "debug_item", -1, -1, 0, false);
+		if (!ConfigIC.debugMode) Item.addToCreative(this.id, 1, 0);
 	}
 
 	onCharge(item: ItemInstance, amount: number, tier: number): number {
@@ -23,16 +25,16 @@ implements ItemFuncs {
 
 		client.sendMessage(block.id+":"+block.data);
 		let region = WorldRegion.getForActor(player);
-		var tile = region.getTileEntity(coords);
+		let tile = region.getTileEntity(coords);
 		if (tile) {
-			var liquid = tile.liquidStorage.getLiquidStored();
+			let liquid = tile.liquidStorage.getLiquidStored();
 			if (liquid) {
 				client.sendMessage(liquid + " - " + tile.liquidStorage.getAmount(liquid)*1000 + "mB");
 			}
-			for (var i in tile.data) {
+			for (let i in tile.data) {
 				if (i != "energy_storage") {
 					if (i == "__liquid_tanks") {
-						var tanks = tile.data[i];
+						let tanks = tile.data[i];
 						client.sendMessage(tanks.input.liquid + ": "+ tanks.input.amount*1000 + "mB");
 						client.sendMessage(tanks.output.liquid + ": "+ tanks.output.amount*1000 + "mB");
 					}
@@ -49,12 +51,12 @@ implements ItemFuncs {
 		}
 		tile = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z);
 		if (tile) {
-			for (var i in tile.__energyNets) {
-				var net = tile.__energyNets[i];
+			for (let i in tile.__energyNets) {
+				let net = tile.__energyNets[i];
 				if (net) client.sendMessage(net.toString());
 			}
 		} else {
-			var net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
+			let net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
 			if (net) client.sendMessage(net.toString());
 		}
 	}

@@ -660,11 +660,11 @@ var BlockBase = /** @class */ (function () {
     return BlockBase;
 }());
 var ItemBasic = /** @class */ (function () {
-    function ItemBasic(nameID, name, icon) {
+    function ItemBasic(stringID, name, icon) {
         this.rarity = 0;
-        this.nameID = nameID;
-        this.id = IDRegistry.genItemID(nameID);
-        this.setName(name || nameID);
+        this.stringID = stringID;
+        this.id = IDRegistry.genItemID(stringID);
+        this.setName(name || stringID);
         if (typeof icon == "string")
             this.setIcon(icon);
         else if (typeof icon == "object")
@@ -674,60 +674,115 @@ var ItemBasic = /** @class */ (function () {
     }
     ItemBasic.prototype.setName = function (name) {
         this.name = name;
-        return this;
     };
     ItemBasic.prototype.setIcon = function (texture, index) {
         if (index === void 0) { index = 0; }
         this.icon = { name: texture, meta: index };
-        return this;
     };
     ItemBasic.prototype.createItem = function (inCreative) {
         if (inCreative === void 0) { inCreative = true; }
-        this.item = Item.createItem(this.nameID, this.name, this.icon, { isTech: !inCreative });
+        this.item = Item.createItem(this.stringID, this.name, this.icon, { isTech: !inCreative });
+        if (this.maxStack)
+            this.setMaxStack(this.maxStack);
+        if (this.maxDamage)
+            this.setMaxDamage(this.maxDamage);
         return this;
     };
-    ItemBasic.prototype.setMaxDamage = function (maxDamage) {
-        this.item.setMaxDamage(maxDamage);
-        return this;
+    /**
+     * Sets item creative category
+     * @param category item category, should be integer from 1 to 4.
+     */
+    ItemBasic.prototype.setCategory = function (category) {
+        Item.setCategory(this.id, category);
     };
+    /**
+     * Sets item maximum stack size
+     * @param maxStack maximum stack size for the item
+     */
     ItemBasic.prototype.setMaxStack = function (maxStack) {
-        this.item.setMaxStackSize(maxStack);
-        return this;
+        this.maxStack = maxStack;
+        if (this.item)
+            this.item.setMaxStackSize(maxStack);
     };
+    /**
+     * Sets item maximum data value
+     * @param maxDamage maximum data value for the item
+     */
+    ItemBasic.prototype.setMaxDamage = function (maxDamage) {
+        this.maxDamage = maxDamage;
+        if (this.item)
+            this.item.setMaxDamage(maxDamage);
+    };
+    /**
+    * Specifies how the player should hold the item
+    * @param enabled if true, player holds the item as a tool, not as a simple
+    * item
+    */
     ItemBasic.prototype.setHandEquipped = function (enabled) {
+        if (!this.item)
+            return;
         this.item.setHandEquipped(enabled);
-        return this;
     };
-    ItemBasic.prototype.setEnchantType = function (type, enchantability) {
-        this.item.setEnchantType(type, enchantability);
-        return this;
-    };
-    ItemBasic.prototype.setLiquidClip = function () {
-        this.item.setLiquidClip(true);
-        return this;
-    };
-    ItemBasic.prototype.setGlint = function (enabled) {
-        this.item.setGlint(enabled);
-        return this;
-    };
+    /**
+     * Allows item to be put in off hand
+     */
     ItemBasic.prototype.allowInOffHand = function () {
+        if (!this.item)
+            return;
         this.item.setAllowedInOffhand(true);
-        return this;
     };
+    /**
+     * Allows item to click on liquid blocks
+     */
+    ItemBasic.prototype.setLiquidClip = function () {
+        if (!this.item)
+            return;
+        this.item.setLiquidClip(true);
+    };
+    /**
+     * Specifies how the item can be enchanted
+     * @param type enchant type defining whan enchants can or cannot be
+     * applied to this item, one of the Native.EnchantType
+     * @param enchantability quality of the enchants that are applied, the higher this
+     * value is, the better enchants you get with the same level
+     */
+    ItemBasic.prototype.setEnchantType = function (type, enchantability) {
+        if (!this.item)
+            return;
+        this.item.setEnchantType(type, enchantability);
+    };
+    /**
+     * Sets item as glint (like enchanted tools or golden apple)
+     * @param enabled if true, the item will be displayed as glint item
+     */
+    ItemBasic.prototype.setGlint = function (enabled) {
+        if (!this.item)
+            return;
+        this.item.setGlint(enabled);
+    };
+    /**
+     * Adds material that can be used to repair the item in the anvil
+     * @param itemID item id to be used as repair material
+     */
     ItemBasic.prototype.addRepairItem = function (itemID) {
+        if (!this.item)
+            return;
         this.item.addRepairItem(itemID);
-        return this;
     };
     ItemBasic.prototype.setRarity = function (rarity) {
         this.rarity = rarity;
-        return this;
+        if (!('onNameOverride' in this)) {
+            Item.registerNameOverrideFunction(this.id, function (item, translation, name) {
+                return this.getRarityColor() + translation;
+            });
+        }
     };
-    ItemBasic.prototype.getRarityColor = function (rarity) {
-        if (rarity == 1)
+    ItemBasic.prototype.getRarityColor = function () {
+        if (this.rarity == 1)
             return "§e";
-        if (rarity == 2)
+        if (this.rarity == 2)
             return "§b";
-        if (rarity == 3)
+        if (this.rarity == 3)
             return "§d";
         return "";
     };
@@ -748,7 +803,7 @@ var ItemArmor = /** @class */ (function (_super) {
     }
     ItemArmor.prototype.createItem = function (inCreative) {
         if (inCreative === void 0) { inCreative = true; }
-        this.item = Item.createArmorItem(this.nameID, this.name, this.icon, { type: this.armorType, armor: this.defence, durability: 0, texture: this.texture, isTech: !inCreative });
+        this.item = Item.createArmorItem(this.stringID, this.name, this.icon, { type: this.armorType, armor: this.defence, durability: 0, texture: this.texture, isTech: !inCreative });
         if (this.armorMaterial)
             this.setMaterial(this.armorMaterial);
         ItemArmor.registerListeners(this.id, this);
@@ -822,7 +877,7 @@ var ItemRegistry;
         items[itemInstance.id] = itemInstance;
         if ('onNameOverride' in itemInstance) {
             Item.registerNameOverrideFunction(itemInstance.id, function (item, translation, name) {
-                return itemInstance.onNameOverride(item, translation, name);
+                return itemInstance.getRarityColor() + itemInstance.onNameOverride(item, translation, name);
             });
         }
         if ('onIconOverride' in itemInstance) {
@@ -864,20 +919,20 @@ var ItemRegistry;
     ItemRegistry.getInstanceOf = getInstanceOf;
     function createItem(nameID, params) {
         var item = new ItemBasic(nameID, params.name, params.icon);
-        item.createItem(params.inCreative);
+        registerItem(item, params.inCreative);
         if (params.maxStack)
             item.setMaxStack(params.maxStack);
         return item;
     }
     ItemRegistry.createItem = createItem;
-    function createArmorItem(nameID, params) {
+    function createArmor(nameID, params) {
         var item = new ItemArmor(nameID, params.name, params.icon, params);
-        item.createItem(params.inCreative);
+        registerItem(item, params.inCreative);
         if (params.material)
             item.setMaterial(params.material);
         return item;
     }
-    ItemRegistry.createArmorItem = createArmorItem;
+    ItemRegistry.createArmor = createArmor;
 })(ItemRegistry || (ItemRegistry = {}));
 var TileEntityBase = /** @class */ (function () {
     function TileEntityBase() {

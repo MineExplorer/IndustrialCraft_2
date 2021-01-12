@@ -18,6 +18,11 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	export class TeslaCoil
 	extends ElectricMachine {
+		defaultValues = {
+			energy: 0,
+			isActive: false
+		}
+
 		getTier(): number {
 			return 3;
 		}
@@ -34,7 +39,7 @@ namespace Machine {
 						var dx = this.x + 0.5 - coords.x;
 						var dy = this.y + 0.5 - coords.y;
 						var dz = this.z + 0.5 - coords.z;
-						if (Math.sqrt(dx*dx + dy*dy + dz*dz) < 4.5 && canTakeDamage(ent, "electricity") && Entity.getHealth(ent) > 0) {
+						if (Math.sqrt(dx*dx + dy*dy + dz*dz) < 4.5 && EntityHelper.canTakeDamage(ent, "electricity") && Entity.getHealth(ent) > 0) {
 							discharge = true;
 							if (damage >= 24) {
 								Entity.setFire(ent, 1, true);
@@ -55,6 +60,10 @@ namespace Machine {
 
 		getEnergyStorage(): number {
 			return 10000;
+		}
+
+		onItemUse(): boolean {
+			return true;
 		}
 	}
 

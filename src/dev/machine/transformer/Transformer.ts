@@ -3,8 +3,8 @@
 namespace Machine {
 	export class Transformer
 	extends ElectricMachine {
-		hasVerticalRotation: boolean = true;
-		private readonly tier: number
+		readonly hasVerticalRotation: boolean = true;
+		readonly tier: number
 
 		constructor(tier: number) {
 			super();

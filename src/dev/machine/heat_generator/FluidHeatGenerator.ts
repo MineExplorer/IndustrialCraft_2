@@ -43,7 +43,7 @@ var guiFluidHeatGenerator = InventoryWindow("Liquid Fuel Firebox", {
 namespace Machine {
 	export class FluidHeatGenerator
 	extends MachineBase {
-		hasVerticalRotation: boolean = true;
+		readonly hasVerticalRotation: boolean = true;
 
 		defaultValues = {
 			output: 0,

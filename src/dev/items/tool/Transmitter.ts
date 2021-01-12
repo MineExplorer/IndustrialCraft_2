@@ -19,9 +19,10 @@ implements ItemFuncs {
 		if (!client) return;
 
 		let receiveCoords: Vector;
+		let dimension = Entity.getDimension(player);
 		let extra = item.extra;
 		if (extra) {
-			receiveCoords = {x: extra.getInt("x"), z: extra.getInt("y"), y: extra.getInt("z")};
+			receiveCoords = {x: extra.getInt("x"), y: extra.getInt("y"), z: extra.getInt("z")};
 		} else {
 			extra = new ItemExtraData();
 		}
@@ -31,10 +32,12 @@ implements ItemFuncs {
 				extra.putInt("x", coords.x);
 				extra.putInt("y", coords.y);
 				extra.putInt("z", coords.z);
+				extra.putInt("dimension", dimension);
 				Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 				client.sendMessage("Frequency Transmitter linked to Teleporter");
 			}
 			else {
+				if (dimension != extra.getInt("dimension")) return;
 				if (receiveCoords.x == coords.x && receiveCoords.y == coords.y && receiveCoords.z == coords.z) {
 					client.sendMessage("Can`t link Teleporter to itself");
 				}

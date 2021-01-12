@@ -47,7 +47,7 @@ var guiElectricHeatGenerator = InventoryWindow("Electric Heater", {
 namespace Machine {
 	export class ElectricHeatGenerator
 	extends ElectricMachine {
-		hasVerticalRotation: boolean = true;
+		readonly hasVerticalRotation: boolean = true;
 
 		getTier(): number {
 			return 4;

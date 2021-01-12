@@ -346,7 +346,7 @@ namespace Machine {
 				let entities = Entity.getAll();
 				for (let i in entities) {
 					let ent = entities[i];
-					if (canTakeDamage(ent, "radiation")) {
+					if (EntityHelper.canTakeDamage(ent, "radiation")) {
 						let c = Entity.getPosition(ent);
 						if (Math.abs(this.x + 0.5 - c.x) <= 3 && Math.abs(this.y + 0.5 - c.y) <= 3 && Math.abs(this.z + 0.5 - c.z) <= 3) {
 							RadiationAPI.addEffect(ent, Math.floor(4 * this.data.hem));

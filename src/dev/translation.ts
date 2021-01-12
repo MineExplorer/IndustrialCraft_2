@@ -320,24 +320,24 @@ Translation.addTranslation("lappack", {en: "Lappack", ru: "Лазуротрон�
 Translation.addTranslation("solar_helmet", {en: "Solar Helmet", ru: "Шлем с солнечной панелью", es: "Casco Solar", pt: "Elmo Solar", zh: "太阳能头盔"});
 
 // Tools
-Translation.addTranslation("Tool Box", {ru: "Ящик для инструментов", es: "Caja de Herramientas", pt: "Caixa de Ferramentas", zh: "工具盒"});
-Translation.addTranslation("Containment Box", {ru: "Защитный контейнер", es: "Caja de Contención", pt: "Caixa de Contenção", zh: "防辐射容纳盒"});
+Translation.addTranslation("tool_box", {en: "Tool Box", ru: "Ящик для инструментов", es: "Caja de Herramientas", pt: "Caixa de Ferramentas", zh: "工具盒"});
+Translation.addTranslation("containment_box", {en: "Containment Box", ru: "Защитный контейнер", es: "Caja de Contención", pt: "Caixa de Contenção", zh: "防辐射容纳盒"});
 Translation.addTranslation("frequency_transmitter", {en: "Frequency Transmitter", ru: "Частотный связыватель", es: "Transmisor de Frecuencias", pt: "Transmissor de Frequência", zh: "遥控器"});
 Translation.addTranslation("scanner", {en: "OD Scanner", ru: "Сканер КР", es: "Escaner de Densidad", zh: "OD扫描器"});
 Translation.addTranslation("scanner_advanced", {en: "OV Scanner", ru: "Сканер ЦР", es: "Escaner de Riqueza", zh: "OV扫描器"});
 Translation.addTranslation("treetap", {en: "Treetap", ru: "Краник", es: "Grifo para Resina", pt: "Drenador", zh: "木龙头"});
-Translation.addTranslation("Forge Hammer", {ru: "Кузнечный молот", es: "Martillo para Forja", pt: "Martelo de Forja", zh: "锻造锤"});
-Translation.addTranslation("Cutter", {ru: "Кусачки", es: "Pelacables Universal", pt: "Alicate", zh: "板材切割剪刀"});
-Translation.addTranslation("Bronze Sword", {ru: "Бронзовый меч", es: "Espada de Bronce", pt: "Espada de Bronze", zh: "青铜剑"});
-Translation.addTranslation("Bronze Shovel", {ru: "Бронзовая лопата", es: "Pala de Bronce", pt: "Pá de Bronze", zh: "青铜铲"});
-Translation.addTranslation("Bronze Pickaxe", {ru: "Бронзовая кирка", es: "Pico de Bronce", pt: "Picareta de Bronze", zh: "青铜镐"});
-Translation.addTranslation("Bronze Axe", {ru: "Бронзовый топор", es: "Hacha de Bronce", pt: "Machado de Bronze", zh: "青铜斧"});
-Translation.addTranslation("Bronze Hoe", {ru: "Бронзовая мотыга", es: "Azada de Bronce", pt: "Enxada de Bronze", zh: "青铜锄"});
-Translation.addTranslation("Wrench", {ru: "Гаечный ключ", es: "Llave Inglesa", pt: "Chave de Grifo", zh: "扳手"});
-Translation.addTranslation("Electric Wrench", {ru: "Электроключ", es: "Llave Inglesa Eléctrica", pt: "Chave de Grifo Elétrica", zh: "电动扳手"});
-Translation.addTranslation("Electric Hoe", {ru: "Электромотыга", es: "Azada Eléctrica", pt: "Enxada Elétrica", zh: "电动锄"});
-Translation.addTranslation("Electric Treetap", {ru: "Электрокраник", es: "Grifo para Resina Eléctrico", pt: "Drenador Elétrico", zh: "电动树脂提取器"});
-Translation.addTranslation("Chainsaw", {ru: "Электропила", es: "Motosierra", pt: "Serra Elétrica", zh: "链锯"});
+Translation.addTranslation("forge_hammer", {en: "Forge Hammer", ru: "Кузнечный молот", es: "Martillo para Forja", pt: "Martelo de Forja", zh: "锻造锤"});
+Translation.addTranslation("cutter", {en: "Cutter", ru: "Кусачки", es: "Pelacables Universal", pt: "Alicate", zh: "板材切割剪刀"});
+Translation.addTranslation("bronze_sword", {en: "Bronze Sword", ru: "Бронзовый меч", es: "Espada de Bronce", pt: "Espada de Bronze", zh: "青铜剑"});
+Translation.addTranslation("bronze_shovel", {en: "Bronze Shovel", ru: "Бронзовая лопата", es: "Pala de Bronce", pt: "Pá de Bronze", zh: "青铜铲"});
+Translation.addTranslation("bronze_pickaxe", {en: "Bronze Pickaxe", ru: "Бронзовая кирка", es: "Pico de Bronce", pt: "Picareta de Bronze", zh: "青铜镐"});
+Translation.addTranslation("bronze_axe", {en: "Bronze Axe", ru: "Бронзовый топор", es: "Hacha de Bronce", pt: "Machado de Bronze", zh: "青铜斧"});
+Translation.addTranslation("bronze_hoe", {en: "Bronze Hoe", ru: "Бронзовая мотыга", es: "Azada de Bronce", pt: "Enxada de Bronze", zh: "青铜锄"});
+Translation.addTranslation("wrench", {en: "Wrench", ru: "Гаечный ключ", es: "Llave Inglesa", pt: "Chave de Grifo", zh: "扳手"});
+Translation.addTranslation("electric_wrench", {en: "Electric Wrench", ru: "Электроключ", es: "Llave Inglesa Eléctrica", pt: "Chave de Grifo Elétrica", zh: "电动扳手"});
+Translation.addTranslation("electric_hoe", {en: "Electric Hoe", ru: "Электромотыга", es: "Azada Eléctrica", pt: "Enxada Elétrica", zh: "电动锄"});
+Translation.addTranslation("electric_treetap", {en: "Electric Treetap", ru: "Электрокраник", es: "Grifo para Resina Eléctrico", pt: "Drenador Elétrico", zh: "电动树脂提取器"});
+Translation.addTranslation("chainsaw", {en: "Chainsaw", ru: "Электропила", es: "Motosierra", pt: "Serra Elétrica", zh: "链锯"});
 Translation.addTranslation("Mining Drill", {ru: "Шахтёрский бур", es: "Taladro", pt: "Broca de Mineração", zh: "采矿钻头"});
 Translation.addTranslation("Diamond Drill", {ru: "Алмазный бур", es: "Taladro de Diamante", pt: "Broca de Diamante", zh: "钻石钻头"});
 Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es: "Taladro de Iridio", pt: "Broca de Irídio", zh: "铱钻头"});

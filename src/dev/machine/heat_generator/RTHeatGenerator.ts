@@ -39,7 +39,7 @@ var guiRTHeatGenerator = InventoryWindow("Radioisotope Heat Generator", {
 namespace Machine {
 	export class RTHeatGenerator
 	extends MachineBase {
-		hasVerticalRotation: boolean = true;
+		readonly hasVerticalRotation: boolean = true;
 
 		getScreenByName() {
 			return guiRTHeatGenerator;

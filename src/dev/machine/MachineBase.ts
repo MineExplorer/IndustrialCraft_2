@@ -5,7 +5,7 @@ namespace Machine {
 
 	export abstract class MachineBase
 	extends TileEntityBase {
-		hasVerticalRotation: boolean = false;
+		readonly hasVerticalRotation: boolean = false;
 		upgrades?: string[];
 
 		init(): void {

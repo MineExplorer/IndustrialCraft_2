@@ -1,5 +1,5 @@
 IDRegistry.genItemID("toolbox");
-Item.createItem("toolbox", "Tool Box", {name: "tool_box", meta: 0}, {stack: 1});
+Item.createItem("toolbox", "tool_box", {name: "tool_box", meta: 0}, {stack: 1});
 
 Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
 	"axa",

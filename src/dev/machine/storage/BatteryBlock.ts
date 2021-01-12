@@ -3,12 +3,13 @@
 namespace Machine {
 	export class BatteryBlock
 	extends ElectricMachine {
-		hasVerticalRotation: boolean = true;
+		readonly hasVerticalRotation: boolean = true;
+		readonly isTeleporterCompatible: boolean = true;
 
-		private readonly tier: number;
-		private readonly capacity: number;
-		private readonly defaultDrop: number;
-		private readonly guiScreen: UI.StandartWindow;
+		readonly tier: number;
+		readonly capacity: number;
+		readonly defaultDrop: number;
+		readonly guiScreen: UI.StandartWindow;
 
 		constructor(tier: number, capacity: number, defaultDrop: number, guiScreen: UI.StandartWindow) {
 			super();

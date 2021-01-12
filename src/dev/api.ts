@@ -15,8 +15,9 @@ ModAPI.registerAPI("ICore", {
 	ConfigIC: ConfigIC,
 	Ore: OreGenerator,
 	Integration: IntegrationAPI,
-	
-	registerEnergyPack: function(){}, // deprecated
+
+	/** @deprecated */
+	registerEnergyPack: function() {},
 	requireGlobal: function(command: string) {
 		return eval(command);
 	}

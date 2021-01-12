@@ -53,7 +53,7 @@ Callback.addCallback("LevelLoaded", function() {
 namespace Machine {
 	export class SolidHeatGenerator
 	extends MachineBase {
-		hasVerticalRotation: boolean = true;
+		readonly hasVerticalRotation: boolean = true;
 
 		defaultValues ={
 			burn: 0,

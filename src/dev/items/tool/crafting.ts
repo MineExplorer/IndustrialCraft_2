@@ -1,5 +1,5 @@
-ItemRegistry.createItem("craftingHammer", {name: "Forge Hammer", icon: "crafting_hammer", stack: 1, maxDamage: 80, category: CreativeCategory.EQUIPMENT});
-ItemRegistry.createItem("cutter", {name: "cutter", icon: "cutter", stack: 1, maxDamage: 60, category: CreativeCategory.EQUIPMENT});
+ItemRegistry.createItem("craftingHammer", {name: "Forge Hammer", icon: "crafting_hammer", stack: 1, maxDamage: 80, category: ItemCategory.EQUIPMENT});
+ItemRegistry.createItem("cutter", {name: "cutter", icon: "cutter", stack: 1, maxDamage: 60, category: ItemCategory.EQUIPMENT});
 
 // TODO: send packet to server
 Callback.addCallback("DestroyBlockStart", function(coords, block) {

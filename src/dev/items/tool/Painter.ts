@@ -10,7 +10,7 @@ extends ItemIC2 {
 		super("icPainter" + itemIndex, name, {name: "ic_painter", meta: itemIndex});
 		this.setMaxStack(1);
 		this.setMaxDamage(16);
-		this.setCategory(CreativeCategory.EQUIPMENT);
+		this.setCategory(ItemCategory.EQUIPMENT);
 		this.color = color;
 	}
 

@@ -3,7 +3,7 @@ extends ItemArmor {
 	constructor(stringID: string, name: string, params: ArmorParams, inCreative?: boolean) {
 		super(stringID, name, name, params);
 		ItemRegistry.registerItem(this, inCreative);
-		this.setCategory(CreativeCategory.EQUIPMENT);
+		this.setCategory(ItemCategory.EQUIPMENT);
 	}
 
 	setArmorTexture(name: string) {

@@ -4,7 +4,7 @@ extends ItemIC2 {
 		super("treetap");
 		this.setMaxStack(1);
 		this.setMaxDamage(17);
-		this.setCategory(CreativeCategory.EQUIPMENT);
+		this.setCategory(ItemCategory.EQUIPMENT);
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number) {

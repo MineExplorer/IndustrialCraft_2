@@ -4,7 +4,7 @@ extends ItemIC2 {
 		super(stringID, name, icon);
 		this.setMaxStack(1);
 		this.setMaxDamage(161);
-		this.setCategory(CreativeCategory.EQUIPMENT);
+		this.setCategory(ItemCategory.EQUIPMENT);
 		ICTool.registerWrench(this.id, dropChance);
 	}
 }

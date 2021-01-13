@@ -12,7 +12,7 @@ implements IElectricItem, ItemFuncs {
 	constructor(stringID: string, name: string, maxCharge: number, transferLimit: number, tier: number, inCreative: boolean = true) {
 		super(stringID, name, name, false);
 		this.setMaxStack(1);
-		this.setCategory(CreativeCategory.EQUIPMENT);
+		this.setCategory(ItemCategory.EQUIPMENT);
 		this.maxCharge = maxCharge;
 		this.transferLimit = transferLimit;
 		this.tier = tier;

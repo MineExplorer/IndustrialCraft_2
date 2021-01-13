@@ -1,4 +1,4 @@
-ItemRegistry.createItem("EUMeter", {name: "EU Meter", icon: "eu_meter", stack: 1, category: CreativeCategory.EQUIPMENT});
+ItemRegistry.createItem("EUMeter", {name: "EU Meter", icon: "eu_meter", stack: 1, category: ItemCategory.EQUIPMENT});
 
 var guiEUReader = new UI.Window({
 	location: {

@@ -3,7 +3,7 @@ extends ItemIC2 {
     constructor() {
         super("weedingTrowel", "weeding_trowel");
         this.setMaxStack(1);
-        this.setCategory(CreativeCategory.EQUIPMENT);
+        this.setCategory(ItemCategory.EQUIPMENT);
     }
 
     onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {

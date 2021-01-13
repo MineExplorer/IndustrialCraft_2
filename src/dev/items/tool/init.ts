@@ -60,7 +60,7 @@ new ItemMiningLaser();
 new ItemWeedingTrowel();
 
 // Painters
-ItemRegistry.createItem("icPainter", {name: "Painter", icon: "ic_painter", stack: 1, category: CreativeCategory.EQUIPMENT});
+ItemRegistry.createItem("icPainter", {name: "Painter", icon: "ic_painter", stack: 1, category: ItemCategory.EQUIPMENT});
 
 let painterCreativeGroup = [ItemID.icPainter];
 for (let i = 1; i <= 16; i++) {

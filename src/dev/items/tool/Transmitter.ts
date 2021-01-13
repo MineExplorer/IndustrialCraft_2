@@ -4,7 +4,7 @@ implements ItemFuncs {
 	constructor() {
 		super("freqTransmitter", "frequency_transmitter");
 		this.setMaxStack(1);
-		this.setCategory(CreativeCategory.EQUIPMENT);
+		this.setCategory(ItemCategory.EQUIPMENT);
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {

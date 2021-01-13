@@ -513,7 +513,7 @@ declare class ItemTool extends ItemBasic implements ToolParams {
     createItem(inCreative?: boolean): this;
     static damageCarriedItem(player: number, damage?: number): void;
 }
-declare enum CreativeCategory {
+declare enum ItemCategory {
     BUILDING = 1,
     NATURE = 2,
     EQUIPMENT = 3,
@@ -531,8 +531,8 @@ declare namespace ItemRegistry {
         icon: string | Item.TextureData;
         stack?: number;
         isTech?: boolean;
-        maxDamage?: number;
         category?: number;
+        maxDamage?: number;
         handEquipped?: boolean;
         allowedInOffhand?: boolean;
         glint?: boolean;

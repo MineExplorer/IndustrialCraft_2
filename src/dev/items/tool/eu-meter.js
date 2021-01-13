@@ -1,12 +1,4 @@
-IDRegistry.genItemID("EUMeter");
-Item.createItem("EUMeter", "EU Meter", {name: "eu_meter", meta: 0}, {stack: 1});
-
-Recipes.addShaped({id: ItemID.EUMeter, count: 1, data: 0}, [
-	" g ",
-	"xcx",
-	"x x"
-], ['c', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'g', 348, -1]);
-
+ItemRegistry.createItem("EUMeter", {name: "EU Meter", icon: "eu_meter", stack: 1, category: CreativeCategory.EQUIPMENT});
 
 var guiEUReader = new UI.Window({
 	location: {
@@ -15,12 +7,12 @@ var guiEUReader = new UI.Window({
 		width: 1000,
 		height: 750
 	},
-	
+
 	drawing: [
 		{type: "background", color: 0},
 		{type: "bitmap", x: 218, y: 30, bitmap: "eu_meter_background", scale: GUI_SCALE},
 	],
-	
+
 	elements: {
 		"arrow": {type: "image", x: 576, y: 206, bitmap: "eu_meter_arrow_0", scale: GUI_SCALE},
 		"textName": {type: "text", font: {size: 36}, x: 378, y: 46, width: 256, height: 42, text: Translation.translate("EU Meter")},

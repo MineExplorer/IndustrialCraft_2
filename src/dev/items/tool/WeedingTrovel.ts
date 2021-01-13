@@ -3,6 +3,7 @@ extends ItemIC2 {
     constructor() {
         super("weedingTrowel", "weeding_trowel");
         this.setMaxStack(1);
+        this.setCategory(CreativeCategory.EQUIPMENT);
     }
 
     onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
@@ -15,13 +16,3 @@ extends ItemIC2 {
         }
     }
 }
-
-new ItemWeedingTrowel();
-
-Callback.addCallback("PostLoaded", function() {
-	Recipes.addShaped({id: ItemID.weedingTrowel , count: 1 , data: 0}, [
-		"c c",
-		" c ",
-		"zcz"
-	], ['c', 265, 0, 'z', ItemID.rubber, 0]);
-});

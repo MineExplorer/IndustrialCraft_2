@@ -338,11 +338,11 @@ Translation.addTranslation("electric_wrench", {en: "Electric Wrench", ru: "Эл�
 Translation.addTranslation("electric_hoe", {en: "Electric Hoe", ru: "Электромотыга", es: "Azada Eléctrica", pt: "Enxada Elétrica", zh: "电动锄"});
 Translation.addTranslation("electric_treetap", {en: "Electric Treetap", ru: "Электрокраник", es: "Grifo para Resina Eléctrico", pt: "Drenador Elétrico", zh: "电动树脂提取器"});
 Translation.addTranslation("chainsaw", {en: "Chainsaw", ru: "Электропила", es: "Motosierra", pt: "Serra Elétrica", zh: "链锯"});
-Translation.addTranslation("Mining Drill", {ru: "Шахтёрский бур", es: "Taladro", pt: "Broca de Mineração", zh: "采矿钻头"});
-Translation.addTranslation("Diamond Drill", {ru: "Алмазный бур", es: "Taladro de Diamante", pt: "Broca de Diamante", zh: "钻石钻头"});
-Translation.addTranslation("Iridium Drill", {ru: "Иридиевый бур", es: "Taladro de Iridio", pt: "Broca de Irídio", zh: "铱钻头"});
-Translation.addTranslation("Nano Saber", {ru: "Нано-сабля", es: "Nano-Sable", pt: "Sabre Nano", zh: "纳米剑"});
-Translation.addTranslation("Mining Laser", {ru: "Шахтёрский лазер", es: "Láser Minero", pt: "Laser de Mineração", zh: "采矿镭射枪"});
+Translation.addTranslation("drill", {en: "Mining Drill", ru: "Шахтёрский бур", es: "Taladro", pt: "Broca de Mineração", zh: "采矿钻头"});
+Translation.addTranslation("diamond_drill", {en: "Diamond Drill", ru: "Алмазный бур", es: "Taladro de Diamante", pt: "Broca de Diamante", zh: "钻石钻头"});
+Translation.addTranslation("iridium_drill", {en: "Iridium Drill", ru: "Иридиевый бур", es: "Taladro de Iridio", pt: "Broca de Irídio", zh: "铱钻头"});
+Translation.addTranslation("nano_saber", {en: "Nano Saber", ru: "Нано-сабля", es: "Nano-Sable", pt: "Sabre Nano", zh: "纳米剑"});
+Translation.addTranslation("mining_laser", {en: "Mining Laser", ru: "Шахтёрский лазер", es: "Láser Minero", pt: "Laser de Mineração", zh: "采矿镭射枪"});
 Translation.addTranslation("EU Meter", {ru: "Мультиметр", pt: "Leitor de EU", zh: "EU电表"});
 Translation.addTranslation("debug_item", {ru: "Предмет отладки", pt: "Item de Depuração", zh:"测试工具"});
 Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh: "作物分析器"});

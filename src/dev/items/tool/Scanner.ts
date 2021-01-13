@@ -27,7 +27,7 @@ extends ItemElectric {
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
 		let client = Network.getClientForPlayer(player);
-		if (client && ICTool.useElectricItem(item, this.getEnergyPerUse())) {
+		if (client && ICTool.useElectricItem(item, this.getEnergyPerUse(), player)) {
 			SoundManager.playSound("ODScanner.ogg");
 			client.sendMessage(Translation.translate("Scan Result: ") + coords.x + ", " + coords.y + ", " + coords.z);
 			let ores = {};
@@ -49,18 +49,3 @@ extends ItemElectric {
 		}
 	}
 }
-
-new ItemScanner("scanner", "scanner", 10000, 100, 1);
-new ItemScanner("scannerAdvanced", "scanner_advanced", 100000, 256, 2);
-
-Recipes.addShaped({id: ItemID.scanner, count: 1, data: 27}, [
-	"gdg",
-	"cbc",
-	"xxx"
-], ['x', ItemID.cableCopper1, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
-
-Recipes.addShaped({id: ItemID.scannerAdvanced, count: 1, data: 27}, [
-	"gbg",
-	"dcd",
-	"xsx"
-], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);

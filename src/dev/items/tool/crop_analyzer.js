@@ -1,11 +1,4 @@
-IDRegistry.genItemID("agriculturalAnalyzer");
-Item.createItem("agriculturalAnalyzer", "Crop Analyzer", {name: "cropnalyzer"}, {stack: 1});
-
-Recipes.addShaped({id: ItemID.agriculturalAnalyzer , count: 1 , data: 0}, [
-	"xx ",
-	"rgr",
-	"rcr"
-], ['x', ItemID.cableCopper1, 0, 'r', 331, 0, 'g', 20, 0, "c", ItemID.circuitBasic, 0]);
+ItemRegistry.createItem("agriculturalAnalyzer", {name: "Crop Analyzer", icon: "cropnalyzer", stack: 1, category: CreativeCategory.EQUIPMENT});
 
 var guiAddConst = 14;
 var guiAnalyserObject = {

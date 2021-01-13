@@ -158,7 +158,7 @@ var buttonContent = {
 			onClick: function() {
 				var item = Player.getCarriedItem();
 				if (UIbuttons.onSwitch[item.id]) {
-					UIbuttons.onSwitch[item.id](item);
+					UIbuttons.onSwitch[item.id](item, player);
 				}
 			}
 		}

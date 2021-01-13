@@ -117,25 +117,10 @@ items/reactor/condensator.js
 items/armor/init.ts
 items/armor/recipes.ts
 
-items/tool/DebugItem.ts
-items/tool/eu-meter.js
-items/tool/Transmitter.ts
-items/tool/Scanner.ts
-items/tool/Treetap.ts
-items/tool/crafting.js
 items/tool/ToolBox.ts
 items/tool/ContainmentBox.ts
-items/tool/bronze.js
-items/tool/wrench.js
-items/tool/ElectricHoe.ts
-items/tool/ElectricTreetap.ts
-items/tool/drills.js
-items/tool/chainsaw.js
-items/tool/nano_saber.js
-items/tool/mining_laser.js
-items/tool/crop_analyzer.js
-items/tool/WeedingTrovel.ts
-items/tool/painter.js
+items/tool/init.ts
+items/tool/recipes.ts
 
 integration/recipe_viewer.js
 integration/tree_capitator.js

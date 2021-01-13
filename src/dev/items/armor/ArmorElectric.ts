@@ -11,10 +11,10 @@ implements IElectricItem, OnHurtListener, OnTickListener {
 
 	constructor(stringID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, maxCharge: number, transferLimit: number, tier: number, inCreative: boolean = true) {
 		super(stringID, name, params, false);
+		this.preventDamaging();
 		this.maxCharge = maxCharge;
 		this.transferLimit = transferLimit;
 		this.tier = tier;
-		Armor.preventDamaging(this.id);
 		ChargeItemRegistry.registerItem(this.id, this, !inCreative);
 	}
 

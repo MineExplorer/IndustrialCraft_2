@@ -61,5 +61,3 @@ extends ItemElectric {
 		}
 	}
 }
-
-new DebugItem();

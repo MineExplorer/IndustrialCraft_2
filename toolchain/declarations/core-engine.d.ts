@@ -9466,7 +9466,7 @@ declare namespace ToolAPI {
     interface ToolMaterial {
         /**
          * Devidor used to calculate block breaking
-         * speed. 2 is a default value for wooden instruments and 12 is a default 
+         * speed. 2 is a default value for wooden instruments and 1 is a default 
          * value for golden instruments
          */
         efficiency?: number,
@@ -9480,7 +9480,7 @@ declare namespace ToolAPI {
         damage?: number,
 
         /**
-         * Durability of the tool, 33 is a default value 
+         * Durability of the tool, 1 is a default value 
          * for golden tools and 1562 is a default value for diamond tools
          */
         durability?: number,
@@ -9583,7 +9583,7 @@ declare namespace ToolAPI {
          * @returns true if default damage should not be applied to the instrument,
          * false otherwise
          */
-        onDestroy?: (item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile) => boolean,
+        onDestroy?: (item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number) => boolean,
 
         /**
          * Function that is called when players attacks some entity with the tool
@@ -9592,15 +9592,16 @@ declare namespace ToolAPI {
          * @returns true if default damage should not be applied to the instrument,
          * false otherwise
          */
-        onAttack?: (item: ItemInstance, victim: number) => boolean,
+        onAttack?: (item: ItemInstance, victim: number, attacker: number) => boolean,
 
         /**
-         * If true, breaking blocks with this tool makes it break 2x faster
+         * If true, breaking blocks with this tool makes it break 2x faster,
+         * otherwise attacking mobs breaks tool 2x faster
          */
         isWeapon?: boolean,
 
         /**
-         * Funciton that is called when the instument is broken
+         * Funciton that is called when the instrument is broken
          * @param item tool item
          * @returns true if default breaking behavior (replacing by *brokenId* item) 
          * should not be applied 
@@ -13474,7 +13475,7 @@ declare namespace World {
      * producesd
      * @param drop whenther to provide drop for the block or not
      */
-    function destroyBlock(x: number, y: number, z: number, drop: boolean): void;
+    function destroyBlock(x: number, y: number, z: number, drop?: boolean): void;
 
     /**
      * @returns light level on the specified coordinates, from 0 to 15
@@ -13632,7 +13633,7 @@ declare namespace World {
      * @param volume sound volume from 0 to 1
      * @param pitch sound pitch, from 0 to 1, 0.5 is default value
      */
-    function playSound(x: number, y: number, z: number, name: string, volume: number, pitch: number): void;
+    function playSound(x: number, y: number, z: number, name: string, volume: number, pitch?: number): void;
 
     /**
      * Plays standart Minecraft sound from the specified entity
@@ -13640,7 +13641,7 @@ declare namespace World {
      * @param volume sound volume from 0 to 1
      * @param pitch sound pitch, from 0 to 1, 0.5 is default value
      */
-    function playSoundAtEntity(entity: number, name: string, volume: number, pitch: number): void;
+    function playSoundAtEntity(entity: number, name: string, volume: number, pitch?: number): void;
 
     /**
      * Enables "BlockChanged" event for the block id. Event occurs when either

@@ -1,20 +1,20 @@
-/// <reference path="./ArmorIC2.ts" />
-/// <reference path="./ArmorHazmat.ts" />
-/// <reference path="./ArmorJetpackElectric.ts" />
-/// <reference path="./ArmorBatpack.ts" />
-/// <reference path="./ArmorNightvisionGoggles.ts" />
-/// <reference path="./ArmorNanoSuit.ts" />
-/// <reference path="./ArmorQuantumSuit.ts" />
-/// <reference path="./ArmorSolarHelmet.ts" />
+/// <reference path="ArmorIC2.ts" />
+/// <reference path="ArmorHazmat.ts" />
+/// <reference path="ArmorJetpackElectric.ts" />
+/// <reference path="ArmorBatpack.ts" />
+/// <reference path="ArmorNightvisionGoggles.ts" />
+/// <reference path="ArmorNanoSuit.ts" />
+/// <reference path="ArmorQuantumSuit.ts" />
+/// <reference path="ArmorSolarHelmet.ts" />
 
-ItemRegistry.addArmorMaterial("bronze", {durabilityFactor: 14, enchantability: 10, repairItem: ItemID.ingotBronze});
+ItemRegistry.addArmorMaterial("bronze", {durabilityFactor: 14, enchantability: 10, repairMaterial: ItemID.ingotBronze});
 
 new ArmorIC2("bronzeHelmet", "bronze_helmet", {type: "helmet", defence: 2, texture: "bronze", material: "bronze"});
 new ArmorIC2("bronzeChestplate", "bronze_chestplate", {type: "chestplate", defence: 6, texture: "bronze", material: "bronze"});
 new ArmorIC2("bronzeLeggings", "bronze_leggings", {type: "leggings", defence: 6, texture: "bronze", material: "bronze"});
 new ArmorIC2("bronzeBoots", "bronze_boots", {type: "boots", defence: 6, texture: "bronze", material: "bronze"});
 
-ItemRegistry.addArmorMaterial("composite", {durabilityFactor: 50, enchantability: 8, repairItem: ItemID.plateAlloy});
+ItemRegistry.addArmorMaterial("composite", {durabilityFactor: 50, enchantability: 8, repairMaterial: ItemID.plateAlloy});
 
 new ArmorIC2("compositeHelmet", "composite_helmet", {type: "helmet", defence: 3, texture: "composite", material: "composite"});
 new ArmorIC2("compositeChestplate", "composite_chestplate", {type: "chestplate", defence: 8, texture: "composite", material: "composite"});

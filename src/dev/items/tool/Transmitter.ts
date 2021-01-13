@@ -4,6 +4,7 @@ implements ItemFuncs {
 	constructor() {
 		super("freqTransmitter", "frequency_transmitter");
 		this.setMaxStack(1);
+		this.setCategory(CreativeCategory.EQUIPMENT);
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
@@ -64,11 +65,3 @@ implements ItemFuncs {
 		}
 	}
 }
-
-new ItemTransmitter();
-
-Recipes.addShaped({id: ItemID.freqTransmitter, count: 1, data: 0}, [
-	"x",
-	"#",
-	"b"
-], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'b', ItemID.casingIron, 0]);

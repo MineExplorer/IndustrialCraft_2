@@ -4,6 +4,7 @@ extends ItemIC2 {
 		super("treetap");
 		this.setMaxStack(1);
 		this.setMaxDamage(17);
+		this.setCategory(CreativeCategory.EQUIPMENT);
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number) {
@@ -26,11 +27,3 @@ extends ItemIC2 {
 		}
 	}
 }
-
-new ItemTreetap();
-
-Recipes.addShaped({id: ItemID.treetap, count: 1, data: 0}, [
-	" x ",
-	"xxx",
-	"x  "
-], ['x', 5, -1]);

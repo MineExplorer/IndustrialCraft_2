@@ -1,7 +1,11 @@
-class ItemElectricTreetap
+class ElectricTreetap
 extends ItemElectric {
+	constructor() {
+		super("electricTreetap", "electric_treetap", 10000, 100, 1);
+	}
+
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number) {
-		if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, 50)) {
+		if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, 50, player)) {
 			let region = WorldRegion.getForActor(player);
 			SoundManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");
 			region.setBlock(coords, BlockID.rubberTreeLogLatex, block.data - 4);
@@ -19,9 +23,3 @@ extends ItemElectric {
 		}
 	}
 }
-
-new ItemElectricTreetap("electricTreetap", "electric_treetap", 10000, 100, 1);
-
-Recipes.addShapeless({id: ItemID.electricTreetap, count: 1, data: 27}, [
-	{id: ItemID.powerUnitSmall, data: 0}, {id: ItemID.treetap, data: 0}
-]);

@@ -1,4 +1,4 @@
-/// <reference path="./init.ts" />
+/// <reference path="init.ts" />
 
 // Bronze
 Recipes.addShaped({id: ItemID.bronzeHelmet, count: 1, data: 0}, [

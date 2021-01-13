@@ -1,5 +1,4 @@
-IDRegistry.genItemID("containmentBox");
-Item.createItem("containmentBox", "containment_box", {name: "containment_box", meta: 0}, {stack: 1});
+ItemRegistry.createItem("containmentBox", {name: "containment_box", icon: "containment_box", stack: 1, category: CreativeCategory.EQUIPMENT});
 
 Recipes.addShaped({id: ItemID.containmentBox, count: 1, data: 0}, [
 	"aaa",

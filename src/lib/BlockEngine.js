@@ -254,9 +254,8 @@ var WorldRegion = /** @class */ (function () {
             this.destroyBlock(pos.x, pos.y, pos.z, drop_1, player_1);
             return;
         }
-        var block = this.getBlock(x, y, z);
-        this.blockSource.destroyBlock(x, y, z, drop);
         if (drop) {
+            var block = this.getBlock(x, y, z);
             var item = player ? Entity.getCarriedItem(player) : new ItemStack();
             var result = Block.getBlockDropViaItem(block, item, new Vector3(x, y, z), this.blockSource);
             if (result) {
@@ -265,6 +264,10 @@ var WorldRegion = /** @class */ (function () {
                     this.dropItem(x + .5, y + .5, z + .5, dropItem[0], dropItem[1], dropItem[2], dropItem[3] || null);
                 }
             }
+            this.blockSource.destroyBlock(x, y, z, !result);
+        }
+        else {
+            this.blockSource.destroyBlock(x, y, z, false);
         }
     };
     WorldRegion.prototype.getNativeTileEntity = function (x, y, z) {
@@ -432,8 +435,18 @@ var WorldRegion = /** @class */ (function () {
         if (blacklist === void 0) { blacklist = false; }
         return this.blockSource.listEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
     };
+    WorldRegion.prototype.playSound = function (x, y, z, name, volume, pitch) {
+        if (volume === void 0) { volume = 1; }
+        if (pitch === void 0) { pitch = 1; }
+        Network.sendToAllClients("WorldRegion.play_sound", { x: x, y: y, z: z, dimension: this.getDimension(), name: name, volume: volume, pitch: pitch });
+    };
     return WorldRegion;
 }());
+Network.addClientPacket("WorldRegion.play_sound", function (data) {
+    if (data.dimension == Player.getDimension()) {
+        World.playSound(data.x, data.y, data.z, data.name, data.volume, data.pitch);
+    }
+});
 var PlayerManager = /** @class */ (function () {
     function PlayerManager(playerUid) {
         this.playerActor = new PlayerActor(playerUid);
@@ -630,24 +643,24 @@ var PlayerManager = /** @class */ (function () {
     return PlayerManager;
 }());
 var BlockBase = /** @class */ (function () {
-    function BlockBase(nameID) {
+    function BlockBase(stringID) {
         this.variants = [];
-        this.nameID = nameID;
-        this.id = IDRegistry.genBlockID(nameID);
+        this.stringID = stringID;
+        this.id = IDRegistry.genBlockID(stringID);
         //ItemRegistry.register(this);
     }
     BlockBase.prototype.addVariant = function (name, texture, inCreative) {
         this.variants.push();
     };
     BlockBase.prototype.create = function (blockType) {
-        Block.createBlock(this.nameID, this.variants, blockType);
+        Block.createBlock(this.stringID, this.variants, blockType);
     };
     BlockBase.prototype.setDestroyTime = function (destroyTime) {
-        Block.setDestroyTime(this.nameID, destroyTime);
+        Block.setDestroyTime(this.stringID, destroyTime);
         return this;
     };
     BlockBase.prototype.setBlockMaterial = function (material, level) {
-        Block.setBlockMaterial(this.nameID, material, level);
+        Block.setBlockMaterial(this.stringID, material, level);
         return this;
     };
     BlockBase.prototype.setShape = function (x1, y1, z1, x2, y2, z2, data) {
@@ -772,27 +785,16 @@ var ItemBasic = /** @class */ (function () {
     ItemBasic.prototype.setRarity = function (rarity) {
         this.rarity = rarity;
         if (!('onNameOverride' in this)) {
-            Item.registerNameOverrideFunction(this.id, function (item, translation, name) {
-                return this.getRarityColor() + translation;
-            });
+            ItemRegistry.setRarity(this.id, rarity);
         }
-    };
-    ItemBasic.prototype.getRarityColor = function () {
-        if (this.rarity == 1)
-            return "§e";
-        if (this.rarity == 2)
-            return "§b";
-        if (this.rarity == 3)
-            return "§d";
-        return "";
     };
     return ItemBasic;
 }());
-/// <reference path="./ItemBasic.ts" />
+/// <reference path="ItemBasic.ts" />
 var ItemArmor = /** @class */ (function (_super) {
     __extends(ItemArmor, _super);
-    function ItemArmor(nameID, name, icon, params) {
-        var _this = _super.call(this, nameID, name, icon) || this;
+    function ItemArmor(stringID, name, icon, params) {
+        var _this = _super.call(this, stringID, name, icon) || this;
         _this.armorType = params.type;
         _this.defence = params.defence;
         if (params.texture)
@@ -811,7 +813,6 @@ var ItemArmor = /** @class */ (function (_super) {
     };
     ItemArmor.prototype.setArmorTexture = function (texture) {
         this.texture = texture;
-        return this;
     };
     ItemArmor.prototype.setMaterial = function (armorMaterial) {
         if (typeof armorMaterial == "string") {
@@ -825,11 +826,13 @@ var ItemArmor = /** @class */ (function (_super) {
             if (armorMaterial.enchantability) {
                 this.setEnchantType(Native.EnchantType[this.armorType], armorMaterial.enchantability);
             }
-            if (armorMaterial.repairItem) {
-                this.addRepairItem(armorMaterial.repairItem);
+            if (armorMaterial.repairMaterial) {
+                this.addRepairItem(armorMaterial.repairMaterial);
             }
         }
-        return this;
+    };
+    ItemArmor.prototype.preventDamaging = function () {
+        Armor.preventDamaging(this.id);
     };
     ItemArmor.registerListeners = function (id, armorFuncs) {
         if ('onHurt' in armorFuncs) {
@@ -856,13 +859,181 @@ var ItemArmor = /** @class */ (function (_super) {
     ItemArmor.maxDamageArray = [11, 16, 15, 13];
     return ItemArmor;
 }(ItemBasic));
-/// <reference path="./BlockBase.ts" />
-/// <reference path="./ItemBasic.ts" />
-/// <reference path="./ItemArmor.ts" />
+var ToolType;
+(function (ToolType) {
+    ToolType.SWORD = {
+        handEquipped: true,
+        isWeapon: true,
+        enchantType: Native.EnchantType.weapon,
+        damage: 4,
+        blockTypes: ["fibre", "plant"],
+        calcDestroyTime: function (item, coords, block, params, destroyTime, enchant) {
+            if (block.id == 30)
+                return 0.08;
+            var material = ToolAPI.getBlockMaterialName(block.id);
+            if (material == "plant" || block.id == 86 || block.id == 91 || block.id == 103 || block.id == 127 || block.id == 410) {
+                return params.base / 1.5;
+            }
+            return destroyTime;
+        }
+    };
+    ToolType.SHOVEL = {
+        handEquipped: true,
+        enchantType: Native.EnchantType.shovel,
+        damage: 2,
+        blockTypes: ["dirt"],
+        onItemUse: function (coords, item, block, player) {
+            if (block.id == 2 && coords.side == 1) {
+                var region = WorldRegion.getForActor(player);
+                region.setBlock(coords, 198, 0);
+                region.playSound(coords.x + .5, coords.y + 1, coords.z + .5, "step.grass", 0.5, 0.8);
+                ItemTool.damageCarriedItem(player);
+            }
+        }
+    };
+    ToolType.PICKAXE = {
+        handEquipped: true,
+        enchantType: Native.EnchantType.pickaxe,
+        damage: 2,
+        blockTypes: ["stone"],
+    };
+    ToolType.AXE = {
+        handEquipped: true,
+        enchantType: Native.EnchantType.axe,
+        damage: 3,
+        blockTypes: ["wood"],
+        onItemUse: function (coords, item, block, player) {
+            var region = WorldRegion.getForActor(player);
+            var logID;
+            if (block.id == 17) {
+                if (block.data == 0)
+                    logID = VanillaTileID.stripped_oak_log;
+                if (block.data == 1)
+                    logID = VanillaTileID.stripped_spruce_log;
+                if (block.data == 2)
+                    logID = VanillaTileID.stripped_birch_log;
+                if (block.data == 3)
+                    logID = VanillaTileID.stripped_jungle_log;
+                region.setBlock(coords, logID, 0);
+                ItemTool.damageCarriedItem(player);
+            }
+            else if (block.id == 162) {
+                if (block.data == 0)
+                    logID = VanillaTileID.stripped_acacia_log;
+                else
+                    logID = VanillaTileID.stripped_dark_oak_log;
+                region.setBlock(coords, logID, 0);
+                ItemTool.damageCarriedItem(player);
+            }
+        }
+    };
+    ToolType.HOE = {
+        handEquipped: true,
+        onItemUse: function (coords, item, block, player) {
+            if ((block.id == 2 || block.id == 3) && coords.side == 1) {
+                var region = WorldRegion.getForActor(player);
+                region.setBlock(coords, 60, 0);
+                region.playSound(coords.x + .5, coords.y + 1, coords.z + .5, "step.gravel", 1, 0.8);
+                ItemTool.damageCarriedItem(player);
+            }
+        }
+    };
+    ToolType.SHEARS = {
+        blockTypes: ["plant", "fibre", "wool"],
+        modifyEnchant: function (enchantData, item, coords, block) {
+            if (block) {
+                var material = ToolAPI.getBlockMaterialName(block.id);
+                if (material == "fibre" || material == "plant") {
+                    enchantData.silk = true;
+                }
+            }
+        },
+        calcDestroyTime: function (item, coords, block, params, destroyTime, enchant) {
+            if (block.id == 30)
+                return 0.08;
+            return destroyTime;
+        },
+        onDestroy: function (item, coords, block, player) {
+            if (block.id == 31 || block.id == 32 || block.id == 18 || block.id == 161) {
+                var region = WorldRegion.getForActor(player);
+                region.destroyBlock(coords);
+                region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, block.id, 1, block.data);
+            }
+            return false;
+        }
+    };
+})(ToolType || (ToolType = {}));
+ToolAPI.addBlockMaterial("wool", 1.5);
+ToolAPI.registerBlockMaterial(35, "wool");
+/// <reference path="ToolType.ts" />
+var ItemTool = /** @class */ (function (_super) {
+    __extends(ItemTool, _super);
+    function ItemTool(stringID, name, icon, toolMaterial, toolData) {
+        var _this = _super.call(this, stringID, name, icon) || this;
+        _this.handEquipped = false;
+        _this.brokenId = 0;
+        _this.damage = 0;
+        _this.isWeapon = false;
+        _this.blockTypes = [];
+        if (typeof toolMaterial == "string") {
+            toolMaterial = ItemRegistry.getToolMaterial(toolMaterial);
+        }
+        _this.toolMaterial = toolMaterial;
+        if (toolData) {
+            for (var key in toolData) {
+                _this[key] = toolData[key];
+            }
+        }
+        return _this;
+    }
+    ItemTool.prototype.createItem = function (inCreative) {
+        _super.prototype.createItem.call(this, inCreative);
+        ToolAPI.registerTool(this.id, this.toolMaterial, this.blockTypes, this);
+        var material = this.toolMaterial;
+        if (this.enchantType && material.enchantability) {
+            this.setEnchantType(this.enchantType, material.enchantability);
+        }
+        if (material.repairMaterial) {
+            this.addRepairItem(material.repairMaterial);
+        }
+        if (this.handEquipped) {
+            this.setHandEquipped(true);
+        }
+        return this;
+    };
+    ItemTool.damageCarriedItem = function (player, damage) {
+        if (damage === void 0) { damage = 1; }
+        var item = Entity.getCarriedItem(player);
+        var enchant = ToolAPI.getEnchantExtraData(item.extra);
+        if (Math.random() < 1 / (enchant.unbreaking + 1)) {
+            item.data += damage;
+        }
+        if (item.data >= Item.getMaxDamage(item.id)) {
+            var tool = ToolAPI.getToolData(item.id);
+            item.id = tool ? tool.brokenId : 0;
+            item.count = 1;
+            item.data = 0;
+        }
+        Entity.setCarriedItem(player, item.id, item.count, item.data, item.extra);
+    };
+    return ItemTool;
+}(ItemBasic));
+/// <reference path="BlockBase.ts" />
+/// <reference path="ItemBasic.ts" />
+/// <reference path="ItemArmor.ts" />
+/// <reference path="ItemTool.ts" />
+var CreativeCategory;
+(function (CreativeCategory) {
+    CreativeCategory[CreativeCategory["BUILDING"] = 1] = "BUILDING";
+    CreativeCategory[CreativeCategory["NATURE"] = 2] = "NATURE";
+    CreativeCategory[CreativeCategory["EQUIPMENT"] = 3] = "EQUIPMENT";
+    CreativeCategory[CreativeCategory["ITEMS"] = 4] = "ITEMS";
+})(CreativeCategory || (CreativeCategory = {}));
 var ItemRegistry;
 (function (ItemRegistry) {
     var items = {};
     var armorMaterials = {};
+    var toolMaterials = {};
     function addArmorMaterial(name, material) {
         armorMaterials[name] = material;
     }
@@ -871,13 +1042,21 @@ var ItemRegistry;
         return armorMaterials[name];
     }
     ItemRegistry.getArmorMaterial = getArmorMaterial;
+    function addToolMaterial(name, material) {
+        toolMaterials[name] = material;
+    }
+    ItemRegistry.addToolMaterial = addToolMaterial;
+    function getToolMaterial(name) {
+        return toolMaterials[name];
+    }
+    ItemRegistry.getToolMaterial = getToolMaterial;
     function registerItem(itemInstance, addToCreative) {
         if (!itemInstance.item)
             itemInstance.createItem(addToCreative);
         items[itemInstance.id] = itemInstance;
         if ('onNameOverride' in itemInstance) {
             Item.registerNameOverrideFunction(itemInstance.id, function (item, translation, name) {
-                return itemInstance.getRarityColor() + itemInstance.onNameOverride(item, translation, name);
+                return getRarityColor(itemInstance.rarity) + itemInstance.onNameOverride(item, translation, name);
             });
         }
         if ('onIconOverride' in itemInstance) {
@@ -917,22 +1096,76 @@ var ItemRegistry;
         return items[itemID] || null;
     }
     ItemRegistry.getInstanceOf = getInstanceOf;
-    function createItem(nameID, params) {
-        var item = new ItemBasic(nameID, params.name, params.icon);
-        registerItem(item, params.inCreative);
-        if (params.maxStack)
-            item.setMaxStack(params.maxStack);
-        return item;
+    function createItem(stringID, params) {
+        var numericID = IDRegistry.genItemID(stringID);
+        var icon;
+        if (typeof params.icon == "string")
+            icon = { name: params.icon };
+        else
+            icon = params.icon;
+        Item.createItem(stringID, params.name, icon, { stack: params.stack || 64, isTech: params.isTech });
+        if (params.maxDamage)
+            Item.setMaxDamage(numericID, params.maxDamage);
+        if (params.category)
+            Item.setCategory(numericID, params.category);
+        if (params.handEquipped)
+            Item.setToolRender(numericID, true);
+        if (params.allowedInOffhand)
+            Item.setAllowedInOffhand(numericID, true);
+        if (params.glint)
+            Item.setGlint(numericID, true);
+        if (params.enchant)
+            Item.setEnchantType(numericID, params.enchant.type, params.enchant.value);
+        if (params.rarity)
+            setRarity(numericID, params.rarity);
     }
     ItemRegistry.createItem = createItem;
-    function createArmor(nameID, params) {
-        var item = new ItemArmor(nameID, params.name, params.icon, params);
-        registerItem(item, params.inCreative);
+    function createArmor(stringID, params) {
+        var item = new ItemArmor(stringID, params.name, params.icon, params);
+        registerItem(item, !params.isTech);
         if (params.material)
             item.setMaterial(params.material);
+        if (params.category)
+            item.setCategory(params.category);
+        if (params.glint)
+            item.setGlint(true);
+        if (params.rarity)
+            item.setRarity(params.rarity);
         return item;
     }
     ItemRegistry.createArmor = createArmor;
+    function createTool(stringID, params, toolData) {
+        var item = new ItemTool(stringID, params.name, params.icon, params.material, toolData);
+        registerItem(item, !params.isTech);
+        if (params.category)
+            item.setCategory(params.category);
+        if (params.glint)
+            item.setGlint(true);
+        if (params.rarity)
+            item.setRarity(params.rarity);
+        return item;
+    }
+    ItemRegistry.createTool = createTool;
+    /**
+     * Registers name override function for item which adds color to item name depends on rarity
+     * @param rarity number from 1 to 3
+     */
+    function setRarity(id, rarity) {
+        Item.registerNameOverrideFunction(id, function (item, translation, name) {
+            return getRarityColor(rarity) + translation;
+        });
+    }
+    ItemRegistry.setRarity = setRarity;
+    function getRarityColor(rarity) {
+        if (rarity == 1)
+            return "§e";
+        if (rarity == 2)
+            return "§b";
+        if (rarity == 3)
+            return "§d";
+        return "";
+    }
+    ItemRegistry.getRarityColor = getRarityColor;
 })(ItemRegistry || (ItemRegistry = {}));
 var TileEntityBase = /** @class */ (function () {
     function TileEntityBase() {
@@ -1069,6 +1302,7 @@ EXPORT("PlayerManager", PlayerManager);
 EXPORT("ItemBasic", ItemBasic);
 EXPORT("ItemArmor", ItemArmor);
 EXPORT("ItemRegistry", ItemRegistry);
+EXPORT("CreativeCategory", CreativeCategory);
 EXPORT("TileEntityBase", TileEntityBase);
 EXPORT("Side", Side);
 EXPORT("BlockEngine", BlockEngine);

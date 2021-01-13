@@ -12,9 +12,9 @@
 */
 
 // libraries
-IMPORT("BlockEngine");
 IMPORT("flags");
 IMPORT("ToolLib");
+IMPORT("BlockEngine");
 IMPORT("EnergyNet");
 IMPORT("ChargeItem");
 IMPORT("TileRender");
@@ -59,34 +59,3 @@ function addShapelessRecipe(result: ItemInstance, source: ItemInstance[]) {
 // vanilla items
 Recipes.addFurnaceFuel(325, 10, 2000); // lava bucket
 ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone
-
-// Recipe debug
-/*
-var workbenchAddShaped = Recipes.addShaped;
-Recipes.addShaped = function(result, scheme, keys) {
-	Logger.Log("Shaped recipe: "+result.id+", "+result.count+", "+result.data, "DEBUG");
-	workbenchAddShaped(result, scheme, keys);
-}
-
-var workbenchAddShapeless = Recipes.addShapeless;
-Recipes.addShapeless = function(result, input) {
-	Logger.Log("Shapeless recipe: "+result.id+", "+result.count+", "+result.data, "DEBUG");
-	workbenchAddShapeless(result, input);
-}
-*/
-
-// delete temporary files
-let File = java.io.File;
-let FileWriter = java.io.FileWriter;
-
-let target_path = __packdir__ + "assets/definitions/recipe";
-let source_path = __dir__ + "assets/res/definitions/recipe";
-let files = new File(source_path).list();
-for (let i in files) {
-	try {
-		let fileName = files[i];
-		new File(target_path, fileName).delete();
-	} catch(e) {
-		Logger.Log(e, "ERROR")
-	}
-}

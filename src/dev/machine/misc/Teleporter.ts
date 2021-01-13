@@ -31,7 +31,7 @@ namespace Machine {
 			for (let side = 0; side < 6; side++) {
 				let coords = StorageInterface.getRelativeCoords(this, side);
 				let tileEntity = this.region.getTileEntity(coords);
-				if (tileEntity && tileEntity.isTeleporterCompatible) {
+				if (tileEntity && MachineRegistry.isMachine(tileEntity.blockID) && tileEntity.isTeleporterCompatible) {
 					storages.push(tileEntity);
 				}
 			}

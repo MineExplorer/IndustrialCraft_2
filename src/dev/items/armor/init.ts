@@ -42,15 +42,17 @@ Item.addCreativeGroup("batteryPack", Translation.translate("Battery Packs"), [
 
 new ArmorNightvisionGoggles();
 
-new ArmorNanoSuit("nanoHelmet", "nano_helmet", {type: "helmet", defence: 4});
-new ArmorNanoSuit("nanoChestplate", "nano_chestplate", {type: "chestplate", defence: 9});
-new ArmorNanoSuit("nanoLeggings", "nano_leggings", {type: "leggings", defence: 7});
-new ArmorNanoSuit("nanoBoots", "nano_boots", {type: "boots", defence: 4});
+new ArmorNanoSuit("nanoHelmet", "nano_helmet", {type: "helmet", defence: 3});
+new ArmorNanoSuit("nanoChestplate", "nano_chestplate", {type: "chestplate", defence: 8});
+new ArmorNanoSuit("nanoLeggings", "nano_leggings", {type: "leggings", defence: 6});
+new ArmorNanoSuit("nanoBoots", "nano_boots", {type: "boots", defence: 3});
 
-new ArmorQuantumSuit("quantumHelmet", "quantum_helmet", {type: "helmet", defence: 4});
-new ArmorQuantumSuit("quantumChestplate", "quantum_chestplate", {type: "chestplate", defence: 10});
-new ArmorQuantumSuit("quantumLeggings", "quantum_leggings", {type: "leggings", defence: 7});
-new ArmorQuantumSuit("quantumBoots", "quantum_boots", {type: "boots", defence: 4});
+UIbuttons.setArmorButton(ItemID.nanoHelmet, "button_nightvision");
+
+new ArmorQuantumSuit("quantumHelmet", "quantum_helmet", {type: "helmet", defence: 3});
+new ArmorQuantumSuit("quantumChestplate", "quantum_chestplate", {type: "chestplate", defence: 8});
+new ArmorQuantumSuit("quantumLeggings", "quantum_leggings", {type: "leggings", defence: 6});
+new ArmorQuantumSuit("quantumBoots", "quantum_boots", {type: "boots", defence: 3});
 
 UIbuttons.setArmorButton(ItemID.quantumHelmet, "button_nightvision");
 UIbuttons.setArmorButton(ItemID.quantumChestplate, "button_fly");

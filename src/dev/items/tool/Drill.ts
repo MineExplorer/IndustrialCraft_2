@@ -1,3 +1,5 @@
+/// <reference path="ElectricTool.ts" />
+
 class ToolDrill
 extends ElectricTool {
 	constructor(stringID: string, name: string, toolData: {energyPerUse: number, level: number, efficiency: number, damage: number}, maxCharge: number, transferLimit: number, tier: number) {

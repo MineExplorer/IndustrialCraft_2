@@ -1,3 +1,5 @@
+/// <reference path="Drill.ts" />
+
 class ToolDrillIridium
 extends ToolDrill {
 	constructor() {

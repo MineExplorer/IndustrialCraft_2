@@ -17,12 +17,6 @@
 /// <reference path="WeedingTrovel.ts" />
 /// <reference path="Painter.ts" />
 
-new DebugItem();
-new ItemTransmitter();
-new ItemScanner("scanner", "scanner", 10000, 100, 1);
-new ItemScanner("scannerAdvanced", "scanner_advanced", 100000, 256, 2);
-new ItemTreetap();
-
 ItemRegistry.addToolMaterial("bronze", {
 	durability: 225,
 	level: 3,
@@ -37,6 +31,12 @@ ItemRegistry.createTool("bronzeShovel", {name: "bronze_shovel", icon: "bronze_sh
 ItemRegistry.createTool("bronzePickaxe", {name: "bronze_pickaxe", icon: "bronze_pickaxe", material: "bronze", category: 3}, ToolType.PICKAXE);
 ItemRegistry.createTool("bronzeAxe", {name: "bronze_axe", icon: "bronze_axe", material: "bronze", category: 3}, ToolType.AXE);
 ItemRegistry.createTool("bronzeHoe", {name: "bronze_hoe", icon: "bronze_hoe", material: "bronze", category: 3}, ToolType.HOE);
+
+new DebugItem();
+new ItemTransmitter();
+new ItemScanner("scanner", "scanner", 10000, 100, 1);
+new ItemScanner("scannerAdvanced", "scanner_advanced", 100000, 256, 2);
+new ItemTreetap();
 
 new ToolWrench("bronzeWrench", "wrench", "bronze_wrench", 0.8);
 new ElectricWrench();

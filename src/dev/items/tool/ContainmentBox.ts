@@ -6,7 +6,7 @@ Recipes.addShaped({id: ItemID.containmentBox, count: 1, data: 0}, [
 	"aaa",
 ], ['x', 54, -1, 'a', ItemID.casingLead, 0]);
 
-let guiContainmentBox = new UI.StandartWindow({
+const guiContainmentBox = new UI.StandartWindow({
 	standard: {
 		header: {text: {text: Translation.translate("Containment Box")}},
 		inventory: {standard: true},

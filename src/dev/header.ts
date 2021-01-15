@@ -37,7 +37,7 @@ const BlockSide = Native.BlockSide;
 const EntityType = Native.EntityType;
 
 // energy (Eu)
-let EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
+const EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 
 // API
 function randomInt(min: number, max: number) {

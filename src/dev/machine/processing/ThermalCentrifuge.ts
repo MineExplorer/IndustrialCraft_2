@@ -46,7 +46,7 @@ Callback.addCallback("PreLoaded", function() {
 	}, true);
 });
 
-let guiCentrifuge = InventoryWindow("Thermal Centrifuge", {
+const guiCentrifuge = InventoryWindow("Thermal Centrifuge", {
 	drawing: [
 		{type: "bitmap", x: 400 + 36*GUI_SCALE_NEW, y: 50 + 15*GUI_SCALE_NEW, bitmap: "thermal_centrifuge_background", scale: GUI_SCALE_NEW},
 		{type: "bitmap", x: 400 + 8*GUI_SCALE_NEW, y: 50 + 38*GUI_SCALE_NEW, bitmap: "energy_small_background", scale: GUI_SCALE_NEW}

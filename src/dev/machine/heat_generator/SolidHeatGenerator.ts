@@ -30,7 +30,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiSolidHeatGenerator = InventoryWindow("Solid Fuel Firebox", {
+const guiSolidHeatGenerator = InventoryWindow("Solid Fuel Firebox", {
 	drawing: [
 		{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},

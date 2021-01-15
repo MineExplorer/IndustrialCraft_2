@@ -68,7 +68,7 @@ Item.addCreativeGroup("ores", Translation.translate("Ores"), [
 	BlockID.oreIridium
 ]);
 
-let OreGenerator = {
+const OreGenerator = {
 	copper: {
 		enabled: __config__.getBool("copper_ore.enabled"),
 		count: __config__.getNumber("copper_ore.count"),

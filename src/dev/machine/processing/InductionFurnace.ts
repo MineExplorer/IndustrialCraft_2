@@ -23,7 +23,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.electricFurnace, -1, 'x', ItemID.ingotCopper, 0, 'a', BlockID.machineBlockAdvanced, 0]);
 });
 
-let guiInductionFurnace = InventoryWindow("Induction Furnace", {
+const guiInductionFurnace = InventoryWindow("Induction Furnace", {
 	drawing: [
 		{type: "bitmap", x: 630, y: 146, bitmap: "arrow_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}

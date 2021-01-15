@@ -117,7 +117,7 @@ function BatteryBlockWindow(header: string) {
 	});
 }
 
-let BatteryBlockInterface = {
+const BatteryBlockInterface = {
 	slots: {
 		"slot1": {input: true, output: true,
 			isValid: function(item: ItemStack, side: number, tileEntity: Machine.BatteryBlock) {

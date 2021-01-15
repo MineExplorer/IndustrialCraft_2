@@ -22,7 +22,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiElectricFurnace = InventoryWindow("Electric Furnace", {
+const guiElectricFurnace = InventoryWindow("Electric Furnace", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 155, bitmap: "arrow_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}

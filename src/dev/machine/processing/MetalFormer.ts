@@ -81,7 +81,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiMetalFormer = InventoryWindow("Metal Former", {
+const guiMetalFormer = InventoryWindow("Metal Former", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 164, bitmap: "metalformer_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},

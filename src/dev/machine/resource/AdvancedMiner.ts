@@ -23,7 +23,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiAdvancedMiner = InventoryWindow("Advanced Miner", {
+const guiAdvancedMiner = InventoryWindow("Advanced Miner", {
 	drawing: [
 		{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},

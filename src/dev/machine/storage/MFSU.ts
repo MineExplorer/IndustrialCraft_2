@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiMFSU = BatteryBlockWindow("MFSU");
+const guiMFSU = BatteryBlockWindow("MFSU");
 
 namespace Machine {
 	class MFSU extends BatteryBlock {

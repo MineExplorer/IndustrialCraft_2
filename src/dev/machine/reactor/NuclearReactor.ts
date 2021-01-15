@@ -37,7 +37,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.primalGenerator, 0, 'a', BlockID.reactorChamber, 0, 'x', ItemID.densePlateLead, 0, 'c', ItemID.circuitAdvanced, 0]);
 });
 
-let reactorElements: UI.ElementSet = {
+const reactorElements: UI.ElementSet = {
 	"heatScale": {type: "scale", x: 346, y: 376, direction: 0, value: 0.5, bitmap: "reactor_heat_scale", scale: 3},
 	"textInfo": {type: "text", font: {size: 24, color: Color.GREEN}, x: 685, y: 382, width: 256, height: 42, text: Translation.translate("Generating: ")},
 }
@@ -49,7 +49,7 @@ for (let y = 0; y < 6; y++) {
 	}
 }
 
-let guiNuclearReactor = InventoryWindow("Nuclear Reactor", {
+const guiNuclearReactor = InventoryWindow("Nuclear Reactor", {
 	drawing: [
 		{type: "bitmap", x: 340, y: 370, bitmap: "reactor_info", scale: GUI_SCALE},
 	],

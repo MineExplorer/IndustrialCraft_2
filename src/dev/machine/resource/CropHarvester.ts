@@ -14,7 +14,7 @@ Callback.addCallback("PreLoaded", function() {
     ], ['#', BlockID.machineBlockBasic, 0, 'z', ItemID.circuitBasic, 0, 'c', 54, -1, 'a', ItemID.agriculturalAnalyzer, 0, 'p', ItemID.plateIron, 0, 's', 359, 0]);
 });
 
-let cropHarvesterGuiElements: UI.ElementSet = {
+const cropHarvesterGuiElements: UI.ElementSet = {
     "energyScale": {type: "scale", x: 409, y: 167, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
     "slotEnergy": {type: "slot", x: 400, y: 230},
     "slotUpgrade0": {type: "slot", x: 880, y: 110},
@@ -28,7 +28,7 @@ for (let i = 0; i < 15; i++) {
     cropHarvesterGuiElements["outSlot" + i] = {type: "slot", x: 520 + x*60, y: 50 + y*60};
 };
 
-let guiCropHarvester = InventoryWindow("Crop Harvester", {
+const guiCropHarvester = InventoryWindow("Crop Harvester", {
     drawing: [
         {type: "bitmap", x: 409, y: 167, bitmap: "energy_small_background", scale: GUI_SCALE}
     ],

@@ -28,7 +28,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiBlastFurnace = InventoryWindow("Blast Furnace", {
+const guiBlastFurnace = InventoryWindow("Blast Furnace", {
 	drawing: [
 		{type: "bitmap", x: 450, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE_NEW}
 	],

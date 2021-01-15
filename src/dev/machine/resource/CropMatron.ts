@@ -19,7 +19,7 @@ Callback.addCallback("PreLoaded", function() {
     ], ['#', BlockID.machineBlockBasic, 0, 'x', 54, -1, 'c', ItemID.circuitBasic, 0, 'a', ItemID.cellEmpty, 0, 'n', ItemID.cropStick, 0]);
 });
 
-let сropMatronGuiElements: UI.ElementSet = {
+const сropMatronGuiElements: UI.ElementSet = {
     "energyScale": {type: "scale", x: 870, y: 270, direction: 1, value: .5, bitmap: "energy_small_scale", scale: GUI_SCALE},
     "liquidScale": {type: "scale", x: 572, y: 256, direction: 1, bitmap: "water_storage_scale", scale: GUI_SCALE},
     "slotEnergy": {type: "slot", x: 804, y: 265},
@@ -36,7 +36,7 @@ for (let i = 1; i < 7; i++) {
     сropMatronGuiElements["slotFertilizer" + i] = {type: "slot", x: 441 + 60*i, y: 75};
 }
 
-let guiCropMatron = InventoryWindow("Crop Matron", {
+const guiCropMatron = InventoryWindow("Crop Matron", {
     drawing: [
         {type: "bitmap", x: 870, y: 270, bitmap: "energy_small_background", scale: GUI_SCALE},
         {type: "bitmap", x: 511, y: 243, bitmap: "water_storage_background", scale: GUI_SCALE}

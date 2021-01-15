@@ -21,7 +21,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiPump = InventoryWindow("Pump", {
+const guiPump = InventoryWindow("Pump", {
 	drawing: [
 		{type: "bitmap", x: 493, y: 149, bitmap: "extractor_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 407, y: 127, bitmap: "energy_small_background", scale: GUI_SCALE},

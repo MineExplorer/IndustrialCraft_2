@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiGenerator = InventoryWindow("Generator", {
+const guiGenerator = InventoryWindow("Generator", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 150, bitmap: "fire_background", scale: GUI_SCALE},

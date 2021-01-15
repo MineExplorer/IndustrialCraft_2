@@ -25,7 +25,7 @@ MachineRecipeRegistry.registerRecipesFor("fluidFuel", {
 	"ethanol": {power: 16, amount: 10},
 });
 
-let guiSemifluidGenerator = InventoryWindow("Semifluid Generator", {
+const guiSemifluidGenerator = InventoryWindow("Semifluid Generator", {
 	drawing: [
 		{type: "bitmap", x: 702, y: 91, bitmap: "energy_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},

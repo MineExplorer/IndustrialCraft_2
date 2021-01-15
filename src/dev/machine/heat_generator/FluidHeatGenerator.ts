@@ -23,7 +23,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', ItemID.heatConductor, 0, 'c', ItemID.cellEmpty, 0, 'p', ItemID.casingIron, 0]);
 });
 
-let guiFluidHeatGenerator = InventoryWindow("Liquid Fuel Firebox", {
+const guiFluidHeatGenerator = InventoryWindow("Liquid Fuel Firebox", {
 	drawing: [
 		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
 		{type: "bitmap", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE},

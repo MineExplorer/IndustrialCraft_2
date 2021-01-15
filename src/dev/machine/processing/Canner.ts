@@ -25,7 +25,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiCanner = InventoryWindow("Fluid/Solid Canning Machine", {
+const guiCanner = InventoryWindow("Fluid/Solid Canning Machine", {
 	drawing: [
 		{type: "bitmap", x: 406, y: 50 + 58*GUI_SCALE_NEW, bitmap: "energy_small_background", scale: GUI_SCALE_NEW},
 		{type: "bitmap", x: 400 + 67*GUI_SCALE_NEW, y: 50 + 18*GUI_SCALE_NEW, bitmap: "extractor_bar_background", scale: GUI_SCALE_NEW},

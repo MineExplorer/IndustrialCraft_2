@@ -20,7 +20,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiMiner = InventoryWindow("Miner", {
+const guiMiner = InventoryWindow("Miner", {
 	drawing: [
 		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],

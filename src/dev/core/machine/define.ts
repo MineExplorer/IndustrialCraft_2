@@ -194,7 +194,7 @@ namespace MachineRegistry {
 	}
 }
 
-let transferByTier = {
+const transferByTier = {
 	1: 32,
 	2: 256,
 	3: 2048,

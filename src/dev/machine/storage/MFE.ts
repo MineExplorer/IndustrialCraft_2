@@ -26,7 +26,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiMFE = BatteryBlockWindow("MFE");
+const guiMFE = BatteryBlockWindow("MFE");
 
 namespace Machine {
 	class MFE extends BatteryBlock {

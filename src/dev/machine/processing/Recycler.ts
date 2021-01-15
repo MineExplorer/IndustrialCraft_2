@@ -20,9 +20,9 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.compressor, -1, 'x', 3, -1, 'a', 348, 0, 'b', ItemID.ingotSteel, 0]);
 });
 
-let recyclerBlacklist = [102, 280, 78, 80, 332];
+const recyclerBlacklist = [102, 280, 78, 80, 332];
 
-let guiRecycler = InventoryWindow("Recycler", {
+const guiRecycler = InventoryWindow("Recycler", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 155, bitmap: "recycler_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}

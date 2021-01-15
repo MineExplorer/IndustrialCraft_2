@@ -14,7 +14,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'a', 20, -1, 'c', ItemID.cellEmpty, 0]);
 });
 
-let guiSolarDistiller = InventoryWindow("Solar Distiller", {
+const guiSolarDistiller = InventoryWindow("Solar Distiller", {
 	drawing: [
 		{type: "background", color: Color.parseColor("#b3b3b3")},
 	],

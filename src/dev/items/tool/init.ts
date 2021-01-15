@@ -62,7 +62,7 @@ ItemRegistry.registerItem(new ItemWeedingTrowel());
 // Painters
 ItemRegistry.createItem("icPainter", {name: "Painter", icon: "ic_painter", stack: 1, category: ItemCategory.EQUIPMENT});
 
-let painterCreativeGroup = [ItemID.icPainter];
+const painterCreativeGroup = [ItemID.icPainter];
 for (let i = 1; i <= 16; i++) {
 	ItemRegistry.registerItem(new ItemPainter(i - 1));
 	painterCreativeGroup.push(ItemID["icPainter"+i]);

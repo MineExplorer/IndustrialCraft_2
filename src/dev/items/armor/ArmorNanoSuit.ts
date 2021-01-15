@@ -68,7 +68,7 @@ extends ArmorElectric {
 }
 
 /** @deprecated */
-let NANO_ARMOR_FUNCS = {
+const NANO_ARMOR_FUNCS = {
 	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
 		return ArmorNanoSuit.prototype.onHurt(params, item, index, Player.get())
 	},

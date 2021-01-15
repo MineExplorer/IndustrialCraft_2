@@ -15,7 +15,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-let guiTank = InventoryWindow("Tank", {
+const guiTank = InventoryWindow("Tank", {
 	drawing: [
 		{type: "bitmap", x: 611, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
 	],

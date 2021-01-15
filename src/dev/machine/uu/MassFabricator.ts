@@ -22,7 +22,7 @@ Callback.addCallback("PreLoaded", function() {
 
 let ENERGY_PER_MATTER = 1000000;
 
-let guiMassFabricator = InventoryWindow("Mass Fabricator", {
+const guiMassFabricator = InventoryWindow("Mass Fabricator", {
 	drawing: [
 		{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],

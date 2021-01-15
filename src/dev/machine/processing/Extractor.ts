@@ -30,7 +30,7 @@ Callback.addCallback("PreLoaded", function() {
 	}, true);
 });
 
-let guiExtractor = InventoryWindow("Extractor", {
+const guiExtractor = InventoryWindow("Extractor", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 155, bitmap: "extractor_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}

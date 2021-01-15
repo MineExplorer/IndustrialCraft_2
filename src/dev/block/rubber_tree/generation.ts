@@ -63,9 +63,9 @@ namespace RubberTreeGenerator {
 }
 
 
-let ForestBiomeIDs = [4, 18, 27, 28, 132, 155, 156];
-let JungleBiomeIDs = [21, 22, 23, 149, 151];
-let SwampBiomeIDs = [6, 134];
+const ForestBiomeIDs = [4, 18, 27, 28, 132, 155, 156];
+const JungleBiomeIDs = [21, 22, 23, 149, 151];
+const SwampBiomeIDs = [6, 134];
 
 let chance = __config__.getNumber("rubber_tree_gen.plains");
 RubberTreeGenerator.biomeData[1] = chance;

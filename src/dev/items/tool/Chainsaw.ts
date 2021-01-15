@@ -11,7 +11,7 @@ extends ElectricTool {
 		ICTool.setOnHandSound(this.id, "ChainsawIdle.ogg", "ChainsawStop.ogg");
 	}
 
-	modifyEnchants(enchantData: ToolAPI.EnchantData, item: ItemInstance, coords?: Callback.ItemUseCoordinates, block?: Tile) {
+	modifyEnchants(enchantData: ToolAPI.EnchantData, item: ItemInstance, coords?: Callback.ItemUseCoordinates, block?: Tile): void {
 		if (block && ToolAPI.getBlockMaterialName(block.id) == "plant") {
 			enchantData.silk = true;
 		}
@@ -28,7 +28,7 @@ extends ElectricTool {
 		return true;
 	}
 
-	onAttack(item: ItemInstance, victim: number, attacker: number) {
+	onAttack(item: ItemInstance, victim: number, attacker: number): boolean {
 		if (ICTool.dischargeItem(item, this.energyPerUse, attacker)) {
 			this.toolMaterial.damage = this.extraDamage;
 		}

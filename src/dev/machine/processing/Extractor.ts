@@ -71,11 +71,11 @@ namespace Machine {
 			return MachineRecipeRegistry.getRecipeResult("extractor", id);
 		}
 
-		getOperationSound() {
+		getOperationSound(): string {
 			return "ExtractorOp.ogg";
 		}
 
-		getInterruptSound() {
+		getInterruptSound(): string {
 			return "InterruptOne.ogg";
 		}
 	}

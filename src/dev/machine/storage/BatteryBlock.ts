@@ -66,7 +66,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		energyTick(type: string, src: any) {
+		energyTick(type: string, src: any): void {
 			super.energyTick(type, src);
 			let output = this.getMaxPacketSize();
 			if (this.data.energy >= output) {

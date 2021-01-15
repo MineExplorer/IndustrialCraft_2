@@ -27,7 +27,7 @@ extends ItemElectric {
 		return name;
 	}
 
-	onModeSwitch(item: ItemInstance, player: number) {
+	onModeSwitch(item: ItemInstance, player: number): void {
 		let extra = item.extra || new ItemExtraData();
 		let mode = (extra.getInt("mode")+1)%7;
 		extra.putInt("mode", mode);
@@ -35,16 +35,16 @@ extends ItemElectric {
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 	}
 
-	getModeData(mode: number) {
+	getModeData(mode: number): any {
 		return this.modes[mode];
 	}
 
-	getModeInfo(mode: number) {
+	getModeInfo(mode: number): string {
 		let modeName = this.getModeData(mode).name;
 		return Translation.translate("Mode: ") + Translation.translate(modeName);
 	}
 
-	makeShot(item: ItemInstance, player: number) {
+	makeShot(item: ItemInstance, player: number): void {
 		let laserSetting = item.extra? item.extra.getInt("mode") : 0;
 		if (laserSetting == 3 || laserSetting == 6) return;
 		let mode = this.getModeData(laserSetting);
@@ -79,7 +79,7 @@ extends ItemElectric {
 		this.makeShot(item, player);
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number) {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
 		let laserSetting = item.extra? item.extra.getInt("mode") : 0;
 		if (laserSetting != 3 && laserSetting != 6) {
 			this.makeShot(item, player);

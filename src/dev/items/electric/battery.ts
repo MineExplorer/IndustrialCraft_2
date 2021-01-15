@@ -10,7 +10,7 @@ extends ItemElectric {
 		ChargeItemRegistry.addToCreative(this.id, maxCharge);
 	}
 
-	onIconOverride(item: ItemInstance) {
+	onIconOverride(item: ItemInstance): Item.TextureData {
 		return {name: this.icon.name, meta: Math.round((27 - item.data) / 26 * 4)};
 	}
 }
@@ -18,7 +18,8 @@ extends ItemElectric {
 ItemRegistry.registerItem(new ItemBattery("storageBattery", "re_battery", 10000, 100, 1));
 ItemRegistry.registerItem(new ItemBattery("storageAdvBattery", "adv_re_battery", 100000, 256, 2));
 ItemRegistry.registerItem(new ItemBattery("storageCrystal", "energy_crystal", 1000000, 2048, 3));
-ItemRegistry.registerItem(new ItemBattery("storageLapotronCrystal", "lapotron_crystal", 10000000, 8192, 4)).setRarity(EnumRarity.UNCOMMON);
+ItemRegistry.registerItem(new ItemBattery("storageLapotronCrystal", "lapotron_crystal", 10000000, 8192, 4));
+ItemRegistry.setRarity("storageLapotronCrystal", EnumRarity.UNCOMMON);
 
 Item.addCreativeGroup("batteryEU", Translation.translate("Batteries"), [
 	ItemID.storageBattery,

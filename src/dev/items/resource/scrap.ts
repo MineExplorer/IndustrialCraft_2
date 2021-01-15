@@ -43,7 +43,7 @@ implements ItemFuncs {
 		Recipes.addFurnaceFuel(this.id, 0, 3150);
 	}
 
-	getDropItem() {
+	getDropItem(): {id: number, data: number} {
 		let total = 0;
 		for (let i in SCRAP_BOX_RANDOM_DROP) {
 			total += SCRAP_BOX_RANDOM_DROP[i].chance;

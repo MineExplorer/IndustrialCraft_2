@@ -176,7 +176,7 @@ namespace Machine {
 			let region = this.region;
 			if (this.data.progress == 0) {
 				let y = this.y;
-				while(region.getBlockId(this.x, y - 1, this.z) == BlockID.miningPipe) {
+				while (region.getBlockId(this.x, y - 1, this.z) == BlockID.miningPipe) {
 					y--;
 				}
 				this.data.y = y;

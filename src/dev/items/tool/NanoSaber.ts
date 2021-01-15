@@ -7,14 +7,14 @@ extends ElectricTool {
 		//ICTool.setOnHandSound(this.id, "NanosaberIdle.ogg");
 	}
 
-	onIconOverride(item: ItemInstance) {
+	onIconOverride(item: ItemInstance): Item.TextureData {
 		if (item.extra && item.extra.getBoolean("active")) {
 			return {name: this.icon.name, meta: 1 + World.getThreadTime()%2}
 		}
 		return {name: this.icon.name, meta: 0};
 	}
 
-	onAttack(item: ItemInstance, victim: number, attacker: number) {
+	onAttack(item: ItemInstance, victim: number, attacker: number): boolean {
 		if (item.extra && item.extra.getBoolean("active")) {
 			this.toolMaterial.damage = 16;
 			SoundManager.playSound("NanosaberSwing.ogg");
@@ -24,7 +24,7 @@ extends ElectricTool {
 		return true;
 	}
 
-	onNoTargetUse(item: ItemInstance, player: number) {
+	onNoTargetUse(item: ItemInstance, player: number): void {
 		let extra = item.extra || new ItemExtraData();
 		if (extra.getBoolean("active")) {
 			extra.putBoolean("active", false);
@@ -37,7 +37,7 @@ extends ElectricTool {
 		}
 	}
 
-	static onTick(playerUid: number) {
+	static onTick(playerUid: number): void {
 		if (World.getThreadTime() % 20 == 0) {
 			let player = new PlayerActor(playerUid);
 			for (let i = 0; i < 36; i++) {

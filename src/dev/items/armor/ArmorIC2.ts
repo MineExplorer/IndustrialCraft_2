@@ -4,9 +4,8 @@ extends ItemArmor {
 		super(stringID, name, name, params, inCreative);
 	}
 
-	setArmorTexture(name: string) {
+	setArmorTexture(name: string): void {
 		let index = (this.armorType == "leggings")? 2 : 1;
 		this.texture = 'armor/' + name + '_' + index + '.png';
-		return this;
 	}
 }

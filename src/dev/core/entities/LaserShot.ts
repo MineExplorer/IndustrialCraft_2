@@ -70,7 +70,7 @@ class LaserShot {
 		}
 	}
 
-	onProjectileHit(target) {
+	onProjectileHit(target: any): void {
 		if (this.power <= 0 || this.blockBreaks <= 0) {
 			LaserShotProvider.removeShot(this);
 		}

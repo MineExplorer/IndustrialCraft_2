@@ -83,19 +83,19 @@ namespace Machine {
 		audioSource: AudioSource;
 		finishingSound: number;
 
-		getOperationSound() {
+		getOperationSound(): string {
 			return null;
 		}
 
-		getStartingSound() {
+		getStartingSound(): string {
 			return null;
 		}
 
-		getInterruptSound() {
+		getInterruptSound(): string {
 			return null;
 		}
 
-		startPlaySound() {
+		startPlaySound(): void {
 			if (!ConfigIC.machineSoundEnabled) return;
 			if (!this.audioSource && !this.remove) {
 				if (this.finishingSound != 0) {
@@ -110,7 +110,7 @@ namespace Machine {
 			}
 		}
 
-		stopPlaySound() {
+		stopPlaySound(): void {
 			if (this.audioSource) {
 				SoundManager.removeSource(this.audioSource);
 				this.audioSource = null;

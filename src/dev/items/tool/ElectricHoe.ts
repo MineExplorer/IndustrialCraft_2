@@ -5,7 +5,7 @@ extends ItemElectric {
 		this.setHandEquipped(true);
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number) {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
 		if ((block.id == 2 || block.id == 3 || block.id == 110 || block.id == 243) && coords.side == 1 && ICTool.useElectricItem(item, 50, player)) {
 			let region = WorldRegion.getForActor(player);
 			region.setBlock(coords, 60, 0);

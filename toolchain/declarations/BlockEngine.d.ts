@@ -528,16 +528,17 @@ declare namespace ItemRegistry {
     export function getInstanceOf(itemID: number): ItemBase;
     export function getRarity(id: number): number;
     export function getRarityColor(rarity: number): string;
-    export function setRarity(id: number, rarity: number): void;
+    export function setRarity(id: string | number, rarity: number): void;
     export function addArmorMaterial(name: string, material: ArmorMaterial): void;
     export function getArmorMaterial(name: string): ArmorMaterial;
     export function addToolMaterial(name: string, material: ToolMaterial): void;
     export function getToolMaterial(name: string): ToolMaterial;
     export function registerItem(itemInstance: ItemBase): ItemBase;
     export function registerItemFuncs(itemID: number, itemFuncs: ItemBase | ItemFuncs): void;
-    type ItemDescription = {
+    interface ItemDescription {
         name: string;
         icon: string | Item.TextureData;
+        type?: "common" | "food" | "throwable";
         stack?: number;
         inCreative?: boolean;
         category?: number;
@@ -550,19 +551,19 @@ declare namespace ItemRegistry {
             value: number;
         };
         rarity?: number;
-    };
+        food?: number;
+    }
     export function createItem(stringID: string, params: ItemDescription): void;
     interface ArmorDescription extends ArmorParams {
         name: string;
         icon: string | Item.TextureData;
-        texture: string;
         inCreative?: boolean;
         category?: number;
         glint?: boolean;
         rarity?: number;
     }
     export function createArmor(stringID: string, params: ArmorDescription): ItemArmor;
-    type ToolDescription = {
+    interface ToolDescription {
         name: string;
         icon: string | Item.TextureData;
         material: string;
@@ -570,7 +571,7 @@ declare namespace ItemRegistry {
         category?: number;
         glint?: boolean;
         rarity?: number;
-    };
+    }
     export function createTool(stringID: string, params: ToolDescription, toolData?: ToolParams): ItemTool;
     export {};
 }

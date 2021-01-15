@@ -1,8 +1,8 @@
 namespace IntegrationAPI {
-	export function addToRecyclerBlacklist(id: number) {
+	export function addToRecyclerBlacklist(id: number): void {
 		recyclerBlacklist.push(id);
 	}
-	export function addToolBooxValidItem(id: number) {
+	export function addToolBooxValidItem(id: number): void {
 		toolbox_items.push(id);
 	}
 }

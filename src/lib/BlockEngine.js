@@ -1043,10 +1043,11 @@ var ItemRegistry;
     }
     ItemRegistry.getRarityColor = getRarityColor;
     function setRarity(id, rarity) {
-        itemsRarity[id] = rarity;
-        var itemInstance = getInstanceOf(id);
+        var numericID = Item.getNumericId(id);
+        itemsRarity[numericID] = rarity;
+        var itemInstance = getInstanceOf(numericID);
         if (!itemInstance || !('onNameOverride' in itemInstance)) {
-            Item.registerNameOverrideFunction(id, function (item, translation, name) {
+            Item.registerNameOverrideFunction(numericID, function (item, translation, name) {
                 return getRarityColor(rarity) + translation;
             });
         }
@@ -1117,12 +1118,21 @@ var ItemRegistry;
     function createItem(stringID, params) {
         var _a;
         var numericID = IDRegistry.genItemID(stringID);
+        var inCreative = (_a = params.inCreative) !== null && _a !== void 0 ? _a : true;
         var icon;
         if (typeof params.icon == "string")
             icon = { name: params.icon };
         else
             icon = params.icon;
-        Item.createItem(stringID, params.name, icon, { stack: params.stack || 64, isTech: !((_a = params.inCreative) !== null && _a !== void 0 ? _a : false) });
+        if (params.type == "food") {
+            Item.createFoodItem(stringID, params.name, icon, { food: params.food, stack: params.stack || 64, isTech: !inCreative });
+        }
+        else if (params.type == "throwable") {
+            Item.createThrowableItem(stringID, params.name, icon, { stack: params.stack || 64, isTech: !inCreative });
+        }
+        else {
+            Item.createItem(stringID, params.name, icon, { stack: params.stack || 64, isTech: !inCreative });
+        }
         Item.setCategory(numericID, params.category || ItemCategory.ITEMS);
         if (params.maxDamage)
             Item.setMaxDamage(numericID, params.maxDamage);
@@ -1142,9 +1152,8 @@ var ItemRegistry;
     function createArmor(stringID, params) {
         var item = new ItemArmor(stringID, params.name, params.icon, params, params.inCreative);
         registerItem(item);
-        item.setCategory(params.category || ItemCategory.EQUIPMENT);
-        if (params.material)
-            item.setMaterial(params.material);
+        if (params.category)
+            item.setCategory(params.category);
         if (params.glint)
             item.setGlint(true);
         if (params.rarity)
@@ -1152,6 +1161,7 @@ var ItemRegistry;
         return item;
     }
     ItemRegistry.createArmor = createArmor;
+    ;
     function createTool(stringID, params, toolData) {
         var item = new ItemTool(stringID, params.name, params.icon, params.material, toolData, params.inCreative);
         registerItem(item);

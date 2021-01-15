@@ -112,7 +112,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getOperationSound() {
+		getOperationSound(): string {
 			return "IronFurnaceOp.ogg";
 		}
 	}

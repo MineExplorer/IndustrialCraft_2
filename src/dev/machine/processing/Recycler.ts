@@ -116,11 +116,11 @@ namespace Machine {
 			return this.data.energy_storage;
 		}
 
-		getOperationSound() {
+		getOperationSound(): string {
 			return "RecyclerOp.ogg";
 		}
 
-		getInterruptSound() {
+		getInterruptSound(): string {
 			return "InterruptOne.ogg";
 		}
 	}

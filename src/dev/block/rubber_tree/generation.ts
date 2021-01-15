@@ -46,7 +46,7 @@ namespace RubberTreeGenerator {
 
 	export function getGrowHeight(x: number, y: number, z: number, max: number, region: BlockSource): number {
 		let height = 0;
-		while(height < max + 2) {
+		while (height < max + 2) {
 			let blockID = region.getBlockId(x, y + height, z);
 			if (blockID != 0) break;
 			height++;

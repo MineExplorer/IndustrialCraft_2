@@ -139,15 +139,15 @@ namespace Machine {
 			return this.data.energy_storage;
 		}
 
-		getStartingSound() {
+		getStartingSound(): string {
 			return "InductionStart.ogg";
 		}
 
-		getOperationSound() {
+		getOperationSound(): string {
 			return "InductionLoop.ogg";
 		}
 
-		getInterruptSound() {
+		getInterruptSound(): string {
 			return "InductionStop.ogg";
 		}
 	}

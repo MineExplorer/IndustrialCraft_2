@@ -115,7 +115,7 @@ namespace Machine {
 			this.data.isEnabled = (signal == 0);
 		}
 
-		getOperationSound() {
+		getOperationSound(): string {
 			return "MassFabLoop.ogg";
 		}
 
@@ -123,7 +123,7 @@ namespace Machine {
 			return ENERGY_PER_MATTER - this.data.progress;
 		}
 
-		getExplosionPower() {
+		getExplosionPower(): number {
 			return 15;
 		}
 	}

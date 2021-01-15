@@ -164,12 +164,12 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Server)
-		switchMode() {
+		switchMode(): void {
 			this.data.mode = (this.data.mode + 1) % 3;
 		}
 
 		@ContainerEvent(Side.Client)
-		setModeIcon(container: any, window: any, content: any, data: {mode: number}) {
+		setModeIcon(container: any, window: any, content: any, data: {mode: number}): void {
 			if (content) {
 				content.elements.button.bitmap = "metal_former_button_" + data.mode;
 			}

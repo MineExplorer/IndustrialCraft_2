@@ -23,7 +23,7 @@ implements ItemFuncs {
 		LiquidLib.registerItem(liquid, ItemID.cellEmpty, this.id, 1000);
 	}
 
-	onNameOverride(item: ItemInstance, name: string) {
+	onNameOverride(item: ItemInstance, name: string): string {
 		return name + "\n§7" + (1000 - item.data) + " mB";
 	}
 }

@@ -236,22 +236,22 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Server)
-		switchWhitelist() {
+		switchWhitelist(): void {
 			this.data.whitelist = !this.data.whitelist;
 		}
 
 		@ContainerEvent(Side.Server)
-		switchSilktouch() {
+		switchSilktouch(): void {
 			this.data.silk_touch = !this.data.silk_touch;
 		}
 
 		@ContainerEvent(Side.Server)
-		restart() {
+		restart(): void {
 			this.data.x = this.data.y = this.data.z =  0;
 		}
 
 		@ContainerEvent(Side.Client)
-		setSilktouchIcon(container: any, window: any, content: any, data: {mode: boolean}) {
+		setSilktouchIcon(container: any, window: any, content: any, data: {mode: boolean}): void {
 			if (content) {
 				let iconIndex = data.mode? 1 : 0;
 				content.elements.button_silk.bitmap = "miner_button_silk_" + iconIndex;

@@ -93,7 +93,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getOperationSound() {
+		getOperationSound(): string {
 			return "GeothermalLoop.ogg";
 		}
 

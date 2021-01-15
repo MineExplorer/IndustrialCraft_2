@@ -115,7 +115,7 @@ namespace Machine {
 			this.__energyNets.Eu = net;
 		}
 
-		addChamber(chamber: ReactorChamber) {
+		addChamber(chamber: ReactorChamber): void {
 			if (!this.__initialized || chamber.remove || (chamber.core && chamber.core != this)) {
 				return;
 			}
@@ -205,7 +205,7 @@ namespace Machine {
 			src.add(output, Math.min(output, 8192));
 		}
 
-		onRedstoneUpdate(signal: number) {
+		onRedstoneUpdate(signal: number): void {
 			this.data.isEnabled = signal > 0;
 		}
 
@@ -279,7 +279,7 @@ namespace Machine {
 			return this.container.getSlot("slot"+(y*9+x));
 		}
 
-		setItemAt(x: number, y: number, id: number, count: number = 0, data: number = 0, extra: ItemExtraData = null) {
+		setItemAt(x: number, y: number, id: number, count: number = 0, data: number = 0, extra: ItemExtraData = null): void {
 			if (x < 0 || x >= this.getReactorSize() || y < 0 || y >= 6) {
 				return null;
 			}
@@ -290,7 +290,7 @@ namespace Machine {
 			this.data.output += energy;
 		}
 
-		destroyBlock(coords: Callback.ItemUseCoordinates, player: number) {
+		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
 			for (let i in this.chambers) {
 				let coords = this.chambers[i];
 				this.region.destroyBlock(coords, true);
@@ -382,7 +382,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		setFieldSize(container: any, window: any, content: any, data: {size: number}) {
+		setFieldSize(container: any, window: any, content: any, data: {size: number}): void {
 			if (content) {
 				for (let y = 0; y < 6; y++) {
 					for (let x = 0; x < 9; x++) {

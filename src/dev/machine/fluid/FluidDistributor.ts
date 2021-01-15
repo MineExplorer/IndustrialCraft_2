@@ -53,7 +53,7 @@ namespace Machine {
 			return guiFluidDistributor;
 		}
 
-		init() {
+		init(): void {
 			super.init();
 			this.setActive(this.data.inverted);
 		}

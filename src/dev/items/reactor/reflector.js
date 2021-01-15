@@ -36,4 +36,4 @@ Recipes.addShaped({id: ItemID.neutronReflectorIridium, count: 1, data: 0}, [
 	"aba",
 	"axa",
 	"aba"
-], ["x", ItemID.plateReinforcedIridium, 0, 'a', ItemID.neutronReflectorThick, 0, 'b', ItemID.plateCopper, 0]);
+], ["x", ItemID.plateReinforcedIridium, 0, 'a', ItemID.neutronReflectorThick, 0, 'b', ItemID.densePlateCopper, 0]);

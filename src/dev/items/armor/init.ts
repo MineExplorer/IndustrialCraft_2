@@ -31,7 +31,8 @@ ItemRegistry.registerItem(new ArmorJetpackElectric());
 ItemRegistry.registerItem(new ArmorBatpack("batpack", "batpack", 60000, 100, 1));
 ItemRegistry.registerItem(new ArmorBatpack("advBatpack", "advanced_batpack", 600000, 512, 2));
 ItemRegistry.registerItem(new ArmorBatpack("energypack", "energypack", 2000000, 2048, 3));
-ItemRegistry.registerItem(new ArmorBatpack("lappack", "lappack", 10000000, 8192, 4)).setRarity(EnumRarity.UNCOMMON);
+ItemRegistry.registerItem(new ArmorBatpack("lappack", "lappack", 10000000, 8192, 4));
+ItemRegistry.setRarity("lappack", EnumRarity.UNCOMMON);
 
 Item.addCreativeGroup("batteryPack", Translation.translate("Battery Packs"), [
 	ItemID.batpack,

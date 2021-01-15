@@ -100,7 +100,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getOperationSound() {
+		getOperationSound(): string {
 			return "GeneratorLoop.ogg";
 		}
 

@@ -4,7 +4,7 @@ extends ItemElectric {
 		super("electricTreetap", "electric_treetap", 10000, 100, 1);
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number) {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
 		if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, 50, player)) {
 			let region = WorldRegion.getForActor(player);
 			SoundManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");

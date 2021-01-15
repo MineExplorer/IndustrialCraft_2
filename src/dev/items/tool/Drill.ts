@@ -6,7 +6,7 @@ extends ElectricTool {
 		super(stringID, name, toolData, ["stone", "dirt"], maxCharge, transferLimit, tier);
 	}
 
-	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number) {
+	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {
 		if (Block.getDestroyTime(block.id) > 0) {
 			ICTool.dischargeItem(item, this.energyPerUse, player);
 			//this.playDestroySound(item, block);
@@ -14,7 +14,7 @@ extends ElectricTool {
 		return true;
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, playerUid: number) {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, playerUid: number): void {
 		let region = WorldRegion.getForActor(playerUid);
 		let place = coords as Vector;
 		if (!World.canTileBeReplaced(block.id, block.data)) {
@@ -44,13 +44,13 @@ extends ElectricTool {
 		}
 	}
 
-	continueDestroyBlock(item, coords, block, progress) {
+	continueDestroyBlock(item, coords, block, progress): void {
 		if (progress > 0) {
 			this.playDestroySound(item, block);
 		}
 	}
 
-	playDestroySound(item: ItemInstance, block: Tile) {
+	playDestroySound(item: ItemInstance, block: Tile): void {
 		if (ConfigIC.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.energyPerUse) {
 			let hardness = Block.getDestroyTime(block.id);
 			if (hardness > 1 || hardness < 0) {

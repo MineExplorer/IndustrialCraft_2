@@ -18,21 +18,21 @@ implements ToolParams {
 		ToolAPI.registerTool(this.id, toolMaterial, blockMaterials, this);
 	}
 
-	onBroke() {return true;}
+	onBroke(): boolean {return true;}
 
-	onAttack(item: ItemInstance, victim: number, attacker: number) {
+	onAttack(item: ItemInstance, victim: number, attacker: number): boolean {
 		ICTool.dischargeItem(item, this.energyPerUse, attacker);
 		return true;
 	}
 
-	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number) {
+	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {
 		if (Block.getDestroyTime(block.id) > 0) {
 			ICTool.dischargeItem(item, this.energyPerUse, player);
 		}
 		return true;
 	}
 
-	calcDestroyTime(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, params: {base: number, devider: number, modifier: number}, destroyTime: number) {
+	calcDestroyTime(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, params: {base: number, devider: number, modifier: number}, destroyTime: number): number {
 		if (ChargeItemRegistry.getEnergyStored(item) >= this.energyPerUse) {
 			return destroyTime;
 		}

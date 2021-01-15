@@ -63,13 +63,13 @@ namespace Machine {
 			return Recipes.getFurnaceRecipeResult(id, data, "iron");
 		}
 
-		getStartingSound() {
+		getStartingSound(): string {
 			return "ElectroFurnaceStart.ogg";
 		}
-		getOperationSound() {
+		getOperationSound(): string {
 			return "ElectroFurnaceLoop.ogg";
 		}
-		getInterruptSound() {
+		getInterruptSound(): string {
 			return "ElectroFurnaceStop.ogg";
 		}
 	}

@@ -38,7 +38,7 @@ namespace Machine {
 			this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
 		}
 
@@ -61,7 +61,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		setSolarElement(container: any, window: any, content: any, data: string) {
+		setSolarElement(container: any, window: any, content: any, data: string): void {
 			if (content) {
 				content.elements["sun"].bitmap = "sun_" + data;
 			}

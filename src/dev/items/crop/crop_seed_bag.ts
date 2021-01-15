@@ -6,7 +6,7 @@ implements ItemFuncs {
         this.setMaxStack(1);
     }
 
-    onNameOverride(item: ItemInstance, name: string) {
+    onNameOverride(item: ItemInstance, name: string): string {
         let extra = item.extra || new ItemExtraData();
         let scanLvl = extra.getInt("scan");
         let cropClassName = scanLvl > 0 ? AgricultureAPI.cropCards[item.data].id : "Unknown";

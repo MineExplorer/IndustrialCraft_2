@@ -50,14 +50,14 @@ namespace Machine {
 
 		core: NuclearReactor = null;
 
-		onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData) {
+		onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean {
 			if (this.core) {
 				return this.core.onItemClick(id, count, data, coords, player, extra);
 			}
 			return false;
 		}
 
-		init() {
+		init(): void {
 			super.init();
 			if (this.data.y >= 0 && this.region.getBlockId(this.data as Vector) == BlockID.nuclearReactor) {
 				let tileEnt = this.region.getTileEntity(this.data as Vector);

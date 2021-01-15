@@ -74,7 +74,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		spreadHeat(heat: number){
+		spreadHeat(heat: number): number {
 			let side = this.getFacing();
 			let coords = StorageInterface.getRelativeCoords(this, side);
 			let TE = this.region.getTileEntity(coords);

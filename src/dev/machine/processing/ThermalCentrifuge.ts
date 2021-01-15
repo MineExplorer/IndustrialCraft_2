@@ -100,7 +100,7 @@ namespace Machine {
 			return MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", id);
 		}
 
-		checkResult(result) {
+		checkResult(result: number[]): boolean {
 			for (let i = 1; i < 4; i++) {
 				let id = result[(i-1)*2];
 				let count = result[(i-1)*2+1];
@@ -112,7 +112,7 @@ namespace Machine {
 			return true;
 		}
 
-		putResult(result) {
+		putResult(result: number[]): void {
 			for (let i = 1; i < 4; i++) {
 				let id = result[(i-1)*2];
 				let count = result[(i-1)*2+1];
@@ -183,7 +183,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		setIndicator(container: any, window: any, content: any, data: string) {
+		setIndicator(container: any, window: any, content: any, data: string): void {
 			if (content) {
 				content.elements["indicator"].bitmap = "indicator_" + data;
 			}

@@ -144,11 +144,11 @@ namespace Machine {
 			return MachineRecipeRegistry.getRecipeResult("macerator", id, data);
 		}
 
-		getOperationSound() {
+		getOperationSound(): string {
 			return "MaceratorOp.ogg";
 		}
 
-		getInterruptSound() {
+		getInterruptSound(): string {
 			return "InterruptOne.ogg";
 		}
 	}

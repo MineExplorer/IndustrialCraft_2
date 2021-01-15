@@ -82,11 +82,11 @@ namespace Machine {
 			return guiCanner;
 		}
 
-		getTier() {
+		getTier(): number {
 			return this.data.tier;
 		}
 
-		resetValues() {
+		resetValues(): void {
 			this.data.tier = this.defaultValues.tier;
 			this.data.energy_storage = this.defaultValues.energy_storage;
 			this.data.energy_consume = this.defaultValues.energy_consume;
@@ -94,7 +94,7 @@ namespace Machine {
 			if (this.data.mode%3 > 0) this.data.work_time /= 5;
 		}
 
-		isValidSourceItem(id: number, data: number) {
+		isValidSourceItem(id: number, data: number): boolean {
 			if (this.data.mode == 0 && MachineRecipeRegistry.hasRecipeFor("solidCanner", id)) {
 				return true;
 			}
@@ -107,7 +107,7 @@ namespace Machine {
 			return false;
 		}
 
-		isValidCan(id: number, data: number) {
+		isValidCan(id: number, data: number): boolean {
 			switch(this.data.mode) {
 			case 0: {
 				let recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
@@ -124,7 +124,7 @@ namespace Machine {
 			}
 		}
 
-		setupContainer() {
+		setupContainer(): void {
 			this.inputTank = new LiquidTank(this, "input", 8);
 			this.outputTank = new LiquidTank(this, "output", 8);
 
@@ -137,7 +137,7 @@ namespace Machine {
 			});
 		}
 
-		tick() {
+		tick(): void {
 			this.container.sendEvent("updateUI", {mode: this.data.mode});
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
@@ -256,12 +256,12 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getEnergyStorage() {
+		getEnergyStorage(): number {
 			return this.data.energy_storage;
 		}
 
 		@ContainerEvent(Side.Server)
-		switchMode() {
+		switchMode(): void {
 			if (this.data.progress == 0) {
 				this.data.mode = (this.data.mode + 1) % 4;
 				this.container.sendEvent("updateUI", {mode: this.data.mode});
@@ -269,7 +269,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Server)
-		switchTanks() {
+		switchTanks(): void {
 			if (this.data.progress == 0) {
 				let liquidData = this.inputTank.data;
 				this.inputTank.data = this.outputTank.data;
@@ -278,7 +278,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		updateUI(container: any, window: any, content: any, data: {mode: number}) {
+		updateUI(container: any, window: any, content: any, data: {mode: number}): void {
 			if (content) {
 				let element = content.elements["slotSource"];
 				let texture = "canner_slot_source_" + data.mode;

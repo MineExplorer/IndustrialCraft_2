@@ -22,7 +22,7 @@ extends ItemBattery {
 		}
 	}
 
-	onNameOverride(item: ItemInstance, name: string) {
+	onNameOverride(item: ItemInstance, name: string): string {
 		let mode = item.extra? item.extra.getInt("mode") : 0;
 		if (mode == 0) {
 			var tooltip = Translation.translate("Mode: Enabled");
@@ -36,7 +36,7 @@ extends ItemBattery {
 		return super.onNameOverride(item, name) + '\n' + tooltip;
 	}
 
-	static checkCharging(playerUid: number) {
+	static checkCharging(playerUid: number): void {
 		let player = new PlayerActor(playerUid);
 		for (let i = 0; i < 36; i++) {
 			let slot = player.getInventorySlot(i);
@@ -66,7 +66,8 @@ extends ItemBattery {
 ItemRegistry.registerItem(new ItemBatteryCharging("chargingBattery", "charging_re_battery", 40000, 128, 1));
 ItemRegistry.registerItem(new ItemBatteryCharging("chargingAdvBattery", "adv_charging_battery", 400000, 1024, 2));
 ItemRegistry.registerItem(new ItemBatteryCharging("chargingCrystal", "charging_energy_crystal", 4000000, 8192, 3));
-ItemRegistry.registerItem(new ItemBatteryCharging("chargingLapotronCrystal", "charging_lapotron_crystal", 4e7, 32768, 4)).setRarity(EnumRarity.UNCOMMON);
+ItemRegistry.registerItem(new ItemBatteryCharging("chargingLapotronCrystal", "charging_lapotron_crystal", 4e7, 32768, 4));
+ItemRegistry.setRarity("chargingLapotronCrystal", EnumRarity.UNCOMMON);
 
 Item.addCreativeGroup("chargingBatteryEU", Translation.translate("Charging Batteries") , [
 	ItemID.chargingBattery,

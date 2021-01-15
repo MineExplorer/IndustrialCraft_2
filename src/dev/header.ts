@@ -40,11 +40,11 @@ const EntityType = Native.EntityType;
 const EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 
 // API
-function randomInt(min: number, max: number) {
+function randomInt(min: number, max: number): number {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function addShapelessRecipe(result: ItemInstance, source: ItemInstance[]) {
+function addShapelessRecipe(result: ItemInstance, source: ItemInstance[]): void {
 	let ingredients = [];
 	for (let i in source) {
 		let item = source[i];

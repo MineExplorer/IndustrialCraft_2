@@ -12,7 +12,7 @@ extends ToolDrill {
 		});
 	}
 
-	getModeName(mode: number) {
+	getModeName(mode: number): string {
 		switch(mode) {
 			case 0:
 				return Translation.translate("Mode: ") + Translation.translate("Fortune III");
@@ -25,13 +25,13 @@ extends ToolDrill {
 		}
 	}
 
-	onNameOverride(item: ItemInstance, name: string) {
+	onNameOverride(item: ItemInstance, name: string): string {
 		name = super.onNameOverride(item, name);
 		let mode = item.extra? item.extra.getInt("mode") : 0;
 		return name + "\n" + this.getModeName(mode);
 	}
 
-	onModeSwitch(item: ItemInstance, player: number) {
+	onModeSwitch(item: ItemInstance, player: number): void {
 		let extra = item.extra || new ItemExtraData();
 		let mode = (extra.getInt("mode") + 1) % 4;
 		extra.putInt("mode", mode);
@@ -52,7 +52,7 @@ extends ToolDrill {
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 	}
 
-	modifyEnchant(enchant: ToolAPI.EnchantData, item: ItemInstance) {
+	modifyEnchant(enchant: ToolAPI.EnchantData, item: ItemInstance): void {
 		let mode = item.extra? item.extra.getInt("mode") : 0;
 		if (mode % 2 == 0) {
 			enchant.fortune = 3;
@@ -72,7 +72,7 @@ extends ToolDrill {
 		return rad;
 	}
 
-	calcDestroyTime(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, params: {base: number, devider: number, modifier: number}, destroyTime: number) {
+	calcDestroyTime(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, params: {base: number, devider: number, modifier: number}, destroyTime: number): number {
 		if (ChargeItemRegistry.getEnergyStored(item) >= this.energyPerUse) {
 			let mode = item.extra? item.extra.getInt("mode") : 0;
 			let material = ToolAPI.getBlockMaterialName(block.id);

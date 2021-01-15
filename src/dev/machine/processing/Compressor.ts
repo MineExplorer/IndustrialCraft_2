@@ -109,11 +109,11 @@ namespace Machine {
 			return MachineRecipeRegistry.getRecipeResult("compressor", id, data);
 		}
 
-		getOperationSound() {
+		getOperationSound(): string {
 			return "CompressorOp.ogg";
 		}
 
-		getInterruptSound() {
+		getInterruptSound(): string {
 			return "InterruptOne.ogg";
 		}
 	}

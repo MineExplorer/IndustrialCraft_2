@@ -2,10 +2,9 @@
 
 class ArmorNanoSuit
 extends ArmorElectric {
-	constructor(stringID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}) {
-		if (!params.texture) params.texture = "nano";
+	constructor(stringID: string, name: string, params: ArmorParams) {
 		super(stringID, name, params, 1000000, 2048, 3);
-		this.setRarity(1);
+		this.setRarity(EnumRarity.UNCOMMON);
 	}
 
 	getEnergyPerDamage(): number {
@@ -16,7 +15,7 @@ extends ArmorElectric {
 		return 4;
 	}
 
-	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		let type = params.type;
 		let energyPerDamage = this.getEnergyPerDamage();
@@ -32,7 +31,7 @@ extends ArmorElectric {
 					let damageReduce = Math.min(Math.min(9, damage), Math.floor(energyStored / energyPerDamage));
 					let damageTaken = damage - damageReduce;
 					if (damageTaken > 0) {
-						Entity.setHealth(player, Entity.getHealth(player) + params.damage - damageTaken);
+						Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - damageTaken);
 					} else {
 						Game.prevent();
 					}
@@ -43,21 +42,21 @@ extends ArmorElectric {
 		return item;
 	}
 
-	onTick(item: ItemInstance, index: number, player: number): ItemInstance {
+	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		// night vision
 		if (index == 0) {
 			let energyStored = ChargeItemRegistry.getEnergyStored(item);
 			if (energyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
-				let pos = Entity.getPosition(player);
-				let time = World.getWorldTime()%24000;
-				let region = WorldRegion.getForActor(player);
+				let pos = Entity.getPosition(playerUid);
+				let time = World.getWorldTime() % 24000;
+				let region = WorldRegion.getForActor(playerUid);
 				if (region.getLightLevel(pos) > 13 && time <= 12000) {
-					Entity.addEffect(player, PotionEffect.blindness, 1, 25);
-					Entity.clearEffect(player, PotionEffect.nightVision);
+					Entity.addEffect(playerUid, PotionEffect.blindness, 1, 25);
+					Entity.clearEffect(playerUid, PotionEffect.nightVision);
 				} else {
-					Entity.addEffect(player, PotionEffect.nightVision, 1, 225);
+					Entity.addEffect(playerUid, PotionEffect.nightVision, 1, 225);
 				}
-				Entity.addEffect(player, PotionEffect.nightVision, 1, 225);
+				Entity.addEffect(playerUid, PotionEffect.nightVision, 1, 225);
 				if (World.getThreadTime()%20 == 0) {
 					ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
 					return item;

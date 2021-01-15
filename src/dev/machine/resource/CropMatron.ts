@@ -19,7 +19,7 @@ Callback.addCallback("PreLoaded", function() {
     ], ['#', BlockID.machineBlockBasic, 0, 'x', 54, -1, 'c', ItemID.circuitBasic, 0, 'a', ItemID.cellEmpty, 0, 'n', ItemID.cropStick, 0]);
 });
 
-var сropMatronGuiElements: UI.ElementSet = {
+let сropMatronGuiElements: UI.ElementSet = {
     "energyScale": {type: "scale", x: 870, y: 270, direction: 1, value: .5, bitmap: "energy_small_scale", scale: GUI_SCALE},
     "liquidScale": {type: "scale", x: 572, y: 256, direction: 1, bitmap: "water_storage_scale", scale: GUI_SCALE},
     "slotEnergy": {type: "slot", x: 804, y: 265},
@@ -36,7 +36,7 @@ for (let i = 1; i < 7; i++) {
     сropMatronGuiElements["slotFertilizer" + i] = {type: "slot", x: 441 + 60*i, y: 75};
 }
 
-var guiCropMatron = InventoryWindow("Crop Matron", {
+let guiCropMatron = InventoryWindow("Crop Matron", {
     drawing: [
         {type: "bitmap", x: 870, y: 270, bitmap: "energy_small_background", scale: GUI_SCALE},
         {type: "bitmap", x: 511, y: 243, bitmap: "water_storage_background", scale: GUI_SCALE}
@@ -84,8 +84,8 @@ namespace Machine {
         tick(): void {
             StorageInterface.checkHoppers(this);
 
-            var slot1 = this.container.getSlot("slotWaterIn");
-            var slot2 = this.container.getSlot("slotWaterOut");
+            let slot1 = this.container.getSlot("slotWaterIn");
+            let slot2 = this.container.getSlot("slotWaterOut");
             this.getLiquidFromItem("water", slot1, slot2);
 
             if (this.data.energy >= 31) {
@@ -95,7 +95,7 @@ namespace Machine {
                 this.setActive(false);
             }
 
-            var energyStorage = this.getEnergyStorage();
+            let energyStorage = this.getEnergyStorage();
             this.data.energy = Math.min(this.data.energy, energyStorage);
             this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 
@@ -119,17 +119,17 @@ namespace Machine {
             }
             this.data.energy -= 1;
 
-            var tileentity = this.region.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
+            let tileentity = this.region.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
             if (tileentity && tileentity.crop) {
-                var slotFertilizer = this.getSlot("slotFertilizer");
-                var weedExSlot = this.getSlot("slotWeedEx");
+                let slotFertilizer = this.getSlot("slotFertilizer");
+                let weedExSlot = this.getSlot("slotWeedEx");
                 if (slotFertilizer && tileentity.applyFertilizer(false)) {
                     this.decreaseSlot(slotFertilizer, 1);
                     this.data.energy -= 10;
                 }
-                var liquidAmount = this.liquidStorage.getAmount("water");
+                let liquidAmount = this.liquidStorage.getAmount("water");
                 if (liquidAmount > 0) {
-                    var amount = tileentity.applyHydration(liquidAmount);
+                    let amount = tileentity.applyHydration(liquidAmount);
                     if (amount > 0) {
                         this.liquidStorage.getLiquid("water", amount / 1000);
                     }
@@ -146,7 +146,7 @@ namespace Machine {
 
         getSlot(type: string): ItemContainerSlot {
             for (let i = 0; i < 7; i++) {
-                var slot = this.container.getSlot(type + i);
+                let slot = this.container.getSlot(type + i);
                 if (slot.id) return slot;
             }
             return null;

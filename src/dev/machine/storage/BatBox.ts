@@ -29,7 +29,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiBatBox = InventoryWindow("BatBox", {
+let guiBatBox = InventoryWindow("BatBox", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
 	],

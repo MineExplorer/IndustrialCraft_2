@@ -10,7 +10,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.inductionFurnace, 2, [["machin
 TileRenderer.registerModelWithRotation(BlockID.inductionFurnace, 2, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
 TileRenderer.setRotationFunction(BlockID.inductionFurnace);
 
-ItemName.setRarity(BlockID.inductionFurnace, 1, true);
+ItemRegistry.setRarity(BlockID.inductionFurnace, EnumRarity.UNCOMMON);
 ItemName.addTierTooltip("inductionFurnace", 2);
 
 MachineRegistry.setMachineDrop("inductionFurnace", BlockID.machineBlockAdvanced);

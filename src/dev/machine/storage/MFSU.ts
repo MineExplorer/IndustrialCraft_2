@@ -15,7 +15,7 @@ Block.registerDropFunction("storageMFSU", function(coords, blockID, blockData, l
 	return [];
 });
 
-ItemName.setRarity(BlockID.storageMFSU, 1);
+ItemRegistry.setRarity(BlockID.storageMFSU, EnumRarity.UNCOMMON);
 ItemName.addStorageBlockTooltip("storageMFSU", 4, "60M");
 
 Callback.addCallback("PreLoaded", function() {
@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiMFSU = BatteryBlockWindow("MFSU");
+let guiMFSU = BatteryBlockWindow("MFSU");
 
 namespace Machine {
 	class MFSU extends BatteryBlock {

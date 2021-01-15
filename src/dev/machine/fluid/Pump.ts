@@ -21,7 +21,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiPump = InventoryWindow("Pump", {
+let guiPump = InventoryWindow("Pump", {
 	drawing: [
 		{type: "bitmap", x: 493, y: 149, bitmap: "extractor_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 407, y: 127, bitmap: "energy_small_background", scale: GUI_SCALE},
@@ -100,8 +100,8 @@ namespace Machine {
 		}
 
 		recursiveSearch(liquid: string, x: number, y: number, z: number, map: {}): Vector {
-			var block = this.region.getBlock(x, y, z);
-			var scoords = x+':'+y+':'+z;
+			let block = this.region.getBlock(x, y, z);
+			let scoords = x+':'+y+':'+z;
 			if (!map[scoords] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
 				if (block.data == 0) return new Vector3(x, y, z);
 				map[scoords] = true;
@@ -118,8 +118,8 @@ namespace Machine {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
-			var newActive = false;
-			var liquid = this.liquidStorage.getLiquidStored();
+			let newActive = false;
+			let liquid = this.liquidStorage.getLiquidStored();
 			if (this.y > 0 && this.liquidStorage.getAmount(liquid) <= 7 && this.data.energy >= this.data.energy_consume) {
 				if (this.data.progress == 0) {
 					this.data.coords = this.recursiveSearch(liquid, this.x, this.y-1, this.z, {});
@@ -129,8 +129,8 @@ namespace Machine {
 					this.data.energy -= this.data.energy_consume;
 					this.data.progress += 1/this.data.work_time;
 					if (this.data.progress.toFixed(3) >= 1) {
-						var coords = this.data.coords;
-						var block = this.region.getBlock(coords);
+						let coords = this.data.coords;
+						let block = this.region.getBlock(coords);
 						liquid = this.getLiquidType(liquid, block);
 						if (liquid && block.data == 0) {
 							this.region.setBlock(coords, 0, 0);
@@ -145,11 +145,11 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			var slot1 = this.container.getSlot("slotLiquid1");
-			var slot2 = this.container.getSlot("slotLiquid2");
+			let slot1 = this.container.getSlot("slotLiquid1");
+			let slot2 = this.container.getSlot("slotLiquid2");
 			this.addLiquidToItem(liquid, slot1, slot2);
 
-			var energyStorage = this.getEnergyStorage();
+			let energyStorage = this.getEnergyStorage();
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 

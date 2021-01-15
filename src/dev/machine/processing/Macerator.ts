@@ -103,7 +103,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiMacerator = InventoryWindow("Macerator", {
+let guiMacerator = InventoryWindow("Macerator", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 155, bitmap: "macerator_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}

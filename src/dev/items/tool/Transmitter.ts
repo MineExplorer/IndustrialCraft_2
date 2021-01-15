@@ -1,8 +1,8 @@
 class ItemTransmitter
-extends ItemIC2
+extends ItemCommon
 implements ItemFuncs {
 	constructor() {
-		super("freqTransmitter", "frequency_transmitter");
+		super("freqTransmitter", "frequency_transmitter", "frequency_transmitter");
 		this.setMaxStack(1);
 		this.setCategory(ItemCategory.EQUIPMENT);
 	}

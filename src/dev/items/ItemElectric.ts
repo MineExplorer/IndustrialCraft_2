@@ -1,7 +1,5 @@
-/// <reference path="ItemIC2.ts" />
-
 class ItemElectric
-extends ItemIC2
+extends ItemCommon
 implements IElectricItem, ItemFuncs {
 	energy: string = "Eu";
 	maxCharge: number;

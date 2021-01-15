@@ -1,5 +1,5 @@
 class ItemTinCanFull
-extends ItemIC2
+extends ItemCommon
 implements ItemFuncs {
 	constructor() {
 		super("tinCanFull", "Filled Tin Can", {name: "tin_can", meta: 1});
@@ -39,4 +39,4 @@ implements ItemFuncs {
 
 ItemRegistry.createItem("tinCanEmpty", {name: "Tin Can", icon: "tin_can"});
 
-new ItemTinCanFull();
+ItemRegistry.registerItem(new ItemTinCanFull());

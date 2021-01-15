@@ -19,11 +19,11 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.reactorChamber, 0, 'x', ItemID.heatConductor, 0, 'c', ItemID.casingIron, 0]);
 });
 
-var guiRTHeatGenerator = InventoryWindow("Radioisotope Heat Generator", {
+let guiRTHeatGenerator = InventoryWindow("Radioisotope Heat Generator", {
 	drawing: [
 		{type: "bitmap", x: 380, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],
-	
+
 	elements: {
 		"slot0": {type: "slot", x: 420, y: 100},
 		"slot1": {type: "slot", x: 480, y: 100},
@@ -50,23 +50,23 @@ namespace Machine {
 		}
 
 		tick(): void {
-			var output = 1;
-			for (var i = 0; i < 6; i++) {
-				var slot = this.container.getSlot("slot"+i);
+			let output = 1;
+			for (let i = 0; i < 6; i++) {
+				let slot = this.container.getSlot("slot"+i);
 				if (slot.id == ItemID.rtgPellet) {
 					output *= 2;
 				}
 			}
 			if (output < 2) output = 0;
-			var maxOutput = output;
+			let maxOutput = output;
 
 			if (output > 0) {
 				output = this.spreadHeat(output);
 			}
 
 			this.setActive(output > 0);
-			var outputText = output.toString();
-			for (var i = outputText.length; i < 6; i++) {
+			let outputText = output.toString();
+			for (let i = outputText.length; i < 6; i++) {
 				outputText += " ";
 			}
 			this.container.setText("textInfo1", outputText + "/");
@@ -75,9 +75,9 @@ namespace Machine {
 		}
 
 		spreadHeat(heat: number){
-			var side = this.getFacing();
-			var coords = StorageInterface.getRelativeCoords(this, side);
-			var TE = this.region.getTileEntity(coords);
+			let side = this.getFacing();
+			let coords = StorageInterface.getRelativeCoords(this, side);
+			let TE = this.region.getTileEntity(coords);
 			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 				return TE.heatReceive(heat);
 			}

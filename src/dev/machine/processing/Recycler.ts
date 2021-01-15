@@ -20,9 +20,9 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.compressor, -1, 'x', 3, -1, 'a', 348, 0, 'b', ItemID.ingotSteel, 0]);
 });
 
-var recyclerBlacklist = [102, 280, 78, 80, 332];
+let recyclerBlacklist = [102, 280, 78, 80, 332];
 
-var guiRecycler = InventoryWindow("Recycler", {
+let guiRecycler = InventoryWindow("Recycler", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 155, bitmap: "recycler_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
@@ -81,9 +81,9 @@ namespace Machine {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
-			var newActive = false;
-			var sourceSlot = this.container.getSlot("slotSource");
-			var resultSlot = this.container.getSlot("slotResult");
+			let newActive = false;
+			let sourceSlot = this.container.getSlot("slotSource");
+			let resultSlot = this.container.getSlot("slotResult");
 			if (sourceSlot.id > 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)) {
 				if (this.data.energy >= this.data.energy_consume) {
 					this.data.energy -= this.data.energy_consume;
@@ -103,7 +103,7 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			var energyStorage = this.getEnergyStorage();
+			let energyStorage = this.getEnergyStorage();
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 

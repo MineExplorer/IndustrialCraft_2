@@ -246,7 +246,7 @@ declare class PlayerManager {
      * Adds item to player's inventory
      * @param dropRemainings if true, surplus will be dropped near player
      */
-    addItemToInventory(id: number, count: number, data: number, extra?: ItemExtraData, dropRemainings?: boolean): void;
+    addItemToInventory(id: number, count: number, data: number, extra?: ItemExtraData): void;
     /**
      * @returns inventory slot's contents.
      */
@@ -375,7 +375,7 @@ interface ItemFuncs {
     onUsingComplete?(item: ItemInstance, player: number): void;
     onDispense?(coords: Callback.ItemUseCoordinates, item: ItemInstance, region: WorldRegion): void;
 }
-declare class ItemBasic {
+declare class ItemBase {
     readonly stringID: string;
     readonly id: number;
     name: string;
@@ -385,12 +385,10 @@ declare class ItemBasic {
     };
     maxStack: number;
     maxDamage: number;
-    rarity: number;
     item: any;
     constructor(stringID: string, name?: string, icon?: string | Item.TextureData);
     setName(name: string): void;
     setIcon(texture: string, index?: number): void;
-    createItem(inCreative?: boolean): this;
     /**
      * Sets item creative category
      * @param category item category, should be integer from 1 to 4.
@@ -440,6 +438,9 @@ declare class ItemBasic {
     addRepairItem(itemID: number): void;
     setRarity(rarity: number): void;
 }
+declare class ItemCommon extends ItemBase {
+    constructor(stringID: string, name?: string, icon?: string | Item.TextureData, inCreative?: boolean);
+}
 interface OnHurtListener {
     onHurt: (params: {
         attacker: number;
@@ -467,17 +468,16 @@ declare type ArmorType = "helmet" | "chestplate" | "leggings" | "boots";
 declare type ArmorParams = {
     type: ArmorType;
     defence: number;
-    texture?: string;
+    texture: string;
     material?: string | ArmorMaterial;
 };
-declare class ItemArmor extends ItemBasic {
+declare class ItemArmor extends ItemBase {
     private static maxDamageArray;
     armorMaterial: ArmorMaterial;
     armorType: ArmorType;
     defence: number;
     texture: string;
-    constructor(stringID: string, name: string, icon: string | Item.TextureData, params: ArmorParams);
-    createItem(inCreative?: boolean): this;
+    constructor(stringID: string, name: string, icon: string | Item.TextureData, params: ArmorParams, inCreative?: boolean);
     setArmorTexture(texture: string): void;
     setMaterial(armorMaterial: string | ArmorMaterial): void;
     preventDamaging(): void;
@@ -501,7 +501,7 @@ declare namespace ToolType {
     let HOE: ToolParams;
     let SHEARS: ToolParams;
 }
-declare class ItemTool extends ItemBasic implements ToolParams {
+declare class ItemTool extends ItemCommon implements ToolParams {
     handEquipped: boolean;
     brokenId: number;
     damage: number;
@@ -509,8 +509,7 @@ declare class ItemTool extends ItemBasic implements ToolParams {
     blockTypes: string[];
     toolMaterial: ToolMaterial;
     enchantType: number;
-    constructor(stringID: string, name: string, icon: string | Item.TextureData, toolMaterial: string | ToolMaterial, toolData?: ToolParams);
-    createItem(inCreative?: boolean): this;
+    constructor(stringID: string, name: string, icon: string | Item.TextureData, toolMaterial: string | ToolMaterial, toolData?: ToolParams, inCreative?: boolean);
     static damageCarriedItem(player: number, damage?: number): void;
 }
 declare enum ItemCategory {
@@ -519,18 +518,28 @@ declare enum ItemCategory {
     EQUIPMENT = 3,
     ITEMS = 4
 }
+declare enum EnumRarity {
+    COMMON = 0,
+    UNCOMMON = 1,
+    RARE = 2,
+    EPIC = 3
+}
 declare namespace ItemRegistry {
+    export function getInstanceOf(itemID: number): ItemBase;
+    export function getRarity(id: number): number;
+    export function getRarityColor(rarity: number): string;
+    export function setRarity(id: number, rarity: number): void;
     export function addArmorMaterial(name: string, material: ArmorMaterial): void;
     export function getArmorMaterial(name: string): ArmorMaterial;
     export function addToolMaterial(name: string, material: ToolMaterial): void;
     export function getToolMaterial(name: string): ToolMaterial;
-    export function registerItem(itemInstance: ItemBasic & ItemFuncs, addToCreative?: boolean): void;
-    export function getInstanceOf(itemID: number): ItemBasic;
+    export function registerItem(itemInstance: ItemBase): ItemBase;
+    export function registerItemFuncs(itemID: number, itemFuncs: ItemBase | ItemFuncs): void;
     type ItemDescription = {
         name: string;
         icon: string | Item.TextureData;
         stack?: number;
-        isTech?: boolean;
+        inCreative?: boolean;
         category?: number;
         maxDamage?: number;
         handEquipped?: boolean;
@@ -543,35 +552,26 @@ declare namespace ItemRegistry {
         rarity?: number;
     };
     export function createItem(stringID: string, params: ItemDescription): void;
-    type ArmorDescription = {
+    interface ArmorDescription extends ArmorParams {
         name: string;
         icon: string | Item.TextureData;
-        type: ArmorType;
-        defence: number;
         texture: string;
-        material?: string | ArmorMaterial;
-        isTech?: boolean;
+        inCreative?: boolean;
         category?: number;
         glint?: boolean;
         rarity?: number;
-    };
+    }
     export function createArmor(stringID: string, params: ArmorDescription): ItemArmor;
     type ToolDescription = {
         name: string;
         icon: string | Item.TextureData;
         material: string;
-        isTech?: boolean;
+        inCreative?: boolean;
         category?: number;
         glint?: boolean;
         rarity?: number;
     };
     export function createTool(stringID: string, params: ToolDescription, toolData?: ToolParams): ItemTool;
-    /**
-     * Registers name override function for item which adds color to item name depends on rarity
-     * @param rarity number from 1 to 3
-     */
-    export function setRarity(id: string | number, rarity: number): void;
-    export function getRarityColor(rarity: number): string;
     export {};
 }
 declare abstract class TileEntityBase implements TileEntity {

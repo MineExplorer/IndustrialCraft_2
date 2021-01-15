@@ -10,8 +10,8 @@ namespace UpgradeAPI {
 	}
 
 	export function isValidUpgrade(id: number, machine: Machine.MachineBase) {
-		var upgrades = machine.upgrades;
-		var upgradeData = getUpgradeData(id);
+		let upgrades = machine.upgrades;
+		let upgradeData = getUpgradeData(id);
 		if (upgradeData && (!upgrades || upgrades.indexOf(upgradeData.type) != -1)) {
 			return true;
 		}
@@ -23,22 +23,22 @@ namespace UpgradeAPI {
 	}
 
 	export function callUpgrade(item: ItemInstance, machine: Machine.MachineBase, data: any) {
-		var upgrades = machine.upgrades;
-		var upgradeData = getUpgradeData(item.id);
+		let upgrades = machine.upgrades;
+		let upgradeData = getUpgradeData(item.id);
 		if (upgradeData && (!upgrades || upgrades.indexOf(upgradeData.type) != -1)) {
 			upgradeData.func(item, machine, data);
 		}
 	}
 
 	export function getUpgrades(container: ItemContainer) {
-		var upgrades = [];
-		for (var slotName in container.slots) {
+		let upgrades = [];
+		for (let slotName in container.slots) {
 			if (slotName.match(/Upgrade/)) {
-				var slot = container.getSlot(slotName);
+				let slot = container.getSlot(slotName);
 				if (slot.id > 0) {
-					var find = false;
-					for (var i in upgrades) {
-						var item = upgrades[i];
+					let find = false;
+					for (let i in upgrades) {
+						let item = upgrades[i];
 						if (item.id == slot.id && item.data == slot.data) {
 							item.count += slot.count;
 							find = true;
@@ -46,7 +46,7 @@ namespace UpgradeAPI {
 						}
 					}
 					if (!find) {
-						item = new ItemStack(slot.id, slot.count, slot.data);
+						let item = new ItemStack(slot);
 						upgrades.push(item);
 					}
 				}
@@ -57,7 +57,7 @@ namespace UpgradeAPI {
 
 	export function getCountOfUpgrade(id: number, container: ItemContainer) {
 		let count = 0;
-		for (var slotName in container.slots) {
+		for (let slotName in container.slots) {
 			if (slotName.match(/Upgrade/)) {
 				let slot = container.getSlot("name");
 				if (slot.id == id)
@@ -68,10 +68,10 @@ namespace UpgradeAPI {
 	}
 
 	export function executeUpgrades(machine: Machine.MachineBase) {
-		var container = machine.container;
-		var data = machine.data;
-		var upgrades = getUpgrades(container);
-		for (var i in upgrades) {
+		let container = machine.container;
+		let data = machine.data;
+		let upgrades = getUpgrades(container);
+		for (let i in upgrades) {
 			callUpgrade(upgrades[i], machine, data);
 		}
 		StorageInterface.checkHoppers(machine);

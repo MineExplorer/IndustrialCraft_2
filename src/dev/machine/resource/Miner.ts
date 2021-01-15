@@ -105,10 +105,10 @@ namespace Machine {
 		}
 
 		findPath(x: number, y: number, z: number, sprc: number, level: number): Vector {
-			var block = this.region.getBlock(x, y, z);
+			let block = this.region.getBlock(x, y, z);
 			if (block.id == BlockID.miningPipe || this.isEmptyBlock(block)) {
-				var dx = this.data.x - x;
-				var dz = this.data.z - z;
+				let dx = this.data.x - x;
+				let dz = this.data.z - z;
 				if (Math.abs(dx) == Math.abs(dz)) {
 					var prc = sprc;
 				} else if (Math.abs(dx) > Math.abs(dz)) {

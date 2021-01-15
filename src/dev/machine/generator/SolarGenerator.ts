@@ -14,7 +14,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
 });
 
-var guiSolarPanel = InventoryWindow("Solar Panel", {
+let guiSolarPanel = InventoryWindow("Solar Panel", {
 	elements: {
 		"slotEnergy": {type: "slot", x: 600, y: 130},
 		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
@@ -43,7 +43,7 @@ namespace Machine {
 		}
 
 		tick(): void {
-			if (World.getThreadTime()%100 == 0) {
+			if (World.getThreadTime() % 100 == 0) {
 				this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
 			}
 			if (this.data.canSeeSky && this.region.getLightLevel(this.x, this.y + 1, this.z) == 15) {

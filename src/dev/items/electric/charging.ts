@@ -3,8 +3,8 @@
 class ItemBatteryCharging
 extends ItemBattery {
 	onNoTargetUse(item: ItemInstance, player: number) {
-		var extra = item.extra || new ItemExtraData();
-		var mode = (extra.getInt("mode") + 1) % 3;
+		let extra = item.extra || new ItemExtraData();
+		let mode = (extra.getInt("mode") + 1) % 3;
 		extra.putInt("mode", mode);
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 
@@ -23,7 +23,7 @@ extends ItemBattery {
 	}
 
 	onNameOverride(item: ItemInstance, name: string) {
-		var mode = item.extra? item.extra.getInt("mode") : 0;
+		let mode = item.extra? item.extra.getInt("mode") : 0;
 		if (mode == 0) {
 			var tooltip = Translation.translate("Mode: Enabled");
 		}
@@ -33,8 +33,7 @@ extends ItemBattery {
 		if (mode == 2) {
 			var tooltip = Translation.translate("Mode: Disabled");
 		}
-		name = super.onNameOverride(item, name);
-		return name + '\n' + tooltip;
+		return super.onNameOverride(item, name) + '\n' + tooltip;
 	}
 
 	static checkCharging(playerUid: number) {
@@ -43,14 +42,14 @@ extends ItemBattery {
 			let slot = player.getInventorySlot(i);
 			let itemClass = ItemRegistry.getInstanceOf(slot.id);
 			if (itemClass instanceof ItemBatteryCharging) {
-				var mode = slot.extra? slot.extra.getInt("mode") : 0;
-				var energyStored = ChargeItemRegistry.getEnergyStored(slot);
+				let mode = slot.extra? slot.extra.getInt("mode") : 0;
+				let energyStored = ChargeItemRegistry.getEnergyStored(slot);
 				if (mode == 2 || energyStored <= 0) continue;
-				for (var index = 0; index < 9; index++) {
+				for (let index = 0; index < 9; index++) {
 					if (mode == 1 && player.getSelectedSlot() == index) continue;
-					var item = player.getInventorySlot(index);
+					let item = player.getInventorySlot(index);
 					if (!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)) {
-						var energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", Math.min(energyStored, itemClass.transferLimit*20), itemClass.tier, true);
+						let energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", Math.min(energyStored, itemClass.transferLimit*20), itemClass.tier, true);
 						if (energyAdd > 0) {
 							energyStored -= energyAdd;
 							player.setInventorySlot(index, item.id, 1, item.data, item.extra);
@@ -64,10 +63,10 @@ extends ItemBattery {
 	}
 }
 
-new ItemBatteryCharging("chargingBattery", "charging_re_battery", 40000, 128, 1);
-new ItemBatteryCharging("chargingAdvBattery", "adv_charging_battery", 400000, 1024, 2);
-new ItemBatteryCharging("chargingCrystal", "charging_energy_crystal", 4000000, 8192, 3);
-new ItemBatteryCharging("chargingLapotronCrystal", "charging_lapotron_crystal", 4e7, 32768, 4).setRarity(1);
+ItemRegistry.registerItem(new ItemBatteryCharging("chargingBattery", "charging_re_battery", 40000, 128, 1));
+ItemRegistry.registerItem(new ItemBatteryCharging("chargingAdvBattery", "adv_charging_battery", 400000, 1024, 2));
+ItemRegistry.registerItem(new ItemBatteryCharging("chargingCrystal", "charging_energy_crystal", 4000000, 8192, 3));
+ItemRegistry.registerItem(new ItemBatteryCharging("chargingLapotronCrystal", "charging_lapotron_crystal", 4e7, 32768, 4)).setRarity(EnumRarity.UNCOMMON);
 
 Item.addCreativeGroup("chargingBatteryEU", Translation.translate("Charging Batteries") , [
 	ItemID.chargingBattery,

@@ -1,6 +1,6 @@
 namespace Utils {
-	var fallStartHeight = 0;
-	var isEnderPearlDamage = false;
+	let fallStartHeight = 0;
+	let isEnderPearlDamage = false;
 
 	Callback.addCallback("LocalTick", function() {
 		isEnderPearlDamage = false;
@@ -17,8 +17,8 @@ namespace Utils {
 
 	export function getFallDamage(damage: number = 0): number {
 		if (isEnderPearlDamage) return damage;
-		var pos = Player.getPosition().y;
-		var height = fallStartHeight - pos;
+		let pos = Player.getPosition().y;
+		let height = fallStartHeight - pos;
 		if (height > 7) {
 			height = Math.round(height);
 		} else if (height > 6) {
@@ -29,7 +29,7 @@ namespace Utils {
 			height = Math.round(height + 3/8);
 		}
 
-		var damage = height - 3;
+		damage = height - 3;
 		return (damage > 0)? damage : 0;
 	}
 
@@ -39,8 +39,8 @@ namespace Utils {
 
 	export function getFallDamageModifier(armor: ItemInstance): number {
 		if (armor.id != 0 && armor.extra) {
-			var enchants = armor.extra.getEnchants();
-			var enchantLvl = enchants[Native.Enchantment.FEATHER_FALLING];
+			let enchants = armor.extra.getEnchants();
+			let enchantLvl = enchants[Native.Enchantment.FEATHER_FALLING];
 			if (enchantLvl) {
 				return 1 - 0.12 * enchantLvl;
 			}
@@ -49,15 +49,15 @@ namespace Utils {
 	}
 
 	export function fixFallDamage(player: number, damage: number): void {
-		var newDamage = Utils.getFallDamage(damage);
+		let newDamage = Utils.getFallDamage(damage);
 		if (newDamage < damage) {
-			var armor = Entity.getArmorSlot(player, 3);
+			let armor = Entity.getArmorSlot(player, 3);
 			if (newDamage == 0) {
 				Game.prevent();
 			}
 			else if (armor.id != ItemID.quantumBoots && armor.id != ItemID.nanoBoots) {
-				var damageModifier = Utils.getFallDamageModifier(armor);
-				var damageReduce = Math.floor((damage - newDamage) * damageModifier);
+				let damageModifier = Utils.getFallDamageModifier(armor);
+				let damageReduce = Math.floor((damage - newDamage) * damageModifier);
 				Entity.setHealth(player, Entity.getHealth(player) + damageReduce);
 			}
 		}

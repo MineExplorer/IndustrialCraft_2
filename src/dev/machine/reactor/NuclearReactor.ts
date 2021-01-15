@@ -3,7 +3,7 @@ Block.createBlock("nuclearReactor", [
 	{name: "Nuclear Reactor", texture: [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.nuclearReactor, "stone", 1, true);
-ItemName.setRarity(BlockID.nuclearReactor, 1, true);
+ItemRegistry.setRarity(BlockID.nuclearReactor, EnumRarity.UNCOMMON);
 
 TileRenderer.setStandardModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1]]);
@@ -201,7 +201,7 @@ namespace Machine {
 		}
 
 		energyTick(type: string, src: any): void {
-			var output = this.getEnergyOutput();
+			let output = this.getEnergyOutput();
 			src.add(output, Math.min(output, 8192));
 		}
 

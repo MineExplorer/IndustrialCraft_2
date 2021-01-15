@@ -7,7 +7,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.massFabricator, 2, [["machine_
 TileRenderer.registerModelWithRotation(BlockID.massFabricator, 2, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.massFabricator);
 
-ItemName.setRarity(BlockID.massFabricator, 2, true);
+ItemRegistry.setRarity(BlockID.massFabricator, EnumRarity.RARE);
 ItemName.addTierTooltip("massFabricator", 4);
 
 MachineRegistry.setMachineDrop("massFabricator", BlockID.machineBlockAdvanced);
@@ -20,9 +20,9 @@ Callback.addCallback("PreLoaded", function() {
 	], ['b', BlockID.machineBlockAdvanced, 0, 'x', 348, 0, 'a', ItemID.circuitAdvanced, 0, '#', ItemID.storageLapotronCrystal, -1]);
 });
 
-var ENERGY_PER_MATTER = 1000000;
+let ENERGY_PER_MATTER = 1000000;
 
-var guiMassFabricator = InventoryWindow("Mass Fabricator", {
+let guiMassFabricator = InventoryWindow("Mass Fabricator", {
 	drawing: [
 		{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
@@ -69,8 +69,8 @@ namespace Machine {
 			if (this.data.isEnabled && this.data.energy > 0) {
 				this.setActive(true);
 				if (this.data.catalyser < Math.max(1000, this.data.energy)) {
-					var catalyserSlot = this.container.getSlot("catalyserSlot");
-					var catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
+					let catalyserSlot = this.container.getSlot("catalyserSlot");
+					let catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
 					if (catalyserData) {
 						this.data.catalyser += catalyserData.input;
 						this.decreaseSlot(catalyserSlot, 1);
@@ -79,7 +79,7 @@ namespace Machine {
 				if (this.data.catalyser > 0) {
 					this.container.setText("textInfo3", "Catalyser:");
 					this.container.setText("textInfo4", Math.floor(this.data.catalyser));
-					var transfer = Math.min((ENERGY_PER_MATTER - this.data.progress) / 6, Math.min(this.data.catalyser, this.data.energy));
+					let transfer = Math.min((ENERGY_PER_MATTER - this.data.progress) / 6, Math.min(this.data.catalyser, this.data.energy));
 					this.data.progress += transfer * 6;
 					this.data.energy -= transfer;
 					this.data.catalyser -= transfer;
@@ -91,7 +91,7 @@ namespace Machine {
 					this.container.setText("textInfo3", "");
 					this.container.setText("textInfo4", "");
 				}
-				var transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
+				let transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
 				this.data.progress += transfer;
 				this.data.energy -= transfer;
 			}
@@ -99,7 +99,7 @@ namespace Machine {
 				this.setActive(false);
 			}
 			if (this.data.progress >= ENERGY_PER_MATTER) {
-				var matterSlot = this.container.getSlot("matterSlot");
+				let matterSlot = this.container.getSlot("matterSlot");
 				if (matterSlot.id == ItemID.matter && matterSlot.count < 64 || matterSlot.id == 0) {
 					matterSlot.setSlot(ItemID.matter, matterSlot.count + 1, 0);
 					this.data.progress = 0;

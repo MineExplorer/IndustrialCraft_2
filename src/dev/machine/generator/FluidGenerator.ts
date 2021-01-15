@@ -25,7 +25,7 @@ MachineRecipeRegistry.registerRecipesFor("fluidFuel", {
 	"ethanol": {power: 16, amount: 10},
 });
 
-var guiSemifluidGenerator = InventoryWindow("Semifluid Generator", {
+let guiSemifluidGenerator = InventoryWindow("Semifluid Generator", {
 	drawing: [
 		{type: "bitmap", x: 702, y: 91, bitmap: "energy_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
@@ -61,7 +61,7 @@ namespace Machine {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				var empty = LiquidLib.getEmptyItem(id, data);
+				let empty = LiquidLib.getEmptyItem(id, data);
 				if (!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			});
@@ -82,14 +82,14 @@ namespace Machine {
 
 		tick(): void {
 			StorageInterface.checkHoppers(this);
-			var energyStorage = this.getEnergyStorage();
-			var liquid = this.liquidStorage.getLiquidStored();
-			var slot1 = this.container.getSlot("slot1");
-			var slot2 = this.container.getSlot("slot2");
+			let energyStorage = this.getEnergyStorage();
+			let liquid = this.liquidStorage.getLiquidStored();
+			let slot1 = this.container.getSlot("slot1");
+			let slot2 = this.container.getSlot("slot2");
 			this.getLiquidFromItem(liquid, slot1, slot2);
 
 			if (this.data.fuel <= 0) {
-				var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", liquid);
+				let fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", liquid);
 				if (fuel && this.liquidStorage.getAmount(liquid).toFixed(3) as any >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= energyStorage) {
 					this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
 					this.data.fuel = fuel.amount;
@@ -97,7 +97,7 @@ namespace Machine {
 				}
 			}
 			if (this.data.fuel > 0) {
-				var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid);
+				let fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid);
 				this.data.energy += fuel.power;
 				this.data.fuel -= fuel.amount/20;
 				this.setActive(true);
@@ -131,7 +131,7 @@ namespace Machine {
 			"slot2": {output: true}
 		},
 		isValidInput: (item: ItemInstance) => {
-			var empty = LiquidLib.getEmptyItem(item.id, item.data);
+			let empty = LiquidLib.getEmptyItem(item.id, item.data);
 			if (!empty) return false;
 			return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 		},

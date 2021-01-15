@@ -3,7 +3,7 @@ Block.createBlock("reactorChamber", [
 	{name: "Reactor Chamber", texture: [["machine_bottom", 0], ["machine_top", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0]], inCreative: true},
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.reactorChamber, "stone", 1, true);
-ItemName.setRarity(BlockID.reactorChamber, 1, true);
+ItemRegistry.setRarity(BlockID.reactorChamber, EnumRarity.UNCOMMON);
 
 MachineRegistry.setMachineDrop("reactorChamber");
 

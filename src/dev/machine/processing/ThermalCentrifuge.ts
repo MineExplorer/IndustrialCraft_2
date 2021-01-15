@@ -46,7 +46,7 @@ Callback.addCallback("PreLoaded", function() {
 	}, true);
 });
 
-var guiCentrifuge = InventoryWindow("Thermal Centrifuge", {
+let guiCentrifuge = InventoryWindow("Thermal Centrifuge", {
 	drawing: [
 		{type: "bitmap", x: 400 + 36*GUI_SCALE_NEW, y: 50 + 15*GUI_SCALE_NEW, bitmap: "thermal_centrifuge_background", scale: GUI_SCALE_NEW},
 		{type: "bitmap", x: 400 + 8*GUI_SCALE_NEW, y: 50 + 38*GUI_SCALE_NEW, bitmap: "energy_small_background", scale: GUI_SCALE_NEW}
@@ -101,10 +101,10 @@ namespace Machine {
 		}
 
 		checkResult(result) {
-			for (var i = 1; i < 4; i++) {
-				var id = result[(i-1)*2];
-				var count = result[(i-1)*2+1];
-				var resultSlot = this.container.getSlot("slotResult"+i);
+			for (let i = 1; i < 4; i++) {
+				let id = result[(i-1)*2];
+				let count = result[(i-1)*2+1];
+				let resultSlot = this.container.getSlot("slotResult"+i);
 				if ((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0) {
 					return false;
 				}
@@ -113,10 +113,10 @@ namespace Machine {
 		}
 
 		putResult(result) {
-			for (var i = 1; i < 4; i++) {
-				var id = result[(i-1)*2];
-				var count = result[(i-1)*2+1];
-				var resultSlot = this.container.getSlot("slotResult"+i);
+			for (let i = 1; i < 4; i++) {
+				let id = result[(i-1)*2];
+				let count = result[(i-1)*2+1];
+				let resultSlot = this.container.getSlot("slotResult"+i);
 				if (id) {
 					resultSlot.setSlot(id, resultSlot.count + count, 0);
 				}
@@ -130,9 +130,9 @@ namespace Machine {
 				this.data.maxHeat = 5000;
 			}
 
-			var newActive = false;
-			var sourceSlot = this.container.getSlot("slotSource");
-			var result = this.getRecipeResult(sourceSlot.id);
+			let newActive = false;
+			let sourceSlot = this.container.getSlot("slotSource");
+			let result = this.getRecipeResult(sourceSlot.id);
 			if (result && this.checkResult(result.result) && this.data.energy > 0) {
 				this.data.maxHeat = result.heat;
 				if (this.data.heat < result.heat) {
@@ -163,7 +163,7 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			var energyStorage = this.getEnergyStorage();
+			let energyStorage = this.getEnergyStorage();
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 

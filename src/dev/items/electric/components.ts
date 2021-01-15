@@ -1,5 +1,5 @@
 ItemRegistry.createItem("circuitBasic", {name: "electronic_circuit", icon: "circuit_basic"});
-ItemRegistry.createItem("circuitAdvanced", {name: "advanced_circuit", icon: "circuit_advanced", rarity: 1});
+ItemRegistry.createItem("circuitAdvanced", {name: "advanced_circuit", icon: "circuit_advanced", rarity: EnumRarity.UNCOMMON});
 
 ItemRegistry.createItem("coil", {name: "coil", icon: "coil"});
 ItemRegistry.createItem("electricMotor", {name: "electric_motor", icon: "electric_motor"});

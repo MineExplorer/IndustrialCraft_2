@@ -5,7 +5,7 @@ extends ToolDrill {
 	constructor() {
 		super("iridiumDrill", "iridium_drill", {energyPerUse: 800, level: 100, efficiency: 24, damage: 5}, 1000000, 2048, 3);
 		this.setGlint(true);
-		this.setRarity(2);
+		this.setRarity(EnumRarity.RARE);
 		UIbuttons.setToolButton(this.id, "button_switch");
 		UIbuttons.registerSwitchFunction(this.id, (item: ItemInstance, player: number) => {
 			this.onModeSwitch(item, player);

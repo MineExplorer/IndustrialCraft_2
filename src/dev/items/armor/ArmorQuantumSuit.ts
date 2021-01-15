@@ -4,10 +4,9 @@ class ArmorQuantumSuit
 extends ArmorElectric {
 	static runTime: number = 0
 
-	constructor(stringID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, isDischarged: boolean = false) {
-		if (!params.texture) params.texture = "quantum";
+	constructor(stringID: string, name: string, params: ArmorParams, isDischarged: boolean = false) {
 		super(stringID, name, params, 1e7, 12000, 4);
-		this.setRarity(2);
+		this.setRarity(EnumRarity.RARE);
 		RadiationAPI.registerHazmatArmor(this.id);
 	}
 
@@ -20,19 +19,19 @@ extends ArmorElectric {
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {
-		var type = params.type;
-		var energyStored = ChargeItemRegistry.getEnergyStored(item);
-		var energyPerDamage = this.getEnergyPerDamage();
+		let type = params.type;
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		let energyPerDamage = this.getEnergyPerDamage();
 		if (energyStored >= energyPerDamage) {
 			if (type == 2 || type == 3 || type == 11) {
-				var energy = params.damage * energyPerDamage;
+				let energy = params.damage * energyPerDamage;
 				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
 			}
 			if (index == 3 && type == 5) {
-				var damage = Math.min(Utils.getFallDamage(), params.damage);
+				let damage = Math.min(Utils.getFallDamage(), params.damage);
 				if (damage > 0) {
-					var damageReduce = Math.min(damage, Math.floor(energyStored / energyPerDamage));
-					var damageTaken = damage - damageReduce;
+					let damageReduce = Math.min(damage, Math.floor(energyStored / energyPerDamage));
+					let damageTaken = damage - damageReduce;
 					if (damageTaken > 0) {
 						Entity.setHealth(player, Entity.getHealth(player) + params.damage - damageTaken);
 					} else {
@@ -58,12 +57,12 @@ extends ArmorElectric {
 	}
 
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
-		var energyStored = ChargeItemRegistry.getEnergyStored(item);
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (energyStored <= 0) return null;
 
 		switch (index) {
 		case 0:
-			var newEnergyStored = energyStored;
+			let newEnergyStored = energyStored;
 			if (RadiationAPI.playerRad > 0) {
 				if (energyStored >= 100000) {
 					RadiationAPI.playerRad = 0;
@@ -76,12 +75,12 @@ extends ArmorElectric {
 			Entity.clearEffect(playerUid, PotionEffect.wither);
 
 			let player = new PlayerManager(playerUid);
-			var hunger = player.getHunger();
+			let hunger = player.getHunger();
 			if (hunger < 20 && newEnergyStored >= 500) {
-				var i = World.getThreadTime()%36;
-				var slot = player.getInventorySlot(i);
+				let i = World.getThreadTime()%36;
+				let slot = player.getInventorySlot(i);
 				if (slot.id == ItemID.tinCanFull) {
-					var count = Math.min(20 - hunger, slot.count);
+					let count = Math.min(20 - hunger, slot.count);
 					player.setHunger(hunger + count);
 					slot.count -= count;
 					player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data, slot.extra);
@@ -92,9 +91,9 @@ extends ArmorElectric {
 			}
 			// night vision
 			if (newEnergyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
-				var coords = Entity.getPosition(playerUid);
-				var time = World.getWorldTime()%24000;
-				let region = BlockSource.getDefaultForActor(playerUid);
+				let coords = Entity.getPosition(playerUid);
+				let time = World.getWorldTime() % 24000;
+				let region = WorldRegion.getForActor(playerUid);
 				if (region.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
 					Entity.addEffect(playerUid, PotionEffect.blindness, 1, 25);
 					Entity.clearEffect(playerUid, PotionEffect.nightVision);
@@ -114,7 +113,7 @@ extends ArmorElectric {
 		case 1:
 			if (item.extra && item.extra.getBoolean("hover")) {
 				Utils.resetFallHeight();
-				var vel = Entity.getVelocity(playerUid);
+				let vel = Entity.getVelocity(playerUid);
 				if (energyStored < 8 || Utils.isOnGround(playerUid)) {
 					item.extra.putBoolean("hover", false);
 					let client = Network.getClientForPlayer(playerUid);
@@ -132,8 +131,8 @@ extends ArmorElectric {
 			Entity.setFire(playerUid, 0, true);
 		break;
 		case 2:
-			var vel = Entity.getVelocity(playerUid);
-			var horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z);
+			let vel = Entity.getVelocity(playerUid);
+			let horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z);
 			// Game.tipMessage(horizontalVel);
 			if (horizontalVel <= 0.15) {
 				ArmorQuantumSuit.runTime = 0;
@@ -181,7 +180,7 @@ Callback.addCallback("EntityHurt", function(attacker: number, victim: number, da
 })
 
 /** @deprecated */
-var QUANTUM_ARMOR_FUNCS = {
+let QUANTUM_ARMOR_FUNCS = {
 	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
 		return ArmorQuantumSuit.prototype.onHurt(params, item, index, Player.get())
 	},

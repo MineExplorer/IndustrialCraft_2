@@ -1,5 +1,5 @@
-ItemRegistry.createItem("iridiumChunk", {name: "Iridium", icon: "iridium", rarity: 2});
-ItemRegistry.createItem("plateReinforcedIridium", {name: "Iridium Reinforced Plate", icon: "plate_reinforced_iridium", rarity: 2});
+ItemRegistry.createItem("iridiumChunk", {name: "Iridium", icon: "iridium", rarity: EnumRarity.RARE});
+ItemRegistry.createItem("plateReinforcedIridium", {name: "Iridium Reinforced Plate", icon: "plate_reinforced_iridium", rarity: EnumRarity.RARE});
 ItemRegistry.createItem("plateAlloy", {name: "Alloy Plate", icon: "plate_alloy"});
 ItemRegistry.createItem("carbonFibre", {name: "Carbon Fibre", icon: "carbon_fibre"});
 ItemRegistry.createItem("carbonMesh", {name: "Carbon Mesh", icon: "carbon_mesh"});

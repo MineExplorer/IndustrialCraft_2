@@ -51,7 +51,7 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 		if (enchant.silk) {
 			return [[blockID, 1, 0]];
 		}
-		var drop = [[ItemID.iridiumChunk, 1, 0]];
+		let drop = [[ItemID.iridiumChunk, 1, 0]];
 		if (Math.random() < enchant.fortune/6) drop.push(drop[0]);
 		ToolAPI.dropOreExp(coords, 12, 28, enchant.experience);
 		return drop;
@@ -68,7 +68,7 @@ Item.addCreativeGroup("ores", Translation.translate("Ores"), [
 	BlockID.oreIridium
 ]);
 
-var OreGenerator = {
+let OreGenerator = {
 	copper: {
 		enabled: __config__.getBool("copper_ore.enabled"),
 		count: __config__.getNumber("copper_ore.count"),
@@ -105,7 +105,7 @@ var OreGenerator = {
 
 	addFlag: function(name, flag, disableOre) {
 		if (this[name].enabled) {
-			var flag = !Flags.addFlag(flag)
+			let flag = !Flags.addFlag(flag)
 			if (disableOre) this[name].enabled = flag;
 		}
 	},
@@ -113,9 +113,9 @@ var OreGenerator = {
 	randomCoords: function(random, chunkX, chunkZ, minHeight, maxHeight) {
 		minHeight = minHeight || 0;
 		maxHeight = maxHeight || 128;
-		var x = chunkX*16 + random.nextInt(16);
-		var z = chunkZ*16 + random.nextInt(16);
-		var y = random.nextInt(maxHeight - minHeight + 1) - minHeight;
+		let x = chunkX*16 + random.nextInt(16);
+		let z = chunkZ*16 + random.nextInt(16);
+		let y = random.nextInt(maxHeight - minHeight + 1) - minHeight;
 		return {x: x, y: y, z: z};
 	}
 }
@@ -127,35 +127,35 @@ OreGenerator.addFlag("uranium", "oreGenUranium", true);
 
 Callback.addCallback("GenerateChunk", function(chunkX, chunkZ, random) {
 	if (OreGenerator.copper.enabled) {
-		for (var i = 0; i < OreGenerator.copper.count; i++) {
-			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.copper.minHeight, OreGenerator.copper.maxHeight);
+		for (let i = 0; i < OreGenerator.copper.count; i++) {
+			let coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.copper.minHeight, OreGenerator.copper.maxHeight);
 			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreCopper, 0, OreGenerator.copper.size, false, random.nextInt());
 		}
 	}
 
 	if (OreGenerator.tin.enabled) {
-		for (var i = 0; i < OreGenerator.tin.count; i++) {
-			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.tin.minHeight, OreGenerator.tin.maxHeight);
+		for (let i = 0; i < OreGenerator.tin.count; i++) {
+			let coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.tin.minHeight, OreGenerator.tin.maxHeight);
 			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreTin, 0, OreGenerator.tin.size, false, random.nextInt());
 		}
 	}
 
 	if (OreGenerator.lead.enabled) {
-		for (var i = 0; i < OreGenerator.lead.count; i++) {
-			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.lead.minHeight, OreGenerator.lead.maxHeight);
+		for (let i = 0; i < OreGenerator.lead.count; i++) {
+			let coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.lead.minHeight, OreGenerator.lead.maxHeight);
 			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreLead, 0, OreGenerator.lead.size, false, random.nextInt());
 		}
 	}
 
 	if (OreGenerator.uranium.enabled) {
-		for (var i = 0; i < OreGenerator.uranium.count; i++) {
-			var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.uranium.minHeight, OreGenerator.uranium.maxHeight);
+		for (let i = 0; i < OreGenerator.uranium.count; i++) {
+			let coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.uranium.minHeight, OreGenerator.uranium.maxHeight);
 			GenerationUtils.generateOre(coords.x, coords.y, coords.z, BlockID.oreUranium, 0, OreGenerator.uranium.size, false, random.nextInt());
 		}
 	}
 
 	if (random.nextDouble() < OreGenerator.iridium.chance) {
-		var coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.iridium.minHeight, OreGenerator.iridium.maxHeight);
+		let coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.iridium.minHeight, OreGenerator.iridium.maxHeight);
 		if (World.getBlockID(coords.x, coords.y, coords.z) == 1)
 			World.setBlock(coords.x, coords.y, coords.z, BlockID.oreIridium);
 	}

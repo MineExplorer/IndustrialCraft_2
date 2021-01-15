@@ -30,7 +30,7 @@ namespace Machine {
 			this.data.last_voltage = this.data.voltage;
 			this.data.voltage = 0;
 
-			var maxVoltage = this.getMaxPacketSize();
+			let maxVoltage = this.getMaxPacketSize();
 			if (this.data.increaseMode) {
 				if (this.data.energy >= maxVoltage) {
 					this.data.energy += src.add(maxVoltage, maxVoltage) - maxVoltage;
@@ -38,14 +38,14 @@ namespace Machine {
 			}
 			else {
 				if (this.data.energy >= maxVoltage/4) {
-					var output = this.data.energy;
+					let output = this.data.energy;
 					this.data.energy += src.add(output, maxVoltage/4) - output;
 				}
 			}
 		}
 
 		onRedstoneUpdate(signal: number): void {
-			var newMode = signal > 0;
+			let newMode = signal > 0;
 			if (newMode != this.data.increaseMode) {
 				this.data.increaseMode = newMode;
 				EnergyNetBuilder.rebuildTileNet(this);

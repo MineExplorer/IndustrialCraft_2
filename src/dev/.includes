@@ -95,7 +95,7 @@ items/crop/crop_utils.ts
 items/crop/crop_items.ts
 items/crop/coffee_beans.ts
 
-items/food/terra_wart.ts
+items/food/terra_wart.js
 items/food/mug.ts
 items/food/coffee.js
 items/food/can.ts

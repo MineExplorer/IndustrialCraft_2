@@ -11,15 +11,15 @@ extends ArmorElectric {
 		return armorName;
 	}
 
-	onTick(item: ItemInstance, index: number, player: number): ItemInstance {
+	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		if (World.getThreadTime() % 20 == 0) {
-			let carried = Entity.getCarriedItem(player);
+			let carried = Entity.getCarriedItem(playerUid);
 			if (ChargeItemRegistry.isValidItem(carried.id, "Eu", this.tier)) {
 				let energyStored = ChargeItemRegistry.getEnergyStored(item);
 				let energyAdd = ChargeItemRegistry.addEnergyTo(carried, "Eu", Math.min(energyStored, this.transferLimit*20), this.tier);
 				if (energyAdd > 0) {
 					ChargeItemRegistry.setEnergyStored(item, energyStored - energyAdd);
-					Entity.setCarriedItem(player, carried.id, 1, carried.data, carried.extra);
+					Entity.setCarriedItem(playerUid, carried.id, 1, carried.data, carried.extra);
 					return item;
 				}
 			}

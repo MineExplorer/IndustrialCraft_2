@@ -3,7 +3,7 @@
 /// <reference path="../../machine/Generator.ts" />
 
 namespace MachineRegistry {
-	var machineIDs = {}
+	let machineIDs = {}
 
 	export function isMachine(id: number) {
 		return machineIDs[id];
@@ -46,7 +46,7 @@ namespace MachineRegistry {
 			};
 		}
 
-		for (var key in Machine.ElectricMachine.prototype) {
+		for (let key in Machine.ElectricMachine.prototype) {
 			if (!Prototype[key]) {
 				Prototype[key] = Machine.ElectricMachine.prototype[key];
 			}
@@ -58,7 +58,7 @@ namespace MachineRegistry {
 	}
 
 	export function registerGenerator(id: number, Prototype: any) {
-		for (var key in Machine.Generator.prototype) {
+		for (let key in Machine.Generator.prototype) {
 			if (!Prototype[key]) {
 				Prototype[key] = Machine.Generator.prototype[key];
 			}
@@ -70,11 +70,11 @@ namespace MachineRegistry {
 	// standard functions
 	export function setStoragePlaceFunction(blockID: string | number, hasVerticalRotation?: boolean) {
 		Block.registerPlaceFunction(Block.getNumericId(blockID), function(coords, item, block, player, region) {
-			var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
-			var rotation = TileRenderer.getBlockRotation(player, hasVerticalRotation);
+			let place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
+			let rotation = TileRenderer.getBlockRotation(player, hasVerticalRotation);
 			region.setBlock(place.x, place.y, place.z, item.id, rotation);
 			// World.playSound(place.x, place.y, place.z, "dig.stone", 1, 0.8)
-			var tile = World.addTileEntity(place.x, place.y, place.z, region);
+			let tile = World.addTileEntity(place.x, place.y, place.z, region);
 			if (item.extra) {
 				tile.data.energy = item.extra.getInt("energy");
 			}
@@ -82,12 +82,12 @@ namespace MachineRegistry {
 	}
 
 	export function getMachineDrop(coords: Vector, blockID: number, level: number, basicDrop?: number, saveEnergyAmount?: number): ItemInstanceArray[] {
-		var item = Player.getCarriedItem();
-		var dropID = 0;
+		let item = Player.getCarriedItem();
+		let dropID = 0;
 		if (ICTool.isValidWrench(item, 10)) {
 			ICTool.useWrench(item, Player.get(), 10);
 			World.setBlock(coords.x, coords.y, coords.z, 0, 0);
-			var chance = ICTool.getWrenchData(item.id).chance;
+			let chance = ICTool.getWrenchData(item.id).chance;
 			if (Math.random() < chance) {
 				dropID = blockID;
 			} else {
@@ -98,7 +98,7 @@ namespace MachineRegistry {
 			dropID = basicDrop || blockID;
 		}
 		if (dropID == blockID && saveEnergyAmount) {
-			var extra = new ItemExtraData();
+			let extra = new ItemExtraData();
 			extra.putInt("energy", saveEnergyAmount);
 			return [[dropID, 1, 0, extra]];
 		}
@@ -118,13 +118,13 @@ namespace MachineRegistry {
 	}
 
 	export function getLiquidFromItem(liquid: string, inputItem: ItemContainerSlot | ItemInstance, outputItem: ItemContainerSlot | ItemInstance, byHand?: boolean): boolean {
-		var storage = StorageInterface.getInterface(this);
-		var empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
+		let storage = StorageInterface.getInterface(this);
+		let empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
 		if (empty && (!liquid && storage.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid) &&
 			(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0)) {
-			var liquidLimit = this.liquidStorage.getLimit(empty.liquid);
-			var storedAmount = this.liquidStorage.getAmount(liquid).toFixed(3);
-			var count = Math.min(byHand? inputItem.count : 1, Math.floor((liquidLimit - storedAmount) / empty.amount));
+			let liquidLimit = this.liquidStorage.getLimit(empty.liquid);
+			let storedAmount = this.liquidStorage.getAmount(liquid).toFixed(3);
+			let count = Math.min(byHand? inputItem.count : 1, Math.floor((liquidLimit - storedAmount) / empty.amount));
 			if (count > 0) {
 				this.liquidStorage.addLiquid(empty.liquid, empty.amount * count);
 				inputItem.count -= count;
@@ -134,7 +134,7 @@ namespace MachineRegistry {
 				if (inputItem.count == 0) inputItem.id = inputItem.data = 0;
 			}
 			else if (inputItem.count == 1 && empty.storage) {
-				var amount = Math.min(liquidLimit - storedAmount, empty.amount);
+				let amount = Math.min(liquidLimit - storedAmount, empty.amount);
 				this.liquidStorage.addLiquid(empty.liquid, amount);
 				inputItem.data += amount * 1000;
 			}
@@ -153,9 +153,9 @@ namespace MachineRegistry {
 	}
 
 	export function addLiquidToItem(liquid: string, inputItem: ItemContainerSlot, outputItem: ItemContainerSlot): void {
-		var amount = this.liquidStorage.getAmount(liquid).toFixed(3);
+		let amount = this.liquidStorage.getAmount(liquid).toFixed(3);
 		if (amount > 0) {
-			var full = LiquidLib.getFullItem(inputItem.id, inputItem.data, liquid);
+			let full = LiquidLib.getFullItem(inputItem.id, inputItem.data, liquid);
 			if (full && (outputItem.id == full.id && outputItem.data == full.data && outputItem.count < Item.getMaxStack(full.id) || outputItem.id == 0)) {
 				if (amount >= full.amount) {
 					this.liquidStorage.getLiquid(liquid, full.amount);
@@ -178,23 +178,23 @@ namespace MachineRegistry {
 
 	/** @deprecated */
 	export function isValidEUItem(id: number, count: number, data: number, container: UI.Container): boolean {
-		var level = container.tileEntity.getTier();
+		let level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidItem(id, "Eu", level);
 	}
 
 	/** @deprecated */
 	export function isValidEUStorage(id: number, count: number, data: number, container: UI.Container): boolean {
-		var level = container.tileEntity.getTier();
+		let level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidStorage(id, "Eu", level);
 	}
 
 	export function updateGuiHeader(gui: any, text: string): void {
-		var header = gui.getWindow("header");
+		let header = gui.getWindow("header");
 		header.contentProvider.drawing[2].text = Translation.translate(text);
 	}
 }
 
-var transferByTier = {
+let transferByTier = {
 	1: 32,
 	2: 256,
 	3: 2048,

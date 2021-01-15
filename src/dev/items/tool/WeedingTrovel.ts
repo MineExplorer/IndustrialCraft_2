@@ -1,7 +1,7 @@
 class ItemWeedingTrowel
-extends ItemIC2 {
+extends ItemCommon {
     constructor() {
-        super("weedingTrowel", "weeding_trowel");
+        super("weedingTrowel", "weeding_trowel", "weeding_trowel");
         this.setMaxStack(1);
         this.setCategory(ItemCategory.EQUIPMENT);
     }

@@ -221,7 +221,7 @@ var AgriculturalAnalyser = {
         var slots = ["slotSeedIn", "slotSeedOut", "slotEnergy"]
         for (var i in slots) {
             var slot = container.getSlot(slots[i]);
-            nativeDropItem(coords.x, coords.y, coords.z, 0, slot.id, slot.count, slot.data, slot.extra);
+            World.drop(coords.x, coords.y, coords.z, slot.id, slot.count, slot.data, slot.extra);
             slot.id = 0;
         }
         container.validateAll();

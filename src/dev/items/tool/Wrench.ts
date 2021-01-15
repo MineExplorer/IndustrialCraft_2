@@ -1,5 +1,5 @@
 class ToolWrench
-extends ItemIC2 {
+extends ItemCommon {
 	constructor(stringID: string, name: string, icon: string, dropChance: number) {
 		super(stringID, name, icon);
 		this.setMaxStack(1);

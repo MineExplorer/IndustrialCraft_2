@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiGenerator = InventoryWindow("Generator", {
+let guiGenerator = InventoryWindow("Generator", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 150, bitmap: "fire_background", scale: GUI_SCALE},
@@ -66,9 +66,9 @@ namespace Machine {
 		}
 
 		consumeFuel(slotName: string): number {
-			var fuelSlot = this.container.getSlot(slotName);
+			let fuelSlot = this.container.getSlot(slotName);
 			if (fuelSlot.id > 0) {
-				var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
+				let burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 				if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
 					this.decreaseSlot(fuelSlot, 1);
 					return burn;
@@ -79,7 +79,7 @@ namespace Machine {
 
 		tick(): void {
 			StorageInterface.checkHoppers(this);
-			var energyStorage = this.getEnergyStorage();
+			let energyStorage = this.getEnergyStorage();
 
 			if (this.data.burn <= 0 && this.data.energy + 10 <= energyStorage) {
 				this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel") / 4;

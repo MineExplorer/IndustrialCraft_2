@@ -28,7 +28,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiBlastFurnace = InventoryWindow("Blast Furnace", {
+let guiBlastFurnace = InventoryWindow("Blast Furnace", {
 	drawing: [
 		{type: "bitmap", x: 450, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE_NEW}
 	],
@@ -80,11 +80,11 @@ namespace Machine {
 		}
 
 		checkResult(result: number[]): boolean {
-			for (var i = 1; i < 3; i++) {
-				var id = result[(i-1) *2 ];
+			for (let i = 1; i < 3; i++) {
+				let id = result[(i-1) *2 ];
 				if (!id) break;
-				var count = result[(i-1) * 2 + 1];
-				var resultSlot = this.container.getSlot("slotResult"+i);
+				let count = result[(i-1) * 2 + 1];
+				let resultSlot = this.container.getSlot("slotResult"+i);
 				if (resultSlot.id != 0 && (resultSlot.id != id || resultSlot.count + count > 64)) {
 					return false;
 				}
@@ -93,18 +93,18 @@ namespace Machine {
 		}
 
 		putResult(result: number[]): void {
-			for (var i = 1; i < 3; i++) {
-				var id = result[(i-1) *2];
+			for (let i = 1; i < 3; i++) {
+				let id = result[(i-1) *2];
 				if (!id) break;
-				var count = result[(i-1) * 2 + 1];
-				var resultSlot = this.container.getSlot("slotResult"+i);
+				let count = result[(i-1) * 2 + 1];
+				let resultSlot = this.container.getSlot("slotResult"+i);
 				resultSlot.setSlot(id, resultSlot.count + count, 0);
 			}
 		}
 
 		controlAir(): boolean {
-			var slot1 = this.container.getSlot("slotAir1");
-			var slot2 = this.container.getSlot("slotAir2");
+			let slot1 = this.container.getSlot("slotAir1");
+			let slot2 = this.container.getSlot("slotAir2");
 			if (this.data.air == 0) {
 				if (slot1.id == ItemID.cellAir && (slot2.id == 0 || slot2.id == ItemID.cellEmpty && slot2.count < 64)) {
 					slot1.setSlot(slot1.id, slot1.count - 1, 0);
@@ -141,15 +141,15 @@ namespace Machine {
 			this.data.isHeating = this.data.signal > 0;
 			UpgradeAPI.executeUpgrades(this);
 
-			var maxHeat = this.getMaxHeat();
+			let maxHeat = this.getMaxHeat();
 			this.data.heat = Math.min(this.data.heat, maxHeat);
 			this.container.setScale("heatScale", this.data.heat / maxHeat);
 
 			if (this.data.heat >= maxHeat) {
 				this.container.sendEvent("setIndicator", "green");
-				var sourceSlot = this.container.getSlot("slotSource");
-				var source = this.data.sourceID || sourceSlot.id;
-				var recipe = this.getRecipeResult(source);
+				let sourceSlot = this.container.getSlot("slotSource");
+				let source = this.data.sourceID || sourceSlot.id;
+				let recipe = this.getRecipeResult(source);
 				if (recipe && this.checkResult(recipe.result)) {
 					if (this.controlAir()) {
 						this.container.sendEvent("showAirImage", {show: false});
@@ -196,7 +196,7 @@ namespace Machine {
 		}
 
 		heatReceive(amount: number): number {
-			var slot = this.container.getSlot("slotSource");
+			let slot = this.container.getSlot("slotSource");
 			if (this.data.isHeating || this.data.sourceID > 0 || MachineRecipeRegistry.getRecipeResult("blastFurnace", slot.id)) {
 				amount = Math.min(this.getMaxHeat() - this.data.heat, amount);
 				this.data.heat += amount + 1;

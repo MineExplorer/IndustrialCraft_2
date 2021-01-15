@@ -20,12 +20,12 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.casingIron, 0, 'a', ItemID.heatConductor, 0, 'b', ItemID.storageBattery, -1]);
 });
 
-var guiElectricHeatGenerator = InventoryWindow("Electric Heater", {
+let guiElectricHeatGenerator = InventoryWindow("Electric Heater", {
 	drawing: [
 		{type: "bitmap", x: 342, y: 110, bitmap: "energy_small_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 461, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],
-	
+
 	elements: {
 		"slot0": {type: "slot", x: 440, y: 120},
 		"slot1": {type: "slot", x: 500, y: 120},
@@ -70,9 +70,9 @@ namespace Machine {
 		}
 
 		calcOutput(): number {
-			var maxOutput = 0;
-			for (var i = 0; i < 10; i++) {
-				var slot = this.container.getSlot("slot"+i);
+			let maxOutput = 0;
+			for (let i = 0; i < 10; i++) {
+				let slot = this.container.getSlot("slot"+i);
 				if (slot.id == ItemID.coil) {
 					maxOutput += 10;
 				}
@@ -81,20 +81,20 @@ namespace Machine {
 		}
 
 		tick(): void {
-			var maxOutput = this.calcOutput();
-			var output = 0;
+			let maxOutput = this.calcOutput();
+			let output = 0;
 
 			if (this.data.energy >= 1) {
-				var side = this.getFacing();
-				var coords = StorageInterface.getRelativeCoords(this, side);
-				var TE = this.region.getTileEntity(coords);
+				let side = this.getFacing();
+				let coords = StorageInterface.getRelativeCoords(this, side);
+				let TE = this.region.getTileEntity(coords);
 				if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 					output = TE.heatReceive(Math.min(maxOutput, this.data.energy));
 					if (output > 0) {
 						this.setActive(true);
 						this.data.energy -= output;
-						var outputText = output.toString();
-						for (var i = outputText.length; i < 6; i++) {
+						let outputText = output.toString();
+						for (let i = outputText.length; i < 6; i++) {
 							outputText += " ";
 						}
 						this.container.setText("textInfo1", outputText + "/");
@@ -106,7 +106,7 @@ namespace Machine {
 				this.container.setText("textInfo1", "0     /");
 			}
 
-			var energyStorage = this.getEnergyStorage()
+			let energyStorage = this.getEnergyStorage()
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 4);
 
 			this.container.setScale("energyScale", this.data.energy / energyStorage);

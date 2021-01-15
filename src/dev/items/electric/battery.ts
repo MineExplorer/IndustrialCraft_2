@@ -15,10 +15,10 @@ extends ItemElectric {
 	}
 }
 
-new ItemBattery("storageBattery", "re_battery", 10000, 100, 1);
-new ItemBattery("storageAdvBattery", "adv_re_battery", 100000, 256, 2);
-new ItemBattery("storageCrystal", "energy_crystal", 1000000, 2048, 3);
-new ItemBattery("storageLapotronCrystal", "lapotron_crystal", 10000000, 8192, 4).setRarity(1);
+ItemRegistry.registerItem(new ItemBattery("storageBattery", "re_battery", 10000, 100, 1));
+ItemRegistry.registerItem(new ItemBattery("storageAdvBattery", "adv_re_battery", 100000, 256, 2));
+ItemRegistry.registerItem(new ItemBattery("storageCrystal", "energy_crystal", 1000000, 2048, 3));
+ItemRegistry.registerItem(new ItemBattery("storageLapotronCrystal", "lapotron_crystal", 10000000, 8192, 4)).setRarity(EnumRarity.UNCOMMON);
 
 Item.addCreativeGroup("batteryEU", Translation.translate("Batteries"), [
 	ItemID.storageBattery,

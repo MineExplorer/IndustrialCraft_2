@@ -14,7 +14,7 @@ TileRenderer.setRotationFunction(BlockID.transformerHV, true);
 
 MachineRegistry.setMachineDrop("transformerHV", BlockID.machineBlockBasic);
 
-ItemName.setRarity(BlockID.transformerHV, 1);
+ItemRegistry.setRarity(BlockID.transformerHV, EnumRarity.UNCOMMON);
 ItemName.addTooltip(BlockID.transformerHV, "Low: 512 EU/t High: 2048 EU/t");
 
 Callback.addCallback("PreLoaded", function() {

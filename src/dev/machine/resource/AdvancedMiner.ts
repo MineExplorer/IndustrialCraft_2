@@ -7,7 +7,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.advancedMiner, 2, [["teleporte
 TileRenderer.registerModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
 MachineRegistry.setStoragePlaceFunction("advancedMiner");
 
-ItemName.setRarity(BlockID.advancedMiner, 2);
+ItemRegistry.setRarity(BlockID.advancedMiner, EnumRarity.RARE);
 ItemName.addStorageBlockTooltip("advancedMiner", 3, "4M");
 
 Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData, level) {

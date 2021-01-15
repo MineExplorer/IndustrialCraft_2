@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.reactorChamber, 0, 'x', BlockID.primalGenerator, 0, 'c', ItemID.casingIron, 0]);
 });
 
-var guiRTGenerator = InventoryWindow("Radioisotope Thermoelectric Generator", {
+let guiRTGenerator = InventoryWindow("Radioisotope Thermoelectric Generator", {
 	drawing: [
 		{type: "bitmap", x: 630, y: 150, bitmap: "energy_bar_background", scale: GUI_SCALE},
 	],
@@ -48,10 +48,10 @@ namespace Machine {
 		}
 
 		tick(): void {
-			var energyStorage = this.getEnergyStorage();
-			var output = 0.5;
-			for (var i = 0; i < 6; i++) {
-				var slot = this.container.getSlot("slot"+i);
+			let energyStorage = this.getEnergyStorage();
+			let output = 0.5;
+			for (let i = 0; i < 6; i++) {
+				let slot = this.container.getSlot("slot"+i);
 				if (slot.id == ItemID.rtgPellet) {
 					output *= 2;
 				}

@@ -195,7 +195,7 @@ AgricultureAPI.registerCropCard({
         return "raGan";
     },
     canGrow: function(crop) {
-        var light = crop.region.getLightLevel(crop);
+        let light = crop.region.getLightLevel(crop);
         return (crop.data.currentSize <= 4 && light >= 12) || crop.data.currentSize == 5;
     },
     canBeHarvested: function(crop) {
@@ -227,7 +227,7 @@ AgricultureAPI.registerCropCard({
     },
     onEntityCollision: function(crop) {
         if (crop.data.currentSize == 5) {
-            var armorSlot = Player.getArmorSlot(3);
+            let armorSlot = Player.getArmorSlot(3);
             if (randomInt(0,50)&&armorSlot.id) {
                 return AgricultureAPI.abstractFunctions["IC2CropCard"].onEntityCollision(crop);
             }
@@ -537,7 +537,7 @@ AgricultureAPI.registerCropCard({
         return "raa1337";
     },
     canGrow: function(crop) {
-        var light = crop.region.getLightLevel(crop);
+        let light = crop.region.getLightLevel(crop);
         return crop.data.currentSize < 7 && light <= 10 && light >= 5;
     },
     dropGainChance: function() {return 0.5},
@@ -572,11 +572,11 @@ AgricultureAPI.registerCropCard({
         return "Snoochy";
     },
     canGrow: function(crop) {
-        var light = crop.region.getLightLevel(crop);
+        let light = crop.region.getLightLevel(crop);
         return crop.data.currentSize < 5 && light >= 9;
     },
     getGrowthDuration(crop) {
-        var base = AgricultureAPI.abstractFunctions["IC2CropCard"];
+        let base = AgricultureAPI.abstractFunctions["IC2CropCard"];
         if (crop.data.currentSize == 3) {
             return Math.round(base.getGrowthDuration(crop) * .5);
         }
@@ -608,7 +608,7 @@ AgricultureAPI.registerCropCard({
     },
     maxSize: 7,
     canGrow: function(crop) {
-        var light = crop.region.getLightLevel(crop);
+        let light = crop.region.getLightLevel(crop);
         return crop.data.currentSize < 7 && light >= 9;
     },
     getGrowthDuration: function(crop) {
@@ -710,7 +710,7 @@ AgricultureAPI.registerCropCard({
         return "Hasudako";
     },
     canGrow: function(crop) {
-        var light = crop.region.getLightLevel(crop);
+        let light = crop.region.getLightLevel(crop);
         if (crop.data.currentSize < 3) {
             return light > 10;
         }
@@ -728,7 +728,7 @@ AgricultureAPI.registerCropCard({
     tick: function(te) {
         if (te.data.currentSize == 1) return;
 
-        var entity = Entity.findNearest({x: this.x + .5, y: this.y + .5, z: this.z + .5}, null, 2);
+        let entity = Entity.findNearest({x: this.x + .5, y: this.y + .5, z: this.z + .5}, null, 2);
         if (!entity)return;
 
         Entity.damageEntity(entity, te.data.currentSize * 2);
@@ -736,7 +736,7 @@ AgricultureAPI.registerCropCard({
             Entity.addEffect(player, PotionEffect.poison, 1, 50);
         }
         if (te.crop.canGrow(te)) te.data.growthPoints += 100;
-        nativeDropItem(this.x, this.y, this.z, 0, 367, 1, 0, null);
+        World.drop(this.x, this.y, this.z, 367, 1, 0);
     },
     nonMetalCheck: {
         298: true,
@@ -745,15 +745,15 @@ AgricultureAPI.registerCropCard({
         301: true
     },
     hasMetalArmor: function() {
-        for (var i = 0; i < 4; i++) {
-            var armorSlot = Player.getArmorSlot(i);
+        for (let i = 0; i < 4; i++) {
+            let armorSlot = Player.getArmorSlot(i);
             if (!armorSlot.id || this.nonMetalCheck[armorSlot.id]) return false;
         }
         return true;
     },
     getGrowthDuration: function(crop) {
-        var multiplier = 1;
-        var base = AgricultureAPI.abstractFunctions["IC2CropCard"];
+        let multiplier = 1;
+        let base = AgricultureAPI.abstractFunctions["IC2CropCard"];
         //todo: compare with PC version when BiomeDictionary will be available
         return Math.round(base.getGrowthDuration(crop) * multiplier);
     },

@@ -26,7 +26,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiCESU = BatteryBlockWindow("CESU");
+let guiCESU = BatteryBlockWindow("CESU");
 
 namespace Machine {
 	class CESU extends BatteryBlock {

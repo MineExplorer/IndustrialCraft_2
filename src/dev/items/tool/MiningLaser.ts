@@ -13,7 +13,7 @@ extends ItemElectric {
 	constructor() {
 		super("miningLaser", "mining_laser", 1000000, 2048, 3);
 		this.setHandEquipped(true);
-		this.setRarity(1);
+		this.setRarity(EnumRarity.UNCOMMON);
 		UIbuttons.setToolButton(this.id, "button_switch", true);
 		UIbuttons.registerSwitchFunction(this.id, (item: ItemInstance, player: number) => {
 			this.onModeSwitch(item, player);

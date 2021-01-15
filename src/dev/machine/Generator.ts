@@ -13,7 +13,7 @@ namespace Machine {
 
 		energyTick(type: string, src: any): void {
 			super.energyTick(type, src);
-			var output = Math.min(this.data.energy, this.getMaxPacketSize());
+			let output = Math.min(this.data.energy, this.getMaxPacketSize());
 			this.data.energy += src.add(output) - output;
 		}
 	}

@@ -33,7 +33,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'b', ItemID.toolbox, -1, 'c', ItemID.coil, 0],
 	function(api, field, result) {
 		if (isToolboxEmpty(field[3]) && isToolboxEmpty(field[5])) {
-			for (var i = 0; i < field.length; i++) {
+			for (let i = 0; i < field.length; i++) {
 				api.decreaseFieldSlot(i);
 			}
 		}
@@ -81,7 +81,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiMetalFormer = InventoryWindow("Metal Former", {
+let guiMetalFormer = InventoryWindow("Metal Former", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 164, bitmap: "metalformer_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},
@@ -132,10 +132,10 @@ namespace Machine {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
-			var newActive = false;
-			var sourceSlot = this.container.getSlot("slotSource");
-			var resultSlot = this.container.getSlot("slotResult");
-			var result = this.getRecipeResult(sourceSlot.id);
+			let newActive = false;
+			let sourceSlot = this.container.getSlot("slotSource");
+			let resultSlot = this.container.getSlot("slotResult");
+			let result = this.getRecipeResult(sourceSlot.id);
 			if (result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
 				if (this.data.energy >= this.data.energy_consume) {
 					this.data.energy -= this.data.energy_consume;
@@ -153,7 +153,7 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			var energyStorage = this.getEnergyStorage();
+			let energyStorage = this.getEnergyStorage();
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 

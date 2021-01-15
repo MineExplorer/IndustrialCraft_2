@@ -23,7 +23,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', ItemID.heatConductor, 0, 'c', ItemID.cellEmpty, 0, 'p', ItemID.casingIron, 0]);
 });
 
-var guiFluidHeatGenerator = InventoryWindow("Liquid Fuel Firebox", {
+let guiFluidHeatGenerator = InventoryWindow("Liquid Fuel Firebox", {
 	drawing: [
 		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
 		{type: "bitmap", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE},
@@ -59,7 +59,7 @@ namespace Machine {
 			this.liquidStorage.setLimit(null, 10);
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				var empty = LiquidLib.getEmptyItem(id, data);
+				let empty = LiquidLib.getEmptyItem(id, data);
 				if (!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			});
@@ -84,12 +84,12 @@ namespace Machine {
 
 		tick(): void {
 			StorageInterface.checkHoppers(this);
-			var liquid = this.liquidStorage.getLiquidStored();
-			var slot1 = this.container.getSlot("slot1");
-			var slot2 = this.container.getSlot("slot2");
+			let liquid = this.liquidStorage.getLiquidStored();
+			let slot1 = this.container.getSlot("slot1");
+			let slot2 = this.container.getSlot("slot2");
 			this.getLiquidFromItem(liquid, slot1, slot2);
 
-			var fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid || liquid);
+			let fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid || liquid);
 			if (fuel && this.data.fuel <= 0 && this.liquidStorage.getAmount(liquid).toFixed(3) as any >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)) {
 				this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
 				this.data.fuel = fuel.amount;
@@ -124,9 +124,9 @@ namespace Machine {
 		}
 
 		spreadHeat(heat: number): number {
-			var side = this.getFacing();
-			var coords = StorageInterface.getRelativeCoords(this, side);
-			var TE = this.region.getTileEntity(coords);
+			let side = this.getFacing();
+			let coords = StorageInterface.getRelativeCoords(this, side);
+			let TE = this.region.getTileEntity(coords);
 			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 				this.data.output = TE.heatReceive(heat);
 			} else {
@@ -144,7 +144,7 @@ namespace Machine {
 			"slot2": {output: true}
 		},
 		isValidInput: function(item: ItemInstance) {
-			var empty = LiquidLib.getEmptyItem(item.id, item.data);
+			let empty = LiquidLib.getEmptyItem(item.id, item.data);
 			if (!empty) return false;
 			return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 		},

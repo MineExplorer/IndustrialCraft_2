@@ -14,7 +14,7 @@ Callback.addCallback("PreLoaded", function() {
     ], ['#', BlockID.machineBlockBasic, 0, 'z', ItemID.circuitBasic, 0, 'c', 54, -1, 'a', ItemID.agriculturalAnalyzer, 0, 'p', ItemID.plateIron, 0, 's', 359, 0]);
 });
 
-var cropHarvesterGuiElements: UI.ElementSet = {
+let cropHarvesterGuiElements: UI.ElementSet = {
     "energyScale": {type: "scale", x: 409, y: 167, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
     "slotEnergy": {type: "slot", x: 400, y: 230},
     "slotUpgrade0": {type: "slot", x: 880, y: 110},
@@ -28,7 +28,7 @@ for (let i = 0; i < 15; i++) {
     cropHarvesterGuiElements["outSlot" + i] = {type: "slot", x: 520 + x*60, y: 50 + y*60};
 };
 
-var guiCropHarvester = InventoryWindow("Crop Harvester", {
+let guiCropHarvester = InventoryWindow("Crop Harvester", {
     drawing: [
         {type: "bitmap", x: 409, y: 167, bitmap: "energy_small_background", scale: GUI_SCALE}
     ],
@@ -77,7 +77,7 @@ namespace Machine {
 
             if (this.data.energy > 100) this.scan();
 
-            var energyStorage = this.getEnergyStorage();
+            let energyStorage = this.getEnergyStorage();
             this.data.energy = Math.min(this.data.energy, energyStorage);
             this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 
@@ -100,9 +100,9 @@ namespace Machine {
                 }
             }
             this.data.energy -= 1;
-            var cropTile = this.region.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
+            let cropTile = this.region.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
             if (cropTile && cropTile.crop && !this.isInventoryFull()) {
-                var drops = null;
+                let drops = null;
                 if (cropTile.data.currentSize == cropTile.crop.getOptimalHarvestSize(cropTile)) {
                     drops = cropTile.performHarvest();
                 }
@@ -111,7 +111,7 @@ namespace Machine {
                 }
                 if (drops && drops.length) {
                     for (let i in drops) {
-                        var item = drops[i];
+                        let item = drops[i];
                         this.putItem(item);
                         this.data.energy -= 100;
 
@@ -124,10 +124,10 @@ namespace Machine {
         }
 
         putItem(item: ItemInstance): void {
-            for (var i = 0; i < 15; i++) {
-                var slot = this.container.getSlot("outSlot" + i);
+            for (let i = 0; i < 15; i++) {
+                let slot = this.container.getSlot("outSlot" + i);
                 if (!slot.id || slot.id == item.id && slot.count < Item.getMaxStack(item.id)) {
-                    var add = Math.min(Item.getMaxStack(item.id) - slot.count, item.count);
+                    let add = Math.min(Item.getMaxStack(item.id) - slot.count, item.count);
                     slot.setSlot(item.id, item.count + add, item.data);
                     item.count -= add;
                 }
@@ -135,9 +135,9 @@ namespace Machine {
         }
 
         isInventoryFull(): boolean {
-            for (var i = 0; i < 15; i++) {
-                var slot = this.container.getSlot("outSlot" + i);
-                var maxStack = Item.getMaxStack(slot.id);
+            for (let i = 0; i < 15; i++) {
+                let slot = this.container.getSlot("outSlot" + i);
+                let maxStack = Item.getMaxStack(slot.id);
                 if (!slot.id || slot.count < maxStack) return false;
             }
             return true;

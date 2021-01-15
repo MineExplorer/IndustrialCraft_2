@@ -515,7 +515,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 
 		for (var ind in dropItems) {
 			var item = dropItems[ind];
-			nativeDropItem(this.x, this.y, this.z, 0, item.id, item.count, item.data, null);
+			World.drop(this.x, this.y, this.z, 0, item.id, item.count, item.data);
 		}
 	},
 
@@ -548,7 +548,7 @@ TileEntity.registerPrototype(BlockID.crop, {
 		else if (Math.random() <= firstchance * 1.5) dropCount++;
 
 		var item = this.crop.getSeeds(this);
-		nativeDropItem(this.x, this.y, this.z, 0, item.id, dropCount, item.data, item.extra);
+		World.drop(this.x, this.y, this.z, item.id, dropCount, item.data, item.extra);
 
 		this.reset();
 		this.updateRender();

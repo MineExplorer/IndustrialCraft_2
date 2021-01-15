@@ -1,7 +1,22 @@
-/// <reference path="../ItemIC2.ts" />
+class ItemEmptyCell
+extends ItemCommon {
+	function(coords, item, block, playerUid) {
+		if (block.id > 7 && block.id < 12 && block.data == 0) {
+			let player = new PlayerManager(playerUid);
+			let region = WorldRegion.getForActor(playerUid);
+			region.setBlock(coords, 0, 0);
+			if (block.id == 8 || block.id == 9) {
+				player.addItemToInventory(ItemID.cellWater, 1, 0);
+			} else {
+				player.addItemToInventory(ItemID.cellLava, 1, 0);
+			}
+			player.decreaseCarriedItem();
+		}
+	}
+}
 
 class ItemLiquidCell
-extends ItemIC2
+extends ItemCommon
 implements ItemFuncs {
 	constructor(stringID: string, liquid: string) {
 		super(stringID, `${liquid}_cell`, `cell_${liquid}`);
@@ -16,12 +31,12 @@ implements ItemFuncs {
 ItemRegistry.createItem("cellEmpty", {name: "empty_cell", icon: "cell_empty"});
 Item.setLiquidClip(ItemID.cellEmpty, true);
 
-new ItemLiquidCell("cellWater", "water");
-new ItemLiquidCell("cellLava", "lava");
-new ItemLiquidCell("cellBiomass", "biomass");
-new ItemLiquidCell("cellBiogas", "biogas");
-new ItemLiquidCell("cellCoolant", "coolant");
-//new ItemLiquidCell("cellMatter", "uu_matter");
+ItemRegistry.registerItem(new ItemLiquidCell("cellWater", "water"));
+ItemRegistry.registerItem(new ItemLiquidCell("cellLava", "lava"));
+ItemRegistry.registerItem(new ItemLiquidCell("cellBiomass", "biomass"));
+ItemRegistry.registerItem(new ItemLiquidCell("cellBiogas", "biogas"));
+ItemRegistry.registerItem(new ItemLiquidCell("cellCoolant", "coolant"));
+//ItemRegistry.registerItem(new ItemLiquidCell("cellMatter", "uu_matter"));
 
 ItemRegistry.createItem("cellAir", {name: "air_cell", icon: "cell_air"});
 
@@ -46,20 +61,6 @@ Recipes.addShaped({id: 49, count: 1, data: 0}, [
 	"aa",
 	"bb"
 ], ['a', ItemID.cellLava, 0, 'b', ItemID.cellWater, 0]);
-
-Item.registerUseFunction("cellEmpty",function(coords, item, block, playerUid) {
-	if (block.id > 7 && block.id < 12 && block.data == 0) {
-		let player = new PlayerManager(playerUid);
-		let region = WorldRegion.getForActor(playerUid);
-		region.setBlock(coords, 0, 0);
-		if (block.id == 8 || block.id == 9) {
-			player.addItemToInventory(ItemID.cellWater, 1, 0);
-		} else {
-			player.addItemToInventory(ItemID.cellLava, 1, 0);
-		}
-		player.decreaseCarriedItem();
-	}
-});
 
 Item.registerUseFunction("cellWater", function(coords, item, block, playerUid) {
 	if (item.data > 0 || block.id == BlockID.crop) return;

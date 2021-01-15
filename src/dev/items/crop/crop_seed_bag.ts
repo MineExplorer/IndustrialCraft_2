@@ -1,7 +1,5 @@
-/// <reference path="../ItemIC2.ts" />
-
 class ItemSeedBag
-extends ItemIC2
+extends ItemCommon
 implements ItemFuncs {
     constructor() {
         super("cropSeedBag", "Seed Bag (%s)", "crop_seed_bag", false);
@@ -47,6 +45,6 @@ implements ItemFuncs {
     }
 }
 
-new ItemSeedBag();
+ItemRegistry.registerItem(new ItemSeedBag());
 
 Item.addCreativeGroup("cropSeedBag", Translation.translate("Seed Bags"), [ItemID.cropSeedBag]);

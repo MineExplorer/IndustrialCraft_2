@@ -19,13 +19,13 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiGeothermalGenerator = InventoryWindow("Geothermal Generator", {
+let guiGeothermalGenerator = InventoryWindow("Geothermal Generator", {
 	drawing: [
 		{type: "bitmap", x: 702, y: 91, bitmap: "energy_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
 		{type: "bitmap", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE}
 	],
-	
+
 	elements: {
 		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
 		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
@@ -72,11 +72,11 @@ namespace Machine {
 		tick(): void {
 			StorageInterface.checkHoppers(this);
 
-			var slot1 = this.container.getSlot("slot1");
-			var slot2 = this.container.getSlot("slot2");
+			let slot1 = this.container.getSlot("slot1");
+			let slot2 = this.container.getSlot("slot2");
 			this.getLiquidFromItem("lava", slot1, slot2);
 
-			var energyStorage = this.getEnergyStorage();
+			let energyStorage = this.getEnergyStorage();
 			if (this.liquidStorage.getAmount("lava").toFixed(3) as any >= 0.001 && this.data.energy + 20 <= energyStorage) {
 				this.data.energy += 20;
 				this.liquidStorage.getLiquid("lava", 0.001);

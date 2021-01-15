@@ -55,8 +55,8 @@ namespace Machine {
 		tick(): void {
 			StorageInterface.checkHoppers(this);
 
-			var tier = this.getTier();
-			var energyStorage = this.getEnergyStorage();
+			let tier = this.getTier();
+			let energyStorage = this.getEnergyStorage();
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, tier);
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slot1"), "Eu", this.data.energy, tier);
 
@@ -68,7 +68,7 @@ namespace Machine {
 
 		energyTick(type: string, src: any) {
 			super.energyTick(type, src);
-			var output = this.getMaxPacketSize();
+			let output = this.getMaxPacketSize();
 			if (this.data.energy >= output) {
 				this.data.energy += src.add(output) - output;
 			}
@@ -91,9 +91,9 @@ namespace Machine {
 		}
 
 		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
-			var itemID = Entity.getCarriedItem(player).id;
-			var level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID);
-			var drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, this.defaultDrop, this.data.energy);
+			let itemID = Entity.getCarriedItem(player).id;
+			let level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID);
+			let drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, this.defaultDrop, this.data.energy);
 			if (drop.length > 0) {
 				this.region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2], drop[0][3]);
 			}

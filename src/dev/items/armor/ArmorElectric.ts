@@ -9,7 +9,7 @@ implements IElectricItem, OnHurtListener, OnTickListener {
 	tier: number;
 	canProvideEnergy: boolean = false;
 
-	constructor(stringID: string, name: string, params: {type: ArmorType, defence: number, texture?: string}, maxCharge: number, transferLimit: number, tier: number, inCreative: boolean = true) {
+	constructor(stringID: string, name: string, params: ArmorParams, maxCharge: number, transferLimit: number, tier: number, inCreative: boolean = true) {
 		super(stringID, name, params, false);
 		this.preventDamaging();
 		this.maxCharge = maxCharge;
@@ -22,11 +22,11 @@ implements IElectricItem, OnHurtListener, OnTickListener {
 		return name + '\n' + ItemName.getItemStorageText(item);
 	}
 
-	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		return item;
 	}
 
-	onTick(item: ItemInstance, index: number, player: number): ItemInstance {
+	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		return null;
 	}
 }

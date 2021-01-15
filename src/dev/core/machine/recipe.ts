@@ -1,12 +1,12 @@
 namespace MachineRecipeRegistry {
-	export var recipeData = {};
+	export let recipeData = {};
 
 	export function registerRecipesFor(name: string, data: any, validateKeys?: boolean) {
 		if (validateKeys) {
-			var newData = {};
-			for (var key in data) {
+			let newData = {};
+			for (let key in data) {
 				if (key.indexOf(":") != -1) {
-					var keyArray = key.split(":");
+					let keyArray = key.split(":");
 					var newKey = eval(keyArray[0]) + ":" + keyArray[1];
 				} else {
 					var newKey = eval(key) as string;
@@ -19,7 +19,7 @@ namespace MachineRecipeRegistry {
 	}
 
 	export function addRecipeFor(name: string, input: any, result: any) {
-		var recipes = this.requireRecipesFor(name, true);
+		let recipes = this.requireRecipesFor(name, true);
 		if (Array.isArray(recipes)) {
 			recipes.push({input: input, result: result});
 		}
@@ -36,7 +36,7 @@ namespace MachineRecipeRegistry {
 	}
 
 	export function getRecipeResult(name: string, key1: string|number, key2?: string|number) {
-		var data = this.requireRecipesFor(name);
+		let data = this.requireRecipesFor(name);
 		if (data) {
 			return data[key1] || data[key1+":"+key2];
 		}

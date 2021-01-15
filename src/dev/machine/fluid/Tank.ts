@@ -15,7 +15,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiTank = InventoryWindow("Tank", {
+let guiTank = InventoryWindow("Tank", {
 	drawing: [
 		{type: "bitmap", x: 611, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
 	],
@@ -67,13 +67,13 @@ namespace Machine {
 		tick(): void {
 			UpgradeAPI.executeUpgrades(this);
 
-			var storage = this.liquidStorage;
-			var liquid = storage.getLiquidStored();
-			var slot1 = this.container.getSlot("slotLiquid1");
-			var slot2 = this.container.getSlot("slotLiquid2");
+			let storage = this.liquidStorage;
+			let liquid = storage.getLiquidStored();
+			let slot1 = this.container.getSlot("slotLiquid1");
+			let slot2 = this.container.getSlot("slotLiquid2");
 			this.getLiquidFromItem(liquid, slot1, slot2);
 			if (liquid) {
-				var full = LiquidLib.getFullItem(slot1.id, slot1.data, liquid);
+				let full = LiquidLib.getFullItem(slot1.id, slot1.data, liquid);
 				if (full && storage.getAmount(liquid) >= full.storage && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)) {
 					storage.getLiquid(liquid, full.storage);
 					slot1.setSlot(slot1.id, slot1.count - 1, slot1.data);

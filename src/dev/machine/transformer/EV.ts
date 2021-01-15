@@ -14,7 +14,7 @@ TileRenderer.setRotationFunction(BlockID.transformerEV, true);
 
 MachineRegistry.setMachineDrop("transformerEV", BlockID.machineBlockBasic);
 
-ItemName.setRarity(BlockID.transformerEV, 1);
+ItemRegistry.setRarity(BlockID.transformerEV, EnumRarity.UNCOMMON);
 ItemName.addTooltip(BlockID.transformerEV, "Low: 2048 EU/t High: 8192 EU/t");
 
 Item.addCreativeGroup("EUTransformers", Translation.translate("Transformers"), [

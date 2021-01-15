@@ -68,7 +68,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiCompressor = InventoryWindow("Compressor", {
+let guiCompressor = InventoryWindow("Compressor", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 155, bitmap: "compressor_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},

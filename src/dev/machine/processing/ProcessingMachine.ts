@@ -44,12 +44,12 @@ namespace Machine {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
-			var newActive = false;
-			var sourceSlot = this.container.getSlot("slotSource");
-			var resultSlot = this.container.getSlot("slotResult");
-			var result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
+			let newActive = false;
+			let sourceSlot = this.container.getSlot("slotSource");
+			let resultSlot = this.container.getSlot("slotResult");
+			let result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
 			if (result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)) {
-				var resultSlot = this.container.getSlot("slotResult");
+				let resultSlot = this.container.getSlot("slotResult");
 				if (resultSlot.id == result.id && (!result.data || resultSlot.data == result.data) && resultSlot.count <= 64 - result.count || resultSlot.id == 0) {
 					if (this.data.energy >= this.data.energy_consume) {
 						this.data.energy -= this.data.energy_consume;
@@ -70,7 +70,7 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			var energyStorage = this.getEnergyStorage();
+			let energyStorage = this.getEnergyStorage();
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 

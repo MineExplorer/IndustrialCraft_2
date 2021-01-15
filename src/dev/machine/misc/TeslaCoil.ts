@@ -30,15 +30,15 @@ namespace Machine {
 		tick(): void {
 			if (this.data.energy >= 400 && this.data.isActive) {
 				if (World.getThreadTime()%32 == 0) {
-					var entities = Entity.getAll();
-					var discharge = false;
-					var damage = Math.floor(this.data.energy/400);
-					for (var i in entities) {
-						var ent = entities[i];
-						var coords = Entity.getPosition(ent);
-						var dx = this.x + 0.5 - coords.x;
-						var dy = this.y + 0.5 - coords.y;
-						var dz = this.z + 0.5 - coords.z;
+					let entities = Entity.getAll();
+					let discharge = false;
+					let damage = Math.floor(this.data.energy/400);
+					for (let i in entities) {
+						let ent = entities[i];
+						let coords = Entity.getPosition(ent);
+						let dx = this.x + 0.5 - coords.x;
+						let dy = this.y + 0.5 - coords.y;
+						let dz = this.z + 0.5 - coords.z;
 						if (Math.sqrt(dx*dx + dy*dy + dz*dz) < 4.5 && EntityHelper.canTakeDamage(ent, "electricity") && Entity.getHealth(ent) > 0) {
 							discharge = true;
 							if (damage >= 24) {

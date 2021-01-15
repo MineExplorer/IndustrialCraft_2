@@ -30,7 +30,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiSolidHeatGenerator = InventoryWindow("Solid Fuel Firebox", {
+let guiSolidHeatGenerator = InventoryWindow("Solid Fuel Firebox", {
 	drawing: [
 		{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},
@@ -74,7 +74,7 @@ namespace Machine {
 
 		getFuel(fuelSlot: ItemInstance): number {
 			if (fuelSlot.id > 0) {
-				var burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
+				let burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 				if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
 					return burn;
 				}
@@ -83,9 +83,9 @@ namespace Machine {
 		}
 
 		spreadHeat(): number {
-			var side = this.getFacing();
-			var coords = StorageInterface.getRelativeCoords(this, side);
-			var TE = this.region.getTileEntity(coords);
+			let side = this.getFacing();
+			let coords = StorageInterface.getRelativeCoords(this, side);
+			let TE = this.region.getTileEntity(coords);
 			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
 				return this.data.output = TE.heatReceive(20);
 			}
@@ -96,10 +96,10 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			this.data.output = 0;
-			var slot = this.container.getSlot("slotAshes");
+			let slot = this.container.getSlot("slotAshes");
 			if (this.data.burn <= 0) {
-				var fuelSlot = this.container.getSlot("slotFuel");
-				var burn = this.getFuel(fuelSlot) / 4;
+				let fuelSlot = this.container.getSlot("slotFuel");
+				let burn = this.getFuel(fuelSlot) / 4;
 				if (burn && ((slot.id == ItemID.ashes && slot.count < 64) || slot.id == 0) && this.spreadHeat()) {
 					this.setActive(true);
 					this.data.burnMax = burn;
@@ -117,8 +117,8 @@ namespace Machine {
 				this.spreadHeat();
 			}
 
-			var outputText = this.data.output.toString();
-			for (var i = outputText.length; i < 6; i++) {
+			let outputText = this.data.output.toString();
+			for (let i = outputText.length; i < 6; i++) {
 				outputText += " ";
 			}
 			this.container.setText("textInfo1", outputText + "/");

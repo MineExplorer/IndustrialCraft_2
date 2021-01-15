@@ -1,7 +1,5 @@
-/// <reference path="../ItemIC2.ts" />
-
 class ItemCable
-extends ItemIC2
+extends ItemCommon
 implements ItemFuncs {
 	maxVoltage: number;
 

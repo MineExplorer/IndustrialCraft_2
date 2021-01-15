@@ -20,7 +20,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-var guiFermenter = InventoryWindow("Fermenter", {
+let guiFermenter = InventoryWindow("Fermenter", {
 	drawing: [
 		{type: "bitmap", x: 390, y: 80, bitmap: "fermenter_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 758, y: 95, bitmap: "liquid_bar", scale: GUI_SCALE}
@@ -84,19 +84,19 @@ namespace Machine {
 					this.data.progress = 0;
 				}
 
-				var outputSlot = this.container.getSlot("slotFertilizer");
+				let outputSlot = this.container.getSlot("slotFertilizer");
 				if (this.data.fertilizer >= 25) {
 					this.data.fertilizer = 0;
 					outputSlot.setSlot(ItemID.fertilizer, outputSlot.count + 1, 0);
 				}
 			}
 
-			var slot1 = this.container.getSlot("slotBiomass0");
-			var slot2 = this.container.getSlot("slotBiomass1");
+			let slot1 = this.container.getSlot("slotBiomass0");
+			let slot2 = this.container.getSlot("slotBiomass1");
 			this.getLiquidFromItem("biomass", slot1, slot2);
 
-			var slot1 = this.container.getSlot("slotBiogas0");
-			var slot2 = this.container.getSlot("slotBiogas1");
+			slot1 = this.container.getSlot("slotBiogas0");
+			slot2 = this.container.getSlot("slotBiogas1");
 			this.addLiquidToItem("biogas", slot1, slot2);
 
 			this.container.setScale("progressScale", this.data.progress / 4000);
@@ -111,7 +111,7 @@ namespace Machine {
 		}
 
 		heatReceive(amount: number): number {
-			var outputSlot = this.container.getSlot("slotFertilizer");
+			let outputSlot = this.container.getSlot("slotFertilizer");
 			if (this.liquidStorage.getAmount("biomass").toFixed(3) as any >= 0.02 && this.liquidStorage.getAmount("biogas") <= 1.6 && outputSlot.count < 64) {
 				this.data.heat = amount;
 				return amount;

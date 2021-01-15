@@ -30,15 +30,14 @@ const fallVelocity = -0.0784;
 const ELECTRIC_ITEM_MAX_DAMAGE = 27;
 
 // import values
-var nativeDropItem = ModAPI.requireGlobal("Level.dropItem");
-var Color = android.graphics.Color;
-var PotionEffect = Native.PotionEffect;
-var ParticleType = Native.ParticleType;
-var BlockSide = Native.BlockSide;
-var EntityType = Native.EntityType;
+const Color = android.graphics.Color;
+const PotionEffect = Native.PotionEffect;
+const ParticleType = Native.ParticleType;
+const BlockSide = Native.BlockSide;
+const EntityType = Native.EntityType;
 
 // energy (Eu)
-var EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
+let EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 
 // API
 function randomInt(min: number, max: number) {
@@ -46,10 +45,10 @@ function randomInt(min: number, max: number) {
 }
 
 function addShapelessRecipe(result: ItemInstance, source: ItemInstance[]) {
-	var ingredients = [];
-	for (var i in source) {
-		var item = source[i];
-		for (var n = 0; n < item.count; n++) {
+	let ingredients = [];
+	for (let i in source) {
+		let item = source[i];
+		for (let n = 0; n < item.count; n++) {
 			ingredients.push(item);
 		}
 	}

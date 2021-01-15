@@ -1,7 +1,7 @@
 const colorNames = ["Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Light Grey", "Dark Grey", "Pink", "Lime", "Yellow", "Light Blue", "Magenta", "Orange", "White"];
 
 class ItemPainter
-extends ItemIC2 {
+extends ItemCommon {
 	readonly color: number;
 
 	constructor(color: number) {
@@ -19,7 +19,7 @@ extends ItemIC2 {
 			let region = WorldRegion.getForActor(player);
 			region.setBlock(coords, 0, 0);
 			region.setBlock(coords, block.id, this.color);
-			var net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
+			let net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
 			if (net) {
 				EnergyNetBuilder.removeNet(net);
 				EnergyNetBuilder.rebuildForWire(coords.x, coords.y, coords.z, block.id);

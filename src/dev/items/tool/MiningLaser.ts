@@ -21,7 +21,7 @@ extends ItemElectric {
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
-		name = ItemName.showItemStorage(item, name);
+		name = super.onNameOverride(item, name);
 		let mode = item.extra? item.extra.getInt("mode") : 0;
 		name += "\n"+this.getModeInfo(mode);
 		return name;

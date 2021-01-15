@@ -1,20 +1,12 @@
-IDRegistry.genItemID("circuitBasic");
-IDRegistry.genItemID("circuitAdvanced");
-Item.createItem("circuitBasic", "Electronic Circuit", {name: "circuit_basic", meta: 0});
-Item.createItem("circuitAdvanced", "Advanced Circuit", {name: "circuit_advanced", meta: 0});
-ItemName.setRarity(ItemID.circuitAdvanced, 1, true);
+ItemRegistry.createItem("circuitBasic", {name: "electronic_circuit", icon: "circuit_basic"});
+ItemRegistry.createItem("circuitAdvanced", {name: "advanced_circuit", icon: "circuit_advanced", rarity: 1});
 
-IDRegistry.genItemID("coil");
-IDRegistry.genItemID("electricMotor");
-IDRegistry.genItemID("powerUnit");
-IDRegistry.genItemID("powerUnitSmall");
-Item.createItem("coil", "Coil", {name: "coil", meta: 0});
-Item.createItem("electricMotor", "Electric Motor", {name: "electric_motor", meta: 0});
-Item.createItem("powerUnit", "Power Unit", {name: "power_unit", meta: 0});
-Item.createItem("powerUnitSmall", "Small Power Unit", {name: "power_unit_small", meta: 0});
+ItemRegistry.createItem("coil", {name: "coil", icon: "coil"});
+ItemRegistry.createItem("electricMotor", {name: "electric_motor", icon: "electric_motor"});
+ItemRegistry.createItem("powerUnit", {name: "power_unit", icon: "power_unit"});
+ItemRegistry.createItem("powerUnitSmall", {name: "small_power_unit", icon: "power_unit_small"});
 
-IDRegistry.genItemID("heatConductor");
-Item.createItem("heatConductor", "Heat Conductor", {name: "heat_conductor", meta: 0});
+ItemRegistry.createItem("heatConductor", {name: "heat_conductor", icon: "heat_conductor"});
 
 Item.addCreativeGroup("ic2_component", Translation.translate("Crafting Components"), [
 	ItemID.circuitBasic,

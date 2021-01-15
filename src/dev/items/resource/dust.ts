@@ -1,45 +1,18 @@
 //Dust
-IDRegistry.genItemID("dustCopper");
-Item.createItem("dustCopper", "Copper Dust", {name: "dust_copper"});
-
-IDRegistry.genItemID("dustTin");
-Item.createItem("dustTin", "Tin Dust", {name: "dust_tin"});
-
-IDRegistry.genItemID("dustBronze");
-Item.createItem("dustBronze", "Bronze Dust", {name: "dust_bronze"});
-
-IDRegistry.genItemID("dustIron");
-Item.createItem("dustIron", "Iron Dust", {name: "dust_iron"});
-
-IDRegistry.genItemID("dustSteel");
-Item.createItem("dustSteel", "Steel Dust", {name: "dust_steel"});
-
-IDRegistry.genItemID("dustLead");
-Item.createItem("dustLead", "Lead Dust", {name: "dust_lead"});
-
-IDRegistry.genItemID("dustGold");
-Item.createItem("dustGold", "Gold Dust", {name: "dust_gold"});
-
-IDRegistry.genItemID("dustSilver");
-Item.createItem("dustSilver", "Silver Dust", {name: "dust_silver"});
-
-IDRegistry.genItemID("dustStone");
-Item.createItem("dustStone", "Stone Dust", {name: "dust_stone"});
-
-IDRegistry.genItemID("dustCoal");
-Item.createItem("dustCoal", "Coal Dust", {name: "dust_coal"});
-
-IDRegistry.genItemID("dustSulfur");
-Item.createItem("dustSulfur", "Sulfur Dust", {name: "dust_sulfur"});
-
-IDRegistry.genItemID("dustLapis");
-Item.createItem("dustLapis", "Lapis Dust", {name: "dust_lapis"});
-
-IDRegistry.genItemID("dustDiamond");
-Item.createItem("dustDiamond", "Diamond Dust", {name: "dust_diamond"});
-
-IDRegistry.genItemID("dustEnergium");
-Item.createItem("dustEnergium", "Energium Dust", {name: "dust_energium"});
+ItemRegistry.createItem("dustCopper", {name: "copper_dust", icon: "dust_copper"});
+ItemRegistry.createItem("dustTin", {name: "tin_dust", icon: "dust_tin"});
+ItemRegistry.createItem("dustBronze", {name: "bronze_dust", icon: "dust_bronze"});
+ItemRegistry.createItem("dustIron", {name: "iron_dust", icon: "dust_iron"});
+ItemRegistry.createItem("dustSteel", {name: "steel_dust", icon: "dust_steel"});
+ItemRegistry.createItem("dustLead", {name: "lead_dust", icon: "dust_lead"});
+ItemRegistry.createItem("dustGold", {name: "gold_dust", icon: "dust_gold"});
+ItemRegistry.createItem("dustSilver", {name: "silver_dust", icon: "dust_silver"});
+ItemRegistry.createItem("dustStone", {name: "stone_dust", icon: "dust_stone"});
+ItemRegistry.createItem("dustCoal", {name: "coal_dust", icon: "dust_coal"});
+ItemRegistry.createItem("dustSulfur", {name: "sulfur_dust", icon: "dust_sulfur"});
+ItemRegistry.createItem("dustLapis", {name: "lapis_dust", icon: "dust_lapis"});
+ItemRegistry.createItem("dustDiamond", {name: "diamond_dust", icon: "dust_diamond"});
+ItemRegistry.createItem("dustEnergium", {name: "energium_dust", icon: "dust_energium"});
 
 Item.addCreativeGroup("dust", Translation.translate("Dusts"), [
 	ItemID.dustCopper,
@@ -59,26 +32,13 @@ Item.addCreativeGroup("dust", Translation.translate("Dusts"), [
 ]);
 
 // Small Dust
-IDRegistry.genItemID("dustSmallCopper");
-Item.createItem("dustSmallCopper", "Tiny Pile of Copper Dust", {name: "dust_copper_small"});
-
-IDRegistry.genItemID("dustSmallTin");
-Item.createItem("dustSmallTin", "Tiny Pile of Tin Dust", {name: "dust_tin_small"});
-
-IDRegistry.genItemID("dustSmallIron");
-Item.createItem("dustSmallIron", "Tiny Pile of Iron Dust", {name: "dust_iron_small"});
-
-IDRegistry.genItemID("dustSmallLead");
-Item.createItem("dustSmallLead", "Tiny Pile of Lead Dust", {name: "dust_lead_small"});
-
-IDRegistry.genItemID("dustSmallGold");
-Item.createItem("dustSmallGold", "Tiny Pile of Gold Dust", {name: "dust_gold_small"});
-
-IDRegistry.genItemID("dustSmallSilver");
-Item.createItem("dustSmallSilver", "Tiny Pile of Silver Dust", {name: "dust_silver_small"});
-
-IDRegistry.genItemID("dustSmallSulfur");
-Item.createItem("dustSmallSulfur", "Tiny Pile of Sulfur Dust", {name: "dust_sulfur_small"});
+ItemRegistry.createItem("dustSmallCopper", {name: "small_copper_dust", icon: "dust_copper_small"});
+ItemRegistry.createItem("dustSmallTin", {name: "small_tin_dust", icon: "dust_tin_small"});
+ItemRegistry.createItem("dustSmallIron", {name: "small_iron_dust", icon: "dust_iron_small"});
+ItemRegistry.createItem("dustSmallLead", {name: "small_lead_dust", icon: "dust_lead_small"});
+ItemRegistry.createItem("dustSmallGold", {name: "small_gold_dust", icon: "dust_gold_small"});
+ItemRegistry.createItem("dustSmallSilver", {name: "small_silver_dust", icon: "dust_silver_small"});
+ItemRegistry.createItem("dustSmallSulfur", {name: "small_sulfur_dust", icon: "dust_sulfur_small"});
 
 Item.addCreativeGroup("dustSmall", Translation.translate("Small Dusts"), [
 	ItemID.dustSmallCopper,

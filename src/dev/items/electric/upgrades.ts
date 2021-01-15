@@ -1,5 +1,4 @@
-IDRegistry.genItemID("upgradeOverclocker");
-Item.createItem("upgradeOverclocker", "Overclocker Upgrade", {name: "upgrade_overclocker", meta: 0});
+ItemRegistry.createItem("upgradeOverclocker", {name: "Overclocker Upgrade", icon: "upgrade_overclocker"});
 Item.registerNameOverrideFunction(ItemID.upgradeOverclocker, function(item, name) {
 	let percent = "%%%%"; // it's one % in name
 	if (currentUIscreen == "in_game_play_screen" || currentUIscreen == "world_loading_progress_screen - local_world_load") {
@@ -10,23 +9,19 @@ Item.registerNameOverrideFunction(ItemID.upgradeOverclocker, function(item, name
 	return name + "§7\n" + timeTooltip + "\n" + powerTooltip;
 });
 
-IDRegistry.genItemID("upgradeTransformer");
-Item.createItem("upgradeTransformer", "Transformer Upgrade", {name: "upgrade_transformer", meta: 0});
+ItemRegistry.createItem("upgradeTransformer", {name: "Transformer Upgrade", icon: "upgrade_transformer"});
 Item.registerNameOverrideFunction(ItemID.upgradeTransformer, function(item, name) {
 	return name + "§7\n" + Translation.translate("Increase energy tier by 1");
 });
 
-IDRegistry.genItemID("upgradeEnergyStorage");
-Item.createItem("upgradeEnergyStorage", "Energy Storage Upgrade", {name: "upgrade_energy_storage", meta: 0});
+ItemRegistry.createItem("upgradeEnergyStorage", {name: "Energy Storage Upgrade", icon: "upgrade_energy_storage"});
 Item.registerNameOverrideFunction(ItemID.upgradeEnergyStorage, function(item, name) {
 	return name + "§7\n" + Translation.translate("Increase energy storage by 10k EU");
 });
 
-IDRegistry.genItemID("upgradeRedstone");
-Item.createItem("upgradeRedstone", "Redstone Signal Inverter Upgrade", {name: "upgrade_redstone_inv", meta: 0});
+ItemRegistry.createItem("upgradeRedstone", {name: "Redstone Signal Inverter Upgrade", icon: "upgrade_redstone_inv"});
 
-IDRegistry.genItemID("upgradeEjector");
-Item.createItem("upgradeEjector", "Ejector Upgrade", {name: "upgrade_ejector", meta: 0});
+ItemRegistry.createItem("upgradeEjector", {name: "Ejector Upgrade", icon: "upgrade_ejector"});
 Item.registerNameOverrideFunction(ItemID.upgradeEjector, function(item, name) {
 	name += "§7\n" + Translation.translate("Automatically output to\nthe %s side").replace("%s", ItemName.getSideName(item.data-1));
 	return name;
@@ -35,8 +30,7 @@ Item.registerIconOverrideFunction(ItemID.upgradeEjector, function(item, name) {
 	return {name: "upgrade_ejector", meta: item.data}
 });
 
-IDRegistry.genItemID("upgradePulling");
-Item.createItem("upgradePulling", "Pulling Upgrade", {name: "upgrade_pulling", meta: 0});
+ItemRegistry.createItem("upgradePulling", {name: "Pulling Upgrade", icon: "upgrade_pulling"});
 Item.registerNameOverrideFunction(ItemID.upgradePulling, function(item, name) {
 	name += "§7\n" + Translation.translate("Automatically input from\nthe %s side").replace("%s", ItemName.getSideName(item.data-1));
 	return name;
@@ -45,8 +39,7 @@ Item.registerIconOverrideFunction(ItemID.upgradePulling, function(item, name) {
 	return {name: "upgrade_pulling", meta: item.data}
 });
 
-IDRegistry.genItemID("upgradeFluidEjector");
-Item.createItem("upgradeFluidEjector", "Fluid Ejector Upgrade", {name: "upgrade_fluid_ejector", meta: 0});
+ItemRegistry.createItem("upgradeFluidEjector", {name: "Fluid Ejector Upgrade", icon: "upgrade_fluid_ejector"});
 Item.registerNameOverrideFunction(ItemID.upgradeFluidEjector, function(item, name) {
 	name += "§7\n" + Translation.translate("Automatically output to\nthe %s side").replace("%s", ItemName.getSideName(item.data-1));
 	return name;
@@ -55,8 +48,7 @@ Item.registerIconOverrideFunction(ItemID.upgradeFluidEjector, function(item, nam
 	return {name: "upgrade_fluid_ejector", meta: item.data}
 });
 
-IDRegistry.genItemID("upgradeFluidPulling");
-Item.createItem("upgradeFluidPulling", "Fluid Pulling Upgrade", {name: "upgrade_fluid_pulling", meta: 0});
+ItemRegistry.createItem("upgradeFluidPulling", {name: "Fluid Pulling Upgrade", icon: "upgrade_fluid_pulling"});
 Item.registerNameOverrideFunction(ItemID.upgradeFluidPulling, function(item, name) {
 	name += "§7\n" + Translation.translate("Automatically input from\nthe %s side").replace("%s", ItemName.getSideName(item.data-1));
 	return name;
@@ -65,8 +57,7 @@ Item.registerIconOverrideFunction(ItemID.upgradeFluidPulling, function(item, nam
 	return {name: "upgrade_fluid_pulling", meta: item.data}
 });
 
-IDRegistry.genItemID("upgradeMFSU");
-Item.createItem("upgradeMFSU", "MFSU Upgrade Kit", {name: "mfsu_upgrade", meta: 0});
+ItemRegistry.createItem("upgradeMFSU", {name: "MFSU Upgrade Kit", icon: "mfsu_upgrade"});
 
 Item.addCreativeGroup("ic2_upgrade", Translation.translate("Machine Upgrades"), [
 	ItemID.upgradeOverclocker,

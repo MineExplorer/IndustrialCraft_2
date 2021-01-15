@@ -1,4 +1,4 @@
-ItemRegistry.createItem("craftingHammer", {name: "Forge Hammer", icon: "crafting_hammer", stack: 1, maxDamage: 80, category: ItemCategory.EQUIPMENT});
+ItemRegistry.createItem("craftingHammer", {name: "forge_hammer", icon: "crafting_hammer", stack: 1, maxDamage: 80, category: ItemCategory.EQUIPMENT});
 ItemRegistry.createItem("cutter", {name: "cutter", icon: "cutter", stack: 1, maxDamage: 60, category: ItemCategory.EQUIPMENT});
 
 // TODO: send packet to server

@@ -1,23 +1,10 @@
-IDRegistry.genItemID("ingotCopper");
-Item.createItem("ingotCopper", "Copper Ingot", {name: "ingot_copper"});
-
-IDRegistry.genItemID("ingotTin");
-Item.createItem("ingotTin", "Tin Ingot", {name: "ingot_tin"});
-
-IDRegistry.genItemID("ingotBronze");
-Item.createItem("ingotBronze", "Bronze Ingot", {name: "ingot_bronze"});
-
-IDRegistry.genItemID("ingotSteel");
-Item.createItem("ingotSteel", "Steel Ingot", {name: "ingot_steel"});
-
-IDRegistry.genItemID("ingotLead");
-Item.createItem("ingotLead", "Lead Ingot", {name: "ingot_lead"});
-
-IDRegistry.genItemID("ingotSilver");
-Item.createItem("ingotSilver", "Silver Ingot", {name: "ingot_silver"});
-
-IDRegistry.genItemID("ingotAlloy");
-Item.createItem("ingotAlloy", "Alloy Ingot", {name: "ingot_alloy"});
+ItemRegistry.createItem("ingotCopper", {name: "copper_ingot", icon: "ingot_copper"});
+ItemRegistry.createItem("ingotTin", {name: "tin_ingot", icon: "ingot_tin"});
+ItemRegistry.createItem("ingotBronze", {name: "bronze_ingot", icon: "ingot_bronze"});
+ItemRegistry.createItem("ingotSteel", {name: "steel_ingot", icon: "ingot_steel"});
+ItemRegistry.createItem("ingotLead", {name: "lead_ingot", icon: "ingot_lead"});
+ItemRegistry.createItem("ingotSilver", {name: "silver_ingot", icon: "ingot_silver"});
+ItemRegistry.createItem("ingotAlloy", {name: "alloy_ingot", icon: "ingot_alloy"});
 
 Item.addCreativeGroup("ingot", Translation.translate("Ingots"), [
 	ItemID.ingotCopper,
@@ -65,20 +52,20 @@ Callback.addCallback("PreLoaded", function() {
 	Recipes.addFurnace(ItemID.plateIron, 265, 0);
 	Recipes.addFurnace(ItemID.plateGold, 266, 0);
 	Recipes.addFurnace(ItemID.plateLead, ItemID.ingotLead, 0);
-	
+
 	Recipes.addShaped({id: ItemID.ingotAlloy, count: 2, data: 0}, [
 		"aaa",
 		"bbb",
 		"ccc"
 	], ['a', ItemID.plateSteel, 0, 'b', ItemID.plateBronze, 0, 'c', ItemID.plateTin, 0]);
-	
+
 	// alternative
 	Recipes.addShaped({id: 66, count: 12, data: 0}, [
 		"a a",
 		"axa",
 		"a a"
 	], ['x', 280, 0, 'a', ItemID.ingotBronze, 0]);
-	
+
 	Recipes.addShaped({id: 33, count: 1, data: 0}, [
 		"ppp",
 		"cbc",

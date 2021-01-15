@@ -1,9 +1,7 @@
-IDRegistry.genItemID("scrap");
-Item.createItem("scrap", "Scrap", {name: "scrap"});
+ItemRegistry.createItem("scrap", {name: "Scrap", icon: "scrap"});
 Recipes.addFurnaceFuel(ItemID.scrap, 0, 350);
 
-IDRegistry.genItemID("scrapBox");
-Item.createItem("scrapBox", "Scrap Box", {name: "scrap_box"});
+ItemRegistry.createItem("scrapBox", {name: "Scrap Box", icon: "scrap_box"});
 Recipes.addFurnaceFuel(ItemID.scrapBox, 0, 3150);
 
 Recipes.addShaped({id: ItemID.scrapBox, count: 1, data: 0}, [
@@ -11,7 +9,7 @@ Recipes.addShaped({id: ItemID.scrapBox, count: 1, data: 0}, [
 	"xxx",
 	"xxx"
 ], ['x', ItemID.scrap, 0]);
-	
+
 MachineRecipeRegistry.addRecipeFor("catalyser", ItemID.scrap, {input: 5000, output: 30000});
 MachineRecipeRegistry.addRecipeFor("catalyser", ItemID.scrapBox, {input: 45000, output: 270000});
 
@@ -67,7 +65,7 @@ function getScrapDropItem() {
 		}
 		current += drop.chance;
 	}
-	
+
 	return {id: ItemID.scrap, data: 0};
 }
 

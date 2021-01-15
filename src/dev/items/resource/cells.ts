@@ -1,33 +1,29 @@
-IDRegistry.genItemID("cellEmpty");
-Item.createItem("cellEmpty", "Cell", {name: "cell_empty"});
+/// <reference path="../ItemIC2.ts" />
+
+class ItemLiquidCell
+extends ItemIC2
+implements ItemFuncs {
+	constructor(stringID: string, liquid: string) {
+		super(stringID, `${liquid}_cell`, `cell_${liquid}`);
+		LiquidLib.registerItem(liquid, ItemID.cellEmpty, this.id, 1000);
+	}
+
+	onNameOverride(item: ItemInstance, name: string) {
+		return name + "\n§7" + (1000 - item.data) + " mB";
+	}
+}
+
+ItemRegistry.createItem("cellEmpty", {name: "empty_cell", icon: "cell_empty"});
 Item.setLiquidClip(ItemID.cellEmpty, true);
 
-IDRegistry.genItemID("cellWater");
-IDRegistry.genItemID("cellLava");
-IDRegistry.genItemID("cellBiomass");
-IDRegistry.genItemID("cellBiogas");
-IDRegistry.genItemID("cellCoolant");
-IDRegistry.genItemID("cellMatter");
-IDRegistry.genItemID("cellAir");
-Item.createItem("cellWater", "Water Cell", {name: "cell_water"});
-Item.createItem("cellLava", "Lava Cell", {name: "cell_lava"});
-Item.createItem("cellBiomass", "Biomass Cell", {name: "cell_biomass"});
-Item.createItem("cellBiogas", "Biogas Cell", {name: "cell_biogas"});
-Item.createItem("cellCoolant", "Coolant Cell", {name: "cell_coolant"});
-//Item.createItem("cellMatter", "UU-Matter Cell", {name: "cell_uu_matter"});
-Item.createItem("cellAir", "Compressed Air Cell", {name: "cell_air"});
+new ItemLiquidCell("cellWater", "water");
+new ItemLiquidCell("cellLava", "lava");
+new ItemLiquidCell("cellBiomass", "biomass");
+new ItemLiquidCell("cellBiogas", "biogas");
+new ItemLiquidCell("cellCoolant", "coolant");
+//new ItemLiquidCell("cellMatter", "uu_matter");
 
-LiquidLib.registerItem("water", ItemID.cellEmpty, ItemID.cellWater, 1000);
-LiquidLib.registerItem("lava", ItemID.cellEmpty, ItemID.cellLava, 1000);
-LiquidLib.registerItem("biomass", ItemID.cellEmpty, ItemID.cellBiomass, 1000);
-LiquidLib.registerItem("biogas", ItemID.cellEmpty, ItemID.cellBiogas, 1000);
-LiquidLib.registerItem("coolant", ItemID.cellEmpty, ItemID.cellCoolant, 1000);
-
-ItemName.addStoredLiquidTooltip(ItemID.cellWater);
-ItemName.addStoredLiquidTooltip(ItemID.cellLava);
-ItemName.addStoredLiquidTooltip(ItemID.cellBiomass);
-ItemName.addStoredLiquidTooltip(ItemID.cellBiogas);
-ItemName.addStoredLiquidTooltip(ItemID.cellCoolant);
+ItemRegistry.createItem("cellAir", {name: "air_cell", icon: "cell_air"});
 
 Item.addCreativeGroup("cells", Translation.translate("Cells"), [
 	ItemID.cellEmpty,

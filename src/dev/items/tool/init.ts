@@ -36,8 +36,8 @@ new DebugItem();
 new ItemTransmitter();
 new ItemScanner("scanner", "scanner", 10000, 100, 1);
 new ItemScanner("scannerAdvanced", "scanner_advanced", 100000, 256, 2);
-new ItemTreetap();
 
+new ItemTreetap();
 new ToolWrench("bronzeWrench", "wrench", "bronze_wrench", 0.8);
 new ElectricWrench();
 new ElectricTreetap();
@@ -55,7 +55,7 @@ Item.addCreativeGroup("ic2_drills", Translation.translate("Mining Drills"), [
 	ItemID.iridiumDrill
 ]);
 
-new NanoSaber();
+new ItemNanoSaber();
 new ItemMiningLaser();
 new ItemWeedingTrowel();
 

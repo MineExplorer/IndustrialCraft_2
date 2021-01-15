@@ -1,37 +1,28 @@
-IDRegistry.genItemID("uranium");
-Item.createItem("uranium", "Enriched Uranium", {name: "uranium"});
+ItemRegistry.createItem("uranium", {name: "Enriched Uranium", icon: "uranium"});
 RadiationAPI.regRadioactiveItem(ItemID.uranium, 60);
 
-IDRegistry.genItemID("uranium235");
-Item.createItem("uranium235", "Uranium 235", {name: "uranium235"});
+ItemRegistry.createItem("uranium235", {name: "Uranium 235", icon: "uranium235"});
 RadiationAPI.regRadioactiveItem(ItemID.uranium235, 150);
 
-IDRegistry.genItemID("smallUranium235");
-Item.createItem("smallUranium235", "Piece of Uranium 235", {name: "small_uranium235"});
+ItemRegistry.createItem("smallUranium235", {name: "Piece of Uranium 235", icon: "small_uranium235"});
 RadiationAPI.regRadioactiveItem(ItemID.smallUranium235, 150);
 
-IDRegistry.genItemID("uranium238");
-Item.createItem("uranium238", "Uranium 238", {name: "uranium238"});
+ItemRegistry.createItem("uranium238", {name: "Uranium 238", icon: "uranium238"});
 RadiationAPI.regRadioactiveItem(ItemID.uranium238, 10, true);
 
-IDRegistry.genItemID("smallUranium238");
-Item.createItem("smallUranium238", "Piece of Uranium 238", {name: "small_uranium238"});
+ItemRegistry.createItem("smallUranium238", {name: "Piece of Uranium 238", icon: "small_uranium238"});
 RadiationAPI.regRadioactiveItem(ItemID.smallUranium238, 10, true);
 
-IDRegistry.genItemID("plutonium");
-Item.createItem("plutonium", "Plutonium", {name: "plutonium"});
+ItemRegistry.createItem("plutonium", {name: "Plutonium", icon: "plutonium"});
 RadiationAPI.regRadioactiveItem(ItemID.plutonium, 150);
 
-IDRegistry.genItemID("smallPlutonium");
-Item.createItem("smallPlutonium", "Piece of Plutonium", {name: "small_plutonium"});
+ItemRegistry.createItem("smallPlutonium", {name: "Piece of Plutonium", icon: "small_plutonium"});
 RadiationAPI.regRadioactiveItem(ItemID.smallPlutonium, 150);
 
-IDRegistry.genItemID("mox");
-Item.createItem("mox", "MOX Nuclear Fuel", {name: "mox"});
+ItemRegistry.createItem("mox", {name: "MOX Nuclear Fuel", icon: "mox"});
 RadiationAPI.regRadioactiveItem(ItemID.mox, 300);
 
-IDRegistry.genItemID("rtgPellet");
-Item.createItem("rtgPellet", "Pellets of RTG Fuel", {name: "rtg_pellet"}, {stack: 1});
+ItemRegistry.createItem("rtgPellet", {name: "Pellets of RTG Fuel", icon: "rtg_pellet", stack: 1});
 RadiationAPI.regRadioactiveItem(ItemID.rtgPellet, 1, true);
 
 Item.addCreativeGroup("nuclear", Translation.translate("Nuclear"), [

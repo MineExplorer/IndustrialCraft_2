@@ -73,32 +73,32 @@ machine/resource/CropMatron.ts
 
 machine/misc/**
 
-items/resource/rubber.js
-items/resource/crushed.js
-items/resource/dust.js
-items/resource/ingot.js
-items/resource/plates.js
-items/resource/dense_plates.js
-items/resource/casing.js
-items/resource/nuclear.js
-items/resource/scrap.js
-items/resource/matter.js
-items/resource/material.js
-items/resource/liquid.js
+items/resource/rubber.ts
+items/resource/crushed.ts
+items/resource/dust.ts
+items/resource/ingot.ts
+items/resource/plates.ts
+items/resource/dense_plates.ts
+items/resource/casing.ts
+items/resource/nuclear.ts
+items/resource/scrap.ts
+items/resource/matter.ts
+items/resource/material.ts
+items/resource/liquid.ts
 items/resource/cells.ts
-items/resource/waste.js
+items/resource/waste.ts
 
-items/crop/crop_seed_bag.js
-items/crop/crop_cards.js
-items/crop/crop_stick.js
-items/crop/crop_utils.js
-items/crop/crop_items.js
-items/crop/coffee_beans.js
+items/crop/crop_seed_bag.ts
+items/crop/crop_cards.ts
+items/crop/crop_stick.ts
+items/crop/crop_utils.ts
+items/crop/crop_items.ts
+items/crop/coffee_beans.ts
 
-items/food/terra_wart.js
-items/food/mug.js
+items/food/terra_wart.ts
+items/food/mug.ts
 items/food/coffee.js
-items/food/can.js
+items/food/can.ts
 
 items/electric/cable.ts
 items/electric/components.ts

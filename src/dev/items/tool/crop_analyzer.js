@@ -1,4 +1,4 @@
-ItemRegistry.createItem("agriculturalAnalyzer", {name: "Crop Analyzer", icon: "cropnalyzer", stack: 1, category: ItemCategory.EQUIPMENT});
+ItemRegistry.createItem("agriculturalAnalyzer", {name: "crop_analyzer", icon: "cropnalyzer", stack: 1, category: ItemCategory.EQUIPMENT});
 
 var guiAddConst = 14;
 var guiAnalyserObject = {

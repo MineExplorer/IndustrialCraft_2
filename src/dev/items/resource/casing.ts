@@ -1,23 +1,10 @@
-IDRegistry.genItemID("casingCopper");
-Item.createItem("casingCopper", "Copper Casing", {name: "casing_copper"});
-
-IDRegistry.genItemID("casingTin");
-Item.createItem("casingTin", "Tin Casing", {name: "casing_tin"});
-
-IDRegistry.genItemID("casingBronze");
-Item.createItem("casingBronze", "Bronze Casing", {name: "casing_bronze"});
-
-IDRegistry.genItemID("casingIron");
-Item.createItem("casingIron", "Iron Casing", {name: "casing_iron"});
-
-IDRegistry.genItemID("casingSteel");
-Item.createItem("casingSteel", "Steel Casing", {name: "casing_steel"});
-
-IDRegistry.genItemID("casingGold");
-Item.createItem("casingGold", "Gold Casing", {name: "casing_gold"});
-
-IDRegistry.genItemID("casingLead");
-Item.createItem("casingLead", "Lead Casing", {name: "casing_lead"});
+ItemRegistry.createItem("casingCopper", {name: "copper_casing", icon: "casing_copper"});
+ItemRegistry.createItem("casingTin", {name: "tin_casing", icon: "casing_tin"});
+ItemRegistry.createItem("casingBronze", {name: "bronze_casing", icon: "casing_bronze"});
+ItemRegistry.createItem("casingIron", {name: "iron_casing", icon: "casing_iron"});
+ItemRegistry.createItem("casingSteel", {name: "steel_casing", icon: "casing_steel"});
+ItemRegistry.createItem("casingGold", {name: "gold_casing", icon: "casing_gold"});
+ItemRegistry.createItem("casingLead", {name: "lead_casing", icon: "casing_lead"});
 
 // creative group
 Item.addCreativeGroup("casingMetal", Translation.translate("Metal Casings"), [

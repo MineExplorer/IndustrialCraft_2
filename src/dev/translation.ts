@@ -94,7 +94,6 @@ Translation.addTranslation("Bio Chaff", {ru: "Отходы", pt: "Bio-Produto", 
 Translation.addTranslation("Scrap", {ru: "Утильсырьё", es: "Chatarra", pt: "Sucata", zh: "废料"});
 Translation.addTranslation("Scrap Box", {ru: "Коробка утильсырья", es: "Caja de Chatarra", pt: "Caixa de Sucata", zh: "废料盒"});
 Translation.addTranslation("UU-Matter", {ru: "Материя", es: "Materia", pt: "Metéria UU", zh: "UU物质"});
-Translation.addTranslation("Heat Conductor", {ru: "Теплопроводник ", es: "Conductor de calor", pt: "Condutor de Calor", zh: "热传导器"});
 Translation.addTranslation("Coal Ball", {ru: "Угольный шарик", es: "Bola de Carbón", pt: "Bola de Carvão", zh: "煤球"});
 Translation.addTranslation("Coal Block", {ru: "Сжатый угольный шарик", es: "Bola de Carbón Compactada", pt: "Bola de Carvão Comprimido", zh: "压缩煤球"});
 Translation.addTranslation("Coal Chunk", {ru: "Угольная глыба", es: "Carbono Bruto", zh: "煤块", pt: "Pedaço de Carvão"});
@@ -152,13 +151,14 @@ Translation.addTranslation("Overclocked Heat Vent", {ru: "Разогнанный
 Translation.addTranslation("RSH-Condensator", {ru: "Красный конденсатор", es: "RSH-Condensador", pt: "Condensador de Calor de Redstone (CCR)", zh: "红石冷凝模块"});
 Translation.addTranslation("LZH-Condensator", {ru: "Лазуритовый конденсатор", es: "LZH-Condensador", pt: "Condensador de Calor de Lápis-Lazúli (CCL)", zh: "青金石冷凝模块"});
 
-// Electric Components
-Translation.addTranslation("Electronic Circuit", {ru: "Электросхема", es: "Circuito Electrónico", pt: "Circuito Eletrônico", zh: "电路板"});
-Translation.addTranslation("Advanced Circuit", {ru: "Улучшенная электросхема", es: "Circuito Avanzado", pt: "Circuito Avançado", zh: "高级电路板"});
-Translation.addTranslation("Coil", {ru: "Катушка", es: "Bobina", pt: "Bobina", zh: "线圈"});
-Translation.addTranslation("Electric Motor", {ru: "Электромотор", es: "Motor Eléctrico", pt: "Motor Elétrico", zh: "电动马达"});
-Translation.addTranslation("Power Unit", {ru: "Силовой агрегат", es: "Unidad de Potencia", pt: "Motor", zh: "驱动把手"});
-Translation.addTranslation("Small Power Unit", {ru: "Малый силовой агрегат", es: "Pequeña Unidad de Potencia", pt: "Motor Pequeno", zh: "小型驱动把手"});
+// Crafting Components
+Translation.addTranslation("electronic_circuit", {en: "Electronic Circuit", ru: "Электросхема", es: "Circuito Electrónico", pt: "Circuito Eletrônico", zh: "电路板"});
+Translation.addTranslation("advanced_circuit", {en: "Advanced Circuit", ru: "Улучшенная электросхема", es: "Circuito Avanzado", pt: "Circuito Avançado", zh: "高级电路板"});
+Translation.addTranslation("coil", {en: "Coil", ru: "Катушка", es: "Bobina", pt: "Bobina", zh: "线圈"});
+Translation.addTranslation("electric_motor", {en: "Electric Motor", ru: "Электромотор", es: "Motor Eléctrico", pt: "Motor Elétrico", zh: "电动马达"});
+Translation.addTranslation("power_unit", {en: "Power Unit", ru: "Силовой агрегат", es: "Unidad de Potencia", pt: "Motor", zh: "驱动把手"});
+Translation.addTranslation("small_power_unit", {en: "Small Power Unit", ru: "Малый силовой агрегат", es: "Pequeña Unidad de Potencia", pt: "Motor Pequeno", zh: "小型驱动把手"});
+Translation.addTranslation("heat_conductor", {en: "Heat Conductor", ru: "Теплопроводник ", es: "Conductor de calor", pt: "Condutor de Calor", zh: "热传导器"});
 
 // Energy Storage
 Translation.addTranslation("re_battery", {en: "RE-Battery", ru: "Аккумулятор", es: "Batería Recargable", pt: "Bateria Reutilizável", zh: "充电电池"});
@@ -182,84 +182,84 @@ Translation.addTranslation("Fluid Ejector Upgrade", {ru: "Улучшение «�
 Translation.addTranslation("Fluid Pulling Upgrade", {ru: "Улучшение «Загрузчик жидкости»", es: "Mejora Traccion de Líquidos", pt: "Melhoria: Injeção de Fluidos Avançada", zh: "流体抽入升级"});
 
 // Crushed Ore
-Translation.addTranslation("Crushed Copper Ore", {ru: "Измельчённая медная руда", es: "Mineral de Cobre Triturado", pt: "Minério de Cobre Triturado", zh: "粉碎铜矿石"});
-Translation.addTranslation("Crushed Tin Ore", {ru: "Измельчённая оловянная руда", es: "Mineral de Estaño Triturado", pt: "Minério de Estanho Triturado", zh: "粉碎锡矿石"});
-Translation.addTranslation("Crushed Iron Ore", {ru: "Измельчённая железная руда", es: "Mineral de Hierro Triturado", pt: "Minério de Ferro Triturado", zh: "粉碎铁矿石"});
-Translation.addTranslation("Crushed Lead Ore", {ru: "Измельчённая свинцовая руда", es: "Mineral de Plomo Triturado", pt: "Minério de Chumbo Triturado", zh: "粉碎铅矿石"});
-Translation.addTranslation("Crushed Gold Ore", {ru: "Измельчённая золотая руда", es: "Mineral de Oro Triturado", pt: "Minério de Ouro Triturado", zh: "粉碎金矿石"});
-Translation.addTranslation("Crushed Silver Ore", {ru: "Измельчённая серебряная руда", es: "Mineral de Plata Triturado", pt: "Minério de Prata Triturado", zh: "粉碎银矿石"});
-Translation.addTranslation("Crushed Uranium Ore", {ru: "Измельчённая урановая руда", es: "Mineral de Uranio Triturado", pt: "Minério de Urânio Triturado", zh: "粉碎铀矿石"});
+Translation.addTranslation("crushed_copper_ore", {en: "Crushed Copper Ore", ru: "Измельчённая медная руда", es: "Mineral de Cobre Triturado", pt: "Minério de Cobre Triturado", zh: "粉碎铜矿石"});
+Translation.addTranslation("crushed_tin_ore", {en: "Crushed Tin Ore", ru: "Измельчённая оловянная руда", es: "Mineral de Estaño Triturado", pt: "Minério de Estanho Triturado", zh: "粉碎锡矿石"});
+Translation.addTranslation("crushed_iron_ore", {en: "Crushed Iron Ore", ru: "Измельчённая железная руда", es: "Mineral de Hierro Triturado", pt: "Minério de Ferro Triturado", zh: "粉碎铁矿石"});
+Translation.addTranslation("crushed_lead_ore", {en: "Crushed Lead Ore", ru: "Измельчённая свинцовая руда", es: "Mineral de Plomo Triturado", pt: "Minério de Chumbo Triturado", zh: "粉碎铅矿石"});
+Translation.addTranslation("crushed_gold_ore", {en: "Crushed Gold Ore", ru: "Измельчённая золотая руда", es: "Mineral de Oro Triturado", pt: "Minério de Ouro Triturado", zh: "粉碎金矿石"});
+Translation.addTranslation("crushed_silver_ore", {en: "Crushed Silver Ore", ru: "Измельчённая серебряная руда", es: "Mineral de Plata Triturado", pt: "Minério de Prata Triturado", zh: "粉碎银矿石"});
+Translation.addTranslation("crushed_uranium_ore", {en: "Crushed Uranium Ore", ru: "Измельчённая урановая руда", es: "Mineral de Uranio Triturado", pt: "Minério de Urânio Triturado", zh: "粉碎铀矿石"});
 
 // Purified Ore
-Translation.addTranslation("Purified Crushed Copper Ore", {ru: "Очищенная измельчённая медная руда", es: "Mineral de Cobre Triturado y Purificado", pt: "Minério Purificado de Cobre Triturado", zh: "纯净的粉碎铜矿石"});
-Translation.addTranslation("Purified Crushed Tin Ore", {ru: "Очищенная измельчённая оловянная руда", es: "Mineral de Estaño Triturado y Purificado", pt: "Minério Purificado de Estanho Triturado", zh: "纯净的粉碎锡矿石"});
-Translation.addTranslation("Purified Crushed Iron Ore", {ru: "Очищенная измельчённая железная руда", es: "Mineral de Hierro Triturado y Purificado", pt: "Minério Purificado de Ferro Triturado", zh: "纯净的粉碎铁矿石"});
-Translation.addTranslation("Purified Crushed Lead Ore", {ru: "Очищенная измельчённая свинцовая руда", es: "Mineral de Plomo Triturado y Purificado", pt: "Minério Purificado de Chumbo Triturado", zh: "纯净的粉碎铅矿石"});
-Translation.addTranslation("Purified Crushed Gold Ore", {ru: "Очищенная измельчённая золотая руда", es: "Mineral de Oro Triturado y Purificado", pt: "Minério Purificado de Ouro Triturado", zh: "纯净的粉碎金矿石"});
-Translation.addTranslation("Purified Crushed Silver Ore", {ru: "Очищенная измельчённая серебряная руда", es: "Mineral de Plata Triturado y Purificado", pt: "Minério Purificado de Prata Triturada", zh: "纯净的粉碎银矿石"});
-Translation.addTranslation("Purified Crushed Uranium Ore", {ru: "Очищенная измельчённая урановая руда", es: "Mineral de Uranio Triturado y Purificado", pt: "Minério Purificado de Urânio Triturado", zh: "纯净的粉碎铀矿石"});
+Translation.addTranslation("purified_copper_ore", {en: "Purified Crushed Copper Ore", ru: "Очищенная измельчённая медная руда", es: "Mineral de Cobre Triturado y Purificado", pt: "Minério Purificado de Cobre Triturado", zh: "纯净的粉碎铜矿石"});
+Translation.addTranslation("purified_tin_ore", {en: "Purified Crushed Tin Ore", ru: "Очищенная измельчённая оловянная руда", es: "Mineral de Estaño Triturado y Purificado", pt: "Minério Purificado de Estanho Triturado", zh: "纯净的粉碎锡矿石"});
+Translation.addTranslation("purified_iron_ore", {en: "Purified Crushed Iron Ore", ru: "Очищенная измельчённая железная руда", es: "Mineral de Hierro Triturado y Purificado", pt: "Minério Purificado de Ferro Triturado", zh: "纯净的粉碎铁矿石"});
+Translation.addTranslation("purified_lead_ore", {en: "Purified Crushed Lead Ore", ru: "Очищенная измельчённая свинцовая руда", es: "Mineral de Plomo Triturado y Purificado", pt: "Minério Purificado de Chumbo Triturado", zh: "纯净的粉碎铅矿石"});
+Translation.addTranslation("purified_gold_ore", {en: "Purified Crushed Gold Ore", ru: "Очищенная измельчённая золотая руда", es: "Mineral de Oro Triturado y Purificado", pt: "Minério Purificado de Ouro Triturado", zh: "纯净的粉碎金矿石"});
+Translation.addTranslation("purified_silver_ore", {en: "Purified Crushed Silver Ore", ru: "Очищенная измельчённая серебряная руда", es: "Mineral de Plata Triturado y Purificado", pt: "Minério Purificado de Prata Triturada", zh: "纯净的粉碎银矿石"});
+Translation.addTranslation("purified_uranium_ore", {en: "Purified Crushed Uranium Ore", ru: "Очищенная измельчённая урановая руда", es: "Mineral de Uranio Triturado y Purificado", pt: "Minério Purificado de Urânio Triturado", zh: "纯净的粉碎铀矿石"});
 
 // Dusts
-Translation.addTranslation("Copper Dust", {ru: "Медная пыль", es: "Polvo de Cobre", pt: "Pó de Cobre", zh: "铜粉"});
-Translation.addTranslation("Tin Dust", {ru: "Оловянная пыль", es: "Polvo de Estaño", pt: "Pó de Estanho", zh: "锡粉"});
-Translation.addTranslation("Bronze Dust", {ru: "Бронзовая пыль", es: "Polvo de Bronce", pt: "Pó de Bronze", zh: "青铜粉"});
-Translation.addTranslation("Iron Dust", {ru: "Железная пыль", es: "Polvo de Hierro", pt: "Pó de Ferro", zh: "铁粉"});
-Translation.addTranslation("Steel Dust", {ru: "Стальная пыль", es: "Polvo de Acero", pt: "Pó de Aço", zh: "钢粉"});
-Translation.addTranslation("Lead Dust", {ru: "Свинцовая пыль", es: "Polvo de Plomo", pt: "Pó de Chumbo", zh: "铅粉"});
-Translation.addTranslation("Gold Dust", {ru: "Золотая пыль", es: "Polvo de Oro", pt: "Pó de Ouro", zh: "金粉"});
-Translation.addTranslation("Silver Dust", {ru: "Серебряная пыль", es: "Polvo de Plata", pt: "Pó de Prata", zh: "银粉"});
-Translation.addTranslation("Stone Dust", {ru: "Каменная пыль", es: "Polvo de Piedra", pt: "Pó de Pedra", zh: "石粉"});
-Translation.addTranslation("Coal Dust", {ru: "Угольная пыль", es: "Polvo de Carbón", pt: "Pó de Carvão", zh: "煤粉"});
-Translation.addTranslation("Sulfur Dust", {ru: "Серная пыль", es: "Polvo de Sulfuro", pt: "Pó de Enxofre", zh: "硫粉"});
-Translation.addTranslation("Lapis Dust", {ru: "Лазуритовая пыль", es: "Polvo de Lapislázuli", pt: "Pó de Lápis-Lazúli", zh: "青金石粉"});
-Translation.addTranslation("Diamond Dust", {ru: "Алмазная пыль", es: "Polvo de Diamante", pt: "Pó de Diamante", zh: "钻石粉"});
-Translation.addTranslation("Energium Dust", {ru: "Энергетическая пыль", es: "Polvo de Energium", pt: "Pó de Enérgio", zh: "能量水晶粉"});
+Translation.addTranslation("copper_dust", {en: "Copper Dust", ru: "Медная пыль", es: "Polvo de Cobre", pt: "Pó de Cobre", zh: "铜粉"});
+Translation.addTranslation("tin_dust", {en: "Tin Dust", ru: "Оловянная пыль", es: "Polvo de Estaño", pt: "Pó de Estanho", zh: "锡粉"});
+Translation.addTranslation("bronze_dust", {en: "Bronze Dust", ru: "Бронзовая пыль", es: "Polvo de Bronce", pt: "Pó de Bronze", zh: "青铜粉"});
+Translation.addTranslation("iron_dust", {en: "Iron Dust", ru: "Железная пыль", es: "Polvo de Hierro", pt: "Pó de Ferro", zh: "铁粉"});
+Translation.addTranslation("steel_dust", {en: "Steel Dust", ru: "Стальная пыль", es: "Polvo de Acero", pt: "Pó de Aço", zh: "钢粉"});
+Translation.addTranslation("lead_dust", {en: "Lead Dust", ru: "Свинцовая пыль", es: "Polvo de Plomo", pt: "Pó de Chumbo", zh: "铅粉"});
+Translation.addTranslation("gold_dust", {en: "Gold Dust", ru: "Золотая пыль", es: "Polvo de Oro", pt: "Pó de Ouro", zh: "金粉"});
+Translation.addTranslation("silver_dust", {en: "Silver Dust", ru: "Серебряная пыль", es: "Polvo de Plata", pt: "Pó de Prata", zh: "银粉"});
+Translation.addTranslation("stone_dust", {en: "Stone Dust", ru: "Каменная пыль", es: "Polvo de Piedra", pt: "Pó de Pedra", zh: "石粉"});
+Translation.addTranslation("coal_dust", {en: "Coal Dust", ru: "Угольная пыль", es: "Polvo de Carbón", pt: "Pó de Carvão", zh: "煤粉"});
+Translation.addTranslation("sulfur_dust", {en: "Sulfur Dust", ru: "Серная пыль", es: "Polvo de Sulfuro", pt: "Pó de Enxofre", zh: "硫粉"});
+Translation.addTranslation("lapis_dust", {en: "Lapis Dust", ru: "Лазуритовая пыль", es: "Polvo de Lapislázuli", pt: "Pó de Lápis-Lazúli", zh: "青金石粉"});
+Translation.addTranslation("diamond_dust", {en: "Diamond Dust", ru: "Алмазная пыль", es: "Polvo de Diamante", pt: "Pó de Diamante", zh: "钻石粉"});
+Translation.addTranslation("energium_dust", {en: "Energium Dust", ru: "Энергетическая пыль", es: "Polvo de Energium", pt: "Pó de Enérgio", zh: "能量水晶粉"});
 
 // Small Dusts
-Translation.addTranslation("Tiny Pile of Copper Dust", {ru: "Небольшая кучка медной пыли", es: "Diminuta Pila de Polvo de Cobre", pt: "Pequena Pilha de Pó de Cobre", zh: "小撮铜粉"});
-Translation.addTranslation("Tiny Pile of Tin Dust", {ru: "Небольшая кучка оловянной пыли", es: "Diminuta Pila de Polvo de Estaño", pt: "Pequena Pilha de Pó de Estanho", zh: "小撮锡粉"});
-Translation.addTranslation("Tiny Pile of Iron Dust", {ru: "Небольшая кучка железной пыли", es: "Diminuta Pila de Polvo de Hierro", pt: "Pequena Pilha de Pó de Ferro", zh: "小撮铁粉"});
-Translation.addTranslation("Tiny Pile of Gold Dust", {ru: "Небольшая кучка золотой пыли", es: "Diminuta Pila de Polvo de Oro", pt: "Pequena Pilha de Pó de Ouro", zh: "小撮金粉"});
-Translation.addTranslation("Tiny Pile of Lead Dust", {ru: "Небольшая кучка свинцовой пыли", es: "Diminuta Pila de Polvo de Plomo", pt: "Pequena Pilha de Pó de Chumbo", zh: "小撮铅粉"});
-Translation.addTranslation("Tiny Pile of Silver Dust", {ru: "Небольшая кучка серебряной пыли", es: "Diminuta Pila de Polvo de Plata", pt: "Pequena Pilha de Pó de Prata", zh: "小撮银粉"});
-Translation.addTranslation("Tiny Pile of Sulfur Dust", {ru: "Небольшая кучка серной пыли", es: "Diminuta Pila de Polvo de Sulfuro", pt: "Pequena Pilha de Pó de Enxofre", zh: "小撮硫粉"});
+Translation.addTranslation("small_copper_dust", {en: "Tiny Pile of Copper Dust", ru: "Небольшая кучка медной пыли", es: "Diminuta Pila de Polvo de Cobre", pt: "Pequena Pilha de Pó de Cobre", zh: "小撮铜粉"});
+Translation.addTranslation("small_tin_dust", {en: "Tiny Pile of Tin Dust", ru: "Небольшая кучка оловянной пыли", es: "Diminuta Pila de Polvo de Estaño", pt: "Pequena Pilha de Pó de Estanho", zh: "小撮锡粉"});
+Translation.addTranslation("small_iron_dust", {en: "Tiny Pile of Iron Dust", ru: "Небольшая кучка железной пыли", es: "Diminuta Pila de Polvo de Hierro", pt: "Pequena Pilha de Pó de Ferro", zh: "小撮铁粉"});
+Translation.addTranslation("small_lead_dust", {en: "Tiny Pile of Lead Dust", ru: "Небольшая кучка свинцовой пыли", es: "Diminuta Pila de Polvo de Plomo", pt: "Pequena Pilha de Pó de Chumbo", zh: "小撮铅粉"});
+Translation.addTranslation("small_gold_dust", {en: "Tiny Pile of Gold Dust", ru: "Небольшая кучка золотой пыли", es: "Diminuta Pila de Polvo de Oro", pt: "Pequena Pilha de Pó de Ouro", zh: "小撮金粉"});
+Translation.addTranslation("small_silver_dust", {en: "Tiny Pile of Silver Dust", ru: "Небольшая кучка серебряной пыли", es: "Diminuta Pila de Polvo de Plata", pt: "Pequena Pilha de Pó de Prata", zh: "小撮银粉"});
+Translation.addTranslation("small_sulfur_dust", {en: "Tiny Pile of Sulfur Dust", ru: "Небольшая кучка серной пыли", es: "Diminuta Pila de Polvo de Sulfuro", pt: "Pequena Pilha de Pó de Enxofre", zh: "小撮硫粉"});
 
 // Ingots
-Translation.addTranslation("Copper Ingot", {ru: "Медный слиток", es: "Lingote de Cobre", pt: "Lingote de Cobre", zh: "铜锭"});
-Translation.addTranslation("Tin Ingot", {ru: "Оловянный слиток", es: "Lingote de Estaño", pt: "Lingote de Estanho", zh: "锡锭"});
-Translation.addTranslation("Bronze Ingot", {ru: "Бронзовый слиток", es: "Lingote de Bronce", pt: "Lingote de Bronze", zh: "青铜锭"});
-Translation.addTranslation("Steel Ingot", {ru: "Стальной слиток", es: "Lingote de Acero", pt: "Lingote de Aço", zh: "钢锭"});
-Translation.addTranslation("Lead Ingot", {ru: "Свинцовый слиток", es: "Lingote de Plomo", pt: "Lingote de Chumbo", zh: "铅锭"});
-Translation.addTranslation("Silver Ingot", {ru: "Серебрянный слиток", es: "Lingote de Plata", pt: "Lingote de Prata", zh: "银锭"});
-Translation.addTranslation("Alloy Ingot", {ru: "Композитный слиток", es: "Lingote de Metal Compuesto", pt: "Lingote de Liga Metálica", zh: "合金锭"});
+Translation.addTranslation("copper_ingor", {en: "Copper Ingot", ru: "Медный слиток", es: "Lingote de Cobre", pt: "Lingote de Cobre", zh: "铜锭"});
+Translation.addTranslation("tin_ingot", {en: "Tin Ingot", ru: "Оловянный слиток", es: "Lingote de Estaño", pt: "Lingote de Estanho", zh: "锡锭"});
+Translation.addTranslation("bronze_ingot", {en: "Bronze Ingot", ru: "Бронзовый слиток", es: "Lingote de Bronce", pt: "Lingote de Bronze", zh: "青铜锭"});
+Translation.addTranslation("steel_ingot", {en: "Steel Ingot", ru: "Стальной слиток", es: "Lingote de Acero", pt: "Lingote de Aço", zh: "钢锭"});
+Translation.addTranslation("lead_ingot", {en: "Lead Ingot", ru: "Свинцовый слиток", es: "Lingote de Plomo", pt: "Lingote de Chumbo", zh: "铅锭"});
+Translation.addTranslation("silver_ingot", {en: "Silver Ingot", ru: "Серебрянный слиток", es: "Lingote de Plata", pt: "Lingote de Prata", zh: "银锭"});
+Translation.addTranslation("alloy_ingot", {en: "Alloy Ingot", ru: "Композитный слиток", es: "Lingote de Metal Compuesto", pt: "Lingote de Liga Metálica", zh: "合金锭"});
 
 // Plates
-Translation.addTranslation("Copper Plate", {ru: "Медная пластина", es: "Placa de Cobre", pt: "Placa de Cobre", zh: "铜板"});
-Translation.addTranslation("Tin Plate", {ru: "Оловянная пластина", es: "Placa de Estaño", pt: "Placa de Estanho", zh: "锡板"});
-Translation.addTranslation("Iron Plate", {ru: "Железная пластина", es: "Placa de Hierro", pt: "Placa de Ferro", zh: "铁板"});
-Translation.addTranslation("Bronze Plate", {ru: "Бронзовая пластина", es: "Placa de Bronce", pt: "Placa de Bronze", zh: "青铜板"});
-Translation.addTranslation("Steel Plate", {ru: "Стальная пластина", es: "Placa de Hierro Refinado", pt: "Placa de Aço", zh: "钢板"});
-Translation.addTranslation("Gold Plate", {ru: "Золотая пластина", es: "Placa de Oro", pt: "Placa de Ouro", zh: "金板"});
-Translation.addTranslation("Lapis Plate", {ru: "Лазуритовая пластина", es: "Placa de Lapislázuli", pt: "Placa de Lápis-Lazúli", zh: "青金石板"});
-Translation.addTranslation("Lead Plate", {ru: "Свинцовая пластина", es: "Placa de Plomo", pt: "Placa de Chumbo", zh: "铅板"});
+Translation.addTranslation("copper_plate", {en: "Copper Plate", ru: "Медная пластина", es: "Placa de Cobre", pt: "Placa de Cobre", zh: "铜板"});
+Translation.addTranslation("tin_plate", {en: "Tin Plate", ru: "Оловянная пластина", es: "Placa de Estaño", pt: "Placa de Estanho", zh: "锡板"});
+Translation.addTranslation("bronze_plate", {en: "Bronze Plate", ru: "Бронзовая пластина", es: "Placa de Bronce", pt: "Placa de Bronze", zh: "青铜板"});
+Translation.addTranslation("iron_plate", {en: "Iron Plate", ru: "Железная пластина", es: "Placa de Hierro", pt: "Placa de Ferro", zh: "铁板"});
+Translation.addTranslation("steel_plate", {en: "Steel Plate", ru: "Стальная пластина", es: "Placa de Hierro Refinado", pt: "Placa de Aço", zh: "钢板"});
+Translation.addTranslation("gold_plate", {en: "Gold Plate", ru: "Золотая пластина", es: "Placa de Oro", pt: "Placa de Ouro", zh: "金板"});
+Translation.addTranslation("lapis_plate", {en: "Lapis Plate", ru: "Лазуритовая пластина", es: "Placa de Lapislázuli", pt: "Placa de Lápis-Lazúli", zh: "青金石板"});
+Translation.addTranslation("lead_plate", {en: "Lead Plate", ru: "Свинцовая пластина", es: "Placa de Plomo", pt: "Placa de Chumbo", zh: "铅板"});
 
 // Dense Plates
-Translation.addTranslation("Dense Copper Plate", {ru: "Плотная медная пластина", es: "Placa de Cobre Denso", pt: "Placa Densa de Cobre", zh: "致密铜板"});
-Translation.addTranslation("Dense Tin Plate", {ru: "Плотная оловянная пластина", es: "Placa Densa de Estaño", pt: "Placa Densa de Estanho", zh: "致密锡板"});
-Translation.addTranslation("Dense Iron Plate", {ru: "Плотная железная пластина", es: "Placa Densa de Hierro", pt: "Placa Densa de Ferro", zh: "致密铁板"});
-Translation.addTranslation("Dense Bronze Plate", {ru: "Плотная бронзовая пластина", es: "Placa de Bronce Densa", pt: "Placa Densa de Bronze", zh: "致密青铜板"});
-Translation.addTranslation("Dense Steel Plate", {ru: "Плотная стальная пластина", es: "Placa de Hierro Refinado Denso", pt: "Placa Densa de Aço", zh: "致密钢板"});
-Translation.addTranslation("Dense Gold Plate", {ru: "Плотная золотая пластина", es: "Placa Densa de Oro", pt: "Placa Densa de Ouro", zh: "致密金板"});
-Translation.addTranslation("Dense Lead Plate", {ru: "Плотная свинцовая пластина", es: "Placa Densa de Plomo", pt: "Placa Densa de Chumbo", zh: "致密铅板"});
+Translation.addTranslation("dense_copper_plate", {en: "Dense Copper Plate", ru: "Плотная медная пластина", es: "Placa de Cobre Denso", pt: "Placa Densa de Cobre", zh: "致密铜板"});
+Translation.addTranslation("dense_tin_plate", {en: "Dense Tin Plate", ru: "Плотная оловянная пластина", es: "Placa Densa de Estaño", pt: "Placa Densa de Estanho", zh: "致密锡板"});
+Translation.addTranslation("dense_bronze_plate", {en: "Dense Bronze Plate", ru: "Плотная бронзовая пластина", es: "Placa de Bronce Densa", pt: "Placa Densa de Bronze", zh: "致密青铜板"});
+Translation.addTranslation("dense_iron_plate", {en: "Dense Iron Plate", ru: "Плотная железная пластина", es: "Placa Densa de Hierro", pt: "Placa Densa de Ferro", zh: "致密铁板"});
+Translation.addTranslation("dense_steel_plate", {en: "Dense Steel Plate", ru: "Плотная стальная пластина", es: "Placa de Hierro Refinado Denso", pt: "Placa Densa de Aço", zh: "致密钢板"});
+Translation.addTranslation("dense_gold_plate", {en: "Dense Gold Plate", ru: "Плотная золотая пластина", es: "Placa Densa de Oro", pt: "Placa Densa de Ouro", zh: "致密金板"});
+Translation.addTranslation("dense_lead_plate", {en: "Dense Lead Plate", ru: "Плотная свинцовая пластина", es: "Placa Densa de Plomo", pt: "Placa Densa de Chumbo", zh: "致密铅板"});
 
 // Casings
-Translation.addTranslation("Copper Casing", {ru: "Медная оболочка", es: "Carcasa para Objetos de Cobre", pt: "Invólucro de Cobre", zh: "铜质外壳"});
-Translation.addTranslation("Tin Casing", {ru: "Оловянная оболочка", es: "Carcasa para Objetos de Estaño", pt: "Invólucro de Estanho", zh: "锡质外壳"});
-Translation.addTranslation("Iron Casing", {ru: "Железная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Ferro", zh: "铁质外壳"});
-Translation.addTranslation("Bronze Casing", {ru: "Бронзовая оболочка", es: "Carcasa para Objetos de Bronce", pt: "Invólucro de Bronze", zh: "青铜外壳"});
-Translation.addTranslation("Steel Casing", {ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Aço", zh: "钢质外壳"});
-Translation.addTranslation("Gold Casing", {ru: "Золотая оболочка", es: "Carcasa para Objetos de Oro", pt: "Invólucro de Ouro", zh: "黄金外壳"});
-Translation.addTranslation("Lead Casing", {ru: "Свинцовая оболочка", es: "Carcasa para Objetos de Plomo", pt: "Invólucro de Chumbo", zh: "铅质外壳"});
+Translation.addTranslation("copper_casing", {en: "Copper Casing", ru: "Медная оболочка", es: "Carcasa para Objetos de Cobre", pt: "Invólucro de Cobre", zh: "铜质外壳"});
+Translation.addTranslation("tin_casing", {en: "Tin Casing", ru: "Оловянная оболочка", es: "Carcasa para Objetos de Estaño", pt: "Invólucro de Estanho", zh: "锡质外壳"});
+Translation.addTranslation("bronze_casing", {en: "Bronze Casing", ru: "Бронзовая оболочка", es: "Carcasa para Objetos de Bronce", pt: "Invólucro de Bronze", zh: "青铜外壳"});
+Translation.addTranslation("iron_casing", {en: "Iron Casing", ru: "Железная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Ferro", zh: "铁质外壳"});
+Translation.addTranslation("steel_casing", {en: "Steel Casing", ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Aço", zh: "钢质外壳"});
+Translation.addTranslation("gold_casing", {en: "Gold Casing", ru: "Золотая оболочка", es: "Carcasa para Objetos de Oro", pt: "Invólucro de Ouro", zh: "黄金外壳"});
+Translation.addTranslation("lead_casing", {en: "Lead Casing", ru: "Свинцовая оболочка", es: "Carcasa para Objetos de Plomo", pt: "Invólucro de Chumbo", zh: "铅质外壳"});
 
 // Cans
 Translation.addTranslation("Tin Can", {ru: "Консервная банка", es: "Lata de Estaño", pt: "Lata de Estanho", zh: "锡罐(空)"});
@@ -267,28 +267,28 @@ Translation.addTranslation("Filled Tin Can", {ru: "Заполненная кон
 Translation.addTranslation("This looks bad...", {ru: "Это выглядит несъедобно…", pt: "Isso parece ruim ...", zh: "这看起来很糟糕..."});
 
 // Cells
-Translation.addTranslation("Cell", {ru: "Капсула", es: "Celda Vacía", pt: "Célula Universal de Fluidos", zh: "空单元"});
-Translation.addTranslation("Water Cell", {ru: "Капсула с водой", es: "Celda de Agua", pt: "Célula com Água", zh: "水单元"});
-Translation.addTranslation("Lava Cell", {ru: "Капсула с лавой", es: "Celda de Lava", pt: "Célula com Lava", zh: "岩浆单元"});
-Translation.addTranslation("Biomass Cell", {ru: "Капсула биомассы", es: "Celda de Biomasa", pt: "Célula com Biomassa", zh: "生物质单元"});
-Translation.addTranslation("Biogas Cell", {ru: "Капсула биогаза", pt: "Célula com Biogás", zh: "沼气单元"});
-Translation.addTranslation("Coolant Cell", {ru: "Капсула хладагента", es: "Celda de Refrigerante", pt: "Célula com Líquido Refrigerante", zh: "冷却液单元"});
-Translation.addTranslation("UU-Matter Cell", {ru: "Капсула жидкой материи", es: "Celda de Materia UU", pt: "Célula com Matéria UU", zh: "UU物质单元"});
-Translation.addTranslation("Compressed Air Cell", {ru: "Капсула со сжатым воздухом", es: "Celda de Aire Comprimida", pt: "Célula com Ar Comprimido", zh: "压缩空气单元"});
+Translation.addTranslation("empty_cell", {en: "Empty Cell", ru: "Пустая капсула", es: "Celda Vacía", pt: "Célula Universal de Fluidos", zh: "空单元"});
+Translation.addTranslation("water_cell", {en: "Water Cell", ru: "Капсула с водой", es: "Celda de Agua", pt: "Célula com Água", zh: "水单元"});
+Translation.addTranslation("lava_cell", {en: "Lava Cell", ru: "Капсула с лавой", es: "Celda de Lava", pt: "Célula com Lava", zh: "岩浆单元"});
+Translation.addTranslation("biomass_cell", {en: "Biomass Cell", ru: "Капсула биомассы", es: "Celda de Biomasa", pt: "Célula com Biomassa", zh: "生物质单元"});
+Translation.addTranslation("biogas_cell", {en: "Biogas Cell", ru: "Капсула биогаза", pt: "Célula com Biogás", zh: "沼气单元"});
+Translation.addTranslation("coolant_cell", {en: "Coolant Cell", ru: "Капсула хладагента", es: "Celda de Refrigerante", pt: "Célula com Líquido Refrigerante", zh: "冷却液单元"});
+Translation.addTranslation("uu_matter_cell", {en: "UU-Matter Cell", ru: "Капсула жидкой материи", es: "Celda de Materia UU", pt: "Célula com Matéria UU", zh: "UU物质单元"});
+Translation.addTranslation("air_cell", {en: "Compressed Air Cell", ru: "Капсула со сжатым воздухом", es: "Celda de Aire Comprimida", pt: "Célula com Ar Comprimido", zh: "压缩空气单元"});
 
 // Cables
-Translation.addTranslation("Tin Cable", {ru: "Оловянный провод", es: "Cable de Ultra-Baja Tensión", pt: "Cabo de Estanho", zh: "锡质导线"});
-Translation.addTranslation("Insulated Tin Cable", {ru: "Оловянный провод с изоляцией", es: "Cable de Estaño Aislado", pt: "Cabo de Estanho Isolado", zh: "绝缘锡质导线"});
-Translation.addTranslation("Copper Cable", {ru: "Медный провод", es: "Cable de Cobre", pt: "Cabo de Cobre", zh: "铜质导线"});
-Translation.addTranslation("Insulated Copper Cable", {ru: "Медный провод с изоляцией", es: "Cable de Cobre Aislado", pt: "Cabo de Cobre Isolado", zh: "绝缘质铜导线"});
-Translation.addTranslation("Gold Cable", {ru: "Золотой провод", es: "Cable de Oro", pt: "Cabo de Ouro", zh: "金质导线"});
-Translation.addTranslation("Insulated Gold Cable", {ru: "Золотой провод с изоляцией", es: "Cable de Oro Aislado", pt: "Cabo de Ouro Isolado", zh: "绝缘金质导线"});
-Translation.addTranslation("2x Ins. Gold Cable", {ru: "Золотой провод с 2x изоляцией", es: "Cable de Oro Aislado x2", pt: "Cabo de Ouro Isolado x2", zh: "2x绝缘金质导线"});
-Translation.addTranslation("HV Cable", {ru: "Высоковольтный провод", es: "Cable de Alta Tensión", pt: "Cabo de Alta Tensão", zh: "高压导线"});
-Translation.addTranslation("Insulated HV Cable", {ru: "Высоковольтный провод с изоляцией", es: "Cable de Alta Tensión Aislado", pt: "Cabo de Alta Tensão Isolado", zh: "绝缘高压导线"});
-Translation.addTranslation("2x Ins. HV Cable", {ru: "Высоковольтный провод с 2x изоляцией", es: "Cable de Alta Tensión Aislado x2", pt: "Cabo de Alta Tensão Isolado x2", zh: "2x绝缘高压导线"});
-Translation.addTranslation("3x Ins. HV Cable", {ru: "Высоковольтный провод с 3x изоляцией", es: "Cable de Alta Tensión Aislado x3", pt: "Cabo de Alta Tensão Isolado x3", zh: "3x绝缘高压导线"});
-Translation.addTranslation("Glass Fibre Cable", {ru: "Стекловолоконный провод", es: "Cable de Alta Tensión", pt: "Cabo de Fibra de Vidro", zh: "玻璃纤维导线"});
+Translation.addTranslation("tin_cable", {en: "Tin Cable", ru: "Оловянный провод", es: "Cable de Ultra-Baja Tensión", pt: "Cabo de Estanho", zh: "锡质导线"});
+Translation.addTranslation("tin_cable_insulated", {en: "Insulated Tin Cable", ru: "Оловянный провод с изоляцией", es: "Cable de Estaño Aislado", pt: "Cabo de Estanho Isolado", zh: "绝缘锡质导线"});
+Translation.addTranslation("copper_cable", {en: "Copper Cable", ru: "Медный провод", es: "Cable de Cobre", pt: "Cabo de Cobre", zh: "铜质导线"});
+Translation.addTranslation("copper_cable_insulated", {en: "Insulated Copper Cable", ru: "Медный провод с изоляцией", es: "Cable de Cobre Aislado", pt: "Cabo de Cobre Isolado", zh: "绝缘质铜导线"});
+Translation.addTranslation("gold_cable", {en: "Gold Cable", ru: "Золотой провод", es: "Cable de Oro", pt: "Cabo de Ouro", zh: "金质导线"});
+Translation.addTranslation("gold_cable_insulated", {en: "Insulated Gold Cable", ru: "Золотой провод с изоляцией", es: "Cable de Oro Aislado", pt: "Cabo de Ouro Isolado", zh: "绝缘金质导线"});
+Translation.addTranslation("gold_cable_insulated_2x", {en: "2x Ins. Gold Cable", ru: "Золотой провод с 2x изоляцией", es: "Cable de Oro Aislado x2", pt: "Cabo de Ouro Isolado x2", zh: "2x绝缘金质导线"});
+Translation.addTranslation("iron_cable", {en: "HV Cable", ru: "Высоковольтный провод", es: "Cable de Alta Tensión", pt: "Cabo de Alta Tensão", zh: "高压导线"});
+Translation.addTranslation("iron_cable_insulated", {en: "Insulated HV Cable", ru: "Высоковольтный провод с изоляцией", es: "Cable de Alta Tensión Aislado", pt: "Cabo de Alta Tensão Isolado", zh: "绝缘高压导线"});
+Translation.addTranslation("iron_cable_insulated_2x", {en: "2x Ins. HV Cable", ru: "Высоковольтный провод с 2x изоляцией", es: "Cable de Alta Tensión Aislado x2", pt: "Cabo de Alta Tensão Isolado x2", zh: "2x绝缘高压导线"});
+Translation.addTranslation("iron_cable_insulated_3x", {en: "3x Ins. HV Cable", ru: "Высоковольтный провод с 3x изоляцией", es: "Cable de Alta Tensión Aislado x3", pt: "Cabo de Alta Tensão Isolado x3", zh: "3x绝缘高压导线"});
+Translation.addTranslation("optic_cable", {en: "Glass Fibre Cable", ru: "Стекловолоконный провод", es: "Cable de Alta Tensión", pt: "Cabo de Fibra de Vidro", zh: "玻璃纤维导线"});
 
 // Armor
 Translation.addTranslation("bronze_helmet", {en: "Bronze Helmet", ru: "Бронзовый шлем", es: "Casco de Bronce", pt: "Elmo de Bronze", zh: "青铜头盔"});
@@ -343,9 +343,9 @@ Translation.addTranslation("diamond_drill", {en: "Diamond Drill", ru: "Алма�
 Translation.addTranslation("iridium_drill", {en: "Iridium Drill", ru: "Иридиевый бур", es: "Taladro de Iridio", pt: "Broca de Irídio", zh: "铱钻头"});
 Translation.addTranslation("nano_saber", {en: "Nano Saber", ru: "Нано-сабля", es: "Nano-Sable", pt: "Sabre Nano", zh: "纳米剑"});
 Translation.addTranslation("mining_laser", {en: "Mining Laser", ru: "Шахтёрский лазер", es: "Láser Minero", pt: "Laser de Mineração", zh: "采矿镭射枪"});
-Translation.addTranslation("EU Meter", {ru: "Мультиметр", pt: "Leitor de EU", zh: "EU电表"});
+Translation.addTranslation("eu_meter", {en: "EU Meter", ru: "Мультиметр", pt: "Leitor de EU", zh: "EU电表"});
 Translation.addTranslation("debug_item", {ru: "Предмет отладки", pt: "Item de Depuração", zh:"测试工具"});
-Translation.addTranslation("Crop Analyzer", {ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh: "作物分析器"});
+Translation.addTranslation("crop_analyzer", {en: "Crop Analyzer", ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh: "作物分析器"});
 Translation.addTranslation("weeding_trowel", {en: "Weeding Trowel", ru: "Пропалыватель", pt: "Espátula Transplantadora", zh: "除草铲"});
 
 // Coffee
@@ -368,36 +368,36 @@ Translation.addTranslation("Weed", {ru: "Сорняк", pt: "Erva Daninha", zh: 
 Translation.addTranslation("Hops", {ru: "Хмель", es: "Lúpulo", pt: "Lúpulo", zh: "啤酒花"});
 
 // Crops
-Translation.addTranslation("wheat", {ru: "Пшеница", en: "Wheat", pt: "Trigo", zh: "小麦"});
-Translation.addTranslation("weed", {ru: "Сорняк", en: "Weed", pt: "Erva Daninha", zh: "杂草"});
-Translation.addTranslation("pumpkin", {ru: "Тыква", en: "Pumpkin", pt: "Abóbora", zh: "南瓜"});
-Translation.addTranslation("melon", {ru: "Арбуз", en: "Melon", pt: "Melancia", zh: "西瓜"});
-Translation.addTranslation("dandelion", {ru: "Одуванчик", en: "Dandelion", pt: "Dente-de-Leão", zh: "蒲公英"});
-Translation.addTranslation("rose", {ru: "Роза", en: "Rose", pt: "Rosa", zh: "玫瑰"});
-Translation.addTranslation("blackthorn", {ru: "Терновник", en: "Blackthorn", pt: "Espinheiro-negro", zh: "黑刺李"});
-Translation.addTranslation("tulip", {ru: "Тюльпан", en: "Tulip", pt: "Tulipa", zh: "郁金香"});
-Translation.addTranslation("cyazint", {ru: "Гиацинт", en: "Cyazint", pt: "Cyazint", zh: "缤纷花"});
-Translation.addTranslation("venomilia", {ru: "Веномилия", en: "Venomilia", pt: "Venomilia", zh: "奇妙花"});
-Translation.addTranslation("reed", {ru: "Сахарный тростник", en: "Reed", pt: "Cana-de-açúcar", zh: "甘蔗"});
-Translation.addTranslation("stickreed", {ru: "Резиновый тростник", en: "Stickreed", zh: "粘性甘蔗", pt: "Cana-de-borracha"});
-Translation.addTranslation("cocoa", {ru: "Какао", en: "Cocoa", pt: "Cacau", zh: "可可"});
-Translation.addTranslation("red_mushroom", {ru: "Красный гриб", en: "Red Mushroom", pt: "Cogumelo Vermelho", zh: "红色蘑菇"});
-Translation.addTranslation("brown_mushroom", {ru: "Коричневый гриб", en: "Brown Mushroom", pt: "Cogumelo marrom", zh: "棕色蘑菇"});
-Translation.addTranslation("nether_wart", {ru: "Адский нарост", en: "Nether Wart", pt: "Fungo do Nether", zh: "地狱疣"});
-Translation.addTranslation("terra_wart", {ru: "Земляной нарост", en: "Terra Wart", pt: "Fungo da Terra", zh: "大地疣"});
-Translation.addTranslation("ferru", {ru: "Феррий", en: "Ferru", pt: "Ferru", zh: "铁叶草"});
-Translation.addTranslation("cyprium", {ru: "Куприй", en: "Cyprium", pt: "Chipre", zh: "铜叶草"});
-Translation.addTranslation("stagnium", {ru: "Стагний", en: "Stagnium", pt: "Stagnium", zh: "银矿草"});
-Translation.addTranslation("plumbiscus", {ru: "Плюмбий", en: "Plumbiscus", pt: "Biscoito de canela", zh: "铅叶草"});
-Translation.addTranslation("aurelia", {ru: "Аурелия", en: "Aurelia", pt: "Aurélia", zh: "金叶草"});
-Translation.addTranslation("shining", {ru: "Аргентий", en: "Shining", pt: "Brilhante", zh: "闪光"});
-Translation.addTranslation("redwheat", {ru: "Красная пшеница", en: "Red Wheat", pt: "Trigo Vermelho", zh: "红麦"});
-Translation.addTranslation("coffee", {ru: "Кофе", en: "Coffee", pt: "Café", zh: "咖啡"});
-Translation.addTranslation("hops", {ru: "Хмель", en: "Hops", pt: "Lúpulo", zh: "啤酒花"});
-Translation.addTranslation("carrots", {ru: "Морковь", en: "Carrots", pt: "Cenouras", zh: "胡萝卜"});
-Translation.addTranslation("potato", {ru: "Картофель", en: "Potato", pt: "Batata", zh: "马铃薯"});
-Translation.addTranslation("eatingplant", {ru: "Плотоядное растение", en: "Eating Plant", pt: "Planta Carnívora", zh: "食人花"});
-Translation.addTranslation("beetroots", {ru: "Свёкла", en: "Beetroots", pt: "Beterrabas", zh: "甜菜根"});
+Translation.addTranslation("wheat", {en: "Wheat", ru: "Пшеница", pt: "Trigo", zh: "小麦"});
+Translation.addTranslation("weed", {en: "Weed", ru: "Сорняк", pt: "Erva Daninha", zh: "杂草"});
+Translation.addTranslation("pumpkin", {en: "Pumpkin", ru: "Тыква", pt: "Abóbora", zh: "南瓜"});
+Translation.addTranslation("melon", {en: "Melon", ru: "Арбуз", pt: "Melancia", zh: "西瓜"});
+Translation.addTranslation("dandelion", {en: "Dandelion", ru: "Одуванчик", pt: "Dente-de-Leão", zh: "蒲公英"});
+Translation.addTranslation("rose", {en: "Rose", ru: "Роза", pt: "Rosa", zh: "玫瑰"});
+Translation.addTranslation("blackthorn", {en: "Blackthorn", ru: "Терновник", pt: "Espinheiro-negro", zh: "黑刺李"});
+Translation.addTranslation("tulip", {en: "Tulip",ru: "Тюльпан",  pt: "Tulipa", zh: "郁金香"});
+Translation.addTranslation("cyazint", {en: "Cyazint", ru: "Гиацинт", pt: "Cyazint", zh: "缤纷花"});
+Translation.addTranslation("venomilia", {en: "Venomilia", ru: "Веномилия", pt: "Venomilia", zh: "奇妙花"});
+Translation.addTranslation("reed", {en: "Reed", ru: "Сахарный тростник", pt: "Cana-de-açúcar", zh: "甘蔗"});
+Translation.addTranslation("stickreed", {en: "Stickreed", ru: "Резиновый тростник", zh: "粘性甘蔗", pt: "Cana-de-borracha"});
+Translation.addTranslation("cocoa", {en: "Cocoa", ru: "Какао", pt: "Cacau", zh: "可可"});
+Translation.addTranslation("red_mushroom", {en: "Red Mushroom", ru: "Красный гриб", pt: "Cogumelo Vermelho", zh: "红色蘑菇"});
+Translation.addTranslation("brown_mushroom", {en: "Brown Mushroom",ru: "Коричневый гриб",  pt: "Cogumelo marrom", zh: "棕色蘑菇"});
+Translation.addTranslation("nether_wart", {en: "Nether Wart", ru: "Адский нарост", pt: "Fungo do Nether", zh: "地狱疣"});
+Translation.addTranslation("terra_wart", {en: "Terra Wart", ru: "Земляной нарост", pt: "Fungo da Terra", zh: "大地疣"});
+Translation.addTranslation("ferru", {en: "Ferru", ru: "Феррий", pt: "Ferru", zh: "铁叶草"});
+Translation.addTranslation("cyprium", {en: "Cyprium", ru: "Куприй", pt: "Chipre", zh: "铜叶草"});
+Translation.addTranslation("stagnium", {en: "Stagnium", ru: "Стагний", pt: "Stagnium", zh: "银矿草"});
+Translation.addTranslation("plumbiscus", {en: "Plumbiscus", ru: "Плюмбий", pt: "Biscoito de canela", zh: "铅叶草"});
+Translation.addTranslation("aurelia", {en: "Aurelia", ru: "Аурелия", pt: "Aurélia", zh: "金叶草"});
+Translation.addTranslation("shining", {en: "Shining", ru: "Аргентий", pt: "Brilhante", zh: "闪光"});
+Translation.addTranslation("redwheat", {en: "Red Wheat", ru: "Красная пшеница", pt: "Trigo Vermelho", zh: "红麦"});
+Translation.addTranslation("coffee", {en: "Coffee", ru: "Кофе", pt: "Café", zh: "咖啡"});
+Translation.addTranslation("hops", {en: "Hops", ru: "Хмель", pt: "Lúpulo", zh: "啤酒花"});
+Translation.addTranslation("carrots", {en: "Carrots", ru: "Морковь", pt: "Cenouras", zh: "胡萝卜"});
+Translation.addTranslation("potato", {en: "Potato", ru: "Картофель", pt: "Batata", zh: "马铃薯"});
+Translation.addTranslation("eatingplant", {en: "Eating Plant", ru: "Плотоядное растение", pt: "Planta Carnívora", zh: "食人花"});
+Translation.addTranslation("beetroots", {en: "Beetroots", ru: "Свёкла", pt: "Beterrabas", zh: "甜菜根"});
 
 // TEXT
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
@@ -460,6 +460,10 @@ Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ноч�
 Translation.addTranslation("Hover mode disabled", {ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
 Translation.addTranslation("Hover mode enabled", {ru: "Режим парения включен", zh: "已启用悬浮模式"});
 Translation.addTranslation("Scan Result: ", {ru: "Результат сканирования: ", es: "Resultado de la exploración: ", pt: "Resultado do Escaneamento: ", zh: "扫描结果: "});
+Translation.addTranslation("Frequency Transmitter linked to Teleporter", {ru: "Частотный связыватель соединился с телепортером"});
+Translation.addTranslation("Can`t link Teleporter to itself", {ru: "Невозможно связать телепортер с самим собой"});
+Translation.addTranslation("Teleportation link established", {ru: "Телепортационная связь установлена"});
+Translation.addTranslation("Frequency Transmitter unlinked", {ru: "Частотный связыватель сброшен"});
 
 // Tooltips
 Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: ", zh: "能量等级: "});

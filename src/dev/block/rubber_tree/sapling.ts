@@ -81,8 +81,7 @@ Callback.addCallback("ItemUseLocal", function(coords: Callback.ItemUseCoordinate
 });
 
 // legacy
-IDRegistry.genItemID("rubberSapling");
-Item.createItem("rubberSapling", "Rubber Tree Sapling", {name: "rubber_tree_sapling", data: 0}, {isTech: true});
+ItemRegistry.createItem("rubberSapling", {name: "Rubber Tree Sapling", icon: "rubber_tree_sapling", isTech: true});
 
 Item.registerUseFunction("rubberSapling", function(coords, item, block, player) {
 	placeRubberSapling(coords, item, player);

@@ -39,12 +39,6 @@ namespace ItemName {
 		});
 	}
 
-	export function addStoredLiquidTooltip(id: number): void {
-		Item.registerNameOverrideFunction(id, function(item: ItemInstance, name: string) {
-			return name += "\n§7" + (1000 - item.data) + " mB";
-		});
-	}
-
 	export function showBlockStorage(item: ItemInstance, name: string, tier: number, capacity: string): string {
 		let tierText = "§7" + Translation.translate("Power Tier: ") + tier;
 

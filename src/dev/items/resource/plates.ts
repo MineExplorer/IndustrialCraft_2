@@ -1,26 +1,11 @@
-IDRegistry.genItemID("plateCopper");
-Item.createItem("plateCopper", "Copper Plate", {name: "plate_copper"});
-
-IDRegistry.genItemID("plateTin");
-Item.createItem("plateTin", "Tin Plate", {name: "plate_tin"});
-
-IDRegistry.genItemID("plateBronze");
-Item.createItem("plateBronze", "Bronze Plate", {name: "plate_bronze"});
-
-IDRegistry.genItemID("plateIron");
-Item.createItem("plateIron", "Iron Plate", {name: "plate_iron"});
-
-IDRegistry.genItemID("plateSteel");
-Item.createItem("plateSteel", "Steel Plate", {name: "plate_steel"});
-
-IDRegistry.genItemID("plateGold");
-Item.createItem("plateGold", "Gold Plate", {name: "plate_gold"});
-
-IDRegistry.genItemID("plateLead");
-Item.createItem("plateLead", "Lead Plate", {name: "plate_lead"});
-
-IDRegistry.genItemID("plateLapis");
-Item.createItem("plateLapis", "Lapis Plate", {name: "plate_lapis"});
+ItemRegistry.createItem("plateCopper", {name: "copper_plate", icon: "plate_copper"});
+ItemRegistry.createItem("plateTin", {name: "tin_plate", icon: "plate_tin"});
+ItemRegistry.createItem("plateBronze", {name: "bronze_plate", icon: "plate_bronze"});
+ItemRegistry.createItem("plateIron", {name: "iron_plate", icon: "plate_iron"});
+ItemRegistry.createItem("plateSteel", {name: "steel_plate", icon: "plate_steel"});
+ItemRegistry.createItem("plateGold", {name: "gold_plate", icon: "plate_gold"});
+ItemRegistry.createItem("plateLead", {name: "lead_plate", icon: "plate_lead"});
+ItemRegistry.createItem("plateLapis", {name: "lapis_plate", icon: "plate_lapis"});
 
 Item.addCreativeGroup("plate", Translation.translate("Plates"), [
 	ItemID.plateCopper,

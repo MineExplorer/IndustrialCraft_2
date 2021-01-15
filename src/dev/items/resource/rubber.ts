@@ -1,8 +1,5 @@
-IDRegistry.genItemID("latex");
-Item.createItem("latex", "Latex", {name: "latex", data: 0});
-
-IDRegistry.genItemID("rubber");
-Item.createItem("rubber", "Rubber", {name: "rubber", data: 0});
+ItemRegistry.createItem("latex", {name: "Latex", icon: "latex"});
+ItemRegistry.createItem("rubber", {name: "Rubber", icon: "rubber"});
 
 Recipes.addFurnace(ItemID.latex, ItemID.rubber, 0);
 

@@ -1,4 +1,4 @@
-class NanoSaber
+class ItemNanoSaber
 extends ElectricTool {
 	damage = 4;
 	constructor() {
@@ -56,5 +56,5 @@ extends ElectricTool {
 }
 
 Callback.addCallback("ServerPlayerTick", function(playerUid: number, isPlayerDead?: boolean) {
-	NanoSaber.onTick(playerUid);
+	ItemNanoSaber.onTick(playerUid);
 });

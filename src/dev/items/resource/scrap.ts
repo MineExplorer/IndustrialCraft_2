@@ -61,7 +61,7 @@ implements ItemBehavior {
 		return {id: ItemID.scrap, data: 0};
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		let region = WorldRegion.getForActor(player);
 		let drop = this.getDropItem();
 		region.dropItem(coords.relative.x + .5, coords.relative.y + .1, coords.relative.z + .5, drop.id, 1, drop.data);

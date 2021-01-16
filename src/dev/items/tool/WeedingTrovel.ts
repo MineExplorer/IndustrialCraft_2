@@ -6,7 +6,7 @@ extends ItemCommon {
         this.setCategory(ItemCategory.EQUIPMENT);
     }
 
-    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
+    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
         let region = WorldRegion.getForActor(player);
         let te = region.getTileEntity(coords);
         if (block.id == BlockID.crop && te.crop && te.crop.id == "weed") {

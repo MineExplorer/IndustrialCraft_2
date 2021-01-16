@@ -19,7 +19,7 @@ extends ItemElectric {
 		return name + "\n§7" + "Infinite EU";
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		let client = Network.getClientForPlayer(player);
 		if (!client) return;
 

@@ -7,7 +7,7 @@ Callback.addCallback("DestroyBlockStart", function(coords, block) {
 	let cableData = CableRegistry.getCableData(block.id);
 	if (item.id == ItemID.cutter && cableData && cableData.insulation > 0) {
 		Game.prevent();
-		ItemTool.damageCarriedItem(Player.get());
+		ToolLib.breakCarriedTool(1, Player.get());
 		SoundManager.playSoundAtBlock(coords, "InsulationCutters.ogg", 1);
 		let blockID = BlockID[cableData.name + (cableData.insulation - 1)]
 		World.setBlock(coords.x, coords.y, coords.z, blockID, 0);

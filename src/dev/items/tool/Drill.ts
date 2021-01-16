@@ -14,7 +14,7 @@ extends ElectricTool {
 		return true;
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, playerUid: number): void {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, playerUid: number): void {
 		let region = WorldRegion.getForActor(playerUid);
 		let place = coords as Vector;
 		if (!World.canTileBeReplaced(block.id, block.data)) {

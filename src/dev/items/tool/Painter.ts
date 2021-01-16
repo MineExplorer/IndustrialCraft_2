@@ -14,7 +14,7 @@ extends ItemCommon {
 		this.color = color;
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		if (CableRegistry.canBePainted(block.id) && block.data != this.color) {
 			let region = WorldRegion.getForActor(player);
 			region.setBlock(coords, 0, 0);

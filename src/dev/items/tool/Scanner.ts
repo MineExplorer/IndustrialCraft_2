@@ -25,7 +25,7 @@ extends ItemElectric {
 		return this.tier == 1 ? 50 : 250;
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		let client = Network.getClientForPlayer(player);
 		if (client && ICTool.useElectricItem(item, this.getEnergyPerUse(), player)) {
 			SoundManager.playSound("ODScanner.ogg");

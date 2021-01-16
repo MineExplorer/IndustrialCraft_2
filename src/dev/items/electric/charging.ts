@@ -2,7 +2,7 @@
 
 class ItemBatteryCharging
 extends ItemBattery {
-	onNoTargetUse(item: ItemInstance, player: number) {
+	onNoTargetUse(item: ItemStack, player: number) {
 		let extra = item.extra || new ItemExtraData();
 		let mode = (extra.getInt("mode") + 1) % 3;
 		extra.putInt("mode", mode);

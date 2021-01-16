@@ -12,7 +12,7 @@ implements ItemBehavior {
 		return name;
 	}
 
-	onNoTargetUse(item: ItemInstance, playerUid: number): void {
+	onNoTargetUse(item: ItemStack, playerUid: number): void {
 		let player = new PlayerInterface(playerUid);
 		let hunger = player.getHunger();
 		let saturation = player.getSaturation();
@@ -29,7 +29,8 @@ implements ItemBehavior {
 			if (item.count == count) {
 				player.setCarriedItem(ItemID.tinCanEmpty, count, 0);
 			} else {
-				player.setCarriedItem(item.id, item.count - count, item.data);
+				item.decrease(count);
+				player.setCarriedItem(item);
 				player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
 			}
 			SoundManager.playSound("eat.ogg");

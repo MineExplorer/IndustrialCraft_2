@@ -75,11 +75,11 @@ extends ItemElectric {
 		}
 	}
 
-	onNoTargetUse(item: ItemInstance, player: number): void {
+	onNoTargetUse(item: ItemStack, player: number): void {
 		this.makeShot(item, player);
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		let laserSetting = item.extra? item.extra.getInt("mode") : 0;
 		if (laserSetting != 3 && laserSetting != 6) {
 			this.makeShot(item, player);

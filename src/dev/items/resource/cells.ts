@@ -6,7 +6,7 @@ implements ItemBehavior {
 		this.setLiquidClip();
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, playerUid: number): void {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, playerUid: number): void {
 		if (block.id > 7 && block.id < 12 && block.data == 0) {
 			let player = new PlayerInterface(playerUid);
 			let region = WorldRegion.getForActor(playerUid);

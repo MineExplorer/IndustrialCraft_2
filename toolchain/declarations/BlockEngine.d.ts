@@ -11,6 +11,7 @@ declare class ItemStack implements ItemInstance {
     getMaxDamage(): number;
     decrease(count: number): void;
     clear(): void;
+    applyDamage(damage: number): void;
 }
 declare class Vector3 implements Vector {
     static readonly DOWN: Vector3;
@@ -361,11 +362,11 @@ declare class PlayerInterface {
 interface ItemBehavior {
     onNameOverride?(item: ItemInstance, translation: string, name: string): string;
     onIconOverride?(item: ItemInstance, isModUi: boolean): Item.TextureData;
-    onItemUse?(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void;
-    onNoTargetUse?(item: ItemInstance, player: number): void;
-    onUsingReleased?(item: ItemInstance, ticks: number, player: number): void;
-    onUsingComplete?(item: ItemInstance, player: number): void;
-    onDispense?(coords: Callback.ItemUseCoordinates, item: ItemInstance, region: WorldRegion): void;
+    onItemUse?(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void;
+    onNoTargetUse?(item: ItemStack, player: number): void;
+    onUsingReleased?(item: ItemStack, ticks: number, player: number): void;
+    onUsingComplete?(item: ItemStack, player: number): void;
+    onDispense?(coords: Callback.ItemUseCoordinates, item: ItemStack, region: WorldRegion): void;
 }
 declare class ItemBase {
     readonly stringID: string;
@@ -487,7 +488,7 @@ interface ToolParams extends ToolAPI.ToolParams {
     handEquipped?: boolean;
     enchantType?: number;
     blockTypes?: string[];
-    onItemUse?: (coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number) => void;
+    onItemUse?: (coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number) => void;
 }
 interface ToolMaterial extends ToolAPI.ToolMaterial {
     enchantability?: number;
@@ -510,7 +511,6 @@ declare class ItemTool extends ItemCommon implements ToolParams {
     toolMaterial: ToolMaterial;
     enchantType: number;
     constructor(stringID: string, name: string, icon: string | Item.TextureData, toolMaterial: string | ToolMaterial, toolData?: ToolParams, inCreative?: boolean);
-    static damageCarriedItem(player: number, damage?: number): void;
 }
 declare enum ItemCategory {
     BUILDING = 1,
@@ -526,9 +526,21 @@ declare enum EnumRarity {
 }
 declare namespace ItemRegistry {
     export function getInstanceOf(itemID: string | number): Nullable<ItemBase>;
-    export function getRarity(id: number): number;
-    export function getRarityColor(id: number): string;
-    export function getRarityColorCode(rarity: number): string;
+    /**
+     * @returns EnumRarity value for item
+     * @param itemID item's id
+     */
+    export function getRarity(itemID: number): number;
+    /**
+     * @returns chat color for rarity
+     * @param rarity one of EnumRarity values
+     */
+    export function getRarityColor(rarity: number): string;
+    /**
+     * @returns chat color for item's rarity
+     * @param itemID item's id
+     */
+    export function getItemRarityColor(itemID: number): string;
     export function setRarity(id: string | number, rarity: number, preventNameOverride?: boolean): void;
     export function addArmorMaterial(name: string, material: ArmorMaterial): void;
     export function getArmorMaterial(name: string): ArmorMaterial;

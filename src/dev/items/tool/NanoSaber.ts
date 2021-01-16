@@ -24,7 +24,7 @@ extends ElectricTool {
 		return true;
 	}
 
-	onNoTargetUse(item: ItemInstance, player: number): void {
+	onNoTargetUse(item: ItemStack, player: number): void {
 		let extra = item.extra || new ItemExtraData();
 		if (extra.getBoolean("active")) {
 			extra.putBoolean("active", false);

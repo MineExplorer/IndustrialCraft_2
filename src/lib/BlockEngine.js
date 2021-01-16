@@ -51,6 +51,18 @@ var ItemStack = /** @class */ (function () {
         this.id = this.data = this.count = 0;
         this.extra = null;
     };
+    ItemStack.prototype.applyDamage = function (damage) {
+        var enchant = ToolAPI.getEnchantExtraData(this.extra);
+        if (Math.random() < 1 / (enchant.unbreaking + 1)) {
+            this.data += damage;
+        }
+        if (this.data >= this.getMaxDamage()) {
+            var tool = ToolAPI.getToolData(this.id);
+            this.id = tool ? tool.brokenId : 0;
+            this.count = 1;
+            this.data = 0;
+        }
+    };
     return ItemStack;
 }());
 var Vector3 = /** @class */ (function () {
@@ -879,7 +891,8 @@ var ToolType;
                 var region = WorldRegion.getForActor(player);
                 region.setBlock(coords, 198, 0);
                 region.playSound(coords.x + .5, coords.y + 1, coords.z + .5, "step.grass", 0.5, 0.8);
-                ItemTool.damageCarriedItem(player);
+                item.applyDamage(1);
+                Entity.setCarriedItem(player, item.id, item.count, item.data, item.extra);
             }
         }
     };
@@ -906,16 +919,17 @@ var ToolType;
                     logID = VanillaTileID.stripped_birch_log;
                 if (block.data == 3)
                     logID = VanillaTileID.stripped_jungle_log;
-                region.setBlock(coords, logID, 0);
-                ItemTool.damageCarriedItem(player);
             }
             else if (block.id == 162) {
                 if (block.data == 0)
                     logID = VanillaTileID.stripped_acacia_log;
                 else
                     logID = VanillaTileID.stripped_dark_oak_log;
+            }
+            if (logID) {
                 region.setBlock(coords, logID, 0);
-                ItemTool.damageCarriedItem(player);
+                item.applyDamage(1);
+                Entity.setCarriedItem(player, item.id, item.count, item.data, item.extra);
             }
         }
     };
@@ -926,7 +940,8 @@ var ToolType;
                 var region = WorldRegion.getForActor(player);
                 region.setBlock(coords, 60, 0);
                 region.playSound(coords.x + .5, coords.y + 1, coords.z + .5, "step.gravel", 1, 0.8);
-                ItemTool.damageCarriedItem(player);
+                item.applyDamage(1);
+                Entity.setCarriedItem(player, item.id, item.count, item.data, item.extra);
             }
         }
     };
@@ -990,21 +1005,6 @@ var ItemTool = /** @class */ (function (_super) {
         }
         return _this;
     }
-    ItemTool.damageCarriedItem = function (player, damage) {
-        if (damage === void 0) { damage = 1; }
-        var item = Entity.getCarriedItem(player);
-        var enchant = ToolAPI.getEnchantExtraData(item.extra);
-        if (Math.random() < 1 / (enchant.unbreaking + 1)) {
-            item.data += damage;
-        }
-        if (item.data >= Item.getMaxDamage(item.id)) {
-            var tool = ToolAPI.getToolData(item.id);
-            item.id = tool ? tool.brokenId : 0;
-            item.count = 1;
-            item.data = 0;
-        }
-        Entity.setCarriedItem(player, item.id, item.count, item.data, item.extra);
-    };
     return ItemTool;
 }(ItemCommon));
 /// <reference path="ItemBase.ts" />
@@ -1038,16 +1038,20 @@ var ItemRegistry;
         return items[numericID] || null;
     }
     ItemRegistry.getInstanceOf = getInstanceOf;
-    function getRarity(id) {
+    /**
+     * @returns EnumRarity value for item
+     * @param itemID item's id
+     */
+    function getRarity(itemID) {
         var _a;
-        return (_a = itemsRarity[id]) !== null && _a !== void 0 ? _a : EnumRarity.COMMON;
+        return (_a = itemsRarity[itemID]) !== null && _a !== void 0 ? _a : EnumRarity.COMMON;
     }
     ItemRegistry.getRarity = getRarity;
-    function getRarityColor(id) {
-        return getRarityColorCode(getRarity(id));
-    }
-    ItemRegistry.getRarityColor = getRarityColor;
-    function getRarityColorCode(rarity) {
+    /**
+     * @returns chat color for rarity
+     * @param rarity one of EnumRarity values
+     */
+    function getRarityColor(rarity) {
         if (rarity == EnumRarity.UNCOMMON)
             return "§e";
         if (rarity == EnumRarity.RARE)
@@ -1056,14 +1060,22 @@ var ItemRegistry;
             return "§d";
         return "";
     }
-    ItemRegistry.getRarityColorCode = getRarityColorCode;
+    ItemRegistry.getRarityColor = getRarityColor;
+    /**
+     * @returns chat color for item's rarity
+     * @param itemID item's id
+     */
+    function getItemRarityColor(itemID) {
+        return getRarityColor(getRarity(itemID));
+    }
+    ItemRegistry.getItemRarityColor = getItemRarityColor;
     function setRarity(id, rarity, preventNameOverride) {
         var numericID = Item.getNumericId(id);
         itemsRarity[numericID] = rarity;
         //@ts-ignore
         if (!preventNameOverride && !Item.nameOverrideFunctions[numericID]) {
             Item.registerNameOverrideFunction(numericID, function (item, translation, name) {
-                return getRarityColor(item.id) + translation;
+                return getItemRarityColor(item.id) + translation;
             });
         }
     }
@@ -1093,7 +1105,7 @@ var ItemRegistry;
     function registerItemFuncs(itemID, itemFuncs) {
         if ('onNameOverride' in itemFuncs) {
             Item.registerNameOverrideFunction(itemID, function (item, translation, name) {
-                return getRarityColor(item.id) + itemFuncs.onNameOverride(item, translation, name);
+                return getItemRarityColor(item.id) + itemFuncs.onNameOverride(item, translation, name);
             });
         }
         if ('onIconOverride' in itemFuncs) {
@@ -1103,28 +1115,28 @@ var ItemRegistry;
         }
         if ('onItemUse' in itemFuncs) {
             Item.registerUseFunction(itemID, function (coords, item, block, player) {
-                itemFuncs.onItemUse(coords, item, block, player);
+                itemFuncs.onItemUse(coords, new ItemStack(item), block, player);
             });
         }
         if ('onNoTargetUse' in itemFuncs) {
             Item.registerNoTargetUseFunction(itemID, function (item, player) {
-                itemFuncs.onNoTargetUse(item, player);
+                itemFuncs.onNoTargetUse(new ItemStack(item), player);
             });
         }
         if ('onUsingReleased' in itemFuncs) {
             Item.registerUsingReleasedFunction(itemID, function (item, ticks, player) {
-                itemFuncs.onUsingReleased(item, ticks, player);
+                itemFuncs.onUsingReleased(new ItemStack(item), ticks, player);
             });
         }
         if ('onUsingComplete' in itemFuncs) {
             Item.registerUsingCompleteFunction(itemID, function (item, player) {
-                itemFuncs.onUsingComplete(item, player);
+                itemFuncs.onUsingComplete(new ItemStack(item), player);
             });
         }
         if ('onDispense' in itemFuncs) {
             Item.registerDispenseFunction(itemID, function (coords, item, blockSource) {
                 var region = new WorldRegion(blockSource);
-                itemFuncs.onDispense(coords, item, region);
+                itemFuncs.onDispense(coords, new ItemStack(item), region);
             });
         }
     }

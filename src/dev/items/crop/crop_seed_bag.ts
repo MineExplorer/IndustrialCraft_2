@@ -24,7 +24,7 @@ implements ItemBehavior {
         return newName;
     }
 
-    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
+    onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
         if (block.id == BlockID.crop) {
             let region = WorldRegion.getForActor(player);
             let te = region.getTileEntity(coords);

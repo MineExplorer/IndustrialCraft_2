@@ -12,7 +12,7 @@ implements ItemBehavior {
 		return name + "\n§7" + Translation.translate("Max voltage: ") + this.maxVoltage + " EU/t";
 	}
 
-	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void {
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		let region = BlockSource.getDefaultForActor(player);
 		let place: Vector = coords;
 		if (!World.canTileBeReplaced(block.id, block.data)) {

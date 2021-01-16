@@ -27,7 +27,7 @@ namespace ICTool {
 	export function useWrench(item: ItemInstance, player: number, damage: number): boolean {
 		let wrench = getWrenchData(item.id);
 		if (!wrench.energy) {
-			ItemTool.damageCarriedItem(player, damage);
+			ToolLib.breakCarriedTool(damage, player);
 			return true;
 		}
 		return useElectricItem(item, wrench.energy * damage, player);

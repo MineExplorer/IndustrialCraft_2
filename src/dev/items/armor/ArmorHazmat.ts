@@ -11,7 +11,7 @@ implements OnHurtListener, OnTickListener {
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		if (params.type == 9 && index == 0) {
-			let player = new PlayerManager(playerUid);
+			let player = new PlayerInterface(playerUid);
 			for (let i = 0; i < 36; i++) {
 				let slot = player.getInventorySlot(i);
 				if (slot.id == ItemID.cellAir) {

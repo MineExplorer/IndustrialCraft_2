@@ -447,54 +447,54 @@ Network.addClientPacket("WorldRegion.play_sound", function (data) {
         World.playSound(data.x, data.y, data.z, data.name, data.volume, data.pitch);
     }
 });
-var PlayerManager = /** @class */ (function () {
-    function PlayerManager(playerUid) {
+var PlayerInterface = /** @class */ (function () {
+    function PlayerInterface(playerUid) {
         this.playerActor = new PlayerActor(playerUid);
         this.playerUid = playerUid;
     }
     /**
      * @returns player's unique numeric entity id
      */
-    PlayerManager.prototype.getUid = function () {
+    PlayerInterface.prototype.getUid = function () {
         return this.playerUid;
     };
     /**
      * @returns the id of dimension where player is.
      */
-    PlayerManager.prototype.getDimension = function () {
+    PlayerInterface.prototype.getDimension = function () {
         return this.playerActor.getDimension();
     };
     /**
      * @returns player's gamemode.
      */
-    PlayerManager.prototype.getGameMode = function () {
+    PlayerInterface.prototype.getGameMode = function () {
         return this.playerActor.getGameMode();
     };
     /**
      * Adds item to player's inventory
      * @param dropRemainings if true, surplus will be dropped near player
      */
-    PlayerManager.prototype.addItemToInventory = function (id, count, data, extra) {
+    PlayerInterface.prototype.addItemToInventory = function (id, count, data, extra) {
         if (extra === void 0) { extra = null; }
         this.playerActor.addItemToInventory(id, count, data, extra, true);
     };
     /**
      * @returns inventory slot's contents.
      */
-    PlayerManager.prototype.getInventorySlot = function (slot) {
+    PlayerInterface.prototype.getInventorySlot = function (slot) {
         return this.playerActor.getInventorySlot(slot);
     };
     /**
      * Sets inventory slot's contents.
      */
-    PlayerManager.prototype.setInventorySlot = function (slot, id, count, data, extra) {
+    PlayerInterface.prototype.setInventorySlot = function (slot, id, count, data, extra) {
         if (extra === void 0) { extra = null; }
         this.playerActor.setInventorySlot(slot, id, count, data, extra);
     };
     /**
      * @returns item in player's hand
     */
-    PlayerManager.prototype.getCarriedItem = function () {
+    PlayerInterface.prototype.getCarriedItem = function () {
         return Entity.getCarriedItem(this.getUid());
     };
     /**
@@ -504,7 +504,7 @@ var PlayerManager = /** @class */ (function () {
      * @param data item data
      * @param extra item extra
      */
-    PlayerManager.prototype.setCarriedItem = function (id, count, data, extra) {
+    PlayerInterface.prototype.setCarriedItem = function (id, count, data, extra) {
         if (extra === void 0) { extra = null; }
         Entity.setCarriedItem(this.getUid(), id, count, data, extra);
     };
@@ -512,7 +512,7 @@ var PlayerManager = /** @class */ (function () {
      * Decreases carried item count by specified number
      * @param amount amount of items to decrease, default is 1
      */
-    PlayerManager.prototype.decreaseCarriedItem = function (amount) {
+    PlayerInterface.prototype.decreaseCarriedItem = function (amount) {
         if (amount === void 0) { amount = 1; }
         var item = this.getCarriedItem();
         this.setCarriedItem(item.id, item.count - amount, item.data, item.extra);
@@ -520,156 +520,126 @@ var PlayerManager = /** @class */ (function () {
     /**
      * @returns armor slot's contents.
      */
-    PlayerManager.prototype.getArmor = function (slot) {
+    PlayerInterface.prototype.getArmor = function (slot) {
         return this.playerActor.getArmor(slot);
     };
     /**
      * Sets armor slot's contents.
      */
-    PlayerManager.prototype.setArmor = function (slot, id, count, data, extra) {
+    PlayerInterface.prototype.setArmor = function (slot, id, count, data, extra) {
         if (extra === void 0) { extra = null; }
         this.playerActor.setArmor(slot, id, count, data, extra);
     };
     /**
      * Sets respawn coords for the player.
      */
-    PlayerManager.prototype.setRespawnCoords = function (x, y, z) {
+    PlayerInterface.prototype.setRespawnCoords = function (x, y, z) {
         this.playerActor.setRespawnCoords(x, y, z);
     };
     /**
      * Spawns exp on coords.
      * @param value experience points value
      */
-    PlayerManager.prototype.spawnExpOrbs = function (x, y, z, value) {
+    PlayerInterface.prototype.spawnExpOrbs = function (x, y, z, value) {
         this.playerActor.spawnExpOrbs(x, y, z, value);
     };
     /**
      * @returns whether the player is a valid entity.
      */
-    PlayerManager.prototype.isValid = function () {
+    PlayerInterface.prototype.isValid = function () {
         return this.playerActor.isValid();
     };
     /**
      * @returns player's selected slot.
      */
-    PlayerManager.prototype.getSelectedSlot = function () {
+    PlayerInterface.prototype.getSelectedSlot = function () {
         return this.playerActor.getSelectedSlot();
     };
     /**
      * Sets player's selected slot.
      */
-    PlayerManager.prototype.setSelectedSlot = function (slot) {
+    PlayerInterface.prototype.setSelectedSlot = function (slot) {
         this.playerActor.setSelectedSlot(slot);
     };
     /**
      * @returns player's experience.
      */
-    PlayerManager.prototype.getExperience = function () {
+    PlayerInterface.prototype.getExperience = function () {
         return this.playerActor.getExperience();
     };
     /**
      * Sets player's experience.
      */
-    PlayerManager.prototype.setExperience = function (value) {
+    PlayerInterface.prototype.setExperience = function (value) {
         this.playerActor.setExperience(value);
     };
     /**
      * Add experience to player.
      */
-    PlayerManager.prototype.addExperience = function (amount) {
+    PlayerInterface.prototype.addExperience = function (amount) {
         this.playerActor.addExperience(amount);
     };
     /**
      * @returns player's xp level.
      */
-    PlayerManager.prototype.getLevel = function () {
+    PlayerInterface.prototype.getLevel = function () {
         return this.playerActor.getLevel();
     };
     /**
      * Sets player's xp level.
      */
-    PlayerManager.prototype.setLevel = function (level) {
+    PlayerInterface.prototype.setLevel = function (level) {
         this.playerActor.setLevel(level);
     };
     /**
      * @returns player's exhaustion.
      */
-    PlayerManager.prototype.getExhaustion = function () {
+    PlayerInterface.prototype.getExhaustion = function () {
         return this.playerActor.getExhaustion();
     };
     /**
      * Sets player's exhaustion.
      */
-    PlayerManager.prototype.setExhaustion = function (value) {
+    PlayerInterface.prototype.setExhaustion = function (value) {
         this.playerActor.setExhaustion(value);
     };
     /**
      * @returns player's hunger.
      */
-    PlayerManager.prototype.getHunger = function () {
+    PlayerInterface.prototype.getHunger = function () {
         return this.playerActor.getHunger();
     };
     /**
      * Sets player's hunger.
      */
-    PlayerManager.prototype.setHunger = function (value) {
+    PlayerInterface.prototype.setHunger = function (value) {
         this.playerActor.setHunger(value);
     };
     /**
      * @returns player's saturation.
      */
-    PlayerManager.prototype.getSaturation = function () {
+    PlayerInterface.prototype.getSaturation = function () {
         return this.playerActor.getSaturation();
     };
     /**
      * Sets player's saturation.
      */
-    PlayerManager.prototype.setSaturation = function (value) {
+    PlayerInterface.prototype.setSaturation = function (value) {
         this.playerActor.setSaturation(value);
     };
     /**
      * @returns player's score.
      */
-    PlayerManager.prototype.getScore = function () {
+    PlayerInterface.prototype.getScore = function () {
         return this.playerActor.getScore();
     };
     /**
      * Sets player's score.
      */
-    PlayerManager.prototype.setScore = function (value) {
+    PlayerInterface.prototype.setScore = function (value) {
         this.playerActor.setScore(value);
     };
-    return PlayerManager;
-}());
-var BlockBase = /** @class */ (function () {
-    function BlockBase(stringID) {
-        this.variants = [];
-        this.stringID = stringID;
-        this.id = IDRegistry.genBlockID(stringID);
-        //ItemRegistry.register(this);
-    }
-    BlockBase.prototype.addVariant = function (name, texture, inCreative) {
-        this.variants.push();
-    };
-    BlockBase.prototype.create = function (blockType) {
-        Block.createBlock(this.stringID, this.variants, blockType);
-    };
-    BlockBase.prototype.setDestroyTime = function (destroyTime) {
-        Block.setDestroyTime(this.stringID, destroyTime);
-        return this;
-    };
-    BlockBase.prototype.setBlockMaterial = function (material, level) {
-        Block.setBlockMaterial(this.stringID, material, level);
-        return this;
-    };
-    BlockBase.prototype.setShape = function (x1, y1, z1, x2, y2, z2, data) {
-        Block.setShape(this.id, x1, y1, z1, x2, y2, z2, data);
-        return this;
-    };
-    BlockBase.prototype.registerTileEntity = function (prototype) {
-        TileEntity.registerPrototype(this.id, prototype);
-    };
-    return BlockBase;
+    return PlayerInterface;
 }());
 var ItemBase = /** @class */ (function () {
     function ItemBase(stringID, name, icon) {
@@ -758,11 +728,10 @@ var ItemBase = /** @class */ (function () {
         this.item.addRepairItem(itemID);
     };
     ItemBase.prototype.setRarity = function (rarity) {
-        ItemRegistry.setRarity(this.id, rarity);
+        ItemRegistry.setRarity(this.id, rarity, true);
     };
     return ItemBase;
 }());
-/// <reference path="ItemBase.ts" />
 var ItemCommon = /** @class */ (function (_super) {
     __extends(ItemCommon, _super);
     function ItemCommon(stringID, name, icon, inCreative) {
@@ -774,7 +743,40 @@ var ItemCommon = /** @class */ (function (_super) {
     }
     return ItemCommon;
 }(ItemBase));
-/// <reference path="ItemBase.ts" />
+var ItemFood = /** @class */ (function (_super) {
+    __extends(ItemFood, _super);
+    function ItemFood(stringID, name, icon, food, inCreative) {
+        if (inCreative === void 0) { inCreative = true; }
+        var _this = _super.call(this, stringID, name, icon) || this;
+        _this.item = Item.createFoodItem(_this.stringID, _this.name, _this.icon, { food: food, isTech: !inCreative });
+        _this.setCategory(ItemCategory.ITEMS);
+        return _this;
+    }
+    ItemFood.prototype.onFoodEaten = function (item, food, saturation, player) { };
+    return ItemFood;
+}(ItemBase));
+Callback.addCallback("FoodEaten", function (food, saturation, player) {
+    var item = Entity.getCarriedItem(player);
+    var itemInstance = ItemRegistry.getInstanceOf(item.id);
+    if (itemInstance && itemInstance.onFoodEaten) {
+        itemInstance.onFoodEaten(item, food, saturation, player);
+    }
+});
+var ItemThrowable = /** @class */ (function (_super) {
+    __extends(ItemThrowable, _super);
+    function ItemThrowable(stringID, name, icon, inCreative) {
+        if (inCreative === void 0) { inCreative = true; }
+        var _this = _super.call(this, stringID, name, icon) || this;
+        _this.item = Item.createThrowableItem(_this.stringID, _this.name, _this.icon, { isTech: !inCreative });
+        _this.setCategory(ItemCategory.ITEMS);
+        Item.registerThrowableFunctionForID(_this.id, function (projectile, item, target) {
+            _this.onProjectileHit(projectile, item, target);
+        });
+        return _this;
+    }
+    ItemThrowable.prototype.onProjectileHit = function (projectile, item, target) { };
+    return ItemThrowable;
+}(ItemBase));
 var ItemArmor = /** @class */ (function (_super) {
     __extends(ItemArmor, _super);
     function ItemArmor(stringID, name, icon, params, inCreative) {
@@ -998,9 +1000,10 @@ var ItemTool = /** @class */ (function (_super) {
     };
     return ItemTool;
 }(ItemCommon));
-/// <reference path="BlockBase.ts" />
 /// <reference path="ItemBase.ts" />
 /// <reference path="ItemCommon.ts" />
+/// <reference path="ItemFood.ts" />
+/// <reference path="ItemThrowable.ts" />
 /// <reference path="ItemArmor.ts" />
 /// <reference path="ItemTool.ts" />
 var ItemCategory;
@@ -1024,7 +1027,8 @@ var ItemRegistry;
     var armorMaterials = {};
     var toolMaterials = {};
     function getInstanceOf(itemID) {
-        return items[itemID] || null;
+        var numericID = Item.getNumericId(itemID);
+        return items[numericID] || null;
     }
     ItemRegistry.getInstanceOf = getInstanceOf;
     function getRarity(id) {
@@ -1032,7 +1036,11 @@ var ItemRegistry;
         return (_a = itemsRarity[id]) !== null && _a !== void 0 ? _a : EnumRarity.COMMON;
     }
     ItemRegistry.getRarity = getRarity;
-    function getRarityColor(rarity) {
+    function getRarityColor(id) {
+        return getRarityColorCode(getRarity(id));
+    }
+    ItemRegistry.getRarityColor = getRarityColor;
+    function getRarityColorCode(rarity) {
         if (rarity == EnumRarity.UNCOMMON)
             return "§e";
         if (rarity == EnumRarity.RARE)
@@ -1041,14 +1049,14 @@ var ItemRegistry;
             return "§d";
         return "";
     }
-    ItemRegistry.getRarityColor = getRarityColor;
-    function setRarity(id, rarity) {
+    ItemRegistry.getRarityColorCode = getRarityColorCode;
+    function setRarity(id, rarity, preventNameOverride) {
         var numericID = Item.getNumericId(id);
         itemsRarity[numericID] = rarity;
-        var itemInstance = getInstanceOf(numericID);
-        if (!itemInstance || !('onNameOverride' in itemInstance)) {
+        //@ts-ignore
+        if (!preventNameOverride && !Item.nameOverrideFunctions[numericID]) {
             Item.registerNameOverrideFunction(numericID, function (item, translation, name) {
-                return getRarityColor(rarity) + translation;
+                return getRarityColor(item.id) + translation;
             });
         }
     }
@@ -1078,8 +1086,7 @@ var ItemRegistry;
     function registerItemFuncs(itemID, itemFuncs) {
         if ('onNameOverride' in itemFuncs) {
             Item.registerNameOverrideFunction(itemID, function (item, translation, name) {
-                var rarity = getRarity(item.id);
-                return getRarityColor(rarity) + itemFuncs.onNameOverride(item, translation, name);
+                return getRarityColor(item.id) + itemFuncs.onNameOverride(item, translation, name);
             });
         }
         if ('onIconOverride' in itemFuncs) {
@@ -1307,11 +1314,13 @@ var BlockEngine;
 EXPORT("ItemStack", ItemStack);
 EXPORT("Vector3", Vector3);
 EXPORT("WorldRegion", WorldRegion);
-EXPORT("PlayerManager", PlayerManager);
+EXPORT("PlayerInterface", PlayerInterface);
+EXPORT("TileEntityBase", TileEntityBase);
 EXPORT("ItemCommon", ItemCommon);
+EXPORT("ItemFood", ItemFood);
+EXPORT("ItemThrowable", ItemThrowable);
 EXPORT("ItemArmor", ItemArmor);
 EXPORT("ItemTool", ItemTool);
-EXPORT("TileEntityBase", TileEntityBase);
 // enums
 EXPORT("ItemCategory", ItemCategory);
 EXPORT("EnumRarity", EnumRarity);

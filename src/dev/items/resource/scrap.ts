@@ -37,7 +37,7 @@ let SCRAP_BOX_RANDOM_DROP = [
 
 class ItemScrapBox
 extends ItemCommon
-implements ItemFuncs {
+implements ItemBehavior {
 	constructor() {
 		super("scrapBox", "Scrap Box", "scrap_box");
 		Recipes.addFurnaceFuel(this.id, 0, 3150);

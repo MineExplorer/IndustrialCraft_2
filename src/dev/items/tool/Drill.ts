@@ -24,7 +24,7 @@ extends ElectricTool {
 				return;
 			}
 		}
-		let player = new PlayerManager(playerUid);
+		let player = new PlayerInterface(playerUid);
 		for (let i = 9; i < 45; i++) {
 			let slot = player.getInventorySlot(i);
 			if (slot.id == 50) {

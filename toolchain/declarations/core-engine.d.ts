@@ -1676,7 +1676,7 @@ declare namespace Callback {
      * @param item item that was in the player's hand when he touched the block
      * @param block block that was touched
      * @param isExternal
-     * @param player player actor uID
+     * @param player player entity uID
      */
     interface ItemUseFunction {
         (coords: ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void
@@ -1699,12 +1699,13 @@ declare namespace Callback {
 
     /**
      * Function used in the "FoodEaten" callback. You can use 
-     * [[Player.getCarriedItem]] to get info about food item
+     * [[Entity.getCarriedItem]] to get info about food item
      * @param food food amount produced by eaten food
      * @param ratio saturation ratio produced by food
+     * @param player player entity uID
      */
     interface FoodEatenFunction {
-        (food: number, ratio: number): void
+        (food: number, ratio: number, player: number): void
     }
 
     /**
@@ -5053,9 +5054,9 @@ declare namespace Item {
     function setGlint(id: number | string, enabled: boolean): void;
 
     /**
-     * 
+     * Allows to click with item on liquid blocks
      * @param id string or numeric item id
-     * @param enabled 
+     * @param enabled if true, liquid blocks can be selected on click
      */
     function setLiquidClip(id: number | string, enabled: boolean): void;
 
@@ -5063,6 +5064,13 @@ declare namespace Item {
      * @deprecated No longer supported
      */
     function setStackedByData(id: number | string, enabled: boolean): void;
+
+    /**
+     * Allows item to be put in offhand slot
+     * @param id string or numeric item id
+     * @param allowed
+     */
+    function setAllowedInOffhand(id: number | string, allowed: boolean): void;
 
     /**
      * Sets additional properties for the item, uses Minecraft mechanisms to
@@ -9466,7 +9474,7 @@ declare namespace ToolAPI {
     interface ToolMaterial {
         /**
          * Devidor used to calculate block breaking
-         * speed. 2 is a default value for wooden instruments and 1 is a default 
+         * speed. 2 is a default value for wooden instruments and 12 is a default 
          * value for golden instruments
          */
         efficiency?: number,
@@ -9480,7 +9488,7 @@ declare namespace ToolAPI {
         damage?: number,
 
         /**
-         * Durability of the tool, 1 is a default value 
+         * Durability of the tool, 33 is a default value 
          * for golden tools and 1562 is a default value for diamond tools
          */
         durability?: number,

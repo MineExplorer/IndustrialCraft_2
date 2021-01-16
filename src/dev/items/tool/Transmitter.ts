@@ -1,6 +1,6 @@
 class ItemTransmitter
 extends ItemCommon
-implements ItemFuncs {
+implements ItemBehavior {
 	constructor() {
 		super("freqTransmitter", "frequency_transmitter", "frequency_transmitter");
 		this.setMaxStack(1);

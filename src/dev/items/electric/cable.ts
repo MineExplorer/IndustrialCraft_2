@@ -1,6 +1,6 @@
 class ItemCable
 extends ItemCommon
-implements ItemFuncs {
+implements ItemBehavior {
 	maxVoltage: number;
 
 	constructor(stringID: string, name: string, texture: string | Item.TextureData, maxVoltage: number) {

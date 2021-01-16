@@ -1,6 +1,6 @@
 class ItemTinCanFull
 extends ItemCommon
-implements ItemFuncs {
+implements ItemBehavior {
 	constructor() {
 		super("tinCanFull", "Filled Tin Can", {name: "tin_can", meta: 1});
 	}
@@ -13,7 +13,7 @@ implements ItemFuncs {
 	}
 
 	onNoTargetUse(item: ItemInstance, playerUid: number): void {
-		let player = new PlayerManager(playerUid);
+		let player = new PlayerInterface(playerUid);
 		let hunger = player.getHunger();
 		let saturation = player.getSaturation();
 		let count = Math.min(20 - hunger, item.count);

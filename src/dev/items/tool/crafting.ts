@@ -18,7 +18,7 @@ Callback.addCallback("DestroyBlockStart", function(coords, block) {
 Item.registerUseFunction("cutter", function(coords, item, block, playerUid) {
 	let cableData = CableRegistry.getCableData(block.id);
 	if (cableData && cableData.insulation < cableData.maxInsulation) {
-		let player = new PlayerManager(playerUid);
+		let player = new PlayerInterface(playerUid);
 		for (let i = 9; i < 45; i++) {
 			let slot = player.getInventorySlot(i);
 			if (slot.id == ItemID.rubber) {

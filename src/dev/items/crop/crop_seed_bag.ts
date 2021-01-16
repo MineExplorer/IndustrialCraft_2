@@ -1,6 +1,6 @@
 class ItemSeedBag
 extends ItemCommon
-implements ItemFuncs {
+implements ItemBehavior {
     constructor() {
         super("cropSeedBag", "Seed Bag (%s)", "crop_seed_bag", false);
         this.setMaxStack(1);

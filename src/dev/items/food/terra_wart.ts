@@ -9,14 +9,20 @@ const negativePotions = [
     PotionEffect.wither
 ];
 
-ItemRegistry.createItem("terraWart", {type: "food", name: "Terra Wart", icon: "terra_wart", food: 1, rarity: EnumRarity.RARE});
+class ItemTerraWart
+extends ItemFood {
+    constructor() {
+        super("terraWart", "Terra Wart", "terra_wart", 1);
+        this.setRarity(EnumRarity.RARE);
+    }
 
-Callback.addCallback("FoodEaten", function(heal: number, satRatio: number, player: number) {
-    if (Entity.getCarriedItem(player).id == ItemID.terraWart) {
-		RadiationAPI.addRadiation(-600);
-		for (var i in negativePotions) {
-			var potionID = negativePotions[i];
+    onFoodEaten(item: ItemInstance, food: number, saturation: number, player: number) {
+        RadiationAPI.addRadiation(-600);
+		for (let i in negativePotions) {
+			let potionID = negativePotions[i];
 			Entity.clearEffect(player, potionID);
 		}
-	}
-});
+    }
+}
+
+ItemRegistry.registerItem(new ItemTerraWart());

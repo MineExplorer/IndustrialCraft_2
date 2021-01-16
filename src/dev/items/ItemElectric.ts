@@ -1,6 +1,6 @@
 class ItemElectric
 extends ItemCommon
-implements IElectricItem, ItemFuncs {
+implements IElectricItem, ItemBehavior {
 	energy: string = "Eu";
 	maxCharge: number;
 	transferLimit: number;

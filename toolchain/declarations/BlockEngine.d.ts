@@ -226,7 +226,7 @@ declare class WorldRegion {
     listEntitiesInAABB(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, type: number, blacklist?: boolean): number[];
     playSound(x: number, y: number, z: number, name: string, volume?: number, pitch?: number): void;
 }
-declare class PlayerManager {
+declare class PlayerInterface {
     playerActor: PlayerActor;
     playerUid: number;
     constructor(playerUid: number);
@@ -354,19 +354,7 @@ declare class PlayerManager {
      */
     setScore(value: number): void;
 }
-declare class BlockBase {
-    stringID: string;
-    id: number;
-    variants: Array<Block.BlockVariation>;
-    constructor(stringID: string);
-    addVariant(name: string, texture: [string, number][], inCreative: any): void;
-    create(blockType?: Block.SpecialType | string): void;
-    setDestroyTime(destroyTime: number): this;
-    setBlockMaterial(material: string, level: number): this;
-    setShape(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, data?: number): this;
-    registerTileEntity(prototype: any): void;
-}
-interface ItemFuncs {
+interface ItemBehavior {
     onNameOverride?(item: ItemInstance, translation: string, name: string): string;
     onIconOverride?(item: ItemInstance, isModUi: boolean): Item.TextureData;
     onItemUse?(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void;
@@ -440,6 +428,14 @@ declare class ItemBase {
 }
 declare class ItemCommon extends ItemBase {
     constructor(stringID: string, name?: string, icon?: string | Item.TextureData, inCreative?: boolean);
+}
+declare class ItemFood extends ItemBase {
+    constructor(stringID: string, name?: string, icon?: string | Item.TextureData, food?: number, inCreative?: boolean);
+    onFoodEaten(item: ItemInstance, food: number, saturation: number, player: number): void;
+}
+declare class ItemThrowable extends ItemBase {
+    constructor(stringID: string, name?: string, icon?: string | Item.TextureData, inCreative?: boolean);
+    onProjectileHit(projectile: number, item: ItemInstance, target: Callback.ProjectileHitTarget): void;
 }
 interface OnHurtListener {
     onHurt: (params: {
@@ -525,16 +521,17 @@ declare enum EnumRarity {
     EPIC = 3
 }
 declare namespace ItemRegistry {
-    export function getInstanceOf(itemID: number): ItemBase;
+    export function getInstanceOf(itemID: string | number): ItemBase;
     export function getRarity(id: number): number;
-    export function getRarityColor(rarity: number): string;
-    export function setRarity(id: string | number, rarity: number): void;
+    export function getRarityColor(id: number): string;
+    export function getRarityColorCode(rarity: number): string;
+    export function setRarity(id: string | number, rarity: number, preventNameOverride?: boolean): void;
     export function addArmorMaterial(name: string, material: ArmorMaterial): void;
     export function getArmorMaterial(name: string): ArmorMaterial;
     export function addToolMaterial(name: string, material: ToolMaterial): void;
     export function getToolMaterial(name: string): ToolMaterial;
     export function registerItem(itemInstance: ItemBase): ItemBase;
-    export function registerItemFuncs(itemID: number, itemFuncs: ItemBase | ItemFuncs): void;
+    export function registerItemFuncs(itemID: string | number, itemFuncs: ItemBase | ItemBehavior): void;
     interface ItemDescription {
         name: string;
         icon: string | Item.TextureData;

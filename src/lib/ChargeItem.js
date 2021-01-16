@@ -1,16 +1,15 @@
 LIBRARY({
     name: "ChargeItem",
-    version: 10,
+    version: 9,
     shared: true,
     api: "CoreEngine"
 });
 var ChargeItemRegistry;
 (function (ChargeItemRegistry) {
     ChargeItemRegistry.chargeData = {};
-    function registerItem(id, energyType, capacity, transferLimit, tier, canProvideEnergy, notInCreative) {
+    function registerItem(id, energyType, capacity, transferLimit, tier, canProvideEnergy, inCreative) {
         if (typeof energyType == "string") {
             ChargeItemRegistry.chargeData[id] = {
-                isFlash: false,
                 canProvideEnergy: canProvideEnergy,
                 energy: energyType,
                 tier: tier || 0,
@@ -20,21 +19,21 @@ var ChargeItemRegistry;
         }
         else {
             var itemData = energyType;
-            notInCreative = capacity;
-            capacity = itemData.maxCharge;
             ChargeItemRegistry.chargeData[id] = itemData;
+            inCreative = capacity;
+            capacity = itemData.maxCharge;
         }
         Item.setMaxDamage(id, 27);
-        if (!notInCreative) {
+        if (inCreative !== null && inCreative !== void 0 ? inCreative : true) {
             addToCreative(id, capacity);
         }
     }
     ChargeItemRegistry.registerItem = registerItem;
     function registerFlashItem(id, energyType, amount, tier) {
+        if (tier === void 0) { tier = 0; }
         ChargeItemRegistry.chargeData[id] = {
-            isFlash: true,
             canProvideEnergy: true,
-            tier: tier || 0,
+            tier: tier,
             energy: energyType,
             amount: amount
         };
@@ -66,12 +65,12 @@ var ChargeItemRegistry;
     ChargeItemRegistry.getItemData = getItemData;
     function isFlashStorage(id) {
         var data = getItemData(id);
-        return (data && data.isFlash);
+        return (data && !!data.amount);
     }
     ChargeItemRegistry.isFlashStorage = isFlashStorage;
     function isValidItem(id, energyType, tier) {
         var data = getItemData(id);
-        return (data && !data.isFlash && data.energy == energyType && data.tier <= tier);
+        return (data && !data.amount && data.energy == energyType && data.tier <= tier);
     }
     ChargeItemRegistry.isValidItem = isValidItem;
     function isValidStorage(id, energyType, tier) {
@@ -96,7 +95,7 @@ var ChargeItemRegistry;
         if (!data || energyType && data.energy != energyType) {
             return 0;
         }
-        if (data.isFlash) {
+        if (data.amount) {
             return data.amount;
         }
         if (item.extra) {
@@ -124,7 +123,7 @@ var ChargeItemRegistry;
         if (!data || data.energy != energyType || data.tier > tier || !data.canProvideEnergy) {
             return 0;
         }
-        if (data.isFlash) {
+        if (data.amount) {
             if (amount < 1) {
                 return 0;
             }

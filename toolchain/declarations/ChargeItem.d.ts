@@ -1,6 +1,6 @@
+/// <reference path="./core-engine.d.ts" />
+
 interface IElectricItem {
-    /** If true, consumes when gives energy, otherwise can be recharged many times */
-    isFlash?: boolean;
     /** Type of energy stored in item */
     energy: string;
     /** If true, energy can be extracted from item */
@@ -22,9 +22,9 @@ declare namespace ChargeItemRegistry {
     let chargeData: {
         [key: number]: IElectricItem;
     };
-    function registerItem(id: number, itemData: IElectricItem, notInCreative?: boolean): void;
-    function registerItem(id: number, energyType: string, capacity: number, transferLimit: number, tier: number, canProvideEnergy?: boolean, notInCreative?: boolean): void;
-    function registerFlashItem(id: number, energyType: string, amount: number, tier: number): void;
+    function registerItem(id: number, itemData: IElectricItem, inCreative?: boolean): void;
+    function registerItem(id: number, energyType: string, capacity: number, transferLimit: number, tier?: number, canProvideEnergy?: boolean, inCreative?: boolean): void;
+    function registerFlashItem(id: number, energyType: string, amount: number, tier?: number): void;
     /** @deprecated Use registerItem instead */
     function registerExtraItem(id: number, energyType: string, capacity: number, transferLimit: number, tier: number, itemType?: string, addScale?: boolean, addToCreative?: boolean): void;
     function addToCreative(id: number, energy: number): void;

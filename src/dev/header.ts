@@ -12,9 +12,9 @@
 */
 
 // libraries
-IMPORT("flags");
-IMPORT("ToolLib");
 IMPORT("BlockEngine");
+IMPORT("flags");
+IMPORT("ToolLib", "ToolLib");
 IMPORT("EnergyNet");
 IMPORT("ChargeItem");
 IMPORT("TileRender");

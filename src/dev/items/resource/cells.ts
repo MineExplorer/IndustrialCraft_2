@@ -1,6 +1,12 @@
 class ItemEmptyCell
-extends ItemCommon {
-	function(coords, item, block, playerUid) {
+extends ItemCommon
+implements ItemBehavior {
+	constructor() {
+		super("cellEmpty", "empty_cell", "cell_empty");
+		this.setLiquidClip();
+	}
+
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, playerUid: number): void {
 		if (block.id > 7 && block.id < 12 && block.data == 0) {
 			let player = new PlayerInterface(playerUid);
 			let region = WorldRegion.getForActor(playerUid);
@@ -28,9 +34,7 @@ implements ItemBehavior {
 	}
 }
 
-ItemRegistry.createItem("cellEmpty", {name: "empty_cell", icon: "cell_empty"});
-Item.setLiquidClip(ItemID.cellEmpty, true);
-
+ItemRegistry.registerItem(new ItemEmptyCell());
 ItemRegistry.registerItem(new ItemLiquidCell("cellWater", "water"));
 ItemRegistry.registerItem(new ItemLiquidCell("cellLava", "lava"));
 ItemRegistry.registerItem(new ItemLiquidCell("cellBiomass", "biomass"));

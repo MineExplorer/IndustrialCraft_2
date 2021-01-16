@@ -20,12 +20,13 @@ Item.registerUseFunction("cutter", function(coords, item, block, playerUid) {
 	if (cableData && cableData.insulation < cableData.maxInsulation) {
 		let player = new PlayerInterface(playerUid);
 		for (let i = 9; i < 45; i++) {
-			let slot = player.getInventorySlot(i);
-			if (slot.id == ItemID.rubber) {
-				let blockID = BlockID[cableData.name + (cableData.insulation + 1)];
+			let stack = player.getInventorySlot(i);
+			if (stack.id == ItemID.rubber) {
+				let blockID = Block.getNumericId(cableData.name + (cableData.insulation + 1));
 				let region = WorldRegion.getForActor(playerUid);
 				region.setBlock(coords, blockID, 0);
-				player.setInventorySlot(i, --slot.count ? slot.id : 0, slot.count, slot.data);
+				stack.decrease(1);
+				player.setInventorySlot(i, stack);
 				break;
 			}
 		}

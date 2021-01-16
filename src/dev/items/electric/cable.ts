@@ -28,7 +28,7 @@ implements ItemBehavior {
 	}
 
 	static createItem(stringID: string, name: string, texture: string | Item.TextureData, maxVoltage: number) {
-		return new this(stringID, name, texture, maxVoltage);
+		return ItemRegistry.registerItem(new this(stringID, name, texture, maxVoltage));
 	}
 }
 

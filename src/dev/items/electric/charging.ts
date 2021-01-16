@@ -37,27 +37,27 @@ extends ItemBattery {
 	}
 
 	static checkCharging(playerUid: number): void {
-		let player = new PlayerActor(playerUid);
+		let player = new PlayerInterface(playerUid);
 		for (let i = 0; i < 36; i++) {
 			let slot = player.getInventorySlot(i);
-			let itemClass = ItemRegistry.getInstanceOf(slot.id);
-			if (itemClass instanceof ItemBatteryCharging) {
+			let itemInstance = slot.getItemInstance();
+			if (itemInstance instanceof ItemBatteryCharging) {
 				let mode = slot.extra? slot.extra.getInt("mode") : 0;
 				let energyStored = ChargeItemRegistry.getEnergyStored(slot);
 				if (mode == 2 || energyStored <= 0) continue;
 				for (let index = 0; index < 9; index++) {
 					if (mode == 1 && player.getSelectedSlot() == index) continue;
-					let item = player.getInventorySlot(index);
-					if (!ChargeItemRegistry.isValidStorage(item.id, "Eu", 5)) {
-						let energyAdd = ChargeItemRegistry.addEnergyTo(item, "Eu", Math.min(energyStored, itemClass.transferLimit*20), itemClass.tier, true);
+					let stack = player.getInventorySlot(index);
+					if (!ChargeItemRegistry.isValidStorage(stack.id, "Eu", 5)) {
+						let energyAdd = ChargeItemRegistry.addEnergyTo(stack, "Eu", Math.min(energyStored, itemInstance.transferLimit*20), itemInstance.tier, true);
 						if (energyAdd > 0) {
 							energyStored -= energyAdd;
-							player.setInventorySlot(index, item.id, 1, item.data, item.extra);
+							player.setInventorySlot(index, stack);
 						}
 					}
 				}
 				ChargeItemRegistry.setEnergyStored(slot, energyStored);
-				player.setInventorySlot(i, slot.id, 1, slot.data, slot.extra);
+				player.setInventorySlot(i, slot);
 			}
 		}
 	}

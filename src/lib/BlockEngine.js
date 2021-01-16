@@ -33,14 +33,14 @@ var ItemStack = /** @class */ (function () {
             this.extra = extra;
         }
     }
+    ItemStack.prototype.getItemInstance = function () {
+        return ItemRegistry.getInstanceOf(this.id);
+    };
     ItemStack.prototype.getMaxStack = function () {
         return Item.getMaxStack(this.id);
     };
     ItemStack.prototype.getMaxDamage = function () {
-        Item.getMaxDamage(this.id);
-    };
-    ItemStack.prototype.isEmpty = function () {
-        return this.id == 0 && this.count == 0 && this.data == 0 && this.extra == null;
+        return Item.getMaxDamage(this.id);
     };
     ItemStack.prototype.decrease = function (count) {
         this.count -= count;
@@ -470,43 +470,47 @@ var PlayerInterface = /** @class */ (function () {
     PlayerInterface.prototype.getGameMode = function () {
         return this.playerActor.getGameMode();
     };
-    /**
-     * Adds item to player's inventory
-     * @param dropRemainings if true, surplus will be dropped near player
-     */
     PlayerInterface.prototype.addItemToInventory = function (id, count, data, extra) {
         if (extra === void 0) { extra = null; }
-        this.playerActor.addItemToInventory(id, count, data, extra, true);
+        var item = id;
+        if (typeof item == "object") {
+            this.playerActor.addItemToInventory(item.id, item.count, item.data, item.extra || null, true);
+        }
+        else {
+            this.playerActor.addItemToInventory(id, count, data, extra, true);
+        }
     };
     /**
      * @returns inventory slot's contents.
      */
     PlayerInterface.prototype.getInventorySlot = function (slot) {
-        return this.playerActor.getInventorySlot(slot);
+        var item = this.playerActor.getInventorySlot(slot);
+        return new ItemStack(item);
     };
-    /**
-     * Sets inventory slot's contents.
-     */
-    PlayerInterface.prototype.setInventorySlot = function (slot, id, count, data, extra) {
+    PlayerInterface.prototype.setInventorySlot = function (slot, item, count, data, extra) {
         if (extra === void 0) { extra = null; }
-        this.playerActor.setInventorySlot(slot, id, count, data, extra);
+        if (typeof item == "object") {
+            this.playerActor.setInventorySlot(slot, item.id, item.count, item.data, item.extra || null);
+        }
+        else {
+            this.playerActor.setInventorySlot(slot, item, count, data, extra);
+        }
     };
     /**
      * @returns item in player's hand
     */
     PlayerInterface.prototype.getCarriedItem = function () {
-        return Entity.getCarriedItem(this.getUid());
+        var item = Entity.getCarriedItem(this.getUid());
+        return new ItemStack(item);
     };
-    /**
-     * Sets item in player's hand
-     * @param id item id
-     * @param count item count
-     * @param data item data
-     * @param extra item extra
-     */
-    PlayerInterface.prototype.setCarriedItem = function (id, count, data, extra) {
+    PlayerInterface.prototype.setCarriedItem = function (item, count, data, extra) {
         if (extra === void 0) { extra = null; }
-        Entity.setCarriedItem(this.getUid(), id, count, data, extra);
+        if (typeof item == "object") {
+            Entity.setCarriedItem(this.getUid(), item.id, item.count, item.data, item.extra);
+        }
+        else {
+            Entity.setCarriedItem(this.getUid(), item, count, data, extra);
+        }
     };
     /**
      * Decreases carried item count by specified number
@@ -521,14 +525,17 @@ var PlayerInterface = /** @class */ (function () {
      * @returns armor slot's contents.
      */
     PlayerInterface.prototype.getArmor = function (slot) {
-        return this.playerActor.getArmor(slot);
+        var item = this.playerActor.getArmor(slot);
+        return new ItemStack(item);
     };
-    /**
-     * Sets armor slot's contents.
-     */
-    PlayerInterface.prototype.setArmor = function (slot, id, count, data, extra) {
+    PlayerInterface.prototype.setArmor = function (slot, item, count, data, extra) {
         if (extra === void 0) { extra = null; }
-        this.playerActor.setArmor(slot, id, count, data, extra);
+        if (typeof item == "object") {
+            this.playerActor.setArmor(slot, item.id, item.count, item.data, item.extra || null);
+        }
+        else {
+            this.playerActor.setArmor(slot, item, count, data, extra);
+        }
     };
     /**
      * Sets respawn coords for the player.
@@ -728,7 +735,7 @@ var ItemBase = /** @class */ (function () {
         this.item.addRepairItem(itemID);
     };
     ItemBase.prototype.setRarity = function (rarity) {
-        ItemRegistry.setRarity(this.id, rarity, true);
+        ItemRegistry.setRarity(this.id, rarity);
     };
     return ItemBase;
 }());
@@ -1321,6 +1328,7 @@ EXPORT("ItemFood", ItemFood);
 EXPORT("ItemThrowable", ItemThrowable);
 EXPORT("ItemArmor", ItemArmor);
 EXPORT("ItemTool", ItemTool);
+EXPORT("ToolType", ToolType);
 // enums
 EXPORT("ItemCategory", ItemCategory);
 EXPORT("EnumRarity", EnumRarity);

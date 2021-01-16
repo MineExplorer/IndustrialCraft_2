@@ -26,8 +26,8 @@ extends ElectricTool {
 		}
 		let player = new PlayerInterface(playerUid);
 		for (let i = 9; i < 45; i++) {
-			let slot = player.getInventorySlot(i);
-			if (slot.id == 50) {
+			let stack = player.getInventorySlot(i);
+			if (stack.id == 50) {
 				if (Block.isSolid(block.id)) {
 					region.setBlock(place, 50, (6 - coords.side)%6);
 				} else {
@@ -38,13 +38,14 @@ extends ElectricTool {
 						break;
 					}
 				}
-				player.setInventorySlot(i, --slot.count > 0 ? slot.id : 0, slot.count, 0);
+				stack.decrease(1);
+				player.setInventorySlot(i, stack);
 				break;
 			}
 		}
 	}
 
-	continueDestroyBlock(item, coords, block, progress): void {
+	continueDestroyBlock(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, progress: number): void {
 		if (progress > 0) {
 			this.playDestroySound(item, block);
 		}

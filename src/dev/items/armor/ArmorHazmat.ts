@@ -13,11 +13,12 @@ implements OnHurtListener, OnTickListener {
 		if (params.type == 9 && index == 0) {
 			let player = new PlayerInterface(playerUid);
 			for (let i = 0; i < 36; i++) {
-				let slot = player.getInventorySlot(i);
-				if (slot.id == ItemID.cellAir) {
+				let stack = player.getInventorySlot(i);
+				if (stack.id == ItemID.cellAir) {
 					Game.prevent();
 					Entity.addEffect(playerUid, PotionEffect.waterBreathing, 1, 60);
-					player.setInventorySlot(i, slot.id, slot.count - 1, 0, slot.extra);
+					stack.decrease(1);
+					player.setInventorySlot(i, stack);
 					player.addItemToInventory(ItemID.cellEmpty, 1, 0);
 					break;
 				}

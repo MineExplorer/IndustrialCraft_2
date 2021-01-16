@@ -78,12 +78,12 @@ extends ArmorElectric {
 			let hunger = player.getHunger();
 			if (hunger < 20 && newEnergyStored >= 500) {
 				let i = World.getThreadTime()%36;
-				let slot = player.getInventorySlot(i);
-				if (slot.id == ItemID.tinCanFull) {
-					let count = Math.min(20 - hunger, slot.count);
+				let stack = player.getInventorySlot(i);
+				if (stack.id == ItemID.tinCanFull) {
+					let count = Math.min(20 - hunger, stack.count);
 					player.setHunger(hunger + count);
-					slot.count -= count;
-					player.setInventorySlot(i, slot.count ? slot.id : 0, slot.count, slot.data, slot.extra);
+					stack.decrease(count);
+					player.setInventorySlot(i, stack);
 					player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
 					newEnergyStored -= 500;
 					break;

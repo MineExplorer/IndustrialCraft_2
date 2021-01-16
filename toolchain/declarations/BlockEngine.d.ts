@@ -6,9 +6,9 @@ declare class ItemStack implements ItemInstance {
     constructor();
     constructor(item: ItemInstance);
     constructor(id: number, count: number, data: number, extra?: ItemExtraData);
+    getItemInstance(): Nullable<ItemBase>;
     getMaxStack(): number;
-    getMaxDamage(): void;
-    isEmpty(): boolean;
+    getMaxDamage(): number;
     decrease(count: number): void;
     clear(): void;
 }
@@ -246,19 +246,21 @@ declare class PlayerInterface {
      * Adds item to player's inventory
      * @param dropRemainings if true, surplus will be dropped near player
      */
+    addItemToInventory(item: ItemInstance): void;
     addItemToInventory(id: number, count: number, data: number, extra?: ItemExtraData): void;
     /**
      * @returns inventory slot's contents.
      */
-    getInventorySlot(slot: number): ItemInstance;
+    getInventorySlot(slot: number): ItemStack;
     /**
      * Sets inventory slot's contents.
      */
+    setInventorySlot(slot: number, item: ItemInstance): void;
     setInventorySlot(slot: number, id: number, count: number, data: number, extra?: ItemExtraData): void;
     /**
      * @returns item in player's hand
     */
-    getCarriedItem(): ItemInstance;
+    getCarriedItem(): ItemStack;
     /**
      * Sets item in player's hand
      * @param id item id
@@ -266,6 +268,7 @@ declare class PlayerInterface {
      * @param data item data
      * @param extra item extra
      */
+    setCarriedItem(item: ItemInstance): void;
     setCarriedItem(id: number, count: number, data: number, extra?: ItemExtraData): void;
     /**
      * Decreases carried item count by specified number
@@ -279,6 +282,7 @@ declare class PlayerInterface {
     /**
      * Sets armor slot's contents.
      */
+    setArmor(slot: number, item: ItemInstance): void;
     setArmor(slot: number, id: number, count: number, data: number, extra?: ItemExtraData): void;
     /**
      * Sets respawn coords for the player.
@@ -521,7 +525,7 @@ declare enum EnumRarity {
     EPIC = 3
 }
 declare namespace ItemRegistry {
-    export function getInstanceOf(itemID: string | number): ItemBase;
+    export function getInstanceOf(itemID: string | number): Nullable<ItemBase>;
     export function getRarity(id: number): number;
     export function getRarityColor(id: number): string;
     export function getRarityColorCode(rarity: number): string;

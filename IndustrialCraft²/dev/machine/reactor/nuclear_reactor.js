@@ -477,8 +477,9 @@ MachineRegistry.registerGenerator(BlockID.reactorChamber, {
 });
 
 Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block){
+	let place = coords.relative;
 	for (let i = 0; i < 6; i++) {
-		let c = StorageInterface.getRelativeCoords(coords.relative, i);
+		let c = StorageInterface.getRelativeCoords(place, i);
 		if(World.getBlockID(c.x, c.y, c.z) == BlockID.reactorChamber){
 			let tileEnt = World.getTileEntity(c.x, c.y, c.z);
 			if(tileEnt.core){
@@ -487,12 +488,12 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block
 			}
 		}
 	}
-	World.setBlock(x, y, z, item.id, 0);
-	World.addTileEntity(x, y, z);
+	World.setBlock(place.x, place.y, place.z, item.id, 0);
+	World.addTileEntity(place.x, place.y, place.z);
 });
 
 Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block){
-	Game.prevent();
+	let place = coords.relative;
 	let reactorConnect = 0;
 	for (let i = 0; i < 6; i++) {
 		let c = StorageInterface.getRelativeCoords(coords.relative, i);
@@ -502,8 +503,8 @@ Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block
 		}
 	}
 	if(reactorConnect == 1){
-		World.setBlock(x, y, z, item.id, 0);
-		World.addTileEntity(x, y, z);
+		World.setBlock(place.x, place.y, place.z, item.id, 0);
+		World.addTileEntity(place.x, place.y, place.z);
 	} else {
 		item.count++;
 	}

@@ -85,7 +85,6 @@ function getValidCoilSlotFunction(index){
 MachineRegistry.registerElectricMachine(BlockID.electricHeatGenerator, {
     defaultValues: {
 		meta: 0,
-		energy_storage: 2000,
 		isActive: false
 	},
     

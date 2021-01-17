@@ -3,15 +3,15 @@ IDRegistry.genItemID("quantumChestplate");
 IDRegistry.genItemID("quantumLeggings");
 IDRegistry.genItemID("quantumBoots");
 
-Item.createArmorItem("quantumHelmet", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 5, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 10000000, texture: "armor/quantum_2.png", isTech: true});
-Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumHelmet", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 5, durability: 1e7, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumChestplate", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 9, durability: 1e7, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumLeggings", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 7, durability: 1e7, texture: "armor/quantum_2.png", isTech: true});
+Item.createArmorItem("quantumBoots", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 4, durability: 1e7, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 10000000, 8192, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 10000000, 8192, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 10000000, 8192, 4, "armor", true);
-ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 10000000, 8192, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumHelmet, "Eu", 1e7, 8192, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumChestplate, "Eu", 1e7, 8192, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumLeggings, "Eu", 1e7, 8192, 4, "armor", true);
+ChargeItemRegistry.registerItem(ItemID.quantumBoots, "Eu", 1e7, 8192, 4, "armor", true);
 
 ItemName.setRarity(ItemID.quantumHelmet, 2);
 ItemName.setRarity(ItemID.quantumChestplate, 2);
@@ -28,15 +28,15 @@ IDRegistry.genItemID("quantumChestplateUncharged");
 IDRegistry.genItemID("quantumLeggingsUncharged");
 IDRegistry.genItemID("quantumBootsUncharged");
 
-Item.createArmorItem("quantumHelmetUncharged", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 2, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumChestplateUncharged", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
-Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 10000000, texture: "armor/quantum_2.png", isTech: true});
-Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 10000000, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumHelmetUncharged", "Quantum Helmet", {name: "quantum_helmet"}, {type: "helmet", armor: 2, durability: 1e7, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumChestplateUncharged", "Quantum Bodyarmor", {name: "quantum_chestplate"}, {type: "chestplate", armor: 6, durability: 1e7, texture: "armor/quantum_1.png", isTech: true});
+Item.createArmorItem("quantumLeggingsUncharged", "Quantum Leggings", {name: "quantum_leggings"}, {type: "leggings", armor: 3, durability: 1e7, texture: "armor/quantum_2.png", isTech: true});
+Item.createArmorItem("quantumBootsUncharged", "Quantum Boots", {name: "quantum_boots"}, {type: "boots", armor: 2, durability: 1e7, texture: "armor/quantum_1.png", isTech: true});
 
-ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 10000000, 8192, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 10000000, 8192, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 10000000, 8192, 4, "armor");
-ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 10000000, 8192, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumHelmetUncharged, 1e7, 8192, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumChestplateUncharged, 1e7, 8192, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumLeggingsUncharged, 1e7, 8192, 4, "armor");
+ChargeItemRegistry.registerItem(ItemID.quantumBootsUncharged, 1e7, 8192, 4, "armor");
 
 ItemName.setRarity(ItemID.quantumHelmetUncharged, 2);
 ItemName.setRarity(ItemID.quantumChestplateUncharged, 2);

@@ -4,15 +4,15 @@ ChargeItemRegistry.registerItem(ItemID.chargingBattery, "Eu", 40000, 128, 1, "st
 
 IDRegistry.genItemID("chargingAdvBattery");
 Item.createItem("chargingAdvBattery", "Advanced Charging Battery", {name: "adv_charging_battery", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 512, 2, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingAdvBattery, "Eu", 400000, 1024, 2, "storage", true, true);
 
 IDRegistry.genItemID("chargingCrystal");
 Item.createItem("chargingCrystal", "Charging Energy Crystal", {name: "charging_energy_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 2048, 3, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingCrystal, "Eu", 4000000, 8192, 3, "storage", true, true);
 
 IDRegistry.genItemID("chargingLapotronCrystal");
 Item.createItem("chargingLapotronCrystal", "Charging Lapotron Crystal", {name: "charging_lapotron_crystal", meta: 0}, {stack: 1, isTech: true});
-ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 40000000, 8192, 4, "storage", true, true);
+ChargeItemRegistry.registerItem(ItemID.chargingLapotronCrystal, "Eu", 4e7, 32768, 4, "storage", true, true);
 ItemName.setRarity(ItemID.chargingLapotronCrystal, 1);
 
 Item.registerIconOverrideFunction(ItemID.chargingBattery, function(item, name){

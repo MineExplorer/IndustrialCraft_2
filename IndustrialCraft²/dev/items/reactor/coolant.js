@@ -12,12 +12,6 @@ Recipes.addShaped({id: ItemID.coolantCell, count: 1, data: 1}, [
 	" a ",
 	"axa",
 	" a ",
-], ['x', 373, 0, 'a', ItemID.plateTin, 0]);
-
-Recipes.addShaped({id: ItemID.coolantCell, count: 1, data: 1}, [
-	" a ",
-	"axa",
-	" a ",
 ], ['x', ItemID.cellCoolant, 0, 'a', ItemID.plateTin, 0]);
 
 Recipes.addShaped({id: ItemID.coolantCell3, count: 1, data: 1}, [

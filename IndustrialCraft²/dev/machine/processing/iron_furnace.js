@@ -65,24 +65,26 @@ MachineRegistry.registerPrototype(BlockID.ironFurnace, {
 		StorageInterface.checkHoppers(this);
 		
 		var sourceSlot = this.container.getSlot("slotSource");
+		var resultSlot = this.container.getSlot("slotResult");
 		var result = Recipes.getFurnaceRecipeResult(sourceSlot.id, "iron");
-		
-		if(this.data.burn == 0 && result){
-			this.data.burn = this.data.burnMax = this.getFuel("slotFuel");
-		}
-		
-		if(this.data.burn > 0 && result){
-			var resultSlot = this.container.getSlot("slotResult");
-			if((resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0) && this.data.progress++ >= 160){
-				sourceSlot.count--;
-				resultSlot.id = result.id;
-				resultSlot.data = result.data;
-				resultSlot.count++;
-				this.container.validateAll();
-				this.data.progress = 0;
+		var resetProgress = true;
+		if (result && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0)) {
+			if (this.data.burn == 0) {
+				this.data.burn = this.data.burnMax = this.getFuel("slotFuel");
+			}
+			if (this.data.burn > 0) {
+				resetProgress = false;
+				if (this.data.progress++ >= 160) {
+					sourceSlot.count--;
+					resultSlot.id = result.id;
+					resultSlot.data = result.data;
+					resultSlot.count++;
+					this.container.validateAll();
+					this.data.progress = 0;
+				}
 			}
 		}
-		else{
+		if (resetProgress) {
 			this.data.progress = 0;
 		}
 		

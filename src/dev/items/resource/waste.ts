@@ -1,3 +1,3 @@
-ItemRegistry.createItem("ashes", {name: "Ashes", icon: "ashes"});
-ItemRegistry.createItem("slag", {name: "Slag", icon: "slag"});
-ItemRegistry.createItem("bioChaff", {name: "Bio Chaff", icon: "bio_chaff"});
+ItemRegistry.createItem("ashes", {name: "ashes", icon: "ashes"});
+ItemRegistry.createItem("slag", {name: "slag", icon: "slag"});
+ItemRegistry.createItem("bioChaff", {name: "bio_chaff", icon: "bio_chaff"});

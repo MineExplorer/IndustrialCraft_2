@@ -6,7 +6,7 @@ namespace ItemName {
 	}
 
 	export function addTierTooltip(stringID: string, tier: number): void {
-		addTooltip(Block.getNumericId(stringID), Translation.translate("Power Tier: ") + tier);
+		addTooltip(Block.getNumericId(stringID), Translation.translate("tooltip.power_tier").replace("%s", tier.toString()));
 	}
 
 	export function addStorageBlockTooltip(stringID: string, tier: number, capacity: string): void {
@@ -16,7 +16,7 @@ namespace ItemName {
 	}
 
 	export function showBlockStorage(item: ItemInstance, name: string, tier: number, capacity: string): string {
-		let tierText = "§7" + Translation.translate("Power Tier: ") + tier;
+		let tierText = "§7" + Translation.translate("tooltip.power_tier").replace("%s", tier.toString());
 
 		let energy = 0;
 		if (item.extra) {
@@ -48,60 +48,5 @@ namespace ItemName {
 			}
 		}
 		return energy;
-	}
-
-	export function getSideName(side: number): string {
-		let sideNames = {
-			en: [
-				"first valid",
-				"bottom",
-				"top",
-				"north",
-				"south",
-				"east",
-				"west"
-			],
-			ru: [
-				"первой подходящей",
-				"нижней",
-				"верхней",
-				"северной",
-				"южной",
-				"восточной",
-				"западной"
-			],
-			zh: [
-				"初次生效",
-				"底部",
-				"顶部",
-				"北边",
-				"南边",
-				"东边",
-				"西边"
-			],
-			es: [
-				"Primera vez efectivo",
-				"abajo",
-				"arriba",
-				"norte",
-				"sur",
-				"este",
-				"oeste"
-			],
-			pt: [
-				"Primeira vez eficaz",
-				"o lado de baixo",
-				"o lado de cima",
-				"o norte",
-				"o sul",
-				"o leste",
-				"o oeste"
-			]
-		}
-		if (sideNames[ConfigIC.gameLanguage]) {
-			return sideNames[ConfigIC.gameLanguage][side+1];
-		} else {
-			return sideNames["en"][side+1];
-		}
 	}
 }

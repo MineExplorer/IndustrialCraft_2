@@ -1,12 +1,12 @@
-ItemRegistry.createItem("iridiumChunk", {name: "Iridium", icon: "iridium", rarity: EnumRarity.RARE});
-ItemRegistry.createItem("plateReinforcedIridium", {name: "Iridium Reinforced Plate", icon: "plate_reinforced_iridium", rarity: EnumRarity.RARE});
-ItemRegistry.createItem("plateAlloy", {name: "Alloy Plate", icon: "plate_alloy"});
-ItemRegistry.createItem("carbonFibre", {name: "Carbon Fibre", icon: "carbon_fibre"});
-ItemRegistry.createItem("carbonMesh", {name: "Carbon Mesh", icon: "carbon_mesh"});
-ItemRegistry.createItem("carbonPlate", {name: "Carbon Plate", icon: "carbon_plate"});
-ItemRegistry.createItem("coalBall", {name: "Coal Ball", icon: "coal_ball"});
-ItemRegistry.createItem("coalBlock", {name: "Coal Block", icon: "coal_block"});
-ItemRegistry.createItem("coalChunk", {name: "Coal Chunk", icon: "coal_chunk"});
+ItemRegistry.createItem("iridiumChunk", {name: "iridium_chunk", icon: "iridium_chunk", rarity: EnumRarity.RARE});
+ItemRegistry.createItem("plateReinforcedIridium", {name: "iridium_reinforced_plate", icon: "plate_reinforced_iridium", rarity: EnumRarity.RARE});
+ItemRegistry.createItem("plateAlloy", {name: "alloy_plate", icon: "plate_alloy"});
+ItemRegistry.createItem("carbonFibre", {name: "carbon_fibre", icon: "carbon_fibre"});
+ItemRegistry.createItem("carbonMesh", {name: "carbon_mesh", icon: "carbon_mesh"});
+ItemRegistry.createItem("carbonPlate", {name: "carbon_plate", icon: "carbon_plate"});
+ItemRegistry.createItem("coalBall", {name: "coal_ball", icon: "coal_ball"});
+ItemRegistry.createItem("coalBlock", {name: "coal_block", icon: "coal_block"});
+ItemRegistry.createItem("coalChunk", {name: "coal_chunk", icon: "coal_chunk"});
 
 Item.addCreativeGroup("ic2_material", Translation.translate("Materials"), [
 	ItemID.iridiumChunk,

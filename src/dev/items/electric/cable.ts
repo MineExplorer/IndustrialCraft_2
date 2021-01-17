@@ -9,7 +9,8 @@ implements ItemBehavior {
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
-		return name + "\n§7" + Translation.translate("Max voltage: ") + this.maxVoltage + " EU/t";
+		name += "\n§7" + Translation.translate("tooltip.max_voltage").replace("%s", this.maxVoltage.toString());
+		return name;
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {

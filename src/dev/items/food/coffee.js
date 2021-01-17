@@ -92,13 +92,13 @@ var CoffeeMug = {
 };
 
 IDRegistry.genItemID("mugColdCoffee");
-Item.createFoodItem("mugColdCoffee", "Cold Coffee", {name: "mug_cold_coffee"}, {stack: 1});
+Item.createFoodItem("mugColdCoffee", "mug_cold_coffee", {name: "mug_cold_coffee"}, {stack: 1});
 
 IDRegistry.genItemID("mugDarkCoffee");
-Item.createFoodItem("mugDarkCoffee", "Dark Coffee", {name: "mug_dark_coffee"}, {stack: 1});
+Item.createFoodItem("mugDarkCoffee", "mug_dark_coffee", {name: "mug_dark_coffee"}, {stack: 1});
 
 IDRegistry.genItemID("mugCoffee");
-Item.createFoodItem("mugCoffee", "Coffee", {name: "mug_coffee"}, {stack: 1});
+Item.createFoodItem("mugCoffee", "mug_coffee", {name: "mug_coffee"}, {stack: 1});
 
 Item.addCreativeGroup("mug_coffee", Translation.translate("Coffee"), [
 	ItemID.mugEmpty,

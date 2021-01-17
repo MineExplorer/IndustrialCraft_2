@@ -1,3 +1,3 @@
-ItemRegistry.createItem("grinPowder", {name: "Grin Powder", icon: "grin_powder"});
-ItemRegistry.createItem("hops", {name: "Hops", icon: "hops"});
-ItemRegistry.createItem("weed", {name: "Weed", icon: "weed"});
+ItemRegistry.createItem("grinPowder", {name: "grin_powder", icon: "grin_powder"});
+ItemRegistry.createItem("hops", {name: "hops", icon: "hops"});
+ItemRegistry.createItem("weed", {name: "weed", icon: "weed"});

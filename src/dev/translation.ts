@@ -85,34 +85,34 @@ Translation.addTranslation("Fluid Distributor", {ru: "Жидкостный ра�
 Translation.addTranslation("Tank", {ru: "Бак", es: "Tanque", pt: "Tanque", zh: "流体储存器"});
 
 // ITEMS
-Translation.addTranslation("Iridium", {ru: "Иридий", es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱碎片"});
-Translation.addTranslation("Latex", {ru: "Латекс", es: "Caucho", pt: "Resina Pegajosa", zh: "粘性树脂"});
-Translation.addTranslation("Rubber", {ru: "Резина", es: "Rubber", pt: "Borracha", zh: "橡胶"});
-Translation.addTranslation("Ashes", {ru: "Пепел", es: "Ceniza", pt: "Cinzas", zh: "灰烬"});
-Translation.addTranslation("Slag", {ru: "Шлак", es: "Escoria", pt: "Sucata", zh: "渣渣"});
-Translation.addTranslation("Bio Chaff", {ru: "Отходы", pt: "Bio-Produto", zh: "糠"});
-Translation.addTranslation("Scrap", {ru: "Утильсырьё", es: "Chatarra", pt: "Sucata", zh: "废料"});
-Translation.addTranslation("Scrap Box", {ru: "Коробка утильсырья", es: "Caja de Chatarra", pt: "Caixa de Sucata", zh: "废料盒"});
-Translation.addTranslation("UU-Matter", {ru: "Материя", es: "Materia", pt: "Metéria UU", zh: "UU物质"});
-Translation.addTranslation("Coal Ball", {ru: "Угольный шарик", es: "Bola de Carbón", pt: "Bola de Carvão", zh: "煤球"});
-Translation.addTranslation("Coal Block", {ru: "Сжатый угольный шарик", es: "Bola de Carbón Compactada", pt: "Bola de Carvão Comprimido", zh: "压缩煤球"});
-Translation.addTranslation("Coal Chunk", {ru: "Угольная глыба", es: "Carbono Bruto", zh: "煤块", pt: "Pedaço de Carvão"});
-Translation.addTranslation("Carbon Fibre", {ru: "Углеволокно", es: "Fibra de Carbono Básica", pt: "Fibra de Carbono Bruto", zh: "粗制碳网"});
-Translation.addTranslation("Carbon Mesh", {ru: "Углеткань", es: "Malla de Carbono Básica", pt: "Malha de Carbono", zh: "粗制碳板"});
-Translation.addTranslation("Carbon Plate", {ru: "Углепластик", es: "Placa de Carbono", pt: "Placa de Carbono", zh: "碳板"});
-Translation.addTranslation("Alloy Plate", {ru: "Композит", es: "Compuesto Avanzado", pt: "Liga Avançada", zh: "高级合金"});
-Translation.addTranslation("Iridium Reinforced Plate", {ru: "Иридиевый композит", es: "Placa de Iridio", pt: "Placa Reforçada com Irídio", zh: "强化铱板"});
+Translation.addTranslation("latex", {en: "Latex", ru: "Латекс", es: "Caucho", pt: "Resina Pegajosa", zh: "粘性树脂"});
+Translation.addTranslation("rubber", {en: "Rubber", ru: "Резина", es: "Rubber", pt: "Borracha", zh: "橡胶"});
+Translation.addTranslation("ashes", {en: "Ashes", ru: "Пепел", es: "Ceniza", pt: "Cinzas", zh: "灰烬"});
+Translation.addTranslation("slag", {en: "Slag", ru: "Шлак", es: "Escoria", pt: "Sucata", zh: "渣渣"});
+Translation.addTranslation("bio_chaff", {en: "Bio Chaff", ru: "Отходы", pt: "Bio-Produto", zh: "糠"});
+Translation.addTranslation("scrap", {en: "Scrap", ru: "Утильсырьё", es: "Chatarra", pt: "Sucata", zh: "废料"});
+Translation.addTranslation("scrap_box", {en: "Scrap Box", ru: "Коробка утильсырья", es: "Caja de Chatarra", pt: "Caixa de Sucata", zh: "废料盒"});
+Translation.addTranslation("uu_matter", {en: "UU-Matter", ru: "Материя", es: "Materia", pt: "Metéria UU", zh: "UU物质"});
+Translation.addTranslation("iridium_chunk", {en: "Iridium", ru: "Иридий", es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱碎片"});
+Translation.addTranslation("iridium_reinforced_plate", {en: "Iridium Reinforced Plate", ru: "Иридиевый композит", es: "Placa de Iridio", pt: "Placa Reforçada com Irídio", zh: "强化铱板"});
+Translation.addTranslation("alloy_plate", {en: "Alloy Plate", ru: "Композит", es: "Compuesto Avanzado", pt: "Liga Avançada", zh: "高级合金"});
+Translation.addTranslation("carbon_fibre", {en: "Carbon Fibre", ru: "Углеволокно", es: "Fibra de Carbono Básica", pt: "Fibra de Carbono Bruto", zh: "粗制碳网"});
+Translation.addTranslation("carbon_mesh", {en: "Carbon Mesh", ru: "Углеткань", es: "Malla de Carbono Básica", pt: "Malha de Carbono", zh: "粗制碳板"});
+Translation.addTranslation("carbon_plate", {en: "Carbon Plate", ru: "Углепластик", es: "Placa de Carbono", pt: "Placa de Carbono", zh: "碳板"});
+Translation.addTranslation("coal_ball", {en: "Coal Ball", ru: "Угольный шарик", es: "Bola de Carbón", pt: "Bola de Carvão", zh: "煤球"});
+Translation.addTranslation("coal_block", {en: "Coal Block", ru: "Сжатый угольный шарик", es: "Bola de Carbón Compactada", pt: "Bola de Carvão Comprimido", zh: "压缩煤球"});
+Translation.addTranslation("coal_chunk", {en: "Coal Chunk", ru: "Угольная глыба", es: "Carbono Bruto", zh: "煤块", pt: "Pedaço de Carvão"});
 
 // Nuclear
-Translation.addTranslation("Enriched Uranium", {ru: "Обогащённый уран", es: "Uranio Enriquecido", pt: "Urânio Enriquecido", zh: "浓缩铀核燃料"});
-Translation.addTranslation("Uranium 235", {ru: "Уран-235", es: "Uranio 235", pt: "Urânio 235", zh: "铀-235"});
-Translation.addTranslation("Piece of Uranium 235", {ru: "Кусочек урана-235", es: "Diminuta Pila de Uranio 235", pt: "Pequena Pilha de Urânio 235", zh: "小撮铀-235"});
-Translation.addTranslation("Uranium 238", {ru: "Уран-238", es: "Uranio 238", pt: "Urânio 238", zh: "铀-238"});
-Translation.addTranslation("Piece of Uranium 238", {ru: "Кусочек урана-238", es: "Diminuta Pila de Uranio 238", pt: "Pequena Pilha de Urânio 238", zh: "小撮铀-238"});
-Translation.addTranslation("Plutonium", {ru: "Плутоний", es: "Plutonio", pt: "Plutônio", zh: "钚"});
-Translation.addTranslation("Piece of Plutonium", {ru: "Кусочек плутония", es: "Diminuta Pila de Plutonio", pt: "Pequena Pilha de Plutônio", zh: "小撮钚"});
-Translation.addTranslation("MOX Nuclear Fuel", {ru: "Ядерное топливо MOX", es: "MOX Combustible Nuclear", pt: "Combustível Nuclear de MOX", zh: "钚铀混合氧化物核燃料(MOX)"});
-Translation.addTranslation("Pellets of RTG Fuel", {ru: "Пеллета РИТЭГ-топлива", es: "Perdigones de Combustible RTG", pt: "Pastilhas de Combustível de GTR", zh: "放射性同位素燃料靶丸"});
+Translation.addTranslation("enriched_uranium", {en: "Enriched Uranium", ru: "Обогащённый уран", es: "Uranio Enriquecido", pt: "Urânio Enriquecido", zh: "浓缩铀核燃料"});
+Translation.addTranslation("uranium_235", {en: "Uranium 235", ru: "Уран-235", es: "Uranio 235", pt: "Urânio 235", zh: "铀-235"});
+Translation.addTranslation("small_uranium_235", {en: "Piece of Uranium 235", ru: "Кусочек урана-235", es: "Diminuta Pila de Uranio 235", pt: "Pequena Pilha de Urânio 235", zh: "小撮铀-235"});
+Translation.addTranslation("uranium_238", {en: "Uranium 238", ru: "Уран-238", es: "Uranio 238", pt: "Urânio 238", zh: "铀-238"});
+Translation.addTranslation("small_uranium_238", {en: "Piece of Uranium 238", ru: "Кусочек урана-238", es: "Diminuta Pila de Uranio 238", pt: "Pequena Pilha de Urânio 238", zh: "小撮铀-238"});
+Translation.addTranslation("plutonium", {en: "Plutonium", ru: "Плутоний", es: "Plutonio", pt: "Plutônio", zh: "钚"});
+Translation.addTranslation("small_plutonium", {en: "Piece of Plutonium", ru: "Кусочек плутония", es: "Diminuta Pila de Plutonio", pt: "Pequena Pilha de Plutônio", zh: "小撮钚"});
+Translation.addTranslation("mox_fuel", {en: "MOX Nuclear Fuel", ru: "Ядерное топливо MOX", es: "MOX Combustible Nuclear", pt: "Combustível Nuclear de MOX", zh: "钚铀混合氧化物核燃料(MOX)"});
+Translation.addTranslation("rtg_pellet", {en: "Pellets of RTG Fuel", ru: "Пеллета РИТЭГ-топлива", es: "Perdigones de Combustible RTG", pt: "Pastilhas de Combustível de GTR", zh: "放射性同位素燃料靶丸"});
 
 // Reactor Stuff - Radioactive Items
 Translation.addTranslation("Fuel Rod (Empty)", {ru: "Топливный стержень (Пустой)", es: "Vara Combustible (Vacía)", pt: "Haste de Combustível (Vazia)", zh: "燃料棒(空)"});
@@ -148,8 +148,8 @@ Translation.addTranslation("Advanced Heat Vent", {ru: "Улучшенный те
 Translation.addTranslation("Component Heat Vent", {ru: "Компонентный теплоотвод", es: "Componente para Ventilación de Calor", pt: "Ventilação de Calor Componente", zh: "元件散热片"});
 Translation.addTranslation("Reactor Heat Vent", {ru: "Реакторный теплоотвод", es: "Ventilación de Calor para Reactor", pt: "Ventilação de Calor para Reator", zh: "反应堆散热片"});
 Translation.addTranslation("Overclocked Heat Vent", {ru: "Разогнанный теплоотвод", es: "Ventilación de Calor con Sobreproducción", pt: "Ventilação de Calor com Overclock", zh: "超频散热片"});
-Translation.addTranslation("RSH-Condensator", {ru: "Красный конденсатор", es: "RSH-Condensador", pt: "Condensador de Calor de Redstone (CCR)", zh: "红石冷凝模块"});
-Translation.addTranslation("LZH-Condensator", {ru: "Лазуритовый конденсатор", es: "LZH-Condensador", pt: "Condensador de Calor de Lápis-Lazúli (CCL)", zh: "青金石冷凝模块"});
+Translation.addTranslation("rsh_condensator", {en: "RSH-Condensator", ru: "Красный конденсатор", es: "RSH-Condensador", pt: "Condensador de Calor de Redstone (CCR)", zh: "红石冷凝模块"});
+Translation.addTranslation("lzh_condensator", {en: "LZH-Condensator", ru: "Лазуритовый конденсатор", es: "LZH-Condensador", pt: "Condensador de Calor de Lápis-Lazúli (CCL)", zh: "青金石冷凝模块"});
 
 // Crafting Components
 Translation.addTranslation("electronic_circuit", {en: "Electronic Circuit", ru: "Электросхема", es: "Circuito Electrónico", pt: "Circuito Eletrônico", zh: "电路板"});
@@ -171,15 +171,15 @@ Translation.addTranslation("charging_energy_crystal", {en: "Charging Energy Crys
 Translation.addTranslation("charging_lapotron_crystal", {en: "Charging Lapotron Crystal", ru: "Заряжающий лазуротроновый кристалл", es: "Cargador de Cristales Lapotron", pt: "Carregador de Cristais Lapotrônicos", zh: "兰波顿充电电池"});
 
 // Upgrades
-Translation.addTranslation("MFSU Upgrade Kit", {ru: "Набор улучшения МФСУ", es: "Kit de Actualización MFSU", pt: "Kit de Melhoria UAMF", zh: "MFSU升级组件"});
-Translation.addTranslation("Overclocker Upgrade", {ru: "Улучшение «Ускоритель»", es: "Mejora de Sobreproducción", pt: "Melhoria: Overclock", zh: "超频升级"});
-Translation.addTranslation("Transformer Upgrade", {ru: "Улучшение «Трансформатор»", es: "Mejora de Transformador", pt: " Melhoria: Transformador Interno", zh: "高压升级"});
-Translation.addTranslation("Energy Storage Upgrade", {ru: "Улучшение «Энергохранитель»", es: "Mejora de Almacenador de Energía", pt: "Melhoria: Armazenamento de Energia", zh: "储能升级"});
-Translation.addTranslation("Redstone Signal Inverter Upgrade", {ru: "Улучшение «Инвертор сигнала редстоуна»", es: "Majora de Invesor de señal Redstone", pt: "Melhoria: Inversor de Sinal de Redstone", zh: "红石信号反转升级"});
-Translation.addTranslation("Ejector Upgrade", {ru: "Улучшение «Выталкиватель»", es: "Mejora Expulsora", pt: "Melhoria: Ejetor", zh: "弹出升级"});
-Translation.addTranslation("Pulling Upgrade", {ru: "Улучшение «Загрузчик»", es: "Mejora de Traccion", pt: "Melhoria: Sucção", zh: "抽入升级"});
-Translation.addTranslation("Fluid Ejector Upgrade", {ru: "Улучшение «Выталкиватель жидкости»", es: "Mejora Expulsora de Líquidos", pt: "Melhoria: Ejetor de Fluidos", zh: "流体弹出升级"});
-Translation.addTranslation("Fluid Pulling Upgrade", {ru: "Улучшение «Загрузчик жидкости»", es: "Mejora Traccion de Líquidos", pt: "Melhoria: Injeção de Fluidos Avançada", zh: "流体抽入升级"});
+Translation.addTranslation("mfsu_upgrade", {en: "MFSU Upgrade Kit", ru: "Набор улучшения МФСУ", es: "Kit de Actualización MFSU", pt: "Kit de Melhoria UAMF", zh: "MFSU升级组件"});
+Translation.addTranslation("overclocker_upgrade", {en: "Overclocker Upgrade", ru: "Улучшение «Ускоритель»", es: "Mejora de Sobreproducción", pt: "Melhoria: Overclock", zh: "超频升级"});
+Translation.addTranslation("transformer_upgrade", {en: "Transformer Upgrade", ru: "Улучшение «Трансформатор»", es: "Mejora de Transformador", pt: " Melhoria: Transformador Interno", zh: "高压升级"});
+Translation.addTranslation("energy_storage_upgrade", {en: "Energy Storage Upgrade", ru: "Улучшение «Энергохранитель»", es: "Mejora de Almacenador de Energía", pt: "Melhoria: Armazenamento de Energia", zh: "储能升级"});
+Translation.addTranslation("redstone_inverter_upgrade", {en: "Redstone Signal Inverter Upgrade", ru: "Улучшение «Инвертор сигнала редстоуна»", es: "Majora de Invesor de señal Redstone", pt: "Melhoria: Inversor de Sinal de Redstone", zh: "红石信号反转升级"});
+Translation.addTranslation("ejector_upgrade", {en: "Ejector Upgrade", ru: "Улучшение «Выталкиватель»", es: "Mejora Expulsora", pt: "Melhoria: Ejetor", zh: "弹出升级"});
+Translation.addTranslation("pulling_upgrade", {en: "Pulling Upgrade", ru: "Улучшение «Загрузчик»", es: "Mejora de Traccion", pt: "Melhoria: Sucção", zh: "抽入升级"});
+Translation.addTranslation("fluid_ejector_upgrade", {en: "Fluid Ejector Upgrade", ru: "Улучшение «Выталкиватель жидкости»", es: "Mejora Expulsora de Líquidos", pt: "Melhoria: Ejetor de Fluidos", zh: "流体弹出升级"});
+Translation.addTranslation("fluid_pulling_upgrade", {en: "Fluid Pulling Upgrade", ru: "Улучшение «Загрузчик жидкости»", es: "Mejora Traccion de Líquidos", pt: "Melhoria: Injeção de Fluidos Avançada", zh: "流体抽入升级"});
 
 // Crushed Ore
 Translation.addTranslation("crushed_copper_ore", {en: "Crushed Copper Ore", ru: "Измельчённая медная руда", es: "Mineral de Cobre Triturado", pt: "Minério de Cobre Triturado", zh: "粉碎铜矿石"});
@@ -262,9 +262,8 @@ Translation.addTranslation("gold_casing", {en: "Gold Casing", ru: "Золота�
 Translation.addTranslation("lead_casing", {en: "Lead Casing", ru: "Свинцовая оболочка", es: "Carcasa para Objetos de Plomo", pt: "Invólucro de Chumbo", zh: "铅质外壳"});
 
 // Cans
-Translation.addTranslation("Tin Can", {ru: "Консервная банка", es: "Lata de Estaño", pt: "Lata de Estanho", zh: "锡罐(空)"});
-Translation.addTranslation("Filled Tin Can", {ru: "Заполненная консервная банка", es: "Lata de Estaño (llena)", pt: "Lata de Estanho (Cheia)", zh: "锡罐(满)"});
-Translation.addTranslation("This looks bad...", {ru: "Это выглядит несъедобно…", pt: "Isso parece ruim ...", zh: "这看起来很糟糕..."});
+Translation.addTranslation("tin_can", {en: "Tin Can", ru: "Консервная банка", es: "Lata de Estaño", pt: "Lata de Estanho", zh: "锡罐(空)"});
+Translation.addTranslation("tin_can_full", {en: "Filled Tin Can", ru: "Заполненная консервная банка", es: "Lata de Estaño (llena)", pt: "Lata de Estanho (Cheia)", zh: "锡罐(满)"});
 
 // Cells
 Translation.addTranslation("empty_cell", {en: "Empty Cell", ru: "Пустая капсула", es: "Celda Vacía", pt: "Célula Universal de Fluidos", zh: "空单元"});
@@ -349,23 +348,20 @@ Translation.addTranslation("crop_analyzer", {en: "Crop Analyzer", ru: "Агро�
 Translation.addTranslation("weeding_trowel", {en: "Weeding Trowel", ru: "Пропалыватель", pt: "Espátula Transplantadora", zh: "除草铲"});
 
 // Coffee
-Translation.addTranslation("Coffee Powder", {ru: "Молотый кофе", es: "Polvo de Café", pt: "Pó de Café", zh: "咖啡粉"});
-Translation.addTranslation("Stone Mug", {ru: "Каменная кружка", es: "Jarra de Piedra", pt: "Caneca de Pedra", zh: "石杯"});
-Translation.addTranslation("Cold Coffee", {ru: "Холодный кофе", es: "Café Frío", pt: "Café Frio", zh: "冷咖啡"});
-Translation.addTranslation("Dark Coffee", {ru: "Тёмный кофе", es: "Café Oscuro", pt: "Café Forte", zh: "黑咖啡"});
-Translation.addTranslation("Coffee", {ru: "Кофе", es: "Café", pt: "Café", zh: "咖啡"});
+Translation.addTranslation("coffee_powder", {en: "Coffee Powder", ru: "Молотый кофе", es: "Polvo de Café", pt: "Pó de Café", zh: "咖啡粉"});
+Translation.addTranslation("stone_mug", {en: "Stone Mug", ru: "Каменная кружка", es: "Jarra de Piedra", pt: "Caneca de Pedra", zh: "石杯"});
+Translation.addTranslation("mug_cold_coffee", {en: "Cold Coffee", ru: "Холодный кофе", es: "Café Frío", pt: "Café Frio", zh: "冷咖啡"});
+Translation.addTranslation("mug_dark_coffee", {en: "Dark Coffee", ru: "Тёмный кофе", es: "Café Oscuro", pt: "Café Forte", zh: "黑咖啡"});
+Translation.addTranslation("mug_coffee", {en: "Coffee", ru: "Кофе", es: "Café", pt: "Café", zh: "咖啡"});
 
 // Crop Items
-Translation.addTranslation("Seed Bag (%s)", {ru: "Мешок с семенами (%s)", es: "Semillas Desconocidas (%s)", pt: "Saco de sementes (%s)", zh: "种子袋 (%s)"});
-Translation.addTranslation("Crop", {ru: "Жёрдочки", pt: "Muda", zh: "作物架"});
-Translation.addTranslation("Grin Powder", {ru: "Токсичная пыль", es: "Polvo Horrible", zh: "蛤蛤粉", pt: "Pó do Riso"});
-Translation.addTranslation("Weed EX", {ru: "Средство от сорняков", es: "Veneno para Hierbas", pt: "Erbicida", zh: "除草剂"});
-Translation.addTranslation("Fertilizer", {ru: "Удобрение", es: "Fertilizante", pt: "Fertilizante", zh: "肥料"});
-Translation.addTranslation("Hydration Cell", {ru: "Увлажняющая капсула", pt: "Líquido de Refrigeração", zh: "水化单元"});
-Translation.addTranslation("Terra Wart", {ru: "Земляной нарост", es: "Verruga de Tierra", pt: "Fungo da Terra", zh: "大地疣"});
-Translation.addTranslation("Coffee Beans", {ru: "Кофейные зёрна", es: "Granos de Café", pt: "Grãos de Café", zh: "咖啡豆"});
-Translation.addTranslation("Weed", {ru: "Сорняк", pt: "Erva Daninha", zh: "杂草"});
-Translation.addTranslation("Hops", {ru: "Хмель", es: "Lúpulo", pt: "Lúpulo", zh: "啤酒花"});
+Translation.addTranslation("crop_seed_bag", {en: "Seed Bag (%s)", ru: "Мешок с семенами (%s)", es: "Semillas Desconocidas (%s)", pt: "Saco de sementes (%s)", zh: "种子袋 (%s)"});
+Translation.addTranslation("crop_stick", {en: "Crop", ru: "Жёрдочки", pt: "Muda", zh: "作物架"});
+Translation.addTranslation("grin_powder", {en: "Grin Powder", ru: "Токсичная пыль", es: "Polvo Horrible", zh: "蛤蛤粉", pt: "Pó do Riso"});
+Translation.addTranslation("weed_ex", {en: "Weed EX", ru: "Средство от сорняков", es: "Veneno para Hierbas", pt: "Erbicida", zh: "除草剂"});
+Translation.addTranslation("fertilizer", {en: "Fertilizer", ru: "Удобрение", es: "Fertilizante", pt: "Fertilizante", zh: "肥料"});
+Translation.addTranslation("hydration_cell", {en: "Hydration Cell", ru: "Увлажняющая капсула", pt: "Líquido de Refrigeração", zh: "水化单元"});
+Translation.addTranslation("coffee_beans", {en: "Coffee Beans", ru: "Кофейные зёрна", es: "Granos de Café", pt: "Grãos de Café", zh: "咖啡豆"});
 
 // Crops
 Translation.addTranslation("wheat", {en: "Wheat", ru: "Пшеница", pt: "Trigo", zh: "小麦"});
@@ -384,7 +380,7 @@ Translation.addTranslation("cocoa", {en: "Cocoa", ru: "Какао", pt: "Cacau",
 Translation.addTranslation("red_mushroom", {en: "Red Mushroom", ru: "Красный гриб", pt: "Cogumelo Vermelho", zh: "红色蘑菇"});
 Translation.addTranslation("brown_mushroom", {en: "Brown Mushroom",ru: "Коричневый гриб",  pt: "Cogumelo marrom", zh: "棕色蘑菇"});
 Translation.addTranslation("nether_wart", {en: "Nether Wart", ru: "Адский нарост", pt: "Fungo do Nether", zh: "地狱疣"});
-Translation.addTranslation("terra_wart", {en: "Terra Wart", ru: "Земляной нарост", pt: "Fungo da Terra", zh: "大地疣"});
+Translation.addTranslation("terra_wart", {en: "Terra Wart", ru: "Земляной нарост", es: "Verruga de Tierra", pt: "Fungo da Terra", zh: "大地疣"});
 Translation.addTranslation("ferru", {en: "Ferru", ru: "Феррий", pt: "Ferru", zh: "铁叶草"});
 Translation.addTranslation("cyprium", {en: "Cyprium", ru: "Куприй", pt: "Chipre", zh: "铜叶草"});
 Translation.addTranslation("stagnium", {en: "Stagnium", ru: "Стагний", pt: "Stagnium", zh: "银矿草"});
@@ -393,7 +389,7 @@ Translation.addTranslation("aurelia", {en: "Aurelia", ru: "Аурелия", pt: 
 Translation.addTranslation("shining", {en: "Shining", ru: "Аргентий", pt: "Brilhante", zh: "闪光"});
 Translation.addTranslation("redwheat", {en: "Red Wheat", ru: "Красная пшеница", pt: "Trigo Vermelho", zh: "红麦"});
 Translation.addTranslation("coffee", {en: "Coffee", ru: "Кофе", pt: "Café", zh: "咖啡"});
-Translation.addTranslation("hops", {en: "Hops", ru: "Хмель", pt: "Lúpulo", zh: "啤酒花"});
+Translation.addTranslation("hops", {en: "Hops", ru: "Хмель", es: "Lúpulo", pt: "Lúpulo", zh: "啤酒花"});
 Translation.addTranslation("carrots", {en: "Carrots", ru: "Морковь", pt: "Cenouras", zh: "胡萝卜"});
 Translation.addTranslation("potato", {en: "Potato", ru: "Картофель", pt: "Batata", zh: "马铃薯"});
 Translation.addTranslation("eatingplant", {en: "Eating Plant", ru: "Плотоядное растение", pt: "Planta Carnívora", zh: "食人花"});
@@ -466,15 +462,22 @@ Translation.addTranslation("Teleportation link established", {ru: "Телепо�
 Translation.addTranslation("Frequency Transmitter unlinked", {ru: "Частотный связыватель сброшен"});
 
 // Tooltips
-Translation.addTranslation("Power Tier: ", {ru: "Энергоуровень: ", zh: "能量等级: "});
-Translation.addTranslation("Max voltage: ", {ru: "Макс. напряжение: ", zh: "最大电压: "});
-Translation.addTranslation("Decrease process time to ", {ru: "Уменьшает время работы до ", pt: "Diminui o tempo de processo para ", zh: "加工用时缩短为"});
-Translation.addTranslation("Increase power to ", {ru: "Увеличивает энергопотребление до ", pt: "Aumenta o Uso de Energia em ", zh: "能量增加到"});
-Translation.addTranslation("Increase energy tier by 1", {ru: "Увеличивает энергоуровень на 1 ", pt: "Aumenta o nível da máquina em 1", zh: "增加一级输出电压"});
-Translation.addTranslation("Increase energy storage by 10k EU", {ru: "Увеличивает энергоёмкость на 10k EU", pt: "Aumenta o armazenamento de energia em 10k EU", zh: "增加10k EU储能"});
-Translation.addTranslation("Automatically output to\nthe %s side", {ru: "Автоматическое извлечение с %s стороны", zh: "自动输出到%s方向"});
-Translation.addTranslation("Automatically input from\nthe %s side", {ru: "Автоматический ввод с %s стороны", zh: "自动从%s抽入物品"});
-// side names are translated in core/item_name.js
+Translation.addTranslation("tooltip.tin_can", {en: "This looks bad...", ru: "Это выглядит несъедобно…", pt: "Isso parece ruim ...", zh: "这看起来很糟糕..."});
+Translation.addTranslation("tooltip.power_tier", {en: "Power Tier: %s", ru: "Энергоуровень: %s", zh: "能量等级: %s"});
+Translation.addTranslation("tooltip.max_voltage", {en: "Max voltage: %s EU/t", ru: "Макс. напряжение: %s EU/t", zh: "最大电压: %s EU/t"});
+Translation.addTranslation("tooltip.upgrade.overclocker.time", {en: "Decrease process time to ", ru: "Уменьшает время работы до ", pt: "Diminui o tempo de processo para ", zh: "加工用时缩短为"});
+Translation.addTranslation("tooltip.upgrade.overclocker.power", {en: "Increase power to ", ru: "Увеличивает энергопотребление до ", pt: "Aumenta o Uso de Energia em ", zh: "能量增加到"});
+Translation.addTranslation("tooltip.upgrade.transformer", {en: "Increase energy tier by 1", ru: "Увеличивает энергоуровень на 1", pt: "Aumenta o nível da máquina em 1", zh: "增加一级输出电压"});
+Translation.addTranslation("tooltip.upgrade.storage", {en: "Increase energy storage by 10k EU", ru: "Увеличивает энергоёмкость на 10k EU", pt: "Aumenta o armazenamento de energia em 10k EU", zh: "增加10k EU储能"});
+Translation.addTranslation("tooltip.upgrade.ejector", {en: "Automatically output to\nthe %s side", ru: "Автоматическое извлечение с %s стороны", zh: "自动输出到%s方向"});
+Translation.addTranslation("tooltip.upgrade.pulling", {en: "Automatically input from\nthe %s side", ru: "Автоматический ввод с %s стороны", zh: "自动从%s抽入物品"});
+Translation.addTranslation("tooltip.upgrade.side.0", {en: "first valid", ru: "первой подходящей", es: "Primera vez efectivo", pt: "Primeira vez eficaz", zh: "初次生效"});
+Translation.addTranslation("tooltip.upgrade.side.1", {en: "bottom", ru: "нижней", es: "abajo", pt: "o lado de baixo", zh: "底部"});
+Translation.addTranslation("tooltip.upgrade.side.2", {en: "top", ru: "верхней", es: "arriba", pt: "o lado de cima", zh: "顶部"});
+Translation.addTranslation("tooltip.upgrade.side.3", {en: "north", ru: "северной", es: "norte", pt: "o norte", zh: "北边"});
+Translation.addTranslation("tooltip.upgrade.side.4", {en: "south", ru: "южной", es: "sur", pt: "o sul", zh: "南边"});
+Translation.addTranslation("tooltip.upgrade.side.5", {en: "east", ru: "восточной", es: "este", pt: "o leste", zh: "东边"});
+Translation.addTranslation("tooltip.upgrade.side.6", {en: "west", ru: "западной", es: "oeste", pt: "o oeste", zh: "西边"});
 
 // Recipe Viewer
 Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "Calor: ", zh: "热量: "});

@@ -12,7 +12,7 @@ const negativePotions = [
 class ItemTerraWart
 extends ItemFood {
     constructor() {
-        super("terraWart", "Terra Wart", "terra_wart", 1);
+        super("terraWart", "terra_wart", "terra_wart", 1);
         this.setRarity(EnumRarity.RARE);
     }
 

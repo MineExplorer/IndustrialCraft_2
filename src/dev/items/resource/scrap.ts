@@ -39,7 +39,7 @@ class ItemScrapBox
 extends ItemCommon
 implements ItemBehavior {
 	constructor() {
-		super("scrapBox", "Scrap Box", "scrap_box");
+		super("scrapBox", "scrap_box", "scrap_box");
 		Recipes.addFurnaceFuel(this.id, 0, 3150);
 	}
 
@@ -69,7 +69,7 @@ implements ItemBehavior {
 	}
 }
 
-ItemRegistry.createItem("scrap", {name: "Scrap", icon: "scrap"});
+ItemRegistry.createItem("scrap", {name: "scrap", icon: "scrap"});
 Recipes.addFurnaceFuel(ItemID.scrap, 0, 350);
 
 ItemRegistry.registerItem(new ItemScrapBox());

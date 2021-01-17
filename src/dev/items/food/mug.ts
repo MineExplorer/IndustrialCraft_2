@@ -1,4 +1,4 @@
-ItemRegistry.createItem("mugEmpty", {name: "Stone Mug", icon: "mug_empty", stack: 1});
+ItemRegistry.createItem("mugEmpty", {name: "stone_mug", icon: "mug_empty", stack: 1});
 
 Callback.addCallback("PostLoaded", function() {
 	Recipes.addShaped({id: ItemID.mugEmpty, count: 1, data: 0}, [

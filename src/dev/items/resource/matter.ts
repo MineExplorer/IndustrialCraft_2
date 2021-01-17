@@ -1,4 +1,4 @@
-ItemRegistry.createItem("matter", {name: "UU-Matter", icon: "uu_matter", rarity: EnumRarity.RARE});
+ItemRegistry.createItem("matter", {name: "uu_matter", icon: "uu_matter", rarity: EnumRarity.RARE});
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: ItemID.iridiumChunk, count: 1, data: 0}, [

@@ -2,12 +2,12 @@ class ItemTinCanFull
 extends ItemCommon
 implements ItemBehavior {
 	constructor() {
-		super("tinCanFull", "Filled Tin Can", {name: "tin_can", meta: 1});
+		super("tinCanFull", "tin_can_full", {name: "tin_can", meta: 1});
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
 		if (item.data > 0) {
-			return name + "\n§7" + Translation.translate("This looks bad...");
+			return name + "\n§7" + Translation.translate("tooltip.tin_can");
 		}
 		return name;
 	}
@@ -38,6 +38,6 @@ implements ItemBehavior {
 	}
 }
 
-ItemRegistry.createItem("tinCanEmpty", {name: "Tin Can", icon: "tin_can"});
+ItemRegistry.createItem("tinCanEmpty", {name: "tin_can", icon: "tin_can"});
 
 ItemRegistry.registerItem(new ItemTinCanFull());

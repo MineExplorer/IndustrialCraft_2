@@ -4,7 +4,7 @@ let RadiationAPI = {
 	sources: {},
 	hazmatArmor: [],
 	
-	regRadioactiveItem: function(id, duration, stack) {
+	registerRadioactiveItem: function(id, duration, stack) {
 		this.items[id] = [duration, stack || false];
 	},
 	

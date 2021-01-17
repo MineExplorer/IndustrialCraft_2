@@ -10,10 +10,10 @@ Item.createItem("heatExchangerComponent", "Component Heat Exchanger", {name: "he
 IDRegistry.genItemID("heatExchangerAdv");
 Item.createItem("heatExchangerAdv", "Advanced Heat Exchanger", {name: "heat_exchanger", meta: 3}, {isTech: true});
 
-ReactorAPI.registerComponent(ItemID.heatExchanger, new ReactorAPI.heatExchanger(2500, 12, 4));
-ReactorAPI.registerComponent(ItemID.heatExchangerReactor, new ReactorAPI.heatExchanger(5000, 0, 72));
-ReactorAPI.registerComponent(ItemID.heatExchangerComponent, new ReactorAPI.heatExchanger(5000, 36, 0));
-ReactorAPI.registerComponent(ItemID.heatExchangerAdv, new ReactorAPI.heatExchanger(10000, 24, 8));
+ItemReactor.registerComponent(ItemID.heatExchanger, new ItemReactor.HeatExchanger(2500, 12, 4));
+ItemReactor.registerComponent(ItemID.heatExchangerReactor, new ItemReactor.HeatExchanger(5000, 0, 72));
+ItemReactor.registerComponent(ItemID.heatExchangerComponent, new ItemReactor.HeatExchanger(5000, 36, 0));
+ItemReactor.registerComponent(ItemID.heatExchangerAdv, new ItemReactor.HeatExchanger(10000, 24, 8));
 
 Item.addCreativeGroup("ic2_reactorHeatExchanger", Translation.translate("Reactor Heat Exchangers"), [
 	ItemID.heatExchanger,

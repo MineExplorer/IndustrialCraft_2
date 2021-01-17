@@ -13,11 +13,11 @@ Item.createItem("heatVentAdv", "Advanced Heat Vent", {name: "heat_vent", meta: 3
 IDRegistry.genItemID("heatVentOverclocked");
 Item.createItem("heatVentOverclocked", "Overclocked Heat Vent", {name: "heat_vent", meta: 4}, {isTech: true});
 
-ReactorAPI.registerComponent(ItemID.heatVent, new ReactorAPI.heatVent(1000, 6, 0));
-ReactorAPI.registerComponent(ItemID.heatVentReactor, new ReactorAPI.heatVent(1000, 5, 5));
-ReactorAPI.registerComponent(ItemID.heatVentComponent, new ReactorAPI.heatVentSpread(4));
-ReactorAPI.registerComponent(ItemID.heatVentAdv, new ReactorAPI.heatVent(1000, 12, 0));
-ReactorAPI.registerComponent(ItemID.heatVentOverclocked, new ReactorAPI.heatVent(1000, 20, 36));
+ItemReactor.registerComponent(ItemID.heatVent, new ItemReactor.HeatVent(1000, 6, 0));
+ItemReactor.registerComponent(ItemID.heatVentReactor, new ItemReactor.HeatVent(1000, 5, 5));
+ItemReactor.registerComponent(ItemID.heatVentComponent, new ItemReactor.HeatVentSpread(4));
+ItemReactor.registerComponent(ItemID.heatVentAdv, new ItemReactor.HeatVent(1000, 12, 0));
+ItemReactor.registerComponent(ItemID.heatVentOverclocked, new ItemReactor.HeatVent(1000, 20, 36));
 
 Item.addCreativeGroup("ic2_reactorHeatVent", Translation.translate("Reactor Heat Vents"), [
 	ItemID.heatVent,

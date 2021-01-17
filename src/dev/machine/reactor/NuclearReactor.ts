@@ -1,3 +1,5 @@
+/// <reference path="IReactor.ts" />
+
 IDRegistry.genBlockID("nuclearReactor");
 Block.createBlock("nuclearReactor", [
 	{name: "Nuclear Reactor", texture: [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]], inCreative: true}
@@ -62,7 +64,8 @@ let EUReactorModifier = 5;
 
 namespace Machine {
 	export class NuclearReactor
-	extends Generator {
+	extends Generator
+	implements IReactor {
 		audioSourceGeiger: AudioSource;
 		__energyNets: any;
 
@@ -101,7 +104,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			this.container.setGlobalAddTransferPolicy((container, name, id, amount, data)  => {
-				if (!ReactorAPI.isReactorItem(id) || container.getSlot(name).count > 0) return 0;
+				if (!ItemReactor.isReactorItem(id) || container.getSlot(name).count > 0) return 0;
 				return 1;
 			})
 		}
@@ -164,7 +167,7 @@ namespace Machine {
 				for (let y = 0; y < 6; y++) {
 					for (let x = 0; x < size; x++) {
 						let slot = this.container.getSlot("slot"+(y*9+x));
-						let component = ReactorAPI.getComponent(slot.id);
+						let component = ItemReactor.getComponent(slot.id);
 						if (component) {
 							component.processChamber(slot, this, x, y, pass == 0);
 						}
@@ -177,7 +180,7 @@ namespace Machine {
 			let reactorSize = this.getReactorSize();
 			this.container.sendEvent("setFieldSize", {size: reactorSize});
 			if (this.data.isEnabled) {
-				if (World.getThreadTime()%20 == 0) {
+				if (World.getThreadTime() % 20 == 0) {
 					this.data.maxHeat = 10000;
 					this.data.hem = 1;
 					this.data.output = 0;
@@ -252,8 +255,12 @@ namespace Machine {
 			this.data.heat = heat;
 		}
 
-		addHeat(amount: number): void {
-			this.data.heat += amount;
+		addHeat(amount: number): number {
+			return this.data.heat += amount;
+		}
+
+		addEmitHeat(heat: number): void {
+			// not implemented
 		}
 
 		getMaxHeat(): number {
@@ -268,8 +275,8 @@ namespace Machine {
 			return this.data.hem;
 		}
 
-		setHeatEffectModifier(newHEM: number): void {
-			this.data.hem = newHEM;
+		setHeatEffectModifier(value: number): void {
+			this.data.hem = value;
 		}
 
 		getItemAt(x: number, y: number): ItemContainerSlot {
@@ -279,15 +286,23 @@ namespace Machine {
 			return this.container.getSlot("slot"+(y*9+x));
 		}
 
-		setItemAt(x: number, y: number, id: number, count: number = 0, data: number = 0, extra: ItemExtraData = null): void {
+		setItemAt(x: number, y: number, id: number, count: number, data: number, extra: ItemExtraData = null): void {
 			if (x < 0 || x >= this.getReactorSize() || y < 0 || y >= 6) {
 				return null;
 			}
 			this.container.setSlot("slot"+(y*9+x), id, count, data, extra);
 		}
 
-		addOutput(energy: number): void {
-			this.data.output += energy;
+		getOutput(): number {
+			return this.data.output;
+		}
+
+		addOutput(energy: number): number {
+			return this.data.output += energy;
+		}
+
+		isFluidCooled(): boolean {
+			return false;
 		}
 
 		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
@@ -303,7 +318,7 @@ namespace Machine {
 			let boomMod = 1;
 			for (let i = 0; i < this.getReactorSize() * 6; i++) {
 				let slot = this.container.getSlot("slot"+i);
-				let component = ReactorAPI.getComponent(slot.id);
+				let component = ItemReactor.getComponent(slot.id);
 				if (component) {
 					let f = component.influenceExplosion(slot, this)
 					if (f > 0 && f < 1) {

@@ -4,9 +4,9 @@ IDRegistry.genItemID("coolantCell6");
 Item.createItem("coolantCell", "10k Coolant Cell", {name: "coolant_cell", meta: 0}, {isTech: true});
 Item.createItem("coolantCell3", "30k Coolant Cell", {name: "coolant_cell", meta: 1}, {isTech: true});
 Item.createItem("coolantCell6", "60k Coolant Cell", {name: "coolant_cell", meta: 2}, {isTech: true});
-ReactorAPI.registerComponent(ItemID.coolantCell, new ReactorAPI.heatStorage(10000));
-ReactorAPI.registerComponent(ItemID.coolantCell3, new ReactorAPI.heatStorage(30000));
-ReactorAPI.registerComponent(ItemID.coolantCell6, new ReactorAPI.heatStorage(60000));
+ItemReactor.registerComponent(ItemID.coolantCell, new ItemReactor.HeatStorage(10000));
+ItemReactor.registerComponent(ItemID.coolantCell3, new ItemReactor.HeatStorage(30000));
+ItemReactor.registerComponent(ItemID.coolantCell6, new ItemReactor.HeatStorage(60000));
 
 Item.addCreativeGroup("ic2_reactorCoolant", Translation.translate("Reactor Coolants"), [
 	ItemID.coolantCell,

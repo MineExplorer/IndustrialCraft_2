@@ -4,7 +4,7 @@ ModAPI.registerAPI("ICore", {
 	ChargeRegistry: ChargeItemRegistry,
 	Cable: CableRegistry,
 	Upgrade: UpgradeAPI,
-	Reactor: ReactorAPI,
+	ItemReactor: ItemReactor,
 	Radiation: RadiationAPI,
 	Tool: ICTool,
 	Sound: SoundManager,

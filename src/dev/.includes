@@ -28,7 +28,6 @@ machine/generator/StirlingGenerator.ts
 
 machine/heat_generator/**
 
-machine/reactor/reactorAPI.js
 machine/reactor/NuclearReactor.ts
 machine/reactor/ReactorChamber.ts
 
@@ -106,6 +105,7 @@ items/electric/battery.ts
 items/electric/charging.ts
 items/electric/upgrades.ts
 
+items/reactor/ItemReactor.ts
 items/reactor/fuel_rod.js
 items/reactor/plating.js
 items/reactor/reflector.js

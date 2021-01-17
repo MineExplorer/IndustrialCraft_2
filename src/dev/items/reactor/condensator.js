@@ -1,9 +1,9 @@
 IDRegistry.genItemID("rshCondensator");
 IDRegistry.genItemID("lzhCondensator");
-Item.createItem("rshCondensator", "RSH-Condensator", {name: "rsh_condensator"}, {isTech: true});
-Item.createItem("lzhCondensator", "LZH-Condensator", {name: "lzh_condensator"}, {isTech: true});
-ReactorAPI.registerComponent(ItemID.rshCondensator, new ReactorAPI.condensator(20000));
-ReactorAPI.registerComponent(ItemID.lzhCondensator, new ReactorAPI.condensator(100000));
+Item.createItem("rshCondensator", "rsh_condensator", {name: "rsh_condensator"}, {isTech: true});
+Item.createItem("lzhCondensator", "lzh_condensator", {name: "lzh_condensator"}, {isTech: true});
+ItemReactor.registerComponent(ItemID.rshCondensator, new ItemReactor.Condensator(20000));
+ItemReactor.registerComponent(ItemID.lzhCondensator, new ItemReactor.Condensator(100000));
 
 Recipes.addShaped({id: ItemID.rshCondensator, count: 1, data: 1}, [
 	"rrr",

@@ -4,9 +4,9 @@ IDRegistry.genItemID("reactorPlatingHeat");
 Item.createItem("reactorPlating", "Reactor Plating", {name: "reactor_plating", meta: 0});
 Item.createItem("reactorPlatingContainment", "Containment Reactor Plating", {name: "reactor_plating", meta: 1});
 Item.createItem("reactorPlatingHeat", "Heat-Capacity Reactor Plating", {name: "reactor_plating", meta: 2});
-ReactorAPI.registerComponent(ItemID.reactorPlating, new ReactorAPI.plating(1000, 0.95));
-ReactorAPI.registerComponent(ItemID.reactorPlatingContainment, new ReactorAPI.plating(500, 0.9));
-ReactorAPI.registerComponent(ItemID.reactorPlatingHeat, new ReactorAPI.plating(2000, 0.99));
+ItemReactor.registerComponent(ItemID.reactorPlating, new ItemReactor.Plating(1000, 0.95));
+ItemReactor.registerComponent(ItemID.reactorPlatingContainment, new ItemReactor.Plating(500, 0.9));
+ItemReactor.registerComponent(ItemID.reactorPlatingHeat, new ItemReactor.Plating(2000, 0.99));
 
 Item.addCreativeGroup("ic2_reactorPlating", Translation.translate("Reactor Platings"), [
 	ItemID.reactorPlating,

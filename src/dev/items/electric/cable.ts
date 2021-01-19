@@ -33,22 +33,22 @@ implements ItemBehavior {
 	}
 }
 
-ItemCable.createItem("cableTin0", "tin_cable", {name: "cable_tin", meta: 0}, 32);
-ItemCable.createItem("cableTin1", "tin_cable_insulated", {name: "cable_tin", meta: 1}, 32);
+ItemCable.createItem("cableTin0", "tin_cable_0", {name: "cable_tin", meta: 0}, 32);
+ItemCable.createItem("cableTin1", "tin_cable_1", {name: "cable_tin", meta: 1}, 32);
 
-ItemCable.createItem("cableCopper0", "copper_cable", {name: "cable_copper", meta: 0}, 128);
-ItemCable.createItem("cableCopper1", "copper_cable_insulated", {name: "cable_copper", meta: 1}, 128);
+ItemCable.createItem("cableCopper0", "copper_cable_0", {name: "cable_copper", meta: 0}, 128);
+ItemCable.createItem("cableCopper1", "copper_cable_1", {name: "cable_copper", meta: 1}, 128);
 
-ItemCable.createItem("cableGold0", "gold_cable", {name: "cable_gold", meta: 0}, 512);
-ItemCable.createItem("cableGold1", "gold_cable_insulated", {name: "cable_gold", meta: 1}, 512);
-ItemCable.createItem("cableGold2", "gold_cable_insulated_2x", {name: "cable_gold", meta: 2}, 512);
+ItemCable.createItem("cableGold0", "gold_cable_0", {name: "cable_gold", meta: 0}, 512);
+ItemCable.createItem("cableGold1", "gold_cable_1", {name: "cable_gold", meta: 1}, 512);
+ItemCable.createItem("cableGold2", "gold_cable_2", {name: "cable_gold", meta: 2}, 512);
 
-ItemCable.createItem("cableIron0", "iron_cable", {name: "cable_iron", meta: 0}, 2048);
-ItemCable.createItem("cableIron1", "iron_cable_insulated", {name: "cable_iron", meta: 1}, 2048);
-ItemCable.createItem("cableIron2", "iron_cable_insulated_2x", {name: "cable_iron", meta: 2}, 2048);
-ItemCable.createItem("cableIron3", "iron_cable_insulated_3x", {name: "cable_iron", meta: 3}, 2048);
+ItemCable.createItem("cableIron0", "iron_cable_0", {name: "cable_iron", meta: 0}, 2048);
+ItemCable.createItem("cableIron1", "iron_cable_1", {name: "cable_iron", meta: 1}, 2048);
+ItemCable.createItem("cableIron2", "iron_cable_2", {name: "cable_iron", meta: 2}, 2048);
+ItemCable.createItem("cableIron3", "iron_cable_3", {name: "cable_iron", meta: 3}, 2048);
 
-ItemCable.createItem("cableOptic", "optic_cable", "cable_optic", 8192);
+ItemCable.createItem("cableOptic", "glass_cable", "cable_optic", 8192);
 
 Item.addCreativeGroup("cableEU", Translation.translate("Cables"), [
 	ItemID.cableTin0,

@@ -18,7 +18,7 @@ extends ArmorElectric {
 		return 5;
 	}
 
-	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, player: number): ItemInstance {
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		let type = params.type;
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		let energyPerDamage = this.getEnergyPerDamage();
@@ -33,7 +33,7 @@ extends ArmorElectric {
 					let damageReduce = Math.min(damage, Math.floor(energyStored / energyPerDamage));
 					let damageTaken = damage - damageReduce;
 					if (damageTaken > 0) {
-						Entity.setHealth(player, Entity.getHealth(player) + params.damage - damageTaken);
+						Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - damageTaken);
 					} else {
 						Game.prevent();
 					}
@@ -47,11 +47,11 @@ extends ArmorElectric {
 		}
 		if (index == 0 && type == 9 && energyStored >= 500) {
 			Game.prevent();
-			Entity.addEffect(player, PotionEffect.waterBreathing, 1, 60);
+			Entity.addEffect(playerUid, PotionEffect.waterBreathing, 1, 60);
 			ChargeItemRegistry.setEnergyStored(item, energyStored - 500);
 		}
 		if (index == 1 && type == 5) {
-			Utils.fixFallDamage(player, params.damage);
+			Utils.fixFallDamage(playerUid, params.damage);
 		}
 		return item;
 	}
@@ -157,7 +157,7 @@ Callback.addCallback("EntityHurt", function(attacker: number, victim: number, da
 	if (Entity.getType(victim) == 1 && (type == 2 || type == 3 || type == 11)) {
 		let defencePoints = 0;
 		for (let i = 0; i < 4; i++) {
-			let item = Entity.getArmorSlot(player, i);
+			let item = Entity.getArmorSlot(victim, i);
 			let armor = ItemRegistry.getInstanceOf(item.id);
 			if (armor instanceof ArmorNanoSuit || armor instanceof ArmorQuantumSuit) {
 				if (ChargeItemRegistry.getEnergyStored(item) >= armor.getEnergyPerDamage() * damage) {
@@ -172,8 +172,8 @@ Callback.addCallback("EntityHurt", function(attacker: number, victim: number, da
 			}
 			let damageAbsorbed = Math.ceil(damageReceived * defencePoints / 20);
 			if (damageAbsorbed > 0) {
-				let playerHealth = Math.min(Entity.getMaxHealth(player), Entity.getHealth(player));
-				Entity.setHealth(player, playerHealth + damageAbsorbed);
+				let playerHealth = Math.min(Entity.getMaxHealth(victim), Entity.getHealth(victim));
+				Entity.setHealth(victim, playerHealth + damageAbsorbed);
 			}
 		}
 	}

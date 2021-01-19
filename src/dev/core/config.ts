@@ -1,22 +1,35 @@
 namespace ConfigIC {
-	export let debugMode: boolean = __config__.getBool("debug_mode");
-	export let soundEnabled: boolean = __config__.getBool("sound_enabled");
-	export let machineSoundEnabled: boolean = __config__.getBool("machine_sounds");
-	export let voltageEnabled: boolean = __config__.getBool("voltage_enabled");
-	export let wireDamageEnabled: boolean = __config__.getBool("wire_damage_enabled");
-	export let gameLanguage: string;
+	export let debugMode: boolean;
+	export let soundEnabled: boolean;
+	export let machineSoundEnabled: boolean;
+	export let voltageEnabled: boolean;
+	export let wireDamageEnabled: boolean;
+
+	export function getBool(name: string): boolean {
+		return __config__.getBool(name);
+	}
+
+	export function getInt(name: string): number {
+		return __config__.getNumber(name).intValue();
+	}
+
+	export function getFloat(name: string): number {
+		return __config__.getNumber(name).floatValue();
+	}
+
 	export function reload() {
-		let lang = FileTools.ReadKeyValueFile("games/com.mojang/minecraftpe/options.txt").game_language;
-		gameLanguage = (lang || "en_US").substring(0, 2);
+		debugMode = getBool("debug_mode");
+		soundEnabled = getBool("sound_enabled");
+		machineSoundEnabled = getBool("machine_sounds");
+		voltageEnabled = getBool("voltage_enabled");
+		wireDamageEnabled = getBool("wire_damage_enabled");
 	}
 }
 
 ConfigIC.reload();
 
-let player: number;
 Callback.addCallback("LevelLoaded", function() {
 	ConfigIC.reload();
-	player = Player.get();
 });
 
 let isLevelDisplayed = false;

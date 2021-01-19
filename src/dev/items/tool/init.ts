@@ -60,11 +60,11 @@ ItemRegistry.registerItem(new ItemMiningLaser());
 ItemRegistry.registerItem(new ItemWeedingTrowel());
 
 // Painters
-ItemRegistry.createItem("icPainter", {name: "Painter", icon: "ic_painter", stack: 1, category: ItemCategory.EQUIPMENT});
+ItemRegistry.createItem("icPainter", {name: "painter", icon: "ic_painter", stack: 1, category: ItemCategory.EQUIPMENT});
 
 const painterCreativeGroup = [ItemID.icPainter];
-for (let i = 1; i <= 16; i++) {
-	ItemRegistry.registerItem(new ItemPainter(i - 1));
-	painterCreativeGroup.push(ItemID["icPainter"+i]);
+for (let i = 0; i < 16; i++) {
+	let item = ItemRegistry.registerItem(new ItemPainter(i));
+	painterCreativeGroup.push(item.id);
 }
 Item.addCreativeGroup("ic2_painter", Translation.translate("Painters"), painterCreativeGroup);

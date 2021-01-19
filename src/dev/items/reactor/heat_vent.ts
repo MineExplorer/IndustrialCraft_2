@@ -1,17 +1,16 @@
-IDRegistry.genItemID("heatVent");
-Item.createItem("heatVent", "Heat Vent", {name: "heat_vent", meta: 0}, {isTech: true});
+/// <reference path="api/HeatVent.ts" />
 
-IDRegistry.genItemID("heatVentReactor");
-Item.createItem("heatVentReactor", "Reactor Heat Vent", {name: "heat_vent", meta: 1}, {isTech: true});
+ItemRegistry.createItem("heatVent", {name: "heat_vent", icon: "heat_vent", inCreative: false});
+ItemRegistry.createItem("heatVentReactor", {name: "reactor_heat_vent", icon: "reactor_heat_vent", inCreative: false});
+ItemRegistry.createItem("heatVentComponent", {name: "component_heat_vent", icon: "component_heat_vent", inCreative: false});
+ItemRegistry.createItem("heatVentAdv", {name: "advanced_heat_vent", icon: "advanced_heat_vent", inCreative: false});
+ItemRegistry.createItem("heatVentOverclocked", {name: "overclocked_heat_vent", icon: "overclocked_heat_vent", inCreative: false});
 
-IDRegistry.genItemID("heatVentComponent");
-Item.createItem("heatVentComponent", "Component Heat Vent", {name: "heat_vent", meta: 2});
-
-IDRegistry.genItemID("heatVentAdv");
-Item.createItem("heatVentAdv", "Advanced Heat Vent", {name: "heat_vent", meta: 3}, {isTech: true});
-
-IDRegistry.genItemID("heatVentOverclocked");
-Item.createItem("heatVentOverclocked", "Overclocked Heat Vent", {name: "heat_vent", meta: 4}, {isTech: true});
+Item.addToCreative(ItemID.heatVent, 64, 1);
+Item.addToCreative(ItemID.heatVentReactor, 64, 1);
+Item.addToCreative(ItemID.heatVentComponent, 64, 1);
+Item.addToCreative(ItemID.heatVentAdv, 64, 1);
+Item.addToCreative(ItemID.heatVentOverclocked, 64, 1);
 
 ItemReactor.registerComponent(ItemID.heatVent, new ItemReactor.HeatVent(1000, 6, 0));
 ItemReactor.registerComponent(ItemID.heatVentReactor, new ItemReactor.HeatVent(1000, 5, 5));

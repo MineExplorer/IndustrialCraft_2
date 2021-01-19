@@ -1,14 +1,14 @@
-IDRegistry.genItemID("heatExchanger");
-Item.createItem("heatExchanger", "Heat Exchanger", {name: "heat_exchanger", meta: 0}, {isTech: true});
+/// <reference path="api/HeatExchanger.ts" />
 
-IDRegistry.genItemID("heatExchangerReactor");
-Item.createItem("heatExchangerReactor", "Reactor Heat Exchanger", {name: "heat_exchanger", meta: 1}, {isTech: true});
+ItemRegistry.createItem("heatExchanger", {name: "heat_exchanger", icon: "heat_exchanger", inCreative: false});
+ItemRegistry.createItem("heatExchangerReactor", {name: "reactor_heat_exchanger", icon: "reactor_heat_exchanger", inCreative: false});
+ItemRegistry.createItem("heatExchangerComponent", {name: "component_heat_exchanger", icon: "component_heat_exchanger", inCreative: false});
+ItemRegistry.createItem("heatExchangerAdv", {name: "advanced_heat_exchanger", icon: "advanced_heat_exchanger", inCreative: false});
 
-IDRegistry.genItemID("heatExchangerComponent");
-Item.createItem("heatExchangerComponent", "Component Heat Exchanger", {name: "heat_exchanger", meta: 2}, {isTech: true});
-
-IDRegistry.genItemID("heatExchangerAdv");
-Item.createItem("heatExchangerAdv", "Advanced Heat Exchanger", {name: "heat_exchanger", meta: 3}, {isTech: true});
+Item.addToCreative(ItemID.heatExchanger, 64, 1);
+Item.addToCreative(ItemID.heatExchangerReactor, 64, 1);
+Item.addToCreative(ItemID.heatExchangerComponent, 64, 1);
+Item.addToCreative(ItemID.heatExchangerAdv, 64, 1);
 
 ItemReactor.registerComponent(ItemID.heatExchanger, new ItemReactor.HeatExchanger(2500, 12, 4));
 ItemReactor.registerComponent(ItemID.heatExchangerReactor, new ItemReactor.HeatExchanger(5000, 0, 72));

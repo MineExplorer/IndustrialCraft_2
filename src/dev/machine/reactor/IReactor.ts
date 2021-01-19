@@ -21,7 +21,7 @@ interface IReactor {
 
     addOutput(amount: number): number;
 
-    getItemAt(x: number, y: number): ItemInstance;
+    getItemAt(x: number, y: number): ItemContainerSlot;
 
     setItemAt(x: number, y: number, id: number, count: number, data: number, extra?: ItemExtraData): void;
 

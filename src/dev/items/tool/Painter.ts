@@ -1,17 +1,14 @@
-const colorNames = ["Black", "Red", "Green", "Brown", "Blue", "Purple", "Cyan", "Light Grey", "Dark Grey", "Pink", "Lime", "Yellow", "Light Blue", "Magenta", "Orange", "White"];
-
 class ItemPainter
 extends ItemCommon {
 	readonly color: number;
 
-	constructor(color: number) {
-		let name = colorNames[color] + " Painter";
-		let itemIndex = color + 1;
-		super("icPainter" + itemIndex, name, {name: "ic_painter", meta: itemIndex});
+	constructor(colorIndex: number) {
+		let itemIndex = colorIndex + 1;
+		super("icPainter" + itemIndex, "painter." + colorIndex, {name: "ic_painter", meta: itemIndex});
 		this.setMaxStack(1);
 		this.setMaxDamage(16);
 		this.setCategory(ItemCategory.EQUIPMENT);
-		this.color = color;
+		this.color = colorIndex;
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {

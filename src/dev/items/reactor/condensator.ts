@@ -1,7 +1,11 @@
-IDRegistry.genItemID("rshCondensator");
-IDRegistry.genItemID("lzhCondensator");
-Item.createItem("rshCondensator", "rsh_condensator", {name: "rsh_condensator"}, {isTech: true});
-Item.createItem("lzhCondensator", "lzh_condensator", {name: "lzh_condensator"}, {isTech: true});
+/// <reference path="api/Condensator.ts" />
+
+ItemRegistry.createItem("rshCondensator", {name: "rsh_condensator", icon: "rsh_condensator", inCreative: false});
+ItemRegistry.createItem("lzhCondensator", {name: "lzh_condensator", icon: "lzh_condensator", inCreative: false});
+
+Item.addToCreative(ItemID.rshCondensator, 64, 1);
+Item.addToCreative(ItemID.lzhCondensator, 64, 1);
+
 ItemReactor.registerComponent(ItemID.rshCondensator, new ItemReactor.Condensator(20000));
 ItemReactor.registerComponent(ItemID.lzhCondensator, new ItemReactor.Condensator(100000));
 
@@ -19,14 +23,14 @@ Recipes.addShaped({id: ItemID.lzhCondensator, count: 1, data: 1}, [
 
 Recipes.addShapeless({id: ItemID.rshCondensator, count: 1, data: 1}, [{id: ItemID.rshCondensator, data: -1}, {id: 331, data: 0}],
 function(api, field, result) {
-	var index = 0;
-	var canBeRepaired = false;
-	for (var i in field) {
-		var slot = field[i];
+	let index = 0;
+	let canBeRepaired = false;
+	for (let i = 0; i < field.length; i++) {
+		let slot = field[i];
 		if (slot.id == ItemID.rshCondensator) {
 			if (slot.data <= 1) break;
 			canBeRepaired = true;
-			slot.data = Math.max(parseInt(slot.data - 10000 / slot.count), 1);
+			slot.data = Math.max(Math.floor(slot.data - 10000 / slot.count), 1);
 		} else if (slot.id != 0) {
 			index = i;
 		}
@@ -39,14 +43,14 @@ function(api, field, result) {
 
 Recipes.addShapeless({id: ItemID.lzhCondensator, count: 1, data: 1}, [{id: ItemID.lzhCondensator, data: -1}, {id: 331, data: 0}],
 function(api, field, result) {
-	var index = 0;
-	var canBeRepaired = false;
-	for (var i in field) {
-		var slot = field[i];
+	let index = 0;
+	let canBeRepaired = false;
+	for (let i = 0; i < field.length; i++) {
+		let slot = field[i];
 		if (slot.id == ItemID.lzhCondensator) {
 			if (slot.data <= 1) break;
 			canBeRepaired = true;
-			slot.data = Math.max(parseInt(slot.data - 10000 / slot.count), 1);
+			slot.data = Math.max(Math.floor(slot.data - 10000 / slot.count), 1);
 		} else if (slot.id != 0) {
 			index = i;
 		}
@@ -59,14 +63,14 @@ function(api, field, result) {
 
 Recipes.addShapeless({id: ItemID.lzhCondensator, count: 1, data: 1}, [{id: ItemID.lzhCondensator, data: -1}, {id: 351, data: 4}],
 function(api, field, result) {
-	var index = 0;
-	var canBeRepaired = false;
-	for (var i in field) {
-		var slot = field[i];
+	let index = 0;
+	let canBeRepaired = false;
+	for (let i = 0; i < field.length; i++) {
+		let slot = field[i];
 		if (slot.id == ItemID.lzhCondensator) {
 			if (slot.data <= 1) break;
 			canBeRepaired = true;
-			slot.data = Math.max(parseInt(slot.data - 40000 / slot.count), 1);
+			slot.data = Math.max(Math.floor(slot.data - 40000 / slot.count), 1);
 		} else if (slot.id != 0) {
 			index = i;
 		}

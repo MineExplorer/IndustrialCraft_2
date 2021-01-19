@@ -6,7 +6,7 @@ translation.ts
 core/**/*
 
 block/rubber_tree/**
-block/ore.js
+block/ore.ts
 block/metal.ts
 block/basic.ts
 block/reinforced.ts
@@ -105,14 +105,13 @@ items/electric/battery.ts
 items/electric/charging.ts
 items/electric/upgrades.ts
 
-items/reactor/ItemReactor.ts
-items/reactor/fuel_rod.js
-items/reactor/plating.js
-items/reactor/reflector.js
-items/reactor/coolant.js
-items/reactor/heat_exchanger.js
-items/reactor/heat_vent.js
-items/reactor/condensator.js
+items/reactor/fuel_rod.ts
+items/reactor/plating.ts
+items/reactor/reflector.ts
+items/reactor/heat_storage.ts
+items/reactor/heat_exchanger.ts
+items/reactor/heat_vent.ts
+items/reactor/condensator.ts
 
 items/armor/init.ts
 items/armor/recipes.ts

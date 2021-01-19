@@ -3,19 +3,19 @@ let RadiationAPI = {
 	playerRad: 0,
 	sources: {},
 	hazmatArmor: [],
-	
-	registerRadioactiveItem: function(id, duration, stack) {
+
+	setRadioactivity: function(id, duration, stack) {
 		this.items[id] = [duration, stack || false];
 	},
-	
+
 	getItemRadiation: function(id) {
 		return this.items[id];
 	},
-	
+
 	isRadioactiveItem: function(id) {
 		return this.items[id] ? true : false;
 	},
-	
+
 	emitItemRadiation: function(id) {
 		let radiation = this.getItemRadiation(id);
 		if (radiation) {
@@ -28,19 +28,19 @@ let RadiationAPI = {
 		}
 		return false;
 	},
-	
+
 	setRadiation: function(duration) {
 		this.playerRad = Math.max(this.playerRad, duration);
 	},
-	
+
 	addRadiation: function(duration) {
 		this.playerRad = Math.max(this.playerRad + duration, 0);
 	},
-	
+
 	registerHazmatArmor: function(id) {
 		this.hazmatArmor.push(id);
 	},
-	
+
 	checkPlayerArmor: function() {
 		for (let i = 0; i < 4; i++) {
 			let armorID = Player.getArmorSlot(i).id;
@@ -48,11 +48,11 @@ let RadiationAPI = {
 		}
 		return false;
 	},
-	
+
 	addEffect: function(ent, duration) {
-		if (ent == player) {
+		if (ent == Player.get()) {
 			if (this.checkPlayerArmor()) {
-				Entity.addEffect(player, PotionEffect.poison, 1, duration * 20);
+				Entity.addEffect(Player.get(), PotionEffect.poison, 1, duration * 20);
 				this.setRadiation(duration);
 			}
 		} else {
@@ -62,7 +62,7 @@ let RadiationAPI = {
 			}
 		}
 	},
-	
+
 	addEffectInRange: function(x, y, z, radius, duration) {
 		let entities = Entity.getAll();
 		for (let i in entities) {
@@ -76,7 +76,7 @@ let RadiationAPI = {
 			}
 		}
 	},
-	
+
 	addRadiationSource: function(x, y, z, radius, duration) {
 		this.sources[x+':'+y+':'+z] = {
 			x: x,
@@ -86,7 +86,7 @@ let RadiationAPI = {
 			timer: duration
 		}
 	},
-	
+
 	tick: function() {
 		if (World.getThreadTime()%20 == 0) {
 			let radiation = false;
@@ -103,9 +103,9 @@ let RadiationAPI = {
 			}
 			let armor = Player.getArmorSlot(0);
 			if (this.playerRad > 0 && !(armor.id == ItemID.quantumHelmet && ChargeItemRegistry.getEnergyStored(armor) >= 100000)) {
-				Entity.addEffect(player, PotionEffect.poison, 1, this.playerRad * 20);
-				if (Entity.getHealth(player) == 1) {
-					Entity.damageEntity(player, 1);
+				Entity.addEffect(Player.get(), PotionEffect.poison, 1, this.playerRad * 20);
+				if (Entity.getHealth(Player.get()) == 1) {
+					Entity.damageEntity(Player.get(), 1);
 				}
 			}
 			for (let i in this.sources) {
@@ -138,7 +138,7 @@ Callback.addCallback("tick", function() {
 });
 
 Callback.addCallback("EntityDeath", function(entity) {
-	if (entity == player) {
+	if (entity == Player.get()) {
 		RadiationAPI.playerRad = 0;
 	}
 });

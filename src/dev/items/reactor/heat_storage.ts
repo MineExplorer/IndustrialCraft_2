@@ -1,9 +1,13 @@
-IDRegistry.genItemID("coolantCell");
-IDRegistry.genItemID("coolantCell3");
-IDRegistry.genItemID("coolantCell6");
-Item.createItem("coolantCell", "10k Coolant Cell", {name: "coolant_cell", meta: 0}, {isTech: true});
-Item.createItem("coolantCell3", "30k Coolant Cell", {name: "coolant_cell", meta: 1}, {isTech: true});
-Item.createItem("coolantCell6", "60k Coolant Cell", {name: "coolant_cell", meta: 2}, {isTech: true});
+/// <reference path="api/HeatStorage.ts" />
+
+ItemRegistry.createItem("coolantCell", {name: "heat_storage", icon: {name: "heat_storage", meta: 0}, inCreative: false});
+ItemRegistry.createItem("coolantCell3", {name: "tri_heat_storage", icon: {name: "heat_storage", meta: 1}, inCreative: false});
+ItemRegistry.createItem("coolantCell6", {name: "six_heat_storage", icon: {name: "heat_storage", meta: 2}, inCreative: false});
+
+Item.addToCreative(ItemID.coolantCell, 64, 1);
+Item.addToCreative(ItemID.coolantCell3, 64, 1);
+Item.addToCreative(ItemID.coolantCell6, 64, 1);
+
 ItemReactor.registerComponent(ItemID.coolantCell, new ItemReactor.HeatStorage(10000));
 ItemReactor.registerComponent(ItemID.coolantCell3, new ItemReactor.HeatStorage(30000));
 ItemReactor.registerComponent(ItemID.coolantCell6, new ItemReactor.HeatStorage(60000));

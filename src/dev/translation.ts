@@ -115,39 +115,39 @@ Translation.addTranslation("mox_fuel", {en: "MOX Nuclear Fuel", ru: "Ядерн�
 Translation.addTranslation("rtg_pellet", {en: "Pellets of RTG Fuel", ru: "Пеллета РИТЭГ-топлива", es: "Perdigones de Combustible RTG", pt: "Pastilhas de Combustível de GTR", zh: "放射性同位素燃料靶丸"});
 
 // Reactor Stuff - Radioactive Items
-Translation.addTranslation("Fuel Rod (Empty)", {ru: "Топливный стержень (Пустой)", es: "Vara Combustible (Vacía)", pt: "Haste de Combustível (Vazia)", zh: "燃料棒(空)"});
-Translation.addTranslation("Fuel Rod (Uranium)", {ru: "Топливный стержень (Уран)", es: "Vara Combustible (Uranio)", pt: "Haste de Combustível (Urânio)", zh: "燃料棒(铀)"});
-Translation.addTranslation("Dual Fuel Rod (Uranium)", {ru: "Спаренный топливный стержень (Уран)", es: "Vara Combustible Doble (Uranio)", pt: "Haste de Combustível Dupla (Urânio)", zh: "双联燃料棒(铀)"});
-Translation.addTranslation("Quad Fuel Rod (Uranium)", {ru: "Счетверённый топливный стержень (Уран)", es: "Vara Combustible Cuádruple (Uranio)", pt: "Haste de Combustível Quádrupla (Urânio)", zh: "四联燃料棒(铀)"});
-Translation.addTranslation("Fuel Rod (MOX)", {ru: "Топливный стержень (MOX)", es: "Vara Combustible (MOX)", pt: "Haste de Combustível (MOX)", zh: "燃料棒(MOX)"});
-Translation.addTranslation("Dual Fuel Rod (MOX)", {ru: "Спаренный топливный стержень (MOX)", es: "Vara Combustible Doble (MOX)", pt: "Haste de Combustível Dupla (MOX)", zh: "双联燃料棒(MOX)"});
-Translation.addTranslation("Quad Fuel Rod (MOX)", {ru: "Счетверённый топливный стержень (MOX)", es: "Vara Combustible Cuádruple (MOX)", pt: "Haste de Combustível Quádrupla (MOX)", zh: "四联燃料棒(MOX)"});
-Translation.addTranslation("Fuel Rod (Depleted Uranium)", {ru: "Топливный стержень (Обеднённый Уран)", es: "Vara Combustible (Uranio Empobrecido)", pt: "Haste de Combustível (Urânio Esgotado)", zh: "燃料棒(枯竭铀)"});
-Translation.addTranslation("Dual Fuel Rod (Depleted Uranium)", {ru: "Спаренный топливный стержень (Обеднённый Уран)", es: "Vara Combustible Doble (Uranio Empobrecido)", pt: "Haste de Combustível Dupla (Urânio Esgotado)", zh: "双联燃料棒(枯竭铀)"});
-Translation.addTranslation("Quad Fuel Rod (Depleted Uranium)", {ru: "Счетверённый топливный стержень (Обеднённый Уран)", es: "Vara Combustible Cuádruple (Uranio Empobrecido)", pt: "Haste de Combustível Quádrupla (Urânio Esgotado)", zh: "四联燃料棒(枯竭铀)"});
-Translation.addTranslation("Fuel Rod (Depleted MOX)", {ru: "Топливный стержень (Обеднённый MOX)", es: "Vara Combustible (MOX Empobrecido)", pt: "Haste de Combustível (MOX Esgotado)", zh: "燃料棒(枯竭MOX)"});
-Translation.addTranslation("Dual Fuel Rod (Depleted MOX)", {ru: "Спаренный топливный стержень (Обеднённый MOX)", es: "Vara Combustible Doble (MOX Empobrecido)", pt: "Haste de Combustível Dupla (MOX Esgotado)", zh: "双联燃料棒(枯竭MOX)"});
-Translation.addTranslation("Quad Fuel Rod (Depleted MOX)", {ru: "Счетверённый топливный стержень (Обеднённый MOX)", es: "Vara Combustible Cuádruple (MOX Empobrecido)", pt: "Haste de Combustível Quádrupla (MOX Esgotado)", zh: "四联燃料棒(枯竭MOX)"});
+Translation.addTranslation("fuel_rod", {en: "Fuel Rod (Empty)", ru: "Топливный стержень (Пустой)", es: "Vara Combustible (Vacía)", pt: "Haste de Combustível (Vazia)", zh: "燃料棒(空)"});
+Translation.addTranslation("uranium_fuel_rod", {en: "Fuel Rod (Uranium)", ru: "Топливный стержень (Уран)", es: "Vara Combustible (Uranio)", pt: "Haste de Combustível (Urânio)", zh: "燃料棒(铀)"});
+Translation.addTranslation("dual_uranium_fuel_rod", {en: "Dual Fuel Rod (Uranium)", ru: "Спаренный топливный стержень (Уран)", es: "Vara Combustible Doble (Uranio)", pt: "Haste de Combustível Dupla (Urânio)", zh: "双联燃料棒(铀)"});
+Translation.addTranslation("quad_uranium_fuel_rod", {en: "Quad Fuel Rod (Uranium)", ru: "Счетверённый топливный стержень (Уран)", es: "Vara Combustible Cuádruple (Uranio)", pt: "Haste de Combustível Quádrupla (Urânio)", zh: "四联燃料棒(铀)"});
+Translation.addTranslation("mox_fuel_rod", {en: "Fuel Rod (MOX)", ru: "Топливный стержень (MOX)", es: "Vara Combustible (MOX)", pt: "Haste de Combustível (MOX)", zh: "燃料棒(MOX)"});
+Translation.addTranslation("dual_mox_fuel_rod", {en: "Dual Fuel Rod (MOX)", ru: "Спаренный топливный стержень (MOX)", es: "Vara Combustible Doble (MOX)", pt: "Haste de Combustível Dupla (MOX)", zh: "双联燃料棒(MOX)"});
+Translation.addTranslation("quad_mox_fuel_rod", {en: "Quad Fuel Rod (MOX)", ru: "Счетверённый топливный стержень (MOX)", es: "Vara Combustible Cuádruple (MOX)", pt: "Haste de Combustível Quádrupla (MOX)", zh: "四联燃料棒(MOX)"});
+Translation.addTranslation("depleted_uranium_fuel_rod", {en: "Fuel Rod (Depleted Uranium)", ru: "Топливный стержень (Обеднённый Уран)", es: "Vara Combustible (Uranio Empobrecido)", pt: "Haste de Combustível (Urânio Esgotado)", zh: "燃料棒(枯竭铀)"});
+Translation.addTranslation("depleted_dual_uranium_fuel_rod", {en: "Dual Fuel Rod (Depleted Uranium)", ru: "Спаренный топливный стержень (Обеднённый Уран)", es: "Vara Combustible Doble (Uranio Empobrecido)", pt: "Haste de Combustível Dupla (Urânio Esgotado)", zh: "双联燃料棒(枯竭铀)"});
+Translation.addTranslation("depleted_quad_uranium_fuel_rod", {en: "Quad Fuel Rod (Depleted Uranium)",ru: "Счетверённый топливный стержень (Обеднённый Уран)", es: "Vara Combustible Cuádruple (Uranio Empobrecido)", pt: "Haste de Combustível Quádrupla (Urânio Esgotado)", zh: "四联燃料棒(枯竭铀)"});
+Translation.addTranslation("depleted_mox_fuel_rod", {en: "Fuel Rod (Depleted MOX)", ru: "Топливный стержень (Обеднённый MOX)", es: "Vara Combustible (MOX Empobrecido)", pt: "Haste de Combustível (MOX Esgotado)", zh: "燃料棒(枯竭MOX)"});
+Translation.addTranslation("depleted_dual_mox_fuel_rod", {en: "Dual Fuel Rod (Depleted MOX)", ru: "Спаренный топливный стержень (Обеднённый MOX)", es: "Vara Combustible Doble (MOX Empobrecido)", pt: "Haste de Combustível Dupla (MOX Esgotado)", zh: "双联燃料棒(枯竭MOX)"});
+Translation.addTranslation("depleted_quad_mox_fuel_rod", {en: "Quad Fuel Rod (Depleted MOX)", ru: "Счетверённый топливный стержень (Обеднённый MOX)", es: "Vara Combustible Cuádruple (MOX Empobrecido)", pt: "Haste de Combustível Quádrupla (MOX Esgotado)", zh: "四联燃料棒(枯竭MOX)"});
 
 // Reactor Stuff - Cooling/Heat Management
-Translation.addTranslation("Reactor Plating", {ru: "Обшивка реактора", es: "Revestimiento para Reactor", pt: "Placa de Reator", zh: "反应堆隔板"});
-Translation.addTranslation("Containment Reactor Plating", {ru: "Сдерживающая реакторная обшивка", es: "Revestimiento de Reactor con Capacidad de Calor", pt: "Placa de Contenção de Reator", zh: "高热容反应堆隔板"});
-Translation.addTranslation("Heat-Capacity Reactor Plating", {ru: "Теплоёмкая реакторная обшивка", es: "Revestimiento de Contención para Reactor", pt: "Placa de Reator com Capacidade de Calor", zh: "密封反应堆隔热板"});
-Translation.addTranslation("Neutron Reflector", {ru: "Отражатель нейтронов", es: "Reflector de Neutrones", pt: "Refletor de Neutrons", zh: "中子反射板"});
-Translation.addTranslation("Thick Neutron Reflector", {ru: "Утолщённый отражатель нейтронов", es: "Reflector de Neutrones Grueso", pt: "Refletor de Neutrons Grosso", zh: "加厚中子反射板"});
-Translation.addTranslation("Iridium Neutron Reflector", {ru: "Иридиевый отражатель нейтронов", es: "Reflector de Neutrones de Iridio", pt: "Refletor de Neutrons de Irídio", zh: "铱中子反射板"});
-Translation.addTranslation("10k Coolant Cell", {ru: "Охлаждающая капсула 10к", es: "Celda Refrigerante 10k", pt: "Célula Refrigerante de 10k", zh: "10k冷却单元"});
-Translation.addTranslation("30k Coolant Cell", {ru: "Охлаждающая капсула 30к", es: "Celda Refrigerante 30k", pt: "Célula Refrigerante de 30k", zh: "30k冷却单元"});
-Translation.addTranslation("60k Coolant Cell", {ru: "Охлаждающая капсула 60к", es: "Celda Refrigerante 60k", pt: "Célula Refrigerante de 60k", zh: "60k冷却单元"});
-Translation.addTranslation("Heat Exchanger", {ru: "Теплообменник", es: "Intercambiador de Calor", pt: "Trocador de Calor", zh: "热交换器"});
-Translation.addTranslation("Advanced Heat Exchanger", {ru: "Улучшенный теплообменник", es: "Intercambiador de Calor para Reactor", pt: "Trocador de Calor Avançado", zh: "高级热交换器"});
-Translation.addTranslation("Component Heat Exchanger", {ru: "Компонентный теплообменник", es: "Intercambiador de Calor para Componentes", pt: "Trocador de Calor Componente", zh: "元件热交换器"});
-Translation.addTranslation("Reactor Heat Exchanger", {ru: "Реакторный теплообменник", es: "Intercambiador de Calor para Reactor", pt: "Trocador de Calor do Reator", zh: "反应堆热交换器"});
-Translation.addTranslation("Heat Vent", {ru: "Теплоотвод", es: "Ventilación de Calor", pt: "Ventilação de Calor", zh: "散热片"});
-Translation.addTranslation("Advanced Heat Vent", {ru: "Улучшенный теплоотвод", es: "Ventilación de Calor Avanzada", pt: "Ventilação de Calor Avançada", zh: "高级散热片"});
-Translation.addTranslation("Component Heat Vent", {ru: "Компонентный теплоотвод", es: "Componente para Ventilación de Calor", pt: "Ventilação de Calor Componente", zh: "元件散热片"});
-Translation.addTranslation("Reactor Heat Vent", {ru: "Реакторный теплоотвод", es: "Ventilación de Calor para Reactor", pt: "Ventilação de Calor para Reator", zh: "反应堆散热片"});
-Translation.addTranslation("Overclocked Heat Vent", {ru: "Разогнанный теплоотвод", es: "Ventilación de Calor con Sobreproducción", pt: "Ventilação de Calor com Overclock", zh: "超频散热片"});
+Translation.addTranslation("reactor_plating", {en: "Reactor Plating", ru: "Обшивка реактора", es: "Revestimiento para Reactor", pt: "Placa de Reator", zh: "反应堆隔板"});
+Translation.addTranslation("containment_reactor_plating", {en: "Containment Reactor Plating", ru: "Сдерживающая реакторная обшивка", es: "Revestimiento de Reactor con Capacidad de Calor", pt: "Placa de Contenção de Reator", zh: "高热容反应堆隔板"});
+Translation.addTranslation("heat_reactor_plating", {en: "Heat-Capacity Reactor Plating", ru: "Теплоёмкая реакторная обшивка", es: "Revestimiento de Contención para Reactor", pt: "Placa de Reator com Capacidade de Calor", zh: "密封反应堆隔热板"});
+Translation.addTranslation("neutron_reflector", {en: "Neutron Reflector", ru: "Отражатель нейтронов", es: "Reflector de Neutrones", pt: "Refletor de Neutrons", zh: "中子反射板"});
+Translation.addTranslation("thick_neutron_reflector", {en: "Thick Neutron Reflector", ru: "Утолщённый отражатель нейтронов", es: "Reflector de Neutrones Grueso", pt: "Refletor de Neutrons Grosso", zh: "加厚中子反射板"});
+Translation.addTranslation("iridium_neutron_reflector", {en: "Iridium Neutron Reflector", ru: "Иридиевый отражатель нейтронов", es: "Reflector de Neutrones de Iridio", pt: "Refletor de Neutrons de Irídio", zh: "铱中子反射板"});
+Translation.addTranslation("heat_storage", {en: "10k Coolant Cell", ru: "Охлаждающая капсула 10к", es: "Celda Refrigerante 10k", pt: "Célula Refrigerante de 10k", zh: "10k冷却单元"});
+Translation.addTranslation("tri_heat_storage", {en: "30k Coolant Cell", ru: "Охлаждающая капсула 30к", es: "Celda Refrigerante 30k", pt: "Célula Refrigerante de 30k", zh: "30k冷却单元"});
+Translation.addTranslation("six_heat_storage", {en: "60k Coolant Cell", ru: "Охлаждающая капсула 60к", es: "Celda Refrigerante 60k", pt: "Célula Refrigerante de 60k", zh: "60k冷却单元"});
+Translation.addTranslation("heat_exchanger", {en: "Heat Exchanger", ru: "Теплообменник", es: "Intercambiador de Calor", pt: "Trocador de Calor", zh: "热交换器"});
+Translation.addTranslation("advanced_heat_exchanger", {en: "Advanced Heat Exchanger", ru: "Улучшенный теплообменник", es: "Intercambiador de Calor para Reactor", pt: "Trocador de Calor Avançado", zh: "高级热交换器"});
+Translation.addTranslation("component_heat_exchanger", {en: "Component Heat Exchanger", ru: "Компонентный теплообменник", es: "Intercambiador de Calor para Componentes", pt: "Trocador de Calor Componente", zh: "元件热交换器"});
+Translation.addTranslation("reactor_heat_exchanger", {en: "Reactor Heat Exchanger", ru: "Реакторный теплообменник", es: "Intercambiador de Calor para Reactor", pt: "Trocador de Calor do Reator", zh: "反应堆热交换器"});
+Translation.addTranslation("heat_vent", {en: "Heat Vent", ru: "Теплоотвод", es: "Ventilación de Calor", pt: "Ventilação de Calor", zh: "散热片"});
+Translation.addTranslation("component_heat_vent", {en: "Component Heat Vent", ru: "Компонентный теплоотвод", es: "Componente para Ventilación de Calor", pt: "Ventilação de Calor Componente", zh: "元件散热片"});
+Translation.addTranslation("reactor_heat_vent", {en: "Reactor Heat Vent", ru: "Реакторный теплоотвод", es: "Ventilación de Calor para Reactor", pt: "Ventilação de Calor para Reator", zh: "反应堆散热片"});
+Translation.addTranslation("advanced_heat_vent", {en: "Advanced Heat Vent", ru: "Улучшенный теплоотвод", es: "Ventilación de Calor Avanzada", pt: "Ventilação de Calor Avançada", zh: "高级散热片"});
+Translation.addTranslation("overclocked_heat_vent", {en: "Overclocked Heat Vent", ru: "Разогнанный теплоотвод", es: "Ventilación de Calor con Sobreproducción", pt: "Ventilação de Calor com Overclock", zh: "超频散热片"});
 Translation.addTranslation("rsh_condensator", {en: "RSH-Condensator", ru: "Красный конденсатор", es: "RSH-Condensador", pt: "Condensador de Calor de Redstone (CCR)", zh: "红石冷凝模块"});
 Translation.addTranslation("lzh_condensator", {en: "LZH-Condensator", ru: "Лазуритовый конденсатор", es: "LZH-Condensador", pt: "Condensador de Calor de Lápis-Lazúli (CCL)", zh: "青金石冷凝模块"});
 
@@ -276,18 +276,18 @@ Translation.addTranslation("uu_matter_cell", {en: "UU-Matter Cell", ru: "Кап�
 Translation.addTranslation("air_cell", {en: "Compressed Air Cell", ru: "Капсула со сжатым воздухом", es: "Celda de Aire Comprimida", pt: "Célula com Ar Comprimido", zh: "压缩空气单元"});
 
 // Cables
-Translation.addTranslation("tin_cable", {en: "Tin Cable", ru: "Оловянный провод", es: "Cable de Ultra-Baja Tensión", pt: "Cabo de Estanho", zh: "锡质导线"});
-Translation.addTranslation("tin_cable_insulated", {en: "Insulated Tin Cable", ru: "Оловянный провод с изоляцией", es: "Cable de Estaño Aislado", pt: "Cabo de Estanho Isolado", zh: "绝缘锡质导线"});
-Translation.addTranslation("copper_cable", {en: "Copper Cable", ru: "Медный провод", es: "Cable de Cobre", pt: "Cabo de Cobre", zh: "铜质导线"});
-Translation.addTranslation("copper_cable_insulated", {en: "Insulated Copper Cable", ru: "Медный провод с изоляцией", es: "Cable de Cobre Aislado", pt: "Cabo de Cobre Isolado", zh: "绝缘质铜导线"});
-Translation.addTranslation("gold_cable", {en: "Gold Cable", ru: "Золотой провод", es: "Cable de Oro", pt: "Cabo de Ouro", zh: "金质导线"});
-Translation.addTranslation("gold_cable_insulated", {en: "Insulated Gold Cable", ru: "Золотой провод с изоляцией", es: "Cable de Oro Aislado", pt: "Cabo de Ouro Isolado", zh: "绝缘金质导线"});
-Translation.addTranslation("gold_cable_insulated_2x", {en: "2x Ins. Gold Cable", ru: "Золотой провод с 2x изоляцией", es: "Cable de Oro Aislado x2", pt: "Cabo de Ouro Isolado x2", zh: "2x绝缘金质导线"});
-Translation.addTranslation("iron_cable", {en: "HV Cable", ru: "Высоковольтный провод", es: "Cable de Alta Tensión", pt: "Cabo de Alta Tensão", zh: "高压导线"});
-Translation.addTranslation("iron_cable_insulated", {en: "Insulated HV Cable", ru: "Высоковольтный провод с изоляцией", es: "Cable de Alta Tensión Aislado", pt: "Cabo de Alta Tensão Isolado", zh: "绝缘高压导线"});
-Translation.addTranslation("iron_cable_insulated_2x", {en: "2x Ins. HV Cable", ru: "Высоковольтный провод с 2x изоляцией", es: "Cable de Alta Tensión Aislado x2", pt: "Cabo de Alta Tensão Isolado x2", zh: "2x绝缘高压导线"});
-Translation.addTranslation("iron_cable_insulated_3x", {en: "3x Ins. HV Cable", ru: "Высоковольтный провод с 3x изоляцией", es: "Cable de Alta Tensión Aislado x3", pt: "Cabo de Alta Tensão Isolado x3", zh: "3x绝缘高压导线"});
-Translation.addTranslation("optic_cable", {en: "Glass Fibre Cable", ru: "Стекловолоконный провод", es: "Cable de Alta Tensión", pt: "Cabo de Fibra de Vidro", zh: "玻璃纤维导线"});
+Translation.addTranslation("tin_cable_0", {en: "Tin Cable", ru: "Оловянный провод", es: "Cable de Ultra-Baja Tensión", pt: "Cabo de Estanho", zh: "锡质导线"});
+Translation.addTranslation("tin_cable_1", {en: "Insulated Tin Cable", ru: "Оловянный провод с изоляцией", es: "Cable de Estaño Aislado", pt: "Cabo de Estanho Isolado", zh: "绝缘锡质导线"});
+Translation.addTranslation("copper_cable_0", {en: "Copper Cable", ru: "Медный провод", es: "Cable de Cobre", pt: "Cabo de Cobre", zh: "铜质导线"});
+Translation.addTranslation("copper_cable_1", {en: "Insulated Copper Cable", ru: "Медный провод с изоляцией", es: "Cable de Cobre Aislado", pt: "Cabo de Cobre Isolado", zh: "绝缘质铜导线"});
+Translation.addTranslation("gold_cable_0", {en: "Gold Cable", ru: "Золотой провод", es: "Cable de Oro", pt: "Cabo de Ouro", zh: "金质导线"});
+Translation.addTranslation("gold_cable_1", {en: "Insulated Gold Cable", ru: "Золотой провод с изоляцией", es: "Cable de Oro Aislado", pt: "Cabo de Ouro Isolado", zh: "绝缘金质导线"});
+Translation.addTranslation("gold_cable_2", {en: "2x Ins. Gold Cable", ru: "Золотой провод с 2x изоляцией", es: "Cable de Oro Aislado x2", pt: "Cabo de Ouro Isolado x2", zh: "2x绝缘金质导线"});
+Translation.addTranslation("iron_cable_0", {en: "HV Cable", ru: "Высоковольтный провод", es: "Cable de Alta Tensión", pt: "Cabo de Alta Tensão", zh: "高压导线"});
+Translation.addTranslation("iron_cable_1", {en: "Insulated HV Cable", ru: "Высоковольтный провод с изоляцией", es: "Cable de Alta Tensión Aislado", pt: "Cabo de Alta Tensão Isolado", zh: "绝缘高压导线"});
+Translation.addTranslation("iron_cable_2", {en: "2x Ins. HV Cable", ru: "Высоковольтный провод с 2x изоляцией", es: "Cable de Alta Tensión Aislado x2", pt: "Cabo de Alta Tensão Isolado x2", zh: "2x绝缘高压导线"});
+Translation.addTranslation("iron_cable_3", {en: "3x Ins. HV Cable", ru: "Высоковольтный провод с 3x изоляцией", es: "Cable de Alta Tensión Aislado x3", pt: "Cabo de Alta Tensão Isolado x3", zh: "3x绝缘高压导线"});
+Translation.addTranslation("glass_cable", {en: "Glass Fibre Cable", ru: "Стекловолоконный провод", es: "Cable de Alta Tensión", pt: "Cabo de Fibra de Vidro", zh: "玻璃纤维导线"});
 
 // Armor
 Translation.addTranslation("bronze_helmet", {en: "Bronze Helmet", ru: "Бронзовый шлем", es: "Casco de Bronce", pt: "Elmo de Bronze", zh: "青铜头盔"});
@@ -346,6 +346,25 @@ Translation.addTranslation("eu_meter", {en: "EU Meter", ru: "Мультимет�
 Translation.addTranslation("debug_item", {ru: "Предмет отладки", pt: "Item de Depuração", zh:"测试工具"});
 Translation.addTranslation("crop_analyzer", {en: "Crop Analyzer", ru: "Агроанализатор", es: "Semillalizador", pt: "Plantanalizador", zh: "作物分析器"});
 Translation.addTranslation("weeding_trowel", {en: "Weeding Trowel", ru: "Пропалыватель", pt: "Espátula Transplantadora", zh: "除草铲"});
+
+// Painter
+Translation.addTranslation("painter", {ru: "Валик", pt: "Rolo de Pintura", zh: "刷子"});
+Translation.addTranslation("painter.0", {en: "Black Painter", ru: "Чёрный валик", pt: "Rolo de Pintura Preto", zh: "黑色刷子"});
+Translation.addTranslation("painter.1", {en: "Blue Painter", ru: "Синий валик", pt: "Rolo de Pintura Azul", zh: "蓝色刷子"});
+Translation.addTranslation("painter.2", {en: "Brown Painter", ru: "Коричневый валик", pt: "Rolo de Pintura Marrom", zh: "棕色刷子"});
+Translation.addTranslation("painter.3", {en: "Light Blue Painter", ru: "Светло-голубой валик", pt: "Rolo de Pintura Azul Claro", zh: "淡蓝色刷子"});
+Translation.addTranslation("painter.4", {en: "Cyan Painter", ru: "Бирюзовый валик", pt: "Rolo de Pintura Ciano", zh: "青色刷子"});
+Translation.addTranslation("painter.5", {en: "Dark Grey Painter", ru: "Тёмно-серый валик", pt: "Rolo de Pintura Cinza", zh: "灰色刷子"});
+Translation.addTranslation("painter.6", {en: "Green Painter", ru: "Зелёный валик", pt: "Rolo de Pintura Verde", zh: "绿色刷子"});
+Translation.addTranslation("painter.7", {en: "Light Grey Painter", ru: "Светло-серый валик", pt: "Rolo de Pintura Cinza Claro", zh: "淡灰色刷子"});
+Translation.addTranslation("painter.8", {en: "Lime Painter", ru: "Лаймовый валик", pt: "Rolo de Pintura Verde-Limão", zh: "柠檬色刷子"});
+Translation.addTranslation("painter.9", {en: "Magenta Painter", ru: "Сиреневый валик", pt: "Rolo de Pintura Lilás", zh: "品红色刷子"});
+Translation.addTranslation("painter.10", {en: "Orange Painter", ru: "Оранжевый валик", pt: "Rolo de Pintura Laranjado", zh: "橙色刷子"});
+Translation.addTranslation("painter.11", {en: "Pink Painter", ru: "Розовый валик", pt: "Rolo de Pintura Rosa", zh: "粉色刷子"});
+Translation.addTranslation("painter.12", {en: "Purple Painter", ru: "Фиолетовый валик", pt: "Rolo de Pintura Roxo", zh: "紫色刷子"});
+Translation.addTranslation("painter.13", {en: "Red Painter", ru: "Красный валик", pt: "Rolo de Pintura Vermelho", zh: "红色刷子"});
+Translation.addTranslation("painter.14", {en: "White Painter", ru: "Белый валик", pt: "Rolo de Pintura Branco", zh: "白色刷子"});
+Translation.addTranslation("painter.15", {en: "Yellow Painter", ru: "Жёлтый валик", pt: "Rolo de Pintura Amarelo", zh: "黄色刷子"});
 
 // Coffee
 Translation.addTranslation("coffee_powder", {en: "Coffee Powder", ru: "Молотый кофе", es: "Polvo de Café", pt: "Pó de Café", zh: "咖啡粉"});
@@ -430,25 +449,6 @@ Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt
 // Iridium Drill
 Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna III", zh: "时运 III"});
 Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
-
-// Painter
-Translation.addTranslation("Painter", {ru: "Валик", pt: "Rolo de Pintura", zh: "刷子"});
-Translation.addTranslation("Black Painter", {ru: "Чёрный валик", pt: "Rolo de Pintura Preto", zh: "黑色刷子"});
-Translation.addTranslation("Blue Painter", {ru: "Синий валик", pt: "Rolo de Pintura Azul", zh: "蓝色刷子"});
-Translation.addTranslation("Brown Painter", {ru: "Коричневый валик", pt: "Rolo de Pintura Marrom", zh: "棕色刷子"});
-Translation.addTranslation("Light Blue Painter", {ru: "Светло-голубой валик", pt: "Rolo de Pintura Azul Claro", zh: "淡蓝色刷子"});
-Translation.addTranslation("Cyan Painter", {ru: "Бирюзовый валик", pt: "Rolo de Pintura Ciano", zh: "青色刷子"});
-Translation.addTranslation("Dark Grey Painter", {ru: "Тёмно-серый валик", pt: "Rolo de Pintura Cinza", zh: "灰色刷子"});
-Translation.addTranslation("Green Painter", {ru: "Зелёный валик", pt: "Rolo de Pintura Verde", zh: "绿色刷子"});
-Translation.addTranslation("Light Grey Painter", {ru: "Светло-серый валик", pt: "Rolo de Pintura Cinza Claro", zh: "淡灰色刷子"});
-Translation.addTranslation("Lime Painter", {ru: "Лаймовый валик", pt: "Rolo de Pintura Verde-Limão", zh: "柠檬色刷子"});
-Translation.addTranslation("Magenta Painter", {ru: "Сиреневый валик", pt: "Rolo de Pintura Lilás", zh: "品红色刷子"});
-Translation.addTranslation("Orange Painter", {ru: "Оранжевый валик", pt: "Rolo de Pintura Laranjado", zh: "橙色刷子"});
-Translation.addTranslation("Pink Painter", {ru: "Розовый валик", pt: "Rolo de Pintura Rosa", zh: "粉色刷子"});
-Translation.addTranslation("Purple Painter", {ru: "Фиолетовый валик", pt: "Rolo de Pintura Roxo", zh: "紫色刷子"});
-Translation.addTranslation("Red Painter", {ru: "Красный валик", pt: "Rolo de Pintura Vermelho", zh: "红色刷子"});
-Translation.addTranslation("White Painter", {ru: "Белый валик", pt: "Rolo de Pintura Branco", zh: "白色刷子"});
-Translation.addTranslation("Yellow Painter", {ru: "Жёлтый валик", pt: "Rolo de Pintura Amarelo", zh: "黄色刷子"});
 
 // Messages
 Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});

@@ -732,8 +732,8 @@ AgricultureAPI.registerCropCard({
         if (!entity)return;
 
         Entity.damageEntity(entity, te.data.currentSize * 2);
-        if (entity == player && !this.hasMetalArmor()) {
-            Entity.addEffect(player, PotionEffect.poison, 1, 50);
+        if (entity == Player.get() && !this.hasMetalArmor()) {
+            Entity.addEffect(Player.get(), PotionEffect.poison, 1, 50);
         }
         if (te.crop.canGrow(te)) te.data.growthPoints += 100;
         World.drop(this.x, this.y, this.z, 367, 1, 0);

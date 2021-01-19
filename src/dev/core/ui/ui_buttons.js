@@ -6,7 +6,7 @@ Callback.addCallback("NativeGuiChanged", function(screenName) {
 	}
 });
 
-var button_scale = __config__.getNumber("button_scale");
+var button_scale = ConfigIC.getInt("button_scale");
 var UIbuttons = {
 	data: {},
 	onSwitch: {},
@@ -158,7 +158,7 @@ var buttonContent = {
 			onClick: function() {
 				var item = Player.getCarriedItem();
 				if (UIbuttons.onSwitch[item.id]) {
-					UIbuttons.onSwitch[item.id](item, player);
+					UIbuttons.onSwitch[item.id](item, Player.get());
 				}
 			}
 		}

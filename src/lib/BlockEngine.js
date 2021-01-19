@@ -19,18 +19,17 @@ LIBRARY({
 });
 var ItemStack = /** @class */ (function () {
     function ItemStack(item, count, data, extra) {
-        if (item === void 0) { item = 0; }
-        if (count === void 0) { count = 0; }
-        if (data === void 0) { data = 0; }
-        if (extra === void 0) { extra = null; }
         if (typeof item == "object") {
-            return new ItemStack(item.id, item.count, item.data, item.extra);
+            this.id = item.id;
+            this.data = item.data;
+            this.count = item.count;
+            this.extra = item.extra || null;
         }
         else {
-            this.id = item;
-            this.data = data;
-            this.count = count;
-            this.extra = extra;
+            this.id = item || 0;
+            this.data = data || 0;
+            this.count = count || 0;
+            this.extra = extra || null;
         }
     }
     ItemStack.prototype.getItemInstance = function () {

@@ -1,9 +1,9 @@
-IDRegistry.genItemID("neutronReflector");
-IDRegistry.genItemID("neutronReflectorThick");
-IDRegistry.genItemID("neutronReflectorIridium");
-Item.createItem("neutronReflector", "Neutron Reflector", {name: "neutron_reflector", meta: 0});
-Item.createItem("neutronReflectorThick", "Thick Neutron Reflector", {name: "neutron_reflector", meta: 1});
-Item.createItem("neutronReflectorIridium", "Iridium Neutron Reflector", {name: "neutron_reflector", meta: 2});
+/// <reference path="api/Reflector.ts" />
+
+ItemRegistry.createItem("neutronReflector", {name: "neutron_reflector", icon: {name: "neutron_reflector", meta: 0}});
+ItemRegistry.createItem("neutronReflectorThick", {name: "thick_neutron_reflector", icon: {name: "neutron_reflector", meta: 1}});
+ItemRegistry.createItem("neutronReflectorIridium", {name: "iridium_neutron_reflector", icon: {name: "neutron_reflector", meta: 2}});
+
 ItemReactor.registerComponent(ItemID.neutronReflector, new ItemReactor.Reflector(30000));
 ItemReactor.registerComponent(ItemID.neutronReflectorThick, new ItemReactor.Reflector(120000));
 ItemReactor.registerComponent(ItemID.neutronReflectorIridium, new ItemReactor.ReflectorIridium());

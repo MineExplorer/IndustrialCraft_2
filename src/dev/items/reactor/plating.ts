@@ -4,9 +4,9 @@ ItemRegistry.createItem("reactorPlating", {name: "reactor_plating", icon: "react
 ItemRegistry.createItem("reactorPlatingContainment", {name: "containment_reactor_plating", icon: "containment_reactor_plating"});
 ItemRegistry.createItem("reactorPlatingHeat", {name: "heat_reactor_plating", icon: "heat_reactor_plating"});
 
-ItemReactor.registerComponent(ItemID.reactorPlating, new ItemReactor.Plating(1000, 0.95));
-ItemReactor.registerComponent(ItemID.reactorPlatingContainment, new ItemReactor.Plating(500, 0.9));
-ItemReactor.registerComponent(ItemID.reactorPlatingHeat, new ItemReactor.Plating(2000, 0.99));
+ReactorItem.registerComponent(ItemID.reactorPlating, new ReactorItem.Plating(1000, 0.95));
+ReactorItem.registerComponent(ItemID.reactorPlatingContainment, new ReactorItem.Plating(500, 0.9));
+ReactorItem.registerComponent(ItemID.reactorPlatingHeat, new ReactorItem.Plating(2000, 0.99));
 
 Item.addCreativeGroup("ic2_reactorPlating", Translation.translate("Reactor Platings"), [
 	ItemID.reactorPlating,

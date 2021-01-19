@@ -7,9 +7,9 @@ ItemRegistry.createItem("fuelRodUranium", {name: "uranium_fuel_rod", icon: {name
 ItemRegistry.createItem("fuelRodUranium2", {name: "dual_uranium_fuel_rod", icon: {name: "fuel_rod_uranium", meta: 1}, stack: 32});
 ItemRegistry.createItem("fuelRodUranium4", {name: "quad_uranium_fuel_rod", icon: {name: "fuel_rod_uranium", meta: 2}, stack: 16});
 
-ItemReactor.registerComponent(ItemID.fuelRodUranium, new ItemReactor.FuelRod(1, 20000));
-ItemReactor.registerComponent(ItemID.fuelRodUranium2, new ItemReactor.FuelRod(2, 20000));
-ItemReactor.registerComponent(ItemID.fuelRodUranium4, new ItemReactor.FuelRod(4, 20000));
+ReactorItem.registerComponent(ItemID.fuelRodUranium, new ReactorItem.FuelRod(1, 20000));
+ReactorItem.registerComponent(ItemID.fuelRodUranium2, new ReactorItem.FuelRod(2, 20000));
+ReactorItem.registerComponent(ItemID.fuelRodUranium4, new ReactorItem.FuelRod(4, 20000));
 
 RadiationAPI.setRadioactivity(ItemID.fuelRodUranium, 10);
 RadiationAPI.setRadioactivity(ItemID.fuelRodUranium2, 10);
@@ -19,9 +19,9 @@ ItemRegistry.createItem("fuelRodMOX", {name: "mox_fuel_rod", icon: {name: "fuel_
 ItemRegistry.createItem("fuelRodMOX2", {name: "dual_mox_fuel_rod", icon: {name: "fuel_rod_mox", meta: 1}, stack: 32});
 ItemRegistry.createItem("fuelRodMOX4", {name: "quad_mox_fuel_rod", icon: {name: "fuel_rod_mox", meta: 2}, stack: 16});
 
-ItemReactor.registerComponent(ItemID.fuelRodMOX, new ItemReactor.FuelRodMOX(1, 10000));
-ItemReactor.registerComponent(ItemID.fuelRodMOX2, new ItemReactor.FuelRodMOX(2, 10000));
-ItemReactor.registerComponent(ItemID.fuelRodMOX4, new ItemReactor.FuelRodMOX(4, 10000));
+ReactorItem.registerComponent(ItemID.fuelRodMOX, new ReactorItem.FuelRodMOX(1, 10000));
+ReactorItem.registerComponent(ItemID.fuelRodMOX2, new ReactorItem.FuelRodMOX(2, 10000));
+ReactorItem.registerComponent(ItemID.fuelRodMOX4, new ReactorItem.FuelRodMOX(4, 10000));
 
 RadiationAPI.setRadioactivity(ItemID.fuelRodMOX, 10);
 RadiationAPI.setRadioactivity(ItemID.fuelRodMOX2, 10);

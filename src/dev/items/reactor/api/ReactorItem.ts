@@ -1,4 +1,4 @@
-namespace ItemReactor {
+namespace ReactorItem {
 	let reactor_components = {};
 
 	export function registerComponent(id: number, component: ReactorComponent): void {

@@ -1,6 +1,6 @@
 /// <reference path="DamageableReactorComponent.ts" />
 
-namespace ItemReactor {
+namespace ReactorItem {
 	export class Reflector
 	extends DamageableReactorComponent {
 		acceptUraniumPulse(item: ItemContainerSlot, reactor: IReactor, pulsingItem: ItemContainerSlot, youX: number, youY: number, pulseX: number, pulseY: number, heatrun: boolean): boolean {

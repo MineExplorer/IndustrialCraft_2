@@ -6,8 +6,8 @@ ItemRegistry.createItem("lzhCondensator", {name: "lzh_condensator", icon: "lzh_c
 Item.addToCreative(ItemID.rshCondensator, 64, 1);
 Item.addToCreative(ItemID.lzhCondensator, 64, 1);
 
-ItemReactor.registerComponent(ItemID.rshCondensator, new ItemReactor.Condensator(20000));
-ItemReactor.registerComponent(ItemID.lzhCondensator, new ItemReactor.Condensator(100000));
+ReactorItem.registerComponent(ItemID.rshCondensator, new ReactorItem.Condensator(20000));
+ReactorItem.registerComponent(ItemID.lzhCondensator, new ReactorItem.Condensator(100000));
 
 Recipes.addShaped({id: ItemID.rshCondensator, count: 1, data: 1}, [
 	"rrr",

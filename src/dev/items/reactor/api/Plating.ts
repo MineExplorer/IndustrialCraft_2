@@ -1,6 +1,6 @@
 /// <reference path="ReactorComponent.ts" />
 
-namespace ItemReactor {
+namespace ReactorItem {
 	export class Plating
 	extends ReactorComponent {
 		maxHeatAdd: number;

@@ -8,9 +8,9 @@ Item.addToCreative(ItemID.coolantCell, 64, 1);
 Item.addToCreative(ItemID.coolantCell3, 64, 1);
 Item.addToCreative(ItemID.coolantCell6, 64, 1);
 
-ItemReactor.registerComponent(ItemID.coolantCell, new ItemReactor.HeatStorage(10000));
-ItemReactor.registerComponent(ItemID.coolantCell3, new ItemReactor.HeatStorage(30000));
-ItemReactor.registerComponent(ItemID.coolantCell6, new ItemReactor.HeatStorage(60000));
+ReactorItem.registerComponent(ItemID.coolantCell, new ReactorItem.HeatStorage(10000));
+ReactorItem.registerComponent(ItemID.coolantCell3, new ReactorItem.HeatStorage(30000));
+ReactorItem.registerComponent(ItemID.coolantCell6, new ReactorItem.HeatStorage(60000));
 
 Item.addCreativeGroup("ic2_reactorCoolant", Translation.translate("Reactor Coolants"), [
 	ItemID.coolantCell,

@@ -12,11 +12,11 @@ Item.addToCreative(ItemID.heatVentComponent, 64, 1);
 Item.addToCreative(ItemID.heatVentAdv, 64, 1);
 Item.addToCreative(ItemID.heatVentOverclocked, 64, 1);
 
-ItemReactor.registerComponent(ItemID.heatVent, new ItemReactor.HeatVent(1000, 6, 0));
-ItemReactor.registerComponent(ItemID.heatVentReactor, new ItemReactor.HeatVent(1000, 5, 5));
-ItemReactor.registerComponent(ItemID.heatVentComponent, new ItemReactor.HeatVentSpread(4));
-ItemReactor.registerComponent(ItemID.heatVentAdv, new ItemReactor.HeatVent(1000, 12, 0));
-ItemReactor.registerComponent(ItemID.heatVentOverclocked, new ItemReactor.HeatVent(1000, 20, 36));
+ReactorItem.registerComponent(ItemID.heatVent, new ReactorItem.HeatVent(1000, 6, 0));
+ReactorItem.registerComponent(ItemID.heatVentReactor, new ReactorItem.HeatVent(1000, 5, 5));
+ReactorItem.registerComponent(ItemID.heatVentComponent, new ReactorItem.HeatVentSpread(4));
+ReactorItem.registerComponent(ItemID.heatVentAdv, new ReactorItem.HeatVent(1000, 12, 0));
+ReactorItem.registerComponent(ItemID.heatVentOverclocked, new ReactorItem.HeatVent(1000, 20, 36));
 
 Item.addCreativeGroup("ic2_reactorHeatVent", Translation.translate("Reactor Heat Vents"), [
 	ItemID.heatVent,

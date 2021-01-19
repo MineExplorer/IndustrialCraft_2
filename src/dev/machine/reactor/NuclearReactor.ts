@@ -104,7 +104,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			this.container.setGlobalAddTransferPolicy((container, name, id, amount, data)  => {
-				if (!ItemReactor.isReactorItem(id) || container.getSlot(name).count > 0) return 0;
+				if (!ReactorItem.isReactorItem(id) || container.getSlot(name).count > 0) return 0;
 				return 1;
 			})
 		}
@@ -167,7 +167,7 @@ namespace Machine {
 				for (let y = 0; y < 6; y++) {
 					for (let x = 0; x < size; x++) {
 						let slot = this.container.getSlot("slot"+(y*9+x));
-						let component = ItemReactor.getComponent(slot.id);
+						let component = ReactorItem.getComponent(slot.id);
 						if (component) {
 							component.processChamber(slot, this, x, y, pass == 0);
 						}
@@ -318,7 +318,7 @@ namespace Machine {
 			let boomMod = 1;
 			for (let i = 0; i < this.getReactorSize() * 6; i++) {
 				let slot = this.container.getSlot("slot"+i);
-				let component = ItemReactor.getComponent(slot.id);
+				let component = ReactorItem.getComponent(slot.id);
 				if (component) {
 					let f = component.influenceExplosion(slot, this)
 					if (f > 0 && f < 1) {

@@ -1,6 +1,6 @@
 /// <reference path="ReactorComponent.ts" />
 
-namespace ItemReactor {
+namespace ReactorItem {
 	export abstract class DamageableReactorComponent
 	extends ReactorComponent {
 		maxDamage: number;

@@ -1,6 +1,6 @@
 /// <reference path="HeatStorage.ts" />
 
-namespace ItemReactor {
+namespace ReactorItem {
 	export class HeatVent
 	extends HeatStorage {
 		selfVent: number;

@@ -1,6 +1,6 @@
 /// <reference path="FuelRod.ts" />
 
-namespace ItemReactor {
+namespace ReactorItem {
 	export class FuelRodMOX
 	extends FuelRod {
 		getDepletedItem(): number {

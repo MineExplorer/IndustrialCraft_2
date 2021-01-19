@@ -1,6 +1,6 @@
-/// <reference path="ItemReactor.ts" />
+/// <reference path="ReactorItem.ts" />
 
-namespace ItemReactor {
+namespace ReactorItem {
 	export abstract class ReactorComponent {
 		processChamber(item: ItemContainerSlot, reactor: IReactor, x: number, y: number, heatrun: boolean): void {}
 

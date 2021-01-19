@@ -1,6 +1,6 @@
 /// <reference path="DamageableReactorComponent.ts" />
 
-namespace ItemReactor {
+namespace ReactorItem {
 	export class HeatStorage
 	extends DamageableReactorComponent {
 		constructor(heatStorage: number) {

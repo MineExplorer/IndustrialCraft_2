@@ -10,10 +10,10 @@ Item.addToCreative(ItemID.heatExchangerReactor, 64, 1);
 Item.addToCreative(ItemID.heatExchangerComponent, 64, 1);
 Item.addToCreative(ItemID.heatExchangerAdv, 64, 1);
 
-ItemReactor.registerComponent(ItemID.heatExchanger, new ItemReactor.HeatExchanger(2500, 12, 4));
-ItemReactor.registerComponent(ItemID.heatExchangerReactor, new ItemReactor.HeatExchanger(5000, 0, 72));
-ItemReactor.registerComponent(ItemID.heatExchangerComponent, new ItemReactor.HeatExchanger(5000, 36, 0));
-ItemReactor.registerComponent(ItemID.heatExchangerAdv, new ItemReactor.HeatExchanger(10000, 24, 8));
+ReactorItem.registerComponent(ItemID.heatExchanger, new ReactorItem.HeatExchanger(2500, 12, 4));
+ReactorItem.registerComponent(ItemID.heatExchangerReactor, new ReactorItem.HeatExchanger(5000, 0, 72));
+ReactorItem.registerComponent(ItemID.heatExchangerComponent, new ReactorItem.HeatExchanger(5000, 36, 0));
+ReactorItem.registerComponent(ItemID.heatExchangerAdv, new ReactorItem.HeatExchanger(10000, 24, 8));
 
 Item.addCreativeGroup("ic2_reactorHeatExchanger", Translation.translate("Reactor Heat Exchangers"), [
 	ItemID.heatExchanger,

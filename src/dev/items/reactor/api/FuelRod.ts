@@ -1,6 +1,6 @@
 /// <reference path="DamageableReactorComponent.ts" />
 
-namespace ItemReactor {
+namespace ReactorItem {
 	export class FuelRod
 	extends DamageableReactorComponent {
 		numberOfCells: number;

@@ -4,9 +4,9 @@ ItemRegistry.createItem("neutronReflector", {name: "neutron_reflector", icon: {n
 ItemRegistry.createItem("neutronReflectorThick", {name: "thick_neutron_reflector", icon: {name: "neutron_reflector", meta: 1}});
 ItemRegistry.createItem("neutronReflectorIridium", {name: "iridium_neutron_reflector", icon: {name: "neutron_reflector", meta: 2}});
 
-ItemReactor.registerComponent(ItemID.neutronReflector, new ItemReactor.Reflector(30000));
-ItemReactor.registerComponent(ItemID.neutronReflectorThick, new ItemReactor.Reflector(120000));
-ItemReactor.registerComponent(ItemID.neutronReflectorIridium, new ItemReactor.ReflectorIridium());
+ReactorItem.registerComponent(ItemID.neutronReflector, new ReactorItem.Reflector(30000));
+ReactorItem.registerComponent(ItemID.neutronReflectorThick, new ReactorItem.Reflector(120000));
+ReactorItem.registerComponent(ItemID.neutronReflectorIridium, new ReactorItem.ReflectorIridium());
 
 Item.addCreativeGroup("ic2_reactorNeutronReflector", Translation.translate("Neutron Reflectors"), [
     ItemID.neutronReflector,

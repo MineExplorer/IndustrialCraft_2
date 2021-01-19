@@ -6,11 +6,11 @@ ItemRegistry.createItem("heatVentComponent", {name: "component_heat_vent", icon:
 ItemRegistry.createItem("heatVentAdv", {name: "advanced_heat_vent", icon: "advanced_heat_vent", inCreative: false});
 ItemRegistry.createItem("heatVentOverclocked", {name: "overclocked_heat_vent", icon: "overclocked_heat_vent", inCreative: false});
 
-Item.addToCreative(ItemID.heatVent, 64, 1);
-Item.addToCreative(ItemID.heatVentReactor, 64, 1);
-Item.addToCreative(ItemID.heatVentComponent, 64, 1);
-Item.addToCreative(ItemID.heatVentAdv, 64, 1);
-Item.addToCreative(ItemID.heatVentOverclocked, 64, 1);
+Item.addToCreative(ItemID.heatVent, 1, 1);
+Item.addToCreative(ItemID.heatVentReactor, 1, 1);
+Item.addToCreative(ItemID.heatVentComponent, 1, 1);
+Item.addToCreative(ItemID.heatVentAdv, 1, 1);
+Item.addToCreative(ItemID.heatVentOverclocked, 1, 1);
 
 ReactorItem.registerComponent(ItemID.heatVent, new ReactorItem.HeatVent(1000, 6, 0));
 ReactorItem.registerComponent(ItemID.heatVentReactor, new ReactorItem.HeatVent(1000, 5, 5));

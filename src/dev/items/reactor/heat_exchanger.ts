@@ -5,10 +5,10 @@ ItemRegistry.createItem("heatExchangerReactor", {name: "reactor_heat_exchanger",
 ItemRegistry.createItem("heatExchangerComponent", {name: "component_heat_exchanger", icon: "component_heat_exchanger", inCreative: false});
 ItemRegistry.createItem("heatExchangerAdv", {name: "advanced_heat_exchanger", icon: "advanced_heat_exchanger", inCreative: false});
 
-Item.addToCreative(ItemID.heatExchanger, 64, 1);
-Item.addToCreative(ItemID.heatExchangerReactor, 64, 1);
-Item.addToCreative(ItemID.heatExchangerComponent, 64, 1);
-Item.addToCreative(ItemID.heatExchangerAdv, 64, 1);
+Item.addToCreative(ItemID.heatExchanger, 1, 1);
+Item.addToCreative(ItemID.heatExchangerReactor, 1, 1);
+Item.addToCreative(ItemID.heatExchangerComponent, 1, 1);
+Item.addToCreative(ItemID.heatExchangerAdv, 1, 1);
 
 ReactorItem.registerComponent(ItemID.heatExchanger, new ReactorItem.HeatExchanger(2500, 12, 4));
 ReactorItem.registerComponent(ItemID.heatExchangerReactor, new ReactorItem.HeatExchanger(5000, 0, 72));

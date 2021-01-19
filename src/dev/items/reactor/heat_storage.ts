@@ -4,9 +4,9 @@ ItemRegistry.createItem("coolantCell", {name: "heat_storage", icon: {name: "heat
 ItemRegistry.createItem("coolantCell3", {name: "tri_heat_storage", icon: {name: "heat_storage", meta: 1}, inCreative: false});
 ItemRegistry.createItem("coolantCell6", {name: "six_heat_storage", icon: {name: "heat_storage", meta: 2}, inCreative: false});
 
-Item.addToCreative(ItemID.coolantCell, 64, 1);
-Item.addToCreative(ItemID.coolantCell3, 64, 1);
-Item.addToCreative(ItemID.coolantCell6, 64, 1);
+Item.addToCreative(ItemID.coolantCell, 1, 1);
+Item.addToCreative(ItemID.coolantCell3, 1, 1);
+Item.addToCreative(ItemID.coolantCell6, 1, 1);
 
 ReactorItem.registerComponent(ItemID.coolantCell, new ReactorItem.HeatStorage(10000));
 ReactorItem.registerComponent(ItemID.coolantCell3, new ReactorItem.HeatStorage(30000));

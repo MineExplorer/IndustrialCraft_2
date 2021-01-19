@@ -3,8 +3,8 @@
 ItemRegistry.createItem("rshCondensator", {name: "rsh_condensator", icon: "rsh_condensator", inCreative: false});
 ItemRegistry.createItem("lzhCondensator", {name: "lzh_condensator", icon: "lzh_condensator", inCreative: false});
 
-Item.addToCreative(ItemID.rshCondensator, 64, 1);
-Item.addToCreative(ItemID.lzhCondensator, 64, 1);
+Item.addToCreative(ItemID.rshCondensator, 1, 1);
+Item.addToCreative(ItemID.lzhCondensator, 1, 1);
 
 ReactorItem.registerComponent(ItemID.rshCondensator, new ReactorItem.Condensator(20000));
 ReactorItem.registerComponent(ItemID.lzhCondensator, new ReactorItem.Condensator(100000));

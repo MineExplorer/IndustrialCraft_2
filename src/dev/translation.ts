@@ -225,7 +225,7 @@ Translation.addTranslation("small_silver_dust", {en: "Tiny Pile of Silver Dust",
 Translation.addTranslation("small_sulfur_dust", {en: "Tiny Pile of Sulfur Dust", ru: "Небольшая кучка серной пыли", es: "Diminuta Pila de Polvo de Sulfuro", pt: "Pequena Pilha de Pó de Enxofre", zh: "小撮硫粉"});
 
 // Ingots
-Translation.addTranslation("copper_ingor", {en: "Copper Ingot", ru: "Медный слиток", es: "Lingote de Cobre", pt: "Lingote de Cobre", zh: "铜锭"});
+Translation.addTranslation("copper_ingot", {en: "Copper Ingot", ru: "Медный слиток", es: "Lingote de Cobre", pt: "Lingote de Cobre", zh: "铜锭"});
 Translation.addTranslation("tin_ingot", {en: "Tin Ingot", ru: "Оловянный слиток", es: "Lingote de Estaño", pt: "Lingote de Estanho", zh: "锡锭"});
 Translation.addTranslation("bronze_ingot", {en: "Bronze Ingot", ru: "Бронзовый слиток", es: "Lingote de Bronce", pt: "Lingote de Bronze", zh: "青铜锭"});
 Translation.addTranslation("steel_ingot", {en: "Steel Ingot", ru: "Стальной слиток", es: "Lingote de Acero", pt: "Lingote de Aço", zh: "钢锭"});

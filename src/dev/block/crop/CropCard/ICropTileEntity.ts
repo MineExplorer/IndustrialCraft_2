@@ -1,7 +1,7 @@
 interface ICropTileEntity {
 	crop: CropCard;
-	data: any; // Change it
-	generateSeeds(tileData: any): SeedBagStackData; // Change tileData type
+	data: CropTileData;
+	generateSeeds(tileData: CropTileData): SeedBagStackData;
 	pick(): boolean;
 	performManualHarvest(): boolean;
 }

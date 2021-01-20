@@ -70,15 +70,15 @@ abstract class CropCard {
 		return base;
 	}
 
-	onLeftClick(te: ICropTileEntity): boolean {
+	onLeftClick(te: ICropTileEntity, player: number): boolean {
 		return te.pick();
 	}
 
-	onRightClick(te: ICropTileEntity): boolean {
+	onRightClick(te: ICropTileEntity, player: number): boolean {
 		return te.performManualHarvest()
 	}
 
-	onEntityCollision(te: ICropTileEntity): boolean {
+	onEntityCollision(te: ICropTileEntity, entity: number): boolean {
 		return true;
 	}
 

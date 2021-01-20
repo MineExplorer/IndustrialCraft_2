@@ -1,0 +1,3 @@
+type CropTileData = {
+	currentSize: number;
+}

@@ -1,5 +1,5 @@
 type SeedBagStackData = {
 	id: number;
-	data: any;
-	extra: any;
+	data: CropTileData;
+	extra: ItemExtraData;
 }

@@ -37,6 +37,15 @@ namespace EntityHelper {
 		return isFriendlyMob(type) || isHostileMob(type);
 	}
 
+	export function isOnGround(entity: number): boolean {
+		let vel = Entity.getVelocity(entity);
+		return Math.abs(vel.y - fallVelocity) < 0.0001;
+	}
+
+	export function resetFallHeight(entity: number) {
+		Entity.addEffect(entity, PotionEffect.slow_falling, 1, 3);
+	}
+
 	let insulationMaxVolt = {
 		0: 5,
 		1: 128,

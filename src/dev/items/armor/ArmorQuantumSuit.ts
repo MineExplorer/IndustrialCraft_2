@@ -28,17 +28,14 @@ extends ArmorElectric {
 				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
 			}
 			if (index == 3 && type == 5) {
-				let damage = Math.min(Utils.getFallDamage(), params.damage);
-				if (damage > 0) {
-					let damageReduce = Math.min(damage, Math.floor(energyStored / energyPerDamage));
-					let damageTaken = damage - damageReduce;
-					if (damageTaken > 0) {
-						Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - damageTaken);
-					} else {
-						Game.prevent();
-					}
-					ChargeItemRegistry.setEnergyStored(item, energyStored - damageReduce * energyPerDamage);
+				let damageReduce = Math.min(params.damage, Math.floor(energyStored / energyPerDamage));
+				let damageTaken = params.damage - damageReduce;
+				if (damageTaken > 0) {
+					Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - damageTaken);
+				} else {
+					Game.prevent();
 				}
+				ChargeItemRegistry.setEnergyStored(item, energyStored - damageReduce * energyPerDamage);
 			}
 			if (index == 3 && type == 22) {
 				Game.prevent();
@@ -49,9 +46,6 @@ extends ArmorElectric {
 			Game.prevent();
 			Entity.addEffect(playerUid, PotionEffect.waterBreathing, 1, 60);
 			ChargeItemRegistry.setEnergyStored(item, energyStored - 500);
-		}
-		if (index == 1 && type == 5) {
-			Utils.fixFallDamage(playerUid, params.damage);
 		}
 		return item;
 	}
@@ -112,19 +106,21 @@ extends ArmorElectric {
 		break;
 		case 1:
 			if (item.extra && item.extra.getBoolean("hover")) {
-				Utils.resetFallHeight();
 				let vel = Entity.getVelocity(playerUid);
-				if (energyStored < 8 || Utils.isOnGround(playerUid)) {
+				if (energyStored < 8 || EntityHelper.isOnGround(playerUid)) {
 					item.extra.putBoolean("hover", false);
 					let client = Network.getClientForPlayer(playerUid);
 					if (client) client.sendMessage("§4" + Translation.translate("Hover mode disabled"));
 					return item;
 				}
-				else if (vel.y < -0.1) {
-					Entity.addVelocity(playerUid, 0, Math.min(0.25, -0.1 - vel.y), 0);
-					if (World.getThreadTime()%5 == 0) {
-						ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
-						return item;
+				else if (vel.y < 0) {
+					EntityHelper.resetFallHeight(playerUid);
+					if (vel.y < -0.1) {
+						Entity.addVelocity(playerUid, 0, Math.min(0.25, -0.1 - vel.y), 0);
+						if (World.getThreadTime()%5 == 0) {
+							ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
+							return item;
+						}
 					}
 				}
 			}
@@ -137,7 +133,7 @@ extends ArmorElectric {
 			if (horizontalVel <= 0.15) {
 				ArmorQuantumSuit.runTime = 0;
 			}
-			else if (Utils.isOnGround(playerUid)) {
+			else if (EntityHelper.isOnGround(playerUid)) {
 				ArmorQuantumSuit.runTime++;
 			}
 			if (ArmorQuantumSuit.runTime > 2 && !Player.getFlying()) {

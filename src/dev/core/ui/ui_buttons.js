@@ -113,7 +113,7 @@ var buttonContent = {
 			onClick: function() {
 				var vel = Player.getVelocity();
 				var armor = Player.getArmorSlot(1);
-				if (!Utils.isOnGround(Player.get()) && ChargeItemRegistry.getEnergyStored(armor) >= 8) {
+				if (!EntityHelper.isOnGround(Player.get()) && ChargeItemRegistry.getEnergyStored(armor) >= 8) {
 					var extra = armor.extra || new ItemExtraData();
 					var hover = extra.getBoolean("hover");
 					if (hover) {
@@ -230,8 +230,8 @@ Callback.addCallback("LocalTick", function() {
 		var energyStored = ChargeItemRegistry.getEnergyStored(armor);
 		if (energyStored >= 8 && UIbuttons.container.isElementTouched("button_fly")) {
 			var vel = Player.getVelocity();
-			if (vel.y > -1.2) {
-				Utils.resetFallHeight();
+			if (vel.y > -1.2 && vel.y < 0) {
+				EntityHelper.resetFallHeight(Player.get());
 			}
 
 			var y = Player.getPosition().y;

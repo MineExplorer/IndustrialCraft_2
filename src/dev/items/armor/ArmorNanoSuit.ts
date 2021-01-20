@@ -25,18 +25,14 @@ extends ArmorElectric {
 				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
 			}
 			if (index == 3 && type == 5) {
-				let damage = Utils.getFallDamage();
-				if (damage > 0) {
-					damage = Math.min(damage, params.damage);
-					let damageReduce = Math.min(Math.min(9, damage), Math.floor(energyStored / energyPerDamage));
-					let damageTaken = damage - damageReduce;
-					if (damageTaken > 0) {
-						Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - damageTaken);
-					} else {
-						Game.prevent();
-					}
-					ChargeItemRegistry.setEnergyStored(item, energyStored - damageReduce * energyPerDamage);
+				let damageReduce = Math.min(Math.min(9, params.damage), Math.floor(energyStored / energyPerDamage));
+				let damageTaken = params.damage - damageReduce;
+				if (damageTaken > 0) {
+					Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - damageTaken);
+				} else {
+					Game.prevent();
 				}
+				ChargeItemRegistry.setEnergyStored(item, energyStored - damageReduce * energyPerDamage);
 			}
 		}
 		return item;

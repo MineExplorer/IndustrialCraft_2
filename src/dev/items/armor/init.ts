@@ -43,21 +43,14 @@ Item.addCreativeGroup("batteryPack", Translation.translate("Battery Packs"), [
 
 ItemRegistry.registerItem(new ArmorNightvisionGoggles());
 
-ItemRegistry.registerItem(new ArmorNanoSuit("nanoHelmet", "nano_helmet", {type: "helmet", defence: 3, texture: "nano"}));
-ItemRegistry.registerItem(new ArmorNanoSuit("nanoChestplate", "nano_chestplate", {type: "chestplate", defence: 8, texture: "nano"}));
-ItemRegistry.registerItem(new ArmorNanoSuit("nanoLeggings", "nano_leggings", {type: "leggings", defence: 6, texture: "nano"}));
-ItemRegistry.registerItem(new ArmorNanoSuit("nanoBoots", "nano_boots", {type: "boots", defence: 3, texture: "nano"}));
+ItemRegistry.registerItem(new ArmorNanoHelmet("nanoHelmet", "nano_helmet", "nano"));
+ItemRegistry.registerItem(new ArmorNanoChestplate("nanoChestplate", "nano_chestplate", "nano"));
+ItemRegistry.registerItem(new ArmorNanoLeggings("nanoLeggings", "nano_leggings", "nano"));
+ItemRegistry.registerItem(new ArmorNanoBoots("nanoBoots", "nano_boots", "nano"));
 
-UIbuttons.setArmorButton(ItemID.nanoHelmet, "button_nightvision");
-
-ItemRegistry.registerItem(new ArmorQuantumSuit("quantumHelmet", "quantum_helmet", {type: "helmet", defence: 3, texture: "quantum"}));
-ItemRegistry.registerItem(new ArmorQuantumSuit("quantumChestplate", "quantum_chestplate", {type: "chestplate", defence: 8, texture: "quantum"}));
-ItemRegistry.registerItem(new ArmorQuantumSuit("quantumLeggings", "quantum_leggings", {type: "leggings", defence: 6, texture: "quantum"}));
-ItemRegistry.registerItem(new ArmorQuantumSuit("quantumBoots", "quantum_boots", {type: "boots", defence: 3, texture: "quantum"}));
-
-UIbuttons.setArmorButton(ItemID.quantumHelmet, "button_nightvision");
-UIbuttons.setArmorButton(ItemID.quantumChestplate, "button_fly");
-UIbuttons.setArmorButton(ItemID.quantumChestplate, "button_hover");
-UIbuttons.setArmorButton(ItemID.quantumBoots, "button_jump");
+ItemRegistry.registerItem(new ArmorQuantumHelmet("quantumHelmet", "quantum_helmet", "quantum"));
+ItemRegistry.registerItem(new ArmorQuantumChestplate("quantumChestplate", "quantum_chestplate", "quantum"));
+ItemRegistry.registerItem(new ArmorQuantumLeggings("quantumLeggings", "quantum_leggings", "quantum"));
+ItemRegistry.registerItem(new ArmorQuantumBoots("quantumBoots", "quantum_boots", "quantum"));
 
 ItemRegistry.registerItem(new ArmorSolarHelmet("solarHelmet", "solar_helmet", {type: "helmet", defence: 2, texture: "solar"}));

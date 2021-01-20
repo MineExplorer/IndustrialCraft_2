@@ -2,8 +2,6 @@
 
 class ArmorQuantumSuit
 extends ArmorElectric {
-	static runTime: number = 0
-
 	constructor(stringID: string, name: string, params: ArmorParams, isDischarged: boolean = false) {
 		super(stringID, name, params, 1e7, 12000, 4);
 		this.setRarity(EnumRarity.RARE);
@@ -19,133 +17,183 @@ extends ArmorElectric {
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
-		let type = params.type;
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		let energyPerDamage = this.getEnergyPerDamage();
-		if (energyStored >= energyPerDamage) {
-			if (type == 2 || type == 3 || type == 11) {
-				let energy = params.damage * energyPerDamage;
-				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
-			}
-			if (index == 3 && type == 5) {
-				let damageReduce = Math.min(params.damage, Math.floor(energyStored / energyPerDamage));
-				let damageTaken = params.damage - damageReduce;
-				if (damageTaken > 0) {
-					Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - damageTaken);
-				} else {
-					Game.prevent();
-				}
-				ChargeItemRegistry.setEnergyStored(item, energyStored - damageReduce * energyPerDamage);
-			}
-			if (index == 3 && type == 22) {
-				Game.prevent();
-				ChargeItemRegistry.setEnergyStored(item, energyStored - energyPerDamage);
-			}
+		let type = params.type;
+		if (energyStored >= energyPerDamage && (type == 2 || type == 3 || type == 11)) {
+			let energy = params.damage * energyPerDamage;
+			ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
+			return item;
 		}
-		if (index == 0 && type == 9 && energyStored >= 500) {
+		return null;
+	}
+}
+
+class ArmorQuantumHelmet
+extends ArmorQuantumSuit {
+	constructor(stringID: string, name: string, texture: string) {
+		super(stringID, name, {type: "helmet", defence: 3, texture: texture});
+		UIbuttons.setArmorButton(this.id, "button_nightvision");
+	}
+
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		if (params.type == 9 && energyStored >= 500) {
 			Game.prevent();
 			Entity.addEffect(playerUid, PotionEffect.waterBreathing, 1, 60);
 			ChargeItemRegistry.setEnergyStored(item, energyStored - 500);
 		}
-		return item;
+		return super.onHurt(params, item, index, playerUid);
 	}
 
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (energyStored <= 0) return null;
 
-		switch (index) {
-		case 0:
-			let newEnergyStored = energyStored;
-			if (RadiationAPI.playerRad > 0) {
-				if (energyStored >= 100000) {
-					RadiationAPI.playerRad = 0;
-					Entity.clearEffect(playerUid, PotionEffect.poison);
-					newEnergyStored -= 100000;
-				}
-			} else {
+		let newEnergyStored = energyStored;
+		if (RadiationAPI.playerRad > 0) {
+			if (energyStored >= 100000) {
+				RadiationAPI.playerRad = 0;
 				Entity.clearEffect(playerUid, PotionEffect.poison);
+				newEnergyStored -= 100000;
 			}
-			Entity.clearEffect(playerUid, PotionEffect.wither);
+		} else {
+			Entity.clearEffect(playerUid, PotionEffect.poison);
+		}
+		Entity.clearEffect(playerUid, PotionEffect.wither);
 
-			let player = new PlayerInterface(playerUid);
-			let hunger = player.getHunger();
-			if (hunger < 20 && newEnergyStored >= 500) {
-				let i = World.getThreadTime()%36;
-				let stack = player.getInventorySlot(i);
-				if (stack.id == ItemID.tinCanFull) {
-					let count = Math.min(20 - hunger, stack.count);
-					player.setHunger(hunger + count);
-					stack.decrease(count);
-					player.setInventorySlot(i, stack);
-					player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
-					newEnergyStored -= 500;
-					break;
-				}
+		let player = new PlayerInterface(playerUid);
+		let hunger = player.getHunger();
+		if (hunger < 20 && newEnergyStored >= 500) {
+			let i = World.getThreadTime()%36;
+			let stack = player.getInventorySlot(i);
+			if (stack.id == ItemID.tinCanFull) {
+				let count = Math.min(20 - hunger, stack.count);
+				player.setHunger(hunger + count);
+				stack.decrease(count);
+				player.setInventorySlot(i, stack);
+				player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
+				newEnergyStored -= 500;
 			}
-			// night vision
-			if (newEnergyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
-				let coords = Entity.getPosition(playerUid);
-				let time = World.getWorldTime() % 24000;
-				let region = WorldRegion.getForActor(playerUid);
-				if (region.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
-					Entity.addEffect(playerUid, PotionEffect.blindness, 1, 25);
-					Entity.clearEffect(playerUid, PotionEffect.nightVision);
-				} else {
-					Entity.addEffect(playerUid, PotionEffect.nightVision, 1, 225);
-				}
-				if (World.getThreadTime()%20 == 0) {
-					newEnergyStored = Math.max(newEnergyStored - 20, 0);
-				}
-			}
+		}
 
-			if (energyStored != newEnergyStored) {
-				ChargeItemRegistry.setEnergyStored(item, newEnergyStored);
+		// night vision
+		if (newEnergyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
+			let coords = Entity.getPosition(playerUid);
+			let time = World.getWorldTime() % 24000;
+			let region = WorldRegion.getForActor(playerUid);
+			if (region.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
+				Entity.addEffect(playerUid, PotionEffect.blindness, 1, 25);
+				Entity.clearEffect(playerUid, PotionEffect.nightVision);
+			} else {
+				Entity.addEffect(playerUid, PotionEffect.nightVision, 1, 225);
+			}
+			if (World.getThreadTime()%20 == 0) {
+				newEnergyStored = Math.max(newEnergyStored - 20, 0);
+			}
+		}
+
+		if (energyStored != newEnergyStored) {
+			ChargeItemRegistry.setEnergyStored(item, newEnergyStored);
+			return item;
+		}
+		return null;
+	}
+}
+
+class ArmorQuantumChestplate
+extends ArmorQuantumSuit {
+	constructor(stringID: string, name: string, texture: string) {
+		super(stringID, name, {type: "chestplate", defence: 8, texture: texture});
+		UIbuttons.setArmorButton(this.id, "button_fly");
+		UIbuttons.setArmorButton(this.id, "button_hover");
+	}
+
+	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		if (energyStored > this.getEnergyPerDamage()) {
+			Entity.setFire(playerUid, 0, true);
+		}
+		if (item.extra && item.extra.getBoolean("hover")) {
+			let vel = Entity.getVelocity(playerUid);
+			if (energyStored < 8 || EntityHelper.isOnGround(playerUid)) {
+				item.extra.putBoolean("hover", false);
+				let client = Network.getClientForPlayer(playerUid);
+				if (client) client.sendMessage("§4" + Translation.translate("Hover mode disabled"));
 				return item;
 			}
-		break;
-		case 1:
-			if (item.extra && item.extra.getBoolean("hover")) {
-				let vel = Entity.getVelocity(playerUid);
-				if (energyStored < 8 || EntityHelper.isOnGround(playerUid)) {
-					item.extra.putBoolean("hover", false);
-					let client = Network.getClientForPlayer(playerUid);
-					if (client) client.sendMessage("§4" + Translation.translate("Hover mode disabled"));
-					return item;
-				}
-				else if (vel.y < 0) {
-					EntityHelper.resetFallHeight(playerUid);
-					if (vel.y < -0.1) {
-						Entity.addVelocity(playerUid, 0, Math.min(0.25, -0.1 - vel.y), 0);
-						if (World.getThreadTime()%5 == 0) {
-							ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
-							return item;
-						}
+			else if (vel.y < 0) {
+				EntityHelper.resetFallHeight(playerUid);
+				if (vel.y < -0.1) {
+					Entity.addVelocity(playerUid, 0, Math.min(0.25, -0.1 - vel.y), 0);
+					if (World.getThreadTime()%5 == 0) {
+						ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
+						return item;
 					}
 				}
 			}
-			Entity.setFire(playerUid, 0, true);
-		break;
-		case 2:
-			let vel = Entity.getVelocity(playerUid);
-			let horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z);
-			// Game.tipMessage(horizontalVel);
-			if (horizontalVel <= 0.15) {
-				ArmorQuantumSuit.runTime = 0;
-			}
-			else if (EntityHelper.isOnGround(playerUid)) {
-				ArmorQuantumSuit.runTime++;
-			}
-			if (ArmorQuantumSuit.runTime > 2 && !Player.getFlying()) {
-				Entity.addEffect(playerUid, PotionEffect.movementSpeed, 6, 5);
-				if (World.getThreadTime()%5 == 0) {
-					ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - Math.floor(horizontalVel*600)));
-					return item;
-				}
-			}
-		break;
 		}
 		return null;
+	}
+}
+
+class ArmorQuantumLeggings
+extends ArmorQuantumSuit {
+	runTime: number;
+
+	constructor(stringID: string, name: string, texture: string) {
+		super(stringID, name, {type: "leggings", defence: 6, texture: texture});
+	}
+
+	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		if (energyStored <= 0) return null;
+
+		let vel = Entity.getVelocity(playerUid);
+		let horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z);
+		// Game.tipMessage(horizontalVel);
+		if (horizontalVel <= 0.15) {
+			this.runTime = 0;
+		}
+		else if (EntityHelper.isOnGround(playerUid)) {
+			this.runTime++;
+		}
+		if (this.runTime > 2 && !Player.getFlying()) {
+			Entity.addEffect(playerUid, PotionEffect.movementSpeed, 6, 5);
+			if (World.getThreadTime()%5 == 0) {
+				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - Math.floor(horizontalVel*600)));
+				return item;
+			}
+		}
+		return null;
+	}
+}
+
+class ArmorQuantumBoots
+extends ArmorQuantumSuit {
+	constructor(stringID: string, name: string, texture: string) {
+		super(stringID, name, {type: "boots", defence: 3, texture: texture});
+		UIbuttons.setArmorButton(this.id, "button_jump")
+	}
+
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		let energyPerDamage = this.getEnergyPerDamage();
+		if (params.type == 5) {
+			let damageReduce = Math.min(params.damage, Math.floor(energyStored / energyPerDamage));
+			let damageTaken = params.damage - damageReduce;
+			if (damageTaken > 0) {
+				Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - damageTaken);
+			} else {
+				Game.prevent();
+			}
+			ChargeItemRegistry.setEnergyStored(item, energyStored - damageReduce * energyPerDamage);
+		}
+		if (params.type == 22) {
+			Game.prevent();
+			ChargeItemRegistry.setEnergyStored(item, energyStored - energyPerDamage);
+		}
+		return super.onHurt(params, item, index, playerUid);
 	}
 }
 

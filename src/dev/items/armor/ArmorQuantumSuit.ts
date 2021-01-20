@@ -154,7 +154,7 @@ extends ArmorElectric {
 }
 
 Callback.addCallback("EntityHurt", function(attacker: number, victim: number, damage: number, type: number) {
-	if (Entity.getType(victim) == 1 && (type == 2 || type == 3 || type == 11)) {
+	if (damage > 0 && Entity.getType(victim) == 1 && (type == 2 || type == 3 || type == 11)) {
 		let defencePoints = 0;
 		for (let i = 0; i < 4; i++) {
 			let item = Entity.getArmorSlot(victim, i);
@@ -170,14 +170,25 @@ Callback.addCallback("EntityHurt", function(attacker: number, victim: number, da
 			let damageReceived = damageGot * ( 20 - defencePoints) / 20;
 			if (damageGot > 1) damageGot = Math.floor(damageGot);
 			let damageAbsorbed = Math.ceil(damageGot - Math.floor(damageReceived));
-			if (damageReceived < 1 && defencePoints < 20) {
-				let chance = damageReceived;
-				if (damageGot < 1) chance = 1 - damageGot + chance;
-				if (Math.random() < chance) damageAbsorbed--;
+			let health = Math.min(Entity.getMaxHealth(victim), Entity.getHealth(victim));
+			if (damageReceived < 1) {
+				if (damageGot < 1) {
+					if (Math.random() >= damageReceived / damageGot) {
+						runOnMainThread(() => {
+							let curHealth = Entity.getHealth(victim);
+							if (curHealth < health) {
+								Entity.setHealth(victim, curHealth + 1);
+							}
+						});
+					}
+					return;
+				}
+				else if (Math.random() < damageReceived) {
+					damageAbsorbed--;
+				}
 			}
 			if (damageAbsorbed > 0) {
-				let playerHealth = Math.min(Entity.getMaxHealth(victim), Entity.getHealth(victim));
-				Entity.setHealth(victim, playerHealth + damageAbsorbed);
+				Entity.setHealth(victim, health + damageAbsorbed);
 			}
 		}
 	}

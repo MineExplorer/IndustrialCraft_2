@@ -4,20 +4,20 @@ let RadiationAPI = {
 	sources: {},
 	hazmatArmor: [],
 
-	setRadioactivity: function(id, duration, stack) {
-		this.items[id] = [duration, stack || false];
+	setRadioactivity: function(itemID, duration, stack) {
+		this.items[itemID] = [duration, stack || false];
 	},
 
-	getItemRadiation: function(id) {
-		return this.items[id];
+	getRadioactivity: function(itemID) {
+		return this.items[itemID];
 	},
 
-	isRadioactiveItem: function(id) {
-		return this.items[id] ? true : false;
+	isRadioactiveItem: function(itemID) {
+		return !!this.items[itemID];
 	},
 
-	emitItemRadiation: function(id) {
-		let radiation = this.getItemRadiation(id);
+	emitItemRadiation: function(itemID) {
+		let radiation = this.getRadioactivity(itemID);
 		if (radiation) {
 			if (radiation[1]) {
 				this.addRadiation(radiation[0]);

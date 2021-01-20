@@ -144,7 +144,7 @@ namespace Machine {
 					this.data.progress += 1/this.data.work_time;
 					newActive = true;
 				}
-				if (this.data.progress.toFixed(3) >= 1) {
+				if (+this.data.progress.toFixed(3) >= 1) {
 					this.decreaseSlot(sourceSlot, 1);
 					this.putResult(result.result);
 					this.data.progress = 0;
@@ -179,7 +179,7 @@ namespace Machine {
 		}
 
 		onRedstoneUpdate(signal: number): void {
-			this.data.signal = signal > 0;
+			this.data.signal = signal;
 		}
 
 		@ContainerEvent(Side.Client)

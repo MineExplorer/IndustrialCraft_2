@@ -59,6 +59,7 @@ namespace Machine {
 	class Lamp
 	extends ElectricMachine {
 		defaultValues = {
+			isActive: false,
 			energy: 0
 		}
 

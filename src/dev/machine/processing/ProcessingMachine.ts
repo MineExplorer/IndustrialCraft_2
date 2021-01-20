@@ -56,7 +56,7 @@ namespace Machine {
 						this.data.progress += 1/this.data.work_time;
 						newActive = true;
 					}
-					if (this.data.progress.toFixed(3) >= 1) {
+					if (+this.data.progress.toFixed(3) >= 1) {
 						let sourceCount = result.sourceCount || 1;
 						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - sourceCount, sourceSlot.data);
 						sourceSlot.validate();

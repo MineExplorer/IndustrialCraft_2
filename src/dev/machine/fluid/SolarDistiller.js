@@ -35,14 +35,14 @@ MachineRegistry.registerPrototype(BlockID.solarDistiller, {
 	},
 
 	init: function() {
-		this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
+		this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
 	},
 
 	tick: function() {
 		if (World.getThreadTime()%100 == 0) {
-			this.data.canSeeSky = this.blockSource.canSeeSky(this.x, this.y + 1, this.z);
+			this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
 		}
-		if (this.data.canSeeSky && this.blockSource.getLightLevel(this.x, this.y + 1, this.z) == 15) {
+		if (this.data.canSeeSky && this.region.getLightLevel(this.x, this.y + 1, this.z) == 15) {
 
 		}
 	}

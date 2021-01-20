@@ -145,7 +145,7 @@ namespace Machine {
 						this.data.progress += 1/this.data.work_time;
 						newActive = true;
 					}
-					if (this.data.progress.toFixed(3) >= 1) {
+					if (+this.data.progress.toFixed(3) >= 1) {
 						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - 1, 0);
 						canSlot.setSlot(canSlot.id, canSlot.count - result.count, 0);
 						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);

@@ -128,7 +128,7 @@ namespace Machine {
 					newActive = true;
 					this.data.energy -= this.data.energy_consume;
 					this.data.progress += 1/this.data.work_time;
-					if (this.data.progress.toFixed(3) >= 1) {
+					if (+this.data.progress.toFixed(3) >= 1) {
 						let coords = this.data.coords;
 						let block = this.region.getBlock(coords);
 						liquid = this.getLiquidType(liquid, block);

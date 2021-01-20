@@ -166,11 +166,15 @@ Callback.addCallback("EntityHurt", function(attacker: number, victim: number, da
 			}
 		}
 		if (defencePoints > 0) {
-			let damageReceived = damage / 5;
-			if (type == 11 || defencePoints < 20) {
-				damageReceived = Math.floor(damageReceived);
+			let damageGot = damage / 5;
+			let damageReceived = damageGot * ( 20 - defencePoints) / 20;
+			if (damageGot > 1) damageGot = Math.floor(damageGot);
+			let damageAbsorbed = Math.ceil(damageGot - Math.floor(damageReceived));
+			if (damageReceived < 1 && defencePoints < 20) {
+				let chance = damageReceived;
+				if (damageGot < 1) chance = 1 - damageGot + chance;
+				if (Math.random() < chance) damageAbsorbed--;
 			}
-			let damageAbsorbed = Math.ceil(damageReceived * defencePoints / 20);
 			if (damageAbsorbed > 0) {
 				let playerHealth = Math.min(Entity.getMaxHealth(victim), Entity.getHealth(victim));
 				Entity.setHealth(victim, playerHealth + damageAbsorbed);

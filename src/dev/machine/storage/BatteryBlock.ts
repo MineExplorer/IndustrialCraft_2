@@ -61,7 +61,7 @@ namespace Machine {
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slot1"), "Eu", this.data.energy, tier);
 
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
-			this.container.setText("textInfo1", parseInt(this.data.energy) + "/");
+			this.container.setText("textInfo1", Math.floor(this.data.energy) + "/");
 			this.container.setText("textInfo2", energyStorage);
 			this.container.sendChanges();
 		}

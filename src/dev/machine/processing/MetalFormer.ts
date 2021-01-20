@@ -142,7 +142,7 @@ namespace Machine {
 					this.data.progress += 1/this.data.work_time;
 					newActive = true;
 				}
-				if (this.data.progress.toFixed(3) >= 1) {
+				if (+this.data.progress.toFixed(3) >= 1) {
 					this.decreaseSlot(sourceSlot, 1);
 					resultSlot.setSlot(result.id, resultSlot.count + result.count, 0);
 					this.data.progress = 0;

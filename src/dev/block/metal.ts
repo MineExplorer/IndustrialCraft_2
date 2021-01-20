@@ -80,43 +80,43 @@ Callback.addCallback("PreLoaded", function() {
 		"xxx",
 		"xxx"
 	], ['x', ItemID.ingotCopper, 0]);
-	
+
 	Recipes.addShaped({id: BlockID.blockTin, count: 1, data: 0}, [
 		"xxx",
 		"xxx",
 		"xxx"
 	], ['x', ItemID.ingotTin, 0]);
-	
+
 	Recipes.addShaped({id: BlockID.blockBronze, count: 1, data: 0}, [
 		"xxx",
 		"xxx",
 		"xxx"
 	], ['x', ItemID.ingotBronze, 0]);
-	
+
 	Recipes.addShaped({id: BlockID.blockLead, count: 1, data: 0}, [
 		"xxx",
 		"xxx",
 		"xxx"
 	], ['x', ItemID.ingotLead, 0]);
-	
+
 	Recipes.addShaped({id: BlockID.blockSteel, count: 1, data: 0}, [
 		"xxx",
 		"xxx",
 		"xxx"
 	], ['x', ItemID.ingotSteel, 0]);
-	
+
 	Recipes.addShaped({id: BlockID.blockSilver, count: 1, data: 0}, [
 		"xxx",
 		"xxx",
 		"xxx"
 	], ['x', ItemID.ingotSilver, 0]);
-	
+
 	Recipes.addShaped({id: BlockID.blockUranium, count: 1, data: 0}, [
 		"xxx",
 		"xxx",
 		"xxx"
 	], ['x', ItemID.uranium238, 0]);
-	
+
 	Recipes.addShapeless({id: ItemID.ingotCopper, count: 9, data: 0}, [{id: BlockID.blockCopper, data: 0}]);
 	Recipes.addShapeless({id: ItemID.ingotTin, count: 9, data: 0}, [{id: BlockID.blockTin, data: 0}]);
 	Recipes.addShapeless({id: ItemID.ingotBronze, count: 9, data: 0}, [{id: BlockID.blockBronze, data: 0}]);

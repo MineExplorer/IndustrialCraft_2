@@ -11,6 +11,7 @@ namespace Machine {
 		defaultValues = {
 			energy: 0
 		};
+		data: this["defaultValues"];
 
 		constructor() {
 			super();

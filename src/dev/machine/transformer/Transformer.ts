@@ -25,10 +25,10 @@ namespace Machine {
 		}
 
 		energyTick(type: string, src: any): void {
-			this.data.last_energy_receive = this.data.energy_receive;
-			this.data.energy_receive = 0;
-			this.data.last_voltage = this.data.voltage;
-			this.data.voltage = 0;
+			this.last_energy_receive = this.energy_receive;
+			this.energy_receive = 0;
+			this.last_voltage = this.voltage;
+			this.voltage = 0;
 
 			let maxVoltage = this.getMaxPacketSize();
 			if (this.data.increaseMode) {

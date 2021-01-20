@@ -158,7 +158,7 @@ namespace Machine {
 							this.data.progress += 1/this.data.work_time;
 							newActive = true;
 						}
-						if (this.data.progress.toFixed(3) >= 1) {
+						if (+this.data.progress.toFixed(3) >= 1) {
 							this.decreaseSlot(sourceSlot, 1);
 							this.decreaseSlot(canSlot, result.count);
 							resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);
@@ -179,7 +179,7 @@ namespace Machine {
 						this.data.progress += 1/this.data.work_time;
 						newActive = true;
 					}
-					if (this.data.progress.toFixed(3) >= 1) {
+					if (+this.data.progress.toFixed(3) >= 1) {
 						this.outputTank.addLiquid(empty.liquid, empty.amount);
 						this.decreaseSlot(canSlot, 1);
 						resultSlot.setSlot(empty.id, resultSlot.count + 1, empty.data);
@@ -202,7 +202,7 @@ namespace Machine {
 							this.data.progress += 1/this.data.work_time;
 							newActive = true;
 						}
-						if (this.data.progress.toFixed(3) >= 1) {
+						if (+this.data.progress.toFixed(3) >= 1) {
 							this.inputTank.getLiquid(liquid, full.storage);
 							this.decreaseSlot(canSlot, 1);
 							resultSlot.setSlot(full.id, resultSlot.count + 1, full.data);
@@ -229,7 +229,7 @@ namespace Machine {
 							this.data.progress += 1/this.data.work_time;
 							newActive = true;
 						}
-						if (this.data.progress.toFixed(3) >= 1) {
+						if (+this.data.progress.toFixed(3) >= 1) {
 							this.inputTank.getLiquid(1);
 							this.decreaseSlot(sourceSlot, source.count);
 							this.outputTank.addLiquid(recipe.output, 1);

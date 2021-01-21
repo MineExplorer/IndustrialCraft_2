@@ -47,7 +47,7 @@ implements OnHurtListener, OnTickListener {
 			&& player.getArmor(1).id == ItemID.hazmatChestplate
 			&& player.getArmor(2).id == ItemID.hazmatLeggings
 			&& player.getArmor(3).id == ItemID.rubberBoots) {
-			if (RadiationAPI.playerRad <= 0) {
+			if (RadiationAPI.getRadiation(playerUid) <= 0) {
 				Entity.clearEffect(playerUid, PotionEffect.poison);
 			}
 			Entity.clearEffect(playerUid, PotionEffect.wither);

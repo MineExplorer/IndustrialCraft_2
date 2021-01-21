@@ -17,53 +17,6 @@ LIBRARY({
     shared: false,
     api: "CoreEngine"
 });
-var ItemStack = /** @class */ (function () {
-    function ItemStack(item, count, data, extra) {
-        if (typeof item == "object") {
-            this.id = item.id;
-            this.data = item.data;
-            this.count = item.count;
-            this.extra = item.extra || null;
-        }
-        else {
-            this.id = item || 0;
-            this.data = data || 0;
-            this.count = count || 0;
-            this.extra = extra || null;
-        }
-    }
-    ItemStack.prototype.getItemInstance = function () {
-        return ItemRegistry.getInstanceOf(this.id);
-    };
-    ItemStack.prototype.getMaxStack = function () {
-        return Item.getMaxStack(this.id);
-    };
-    ItemStack.prototype.getMaxDamage = function () {
-        return Item.getMaxDamage(this.id);
-    };
-    ItemStack.prototype.decrease = function (count) {
-        this.count -= count;
-        if (this.count <= 0)
-            this.clear();
-    };
-    ItemStack.prototype.clear = function () {
-        this.id = this.data = this.count = 0;
-        this.extra = null;
-    };
-    ItemStack.prototype.applyDamage = function (damage) {
-        var enchant = ToolAPI.getEnchantExtraData(this.extra);
-        if (Math.random() < 1 / (enchant.unbreaking + 1)) {
-            this.data += damage;
-        }
-        if (this.data >= this.getMaxDamage()) {
-            var tool = ToolAPI.getToolData(this.id);
-            this.id = tool ? tool.brokenId : 0;
-            this.count = 1;
-            this.data = 0;
-        }
-    };
-    return ItemStack;
-}());
 var Vector3 = /** @class */ (function () {
     function Vector3(vx, vy, vz) {
         if (typeof (vx) == "number") {
@@ -658,6 +611,94 @@ var PlayerInterface = /** @class */ (function () {
         this.playerActor.setScore(value);
     };
     return PlayerInterface;
+}());
+var EntityCustomData;
+(function (EntityCustomData) {
+    var entities = {};
+    function getAll() {
+        return entities;
+    }
+    EntityCustomData.getAll = getAll;
+    function getData(entity) {
+        var data = entities[entity];
+        if (!data) {
+            data = {};
+            putData(entity, data);
+        }
+        return data;
+    }
+    EntityCustomData.getData = getData;
+    function putData(entity, data) {
+        entities[entity] = data;
+    }
+    EntityCustomData.putData = putData;
+    function getField(entity, key) {
+        var playerData = getData(entity);
+        if (playerData) {
+            return playerData[key];
+        }
+    }
+    EntityCustomData.getField = getField;
+    function putField(entity, key, value) {
+        var data = getData(entity);
+        data[key] = value;
+    }
+    EntityCustomData.putField = putField;
+    Saver.addSavesScope("EntityData", function read(scope) {
+        entities = scope || {};
+    }, function save() {
+        return entities;
+    });
+    Callback.addCallback("EntityRemoved", function (entity) {
+        delete entities[entity];
+    });
+})(EntityCustomData || (EntityCustomData = {}));
+var ItemStack = /** @class */ (function () {
+    function ItemStack(item, count, data, extra) {
+        if (typeof item == "object") {
+            this.id = item.id;
+            this.data = item.data;
+            this.count = item.count;
+            this.extra = item.extra || null;
+        }
+        else {
+            this.id = item || 0;
+            this.data = data || 0;
+            this.count = count || 0;
+            this.extra = extra || null;
+        }
+    }
+    ItemStack.prototype.getItemInstance = function () {
+        return ItemRegistry.getInstanceOf(this.id);
+    };
+    ItemStack.prototype.getMaxStack = function () {
+        return Item.getMaxStack(this.id);
+    };
+    ItemStack.prototype.getMaxDamage = function () {
+        return Item.getMaxDamage(this.id);
+    };
+    ItemStack.prototype.decrease = function (count) {
+        this.count -= count;
+        if (this.count <= 0)
+            this.clear();
+    };
+    ItemStack.prototype.clear = function () {
+        this.id = this.data = this.count = 0;
+        this.extra = null;
+    };
+    ItemStack.prototype.applyDamage = function (damage) {
+        var enchant = ToolAPI.getEnchantExtraData(this.extra);
+        if (Math.random() < 1 / (enchant.unbreaking + 1)) {
+            this.data += damage;
+        }
+        if (this.data >= this.getMaxDamage()) {
+            var tool = ToolAPI.getToolData(this.id);
+            this.id = tool ? tool.brokenId : 0;
+            this.count = 1;
+            this.data = 0;
+        }
+    };
+    return ItemStack;
 }());
 var ItemBase = /** @class */ (function () {
     function ItemBase(stringID, name, icon) {
@@ -1346,4 +1387,5 @@ EXPORT("EnumRarity", EnumRarity);
 EXPORT("Side", Side);
 // APIs
 EXPORT("ItemRegistry", ItemRegistry);
+EXPORT("EntityCustomData", EntityCustomData);
 EXPORT("BlockEngine", BlockEngine);

@@ -17,7 +17,7 @@ extends ItemFood {
     }
 
     onFoodEaten(item: ItemInstance, food: number, saturation: number, player: number) {
-        RadiationAPI.addRadiation(-600);
+        RadiationAPI.addRadiation(player, -600);
 		for (let i in negativePotions) {
 			let potionID = negativePotions[i];
 			Entity.clearEffect(player, potionID);

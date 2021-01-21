@@ -1,18 +1,3 @@
-declare class ItemStack implements ItemInstance {
-    id: number;
-    count: number;
-    data: number;
-    extra?: ItemExtraData;
-    constructor();
-    constructor(item: ItemInstance);
-    constructor(id: number, count: number, data: number, extra?: ItemExtraData);
-    getItemInstance(): Nullable<ItemBase>;
-    getMaxStack(): number;
-    getMaxDamage(): number;
-    decrease(count: number): void;
-    clear(): void;
-    applyDamage(damage: number): void;
-}
 declare class Vector3 implements Vector {
     static readonly DOWN: Vector3;
     static readonly UP: Vector3;
@@ -358,6 +343,30 @@ declare class PlayerInterface {
      * Sets player's score.
      */
     setScore(value: number): void;
+}
+declare namespace EntityCustomData {
+    function getAll(): {
+        [key: number]: object;
+    };
+    function getData(entity: number): object;
+    function putData(entity: number, data: object): void;
+    function getField(entity: number, key: string): any;
+    function putField(entity: number, key: string, value: any): void;
+}
+declare class ItemStack implements ItemInstance {
+    id: number;
+    count: number;
+    data: number;
+    extra?: ItemExtraData;
+    constructor();
+    constructor(item: ItemInstance);
+    constructor(id: number, count: number, data: number, extra?: ItemExtraData);
+    getItemInstance(): Nullable<ItemBase>;
+    getMaxStack(): number;
+    getMaxDamage(): number;
+    decrease(count: number): void;
+    clear(): void;
+    applyDamage(damage: number): void;
 }
 interface ItemBehavior {
     onNameOverride?(item: ItemInstance, translation: string, name: string): string;

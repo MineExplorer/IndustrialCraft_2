@@ -1,4 +1,5 @@
 /// <reference path="./ArmorElectric.ts" />
+/// <reference path="./JetpackProvider.ts" />
 
 class ArmorQuantumSuit
 extends ArmorElectric {
@@ -51,9 +52,9 @@ extends ArmorQuantumSuit {
 		if (energyStored <= 0) return null;
 
 		let newEnergyStored = energyStored;
-		if (RadiationAPI.playerRad > 0) {
+		if (RadiationAPI.getRadiation(playerUid) > 0) {
 			if (energyStored >= 100000) {
-				RadiationAPI.playerRad = 0;
+				RadiationAPI.resetRadiation(playerUid);
 				Entity.clearEffect(playerUid, PotionEffect.poison);
 				newEnergyStored -= 100000;
 			}
@@ -114,26 +115,7 @@ extends ArmorQuantumSuit {
 		if (energyStored > this.getEnergyPerDamage()) {
 			Entity.setFire(playerUid, 0, true);
 		}
-		if (item.extra && item.extra.getBoolean("hover")) {
-			let vel = Entity.getVelocity(playerUid);
-			if (energyStored < 8 || EntityHelper.isOnGround(playerUid)) {
-				item.extra.putBoolean("hover", false);
-				let client = Network.getClientForPlayer(playerUid);
-				if (client) client.sendMessage("§4" + Translation.translate("Hover mode disabled"));
-				return item;
-			}
-			else if (vel.y < 0) {
-				EntityHelper.resetFallHeight(playerUid);
-				if (vel.y < -0.1) {
-					Entity.addVelocity(playerUid, 0, Math.min(0.25, -0.1 - vel.y), 0);
-					if (World.getThreadTime()%5 == 0) {
-						ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
-						return item;
-					}
-				}
-			}
-		}
-		return null;
+		return JetpackProvider.onTick(item, playerUid);;
 	}
 }
 

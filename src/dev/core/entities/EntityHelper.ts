@@ -16,6 +16,10 @@ namespace EntityHelper {
 		return false;
 	}
 
+	export function isMob(type: number): boolean {
+		return isFriendlyMob(type) || isHostileMob(type);
+	}
+
 	export function canTakeDamage(entity: number, damageSource: string): boolean {
 		let type = Entity.getType(entity);
 		if (type == 1) {
@@ -29,12 +33,12 @@ namespace EntityHelper {
 				}
 			break;
 			case "radiation":
-				return RadiationAPI.checkPlayerArmor();
+				return RadiationAPI.checkPlayerArmor(entity);
 			}
 			return true;
 		}
 		if (!ConfigIC.wireDamageEnabled) return false;
-		return isFriendlyMob(type) || isHostileMob(type);
+		return isMob(type);
 	}
 
 	export function isOnGround(entity: number): boolean {

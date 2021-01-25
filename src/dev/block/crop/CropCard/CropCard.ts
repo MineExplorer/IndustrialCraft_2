@@ -62,6 +62,10 @@ abstract class CropCard {
 		return te.generateSeeds(te.data);
 	}
 
+	getProduct(): ItemInstance {
+		return { id: 0, count: 0, data: 0 }
+	}
+
 	getSeedDropChance(te: ICropTileEntity): number {
 		if (te.data.currentSize == 1) return 0;
 		let base = .5;

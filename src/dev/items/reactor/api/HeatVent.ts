@@ -3,8 +3,8 @@
 namespace ReactorItem {
 	export class HeatVent
 	extends HeatStorage {
-		selfVent: number;
-		reactorVent: number;
+		readonly selfVent: number;
+		readonly reactorVent: number;
 
 		constructor(heatStorage: number, selfVent: number, reactorVent: number) {
 			super(heatStorage);

@@ -46,7 +46,7 @@ const reactorElements: UI.ElementSet = {
 
 for (let y = 0; y < 6; y++) {
 	for (let x = 0; x < 9; x++) {
-		let i = y*9+x;
+		let i = x*6 + y;
 		reactorElements["slot"+i] = {type: "slot", x: 400 + 54 * x, y: 40 + 54 * y, size: 54}
 	}
 }
@@ -75,8 +75,7 @@ namespace Machine {
 			heat: 0,
 			maxHeat: 10000,
 			hem: 1,
-			output: 0,
-			boomPower: 0
+			output: 0
 		}
 
 		chambers: ReactorChamber[] = [];
@@ -148,7 +147,7 @@ namespace Machine {
 			this.rebuildEnergyNet();
 			let x = this.getReactorSize();
 			for (let y = 0; y < 6; y++) {
-				let slotName = "slot"+(y*9+x);
+				let slotName = this.getSlotName(x, y);
 				let slot = this.container.getSlot(slotName);
 				if (slot.id > 0) {
 					this.region.dropItem(chamber.x + .5, chamber.y + .5, chamber.z + .5, slot.id, slot.count, slot.data);
@@ -166,7 +165,7 @@ namespace Machine {
 			for (let pass = 0; pass < 2; pass++) {
 				for (let y = 0; y < 6; y++) {
 					for (let x = 0; x < size; x++) {
-						let slot = this.container.getSlot("slot"+(y*9+x));
+						let slot = this.container.getSlot(this.getSlotName(x, y));
 						let component = ReactorItem.getComponent(slot.id);
 						if (component) {
 							component.processChamber(slot, this, x, y, pass == 0);
@@ -179,18 +178,20 @@ namespace Machine {
 		tick(): void {
 			let reactorSize = this.getReactorSize();
 			this.container.sendEvent("setFieldSize", {size: reactorSize});
-			if (this.data.isEnabled) {
-				if (World.getThreadTime() % 20 == 0) {
+			if (World.getThreadTime() % 20 == 0) {
+				if (this.data.isEnabled) {
 					this.data.maxHeat = 10000;
 					this.data.hem = 1;
 					this.data.output = 0;
 					this.processChambers();
-					this.calculateHeatEffects();
+					if (this.calculateHeatEffects()) {
+						return;
+					}
+				} else {
+					this.data.output = 0;
 				}
-			} else {
-				this.data.output = 0;
+				this.setActive(this.data.heat >= 1000 || this.data.output > 0);
 			}
-			this.setActive(this.data.heat >= 1000 || this.data.output > 0);
 
 			if (this.data.output > 0) {
 				this.startPlaySound();
@@ -279,18 +280,22 @@ namespace Machine {
 			this.data.hem = value;
 		}
 
+		getSlotName(x: number, y: number): string {
+			return "slot" + (x*6 + y);
+		}
+
 		getItemAt(x: number, y: number): ItemContainerSlot {
 			if (x < 0 || x >= this.getReactorSize() || y < 0 || y >= 6) {
 				return null;
 			}
-			return this.container.getSlot("slot"+(y*9+x));
+			return this.container.getSlot(this.getSlotName(x, y));
 		}
 
 		setItemAt(x: number, y: number, id: number, count: number, data: number, extra: ItemExtraData = null): void {
 			if (x < 0 || x >= this.getReactorSize() || y < 0 || y >= 6) {
 				return null;
 			}
-			this.container.setSlot("slot"+(y*9+x), id, count, data, extra);
+			this.container.setSlot(this.getSlotName(x, y), id, count, data, extra);
 		}
 
 		getOutput(): number {
@@ -331,17 +336,18 @@ namespace Machine {
 				this.container.setSlot("slot"+i, 0, 0, 0);
 			}
 			if (explode) {
-				this.data.boomPower = Math.min(boomPower * this.data.hem * boomMod, ConfigIC.getFloat("reactor_explosion_max_power"));
-				RadiationAPI.addRadiationSource(this.x + .5, this.y + .5, this.z + .5, this.data.boomPower, 600);
-				this.region.explode(this.x + .5, this.y + .5, this.z + .5, this.data.boomPower, false);
+				boomPower = Math.min(boomPower * this.data.hem * boomMod, ConfigIC.getFloat("reactor_explosion_max_power"));
+				RadiationAPI.addRadiationSource(this.x + .5, this.y + .5, this.z + .5, this.dimension, boomPower, 600);
+				this.region.explode(this.x + .5, this.y + .5, this.z + .5, boomPower, false);
 				this.selfDestroy();
 			}
 		}
 
-		calculateHeatEffects(): void {
+		calculateHeatEffects(): boolean {
 			let power = this.data.heat / this.data.maxHeat;
 			if (power >= 1) {
 				this.explode();
+				return true;
 			}
 			if (power >= 0.85 && Math.random() <= 0.2 * this.data.hem) {
 				let coord = this.getRandCoord(2);
@@ -361,9 +367,9 @@ namespace Machine {
 				let entities = Entity.getAll();
 				for (let i in entities) {
 					let ent = entities[i];
-					if (EntityHelper.canTakeDamage(ent, "radiation")) {
+					if (Entity.getDimension(ent) == this.dimension && EntityHelper.canTakeDamage(ent, DamageSource.radiation)) {
 						let c = Entity.getPosition(ent);
-						if (Math.abs(this.x + 0.5 - c.x) <= 3 && Math.abs(this.y + 0.5 - c.y) <= 3 && Math.abs(this.z + 0.5 - c.z) <= 3) {
+						if (Math.abs(this.x + .5 - c.x) <= 3.5 && Math.abs(this.y + .5 - c.y) <= 3.5 && Math.abs(this.z + .5 - c.z) <= 3.5) {
 							RadiationAPI.addEffect(ent, Math.floor(4 * this.data.hem));
 						}
 					}
@@ -382,7 +388,7 @@ namespace Machine {
 				let material = ToolAPI.getBlockMaterialName(block);
 				if (block != 49 && (material == "wood" || material == "wool" || material == "fibre" || material == "plant")) {
 					for (let i = 0; i < 6; i++) {
-						let coord2 = StorageInterface.getRelativeCoords(coord, i);
+						let coord2 = World.getRelativeCoords(coord.x, coord.y, coord.z, i);
 						if (this.region.getBlockId(coord2) == 0) {
 							this.region.setBlock(coord2, 51, 0);
 							break;
@@ -390,6 +396,7 @@ namespace Machine {
 					}
 				}
 			}
+			return false;
 		}
 
 		getRandCoord(rad: number): Vector {
@@ -402,7 +409,7 @@ namespace Machine {
 				for (let y = 0; y < 6; y++) {
 					for (let x = 0; x < 9; x++) {
 						let newX = (x < data.size) ? 400 + 54 * x : 1400;
-						content.elements["slot"+(y*9+x)].x = newX;
+						content.elements["slot" + (x*6 + y)].x = newX;
 					}
 				}
 			}

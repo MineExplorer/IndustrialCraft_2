@@ -13,7 +13,7 @@ extends ToolDrill {
 	}
 
 	getModeName(mode: number): string {
-		switch(mode) {
+		switch (mode) {
 			case 0:
 				return Translation.translate("Mode: ") + Translation.translate("Fortune III");
 			case 1:
@@ -35,7 +35,7 @@ extends ToolDrill {
 		let extra = item.extra || new ItemExtraData();
 		let mode = (extra.getInt("mode") + 1) % 4;
 		extra.putInt("mode", mode);
-		switch(mode) {
+		switch (mode) {
 			case 0:
 				Game.message("§e" + this.getModeName(mode));
 			break;

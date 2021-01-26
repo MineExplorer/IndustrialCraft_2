@@ -39,7 +39,7 @@ namespace Machine {
 						let dx = this.x + 0.5 - coords.x;
 						let dy = this.y + 0.5 - coords.y;
 						let dz = this.z + 0.5 - coords.z;
-						if (Math.sqrt(dx*dx + dy*dy + dz*dz) < 4.5 && EntityHelper.canTakeDamage(ent, "electricity") && Entity.getHealth(ent) > 0) {
+						if (Math.sqrt(dx*dx + dy*dy + dz*dz) < 4.5 && EntityHelper.canTakeDamage(ent, DamageSource.electricity)) {
 							discharge = true;
 							if (damage >= 24) {
 								Entity.setFire(ent, 1, true);

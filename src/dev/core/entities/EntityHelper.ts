@@ -1,5 +1,10 @@
+enum DamageSource {
+	electricity,
+	radiation
+}
+
 namespace EntityHelper {
-	export function isFriendlyMob(type: number): boolean {
+	export function isFriendlyMobType(type: number): boolean {
 		if (type >= 10 && type <= 31) return true;
 		if (type == 74 || type == 75) return true;
 		if (type == 108 || type == 109 || type >= 111 && type <= 113 || type == 115 || type == 118) {
@@ -8,7 +13,7 @@ namespace EntityHelper {
 		return false;
 	}
 
-	export function isHostileMob(type: number): boolean {
+	export function isHostileMobType(type: number): boolean {
 		if (type >= 32 && type <= 59) return true;
 		if (type == 104 || type == 105 || type == 110 || type == 114 || type == 116) {
 			return true;
@@ -16,29 +21,31 @@ namespace EntityHelper {
 		return false;
 	}
 
-	export function isMob(type: number): boolean {
-		return isFriendlyMob(type) || isHostileMob(type);
+	export function isMob(entity: number): boolean {
+		let type = Entity.getType(entity);
+		return isFriendlyMobType(type) || isHostileMobType(type);
 	}
 
-	export function canTakeDamage(entity: number, damageSource: string): boolean {
+	export function canTakeDamage(entity: number, damageSource: number): boolean {
+		if (Entity.getHealth(entity) <= 0) return false;
+		if (!ConfigIC.wireDamageEnabled && damageSource == DamageSource.electricity) return false;
+
 		let type = Entity.getType(entity);
 		if (type == 1) {
-			if (Game.getGameMode() == 1) return false;
-			switch(damageSource) {
-			case "electricity":
+			if (new PlayerActor(entity).getGameMode() == 1) return false;
+			if (damageSource == DamageSource.electricity) {
 				let player = new PlayerActor(entity);
 				if (player.getArmor(0).id == ItemID.hazmatHelmet && player.getArmor(1).id == ItemID.hazmatChestplate &&
 				player.getArmor(2).id == ItemID.hazmatLeggings && player.getArmor(3).id == ItemID.rubberBoots) {
 					return false;
 				}
-			break;
-			case "radiation":
-				return RadiationAPI.checkPlayerArmor(entity);
+				return true;
 			}
-			return true;
+			if (damageSource == DamageSource.radiation) {
+				return !RadiationAPI.hasHazmatSuit(entity);
+			}
 		}
-		if (!ConfigIC.wireDamageEnabled) return false;
-		return isMob(type);
+		return isMob(entity);
 	}
 
 	export function isOnGround(entity: number): boolean {
@@ -79,7 +86,7 @@ namespace EntityHelper {
 			let entities = Entity.getAll();
 			for (let i in entities) {
 				let ent = entities[i];
-				if (canTakeDamage(ent, "electricity") && Entity.getHealth(ent) > 0) {
+				if (canTakeDamage(ent, DamageSource.electricity)) {
 					let coords = Entity.getPosition(ent);
 					dealDamageFromCables(ent, Math.floor(coords.x), Math.floor(coords.y), Math.floor(coords.z));
 				}

@@ -68,7 +68,7 @@ namespace Machine {
 				}
 			}
 
-			RadiationAPI.addRadiationSource(this.x + .5, this.y + .5, this.z + .5, radius * 2, 600);
+			RadiationAPI.addRadiationSource(this.x + .5, this.y + .5, this.z + .5, this.dimension, radius * 2, 300);
 			this.sendPacket("explodeAnimation", {rad: radius});
 		}
 

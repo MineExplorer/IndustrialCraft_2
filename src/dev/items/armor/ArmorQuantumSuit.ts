@@ -51,17 +51,14 @@ extends ArmorQuantumSuit {
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (energyStored <= 0) return null;
 
-		let newEnergyStored = energyStored;
-		if (RadiationAPI.getRadiation(playerUid) > 0) {
-			if (energyStored >= 100000) {
-				RadiationAPI.resetRadiation(playerUid);
-				Entity.clearEffect(playerUid, PotionEffect.poison);
-				newEnergyStored -= 100000;
-			}
-		} else {
-			Entity.clearEffect(playerUid, PotionEffect.poison);
-		}
+		Entity.clearEffect(playerUid, PotionEffect.poison);
 		Entity.clearEffect(playerUid, PotionEffect.wither);
+
+		let newEnergyStored = energyStored;
+		if (RadiationAPI.getRadiation(playerUid) > 0 && energyStored >= 100000) {
+			RadiationAPI.resetRadiation(playerUid);
+			newEnergyStored -= 100000;
+		}
 
 		let player = new PlayerInterface(playerUid);
 		let hunger = player.getHunger();

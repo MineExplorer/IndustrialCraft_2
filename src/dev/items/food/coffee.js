@@ -32,7 +32,7 @@ var CoffeeMug = {
         var maxAmplifier = 0;
         var extraDuration = 0;
         var itemId = Player.getCarriedItem().id;
-        switch(itemId) {
+        switch (itemId) {
             case ItemID.mugCoffee :
                 maxAmplifier = 6;
                 extraDuration = 1200;

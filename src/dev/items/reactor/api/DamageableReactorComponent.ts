@@ -3,7 +3,7 @@
 namespace ReactorItem {
 	export abstract class DamageableReactorComponent
 	extends ReactorComponent {
-		maxDamage: number;
+		readonly maxDamage: number;
 
 		constructor(durability: number) {
 			super();

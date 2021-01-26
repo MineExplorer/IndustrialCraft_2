@@ -108,7 +108,7 @@ namespace Machine {
 		}
 
 		isValidCan(id: number, data: number): boolean {
-			switch(this.data.mode) {
+			switch (this.data.mode) {
 			case 0: {
 				let recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 				for (let i in recipes) {
@@ -147,7 +147,7 @@ namespace Machine {
 			let canSlot = this.container.getSlot("slotCan");
 
 			let newActive = false;
-			switch(this.data.mode) {
+			switch (this.data.mode) {
 			case 0:
 				let recipe = MachineRecipeRegistry.getRecipeResult("solidCanner", sourceSlot.id);
 				if (recipe) {

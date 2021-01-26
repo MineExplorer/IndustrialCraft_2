@@ -3,27 +3,29 @@ namespace RadiationAPI {
 		x: number,
 		y: number,
 		z: number,
+		dimension: number,
 		radius: number,
 		timer: number
 	}
 
-	export let items = {};
-	export let sources = {};
+	export let radioactiveItems = {};
 	export let hazmatArmor = {};
+	export let sources: RadiationSource[] = [];
+	export let effectDuration = {};
 
-	export function setRadioactivity(itemID: number, duration: number, stack: boolean = false) {
-		items[itemID] = {duration: duration, stack: stack};
+	export function setRadioactivity(itemID: number, duration: number, stack: boolean = false): void {
+		radioactiveItems[itemID] = {duration: duration, stack: stack};
 	}
 
 	export function getRadioactivity(itemID: number): {duration: number, stack: number} {
-		return items[itemID];
+		return radioactiveItems[itemID];
 	}
 
-	export function isRadioactiveItem(itemID: number) {
-		return !!items[itemID];
+	export function isRadioactiveItem(itemID: number): boolean {
+		return !!radioactiveItems[itemID];
 	}
 
-	export function emitItemRadiation(entity: number, itemID: number) {
+	export function emitItemRadiation(entity: number, itemID: number): void {
 		let radiation = getRadioactivity(itemID);
 		if (radiation) {
 			if (radiation.stack) {
@@ -31,29 +33,27 @@ namespace RadiationAPI {
 			} else {
 				setRadiation(entity, radiation.duration);
 			}
-			return true;
-		}
-		return false;
-	}
-
-	export function getRadiation(entity: number): number {
-		return EntityCustomData.getField(entity, "radiation");
-	}
-
-	export function resetRadiation(entity: number): void {
-		EntityCustomData.putField(entity, "radiation", 0);
-	}
-
-	export function setRadiation(entity: number, duration: number): void {
-		let currentDuration = EntityCustomData.getField(entity, "duration") || 0;
-		if (duration > currentDuration) {
-			EntityCustomData.putField(entity, "radiation", duration);
 		}
 	}
 
-	export function addRadiation(entity: number, duration: number): void {
-		duration = Math.max(getRadiation(entity) + duration, 0);
-		EntityCustomData.putField(entity, "radiation", duration);
+	export function getRadiation(playerUid: number): number {
+		return effectDuration[playerUid] || 0;
+	}
+
+	export function resetRadiation(playerUid: number): void {
+		effectDuration[playerUid] = 0;
+		Entity.clearEffect(playerUid, PotionEffect.fatal_poison);
+	}
+
+	export function setRadiation(playerUid: number, duration: number): void {
+		if (duration > getRadiation(playerUid)) {
+			effectDuration[playerUid] = duration;
+		}
+	}
+
+	export function addRadiation(playerUid: number, duration: number): void {
+		duration = Math.max(getRadiation(playerUid) + duration, 0);
+		effectDuration[playerUid] = duration;
 	}
 
 	export function registerHazmatArmor(itemID: number): void {
@@ -64,27 +64,27 @@ namespace RadiationAPI {
 		return hazmatArmor[itemID];
 	}
 
-	export function checkPlayerArmor(entity: number): boolean {
+	export function hasHazmatSuit(playerUid: number): boolean {
 		for (let i = 0; i < 4; i++) {
-			let itemID = Entity.getArmorSlot(entity, i).id;
-			if (!isHazmatArmor(itemID)) return true;
+			let itemID = Entity.getArmorSlot(playerUid, i).id;
+			if (!isHazmatArmor(itemID)) return false;
 		}
-		return false;
+		return true;
 	}
 
 	export function addEffect(ent: number, duration: number): void {
 		let type = Entity.getType(ent);
-		if (type == 1 && checkPlayerArmor(ent) || EntityHelper.isMob(ent)) {
-			Entity.addEffect(Player.get(), PotionEffect.poison, 1, duration * 20);
-			setRadiation(ent, duration);
+		if (type == 1 && !hasHazmatSuit(ent) || EntityHelper.isMob(ent)) {
+			Entity.addEffect(ent, PotionEffect.fatal_poison, 1, duration * 20);
+			if (type == 1) setRadiation(ent, duration);
 		}
 	}
 
-	export function addEffectInRange(x: number, y: number, z: number, radius: number, duration: number): void {
+	export function addEffectInRange(x: number, y: number, z: number, dimension: number, radius: number, duration: number): void {
 		let entities = Entity.getAll();
 		for (let i in entities) {
 			let ent = entities[i];
-			if (EntityHelper.canTakeDamage(ent, "radiation") && Entity.getHealth(ent) > 0) {
+			if (Entity.getDimension(ent) == dimension && EntityHelper.canTakeDamage(ent, DamageSource.radiation)) {
 				let c = Entity.getPosition(ent);
 				let xx = Math.abs(x - c.x), yy = Math.abs(y - c.y), zz = Math.abs(z - c.z);
 				if (Math.sqrt(xx*xx + yy*yy + zz*zz) <= radius) {
@@ -94,69 +94,62 @@ namespace RadiationAPI {
 		}
 	}
 
-	export function addRadiationSource(x: number, y: number, z: number, radius: number, duration: number): void {
-		sources[x+':'+y+':'+z] = {
+	export function addRadiationSource(x: number, y: number, z: number, dimension: number, radius: number, duration: number): void {
+		sources.push({
 			x: x,
 			y: y,
 			z: z,
+			dimension: dimension,
 			radius: radius,
 			timer: duration
-		}
-	}
-
-	export function onTick(): void {
-		if (World.getThreadTime()%20 == 0) {
-			for (let i in sources) {
-				let source: RadiationSource = sources[i];
-				addEffectInRange(source.x, source.y, source.z, source.radius, 10);
-				source.timer--;
-				if (source.timer <= 0) {
-					delete sources[i];
-				}
-			}
-
-			let entitiesData = EntityCustomData.getAll();
-			for (let key in entitiesData) {
-				let ent = parseInt(key);
-				if (Entity.getType(ent) == 1) {
-					let player = new PlayerActor(ent);
-					if (checkPlayerArmor(ent)) {
-						for (let i = 9; i < 45; i++) {
-							let itemID = player.getInventorySlot(i).id;
-							emitItemRadiation(ent, itemID);
-						}
-					}
-				}
-				let data = entitiesData[key];
-				let duration = data["radiation"];
-				if (duration > 0) {
-					Entity.addEffect(ent, PotionEffect.poison, 1, duration * 20);
-					if (Entity.getHealth(ent) == 1) {
-						Entity.damageEntity(ent, 1);
-					}
-					duration--;
-				}
-			}
-		}
+		});
 	}
 
 	Saver.addSavesScope("radiation",
-		function read(scope: {sources: object}) {
-			sources = scope.sources || {};
+		function read(scope: {source: RadiationSource[], effects: object}) {
+			sources = scope.source || [];
+			effectDuration = scope.effects || {};
 		},
 		function save() {
 			return {
-				sources: sources
+				source: sources,
+				effects: effectDuration
 			}
 		}
 	);
 
 	Callback.addCallback("tick", function() {
-		onTick();
+		if (World.getThreadTime()%20 == 0) {
+			for (let i = 0; i < sources.length; i++) {
+				let source: RadiationSource = sources[i];
+				addEffectInRange(source.x, source.y, source.z, source.dimension, source.radius, 10);
+				source.timer--;
+				if (source.timer <= 0) {
+					sources.splice(i--, 1);
+				}
+			}
+		}
 	});
 
-	Callback.addCallback("EntityDeath", function(entity) {
-		if (Entity.getType(entity) == 1) {
+	Callback.addCallback("ServerPlayerTick", function(playerUid: number) {
+		if (World.getThreadTime()%20 == 0) {
+			if (!hasHazmatSuit(playerUid)) {
+				let player = new PlayerActor(playerUid);
+				for (let i = 9; i < 45; i++) {
+					let itemID = player.getInventorySlot(i).id;
+					emitItemRadiation(playerUid, itemID);
+				}
+			}
+			let duration = effectDuration[playerUid];
+			if (duration > 0) {
+				Entity.addEffect(playerUid, PotionEffect.fatal_poison, 1, duration * 20);
+				effectDuration[playerUid]--;
+			}
+		}
+	});
+
+	Callback.addCallback("EntityDeath", function(entity: number) {
+		if (Entity.getType(entity) == 1 && getRadiation(entity) > 0) {
 			resetRadiation(entity);
 		}
 	});

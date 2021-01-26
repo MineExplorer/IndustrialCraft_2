@@ -42,8 +42,8 @@ namespace Machine {
 			let type = Entity.getType(ent);
 			if (type == 1 || type == EntityType.MINECART) return 1000;
 			if (type == EntityType.ITEM) return 100;
-			if (EntityHelper.isFriendlyMob(type)) return 200;
-			if (EntityHelper.isHostileMob(type)) return 500;
+			if (EntityHelper.isFriendlyMobType(type)) return 200;
+			if (EntityHelper.isHostileMobType(type)) return 500;
 			return 0;
 		}
 

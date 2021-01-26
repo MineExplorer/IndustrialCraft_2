@@ -3,8 +3,8 @@
 namespace ReactorItem {
 	export class Plating
 	extends ReactorComponent {
-		maxHeatAdd: number;
-		effectModifier: number;
+		readonly maxHeatAdd: number;
+		readonly effectModifier: number;
 
 		constructor(maxHeatAdd: number, effectModifier: number) {
 			super();

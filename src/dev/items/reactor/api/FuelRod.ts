@@ -3,7 +3,7 @@
 namespace ReactorItem {
 	export class FuelRod
 	extends DamageableReactorComponent {
-		numberOfCells: number;
+		readonly numberOfCells: number;
 
 		constructor(cells: number, durability: number) {
 			super(durability);
@@ -11,7 +11,7 @@ namespace ReactorItem {
 		}
 
 		getDepletedItem(): number {
-			switch(this.numberOfCells) {
+			switch (this.numberOfCells) {
 				case 1: return ItemID.fuelRodDepletedUranium;
 				case 2: return ItemID.fuelRodDepletedUranium2;
 				case 4: return ItemID.fuelRodDepletedUranium4;

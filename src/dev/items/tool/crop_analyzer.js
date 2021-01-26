@@ -90,7 +90,7 @@ var AgriculturalAnalyser = {
         var level = seedBagSlot.extra.getInt("scan");
         var crop = AgricultureAPI.cropCards[seedBagSlot.data];
 
-        switch(level) {
+        switch (level) {
             case 4:
                 this.showStats(seedBagSlot, elements);
             case 3:
@@ -227,7 +227,7 @@ var AgriculturalAnalyser = {
         container.validateAll();
     },
     showCropValues: function(te) {
-        switch(te.data.scanLevel) {
+        switch (te.data.scanLevel) {
             case 4:
                 Game.message("Growth: " + te.data.statGrowth);
                 Game.message("Gain: " + te.data.statGain);

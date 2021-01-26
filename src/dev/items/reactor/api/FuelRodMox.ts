@@ -4,7 +4,7 @@ namespace ReactorItem {
 	export class FuelRodMOX
 	extends FuelRod {
 		getDepletedItem(): number {
-			switch(this.numberOfCells) {
+			switch (this.numberOfCells) {
 				case 1: return ItemID.fuelRodDepletedMOX;
 				case 2: return ItemID.fuelRodDepletedMOX2;
 				case 4: return ItemID.fuelRodDepletedMOX4;

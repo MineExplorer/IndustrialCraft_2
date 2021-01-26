@@ -3,8 +3,8 @@
 namespace ReactorItem {
 	export class HeatExchanger
 	extends HeatStorage {
-		switchSide: number;
-		switchReactor: number;
+		readonly switchSide: number;
+		readonly switchReactor: number;
 		constructor(heatStorage: number, switchSide: number, switchReactor: number) {
 			super(heatStorage);
 			this.switchSide = switchSide;

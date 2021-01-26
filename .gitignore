@@ -2,6 +2,7 @@
 Thumbs.db
 
 .vscode/.ropeproject
+toolchain/adb
 toolchain/build
 toolchain/temp
 toolchain/ndk

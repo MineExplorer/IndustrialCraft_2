@@ -10,7 +10,7 @@ extends ArmorElectric {
 	}
 
 	getEnergyPerDamage(): number {
-		return 5000;
+		return 10000;
 	}
 
 	getExtraDefence(): number {

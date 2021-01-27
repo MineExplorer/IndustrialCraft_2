@@ -1,3 +1,7 @@
+/// <reference path="../CropCard/CropCard.ts" />
+/// <reference path="../CropCard/SeedBagStackData.ts" />
+/// <reference path="../CropCard/CropCardProperties.ts" />
+/// <reference path="../CropTile/ICropTileEntity.ts" />
 namespace Agriculture {
 	export class CropVanilla extends CropCard {
 		getDiscoveredBy(): string {
@@ -9,7 +13,7 @@ namespace Agriculture {
 		}
 
 		canGrow(tileentity: ICropTileEntity) {
-			const light = tileentity.region.getLightLevel(tileentity);
+			const light = tileentity.region.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
 			return tileentity.data.currentSize < tileentity.crop.getMaxSize() && light >= 9;
 		}
 
@@ -17,12 +21,19 @@ namespace Agriculture {
 			return te.crop.getProduct();
 		}
 
-		getSeeds(te: ICropTileEntity) {
+		getSeeds(te: ICropTileEntity): SeedBagStackData {
 			if (te.data.statGain <= 1 && te.data.statGrowth <= 1 && te.data.statResistance <= 1) {
-				return AgricultureAPI.abstractFunctions["CropVanilla"].getSeed();
+				// TODO check reqursion
+				return this.getSeed(te);
+				// return AgricultureAPI.abstractFunctions["CropVanilla"].getSeed();
 				// TODO add types to AgricultureAPI
 			}
-			return AgricultureAPI.abstractFunctions["IC2CropCard"].getSeeds(te);
+			return super.getSeeds(te);
+			// return AgricultureAPI.abstractFunctions["IC2CropCard"].getSeeds(te);
+		}
+
+		getSeed(te: ICropTileEntity): SeedBagStackData {
+			return { id: 0, data: te.data, extra: null };
 		}
 	}
 }

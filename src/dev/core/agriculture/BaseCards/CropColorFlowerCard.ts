@@ -1,3 +1,6 @@
+/// <reference path="../CropCard/CropCard.ts" />
+/// <reference path="../CropCard/CropCardProperties.ts" />
+/// <reference path="../CropTile/ICropTileEntity.ts" />
 namespace Agriculture {
 	export class CropColorFlowerCard extends CropCard {
 		getDiscoveredBy(): string {
@@ -28,7 +31,7 @@ namespace Agriculture {
 		}
 
 		canGrow(tileentity: ICropTileEntity): boolean {
-			const light = tileentity.region.getLightLevel(tileentity);
+			const light = tileentity.region.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
 			return tileentity.data.currentSize < tileentity.crop.getMaxSize() && light >= 12;
 		}
 

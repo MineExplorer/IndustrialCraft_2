@@ -1,3 +1,6 @@
+/// <reference path="../CropCard/CropCard.ts" />
+/// <reference path="../CropCard/CropCardProperties.ts" />
+/// <reference path="../CropTile/ICropTileEntity.ts" />
 namespace Agriculture {
 	export class CropBaseMetalCommon extends CropCard {
 		getProperties(): CropCardProperties {
@@ -20,7 +23,7 @@ namespace Agriculture {
 		}
 
 		getCropRootsRequirement(): any {
-
+			// TODO: getCropRootsRequirement
 		}
 
 		canGrow(tileentity: ICropTileEntity): boolean {
@@ -36,8 +39,9 @@ namespace Agriculture {
 			return false;
 		}
 
-		dropGainChance(): number {
-			return AgricultureAPI.abstractFunctions["IC2CropCard"] / 2;
+		dropGainChance(te: ICropTileEntity): number {
+			return super.dropGainChance(te) / 2;
+			// return AgricultureAPI.abstractFunctions["IC2CropCard"] / 2;
 		}
 
 		getGrowthDuration(tileentity: ICropTileEntity): number {

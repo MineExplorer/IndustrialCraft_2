@@ -1,5 +1,6 @@
 namespace Agriculture {
 	export interface ICropTileEntity {
+		x: number; y: number; z: number;
 		crop: CropCard;
 		data: CropTileData;
 		region: BlockSource;

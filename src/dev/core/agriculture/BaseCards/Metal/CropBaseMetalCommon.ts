@@ -1,6 +1,6 @@
-/// <reference path="../CropCard/CropCard.ts" />
-/// <reference path="../CropCard/CropCardProperties.ts" />
-/// <reference path="../CropTile/ICropTileEntity.ts" />
+/// <reference path="../../CropCard/CropCard.ts" />
+/// <reference path="../../CropCard/CropCardProperties.ts" />
+/// <reference path="../../CropTile/ICropTileEntity.ts" />
 namespace Agriculture {
 	export class CropBaseMetalCommon extends CropCard {
 		getProperties(): CropCardProperties {
@@ -22,8 +22,8 @@ namespace Agriculture {
 			return 5
 		}
 
-		getCropRootsRequirement(): any {
-			// TODO: getCropRootsRequirement
+		getCropRootsRequirement(): number[] {
+			return [];
 		}
 
 		canGrow(tileentity: ICropTileEntity): boolean {
@@ -31,9 +31,8 @@ namespace Agriculture {
 			if (tileentity.data.currentSize == 3) {
 				// TODO check it
 				if (!this.getCropRootsRequirement() || this.getCropRootsRequirement().length == 0) return true;
-				for (const req of this.getCropRootsRequirement()) {
-					// TODO check eval
-					if (tileentity.isBlockBelow(eval(req))) return true;
+				for (const id of this.getCropRootsRequirement()) {
+					if (tileentity.isBlockBelow(id)) return true;
 				}
 			}
 			return false;

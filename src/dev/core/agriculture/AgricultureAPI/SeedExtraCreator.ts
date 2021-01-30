@@ -12,7 +12,7 @@ namespace Agriculture {
 
 		getDefaultExtra(cardIndex: number) {
 			const extra = new ItemExtraData();
-			const card = AgricultureAPI.getCropCardByIndex(cardIndex);
+			const card = CropCardManager.getCropCardByIndex(cardIndex);
 			const baseSeed = card.getBaseSeed();
 			extra.putInt("growth", baseSeed.growth);
 			extra.putInt("gain", baseSeed.gain);

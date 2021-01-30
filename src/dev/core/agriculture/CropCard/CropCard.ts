@@ -1,5 +1,14 @@
 namespace Agriculture {
 	export abstract class CropCard {
+
+		abstract getID(): string
+
+		abstract getAttributes(): string[]
+
+		getTexture(): string {
+			return this.getID();
+		}
+
 		getBaseSeed(): BaseSeed {
 			return {
 				size: 1,

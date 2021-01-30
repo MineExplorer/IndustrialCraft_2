@@ -1,9 +1,9 @@
-/// <reference path="../CropCard/CropCard.ts" />
-/// <reference path="../CropCard/SeedBagStackData.ts" />
-/// <reference path="../CropCard/CropCardProperties.ts" />
-/// <reference path="../CropTile/ICropTileEntity.ts" />
+/// <reference path="../../../CropCard/CropCard.ts" />
+/// <reference path="../../../CropCard/SeedBagStackData.ts" />
+/// <reference path="../../../CropCard/CropCardProperties.ts" />
+/// <reference path="../../../CropTile/ICropTileEntity.ts" />
 namespace Agriculture {
-	export class CropVanilla extends CropCard {
+	export abstract class CropVanilla extends CropCard {
 		getDiscoveredBy(): string {
 			return "Notch";
 		}

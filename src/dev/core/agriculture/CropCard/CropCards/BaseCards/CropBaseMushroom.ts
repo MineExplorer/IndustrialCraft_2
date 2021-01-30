@@ -1,5 +1,5 @@
 namespace Agriculture {
-	export class CropBaseMushroom extends CropCard {
+	export abstract class CropBaseMushroom extends CropCard {
 		getProperties(): CropCardProperties {
 			return {
 				tier: 2,

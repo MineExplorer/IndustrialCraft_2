@@ -1,8 +1,8 @@
-/// <reference path="../../CropCard/CropCard.ts" />
-/// <reference path="../../CropCard/CropCardProperties.ts" />
-/// <reference path="../../CropTile/ICropTileEntity.ts" />
+/// <reference path="../../../../CropCard/CropCard.ts" />
+/// <reference path="../../../../CropCard/CropCardProperties.ts" />
+/// <reference path="../../../../CropTile/ICropTileEntity.ts" />
 namespace Agriculture {
-	export class CropBaseMetalCommon extends CropCard {
+	export abstract class CropBaseMetalCommon extends CropCard {
 		getProperties(): CropCardProperties {
 			return {
 				tier: 6,

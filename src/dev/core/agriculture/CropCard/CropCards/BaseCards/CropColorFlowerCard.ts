@@ -2,7 +2,19 @@
 /// <reference path="../../../CropCard/CropCardProperties.ts" />
 /// <reference path="../../../CropTile/ICropTileEntity.ts" />
 namespace Agriculture {
-	export abstract class CropColorFlowerCard extends CropCard {
+	export class CropColorFlowerCard extends CropCard {
+		constructor(protected id: string, protected attributes: string[], protected color: number, protected baseSeed?: BaseSeed) {
+			super();
+		}
+
+		getID(): string {
+			return this.id;
+		}
+
+		getAttributes(): string[] {
+			return this.attributes;
+		}
+
 		getDiscoveredBy(): string {
 			return "Notch";
 		}
@@ -18,12 +30,19 @@ namespace Agriculture {
 			}
 		}
 
+		getBaseSeed(): BaseSeed {
+			return {
+				...super.getBaseSeed(),
+				...this.baseSeed
+			};
+		}
+
 		getMaxSize(): number {
 			return 4;
 		}
 
 		getColor(): number {
-			return 0;
+			return this.color;
 		}
 
 		getOptimalHarvestSize(): number {

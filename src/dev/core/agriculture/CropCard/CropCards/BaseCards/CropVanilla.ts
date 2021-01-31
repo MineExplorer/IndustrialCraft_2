@@ -21,19 +21,16 @@ namespace Agriculture {
 			return te.crop.getProduct();
 		}
 
-		getSeeds(te: ICropTileEntity): SeedBagStackData {
+		getSeeds(te: ICropTileEntity): SeedBagStackData | ItemInstance {
 			if (te.data.statGain <= 1 && te.data.statGrowth <= 1 && te.data.statResistance <= 1) {
 				// TODO check reqursion
 				return this.getSeed(te);
 				// return AgricultureAPI.abstractFunctions["CropVanilla"].getSeed();
-				// TODO add types to AgricultureAPI
 			}
 			return super.getSeeds(te);
 			// return AgricultureAPI.abstractFunctions["IC2CropCard"].getSeeds(te);
 		}
 
-		getSeed(te: ICropTileEntity): SeedBagStackData {
-			return { id: 0, data: te.data, extra: null };
-		}
+		abstract getSeed(te: ICropTileEntity): ItemInstance
 	}
 }

@@ -1,6 +1,6 @@
 class ItemSeedBag
-extends ItemCommon
-implements ItemBehavior {
+    extends ItemCommon
+    implements ItemBehavior {
     constructor() {
         super("cropSeedBag", "crop_seed_bag", "crop_seed_bag", false);
         this.setMaxStack(1);
@@ -9,17 +9,17 @@ implements ItemBehavior {
     onNameOverride(item: ItemInstance, name: string): string {
         let extra = item.extra || new ItemExtraData();
         let scanLvl = extra.getInt("scan");
-        let cropClassName = scanLvl > 0 ? AgricultureAPI.cropCards[item.data].id : "Unknown";
+        let cropClassName = scanLvl > 0 ? Agriculture.CropCardManager.getCropCardByIndex(item.data).getID() : "Unknown";
         let translatedCropName = Translation.translate(cropClassName);
 
         let newName = name.replace("%s", translatedCropName) + '\n';
         if (scanLvl >= 4) {
-            newName += "§2Gr: " + extra.getInt("growth") + '\n';
-            newName += "§6Ga: " + extra.getInt("gain") + '\n';
-            newName += "§bRe: " + extra.getInt("resistance");
+            newName += `§2Gr: ${extra.getInt("growth")} \n`;
+            newName += `§6Ga: ${extra.getInt("gain")} \n`;
+            newName += `§bRe: ${extra.getInt("resistance")}`;
         }
         if (ConfigIC.debugMode) {
-            newName += "[DEBUG]scanLevel: " + scanLvl;
+            newName += `\n[DEBUG]scanLevel: ${scanLvl}`;
         }
         return newName;
     }

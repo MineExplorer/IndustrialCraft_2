@@ -17,7 +17,7 @@ namespace Agriculture {
 
         static getCardFromSeed(item: ItemInstance) {
             for (var i in this.cropCards) {
-                var seed = this.cropCards[i].getBaseSeed();
+                const seed = this.cropCards[i].getBaseSeed();
                 if (seed && seed.id == item.id && (!seed.data || seed.data == item.data)) {
                     return this.cropCards[i];
                 }

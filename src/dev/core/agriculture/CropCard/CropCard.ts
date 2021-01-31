@@ -2,8 +2,9 @@ namespace Agriculture {
 	export abstract class CropCard {
 		constructor() {
 			const cardID = CropCardManager.registerCropCard(this);
-
+			alert(`${this.getID()} registred as ${cardID}`);
 			if (this.getBaseSeed().addToCreative) {
+				alert(`added to creative ${cardID}`)
 				const extra = SeedExtraCreator.getDefaultExtra(cardID);
 				Item.addToCreative(ItemID.cropSeedBag, 1, cardID, extra);
 			}
@@ -76,7 +77,7 @@ namespace Agriculture {
 			return te.crop.getProperties().tier * 200;
 		}
 
-		getSeeds(te: ICropTileEntity): SeedBagStackData {
+		getSeeds(te: ICropTileEntity): SeedBagStackData | ItemInstance {
 			return te.generateSeeds(te.data);
 		}
 

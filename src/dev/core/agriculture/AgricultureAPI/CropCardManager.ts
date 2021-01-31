@@ -2,8 +2,13 @@ namespace Agriculture {
     export class CropCardManager {
         private static cropCards: CropCard[] = [];
 
-        static registerCropCard(cropCard: CropCard): void {
-            this.cropCards.push(cropCard);
+        /**
+         * Register new card
+         * @param {CropCard} cropCard
+         * @returns {number} registred card ID
+         */
+        static registerCropCard(cropCard: CropCard): number {
+            return this.cropCards.push(cropCard) - 1;
         }
 
         static getCropCardByIndex(index: number): CropCard {

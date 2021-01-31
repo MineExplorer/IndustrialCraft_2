@@ -88,7 +88,6 @@ items/resource/cells.ts
 items/resource/waste.ts
 
 items/crop/crop_seed_bag.ts
-items/crop/crop_cards.ts
 items/crop/crop_stick.ts
 items/crop/crop_utils.ts
 items/crop/crop_items.ts

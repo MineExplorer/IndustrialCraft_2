@@ -1,7 +1,7 @@
 /// <reference path="../CropTile/CropTileData.ts" />
 namespace Agriculture {
 	export class SeedExtraCreator {
-		generateExtraFromValues(data: CropTileData) {
+		static generateExtraFromValues(data: CropTileData) {
 			const extra = new ItemExtraData();
 			extra.putInt("growth", data.statGrowth);
 			extra.putInt("gain", data.statGain);
@@ -10,7 +10,7 @@ namespace Agriculture {
 			return extra;
 		}
 
-		getDefaultExtra(cardIndex: number) {
+		static getDefaultExtra(cardIndex: number) {
 			const extra = new ItemExtraData();
 			const card = CropCardManager.getCropCardByIndex(cardIndex);
 			const baseSeed = card.getBaseSeed();

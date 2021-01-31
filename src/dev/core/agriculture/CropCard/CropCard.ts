@@ -1,5 +1,13 @@
 namespace Agriculture {
 	export abstract class CropCard {
+		constructor() {
+			const cardID = CropCardManager.registerCropCard(this);
+
+			if (this.getBaseSeed().addToCreative) {
+				const extra = SeedExtraCreator.getDefaultExtra(cardID);
+				Item.addToCreative(ItemID.cropSeedBag, 1, cardID, extra);
+			}
+		}
 
 		abstract getID(): string
 

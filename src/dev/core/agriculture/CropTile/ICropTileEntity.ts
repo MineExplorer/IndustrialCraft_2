@@ -1,12 +1,14 @@
 namespace Agriculture {
 	export interface ICropTileEntity {
 		x: number; y: number; z: number;
+		region: WorldRegion;
 		crop: CropCard;
 		data: CropTileData;
-		region: BlockSource;
+		blockSource: BlockSource;
 		generateSeeds(tileData: CropTileData): SeedBagStackData;
 		pick(): boolean;
 		isBlockBelow(reqBlockID: number): boolean;
 		performManualHarvest(): boolean;
+		updateRender(): void;
 	}
 }

@@ -15,10 +15,28 @@ namespace Agriculture {
             return this.cropCards[index] || null;
         }
 
+        static getIndexByCropCardID(id: string): number {
+            for (const i in this.cropCards) {
+                if (this.cropCards[i].getID() == id) {
+                    return +i;
+                }
+            }
+            return null;
+        }
+
         static getCardFromSeed(item: ItemInstance) {
             for (var i in this.cropCards) {
                 const seed = this.cropCards[i].getBaseSeed();
                 if (seed && seed.id == item.id && (!seed.data || seed.data == item.data)) {
+                    return this.cropCards[i];
+                }
+            }
+            return null;
+        }
+
+        static getCardFromID(id: string): CropCard {
+            for (var i in this.cropCards) {
+                if (this.cropCards[i].getID() == id) {
                     return this.cropCards[i];
                 }
             }

@@ -1,6 +1,6 @@
 namespace Agriculture {
 	export type BaseSeed = {
-		id?: number;
+		id?: number | string;
 		data?: number;
 		size: number;
 		growth: number;

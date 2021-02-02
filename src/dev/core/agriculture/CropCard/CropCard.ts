@@ -57,7 +57,7 @@ namespace Agriculture {
 
 		tick(te: ICropTileEntity): void { }
 
-		dropGainChance(te: ICropTileEntity): number {
+		getDropGainChance(te: ICropTileEntity): number {
 			return Math.pow(0.95, te.crop.getProperties().tier);
 		}
 

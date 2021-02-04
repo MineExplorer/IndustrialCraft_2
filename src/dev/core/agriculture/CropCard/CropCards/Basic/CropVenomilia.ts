@@ -86,7 +86,7 @@ namespace Agriculture {
 				if (randomInt(0, 50) && armorSlot.id != 0) {
 					return super.onEntityCollision(te, entity);
 				}
-				Entity.addEffect(Player.get(), PotionEffect.poison, 1, (randomInt(0, 10) + 5) * 20);
+				Entity.addEffect(entity, PotionEffect.poison, 1, (randomInt(0, 10) + 5) * 20);
 				te.data.currentSize = 4;
 				te.updateRender();
 			}

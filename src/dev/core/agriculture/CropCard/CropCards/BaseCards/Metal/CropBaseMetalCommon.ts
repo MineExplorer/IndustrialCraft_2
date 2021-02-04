@@ -2,7 +2,19 @@
 /// <reference path="../../../../CropCard/CropCardProperties.ts" />
 /// <reference path="../../../../CropTile/ICropTileEntity.ts" />
 namespace Agriculture {
-	export abstract class CropBaseMetalCommon extends CropCard {
+	export class CropBaseMetalCommon extends CropCard {
+		constructor(protected id: string, protected attributes: string[], protected requirements: number[], protected gain: ItemInstance) {
+			super();
+		}
+
+		getID(): string {
+			return this.id;
+		}
+
+		getAttributes(): string[] {
+			return this.attributes;
+		}
+
 		getProperties(): CropCardProperties {
 			return {
 				tier: 6,
@@ -18,19 +30,25 @@ namespace Agriculture {
 			return 4;
 		}
 
+		getOptimalHarvestSize(): number {
+			return this.getMaxSize();
+		}
+
 		getRootsLength(te: ICropTileEntity) {
 			return 5
 		}
 
 		getCropRootsRequirement(): number[] {
-			return [];
+			return this.requirements;
 		}
 
 		canGrow(tileentity: ICropTileEntity): boolean {
 			if (tileentity.data.currentSize < 3) return true;
 			if (tileentity.data.currentSize == 3) {
 				// TODO check it
-				if (!this.getCropRootsRequirement() || this.getCropRootsRequirement().length == 0) return true;
+				if (!this.getCropRootsRequirement() || this.getCropRootsRequirement().length > 0) {
+					return true;
+				}
 				for (const id of this.getCropRootsRequirement()) {
 					if (tileentity.isBlockBelow(id)) return true;
 				}
@@ -38,9 +56,8 @@ namespace Agriculture {
 			return false;
 		}
 
-		dropGainChance(te: ICropTileEntity): number {
-			return super.dropGainChance(te) / 2;
-			// return AgricultureAPI.abstractFunctions["IC2CropCard"] / 2;
+		getDropGainChance(te: ICropTileEntity): number {
+			return super.getDropGainChance(te) / 2;
 		}
 
 		getGrowthDuration(tileentity: ICropTileEntity): number {
@@ -52,6 +69,10 @@ namespace Agriculture {
 
 		getSizeAfterHarvest(tileentity: ICropTileEntity): number {
 			return 2;
+		}
+
+		getGain(tileentity: ICropTileEntity): ItemInstance {
+			return this.gain;
 		}
 	}
 }

@@ -2,15 +2,11 @@
 /// <reference path="../../../../CropCard/CropCardProperties.ts" />
 /// <reference path="../../../../CropTile/ICropTileEntity.ts" />
 namespace Agriculture {
-	export abstract class CropBaseMetalUncommon extends CropCard {
+	export class CropBaseMetalUncommon extends CropBaseMetalCommon {
 		getProperties(): CropCardProperties {
 			return {
-				tier: 6,
-				chemistry: 2,
-				consumable: 0,
-				defensive: 0,
+				...super.getProperties(),
 				colorful: 2,
-				weed: 0
 			}
 		}
 
@@ -18,22 +14,12 @@ namespace Agriculture {
 			return 5;
 		}
 
-		getCropRootsRequirement(): number[] {
-			return [];
-		}
-
-		getOptimalHarvestSize(tileentity: ICropTileEntity) {
-			return 5;
-		}
-
-		getRootsLength(tileentity: ICropTileEntity): number {
-			return 5;
-		}
-
 		canGrow(tileentity: ICropTileEntity): boolean {
 			if (tileentity.data.currentSize < 4) return true;
 			if (tileentity.data.currentSize == 4) {
-				if (!this.getCropRootsRequirement() || !this.getCropRootsRequirement().length) return true;
+				if (!this.getCropRootsRequirement() || this.getCropRootsRequirement().length > 0) {
+					return true;
+				}
 				for (const id of this.getCropRootsRequirement()) {
 					if (tileentity.isBlockBelow(id)) return true;
 				}
@@ -41,7 +27,7 @@ namespace Agriculture {
 			return false;
 		}
 
-		dropGainChance(): number {
+		getDropGainChance(): number {
 			return Math.pow(0.95, this.getProperties().tier);
 		}
 
@@ -50,10 +36,6 @@ namespace Agriculture {
 				return 2200;
 			}
 			return 750;
-		}
-
-		getSizeAfterHarvest(tileentity: ICropTileEntity): number {
-			return 2;
 		}
 	}
 }

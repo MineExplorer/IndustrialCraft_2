@@ -25,5 +25,9 @@ namespace Agriculture {
 				addToCreative: false
 			};
 		}
+
+		getGain(te: ICropTileEntity): ItemInstance {
+			return { id: 0, count: 1, data: 0 }
+		}
 	}
 }

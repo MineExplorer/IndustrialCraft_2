@@ -11,6 +11,10 @@ namespace Agriculture {
             return this.cropCards.push(cropCard) - 1;
         }
 
+        static getALLCropCards(): CropCard[] {
+            return this.cropCards;
+        }
+
         static getCropCardByIndex(index: number): CropCard {
             return this.cropCards[index] || null;
         }

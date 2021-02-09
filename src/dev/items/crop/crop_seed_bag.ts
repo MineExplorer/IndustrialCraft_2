@@ -27,7 +27,7 @@ class ItemSeedBag
     onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
         if (block.id == BlockID.crop) {
             let region = WorldRegion.getForActor(player);
-            let te = region.getTileEntity(coords);
+            let te = region.getTileEntity(coords) as Agriculture.CropTile;
             if (!te.data.crop) {
                 let extra = item.extra;
                 let data = {

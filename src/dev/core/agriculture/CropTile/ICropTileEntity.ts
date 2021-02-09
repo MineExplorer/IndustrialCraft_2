@@ -5,7 +5,7 @@ namespace Agriculture {
 		crop: CropCard;
 		data: CropTileData;
 		blockSource: BlockSource;
-		generateSeeds(tileData: CropTileData): SeedBagStackData;
+		generateSeeds(tileData: CropTileData): ItemInstance;
 		pick(): boolean;
 		isBlockBelow(reqBlockID: number): boolean;
 		performManualHarvest(): boolean;

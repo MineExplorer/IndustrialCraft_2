@@ -61,6 +61,8 @@ namespace Agriculture {
 			return Math.pow(0.95, te.crop.getProperties().tier);
 		}
 
+		abstract getGain(te: ICropTileEntity): ItemInstance
+
 		canGrow(te: ICropTileEntity): boolean {
 			return te.data.currentSize < te.crop.getMaxSize();
 		}

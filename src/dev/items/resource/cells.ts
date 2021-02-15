@@ -8,7 +8,7 @@ implements ItemBehavior {
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, playerUid: number): void {
 		if (block.id > 7 && block.id < 12 && block.data == 0) {
-			let player = new PlayerInterface(playerUid);
+			let player = new PlayerEntity(playerUid);
 			let region = WorldRegion.getForActor(playerUid);
 			region.setBlock(coords, 0, 0);
 			if (block.id == 8 || block.id == 9) {
@@ -68,7 +68,7 @@ Recipes.addShaped({id: 49, count: 1, data: 0}, [
 
 Item.registerUseFunction("cellWater", function(coords, item, block, playerUid) {
 	if (item.data > 0 || block.id == BlockID.crop) return;
-	let player = new PlayerInterface(playerUid);
+	let player = new PlayerEntity(playerUid);
 	let region = WorldRegion.getForActor(playerUid);
 	let blockID = region.getBlockId(coords.relative);
 	if (blockID == 0 || blockID > 7 && blockID < 12) {
@@ -80,7 +80,7 @@ Item.registerUseFunction("cellWater", function(coords, item, block, playerUid) {
 
 Item.registerUseFunction("cellLava", function(coords, item, block, playerUid) {
 	if (item.data > 0) return;
-	let player = new PlayerInterface(playerUid);
+	let player = new PlayerEntity(playerUid);
 	let region = WorldRegion.getForActor(playerUid);
 	let blockID = region.getBlockId(coords.relative);
 	if (blockID == 0 || blockID > 7 && blockID < 12) {

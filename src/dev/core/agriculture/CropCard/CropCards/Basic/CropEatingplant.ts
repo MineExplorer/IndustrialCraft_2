@@ -67,7 +67,7 @@ namespace Agriculture {
 
 		hasMetalArmor(player: number): boolean {
 			for (let i = 0; i < 4; i++) {
-				const armorSlot = new PlayerInterface(player).getArmor(i);
+				const armorSlot = new PlayerEntity(player).getArmor(i);
 				if (armorSlot.id > 297 && armorSlot.id < 302) return false;
 			}
 			return true;

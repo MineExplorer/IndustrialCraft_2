@@ -60,7 +60,7 @@ extends ArmorQuantumSuit {
 			newEnergyStored -= 100000;
 		}
 
-		let player = new PlayerInterface(playerUid);
+		let player = new PlayerEntity(playerUid);
 		let hunger = player.getHunger();
 		if (hunger < 20 && newEnergyStored >= 500) {
 			let i = World.getThreadTime()%36;

@@ -2,7 +2,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -411,63 +411,63 @@ Network.addClientPacket("WorldRegion.play_sound", function (data) {
         World.playSound(data.x, data.y, data.z, data.name, data.volume, data.pitch);
     }
 });
-var PlayerInterface = /** @class */ (function () {
-    function PlayerInterface(playerUid) {
-        this.playerActor = new PlayerActor(playerUid);
+var PlayerEntity = /** @class */ (function () {
+    function PlayerEntity(playerUid) {
+        this.actor = new PlayerActor(playerUid);
         this.playerUid = playerUid;
     }
     /**
      * @returns player's unique numeric entity id
      */
-    PlayerInterface.prototype.getUid = function () {
+    PlayerEntity.prototype.getUid = function () {
         return this.playerUid;
     };
     /**
      * @returns the id of dimension where player is.
      */
-    PlayerInterface.prototype.getDimension = function () {
-        return this.playerActor.getDimension();
+    PlayerEntity.prototype.getDimension = function () {
+        return this.actor.getDimension();
     };
     /**
      * @returns player's gamemode.
      */
-    PlayerInterface.prototype.getGameMode = function () {
-        return this.playerActor.getGameMode();
+    PlayerEntity.prototype.getGameMode = function () {
+        return this.actor.getGameMode();
     };
-    PlayerInterface.prototype.addItemToInventory = function (id, count, data, extra) {
+    PlayerEntity.prototype.addItemToInventory = function (id, count, data, extra) {
         if (extra === void 0) { extra = null; }
         var item = id;
         if (typeof item == "object") {
-            this.playerActor.addItemToInventory(item.id, item.count, item.data, item.extra || null, true);
+            this.actor.addItemToInventory(item.id, item.count, item.data, item.extra || null, true);
         }
         else {
-            this.playerActor.addItemToInventory(id, count, data, extra, true);
+            this.actor.addItemToInventory(id, count, data, extra, true);
         }
     };
     /**
      * @returns inventory slot's contents.
      */
-    PlayerInterface.prototype.getInventorySlot = function (slot) {
-        var item = this.playerActor.getInventorySlot(slot);
+    PlayerEntity.prototype.getInventorySlot = function (slot) {
+        var item = this.actor.getInventorySlot(slot);
         return new ItemStack(item);
     };
-    PlayerInterface.prototype.setInventorySlot = function (slot, item, count, data, extra) {
+    PlayerEntity.prototype.setInventorySlot = function (slot, item, count, data, extra) {
         if (extra === void 0) { extra = null; }
         if (typeof item == "object") {
-            this.playerActor.setInventorySlot(slot, item.id, item.count, item.data, item.extra || null);
+            this.actor.setInventorySlot(slot, item.id, item.count, item.data, item.extra || null);
         }
         else {
-            this.playerActor.setInventorySlot(slot, item, count, data, extra);
+            this.actor.setInventorySlot(slot, item, count, data, extra);
         }
     };
     /**
      * @returns item in player's hand
     */
-    PlayerInterface.prototype.getCarriedItem = function () {
+    PlayerEntity.prototype.getCarriedItem = function () {
         var item = Entity.getCarriedItem(this.getUid());
         return new ItemStack(item);
     };
-    PlayerInterface.prototype.setCarriedItem = function (item, count, data, extra) {
+    PlayerEntity.prototype.setCarriedItem = function (item, count, data, extra) {
         if (extra === void 0) { extra = null; }
         if (typeof item == "object") {
             Entity.setCarriedItem(this.getUid(), item.id, item.count, item.data, item.extra);
@@ -480,7 +480,7 @@ var PlayerInterface = /** @class */ (function () {
      * Decreases carried item count by specified number
      * @param amount amount of items to decrease, default is 1
      */
-    PlayerInterface.prototype.decreaseCarriedItem = function (amount) {
+    PlayerEntity.prototype.decreaseCarriedItem = function (amount) {
         if (amount === void 0) { amount = 1; }
         var item = this.getCarriedItem();
         this.setCarriedItem(item.id, item.count - amount, item.data, item.extra);
@@ -488,129 +488,129 @@ var PlayerInterface = /** @class */ (function () {
     /**
      * @returns armor slot's contents.
      */
-    PlayerInterface.prototype.getArmor = function (slot) {
-        var item = this.playerActor.getArmor(slot);
+    PlayerEntity.prototype.getArmor = function (slot) {
+        var item = this.actor.getArmor(slot);
         return new ItemStack(item);
     };
-    PlayerInterface.prototype.setArmor = function (slot, item, count, data, extra) {
+    PlayerEntity.prototype.setArmor = function (slot, item, count, data, extra) {
         if (extra === void 0) { extra = null; }
         if (typeof item == "object") {
-            this.playerActor.setArmor(slot, item.id, item.count, item.data, item.extra || null);
+            this.actor.setArmor(slot, item.id, item.count, item.data, item.extra || null);
         }
         else {
-            this.playerActor.setArmor(slot, item, count, data, extra);
+            this.actor.setArmor(slot, item, count, data, extra);
         }
     };
     /**
      * Sets respawn coords for the player.
      */
-    PlayerInterface.prototype.setRespawnCoords = function (x, y, z) {
-        this.playerActor.setRespawnCoords(x, y, z);
+    PlayerEntity.prototype.setRespawnCoords = function (x, y, z) {
+        this.actor.setRespawnCoords(x, y, z);
     };
     /**
      * Spawns exp on coords.
      * @param value experience points value
      */
-    PlayerInterface.prototype.spawnExpOrbs = function (x, y, z, value) {
-        this.playerActor.spawnExpOrbs(x, y, z, value);
+    PlayerEntity.prototype.spawnExpOrbs = function (x, y, z, value) {
+        this.actor.spawnExpOrbs(x, y, z, value);
     };
     /**
      * @returns whether the player is a valid entity.
      */
-    PlayerInterface.prototype.isValid = function () {
-        return this.playerActor.isValid();
+    PlayerEntity.prototype.isValid = function () {
+        return this.actor.isValid();
     };
     /**
      * @returns player's selected slot.
      */
-    PlayerInterface.prototype.getSelectedSlot = function () {
-        return this.playerActor.getSelectedSlot();
+    PlayerEntity.prototype.getSelectedSlot = function () {
+        return this.actor.getSelectedSlot();
     };
     /**
      * Sets player's selected slot.
      */
-    PlayerInterface.prototype.setSelectedSlot = function (slot) {
-        this.playerActor.setSelectedSlot(slot);
+    PlayerEntity.prototype.setSelectedSlot = function (slot) {
+        this.actor.setSelectedSlot(slot);
     };
     /**
      * @returns player's experience.
      */
-    PlayerInterface.prototype.getExperience = function () {
-        return this.playerActor.getExperience();
+    PlayerEntity.prototype.getExperience = function () {
+        return this.actor.getExperience();
     };
     /**
      * Sets player's experience.
      */
-    PlayerInterface.prototype.setExperience = function (value) {
-        this.playerActor.setExperience(value);
+    PlayerEntity.prototype.setExperience = function (value) {
+        this.actor.setExperience(value);
     };
     /**
      * Add experience to player.
      */
-    PlayerInterface.prototype.addExperience = function (amount) {
-        this.playerActor.addExperience(amount);
+    PlayerEntity.prototype.addExperience = function (amount) {
+        this.actor.addExperience(amount);
     };
     /**
      * @returns player's xp level.
      */
-    PlayerInterface.prototype.getLevel = function () {
-        return this.playerActor.getLevel();
+    PlayerEntity.prototype.getLevel = function () {
+        return this.actor.getLevel();
     };
     /**
      * Sets player's xp level.
      */
-    PlayerInterface.prototype.setLevel = function (level) {
-        this.playerActor.setLevel(level);
+    PlayerEntity.prototype.setLevel = function (level) {
+        this.actor.setLevel(level);
     };
     /**
      * @returns player's exhaustion.
      */
-    PlayerInterface.prototype.getExhaustion = function () {
-        return this.playerActor.getExhaustion();
+    PlayerEntity.prototype.getExhaustion = function () {
+        return this.actor.getExhaustion();
     };
     /**
      * Sets player's exhaustion.
      */
-    PlayerInterface.prototype.setExhaustion = function (value) {
-        this.playerActor.setExhaustion(value);
+    PlayerEntity.prototype.setExhaustion = function (value) {
+        this.actor.setExhaustion(value);
     };
     /**
      * @returns player's hunger.
      */
-    PlayerInterface.prototype.getHunger = function () {
-        return this.playerActor.getHunger();
+    PlayerEntity.prototype.getHunger = function () {
+        return this.actor.getHunger();
     };
     /**
      * Sets player's hunger.
      */
-    PlayerInterface.prototype.setHunger = function (value) {
-        this.playerActor.setHunger(value);
+    PlayerEntity.prototype.setHunger = function (value) {
+        this.actor.setHunger(value);
     };
     /**
      * @returns player's saturation.
      */
-    PlayerInterface.prototype.getSaturation = function () {
-        return this.playerActor.getSaturation();
+    PlayerEntity.prototype.getSaturation = function () {
+        return this.actor.getSaturation();
     };
     /**
      * Sets player's saturation.
      */
-    PlayerInterface.prototype.setSaturation = function (value) {
-        this.playerActor.setSaturation(value);
+    PlayerEntity.prototype.setSaturation = function (value) {
+        this.actor.setSaturation(value);
     };
     /**
      * @returns player's score.
      */
-    PlayerInterface.prototype.getScore = function () {
-        return this.playerActor.getScore();
+    PlayerEntity.prototype.getScore = function () {
+        return this.actor.getScore();
     };
     /**
      * Sets player's score.
      */
-    PlayerInterface.prototype.setScore = function (value) {
-        this.playerActor.setScore(value);
+    PlayerEntity.prototype.setScore = function (value) {
+        this.actor.setScore(value);
     };
-    return PlayerInterface;
+    return PlayerEntity;
 }());
 var EntityCustomData;
 (function (EntityCustomData) {
@@ -1373,7 +1373,7 @@ var BlockEngine;
 EXPORT("ItemStack", ItemStack);
 EXPORT("Vector3", Vector3);
 EXPORT("WorldRegion", WorldRegion);
-EXPORT("PlayerInterface", PlayerInterface);
+EXPORT("PlayerEntity", PlayerEntity);
 EXPORT("TileEntityBase", TileEntityBase);
 EXPORT("ItemCommon", ItemCommon);
 EXPORT("ItemFood", ItemFood);

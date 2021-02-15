@@ -212,8 +212,8 @@ declare class WorldRegion {
     listEntitiesInAABB(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, type: number, blacklist?: boolean): number[];
     playSound(x: number, y: number, z: number, name: string, volume?: number, pitch?: number): void;
 }
-declare class PlayerInterface {
-    playerActor: PlayerActor;
+declare class PlayerEntity {
+    actor: PlayerActor;
     playerUid: number;
     constructor(playerUid: number);
     /**

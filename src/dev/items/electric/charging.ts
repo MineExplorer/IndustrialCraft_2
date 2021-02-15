@@ -37,7 +37,7 @@ extends ItemBattery {
 	}
 
 	static checkCharging(playerUid: number): void {
-		let player = new PlayerInterface(playerUid);
+		let player = new PlayerEntity(playerUid);
 		for (let i = 0; i < 36; i++) {
 			let slot = player.getInventorySlot(i);
 			let itemInstance = slot.getItemInstance();

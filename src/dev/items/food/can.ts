@@ -13,7 +13,7 @@ implements ItemBehavior {
 	}
 
 	onNoTargetUse(item: ItemStack, playerUid: number): void {
-		let player = new PlayerInterface(playerUid);
+		let player = new PlayerEntity(playerUid);
 		let hunger = player.getHunger();
 		let saturation = player.getSaturation();
 		let count = Math.min(20 - hunger, item.count);

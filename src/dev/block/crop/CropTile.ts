@@ -48,14 +48,14 @@ namespace Agriculture {
 			this.checkGround();
 			const entities = this.region.listEntitiesInAABB(this.x, this.y, this.z, this.x + 1, this.y + 1, this.z + 1, EntityType.PLAYER, false);
 			if (entities.length > 0) {
-				for (const player of entities) {
-					this.checkPlayerRunning(player);
+				for (const playerUid of entities) {
+					this.checkPlayerRunning(playerUid);
 				}
 			}
 			if (World.getThreadTime() % 192 == 0) this.performTick();
 		}
 
-		onLongClick(player: number): boolean {
+		onLongClick(playerUid: number): boolean {
 			//Debug.m("onLong")
 			if (this.data.crossingBase) {
 				//Debug.m("crossing")
@@ -67,14 +67,14 @@ namespace Agriculture {
 			}
 			if (this.crop) {
 				//Debug.m("crop EXIST")
-				return this.crop.onLeftClick(this, player);
+				return this.crop.onLeftClick(this, playerUid);
 			}
 			//Debug.m("return false")
-			this.region.destroyBlock(this, true, player);
+			this.region.destroyBlock(this, true, playerUid);
 			return false;
 		}
 
-		onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean {
+		onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, playerUid: number, extra: ItemExtraData): boolean {
 			//alert("onClick");
 			if (id != 0) {
 				const card = AgricultureAPI.getCardFromSeed({ id: id, data: data });
@@ -89,26 +89,26 @@ namespace Agriculture {
 					return;
 				}
 
-				const pl = new PlayerInterface(player);
+				const player = new PlayerEntity(playerUid);
 				if (!this.crop && !this.data.crossingBase && id == ItemID.cropStick) {
 					this.data.crossingBase = true;
 					this.data.dirty = true;
-					pl.decreaseCarriedItem();
+					player.decreaseCarriedItem();
 					this.updateRender();
 					return;
 				}
 				if (this.crop && id == ItemID.fertilizer) {
 					if (this.applyFertilizer(true)) this.data.dirty = true;
-					pl.decreaseCarriedItem();
+					player.decreaseCarriedItem();
 					return;
 				}
 				if (id == ItemID.cellWater && count == 1) {
 					const amount = this.applyHydration(1000 - data);
 					if (amount > 0) {
 						if (data + amount >= 1000) {
-							pl.setCarriedItem({ id: ItemID.cellEmpty, count: 1, data: 0 })
+							player.setCarriedItem(ItemID.cellEmpty, 1, 0);
 						} else {
-							pl.setCarriedItem({ id: id, count: 1, data: data + amount })
+							player.setCarriedItem(id, 1, data + amount);
 						}
 					}
 					return;
@@ -130,19 +130,19 @@ namespace Agriculture {
 					this.data.statGrowth = card.baseSeed.growth;
 					this.data.statResistance = card.baseSeed.resistance;
 
-					pl.decreaseCarriedItem();
+					player.decreaseCarriedItem();
 					this.updateRender();
 					return;
 				}
 			}
-			if (this.crop && this.crop.canBeHarvested(this)) this.crop.onRightClick(this, player);
+			if (this.crop && this.crop.canBeHarvested(this)) this.crop.onRightClick(this, playerUid);
 		}
 
-		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
-			super.destroyBlock(coords, player);
+		destroyBlock(coords: Callback.ItemUseCoordinates, playerUid: number): void {
+			super.destroyBlock(coords, playerUid);
 			this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
 			if (this.data.crossingBase) this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
-			if (this.crop) this.crop.onLeftClick(this, player);
+			if (this.crop) this.crop.onLeftClick(this, playerUid);
 		}
 
 		updateRender(): void {
@@ -157,10 +157,10 @@ namespace Agriculture {
 			this.networkData.sendChanges();
 		}
 
-		checkPlayerRunning(player: number): void {
+		checkPlayerRunning(playerUid: number): void {
 			if (!this.crop) return;
 
-			const coords = Entity.getPosition(player);
+			const coords = Entity.getPosition(playerUid);
 			const playerX = Math.floor(coords.x);
 			const playerY = Math.floor(coords.y);
 			const playerZ = Math.floor(coords.z);
@@ -168,8 +168,8 @@ namespace Agriculture {
 			if (playerX == this.x && playerY - 1 == this.y && playerZ == this.z) {
 				const vel = Player.getVelocity();
 				const horizontalVel = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
-				if (horizontalVel > 0.15 && this.crop.onEntityCollision(this, player)) {
-					this.region.destroyBlock(this, true, player);
+				if (horizontalVel > 0.15 && this.crop.onEntityCollision(this, playerUid)) {
+					this.region.destroyBlock(this, true, playerUid);
 				}
 			}
 		}
@@ -603,7 +603,7 @@ namespace Agriculture {
 		}
 	}
 }
-Callback.addCallback("DestroyBlockStart", function (coords: Callback.ItemUseCoordinates, block: Tile, player: number): void {
+Callback.addCallback("DestroyBlockStart", function (coords: Callback.ItemUseCoordinates, block: Tile, playerUid: number): void {
 	if (block.id == BlockID.crop) {
 		// ? TEST IT!!! i think it can cause problem
 		// Block.setTempDestroyTime(block.id, 1000);

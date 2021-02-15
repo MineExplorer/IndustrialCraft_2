@@ -67,14 +67,14 @@ namespace Agriculture {
 		}
 
 		onRightClick(te: ICropTileEntity, entity: number): boolean {
-			if (new PlayerInterface(entity).getCarriedItem().id != 0) {
+			if (Entity.getCarriedItem(entity).id != 0) {
 				return this.onEntityCollision(te, entity);
 			}
 			return te.performManualHarvest();
 		}
 
 		onLeftClick(te: ICropTileEntity, entity: number): boolean {
-			if (new PlayerInterface(entity).getCarriedItem().id != 0) {
+			if (Entity.getCarriedItem(entity).id != 0) {
 				this.onEntityCollision(te, entity);
 			}
 			return te.pick();
@@ -82,7 +82,7 @@ namespace Agriculture {
 
 		onEntityCollision(te: ICropTileEntity, entity: number): boolean {
 			if (te.data.currentSize == 5) {
-				const armorSlot = new PlayerInterface(entity).getArmor(3);
+				const armorSlot = new PlayerEntity(entity).getArmor(3);
 				if (randomInt(0, 50) && armorSlot.id != 0) {
 					return super.onEntityCollision(te, entity);
 				}

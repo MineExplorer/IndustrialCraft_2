@@ -166,7 +166,7 @@ namespace Agriculture {
 			const playerZ = Math.floor(coords.z);
 
 			if (playerX == this.x && playerY - 1 == this.y && playerZ == this.z) {
-				const vel = Player.getVelocity();
+				const vel = Entity.getVelocity(playerUid);
 				const horizontalVel = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
 				if (horizontalVel > 0.15 && this.crop.onEntityCollision(this, playerUid)) {
 					this.region.destroyBlock(this, true, playerUid);

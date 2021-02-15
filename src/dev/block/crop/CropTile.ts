@@ -22,6 +22,22 @@ namespace Agriculture {
 
 		crop: CropCard = null;
 
+		clientLoad(): void {
+			//alert("load");
+			this.networkData.addOnDataChangedListener((data: SyncedNetworkData, isExternal) => {
+				const texture: [string, number] = [
+					data.getString("textureName"),
+					data.getInt("textureData")
+				];
+				BlockRenderer.mapAtCoords(this.x, this.y, this.z, TileRenderer.getCropModel(texture));
+			});
+		}
+
+		clientUnload(): void {
+			//alert("unload");
+			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+		}
+
 		init(): void {
 			super.init();
 			if (this.data.crop) this.crop = AgricultureAPI.cropCards[this.data.crop];
@@ -40,22 +56,26 @@ namespace Agriculture {
 		}
 
 		onLongClick(player: number): boolean {
-			alert("onLongClick")
+			//Debug.m("onLong")
 			if (this.data.crossingBase) {
+				//Debug.m("crossing")
 				this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
 				this.data.crossingBase = false;
 				this.data.dirty = true;
 				this.updateRender();
 				return true;
 			}
-			else if (this.crop) {
+			if (this.crop) {
+				//Debug.m("crop EXIST")
 				return this.crop.onLeftClick(this, player);
 			}
+			//Debug.m("return false")
+			this.region.destroyBlock(this, true, player);
 			return false;
 		}
 
 		onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean {
-			alert("onClick");
+			//alert("onClick");
 			if (id != 0) {
 				const card = AgricultureAPI.getCardFromSeed({ id: id, data: data });
 				if (id == ItemID.agriculturalAnalyzer) return;
@@ -83,7 +103,7 @@ namespace Agriculture {
 					return;
 				}
 				if (id == ItemID.cellWater && count == 1) {
-					var amount = this.applyHydration(1000 - data);
+					const amount = this.applyHydration(1000 - data);
 					if (amount > 0) {
 						if (data + amount >= 1000) {
 							pl.setCarriedItem({ id: ItemID.cellEmpty, count: 1, data: 0 })
@@ -120,12 +140,9 @@ namespace Agriculture {
 
 		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
 			super.destroyBlock(coords, player);
-			alert("destroy");
-			Debug.m(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
 			this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
 			if (this.data.crossingBase) this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
 			if (this.crop) this.crop.onLeftClick(this, player);
-			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 		}
 
 		updateRender(): void {
@@ -135,8 +152,9 @@ namespace Agriculture {
 				texture[1] = this.data.currentSize;
 			}
 			else if (this.data.crossingBase) texture[1] = 1;
-
-			BlockRenderer.mapAtCoords(this.x, this.y, this.z, TileRenderer.getCropModel(texture));
+			this.networkData.putString("textureName", texture[0]);
+			this.networkData.putInt("textureData", texture[1]);
+			this.networkData.sendChanges();
 		}
 
 		checkPlayerRunning(player: number): void {
@@ -148,17 +166,17 @@ namespace Agriculture {
 			const playerZ = Math.floor(coords.z);
 
 			if (playerX == this.x && playerY - 1 == this.y && playerZ == this.z) {
-				var vel = Player.getVelocity();
-				var horizontalVel = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
+				const vel = Player.getVelocity();
+				const horizontalVel = Math.sqrt(vel.x * vel.x + vel.z * vel.z)
 				if (horizontalVel > 0.15 && this.crop.onEntityCollision(this, player)) {
-					this.region.destroyBlock(this);
+					this.region.destroyBlock(this, true, player);
 				}
 			}
 		}
 
 		checkGround(): void {
 			if (this.region.getBlockId(this.x, this.y - 1, this.z) != 60) {
-				this.region.destroyBlock(this);
+				this.region.destroyBlock(this, true);
 			}
 		}
 
@@ -188,7 +206,7 @@ namespace Agriculture {
 				this.crop.tick(this);
 				if (this.crop.canGrow(this)) {
 					this.performGrowthTick();
-					var growDuration = this.crop.getGrowthDuration(this);
+					const growDuration = this.crop.getGrowthDuration(this);
 					if (this.data.growthPoints >= growDuration) {
 						this.data.growthPoints = 0;
 						this.data.currentSize = this.data.currentSize + 1;
@@ -208,7 +226,7 @@ namespace Agriculture {
 		}
 
 		updateTerrainHumidity(): void {
-			var humidity = Agriculture.BiomeBonusesManager.getHumidityBiomeBonus(this.x, this.z);
+			let humidity = Agriculture.BiomeBonusesManager.getHumidityBiomeBonus(this.x, this.z);
 
 			if (this.region.getBlockData(this.x, this.y - 1, this.z) == 7) humidity += 2
 			if (this.data.storageWater >= 5) humidity += 2;
@@ -221,7 +239,7 @@ namespace Agriculture {
 			let nutrients = Agriculture.BiomeBonusesManager.getNutrientBiomeBonus(this.x, this.z);
 			nutrients += (this.data.terrainNutrients + 19) / 20;
 
-			for (var i = 2; i < 5; ++i) {
+			for (let i = 2; i < 5; ++i) {
 				if (this.region.getBlockId(this.x, this.y - i, this.z) == 3) nutrients++;
 			}
 			this.data.terrainNutrients = nutrients;
@@ -233,13 +251,13 @@ namespace Agriculture {
 			if (height > 4) height = 4;
 			if (height < 0) height = 0;
 
-			var fresh = 9;
-			for (var x = this.x - 1; x < this.x + 2; x++) {
-				for (var z = this.z - 1; z < this.z + 2; z++) {
+			let fresh = 9;
+			for (let x = this.x - 1; x < this.x + 2; x++) {
+				for (let z = this.z - 1; z < this.z + 2; z++) {
 					if (this.region.getBlockId(x, this.y, z)) fresh--;
 				}
 			}
-			if (GenerationUtils.canSeeSky(this.x, this.y + 1, this.z)) value += 2;
+			if (this.region.canSeeSky(this.x, this.y + 1, this.z)) value += 2;
 			value += Math.floor(fresh / 2);
 			value += height;
 
@@ -249,19 +267,19 @@ namespace Agriculture {
 		performGrowthTick(): void {
 			if (!this.crop) return;
 
-			var totalGrowth = 0;
-			var baseGrowth = 3 + randomInt(0, 7) + this.data.statGrowth;
-			var properties = this.crop.getProperties();
-			var sumOfStats = this.data.statGrowth + this.data.statGain + this.data.statResistance;
-			var minimumQuality = (properties.tier - 1) * 4 + sumOfStats;
+			let totalGrowth = 0;
+			const baseGrowth = 3 + randomInt(0, 7) + this.data.statGrowth;
+			const properties = this.crop.getProperties();
+			const sumOfStats = this.data.statGrowth + this.data.statGain + this.data.statResistance;
+			let minimumQuality = (properties.tier - 1) * 4 + sumOfStats;
 			minimumQuality = Math.max(minimumQuality, 0);
-			var providedQuality = 75;
+			const providedQuality = 75;
 
 			if (providedQuality >= minimumQuality) {
 				totalGrowth = baseGrowth * (100 + (providedQuality - minimumQuality)) / 100;
 			}
 			else {
-				var aux = (minimumQuality - providedQuality) * 4;
+				const aux = (minimumQuality - providedQuality) * 4;
 				if (aux > 100 && randomInt(0, 32) > this.data.statResistance) {
 					totalGrowth = 0;
 
@@ -364,13 +382,13 @@ namespace Agriculture {
 			this.data.statResistance = 0;
 			this.data.statGain = 0;
 
-			for (var i in cropCoords) {
-				var te2 = this.region.getTileEntity(cropCoords[i].x, cropCoords[i].y, cropCoords[i].z);
+			for (const i in cropCoords) {
+				const te2 = this.region.getTileEntity(cropCoords[i].x, cropCoords[i].y, cropCoords[i].z);
 				this.data.statGrowth += te2.data.statGrowth;
 				this.data.statResistance += te2.data.statResistance;
 				this.data.statGain += te2.data.statGain;
 			}
-			var count = cropCoords.length;
+			const count = cropCoords.length;
 
 			this.data.statGrowth = Math.floor(this.data.statGrowth / count);
 			this.data.statResistance = Math.floor(this.data.statResistance / count);
@@ -458,10 +476,10 @@ namespace Agriculture {
 
 		applyWeedEx(stack: ItemStack, manual: boolean) {
 			if (stack.id == ItemID.weedEx) {
-				var limit = manual ? 100 : 150;
+				const limit = manual ? 100 : 150;
 				if (this.data.storageWeedEX >= limit) return false;
 
-				var amount = manual ? 50 : 100;
+				const amount = manual ? 50 : 100;
 				this.data.storageWeedEX += amount;
 
 				if (manual) stack.applyDamage(1);
@@ -482,7 +500,7 @@ namespace Agriculture {
 		}
 
 		tryPlantIn(cropCardID: number, size: number, statGr: number, statGa: number, statRe: number, scan: number): boolean {
-			alert("try plant in")
+			//alert("try plant in")
 			const cropCard = Agriculture.CropCardManager.getCropCardByIndex(cropCardID);
 			if (!cropCard || cropCard.getID() == "weed" || this.data.crossingBase) return false;
 
@@ -524,27 +542,26 @@ namespace Agriculture {
 			const dropItems = this.performHarvest();
 			if (!dropItems || !dropItems.length) return;
 
-			for (var ind in dropItems) {
-				var item = dropItems[ind];
+			for (const item of dropItems) {
 				this.region.dropItem(this.x, this.y, this.z, item.id, item.count, item.data);
 			}
 			return true;
 		}
 
 		nextGaussian(): number {
-			var v1, v2, s;
+			let v1, v2, s;
 			do {
 				v1 = 2 * Math.random() - 1; // Between -1.0 and 1.0.
 				v2 = 2 * Math.random() - 1; // Between -1.0 and 1.0.
 				s = v1 * v1 + v2 * v2;
 			} while (s >= 1);
 
-			var norm = Math.sqrt(-2 * Math.log(s) / s);
+			const norm = Math.sqrt(-2 * Math.log(s) / s);
 			return v1 * norm;
 		}
 
 		pick(): boolean {
-			alert("pick")
+			//alert("pick")
 			if (!this.crop) return false;
 
 			let bonus = this.crop.canBeHarvested(this);
@@ -561,9 +578,8 @@ namespace Agriculture {
 			else if (Math.random() <= firstchance * 1.5) dropCount++;
 
 			const item = this.crop.getSeeds(this) as ItemInstance;
-			Debug.m("pick", this.x, this.y, this.z, item.id, dropCount, item.data, item.extra);
+			//Debug.m("pick", this.x, this.y, this.z, item.id, dropCount, item.data, item.extra);
 			this.region.dropItem(this.x, this.y, this.z, item.id, dropCount, item.data, item.extra);
-			// World.drop(this.x, this.y, this.z, item.id, dropCount, item.data, item.extra);
 
 			this.reset();
 			this.updateRender();
@@ -585,17 +601,26 @@ namespace Agriculture {
 			}
 			return false;
 		}
-
-		// TODO callback destroy start
-		/**
-		Callback.addCallback("DestroyBlockStart", function(coords, block) {
-			if (block.id == BlockID.crop) {
-				var tileEntity = this.region.getTileEntity(coords.x, coords.y, coords.z);
-				if (tileEntity && tileEntity.onLongClick()) {
-					Game.prevent();
-				}
-			}
-		});
-		 */
 	}
 }
+Callback.addCallback("DestroyBlockStart", function (coords: Callback.ItemUseCoordinates, block: Tile, player: number): void {
+	if (block.id == BlockID.crop) {
+		// ? TEST IT!!! i think it can cause problem
+		// Block.setTempDestroyTime(block.id, 1000);
+		Network.sendToServer("icpe.cropDestroyStart", { x: coords.x, y: coords.y, z: coords.z });
+	}
+});
+
+Network.addServerPacket("icpe.cropDestroyStart", function (client: NetworkClient, data: Vector) {
+	//Debug.m("HAHA");
+	const region = WorldRegion.getForActor(client.getPlayerUid());
+	const tileEntity = region.getTileEntity(data.x, data.y, data.z);
+	if (tileEntity) {
+		//Debug.m("TILE")
+		if (tileEntity.onLongClick(client.getPlayerUid())) {
+			//Debug.m("prevent");
+			Game.prevent();
+		}
+
+	}
+});

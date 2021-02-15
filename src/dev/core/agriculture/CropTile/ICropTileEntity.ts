@@ -9,6 +9,7 @@ namespace Agriculture {
 		pick(): boolean;
 		isBlockBelow(reqBlockID: number): boolean;
 		performManualHarvest(): boolean;
+		onLongClick(player: number): boolean;
 		updateRender(): void;
 	}
 }

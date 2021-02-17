@@ -55,7 +55,7 @@ namespace Agriculture {
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			return { id: 351, count: 1, data: this.getColor() }
+			return new ItemStack(351, 1, this.getColor());
 		}
 
 		getSizeAfterHarvest(te: ICropTileEntity): number {

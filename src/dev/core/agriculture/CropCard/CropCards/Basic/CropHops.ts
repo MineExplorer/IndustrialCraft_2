@@ -43,7 +43,7 @@ namespace Agriculture {
 
 		getGain(te: ICropTileEntity): ItemInstance {
 			// TODO check hops count
-			return { id: ItemID.hops, count: 1, data: 0 };
+			return new ItemStack(ItemID.hops, 1, 0);
 		}
 
 		getSizeAfterHarvest(te: ICropTileEntity): number {

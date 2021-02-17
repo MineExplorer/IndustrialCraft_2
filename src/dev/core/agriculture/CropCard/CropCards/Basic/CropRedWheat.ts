@@ -42,8 +42,7 @@ namespace Agriculture {
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			if (Math.random() < 0.5) return { id: 331, count: 1, data: 0 };
-			return { id: 295, count: 1, data: 0 }
+			return new ItemStack(Math.random() < 0.5 ? 331 : 295, 1, 0);
 		}
 
 		getGrowthDuration(te: ICropTileEntity): number {

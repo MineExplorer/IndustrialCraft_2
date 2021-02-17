@@ -49,10 +49,10 @@ namespace Agriculture {
 
 		getGain(te: ICropTileEntity): ItemInstance {
 			if (te.data.currentSize == 5) {
-				return { id: ItemID.grinPowder, count: 1, data: 0 };
+				return new ItemStack(ItemID.grinPowder, 1, 0);
 			}
 			if (te.data.currentSize >= 4) {
-				return { id: 351, count: 1, data: 5 }
+				return new ItemStack(351, 1, 5);
 			}
 			return null;
 		}

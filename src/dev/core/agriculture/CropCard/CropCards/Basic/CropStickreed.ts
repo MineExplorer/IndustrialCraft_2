@@ -42,9 +42,9 @@ namespace Agriculture {
 
 		getGain(te: ICropTileEntity): ItemInstance {
 			if (te.data.currentSize <= 3) {
-				return { id: 338, count: te.data.currentSize - 1, data: 0 };
+				return new ItemStack(338, te.data.currentSize - 1, 0);
 			}
-			return { id: ItemID.latex, count: 1, data: 0 };
+			return new ItemStack(ItemID.latex, 1, 0);
 		}
 
 		getSizeAfterHarvest(te: ICropTileEntity): number {

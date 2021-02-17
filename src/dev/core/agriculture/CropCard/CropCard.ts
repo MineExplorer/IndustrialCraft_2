@@ -84,7 +84,7 @@ namespace Agriculture {
 		}
 
 		getProduct(): ItemInstance {
-			return { id: 0, count: 0, data: 0 }
+			return new ItemStack();
 		}
 
 		getSeedDropChance(te: ICropTileEntity): number {

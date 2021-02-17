@@ -56,7 +56,7 @@ namespace Agriculture {
 
 		getGain(te: ICropTileEntity): ItemInstance {
 			if (te.data.currentSize == 4) return null;
-			return { id: ItemID.coffeeBeans, count: 1, data: 0 };
+			return new ItemStack(ItemID.coffeeBeans, 1, 0);
 		}
 
 		getSizeAfterHarvest(te: ICropTileEntity): number {

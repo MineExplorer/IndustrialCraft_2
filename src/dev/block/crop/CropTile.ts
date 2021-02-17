@@ -588,7 +588,7 @@ namespace Agriculture {
 
 		generateSeeds(data): ItemInstance {
 			const extra = Agriculture.SeedExtraCreator.generateExtraFromValues(data);
-			return { id: ItemID.cropSeedBag, count: 1, data: this.data.crop, extra: extra };
+			return new ItemStack(ItemID.cropSeedBag, 1, this.data.crop, extra);
 		}
 
 		isBlockBelow(reqBlockID: number): boolean {

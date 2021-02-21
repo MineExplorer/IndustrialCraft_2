@@ -68,7 +68,9 @@ machine/fluid/Tank.ts
 machine/resource/Miner.ts
 machine/resource/AdvancedMiner.ts
 machine/resource/CropHarvester.ts
-machine/resource/CropMatron.ts
+machine/resource/CropMatron/CropMatronGUI.ts
+machine/resource/CropMatron/TileCropMatron.ts
+machine/resource/CropMatron/CropMatron.ts
 
 machine/misc/**
 

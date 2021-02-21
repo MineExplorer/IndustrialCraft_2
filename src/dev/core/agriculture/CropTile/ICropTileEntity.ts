@@ -1,5 +1,5 @@
 namespace Agriculture {
-	export interface ICropTileEntity {
+	export interface ICropTileEntity extends TileEntity {
 		x: number; y: number; z: number;
 		region: WorldRegion;
 		crop: CropCard;

@@ -71,9 +71,9 @@ namespace EntityHelper {
 			let blockID = region.getBlockId(xx, yy, zz);
 			let cableData = CableRegistry.getCableData(blockID);
 			if (cableData && cableData.insulation < cableData.maxInsulation) {
-				let net = EnergyNetBuilder.getNetOnCoords(xx, yy, zz);
-				if (net && net.energyName == "Eu" && net.lastVoltage > insulationMaxVolt[cableData.insulation]) {
-					let damage = Math.ceil(net.lastVoltage / 32);
+				let node = EnergyNet.getNodeOnCoords(region, xx, yy, zz);
+				if (node && node.baseEnergy == "Eu" && node.energyPower > insulationMaxVolt[cableData.insulation]) {
+					let damage = Math.ceil(node.energyPower / 32);
 					Entity.damageEntity(entity, damage);
 					return;
 				}

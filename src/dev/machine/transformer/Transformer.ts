@@ -25,11 +25,6 @@ namespace Machine {
 		}
 
 		energyTick(type: string, src: any): void {
-			this.last_energy_receive = this.energy_receive;
-			this.energy_receive = 0;
-			this.last_voltage = this.voltage;
-			this.voltage = 0;
-
 			let maxVoltage = this.getMaxPacketSize();
 			if (this.data.increaseMode) {
 				if (this.data.energy >= maxVoltage) {
@@ -48,7 +43,7 @@ namespace Machine {
 			let newMode = signal > 0;
 			if (newMode != this.data.increaseMode) {
 				this.data.increaseMode = newMode;
-				EnergyNetBuilder.rebuildTileNet(this);
+				this.rebuildGrid();
 			}
 		}
 
@@ -80,7 +75,7 @@ namespace Machine {
 
 		setFacing(side: number): boolean {
 			if (super.setFacing(side)) {
-				EnergyNetBuilder.rebuildTileNet(this);
+				this.rebuildGrid();
 				return true;
 			}
 			return false;

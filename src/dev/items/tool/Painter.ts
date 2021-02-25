@@ -13,13 +13,13 @@ extends ItemCommon {
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		if (CableRegistry.canBePainted(block.id) && block.data != this.color) {
-			let region = WorldRegion.getForActor(player);
-			region.setBlock(coords, 0, 0);
-			region.setBlock(coords, block.id, this.color);
-			let net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
-			if (net) {
-				EnergyNetBuilder.removeNet(net);
-				EnergyNetBuilder.rebuildForWire(coords.x, coords.y, coords.z, block.id);
+			let region = BlockSource.getDefaultForActor(player);
+			region.setBlock(coords.x, coords.y, coords.z, 0, 0);
+			region.setBlock(coords.x, coords.y, coords.z, block.id, this.color);
+			let node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
+			if (node) {
+				node.destroy();
+				EnergyGridBuilder.rebuildForWire(region, coords.x, coords.y, coords.z, block.id);
 			}
 			if (Game.isItemSpendingAllowed(player)) {
 				if (++item.data >= Item.getMaxDamage(item.id))

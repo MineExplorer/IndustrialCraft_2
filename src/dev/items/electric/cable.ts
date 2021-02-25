@@ -25,7 +25,7 @@ implements ItemBehavior {
 		if (Game.isItemSpendingAllowed(player)) {
 			Entity.setCarriedItem(player, item.id, item.count - 1, item.data);
 		}
-		EnergyTypeRegistry.onWirePlaced(place.x, place.y, place.z);
+		EnergyGridBuilder.onWirePlaced(region, place.x, place.y, place.z);
 	}
 
 	static createItem(stringID: string, name: string, texture: string | Item.TextureData, maxVoltage: number) {

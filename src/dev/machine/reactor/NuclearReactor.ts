@@ -67,7 +67,6 @@ namespace Machine {
 	extends Generator
 	implements IReactor {
 		audioSourceGeiger: AudioSource;
-		__energyNets: any;
 
 		defaultValues = {
 			energy: 0,
@@ -109,12 +108,7 @@ namespace Machine {
 		}
 
 		rebuildEnergyNet(): void {
-			let net = this.__energyNets.Eu;
-			if (net) {
-				EnergyNetBuilder.removeNet(net);
-			}
-			net = EnergyNetBuilder.buildForTile(this, EU);
-			this.__energyNets.Eu = net;
+			this.rebuildGrid();
 		}
 
 		addChamber(chamber: ReactorChamber): void {
@@ -128,23 +122,11 @@ namespace Machine {
 				chamber.data.y = this.y;
 				chamber.data.z = this.z;
 			}
-			let net = this.__energyNets.Eu;
-			let chamberNets = chamber.__energyNets;
-			if (chamberNets.Eu) {
-				if (chamberNets.Eu != net) {
-				EnergyNetBuilder.mergeNets(net, chamberNets.Eu);}
-			} else {
-				for (let side = 0; side < 6; side++) {
-					let c = StorageInterface.getRelativeCoords(chamber, side);
-					EnergyNetBuilder.buildTileNet(net, c.x, c.y, c.z, side ^ 1);
-				}
-			}
-			chamberNets.Eu = net;
+			this.energyNode.addConnection(chamber.energyNode);
 		}
 
 		removeChamber(chamber: ReactorChamber): void {
 			this.chambers.splice(this.chambers.indexOf(chamber), 1);
-			this.rebuildEnergyNet();
 			let x = this.getReactorSize();
 			for (let y = 0; y < 6; y++) {
 				let slotName = this.getSlotName(x, y);
@@ -207,6 +189,10 @@ namespace Machine {
 		energyTick(type: string, src: any): void {
 			let output = this.getEnergyOutput();
 			src.add(output, Math.min(output, 8192));
+		}
+
+		canConductEnergy(): boolean {
+			return true;
 		}
 
 		onRedstoneUpdate(signal: number): void {

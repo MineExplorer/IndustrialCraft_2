@@ -46,7 +46,7 @@ namespace Machine {
 
 		setFacing(side: number): boolean {
 			if (super.setFacing(side)) {
-				EnergyNetBuilder.rebuildTileNet(this);
+				this.rebuildGrid();
 				return true;
 			}
 			return false;

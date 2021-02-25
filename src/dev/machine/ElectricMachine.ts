@@ -2,11 +2,11 @@
 
 namespace Machine {
 	export abstract class ElectricMachine
-	extends MachineBase {
-		energy_receive: number = 0;
-		last_energy_receive: number = 0;
-		voltage: number = 0;
-		last_voltage: number = 0;
+	extends MachineBase
+	implements EnergyTile {
+		isEnergyTile: true;
+		energyNode: EnergyTileNode;
+		energyTypes: object;
 
 		defaultValues = {
 			energy: 0
@@ -34,10 +34,6 @@ namespace Machine {
 		}
 
 		energyTick(type: string, src: any): void {
-			this.last_energy_receive = this.energy_receive;
-			this.energy_receive = 0;
-			this.last_voltage = this.voltage;
-			this.voltage = 0;
 		}
 
 		energyReceive(type: string, amount: number, voltage: number): number {
@@ -55,13 +51,28 @@ namespace Machine {
 				var add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
 			}
 			this.data.energy += add;
-			this.energy_receive += add;
-			this.voltage = Math.max(this.voltage, voltage);
 			return add;
 		}
 
 		getExplosionPower(): number {
 			return 1.2;
+		}
+
+		canReceiveEnergy(side: number, type: string) {
+			return true;
+		}
+
+		canExtractEnergy(side: number, type: string) {
+			return false;
+		}
+
+		canConductEnergy(type: string) {
+			return false;
+		}
+
+		rebuildGrid(): void {
+			this.energyNode.resetConnections();
+			EnergyGridBuilder.buildGridForTile(this);
 		}
 	}
 }

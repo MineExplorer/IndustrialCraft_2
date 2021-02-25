@@ -1,3 +1,5 @@
+/// <reference path="EUCableGrid.ts" />
+
 namespace CableRegistry {
 	type CableData = {name: string, insulation: number, maxInsulation: number};
 
@@ -26,30 +28,30 @@ namespace CableRegistry {
 			for (let index = 0; index <= maxInsulationLevel; index++) {
 				let blockID = BlockID[stringID + index];
 				insulation_data[blockID] = {name: stringID, insulation: index, maxInsulation: maxInsulationLevel};
-				EU.registerWire(blockID, maxVoltage, cableBurnoutFunc, cableConnectFunc);
+				EU.registerWire(blockID, maxVoltage, EUCableGrid);
 
 				let itemID = ItemID[stringID + index];
 				Block.registerDropFunction(stringID + index, function(coords, id, data) {
 					return [[itemID, 1, 0]];
 				});
 
-				Block.registerPopResourcesFunction(stringID + index, function(coords, block) {
+				Block.registerPopResourcesFunction(stringID + index, function(coords, block, region) {
 					if (Math.random() < 0.25) {
-						World.drop(coords.x + .5, coords.y + .5, coords.z + .5, itemID, 1, 0);
+						region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, itemID, 1, 0);
 					}
-					EnergyTypeRegistry.onWireDestroyed(coords.x, coords.y, coords.z, block.id);
+					EnergyGridBuilder.onWireDestroyed(region, coords.x, coords.y, coords.z, block.id);
 				});
 			}
 		} else {
-			EU.registerWire(BlockID[stringID], maxVoltage, cableBurnoutFunc, cableConnectFunc);
+			EU.registerWire(BlockID[stringID], maxVoltage, EUCableGrid);
 			Block.registerDropFunction(stringID, function(coords, id, data) {
 				return [[ItemID[stringID], 1, 0]];
 			});
-			Block.registerPopResourcesFunction(stringID, function(coords, block) {
+			Block.registerPopResourcesFunction(stringID, function(coords, block, region) {
 				if (Math.random() < 0.25) {
-					World.drop(coords.x + .5, coords.y + .5, coords.z + .5, ItemID[stringID], 1, 0);
+					region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, ItemID[stringID], 1, 0);
 				}
-				EnergyTypeRegistry.onWireDestroyed(coords.x, coords.y, coords.z, block.id);
+				EnergyGridBuilder.onWireDestroyed(region, coords.x, coords.y, coords.z, block.id);
 			});
 		}
 	}
@@ -109,35 +111,5 @@ namespace CableRegistry {
 			BlockRenderer.setStaticICRender(id, data, render);
 			BlockRenderer.setCustomCollisionShape(id, data, shape);
 		}
-	}
-
-	function cableBurnoutFunc(voltage: number): void {
-		if (ConfigIC.voltageEnabled) {
-			for (let key in this.wireMap) {
-				let coords = key.split(':');
-				// @ts-ignore
-				let x = Math.floor(coords[0]), y = Math.floor(coords[1]), z = Math.floor(coords[2]);
-				World.setBlock(x, y, z, 0, 0);
-				addBurnParticles(x, y, z);
-			}
-			EnergyNetBuilder.removeNet(this);
-		}
-	}
-
-	function addBurnParticles(x: number, y: number, z: number): void {
-		for (let i = 0; i < 32; i++) {
-			let px = x + Math.random();
-			let pz = z + Math.random();
-			let py = y + Math.random();
-			Particles.addParticle(ParticleType.smoke, px, py, pz, 0, 0.01, 0);
-		}
-	}
-
-	function cableConnectFunc(block: Tile, coord1: Vector, coord2: Vector, side: number): boolean {
-		let block2 = World.getBlock(coord2.x, coord2.y, coord2.z);
-		if (!CableRegistry.canBePainted(block2.id) || block2.data == 0 || block2.data == block.data) {
-			return true;
-		}
-		return false;
 	}
 }

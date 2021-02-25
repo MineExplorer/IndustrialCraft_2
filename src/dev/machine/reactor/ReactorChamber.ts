@@ -39,8 +39,6 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	export class ReactorChamber
 	extends Generator {
-		__energyNets: any;
-
 		defaultValues = {
 			energy: 0,
 			x: 0,
@@ -49,6 +47,10 @@ namespace Machine {
 		}
 
 		core: NuclearReactor = null;
+
+		getTier() {
+			return 5;
+		}
 
 		onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean {
 			if (this.core) {

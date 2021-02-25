@@ -7,7 +7,7 @@ namespace Machine {
 			return false;
 		}
 
-		isEnergySource(): boolean {
+		canExtractEnergy(): boolean {
 			return true;
 		}
 

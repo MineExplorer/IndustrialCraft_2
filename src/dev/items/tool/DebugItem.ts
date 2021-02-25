@@ -49,15 +49,8 @@ extends ItemElectric {
 				}
 			}
 		}
-		tile = EnergyTileRegistry.accessMachineAtCoords(coords.x, coords.y, coords.z);
-		if (tile) {
-			for (let i in tile.__energyNets) {
-				let net = tile.__energyNets[i];
-				if (net) client.sendMessage(net.toString());
-			}
-		} else {
-			let net = EnergyNetBuilder.getNetOnCoords(coords.x, coords.y, coords.z);
-			if (net) client.sendMessage(net.toString());
-		}
+
+		let node = EnergyNet.getNodeOnCoords(region.blockSource, coords.x, coords.y, coords.z);
+		if (node) client.sendMessage(node.toString());
 	}
 }

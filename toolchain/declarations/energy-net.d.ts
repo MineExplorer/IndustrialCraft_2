@@ -1,89 +1,144 @@
 declare namespace EnergyTypeRegistry {
-    const energyTypes: {};
-    function createEnergyType(name: any, value: any, wireParams?: any): EnergyType;
-    function assureEnergyType(name: any, value: any, wireParams?: any): any;
-    function getEnergyType(name: any): any;
-    function getValueRatio(name1: any, name2: any): number;
-    const wireData: {};
-    function getWireData(id: any): any;
-    function isWire(id: any, type: any): boolean;
-    function onWirePlaced(x: any, y: any, z: any): void;
-    function onWireDestroyed(x: any, y: any, z: any, id: any): void;
+    type WireData = {
+        type: EnergyType;
+        value: number;
+        class: typeof EnergyGrid;
+    };
+    let energyTypes: {};
+    let wireData: {};
+    /**
+     * name - name of this energy type,
+     * value - value of one unit in [Eu] (IC2 Energy)
+    */
+    function createEnergyType(name: string, value: number): EnergyType;
+    function assureEnergyType(name: string, value: number): EnergyType;
+    function getEnergyType(name: string): EnergyType;
+    function getValueRatio(name1: string, name2: string): number;
+    function getWireData(blockID: number): WireData;
+    function registerWire(blockID: number, type: EnergyType, maxValue: number, energyGridClass?: typeof EnergyGrid): void;
+    function isWire(blockID: number, type?: string): boolean;
 }
 declare class EnergyType {
-    constructor(name: any);
-    name: any;
+    name: string;
     value: number;
-    wireData: {};
-    registerWire(id: any, maxValue: any, overloadFunc: any, canConnectFunc: any): {
-        type: any;
-        value: any;
-    };
+    constructor(name: string, value?: number);
+    registerWire(id: number, maxValue: number, energyGridClass?: typeof EnergyGrid): void;
+}
+declare class EnergyPacket {
+    energyName: string;
+    size: number;
+    source: EnergyNode;
+    passedNodes: object;
+    constructor(energyName: string, size: number, source: EnergyNode);
+}
+declare let GLOBAL_NODE_ID: number;
+declare class EnergyNode {
+    id: number;
+    baseEnergy: string;
+    energyTypes: object;
+    dimension: number;
+    maxValue: number;
+    initialized: boolean;
+    removed: boolean;
+    blocksMap: object;
+    entries: EnergyNode[];
+    receivers: EnergyNode[];
+    energyIn: number;
+    currentIn: number;
+    energyOut: number;
+    currentOut: number;
+    energyPower: number;
+    currentPower: number;
+    constructor(energyType: EnergyType, dimension: number);
+    addEnergyType(energyType: EnergyType): void;
+    addCoords(x: number, y: number, z: number): void;
+    removeCoords(x: number, y: number, z: number): void;
+    private addEntry;
+    private removeEntry;
+    /**
+     * @param node receiver node
+     * @returns true if link to the node was added, false if it already exists
+     */
+    private addReceiver;
+    /**
+     * @param node receiver node
+     * @returns true if link to the node was removed, false if it already removed
+     */
+    private removeReceiver;
+    /**
+     * Adds output connection to specified node
+     * @param node receiver node
+     */
+    addConnection(node: EnergyNode): void;
+    /**
+     * Removes output connection to specified node
+     * @param node receiver node
+     */
+    removeConnection(node: EnergyNode): void;
+    resetConnections(): void;
+    receiveEnergy(amount: number, packet: EnergyPacket): number;
+    add(amount: number, power?: number): number;
+    addPacket(energyName: string, amount: number, size: number): number;
+    transferEnergy(amount: number, packet: EnergyPacket): number;
+    /** @deprecated */
+    addAll(amount: number, power?: number): void;
+    onOverload(packetSize: number): void;
+    canReceiveEnergy(side: number, type: string): boolean;
+    canExtractEnergy(side: number, type: string): boolean;
+    canConductEnergy(coord1: Vector, coord2: Vector, side: number): boolean;
+    isCompatible(node: EnergyNode): boolean;
+    init(): void;
+    tick(): void;
+    destroy(): void;
+    toString(): string;
+}
+declare class EnergyGrid extends EnergyNode {
+    blockID: number;
+    region: BlockSource;
+    constructor(energyType: EnergyType, maxValue: number, wireID: number, region: BlockSource);
+    isCompatible(node: EnergyNode): boolean;
+    mergeGrid(grid: EnergyNode): EnergyNode;
+    rebuildRecursive(x: number, y: number, z: number, side?: number): void;
+    rebuildFor6Sides(x: number, y: number, z: number): void;
+}
+declare class EnergyTileNode extends EnergyNode {
+    tileEntity: EnergyTile;
+    constructor(energyType: EnergyType, parent: EnergyTile);
+    getParent(): EnergyTile;
+    receiveEnergy(amount: number, packet: EnergyPacket): number;
+    canReceiveEnergy(side: number, type: string): boolean;
+    canExtractEnergy(side: number, type: string): boolean;
+    init(): void;
+    tick(): void;
+}
+interface EnergyTile extends TileEntity {
+    isEnergyTile: boolean;
+    energyTypes: {};
+    energyNode: EnergyTileNode;
+    energyTick(type: string, node: EnergyTileNode): void;
+    energyReceive(type: string, amount: number, voltage: number): number;
+    canReceiveEnergy(side: number, type: string): boolean;
+    canExtractEnergy(side: number, type: string): boolean;
+    canConductEnergy(type: string): boolean;
 }
 declare namespace EnergyTileRegistry {
-    function addEnergyType(Prototype: any, energyType: any): void;
-    function addEnergyTypeForId(id: any, energyType: any): void;
-    function setupInitialParams(Prototype: any): void;
-    const machineIDs: {};
-    function isMachine(id: any): any;
-    const quickCoordAccess: {};
-    function addMacineAccessAtCoords(x: any, y: any, z: any, machine: any): void;
-    function removeMachineAccessAtCoords(x: any, y: any, z: any): void;
-    function accessMachineAtCoords(x: any, y: any, z: any): any;
-    function executeForAllInNet(net: any, func: any): void;
+    function addEnergyType(Prototype: EnergyTile, energyType: EnergyType): void;
+    function addEnergyTypeForId(id: number, energyType: EnergyType): void;
+    function setupAsEnergyTile(Prototype: EnergyTile): void;
+    let machineIDs: {};
+    function isMachine(id: number): boolean;
 }
-declare namespace EnergyNetBuilder {
-    const energyNets: any[];
-    function addEnergyNet(net: any): void;
-    function removeNet(net: any): void;
-    function removeNetOnCoords(x: any, y: any, z: any): void;
-    function removeNetByBlock(x: any, y: any, z: any, wireId: any): void;
-    function mergeNets(net1: any, net2: any): void;
-    function buildForTile(tile: any, type: any): EnergyNet;
-    function buildTileNet(net: any, x: any, y: any, z: any, side: any): void;
-    function buildForWire(x: any, y: any, z: any, id: any): EnergyNet;
-    function rebuildForWire(x: any, y: any, z: any, id: any): void;
-    function rebuildRecursive(net: any, wireId: any, x: any, y: any, z: any, side: any): void;
-    function rebuildFor6Sides(net: any, wireBlock: any, x: any, y: any, z: any): void;
-    function rebuildTileNet(tile: any): void;
-    function rebuildTileConnections(x: any, y: any, z: any, tile: any): void;
-    function getNetOnCoords(x: any, y: any, z: any): any;
-    function getNetByBlock(x: any, y: any, z: any, wireId: any): any;
-    function tickEnergyNets(): void;
-    function getRelativeCoords(x: any, y: any, z: any, side: any): {
-        x: any;
-        y: any;
-        z: any;
-    };
+declare namespace EnergyGridBuilder {
+    function connectNodes(node1: EnergyNode, node2: EnergyNode): void;
+    function buildGridForTile(te: EnergyTile): void;
+    function buildWireGrid(region: BlockSource, x: number, y: number, z: number): EnergyGrid;
+    function rebuildForWire(region: BlockSource, x: number, y: number, z: number, wireID: number): EnergyGrid;
+    function onWirePlaced(region: BlockSource, x: number, y: number, z: number): void;
+    function onWireDestroyed(region: BlockSource, x: number, y: number, z: number, id: number): void;
 }
-declare class EnergyNet {
-    constructor(energyType: any, maxPacketSize: any, overloadFunc: any);
-    energyType: any;
-    energyName: any;
-    maxPacketSize: any;
-    netId: number;
-    wireMap: {};
-    onOverload: any;
-    store: number;
-    transfered: number;
-    voltage: number;
-    lastStore: number;
-    lastTransfered: number;
-    lastVoltage: number;
-    source: {
-        parent: () => EnergyNet;
-        add: (amount: any, voltage: any) => number;
-        addAll: (amount: any, voltage: any) => void;
-    };
-    connectedNets: {};
-    connectionsCount: number;
-    tileEntities: any[];
-    addConnection(net: any): void;
-    removeConnection(net: any): void;
-    addTileEntity(tileEntity: any): void;
-    removeTileEntity(tileEntity: any): void;
-    addEnergy(amount: any, voltage: any, source: any, explored: any): number;
-    addToBuffer(amount: any, voltage: any): void;
-    tick(): void;
-    toString(): string;
+declare namespace EnergyNet {
+    function getNodesByDimension(dimension: number): EnergyNode[];
+    function addEnergyNode(node: EnergyNode): void;
+    function removeEnergyNode(node: EnergyNode): void;
+    function getNodeOnCoords(region: BlockSource, x: number, y: number, z: number): EnergyNode;
 }

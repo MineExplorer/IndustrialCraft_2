@@ -1,3 +1,5 @@
+/// <reference path="./core-engine.d.ts" />
+
 declare namespace EnergyTypeRegistry {
     type WireData = {
         type: EnergyType;
@@ -135,6 +137,7 @@ declare namespace EnergyGridBuilder {
     function connectNodes(node1: EnergyNode, node2: EnergyNode): void;
     function buildGridForTile(te: EnergyTile): void;
     function buildWireGrid(region: BlockSource, x: number, y: number, z: number): EnergyGrid;
+    function rebuildWireGrid(region: BlockSource, x: number, y: number, z: number): void;
     function rebuildForWire(region: BlockSource, x: number, y: number, z: number, wireID: number): EnergyGrid;
     function onWirePlaced(region: BlockSource, x: number, y: number, z: number): void;
     function onWireDestroyed(region: BlockSource, x: number, y: number, z: number, id: number): void;

@@ -14,6 +14,10 @@ namespace CableRegistry {
 		return paintData.indexOf(id) != -1;
 	}
 
+	export function getBlockID(stringID: string, insulation: number): number {
+		return Block.getNumericId(stringID + insulation);
+	}
+
 	export function createBlock(stringID: string, properties: {name: string, texture: string}, blockType?: string | Block.SpecialType): void {
 		let variations = [];
 		for (let i = 0; i < 16; i++) {

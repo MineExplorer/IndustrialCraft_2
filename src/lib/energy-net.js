@@ -557,6 +557,14 @@ var EnergyGridBuilder;
         return null;
     }
     EnergyGridBuilder.buildWireGrid = buildWireGrid;
+    function rebuildWireGrid(region, x, y, z) {
+        var node = EnergyNet.getNodeOnCoords(region, x, y, z);
+        if (node) {
+            node.destroy();
+            EnergyGridBuilder.buildWireGrid(region, x, y, z);
+        }
+    }
+    EnergyGridBuilder.rebuildWireGrid = rebuildWireGrid;
     function rebuildForWire(region, x, y, z, wireID) {
         if (region.getBlockId(x, y, z) == wireID) {
             return buildWireGrid(region, x, y, z);

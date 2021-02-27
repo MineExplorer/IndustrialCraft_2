@@ -58,15 +58,15 @@ namespace Machine {
 			return 1.2;
 		}
 
+		isConductor(type: string) {
+			return false;
+		}
+
 		canReceiveEnergy(side: number, type: string) {
 			return true;
 		}
 
 		canExtractEnergy(side: number, type: string) {
-			return false;
-		}
-
-		canConductEnergy(type: string) {
 			return false;
 		}
 

@@ -85,6 +85,10 @@ namespace Machine {
 			}
 			return false;
 		}
+
+		isConductor(): boolean {
+			return true;
+		}
 	}
 
 	MachineRegistry.registerGenerator(BlockID.reactorChamber, new ReactorChamber());

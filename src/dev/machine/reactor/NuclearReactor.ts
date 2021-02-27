@@ -191,10 +191,6 @@ namespace Machine {
 			src.add(output, Math.min(output, 8192));
 		}
 
-		canConductEnergy(): boolean {
-			return true;
-		}
-
 		onRedstoneUpdate(signal: number): void {
 			this.data.isEnabled = signal > 0;
 		}

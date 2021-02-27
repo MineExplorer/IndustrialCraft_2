@@ -82,7 +82,7 @@ namespace Machine {
 
 		tick(): void {
 			StorageInterface.checkHoppers(this);
-			let energyStorage = this.getEnergyStorage();
+			const energyStorage = this.getEnergyStorage();
 			let liquid = this.liquidStorage.getLiquidStored();
 			let slot1 = this.container.getSlot("slot1");
 			let slot2 = this.container.getSlot("slot2");

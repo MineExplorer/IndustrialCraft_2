@@ -48,7 +48,7 @@ namespace Machine {
 		}
 
 		tick(): void {
-			let energyStorage = this.getEnergyStorage();
+			const energyStorage = this.getEnergyStorage();
 			let output = 0.5;
 			for (let i = 0; i < 6; i++) {
 				let slot = this.container.getSlot("slot"+i);

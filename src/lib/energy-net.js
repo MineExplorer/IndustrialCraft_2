@@ -105,7 +105,9 @@ var EnergyType = /** @class */ (function () {
             var place = coords.relative;
             if (region.getBlockId(place.x, place.y, place.z) == 0) {
                 region.setBlock(place.x, place.y, place.z, item.id, item.data);
-                Entity.setCarriedItem(player, item.id, item.count - 1, item.data);
+                if (Game.isItemSpendingAllowed(player)) {
+                    Entity.setCarriedItem(player, item.id, item.count - 1, item.data);
+                }
                 EnergyGridBuilder.onWirePlaced(region, place.x, place.y, place.z);
             }
         });

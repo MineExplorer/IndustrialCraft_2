@@ -210,7 +210,7 @@ namespace Machine {
 				this.container.setText("textInfoXYZ", "");
 
 			let tier = this.getTier();
-			let energyStorage = this.getEnergyStorage();
+			const energyStorage = this.getEnergyStorage();
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotScanner"), "Eu", this.data.energy, tier);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, tier);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);

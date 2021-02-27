@@ -56,7 +56,7 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			let tier = this.getTier();
-			let energyStorage = this.getEnergyStorage();
+			const energyStorage = this.getEnergyStorage();
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, tier);
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slot1"), "Eu", this.data.energy, tier);
 

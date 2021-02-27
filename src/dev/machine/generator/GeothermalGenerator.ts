@@ -76,7 +76,7 @@ namespace Machine {
 			let slot2 = this.container.getSlot("slot2");
 			this.getLiquidFromItem("lava", slot1, slot2);
 
-			let energyStorage = this.getEnergyStorage();
+			const energyStorage = this.getEnergyStorage();
 			if (this.liquidStorage.getAmount("lava").toFixed(3) as any >= 0.001 && this.data.energy + 20 <= energyStorage) {
 				this.data.energy += 20;
 				this.liquidStorage.getLiquid("lava", 0.001);

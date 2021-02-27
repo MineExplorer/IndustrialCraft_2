@@ -106,7 +106,7 @@ namespace Machine {
 				this.container.setText("textInfo1", "0     /");
 			}
 
-			let energyStorage = this.getEnergyStorage()
+			const energyStorage = this.getEnergyStorage()
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 4);
 
 			this.container.setScale("energyScale", this.data.energy / energyStorage);

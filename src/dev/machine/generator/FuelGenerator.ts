@@ -79,7 +79,7 @@ namespace Machine {
 
 		tick(): void {
 			StorageInterface.checkHoppers(this);
-			let energyStorage = this.getEnergyStorage();
+			const energyStorage = this.getEnergyStorage();
 
 			if (this.data.burn <= 0 && this.data.energy + 10 <= energyStorage) {
 				this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel") / 4;

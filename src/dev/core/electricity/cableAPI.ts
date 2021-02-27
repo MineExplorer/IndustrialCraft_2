@@ -3,15 +3,15 @@
 namespace CableRegistry {
 	type CableData = {name: string, insulation: number, maxInsulation: number};
 
-	let insulation_data = {};
-	let paint_data: number[] = [];
+	let insulationData = {};
+	let paintData: number[] = [];
 
 	export function getCableData(id: number): CableData {
-		return insulation_data[id];
+		return insulationData[id];
 	}
 
 	export function canBePainted(id: number): boolean {
-		return paint_data.indexOf(id) != -1;
+		return paintData.indexOf(id) != -1;
 	}
 
 	export function createBlock(stringID: string, properties: {name: string, texture: string}, blockType?: string | Block.SpecialType): void {
@@ -20,14 +20,14 @@ namespace CableRegistry {
 			variations.push({name: properties.name, texture: [[properties.texture, i]]});
 		}
 		Block.createBlock(stringID, variations, blockType);
-		paint_data.push(BlockID[stringID]);
+		paintData.push(BlockID[stringID]);
 	}
 
 	export function registerCable(stringID: string, maxVoltage: number, maxInsulationLevel?: number): void {
 		if (maxInsulationLevel) {
 			for (let index = 0; index <= maxInsulationLevel; index++) {
 				let blockID = BlockID[stringID + index];
-				insulation_data[blockID] = {name: stringID, insulation: index, maxInsulation: maxInsulationLevel};
+				insulationData[blockID] = {name: stringID, insulation: index, maxInsulation: maxInsulationLevel};
 				EU.registerWire(blockID, maxVoltage, EUCableGrid);
 
 				let itemID = ItemID[stringID + index];

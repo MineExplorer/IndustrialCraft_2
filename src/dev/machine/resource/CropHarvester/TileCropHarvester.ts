@@ -39,7 +39,7 @@ namespace Machine {
 
 			if (this.data.energy > 100) this.scan();
 
-			let energyStorage = this.getEnergyStorage();
+			const energyStorage = this.getEnergyStorage();
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 
@@ -77,7 +77,6 @@ namespace Machine {
 						let item = drops[i];
 						this.putItem(item);
 						this.data.energy -= 100;
-
 						if (item.count > 0) {
 							this.region.dropItem(this.x, this.y + 1, this.z, item.id, item.count, item.data);
 						}
@@ -86,23 +85,20 @@ namespace Machine {
 			}
 		}
 
-		putItem(stack: ItemStack): void {
+		putItem(item: ItemInstance): void {
 			for (let i = 0; i < 15; i++) {
 				let slot = this.container.getSlot("outSlot" + i);
-				if (!slot.id || slot.id == stack.id && slot.count < stack.getMaxStack()) {
-					let add = Math.min(stack.getMaxStack() - slot.count, stack.count);
-					slot.setSlot(stack.id, stack.count + add, stack.data);
-					stack.count -= add;
+				if (StorageInterface.addItemToSlot(item, slot) > 0) {
+					slot.markDirty();
 				}
 			}
 		}
 
 		isInventoryFull(): boolean {
 			for (let i = 0; i < 15; i++) {
-				let stack = new ItemStack(this.container.getSlot("outSlot" + i));
-
-				let maxStack = stack.getMaxStack();
-				if (!stack.id || stack.count < maxStack) return false;
+				let slot = this.container.getSlot("outSlot" + i);
+				let maxStack = Item.getMaxStack(slot.id);
+				if (!slot.id || slot.count < maxStack) return false;
 			}
 			return true;
 		}

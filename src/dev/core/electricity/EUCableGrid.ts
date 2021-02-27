@@ -23,8 +23,8 @@ class EUCableGrid extends EnergyGrid {
 
 	canConductEnergy(coord1: Vector, coord2: Vector, side: number): boolean {
 		let block1 = this.region.getBlock(coord1.x, coord1.y, coord1.z);
-		let block2 = World.getBlock(coord2.x, coord2.y, coord2.z);
-		if (!CableRegistry.canBePainted(block2.id) || block2.data == 0 || block2.data == block1.data) {
+		let block2 = this.region.getBlock(coord2.x, coord2.y, coord2.z);
+		if (!CableRegistry.canBePainted(block2.id) || block1.data == 0 || block2.data == 0 || block2.data == block1.data) {
 			return true;
 		}
 		return false;

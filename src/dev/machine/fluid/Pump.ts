@@ -149,7 +149,7 @@ namespace Machine {
 			let slot2 = this.container.getSlot("slotLiquid2");
 			this.addLiquidToItem(liquid, slot1, slot2);
 
-			let energyStorage = this.getEnergyStorage();
+			const energyStorage = this.getEnergyStorage();
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 

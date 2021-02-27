@@ -275,7 +275,7 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			let energyStorage = this.getEnergyStorage();
+			const energyStorage = this.getEnergyStorage();
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotDrill"), "Eu", this.data.energy, 2);
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotScanner"), "Eu", this.data.energy, 2);
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, 2);

@@ -183,7 +183,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		setIndicator(container: any, window: any, content: any, data: string): void {
+		setIndicator(container: ItemContainer, window: any, content: any, data: string): void {
 			if (content) {
 				content.elements["indicator"].bitmap = "indicator_" + data;
 			}

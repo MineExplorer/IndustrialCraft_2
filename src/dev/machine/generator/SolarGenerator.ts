@@ -61,7 +61,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		setSolarElement(container: any, window: any, content: any, data: string): void {
+		setSolarElement(container: ItemContainer, window: any, content: any, data: string): void {
 			if (content) {
 				content.elements["sun"].bitmap = "sun_" + data;
 			}

@@ -121,7 +121,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		showAirImage(container: any, window: any, content: any, data: {show: boolean}): void {
+		showAirImage(container: ItemContainer, window: any, content: any, data: {show: boolean}): void {
 			if (content) {
 				if (data.show && !content.elements["indicatorAir"])
 					content.elements["indicatorAir"] = {type: "image", x: 344 + 128*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
@@ -131,7 +131,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		setIndicator(container: any, window: any, content: any, data: string): void {
+		setIndicator(container: ItemContainer, window: any, content: any, data: string): void {
 			if (content) {
 				content.elements["indicator"].bitmap = "indicator_" + data;
 			}

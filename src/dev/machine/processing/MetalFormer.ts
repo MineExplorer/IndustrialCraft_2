@@ -169,7 +169,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		setModeIcon(container: any, window: any, content: any, data: {mode: number}): void {
+		setModeIcon(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
 			if (content) {
 				content.elements.button.bitmap = "metal_former_button_" + data.mode;
 			}

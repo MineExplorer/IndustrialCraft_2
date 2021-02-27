@@ -146,7 +146,7 @@ namespace Machine {
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, this.getTier());
 
 			this.container.setScale("progressScale", this.data.progress);
-			this.liquidStorage.updateUiScale("liquidScale", "water");
+			this.updateLiquidScale("liquidScale", "water");
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 		}
 

@@ -95,7 +95,7 @@ namespace Machine {
 				}
 			}
 
-			this.liquidStorage.updateUiScale("liquidScale", liquid);
+			this.updateLiquidScale("liquidScale", liquid);
 			this.container.sendChanges();
 		}
 

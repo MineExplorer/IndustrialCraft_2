@@ -602,12 +602,12 @@ declare abstract class TileEntityBase implements TileEntity {
     x: number;
     y: number;
     z: number;
-    dimension: number;
-    blockID: number;
+    readonly dimension: number;
+    readonly blockID: number;
+    readonly useNetworkItemContainer: boolean;
     remove: boolean;
     isLoaded: boolean;
     __initialized: boolean;
-    useNetworkItemContainer: boolean;
     data: {
         [key: string]: any;
     };
@@ -669,6 +669,12 @@ declare abstract class TileEntityBase implements TileEntity {
     requireMoreLiquid(liquid: string, amount: number): void;
     sendPacket: (name: string, data: object) => {};
     sendResponse: (packetName: string, someData: object) => {};
+    updateLiquidScale(scale: string, liquid: string): void;
+    setLiquidScale(container: any, window: any, content: any, data: {
+        scale: string;
+        liquid: string;
+        amount: number;
+    }): void;
 }
 declare enum Side {
     Client = 0,

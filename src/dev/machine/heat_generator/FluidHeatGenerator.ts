@@ -111,7 +111,7 @@ namespace Machine {
 			}
 
 			this.container.setText("textInfo1", "Emit: " + this.data.output);
-			this.liquidStorage.updateUiScale("liquidScale", liquid);
+			this.updateLiquidScale("liquidScale", liquid);
 			this.container.sendChanges();
 		}
 

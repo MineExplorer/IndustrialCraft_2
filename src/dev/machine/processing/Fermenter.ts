@@ -101,8 +101,8 @@ namespace Machine {
 
 			this.container.setScale("progressScale", this.data.progress / 4000);
 			this.container.setScale("fertilizerScale", this.data.fertilizer / 25);
-			this.liquidStorage.updateUiScale("biomassScale", "biomass");
-			this.liquidStorage.updateUiScale("biogasScale", "biogas");
+			this.updateLiquidScale("biomassScale", "biomass");
+			this.updateLiquidScale("biogasScale", "biogas");
 			this.container.sendChanges();
 		}
 

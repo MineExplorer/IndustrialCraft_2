@@ -11,12 +11,73 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 LIBRARY({
     name: "BlockEngine",
     version: 1,
     shared: false,
     api: "CoreEngine"
 });
+var Side;
+(function (Side) {
+    Side[Side["Client"] = 0] = "Client";
+    Side[Side["Server"] = 1] = "Server";
+})(Side || (Side = {}));
+var BlockEngine;
+(function (BlockEngine) {
+    var Decorators;
+    (function (Decorators) {
+        function ClientSide() {
+            return function (target, propertyName) {
+                if (!target.client)
+                    target.client = {};
+                target.client[propertyName] = target[propertyName];
+            };
+        }
+        Decorators.ClientSide = ClientSide;
+        function NetworkEvent(side) {
+            return function (target, propertyName) {
+                if (side == Side.Client) {
+                    if (!target.client)
+                        target.client = {};
+                    if (!target.client.events)
+                        target.client.events = {};
+                    target.client.events[propertyName] = target[propertyName];
+                    delete target[propertyName];
+                }
+                else {
+                    if (!target.events)
+                        target.events = {};
+                    target.events[propertyName] = target[propertyName];
+                }
+            };
+        }
+        Decorators.NetworkEvent = NetworkEvent;
+        function ContainerEvent(side) {
+            return function (target, propertyName) {
+                if (side == Side.Client) {
+                    if (!target.client)
+                        target.client = {};
+                    if (!target.client.containerEvents)
+                        target.client.containerEvents = {};
+                    target.client.containerEvents[propertyName] = target[propertyName];
+                    delete target[propertyName];
+                }
+                else {
+                    if (!target.containerEvents)
+                        target.containerEvents = {};
+                    target.containerEvents[propertyName] = target[propertyName];
+                }
+            };
+        }
+        Decorators.ContainerEvent = ContainerEvent;
+    })(Decorators = BlockEngine.Decorators || (BlockEngine.Decorators = {}));
+})(BlockEngine || (BlockEngine = {}));
 var Vector3 = /** @class */ (function () {
     function Vector3(vx, vy, vz) {
         if (typeof (vx) == "number") {
@@ -1312,63 +1373,26 @@ var TileEntityBase = /** @class */ (function () {
         TileEntity.destroyTileEntity(this);
     };
     TileEntityBase.prototype.requireMoreLiquid = function (liquid, amount) { };
+    TileEntityBase.prototype.updateLiquidScale = function (scale, liquid) {
+        this.container.sendEvent("setLiquidScale", { scale: scale, liquid: liquid, amount: this.liquidStorage.getRelativeAmount(liquid) });
+    };
+    TileEntityBase.prototype.setLiquidScale = function (container, window, content, data) {
+        var gui = container.getUiAdapter();
+        if (gui) {
+            var size = gui.getBinding(data.scale, "element_rect");
+            if (!size) {
+                return;
+            }
+            var texture = LiquidRegistry.getLiquidUITexture(data.liquid, size.width(), size.height());
+            gui.setBinding(data.scale, "texture", texture);
+            gui.setBinding(data.scale, "value", data.amount);
+        }
+    };
+    __decorate([
+        BlockEngine.Decorators.ContainerEvent(Side.Client)
+    ], TileEntityBase.prototype, "setLiquidScale", null);
     return TileEntityBase;
 }());
-var Side;
-(function (Side) {
-    Side[Side["Client"] = 0] = "Client";
-    Side[Side["Server"] = 1] = "Server";
-})(Side || (Side = {}));
-var BlockEngine;
-(function (BlockEngine) {
-    var Decorators;
-    (function (Decorators) {
-        function ClientSide() {
-            return function (target, propertyName) {
-                if (!target.client)
-                    target.client = {};
-                target.client[propertyName] = target[propertyName];
-            };
-        }
-        Decorators.ClientSide = ClientSide;
-        function NetworkEvent(side) {
-            return function (target, propertyName) {
-                if (side == Side.Client) {
-                    if (!target.client)
-                        target.client = {};
-                    if (!target.client.events)
-                        target.client.events = {};
-                    target.client.events[propertyName] = target[propertyName];
-                    delete target[propertyName];
-                }
-                else {
-                    if (!target.events)
-                        target.events = {};
-                    target.events[propertyName] = target[propertyName];
-                }
-            };
-        }
-        Decorators.NetworkEvent = NetworkEvent;
-        function ContainerEvent(side) {
-            return function (target, propertyName) {
-                if (side == Side.Client) {
-                    if (!target.client)
-                        target.client = {};
-                    if (!target.client.containerEvents)
-                        target.client.containerEvents = {};
-                    target.client.containerEvents[propertyName] = target[propertyName];
-                    delete target[propertyName];
-                }
-                else {
-                    if (!target.containerEvents)
-                        target.containerEvents = {};
-                    target.containerEvents[propertyName] = target[propertyName];
-                }
-            };
-        }
-        Decorators.ContainerEvent = ContainerEvent;
-    })(Decorators = BlockEngine.Decorators || (BlockEngine.Decorators = {}));
-})(BlockEngine || (BlockEngine = {}));
 // classes
 EXPORT("ItemStack", ItemStack);
 EXPORT("Vector3", Vector3);

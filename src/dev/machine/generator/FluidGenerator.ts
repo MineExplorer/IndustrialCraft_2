@@ -109,7 +109,7 @@ namespace Machine {
 
 			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
 
-			this.liquidStorage.updateUiScale("liquidScale", liquid);
+			this.updateLiquidScale("liquidScale", liquid);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.sendChanges();
 		}

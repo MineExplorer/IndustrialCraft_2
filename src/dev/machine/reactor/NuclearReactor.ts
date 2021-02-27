@@ -386,7 +386,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		setFieldSize(container: any, window: any, content: any, data: {size: number}): void {
+		setFieldSize(container: ItemContainer, window: any, content: any, data: {size: number}): void {
 			if (content) {
 				for (let y = 0; y < 6; y++) {
 					for (let x = 0; x < 9; x++) {

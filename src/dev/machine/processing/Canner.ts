@@ -278,7 +278,7 @@ namespace Machine {
 		}
 
 		@ContainerEvent(Side.Client)
-		updateUI(container: any, window: any, content: any, data: {mode: number}): void {
+		updateUI(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
 			if (content) {
 				let element = content.elements["slotSource"];
 				let texture = "canner_slot_source_" + data.mode;

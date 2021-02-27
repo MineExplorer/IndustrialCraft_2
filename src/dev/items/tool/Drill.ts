@@ -9,7 +9,7 @@ extends ElectricTool {
 	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {
 		if (Block.getDestroyTime(block.id) > 0) {
 			ICTool.dischargeItem(item, this.energyPerUse, player);
-			//this.playDestroySound(item, block);
+			this.playDestroySound(item, block, player);
 		}
 		return true;
 	}
@@ -47,18 +47,18 @@ extends ElectricTool {
 
 	continueDestroyBlock(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, progress: number): void {
 		if (progress > 0) {
-			this.playDestroySound(item, block);
+			this.playDestroySound(item, block, Player.get());
 		}
 	}
 
-	playDestroySound(item: ItemInstance, block: Tile): void {
+	playDestroySound(item: ItemInstance, block: Tile, player: number): void {
 		if (ConfigIC.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.energyPerUse) {
 			let hardness = Block.getDestroyTime(block.id);
 			if (hardness > 1 || hardness < 0) {
-				SoundManager.startPlaySound(SourceType.PLAYER, "DrillHard.ogg");
+				SoundManager.startPlaySound(SourceType.ENTITY, player, "DrillHard.ogg");
 			}
 			else if (hardness > 0) {
-				SoundManager.startPlaySound(SourceType.PLAYER, "DrillSoft.ogg");
+				SoundManager.startPlaySound(SourceType.ENTITY, player, "DrillSoft.ogg");
 			}
 		}
 	}

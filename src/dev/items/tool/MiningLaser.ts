@@ -49,7 +49,7 @@ extends ItemElectric {
 		if (laserSetting == 3 || laserSetting == 6) return;
 		let mode = this.getModeData(laserSetting);
 		if (ICTool.useElectricItem(item, mode.energy, player)) {
-			SoundManager.playSound(mode.sound || "MiningLaser.ogg");
+			SoundManager.playSoundAtEntity(player, mode.sound || "MiningLaser.ogg");
 			let pos = Entity.getPosition(player);
 			let angle = Entity.getLookAngle(player);
 			let dir = new Vector3(Entity.getLookVectorByAngle(angle));
@@ -87,7 +87,7 @@ extends ItemElectric {
 		}
 		let mode = this.getModeData(laserSetting);
 		if (ICTool.useElectricItem(item, mode.energy, player)) {
-			SoundManager.playSound(mode.sound || "MiningLaser.ogg");
+			SoundManager.playSoundAtEntity(player, mode.sound || "MiningLaser.ogg");
 			let pos = Entity.getPosition(player);
 			let angle = Entity.getLookAngle(player);
 			let dir = new Vector3(Entity.getLookVectorByAngle(angle));

@@ -28,7 +28,7 @@ extends ItemElectric {
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		let client = Network.getClientForPlayer(player);
 		if (client && ICTool.useElectricItem(item, this.getEnergyPerUse(), player)) {
-			SoundManager.playSound("ODScanner.ogg");
+			SoundManager.playSoundAtEntity(player, "ODScanner.ogg");
 			client.sendMessage(Translation.translate("Scan Result: ") + coords.x + ", " + coords.y + ", " + coords.z);
 			let ores = {};
 			let radius = this.getScanRadius();

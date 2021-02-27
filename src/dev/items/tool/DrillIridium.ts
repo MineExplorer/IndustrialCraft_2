@@ -95,7 +95,7 @@ extends ToolDrill {
 	}
 
 	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {
-		this.playDestroySound(item, block);
+		this.playDestroySound(item, block, player);
 		let region = WorldRegion.getForActor(player);
 		let mode = item.extra? item.extra.getInt("mode") : 0;
 		let material = ToolAPI.getBlockMaterialName(block.id);

@@ -29,7 +29,7 @@ Block.registerPlaceFunction("rubberTreeLog", function(coords, item, block, playe
 		var rotation = Math.floor(coords.side / 2);
 	}
 	region.setBlock(place.x, place.y, place.z, item.id, rotation);
-	World.playSound(place.x + .5, place.y + .5, place.z + .5, "dig.wood", 1, 0.8)
+	//World.playSound(place.x + .5, place.y + .5, place.z + .5, "dig.wood", 1, 0.8)
 });
 
 IDRegistry.genBlockID("rubberTreeLogLatex");

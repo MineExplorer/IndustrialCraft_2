@@ -33,7 +33,7 @@ implements ItemBehavior {
 				player.setCarriedItem(item);
 				player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
 			}
-			SoundManager.playSound("eat.ogg");
+			SoundManager.playSoundAtEntity(playerUid, "eat.ogg");
 		}
 	}
 }

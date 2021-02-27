@@ -100,9 +100,9 @@ namespace ICTool {
 			let item = Player.getCarriedItem();
 			let tool = ToolAPI.getToolData(item.id) as any;
 			if (item.id == itemID && (!tool || !tool.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.energyPerUse)) {
-				SoundManager.startPlaySound(SourceType.PLAYER, item.id, idleSound);
+				SoundManager.startPlaySound(SourceType.ENTITY, Player.get(), idleSound);
 			}
-			else if (SoundManager.stopPlaySound(itemID) && stopSound) {
+			else if (SoundManager.stopPlaySound(Player.get(), idleSound) && stopSound) {
 				SoundManager.playSound(stopSound);
 			}
 		});

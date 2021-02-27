@@ -15,7 +15,7 @@ function placeRubberSapling(coords: Callback.ItemUseCoordinates, item: ItemInsta
 		if (Game.isItemSpendingAllowed(player)) {
 			Entity.setCarriedItem(player, BlockID.rubberTreeSapling, item.count - 1, 0);
 		}
-		World.playSound(place.x, place.y, place.z, "dig.grass", 1, 0.8);
+		//World.playSound(place.x, place.y, place.z, "dig.grass", 1, 0.8);
 	}
 }
 

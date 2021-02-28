@@ -1,7 +1,11 @@
 namespace Agriculture {
 	export abstract class CropCard {
-		constructor() {
-			const cardID = CropCardManager.registerCropCard(this);
+
+		abstract getID(): string
+
+		abstract getAttributes(): string[]
+
+		initialize(cardID: number): void {
 			alert(`${this.getID()} registred as ${cardID}`);
 			if (this.getBaseSeed().addToCreative) {
 				alert(`added to creative ${cardID}`)
@@ -9,10 +13,6 @@ namespace Agriculture {
 				Item.addToCreative(ItemID.cropSeedBag, 1, cardID, extra);
 			}
 		}
-
-		abstract getID(): string
-
-		abstract getAttributes(): string[]
 
 		getTexture(): string {
 			return this.getID();

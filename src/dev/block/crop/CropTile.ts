@@ -23,7 +23,6 @@ namespace Agriculture {
 		crop: CropCard = null;
 
 		clientLoad(): void {
-			//alert("load");
 			this.networkData.addOnDataChangedListener((data: SyncedNetworkData, isExternal) => {
 				const texture: [string, number] = [
 					data.getString("textureName"),
@@ -505,7 +504,6 @@ namespace Agriculture {
 		}
 
 		tryPlantIn(cropCardID: number, size: number, statGr: number, statGa: number, statRe: number, scan: number): boolean {
-			//alert("try plant in")
 			const cropCard = Agriculture.CropCardManager.getCropCardByIndex(cropCardID);
 			if (!cropCard || cropCard.getID() == "weed" || this.data.crossingBase) return false;
 

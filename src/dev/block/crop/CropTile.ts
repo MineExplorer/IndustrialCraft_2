@@ -22,13 +22,19 @@ namespace Agriculture {
 
 		crop: CropCard = null;
 
+		@BlockEngine.Decorators.ClientSide
+		renderModel() {
+			const texture: [string, number] = [
+				this.networkData.getString("textureName"),
+				this.networkData.getInt("textureData")
+			];
+			BlockRenderer.mapAtCoords(this.x, this.y, this.z, TileRenderer.getCropModel(texture));
+		}
+
 		clientLoad(): void {
+			this.renderModel();
 			this.networkData.addOnDataChangedListener((data: SyncedNetworkData, isExternal) => {
-				const texture: [string, number] = [
-					data.getString("textureName"),
-					data.getInt("textureData")
-				];
-				BlockRenderer.mapAtCoords(this.x, this.y, this.z, TileRenderer.getCropModel(texture));
+				this.renderModel();
 			});
 		}
 
@@ -410,7 +416,6 @@ namespace Agriculture {
 
 		getRelativeCoords(): [number[], number[], number[], number[]] {
 			return [[1, 0, 0], [-1, 0, 0], [0, 0, 1], [0, 0, -1]];
-
 		}
 
 		askCropJoinCross(coordsArray: [number[], number[], number[], number[]]) { // modified from the original

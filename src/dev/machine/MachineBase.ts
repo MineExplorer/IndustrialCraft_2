@@ -37,7 +37,7 @@ namespace Machine {
 			}
 		}
 
-		@ClientSide()
+		@ClientSide
 		renderModel(): void {
 			if (this.networkData.getBoolean("isActive")) {
 				let blockId = Network.serverToLocalId(this.networkData.getInt("blockId"));

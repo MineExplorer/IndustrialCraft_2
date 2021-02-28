@@ -402,7 +402,6 @@ var EnergyTileNode = /** @class */ (function (_super) {
     function EnergyTileNode(energyType, parent) {
         var _this = _super.call(this, energyType, parent.dimension) || this;
         _this.tileEntity = parent;
-        _this.addCoords(parent.x, parent.y, parent.z);
         return _this;
     }
     EnergyTileNode.prototype.getParent = function () {
@@ -632,6 +631,10 @@ var EnergyNet;
     }
     EnergyNet.removeEnergyNode = removeEnergyNode;
     function getNodeOnCoords(region, x, y, z) {
+        var tileEntity = TileEntity.getTileEntity(x, y, z, region);
+        if (tileEntity && tileEntity.__initialized && tileEntity.energyNode) {
+            return tileEntity.energyNode;
+        }
         var nodes = getNodesByDimension(region.getDimension());
         var coordKey = x + ":" + y + ":" + z;
         for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
@@ -652,6 +655,7 @@ var EnergyNet;
     }
     Callback.addCallback("LevelLeft", function () {
         energyNodes = {};
+        GLOBAL_NODE_ID = 0;
     });
     Callback.addCallback("tick", function () {
         energyNodesTick();

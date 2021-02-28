@@ -1,3 +1,14 @@
+declare enum Side {
+    Client = 0,
+    Server = 1
+}
+declare namespace BlockEngine {
+    namespace Decorators {
+        function ClientSide(target: TileEntityBase, propertyName: string): void;
+        function NetworkEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
+        function ContainerEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
+    }
+}
 declare class Vector3 implements Vector {
     static readonly DOWN: Vector3;
     static readonly UP: Vector3;
@@ -675,15 +686,4 @@ declare abstract class TileEntityBase implements TileEntity {
         liquid: string;
         amount: number;
     }): void;
-}
-declare enum Side {
-    Client = 0,
-    Server = 1
-}
-declare namespace BlockEngine {
-    namespace Decorators {
-        function ClientSide(): (target: TileEntityBase, propertyName: string) => void;
-        function NetworkEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
-        function ContainerEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
-    }
 }

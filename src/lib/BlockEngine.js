@@ -32,27 +32,28 @@ var BlockEngine;
 (function (BlockEngine) {
     var Decorators;
     (function (Decorators) {
-        function ClientSide() {
-            return function (target, propertyName) {
-                if (!target.client)
-                    target.client = {};
-                target.client[propertyName] = target[propertyName];
-            };
+        function createField(target, field) {
+            var clientPrototype = {};
+            for (var key in target[field]) {
+                clientPrototype[key] = target[field][key];
+            }
+            target[field] = clientPrototype;
+        }
+        function ClientSide(target, propertyName) {
+            createField(target, "client");
+            target.client[propertyName] = target[propertyName];
         }
         Decorators.ClientSide = ClientSide;
         function NetworkEvent(side) {
             return function (target, propertyName) {
                 if (side == Side.Client) {
-                    if (!target.client)
-                        target.client = {};
-                    if (!target.client.events)
-                        target.client.events = {};
+                    createField(target, "client");
+                    createField(target.client, "events");
                     target.client.events[propertyName] = target[propertyName];
                     delete target[propertyName];
                 }
                 else {
-                    if (!target.events)
-                        target.events = {};
+                    createField(target, "events");
                     target.events[propertyName] = target[propertyName];
                 }
             };
@@ -61,16 +62,13 @@ var BlockEngine;
         function ContainerEvent(side) {
             return function (target, propertyName) {
                 if (side == Side.Client) {
-                    if (!target.client)
-                        target.client = {};
-                    if (!target.client.containerEvents)
-                        target.client.containerEvents = {};
+                    createField(target, "client");
+                    createField(target.client, "containerEvents");
                     target.client.containerEvents[propertyName] = target[propertyName];
                     delete target[propertyName];
                 }
                 else {
-                    if (!target.containerEvents)
-                        target.containerEvents = {};
+                    createField(target, "containerEvents");
                     target.containerEvents[propertyName] = target[propertyName];
                 }
             };

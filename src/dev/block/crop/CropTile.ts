@@ -33,13 +33,12 @@ namespace Agriculture {
 		}
 
 		clientUnload(): void {
-			//alert("unload");
 			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 		}
 
 		init(): void {
 			super.init();
-			if (this.data.crop) this.crop = AgricultureAPI.cropCards[this.data.crop];
+			if (this.data.crop) this.crop = Agriculture.CropCardManager.getCropCardByIndex(this.data.crop);
 			this.updateRender();
 		}
 
@@ -74,12 +73,9 @@ namespace Agriculture {
 		}
 
 		onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, playerUid: number, extra: ItemExtraData): boolean {
-			// alert("onClick");
 			if (id != 0) {
-				// Debug.m(`id not 0`);
 				const card = Agriculture.CropCardManager.getCardFromSeed(new ItemStack(id, count, data, extra));
 				if (id == ItemID.agriculturalAnalyzer) return;
-				// Debug.m("Not analyser");
 				if (id == ItemID.debugItem && this.crop) {
 					this.data.currentSize = this.crop.getMaxSize();
 					this.updateRender();
@@ -120,11 +116,8 @@ namespace Agriculture {
 					this.data.dirty = true;
 					return;
 				}
-				// Debug.m(`TRY plant in ${card}`)
 				if (!this.crop && !this.data.crossingBase && card) {
-
 					this.reset();
-
 					this.data.crop = Agriculture.CropCardManager.getIndexByCropCardID(card.getID());
 					this.crop = Agriculture.CropCardManager.getCropCardByIndex(this.data.crop);
 					const baseSeed = card.getBaseSeed();
@@ -133,7 +126,6 @@ namespace Agriculture {
 					this.data.statGain = baseSeed.gain;
 					this.data.statGrowth = baseSeed.growth;
 					this.data.statResistance = baseSeed.resistance;
-					// Debug.m(`plant in ${this.data.crop} ${this.crop.getID()}`)
 					player.decreaseCarriedItem();
 					this.updateRender();
 					return;

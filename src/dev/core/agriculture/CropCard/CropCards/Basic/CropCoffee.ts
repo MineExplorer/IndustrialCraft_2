@@ -41,11 +41,10 @@ namespace Agriculture {
 		}
 
 		getGrowthDuration(te: ICropTileEntity): number {
-			let base = AgricultureAPI.abstractFunctions["IC2CropCard"];
 			if (te.data.currentSize == 3) {
-				return Math.round(base.getGrowthDuration(te) * .5);
+				return Math.round(super.getGrowthDuration(te) * .5);
 			} else if (te.data.currentSize == 4) {
-				return Math.round(base.getGrowthDuration(te) * 1.5);
+				return Math.round(super.getGrowthDuration(te) * 1.5);
 			}
 			return super.getGrowthDuration(te);
 		}

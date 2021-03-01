@@ -1,8 +1,7 @@
 /// <reference path="../ElectricMachine.ts" />
 
 namespace Machine {
-	export class Transformer
-	extends ElectricMachine {
+	export class Transformer extends ElectricMachine {
 		readonly hasVerticalRotation: boolean = true;
 		readonly tier: number
 

@@ -1,3 +1,14 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -33,11 +44,7 @@ var BlockEngine;
     var Decorators;
     (function (Decorators) {
         function createField(target, field) {
-            var clientPrototype = {};
-            for (var key in target[field]) {
-                clientPrototype[key] = target[field][key];
-            }
-            target[field] = clientPrototype;
+            target[field] = __assign({}, target[field]);
         }
         function ClientSide(target, propertyName) {
             createField(target, "client");
@@ -1302,8 +1309,9 @@ var ItemRegistry;
 })(ItemRegistry || (ItemRegistry = {}));
 var TileEntityBase = /** @class */ (function () {
     function TileEntityBase() {
+        var _a;
         this.useNetworkItemContainer = true;
-        this.client = this.client || {};
+        (_a = this.client) !== null && _a !== void 0 ? _a : (this.client = {});
         this.client.load = this.clientLoad;
         this.client.unload = this.clientUnload;
         this.client.tick = this.clientTick;

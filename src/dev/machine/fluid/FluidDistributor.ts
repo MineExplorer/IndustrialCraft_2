@@ -39,8 +39,7 @@ const guiFluidDistributor = InventoryWindow("Fluid Distributor", {
 });
 
 namespace Machine {
-	export class FluidDistributor
-	extends MachineBase {
+	export class FluidDistributor extends MachineBase {
 		defaultValues = {
 			inverted: false
 		}

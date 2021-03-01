@@ -18,8 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export class Windmill
-	extends Generator {
+	export class WindGenerator extends Generator {
 		defaultValues = {
 			energy: 0,
 			output: 0,
@@ -62,7 +61,7 @@ namespace Machine {
 		}
 	}
 
-	MachineRegistry.registerPrototype(BlockID.genWindmill, new Windmill());
+	MachineRegistry.registerPrototype(BlockID.genWindmill, new WindGenerator());
 }
 
 let windStrength = 0;

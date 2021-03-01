@@ -47,8 +47,7 @@ const guiSolidHeatGenerator = InventoryWindow("Solid Fuel Firebox", {
 });
 
 namespace Machine {
-	export class SolidHeatGenerator
-	extends MachineBase {
+	export class SolidHeatGenerator extends MachineBase {
 		readonly hasVerticalRotation: boolean = true;
 
 		defaultValues ={

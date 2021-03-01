@@ -79,8 +79,7 @@ const guiSolidCanner = InventoryWindow("Solid Canning Machine", {
 });
 
 namespace Machine {
-	export class SolidCanner
-	extends ElectricMachine {
+	export class SolidCanner extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
 			tier: 1,

@@ -34,8 +34,7 @@ const guiIronFurnace = InventoryWindow("Iron Furnace", {
 });
 
 namespace Machine {
-	export class IronFurnace
-	extends MachineBase {
+	export class IronFurnace extends MachineBase {
 		defaultValues = {
 			progress: 0,
 			burn: 0,

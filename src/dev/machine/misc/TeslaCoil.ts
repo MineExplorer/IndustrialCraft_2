@@ -16,8 +16,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export class TeslaCoil
-	extends ElectricMachine {
+	export class TeslaCoil extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
 			isActive: false

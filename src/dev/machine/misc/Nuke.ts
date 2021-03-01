@@ -23,8 +23,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	class Nuke
-	extends TileEntityBase {
+	class Nuke extends TileEntityBase {
 		defaultValues = {
 			activated: false,
 			timer: 300

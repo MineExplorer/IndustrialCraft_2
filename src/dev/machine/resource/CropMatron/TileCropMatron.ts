@@ -1,6 +1,5 @@
 namespace Machine {
-	export class CropMatron
-		extends ElectricMachine {
+	export class CropMatron extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
 			scanX: -5,

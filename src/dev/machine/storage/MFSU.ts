@@ -26,7 +26,6 @@ Callback.addCallback("PreLoaded", function() {
 	], ['b', BlockID.storageMFE, -1, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, 0]);
 });
 
-
 const guiMFSU = BatteryBlockWindow("MFSU");
 
 namespace Machine {

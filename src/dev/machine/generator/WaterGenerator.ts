@@ -18,8 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export class Watermill
-	extends Generator {
+	export class WaterGenerator extends Generator {
 		defaultValues = {
 			energy: 0,
 			output: 0
@@ -68,5 +67,5 @@ namespace Machine {
 		}
 	}
 
-	MachineRegistry.registerPrototype(BlockID.genWatermill, new Watermill());
+	MachineRegistry.registerPrototype(BlockID.genWatermill, new WaterGenerator());
 }

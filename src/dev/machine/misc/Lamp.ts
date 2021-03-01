@@ -56,8 +56,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	class Lamp
-	extends ElectricMachine {
+	class Lamp extends ElectricMachine {
 		defaultValues = {
 			isActive: false,
 			energy: 0

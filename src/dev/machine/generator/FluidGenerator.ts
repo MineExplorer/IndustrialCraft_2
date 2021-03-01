@@ -42,8 +42,7 @@ const guiSemifluidGenerator = InventoryWindow("Semifluid Generator", {
 });
 
 namespace Machine {
-	export class FluidGenerator
-	extends Generator {
+	export class FluidGenerator extends Generator {
 		defaultValues = {
 			energy: 0,
 			fuel: 0,

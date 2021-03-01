@@ -1,8 +1,7 @@
 /// <reference path="../ElectricMachine.ts" />
 
 namespace Machine {
-	export class BatteryBlock
-	extends ElectricMachine {
+	export class BatteryBlock extends ElectricMachine {
 		readonly hasVerticalRotation: boolean = true;
 		readonly isTeleporterCompatible: boolean = true;
 

@@ -44,8 +44,7 @@ const guiPump = InventoryWindow("Pump", {
 });
 
 namespace Machine {
-	export class Pump
-	extends ElectricMachine {
+	export class Pump extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
 			tier: 1,

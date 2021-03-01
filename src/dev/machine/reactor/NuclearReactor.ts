@@ -63,8 +63,7 @@ const guiNuclearReactor = InventoryWindow("Nuclear Reactor", {
 let EUReactorModifier = 5;
 
 namespace Machine {
-	export class NuclearReactor
-	extends Generator
+	export class NuclearReactor extends Generator
 	implements IReactor {
 		audioSourceGeiger: AudioSource;
 

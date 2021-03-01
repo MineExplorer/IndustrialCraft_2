@@ -42,8 +42,7 @@ const guiRecycler = InventoryWindow("Recycler", {
 });
 
 namespace Machine {
-	export class Recycler
-	extends ElectricMachine {
+	export class Recycler extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
 			tier: 1,

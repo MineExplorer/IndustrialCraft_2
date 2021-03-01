@@ -106,8 +106,7 @@ const guiMetalFormer = InventoryWindow("Metal Former", {
 });
 
 namespace Machine {
-	export class MetalFormer
-	extends ProcessingMachine {
+	export class MetalFormer extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			tier: 1,

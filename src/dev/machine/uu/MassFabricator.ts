@@ -39,8 +39,7 @@ const guiMassFabricator = InventoryWindow("Mass Fabricator", {
 });
 
 namespace Machine {
-	export class MassFabricator
-	extends ElectricMachine {
+	export class MassFabricator extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
 			progress: 0,

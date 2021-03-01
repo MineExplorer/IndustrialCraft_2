@@ -22,8 +22,7 @@ const guiSolarPanel = InventoryWindow("Solar Panel", {
 });
 
 namespace Machine {
-	export class SolarGenerator
-	extends Generator {
+	export class SolarGenerator extends Generator {
 		defaultValues = {
 			energy: 0,
 			canSeeSky: false

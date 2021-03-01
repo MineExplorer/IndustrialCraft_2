@@ -35,8 +35,7 @@ const guiMiner = InventoryWindow("Miner", {
 });
 
 namespace Machine {
-	export class Miner
-	extends ElectricMachine {
+	export class Miner extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
 			x: 0,

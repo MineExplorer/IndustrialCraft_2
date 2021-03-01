@@ -61,8 +61,7 @@ const guiCanner = InventoryWindow("Fluid/Solid Canning Machine", {
 });
 
 namespace Machine {
-	export class Canner
-	extends ElectricMachine {
+	export class Canner extends ElectricMachine {
 		inputTank: LiquidTank;
 		outputTank: LiquidTank;
 

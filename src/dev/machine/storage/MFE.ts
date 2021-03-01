@@ -25,7 +25,6 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', BlockID.machineBlockBasic, 0, 'a', ItemID.storageCrystal, -1, 'b', ItemID.cableGold2, -1]);
 });
 
-
 const guiMFE = BatteryBlockWindow("MFE");
 
 namespace Machine {

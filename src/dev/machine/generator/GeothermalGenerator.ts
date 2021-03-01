@@ -36,8 +36,7 @@ const guiGeothermalGenerator = InventoryWindow("Geothermal Generator", {
 });
 
 namespace Machine {
-	export class GeothermalGenerator
-	extends Generator {
+	export class GeothermalGenerator extends Generator {
 		getScreenByName() {
 			return guiGeothermalGenerator;
 		}

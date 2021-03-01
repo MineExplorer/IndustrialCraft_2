@@ -42,8 +42,7 @@ const guiFermenter = InventoryWindow("Fermenter", {
 });
 
 namespace Machine {
-	export class Fermenter
-	extends MachineBase
+	export class Fermenter extends MachineBase
 	implements IHeatConsumer {
 		defaultValues = {
 			heat: 0,

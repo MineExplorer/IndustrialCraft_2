@@ -32,8 +32,7 @@ const guiTank = InventoryWindow("Tank", {
 });
 
 namespace Machine {
-	export class FluidTank
-	extends MachineBase {
+	export class FluidTank extends MachineBase {
 		upgrades = ["fluidEjector", "fluidPulling"];
 
 		getScreenByName() {

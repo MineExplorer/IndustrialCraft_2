@@ -57,8 +57,7 @@ const guiOreWasher = InventoryWindow("Ore Washing Plant", {
 });
 
 namespace Machine {
-	export class OreWasher
-	extends ProcessingMachine {
+	export class OreWasher extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			tier: 1,

@@ -25,7 +25,6 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', ItemID.cableCopper1, 0, 'a', ItemID.storageAdvBattery, -1, 'b', ItemID.plateBronze, 0]);
 });
 
-
 const guiCESU = BatteryBlockWindow("CESU");
 
 namespace Machine {

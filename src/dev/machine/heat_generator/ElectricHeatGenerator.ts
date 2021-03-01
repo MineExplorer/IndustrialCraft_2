@@ -45,8 +45,7 @@ const guiElectricHeatGenerator = InventoryWindow("Electric Heater", {
 });
 
 namespace Machine {
-	export class ElectricHeatGenerator
-	extends ElectricMachine {
+	export class ElectricHeatGenerator extends ElectricMachine {
 		readonly hasVerticalRotation: boolean = true;
 
 		getTier(): number {

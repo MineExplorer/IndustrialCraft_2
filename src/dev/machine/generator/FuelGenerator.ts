@@ -44,8 +44,7 @@ const guiGenerator = InventoryWindow("Generator", {
 });
 
 namespace Machine {
-	export class FuelGenerator
-	extends Generator {
+	export class FuelGenerator extends Generator {
 		defaultValues = {
 			energy: 0,
 			burn: 0,

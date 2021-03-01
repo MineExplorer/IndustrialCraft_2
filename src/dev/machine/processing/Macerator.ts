@@ -123,8 +123,7 @@ const guiMacerator = InventoryWindow("Macerator", {
 });
 
 namespace Machine {
-	export class Macerator
-	extends ProcessingMachine {
+	export class Macerator extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			tier: 1,

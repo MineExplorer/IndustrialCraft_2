@@ -50,8 +50,7 @@ const guiExtractor = InventoryWindow("Extractor", {
 });
 
 namespace Machine {
-	export class Extractor
-	extends ProcessingMachine {
+	export class Extractor extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			tier: 1,

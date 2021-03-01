@@ -88,8 +88,7 @@ const guiCompressor = InventoryWindow("Compressor", {
 });
 
 namespace Machine {
-	export class Compressor
-	extends ProcessingMachine {
+	export class Compressor extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			tier: 1,

@@ -72,8 +72,7 @@ const guiAdvancedMiner = InventoryWindow("Advanced Miner", {
 });
 
 namespace Machine {
-	export class AdvancedMiner
-	extends ElectricMachine {
+	export class AdvancedMiner extends ElectricMachine {
 		defaultValues = {
 			tier: 3,
 			energy: 0,

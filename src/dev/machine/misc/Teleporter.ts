@@ -19,8 +19,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export class Teleporter
-	extends MachineBase {
+	export class Teleporter extends MachineBase {
 		defaultValues = {
 			isActive: false,
 			frequency: null

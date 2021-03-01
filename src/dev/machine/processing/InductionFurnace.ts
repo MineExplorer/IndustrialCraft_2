@@ -46,8 +46,7 @@ const guiInductionFurnace = InventoryWindow("Induction Furnace", {
 });
 
 namespace Machine {
-	export class InductionFurnace
-	extends ProcessingMachine {
+	export class InductionFurnace extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			tier: 2,

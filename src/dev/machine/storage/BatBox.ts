@@ -31,7 +31,7 @@ Callback.addCallback("PreLoaded", function() {
 const guiBatBox = BatteryBlockWindow("BatBox");
 
 namespace Machine {
-	class BatBox extends Machine.BatteryBlock {
+	class BatBox extends BatteryBlock {
 		constructor() {
 			super(1, 40000, BlockID.storageBatBox, guiBatBox);
 		}

@@ -37,8 +37,7 @@ const guiRTGenerator = InventoryWindow("Radioisotope Thermoelectric Generator", 
 
 
 namespace Machine {
-	export class RTGenerator
-	extends Generator {
+	export class RTGenerator extends Generator {
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id) => (id == ItemID.rtgPellet));
 		}

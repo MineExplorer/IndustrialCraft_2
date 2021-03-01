@@ -21,8 +21,8 @@ machine/generator/FuelGenerator.ts
 machine/generator/GeothermalGenerator.ts
 machine/generator/FluidGenerator.ts
 machine/generator/SolarGenerator.ts
-machine/generator/Windmill.ts
-machine/generator/Watermill.ts
+machine/generator/WindGenerator.ts
+machine/generator/WaterGenerator.ts
 machine/generator/RTGenerator.ts
 machine/generator/StirlingGenerator.ts
 

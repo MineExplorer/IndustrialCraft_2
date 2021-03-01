@@ -48,8 +48,7 @@ const guiBlastFurnace = InventoryWindow("Blast Furnace", {
 });
 
 namespace Machine {
-	export class BlastFurnace
-	extends MachineBase
+	export class BlastFurnace extends MachineBase
 	implements IHeatConsumer {
 		defaultValues = {
 			progress: 0,

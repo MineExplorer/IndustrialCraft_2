@@ -1,6 +1,5 @@
 namespace Machine {
-	export class CropHarvester
-		extends ElectricMachine {
+	export class CropHarvester extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
 			tier: 1,

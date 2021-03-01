@@ -21,8 +21,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export class StirlingGenerator
-	extends Generator
+	export class StirlingGenerator extends Generator
 	implements IHeatConsumer {
 		defaultValues = {
 			energy: 0,

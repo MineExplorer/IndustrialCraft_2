@@ -25,9 +25,10 @@ namespace Agriculture {
 		@BlockEngine.Decorators.ClientSide
 		renderModel() {
 			const texture: [string, number] = [
-				this.networkData.getString("textureName"),
-				this.networkData.getInt("textureData")
+				this.networkData.getString("textureName") ?? "stick",
+				this.networkData.getInt("textureData") ?? 0
 			];
+
 			BlockRenderer.mapAtCoords(this.x, this.y, this.z, TileRenderer.getCropModel(texture));
 		}
 

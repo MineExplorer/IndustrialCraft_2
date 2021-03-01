@@ -46,10 +46,6 @@ const guiSolidHeatGenerator = InventoryWindow("Solid Fuel Firebox", {
 	}
 });
 
-Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiSolidHeatGenerator, "Solid Fuel Firebox");
-});
-
 namespace Machine {
 	export class SolidHeatGenerator
 	extends MachineBase {

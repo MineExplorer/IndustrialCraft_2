@@ -35,10 +35,6 @@ const guiGeothermalGenerator = InventoryWindow("Geothermal Generator", {
 	}
 });
 
-Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiGeothermalGenerator, "Geothermal Generator");
-});
-
 namespace Machine {
 	export class GeothermalGenerator
 	extends Generator {

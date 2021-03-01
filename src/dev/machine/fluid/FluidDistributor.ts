@@ -38,10 +38,6 @@ const guiFluidDistributor = InventoryWindow("Fluid Distributor", {
 	}
 });
 
-Callback.addCallback("LevelLoaded", function() {
-	MachineRegistry.updateGuiHeader(guiFluidDistributor, "Fluid Distributor");
-});
-
 namespace Machine {
 	export class FluidDistributor
 	extends MachineBase {

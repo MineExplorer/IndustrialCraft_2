@@ -61,9 +61,7 @@ namespace Agriculture {
 		}
 
 		onLongClick(playerUid: number): boolean {
-			//Debug.m("onLong")
 			if (this.data.crossingBase) {
-				//Debug.m("crossing")
 				this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
 				this.data.crossingBase = false;
 				this.data.dirty = true;
@@ -71,10 +69,8 @@ namespace Agriculture {
 				return true;
 			}
 			if (this.crop) {
-				//Debug.m("crop EXIST")
 				return this.crop.onLeftClick(this, playerUid);
 			}
-			//Debug.m("return false")
 			this.region.destroyBlock(this, true, playerUid);
 			return false;
 		}
@@ -562,7 +558,6 @@ namespace Agriculture {
 		}
 
 		pick(): boolean {
-			//alert("pick")
 			if (!this.crop) return false;
 
 			let bonus = this.crop.canBeHarvested(this);
@@ -579,7 +574,6 @@ namespace Agriculture {
 			else if (Math.random() <= firstchance * 1.5) dropCount++;
 
 			const item = this.crop.getSeeds(this) as ItemInstance;
-			//Debug.m("pick", this.x, this.y, this.z, item.id, dropCount, item.data, item.extra);
 			this.region.dropItem(this.x, this.y, this.z, item.id, dropCount, item.data, item.extra);
 
 			this.reset();
@@ -613,13 +607,10 @@ Callback.addCallback("DestroyBlockStart", function (coords: Callback.ItemUseCoor
 });
 
 Network.addServerPacket("icpe.cropDestroyStart", function (client: NetworkClient, data: Vector) {
-	//Debug.m("HAHA");
 	const region = WorldRegion.getForActor(client.getPlayerUid());
 	const tileEntity = region.getTileEntity(data.x, data.y, data.z);
 	if (tileEntity) {
-		//Debug.m("TILE")
 		if (tileEntity.onLongClick(client.getPlayerUid())) {
-			//Debug.m("prevent");
 			Game.prevent();
 		}
 

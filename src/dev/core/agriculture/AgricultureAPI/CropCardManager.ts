@@ -30,10 +30,8 @@ namespace Agriculture {
         }
 
         static getCardFromSeed(item: ItemStack) {
-            // Debug.m("HOLA", item.id, item.data)
             for (var i in this.cropCards) {
                 const seed = this.cropCards[i].getBaseSeed();
-                // Debug.m(seed.id, seed.data)
                 if (seed && seed.id == item.id && (!seed.data || seed.data == item.data)) {
                     return this.cropCards[i];
                 }

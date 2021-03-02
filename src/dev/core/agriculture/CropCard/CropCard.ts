@@ -6,9 +6,7 @@ namespace Agriculture {
 		abstract getAttributes(): string[]
 
 		initialize(cardID: number): void {
-			alert(`${this.getID()} registred as ${cardID}`);
 			if (this.getBaseSeed().addToCreative) {
-				alert(`added to creative ${cardID}`)
 				const extra = SeedExtraCreator.getDefaultExtra(cardID);
 				Item.addToCreative(ItemID.cropSeedBag, 1, cardID, extra);
 			}

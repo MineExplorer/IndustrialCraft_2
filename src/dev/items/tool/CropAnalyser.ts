@@ -63,32 +63,37 @@ class CropAnalyser extends ItemCommon {
 				case "slotSeedOut":
 					return 0;
 				case "slotEnergy":
-					if (ChargeItemRegistry.isValidItem(id, "Eu", 1))
+					if (ChargeItemRegistry.isValidItem(id, "Eu", 1)) {
+						const slotBagIn = container.getSlot("slotSeedIn");
+						if (slotBagIn.id == ItemID.cropSeedBag) {
+							Updatable.addUpdatable({
+								update: function () {
+									const slotBagOut = container.getSlot("slotSeedOut");
+									const slotEnergy = container.getSlot("slotEnergy");
+									CropAnalyser.scanBag(slotBagIn, slotEnergy, playerUid);
+									CropAnalyser.moveBag(slotBagIn, slotBagOut);
+									CropAnalyser.showAllValues(container, slotBagOut);
+									this.remove = true;
+								}
+							});
+						}
 						return count;
-					return 0;
+					} else return 0;
 				case "slotSeedIn":
 					if (id == ItemID.cropSeedBag) {
-						const level = extra.getInt("scan");
-						if (level < 4) {
-							const needEnergy = this.energyForLevel(level);
-							const slotEnergy = container.getSlot("slotEnergy");
-							const currentEnergy = ChargeItemRegistry.getEnergyStored(slotEnergy, "Eu");
-							if (currentEnergy > needEnergy) {
-								ICTool.dischargeItem(slotEnergy, needEnergy, playerUid);
-								extra.putInt("scan", level + 1);
-							}
+						const slotEnergy = container.getSlot("slotEnergy");
+						if (ChargeItemRegistry.isValidItem(slotEnergy.id, "Eu", 1)) {
+							CropAnalyser.scanBag({ id, count, data, extra }, slotEnergy, playerUid);
+							Updatable.addUpdatable({
+								update: function () {
+									const slotBagIn = container.getSlot("slotSeedIn");
+									const slotBagOut = container.getSlot("slotSeedOut");
+									CropAnalyser.moveBag(slotBagIn, slotBagOut);
+									CropAnalyser.showAllValues(container, { id, count, data, extra });
+									this.remove = true;
+								}
+							});
 						}
-
-						CropAnalyser.showAllValues(container, { id, count, data, extra });
-						Updatable.addUpdatable({
-							update: function () {
-								container.setSlot("slotSeedOut", id, count, data, extra);
-								container.clearSlot("slotSeedIn");
-								container.sendChanges();
-
-								this.remove = true;
-							}
-						});
 						return count;
 					}
 					return 0;
@@ -114,6 +119,25 @@ class CropAnalyser extends ItemCommon {
 		});
 	}
 
+	static moveBag(slotBagIn: ItemContainerSlot, slotBagOut: ItemContainerSlot): void {
+		slotBagOut.id = slotBagIn.id;
+		slotBagOut.count = slotBagIn.count;
+		slotBagOut.data = slotBagIn.data;
+		slotBagOut.extra = slotBagIn.extra;
+		slotBagIn.clear();
+	}
+
+	static scanBag(slotBag: ItemInstance, slotEnergy: ItemInstance, playerUid: number): void {
+		const level = slotBag.extra.getInt("scan");
+		if (level < 4) {
+			const needEnergy = CropAnalyser.energyForLevel(level);
+			const currentEnergy = ChargeItemRegistry.getEnergyStored(slotEnergy, "Eu");
+			if (currentEnergy > needEnergy) {
+				ICTool.dischargeItem(slotEnergy, needEnergy, playerUid);
+				slotBag.extra.putInt("scan", level + 1);
+			}
+		}
+	}
 	static showAllValues(container: ItemContainer, seedBagSlot: ItemInstance) {
 		var level = seedBagSlot.extra.getInt("scan");
 		var crop: Agriculture.CropCard = Agriculture.CropCardManager.getCropCardByIndex(seedBagSlot.data)
@@ -133,19 +157,23 @@ class CropAnalyser extends ItemCommon {
 					container.setText("attributes" + (+i % 3), attributes[i]);
 				}
 			case 2:
-				container.setText("textTier", this.getStringTier(crop.getProperties().tier));
+				container.setText("textTier", CropAnalyser.getStringTier(crop.getProperties().tier));
 				container.setText("discoveredByText", "Discovered by: ");
 				container.setText("discoveredBy", crop.getDiscoveredBy());
 			case 1:
-				container.setText("cropName", this.getSeedName(crop.getID()));
+				container.setText("cropName", CropAnalyser.getSeedName(crop.getID()));
 		}
+
+		container.setSlot("slotSeedOut", seedBagSlot.id, seedBagSlot.count, seedBagSlot.data, seedBagSlot.extra);
+		container.clearSlot("slotSeedIn");
+		container.sendChanges();
 	}
 
 	static getSeedName(name: string): string {
 		return Translation.translate(name);
 	}
 
-	energyForLevel(level: number): number {
+	static energyForLevel(level: number): number {
 		switch (level) {
 			default: {
 				return 10;

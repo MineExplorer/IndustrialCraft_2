@@ -70,6 +70,7 @@ namespace Machine {
 		defaultValues = {
 			energy: 0,
 			isEnabled: false,
+			signal: 0,
 			heat: 0,
 			maxHeat: 10000,
 			hem: 1,
@@ -117,9 +118,7 @@ namespace Machine {
 			if (this.chambers.indexOf(chamber) == -1) {
 				this.chambers.push(chamber);
 				chamber.core = this;
-				chamber.data.x = this.x;
-				chamber.data.y = this.y;
-				chamber.data.z = this.z;
+				chamber.data.corePos = {x: this.x, y: this.y, z: this.z};
 			}
 			this.energyNode.addConnection(chamber.energyNode);
 		}
@@ -190,8 +189,17 @@ namespace Machine {
 			src.add(output, Math.min(output, 8192));
 		}
 
-		onRedstoneUpdate(signal: number): void {
+		updateSignal() {
+			let signal = this.data.signal;
+			for (let chamber of this.chambers) {
+				signal = Math.max(signal, chamber.data.signal);
+			}
 			this.data.isEnabled = signal > 0;
+		}
+
+		onRedstoneUpdate(signal: number): void {
+			this.data.signal = signal;
+			this.updateSignal();
 		}
 
 		getEnergyOutput(): number {

@@ -39,11 +39,16 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	export class ReactorChamber
 	extends Generator {
+		data: {
+			energy: number,
+			corePos: Vector,
+			signal: number
+		}
+
 		defaultValues = {
 			energy: 0,
-			x: 0,
-			y: -1,
-			z: 0
+			corePos: null,
+			signal: 0
 		}
 
 		core: NuclearReactor = null;
@@ -61,8 +66,8 @@ namespace Machine {
 
 		init(): void {
 			super.init();
-			if (this.data.y >= 0 && this.region.getBlockId(this.data as Vector) == BlockID.nuclearReactor) {
-				let tileEnt = this.region.getTileEntity(this.data as Vector);
+			if (this.data.corePos && this.region.getBlockId(this.data.corePos) == BlockID.nuclearReactor) {
+				let tileEnt = this.region.getTileEntity(this.data.corePos);
 				if (tileEnt) {
 					tileEnt.addChamber(this);
 				}
@@ -76,6 +81,13 @@ namespace Machine {
 						break;
 					}
 				}
+			}
+		}
+
+		onRedstoneUpdate(signal: number): void {
+			this.data.signal = signal;
+			if (this.core) {
+				this.core.updateSignal();
 			}
 		}
 

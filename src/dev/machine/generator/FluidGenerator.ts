@@ -67,6 +67,10 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
 
+		getFuel(liquid: string): {power: number, amount: number} {
+			return MachineRecipeRegistry.getRecipeResult("fluidFuel", liquid);
+		}
+
 		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
 			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
@@ -88,7 +92,7 @@ namespace Machine {
 			this.getLiquidFromItem(liquid, slot1, slot2);
 
 			if (this.data.fuel <= 0) {
-				let fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", liquid);
+				let fuel = this.getFuel(liquid);
 				if (fuel && this.liquidStorage.getAmount(liquid).toFixed(3) as any >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= energyStorage) {
 					this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
 					this.data.fuel = fuel.amount;
@@ -96,7 +100,7 @@ namespace Machine {
 				}
 			}
 			if (this.data.fuel > 0) {
-				let fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid);
+				let fuel = this.getFuel(this.data.liquid);
 				this.data.energy += fuel.power;
 				this.data.fuel -= fuel.amount/20;
 				this.setActive(true);

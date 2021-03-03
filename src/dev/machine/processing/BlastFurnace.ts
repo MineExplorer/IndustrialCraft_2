@@ -196,7 +196,7 @@ namespace Machine {
 
 		heatReceive(amount: number): number {
 			let slot = this.container.getSlot("slotSource");
-			if (this.data.isHeating || this.data.sourceID > 0 || MachineRecipeRegistry.getRecipeResult("blastFurnace", slot.id)) {
+			if (this.data.isHeating || this.data.sourceID > 0 || this.getRecipeResult(slot.id)) {
 				amount = Math.min(this.getMaxHeat() - this.data.heat, amount);
 				this.data.heat += amount + 1;
 				return amount;

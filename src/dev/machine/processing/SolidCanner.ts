@@ -101,7 +101,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name == "slotSource") return !this.getRecipeResult(id);
+				if (name == "slotSource") return !!this.getRecipeResult(id);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotCan") {
 					let recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
@@ -135,7 +135,7 @@ namespace Machine {
 			let canSlot = this.container.getSlot("slotCan");
 
 			let newActive = false;
-			let recipe = MachineRecipeRegistry.getRecipeResult("solidCanner", sourceSlot.id);
+			let recipe = this.getRecipeResult(sourceSlot.id);
 			if (recipe) {
 				let result = recipe.result;
 				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {

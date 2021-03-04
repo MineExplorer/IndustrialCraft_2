@@ -33,8 +33,16 @@ namespace Machine {
 			return (item.id == ItemID.debugItem || item.id == ItemID.EUMeter);
 		}
 
-		energyTick(type: string, src: any): void {
+		chargeSlot(slotName: string) {
+			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot(slotName), "Eu", this.data.energy, this.getTier());
 		}
+
+		dischargeSlot(slotName: string) {
+			let amount = this.getEnergyStorage() - this.data.energy;
+			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", amount, this.getTier());
+		}
+
+		energyTick(type: string, src: any): void {}
 
 		energyReceive(type: string, amount: number, voltage: number): number {
 			var maxVoltage = this.getMaxPacketSize();

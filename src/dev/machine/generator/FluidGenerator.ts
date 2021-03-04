@@ -85,12 +85,13 @@ namespace Machine {
 
 		tick(): void {
 			StorageInterface.checkHoppers(this);
-			const energyStorage = this.getEnergyStorage();
+			
 			let liquid = this.liquidStorage.getLiquidStored();
 			let slot1 = this.container.getSlot("slot1");
 			let slot2 = this.container.getSlot("slot2");
 			this.getLiquidFromItem(liquid, slot1, slot2);
 
+			const energyStorage = this.getEnergyStorage();
 			if (this.data.fuel <= 0) {
 				let fuel = this.getFuel(liquid);
 				if (fuel && this.liquidStorage.getAmount(liquid).toFixed(3) as any >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= energyStorage) {
@@ -110,8 +111,7 @@ namespace Machine {
 				this.setActive(false);
 			}
 
-			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
-
+			this.chargeSlot("slotEnergy");
 			this.updateLiquidScale("liquidScale", liquid);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.sendChanges();

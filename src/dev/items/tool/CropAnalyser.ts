@@ -12,7 +12,8 @@ class CropAnalyser extends ItemCommon {
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		if (block.id == BlockID.crop) {
-			const tileEntity = World.getTileEntity(coords.x, coords.y, coords.z) as Agriculture.ICropTileEntity;
+			const region = WorldRegion.getForActor(player);
+			const tileEntity = region.getTileEntity(coords.x, coords.y, coords.z) as Agriculture.ICropTileEntity;
 			if (!tileEntity.crop) return;
 			this.showCropValues(tileEntity);
 		} else {
@@ -59,18 +60,15 @@ class CropAnalyser extends ItemCommon {
 				case "slotSeedOut":
 					return 0;
 				case "slotEnergy":
-					if (ChargeItemRegistry.isValidItem(id, "Eu", 1)) {
+					if (ChargeItemRegistry.isValidStorage(id, "Eu", 4)) {
 						const slotBagIn = container.getSlot("slotSeedIn");
 						if (slotBagIn.id == ItemID.cropSeedBag) {
-							Updatable.addUpdatable({
-								update: function () {
-									const slotBagOut = container.getSlot("slotSeedOut");
-									const slotEnergy = container.getSlot("slotEnergy");
-									CropAnalyser.scanBag(slotBagIn, slotEnergy, playerUid);
-									CropAnalyser.moveBag(slotBagIn, slotBagOut);
-									CropAnalyser.showAllValues(container, slotBagOut);
-									this.remove = true;
-								}
+							runOnMainThread(() => {
+								const slotBagOut = container.getSlot("slotSeedOut");
+								const slotEnergy = container.getSlot("slotEnergy");
+								CropAnalyser.scanBag(slotBagIn, slotEnergy, playerUid);
+								CropAnalyser.moveBag(slotBagIn, slotBagOut);
+								CropAnalyser.showAllValues(container, slotBagOut);
 							});
 						}
 						return count;
@@ -78,16 +76,13 @@ class CropAnalyser extends ItemCommon {
 				case "slotSeedIn":
 					if (id == ItemID.cropSeedBag) {
 						const slotEnergy = container.getSlot("slotEnergy");
-						if (ChargeItemRegistry.isValidItem(slotEnergy.id, "Eu", 1)) {
+						if (ChargeItemRegistry.isValidStorage(slotEnergy.id, "Eu", 4)) {
 							CropAnalyser.scanBag({ id, count, data, extra }, slotEnergy, playerUid);
-							Updatable.addUpdatable({
-								update: function () {
-									const slotBagIn = container.getSlot("slotSeedIn");
-									const slotBagOut = container.getSlot("slotSeedOut");
-									CropAnalyser.moveBag(slotBagIn, slotBagOut);
-									CropAnalyser.showAllValues(container, { id, count, data, extra });
-									this.remove = true;
-								}
+							runOnMainThread(() => {
+								const slotBagIn = container.getSlot("slotSeedIn");
+								const slotBagOut = container.getSlot("slotSeedOut");
+								CropAnalyser.moveBag(slotBagIn, slotBagOut);
+								CropAnalyser.showAllValues(container, { id, count, data, extra });
 							});
 						}
 						return count;

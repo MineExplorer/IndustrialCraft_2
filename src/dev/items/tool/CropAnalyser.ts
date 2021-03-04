@@ -3,6 +3,7 @@ class CropAnalyser extends ItemCommon {
 	constructor() {
 		super("agriculturalAnalyzer", "crop_analyzer", "cropnalyzer", true);
 		this.setMaxStack(1);
+		this.setCategory(ItemCategory.EQUIPMENT);
 		// @ts-ignore
 		ItemContainer.registerScreenFactory("crop_analyser.ui", function (container, name) {
 			return CropAnalyser.gui;

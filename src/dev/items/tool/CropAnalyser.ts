@@ -264,16 +264,9 @@ const guiAnalyserObject: UI.WindowContent = {
 	elements: {
 		"closeButton": { type: "closeButton", x: 672, y: 77, bitmap: "close_button_small", scale: GUI_SCALE },
 		"textName": { type: "text", font: { size: 18 }, x: 432, y: 86, width: 256, height: 42, text: Translation.translate("Crop Analyzer") },
-		"slotSeedIn": {
-			type: "slot", x: 265, y: 75, size: GUI_SCALE * 16, isValid: function (id, count, data) {
-				return id == ItemID.cropSeedBag;
-			}
-		},
-		"slotSeedOut": { type: "slot", x: 360, y: 75, size: GUI_SCALE * 16, isValid: function () { return false; } },
-		"slotEnergy": {
-			type: "slot", x: 615, y: 75, size: GUI_SCALE * 16,
-			isValid: (id: number, count: number, data: number, container: UI.Container, item: ItemInstance) => ChargeItemRegistry.isValidStorage(id, "Eu", 10)
-		},
+		"slotSeedIn": { type: "slot", x: 265, y: 75, size: GUI_SCALE * 16 },
+		"slotSeedOut": { type: "slot", x: 360, y: 75, size: GUI_SCALE * 16 },
+		"slotEnergy": { type: "slot", x: 615, y: 75, size: GUI_SCALE * 16 },
 
 		"cropName": { type: "text", font: { size: 18, color: Color.WHITE }, x: 270, y: 160, width: 256, height: 42, text: "" },
 		"discoveredByText": { type: "text", font: { size: 18, color: Color.WHITE }, x: 270, y: 240, width: 256, height: 42, text: "" },

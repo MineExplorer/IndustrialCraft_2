@@ -27,17 +27,13 @@ class CropAnalyser extends ItemCommon {
 		}
 		const container = new ItemContainer();
 		container.setParent(this);
-		// @ts-ignore
 		if (!container.getClientContainerTypeName()) {
 			this.setupContainer(container);
 		}
-		// @ts-ignore
-		container.addServerCloseListener({
-			onClose: function (container: ItemContainer, client: NetworkClient) {
-				const player = client.getPlayerUid();
-				const { x, y, z } = Entity.getPosition(player);
-				container.dropAt(BlockSource.getDefaultForActor(player), x, y, z);
-			}
+		container.addServerCloseListener((container: ItemContainer, client: NetworkClient) => {
+			const player = client.getPlayerUid();
+			const { x, y, z } = Entity.getPosition(player);
+			container.dropAt(BlockSource.getDefaultForActor(player), x, y, z);
 		});
 		container.openFor(client, "crop_analyser.ui");
 	}
@@ -57,7 +53,6 @@ class CropAnalyser extends ItemCommon {
 	}
 
 	setupContainer(container: ItemContainer) {
-		// @ts-ignore
 		container.setClientContainerTypeName("crop_analyser.ui");
 		container.setGlobalAddTransferPolicy(function (container: ItemContainer, name: string, id: number, count: number, data: number, extra: ItemExtraData, playerUid: number): number {
 			switch (name) {

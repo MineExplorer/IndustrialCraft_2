@@ -208,11 +208,9 @@ namespace Machine {
 			else
 				this.container.setText("textInfoXYZ", "");
 
-			let tier = this.getTier();
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotScanner"), "Eu", this.data.energy, tier);
-			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", energyStorage - this.data.energy, tier);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.chargeSlot("slotScanner");
+			this.dischargeSlot("slotEnergy");
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendEvent("setSilktouchIcon", {mode: this.data.silk_touch});
 			this.container.sendChanges();
 		}

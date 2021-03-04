@@ -91,8 +91,7 @@ namespace Machine {
 				this.setActive(false);
 			}
 
-			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", this.data.energy, 1);
-
+			this.chargeSlot("slotEnergy");
 			this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.setText("textInfo1", this.data.energy + "/");

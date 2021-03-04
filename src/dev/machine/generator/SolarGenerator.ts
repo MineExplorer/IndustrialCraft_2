@@ -47,7 +47,7 @@ namespace Machine {
 			}
 			if (this.data.canSeeSky && this.region.getLightLevel(this.x, this.y + 1, this.z) == 15) {
 				this.data.energy = 1;
-				this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slotEnergy"), "Eu", 1, 1);
+				this.chargeSlot("slotEnergy");
 				this.container.sendEvent("setSolarElement", "on");
 				this.container.sendChanges();
 			} else {

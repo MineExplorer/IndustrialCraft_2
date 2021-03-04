@@ -54,11 +54,10 @@ namespace Machine {
 		tick(): void {
 			StorageInterface.checkHoppers(this);
 
-			let tier = this.getTier();
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slot2"), "Eu", energyStorage - this.data.energy, tier);
-			this.data.energy -= ChargeItemRegistry.addEnergyToSlot(this.container.getSlot("slot1"), "Eu", this.data.energy, tier);
+			this.dischargeSlot("slot2");
+			this.chargeSlot("slot1");
 
+			const energyStorage = this.getEnergyStorage();
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.setText("textInfo1", Math.floor(this.data.energy) + "/");
 			this.container.setText("textInfo2", energyStorage);

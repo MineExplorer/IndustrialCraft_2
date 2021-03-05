@@ -36,6 +36,9 @@ class CropAnalyser extends ItemCommon {
 			const { x, y, z } = Entity.getPosition(player);
 			container.dropAt(BlockSource.getDefaultForActor(player), x, y, z);
 		});
+		container.addServerOpenListener((container: ItemContainer, client: NetworkClient) => {
+			CropAnalyser.clearInfo(container);
+		});
 		container.openFor(client, "crop_analyser.ui");
 	}
 
@@ -55,59 +58,74 @@ class CropAnalyser extends ItemCommon {
 
 	setupContainer(container: ItemContainer) {
 		container.setClientContainerTypeName("crop_analyser.ui");
-		container.setGlobalAddTransferPolicy(function (container: ItemContainer, name: string, id: number, count: number, data: number, extra: ItemExtraData, playerUid: number): number {
-			switch (name) {
-				case "slotSeedOut":
-					return 0;
-				case "slotEnergy":
-					if (ChargeItemRegistry.isValidStorage(id, "Eu", 4)) {
-						const slotBagIn = container.getSlot("slotSeedIn");
-						if (slotBagIn.id == ItemID.cropSeedBag) {
-							runOnMainThread(() => {
-								const slotBagOut = container.getSlot("slotSeedOut");
-								const slotEnergy = container.getSlot("slotEnergy");
-								CropAnalyser.scanBag(slotBagIn, slotEnergy, playerUid);
-								CropAnalyser.moveBag(slotBagIn, slotBagOut);
-								CropAnalyser.showAllValues(container, slotBagOut);
-							});
-						}
-						return count;
-					} else return 0;
-				case "slotSeedIn":
-					if (id == ItemID.cropSeedBag) {
-						const slotEnergy = container.getSlot("slotEnergy");
-						if (ChargeItemRegistry.isValidStorage(slotEnergy.id, "Eu", 4)) {
-							CropAnalyser.scanBag({ id, count, data, extra }, slotEnergy, playerUid);
-							runOnMainThread(() => {
-								const slotBagIn = container.getSlot("slotSeedIn");
-								const slotBagOut = container.getSlot("slotSeedOut");
-								CropAnalyser.moveBag(slotBagIn, slotBagOut);
-								CropAnalyser.showAllValues(container, { id, count, data, extra });
-							});
-						}
-						return count;
+		container.setSlotAddTransferPolicy("slotSeedOut", () => 0);
+		container.setSlotAddTransferPolicy("slotEnergy", (container: ItemContainer, name: string, id: number, amount: number, data: number, extra: ItemExtraData, playerUid: number) => {
+			if (ChargeItemRegistry.isValidStorage(id, "Eu", 4)) {
+				const slotBagIn = container.getSlot("slotSeedIn");
+				if (slotBagIn.id == ItemID.cropSeedBag) {
+					const slotBagOut = container.getSlot("slotSeedOut");
+					if (slotBagOut.isEmpty()) {
+						runOnMainThread(() => {
+							const slotEnergy = container.getSlot("slotEnergy");
+							CropAnalyser.scanBag(slotBagIn, slotEnergy, playerUid);
+							CropAnalyser.moveBag(slotBagIn, slotBagOut);
+							CropAnalyser.showAllValues(container, slotBagOut);
+						});
 					}
-					return 0;
+				}
+				return amount;
 			}
+			return 0;
 		});
-		container.setGlobalGetTransferPolicy(function (container: ItemContainer, name: string, id: number, amount: number, data: number, extra: ItemExtraData, playerUid: number) {
-			if (name == "slotSeedOut") {
-				container.setText("growthText", "");
-				container.setText("gainText", "");
-				container.setText("resistText", "");
-				container.setText("growth", "");
-				container.setText("gain", "");
-				container.setText("resist", "");
-				container.setText("attributes0", "");
-				container.setText("attributes1", "");
-				container.setText("attributes2", "");
-				container.setText("textTier", "");
-				container.setText("discoveredByText", "");
-				container.setText("discoveredBy", "");
-				container.setText("cropName", "");
+		container.setSlotAddTransferPolicy("slotSeedIn", (container: ItemContainer, name: string, id: number, amount: number, data: number, extra: ItemExtraData, playerUid: number) => {
+			if (id == ItemID.cropSeedBag) {
+				const slotBagOut = container.getSlot("slotSeedOut");
+				const slotEnergy = container.getSlot("slotEnergy");
+				if (slotBagOut.isEmpty() && ChargeItemRegistry.isValidStorage(slotEnergy.id, "Eu", 4)) {
+					CropAnalyser.scanBag({ id, count: amount, data, extra }, slotEnergy, playerUid);
+					runOnMainThread(() => {
+						const slotBagIn = container.getSlot("slotSeedIn");
+						CropAnalyser.moveBag(slotBagIn, slotBagOut);
+						CropAnalyser.showAllValues(container, { id, count: amount, data, extra });
+					});
+				}
+				return amount;
+			}
+			return 0;
+		});
+		container.setSlotGetTransferPolicy("slotSeedOut", (container: ItemContainer, name: string, id: number, amount: number, data: number, extra: ItemExtraData, playerUid: number) => {
+			CropAnalyser.clearInfo(container);
+			const slotBagIn = container.getSlot("slotSeedIn");
+			if (!slotBagIn.isEmpty()) {
+				const slotEnergy = container.getSlot("slotEnergy");
+				if (ChargeItemRegistry.isValidStorage(slotEnergy.id, "Eu", 4)) {
+					runOnMainThread(() => {
+						const slotBagOut = container.getSlot("slotSeedOut");
+						CropAnalyser.scanBag({ id, count: amount, data, extra }, slotEnergy, playerUid);
+						CropAnalyser.moveBag(slotBagIn, slotBagOut);
+						CropAnalyser.showAllValues(container, { id, count: amount, data, extra });
+					});
+				}
 			}
 			return amount;
 		});
+	}
+
+	static clearInfo(container: ItemContainer): void {
+		container.setText("growthText", "");
+		container.setText("gainText", "");
+		container.setText("resistText", "");
+		container.setText("growth", "");
+		container.setText("gain", "");
+		container.setText("resist", "");
+		container.setText("attributes0", "");
+		container.setText("attributes1", "");
+		container.setText("attributes2", "");
+		container.setText("textTier", "");
+		container.setText("discoveredByText", "");
+		container.setText("discoveredBy", "");
+		container.setText("cropName", "");
+		container.sendChanges();
 	}
 
 	static moveBag(slotBagIn: ItemContainerSlot, slotBagOut: ItemContainerSlot): void {

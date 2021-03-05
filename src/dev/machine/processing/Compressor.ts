@@ -12,8 +12,6 @@ TileRenderer.setRotationFunction(BlockID.compressor);
 
 ItemName.addTierTooltip("compressor", 1);
 
-MachineRegistry.setMachineDrop("compressor", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
 		"x x",

@@ -9,8 +9,6 @@ TileRenderer.setStandardModelWithRotation(BlockID.blastFurnace, 0, [["machine_ad
 TileRenderer.registerModelWithRotation(BlockID.blastFurnace, 0, [["machine_advanced", 0], ["ind_furnace_side", 1], ["machine_back", 0], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], true);
 TileRenderer.setRotationFunction(BlockID.blastFurnace, true);
 
-MachineRegistry.setMachineDrop("blastFurnace", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.blastFurnace, count: 1, data: 0}, [
 		"aaa",
@@ -26,7 +24,6 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.crushedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000}
 	}, true);
 });
-
 
 const guiBlastFurnace = InventoryWindow("Blast Furnace", {
 	drawing: [
@@ -60,6 +57,8 @@ namespace Machine {
 		}
 
 		upgrades = ["redstone", "itemEjector", "itemPulling"]
+
+		defaultDrop = BlockID.machineBlockBasic;
 
 		getScreenByName() {
 		   return guiBlastFurnace;
@@ -204,12 +203,8 @@ namespace Machine {
 			return 0;
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			if (ICTool.isValidWrench(item)) {
-				ICTool.rotateMachine(this, coords.side, item, player)
-				return true;
-			}
-			return super.onItemUse(coords, item, player);
+		isWrenchable(): boolean {
+			return true;
 		}
 	}
 

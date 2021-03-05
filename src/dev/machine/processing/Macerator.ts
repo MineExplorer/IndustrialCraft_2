@@ -12,8 +12,6 @@ TileRenderer.setRotationFunction(BlockID.macerator);
 
 ItemName.addTierTooltip("macerator", 1);
 
-MachineRegistry.setMachineDrop("macerator", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.macerator, count: 1, data: 0}, [
 		"xxx",

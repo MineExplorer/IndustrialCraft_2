@@ -44,8 +44,6 @@ const guiElectricHeatGenerator = InventoryWindow("Electric Heater", {
 
 namespace Machine {
 	export class ElectricHeatGenerator extends ElectricMachine {
-		readonly hasVerticalRotation: boolean = true;
-
 		getTier(): number {
 			return 4;
 		}
@@ -115,16 +113,8 @@ namespace Machine {
 			return 2000;
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			if (ICTool.isValidWrench(item)) {
-				ICTool.rotateMachine(this, coords.side, item, player)
-				return true;
-			}
-			return super.onItemUse(coords, item, player);
-		}
-
-		getDefaultDrop(): number {
-			return this.blockID;
+		isWrenchable() {
+			return true;
 		}
 	}
 

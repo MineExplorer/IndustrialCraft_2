@@ -9,8 +9,6 @@ TileRenderer.setStandardModelWithRotation(BlockID.icFermenter, 0, [["machine_bot
 TileRenderer.registerModelWithRotation(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 1], ["heat_pipe", 1], ["ic_fermenter_side", 1], ["ic_fermenter_side", 1]], true);
 TileRenderer.setRotationFunction(BlockID.icFermenter, true);
 
-MachineRegistry.setMachineDrop("icFermenter");
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.icFermenter, count: 1, data: 0}, [
 		"aaa",
@@ -126,16 +124,16 @@ namespace Machine {
 			return MachineRegistry.addLiquidToItem.call(this, liquid, inputItem, outputItem);
 		}
 
+		isWrenchable(): boolean {
+			return true;
+		}
+
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				let liquid = this.liquidStorage.getLiquidStored();
 				if (this.getLiquidFromItem(liquid, item, new ItemStack(), true)) {
 					return true;
 				}
-			}
-			if (ICTool.isValidWrench(item)) {
-				ICTool.rotateMachine(this, coords.side, item, player)
-				return true;
 			}
 			return super.onItemUse(coords, item, player);
 		}

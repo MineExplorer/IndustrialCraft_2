@@ -26,6 +26,8 @@ namespace Machine {
 			canSeeSky: false
 		}
 
+		defaultDrop = BlockID.machineBlockBasic;
+
 		getScreenByName() {
 			return guiSolarPanel;
 		}
@@ -62,10 +64,6 @@ namespace Machine {
 			if (content) {
 				content.elements["sun"].bitmap = "sun_" + data;
 			}
-		}
-
-		getDefaultDrop(): number {
-			return BlockID.machineBlockBasic;
 		}
 	}
 

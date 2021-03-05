@@ -10,8 +10,6 @@ TileRenderer.setRotationFunction(BlockID.thermalCentrifuge);
 
 ItemName.addTierTooltip("thermalCentrifuge", 2);
 
-MachineRegistry.setMachineDrop("thermalCentrifuge", BlockID.machineBlockAdvanced);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.thermalCentrifuge, count: 1, data: 0}, [
 		"cmc",
@@ -86,6 +84,8 @@ namespace Machine {
 		}
 
 		upgrades = ["overclocker", "transformer", "energyStorage", "redstone", "itemEjector", "itemPulling"];
+
+		defaultDrop = BlockID.machineBlockAdvanced;
 
 		getScreenByName() {
 			return guiCentrifuge;

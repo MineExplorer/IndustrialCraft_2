@@ -10,8 +10,6 @@ ItemRegistry.setRarity(BlockID.nuclearReactor, EnumRarity.UNCOMMON);
 TileRenderer.setStandardModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1]]);
 
-MachineRegistry.setMachineDrop("nuclearReactor", BlockID.primalGenerator);
-
 Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block, player, region) {
 	let x = coords.relative.x;
 	let y = coords.relative.y;
@@ -38,6 +36,7 @@ Callback.addCallback("PreLoaded", function() {
 		"x#x"
 	], ['#', BlockID.primalGenerator, 0, 'a', BlockID.reactorChamber, 0, 'x', ItemID.densePlateLead, 0, 'c', ItemID.circuitAdvanced, 0]);
 });
+
 
 const reactorElements: UI.ElementSet = {
 	"heatScale": {type: "scale", x: 346, y: 376, direction: 0, value: 0.5, bitmap: "reactor_heat_scale", scale: 3},
@@ -405,5 +404,5 @@ namespace Machine {
 		}
 	}
 
-	MachineRegistry.registerGenerator(BlockID.nuclearReactor, new NuclearReactor());
+	MachineRegistry.registerPrototype(BlockID.nuclearReactor, new NuclearReactor());
 }

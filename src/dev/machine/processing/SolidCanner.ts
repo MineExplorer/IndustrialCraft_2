@@ -10,8 +10,6 @@ TileRenderer.setRotationFunction(BlockID.solidCanner);
 
 ItemName.addTierTooltip("solidCanner", 1);
 
-MachineRegistry.setMachineDrop("solidCanner", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.solidCanner, count: 1, data: 0}, [
 		"c#c",
@@ -57,6 +55,7 @@ Callback.addCallback("PreLoaded", function() {
 	}, true);
 });
 
+
 const guiSolidCanner = InventoryWindow("Solid Canning Machine", {
 	drawing: [
 		{type: "bitmap", x: 400 + 52*GUI_SCALE, y: 50 + 33*GUI_SCALE, bitmap: "solid_canner_arrow", scale: GUI_SCALE},
@@ -90,6 +89,8 @@ namespace Machine {
 		}
 
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
+
+		defaultDrop = BlockID.machineBlockBasic;
 
 		getScreenByName() {
 			return guiSolidCanner;

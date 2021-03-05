@@ -12,10 +12,8 @@ TileRenderer.setRotationFunction(BlockID.metalFormer);
 
 ItemName.addTierTooltip("metalFormer", 1);
 
-MachineRegistry.setMachineDrop("metalFormer", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
-	function isToolboxEmpty(slot) {
+	function isToolboxEmpty(slot: ItemInstance) {
 		let container = BackpackRegistry.containers["d" + slot.data];
 		if (container) {
 			for (let i = 1; i <= 10; i++) {

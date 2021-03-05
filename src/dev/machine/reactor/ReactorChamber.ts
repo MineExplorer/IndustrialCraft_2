@@ -5,8 +5,6 @@ Block.createBlock("reactorChamber", [
 ToolAPI.registerBlockMaterial(BlockID.reactorChamber, "stone", 1, true);
 ItemRegistry.setRarity(BlockID.reactorChamber, EnumRarity.UNCOMMON);
 
-MachineRegistry.setMachineDrop("reactorChamber");
-
 Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block, player, region) {
 	let x = coords.relative.x;
 	let y = coords.relative.y;
@@ -36,9 +34,9 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.plateLead, 0]);
 });
 
+
 namespace Machine {
-	export class ReactorChamber
-	extends Generator {
+	export class ReactorChamber extends Generator {
 		data: {
 			energy: number,
 			corePos: Vector,
@@ -103,5 +101,5 @@ namespace Machine {
 		}
 	}
 
-	MachineRegistry.registerGenerator(BlockID.reactorChamber, new ReactorChamber());
+	MachineRegistry.registerPrototype(BlockID.reactorChamber, new ReactorChamber());
 }

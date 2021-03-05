@@ -11,6 +11,8 @@ namespace Machine {
 
 		upgrades = ["transformer", "energyStorage", "itemEjector"];
 
+		defaultDrop = BlockID.machineBlockBasic;
+
 		getScreenByName() {
 			return guiCropHarvester;
 		}

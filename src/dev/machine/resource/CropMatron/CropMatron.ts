@@ -18,7 +18,6 @@ Callback.addCallback("PreLoaded", function () {
 });
 
 MachineRegistry.registerPrototype(BlockID.cropMatron, new Machine.CropMatron());
-MachineRegistry.setMachineDrop("cropMatron", BlockID.machineBlockBasic);
 
 StorageInterface.createInterface(BlockID.cropMatron, {
     slots: {

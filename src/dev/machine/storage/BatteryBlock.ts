@@ -2,7 +2,6 @@
 
 namespace Machine {
 	export class BatteryBlock extends ElectricMachine {
-		readonly hasVerticalRotation: boolean = true;
 		readonly isTeleporterCompatible: boolean = true;
 
 		readonly tier: number;
@@ -35,12 +34,8 @@ namespace Machine {
 			});
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			if (ICTool.isValidWrench(item)) {
-				ICTool.rotateMachine(this, coords.side, item, player)
-				return true;
-			}
-			return super.onItemUse(coords, item, player);
+		isWrenchable(): boolean {
+			return true;
 		}
 
 		setFacing(side: number): boolean {
@@ -65,7 +60,6 @@ namespace Machine {
 		}
 
 		energyTick(type: string, src: any): void {
-			super.energyTick(type, src);
 			let output = this.getMaxPacketSize();
 			if (this.data.energy >= output) {
 				this.data.energy += src.add(output) - output;
@@ -86,10 +80,6 @@ namespace Machine {
 
 		canExtractEnergy(side: number): boolean {
 			return side == this.getFacing();
-		}
-
-		getDefaultDrop(): number {
-			return this.defaultDrop;
 		}
 
 		getDropItem(player: number): ItemInstance {

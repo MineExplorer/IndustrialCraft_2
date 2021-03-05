@@ -10,8 +10,6 @@ TileRenderer.setRotationFunction(BlockID.massFabricator);
 ItemRegistry.setRarity(BlockID.massFabricator, EnumRarity.RARE);
 ItemName.addTierTooltip("massFabricator", 4);
 
-MachineRegistry.setMachineDrop("massFabricator", BlockID.machineBlockAdvanced);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.massFabricator, count: 1, data: 0}, [
 		"xax",
@@ -46,6 +44,8 @@ namespace Machine {
 			catalyser: 0,
 			isEnabled: true
 		}
+
+		defaultDrop = BlockID.machineBlockAdvanced;
 
 		getTier(): number {
 			return 4;

@@ -46,8 +46,6 @@ const guiSolidHeatGenerator = InventoryWindow("Solid Fuel Firebox", {
 
 namespace Machine {
 	export class SolidHeatGenerator extends MachineBase {
-		readonly hasVerticalRotation: boolean = true;
-
 		defaultValues ={
 			burn: 0,
 			burnMax: 0,
@@ -119,12 +117,8 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			if (ICTool.isWrench(item.id)) {
-				ICTool.rotateMachine(this, coords.side, item, player)
-				return true;
-			}
-			return super.onItemUse(coords, item, player);
+		isWrenchable(): boolean {
+			return true;
 		}
 	}
 

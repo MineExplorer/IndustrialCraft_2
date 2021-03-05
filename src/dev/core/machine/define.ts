@@ -10,15 +10,16 @@ namespace MachineRegistry {
 	}
 
 	// register IC2 Machine
-	export function registerPrototype(id: number, Prototype: any) {
+	export function registerPrototype(id: number, Prototype: TileEntity.TileEntityPrototype) {
 		// register ID
 		machineIDs[id] = true;
 
 		TileEntity.registerPrototype(id, Prototype);
 
-		if (Prototype instanceof Machine.MachineBase) {
-			Block.registerDropFunction(id, () => []);
+		if (!Prototype.getDefaultDrop) Prototype.getDefaultDrop = function() {
+			return this.blockID;
 		}
+		setMachineDrop(id, Prototype.defaultDrop);
 
 		if (Prototype instanceof Machine.ElectricMachine) {
 			// wire connection
@@ -29,46 +30,36 @@ namespace MachineRegistry {
 	}
 
 	// for reverse compatibility
-	export function registerElectricMachine(id: number, Prototype: any) {
+	export function registerElectricMachine(id: number, Prototype: TileEntity.TileEntityPrototype) {
 		// wire connection
 		ICRender.getGroup("ic-wire").add(id, -1);
 		// setup energy values
 		if (Prototype.defaultValues) {
 			Prototype.defaultValues.energy = 0;
-			Prototype.defaultValues.energy_receive = 0;
-			Prototype.defaultValues.last_energy_receive = 0;
-			Prototype.defaultValues.voltage = 0;
-			Prototype.defaultValues.last_voltage = 0;
 		}
 		else {
 			Prototype.defaultValues = {
-				energy: 0,
-				energy_receive: 0,
-				last_energy_receive: 0,
-				voltage: 0,
-				last_voltage: 0
+				energy: 0
 			};
 		}
 
-		for (let key in Machine.ElectricMachine.prototype) {
-			if (!Prototype[key]) {
-				Prototype[key] = Machine.ElectricMachine.prototype[key];
-			}
-		}
+		let BasePrototype = Machine.ElectricMachine.prototype;
+		Prototype.getTier = Prototype.getTier || BasePrototype.getTier;
+		Prototype.getMaxPacketSize = Prototype.getMaxPacketSize || BasePrototype.getMaxPacketSize;
+		Prototype.getExplosionPower = Prototype.getExplosionPower || BasePrototype.getExplosionPower;
+		Prototype.energyReceive = Prototype.energyReceive || BasePrototype.energyReceive;
 
 		this.registerPrototype(id, Prototype);
 		// register for energy net
 		EnergyTileRegistry.addEnergyTypeForId(id, EU);
 	}
 
-	export function registerGenerator(id: number, Prototype: any) {
-		for (let key in Machine.Generator.prototype) {
-			if (!Prototype[key]) {
-				Prototype[key] = Machine.Generator.prototype[key];
-			}
-		}
-
-		this.registerPrototype(id, Prototype);
+	export function registerGenerator(id: number, Prototype: TileEntity.TileEntityPrototype) {
+		let BasePrototype = Machine.Generator.prototype;
+		Prototype.energyTick = Prototype.energyTick || BasePrototype.energyTick;
+		Prototype.canReceiveEnergy = Prototype.canReceiveEnergy || BasePrototype.canReceiveEnergy;
+		Prototype.canExtractEnergy = Prototype.canExtractEnergy || BasePrototype.canExtractEnergy;
+		this.registerElectricMachine(id, Prototype);
 	}
 
 	// standard functions
@@ -85,37 +76,28 @@ namespace MachineRegistry {
 		});
 	}
 
-	export function getMachineDrop(coords: Vector, blockID: number, level: number, item: ItemInstance, region: BlockSource, basicDrop?: number, saveEnergyAmount?: number): ItemInstanceArray[] {
-		let dropID = 0;
-		if (ICTool.isValidWrench(item, 10)) {
-			ChargeItemRegistry.getEnergyFrom(item, "Eu", 10, 4, true);
-			region.setBlock(coords.x, coords.y, coords.z, 0, 0);
-			let chance = ICTool.getWrenchData(item.id).chance;
-			if (Math.random() < chance) {
-				dropID = blockID;
-			} else {
-				dropID = basicDrop || blockID;
-			}
+	export function getMachineDrop(blockID: number, level: number): ItemInstanceArray[] {
+		let drop = [];
+		if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
+			let dropID = TileEntity.getPrototype(blockID).getDefaultDrop();
+			drop.push([dropID, 1, 0]);
 		}
-		else if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
-			dropID = basicDrop || blockID;
-		}
-		if (dropID == blockID && saveEnergyAmount) {
-			let extra = new ItemExtraData();
-			extra.putInt("energy", saveEnergyAmount);
-			return [[dropID, 1, 0, extra]];
-		}
-		if (dropID) return [[dropID, 1, 0]];
-		return [];
+		return drop;
 	}
 
-	export function setMachineDrop(stringID: string, basicDrop?: number) {
-		Block.registerDropFunction(stringID, function(coords, blockID, blockData, level, enchant, item, region) {
-			return MachineRegistry.getMachineDrop(coords, blockID, level, item, region, basicDrop);
+	export function setMachineDrop(blockID: string | number, dropID?: number) {
+		dropID ??= Block.getNumericId(blockID);
+		Block.registerDropFunction(blockID, function(coords, blockID, blockData, level) {
+			let drop = [];
+			if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
+				drop.push([dropID, 1, 0]);
+			}
+			return drop;
 		});
-		Block.registerPopResourcesFunction(stringID, function(coords, block, region) { // drop on explosion
+		// drop on explosion
+		Block.registerPopResourcesFunction(blockID, function(coords, block, region) {
 			if (Math.random() < 0.25) {
-				region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, basicDrop || block.id, 1, 0);
+				region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, dropID, 1, 0);
 			}
 		});
 	}

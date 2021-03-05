@@ -81,6 +81,8 @@ namespace Machine {
 
 		upgrades = ["overclocker", "transformer"];
 
+		defaultDrop = BlockID.machineBlockAdvanced;
+
 		getScreenByName() {
 			return guiAdvancedMiner;
 		}

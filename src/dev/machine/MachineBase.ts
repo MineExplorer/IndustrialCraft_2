@@ -5,15 +5,15 @@ namespace Machine {
 
 	export abstract class MachineBase
 	extends TileEntityBase {
-		readonly hasVerticalRotation: boolean = false;
 		upgrades?: string[];
+		defaultDrop?: number;
 
 		init(): void {
 			super.init();
 			if (this.data.meta !== undefined) {
 				Logger.Log(`Update tile with ID ${this.blockID}, data ${this.data.meta}`, "IC2");
 				let facing = this.data.meta;
-				if (!this.hasVerticalRotation) facing += 2;
+				if (!this.isWrenchable()) facing += 2;
 				this.setFacing(facing);
 				delete this.data.meta;
 			}
@@ -25,8 +25,17 @@ namespace Machine {
 
 		setupContainer(): void {}
 
+		isWrenchable(): boolean {
+			return false;
+		}
+
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			return (item.id == ItemID.debugItem);
+			if (item.id == ItemID.debugItem) return true;
+			if (this.isWrenchable() && ICTool.isUseableWrench(item, 1)) {
+				ICTool.rotateMachine(this, coords.side, item, player);
+				return true;
+			}
+			return false;
 		}
 
 		setActive(isActive: boolean): void {
@@ -80,16 +89,15 @@ namespace Machine {
 		}
 
 		getDefaultDrop(): number {
-			return this.blockID;
+			return this.defaultDrop ?? this.blockID;
 		}
 
 		getDropItem(player: number): ItemInstance {
 			let item = Entity.getCarriedItem(player);
 			let dropID = 0;
-			if (ICTool.isValidWrench(item, 10)) {
-				ICTool.useWrench(item, player, 10);
-				ChargeItemRegistry.getEnergyFrom(item, "Eu", 10, 4, true);
-				let chance = ICTool.getWrenchData(item.id).chance;
+			if (ICTool.isUseableWrench(item, 10)) {
+				ICTool.useWrench(item, 10, player);
+				let chance = ICTool.getWrenchData(item.id).dropChance;
 				if (Math.random() < chance) {
 					dropID = this.blockID;
 				} else {

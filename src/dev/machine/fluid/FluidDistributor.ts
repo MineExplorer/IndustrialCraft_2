@@ -42,6 +42,8 @@ namespace Machine {
 			inverted: false
 		}
 
+		defaultDrop = BlockID.machineBlockBasic;
+
 		getScreenByName() {
 			return guiFluidDistributor;
 		}
@@ -92,16 +94,8 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			if (ICTool.isValidWrench(item)) {
-				ICTool.rotateMachine(this, coords.side, item, player)
-				return true;
-			}
-			return super.onItemUse(coords, item, player);
-		}
-
-		getDefaultDrop(): number {
-			return BlockID.machineBlockBasic;
+		isWrenchable() {
+			return true;
 		}
 
 		@ContainerEvent(Side.Server)

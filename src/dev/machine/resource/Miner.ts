@@ -43,6 +43,8 @@ namespace Machine {
 			progress: 0
 		}
 
+		defaultDrop = BlockID.machineBlockBasic;
+
 		getScreenByName() {
 			return guiMiner;
 		}

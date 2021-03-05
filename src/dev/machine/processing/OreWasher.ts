@@ -10,8 +10,6 @@ TileRenderer.setRotationFunction(BlockID.oreWasher);
 
 ItemName.addTierTooltip("oreWasher", 1);
 
-MachineRegistry.setMachineDrop("oreWasher", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.oreWasher, count: 1, data: 0}, [
 		"aaa",

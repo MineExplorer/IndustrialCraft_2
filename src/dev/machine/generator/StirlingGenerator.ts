@@ -47,14 +47,10 @@ namespace Machine {
 			}
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			if (ICTool.isWrench(item.id)) {
-				ICTool.rotateMachine(this, coords.side, item, player)
-				return true;
-			}
-			return super.onItemUse(coords, item, player);
+		isWrenchable() {
+			return true;
 		}
 	}
 
-	MachineRegistry.registerGenerator(BlockID.stirlingGenerator, new StirlingGenerator());
+	MachineRegistry.registerPrototype(BlockID.stirlingGenerator, new StirlingGenerator());
 }

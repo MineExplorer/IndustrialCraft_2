@@ -50,8 +50,10 @@ namespace Machine {
 				let height = (this.y < 160) ? Math.max(this.y - 64, 0) : 256 - this.y;
 				let wind = windStrength;
 				let wether = World.getWeather();
-				if (wether.thunder) wind *= 1.25;
-				else if (wether.rain) wind *= 1.5;
+				if (wether.thunder)
+					wind *= 1.25;
+				else if (wether.rain)
+					wind *= 1.5;
 				let output = wind * height * (1 - this.data.blockCount/405) / 288;
 				this.data.output = Math.round(output*10)/10;
 			}

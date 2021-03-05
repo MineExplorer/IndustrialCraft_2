@@ -9,8 +9,6 @@ ToolAPI.registerBlockMaterial(BlockID.transformerLV, "stone", 1, true);
 TileRenderer.setStandardModelWithRotation(BlockID.transformerLV, 0, [["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0]], true);
 TileRenderer.setRotationFunction(BlockID.transformerLV, true);
 
-MachineRegistry.setMachineDrop("transformerLV");
-
 ItemName.addTooltip(BlockID.transformerLV, "Low: 32 EU/t High: 128 EU/t");
 
 Callback.addCallback("PreLoaded", function() {

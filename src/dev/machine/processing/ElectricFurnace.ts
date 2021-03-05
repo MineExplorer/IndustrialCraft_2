@@ -12,8 +12,6 @@ TileRenderer.setRotationFunction(BlockID.electricFurnace);
 
 ItemName.addTierTooltip("electricFurnace", 1);
 
-MachineRegistry.setMachineDrop("electricFurnace", BlockID.ironFurnace);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.electricFurnace, count: 1, data: 0}, [
 		" a ",
@@ -52,7 +50,9 @@ namespace Machine {
 			progress: 0
 		}
 
-		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"]
+		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
+
+		defaultDrop = BlockID.ironFurnace;
 
 		getScreenByName() {
 			return guiElectricFurnace;

@@ -10,8 +10,6 @@ TileRenderer.setRotationFunction(BlockID.recycler);
 
 ItemName.addTierTooltip("recycler", 1);
 
-MachineRegistry.setMachineDrop("recycler", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.recycler, count: 1, data: 0}, [
 		" a ",
@@ -53,6 +51,8 @@ namespace Machine {
 		}
 
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
+
+		defaultDrop = BlockID.machineBlockBasic;
 
 		getScreenByName() {
 			return guiRecycler;

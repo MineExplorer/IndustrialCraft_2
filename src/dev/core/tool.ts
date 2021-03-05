@@ -1,11 +1,17 @@
+interface IWrech {
+	dropChance: number;
+	isUseable(item: ItemInstance, damage: number): boolean;
+	useItem(item: ItemInstance, damage: number, player: number): boolean;
+}
+
 namespace ICTool {
 	let wrenchData = {}
 
-	export function registerWrench(id: number, chance: number, energyPerUse?: number) {
-		wrenchData[id] = {chance: chance, energy: energyPerUse}
+	export function registerWrench(id: number, properties: IWrech) {
+		wrenchData[id] = properties;
 	}
 
-	export function getWrenchData(id: number): {chance: number, energy?: number} {
+	export function getWrenchData(id: number): IWrech {
 		return wrenchData[id];
 	}
 
@@ -13,24 +19,14 @@ namespace ICTool {
 		return !!getWrenchData(id);
 	}
 
-	export function isValidWrench(item: ItemInstance, damage: number = 1): boolean {
+	export function isUseableWrench(item: ItemInstance, damage: number = 1): boolean {
 		let wrench = getWrenchData(item.id);
-		if (wrench) {
-			let energyStored = ChargeItemRegistry.getEnergyStored(item);
-			if (!wrench.energy || energyStored >= wrench.energy * damage) {
-				return true;
-			}
-		}
-		return false;
+		return wrench?.isUseable(item, damage);
 	}
 
-	export function useWrench(item: ItemInstance, player: number, damage: number): boolean {
+	export function useWrench(item: ItemInstance, damage: number, player: number): boolean {
 		let wrench = getWrenchData(item.id);
-		if (!wrench.energy) {
-			ToolLib.breakCarriedTool(damage, player);
-			return true;
-		}
-		return useElectricItem(item, wrench.energy * damage, player);
+		return wrench?.useItem(item, damage, player);
 	}
 
 	export function rotateMachine(tileEntity: TileEntity, side: number, item: ItemInstance, player: number): void {
@@ -38,7 +34,7 @@ namespace ICTool {
 			side ^= 1;
 		}
 		if (tileEntity.setFacing(side)) {
-			useWrench(item, player, 1);
+			useWrench(item, 1, player);
 			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg", 1);
 		}
 	}
@@ -112,7 +108,7 @@ namespace ICTool {
 Callback.addCallback("DestroyBlockStart", function(coords: Callback.ItemUseCoordinates, block: Tile) {
 	if (MachineRegistry.isMachine(block.id)) {
 		let item = Player.getCarriedItem();
-		if (ICTool.isValidWrench(item, 10)) {
+		if (ICTool.isUseableWrench(item, 10)) {
 			Block.setTempDestroyTime(block.id, 0);
 		}
 	}

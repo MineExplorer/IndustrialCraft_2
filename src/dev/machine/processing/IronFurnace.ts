@@ -8,8 +8,6 @@ TileRenderer.setStandardModelWithRotation(BlockID.ironFurnace, 2, [["iron_furnac
 TileRenderer.registerModelWithRotation(BlockID.ironFurnace, 2, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 1], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.ironFurnace);
 
-MachineRegistry.setMachineDrop("ironFurnace");
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.ironFurnace, count: 1, data: 0}, [
 		" x ",

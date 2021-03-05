@@ -13,8 +13,6 @@ TileRenderer.setRotationFunction(BlockID.inductionFurnace);
 ItemRegistry.setRarity(BlockID.inductionFurnace, EnumRarity.UNCOMMON);
 ItemName.addTierTooltip("inductionFurnace", 2);
 
-MachineRegistry.setMachineDrop("inductionFurnace", BlockID.machineBlockAdvanced);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.inductionFurnace, count: 1, data: 0}, [
 		"xxx",
@@ -58,6 +56,8 @@ namespace Machine {
 		}
 
 		upgrades = ["transformer", "energyStorage", "redstone", "itemEjector", "itemPulling"];
+
+		defaultDrop = BlockID.machineBlockAdvanced;
 
 		getScreenByName() {
 			return guiInductionFurnace;

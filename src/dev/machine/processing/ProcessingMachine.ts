@@ -12,6 +12,8 @@ namespace Machine {
 			progress?: number,
 		}
 
+		defaultDrop = BlockID.machineBlockBasic;
+
 		getTier(): number {
 			return this.data.tier;
 		}

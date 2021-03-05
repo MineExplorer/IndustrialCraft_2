@@ -36,8 +36,6 @@ const guiRTHeatGenerator = InventoryWindow("Radioisotope Heat Generator", {
 
 namespace Machine {
 	export class RTHeatGenerator extends MachineBase {
-		readonly hasVerticalRotation: boolean = true;
-
 		getScreenByName() {
 			return guiRTHeatGenerator;
 		}
@@ -81,12 +79,8 @@ namespace Machine {
 			return 0;
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			if (ICTool.isValidWrench(item)) {
-				ICTool.rotateMachine(this, coords.side, item, player)
-				return true;
-			}
-			return super.onItemUse(coords, item, player);
+		isWrenchable(): boolean {
+			return true;
 		}
 	}
 

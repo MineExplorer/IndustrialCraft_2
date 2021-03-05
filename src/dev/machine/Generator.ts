@@ -3,6 +3,8 @@
 namespace Machine {
 	export abstract class Generator
 	extends ElectricMachine {
+		defaultDrop = BlockID.primalGenerator;
+
 		canReceiveEnergy(): boolean {
 			return false;
 		}
@@ -12,13 +14,8 @@ namespace Machine {
 		}
 
 		energyTick(type: string, src: any): void {
-			super.energyTick(type, src);
 			let output = Math.min(this.data.energy, this.getMaxPacketSize());
 			this.data.energy += src.add(output) - output;
-		}
-
-		getDefaultDrop(): number {
-			return BlockID.primalGenerator;
 		}
 	}
 }

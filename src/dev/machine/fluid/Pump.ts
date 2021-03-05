@@ -54,6 +54,8 @@ namespace Machine {
 
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector"];
 
+		defaultDrop = BlockID.machineBlockBasic;
+
 		getScreenByName() {
 			return guiPump;
 		}

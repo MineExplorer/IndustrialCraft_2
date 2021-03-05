@@ -11,11 +11,8 @@ namespace Machine {
 		defaultValues = {
 			energy: 0
 		};
-		data: this["defaultValues"];
 
-		constructor() {
-			super();
-		}
+		data: this["defaultValues"];
 
 		getTier(): number {
 			return 1;
@@ -81,10 +78,6 @@ namespace Machine {
 		rebuildGrid(): void {
 			this.energyNode.resetConnections();
 			EnergyGridBuilder.buildGridForTile(this);
-		}
-
-		getDefaultDrop(): number {
-			return BlockID.machineBlockBasic;
 		}
 	}
 }

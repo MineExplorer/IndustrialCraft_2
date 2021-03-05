@@ -84,10 +84,6 @@ namespace Machine {
 				this.setBlock(BlockID.luminator_on)
 			}
 		}
-
-		getDefaultDrop(): number {
-			return this.blockID;
-		}
 	}
 
 	class LampOn

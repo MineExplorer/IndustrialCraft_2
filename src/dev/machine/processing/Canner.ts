@@ -10,8 +10,6 @@ TileRenderer.setRotationFunction(BlockID.canner);
 
 ItemName.addTierTooltip("canner", 1);
 
-MachineRegistry.setMachineDrop("canner", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.canner, count: 1, data: 0}, [
 		"c#c",
@@ -76,6 +74,8 @@ namespace Machine {
 		};
 
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector", "fluidPulling"];
+
+		defaultDrop = BlockID.machineBlockBasic;
 
 		getScreenByName() {
 			return guiCanner;

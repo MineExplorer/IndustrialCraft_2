@@ -40,8 +40,6 @@ const guiFluidHeatGenerator = InventoryWindow("Liquid Fuel Firebox", {
 
 namespace Machine {
 	export class FluidHeatGenerator extends MachineBase {
-		readonly hasVerticalRotation: boolean = true;
-
 		defaultValues = {
 			output: 0,
 			fuel: 0,
@@ -67,14 +65,14 @@ namespace Machine {
 			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
 
+		isWrenchable(): boolean {
+			return true;
+		}
+
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				let liquid = this.liquidStorage.getLiquidStored();
 				return this.getLiquidFromItem(liquid, item, new ItemStack(), true);
-			}
-			if (ICTool.isValidWrench(item)) {
-				ICTool.rotateMachine(this, coords.side, item, player)
-				return true;
 			}
 			return super.onItemUse(coords, item, player);
 		}

@@ -12,7 +12,6 @@ Callback.addCallback("PreLoaded", function () {
 	], ['#', BlockID.machineBlockBasic, 0, 'z', ItemID.circuitBasic, 0, 'c', 54, -1, 'a', ItemID.agriculturalAnalyzer, 0, 'p', ItemID.plateIron, 0, 's', 359, 0]);
 });
 
-MachineRegistry.setMachineDrop("cropHarvester", BlockID.machineBlockBasic);
 MachineRegistry.registerPrototype(BlockID.cropHarvester, new Machine.CropHarvester());
 
 StorageInterface.createInterface(BlockID.cropHarvester, {

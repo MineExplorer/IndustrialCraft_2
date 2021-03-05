@@ -2,12 +2,12 @@
 
 namespace Machine {
 	export class Transformer extends ElectricMachine {
-		readonly hasVerticalRotation: boolean = true;
 		readonly tier: number
 
-		constructor(tier: number) {
+		constructor(tier: number, defaultDrop?: number) {
 			super();
 			this.tier = tier;
+			this.defaultDrop = defaultDrop;
 		}
 
 		defaultValues = {
@@ -64,10 +64,7 @@ namespace Machine {
 			return !this.data.increaseMode;
 		}
 
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			if (ICTool.isValidWrench(item)) {
-				ICTool.rotateMachine(this, coords.side, item, player)
-			}
+		isWrenchable(): boolean {
 			return true;
 		}
 

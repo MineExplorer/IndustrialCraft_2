@@ -12,8 +12,6 @@ TileRenderer.setStandardModel(BlockID.transformerEV, 1, [["ev_transformer_side",
 TileRenderer.setStandardModelWithRotation(BlockID.transformerEV, 2, [["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0], ["ev_transformer_front", 0], ["ev_transformer_side", 0], ["ev_transformer_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.transformerEV, true);
 
-MachineRegistry.setMachineDrop("transformerEV", BlockID.machineBlockBasic);
-
 ItemRegistry.setRarity(BlockID.transformerEV, EnumRarity.UNCOMMON);
 ItemName.addTooltip(BlockID.transformerEV, "Low: 2048 EU/t High: 8192 EU/t");
 
@@ -32,4 +30,4 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', BlockID.transformerHV, 0, 'a', ItemID.storageLapotronCrystal, -1, 'b', ItemID.cableIron3, 0, 'c', ItemID.circuitAdvanced, 0]);
 });
 
-MachineRegistry.registerPrototype(BlockID.transformerEV, new Machine.Transformer(5));
+MachineRegistry.registerPrototype(BlockID.transformerEV, new Machine.Transformer(5, BlockID.machineBlockBasic));

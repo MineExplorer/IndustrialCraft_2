@@ -12,8 +12,6 @@ TileRenderer.setRotationFunction(BlockID.extractor);
 
 ItemName.addTierTooltip("extractor", 1);
 
-MachineRegistry.setMachineDrop("extractor", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.extractor, count: 1, data: 0}, [
 		"x#x",

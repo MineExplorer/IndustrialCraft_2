@@ -23,6 +23,8 @@ namespace Machine {
 			frequency: null
 		}
 
+		defaultDrop = BlockID.machineBlockAdvanced;
+
 		getNearestStorages(): TileEntity[] {
 			let storages = [];
 			for (let side = 0; side < 6; side++) {
@@ -92,10 +94,6 @@ namespace Machine {
 
 		onItemUse(): boolean {
 			return true;
-		}
-
-		getDefaultDrop(): number {
-			return BlockID.machineBlockAdvanced;
 		}
 	}
 

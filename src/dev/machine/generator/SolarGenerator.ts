@@ -4,8 +4,6 @@ Block.createBlock("solarPanel", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.solarPanel, "stone", 1, true);
 
-MachineRegistry.setMachineDrop("solarPanel", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
 		"aaa",
@@ -64,6 +62,10 @@ namespace Machine {
 			if (content) {
 				content.elements["sun"].bitmap = "sun_" + data;
 			}
+		}
+
+		getDefaultDrop(): number {
+			return BlockID.machineBlockBasic;
 		}
 	}
 

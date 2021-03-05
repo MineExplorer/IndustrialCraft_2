@@ -7,8 +7,6 @@ ToolAPI.registerBlockMaterial(BlockID.genWindmill, "stone", 1, true);
 TileRenderer.setStandardModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.genWindmill);
 
-MachineRegistry.setMachineDrop("genWindmill", BlockID.primalGenerator);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.genWindmill, count: 1, data: 0}, [
 		"x x",

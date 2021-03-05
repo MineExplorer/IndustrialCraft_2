@@ -10,8 +10,6 @@ TileRenderer.setRotationFunction(BlockID.pump);
 
 ItemName.addTierTooltip("pump", 1);
 
-MachineRegistry.setMachineDrop("pump", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.pump, count: 1, data: 0}, [
 		"cxc",
@@ -19,7 +17,6 @@ Callback.addCallback("PreLoaded", function() {
 		"bab"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'a', ItemID.treetap, 0, 'b', BlockID.miningPipe, 0, 'c', ItemID.cellEmpty, 0]);
 });
-
 
 const guiPump = InventoryWindow("Pump", {
 	drawing: [

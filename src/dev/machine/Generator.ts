@@ -16,5 +16,9 @@ namespace Machine {
 			let output = Math.min(this.data.energy, this.getMaxPacketSize());
 			this.data.energy += src.add(output) - output;
 		}
+
+		getDefaultDrop(): number {
+			return BlockID.primalGenerator;
+		}
 	}
 }

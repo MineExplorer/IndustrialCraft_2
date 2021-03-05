@@ -8,8 +8,6 @@ TileRenderer.setStandardModelWithRotation(BlockID.semifluidGenerator, 2, [["mach
 TileRenderer.registerModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
 TileRenderer.setRotationFunction(BlockID.semifluidGenerator);
 
-MachineRegistry.setMachineDrop("semifluidGenerator", BlockID.primalGenerator);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.semifluidGenerator, count: 1, data: 0}, [
 		"pcp",

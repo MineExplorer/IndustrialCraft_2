@@ -5,8 +5,6 @@ Block.createBlock("teslaCoil", [
 ToolAPI.registerBlockMaterial(BlockID.teslaCoil, "stone", 1, true);
 ItemName.addTierTooltip("teslaCoil", 3);
 
-MachineRegistry.setMachineDrop("teslaCoil", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.teslaCoil, count: 1, data: 0}, [
 		"ror",

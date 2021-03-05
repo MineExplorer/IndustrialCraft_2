@@ -14,10 +14,6 @@ TileRenderer.setStandardModel(BlockID.storageBatBox, 3, [["batbox_bottom", 0], [
 TileRenderer.setStandardModel(BlockID.storageBatBox, 4, [["batbox_bottom", 0], ["batbox_top", 1], ["batbox_side", 0], ["batbox_side", 0], ["batbox_front", 0], ["batbox_back", 0]]);
 TileRenderer.setStandardModel(BlockID.storageBatBox, 5, [["batbox_bottom", 0], ["batbox_top", 1], ["batbox_side", 0], ["batbox_side", 0], ["batbox_back", 0], ["batbox_front", 0]]);
 
-Block.registerDropFunction("storageBatBox", function(coords, blockID, blockData, level) {
-	return [];
-});
-
 ItemName.addStorageBlockTooltip("storageBatBox", 1, "40K");
 
 Callback.addCallback("PreLoaded", function() {

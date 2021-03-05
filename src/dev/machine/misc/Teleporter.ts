@@ -8,8 +8,6 @@ ItemRegistry.setRarity(BlockID.teleporter, EnumRarity.RARE);
 TileRenderer.setStandardModel(BlockID.teleporter, 0, [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.teleporter, 0, [["machine_advanced_bottom", 0], ["teleporter_top", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1], ["teleporter_side", 1]]);
 
-MachineRegistry.setMachineDrop("teleporter", BlockID.machineBlockAdvanced);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.teleporter, count: 1, data: 0}, [
 		"xax",
@@ -94,6 +92,10 @@ namespace Machine {
 
 		onItemUse(): boolean {
 			return true;
+		}
+
+		getDefaultDrop(): number {
+			return BlockID.machineBlockAdvanced;
 		}
 	}
 

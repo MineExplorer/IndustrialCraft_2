@@ -13,8 +13,6 @@ TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 1, [["generator", 0
 TileRenderer.registerModelWithRotation(BlockID.solidHeatGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["generator", 1], ["heat_pipe", 1], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
 TileRenderer.setRotationFunction(BlockID.solidHeatGenerator, true);
 
-MachineRegistry.setMachineDrop("solidHeatGenerator");
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.solidHeatGenerator, count: 1, data: 0}, [
 		"a",

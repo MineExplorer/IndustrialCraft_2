@@ -13,8 +13,6 @@ TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 1, [["fluid_heat_ge
 TileRenderer.registerModelWithRotation(BlockID.fluidHeatGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_back", 1], ["heat_pipe", 1], ["fluid_heat_generator_side", 1], ["fluid_heat_generator_side", 1]]);
 TileRenderer.setRotationFunction(BlockID.fluidHeatGenerator, true);
 
-MachineRegistry.setMachineDrop("fluidHeatGenerator");
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.fluidHeatGenerator, count: 1, data: 0}, [
 		"pcp",

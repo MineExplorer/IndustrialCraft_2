@@ -9,8 +9,6 @@ TileRenderer.setStandardModelWithRotation(BlockID.rtHeatGenerator, 0, [["machine
 TileRenderer.registerModelWithRotation(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top", 1], ["rt_generator_side", 0], ["heat_pipe", 1], ["rt_generator_side", 0], ["rt_generator_side", 0]], true);
 TileRenderer.setRotationFunction(BlockID.rtHeatGenerator, true);
 
-MachineRegistry.setMachineDrop("rtHeatGenerator");
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.rtHeatGenerator, count: 1, data: 0}, [
 		"ccc",

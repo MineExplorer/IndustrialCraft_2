@@ -8,8 +8,6 @@ TileRenderer.setStandardModelWithRotation(BlockID.geothermalGenerator, 2, [["mac
 TileRenderer.registerModelWithRotation(BlockID.geothermalGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.geothermalGenerator);
 
-MachineRegistry.setMachineDrop("geothermalGenerator", BlockID.primalGenerator);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.geothermalGenerator, count: 1, data: 0}, [
 		"xax",

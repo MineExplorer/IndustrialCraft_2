@@ -67,9 +67,8 @@ namespace Machine {
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (ICTool.isValidWrench(item)) {
 				ICTool.rotateMachine(this, coords.side, item, player)
-				return true;
 			}
-			return super.onItemUse(coords, item, player);
+			return true;
 		}
 
 		setFacing(side: number): boolean {

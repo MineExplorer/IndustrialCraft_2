@@ -11,10 +11,6 @@ TileRenderer.setStandardModel(BlockID.storageCESU, 0, [["cesu_front", 0], ["cesu
 TileRenderer.setStandardModel(BlockID.storageCESU, 1, [["cesu_back", 0], ["cesu_front", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);
 TileRenderer.setStandardModelWithRotation(BlockID.storageCESU, 2, [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]]);
 
-Block.registerDropFunction("storageCESU", function(coords, blockID, blockData, level) {
-	return [];
-});
-
 ItemName.addStorageBlockTooltip("storageCESU", 2, "300K");
 
 Callback.addCallback("PreLoaded", function() {

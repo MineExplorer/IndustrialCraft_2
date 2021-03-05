@@ -79,6 +79,36 @@ namespace Machine {
 			slot.validate();
 		}
 
+		getDefaultDrop(): number {
+			return this.blockID;
+		}
+
+		getDropItem(player: number): ItemInstance {
+			let item = Entity.getCarriedItem(player);
+			let dropID = 0;
+			if (ICTool.isValidWrench(item, 10)) {
+				ICTool.useWrench(item, player, 10);
+				ChargeItemRegistry.getEnergyFrom(item, "Eu", 10, 4, true);
+				let chance = ICTool.getWrenchData(item.id).chance;
+				if (Math.random() < chance) {
+					dropID = this.blockID;
+				} else {
+					dropID = this.getDefaultDrop();
+				}
+			}
+			else if (ToolAPI.getToolLevelViaBlock(item.id, this.blockID) > 0) {
+				dropID = this.getDefaultDrop();
+			}
+			return dropID ? new ItemStack(dropID, 1, 0) : null;
+		}
+
+		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
+			let item = this.getDropItem(player);
+			if (item) {
+				this.region.dropItem(this.x + .5, this.y + .5, this.z + .5, item.id, item.count, item.data, item.extra);
+			}
+		}
+
 		// Audio
 		audioSource: AudioSource;
 		finishingSound: number;

@@ -88,13 +88,17 @@ namespace Machine {
 			return side == this.getFacing();
 		}
 
-		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
-			let itemID = Entity.getCarriedItem(player).id;
-			let level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID);
-			let drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, this.defaultDrop, this.data.energy);
-			if (drop.length > 0) {
-				this.region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2], drop[0][3]);
+		getDefaultDrop(): number {
+			return this.defaultDrop;
+		}
+
+		getDropItem(player: number): ItemInstance {
+			let item = super.getDropItem(player);
+			if (item.id == this.blockID && this.data.energy > 0) {
+				let extra = new ItemExtraData();
+				item.extra = extra.putInt("energy", this.data.energy);
 			}
+			return item;
 		}
 	}
 }

@@ -11,10 +11,6 @@ TileRenderer.setStandardModel(BlockID.storageMFE, 0, [["mfe_front", 0], ["mfe_ba
 TileRenderer.setStandardModel(BlockID.storageMFE, 1, [["mfe_back", 0], ["mfe_front", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
 TileRenderer.setStandardModelWithRotation(BlockID.storageMFE, 2, [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
 
-Block.registerDropFunction("storageMFE", function(coords, blockID, blockData, level) {
-	return [];
-});
-
 ItemName.addStorageBlockTooltip("storageMFE", 3, "4M");
 
 Callback.addCallback("PreLoaded", function() {

@@ -16,6 +16,10 @@ namespace MachineRegistry {
 
 		TileEntity.registerPrototype(id, Prototype);
 
+		if (Prototype instanceof Machine.MachineBase) {
+			Block.registerDropFunction(id, () => []);
+		}
+
 		if (Prototype instanceof Machine.ElectricMachine) {
 			// wire connection
 			ICRender.getGroup("ic-wire").add(id, -1);
@@ -81,12 +85,11 @@ namespace MachineRegistry {
 		});
 	}
 
-	export function getMachineDrop(coords: Vector, blockID: number, level: number, basicDrop?: number, saveEnergyAmount?: number): ItemInstanceArray[] {
-		let item = Player.getCarriedItem();
+	export function getMachineDrop(coords: Vector, blockID: number, level: number, item: ItemInstance, region: BlockSource, basicDrop?: number, saveEnergyAmount?: number): ItemInstanceArray[] {
 		let dropID = 0;
 		if (ICTool.isValidWrench(item, 10)) {
-			ICTool.useWrench(item, Player.get(), 10);
-			World.setBlock(coords.x, coords.y, coords.z, 0, 0);
+			ChargeItemRegistry.getEnergyFrom(item, "Eu", 10, 4, true);
+			region.setBlock(coords.x, coords.y, coords.z, 0, 0);
 			let chance = ICTool.getWrenchData(item.id).chance;
 			if (Math.random() < chance) {
 				dropID = blockID;
@@ -107,8 +110,8 @@ namespace MachineRegistry {
 	}
 
 	export function setMachineDrop(stringID: string, basicDrop?: number) {
-		Block.registerDropFunction(stringID, function(coords, blockID, blockData, level) {
-			return MachineRegistry.getMachineDrop(coords, blockID, level, basicDrop);
+		Block.registerDropFunction(stringID, function(coords, blockID, blockData, level, enchant, item, region) {
+			return MachineRegistry.getMachineDrop(coords, blockID, level, item, region, basicDrop);
 		});
 		Block.registerPopResourcesFunction(stringID, function(coords, block, region) { // drop on explosion
 			if (Math.random() < 0.25) {

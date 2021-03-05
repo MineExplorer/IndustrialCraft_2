@@ -9,8 +9,6 @@ TileRenderer.setStandardModelWithRotation(BlockID.fluidDistributor, 0, [["fluid_
 TileRenderer.registerModelWithRotation(BlockID.fluidDistributor, 0, [["fluid_distributor", 0], ["fluid_distributor", 0], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 0]], true);
 TileRenderer.setRotationFunction("fluidDistributor", true);
 
-MachineRegistry.setMachineDrop("fluidDistributor", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.fluidDistributor, count: 1, data: 0}, [
 		"a",
@@ -100,6 +98,10 @@ namespace Machine {
 				return true;
 			}
 			return super.onItemUse(coords, item, player);
+		}
+
+		getDefaultDrop(): number {
+			return BlockID.machineBlockBasic;
 		}
 
 		@ContainerEvent(Side.Server)

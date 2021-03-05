@@ -10,10 +10,6 @@ MachineRegistry.setStoragePlaceFunction("advancedMiner");
 ItemRegistry.setRarity(BlockID.advancedMiner, EnumRarity.RARE);
 ItemName.addStorageBlockTooltip("advancedMiner", 3, "4M");
 
-Block.registerDropFunction("advancedMiner", function(coords, blockID, blockData, level) {
-	return [];
-});
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.advancedMiner, count: 1, data: 0}, [
 		"pmp",
@@ -21,7 +17,6 @@ Callback.addCallback("PreLoaded", function() {
 		"pmp"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'a', BlockID.teleporter, 0, 'e', BlockID.storageMFE, -1, 'm', BlockID.miner, -1, 'p', ItemID.plateAlloy, 0]);
 });
-
 
 const guiAdvancedMiner = InventoryWindow("Advanced Miner", {
 	drawing: [
@@ -215,13 +210,13 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
-			let itemID = Entity.getCarriedItem(player).id;
-			let level = ToolAPI.getToolLevelViaBlock(itemID, this.blockID)
-			let drop = MachineRegistry.getMachineDrop(coords, this.blockID, level, BlockID.machineBlockAdvanced, this.data.energy);
-			if (drop.length > 0) {
-				this.region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[0][0], drop[0][1], drop[0][2], drop[0][3]);
+		getDropItem(player: number): ItemInstance {
+			let item = super.getDropItem(player);
+			if (item.id == this.blockID) {
+				let extra = new ItemExtraData();
+				item.extra = extra.putInt("energy", this.data.energy);
 			}
+			return item;
 		}
 
 		onRedstoneUpdate(signal: number): void {

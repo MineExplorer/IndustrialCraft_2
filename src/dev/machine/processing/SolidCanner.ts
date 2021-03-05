@@ -122,7 +122,7 @@ namespace Machine {
 			this.data.work_time = this.defaultValues.work_time;
 		}
 
-		getRecipeResult(id: number) {
+		getRecipeResult(id: number): {can: number, result: ItemInstance} {
 			return MachineRecipeRegistry.getRecipeResult("solidCanner", id);
 		}
 

@@ -11,10 +11,6 @@ TileRenderer.setStandardModel(BlockID.storageMFSU, 0, [["mfsu_front", 0], ["mfsu
 TileRenderer.setStandardModel(BlockID.storageMFSU, 1, [["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 1], ["mfsu_side", 1]]);
 TileRenderer.setStandardModelWithRotation(BlockID.storageMFSU, 2, [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]]);
 
-Block.registerDropFunction("storageMFSU", function(coords, blockID, blockData, level) {
-	return [];
-});
-
 ItemRegistry.setRarity(BlockID.storageMFSU, EnumRarity.UNCOMMON);
 ItemName.addStorageBlockTooltip("storageMFSU", 4, "60M");
 

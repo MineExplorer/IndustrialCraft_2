@@ -10,8 +10,6 @@ TileRenderer.setRotationFunction(BlockID.electricHeatGenerator, true);
 
 ItemName.addTierTooltip("electricHeatGenerator", 4);
 
-MachineRegistry.setMachineDrop("electricHeatGenerator");
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.electricHeatGenerator, count: 1, data: 0}, [
 		"xbx",
@@ -123,6 +121,10 @@ namespace Machine {
 				return true;
 			}
 			return super.onItemUse(coords, item, player);
+		}
+
+		getDefaultDrop(): number {
+			return this.blockID;
 		}
 	}
 

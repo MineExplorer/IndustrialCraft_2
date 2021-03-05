@@ -4,8 +4,6 @@ Block.createBlock("tank", [
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.tank, "stone", 1, true);
 
-MachineRegistry.setMachineDrop("tank");
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.tank, count: 1, data: 0}, [
 		" c ",
@@ -13,7 +11,6 @@ Callback.addCallback("PreLoaded", function() {
 		" c "
 	], ['#', BlockID.machineBlockBasic, 0, 'c', ItemID.cellEmpty, 0]);
 });
-
 
 const guiTank = InventoryWindow("Tank", {
 	drawing: [

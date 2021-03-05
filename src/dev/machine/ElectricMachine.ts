@@ -82,5 +82,9 @@ namespace Machine {
 			this.energyNode.resetConnections();
 			EnergyGridBuilder.buildGridForTile(this);
 		}
+
+		getDefaultDrop(): number {
+			return BlockID.machineBlockBasic;
+		}
 	}
 }

@@ -10,8 +10,6 @@ TileRenderer.setStandardModelWithRotation(BlockID.primalGenerator, 2, [["machine
 TileRenderer.registerModelWithRotation(BlockID.primalGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.primalGenerator);
 
-MachineRegistry.setMachineDrop("primalGenerator");
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
 		"x",

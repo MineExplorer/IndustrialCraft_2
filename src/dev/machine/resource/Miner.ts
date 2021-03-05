@@ -9,8 +9,6 @@ TileRenderer.setRotationFunction(BlockID.miner);
 
 ItemName.addTierTooltip("miner", 2);
 
-MachineRegistry.setMachineDrop("miner", BlockID.machineBlockBasic);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.miner, count: 1, data: 0}, [
 		"x#x",
@@ -18,7 +16,6 @@ Callback.addCallback("PreLoaded", function() {
 		" b "
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'b', BlockID.miningPipe, 0]);
 });
-
 
 const guiMiner = InventoryWindow("Miner", {
 	drawing: [

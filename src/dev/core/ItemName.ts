@@ -1,4 +1,12 @@
 namespace ItemName {
+	export function setRarity(id: number, rarity: number) {
+		ItemRegistry.setRarity(id, rarity);
+	}
+
+	export function getRarity(id: number) {
+		ItemRegistry.getRarity(id);
+	}
+
 	export function addTooltip(id: number, tooltip: string): void {
 		Item.registerNameOverrideFunction(id, function(item: ItemInstance, name: string) {
 			return ItemRegistry.getItemRarityColor(item.id) + name + "\n§7" + tooltip;

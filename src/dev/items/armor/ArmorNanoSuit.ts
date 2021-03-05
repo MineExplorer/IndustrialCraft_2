@@ -98,9 +98,9 @@ extends ArmorNanoSuit {
 /** @deprecated */
 const NANO_ARMOR_FUNCS = {
 	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
-		return ArmorNanoSuit.prototype.onHurt(params, item, index, Player.get())
+		return !!ArmorNanoSuit.prototype.onHurt(params, item, index, Player.get());
 	},
 	tick: function(item: ItemInstance, index: number) {
-		return ArmorNanoSuit.prototype.onTick(item, index, Player.get())
+		return !!ArmorNanoSuit.prototype.onTick(item, index, Player.get());
 	}
 }

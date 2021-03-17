@@ -113,7 +113,7 @@ namespace Machine {
 		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
 			let item = this.getDropItem(player);
 			if (item) {
-				this.region.dropItem(this.x + .5, this.y + .5, this.z + .5, item.id, item.count, item.data, item.extra);
+				this.region.dropItem(this.x + .5, this.y + .5, this.z + .5, item);
 			}
 		}
 

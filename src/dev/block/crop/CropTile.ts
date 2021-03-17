@@ -540,7 +540,7 @@ namespace Agriculture {
 			if (!dropItems || !dropItems.length) return;
 
 			for (const item of dropItems) {
-				this.region.dropItem(this.x, this.y, this.z, item.id, item.count, item.data);
+				this.region.dropItem(this.x, this.y, this.z, item);
 			}
 			return true;
 		}
@@ -613,6 +613,5 @@ Network.addServerPacket("icpe.cropDestroyStart", function (client: NetworkClient
 		if (tileEntity.onLongClick(client.getPlayerUid())) {
 			Game.prevent();
 		}
-
 	}
 });

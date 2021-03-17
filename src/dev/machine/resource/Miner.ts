@@ -165,7 +165,7 @@ namespace Machine {
 			for (let i in items) {
 				let item = items[i]
 				if (item.count > 0) {
-					this.region.dropItem(this.x + .5, this.y + 1, this.z + .5, item.id, item.count, item.data, item.extra);
+					this.region.dropItem(this.x + .5, this.y + 1, this.z + .5, item);
 				}
 			}
 		}

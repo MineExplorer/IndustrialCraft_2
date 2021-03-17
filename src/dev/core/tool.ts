@@ -126,8 +126,8 @@ Network.addServerPacket("icpe.demontageMachine", function (client: NetworkClient
 			//Block.setTempDestroyTime(block.id, 0);
 			const tileEntity = region.getTileEntity(data.x, data.y, data.z) as Machine.MachineBase;
 			if (tileEntity) {
-				let item = tileEntity.getDropItem(player);
-				region.dropItem(data.x + .5, data.y + .5, data.z + .5, item.id, item.count, item.data, item.extra);
+				let drop = tileEntity.getDropItem(player);
+				region.dropItem(data.x + .5, data.y + .5, data.z + .5, drop);
 			}
 			region.destroyBlock(data.x, data.y, data.z, true);
 		}

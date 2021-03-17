@@ -129,7 +129,7 @@ namespace Machine {
 				let slotName = this.getSlotName(x, y);
 				let slot = this.container.getSlot(slotName);
 				if (slot.id > 0) {
-					this.region.dropItem(chamber.x + .5, chamber.y + .5, chamber.z + .5, slot.id, slot.count, slot.data);
+					this.region.dropItem(chamber.x + .5, chamber.y + .5, chamber.z + .5, slot);
 					this.container.setSlot(slotName, 0, 0, 0);
 				}
 			}

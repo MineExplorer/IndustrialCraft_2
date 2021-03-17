@@ -209,7 +209,7 @@ UpgradeAPI.registerUpgrade(ItemID.upgradeFluidPulling, "fluidPulling", function(
 
 Item.registerUseFunction("upgradeMFSU", function(coords, item, block, player) {
 	if (block.id == BlockID.storageMFE) {
-		let tile = World.getTileEntity(coords.x ,coords.y, coords.z);
+		let tile = World.getTileEntity(coords.x, coords.y, coords.z);
 		tile.selfDestroy();
 		World.setBlock(coords.x, coords.y, coords.z, BlockID.storageMFSU, tile.getFacing());
 		let newTile = World.addTileEntity(coords.x, coords.y, coords.z);

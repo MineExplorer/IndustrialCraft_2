@@ -142,14 +142,14 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', ItemID.circuitAdvanced, 0, 'x', ItemID.storageCrystal, -1, 'a', ItemID.plateAlloy, 0, "c", 331, 0], ChargeItemRegistry.transferEnergy);
 
 	// Crop Analyzer
-	Recipes.addShaped({id: ItemID.agriculturalAnalyzer , count: 1 , data: 0}, [
+	Recipes.addShaped({id: ItemID.agriculturalAnalyzer, count: 1, data: 0}, [
 		"xx ",
 		"rgr",
 		"rcr"
 	], ['x', ItemID.cableCopper1, 0, 'r', 331, 0, 'g', 20, 0, "c", ItemID.circuitBasic, 0]);
 
 	// Weeding Trovel
-	Recipes.addShaped({id: ItemID.weedingTrowel , count: 1 , data: 0}, [
+	Recipes.addShaped({id: ItemID.weedingTrowel, count: 1, data: 0}, [
 		"c c",
 		" c ",
 		"zcz"

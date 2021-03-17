@@ -85,6 +85,7 @@ namespace Machine {
 		init(): void {
 			super.init();
 			this.chambers = [];
+			this.rebuildGrid();
 			this.__initialized = true;
 			for (let i = 0; i < 6; i++) {
 				let coords = StorageInterface.getRelativeCoords(this, i);

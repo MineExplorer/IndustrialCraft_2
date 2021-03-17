@@ -22,7 +22,7 @@ namespace MachineRegistry {
 		Prototype.adjustDrop = Prototype.adjustDrop || BasePrototype.adjustDrop;
 		setMachineDrop(id, Prototype.defaultDrop);
 
-		if (Prototype.isEnergyTile) {
+		if (Prototype instanceof Machine.ElectricMachine) {
 			// wire connection
 			ICRender.getGroup("ic-wire").add(id, -1);
 			// register for energy net

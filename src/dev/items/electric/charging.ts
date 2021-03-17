@@ -69,7 +69,7 @@ ItemRegistry.registerItem(new ItemBatteryCharging("chargingCrystal", "charging_e
 ItemRegistry.registerItem(new ItemBatteryCharging("chargingLapotronCrystal", "charging_lapotron_crystal", 4e7, 32768, 4));
 ItemRegistry.setRarity("chargingLapotronCrystal", EnumRarity.UNCOMMON);
 
-Item.addCreativeGroup("chargingBatteryEU", Translation.translate("Charging Batteries") , [
+Item.addCreativeGroup("chargingBatteryEU", Translation.translate("Charging Batteries"), [
 	ItemID.chargingBattery,
 	ItemID.chargingAdvBattery,
 	ItemID.chargingCrystal,

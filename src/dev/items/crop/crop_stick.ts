@@ -1,6 +1,6 @@
 ItemRegistry.createItem("cropStick", {name: "crop_stick", icon: "crop_stick"});
 
-Recipes.addShaped({id: ItemID.cropStick , count: 2 , data: 0}, [
+Recipes.addShaped({id: ItemID.cropStick, count: 2, data: 0}, [
 	"x x",
 	"x x"
 ], ['x', 280, 0]);

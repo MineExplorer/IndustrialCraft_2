@@ -1611,6 +1611,44 @@ declare namespace Callback {
 	
     function addCallback(name: "CustomDimensionTransfer", func: CustomDimensionTransferFunction): void;
 
+    function addCallback(name: "BlockEventEntityInside", func: BlockEventEntityInsideFunction): void;
+
+    function addCallback(name: "BlockEventEntityStepOn", func: BlockEventEntityStepOnFunction): void;
+
+    function addCallback(name: "BlockEventNeighbourChange", func: BlockEventNeighbourChangeFunction): void;
+
+    function addCallback(name: "ConnectingToHost", func: ConnectingToHostFunction): void;
+
+    function addCallback(name: "DimensionUnloaded", func: DimensionUnloadedFunction): void;
+
+    function addCallback(name: "LevelPreLeft", func: {(): void}): void;
+
+    function addCallback(name: "LevelLeft", func: {(): void}): void;
+
+    function addCallback(name: "ItemUseLocal", func: ItemUseLocalFunction): void;
+
+    function addCallback(name: "SystemKeyEventDispatched", func: SystemKeyEventDispatchedFunction): void;
+
+    function addCallback(name: "NavigationBackPressed", func: {(): void}): void;
+
+    function addCallback(name: "LevelCreated", func: {(): void}): void;
+
+    function addCallback(name: "LevelDisplayed", func: {(): void}): void;
+
+    function addCallback(name: "LevelPreLoaded", func: LevelLoadedFunction): void;
+
+    function addCallback(name: "LevelLoaded", func: LevelLoadedFunction): void;
+
+    function addCallback(name: "LocalLevelLoaded", func: {(): void}): void;
+
+    function addCallback(name: "LocalTick", func: {(): void}): void;
+
+    function addCallback(name: "AppSuspended", func: {(): void}): void;
+
+    function addCallback(name: "EntityPickUpDrop", func: EntityPickUpDropFunction): void;
+
+    
+
     /**
      * Invokes callback with any name and up to 10 additional parameters. You
      * should not generally call pre-defined callbacks until you really need to 
@@ -1640,7 +1678,6 @@ declare namespace Callback {
         (recipe: Recipes.WorkbenchRecipe, field: Recipes.WorkbenchField, isPrevented: boolean): void
     }
 
-
     /**
      * Function used in "VanillaWorkbenchCraft" and "VanillaWorkbenchPostCraft" 
      * callbacks
@@ -1651,7 +1688,6 @@ declare namespace Callback {
         (result: ItemInstance, workbenchContainer: UI.Container): void
     }
 
-
     /**
      * Function used in "VanillaWorkbenchRecipeSelected" callback
      * @param recipe object containing recipe information
@@ -1661,7 +1697,6 @@ declare namespace Callback {
     interface VanillaWorkbenchRecipeSelectedFunction {
         (recipe: Recipes.WorkbenchRecipe, result: ItemInstance, workbenchContainer: UI.Container)
     }
-
 
     /**
      * Function used in "ContainerClosed" callback
@@ -1674,7 +1709,6 @@ declare namespace Callback {
         (container: UI.Container, window: UI.IWindow, byUser: boolean): void
     }
 
-
     /**
      * Function used in "ContainerOpened" callback
      * @param container container that was opened
@@ -1684,7 +1718,6 @@ declare namespace Callback {
         (container: UI.Container, window: UI.IWindow | UI.WindowGroup): void
     }
 
-
     /**
      * Function used in "CustomWindowOpened" callback
      * @param window window that was opened
@@ -1692,7 +1725,6 @@ declare namespace Callback {
     interface CustomWindowOpenedFunction {
         (window: UI.IWindow): void;
     }
-
 
     /**
      * Function used in "CustomWindowClosed" callback
@@ -1702,7 +1734,6 @@ declare namespace Callback {
         (window: UI.IWindow): void;
     }
 
-
     /**
      * Function used in "CoreConfigured" callback
      * @param config Inner Core default config instance
@@ -1710,7 +1741,6 @@ declare namespace Callback {
     interface CoreConfiguredFunction {
         (config: Config): void;
     }
-
 
     /**
      * Function used in "LevelSelected" callback
@@ -1722,7 +1752,6 @@ declare namespace Callback {
         (worldName: string, worldDir: string): void
     }
 
-
     /**
      * Function used in "DimensionLoaded" callback
      * @param dimension vanilla dimension id, one of the [[Native.Dimension]]
@@ -1731,7 +1760,6 @@ declare namespace Callback {
     interface DimensionLoadedFunction {
         (dimension: number): void
     }
-
 
     /**
      * Function used in "DestroyBlock" and "DestroyBlockStart" callbacks
@@ -1744,7 +1772,6 @@ declare namespace Callback {
         (coords: ItemUseCoordinates, block: Tile, player: number): void
     }
 
-
     /**
      * Function used in "DestroyBlockContinue" callback 
      * @param coords coordinates where the block is destroyed and side from
@@ -1755,7 +1782,6 @@ declare namespace Callback {
     interface DestroyBlockContinueFunction {
         (coords: ItemUseCoordinates, block: Tile, progress: number): void
     }
-
 
     /**
      * Function used in "BuildBlock" callback
@@ -1779,7 +1805,6 @@ declare namespace Callback {
         (coords: Vector, oldBlock: Tile, newBlock: Tile, region: BlockSource): void
     }
 
-
     /**
      * Function used in "ItemUse" and "ItemUseLocalServer" callbacks
      * @param coords set of all coordinate values that can be useful to write 
@@ -1790,6 +1815,18 @@ declare namespace Callback {
      * @param player player entity uID
      */
     interface ItemUseFunction {
+        (coords: ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal: boolean, player: number): void
+    }
+
+    /**
+     * Function used in "ItemUseLocal" callback
+     * @param coords set of all coordinate values that can be useful to write 
+     * custom use logics
+     * @param item item that was in the player's hand when he touched the block
+     * @param block block that was touched
+     * @param player player entity uID
+     */
+    interface ItemUseLocalFunction {
         (coords: ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void
     }
 
@@ -1821,18 +1858,20 @@ declare namespace Callback {
 
     /**
      * Function used in "ExpAdd" callback
-     * @param exp amount of experience to be added 
+     * @param exp amount of experience to be added
+     * @param player player's uID
      */
     interface ExpAddFunction {
-        (exp: number): void
+        (exp: number, player: number): void
     }
 
     /**
      * Function used in "ExpLevelAdd" callback
      * @param level amount of levels to be added 
+     * @param player player's uID
      */
     interface ExpLevelAddFunction {
-        (level: number): void
+        (level: number, player: number): void
     }
 
     /**
@@ -1861,7 +1900,6 @@ declare namespace Callback {
         (entity: number): void
     }
 
-
     /**
      * Function used in "EntityRemoved" callback
      * @param entity entity unique id
@@ -1881,7 +1919,6 @@ declare namespace Callback {
         (entity: number, attacker: number, damageType: number): void
     }
 
-
     /**
      * Function used in "EntityHurt" callback
      * @param attacker if an entity was hurt by another entity, attacker's 
@@ -1896,16 +1933,14 @@ declare namespace Callback {
         (attacker: number, entity: number, damageValue: number, damageType: number, someBool1: boolean, someBool2: boolean): void
     }
 
-
     /**
      * Function used in "EntityInteract" callback
      * @param entity entity unique id
      * @param player player entity unique id
      */
     interface EntityInteractFunction {
-        (entity: number, player: number): void
+        (entity: number, player: number, coords: Vector): void
     }
-
 
     /**
      * Function used in "ProjectileHit" callback
@@ -1918,7 +1953,6 @@ declare namespace Callback {
         (projectile: number, item: ItemInstance, target: ProjectileHitTarget): void
     }
 
-
     /**
      * Function used in "RedstoneSignal" callback
      * @param coords coordinates where redstone signal changed
@@ -1929,9 +1963,8 @@ declare namespace Callback {
      * @param block information about the block on the specified coordinates
      */
     interface RedstoneSignalFunction {
-        (coords: Vector, params: { power: number, signal: number, onLoad: boolean }, block: Tile): void
+        (coords: Vector, params: { power: number, signal: number, onLoad: boolean }, block: Tile, world?: BlockSource): void
     }
-
 
     /**
      * Function used in "PopBlockResources" callback
@@ -1944,7 +1977,6 @@ declare namespace Callback {
         (coords: Vector, block: Tile, f: number, i: number): void
     }
 
-
     /**
      * Function used in "ItemIconOverride" callback
      * @param item information about item that is used in override function
@@ -1955,7 +1987,6 @@ declare namespace Callback {
     interface ItemIconOverrideFunction {
         (item: ItemInstance, isModUi: boolean): void | Item.TextureData
     }
-
 
     /**
      * Function used in "ItemNameOverride" callback
@@ -1969,7 +2000,6 @@ declare namespace Callback {
         (item: ItemInstance, translation: string, name: string): void | string;
     }
 
-
     /**
      * Function used in "ItemUseNoTarget" callback
      * @param item item that was in the player's hand when the event occurred
@@ -1978,7 +2008,6 @@ declare namespace Callback {
     interface ItemUseNoTargetFunction {
         (item: ItemInstance, player: number): void
     }
-
 
     /**
      * Function used in "ItemUsingReleased" callback
@@ -1989,7 +2018,6 @@ declare namespace Callback {
         (item: ItemInstance, ticks: number, player: number): void
     }
 
-
     /**
      * Function used in "ItemUsingComplete" callback
      * @param item item that was in the player's hand when the event occurred
@@ -1997,7 +2025,6 @@ declare namespace Callback {
     interface ItemUsingCompleteFunction {
         (item: ItemInstance, player: number): void
     }
-
 
     /**
      * Function used in "ItemDispensed" callback
@@ -2009,18 +2036,16 @@ declare namespace Callback {
         (coords: ItemUseCoordinates, item: ItemInstance, region: BlockSource): void
     }
 
-
     /**
      * Function used in "NativeGuiChanged" callback
-     * @param name current screen name
-     * @param lastName previous screen name
+     * @param screenName current screen name
+     * @param lastScreenName previous screen name
      * @param isPushEvent if true, the new screen was pushed on the Minecraft 
      * screens stack, popped from the stack otherwise
      */
     interface NativeGuiChangedFunction {
-        (name: string, lastName: string, isPushEvent: string): void
+        (screenName: string, lastScreenName: string, isPushEvent: boolean): void
     }
-
 
     /**
      * Function used in all generation callbacks
@@ -2039,7 +2064,6 @@ declare namespace Callback {
         (chunkX: number, chunkZ: number, random: java.util.Random,
             dimensionId: number, chunkSeed: number, worldSeed: number, dimensionSeed: number): void
     }
-
 
     /**
      * Function used in "ReadSaves" and "WriteSaves" callbacks
@@ -2077,6 +2101,69 @@ declare namespace Callback {
      */
     interface CustomDimensionTransferFunction {
     	(entity: number, from: number, to: number): void
+    }
+
+    /**
+     * Function used in "BlockEventEntityInside" callback
+     */
+    interface BlockEventEntityInsideFunction {
+        (coords: Vector, block: Tile, entity: number): void
+    }
+
+    /**
+     * Function used in "BlockEventEntityStepOn" callback
+     */
+    interface BlockEventEntityStepOnFunction {
+        (coords: Vector, block: Tile, entity: number): void
+    }
+
+    /**
+     * Function used in "BlockEventNeighbourChange" callback
+     */
+    interface BlockEventNeighbourChangeFunction {
+        (coords: Vector, block: Tile, changedCoords: Vector, world: BlockSource): void
+    }
+
+    /**
+     * Function used in "ConnectingToHost" callback
+     */
+    interface ConnectingToHostFunction {
+        (host: string, someInt: number, port: number): void
+    }
+
+    /**
+     * Function used in "DimensionUnloaded" callback
+     */
+    interface DimensionUnloadedFunction {
+        (dimensionId: number): void
+    }
+
+    /**
+     * Function used in "SystemKeyEventDispatched" callback
+     * @todo understand the meaning of the params
+     */
+    interface SystemKeyEventDispatchedFunction {
+        (someInt: number, someInt2: number): void
+    }
+
+    /**
+     * Function used in "LevelLoaded" and "LevelPreLoaded" callbacks
+     * @todo understand param's meaning
+     */
+    interface LevelLoadedFunction {
+        (someBool: boolean): void
+    }
+
+    /**
+     * Function used in "EntityPickUpDrop" callback
+     * @param entity entity that picked up the item
+     * (this callback is currently called only for players)
+     * @param dropEntity dropped item's entity
+     * @param dropStack ItemInstance of the drop entity
+     * @param count what count?
+     */
+    interface EntityPickUpDropFunction {
+        (entity: number, dropEntity: number, dropStack: ItemInstance, count: number)
     }
 
     /**
@@ -2121,6 +2208,7 @@ declare namespace Callback {
          */
         vec?: Vector
     }
+
 }
 
 /**
@@ -5066,7 +5154,7 @@ declare namespace Item {
      * @param params.type armor type, should be one of the 'helmet', 
      * 'chestplate', 'leggings' or 'boots'
      */
-    function createArmorItem(nameID: string, name: string, texture: TextureData, params: { type: string, armor: number, durability: number, texture: string, isTech?: boolean }): void;
+    function createArmorItem(nameID: string, name: string, texture: TextureData, params: { type: string, armor: number, durability: number, texture: string, isTech?: boolean }): NativeItem
 
     /**
      * Creates throwable item using specified parameters
@@ -5081,7 +5169,7 @@ declare namespace Item {
      * @param params.isTech if true, the item will not be added to creative. 
      * Default value is false 
      */
-    function createThrowableItem(nameID: string, name: string, texture: TextureData, params: any): void;
+    function createThrowableItem(nameID: string, name: string, texture: TextureData, params: any): NativeItem;
 
     /**
      * @param id numeric item id
@@ -5226,7 +5314,7 @@ declare namespace Item {
     /**
      * Same as [[Item.registerUseFunction]], but supports numeric ids only
      */
-    function registerUseFunctionForID(numericID: number, useFunc: Callback.ItemUseFunction): void;
+    function registerUseFunctionForID(numericID: number, useFunc: ItemUseFunction): void;
 
     /**
      * Registers function that is called when user touches some block in the 
@@ -5234,7 +5322,7 @@ declare namespace Item {
      * @param nameID string or numeric id of the item
      * @param useFunc function that is called when such an event occurs
      */
-    function registerUseFunction(nameID: string | number, useFunc: Callback.ItemUseFunction): void;
+    function registerUseFunction(nameID: string | number, useFunc: ItemUseFunction): void;
 
     /**
      * Same as [[Item.registerThrowableFunction]], but supports numeric ids only
@@ -5316,8 +5404,47 @@ declare namespace Item {
     /**
      * Class representing item used to set its properties
      */
-    class NativeItem {
+    interface NativeItem {
 
+        addRepairItem(id: number): void;
+
+        addRepairItems(id: number[]): void;
+
+        setAllowedInOffhand(allowed: boolean): void;
+
+        setArmorDamageable(damageable: boolean): void;
+
+        setCreativeCategory(category: number): void;
+
+        setEnchantType(type: number): void;
+
+        setEnchantType(enchant: number, value: number): void;
+
+        setEnchantability(enchant: number, value: number): void;
+
+        setGlint(glint: boolean): void;
+
+        setHandEquipped(equipped: boolean): void;
+
+        setLiquidClip(clip: boolean): void;
+
+        setMaxDamage(maxDamage: number): void;
+
+        setMaxStackSize(maxStack: number): void;
+
+        setMaxUseDuration(duration: number): void;
+
+        /**@deprecated */
+        setProperties(props: string): void;
+
+        setStackedByData(stacked: boolean): void;
+
+        setUseAnimation(animation: number): void;
+
+    }
+
+    interface ItemUseFunction {
+        (coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void
     }
 
     /**
@@ -7116,6 +7243,21 @@ declare namespace NBT {
  */
 declare namespace Network {
     /**
+     * @returns array containing connected clients
+     */
+    function getConnectedClients(): NetworkClient[];
+
+    /**
+     * @returns array containing connected players uids
+     */
+    function getConnectedPlayers(): number[];
+
+    /**
+     * @returns Client object for player by player's entity id
+     */
+    function getClientForPlayer(player: number): NetworkClient;
+
+    /**
      * Event that is called when a client receives a packet with given name
      * @param name name of the packet
      */
@@ -7138,9 +7280,10 @@ declare namespace Network {
     function sendToServer(name: string, packetData: object): void;
 
     /**
-     * @returns Client object for player by player's entity id
+     * Sends message to all players
+     * @param message text of the message
      */
-    function getClientForPlayer(player: number): NetworkClient;
+    function sendServerMessage(message: string): void;
 
     /**
      * Converts item or block id from server to local value
@@ -7197,7 +7340,6 @@ declare class NetworkClient {
  * bound by certain conditions
  */
 declare class NetworkConnectedClientList {
-    
     /**
      * @param addToGlobalRefreshList if true, the object will be added to the
      * global list for updating periodically, default is true

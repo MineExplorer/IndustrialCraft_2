@@ -134,7 +134,8 @@ declare class WorldRegion {
      * @param power defines radius of the explosion and what blocks it can destroy
      * @param fire if true, puts the crater on fire
      */
-    explode(x: number, y: number, z: number, power: number, fire?: boolean): void;
+    explode(pos: Vector, power: number, fire?: boolean): void;
+    explode(x: number, y: any, z: any, power: number, fire?: boolean): void;
     /**
      * @returns biome id at X and Z coord
      */
@@ -192,12 +193,10 @@ declare class WorldRegion {
      * @param x X coord of the place where item will be dropped
      * @param y Y coord of the place where item will be dropped
      * @param z Z coord of the place where item will be dropped
-     * @param id id of the item to drop
-     * @param count count of the item to drop
-     * @param data data of the item to drop
-     * @param extra extra of the item to drop
+     * @param item object representing item stack
      * @returns drop entity id
      */
+    dropItem(x: number, y: number, z: number, item: ItemInstance): number;
     dropItem(x: number, y: number, z: number, id: number, count: number, data: number, extra?: ItemExtraData): number;
     /**
      * Spawns entity of given numeric type on coords
@@ -398,7 +397,7 @@ declare class ItemBase {
     };
     maxStack: number;
     maxDamage: number;
-    item: any;
+    item: Item.NativeItem;
     constructor(stringID: string, name?: string, icon?: string | Item.TextureData);
     setName(name: string): void;
     setIcon(texture: string, index?: number): void;

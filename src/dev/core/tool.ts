@@ -109,7 +109,27 @@ Callback.addCallback("DestroyBlockStart", function(coords: Callback.ItemUseCoord
 	if (MachineRegistry.isMachine(block.id)) {
 		let item = Player.getCarriedItem();
 		if (ICTool.isUseableWrench(item, 10)) {
-			Block.setTempDestroyTime(block.id, 0);
+			//Block.setTempDestroyTime(block.id, 0);
+			World.destroyBlock(coords.x, coords.y, coords.z, true);
+		}
+	}
+});
+
+
+Network.addServerPacket("icpe.demontageMachine", function (client: NetworkClient, data: Vector) {
+	const player = client.getPlayerUid();
+	const region = WorldRegion.getForActor(player);
+	const blockID = region.getBlockId(data);
+	if (MachineRegistry.isMachine(blockID)) {
+		const item = Entity.getCarriedItem(player);
+		if (ICTool.isUseableWrench(item, 10)) {
+			//Block.setTempDestroyTime(block.id, 0);
+			const tileEntity = region.getTileEntity(data.x, data.y, data.z) as Machine.MachineBase;
+			if (tileEntity) {
+				let item = tileEntity.getDropItem(player);
+				region.dropItem(data.x + .5, data.y + .5, data.z + .5, item.id, item.count, item.data, item.extra);
+			}
+			region.destroyBlock(data.x, data.y, data.z, true);
 		}
 	}
 });

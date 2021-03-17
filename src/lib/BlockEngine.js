@@ -30,7 +30,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 1,
+    version: 2,
     shared: false,
     api: "CoreEngine"
 });
@@ -261,7 +261,7 @@ var WorldRegion = /** @class */ (function () {
             return this.blockSource.getBlock(x, y, z);
         }
         var pos = x;
-        return this.getBlock(pos.x, pos.y, pos.z);
+        return this.blockSource.getBlock(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.getBlockId = function (x, y, z) {
         return this.getBlock(x, y, z).id;
@@ -276,7 +276,7 @@ var WorldRegion = /** @class */ (function () {
         var pos = x;
         id = y;
         data = z;
-        return this.setBlock(pos.x, pos.y, pos.z, id, data);
+        return this.blockSource.setBlock(pos.x, pos.y, pos.z, id, data);
     };
     WorldRegion.prototype.destroyBlock = function (x, y, z, drop, player) {
         if (typeof x === "object") {
@@ -310,9 +310,7 @@ var WorldRegion = /** @class */ (function () {
     WorldRegion.prototype.getTileEntity = function (x, y, z) {
         if (typeof x === "number") {
             var tileEntity = TileEntity.getTileEntity(x, y, z, this.blockSource);
-            if (tileEntity && tileEntity.__initialized)
-                return tileEntity;
-            return null;
+            return (tileEntity && tileEntity.__initialized) ? tileEntity : null;
         }
         var pos = x;
         return this.getTileEntity(pos.x, pos.y, pos.z);
@@ -338,14 +336,16 @@ var WorldRegion = /** @class */ (function () {
         var pos = x;
         return this.getContainer(pos.x, pos.y, pos.z);
     };
-    /**
-     * Causes an explosion on coords
-     * @param power defines radius of the explosion and what blocks it can destroy
-     * @param fire if true, puts the crater on fire
-     */
     WorldRegion.prototype.explode = function (x, y, z, power, fire) {
-        if (fire === void 0) { fire = false; }
-        this.blockSource.explode(x, y, z, power, fire);
+        if (typeof x === "number") {
+            this.blockSource.explode(x, y, z, power, fire || false);
+        }
+        else {
+            var pos = x;
+            power = y;
+            fire = z || false;
+            this.blockSource.explode(pos.x, pos.y, pos.z, power, fire);
+        }
     };
     /**
      * @returns biome id at X and Z coord
@@ -403,36 +403,27 @@ var WorldRegion = /** @class */ (function () {
             return this.blockSource.getLightLevel(x, y, z);
         }
         var pos = x;
-        return this.getLightLevel(pos.x, pos.y, pos.z);
+        return this.blockSource.getLightLevel(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.canSeeSky = function (x, y, z) {
         if (typeof x === "number") {
             return this.blockSource.canSeeSky(x, y, z);
         }
         var pos = x;
-        return this.canSeeSky(pos.x, pos.y, pos.z);
+        return this.blockSource.canSeeSky(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.getGrassColor = function (x, y, z) {
         if (typeof x === "number") {
             return this.blockSource.getGrassColor(x, y, z);
         }
         var pos = x;
-        return this.getGrassColor(pos.x, pos.y, pos.z);
+        return this.blockSource.getGrassColor(pos.x, pos.y, pos.z);
     };
-    /**
-     * Creates dropped item and returns entity id
-     * @param x X coord of the place where item will be dropped
-     * @param y Y coord of the place where item will be dropped
-     * @param z Z coord of the place where item will be dropped
-     * @param id id of the item to drop
-     * @param count count of the item to drop
-     * @param data data of the item to drop
-     * @param extra extra of the item to drop
-     * @returns drop entity id
-     */
-    WorldRegion.prototype.dropItem = function (x, y, z, id, count, data, extra) {
-        if (extra === void 0) { extra = null; }
-        return this.blockSource.spawnDroppedItem(x, y, z, id, count, data, extra);
+    WorldRegion.prototype.dropItem = function (x, y, z, item, count, data, extra) {
+        if (typeof item == "object") {
+            return this.blockSource.spawnDroppedItem(x, y, z, item.id, item.count, item.data, item.extra || null);
+        }
+        return this.blockSource.spawnDroppedItem(x, y, z, item, count, data, extra || null);
     };
     WorldRegion.prototype.spawnEntity = function (x, y, z, namespace, type, init_data) {
         if (type === void 0) {
@@ -468,14 +459,22 @@ var WorldRegion = /** @class */ (function () {
     WorldRegion.prototype.playSound = function (x, y, z, name, volume, pitch) {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
-        Network.sendToAllClients("WorldRegion.play_sound", { x: x, y: y, z: z, dimension: this.getDimension(), name: name, volume: volume, pitch: pitch });
+        var soundPos = new Vector3(x, y, z);
+        var dimension = this.getDimension();
+        var clientsList = Network.getConnectedClients();
+        for (var _i = 0, clientsList_1 = clientsList; _i < clientsList_1.length; _i++) {
+            var client = clientsList_1[_i];
+            var player = client.getPlayerUid();
+            var pos = Entity.getPosition(player);
+            if (Entity.getDimension(player) == dimension && Entity.getDistanceBetweenCoords(pos, soundPos) < 100) {
+                client.send("WorldRegion.play_sound", __assign(__assign({}, soundPos), { name: name, volume: volume, pitch: pitch }));
+            }
+        }
     };
     return WorldRegion;
 }());
 Network.addClientPacket("WorldRegion.play_sound", function (data) {
-    if (data.dimension == Player.getDimension()) {
-        World.playSound(data.x, data.y, data.z, data.name, data.volume, data.pitch);
-    }
+    World.playSound(data.x, data.y, data.z, data.name, data.volume, data.pitch);
 });
 var PlayerEntity = /** @class */ (function () {
     function PlayerEntity(playerUid) {
@@ -501,13 +500,12 @@ var PlayerEntity = /** @class */ (function () {
         return this.actor.getGameMode();
     };
     PlayerEntity.prototype.addItemToInventory = function (id, count, data, extra) {
-        if (extra === void 0) { extra = null; }
         var item = id;
         if (typeof item == "object") {
             this.actor.addItemToInventory(item.id, item.count, item.data, item.extra || null, true);
         }
         else {
-            this.actor.addItemToInventory(id, count, data, extra, true);
+            this.actor.addItemToInventory(id, count, data, extra || null, true);
         }
     };
     /**

@@ -57,13 +57,14 @@ declare class WorldRegion {
      * (null if given dimension is not loaded and this interface
      * was not created yet)
      */
-    static getForDimension(dimension: number): WorldRegion;
+    static getForDimension(dimension: number): Nullable<WorldRegion>;
     /**
      * @returns interface to the dimension where the given entity is
      * (null if given entity does not exist or the dimension is not loaded
      * and interface was not created)
      */
-    static getForActor(entityUid: number): WorldRegion;
+    static getForActor(entityUid: number): Nullable<WorldRegion>;
+    static getCurrentWorldGenRegion(): Nullable<WorldRegion>;
     /**
      * @returns the dimension id to which the following object belongs
      */
@@ -134,7 +135,7 @@ declare class WorldRegion {
      * @param power defines radius of the explosion and what blocks it can destroy
      * @param fire if true, puts the crater on fire
      */
-    explode(pos: Vector, power: number, fire?: boolean): void;
+    explode(coords: Vector, power: number, fire?: boolean): void;
     explode(x: number, y: any, z: any, power: number, fire?: boolean): void;
     /**
      * @returns biome id at X and Z coord
@@ -148,6 +149,7 @@ declare class WorldRegion {
     /**
      * @returns temperature of the biome on coords
      */
+    getBiomeTemperatureAt(coords: Vector): number;
     getBiomeTemperatureAt(x: number, y: number, z: number): number;
     /**
      * @param chunkX X coord of the chunk
@@ -213,14 +215,10 @@ declare class WorldRegion {
      * that are equal to the given type, if blacklist value is false,
      * and all except the entities of the given type, if blacklist value is true
      */
-    fetchEntitiesInAABB(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, type: number, blacklist?: boolean): number[];
-    /**
-     * @returns the list of entity IDs in given box,
-     * that are equal to the given type, if blacklist value is false,
-     * and all except the entities of the given type, if blacklist value is true
-     */
-    listEntitiesInAABB(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, type: number, blacklist?: boolean): number[];
+    listEntitiesInAABB(pos1: Vector, pos2: Vector, type?: number, blacklist?: boolean): number[];
+    listEntitiesInAABB(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, type?: number, blacklist?: boolean): number[];
     playSound(x: number, y: number, z: number, name: string, volume?: number, pitch?: number): void;
+    playSoundAtEntity(ent: number, name: string, volume?: number, pitch?: number): void;
 }
 declare class PlayerEntity {
     actor: PlayerActor;

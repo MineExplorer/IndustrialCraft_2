@@ -250,6 +250,13 @@ var WorldRegion = /** @class */ (function () {
         }
         return null;
     };
+    WorldRegion.getCurrentWorldGenRegion = function () {
+        var blockSource = BlockSource.getCurrentWorldGenRegion();
+        if (blockSource) {
+            return new WorldRegion(blockSource);
+        }
+        return null;
+    };
     /**
      * @returns the dimension id to which the following object belongs
      */
@@ -360,11 +367,12 @@ var WorldRegion = /** @class */ (function () {
     WorldRegion.prototype.setBiome = function (x, z, biomeID) {
         this.blockSource.setBiome(x, z, biomeID);
     };
-    /**
-     * @returns temperature of the biome on coords
-     */
     WorldRegion.prototype.getBiomeTemperatureAt = function (x, y, z) {
-        return this.blockSource.getBiomeTemperatureAt(x, y, z);
+        if (typeof x === "number") {
+            return this.blockSource.getBiomeTemperatureAt(x, y, z);
+        }
+        var pos = x;
+        return this.blockSource.getBiomeTemperatureAt(pos.x, pos.y, pos.z);
     };
     /**
      * @param chunkX X coord of the chunk
@@ -438,22 +446,13 @@ var WorldRegion = /** @class */ (function () {
     WorldRegion.prototype.spawnExpOrbs = function (x, y, z, amount) {
         return this.blockSource.spawnExpOrbs(x, y, z, amount);
     };
-    /**
-     * @returns the list of entity IDs in given box,
-     * that are equal to the given type, if blacklist value is false,
-     * and all except the entities of the given type, if blacklist value is true
-     */
-    WorldRegion.prototype.fetchEntitiesInAABB = function (x1, y1, z1, x2, y2, z2, type, blacklist) {
-        if (blacklist === void 0) { blacklist = false; }
-        return this.blockSource.fetchEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
-    };
-    /**
-     * @returns the list of entity IDs in given box,
-     * that are equal to the given type, if blacklist value is false,
-     * and all except the entities of the given type, if blacklist value is true
-     */
     WorldRegion.prototype.listEntitiesInAABB = function (x1, y1, z1, x2, y2, z2, type, blacklist) {
-        if (blacklist === void 0) { blacklist = false; }
+        if (type === void 0) { type = -1; }
+        if (blacklist === void 0) { blacklist = true; }
+        if (typeof x1 == "object") {
+            var pos1 = x1, pos2 = y1;
+            return this.listEntitiesInAABB(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, z1, x2);
+        }
         return this.blockSource.listEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
     };
     WorldRegion.prototype.playSound = function (x, y, z, name, volume, pitch) {
@@ -466,8 +465,23 @@ var WorldRegion = /** @class */ (function () {
             var client = clientsList_1[_i];
             var player = client.getPlayerUid();
             var pos = Entity.getPosition(player);
-            if (Entity.getDimension(player) == dimension && Entity.getDistanceBetweenCoords(pos, soundPos) < 100) {
+            if (Entity.getDimension(player) == dimension && Entity.getDistanceBetweenCoords(pos, soundPos) <= 100) {
                 client.send("WorldRegion.play_sound", __assign(__assign({}, soundPos), { name: name, volume: volume, pitch: pitch }));
+            }
+        }
+    };
+    WorldRegion.prototype.playSoundAtEntity = function (ent, name, volume, pitch) {
+        if (volume === void 0) { volume = 1; }
+        if (pitch === void 0) { pitch = 1; }
+        var soundPos = Entity.getPosition(ent);
+        var dimension = this.getDimension();
+        var clientsList = Network.getConnectedClients();
+        for (var _i = 0, clientsList_2 = clientsList; _i < clientsList_2.length; _i++) {
+            var client = clientsList_2[_i];
+            var player = client.getPlayerUid();
+            var pos = Entity.getPosition(player);
+            if (Entity.getDimension(player) == dimension && Entity.getDistanceBetweenCoords(pos, soundPos) <= 100) {
+                client.send("WorldRegion.play_sound_at", { ent: ent, name: name, volume: volume, pitch: pitch });
             }
         }
     };
@@ -475,6 +489,9 @@ var WorldRegion = /** @class */ (function () {
 }());
 Network.addClientPacket("WorldRegion.play_sound", function (data) {
     World.playSound(data.x, data.y, data.z, data.name, data.volume, data.pitch);
+});
+Network.addClientPacket("WorldRegion.play_sound_at", function (data) {
+    World.playSoundAtEntity(data.ent, data.name, data.volume, data.pitch);
 });
 var PlayerEntity = /** @class */ (function () {
     function PlayerEntity(playerUid) {

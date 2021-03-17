@@ -6,7 +6,6 @@ namespace Machine {
 
 		readonly tier: number;
 		readonly capacity: number;
-		readonly defaultDrop: number;
 		readonly guiScreen: UI.StandartWindow;
 
 		constructor(tier: number, capacity: number, defaultDrop: number, guiScreen: UI.StandartWindow) {
@@ -82,8 +81,7 @@ namespace Machine {
 			return side == this.getFacing();
 		}
 
-		getDropItem(player: number): ItemInstance {
-			let item = super.getDropItem(player);
+		adjustDrop(item: ItemInstance): ItemInstance {
 			if (item.id == this.blockID && this.data.energy > 0) {
 				let extra = new ItemExtraData();
 				item.extra = extra.putInt("energy", this.data.energy);

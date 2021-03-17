@@ -1,10 +1,13 @@
+/// <reference path="IWrenchable.ts" />
+
 namespace Machine {
 	export let ClientSide = BlockEngine.Decorators.ClientSide;
 	export let NetworkEvent = BlockEngine.Decorators.NetworkEvent;
 	export let ContainerEvent = BlockEngine.Decorators.ContainerEvent;
 
 	export abstract class MachineBase
-	extends TileEntityBase {
+	extends TileEntityBase
+	implements IWrenchable {
 		upgrades?: string[];
 		defaultDrop?: number;
 
@@ -92,29 +95,8 @@ namespace Machine {
 			return this.defaultDrop ?? this.blockID;
 		}
 
-		getDropItem(player: number): ItemInstance {
-			let item = Entity.getCarriedItem(player);
-			let dropID = 0;
-			if (ICTool.isUseableWrench(item, 10)) {
-				ICTool.useWrench(item, 10, player);
-				let chance = ICTool.getWrenchData(item.id).dropChance;
-				if (Math.random() < chance) {
-					dropID = this.blockID;
-				} else {
-					dropID = this.getDefaultDrop();
-				}
-			}
-			else if (ToolAPI.getToolLevelViaBlock(item.id, this.blockID) > 0) {
-				dropID = this.getDefaultDrop();
-			}
-			return dropID ? new ItemStack(dropID, 1, 0) : null;
-		}
-
-		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
-			let item = this.getDropItem(player);
-			if (item) {
-				this.region.dropItem(this.x + .5, this.y + .5, this.z + .5, item);
-			}
+		adjustDrop(item: ItemInstance): ItemInstance {
+			return item;
 		}
 
 		// Audio

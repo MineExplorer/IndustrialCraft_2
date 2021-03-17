@@ -103,33 +103,35 @@ namespace ICTool {
 			}
 		});
 	}
-}
 
-Callback.addCallback("DestroyBlockStart", function(coords: Callback.ItemUseCoordinates, block: Tile) {
-	if (MachineRegistry.isMachine(block.id)) {
-		let item = Player.getCarriedItem();
-		if (ICTool.isUseableWrench(item, 10)) {
-			//Block.setTempDestroyTime(block.id, 0);
-			World.destroyBlock(coords.x, coords.y, coords.z, true);
-		}
-	}
-});
-
-
-Network.addServerPacket("icpe.demontageMachine", function (client: NetworkClient, data: Vector) {
-	const player = client.getPlayerUid();
-	const region = WorldRegion.getForActor(player);
-	const blockID = region.getBlockId(data);
-	if (MachineRegistry.isMachine(blockID)) {
-		const item = Entity.getCarriedItem(player);
-		if (ICTool.isUseableWrench(item, 10)) {
-			//Block.setTempDestroyTime(block.id, 0);
-			const tileEntity = region.getTileEntity(data.x, data.y, data.z) as Machine.MachineBase;
-			if (tileEntity) {
-				let drop = tileEntity.getDropItem(player);
-				region.dropItem(data.x + .5, data.y + .5, data.z + .5, drop);
+	Callback.addCallback("DestroyBlockStart", function(coords: Callback.ItemUseCoordinates, block: Tile) {
+		if (MachineRegistry.isMachine(block.id)) {
+			let item = Player.getCarriedItem();
+			if (ICTool.isUseableWrench(item, 10)) {
+				Network.sendToServer("icpe.demontageMachine", {x: coords.x, y: coords.y, z: coords.z});
+				Game.prevent();
 			}
-			region.destroyBlock(data.x, data.y, data.z, true);
 		}
-	}
-});
+	});
+	
+	Network.addServerPacket("icpe.demontageMachine", function (client: NetworkClient, data: Vector) {
+		const player = client.getPlayerUid();
+		const region = WorldRegion.getForActor(player);
+		const blockID = region.getBlockId(data);
+		if (MachineRegistry.isMachine(blockID)) {
+			const item = Entity.getCarriedItem(player);
+			if (ICTool.isUseableWrench(item, 10)) {
+				ICTool.useWrench(item, 10, player);
+				const tileEntity = region.getTileEntity(data) || region.addTileEntity(data);
+				if (tileEntity) {
+					const chance = ICTool.getWrenchData(item.id).dropChance;
+					const dropID = Math.random() < chance ? this.blockID : tileEntity.getDefaultDrop();
+					const drop = tileEntity.adjustDrop(new ItemStack(dropID, 1, 0));
+					region.dropItem(data.x + .5,data.y + .5, data.z + .5, drop);
+					TileEntity.destroyTileEntity(tileEntity);
+				}
+				region.setBlock(data.x, data .y, data.z, 0, 0);
+			}
+		}
+	});
+}

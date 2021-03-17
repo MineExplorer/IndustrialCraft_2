@@ -76,7 +76,7 @@ namespace Machine {
 		}
 
 		rebuildGrid(): void {
-			this.energyNode.resetConnections();
+			this.energyNode?.resetConnections();
 			EnergyGridBuilder.buildGridForTile(this);
 		}
 	}

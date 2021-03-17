@@ -85,9 +85,7 @@ namespace Machine {
 		init(): void {
 			super.init();
 			this.chambers = [];
-			this.renderModel();
 			this.__initialized = true;
-			this.rebuildEnergyNet();
 			for (let i = 0; i < 6; i++) {
 				let coords = StorageInterface.getRelativeCoords(this, i);
 				if (this.region.getBlockId(coords) == BlockID.reactorChamber) {
@@ -104,10 +102,6 @@ namespace Machine {
 				if (!ReactorItem.isReactorItem(id) || container.getSlot(name).count > 0) return 0;
 				return 1;
 			})
-		}
-
-		rebuildEnergyNet(): void {
-			this.rebuildGrid();
 		}
 
 		addChamber(chamber: ReactorChamber): void {

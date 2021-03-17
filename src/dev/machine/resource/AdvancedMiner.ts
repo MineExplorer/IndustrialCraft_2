@@ -212,9 +212,8 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getDropItem(player: number): ItemInstance {
-			let item = super.getDropItem(player);
-			if (item.id == this.blockID) {
+		adjustDrop(item: ItemInstance): ItemInstance {
+			if (item.id == this.blockID && this.data.energy > 0) {
 				let extra = new ItemExtraData();
 				item.extra = extra.putInt("energy", this.data.energy);
 			}

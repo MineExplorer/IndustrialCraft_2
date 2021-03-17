@@ -16,12 +16,13 @@ namespace MachineRegistry {
 
 		TileEntity.registerPrototype(id, Prototype);
 
-		if (!Prototype.getDefaultDrop) Prototype.getDefaultDrop = function() {
-			return this.blockID;
-		}
+		// setup drop
+		const BasePrototype = Machine.MachineBase.prototype;
+		Prototype.getDefaultDrop = Prototype.getDefaultDrop || BasePrototype.getDefaultDrop;
+		Prototype.adjustDrop = Prototype.adjustDrop || BasePrototype.adjustDrop;
 		setMachineDrop(id, Prototype.defaultDrop);
 
-		if (Prototype instanceof Machine.ElectricMachine) {
+		if (Prototype.isEnergyTile) {
 			// wire connection
 			ICRender.getGroup("ic-wire").add(id, -1);
 			// register for energy net
@@ -43,7 +44,8 @@ namespace MachineRegistry {
 			};
 		}
 
-		let BasePrototype = Machine.ElectricMachine.prototype;
+		const BasePrototype = Machine.ElectricMachine.prototype;
+		Prototype.isEnergyTile = true;
 		Prototype.getTier = Prototype.getTier || BasePrototype.getTier;
 		Prototype.getMaxPacketSize = Prototype.getMaxPacketSize || BasePrototype.getMaxPacketSize;
 		Prototype.getExplosionPower = Prototype.getExplosionPower || BasePrototype.getExplosionPower;
@@ -55,7 +57,7 @@ namespace MachineRegistry {
 	}
 
 	export function registerGenerator(id: number, Prototype: TileEntity.TileEntityPrototype) {
-		let BasePrototype = Machine.Generator.prototype;
+		const BasePrototype = Machine.Generator.prototype;
 		Prototype.energyTick = Prototype.energyTick || BasePrototype.energyTick;
 		Prototype.canReceiveEnergy = Prototype.canReceiveEnergy || BasePrototype.canReceiveEnergy;
 		Prototype.canExtractEnergy = Prototype.canExtractEnergy || BasePrototype.canExtractEnergy;

@@ -26,13 +26,9 @@ implements ItemBehavior {
 			if (item.data == 2) {
 				Entity.addEffect(playerUid, PotionEffect.poison, 1, 80);
 			}
-			if (item.count == count) {
-				player.setCarriedItem(ItemID.tinCanEmpty, count, 0);
-			} else {
-				item.decrease(count);
-				player.setCarriedItem(item);
-				player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
-			}
+			item.decrease(count);
+			player.setCarriedItem(item);
+			player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
 			SoundManager.playSoundAtEntity(playerUid, "eat.ogg");
 		}
 	}

@@ -27,7 +27,10 @@ namespace Machine {
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			return (item.id == ItemID.debugItem || item.id == ItemID.EUMeter);
+			if (item.id == ItemID.debugItem || item.id == ItemID.EUMeter) {
+				return true;
+			}
+			return super.onItemUse(coords, item, player);
 		}
 
 		chargeSlot(slotName: string) {

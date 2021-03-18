@@ -76,7 +76,8 @@ namespace Machine {
 			return false;
 		}
 
-		onItemUse() {
+		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
+			super.onItemUse(coords, item, player);
 			return true;
 		}
 	}

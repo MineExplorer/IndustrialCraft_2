@@ -51,7 +51,7 @@ namespace Agriculture {
 
 		tick(): void {
 			this.checkGround();
-			const entities = this.region.listEntitiesInAABB(this.x, this.y, this.z, this.x + 1, this.y + 1, this.z + 1, EntityType.PLAYER, false);
+			const entities = this.region.listEntitiesInAABB(this.x, this.y, this.z, this.x + 1, this.y + 1, this.z + 1, 1, false);
 			if (entities.length > 0) {
 				for (const playerUid of entities) {
 					this.checkPlayerRunning(playerUid);

@@ -9,6 +9,18 @@ Port of IC2 Experimental for PC to Minecraft on Android for Inner Core modloader
 ## Discord server
 Join our [Discord server](https://discord.gg/jPFntnP)!
 
+## Development
+### Requirements
+1. Visual Studio Code IDE
+2. Python 3.6 or higher
+3. Node.js 10.15.1 or higher
+
+### Building
+1. Clone repository
+2. Download mod toolchain (https://github.com/zheka2304/innercore-mod-toolchain)
+2. Install toolchain manually: extract files from toolchain-mod folder into repository without replacing existing files
+4. Build using Build Everything task in VS Code (Ctrl+Shift+B)
+
 ## Note
 I'm not associated with IC2 developer team which develops original mod for PC, this is unofficial port of their mod to Minecraft on Android.
 All rights for textures from IC2 for PC reserved by IC2 developer team.

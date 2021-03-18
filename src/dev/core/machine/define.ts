@@ -45,7 +45,6 @@ namespace MachineRegistry {
 		}
 
 		const BasePrototype = Machine.ElectricMachine.prototype;
-		Prototype.isEnergyTile = true;
 		Prototype.getTier = Prototype.getTier || BasePrototype.getTier;
 		Prototype.getMaxPacketSize = Prototype.getMaxPacketSize || BasePrototype.getMaxPacketSize;
 		Prototype.getExplosionPower = Prototype.getExplosionPower || BasePrototype.getExplosionPower;

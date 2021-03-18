@@ -1,0 +1,137 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Assemble Mod for Release",
+			"type": "shell",
+			"options": {
+				"cwd": ".\\toolchain\\python"
+			},
+			"command": "..\\assemble-release.bat",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build and Push Everything",
+			"type": "shell",
+			"options": {
+				"cwd": ".\\toolchain\\python"
+			},
+			"command": "..\\build-and-push-all.bat",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build Everything",
+			"type": "shell",
+			"options": {
+				"cwd": ".\\toolchain\\python"
+			},
+			"command": "..\\build-all.bat",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build Scripts and Resources",
+			"type": "shell",
+			"options": {
+				"cwd": ".\\toolchain\\python"
+			},
+			"command": "..\\build-scripts-and-resources.bat",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Cleanup",
+			"type": "shell",
+			"options": {
+				"cwd": ".\\toolchain\\python"
+			},
+			"command": "..\\cleanup.bat",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build and Push Java",
+			"type": "shell",
+			"options": {
+				"cwd": ".\\toolchain\\python"
+			},
+			"command": "..\\compile-java.bat",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Build and Push Native",
+			"type": "shell",
+			"options": {
+				"cwd": ".\\toolchain\\python"
+			},
+			"command": "..\\compile-native.bat",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "Connect to ADB",
+			"type": "shell",
+			"options": {
+				"cwd": ".\\toolchain\\python"
+			},
+			"command": "python",
+			"args": [
+				"task.py",
+				"connectToADB",
+				"'${input:ip}:${input:port}'"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Download Declarations",
+			"type": "shell",
+			"options": {
+				"cwd": ".\\toolchain\\python"
+			},
+			"command": "..\\download-declarations.bat",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
+		}
+	],
+	"inputs": [
+		{
+			"id": "ip",
+			"description": "IP:",
+			"default": "192.168.31.74",
+			"type": "promptString"
+		},
+		{
+			"id": "port",
+			"description": "Port:",
+			"default": "5037",
+			"type": "promptString"
+		}
+	]
+}

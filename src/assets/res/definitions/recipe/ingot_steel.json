@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "tags": [ "crafting_table" ],
+  "pattern": [
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:block_block_steel"
+    }
+  },
+  "result": {
+    "item": "minecraft:item_ingot_steel",
+    "count": 9
+  }
+}

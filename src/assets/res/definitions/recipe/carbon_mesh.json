@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "tags": [ "crafting_table" ],
+  "pattern": [
+    "X",
+    "X"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:item_carbon_fibre"
+    }
+  },
+  "result": {
+	"item": "minecraft:item_carbon_mesh"
+  }
+}

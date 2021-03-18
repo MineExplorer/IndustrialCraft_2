@@ -1,0 +1,20 @@
+{
+  "type": "crafting_shaped",
+  "tags": [ "crafting_table" ],
+  "pattern": [
+    "X",
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "minecraft:item_latex"
+    }
+  },
+  "result": {
+	"item": "minecraft:torch",
+	"count": 4
+  }
+}

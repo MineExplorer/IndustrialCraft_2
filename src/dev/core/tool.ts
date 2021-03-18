@@ -112,7 +112,7 @@ namespace ICTool {
 			}
 		}
 	});
-	
+
 	Network.addServerPacket("icpe.demontageMachine", function (client: NetworkClient, data: Vector) {
 		const player = client.getPlayerUid();
 		const region = WorldRegion.getForActor(player);
@@ -130,6 +130,7 @@ namespace ICTool {
 					TileEntity.destroyTileEntity(tileEntity);
 				}
 				region.setBlock(data.x, data.y, data.z, 0, 0);
+				SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg", 1);
 			}
 		}
 	});

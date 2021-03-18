@@ -75,5 +75,9 @@ namespace Machine {
 			}
 			return false;
 		}
+
+		onItemUse() {
+			return true;
+		}
 	}
 }

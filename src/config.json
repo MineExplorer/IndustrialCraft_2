@@ -1,0 +1,49 @@
+{
+  "enabled": true,
+  "debug_mode": true,
+  "sound_enabled": true,
+  "machine_sounds": true,
+  "voltage_enabled": true,
+  "wire_damage_enabled": false,
+  "reactor_explosion_max_power": 45,
+  "button_scale": 55,
+  "rubber_tree_gen": {
+    "plains": 0.5,
+    "forest": 3,
+    "jungle": 6,
+    "swamp": 10
+  },
+  "copper_ore": {
+    "enabled": true,
+    "count": 15,
+    "size": 10,
+    "minHeight": 0,
+    "maxHeight": 68
+  },
+  "tin_ore": {
+    "enabled": true,
+    "count": 25,
+    "size": 6,
+    "minHeight": 0,
+    "maxHeight": 52
+  },
+  "lead_ore": {
+    "enabled": true,
+    "count": 8,
+    "size": 4,
+    "minHeight": 0,
+    "maxHeight": 40
+  },
+  "uranium_ore": {
+    "enabled": true,
+    "count": 20,
+    "size": 3,
+    "minHeight": 0,
+    "maxHeight": 64
+  },
+  "iridium_ore": {
+    "chance": 0.2,
+    "minHeight": 1,
+    "maxHeight": 72
+  }
+}

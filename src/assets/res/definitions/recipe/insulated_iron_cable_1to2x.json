@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shapeless",
+  "tags": [ "crafting_table" ],
+  "ingredients": [
+    {
+      "item": "minecraft:item_cable_iron1",
+      "data": 0
+    },
+    {
+      "item": "minecraft:item_rubber",
+      "data": 0
+    }
+  ],
+  "result": {
+    "item": "minecraft:item_cable_iron2"
+  }
+}

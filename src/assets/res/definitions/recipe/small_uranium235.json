@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "tags": [ "crafting_table" ],
+  "pattern": [
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:item_uranium235"
+    }
+  },
+  "result": {
+    "item": "minecraft:item_small_uranium235",
+    "count": 9
+  }
+}

@@ -46,22 +46,39 @@ namespace Machine {
 			return 0;
 		}
 
+		getEntitiesInField(): number[] {
+			let entities = this.region.listEntitiesInAABB(this.x - 1.5, this.y, this.z - 1.5, this.x + 1.5, this.y + 3, this.z + 1.5);
+			let players = Network.getConnectedPlayers();
+			for (let ent of players) {
+				if (Entity.getDimension(ent) !== this.dimension) continue;
+				let c = Entity.getPosition(ent);
+				let dx = Math.abs(this.x + 0.5 - c.x);
+				let y = c.y - this.y;
+				let dz = Math.abs(this.z + 0.5 - c.z);
+				if (dx < 1.5 && dz < 1.5 && y >= 0 && y < 3) {
+					entities.push(ent);
+				}
+			}
+			return entities;
+		}
+
 		tick(): void {
 			if (World.getThreadTime() % 11 == 0 && this.data.isActive && this.data.frequency) {
-				let entities = this.region.listEntitiesInAABB(this.x - 1.5, this.y, this.z - 1.5, this.x + 1.5, this.y + 3, this.z + 1.5);
-				if (!entities.length) return;
-
 				let storages = this.getNearestStorages();
 				let energyAvailable = 0;
 				for (let i in storages) {
 					energyAvailable += storages[i].data.energy;
 				}
-
 				let receive = this.data.frequency;
+
 				if (energyAvailable > receive.energy * 100) {
+					let entities = this.getEntitiesInField();
+					if (!entities.length) return;
+
 					for (let ent of entities) {
 						let weight = this.getWeight(ent);
 						if (!weight) continue;
+
 						let energyNeed = weight * receive.energy;
 						if (ConfigIC.debugMode) Debug.m(energyNeed);
 						if (energyNeed <= energyAvailable) {

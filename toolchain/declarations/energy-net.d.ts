@@ -1,5 +1,3 @@
-/// <reference path="./core-engine.d.ts" />
-
 declare namespace EnergyTypeRegistry {
     type WireData = {
         type: EnergyType;
@@ -81,7 +79,7 @@ declare class EnergyNode {
     resetConnections(): void;
     receiveEnergy(amount: number, packet: EnergyPacket): number;
     add(amount: number, power?: number): number;
-    addPacket(energyName: string, amount: number, size: number): number;
+    addPacket(energyName: string, amount: number, size?: number): number;
     transferEnergy(amount: number, packet: EnergyPacket): number;
     /** @deprecated */
     addAll(amount: number, power?: number): void;
@@ -117,8 +115,8 @@ declare class EnergyTileNode extends EnergyNode {
     tick(): void;
 }
 interface EnergyTile extends TileEntity {
-    isEnergyTile: boolean;
-    energyTypes: {};
+    isEnergyTile?: boolean;
+    energyTypes?: {};
     energyNode: EnergyTileNode;
     energyTick(type: string, node: EnergyTileNode): void;
     energyReceive(type: string, amount: number, voltage: number): number;

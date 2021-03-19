@@ -32,8 +32,7 @@ namespace Machine {
 			return guiSolarPanel;
 		}
 
-		init(): void {
-			super.init();
+		onInit(): void {
 			this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
 		}
 

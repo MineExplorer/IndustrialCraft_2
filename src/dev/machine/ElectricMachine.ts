@@ -4,7 +4,6 @@ namespace Machine {
 	export abstract class ElectricMachine
 	extends MachineBase
 	implements EnergyTile {
-		isEnergyTile: true;
 		energyNode: EnergyTileNode;
 		energyTypes: object;
 
@@ -39,7 +38,7 @@ namespace Machine {
 
 		dischargeSlot(slotName: string) {
 			let amount = this.getEnergyStorage() - this.data.energy;
-			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot("slotEnergy"), "Eu", amount, this.getTier());
+			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot(slotName), "Eu", amount, this.getTier());
 		}
 
 		energyTick(type: string, src: any): void {}
@@ -66,20 +65,20 @@ namespace Machine {
 			return 1.2;
 		}
 
-		isConductor(type: string) {
+		isConductor(type: string): boolean {
 			return false;
 		}
 
-		canReceiveEnergy(side: number, type: string) {
+		canReceiveEnergy(side: number, type: string): boolean {
 			return true;
 		}
 
-		canExtractEnergy(side: number, type: string) {
+		canExtractEnergy(side: number, type: string): boolean {
 			return false;
 		}
 
 		rebuildGrid(): void {
-			this.energyNode?.resetConnections();
+			this.energyNode.resetConnections();
 			EnergyGridBuilder.buildGridForTile(this);
 		}
 	}

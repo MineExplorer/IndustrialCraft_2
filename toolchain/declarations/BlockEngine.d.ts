@@ -217,7 +217,19 @@ declare class WorldRegion {
      */
     listEntitiesInAABB(pos1: Vector, pos2: Vector, type?: number, blacklist?: boolean): number[];
     listEntitiesInAABB(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, type?: number, blacklist?: boolean): number[];
+    /**
+     * Plays standart Minecraft sound on the specified coordinates
+     * @param name sound name
+     * @param volume sound volume from 0 to 1. Default is 1.
+     * @param pitch sound pitch, from 0 to 1. Default is 1.
+     */
     playSound(x: number, y: number, z: number, name: string, volume?: number, pitch?: number): void;
+    /**
+     * Plays standart Minecraft sound from the specified entity
+     * @param name sound name
+     * @param volume sound volume from 0 to 1. Default is 1.
+     * @param pitch sound pitch, from 0 to 1. Default is 1.
+     */
     playSoundAtEntity(ent: number, name: string, volume?: number, pitch?: number): void;
 }
 declare class PlayerEntity {
@@ -648,6 +660,26 @@ declare abstract class TileEntityBase implements TileEntity {
     load(): void;
     unload(): void;
     tick(): void;
+    /**
+     * Called when a TileEntity is created
+     */
+    onCreate(): void;
+    /**
+     * Called when a TileEntity is initialised in the world
+     */
+    onInit(): void;
+    /**
+     * Called when a chunk with TileEntity is loaded
+     */
+    onLoad(): void;
+    /**
+     * Called when a chunk with TileEntity is unloaded
+     */
+    onUnload(): void;
+    /**
+     * Called every tick and should be used for all the updates of the TileEntity
+     */
+    onTick(): void;
     clientLoad(): void;
     clientUnload(): void;
     clientTick(): void;

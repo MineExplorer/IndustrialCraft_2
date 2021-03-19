@@ -7,6 +7,8 @@ declare namespace TileRenderer {
     function setStaticModel(id: number, data: number, boxes: BoxVertexes[]): void;
     function setStaticModelWithRotation(id: number, boxes: BoxVertexes[]): void;
     function getRotatedBoxVertexes(rotation: number, box: BoxVertexes): BoxVertexes;
+    function setCollisionShape(id: number, data: number, boxes: BoxVertexes[]): void;
+    function setEmptyCollisionShape(id: number): void;
     function setStandardModel(id: number, data: number, texture: [string, number][]): void;
     function setStandardModelWithRotation(id: number, data: number, texture: [string, number][], hasVertical?: boolean): void;
     /** @deprecated use setStandardModel instead*/
@@ -25,6 +27,5 @@ declare namespace TileRenderer {
     /** @deprecated use setRotationFunction instead*/
     function setRotationPlaceFunction(id: string | number, hasVertical?: boolean, placeSound?: string): void;
     function setupWireModel(id: number, data: number, width: number, groupName: string, preventSelfAdd?: boolean): void;
-    function setEmptyCollisionShape(id: number): void;
     function getCropModel(texture: [string, number]): ICRender.Model;
 }

@@ -30,7 +30,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 2,
+    version: 3,
     shared: false,
     api: "CoreEngine"
 });
@@ -455,6 +455,12 @@ var WorldRegion = /** @class */ (function () {
         }
         return this.blockSource.listEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
     };
+    /**
+     * Plays standart Minecraft sound on the specified coordinates
+     * @param name sound name
+     * @param volume sound volume from 0 to 1. Default is 1.
+     * @param pitch sound pitch, from 0 to 1. Default is 1.
+     */
     WorldRegion.prototype.playSound = function (x, y, z, name, volume, pitch) {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
@@ -470,6 +476,12 @@ var WorldRegion = /** @class */ (function () {
             }
         }
     };
+    /**
+     * Plays standart Minecraft sound from the specified entity
+     * @param name sound name
+     * @param volume sound volume from 0 to 1. Default is 1.
+     * @param pitch sound pitch, from 0 to 1. Default is 1.
+     */
     WorldRegion.prototype.playSoundAtEntity = function (ent, name, volume, pitch) {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
@@ -1331,13 +1343,42 @@ var TileEntityBase = /** @class */ (function () {
         this.client.unload = this.clientUnload;
         this.client.tick = this.clientTick;
     }
-    TileEntityBase.prototype.created = function () { };
+    TileEntityBase.prototype.created = function () {
+        this.onCreate();
+    };
     TileEntityBase.prototype.init = function () {
         this.region = new WorldRegion(this.blockSource);
+        this.onInit();
     };
-    TileEntityBase.prototype.load = function () { };
-    TileEntityBase.prototype.unload = function () { };
-    TileEntityBase.prototype.tick = function () { };
+    TileEntityBase.prototype.load = function () {
+        this.onLoad();
+    };
+    TileEntityBase.prototype.unload = function () {
+        this.onUnload();
+    };
+    TileEntityBase.prototype.tick = function () {
+        this.onTick();
+    };
+    /**
+     * Called when a TileEntity is created
+     */
+    TileEntityBase.prototype.onCreate = function () { };
+    /**
+     * Called when a TileEntity is initialised in the world
+     */
+    TileEntityBase.prototype.onInit = function () { };
+    /**
+     * Called when a chunk with TileEntity is loaded
+     */
+    TileEntityBase.prototype.onLoad = function () { };
+    /**
+     * Called when a chunk with TileEntity is unloaded
+     */
+    TileEntityBase.prototype.onUnload = function () { };
+    /**
+     * Called every tick and should be used for all the updates of the TileEntity
+     */
+    TileEntityBase.prototype.onTick = function () { };
     TileEntityBase.prototype.clientLoad = function () { };
     TileEntityBase.prototype.clientUnload = function () { };
     TileEntityBase.prototype.clientTick = function () { };

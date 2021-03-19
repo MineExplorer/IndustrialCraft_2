@@ -62,8 +62,7 @@ namespace Machine {
 			return false;
 		}
 
-		init(): void {
-			super.init();
+		onInit(): void {
 			if (this.data.corePos && this.region.getBlockId(this.data.corePos) == BlockID.nuclearReactor) {
 				let tileEnt = this.region.getTileEntity(this.data.corePos);
 				if (tileEnt) {

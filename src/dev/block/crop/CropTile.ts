@@ -43,8 +43,7 @@ namespace Agriculture {
 			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 		}
 
-		init(): void {
-			super.init();
+		onInit(): void {
 			if (this.data.crop) this.crop = Agriculture.CropCardManager.getCropCardByIndex(this.data.crop);
 			this.updateRender();
 		}

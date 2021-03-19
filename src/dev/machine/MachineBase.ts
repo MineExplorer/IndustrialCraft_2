@@ -11,8 +11,7 @@ namespace Machine {
 		upgrades?: string[];
 		defaultDrop?: number;
 
-		init(): void {
-			super.init();
+		onInit(): void {
 			if (this.data.meta !== undefined) {
 				Logger.Log(`Update tile with ID ${this.blockID}, data ${this.data.meta}`, "IC2");
 				let facing = this.data.meta;

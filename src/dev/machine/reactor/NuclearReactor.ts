@@ -82,8 +82,8 @@ namespace Machine {
 			return guiNuclearReactor;
 		}
 
-		init(): void {
-			super.init();
+		onInit(): void {
+			super.onInit();
 			this.chambers = [];
 			this.rebuildGrid();
 			this.__initialized = true;

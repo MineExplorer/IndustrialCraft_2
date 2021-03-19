@@ -40,7 +40,7 @@ namespace Machine {
 
 		onRedstoneUpdate(signal: number): void {
 			let newMode = signal > 0;
-			if (newMode != this.data.increaseMode) {
+			if (this.data.increaseMode != newMode) {
 				this.data.increaseMode = newMode;
 				this.rebuildGrid();
 			}

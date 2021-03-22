@@ -123,7 +123,7 @@ namespace Machine {
 			}
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 			if (this.data.isHeating) {

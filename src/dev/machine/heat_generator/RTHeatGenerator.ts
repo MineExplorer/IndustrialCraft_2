@@ -44,7 +44,7 @@ namespace Machine {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id) => (id == ItemID.rtgPellet));
 		}
 
-		tick(): void {
+		onTick(): void {
 			let output = 1;
 			for (let i = 0; i < 6; i++) {
 				let slot = this.container.getSlot("slot"+i);

@@ -26,7 +26,7 @@ extends ItemCommon
 implements ItemBehavior {
 	constructor(stringID: string, liquid: string) {
 		super(stringID, `${liquid}_cell`, `cell_${liquid}`);
-		LiquidLib.registerItem(liquid, ItemID.cellEmpty, this.id, 1000);
+		LiquidItemRegistry.registerItem(liquid, ItemID.cellEmpty, this.id, 1000);
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {

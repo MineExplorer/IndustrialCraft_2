@@ -5503,6 +5503,11 @@ declare class ItemContainer {
 	parent: Nullable<TileEntity> | any;
 
 	/**
+	 * @returns false if container supports multiplayer, true otherwise
+	 */
+	isLegacyContainer(): false;
+
+	/**
 	 * Sets container's parent object, for [[TileEntity]]'s container it 
 	 * should be a [[TileEntity]] reference, otherwise you can pass any 
 	 * value to be used in your code later
@@ -10096,6 +10101,11 @@ declare namespace UI {
 		slots: {
 			[key: string]: Slot;
 		}
+
+		/**
+		 * @returns false if container supports multiplayer, true otherwise
+		 */
+		isLegacyContainer(): true;
 
 		/**
 		 * Sets container's parent object, for [[TileEntity]]'s container it 

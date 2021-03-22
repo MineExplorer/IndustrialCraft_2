@@ -42,7 +42,7 @@ namespace Machine {
 			this.data.work_time = this.defaultValues.work_time;
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 

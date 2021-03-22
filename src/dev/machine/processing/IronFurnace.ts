@@ -74,7 +74,7 @@ namespace Machine {
 			return Recipes.getFurnaceRecipeResult(id, data, "iron");
 		}
 
-		tick(): void {
+		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
 			let sourceSlot = this.container.getSlot("slotSource");

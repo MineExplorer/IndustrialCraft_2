@@ -75,7 +75,7 @@ namespace Machine {
 			return maxOutput;
 		}
 
-		tick(): void {
+		onTick(): void {
 			let maxOutput = this.calcOutput();
 			let output = 0;
 

@@ -1,3 +1,14 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -116,17 +127,21 @@ var EnergyType = /** @class */ (function () {
 }());
 var EnergyPacket = /** @class */ (function () {
     function EnergyPacket(energyName, size, source) {
-        this.passedNodes = {};
+        this.nodeList = {};
         this.energyName = energyName;
         this.size = size;
         this.source = source;
         this.setNodePassed(source.id);
     }
     EnergyPacket.prototype.validateNode = function (nodeId) {
-        return !this.passedNodes[nodeId];
+        if (this.nodeList[nodeId]) {
+            return false;
+        }
+        this.setNodePassed(nodeId);
+        return true;
     };
     EnergyPacket.prototype.setNodePassed = function (nodeId) {
-        this.passedNodes[nodeId] = true;
+        this.nodeList[nodeId] = true;
     };
     return EnergyPacket;
 }());
@@ -244,7 +259,6 @@ var EnergyNode = /** @class */ (function () {
         return this.transferEnergy(amount, packet);
     };
     EnergyNode.prototype.transferEnergy = function (amount, packet) {
-        packet.setNodePassed(this.id);
         if (this.receivers.length == 0)
             return 0;
         var receivedAmount = amount;
@@ -252,6 +266,7 @@ var EnergyNode = /** @class */ (function () {
             amount = Math.min(amount, packet.size);
             this.onOverload(packet.size);
         }
+        var currentNodeList = __assign({}, packet.nodeList);
         var receiversCount = this.receivers.length;
         for (var i = 0; i < receiversCount; i++) {
             var node = this.receivers[i];
@@ -261,6 +276,7 @@ var EnergyNode = /** @class */ (function () {
                 amount -= node.receiveEnergy(Math.ceil(amount / (receiversCount - i)), packet);
             }
         }
+        packet.nodeList = currentNodeList;
         for (var _i = 0, _a = this.receivers; _i < _a.length; _i++) {
             var node = _a[_i];
             if (amount <= 0)

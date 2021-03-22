@@ -608,7 +608,7 @@ declare namespace ItemRegistry {
     interface ToolDescription {
         name: string;
         icon: string | Item.TextureData;
-        material: string;
+        material: string | ToolAPI.ToolMaterial;
         inCreative?: boolean;
         category?: number;
         glint?: boolean;
@@ -715,4 +715,62 @@ declare abstract class TileEntityBase implements TileEntity {
         liquid: string;
         amount: number;
     }): void;
+}
+declare namespace LiquidItemRegistry {
+    /**
+     * @amount liquid amount able to extract
+     */
+    type EmptyData = {
+        id: number;
+        data: number;
+        liquid: string;
+        amount: number;
+        storage?: number;
+    };
+    /**
+     * @amount free liquid amount
+     */
+    type FullData = {
+        id: number;
+        data: number;
+        amount: number;
+        storage?: number;
+    };
+    export let EmptyByFull: {};
+    export let FullByEmpty: {};
+    /**
+     * Registers liquid storage item
+     * @param liquid liquid name
+     * @param emptyId empty item id
+     * @param fullId id of item with luquid
+     * @param storage capacity of liquid in mB
+     */
+    export function registerItem(liquid: string, emptyId: number, fullId: number, storage: number): void;
+    export function getItemLiquid(id: number, data: number): string;
+    export function getEmptyItem(id: number, data: number): EmptyData;
+    export function getFullItem(id: number, data: number, liquid: string): FullData;
+    export {};
+}
+declare namespace BlockEngine {
+    class LiquidTank {
+        tileEntity: TileEntity;
+        name: string;
+        limit: number;
+        data: {
+            liquid: string;
+            amount: number;
+        };
+        constructor(tileEntity: TileEntity, name: string, limit: number);
+        getLiquidStored(): string;
+        getLimit(): number;
+        getAmount(liquid?: string): number;
+        setAmount(liquid: string, amount: number): void;
+        getRelativeAmount(): number;
+        addLiquid(liquid: string, amount: number): number;
+        getLiquid(amount: number): number;
+        getLiquid(liquid: string, amount: number): number;
+        isFull(): boolean;
+        isEmpty(): boolean;
+        updateUiScale(scale: string): void;
+    }
 }

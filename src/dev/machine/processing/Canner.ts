@@ -117,15 +117,15 @@ namespace Machine {
 			}
 			case 1:
 			case 3:
-				return !!LiquidLib.getEmptyItem(id, data);
+				return !!LiquidItemRegistry.getEmptyItem(id, data);
 			case 2:
 				return !!LiquidRegistry.getFullItem(id, data, "water");
 			}
 		}
 
 		setupContainer(): void {
-			this.inputTank = new LiquidTank(this, "input", 8);
-			this.outputTank = new LiquidTank(this, "output", 8);
+			this.inputTank = new BlockEngine.LiquidTank(this, "input", 8);
+			this.outputTank = new BlockEngine.LiquidTank(this, "output", 8);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotSource") return this.isValidSourceItem(id, data);
@@ -136,7 +136,7 @@ namespace Machine {
 			});
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.container.sendEvent("updateUI", {mode: this.data.mode});
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
@@ -171,7 +171,7 @@ namespace Machine {
 			break;
 			case 1:
 				let liquid = this.outputTank.getLiquidStored();
-				let empty = LiquidLib.getEmptyItem(canSlot.id, canSlot.data);
+				let empty = LiquidItemRegistry.getEmptyItem(canSlot.id, canSlot.data);
 				if (empty && (!liquid || empty.liquid == liquid) && this.outputTank.getAmount() <= 8 - empty.amount) {
 					if (this.data.energy >= this.data.energy_consume && (resultSlot.id == empty.id && resultSlot.data == empty.data && resultSlot.count < Item.getMaxStack(empty.id) || resultSlot.id == 0)) {
 						this.data.energy -= this.data.energy_consume;
@@ -193,7 +193,7 @@ namespace Machine {
 				let resetProgress = true;
 				liquid = this.inputTank.getLiquidStored();
 				if (liquid) {
-					let full = LiquidLib.getFullItem(canSlot.id, canSlot.data, liquid);
+					let full = LiquidItemRegistry.getFullItem(canSlot.id, canSlot.data, liquid);
 					if (full && this.inputTank.getAmount() >= full.storage) {
 						resetProgress = false;
 						if (this.data.energy >= this.data.energy_consume && (resultSlot.id == full.id && resultSlot.data == full.data && resultSlot.count < Item.getMaxStack(full.id) || resultSlot.id == 0)) {

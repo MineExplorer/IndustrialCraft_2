@@ -45,7 +45,7 @@ namespace Machine {
 			return false;
 		}
 
-		tick(): void {
+		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
 			this.dischargeSlot("slot2");

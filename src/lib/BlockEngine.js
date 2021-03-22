@@ -1165,7 +1165,6 @@ var ItemRegistry;
     var items = {};
     var itemsRarity = {};
     var armorMaterials = {};
-    var toolMaterials = {};
     function getInstanceOf(itemID) {
         var numericID = Item.getNumericId(itemID);
         return items[numericID] || null;
@@ -1222,11 +1221,12 @@ var ItemRegistry;
     }
     ItemRegistry.getArmorMaterial = getArmorMaterial;
     function addToolMaterial(name, material) {
-        toolMaterials[name] = material;
+        ToolAPI.addToolMaterial(name, material);
     }
     ItemRegistry.addToolMaterial = addToolMaterial;
     function getToolMaterial(name) {
-        return toolMaterials[name];
+        //@ts-ignore
+        return ToolAPI.toolMaterials[name];
     }
     ItemRegistry.getToolMaterial = getToolMaterial;
     function registerItem(itemInstance) {
@@ -1455,6 +1455,150 @@ var TileEntityBase = /** @class */ (function () {
     ], TileEntityBase.prototype, "setLiquidScale", null);
     return TileEntityBase;
 }());
+var LiquidItemRegistry;
+(function (LiquidItemRegistry) {
+    LiquidItemRegistry.EmptyByFull = {};
+    LiquidItemRegistry.FullByEmpty = {};
+    /**
+     * Registers liquid storage item
+     * @param liquid liquid name
+     * @param emptyId empty item id
+     * @param fullId id of item with luquid
+     * @param storage capacity of liquid in mB
+     */
+    function registerItem(liquid, emptyId, fullId, storage) {
+        LiquidItemRegistry.EmptyByFull[fullId] = { id: emptyId, liquid: liquid, storage: storage };
+        LiquidItemRegistry.FullByEmpty[emptyId + ":" + liquid] = { id: fullId, storage: storage };
+        Item.setMaxDamage(fullId, storage);
+        if (storage == 1000)
+            LiquidRegistry.registerItem(liquid, { id: emptyId, data: 0 }, { id: fullId, data: 0 });
+    }
+    LiquidItemRegistry.registerItem = registerItem;
+    function getItemLiquid(id, data) {
+        var empty = LiquidItemRegistry.EmptyByFull[id];
+        if (empty) {
+            return empty.liquid;
+        }
+        return LiquidRegistry.getItemLiquid(id, data);
+    }
+    LiquidItemRegistry.getItemLiquid = getItemLiquid;
+    function getEmptyItem(id, data) {
+        var empty = LiquidRegistry.getEmptyItem(id, data);
+        if (empty) {
+            var itemData = { id: empty.id, data: empty.data, liquid: empty.liquid };
+            var emptyData = LiquidItemRegistry.EmptyByFull[id];
+            if (emptyData) {
+                itemData.storage = emptyData.storage;
+                itemData.amount = (emptyData.storage - data) / 1000;
+            }
+            else {
+                itemData.amount = 1;
+            }
+            return itemData;
+        }
+        return null;
+    }
+    LiquidItemRegistry.getEmptyItem = getEmptyItem;
+    function getFullItem(id, data, liquid) {
+        var emptyData = LiquidItemRegistry.EmptyByFull[id];
+        if (emptyData) {
+            return { id: id, data: 0, amount: data / 1000, storage: emptyData.storage / 1000 };
+        }
+        var fullData = LiquidItemRegistry.FullByEmpty[id + ":" + liquid];
+        if (fullData) {
+            return { id: fullData.id, data: 0, amount: fullData.storage / 1000, storage: fullData.storage / 1000 };
+        }
+        var full = LiquidRegistry.getFullItem(id, data, liquid);
+        if (full) {
+            return { id: full.id, data: full.data, amount: 1 };
+        }
+        return null;
+    }
+    LiquidItemRegistry.getFullItem = getFullItem;
+})(LiquidItemRegistry || (LiquidItemRegistry = {}));
+var BlockEngine;
+(function (BlockEngine) {
+    var LiquidTank = /** @class */ (function () {
+        function LiquidTank(tileEntity, name, limit) {
+            this.tileEntity = tileEntity;
+            this.name = name;
+            this.limit = limit;
+            var tileData = tileEntity.data;
+            if (!tileData.__liquid_tanks) {
+                tileData.__liquid_tanks = {};
+            }
+            if (tileData.__liquid_tanks[name]) {
+                this.data = tileData.__liquid_tanks[name];
+            }
+            else {
+                tileData.__liquid_tanks[name] = this.data = {
+                    liquid: null,
+                    amount: 0
+                };
+            }
+        }
+        LiquidTank.prototype.getLiquidStored = function () {
+            return this.data.liquid;
+        };
+        LiquidTank.prototype.getLimit = function () {
+            return this.limit;
+        };
+        LiquidTank.prototype.getAmount = function (liquid) {
+            if (!liquid || this.data.liquid == liquid) {
+                return this.data.amount;
+            }
+            return 0;
+        };
+        LiquidTank.prototype.setAmount = function (liquid, amount) {
+            this.data.liquid = liquid;
+            this.data.amount = amount;
+        };
+        LiquidTank.prototype.getRelativeAmount = function () {
+            return this.data.amount / this.limit;
+        };
+        LiquidTank.prototype.addLiquid = function (liquid, amount) {
+            if (!this.data.liquid || this.data.liquid == liquid) {
+                this.data.liquid = liquid;
+                var add = Math.min(amount, this.limit - this.data.amount);
+                this.data.amount += add;
+                return amount - add;
+            }
+            return 0;
+        };
+        LiquidTank.prototype.getLiquid = function (liquid, amount) {
+            if (amount == undefined) {
+                amount = liquid;
+                liquid = null;
+            }
+            if (!liquid || this.data.liquid == liquid) {
+                var got = Math.min(amount, this.data.amount);
+                this.data.amount -= got;
+                if (this.data.amount == 0) {
+                    this.data.liquid = null;
+                }
+                return got;
+            }
+            return 0;
+        };
+        LiquidTank.prototype.isFull = function () {
+            return this.data.amount < this.limit;
+        };
+        LiquidTank.prototype.isEmpty = function () {
+            return this.data.amount == 0;
+        };
+        LiquidTank.prototype.updateUiScale = function (scale) {
+            var container = this.tileEntity.container;
+            if (container.isLegacyContainer()) {
+                this.tileEntity.liquidStorage._setContainerScale(container, scale, this.data.liquid, this.getRelativeAmount());
+            }
+            else {
+                container.sendEvent("setLiquidScale", { scale: scale, liquid: this.data.liquid, amount: this.getRelativeAmount() });
+            }
+        };
+        return LiquidTank;
+    }());
+    BlockEngine.LiquidTank = LiquidTank;
+})(BlockEngine || (BlockEngine = {}));
 // classes
 EXPORT("ItemStack", ItemStack);
 EXPORT("Vector3", Vector3);
@@ -1473,5 +1617,6 @@ EXPORT("EnumRarity", EnumRarity);
 EXPORT("Side", Side);
 // APIs
 EXPORT("ItemRegistry", ItemRegistry);
+EXPORT("LiquidItemRegistry", LiquidItemRegistry);
 EXPORT("EntityCustomData", EntityCustomData);
 EXPORT("BlockEngine", BlockEngine);

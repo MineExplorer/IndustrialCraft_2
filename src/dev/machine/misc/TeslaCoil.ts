@@ -24,7 +24,7 @@ namespace Machine {
 			return 3;
 		}
 
-		tick(): void {
+		onTick(): void {
 			if (this.data.energy >= 400 && this.data.isActive) {
 				if (World.getThreadTime()%32 == 0) {
 					let entities = Entity.getAll();

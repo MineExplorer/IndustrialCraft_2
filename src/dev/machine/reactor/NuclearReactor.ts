@@ -99,10 +99,10 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.container.setGlobalAddTransferPolicy((container, name, id, amount, data)  => {
+			this.container.setGlobalAddTransferPolicy((container, name, id, amount, data) => {
 				if (!ReactorItem.isReactorItem(id) || container.getSlot(name).count > 0) return 0;
 				return 1;
-			})
+			});
 		}
 
 		addChamber(chamber: ReactorChamber): void {
@@ -149,7 +149,7 @@ namespace Machine {
 			}
 		}
 
-		tick(): void {
+		onTick(): void {
 			let reactorSize = this.getReactorSize();
 			this.container.sendEvent("setFieldSize", {size: reactorSize});
 			if (World.getThreadTime() % 20 == 0) {

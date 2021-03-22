@@ -40,7 +40,7 @@ namespace Machine {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => ChargeItemRegistry.isValidItem(id, "Eu", 1));
 		}
 
-		tick(): void {
+		onTick(): void {
 			if (World.getThreadTime() % 100 == 0) {
 				this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
 			}

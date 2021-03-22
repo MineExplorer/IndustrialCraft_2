@@ -59,14 +59,14 @@ namespace Machine {
 			this.liquidStorage.setLimit("biogas", 2);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, count, data) => {
-				if (name == "slotBiomass0") return LiquidLib.getItemLiquid(id, data) == "biomass";
-				if (name == "slotBiogas0") return !!LiquidLib.getFullItem(id, data, "biogas");
+				if (name == "slotBiomass0") return LiquidItemRegistry.getItemLiquid(id, data) == "biomass";
+				if (name == "slotBiogas0") return !!LiquidItemRegistry.getFullItem(id, data, "biogas");
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
 			});
 		}
 
-		tick(): void {
+		onTick(): void {
 			UpgradeAPI.executeUpgrades(this);
 			this.setActive(this.data.heat > 0);
 

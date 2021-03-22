@@ -135,7 +135,7 @@ namespace Machine {
 			}
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.data.isHeating = this.data.signal > 0;
 			UpgradeAPI.executeUpgrades(this);
 

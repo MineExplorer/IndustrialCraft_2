@@ -76,7 +76,7 @@ namespace Machine {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotSource") return !!this.getRecipeResult(id);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
-				if (name == "slotLiquid1") return LiquidLib.getItemLiquid(id, data) == "water";
+				if (name == "slotLiquid1") return LiquidItemRegistry.getItemLiquid(id, data) == "water";
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
 			});
@@ -110,7 +110,7 @@ namespace Machine {
 			return MachineRecipeRegistry.getRecipeResult("oreWasher", id);
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
@@ -153,7 +153,9 @@ namespace Machine {
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 			if (Entity.getSneaking(player)) {
-				return this.getLiquidFromItem("lava", item, null, true);
+				if (this.getLiquidFromItem("water", item, new ItemStack(), true)) {
+					return true;
+				}
 			}
 			return super.onItemUse(coords, item, player);
 		}
@@ -168,7 +170,7 @@ namespace Machine {
 					return MachineRecipeRegistry.hasRecipeFor("oreWasher", item.id, item.data);
 			}},
 			"slotLiquid1": {input: true, isValid: (item: ItemInstance) => {
-				return LiquidLib.getItemLiquid(item.id, item.data) == "water";
+				return LiquidItemRegistry.getItemLiquid(item.id, item.data) == "water";
 			}},
 			"slotLiquid2": {output: true},
 			"slotResult1": {output: true},

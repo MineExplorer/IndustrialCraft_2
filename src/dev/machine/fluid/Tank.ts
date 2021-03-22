@@ -41,7 +41,7 @@ namespace Machine {
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotLiquid1") {
-					return !!(LiquidRegistry.getFullItem(id, data, "water") || LiquidLib.getEmptyItem(id, data));
+					return !!(LiquidRegistry.getFullItem(id, data, "water") || LiquidItemRegistry.getEmptyItem(id, data));
 				}
 				if (name == "slotLiquid2") return false;
 				return UpgradeAPI.isValidUpgrade(id, this);
@@ -55,12 +55,14 @@ namespace Machine {
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				let liquid = this.liquidStorage.getLiquidStored();
-				return this.getLiquidFromItem(liquid, item, new ItemStack());
+				if (this.getLiquidFromItem(liquid, item, new ItemStack(), true)) {
+					return true;
+				}
 			}
 			return super.onItemUse(coords, item, player);
 		}
 
-		tick(): void {
+		onTick(): void {
 			UpgradeAPI.executeUpgrades(this);
 
 			let storage = this.liquidStorage;
@@ -69,7 +71,7 @@ namespace Machine {
 			let slot2 = this.container.getSlot("slotLiquid2");
 			this.getLiquidFromItem(liquid, slot1, slot2);
 			if (liquid) {
-				let full = LiquidLib.getFullItem(slot1.id, slot1.data, liquid);
+				let full = LiquidItemRegistry.getFullItem(slot1.id, slot1.data, liquid);
 				if (full && storage.getAmount(liquid) >= full.storage && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)) {
 					storage.getLiquid(liquid, full.storage);
 					slot1.setSlot(slot1.id, slot1.count - 1, slot1.data);
@@ -77,7 +79,7 @@ namespace Machine {
 					slot2.setSlot(full.id, slot2.count + 1, full.data);
 				}
 			}
-			storage.updateUiScale("liquidScale", storage.getLiquidStored());
+			this.updateLiquidScale("liquidScale", storage.getLiquidStored());
 			this.container.sendChanges();
 		}
 	}
@@ -91,7 +93,7 @@ StorageInterface.createInterface(BlockID.tank, {
 		"slotLiquid2": {output: true}
 	},
 	isValidInput: (item: ItemInstance) => {
-		return !!(LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidLib.getEmptyItem(item.id, item.data));
+		return !!(LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidItemRegistry.getEmptyItem(item.id, item.data));
 	},
 	canReceiveLiquid: () => true,
 	canTransportLiquid: () => true

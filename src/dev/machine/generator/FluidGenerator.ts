@@ -58,7 +58,7 @@ namespace Machine {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				let empty = LiquidLib.getEmptyItem(id, data);
+				let empty = LiquidItemRegistry.getEmptyItem(id, data);
 				if (!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			});
@@ -76,12 +76,14 @@ namespace Machine {
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				let liquid = this.liquidStorage.getLiquidStored();
-				return this.getLiquidFromItem(liquid, item, new ItemStack(), true);
+				if (this.getLiquidFromItem(liquid, item, new ItemStack(), true)) {
+					return true;
+				}
 			}
 			return super.onItemUse(coords, item, player);
 		}
 
-		tick(): void {
+		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
 			let liquid = this.liquidStorage.getLiquidStored();
@@ -132,7 +134,7 @@ namespace Machine {
 			"slot2": {output: true}
 		},
 		isValidInput: (item: ItemInstance) => {
-			let empty = LiquidLib.getEmptyItem(item.id, item.data);
+			let empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
 			if (!empty) return false;
 			return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 		},

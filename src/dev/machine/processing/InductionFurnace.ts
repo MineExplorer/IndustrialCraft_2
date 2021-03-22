@@ -84,7 +84,7 @@ namespace Machine {
 			this.data.isHeating = this.data.signal > 0;
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 

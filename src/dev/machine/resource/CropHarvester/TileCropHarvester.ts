@@ -33,7 +33,7 @@ namespace Machine {
 			});
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 			StorageInterface.checkHoppers(this);

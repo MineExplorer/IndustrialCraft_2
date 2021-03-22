@@ -44,7 +44,7 @@ namespace Machine {
 			return guiRTGenerator;
 		}
 
-		tick(): void {
+		onTick(): void {
 			const energyStorage = this.getEnergyStorage();
 			let output = 0.5;
 			for (let i = 0; i < 6; i++) {

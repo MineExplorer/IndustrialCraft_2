@@ -62,7 +62,7 @@ namespace Machine {
 			return entities;
 		}
 
-		tick(): void {
+		onTick(): void {
 			if (World.getThreadTime() % 11 == 0 && this.data.isActive && this.data.frequency) {
 				let storages = this.getNearestStorages();
 				let energyAvailable = 0;

@@ -151,7 +151,7 @@ namespace Machine {
 			return 0;
 		}
 
-		tick(): void {
+		onTick(): void {
 			if (this.data.whitelist)
 				this.container.setText("textInfoMode", Translation.translate("Mode: Whitelist"));
 			else
@@ -240,7 +240,7 @@ namespace Machine {
 
 		@ContainerEvent(Side.Server)
 		restart(): void {
-			this.data.x = this.data.y = this.data.z =  0;
+			this.data.x = this.data.y = this.data.z = 0;
 		}
 
 		@ContainerEvent(Side.Client)

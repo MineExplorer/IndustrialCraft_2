@@ -46,7 +46,7 @@ namespace Machine {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				return LiquidLib.getItemLiquid(id, data) == "lava";
+				return LiquidItemRegistry.getItemLiquid(id, data) == "lava";
 			});
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
@@ -57,12 +57,14 @@ namespace Machine {
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				return this.getLiquidFromItem("lava", item, null, true);
+				if (this.getLiquidFromItem("lava", item, new ItemStack(), true)) {
+					return true;
+				}
 			}
 			return super.onItemUse(coords, item, player);
 		}
 
-		tick(): void {
+		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
 			let slot1 = this.container.getSlot("slot1");
@@ -102,7 +104,7 @@ namespace Machine {
 			"slot2": {output: true}
 		},
 		isValidInput: (item: ItemInstance) => (
-			LiquidLib.getItemLiquid(item.id, item.data) == "lava"
+			LiquidItemRegistry.getItemLiquid(item.id, item.data) == "lava"
 		),
 		canReceiveLiquid: (liquid: string) => liquid == "lava",
 		canTransportLiquid: (liquid: string) => false

@@ -105,11 +105,11 @@ namespace MachineRegistry {
 
 	export function getLiquidFromItem(liquid: string, inputItem: ItemContainerSlot | ItemInstance, outputItem: ItemContainerSlot | ItemInstance, byHand?: boolean): boolean {
 		let storage = StorageInterface.getInterface(this);
-		let empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
+		let empty = LiquidItemRegistry.getEmptyItem(inputItem.id, inputItem.data);
 		if (empty && (!liquid && storage.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid) &&
 			(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0)) {
 			let liquidLimit = this.liquidStorage.getLimit(empty.liquid);
-			let storedAmount = this.liquidStorage.getAmount(liquid).toFixed(3);
+			let storedAmount = +this.liquidStorage.getAmount(liquid).toFixed(3);
 			let count = Math.min(byHand? inputItem.count : 1, Math.floor((liquidLimit - storedAmount) / empty.amount));
 			if (count > 0) {
 				this.liquidStorage.addLiquid(empty.liquid, empty.amount * count);
@@ -141,7 +141,7 @@ namespace MachineRegistry {
 	export function addLiquidToItem(liquid: string, inputItem: ItemContainerSlot, outputItem: ItemContainerSlot): void {
 		let amount = this.liquidStorage.getAmount(liquid).toFixed(3);
 		if (amount > 0) {
-			let full = LiquidLib.getFullItem(inputItem.id, inputItem.data, liquid);
+			let full = LiquidItemRegistry.getFullItem(inputItem.id, inputItem.data, liquid);
 			if (full && (outputItem.id == full.id && outputItem.data == full.data && outputItem.count < Item.getMaxStack(full.id) || outputItem.id == 0)) {
 				if (amount >= full.amount) {
 					this.liquidStorage.getLiquid(liquid, full.amount);

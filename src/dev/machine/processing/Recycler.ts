@@ -76,7 +76,7 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slotResult", () => 0);
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 

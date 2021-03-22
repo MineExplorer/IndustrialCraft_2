@@ -80,7 +80,7 @@ namespace Machine {
 			this.liquidStorage.setLimit("lava", 8);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name == "slotLiquid1") return !!LiquidLib.getFullItem(id, data, "water");
+				if (name == "slotLiquid1") return !!LiquidItemRegistry.getFullItem(id, data, "water");
 				if (name == "slotLiquid2") return false;
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				return UpgradeAPI.isValidUpgrade(id, this);
@@ -112,7 +112,7 @@ namespace Machine {
 			return null;
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 
@@ -174,7 +174,7 @@ namespace Machine {
 			"slotLiquid2": {output: true}
 		},
 		isValidInput: (item: ItemInstance) => (
-			!!LiquidLib.getFullItem(item.id, item.data, "water")
+			!!LiquidItemRegistry.getFullItem(item.id, item.data, "water")
 		),
 		canReceiveLiquid: () => false,
 		canTransportLiquid: () => true

@@ -15,7 +15,7 @@ namespace Machine {
 			this.liquidStorage.setLimit("water", 2);
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
-				if (name == "slotWaterIn") return LiquidLib.getItemLiquid(id, data) == "water";
+				if (name == "slotWaterIn") return LiquidItemRegistry.getItemLiquid(id, data) == "water";
 				if (name.startsWith("slotFertilizer")) return id == ItemID.fertilizer;
 				if (name.startsWith("slotWeedEx")) return id == ItemID.weedEx;
 				return false;
@@ -28,12 +28,14 @@ namespace Machine {
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				return this.getLiquidFromItem("water", item, new ItemStack(), true);
+				if (this.getLiquidFromItem("water", item, new ItemStack(), true)) {
+					return true;
+				}
 			}
 			return super.onItemUse(coords, item, player);
 		}
 
-		tick(): void {
+		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
 			let slot1 = this.container.getSlot("slotWaterIn");

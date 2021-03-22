@@ -170,7 +170,7 @@ namespace Machine {
 			}
 		}
 
-		tick(): void {
+		onTick(): void {
 			let region = this.region;
 			if (this.data.progress == 0) {
 				let y = this.y;

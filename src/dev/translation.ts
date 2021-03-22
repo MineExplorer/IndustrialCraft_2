@@ -6,7 +6,7 @@ Translation.addTranslation("Copper Ore", {ru: "Медная руда", es: "Mine
 Translation.addTranslation("Tin Ore", {ru: "Оловянная руда", es: "Mineral de Estaño", pt: "Minério de Estanho", zh: "锡矿石"});
 Translation.addTranslation("Lead Ore", {ru: "Свинцовая руда", es: "Mineral de Plomo", pt: "Minério de Chumbo", zh: "铅矿石"});
 Translation.addTranslation("Uranium Ore", {ru: "Урановая руда", es: "Mineral de Uranium", pt: "Minério de Urânio", zh: "铀矿石"});
-Translation.addTranslation("Iridium Ore", {ru: "Иридиевая руда",  es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱矿石"});
+Translation.addTranslation("Iridium Ore", {ru: "Иридиевая руда", es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱矿石"});
 Translation.addTranslation("Copper Block", {ru: "Медный блок", es: "Bloque de Cobre", pt: "Bloco de Cobre", zh: "铜块"});
 Translation.addTranslation("Tin Block", {ru: "Оловянный блок", es: "Bloque de Estaño", pt: "Bloco de Estanho", zh: "锡块"});
 Translation.addTranslation("Bronze Block", {ru: "Бронзовый блок", es: "Bloque de Bronce", pt: "Bloco de Bronze", zh: "青铜块"});
@@ -390,14 +390,14 @@ Translation.addTranslation("melon", {en: "Melon", ru: "Арбуз", pt: "Melanci
 Translation.addTranslation("dandelion", {en: "Dandelion", ru: "Одуванчик", pt: "Dente-de-Leão", zh: "蒲公英"});
 Translation.addTranslation("rose", {en: "Rose", ru: "Роза", pt: "Rosa", zh: "玫瑰"});
 Translation.addTranslation("blackthorn", {en: "Blackthorn", ru: "Терновник", pt: "Espinheiro-negro", zh: "黑刺李"});
-Translation.addTranslation("tulip", {en: "Tulip",ru: "Тюльпан",  pt: "Tulipa", zh: "郁金香"});
+Translation.addTranslation("tulip", {en: "Tulip", ru: "Тюльпан", pt: "Tulipa", zh: "郁金香"});
 Translation.addTranslation("cyazint", {en: "Cyazint", ru: "Гиацинт", pt: "Cyazint", zh: "缤纷花"});
 Translation.addTranslation("venomilia", {en: "Venomilia", ru: "Веномилия", pt: "Venomilia", zh: "奇妙花"});
 Translation.addTranslation("reed", {en: "Reed", ru: "Сахарный тростник", pt: "Cana-de-açúcar", zh: "甘蔗"});
 Translation.addTranslation("stickreed", {en: "Stickreed", ru: "Резиновый тростник", zh: "粘性甘蔗", pt: "Cana-de-borracha"});
 Translation.addTranslation("cocoa", {en: "Cocoa", ru: "Какао", pt: "Cacau", zh: "可可"});
 Translation.addTranslation("red_mushroom", {en: "Red Mushroom", ru: "Красный гриб", pt: "Cogumelo Vermelho", zh: "红色蘑菇"});
-Translation.addTranslation("brown_mushroom", {en: "Brown Mushroom",ru: "Коричневый гриб",  pt: "Cogumelo marrom", zh: "棕色蘑菇"});
+Translation.addTranslation("brown_mushroom", {en: "Brown Mushroom", ru: "Коричневый гриб", pt: "Cogumelo marrom", zh: "棕色蘑菇"});
 Translation.addTranslation("nether_wart", {en: "Nether Wart", ru: "Адский нарост", pt: "Fungo do Nether", zh: "地狱疣"});
 Translation.addTranslation("terra_wart", {en: "Terra Wart", ru: "Земляной нарост", es: "Verruga de Tierra", pt: "Fungo da Terra", zh: "大地疣"});
 Translation.addTranslation("ferru", {en: "Ferru", ru: "Феррий", pt: "Ferru", zh: "铁叶草"});

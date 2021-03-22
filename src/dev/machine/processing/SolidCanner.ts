@@ -127,7 +127,7 @@ namespace Machine {
 			return MachineRecipeRegistry.getRecipeResult("solidCanner", id);
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.resetValues();
 			UpgradeAPI.executeUpgrades(this);
 

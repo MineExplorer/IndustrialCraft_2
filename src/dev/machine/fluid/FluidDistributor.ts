@@ -56,7 +56,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidTank = this.addLiquidTank("fluid", 1);
+			this.liquidTank = this.addLiquidTank("fluid", 1000);
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, amount, data) => {
 				return !!LiquidItemRegistry.getFullItem(id, data, "water");

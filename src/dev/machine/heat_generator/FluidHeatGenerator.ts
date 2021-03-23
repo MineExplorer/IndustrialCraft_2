@@ -54,7 +54,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			let liquidFuel = MachineRecipeRegistry.requireRecipesFor("fluidFuel");
-			this.liquidTank = this.addLiquidTank("fluid", 10, Object.keys(liquidFuel));
+			this.liquidTank = this.addLiquidTank("fluid", 10000, Object.keys(liquidFuel));
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
 				let empty = LiquidItemRegistry.getEmptyItem(id, data);
@@ -87,16 +87,16 @@ namespace Machine {
 
 			let liquid = this.liquidTank.getLiquidStored();
 			let fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid || liquid);
-			if (fuel && this.data.fuel <= 0 && +this.liquidTank.getAmount().toFixed(3) >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)) {
-				this.liquidTank.getLiquid(fuel.amount/1000);
+			if (fuel && this.data.fuel <= 0 && this.liquidTank.getAmount() >= fuel.amount && this.spreadHeat(fuel.power * 2)) {
+				this.liquidTank.getLiquid(fuel.amount);
 				this.data.fuel = fuel.amount;
 				this.data.liquid = liquid;
 			}
 			if (fuel && this.data.fuel > 0) {
 				if (this.data.fuel < fuel.amount) {
-					this.spreadHeat(fuel.power*2);
+					this.spreadHeat(fuel.power * 2);
 				}
-				this.data.fuel -= fuel.amount/20;
+				this.data.fuel -= fuel.amount / 20;
 				this.setActive(true);
 				this.container.setText("textInfo2", "Max Emit: " + fuel.power * 2);
 			}

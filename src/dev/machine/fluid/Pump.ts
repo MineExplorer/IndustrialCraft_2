@@ -74,7 +74,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidTank = this.addLiquidTank("fluid", 8);
+			this.liquidTank = this.addLiquidTank("fluid", 8000);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotLiquid1") return !!LiquidItemRegistry.getFullItem(id, data, "water");
@@ -115,7 +115,7 @@ namespace Machine {
 
 			let newActive = false;
 			let liquid = this.liquidTank.getLiquidStored();
-			if (this.y > 0 && this.liquidTank.getAmount() <= 7 && this.data.energy >= this.data.energy_consume) {
+			if (this.y > 0 && this.liquidTank.getAmount() <= 7000 && this.data.energy >= this.data.energy_consume) {
 				if (this.data.progress == 0) {
 					this.data.coords = this.recursiveSearch(liquid, this.x, this.y - 1, this.z, {});
 				}
@@ -129,7 +129,7 @@ namespace Machine {
 						liquid = this.getLiquidType(liquid, block);
 						if (liquid && block.data == 0) {
 							this.region.setBlock(coords, 0, 0);
-							this.liquidTank.addLiquid(liquid, 1);
+							this.liquidTank.addLiquid(liquid, 1000);
 						}
 						this.data.progress = 0;
 					}

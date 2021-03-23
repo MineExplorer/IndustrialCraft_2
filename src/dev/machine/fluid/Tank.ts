@@ -38,7 +38,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidTank = this.addLiquidTank("fluid", 16);
+			this.liquidTank = this.addLiquidTank("fluid", 16000);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotLiquid1") {

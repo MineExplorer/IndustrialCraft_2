@@ -42,7 +42,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidTank = this.addLiquidTank("fluid", 8, ["lava"]);
+			this.liquidTank = this.addLiquidTank("fluid", 8000, ["lava"]);
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
@@ -72,9 +72,9 @@ namespace Machine {
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			const energyStorage = this.getEnergyStorage();
-			if (+this.liquidTank.getAmount("lava").toFixed(3) >= 0.001 && this.data.energy + 20 <= energyStorage) {
+			if (this.liquidTank.getAmount("lava") >= 1000 && this.data.energy + 20 <= energyStorage) {
 				this.data.energy += 20;
-				this.liquidTank.getLiquid(0.001);
+				this.liquidTank.getLiquid(1);
 				this.setActive(true);
 			}
 			else {

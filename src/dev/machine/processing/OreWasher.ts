@@ -74,7 +74,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidTank = this.addLiquidTank("fluid", 8, ["water"]);
+			this.liquidTank = this.addLiquidTank("fluid", 8000, ["water"]);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotSource") return !!this.getRecipeResult(id);
@@ -99,7 +99,7 @@ namespace Machine {
 		}
 
 		putResult(result: number[]) {
-			this.liquidTank.getLiquid(1);
+			this.liquidTank.getLiquid(1000);
 			for (let i = 1; i < 4; i++) {
 				let id = result[(i-1) * 2];
 				if (!id) break;
@@ -124,7 +124,7 @@ namespace Machine {
 			let newActive = false;
 			let sourceSlot = this.container.getSlot("slotSource");
 			let result = this.getRecipeResult(sourceSlot.id);
-			if (result && this.checkResult(result) && this.liquidTank.getAmount("water") >= 1) {
+			if (result && this.checkResult(result) && this.liquidTank.getAmount("water") >= 1000) {
 				if (this.data.energy >= this.data.energy_consume) {
 					this.data.energy -= this.data.energy_consume;
 					this.data.progress += 1/this.data.work_time;

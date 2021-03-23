@@ -124,8 +124,8 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.inputTank = this.addLiquidTank("inputTank", 8);
-			this.outputTank = this.addLiquidTank("outputTank", 8);
+			this.inputTank = this.addLiquidTank("inputTank", 8000);
+			this.outputTank = this.addLiquidTank("outputTank", 8000);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotSource") return this.isValidSourceItem(id, data);
@@ -172,7 +172,7 @@ namespace Machine {
 			case 1:
 				let liquid = this.outputTank.getLiquidStored();
 				let empty = LiquidItemRegistry.getEmptyItem(canSlot.id, canSlot.data);
-				if (empty && (!liquid || empty.liquid == liquid) && this.outputTank.getAmount() <= 8 - empty.amount) {
+				if (empty && (!liquid || empty.liquid == liquid) && this.outputTank.getAmount() <= 8000 - empty.amount) {
 					if (this.data.energy >= this.data.energy_consume && (resultSlot.id == empty.id && resultSlot.data == empty.data && resultSlot.count < Item.getMaxStack(empty.id) || resultSlot.id == 0)) {
 						this.data.energy -= this.data.energy_consume;
 						this.data.progress += 1/this.data.work_time;
@@ -220,18 +220,18 @@ namespace Machine {
 					let recipe = recipes[i];
 					let liquid = recipe.input[0];
 					let source = recipe.input[1];
-					if (this.inputTank.getAmount(liquid) >= 1 && sourceSlot.id == source.id && sourceSlot.count >= source.count) {
+					if (this.inputTank.getAmount(liquid) >= 1000 && sourceSlot.id == source.id && sourceSlot.count >= source.count) {
 						resetProgress = false;
 						let outputLiquid = this.outputTank.getLiquidStored()
-						if ((!outputLiquid || recipe.output == outputLiquid && this.outputTank.getAmount() <= 7) && this.data.energy >= this.data.energy_consume) {
+						if ((!outputLiquid || recipe.output == outputLiquid && this.outputTank.getAmount() <= 7000) && this.data.energy >= this.data.energy_consume) {
 							this.data.energy -= this.data.energy_consume;
 							this.data.progress += 1/this.data.work_time;
 							newActive = true;
 						}
 						if (+this.data.progress.toFixed(3) >= 1) {
-							this.inputTank.getLiquid(1);
+							this.inputTank.getLiquid(1000);
 							this.decreaseSlot(sourceSlot, source.count);
-							this.outputTank.addLiquid(recipe.output, 1);
+							this.outputTank.addLiquid(recipe.output, 1000);
 							this.data.progress = 0;
 						}
 						break;

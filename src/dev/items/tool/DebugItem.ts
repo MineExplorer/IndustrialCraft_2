@@ -29,23 +29,23 @@ extends ItemElectric {
 		if (tile) {
 			let liquid = tile.liquidStorage.getLiquidStored();
 			if (liquid) {
-				client.sendMessage(liquid + " - " + tile.liquidStorage.getAmount(liquid)*1000 + "mB");
+				client.sendMessage(`${liquid} - ${tile.liquidStorage.getAmount(liquid)*1000} mB`);
 			}
-			for (let i in tile.data) {
-				if (i != "energy_storage") {
-					if (i == "__liquid_tanks") {
-						let tanks = tile.data[i];
-						client.sendMessage(tanks.input.liquid + ": "+ tanks.input.amount*1000 + "mB");
-						client.sendMessage(tanks.output.liquid + ": "+ tanks.output.amount*1000 + "mB");
+			for (let key in tile.data) {
+				if (key == "energy_storage") continue;
+
+				let value = tile.data[key];
+				if (key == "energy") {
+					client.sendMessage(`energy: ${value}/${tile.getEnergyStorage()}`);
+				}
+				else try {
+					if (typeof value == "object") {
+						client.sendMessage(key + ": " + JSON.stringify(value));
+					} else {
+						client.sendMessage(key + ": " + value);
 					}
-					else if (i == "energy") {
-						client.sendMessage("energy: " + tile.data[i] + "/" + tile.getEnergyStorage());
-					}
-					else try {
-						client.sendMessage(i + ": " + tile.data[i]);
-					} catch(e) {
-						client.sendMessage(i);
-					}
+				} catch(e) {
+					client.sendMessage(key);
 				}
 			}
 		}

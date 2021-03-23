@@ -13,14 +13,27 @@ namespace MachineRegistry {
 	export function registerPrototype(id: number, Prototype: TileEntity.TileEntityPrototype) {
 		// register ID
 		machineIDs[id] = true;
-
 		TileEntity.registerPrototype(id, Prototype);
-
-		// setup drop
-		const BasePrototype = Machine.MachineBase.prototype;
-		Prototype.getDefaultDrop = Prototype.getDefaultDrop || BasePrototype.getDefaultDrop;
-		Prototype.adjustDrop = Prototype.adjustDrop || BasePrototype.adjustDrop;
 		setMachineDrop(id, Prototype.defaultDrop);
+
+		// setup functions
+		if (!(Prototype instanceof Machine.MachineBase)) {
+			const BasePrototype = Machine.MachineBase.prototype;
+			Prototype.getDefaultDrop ??= BasePrototype.getDefaultDrop;
+			Prototype.adjustDrop ??= BasePrototype.adjustDrop;
+			Prototype.activate ??= function() {
+				if (!this.data.isActive) {
+					this.data.isActive = true;
+					TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + 4);
+				}
+			}
+			Prototype.deactivate ??= function() {
+				if (this.data.isActive) {
+					this.data.isActive = false;
+					TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta);
+				}
+			}
+		}
 
 		if (Prototype instanceof Machine.ElectricMachine) {
 			// wire connection
@@ -45,10 +58,10 @@ namespace MachineRegistry {
 		}
 
 		const BasePrototype = Machine.ElectricMachine.prototype;
-		Prototype.getTier = Prototype.getTier || BasePrototype.getTier;
-		Prototype.getMaxPacketSize = Prototype.getMaxPacketSize || BasePrototype.getMaxPacketSize;
-		Prototype.getExplosionPower = Prototype.getExplosionPower || BasePrototype.getExplosionPower;
-		Prototype.energyReceive = Prototype.energyReceive || BasePrototype.energyReceive;
+		Prototype.getTier ??= BasePrototype.getTier;
+		Prototype.getMaxPacketSize ??= BasePrototype.getMaxPacketSize;
+		Prototype.getExplosionPower ??= BasePrototype.getExplosionPower;
+		Prototype.energyReceive ??= BasePrototype.energyReceive;
 
 		this.registerPrototype(id, Prototype);
 		// register for energy net
@@ -57,9 +70,9 @@ namespace MachineRegistry {
 
 	export function registerGenerator(id: number, Prototype: TileEntity.TileEntityPrototype) {
 		const BasePrototype = Machine.Generator.prototype;
-		Prototype.energyTick = Prototype.energyTick || BasePrototype.energyTick;
-		Prototype.canReceiveEnergy = Prototype.canReceiveEnergy || BasePrototype.canReceiveEnergy;
-		Prototype.canExtractEnergy = Prototype.canExtractEnergy || BasePrototype.canExtractEnergy;
+		Prototype.energyTick ??= BasePrototype.energyTick;
+		Prototype.canReceiveEnergy ??= BasePrototype.canReceiveEnergy;
+		Prototype.canExtractEnergy ??= BasePrototype.canExtractEnergy;
 		this.registerElectricMachine(id, Prototype);
 	}
 
@@ -109,7 +122,7 @@ namespace MachineRegistry {
 		if (empty && (!liquid && tank.isValidLiquid(empty.liquid) || empty.liquid == liquid) && !tank.isFull() &&
 			(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0)) {
 			let liquidLimit = tank.getLimit();
-			let storedAmount = +tank.getAmount(liquid).toFixed(3);
+			let storedAmount = tank.getAmount(liquid);
 			let count = Math.min(inputItem.count, Math.floor((liquidLimit - storedAmount) / empty.amount));
 			if (count > 0) {
 				tank.addLiquid(empty.liquid, empty.amount * count);
@@ -122,7 +135,7 @@ namespace MachineRegistry {
 			else if (inputItem.count == 1 && empty.storage) {
 				let amount = Math.min(liquidLimit - storedAmount, empty.amount);
 				tank.addLiquid(empty.liquid, amount);
-				inputItem.data += amount * 1000;
+				inputItem.data += amount;
 			}
 			return true;
 		}
@@ -134,9 +147,9 @@ namespace MachineRegistry {
 		if (getLiquidFromItem(liquidTank, item, outputItem)) {
 			let player = new PlayerEntity(playerUid);
 			if (outputItem.id) {
-				player.addItemToInventory(outputItem.id, outputItem.count, outputItem.data);
+				player.addItemToInventory(outputItem);
 			}
-			player.setCarriedItem(item.id, item.count, item.data);
+			player.setCarriedItem(item);
 			return true;
 		}
 		return false;

@@ -716,6 +716,9 @@ declare abstract class TileEntityBase implements TileEntity {
         amount: number;
     }): void;
 }
+/**
+ * Registry for liquid storage items. Compatible with LiquidRegistry.
+ */
 declare namespace LiquidItemRegistry {
     /**
      * @amount liquid amount able to extract

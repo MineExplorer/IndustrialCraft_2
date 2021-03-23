@@ -54,7 +54,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			let liquidFuel = MachineRecipeRegistry.requireRecipesFor("fluidFuel");
-			this.liquidTank = this.addLiquidTank("fluid", 10, Object.keys(liquidFuel));
+			this.liquidTank = this.addLiquidTank("fluid", 10000, Object.keys(liquidFuel));
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
@@ -89,11 +89,11 @@ namespace Machine {
 			let slot2 = this.container.getSlot("slot2");
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
-			let liquid = this.liquidTank.getLiquidStored();
 			if (this.data.fuel <= 0) {
+				let liquid = this.liquidTank.getLiquidStored();
 				let fuel = this.getFuel(liquid);
-				if (fuel && +this.liquidTank.getAmount().toFixed(3) >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= this.getEnergyStorage()) {
-					this.liquidTank.getLiquid(fuel.amount/1000);
+				if (fuel && this.liquidTank.getAmount() >= fuel.amount && this.data.energy + fuel.power * fuel.amount <= this.getEnergyStorage()) {
+					this.liquidTank.getLiquid(fuel.amount);
 					this.data.fuel = fuel.amount;
 					this.data.liquid = liquid;
 				}
@@ -101,7 +101,7 @@ namespace Machine {
 			if (this.data.fuel > 0) {
 				let fuel = this.getFuel(this.data.liquid);
 				this.data.energy += fuel.power;
-				this.data.fuel -= fuel.amount/20;
+				this.data.fuel -= fuel.amount / 20;
 				this.setActive(true);
 			}
 			else {
@@ -110,7 +110,7 @@ namespace Machine {
 			}
 
 			this.chargeSlot("slotEnergy");
-			this.updateLiquidScale("liquidScale", liquid);
+			this.liquidTank.updateUiScale("liquidScale");
 			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendChanges();
 		}

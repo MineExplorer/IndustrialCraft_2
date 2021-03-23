@@ -42,6 +42,9 @@ const guiFermenter = InventoryWindow("Fermenter", {
 namespace Machine {
 	export class Fermenter extends MachineBase
 	implements IHeatConsumer {
+		inputTank: BlockEngine.LiquidTank;
+		outputTank: BlockEngine.LiquidTank;
+
 		defaultValues = {
 			heat: 0,
 			progress: 0,
@@ -55,8 +58,8 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit("biomass", 10);
-			this.liquidStorage.setLimit("biogas", 2);
+			this.inputTank = this.addLiquidTank("inputTank", 10000, ["biomass"]);
+			this.outputTank = this.addLiquidTank("outputTank", 2000, ["biogas"]);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, count, data) => {
 				if (name == "slotBiomass0") return LiquidItemRegistry.getItemLiquid(id, data) == "biomass";
@@ -75,8 +78,8 @@ namespace Machine {
 				this.data.heat = 0;
 
 				if (this.data.progress >= 4000) {
-					this.liquidStorage.getLiquid("biomass", 0.02);
-					this.liquidStorage.addLiquid("biogas", 0.4);
+					this.inputTank.getLiquid("biomass", 20);
+					this.outputTank.addLiquid("biogas", 400);
 					this.data.fertilizer++;
 					this.data.progress = 0;
 				}
@@ -90,16 +93,16 @@ namespace Machine {
 
 			let slot1 = this.container.getSlot("slotBiomass0");
 			let slot2 = this.container.getSlot("slotBiomass1");
-			this.getLiquidFromItem("biomass", slot1, slot2);
+			this.inputTank.getLiquidFromItem(slot1, slot2);
 
 			slot1 = this.container.getSlot("slotBiogas0");
 			slot2 = this.container.getSlot("slotBiogas1");
-			this.addLiquidToItem("biogas", slot1, slot2);
+			this.outputTank.addLiquidToItem(slot1, slot2);
 
 			this.container.setScale("progressScale", this.data.progress / 4000);
 			this.container.setScale("fertilizerScale", this.data.fertilizer / 25);
-			this.updateLiquidScale("biomassScale", "biomass");
-			this.updateLiquidScale("biogasScale", "biogas");
+			this.inputTank.updateUiScale("biomassScale");
+			this.outputTank.updateUiScale("biogasScale");
 			this.container.sendChanges();
 		}
 
@@ -109,19 +112,11 @@ namespace Machine {
 
 		heatReceive(amount: number): number {
 			let outputSlot = this.container.getSlot("slotFertilizer");
-			if (this.liquidStorage.getAmount("biomass").toFixed(3) as any >= 0.02 && this.liquidStorage.getAmount("biogas") <= 1.6 && outputSlot.count < 64) {
+			if (this.inputTank.getAmount("biomass") >= 20 && this.outputTank.getAmount("biogas") <= 1600 && outputSlot.count < 64) {
 				this.data.heat = amount;
 				return amount;
 			}
 			return 0;
-		}
-
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
-			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
-		}
-
-		addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance): void {
-			return MachineRegistry.addLiquidToItem.call(this, liquid, inputItem, outputItem);
 		}
 
 		isWrenchable(): boolean {
@@ -130,8 +125,7 @@ namespace Machine {
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				let liquid = this.liquidStorage.getLiquidStored();
-				if (this.getLiquidFromItem(liquid, item, new ItemStack(), true)) {
+				if (MachineRegistry.fillTankOnClick(this.inputTank, item, player)) {
 					return true;
 				}
 			}
@@ -151,8 +145,8 @@ namespace Machine {
 		},
 		canReceiveLiquid: (liquid: string) => liquid == "biomass",
 		canTransportLiquid: () => true,
-		getLiquidStored: (storage: string) => {
-			return storage == "input" ? "biomass" : "biogas";
+		getLiquidStorage: function(storage: string) {
+			return storage == "input" ? this.tileEntity.inputTank : this.tileEntity.outputTank;
 		}
 	});
 }

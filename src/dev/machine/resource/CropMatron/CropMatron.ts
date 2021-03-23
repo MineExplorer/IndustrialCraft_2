@@ -30,5 +30,10 @@ StorageInterface.createInterface(BlockID.cropMatron, {
         },
         "slotWaterOut": { output: true }
     },
+
+    getLiquidStorage: function() {
+        return this.tileEntity.liquidTank;
+    },
+
     canReceiveLiquid: (liquid: string) => liquid == "water"
 });

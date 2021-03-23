@@ -28,7 +28,13 @@ namespace Machine {
 		setupContainer(): void {}
 
 		addLiquidTank(name: string, limit: number, liquids?: string[]) {
-			return new BlockEngine.LiquidTank(this, name, limit, liquids);
+			let tank = new BlockEngine.LiquidTank(this, name, limit, liquids);
+			let liquid = this.liquidStorage.getLiquidStored();
+			if (liquid) {
+				let amount = this.liquidStorage.getLiquid(liquid, tank.getLimit() / 1000);
+				tank.addLiquid(liquid, Math.round(amount * 1000));
+			}
+			return tank;
 		}
 
 		isWrenchable(): boolean {

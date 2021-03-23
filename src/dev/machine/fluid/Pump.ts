@@ -42,6 +42,8 @@ const guiPump = InventoryWindow("Pump", {
 
 namespace Machine {
 	export class Pump extends ElectricMachine {
+		liquidTank: BlockEngine.LiquidTank;
+
 		defaultValues = {
 			energy: 0,
 			tier: 1,
@@ -71,13 +73,8 @@ namespace Machine {
 			this.data.work_time = this.defaultValues.work_time;
 		}
 
-		addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance): void {
-			return MachineRegistry.addLiquidToItem.call(this, liquid, inputItem, outputItem);
-		}
-
 		setupContainer(): void {
-			this.liquidStorage.setLimit("water", 8);
-			this.liquidStorage.setLimit("lava", 8);
+			this.liquidTank = this.addLiquidTank("fluid", 8);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotLiquid1") return !!LiquidItemRegistry.getFullItem(id, data, "water");
@@ -88,10 +85,10 @@ namespace Machine {
 		}
 
 		getLiquidType(liquid: string, block: Tile): string {
-			if ((!liquid || liquid=="water") && (block.id == 8 || block.id == 9)) {
+			if ((!liquid || liquid == "water") && (block.id == 8 || block.id == 9)) {
 				return "water";
 			}
-			if ((!liquid || liquid=="lava") && (block.id == 10 || block.id == 11)) {
+			if ((!liquid || liquid == "lava") && (block.id == 10 || block.id == 11)) {
 				return "lava";
 			}
 			return null;
@@ -99,10 +96,10 @@ namespace Machine {
 
 		recursiveSearch(liquid: string, x: number, y: number, z: number, map: {}): Vector {
 			let block = this.region.getBlock(x, y, z);
-			let scoords = x+':'+y+':'+z;
-			if (!map[scoords] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
+			let coordsKey = x+':'+y+':'+z;
+			if (!map[coordsKey] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
 				if (block.data == 0) return new Vector3(x, y, z);
-				map[scoords] = true;
+				map[coordsKey] = true;
 				return this.recursiveSearch(liquid, x, y+1, z, map) ||
 				this.recursiveSearch(liquid, x+1, y, z, map) ||
 				this.recursiveSearch(liquid, x-1, y, z, map) ||
@@ -117,10 +114,10 @@ namespace Machine {
 			UpgradeAPI.executeUpgrades(this);
 
 			let newActive = false;
-			let liquid = this.liquidStorage.getLiquidStored();
-			if (this.y > 0 && this.liquidStorage.getAmount(liquid) <= 7 && this.data.energy >= this.data.energy_consume) {
+			let liquid = this.liquidTank.getLiquidStored();
+			if (this.y > 0 && this.liquidTank.getAmount() <= 7 && this.data.energy >= this.data.energy_consume) {
 				if (this.data.progress == 0) {
-					this.data.coords = this.recursiveSearch(liquid, this.x, this.y-1, this.z, {});
+					this.data.coords = this.recursiveSearch(liquid, this.x, this.y - 1, this.z, {});
 				}
 				if (this.data.coords) {
 					newActive = true;
@@ -132,7 +129,7 @@ namespace Machine {
 						liquid = this.getLiquidType(liquid, block);
 						if (liquid && block.data == 0) {
 							this.region.setBlock(coords, 0, 0);
-							this.liquidStorage.addLiquid(liquid, 1);
+							this.liquidTank.addLiquid(liquid, 1);
 						}
 						this.data.progress = 0;
 					}
@@ -145,14 +142,14 @@ namespace Machine {
 
 			let slot1 = this.container.getSlot("slotLiquid1");
 			let slot2 = this.container.getSlot("slotLiquid2");
-			this.addLiquidToItem(liquid, slot1, slot2);
+			this.liquidTank.addLiquidToItem(slot1, slot2);
 
 			const energyStorage = this.getEnergyStorage();
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
 			this.container.setScale("progressScale", this.data.progress);
-			this.updateLiquidScale("liquidScale", liquid);
+			this.liquidTank.updateUiScale("liquidScale");
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.sendChanges();
 		}
@@ -173,9 +170,15 @@ namespace Machine {
 			"slotLiquid1": {input: true},
 			"slotLiquid2": {output: true}
 		},
+
 		isValidInput: (item: ItemInstance) => (
 			!!LiquidItemRegistry.getFullItem(item.id, item.data, "water")
 		),
+
+		getLiquidStorage: function() {
+			return this.tileEntity.liquidTank;
+		},
+
 		canReceiveLiquid: () => false,
 		canTransportLiquid: () => true
 	});

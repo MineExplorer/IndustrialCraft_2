@@ -40,6 +40,8 @@ const guiFluidHeatGenerator = InventoryWindow("Liquid Fuel Firebox", {
 
 namespace Machine {
 	export class FluidHeatGenerator extends MachineBase {
+		liquidTank: BlockEngine.LiquidTank;
+
 		defaultValues = {
 			output: 0,
 			fuel: 0,
@@ -51,18 +53,16 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit(null, 10);
+			let liquidFuel = MachineRecipeRegistry.requireRecipesFor("fluidFuel");
+			this.liquidTank = this.addLiquidTank("fluid", 10, Object.keys(liquidFuel));
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
 				let empty = LiquidItemRegistry.getEmptyItem(id, data);
 				if (!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			});
-			this.container.setSlotAddTransferPolicy("slot2", () => 0);
-		}
 
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
-			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
+			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
 
 		isWrenchable(): boolean {
@@ -71,8 +71,7 @@ namespace Machine {
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				let liquid = this.liquidStorage.getLiquidStored();
-				if (this.getLiquidFromItem(liquid, item, new ItemStack(), true)) {
+				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
 					return true;
 				}
 			}
@@ -81,14 +80,15 @@ namespace Machine {
 
 		onTick(): void {
 			StorageInterface.checkHoppers(this);
-			let liquid = this.liquidStorage.getLiquidStored();
+
 			let slot1 = this.container.getSlot("slot1");
 			let slot2 = this.container.getSlot("slot2");
-			this.getLiquidFromItem(liquid, slot1, slot2);
+			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
+			let liquid = this.liquidTank.getLiquidStored();
 			let fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid || liquid);
-			if (fuel && this.data.fuel <= 0 && this.liquidStorage.getAmount(liquid).toFixed(3) as any >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)) {
-				this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
+			if (fuel && this.data.fuel <= 0 && +this.liquidTank.getAmount().toFixed(3) >= fuel.amount/1000 && this.spreadHeat(fuel.power*2)) {
+				this.liquidTank.getLiquid(fuel.amount/1000);
 				this.data.fuel = fuel.amount;
 				this.data.liquid = liquid;
 			}
@@ -108,7 +108,7 @@ namespace Machine {
 			}
 
 			this.container.setText("textInfo1", "Emit: " + this.data.output);
-			this.updateLiquidScale("liquidScale", liquid);
+			this.liquidTank.updateUiScale("liquidScale");
 			this.container.sendChanges();
 		}
 
@@ -140,12 +140,21 @@ namespace Machine {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
+
 		isValidInput: function(item: ItemInstance) {
 			let empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
 			if (!empty) return false;
 			return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 		},
-		canReceiveLiquid: (liquid: string) => MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid),
-		canTransportLiquid: (liquid: string) => false
+
+		getLiquidStorage: function() {
+			return this.tileEntity.liquidTank;
+		},
+
+		canReceiveLiquid: function(liquid: string) {
+			return this.getLiquidStorage().isValidLiquid(liquid);
+		},
+
+		canTransportLiquid: () => false
 	});
 }

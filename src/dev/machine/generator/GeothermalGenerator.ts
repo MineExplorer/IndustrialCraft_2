@@ -35,29 +35,29 @@ const guiGeothermalGenerator = InventoryWindow("Geothermal Generator", {
 
 namespace Machine {
 	export class GeothermalGenerator extends Generator {
+		liquidTank: BlockEngine.LiquidTank;
+
 		getScreenByName() {
 			return guiGeothermalGenerator;
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit("lava", 8);
+			this.liquidTank = this.addLiquidTank("fluid", 8, ["lava"]);
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
 			});
+
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
 				return LiquidItemRegistry.getItemLiquid(id, data) == "lava";
 			});
-			this.container.setSlotAddTransferPolicy("slot2", () => 0);
-		}
 
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
-			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
+			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				if (this.getLiquidFromItem("lava", item, new ItemStack(), true)) {
+				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
 					return true;
 				}
 			}
@@ -69,12 +69,12 @@ namespace Machine {
 
 			let slot1 = this.container.getSlot("slot1");
 			let slot2 = this.container.getSlot("slot2");
-			this.getLiquidFromItem("lava", slot1, slot2);
+			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			const energyStorage = this.getEnergyStorage();
-			if (this.liquidStorage.getAmount("lava").toFixed(3) as any >= 0.001 && this.data.energy + 20 <= energyStorage) {
+			if (+this.liquidTank.getAmount("lava").toFixed(3) >= 0.001 && this.data.energy + 20 <= energyStorage) {
 				this.data.energy += 20;
-				this.liquidStorage.getLiquid("lava", 0.001);
+				this.liquidTank.getLiquid(0.001);
 				this.setActive(true);
 			}
 			else {
@@ -82,7 +82,7 @@ namespace Machine {
 			}
 
 			this.chargeSlot("slotEnergy");
-			this.updateLiquidScale("liquidScale", "lava");
+			this.liquidTank.updateUiScale("liquidScale");
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.sendChanges();
 		}
@@ -103,9 +103,15 @@ namespace Machine {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
+
 		isValidInput: (item: ItemInstance) => (
 			LiquidItemRegistry.getItemLiquid(item.id, item.data) == "lava"
 		),
+
+		getLiquidStorage: function() {
+			return this.tileEntity.liquidTank;
+		},
+
 		canReceiveLiquid: (liquid: string) => liquid == "lava",
 		canTransportLiquid: (liquid: string) => false
 	});

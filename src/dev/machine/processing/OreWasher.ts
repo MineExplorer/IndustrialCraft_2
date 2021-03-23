@@ -56,6 +56,8 @@ const guiOreWasher = InventoryWindow("Ore Washing Plant", {
 
 namespace Machine {
 	export class OreWasher extends ProcessingMachine {
+		liquidTank: BlockEngine.LiquidTank;
+
 		defaultValues = {
 			energy: 0,
 			tier: 1,
@@ -72,7 +74,8 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit("water", 8);
+			this.liquidTank = this.addLiquidTank("fluid", 8, ["water"]);
+
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotSource") return !!this.getRecipeResult(id);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
@@ -96,7 +99,7 @@ namespace Machine {
 		}
 
 		putResult(result: number[]) {
-			this.liquidStorage.getLiquid("water", 1);
+			this.liquidTank.getLiquid(1);
 			for (let i = 1; i < 4; i++) {
 				let id = result[(i-1) * 2];
 				if (!id) break;
@@ -116,12 +119,12 @@ namespace Machine {
 
 			let slot1 = this.container.getSlot("slotLiquid1");
 			let slot2 = this.container.getSlot("slotLiquid2");
-			this.getLiquidFromItem("water", slot1, slot2);
+			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			let newActive = false;
 			let sourceSlot = this.container.getSlot("slotSource");
 			let result = this.getRecipeResult(sourceSlot.id);
-			if (result && this.checkResult(result) && this.liquidStorage.getAmount("water") >= 1) {
+			if (result && this.checkResult(result) && this.liquidTank.getAmount("water") >= 1) {
 				if (this.data.energy >= this.data.energy_consume) {
 					this.data.energy -= this.data.energy_consume;
 					this.data.progress += 1/this.data.work_time;
@@ -143,17 +146,13 @@ namespace Machine {
 			this.dischargeSlot("slotEnergy");
 
 			this.container.setScale("progressScale", this.data.progress);
-			this.updateLiquidScale("liquidScale", "water");
+			this.liquidTank.updateUiScale("liquidScale");
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
-		}
-
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
-			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 			if (Entity.getSneaking(player)) {
-				if (this.getLiquidFromItem("water", item, new ItemStack(), true)) {
+				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
 					return true;
 				}
 			}
@@ -177,6 +176,11 @@ namespace Machine {
 			"slotResult2": {output: true},
 			"slotResult3": {output: true}
 		},
+
+		getLiquidStorage: function() {
+			return this.tileEntity.liquidTank;
+		},
+
 		canReceiveLiquid: (liquid: string) => liquid == "water",
 		canTransportLiquid: () => false
 	});

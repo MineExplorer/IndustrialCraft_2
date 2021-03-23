@@ -756,19 +756,25 @@ declare namespace BlockEngine {
         tileEntity: TileEntity;
         name: string;
         limit: number;
+        liquids: object;
         data: {
             liquid: string;
             amount: number;
         };
-        constructor(tileEntity: TileEntity, name: string, limit: number);
+        constructor(tileEntity: TileEntity, name: string, limit: number, liquids?: string[]);
+        setParent(tileEntity: TileEntity): void;
         getLiquidStored(): string;
         getLimit(): number;
+        isValidLiquid(liquid: string): boolean;
+        setValidLiquids(liquids: string[]): void;
         getAmount(liquid?: string): number;
         setAmount(liquid: string, amount: number): void;
         getRelativeAmount(): number;
         addLiquid(liquid: string, amount: number): number;
         getLiquid(amount: number): number;
         getLiquid(liquid: string, amount: number): number;
+        addLiquidToItem(inputSlot: ItemContainerSlot, outputSlot: ItemContainerSlot): boolean;
+        getLiquidFromItem(inputSlot: ItemContainerSlot, outputSlot: ItemContainerSlot): boolean;
         isFull(): boolean;
         isEmpty(): boolean;
         updateUiScale(scale: string): void;

@@ -1519,29 +1519,39 @@ var LiquidItemRegistry;
 var BlockEngine;
 (function (BlockEngine) {
     var LiquidTank = /** @class */ (function () {
-        function LiquidTank(tileEntity, name, limit) {
-            this.tileEntity = tileEntity;
+        function LiquidTank(tileEntity, name, limit, liquids) {
             this.name = name;
             this.limit = limit;
-            var tileData = tileEntity.data;
-            if (!tileData.__liquid_tanks) {
-                tileData.__liquid_tanks = {};
-            }
-            if (tileData.__liquid_tanks[name]) {
-                this.data = tileData.__liquid_tanks[name];
-            }
-            else {
-                tileData.__liquid_tanks[name] = this.data = {
-                    liquid: null,
-                    amount: 0
-                };
-            }
+            if (liquids)
+                this.setValidLiquids(liquids);
+            this.setParent(tileEntity);
         }
+        LiquidTank.prototype.setParent = function (tileEntity) {
+            this.tileEntity = tileEntity;
+            var liquidData = tileEntity.data[this.name] || {
+                liquid: null,
+                amount: 0
+            };
+            tileEntity.data[this.name] = this.data = liquidData;
+        };
         LiquidTank.prototype.getLiquidStored = function () {
             return this.data.liquid;
         };
         LiquidTank.prototype.getLimit = function () {
             return this.limit;
+        };
+        LiquidTank.prototype.isValidLiquid = function (liquid) {
+            if (!this.liquids) {
+                return true;
+            }
+            return this.liquids[liquid] || false;
+        };
+        LiquidTank.prototype.setValidLiquids = function (liquids) {
+            this.liquids = {};
+            for (var _i = 0, liquids_1 = liquids; _i < liquids_1.length; _i++) {
+                var name = liquids_1[_i];
+                this.liquids[name] = true;
+            }
         };
         LiquidTank.prototype.getAmount = function (liquid) {
             if (!liquid || this.data.liquid == liquid) {
@@ -1579,6 +1589,60 @@ var BlockEngine;
                 return got;
             }
             return 0;
+        };
+        LiquidTank.prototype.addLiquidToItem = function (inputSlot, outputSlot) {
+            var liquid = this.getLiquidStored();
+            if (!liquid)
+                return false;
+            var amount = Math.round(this.getAmount(liquid) * 1000) / 1000;
+            if (amount > 0) {
+                var full = LiquidItemRegistry.getFullItem(inputSlot.id, inputSlot.data, liquid);
+                if (full && (outputSlot.id == full.id && outputSlot.data == full.data && outputSlot.count < Item.getMaxStack(full.id) || outputSlot.id == 0)) {
+                    if (amount >= full.amount) {
+                        this.getLiquid(full.amount);
+                        inputSlot.setSlot(inputSlot.id, inputSlot.count - 1, inputSlot.data);
+                        inputSlot.validate();
+                        outputSlot.setSlot(full.id, outputSlot.count + 1, full.data);
+                        return true;
+                    }
+                    if (inputSlot.count == 1 && full.storage) {
+                        if (inputSlot.id == full.id) {
+                            amount = this.getLiquid(full.amount);
+                            inputSlot.setSlot(inputSlot.id, 1, inputSlot.data - amount * 1000);
+                        }
+                        else {
+                            amount = this.getLiquid(full.storage);
+                            inputSlot.setSlot(full.id, 1, (full.storage - amount) * 1000);
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+        LiquidTank.prototype.getLiquidFromItem = function (inputSlot, outputSlot) {
+            var liquid = this.getLiquidStored();
+            var empty = LiquidItemRegistry.getEmptyItem(inputSlot.id, inputSlot.data);
+            if (empty && (!liquid && this.isValidLiquid(empty.liquid) || empty.liquid == liquid) && !this.isFull()) {
+                if (outputSlot.id == empty.id && outputSlot.data == empty.data && outputSlot.count < Item.getMaxStack(empty.id) || outputSlot.id == 0) {
+                    var storedAmount = +this.getAmount(liquid).toFixed(3);
+                    var freeAmount = this.getLimit() - storedAmount;
+                    if (freeAmount > empty.amount) {
+                        this.addLiquid(empty.liquid, empty.amount);
+                        inputSlot.setSlot(inputSlot.id, inputSlot.count - 1, inputSlot.data);
+                        inputSlot.validate();
+                        outputSlot.setSlot(empty.id, outputSlot.count + 1, empty.data);
+                        return true;
+                    }
+                    if (inputSlot.count == 1 && empty.storage) {
+                        var amount = Math.min(freeAmount, empty.amount);
+                        this.addLiquid(empty.liquid, amount);
+                        inputSlot.setSlot(inputSlot.id, 1, inputSlot.data + amount * 1000);
+                        return true;
+                    }
+                }
+            }
+            return false;
         };
         LiquidTank.prototype.isFull = function () {
             return this.data.amount < this.limit;

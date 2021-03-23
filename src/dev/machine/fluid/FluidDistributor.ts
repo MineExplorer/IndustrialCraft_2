@@ -38,6 +38,8 @@ const guiFluidDistributor = InventoryWindow("Fluid Distributor", {
 
 namespace Machine {
 	export class FluidDistributor extends MachineBase {
+		liquidTank: BlockEngine.LiquidTank;
+
 		defaultValues = {
 			inverted: false
 		}
@@ -54,16 +56,12 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit(null, 1);
+			this.liquidTank = this.addLiquidTank("fluid", 1);
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, amount, data) => {
 				return !!LiquidItemRegistry.getFullItem(id, data, "water");
 			});
 			this.container.setSlotAddTransferPolicy("slotLiquid2", () => 0);
-		}
-
-		addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance): void {
-			return MachineRegistry.addLiquidToItem.call(this, liquid, inputItem, outputItem);
 		}
 
 		onTick(): void {
@@ -73,12 +71,11 @@ namespace Machine {
 				this.container.setText("text2", Translation.translate("Distribute"));
 			}
 
-			let liquid = this.liquidStorage.getLiquidStored();
 			let slot1 = this.container.getSlot("slot1");
 			let slot2 = this.container.getSlot("slot2");
-			this.addLiquidToItem(liquid, slot1, slot2);
+			this.liquidTank.addLiquidToItem(slot1, slot2);
 
-			liquid = this.liquidStorage.getLiquidStored();
+			let liquid = this.liquidTank.getLiquidStored();
 			if (liquid) {
 				let facing = this.getFacing();
 				for (let side = 0; side < 6; side++) {
@@ -90,7 +87,7 @@ namespace Machine {
 				}
 			}
 
-			this.updateLiquidScale("liquidScale", liquid);
+			this.liquidTank.updateUiScale("liquidScale");
 			this.container.sendChanges();
 		}
 
@@ -112,13 +109,20 @@ namespace Machine {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
+
 		isValidInput: (item: ItemInstance) => {
 			return !!LiquidItemRegistry.getFullItem(item.id, item.data, "water")
 		},
+
+		getLiquidStorage: function() {
+			return this.tileEntity.liquidTank;
+		},
+
 		canReceiveLiquid: function(liquid: string, side: number): boolean {
 			let data = this.tileEntity.data;
 			return (side == this.tileEntity.getFacing()) != data.inverted;
 		},
+
 		canTransportLiquid: () => true
 	});
 }

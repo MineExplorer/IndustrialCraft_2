@@ -124,8 +124,8 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.inputTank = new BlockEngine.LiquidTank(this, "input", 8);
-			this.outputTank = new BlockEngine.LiquidTank(this, "output", 8);
+			this.inputTank = this.addLiquidTank("inputTank", 8);
+			this.outputTank = this.addLiquidTank("outputTank", 8);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotSource") return this.isValidSourceItem(id, data);
@@ -244,14 +244,13 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
+			this.data.energy = Math.min(this.data.energy, this.getEnergyStorage());
 			this.dischargeSlot("slotEnergy");
 
 			this.inputTank.updateUiScale("liquidInputScale");
 			this.outputTank.updateUiScale("liquidOutputScale");
 			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendChanges();
 		}
 

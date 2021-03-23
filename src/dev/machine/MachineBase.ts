@@ -27,6 +27,10 @@ namespace Machine {
 
 		setupContainer(): void {}
 
+		addLiquidTank(name: string, limit: number, liquids?: string[]) {
+			return new BlockEngine.LiquidTank(this, name, limit, liquids);
+		}
+
 		isWrenchable(): boolean {
 			return false;
 		}

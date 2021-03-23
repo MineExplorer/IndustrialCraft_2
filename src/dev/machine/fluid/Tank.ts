@@ -30,6 +30,7 @@ const guiTank = InventoryWindow("Tank", {
 
 namespace Machine {
 	export class FluidTank extends MachineBase {
+		liquidTank: BlockEngine.LiquidTank;
 		upgrades = ["fluidEjector", "fluidPulling"];
 
 		getScreenByName() {
@@ -37,7 +38,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit(null, 16);
+			this.liquidTank = this.addLiquidTank("fluid", 16);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotLiquid1") {
@@ -48,14 +49,9 @@ namespace Machine {
 			});
 		}
 
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
-			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
-		}
-
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				let liquid = this.liquidStorage.getLiquidStored();
-				if (this.getLiquidFromItem(liquid, item, new ItemStack(), true)) {
+				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
 					return true;
 				}
 			}
@@ -65,21 +61,10 @@ namespace Machine {
 		onTick(): void {
 			UpgradeAPI.executeUpgrades(this);
 
-			let storage = this.liquidStorage;
-			let liquid = storage.getLiquidStored();
 			let slot1 = this.container.getSlot("slotLiquid1");
 			let slot2 = this.container.getSlot("slotLiquid2");
-			this.getLiquidFromItem(liquid, slot1, slot2);
-			if (liquid) {
-				let full = LiquidItemRegistry.getFullItem(slot1.id, slot1.data, liquid);
-				if (full && storage.getAmount(liquid) >= full.storage && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)) {
-					storage.getLiquid(liquid, full.storage);
-					slot1.setSlot(slot1.id, slot1.count - 1, slot1.data);
-					slot1.validate();
-					slot2.setSlot(full.id, slot2.count + 1, full.data);
-				}
-			}
-			this.updateLiquidScale("liquidScale", storage.getLiquidStored());
+			this.liquidTank.getLiquidFromItem(slot1, slot2) || this.liquidTank.addLiquidToItem(slot1, slot2);
+			this.liquidTank.updateUiScale("liquidScale");
 			this.container.sendChanges();
 		}
 	}
@@ -92,9 +77,15 @@ StorageInterface.createInterface(BlockID.tank, {
 		"slotLiquid1": {input: true},
 		"slotLiquid2": {output: true}
 	},
+
 	isValidInput: (item: ItemInstance) => {
 		return !!(LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidItemRegistry.getEmptyItem(item.id, item.data));
 	},
+
+	getLiquidStorage: function() {
+		return this.tileEntity.liquidTank;
+	},
+
 	canReceiveLiquid: () => true,
 	canTransportLiquid: () => true
 });

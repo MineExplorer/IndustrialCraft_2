@@ -103,63 +103,43 @@ namespace MachineRegistry {
 		});
 	}
 
-	export function getLiquidFromItem(liquid: string, inputItem: ItemContainerSlot | ItemInstance, outputItem: ItemContainerSlot | ItemInstance, byHand?: boolean): boolean {
-		let storage = StorageInterface.getInterface(this);
+	export function getLiquidFromItem(tank: BlockEngine.LiquidTank, inputItem: ItemInstance, outputItem: ItemInstance): boolean {
+		let liquid = tank.getLiquidStored();
 		let empty = LiquidItemRegistry.getEmptyItem(inputItem.id, inputItem.data);
-		if (empty && (!liquid && storage.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid) &&
+		if (empty && (!liquid && tank.isValidLiquid(empty.liquid) || empty.liquid == liquid) && !tank.isFull() &&
 			(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0)) {
-			let liquidLimit = this.liquidStorage.getLimit(empty.liquid);
-			let storedAmount = +this.liquidStorage.getAmount(liquid).toFixed(3);
-			let count = Math.min(byHand? inputItem.count : 1, Math.floor((liquidLimit - storedAmount) / empty.amount));
+			let liquidLimit = tank.getLimit();
+			let storedAmount = +tank.getAmount(liquid).toFixed(3);
+			let count = Math.min(inputItem.count, Math.floor((liquidLimit - storedAmount) / empty.amount));
 			if (count > 0) {
-				this.liquidStorage.addLiquid(empty.liquid, empty.amount * count);
-				inputItem.count -= count;
+				tank.addLiquid(empty.liquid, empty.amount * count);
 				outputItem.id = empty.id;
 				outputItem.count += count;
 				outputItem.data = empty.data;
+				inputItem.count -= count;
 				if (inputItem.count == 0) inputItem.id = inputItem.data = 0;
 			}
 			else if (inputItem.count == 1 && empty.storage) {
 				let amount = Math.min(liquidLimit - storedAmount, empty.amount);
-				this.liquidStorage.addLiquid(empty.liquid, amount);
+				tank.addLiquid(empty.liquid, amount);
 				inputItem.data += amount * 1000;
-			}
-			if (byHand) {
-				if (outputItem.id) {
-					Player.addItemToInventory(outputItem.id, outputItem.count, outputItem.data);
-				}
-				Player.setCarriedItem(inputItem.id, inputItem.count, inputItem.data);
-			} else {
-				(inputItem as ItemContainerSlot).markDirty();
-				(outputItem as ItemContainerSlot).markDirty();
 			}
 			return true;
 		}
 		return false;
 	}
 
-	export function addLiquidToItem(liquid: string, inputItem: ItemContainerSlot, outputItem: ItemContainerSlot): void {
-		let amount = this.liquidStorage.getAmount(liquid).toFixed(3);
-		if (amount > 0) {
-			let full = LiquidItemRegistry.getFullItem(inputItem.id, inputItem.data, liquid);
-			if (full && (outputItem.id == full.id && outputItem.data == full.data && outputItem.count < Item.getMaxStack(full.id) || outputItem.id == 0)) {
-				if (amount >= full.amount) {
-					this.liquidStorage.getLiquid(liquid, full.amount);
-					inputItem.setSlot(inputItem.id, inputItem.count - 1, inputItem.data);
-					inputItem.validate();
-					outputItem.setSlot(full.id, outputItem.count + 1, full.data);
-				}
-				else if (inputItem.count == 1 && full.storage) {
-					if (inputItem.id == full.id) {
-						amount = this.liquidStorage.getLiquid(liquid, full.amount);
-						inputItem.setSlot(inputItem.id, 1, inputItem.data - amount * 1000);
-					} else {
-						amount = this.liquidStorage.getLiquid(liquid, full.storage);
-						inputItem.setSlot(full.id, 1, (full.storage - amount)*1000);
-					}
-				}
+	export function fillTankOnClick(liquidTank: BlockEngine.LiquidTank, item: ItemInstance, playerUid: number): boolean {
+		let outputItem = new ItemStack();
+		if (getLiquidFromItem(liquidTank, item, outputItem)) {
+			let player = new PlayerEntity(playerUid);
+			if (outputItem.id) {
+				player.addItemToInventory(outputItem.id, outputItem.count, outputItem.data);
 			}
+			player.setCarriedItem(item.id, item.count, item.data);
+			return true;
 		}
+		return false;
 	}
 
 	/** @deprecated */

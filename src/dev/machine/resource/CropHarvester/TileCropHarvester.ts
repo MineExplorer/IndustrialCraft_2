@@ -45,7 +45,6 @@ namespace Machine {
 			this.dischargeSlot("slotEnergy");
 
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
-			this.container.validateAll();
 			this.container.sendChanges();
 		}
 

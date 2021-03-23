@@ -99,10 +99,10 @@ namespace Machine {
 			slot2 = this.container.getSlot("slotBiogas1");
 			this.outputTank.addLiquidToItem(slot1, slot2);
 
-			this.container.setScale("progressScale", this.data.progress / 4000);
-			this.container.setScale("fertilizerScale", this.data.fertilizer / 25);
 			this.inputTank.updateUiScale("biomassScale");
 			this.outputTank.updateUiScale("biogasScale");
+			this.container.setScale("progressScale", this.data.progress / 4000);
+			this.container.setScale("fertilizerScale", this.data.fertilizer / 25);
 			this.container.sendChanges();
 		}
 

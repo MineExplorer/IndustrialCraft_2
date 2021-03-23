@@ -56,6 +56,7 @@ namespace Machine {
 			output = Math.floor(output);
 			this.setActive(output > 0);
 			this.data.energy = Math.min(this.data.energy + output, energyStorage);
+
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.setText("textInfo1", this.data.energy + "/");
 			this.container.sendChanges();

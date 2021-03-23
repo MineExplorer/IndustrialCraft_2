@@ -60,8 +60,8 @@ const guiCanner = InventoryWindow("Fluid/Solid Canning Machine", {
 
 namespace Machine {
 	export class Canner extends ElectricMachine {
-		inputTank: LiquidTank;
-		outputTank: LiquidTank;
+		inputTank: BlockEngine.LiquidTank;
+		outputTank: BlockEngine.LiquidTank;
 
 		defaultValues = {
 			energy: 0,
@@ -119,7 +119,7 @@ namespace Machine {
 			case 3:
 				return !!LiquidItemRegistry.getEmptyItem(id, data);
 			case 2:
-				return !!LiquidRegistry.getFullItem(id, data, "water");
+				return !!LiquidItemRegistry.getFullItem(id, data, "water");
 			}
 		}
 
@@ -172,16 +172,14 @@ namespace Machine {
 			case 1:
 				let liquid = this.outputTank.getLiquidStored();
 				let empty = LiquidItemRegistry.getEmptyItem(canSlot.id, canSlot.data);
-				if (empty && (!liquid || empty.liquid == liquid) && this.outputTank.getAmount() <= 8000 - empty.amount) {
+				if (empty && (!liquid || empty.liquid == liquid) && !this.outputTank.isFull()) {
 					if (this.data.energy >= this.data.energy_consume && (resultSlot.id == empty.id && resultSlot.data == empty.data && resultSlot.count < Item.getMaxStack(empty.id) || resultSlot.id == 0)) {
 						this.data.energy -= this.data.energy_consume;
 						this.data.progress += 1/this.data.work_time;
 						newActive = true;
 					}
 					if (+this.data.progress.toFixed(3) >= 1) {
-						this.outputTank.addLiquid(empty.liquid, empty.amount);
-						this.decreaseSlot(canSlot, 1);
-						resultSlot.setSlot(empty.id, resultSlot.count + 1, empty.data);
+						this.outputTank.getLiquidFromItem(canSlot, resultSlot);
 						this.data.progress = 0;
 					}
 				}
@@ -194,7 +192,7 @@ namespace Machine {
 				liquid = this.inputTank.getLiquidStored();
 				if (liquid) {
 					let full = LiquidItemRegistry.getFullItem(canSlot.id, canSlot.data, liquid);
-					if (full && this.inputTank.getAmount() >= full.storage) {
+					if (full) {
 						resetProgress = false;
 						if (this.data.energy >= this.data.energy_consume && (resultSlot.id == full.id && resultSlot.data == full.data && resultSlot.count < Item.getMaxStack(full.id) || resultSlot.id == 0)) {
 							this.data.energy -= this.data.energy_consume;
@@ -202,9 +200,7 @@ namespace Machine {
 							newActive = true;
 						}
 						if (+this.data.progress.toFixed(3) >= 1) {
-							this.inputTank.getLiquid(liquid, full.storage);
-							this.decreaseSlot(canSlot, 1);
-							resultSlot.setSlot(full.id, resultSlot.count + 1, full.data);
+							this.inputTank.addLiquidToItem(canSlot, resultSlot);
 							this.data.progress = 0;
 						}
 					}

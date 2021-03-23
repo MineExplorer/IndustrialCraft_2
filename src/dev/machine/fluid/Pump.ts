@@ -148,8 +148,8 @@ namespace Machine {
 			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
-			this.container.setScale("progressScale", this.data.progress);
 			this.liquidTank.updateUiScale("liquidScale");
+			this.container.setScale("progressScale", this.data.progress);
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.sendChanges();
 		}

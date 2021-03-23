@@ -1456,7 +1456,7 @@ var TileEntityBase = /** @class */ (function () {
     return TileEntityBase;
 }());
 /**
- * Registry for liquid items. Compatible with LiquidRegistry.
+ * Registry for liquid storage items. Compatible with LiquidRegistry.
  */
 var LiquidItemRegistry;
 (function (LiquidItemRegistry) {
@@ -1500,7 +1500,7 @@ var LiquidItemRegistry;
     LiquidItemRegistry.getEmptyItem = getEmptyItem;
     function getFullItem(id, data, liquid) {
         var emptyData = LiquidItemRegistry.EmptyByFull[id];
-        if (emptyData) {
+        if (emptyData && data > 0) {
             return { id: id, data: 0, amount: data, storage: emptyData.storage };
         }
         var fullData = LiquidItemRegistry.FullByEmpty[id + ":" + liquid];
@@ -1589,14 +1589,20 @@ var BlockEngine;
             }
             return 0;
         };
+        LiquidTank.prototype.isFull = function () {
+            return this.data.amount == this.limit;
+        };
+        LiquidTank.prototype.isEmpty = function () {
+            return this.data.amount == 0;
+        };
         LiquidTank.prototype.addLiquidToItem = function (inputSlot, outputSlot) {
             var liquid = this.getLiquidStored();
             if (!liquid)
                 return false;
-            var amount = Math.round(this.getAmount(liquid) * 1000) / 1000;
+            var amount = this.getAmount(liquid);
             if (amount > 0) {
                 var full = LiquidItemRegistry.getFullItem(inputSlot.id, inputSlot.data, liquid);
-                if (full && full.amount > 0 && (outputSlot.id == full.id && outputSlot.data == full.data && outputSlot.count < Item.getMaxStack(full.id) || outputSlot.id == 0)) {
+                if (full && (outputSlot.id == full.id && outputSlot.data == full.data && outputSlot.count < Item.getMaxStack(full.id) || outputSlot.id == 0)) {
                     if (amount >= full.amount) {
                         this.getLiquid(full.amount);
                         inputSlot.setSlot(inputSlot.id, inputSlot.count - 1, inputSlot.data);
@@ -1607,11 +1613,11 @@ var BlockEngine;
                     if (inputSlot.count == 1 && full.storage) {
                         if (inputSlot.id == full.id) {
                             amount = this.getLiquid(full.amount);
-                            inputSlot.setSlot(inputSlot.id, 1, inputSlot.data - amount * 1000);
+                            inputSlot.setSlot(inputSlot.id, 1, inputSlot.data - amount);
                         }
                         else {
                             amount = this.getLiquid(full.storage);
-                            inputSlot.setSlot(full.id, 1, (full.storage - amount) * 1000);
+                            inputSlot.setSlot(full.id, 1, full.storage - amount);
                         }
                         return true;
                     }
@@ -1624,8 +1630,7 @@ var BlockEngine;
             var empty = LiquidItemRegistry.getEmptyItem(inputSlot.id, inputSlot.data);
             if (empty && (!liquid && this.isValidLiquid(empty.liquid) || empty.liquid == liquid) && !this.isFull()) {
                 if (outputSlot.id == empty.id && outputSlot.data == empty.data && outputSlot.count < Item.getMaxStack(empty.id) || outputSlot.id == 0) {
-                    var storedAmount = +this.getAmount(liquid).toFixed(3);
-                    var freeAmount = this.getLimit() - storedAmount;
+                    var freeAmount = this.getLimit() - this.getAmount();
                     if (freeAmount >= empty.amount) {
                         this.addLiquid(empty.liquid, empty.amount);
                         inputSlot.setSlot(inputSlot.id, inputSlot.count - 1, inputSlot.data);
@@ -1636,18 +1641,12 @@ var BlockEngine;
                     if (inputSlot.count == 1 && empty.storage) {
                         var amount = Math.min(freeAmount, empty.amount);
                         this.addLiquid(empty.liquid, amount);
-                        inputSlot.setSlot(inputSlot.id, 1, inputSlot.data + amount * 1000);
+                        inputSlot.setSlot(inputSlot.id, 1, inputSlot.data + amount);
                         return true;
                     }
                 }
             }
             return false;
-        };
-        LiquidTank.prototype.isFull = function () {
-            return this.data.amount < this.limit;
-        };
-        LiquidTank.prototype.isEmpty = function () {
-            return this.data.amount == 0;
         };
         LiquidTank.prototype.updateUiScale = function (scale) {
             var container = this.tileEntity.container;

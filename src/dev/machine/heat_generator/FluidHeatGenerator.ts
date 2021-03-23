@@ -107,8 +107,8 @@ namespace Machine {
 				this.container.setText("textInfo2", "Max Emit: 0");
 			}
 
-			this.container.setText("textInfo1", "Emit: " + this.data.output);
 			this.liquidTank.updateUiScale("liquidScale");
+			this.container.setText("textInfo1", "Emit: " + this.data.output);
 			this.container.sendChanges();
 		}
 

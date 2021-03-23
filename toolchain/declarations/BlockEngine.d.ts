@@ -757,7 +757,7 @@ declare namespace LiquidItemRegistry {
 declare namespace BlockEngine {
     class LiquidTank {
         tileEntity: TileEntity;
-        name: string;
+        readonly name: string;
         limit: number;
         liquids: object;
         data: {
@@ -776,10 +776,10 @@ declare namespace BlockEngine {
         addLiquid(liquid: string, amount: number): number;
         getLiquid(amount: number): number;
         getLiquid(liquid: string, amount: number): number;
-        addLiquidToItem(inputSlot: ItemContainerSlot, outputSlot: ItemContainerSlot): boolean;
-        getLiquidFromItem(inputSlot: ItemContainerSlot, outputSlot: ItemContainerSlot): boolean;
         isFull(): boolean;
         isEmpty(): boolean;
+        addLiquidToItem(inputSlot: ItemContainerSlot, outputSlot: ItemContainerSlot): boolean;
+        getLiquidFromItem(inputSlot: ItemContainerSlot, outputSlot: ItemContainerSlot): boolean;
         updateUiScale(scale: string): void;
     }
 }

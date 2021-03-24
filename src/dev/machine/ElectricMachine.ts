@@ -26,9 +26,7 @@ namespace Machine {
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			if (item.id == ItemID.debugItem || item.id == ItemID.EUMeter) {
-				return true;
-			}
+			if (item.id == ItemID.EUMeter) return true;
 			return super.onItemUse(coords, item, player);
 		}
 

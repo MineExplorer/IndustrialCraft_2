@@ -69,10 +69,6 @@ namespace Machine {
 			return this.capacity;
 		}
 
-		isEnergySource(): boolean {
-			return true;
-		}
-
 		canReceiveEnergy(side: number): boolean {
 			return side != this.getFacing();
 		}

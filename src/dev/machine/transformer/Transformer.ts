@@ -46,10 +46,6 @@ namespace Machine {
 			}
 		}
 
-		isEnergySource(): boolean {
-			return true;
-		}
-
 		canReceiveEnergy(side: number): boolean {
 			if (side == this.getFacing()) {
 				return !this.data.increaseMode;

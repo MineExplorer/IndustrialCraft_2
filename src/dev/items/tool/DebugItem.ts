@@ -27,13 +27,11 @@ extends ItemElectric {
 		let region = WorldRegion.getForActor(player);
 		let tile = region.getTileEntity(coords);
 		if (tile) {
-			let liquid = tile.liquidStorage.getLiquidStored();
+			let liquid = tile.liquidStorage?.getLiquidStored();
 			if (liquid) {
 				client.sendMessage(`${liquid} - ${tile.liquidStorage.getAmount(liquid)*1000} mB`);
 			}
 			for (let key in tile.data) {
-				if (key == "energy_storage") continue;
-
 				let value = tile.data[key];
 				if (key == "energy") {
 					client.sendMessage(`energy: ${value}/${tile.getEnergyStorage()}`);

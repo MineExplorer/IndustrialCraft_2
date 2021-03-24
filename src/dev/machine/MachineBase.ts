@@ -125,7 +125,7 @@ namespace Machine {
 		}
 
 		startPlaySound(): void {
-			if (!ConfigIC.machineSoundEnabled) return;
+			/*if (!ConfigIC.machineSoundEnabled) return;
 			if (!this.audioSource && !this.remove) {
 				if (this.finishingSound != 0) {
 					SoundManager.stop(this.finishingSound);
@@ -136,17 +136,17 @@ namespace Machine {
 				} else if (this.getOperationSound()) {
 					this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getOperationSound());
 				}
-			}
+			}*/
 		}
 
 		stopPlaySound(): void {
-			if (this.audioSource) {
+			/*if (this.audioSource) {
 				SoundManager.removeSource(this.audioSource);
 				this.audioSource = null;
 				if (this.getInterruptSound()) {
 					this.finishingSound = SoundManager.playSoundAtBlock(this, this.getInterruptSound(), 1);
 				}
-			}
+			}*/
 		}
 	}
 }

@@ -1590,10 +1590,10 @@ var BlockEngine;
             return 0;
         };
         LiquidTank.prototype.isFull = function () {
-            return this.data.amount == this.limit;
+            return this.data.amount >= this.limit;
         };
         LiquidTank.prototype.isEmpty = function () {
-            return this.data.amount == 0;
+            return this.data.amount <= 0;
         };
         LiquidTank.prototype.addLiquidToItem = function (inputSlot, outputSlot) {
             var liquid = this.getLiquidStored();

@@ -45,7 +45,6 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			const energyStorage = this.getEnergyStorage();
 			let output = 0.5;
 			for (let i = 0; i < 6; i++) {
 				let slot = this.container.getSlot("slot"+i);
@@ -53,9 +52,13 @@ namespace Machine {
 					output *= 2;
 				}
 			}
-			output = Math.floor(output);
-			this.setActive(output > 0);
-			this.data.energy = Math.min(this.data.energy + output, energyStorage);
+			const energyStorage = this.getEnergyStorage();
+			if (output >= 1) {
+				this.setActive(true);
+				this.data.energy = Math.min(this.data.energy + output, energyStorage);
+			} else {
+				this.setActive(false);
+			}
 
 			this.container.setScale("energyScale", this.data.energy / energyStorage);
 			this.container.setText("textInfo1", this.data.energy + "/");

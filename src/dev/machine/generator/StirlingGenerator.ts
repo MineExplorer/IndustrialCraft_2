@@ -26,9 +26,18 @@ namespace Machine {
 			heat: 0
 		}
 
+		getScreenName(): string {
+			return null;
+		}
+
 		getTier(): number {
 			return 4;
 		}
+
+		isWrenchable() {
+			return true;
+		}
+
 		canReceiveHeat(side: number): boolean {
 			return side == this.getFacing();
 		}
@@ -45,10 +54,6 @@ namespace Machine {
 			if (src.add(this.data.energy) < this.data.energy) {
 				this.data.energy = 0;
 			}
-		}
-
-		isWrenchable() {
-			return true;
 		}
 	}
 

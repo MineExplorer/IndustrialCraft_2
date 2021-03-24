@@ -29,6 +29,10 @@ namespace Machine {
 			timer: 300
 		}
 
+		getScreenName(): string {
+			return null;
+		}
+
 		explode(radius: number): void {
 			SoundManager.playSound("NukeExplosion.ogg");
 			let entities = Entity.getAll();

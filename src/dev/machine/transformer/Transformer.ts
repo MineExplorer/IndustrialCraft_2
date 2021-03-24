@@ -15,6 +15,10 @@ namespace Machine {
 			increaseMode: false
 		}
 
+		getScreenName(): string {
+			return null;
+		}
+
 		getTier(): number {
 			return this.tier;
 		}
@@ -70,11 +74,6 @@ namespace Machine {
 				return true;
 			}
 			return false;
-		}
-
-		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			super.onItemUse(coords, item, player);
-			return true;
 		}
 	}
 }

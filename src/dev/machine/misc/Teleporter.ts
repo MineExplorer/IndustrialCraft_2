@@ -25,6 +25,10 @@ namespace Machine {
 
 		defaultDrop = BlockID.machineBlockAdvanced;
 
+		getScreenName(): string {
+			return null;
+		}
+
 		getNearestStorages(): TileEntity[] {
 			let storages = [];
 			for (let side = 0; side < 6; side++) {
@@ -102,10 +106,6 @@ namespace Machine {
 			let isActive = signal > 0;
 			this.data.isActive = isActive
 			this.setActive(isActive);
-		}
-
-		onItemUse(): boolean {
-			return true;
 		}
 	}
 

@@ -20,6 +20,10 @@ namespace Machine {
 			isActive: false
 		}
 
+		getScreenName(): string {
+			return null;
+		}
+
 		getTier(): number {
 			return 3;
 		}
@@ -57,10 +61,6 @@ namespace Machine {
 
 		getEnergyStorage(): number {
 			return 10000;
-		}
-
-		onItemUse(): boolean {
-			return true;
 		}
 	}
 

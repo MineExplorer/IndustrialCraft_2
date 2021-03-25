@@ -1338,6 +1338,7 @@ var TileEntityBase = /** @class */ (function () {
     function TileEntityBase() {
         var _a;
         this.useNetworkItemContainer = true;
+        this._clickPrevented = false;
         (_a = this.client) !== null && _a !== void 0 ? _a : (this.client = {});
         this.client.load = this.clientLoad;
         this.client.unload = this.clientUnload;
@@ -1396,14 +1397,21 @@ var TileEntityBase = /** @class */ (function () {
     TileEntityBase.prototype.onItemUse = function (coords, item, player) {
         return false;
     };
+    /**
+     * Prevents all actions on click
+     */
+    TileEntityBase.prototype.preventClick = function () {
+        this._clickPrevented = true;
+    };
     TileEntityBase.prototype.onItemClick = function (id, count, data, coords, player, extra) {
         if (!this.__initialized) {
             if (!this._runInit()) {
                 return false;
             }
         }
-        if (this.onItemUse(coords, new ItemStack(id, count, data, extra), player)) {
-            return false;
+        this._clickPrevented = false;
+        if (this.onItemUse(coords, new ItemStack(id, count, data, extra), player) || this._clickPrevented) {
+            return this._clickPrevented;
         }
         if (Entity.getSneaking(player)) {
             return false;

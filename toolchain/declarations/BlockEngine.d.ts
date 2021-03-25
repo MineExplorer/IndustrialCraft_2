@@ -691,6 +691,11 @@ declare abstract class TileEntityBase implements TileEntity {
      * @returns true if should prevent opening UI.
     */
     onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean;
+    private _clickPrevented;
+    /**
+     * Prevents all actions on click
+     */
+    preventClick(): void;
     onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean;
     destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void;
     redstone(params: {

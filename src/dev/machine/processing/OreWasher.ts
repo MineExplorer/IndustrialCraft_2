@@ -154,6 +154,7 @@ namespace Machine {
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 			if (Entity.getSneaking(player)) {
 				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
+					this.preventClick();
 					return true;
 				}
 			}

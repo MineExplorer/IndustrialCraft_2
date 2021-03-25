@@ -47,17 +47,16 @@ namespace Machine {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
 			});
-
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
 				return LiquidItemRegistry.getItemLiquid(id, data) == "lava";
 			});
-
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
+					this.preventClick();
 					return true;
 				}
 			}

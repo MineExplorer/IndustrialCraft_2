@@ -1,7 +1,7 @@
 interface IWrech {
 	dropChance: number;
 	isUseable(item: ItemInstance, damage: number): boolean;
-	useItem(item: ItemInstance, damage: number, player: number): boolean;
+	useItem(item: ItemStack, damage: number, player: number): boolean;
 }
 
 namespace ICTool {
@@ -24,12 +24,12 @@ namespace ICTool {
 		return wrench?.isUseable(item, damage);
 	}
 
-	export function useWrench(item: ItemInstance, damage: number, player: number): boolean {
+	export function useWrench(item: ItemStack, damage: number, player: number): boolean {
 		let wrench = getWrenchData(item.id);
 		return wrench?.useItem(item, damage, player);
 	}
 
-	export function rotateMachine(tileEntity: TileEntity, side: number, item: ItemInstance, player: number): void {
+	export function rotateMachine(tileEntity: TileEntity, side: number, item: ItemStack, player: number): void {
 		if (Entity.getSneaking(player)) {
 			side ^= 1;
 		}
@@ -118,7 +118,7 @@ namespace ICTool {
 		const region = WorldRegion.getForActor(player);
 		const blockID = region.getBlockId(data);
 		if (MachineRegistry.isMachine(blockID)) {
-			const item = Entity.getCarriedItem(player);
+			const item = new ItemStack(Entity.getCarriedItem(player));
 			if (ICTool.isUseableWrench(item, 10)) {
 				ICTool.useWrench(item, 10, player);
 				const tileEntity = region.getTileEntity(data) || region.addTileEntity(data);

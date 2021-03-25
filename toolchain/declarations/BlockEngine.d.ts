@@ -554,6 +554,8 @@ declare enum EnumRarity {
     EPIC = 3
 }
 declare namespace ItemRegistry {
+    export function isBlock(id: number): boolean;
+    export function isItem(id: number): boolean;
     export function getInstanceOf(itemID: string | number): Nullable<ItemBase>;
     /**
      * @returns EnumRarity value for item

@@ -12,7 +12,7 @@ namespace MachineRegistry {
 	// register IC2 Machine
 	export function registerPrototype(id: number, Prototype: TileEntity.TileEntityPrototype) {
 		// setup legacy prototypes
-		if (!(Prototype instanceof Machine.MachineBase)) {
+		if (!(Prototype instanceof TileEntityBase)) {
 			const BasePrototype = Machine.MachineBase.prototype;
 			Prototype.id = id;
 			Prototype.getDefaultDrop ??= BasePrototype.getDefaultDrop;

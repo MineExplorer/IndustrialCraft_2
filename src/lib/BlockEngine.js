@@ -786,9 +786,14 @@ var ItemStack = /** @class */ (function () {
         }
         if (this.data >= this.getMaxDamage()) {
             var tool = ToolAPI.getToolData(this.id);
-            this.id = tool ? tool.brokenId : 0;
-            this.count = 1;
-            this.data = 0;
+            if (tool && tool.brokenId) {
+                this.id = tool.brokenId;
+                this.data = 0;
+                this.extra = null;
+            }
+            else {
+                this.clear();
+            }
         }
     };
     return ItemStack;
@@ -1165,6 +1170,14 @@ var ItemRegistry;
     var items = {};
     var itemsRarity = {};
     var armorMaterials = {};
+    function isBlock(id) {
+        return IDRegistry.getIdInfo(id).startsWith("block");
+    }
+    ItemRegistry.isBlock = isBlock;
+    function isItem(id) {
+        return IDRegistry.getIdInfo(id).startsWith("item");
+    }
+    ItemRegistry.isItem = isItem;
     function getInstanceOf(itemID) {
         var numericID = Item.getNumericId(itemID);
         return items[numericID] || null;

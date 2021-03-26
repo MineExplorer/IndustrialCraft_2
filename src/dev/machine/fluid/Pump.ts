@@ -46,16 +46,19 @@ namespace Machine {
 
 		tier: number;
 		energyStorage: number;
-		defaultTier = 1;
-		defaultEnergyStorage = 800;
+		energyDemand: number;
+		processTime: number;
+
 		defaultValues = {
 			energy: 0,
-			energy_consume: 1,
-			work_time: 20,
 			progress: 0,
 			coords: null
 		}
 
+		defaultTier = 1;
+		defaultEnergyStorage = 800;
+		defaultEnergyDemand = 1;
+		defaultProcessTime = 20;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector"];
 
 		defaultDrop = BlockID.machineBlockBasic;
@@ -72,14 +75,6 @@ namespace Machine {
 			return this.energyStorage;
 		}
 
-		executeUpgrades(): void {
-			let upgrades = UpgradeAPI.getUpgrades(this);
-			this.tier = UpgradeAPI.getExtraTier(this, upgrades, this.defaultTier);
-			this.energyStorage = UpgradeAPI.getExtraEnergyStorage(this, upgrades);
-			this.data.energy_consume = this.defaultValues.energy_consume;
-			this.data.work_time = this.defaultValues.work_time;
-		}
-
 		setupContainer(): void {
 			this.liquidTank = this.addLiquidTank("fluid", 8000);
 
@@ -91,14 +86,57 @@ namespace Machine {
 			});
 		}
 
-		getLiquidType(liquid: string, block: Tile): string {
-			if ((!liquid || liquid == "water") && (block.id == 8 || block.id == 9)) {
-				return "water";
+		executeUpgrades(): void {
+			let upgrades = UpgradeAPI.getUpgrades(this);
+			this.tier = upgrades.getTier(this.defaultTier);
+			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
+			this.energyDemand = upgrades.getEnergyDemand(this.defaultEnergyDemand);
+			this.processTime = upgrades.getProcessTime(this.defaultProcessTime);
+		}
+
+		onTick(): void {
+			this.executeUpgrades();
+			this.extractLiquid();
+
+			let slot1 = this.container.getSlot("slotLiquid1");
+			let slot2 = this.container.getSlot("slotLiquid2");
+			this.liquidTank.addLiquidToItem(slot1, slot2);
+
+			this.dischargeSlot("slotEnergy");
+
+			this.liquidTank.updateUiScale("liquidScale");
+			this.container.setScale("progressScale", this.data.progress);
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.sendChanges();
+		}
+
+		extractLiquid(): void {
+			let newActive = false;
+			let liquid = this.liquidTank.getLiquidStored();
+			if (this.y > 0 && this.liquidTank.getAmount() <= 7000 && this.data.energy >= this.energyDemand) {
+				if (this.data.progress == 0) {
+					this.data.coords = this.recursiveSearch(liquid, this.x, this.y - 1, this.z, {});
+				}
+				if (this.data.coords) {
+					newActive = true;
+					this.data.energy -= this.energyDemand;
+					this.data.progress += 1 / this.processTime;
+					if (+this.data.progress.toFixed(3) >= 1) {
+						let coords = this.data.coords;
+						let block = this.region.getBlock(coords);
+						liquid = this.getLiquidType(liquid, block);
+						if (liquid && block.data == 0) {
+							this.region.setBlock(coords, 0, 0);
+							this.liquidTank.addLiquid(liquid, 1000);
+						}
+						this.data.progress = 0;
+					}
+				}
 			}
-			if ((!liquid || liquid == "lava") && (block.id == 10 || block.id == 11)) {
-				return "lava";
+			else {
+				this.data.progress = 0;
 			}
-			return null;
+			this.setActive(newActive);
 		}
 
 		recursiveSearch(liquid: string, x: number, y: number, z: number, map: {}): Vector {
@@ -116,48 +154,14 @@ namespace Machine {
 			return null;
 		}
 
-		onTick(): void {
-			this.executeUpgrades();
-
-			let newActive = false;
-			let liquid = this.liquidTank.getLiquidStored();
-			if (this.y > 0 && this.liquidTank.getAmount() <= 7000 && this.data.energy >= this.data.energy_consume) {
-				if (this.data.progress == 0) {
-					this.data.coords = this.recursiveSearch(liquid, this.x, this.y - 1, this.z, {});
-				}
-				if (this.data.coords) {
-					newActive = true;
-					this.data.energy -= this.data.energy_consume;
-					this.data.progress += 1/this.data.work_time;
-					if (+this.data.progress.toFixed(3) >= 1) {
-						let coords = this.data.coords;
-						let block = this.region.getBlock(coords);
-						liquid = this.getLiquidType(liquid, block);
-						if (liquid && block.data == 0) {
-							this.region.setBlock(coords, 0, 0);
-							this.liquidTank.addLiquid(liquid, 1000);
-						}
-						this.data.progress = 0;
-					}
-				}
+		getLiquidType(liquid: string, block: Tile): string {
+			if ((!liquid || liquid == "water") && (block.id == 8 || block.id == 9)) {
+				return "water";
 			}
-			else {
-				this.data.progress = 0;
+			if ((!liquid || liquid == "lava") && (block.id == 10 || block.id == 11)) {
+				return "lava";
 			}
-			this.setActive(newActive);
-
-			let slot1 = this.container.getSlot("slotLiquid1");
-			let slot2 = this.container.getSlot("slotLiquid2");
-			this.liquidTank.addLiquidToItem(slot1, slot2);
-
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
-			this.dischargeSlot("slotEnergy");
-
-			this.liquidTank.updateUiScale("liquidScale");
-			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
-			this.container.sendChanges();
+			return null;
 		}
 
 		getOperationSound(): string {

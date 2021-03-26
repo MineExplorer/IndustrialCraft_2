@@ -69,7 +69,6 @@ const guiAdvancedMiner = InventoryWindow("Advanced Miner", {
 namespace Machine {
 	export class AdvancedMiner extends ElectricMachine {
 		defaultValues = {
-			tier: 3,
 			energy: 0,
 			x: 0,
 			y: 0,
@@ -79,18 +78,23 @@ namespace Machine {
 			isEnabled: true
 		}
 
-		extraTier: number;
-
+		defaultTier = 3;
+		defaultDrop = BlockID.machineBlockAdvanced;
 		upgrades = ["overclocker", "transformer"];
 
-		defaultDrop = BlockID.machineBlockAdvanced;
+		tier: number;
+		maxScanCount: number;
 
 		getScreenByName() {
 			return guiAdvancedMiner;
 		}
 
 		getTier(): number {
-			return 3 + this.extraTier;
+			return this.tier;
+		}
+
+		getEnergyStorage(): number {
+			return 4000000;
 		}
 
 		setupContainer(): void {
@@ -104,68 +108,44 @@ namespace Machine {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade2", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
 		}
 
-		isValidBlock(id: number, data: number): boolean {
-			if (id > 0 && ToolAPI.getBlockMaterialName(id) != "unbreaking") {
-				return true;
-			}
-			return false;
-		}
-
-		checkDrop(drop: ItemInstanceArray[]): boolean {
-			if (drop.length == 0) return true;
-			for (let i in drop) {
-				for (let j = 0; j < 16; j++) {
-					let slot = this.container.getSlot("slot"+j);
-					if (slot.id == drop[i][0] && slot.data == drop[i][2]) {return !this.data.whitelist;}
-				}
-			}
-			return this.data.whitelist;
-		}
-
-		harvestBlock(x: number, y: number, z: number, block: Tile): boolean {
-			// @ts-ignore
-			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, 100, {silk: this.data.silk_touch});
-			if (this.checkDrop(drop)) return false;
-			this.region.setBlock(x, y, z, 0, 0);
-			let items = [];
-			for (let i in drop) {
-				items.push(new ItemStack(drop[i][0], drop[i][1], drop[i][2], drop[i][3]));
-			}
-			this.drop(items);
-			this.data.energy -= 512;
-			return true;
-		}
-
-		drop(items: ItemInstance[]): void {
-			let containers = StorageInterface.getNearestContainers(this, this.blockSource);
-			StorageInterface.putItems(items, containers);
-			for (let i in items) {
-				let item = items[i];
-				if (item.count > 0) {
-					this.region.dropItem(this.x + .5, this.y + 1, this.z + .5, item);
-				}
-			}
-		}
-
 		getScanRadius(itemID: number): number {
 			if (itemID == ItemID.scanner) return 16;
 			if (itemID == ItemID.scannerAdvanced) return 32;
 			return 0;
 		}
 
-		getScanSpeed(): number {
-			return 5 * UpgradeAPI.getCountOfUpgrade("overclocker", this.container);
+		setUpgradeStats(): void {
+			let upgrades = UpgradeAPI.getUpgrades(this);
+			this.tier = upgrades.getTier(this.defaultTier);
+			this.maxScanCount = 5 * (upgrades.augmentation + 1);
 		}
 
 		onTick(): void {
-			if (this.data.whitelist)
+			this.setUpgradeStats();
+			this.operate();
+			this.chargeSlot("slotScanner");
+			this.dischargeSlot("slotEnergy");
+			this.updateUi();
+		}
+
+		updateUi(): void {
+			if (this.data.whitelist) {
 				this.container.setText("textInfoMode", Translation.translate("Mode: Whitelist"));
-			else
+			} else {
 				this.container.setText("textInfoMode", Translation.translate("Mode: Blacklist"));
+			}
+			if (this.data.y < 0) {
+				this.container.setText("textInfoXYZ", "X: "+ this.data.x + ", Y: "+ Math.min(this.data.y, -1) + ", Z: "+ this.data.z);
+			} else {
+				this.container.setText("textInfoXYZ", "");
+			}
 
-			this.extraTier = UpgradeAPI.getCountOfUpgrade("transformer", this.container);
-			let maxScanCount = this.getScanSpeed();
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.sendEvent("setSilktouchIcon", {mode: this.data.silk_touch});
+			this.container.sendChanges();
+		}
 
+		operate(): void {
 			let newActive = false;
 			if (this.data.isEnabled && this.y + this.data.y >= 0 && this.data.energy >= 512) {
 				let scanner = this.container.getSlot("slotScanner");
@@ -179,7 +159,7 @@ namespace Machine {
 							this.data.y = -1;
 							this.data.z = -scanR;
 						}
-						for (let i = 0; i < maxScanCount; i++) {
+						for (let i = 0; i < this.maxScanCount; i++) {
 							if (this.data.x > scanR) {
 								this.data.x = -scanR;
 								this.data.z++;
@@ -203,17 +183,49 @@ namespace Machine {
 				}
 			}
 			this.setActive(newActive);
+		}
 
-			if (this.data.y < 0)
-				this.container.setText("textInfoXYZ", "X: "+ this.data.x + ", Y: "+ Math.min(this.data.y, -1) + ", Z: "+ this.data.z);
-			else
-				this.container.setText("textInfoXYZ", "");
+		isValidBlock(id: number, data: number): boolean {
+			if (id > 0 && ToolAPI.getBlockMaterialName(id) != "unbreaking") {
+				return true;
+			}
+			return false;
+		}
 
-			this.chargeSlot("slotScanner");
-			this.dischargeSlot("slotEnergy");
-			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
-			this.container.sendEvent("setSilktouchIcon", {mode: this.data.silk_touch});
-			this.container.sendChanges();
+		harvestBlock(x: number, y: number, z: number, block: Tile): boolean {
+			// @ts-ignore
+			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, 100, {silk: this.data.silk_touch});
+			if (this.checkDrop(drop)) return false;
+			this.region.setBlock(x, y, z, 0, 0);
+			let items = [];
+			for (let i in drop) {
+				items.push(new ItemStack(drop[i][0], drop[i][1], drop[i][2], drop[i][3]));
+			}
+			this.drop(items);
+			this.data.energy -= 512;
+			return true;
+		}
+
+		checkDrop(drop: ItemInstanceArray[]): boolean {
+			if (drop.length == 0) return true;
+			for (let i in drop) {
+				for (let j = 0; j < 16; j++) {
+					let slot = this.container.getSlot("slot"+j);
+					if (slot.id == drop[i][0] && slot.data == drop[i][2]) {return !this.data.whitelist;}
+				}
+			}
+			return this.data.whitelist;
+		}
+
+		drop(items: ItemInstance[]): void {
+			let containers = StorageInterface.getNearestContainers(this, this.blockSource);
+			StorageInterface.putItems(items, containers);
+			for (let i in items) {
+				let item = items[i];
+				if (item.count > 0) {
+					this.region.dropItem(this.x + .5, this.y + 1, this.z + .5, item);
+				}
+			}
 		}
 
 		adjustDrop(item: ItemInstance): ItemInstance {
@@ -226,10 +238,6 @@ namespace Machine {
 
 		onRedstoneUpdate(signal: number): void {
 			this.data.isEnabled = (signal == 0);
-		}
-
-		getEnergyStorage(): number {
-			return 4000000;
 		}
 
 		@ContainerEvent(Side.Server)

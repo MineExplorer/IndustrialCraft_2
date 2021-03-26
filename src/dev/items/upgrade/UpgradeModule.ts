@@ -1,5 +1,3 @@
-/// <reference path="IUpgrade.ts" />
-
 class UpgradeModule extends ItemCommon
 implements IUpgrade, ItemBehavior {
 	type: string;
@@ -24,13 +22,20 @@ implements IUpgrade, ItemBehavior {
 			case "transformer": {
 				return name + "§7\n" + Translation.translate("tooltip.upgrade.transformer");
 			}
-			case "energyStorage": {
+			case "energy_storage": {
 				let capacity = this.getExtraEnergyStorage(item, null);
 				return name + "§7\n" + Translation.translate("tooltip.upgrade.storage").replace("%s", ItemName.displayEnergy(capacity, false));
 			}
 			default:
 				return name;
 		}
+	}
+
+	getAugmentation(item: ItemInstance, machine: TileEntity): number {
+		if (this.type == "overclocker") {
+			return 1;
+		}
+		return 0;
 	}
 
 	getEnergyDemandMultiplier(item: ItemInstance, machine: TileEntity): number {

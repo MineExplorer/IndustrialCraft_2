@@ -106,7 +106,8 @@ items/electric/cable.ts
 items/electric/components.ts
 items/electric/battery.ts
 items/electric/charging.ts
-items/electric/upgrades.ts
+
+items/upgrade/**
 
 items/reactor/fuel_rod.ts
 items/reactor/plating.ts

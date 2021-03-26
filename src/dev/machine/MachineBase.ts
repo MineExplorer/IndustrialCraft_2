@@ -23,7 +23,6 @@ namespace Machine {
 			this.networkData.putInt("blockData", this.getFacing());
 			this.networkData.sendChanges();
 			this.setupContainer();
-			delete this.liquidStorage;
 		}
 
 		setupContainer(): void {}

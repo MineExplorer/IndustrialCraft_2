@@ -44,10 +44,12 @@ namespace Machine {
 	export class Pump extends ElectricMachine {
 		liquidTank: BlockEngine.LiquidTank;
 
+		tier: number;
+		energyStorage: number;
+		defaultTier = 1;
+		defaultEnergyStorage = 800;
 		defaultValues = {
 			energy: 0,
-			tier: 1,
-			energy_storage: 800,
 			energy_consume: 1,
 			work_time: 20,
 			progress: 0,
@@ -63,12 +65,17 @@ namespace Machine {
 		}
 
 		getTier(): number {
-			return this.data.tier;
+			return this.tier;
 		}
 
-		resetValues(): void {
-			this.data.tier = this.defaultValues.tier;
-			this.data.energy_storage = this.defaultValues.energy_storage;
+		getEnergyStorage(): number {
+			return this.energyStorage;
+		}
+
+		executeUpgrades(): void {
+			let upgrades = UpgradeAPI.getUpgrades(this);
+			this.tier = UpgradeAPI.getExtraTier(this, upgrades, this.defaultTier);
+			this.energyStorage = UpgradeAPI.getExtraEnergyStorage(this, upgrades);
 			this.data.energy_consume = this.defaultValues.energy_consume;
 			this.data.work_time = this.defaultValues.work_time;
 		}
@@ -110,8 +117,7 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.resetValues();
-			UpgradeAPI.executeUpgrades(this);
+			this.executeUpgrades();
 
 			let newActive = false;
 			let liquid = this.liquidTank.getLiquidStored();
@@ -156,10 +162,6 @@ namespace Machine {
 
 		getOperationSound(): string {
 			return "PumpOp.ogg";
-		}
-
-		getEnergyStorage(): number {
-			return this.data.energy_storage;
 		}
 	}
 

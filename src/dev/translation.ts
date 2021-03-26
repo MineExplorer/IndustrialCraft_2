@@ -175,7 +175,7 @@ Translation.addTranslation("mfsu_upgrade", {en: "MFSU Upgrade Kit", ru: "Наб�
 Translation.addTranslation("overclocker_upgrade", {en: "Overclocker Upgrade", ru: "Улучшение «Ускоритель»", es: "Mejora de Sobreproducción", pt: "Melhoria: Overclock", zh: "超频升级"});
 Translation.addTranslation("transformer_upgrade", {en: "Transformer Upgrade", ru: "Улучшение «Трансформатор»", es: "Mejora de Transformador", pt: " Melhoria: Transformador Interno", zh: "高压升级"});
 Translation.addTranslation("energy_storage_upgrade", {en: "Energy Storage Upgrade", ru: "Улучшение «Энергохранитель»", es: "Mejora de Almacenador de Energía", pt: "Melhoria: Armazenamento de Energia", zh: "储能升级"});
-Translation.addTranslation("redstone_inverter_upgrade", {en: "Redstone Signal Inverter Upgrade", ru: "Улучшение «Инвертор сигнала редстоуна»", es: "Majora de Invesor de señal Redstone", pt: "Melhoria: Inversor de Sinal de Redstone", zh: "红石信号反转升级"});
+Translation.addTranslation("redstone_inv_upgrade", {en: "Redstone Signal Inverter Upgrade", ru: "Улучшение «Инвертор сигнала редстоуна»", es: "Majora de Invesor de señal Redstone", pt: "Melhoria: Inversor de Sinal de Redstone", zh: "红石信号反转升级"});
 Translation.addTranslation("ejector_upgrade", {en: "Ejector Upgrade", ru: "Улучшение «Выталкиватель»", es: "Mejora Expulsora", pt: "Melhoria: Ejetor", zh: "弹出升级"});
 Translation.addTranslation("pulling_upgrade", {en: "Pulling Upgrade", ru: "Улучшение «Загрузчик»", es: "Mejora de Traccion", pt: "Melhoria: Sucção", zh: "抽入升级"});
 Translation.addTranslation("fluid_ejector_upgrade", {en: "Fluid Ejector Upgrade", ru: "Улучшение «Выталкиватель жидкости»", es: "Mejora Expulsora de Líquidos", pt: "Melhoria: Ejetor de Fluidos", zh: "流体弹出升级"});
@@ -468,16 +468,16 @@ Translation.addTranslation("tooltip.max_voltage", {en: "Max voltage: %s EU/t", r
 Translation.addTranslation("tooltip.upgrade.overclocker.time", {en: "Decrease process time to ", ru: "Уменьшает время работы до ", pt: "Diminui o tempo de processo para ", zh: "加工用时缩短为"});
 Translation.addTranslation("tooltip.upgrade.overclocker.power", {en: "Increase power to ", ru: "Увеличивает энергопотребление до ", pt: "Aumenta o Uso de Energia em ", zh: "能量增加到"});
 Translation.addTranslation("tooltip.upgrade.transformer", {en: "Increase energy tier by 1", ru: "Увеличивает энергоуровень на 1", pt: "Aumenta o nível da máquina em 1", zh: "增加一级输出电压"});
-Translation.addTranslation("tooltip.upgrade.storage", {en: "Increase energy storage by 10k EU", ru: "Увеличивает энергоёмкость на 10k EU", pt: "Aumenta o armazenamento de energia em 10k EU", zh: "增加10k EU储能"});
+Translation.addTranslation("tooltip.upgrade.storage", {en: "Increase energy storage by %s EU", ru: "Увеличивает энергоёмкость на %s EU", pt: "Aumenta o armazenamento de energia em %s EU", zh: "增加%s EU储能"});
 Translation.addTranslation("tooltip.upgrade.ejector", {en: "Automatically output to\nthe %s side", ru: "Автоматическое извлечение с %s стороны", zh: "自动输出到%s方向"});
 Translation.addTranslation("tooltip.upgrade.pulling", {en: "Automatically input from\nthe %s side", ru: "Автоматический ввод с %s стороны", zh: "自动从%s抽入物品"});
-Translation.addTranslation("tooltip.upgrade.side.0", {en: "first valid", ru: "первой подходящей", es: "Primera vez efectivo", pt: "Primeira vez eficaz", zh: "初次生效"});
-Translation.addTranslation("tooltip.upgrade.side.1", {en: "bottom", ru: "нижней", es: "abajo", pt: "o lado de baixo", zh: "底部"});
-Translation.addTranslation("tooltip.upgrade.side.2", {en: "top", ru: "верхней", es: "arriba", pt: "o lado de cima", zh: "顶部"});
-Translation.addTranslation("tooltip.upgrade.side.3", {en: "north", ru: "северной", es: "norte", pt: "o norte", zh: "北边"});
-Translation.addTranslation("tooltip.upgrade.side.4", {en: "south", ru: "южной", es: "sur", pt: "o sul", zh: "南边"});
-Translation.addTranslation("tooltip.upgrade.side.5", {en: "east", ru: "восточной", es: "este", pt: "o leste", zh: "东边"});
-Translation.addTranslation("tooltip.upgrade.side.6", {en: "west", ru: "западной", es: "oeste", pt: "o oeste", zh: "西边"});
+Translation.addTranslation("tooltip.upgrade.anyside", {en: "first valid", ru: "первой подходящей", es: "Primera vez efectivo", pt: "Primeira vez eficaz", zh: "初次生效"});
+Translation.addTranslation("ic2.dir.bottom", {en: "bottom", ru: "нижней", es: "abajo", pt: "o lado de baixo", zh: "底部"});
+Translation.addTranslation("ic2.dir.top", {en: "top", ru: "верхней", es: "arriba", pt: "o lado de cima", zh: "顶部"});
+Translation.addTranslation("ic2.dir.north", {en: "north", ru: "северной", es: "norte", pt: "o norte", zh: "北边"});
+Translation.addTranslation("ic2.dir.south", {en: "south", ru: "южной", es: "sur", pt: "o sul", zh: "南边"});
+Translation.addTranslation("ic2.dir.east", {en: "east", ru: "восточной", es: "este", pt: "o leste", zh: "东边"});
+Translation.addTranslation("ic2.dir.west", {en: "west", ru: "западной", es: "oeste", pt: "o oeste", zh: "西边"});
 
 // Recipe Viewer
 Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "Calor: ", zh: "热量: "});

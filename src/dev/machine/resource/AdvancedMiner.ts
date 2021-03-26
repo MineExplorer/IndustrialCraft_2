@@ -79,6 +79,8 @@ namespace Machine {
 			isEnabled: true
 		}
 
+		extraTier: number;
+
 		upgrades = ["overclocker", "transformer"];
 
 		defaultDrop = BlockID.machineBlockAdvanced;
@@ -88,7 +90,7 @@ namespace Machine {
 		}
 
 		getTier(): number {
-			return this.data.tier;
+			return 3 + this.extraTier;
 		}
 
 		setupContainer(): void {
@@ -151,16 +153,18 @@ namespace Machine {
 			return 0;
 		}
 
+		getScanSpeed(): number {
+			return 5 * UpgradeAPI.getCountOfUpgrade("overclocker", this.container);
+		}
+
 		onTick(): void {
 			if (this.data.whitelist)
 				this.container.setText("textInfoMode", Translation.translate("Mode: Whitelist"));
 			else
 				this.container.setText("textInfoMode", Translation.translate("Mode: Blacklist"));
 
-			let max_scan_count = 5;
-			max_scan_count *= UpgradeAPI.getCountOfUpgrade(ItemID.upgradeOverclocker, this.container);
-			this.data.tier = this.defaultValues.tier;
-			this.data.tier += UpgradeAPI.getCountOfUpgrade(ItemID.upgradeTransformer, this.container);
+			this.extraTier = UpgradeAPI.getCountOfUpgrade("transformer", this.container);
+			let maxScanCount = this.getScanSpeed();
 
 			let newActive = false;
 			if (this.data.isEnabled && this.y + this.data.y >= 0 && this.data.energy >= 512) {
@@ -175,7 +179,7 @@ namespace Machine {
 							this.data.y = -1;
 							this.data.z = -scanR;
 						}
-						for (let i = 0; i < max_scan_count; i++) {
+						for (let i = 0; i < maxScanCount; i++) {
 							if (this.data.x > scanR) {
 								this.data.x = -scanR;
 								this.data.z++;

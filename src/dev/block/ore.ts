@@ -70,37 +70,37 @@ Item.addCreativeGroup("ores", Translation.translate("Ores"), [
 
 namespace OreGenerator {
 	export let copper = {
-		enabled: ConfigIC.getBool("copper_ore.enabled"),
-		count: ConfigIC.getInt("copper_ore.count"),
-		size: ConfigIC.getInt("copper_ore.size"),
-		minHeight: ConfigIC.getInt("copper_ore.minHeight"),
-		maxHeight: ConfigIC.getInt("copper_ore.maxHeight")
+		enabled: IC2Config.getBool("copper_ore.enabled"),
+		count: IC2Config.getInt("copper_ore.count"),
+		size: IC2Config.getInt("copper_ore.size"),
+		minHeight: IC2Config.getInt("copper_ore.minHeight"),
+		maxHeight: IC2Config.getInt("copper_ore.maxHeight")
 	}
 	export let tin = {
-		enabled: ConfigIC.getBool("tin_ore.enabled"),
-		count: ConfigIC.getInt("tin_ore.count"),
-		size: ConfigIC.getInt("tin_ore.size"),
-		minHeight: ConfigIC.getInt("tin_ore.minHeight"),
-		maxHeight: ConfigIC.getInt("tin_ore.maxHeight")
+		enabled: IC2Config.getBool("tin_ore.enabled"),
+		count: IC2Config.getInt("tin_ore.count"),
+		size: IC2Config.getInt("tin_ore.size"),
+		minHeight: IC2Config.getInt("tin_ore.minHeight"),
+		maxHeight: IC2Config.getInt("tin_ore.maxHeight")
 	}
 	export let lead = {
-		enabled: ConfigIC.getBool("lead_ore.enabled"),
-		count: ConfigIC.getInt("lead_ore.count"),
-		size: ConfigIC.getInt("lead_ore.size"),
-		minHeight: ConfigIC.getInt("lead_ore.minHeight"),
-		maxHeight: ConfigIC.getInt("lead_ore.maxHeight")
+		enabled: IC2Config.getBool("lead_ore.enabled"),
+		count: IC2Config.getInt("lead_ore.count"),
+		size: IC2Config.getInt("lead_ore.size"),
+		minHeight: IC2Config.getInt("lead_ore.minHeight"),
+		maxHeight: IC2Config.getInt("lead_ore.maxHeight")
 	}
 	export let uranium = {
-		enabled: ConfigIC.getBool("uranium_ore.enabled"),
-		count: ConfigIC.getInt("uranium_ore.count"),
-		size: ConfigIC.getInt("uranium_ore.size"),
-		minHeight: ConfigIC.getInt("uranium_ore.minHeight"),
-		maxHeight: ConfigIC.getInt("uranium_ore.maxHeight")
+		enabled: IC2Config.getBool("uranium_ore.enabled"),
+		count: IC2Config.getInt("uranium_ore.count"),
+		size: IC2Config.getInt("uranium_ore.size"),
+		minHeight: IC2Config.getInt("uranium_ore.minHeight"),
+		maxHeight: IC2Config.getInt("uranium_ore.maxHeight")
 	}
 	export let iridium = {
-		chance: ConfigIC.getInt("iridium_ore.chance"),
-		minHeight: ConfigIC.getInt("iridium_ore.minHeight"),
-		maxHeight: ConfigIC.getInt("iridium_ore.maxHeight")
+		chance: IC2Config.getInt("iridium_ore.chance"),
+		minHeight: IC2Config.getInt("iridium_ore.minHeight"),
+		maxHeight: IC2Config.getInt("iridium_ore.maxHeight")
 	}
 
 	export function addFlag(oreName: string, flagName: string, disableOre?: boolean) {

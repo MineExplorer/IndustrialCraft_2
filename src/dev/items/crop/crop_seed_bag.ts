@@ -18,7 +18,7 @@ class ItemSeedBag
             newName += `§6Ga: ${extra.getInt("gain")} \n`;
             newName += `§bRe: ${extra.getInt("resistance")}`;
         }
-        if (ConfigIC.debugMode) {
+        if (IC2Config.debugMode) {
             newName += `\n[DEBUG]scanLevel: ${scanLvl}`;
         }
         return newName;

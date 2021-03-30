@@ -70,10 +70,10 @@ declare class WorldRegion {
      */
     getDimension(): number;
     /**
-     * @returns Tile object with id and data propeties of the block at coords
+     * @returns BlockState object of the block at coords
      */
-    getBlock(coords: Vector): Tile;
-    getBlock(x: number, y: number, z: number): Tile;
+    getBlock(coords: Vector): BlockState;
+    getBlock(x: number, y: number, z: number): BlockState;
     /**
      * @returns block's id at coords
      */
@@ -89,8 +89,10 @@ declare class WorldRegion {
      * @param id - id of the block to set
      * @param data - data of the block to set
      */
-    setBlock(coords: Vector, id: number, data: number): number;
-    setBlock(x: number, y: number, z: number, id: number, data: number): number;
+    setBlock(coords: Vector, state: BlockState): void;
+    setBlock(coords: Vector, id: number, data: number): void;
+    setBlock(x: number, y: number, z: number, state: BlockState): void;
+    setBlock(x: number, y: number, z: number, id: number, data: number): void;
     /**
      * Destroys block on coords producing appropriate drop and particles.
      * @param drop whether to provide drop for the block or not
@@ -231,6 +233,12 @@ declare class WorldRegion {
      * @param pitch sound pitch, from 0 to 1. Default is 1.
      */
     playSoundAtEntity(ent: number, name: string, volume?: number, pitch?: number): void;
+    /**
+     * Sends network packet for players in a radius from specified coords
+     * @param packetName name of the packet to send
+     * @param data packet data object
+     */
+    sendPacketInRadius(coords: Vector, radius: number, packetName: string, data: object): void;
 }
 declare class PlayerEntity {
     actor: PlayerActor;

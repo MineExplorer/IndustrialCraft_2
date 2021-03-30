@@ -92,7 +92,7 @@ namespace ICTool {
 
 	export function setOnHandSound(itemID: number, idleSound: string, stopSound?: string) {
 		Callback.addCallback("LocalTick", function() {
-			if (!ConfigIC.soundEnabled) {return;}
+			if (!IC2Config.soundEnabled) {return;}
 			let item = Player.getCarriedItem();
 			let tool = ToolAPI.getToolData(item.id) as any;
 			if (item.id == itemID && (!tool || !tool.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.energyPerUse)) {

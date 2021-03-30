@@ -1303,7 +1303,7 @@ declare namespace BlockRenderer {
     }
 }
 /**
- * New class to work with world instead of some methods from World module.
+ * New class to work with world instead of some methods from [[World]] module.
  */
 declare class BlockSource {
 	/**
@@ -1315,9 +1315,10 @@ declare class BlockSource {
 	 * @param x X coord of the block
 	 * @param y Y coord of the block
 	 * @param z Z coord of the block
-	* @returns Tile object with id and data properties
+	 * @returns [[BlockState]] object of the block on given coords
+	 * or [[Tile]] object in Legacy pack
 	 */
-	getBlock(x: number, y: number, z: number): Tile;
+	getBlock(x: number, y: number, z: number): BlockState;
 
 	/**
 	 * @returns block's id at coords
@@ -1334,13 +1335,18 @@ declare class BlockSource {
 	 * @param z Z coord of the block
 	 */
 	getBlockData(x: number, y: number, z: number): number;
-	
+
 	/**
 	 * Sets block on coords
-	 * @param id - id of the block to set
-	 * @param data - data of the block to set
+	 * @param id id of the block to set
+	 * @param data data of the block to set
 	 */
-	setBlock(x: number, y: number, z: number, id: number, data: number): number;
+	setBlock(x: number, y: number, z: number, id: number, data: number): void;
+
+	/**
+	 * Sets block by given [[BlockState]] on coords
+	 */
+	setBlock(x: number, y: number, z: number, state: BlockState): void;
 
 	 /**
 	  * Creates an explosion on coords
@@ -1349,18 +1355,18 @@ declare class BlockSource {
 	  * @param fire if true, puts the crater on fire
 	  */
 	explode(x: number, y: number, z: number, power: number, fire: boolean): void;
-	 
-	 /**
-	  * Destroys block on coords producing appropriate drop
-	  * and particles. Do not use for massive tasks due to particles being 
-	  * produced
-	  * @param x X coord of the block
-	  * @param y Y coord of the block
-	  * @param z Z coord of the block
-	  * @param drop whether to provide drop for the block or not
-	  */
+
+	/**
+	 * Destroys block on coords producing appropriate drop
+	 * and particles. Do not use for massive tasks due to particles being 
+	 * produced
+	 * @param x X coord of the block
+	 * @param y Y coord of the block
+	 * @param z Z coord of the block
+	 * @param drop whether to provide drop for the block or not
+	 */
 	destroyBlock(x: number, y: number, z: number, drop?: boolean): void;
-	
+
 	/**
 	 * @param x X coord of the block
 	 * @param y Y coord of the block
@@ -1368,68 +1374,68 @@ declare class BlockSource {
 	 * @returns interface to the vanilla TileEntity (chest, furnace, etc.) on the coords
 	 */
 	getBlockEntity(x: number, y: number, z: number): NativeTileEntity;
-	
+
 	/**
 	 * @param x X coord of the block
 	 * @param z Z coord of the block
 	 * @returns biome id
 	 */
 	getBiome(x: number, z: number): number;
-	
+
 	/**
 	 * Sets biome id by coords
 	 * @param id - id of the biome to set
 	 */
 	setBiome(x: number, z: number, biomeID: number): void;
-	
+
 	/**
 	 * @returns temperature of the biome on coords
 	 */
 	getBiomeTemperatureAt(x: number, y: number, z: number): number;
-	
+
 	/**
 	* @param chunkX X coord of the chunk
 	 * @param chunkZ Z coord of the chunk
 	 * @returns true if chunk is loaded, false otherwise
 	 */
 	isChunkLoaded(chunkX: number, chunkZ: number): boolean;
-	
+
 	/**
 	* @param x X coord of the position
 	 * @param z Z coord of the position
 	 * @returns true if chunk on the position is loaded, false otherwise
 	 */
 	isChunkLoadedAt(x: number, z: number): boolean;
-	
+
 	/**
 	* @param chunkX X coord of the chunk
 	 * @param chunkZ Z coord of the chunk
 	 * @returns the loading state of the chunk by chunk coords
 	 */
 	getChunkState(chunkX: number, chunkZ: number): number;
-	
+
 	/**
 	* @param x X coord of the position
 	 * @param z Z coord of the position
 	 * @returns the loading state of the chunk by coords
 	 */
 	getChunkStateAt(x: number, z: number): number;
-	
+
 	/**
      * @returns light level on the specified coordinates, from 0 to 15
      */
 	getLightLevel(x: number, y: number, z: number): number;
-	
+
 	/**
 	 * @returns whether the sky can be seen from coords
 	 */
 	canSeeSky(x: number, y: number, z: number): boolean;
-	
+
 	/**
 	 * @returns grass color on coords
 	 */
 	getGrassColor(x: number, y: number, z: number): number;
-	
+
 	/**
 	 * Creates dropped item and returns entity id
 	 * @param x X coord of the place where item will be dropped
@@ -1447,7 +1453,7 @@ declare class BlockSource {
 	  * Spawns entity of given numeric type on coords
 	  */
 	spawnEntity(x: number, y: number, z: number, type: number | string): number;
-		
+
 	spawnEntity(x: number, y: number, z: number, namespace: string, type: string, init_data: string): number;
 
 
@@ -1478,18 +1484,130 @@ declare class BlockSource {
 	 * was not created yet)
 	 */
 	static getDefaultForDimension(dimension: number): Nullable<BlockSource>;
-	
+
 	/**
 	 * @returns interface to the dimension where the given entity is 
 	 * (null if given entity does not exist or the dimension is not loaded 
 	 * and interface was not created)
 	 */
 	static getDefaultForActor(entityUid: number): Nullable<BlockSource>;
-	
+
 	/**
 	 * @return BlockSource foe world generation
 	 */
 	static getCurrentWorldGenRegion(): Nullable<BlockSource>;
+}
+/**
+ * Class to work with vanilla blocks parameters
+ */
+declare class BlockState
+implements Tile {
+
+    /**Data of the block */
+    readonly data: number;
+
+    /**Numeric ID of the block */
+    readonly id: number;
+
+    /**
+     * Constructs new BlockState object
+     * from given id and data
+     */
+    constructor(id: number, data: number);
+
+    /**
+     * Constructs new BlockState object
+     * from given id and states object
+     */
+    constructor(id: number, scriptable: {key: number});
+
+    /**
+     * @returns id of the block
+     */
+    getId(): number;
+
+    /**
+     * @returns data of the block
+     */
+    getData(): number;
+
+    /**
+     * @returns id of the blockstate in runtime
+     */
+    getRuntimeId(): number;
+
+    /**
+     * @returns whether the state is valid
+     */
+    isValidState(): boolean;
+
+    /**
+     * @returns state of the given number
+     * if it's present in the following object
+     */
+    getState(state: number): number;
+
+    /**
+     * @returns whether the state by given number
+     * is present in the following object
+     */
+    hasState(state: number): boolean;
+
+    /**
+     * Adds state to the following object
+     * @returns BlockState object itself
+     */
+    addState(state: number, value: number): BlockState;
+
+    /**
+     * Adds states to the following object
+     * from given java.util.Map instance
+     * @returns BlockState object itself
+     */
+    addStates(states: java.util.Map<unknown, number>): BlockState;
+
+    /**
+     * Adds states to the following object
+     * from given JS object instance
+     * @returns BlockState object itself
+     */
+    addStates(states: object): BlockState;
+
+    /**
+     * @returns all states from following object
+     * in java.util.Map instance
+     */
+    getStates(): java.util.Map<number, number>;
+
+    /**
+     * @returns all NAMED states from following object
+     * in java.util.Map instance
+     */
+    getNamedStates(): java.util.Map<string, number>;
+
+    /**
+     * @returns all states from following object
+     * in JS object instance
+     */
+    getStatesScriptable(): {[key: string]: number};
+
+    /**
+     * @returns all NAMED states from following object
+     * in JS object instance
+     */
+    getNamedStatesScriptable(): {[key: string]: number};
+
+    /**
+     * @returns string representation of the following object
+     */
+    toString(): string;
+
+    /**
+     * @returns whether the following object is equal to given,
+     * according to different parameters
+     */
+    equals(object: any): boolean;
+
 }
 /**
  * Module used to handle callbacks. See {@page Callbacks} for details about the 
@@ -1819,7 +1937,8 @@ declare namespace Callback {
     }
 
     /**
-     * Function used in "ItemUseLocal" callback
+     * Function used in "ItemUseLocal" callback,
+     * and also in [[Item.registerUseFunction]] and [[Item.registerUseFunctionForID]] methods
      * @param coords set of all coordinate values that can be useful to write 
      * custom use logics
      * @param item item that was in the player's hand when he touched the block
@@ -4389,6 +4508,594 @@ declare class EntityModel {
 
 }
 /**
+ * Defines armor type and armor slot index in player's inventory
+ */
+declare enum EArmorType {
+    HELMET = 0,
+    CHESTPLATE = 1,
+    LEGGINGS = 2,
+    BOOTS = 3
+}
+
+/**
+ * Defines possible render layers (display methods) for blocks
+ */
+declare enum EBlockRenderLayer {
+    DOUBLE_SIDE = 0,
+    RAY_TRACED_WATER = 1,
+    BLEND = 2,
+    OPAQUE = 3,
+    ALPHA = 4,
+    OPAQUE_SEASONS = 6,
+    ALPHA_SEASONS = 7,
+    ALPHA_SINGLE_SIDE = 8,
+    END_PORTAL = 9,
+    BARRIER = 10,
+    STRUCTURE_VOID = 11
+}
+
+/**
+ * Defines numeric representation for each block side
+ */
+declare enum EBlockSide {
+    DOWN = 0,
+    UP = 1,
+    NORTH = 2,
+    SOUTH = 3,
+    WEST = 4,
+    EAST = 5
+}
+
+/**
+ * Defines numeric representation for each vanilla block state
+ */
+declare enum EBlockStates {
+    HEIGHT = 0,
+    COVERED_BIT = 1,
+    TORCH_FACING_DIRECTION = 2,
+    OPEN_BIT = 3,
+    DIRECTION = 4,
+    UPSIDE_DOWN_BIT = 5,
+    ATTACHED_BIT = 6,
+    SUSPENDED_BIT = 7,
+    POWERED_BIT = 8,
+    DISARMED_BIT = 9,
+    CRACKED_STATE = 10,
+    TURTLE_EGG_COUNT = 11,
+    TWISTING_VINES_AGE = 12,
+    TOP_SLOT_BIT = 13,
+    PORTAL_AXIS = 14,
+    FACING_DIRECTION = 15,
+    RAIL_DIRECTION = 16,
+    STANDING_ROTATION = 17,
+    WEIRDO_DIRECTION = 18,
+    CORAL_DIRECTION = 19,
+    LEVER_DIRECTION = 20,
+    PILLAR_AXIS = 21,
+    VINE_DIRECTION_BITS = 22,
+    AGE_BIT = 23,
+    AGE = 24,
+    BITE_COUNTER = 25,
+    BREWING_STAND_SLOT_A_BIT = 26,
+    BREWING_STAND_SLOT_B_BIT = 27,
+    BREWING_STAND_SLOT_C_BIT = 28,
+    BUTTON_PRESSED_BIT = 29,
+    CONDITIONAL_BIT = 30,
+    DAMAGE = 31,
+    DOOR_HINGE_HIT = 32,
+    UPPER_BLOCK_HIT = 33,
+    END_PORTAL_EYE_BIT = 34,
+    EXPLODE_BIT = 35,
+    FILL_LEVEL = 36,
+    GROWTH = 37,
+    HEAD_PIECE_BIT = 38,
+    INFINIBURN_BIT = 39,
+    IN_WALL_BIT = 40,
+    LIQUID_DEPTH = 41,
+    MOISTURIZED_AMOUNT = 42,
+    NO_DROP_BIT = 43,
+    KELP_AGE = 44,
+    OCCUPIED_BIT = 45,
+    OUTPUT_SUBTRACT_BIT = 46,
+    OUTPUT_LIT_BIT = 47,
+    PERSISTENT_BIT = 48,
+    RAIL_DATA_BIT = 49,
+    REDSTONE_SIGNAL = 50,
+    REPEATER_DELAY = 51,
+    TOGGLE_BIT = 52,
+    TRIGGERED_BIT = 53,
+    UPDATE_BIT = 54,
+    ALLOW_UNDERWATER_BIT = 55,
+    COLOR_BIT = 56,
+    DEAD_BIT = 57,
+    CLUSTER_COUNT = 58,
+    ITEM_FRAME_MAP_BIT = 59,
+    SAPLING_TYPE = 60,
+    DRAG_DOWN = 61,
+    COLOR = 62,
+    BAMBOO_THICKNESS = 63,
+    BAMBOO_LEAF_SIZE = 64,
+    STABILITY = 65,
+    STABILITY_CHECK_BIT = 66,
+    WOOD_TYPE = 67,
+    STONE_TYPE = 68,
+    DIRT_TYPE = 69,
+    SAND_TYPE = 70,
+    OLD_LOG_TYPE = 71,
+    NEW_LOG_TYPE = 72,
+    CHISEL_TYPE = 73,
+    DEPRECATED = 74,
+    OLD_LEAF_TYPE = 75,
+    NEW_LEAF_TYPE = 76,
+    SPONGE_TYPE = 77,
+    SAND_STONE_TYPE = 78,
+    TALL_GRASS_TYPE = 79,
+    FLOWER_TYPE = 80,
+    STONE_SLAB_TYPE = 81,
+    STONE_SLAB_TYPE2 = 82,
+    STONE_SLAB_TYPE3 = 83,
+    STONE_SLAB_TYPE4 = 84,
+    MONSTER_EGG_STONE_TYPE = 85,
+    STONE_BRICK_TYPE = 86,
+    HUGE_MUSHROOM_BITS = 87,
+    WALL_BLOCK_TYPE = 88,
+    PRISMARINE_BLOCK_TYPE = 89,
+    DOUBLE_PLANT_TYPE = 90,
+    CHEMISTRY_TABLE_TYPE = 91,
+    SEA_GRASS_TYPE = 92,
+    CORAL_COLOR = 93,
+    CAULDRON_LIQUID = 94,
+    HANGING_BIT = 95,
+    STRIPPED_BIT = 96,
+    CORAL_HANG_TYPE_BIT = 97,
+    ATTACHMENT = 98,
+    STRUCTURE_VOID_TYPE = 99,
+    STRUCTURE_BLOCK_TYPE = 100,
+    EXTINGUISHED = 101,
+    COMPOSTER_FILL_LEVEL = 102,
+    CORAL_FAN_DIRECTION = 103,
+    BLOCK_LIGHT_LEVEL = 104,
+    BEEHIVE_HONEY_LEVEL = 105,
+    WEEPING_VINES_AGE = 106,
+    WALL_POST_BIT = 107,
+    WALL_CONNECTION_TYPE_NORTH = 108,
+    WALL_CONNECTION_TYPE_EAST = 109,
+    WALL_CONNECTION_TYPE_SOUTH = 110,
+    WALL_CONNECTION_TYPE_WEST = 111,
+    ROTATION = 112,
+    RESPAWN_ANCHOR_CHARGE = 113
+}
+
+/**
+ * Defines text colors and font styles for chat and tip messages
+ */
+declare enum EColor {
+    AQUA = "§b",
+    BEGIN = "§",
+    BLACK = "§0",
+    BLUE = "§9",
+    BOLD = "§l",
+    DARK_AQUA = "§3",
+    DARK_BLUE = "§1",
+    DARK_GRAY = "§8",
+    DARK_GREEN = "§2",
+    DARK_PURPLE = "§5",
+    DARK_RED = "§4",
+    GOLD = "§6",
+    GRAY = "§7",
+    GREEN = "§a",
+    ITALIC = "§o",
+    LIGHT_PURPLE = "§d",
+    OBFUSCATED = "§k",
+    RED = "§c",
+    RESET = "§r",
+    STRIKETHROUGH = "§m",
+    UNDERLINE = "§n",
+    WHITE = "§f",
+    YELLOW = "§e",
+}
+
+/**
+ * Defines numeric representation for three vanilla dimensions
+ */
+declare enum EDimension {
+    NORMAL = 0,
+    NETHER = 1,
+    END = 2
+}
+
+/**
+ * Defines what enchantments can or cannot be applied to every instrument type
+ */
+declare enum EEnchantType {
+    HELMET = 0,
+    LEGGINGS = 2,
+    BOOTS = 4,
+    CHESTPLATE = 8,
+    WEAPON = 16,
+    BOW = 32,
+    HOE = 64,
+    SHEARS = 128,
+    FLINT_AND_STEEL = 256,
+    AXE = 512,
+    PICKAXE = 1024,
+    SHOVEL = 2048,
+    FISHING_ROD = 4096,
+    ALL = 16383,
+    BOOK = 16383
+}
+
+/**
+ * Defines numeric ids of all vanilla enchantments
+ */
+declare enum EEnchantment {
+    PROTECTION = 0,
+    FIRE_PROTECTION = 1,
+    FEATHER_FALLING = 2,
+    BLAST_PROTECTION = 3,
+    PROJECTILE_PROTECTION = 4,
+    THORNS = 5,
+    RESPIRATION = 6,
+    AQUA_AFFINITY = 7,
+    DEPTH_STRIDER = 8,
+    SHARPNESS = 9,
+    SMITE = 10,
+    BANE_OF_ARTHROPODS = 11,
+    KNOCKBACK = 12,
+    FIRE_ASPECT = 13,
+    LOOTING = 14,
+    EFFICIENCY = 15,
+    SILK_TOUCH = 16,
+    UNBREAKING = 17,
+    FORTUNE = 18,
+    POWER = 19,
+    PUNCH = 20,
+    FLAME = 21,
+    INFINITY = 22,
+    LUCK_OF_THE_SEA = 23,
+    LURE = 24,
+    FROST_WALKER = 25,
+    MENDING = 26,
+    BINDING_CURSE = 27,
+    VANISHING_CURSE = 28,
+    IMPALING = 29,
+    RIPTIDE = 30,
+    LOYALTY = 31,
+    CHANNELING = 32
+}
+
+/**
+ * Defines all vanilla entity type numeric ids
+ */
+declare enum EEntityType {
+    PLAYER = 1,
+    CHICKEN = 10,
+    COW = 11,
+    PIG = 12,
+    SHEEP = 13,
+    WOLF = 14,
+    VILLAGER = 15,
+    MUSHROOM_COW = 16,
+    SQUID = 17,
+    RABBIT = 18,
+    BAT = 19,
+    IRON_GOLEM = 20,
+    SNOW_GOLEM = 21,
+    OCELOT = 22,
+    HORSE = 23,
+    DONKEY = 24,
+    MULE = 25,
+    SKELETON_HORSE = 26,
+    ZOMBIE_HORSE = 27,
+    POLAR_BEAR = 28,
+    LLAMA = 29,
+    PARROT = 30,
+    DOLPHIN = 31,
+    ZOMBIE = 32,
+    CREEPER = 33,
+    SKELETON = 34,
+    SPIDER = 35,
+    PIG_ZOMBIE = 36,
+    SLIME = 37,
+    ENDERMAN = 38,
+    SILVERFISH = 39,
+    CAVE_SPIDER = 40,
+    GHAST = 41,
+    LAVA_SLIME = 42,
+    BLAZE = 43,
+    ZOMBIE_VILLAGER = 44,
+    WHITCH = 45,
+    STRAY = 46,
+    HUSK = 47,
+    WHITHER_SKELETON = 48,
+    GUARDIAN = 49,
+    ENDER_GUARDIAN = 50,
+    WHITHER = 52,
+    ENDER_DRAGON = 53,
+    SHULKER = 54,
+    ENDERMITE = 55,
+    VINDICATOR = 57,
+    PHANTOM = 58,
+    RAVAGER = 59,
+    ARMOR_STAND = 61,
+    ITEM = 64,
+    PRIMED_TNT = 65,
+    FALLING_BLOCK = 66,
+    MOVING_BLOCK = 67,
+    EXPERIENCE_BOTTLE = 68,
+    EXPERIENCE_ORB = 69,
+    EYE_OF_ENDER_SIGNAL = 70,
+    ENDER_CRYSTAL = 71,
+    FIREWORKS_ROCKET = 72,
+    THROWN_TRIDENT = 73,
+    TURTLE = 74,
+    CAT = 75,
+    SHULKER_BULLET = 76,
+    FISHING_HOOK = 77,
+    DRAGON_FIREBOLL = 79,
+    ARROW = 80,
+    SNOWBALL = 81,
+    EGG = 82,
+    PAINTING = 83,
+    MINECART = 84,
+    FIREBALL = 85,
+    THROWN_POTION = 86,
+    ENDER_PEARL = 87,
+    LEASH_KNOT = 88,
+    WHITHER_SKULL = 89,
+    BOAT = 90,
+    WHITHER_SKULL_DANGEROUS = 91,
+    LIGHTNING_BOLT = 93,
+    SMALL_FIREBALL = 94,
+    AREA_EFFECT_CLOUD = 95,
+    HOPPER_MINECART = 96,
+    TNT_COMMAND = 97,
+    CHEST_MINECART = 98,
+    COMMAND_BLOCK_MINECART = 100,
+    LINGERING_POTION = 101,
+    LLAMA_SPLIT = 102,
+    EVOCATION_FANG = 103,
+    EVOCATION_ILLAGER = 104,
+    VEX = 105,
+    PUFFERFISH = 108,
+    SALMON = 109,
+    DROWNED = 110,
+    TROPICALFISH = 111,
+    COD = 112,
+    PANDA = 113,
+    PILLAGER = 114,
+    VILLAGER_V2 = 115,
+    ZOMBIE_VILLAGE_V2 = 116,
+    SHIELD = 117,
+    WANDERING_TRADER = 118,
+    ENDER_GUARDIAN_GHOST = 120
+}
+
+/**
+ * Defines possible game difficulties
+ */
+declare enum EGameDifficulty {
+    PEACEFUL = 0,
+    EASY = 1,
+    NORMAL = 2,
+    HARD = 3
+}
+
+/**
+ * Defines possible game modes
+ */
+declare enum EGameMode {
+    SURVIVAL = 0,
+    CREATIVE = 1,
+    ADVENTURE = 2,
+    SPECTATOR = 3
+}
+
+/**
+ * Defines item animation types
+ */
+declare enum EItemAnimation {
+    NORMAL = 0,
+    BOW = 4
+}
+
+/**
+ * Defines vanilla item categories in creative inventory
+ */
+declare enum EItemCategory {
+    INTERNAL = 0,
+    MATERIAL = 1,
+    DECORATION = 2,
+    TOOL = 3,
+    FOOD = 4
+}
+
+/**
+ * Defines vanilla mob render types
+ */
+declare enum EMobRenderType {
+    TNT = 2,
+    HUMAN = 3,
+    ITEM = 4,
+    CHICKEN = 5,
+    COW = 6,
+    MUSHROOM_COW = 7,
+    PIG = 8,
+    SHEEP = 9,
+    BAT = 10,
+    WOLF = 11,
+    VILLAGER = 12,
+    ZOMBIE = 14,
+    ZOMBIE_PIGMAN = 15,
+    LAVA_SLIME = 16,
+    GHAST = 17,
+    BLAZE = 18,
+    SKELETON = 19,
+    SPIDER = 20,
+    SILVERFISH = 21,
+    CREEPER = 22,
+    SLIME = 23,
+    ENDERMAN = 24,
+    ARROW = 25,
+    FISH_HOOK = 26,
+    PLAYER = 27,
+    EGG = 28,
+    SNOWBALL = 29,
+    UNKNOWN_ITEM = 30,
+    THROWN_POTION = 31,
+    PAINTING = 32,
+    FALLING_TILE = 33,
+    MINECART = 34,
+    BOAT = 35,
+    SQUID = 36,
+    FIREBALL = 37,
+    SMALL_FIREBALL = 38,
+    VILLAGER_ZOMBIE = 39,
+    EXPERIENCE_ORB = 40,
+    LIGHTNING_BOLT = 41,
+    IRON_GOLEM = 42,
+    OCELOT = 43,
+    SNOW_GOLEM = 44,
+    EXP_POTION = 45,
+    RABBIT = 46,
+    WITCH = 47,
+    CAMERA = 48,
+    MAP = 50
+}
+
+/**
+ * Defines numeric representation for each NBT data type
+ */
+declare enum ENbtDataType {
+    TYPE_END_TAG = 0,
+    TYPE_BYTE = 1,
+    TYPE_SHORT = 2,
+    TYPE_INT = 3,
+    TYPE_INT64 = 4,
+    TYPE_FLOAT = 5,
+    TYPE_DOUBLE = 6,
+    TYPE_BYTE_ARRAY = 7,
+    TYPE_STRING = 8,
+    TYPE_LIST = 9,
+    TYPE_COMPOUND = 10,
+    TYPE_INT_ARRAY = 11
+}
+
+/**
+ * Defines all existing vanilla particles
+ */
+declare enum EParticleType {
+    BUBBLE = 1,
+    CRIT = 2,
+    CLOUD = 4,
+    SMOKE = 4,
+    LARGEEXPLODE = 5,
+    FLAME = 7,
+    LAVA = 8,
+    SMOKE2 = 9,
+    REDSTONE = 10,
+    ITEM_BREAK = 11,
+    SNOWBALLPOOF = 12,
+    HUGEEXPLOSION = 13,
+    HUGEEXPLOSION_SEED = 14,
+    MOB_FLAME = 15,
+    TERRAIN = 16,
+    HEART = 17,
+    SUSPENDED_TOWN = 18,
+    PORTAL = 20,
+    RAIN_SPLASH = 21,
+    SPLASH = 22,
+    DRIP_WATER = 23,
+    DRIP_LAVA = 24,
+    INK = 25,
+    FALLING_DUST = 26,
+    SPELL3 = 27,
+    SPELL2 = 28,
+    SPELL = 29,
+    SLIME = 30,
+    WATER_WAKE = 31,
+    ANGRY_VILLAGER = 32,
+    HAPPY_VILLAGER = 33,
+    ENCHANTMENTTABLE = 34,
+    NOTE = 36
+}
+
+/**
+ * Defines player's abilities. See {@page Abilities} for details
+ */
+declare enum EPlayerAbility {
+    ATTACK_MOBS = "attackmobs",
+    ATTACK_PLAYERS = "attackplayers",
+    BUILD = "build",
+    DOORS_AND_SWITCHES = "doorsandswitches",
+    FLYSPEED = "flyspeed",
+    FLYING = "flying",
+    INSTABUILD = "instabuild",
+    INVULNERABLE = "invulnerable",
+    LIGHTNING = "lightning",
+    MAYFLY = "mayfly",
+    MINE = "mine",
+    MUTED = "mute",
+    NOCLIP = "noclip",
+    OPERATOR_COMMANDS = "op",
+    OPEN_CONTAINERS = "opencontainers",
+    TELEPORT = "teleport",
+    WALKSPEED = "walkspeed",
+    WORLDBUILDER = "worldbuilder"
+}
+
+/**
+ * Defines vanilla potion effects
+ */
+declare enum EPotionEffect {
+    MOVEMENT_SPEED = 1,
+    MOVEMENT_SLOWDOWN = 2,
+    DIG_SPEED = 3,
+    DIG_SLOWDOWN = 4,
+    DAMAGE_BOOST = 5,
+    HEAL = 6,
+    HARM = 7,
+    JUMP = 8,
+    CONFUSION = 9,
+    REGENERATION = 10,
+    DAMAGE_RESISTANCE = 11,
+    FIRE_RESISTANCE = 12,
+    WATER_BREATHING = 13,
+    INVISIBILITY = 14,
+    BLINDNESS = 15,
+    NIGHT_VISION = 16,
+    HUNGER = 17,
+    WEAKNESS = 18,
+    POISON = 19,
+    WITHER = 20,
+    HEALTH_BOOST = 21,
+    ABSORPTION = 22,
+    SATURATION = 23,
+    LEVITATION = 24,
+    FATAL_POISON = 25,
+    CONDUIT_POWER = 26,
+    SLOW_FALLING = 27,
+    BAD_OMEN = 28,
+    VILLAGE_HERO = 29
+}
+
+/**
+ * Defines numeric representation for vanilla TileEntity types.
+ * Use [[NativeTileEntity]] class to work with them.
+ */
+declare enum ETileEntityType {
+    NONE = -1,
+    CHEST = 0,
+    FURNACE = 1,
+    HOPPER = 2,
+    BREWING_STAND = 8,
+    DISPENSER = 13,
+    CAULDRON = 16,
+    BEACON = 21,
+    JUKEBOX = 33,
+    LECTERN = 37
+}
+/**
  * Module that provides methods to work with android file system
  */
 declare namespace FileTools {
@@ -5328,7 +6035,7 @@ declare namespace Item {
     /**
      * Same as [[Item.registerUseFunction]], but supports numeric ids only
      */
-    function registerUseFunctionForID(numericID: number, useFunc: ItemUseFunction): void;
+    function registerUseFunctionForID(numericID: number, useFunc: Callback.ItemUseLocalFunction): void;
 
     /**
      * Registers function that is called when user touches some block in the 
@@ -5336,7 +6043,7 @@ declare namespace Item {
      * @param nameID string or numeric id of the item
      * @param useFunc function that is called when such an event occurs
      */
-    function registerUseFunction(nameID: string | number, useFunc: ItemUseFunction): void;
+    function registerUseFunction(nameID: string | number, useFunc: Callback.ItemUseLocalFunction): void;
 
     /**
      * Same as [[Item.registerThrowableFunction]], but supports numeric ids only
@@ -5455,10 +6162,6 @@ declare namespace Item {
 
         setUseAnimation(animation: number): void;
 
-    }
-
-    interface ItemUseFunction {
-        (coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void
     }
 
     /**
@@ -6418,6 +7121,7 @@ declare namespace ModAPI {
 }
 /**
  * Module containing enums that can make user code more readable
+ * @deprecated from InnerCore Test 2.2.1b89, use new enum system instead
  */
 declare namespace Native {
     /**
@@ -6617,7 +7321,7 @@ declare namespace Native {
     }
 
     /**
-     * Defines vanilla mob rendertypes
+     * Defines vanilla mob render types
      */
     enum MobRenderType {
         arrow = 25,
@@ -6670,7 +7374,7 @@ declare namespace Native {
     }
 
     /**
-     * Defines vanilla posion effects
+     * Defines vanilla potion effects
      */
     enum PotionEffect {
         absorption = 22,
@@ -13052,6 +13756,100 @@ declare enum VanillaBlockID {
     jungle_pressure_plate = -153,
     spruce_pressure_plate = -154,
     bubble_column = -160,
+    allow = -215,
+    ancient_debris = -216,
+    basalt = -217,
+    bee_nest = -218,
+    beehive = -219,
+    blackstone = -220,
+    blackstone_double_slab = -221,
+    blackstone_slab = -222,
+    blackstone_stairs = -223,
+    blackstone_wall = -224,
+    border_block = -225,
+    camera = -226,
+    chain = -227,
+    chiseled_nether_bricks = -228,
+    chiseled_polished_blackstone = -229,
+    cracked_nether_bricks = -230,
+    cracked_polished_blackstone_bricks = -231,
+    crimson_button = -232,
+    crimson_door = -233,
+    crimson_double_slab = -234,
+    crimson_fence = -235,
+    crimson_fence_gate = -236,
+    crimson_fungus = -237,
+    crimson_hyphae = -238,
+    crimson_nylium = -239,
+    crimson_planks = -240,
+    crimson_pressure_plate = -241,
+    crimson_roots = -242,
+    crimson_slab = -243,
+    crimson_stairs = -244,
+    crimson_standing_sign = -245,
+    crimson_stem = -246,
+    crimson_trapdoor = -247,
+    crimson_wall_sign = -248,
+    crying_obsidian = -249,
+    deny = -250,
+    gilded_blackstone = -251,
+    honey_block = -252,
+    honeycomb_block = -253,
+    light_block = -254,
+    lodestone = -255,
+    nether_gold_ore = -256,
+    nether_sprouts = -257,
+    netherite_block = -258,
+    polished_basalt = -259,
+    polished_blackstone = -260,
+    polished_blackstone_brick_double_slab = -261,
+    polished_blackstone_brick_slab = -262,
+    polished_blackstone_brick_stairs = -263,
+    polished_blackstone_brick_wall = -264,
+    polished_blackstone_bricks = -265,
+    polished_blackstone_button = -266,
+    polished_blackstone_double_slab = -267,
+    polished_blackstone_pressure_plate = -268,
+    polished_blackstone_slab = -269,
+    polished_blackstone_stairs = -270,
+    polished_blackstone_wall = -271,
+    quartz_bricks = -272,
+    respawn_anchor = -273,
+    shroomlight = -274,
+    soul_campfire = -275,
+    soul_fire = -276,
+    soul_lantern = -277,
+    soul_soil = -278,
+    soul_torch = -279,
+    stickypistonarmcollision = -280,
+    stripped_crimson_hyphae = -281,
+    stripped_crimson_stem = -282,
+    stripped_warped_hyphae = -283,
+    stripped_warped_stem = -284,
+    structure_void = -285,
+    target = -286,
+    twisting_vines = -287,
+    unknown = -288,
+    warped_button = -289,
+    warped_door = -290,
+    warped_double_slab = -291,
+    warped_fence = -292,
+    warped_fence_gate = -293,
+    warped_fungus = -294,
+    warped_hyphae = -295,
+    warped_nylium = -296,
+    warped_planks = -297,
+    warped_pressure_plate = -298,
+    warped_roots = -299,
+    warped_slab = -300,
+    warped_stairs = -301,
+    warped_standing_sign = -302,
+    warped_stem = -303,
+    warped_trapdoor = -304,
+    warped_wall_sign = -305,
+    warped_wart_block = -306,
+    weeping_vines = -307,
+    wither_rose = -308
 }
 
 /**
@@ -13272,6 +14070,190 @@ declare enum VanillaItemID {
     spider_eye = 375,
     golden_axe = 286,
     real_double_stone_slab = 43,
+    respawn_anchor = 721,
+    ancient_debris = 722,
+    warped_slab = 723,
+    crimson_slab = 724,
+    carved_pumpkin = 725,
+    warped_roots = 726,
+    flower_banner_pattern = 727,
+    music_disc_blocks = 728,
+    soul_campfire = 729,
+    polished_blackstone_slab = 730,
+    warped_door = 731,
+    nether_sprouts = 732,
+    netherite_scrap = 733,
+    netherite_leggings = 734,
+    netherite_shovel = 735,
+    netherite_sword = 736,
+    blackstone_slab = 737,
+    netherite_ingot = 738,
+    lodestone_compass = 739,
+    light_gray_dye = 740,
+    camera = 741,
+    honey_bottle = 742,
+    piglin_banner_pattern = 743,
+    mojang_banner_pattern = 744,
+    polished_blackstone_brick_slab = 745,
+    field_masoned_banner_pattern = 746,
+    creeper_banner_pattern = 747,
+    brown_dye = 748,
+    farmland = 749,
+    light_block = 750,
+    panda_spawn_egg = 751,
+    crimson_sign = 752,
+    scute = 753,
+    totem_of_undying = 754,
+    cooked_mutton = 755,
+    mutton = 756,
+    music_disc_11 = 757,
+    music_disc_ward = 758,
+    bordure_indented_banner_pattern = 759,
+    music_disc_strad = 760,
+    music_disc_mellohi = 761,
+    music_disc_far = 762,
+    music_disc_cat = 763,
+    diamond_horse_armor = 764,
+    music_disc_chirp = 765,
+    carrot_on_a_stick = 766,
+    iron_horse_armor = 767,
+    warped_sign = 768,
+    music_disc_stal = 769,
+    suspicious_stew = 770,
+    light_blue_dye = 771,
+    leather_horse_armor = 772,
+    green_dye = 773,
+    firework_star = 774,
+    sugar_cane = 775,
+    nether_star = 776,
+    netherite_helmet = 777,
+    empty_map = 778,
+    fire_charge = 779,
+    zoglin_spawn_egg = 780,
+    bee_spawn_egg = 781,
+    ravager_spawn_egg = 782,
+    pillager_spawn_egg = 783,
+    cat_spawn_egg = 784,
+    enderman_spawn_egg = 785,
+    agent_spawn_egg = 786,
+    phantom_spawn_egg = 787,
+    turtle_spawn_egg = 788,
+    dolphin_spawn_egg = 789,
+    drowned_spawn_egg = 790,
+    pufferfish_spawn_egg = 791,
+    cod_spawn_egg = 792,
+    polar_bear_spawn_egg = 793,
+    shulker_spawn_egg = 794,
+    donkey_spawn_egg = 795,
+    cow_spawn_egg = 796,
+    yellow_dye = 797,
+    wither_skeleton_spawn_egg = 798,
+    husk_spawn_egg = 799,
+    stray_spawn_egg = 800,
+    fox_spawn_egg = 801,
+    salmon_spawn_egg = 802,
+    guardian_spawn_egg = 803,
+    endermite_spawn_egg = 804,
+    cave_spider_spawn_egg = 805,
+    blaze_spawn_egg = 806,
+    ghast_spawn_egg = 807,
+    witch_spawn_egg = 808,
+    ocelot_spawn_egg = 809,
+    zombie_pigman_spawn_egg = 810,
+    squid_spawn_egg = 811,
+    hoglin_spawn_egg = 812,
+    bat_spawn_egg = 813,
+    zombie_spawn_egg = 814,
+    dark_oak_sign = 815,
+    skeleton_spawn_egg = 816,
+    netherite_pickaxe = 817,
+    skull_banner_pattern = 818,
+    parrot_spawn_egg = 819,
+    mooshroom_spawn_egg = 820,
+    wandering_trader_spawn_egg = 821,
+    cod = 822,
+    wolf_spawn_egg = 823,
+    sheep_spawn_egg = 824,
+    mule_spawn_egg = 825,
+    netherite_boots = 826,
+    chicken_spawn_egg = 827,
+    tropical_fish = 828,
+    glistering_melon_slice = 829,
+    melon_slice = 830,
+    music_disc_wait = 831,
+    blue_dye = 832,
+    filled_map = 833,
+    lapis_lazuli = 834,
+    ink_sac = 835,
+    white_dye = 836,
+    orange_dye = 837,
+    magenta_dye = 838,
+    gray_dye = 839,
+    cyan_dye = 840,
+    purple_dye = 841,
+    red_dye = 842,
+    netherite_block = 843,
+    music_disc_13 = 844,
+    black_dye = 845,
+    crimson_door = 846,
+    tropical_fish_spawn_egg = 847,
+    villager_spawn_egg = 848,
+    netherite_chestplate = 849,
+    netherite_axe = 850,
+    firework_rocket = 851,
+    pink_dye = 852,
+    cod_bucket = 853,
+    pig_spawn_egg = 854,
+    magma_cube_spawn_egg = 855,
+    dark_oak_boat = 856,
+    acacia_boat = 857,
+    lava_bucket = 858,
+    spruce_boat = 859,
+    jungle_boat = 860,
+    crying_obsidian = 861,
+    tropical_fish_bucket = 862,
+    salmon_bucket = 863,
+    cocoa_beans = 864,
+    silverfish_spawn_egg = 865,
+    water_bucket = 866,
+    enchanted_golden_apple = 867,
+    creeper_spawn_egg = 868,
+    lit_pumpkin = 869,
+    popped_chorus_fruit = 870,
+    zombie_horse_spawn_egg = 871,
+    golden_horse_armor = 872,
+    music_disc_pigstep = 873,
+    bone_meal = 874,
+    music_disc_mall = 875,
+    evoker_spawn_egg = 876,
+    piglin_brute_spawn_egg = 877,
+    rabbit_spawn_egg = 878,
+    llama_spawn_egg = 879,
+    elder_guardian_spawn_egg = 880,
+    crimson_roots = 881,
+    oak_sign = 882,
+    charcoal = 883,
+    spider_spawn_egg = 884,
+    lime_dye = 885,
+    honeycomb = 886,
+    npc_spawn_egg = 887,
+    pufferfish_bucket = 888,
+    vex_spawn_egg = 889,
+    oak_boat = 890,
+    chain = 891,
+    skeleton_horse_spawn_egg = 892,
+    birch_boat = 893,
+    milk_bucket = 894,
+    cooked_cod = 895,
+    horse_spawn_egg = 896,
+    slime_spawn_egg = 897,
+    netherite_hoe = 898,
+    zombie_villager_spawn_egg = 899,
+    pumpkin = 900,
+    strider_spawn_egg = 901,
+    piglin_spawn_egg = 902,
+    warped_fungus_on_a_stick = 903,
+    vindicator_spawn_egg = 904
 }
 
 /**
@@ -13738,6 +14720,100 @@ declare enum VanillaTileID {
     element_27 = 293,
     spruce_pressure_plate = 409,
     bubble_column = 415,
+    allow = 470,
+    ancient_debris = 471,
+    basalt = 472,
+    bee_nest = 473,
+    beehive = 474,
+    blackstone = 475,
+    blackstone_double_slab = 476,
+    blackstone_slab = 477,
+    blackstone_stairs = 478,
+    blackstone_wall = 479,
+    border_block = 480,
+    camera = 481,
+    chain = 482,
+    chiseled_nether_bricks = 483,
+    chiseled_polished_blackstone = 484,
+    cracked_nether_bricks = 485,
+    cracked_polished_blackstone_bricks = 486,
+    crimson_button = 487,
+    crimson_door = 488,
+    crimson_double_slab = 489,
+    crimson_fence = 490,
+    crimson_fence_gate = 491,
+    crimson_fungus = 492,
+    crimson_hyphae = 493,
+    crimson_nylium = 494,
+    crimson_planks = 495,
+    crimson_pressure_plate = 496,
+    crimson_roots = 497,
+    crimson_slab = 498,
+    crimson_stairs = 499,
+    crimson_standing_sign = 500,
+    crimson_stem = 501,
+    crimson_trapdoor = 502,
+    crimson_wall_sign = 503,
+    crying_obsidian = 504,
+    deny = 505,
+    gilded_blackstone = 506,
+    honey_block = 507,
+    honeycomb_block = 508,
+    light_block = 509,
+    lodestone = 510,
+    nether_gold_ore = 511,
+    nether_sprouts = 512,
+    netherite_block = 513,
+    polished_basalt = 514,
+    polished_blackstone = 515,
+    polished_blackstone_brick_double_slab = 516,
+    polished_blackstone_brick_slab = 517,
+    polished_blackstone_brick_stairs = 518,
+    polished_blackstone_brick_wall = 519,
+    polished_blackstone_bricks = 520,
+    polished_blackstone_button = 521,
+    polished_blackstone_double_slab = 522,
+    polished_blackstone_pressure_plate = 523,
+    polished_blackstone_slab = 524,
+    polished_blackstone_stairs = 525,
+    polished_blackstone_wall = 526,
+    quartz_bricks = 527,
+    respawn_anchor = 528,
+    shroomlight = 529,
+    soul_campfire = 530,
+    soul_fire = 531,
+    soul_lantern = 532,
+    soul_soil = 533,
+    soul_torch = 534,
+    stickypistonarmcollision = 535,
+    stripped_crimson_hyphae = 536,
+    stripped_crimson_stem = 537,
+    stripped_warped_hyphae = 538,
+    stripped_warped_stem = 539,
+    structure_void = 540,
+    target = 541,
+    twisting_vines = 542,
+    unknown = 543,
+    warped_button = 544,
+    warped_door = 545,
+    warped_double_slab = 546,
+    warped_fence = 547,
+    warped_fence_gate = 548,
+    warped_fungus = 549,
+    warped_hyphae = 550,
+    warped_nylium = 551,
+    warped_planks = 552,
+    warped_pressure_plate = 553,
+    warped_roots = 554,
+    warped_slab = 555,
+    warped_stairs = 556,
+    warped_standing_sign = 557,
+    warped_stem = 558,
+    warped_trapdoor = 559,
+    warped_wall_sign = 560,
+    warped_wart_block = 561,
+    weeping_vines = 562,
+    wither_rose = 563
 }
 
 /**

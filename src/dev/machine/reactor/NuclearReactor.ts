@@ -201,7 +201,7 @@ namespace Machine {
 		}
 
 		startPlaySound(): void {
-			if (!ConfigIC.machineSoundEnabled || this.remove) return;
+			if (!IC2Config.machineSoundEnabled || this.remove) return;
 			if (!this.audioSource) {
 				this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, "NuclearReactorLoop.ogg");;
 			}
@@ -319,7 +319,7 @@ namespace Machine {
 				this.container.setSlot("slot"+i, 0, 0, 0);
 			}
 			if (explode) {
-				boomPower = Math.min(boomPower * this.data.hem * boomMod, ConfigIC.getFloat("reactor_explosion_max_power"));
+				boomPower = Math.min(boomPower * this.data.hem * boomMod, IC2Config.getFloat("reactor_explosion_max_power"));
 				RadiationAPI.addRadiationSource(this.x + .5, this.y + .5, this.z + .5, this.dimension, boomPower, 600);
 				this.region.explode(this.x + .5, this.y + .5, this.z + .5, boomPower, false);
 				this.selfDestroy();

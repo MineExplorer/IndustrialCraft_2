@@ -278,12 +278,17 @@ var WorldRegion = /** @class */ (function () {
     };
     WorldRegion.prototype.setBlock = function (x, y, z, id, data) {
         if (typeof x === "number") {
-            return this.blockSource.setBlock(x, y, z, id, data);
+            if (typeof id == "number") {
+                return this.blockSource.setBlock(x, y, z, id, data);
+            }
+            else {
+                return this.blockSource.setBlock(x, y, z, id);
+            }
         }
         var pos = x;
         id = y;
         data = z;
-        return this.blockSource.setBlock(pos.x, pos.y, pos.z, id, data);
+        return this.setBlock(pos.x, pos.y, pos.z, id, data);
     };
     WorldRegion.prototype.destroyBlock = function (x, y, z, drop, player) {
         if (typeof x === "object") {
@@ -465,16 +470,7 @@ var WorldRegion = /** @class */ (function () {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
         var soundPos = new Vector3(x, y, z);
-        var dimension = this.getDimension();
-        var clientsList = Network.getConnectedClients();
-        for (var _i = 0, clientsList_1 = clientsList; _i < clientsList_1.length; _i++) {
-            var client = clientsList_1[_i];
-            var player = client.getPlayerUid();
-            var pos = Entity.getPosition(player);
-            if (Entity.getDimension(player) == dimension && Entity.getDistanceBetweenCoords(pos, soundPos) <= 100) {
-                client.send("WorldRegion.play_sound", __assign(__assign({}, soundPos), { name: name, volume: volume, pitch: pitch }));
-            }
-        }
+        this.sendPacketInRadius(soundPos, 100, "WorldRegion.play_sound", __assign(__assign({}, soundPos), { name: name, volume: volume, pitch: pitch }));
     };
     /**
      * Plays standart Minecraft sound from the specified entity
@@ -486,14 +482,22 @@ var WorldRegion = /** @class */ (function () {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
         var soundPos = Entity.getPosition(ent);
+        this.sendPacketInRadius(soundPos, 100, "WorldRegion.play_sound_at", { ent: ent, name: name, volume: volume, pitch: pitch });
+    };
+    /**
+     * Sends network packet for players in a radius from specified coords
+     * @param packetName name of the packet to send
+     * @param data packet data object
+     */
+    WorldRegion.prototype.sendPacketInRadius = function (coords, radius, packetName, data) {
         var dimension = this.getDimension();
         var clientsList = Network.getConnectedClients();
-        for (var _i = 0, clientsList_2 = clientsList; _i < clientsList_2.length; _i++) {
-            var client = clientsList_2[_i];
+        for (var _i = 0, clientsList_1 = clientsList; _i < clientsList_1.length; _i++) {
+            var client = clientsList_1[_i];
             var player = client.getPlayerUid();
-            var pos = Entity.getPosition(player);
-            if (Entity.getDimension(player) == dimension && Entity.getDistanceBetweenCoords(pos, soundPos) <= 100) {
-                client.send("WorldRegion.play_sound_at", { ent: ent, name: name, volume: volume, pitch: pitch });
+            var entPos = Entity.getPosition(player);
+            if (Entity.getDimension(player) == dimension && Entity.getDistanceBetweenCoords(entPos, coords) <= radius) {
+                client.send(packetName, data);
             }
         }
     };

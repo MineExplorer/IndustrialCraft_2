@@ -125,7 +125,7 @@ namespace Machine {
 		}
 
 		startPlaySound(): void {
-			/*if (!ConfigIC.machineSoundEnabled) return;
+			/*if (!IC2Config.machineSoundEnabled) return;
 			if (!this.audioSource && !this.remove) {
 				if (this.finishingSound != 0) {
 					SoundManager.stop(this.finishingSound);

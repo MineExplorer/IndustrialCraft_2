@@ -67,20 +67,20 @@ const ForestBiomeIDs = [4, 18, 27, 28, 132, 155, 156];
 const JungleBiomeIDs = [21, 22, 23, 149, 151];
 const SwampBiomeIDs = [6, 134];
 
-let chance = ConfigIC.getInt("rubber_tree_gen.plains");
+let chance = IC2Config.getInt("rubber_tree_gen.plains");
 RubberTreeGenerator.biomeData[1] = chance;
 
-chance = ConfigIC.getInt("rubber_tree_gen.forest");
+chance = IC2Config.getInt("rubber_tree_gen.forest");
 ForestBiomeIDs.forEach(function(id) {
 	RubberTreeGenerator.biomeData[id] = chance;
 });
 
-chance = ConfigIC.getInt("rubber_tree_gen.jungle");
+chance = IC2Config.getInt("rubber_tree_gen.jungle");
 JungleBiomeIDs.forEach(function(id) {
 	RubberTreeGenerator.biomeData[id] = chance;
 });
 
-chance = ConfigIC.getInt("rubber_tree_gen.swamp");
+chance = IC2Config.getInt("rubber_tree_gen.swamp");
 SwampBiomeIDs.forEach(function(id) {
 	RubberTreeGenerator.biomeData[id] = chance;
 });

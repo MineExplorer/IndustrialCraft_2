@@ -52,7 +52,7 @@ extends ElectricTool {
 	}
 
 	playDestroySound(item: ItemInstance, block: Tile, player: number): void {
-		if (ConfigIC.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.energyPerUse) {
+		if (IC2Config.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.energyPerUse) {
 			let hardness = Block.getDestroyTime(block.id);
 			if (hardness > 1 || hardness < 0) {
 				SoundManager.startPlaySound(SourceType.ENTITY, player, "DrillHard.ogg");

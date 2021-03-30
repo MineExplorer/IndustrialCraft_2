@@ -1,9 +1,9 @@
-namespace ConfigIC {
-	export let debugMode: boolean;
-	export let soundEnabled: boolean;
-	export let machineSoundEnabled: boolean;
-	export let voltageEnabled: boolean;
-	export let wireDamageEnabled: boolean;
+namespace IC2Config {
+	export let debugMode = getBool("debug_mode");
+	export let soundEnabled = getBool("sound_enabled");
+	export let machineSoundEnabled = getBool("machine_sounds");
+	export let voltageEnabled = getBool("voltage_enabled");
+	export let wireDamageEnabled = getBool("wire_damage_enabled");
 
 	export function getBool(name: string): boolean {
 		return __config__.getBool(name);
@@ -17,20 +17,10 @@ namespace ConfigIC {
 		return __config__.getNumber(name).floatValue();
 	}
 
-	export function reload() {
-		debugMode = getBool("debug_mode");
-		soundEnabled = getBool("sound_enabled");
-		machineSoundEnabled = getBool("machine_sounds");
-		voltageEnabled = getBool("voltage_enabled");
-		wireDamageEnabled = getBool("wire_damage_enabled");
+	export function getMinecraftVersion(): number {
+		return getMCPEVersion().array[1];
 	}
 }
-
-ConfigIC.reload();
-
-Callback.addCallback("LevelLoaded", function() {
-	ConfigIC.reload();
-});
 
 let isLevelDisplayed = false;
 Callback.addCallback("LevelDisplayed", function() {
@@ -44,7 +34,7 @@ Callback.addCallback("LevelLeft", function() {
 let lasttime = -1;
 let frame = 0;
 
-if (ConfigIC.debugMode) {
+if (IC2Config.debugMode) {
 	Callback.addCallback("tick", function() {
 		let t = Debug.sysTime();
 		if (frame++ % 20 == 0) {

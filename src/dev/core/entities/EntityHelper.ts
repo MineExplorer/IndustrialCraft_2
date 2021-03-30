@@ -28,7 +28,7 @@ namespace EntityHelper {
 
 	export function canTakeDamage(entity: number, damageSource: number): boolean {
 		if (Entity.getHealth(entity) <= 0) return false;
-		if (!ConfigIC.wireDamageEnabled && damageSource == DamageSource.electricity) return false;
+		if (!IC2Config.wireDamageEnabled && damageSource == DamageSource.electricity) return false;
 
 		let type = Entity.getType(entity);
 		if (type == 1) {

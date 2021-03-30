@@ -122,22 +122,15 @@ const guiMacerator = InventoryWindow("Macerator", {
 
 namespace Machine {
 	export class Macerator extends ProcessingMachine {
-		defaultValues = {
-			energy: 0,
-			tier: 1,
-			energy_storage: 1200,
-			energy_consume: 2,
-			work_time: 300,
-			progress: 0
-		}
-
+		defaultEnergyDemand = 2;
+		defaultProcessTime = 300;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
 		getScreenByName() {
 			return guiMacerator;
 		}
 
-		getRecipeResult(id: number, data: number) {
+		getRecipeResult(id: number, data: number): MachineRecipeRegistry.RecipeData {
 			return MachineRecipeRegistry.getRecipeResult("macerator", id, data);
 		}
 

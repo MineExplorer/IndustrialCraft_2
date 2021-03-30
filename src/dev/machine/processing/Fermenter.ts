@@ -70,7 +70,8 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			UpgradeAPI.executeUpgrades(this);
+			UpgradeAPI.useUpgrades(this);
+			StorageInterface.checkHoppers(this);
 			this.setActive(this.data.heat > 0);
 
 			if (this.data.heat > 0) {

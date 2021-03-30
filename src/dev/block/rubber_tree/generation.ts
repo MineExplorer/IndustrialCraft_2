@@ -48,7 +48,7 @@ namespace RubberTreeGenerator {
 		let height = 0;
 		while (height < max + 2) {
 			let blockID = region.getBlockId(x, y + height, z);
-			if (blockID != 0) break;
+			if (blockID != 0 && ToolAPI.getBlockMaterialName(blockID) !== "plant") break;
 			height++;
 		}
 		return height > 2 ? height - 2 : 0;

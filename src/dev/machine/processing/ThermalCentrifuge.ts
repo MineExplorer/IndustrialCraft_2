@@ -68,35 +68,35 @@ const guiCentrifuge = InventoryWindow("Thermal Centrifuge", {
 });
 
 namespace Machine {
-	export class ThermalCentrifuge
-	extends ProcessingMachine {
+	export class ThermalCentrifuge extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
-			tier: 2,
-			energy_storage: 30000,
-			energy_consume: 48,
-			work_time: 500,
 			progress: 0,
-			isHeating: false,
 			heat: 0,
-			maxHeat: 5000,
-			signal: 0
+			maxHeat: 5000
 		}
 
+		defaultTier = 2;
+		defaultEnergyStorage = 30000;
+		defaultEnergyDemand = 48;
+		defaultProcessTime = 500;
+		defaultDrop = BlockID.machineBlockAdvanced;
 		upgrades = ["overclocker", "transformer", "energyStorage", "redstone", "itemEjector", "itemPulling"];
 
-		defaultDrop = BlockID.machineBlockAdvanced;
+		isHeating: boolean = false;
+		isPowered: boolean;
 
 		getScreenByName() {
 			return guiCentrifuge;
 		}
 
-		resetValues(): void {
-			super.resetValues();
-			this.data.isHeating = this.data.signal > 0;
+		useUpgrades(): UpgradeAPI.UpgradeSet {
+			let upgrades = super.useUpgrades();
+			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
+			return upgrades;
 		}
 
-		getRecipeResult(id: number) {
+		getRecipeResult(id: number): {result: number[], heat: number} {
 			return MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", id);
 		}
 
@@ -124,36 +124,37 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.resetValues();
-			UpgradeAPI.executeUpgrades(this);
-			if (this.data.isHeating) {
+			this.useUpgrades();
+			StorageInterface.checkHoppers(this);
+
+			if (this.isHeating) {
 				this.data.maxHeat = 5000;
 			}
 
 			let newActive = false;
 			let sourceSlot = this.container.getSlot("slotSource");
-			let result = this.getRecipeResult(sourceSlot.id);
-			if (result && this.checkResult(result.result) && this.data.energy > 0) {
-				this.data.maxHeat = result.heat;
-				if (this.data.heat < result.heat) {
+			let recipe = this.getRecipeResult(sourceSlot.id);
+			if (recipe && this.checkResult(recipe.result) && this.data.energy > 0) {
+				this.data.maxHeat = recipe.heat;
+				if (this.data.heat < recipe.heat) {
 					this.data.energy--;
 					this.data.heat++;
 				}
-				else if (this.data.energy >= this.data.energy_consume) {
-					this.data.energy -= this.data.energy_consume;
-					this.data.progress += 1/this.data.work_time;
+				else if (this.data.energy >= this.energyDemand) {
+					this.data.energy -= this.energyDemand;
+					this.data.progress += 1 / this.processTime;
 					newActive = true;
 				}
 				if (+this.data.progress.toFixed(3) >= 1) {
 					this.decreaseSlot(sourceSlot, 1);
-					this.putResult(result.result);
+					this.putResult(recipe.result);
 					this.data.progress = 0;
 				}
 			}
 			else {
 				this.data.maxHeat = 5000;
 				this.data.progress = 0;
-				if (this.data.isHeating && this.data.energy > 1) {
+				if (this.isHeating && this.data.energy > 1) {
 					if (this.data.heat < 5000) {this.data.heat++;}
 					this.data.energy -= 2;
 				}
@@ -163,8 +164,6 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
 			if (this.data.heat >= this.data.maxHeat) {
@@ -174,12 +173,12 @@ namespace Machine {
 			}
 			this.container.setScale("progressScale", this.data.progress);
 			this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendChanges();
 		}
 
 		onRedstoneUpdate(signal: number): void {
-			this.data.signal = signal;
+			this.isPowered = signal > 0;
 		}
 
 		@ContainerEvent(Side.Client)

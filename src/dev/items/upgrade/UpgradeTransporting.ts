@@ -23,7 +23,7 @@ abstract class UpgradeTransporting extends UpgradeModule {
 				return "ic2.dir.west";
 			}
 			default: {
-				"tooltip.upgrade.anyside";
+				return "tooltip.upgrade.anyside";
 			}
 		}
 	}

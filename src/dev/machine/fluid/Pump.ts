@@ -44,11 +44,6 @@ namespace Machine {
 	export class Pump extends ElectricMachine {
 		liquidTank: BlockEngine.LiquidTank;
 
-		tier: number;
-		energyStorage: number;
-		energyDemand: number;
-		processTime: number;
-
 		defaultValues = {
 			energy: 0,
 			progress: 0,
@@ -59,9 +54,13 @@ namespace Machine {
 		defaultEnergyStorage = 800;
 		defaultEnergyDemand = 1;
 		defaultProcessTime = 20;
+		defaultDrop = BlockID.machineBlockBasic;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector"];
 
-		defaultDrop = BlockID.machineBlockBasic;
+		tier: number;
+		energyStorage: number;
+		energyDemand: number;
+		processTime: number;
 
 		getScreenByName() {
 			return guiPump;
@@ -86,8 +85,8 @@ namespace Machine {
 			});
 		}
 
-		executeUpgrades(): void {
-			let upgrades = UpgradeAPI.getUpgrades(this);
+		useUpgrades(): void {
+			let upgrades = UpgradeAPI.useUpgrades(this);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.energyDemand = upgrades.getEnergyDemand(this.defaultEnergyDemand);
@@ -95,7 +94,9 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.executeUpgrades();
+			this.useUpgrades();
+			StorageInterface.checkHoppers(this);
+
 			this.extractLiquid();
 
 			let slot1 = this.container.getSlot("slotLiquid1");

@@ -49,22 +49,15 @@ const guiExtractor = InventoryWindow("Extractor", {
 
 namespace Machine {
 	export class Extractor extends ProcessingMachine {
-		defaultValues = {
-			energy: 0,
-			tier: 1,
-			energy_storage: 1200,
-			energy_consume: 2,
-			work_time: 400,
-			progress: 0
-		}
-
+		defaultEnergyDemand = 2;
+		defaultProcessTime = 400;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
 		getScreenByName() {
 			return guiExtractor;
 		}
 
-		getRecipeResult(id: number) {
+		getRecipeResult(id: number): MachineRecipeRegistry.RecipeData {
 			return MachineRecipeRegistry.getRecipeResult("extractor", id);
 		}
 

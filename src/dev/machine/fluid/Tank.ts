@@ -61,7 +61,8 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			UpgradeAPI.executeUpgrades(this);
+			UpgradeAPI.useUpgrades(this);
+			StorageInterface.checkHoppers(this);
 
 			let slot1 = this.container.getSlot("slotLiquid1");
 			let slot2 = this.container.getSlot("slotLiquid2");

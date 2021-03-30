@@ -58,15 +58,9 @@ namespace Machine {
 	export class OreWasher extends ProcessingMachine {
 		liquidTank: BlockEngine.LiquidTank;
 
-		defaultValues = {
-			energy: 0,
-			tier: 1,
-			energy_storage: 10000,
-			energy_consume: 16,
-			work_time: 500,
-			progress: 0,
-		}
-
+		defaultEnergyStorage = 10000;
+		defaultEnergyDemand = 16;
+		defaultProcessTime = 500;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidPulling"];
 
 		getScreenByName() {
@@ -109,13 +103,13 @@ namespace Machine {
 			}
 		}
 
-		getRecipeResult(id: number) {
+		getRecipeResult(id: number): number[] {
 			return MachineRecipeRegistry.getRecipeResult("oreWasher", id);
 		}
 
 		onTick(): void {
-			this.resetValues();
-			UpgradeAPI.executeUpgrades(this);
+			this.useUpgrades();
+			StorageInterface.checkHoppers(this);
 
 			let slot1 = this.container.getSlot("slotLiquid1");
 			let slot2 = this.container.getSlot("slotLiquid2");
@@ -125,9 +119,9 @@ namespace Machine {
 			let sourceSlot = this.container.getSlot("slotSource");
 			let result = this.getRecipeResult(sourceSlot.id);
 			if (result && this.checkResult(result) && this.liquidTank.getAmount("water") >= 1000) {
-				if (this.data.energy >= this.data.energy_consume) {
-					this.data.energy -= this.data.energy_consume;
-					this.data.progress += 1/this.data.work_time;
+				if (this.data.energy >= this.energyDemand) {
+					this.data.energy -= this.energyDemand;
+					this.data.progress += 1 / this.processTime;
 					newActive = true;
 				}
 				if (+this.data.progress.toFixed(3) >= 1) {
@@ -141,13 +135,11 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
 			this.liquidTank.updateUiScale("liquidScale");
 			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendChanges();
 		}
 

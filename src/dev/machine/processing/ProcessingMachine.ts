@@ -3,23 +3,29 @@
 namespace Machine {
 	export abstract class ProcessingMachine
 	extends ElectricMachine {
-		defaultValues: {
-			energy: number,
-			tier: number,
-			energy_storage: number,
-			energy_consume?: number,
-			work_time?: number,
-			progress?: number,
+		defaultValues = {
+			energy: 0,
+			progress: 0
 		}
 
 		defaultDrop = BlockID.machineBlockBasic;
 
+		defaultTier = 1;
+		defaultEnergyStorage = 1200;
+		defaultEnergyDemand?: number;
+		defaultProcessTime?: number;
+
+		tier: number;
+		energyStorage: number;
+		energyDemand?: number;
+		processTime?: number;
+
 		getTier(): number {
-			return this.data.tier;
+			return this.tier;
 		}
 
 		getEnergyStorage(): number {
-			return this.data.energy_storage;
+			return this.energyStorage;
 		}
 
 		setupContainer(): void {
@@ -31,31 +37,32 @@ namespace Machine {
 			});
 		}
 
-		getRecipeResult(id: number, data: number): MachineRecipeRegistry.RecipeData {
+		getRecipeResult(id: number, data: number): any {
 			return null;
 		}
 
-		resetValues(): void {
-			this.data.tier = this.defaultValues.tier;
-			this.data.energy_storage = this.defaultValues.energy_storage;
-			this.data.energy_consume = this.defaultValues.energy_consume;
-			this.data.work_time = this.defaultValues.work_time;
+		useUpgrades(): UpgradeAPI.UpgradeSet {
+			let upgrades = UpgradeAPI.useUpgrades(this);
+			this.tier = upgrades.getTier(this.defaultTier);
+			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
+			this.energyDemand = upgrades.getEnergyDemand(this.defaultEnergyDemand);
+			this.processTime = upgrades.getProcessTime(this.defaultProcessTime);
+			return upgrades;
 		}
 
 		onTick(): void {
-			this.resetValues();
-			UpgradeAPI.executeUpgrades(this);
+			this.useUpgrades();
+			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
 			let sourceSlot = this.container.getSlot("slotSource");
-			let resultSlot = this.container.getSlot("slotResult");
 			let result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
 			if (result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)) {
 				let resultSlot = this.container.getSlot("slotResult");
 				if (resultSlot.id == result.id && (!result.data || resultSlot.data == result.data) && resultSlot.count <= 64 - result.count || resultSlot.id == 0) {
-					if (this.data.energy >= this.data.energy_consume) {
-						this.data.energy -= this.data.energy_consume;
-						this.data.progress += 1/this.data.work_time;
+					if (this.data.energy >= this.energyDemand) {
+						this.data.energy -= this.energyDemand;
+						this.data.progress += 1 / this.processTime;
 						newActive = true;
 					}
 					if (+this.data.progress.toFixed(3) >= 1) {
@@ -72,12 +79,10 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
 			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendChanges();
 		}
 	}

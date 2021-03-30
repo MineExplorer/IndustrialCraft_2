@@ -115,7 +115,7 @@ namespace Machine {
 		}
 
 		setUpgradeStats(): void {
-			let upgrades = UpgradeAPI.getUpgrades(this);
+			let upgrades = UpgradeAPI.useUpgrades(this);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.maxScanCount = 5 * (upgrades.augmentation + 1);
 		}

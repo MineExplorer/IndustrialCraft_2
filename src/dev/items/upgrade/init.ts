@@ -4,9 +4,9 @@
 /// <reference path="UpgradeFluidEjector.ts" />
 /// <reference path="UpgradeFluidPulling.ts" />
 
-ItemRegistry.registerItem(new UpgradeModule("upgradeOverclocker", "overclocker"));
-ItemRegistry.registerItem(new UpgradeModule("upgradeTransformer", "transformer"));
-ItemRegistry.registerItem(new UpgradeModule("upgradeEnergyStorage", "energy_storage"));
+ItemRegistry.registerItem(new UpgradeModule("upgradeOverclocker", "overclocker", "overclocker"));
+ItemRegistry.registerItem(new UpgradeModule("upgradeTransformer", "transformer", "transformer"));
+ItemRegistry.registerItem(new UpgradeModule("upgradeEnergyStorage", "energy_storage", "energyStorage"));
 ItemRegistry.registerItem(new UpgradeModule("upgradeRedstone", "redstone_inv", "redstone"));
 ItemRegistry.registerItem(new UpgradeEjector());
 ItemRegistry.registerItem(new UpgradePulling());
@@ -89,22 +89,7 @@ Callback.addCallback("PreLoaded", function() {
 		"aba"
 	], ['b', ItemID.bronzeWrench, 0, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, -1]);
 });
-/*
-UpgradeAPI.registerUpgrade(ItemID.upgradeOverclocker, "overclocker", function(item, machine, data) {
-	if (data.work_time) {
-		data.energy_consume = Math.round(data.energy_consume * Math.pow(1.6, item.count));
-		data.work_time = Math.round(data.work_time * Math.pow(0.7, item.count));
-	}
-});
 
-UpgradeAPI.registerUpgrade(ItemID.upgradeEnergyStorage, "energyStorage", function(item, machine, data) {
-	data.energy_storage += 10000 * item.count;
-});
-
-UpgradeAPI.registerUpgrade(ItemID.upgradeRedstone, "redstone", function(item, machine, data) {
-	data.isHeating = !data.isHeating;
-});
-*/
 Item.registerUseFunction("upgradeMFSU", function(coords, item, block, player) {
 	if (block.id == BlockID.storageMFE) {
 		let region = WorldRegion.getForActor(player);

@@ -40,33 +40,14 @@ const guiRecycler = InventoryWindow("Recycler", {
 });
 
 namespace Machine {
-	export class Recycler extends ElectricMachine {
-		defaultValues = {
-			energy: 0,
-			tier: 1,
-			energy_storage: 800,
-			energy_consume: 1,
-			work_time: 45,
-			progress: 0
-		}
-
+	export class Recycler extends ProcessingMachine {
+		defaultEnergyStorage = 800;
+		defaultEnergyDemand = 1;
+		defaultProcessTime = 45;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
-
-		defaultDrop = BlockID.machineBlockBasic;
 
 		getScreenByName() {
 			return guiRecycler;
-		}
-
-		getTier(): number {
-			return this.data.tier;
-		}
-
-		resetValues(): void {
-			this.data.tier = this.defaultValues.tier;
-			this.data.energy_storage = this.defaultValues.energy_storage;
-			this.data.energy_consume = this.defaultValues.energy_consume;
-			this.data.work_time = this.defaultValues.work_time;
 		}
 
 		setupContainer(): void {
@@ -77,16 +58,16 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.resetValues();
-			UpgradeAPI.executeUpgrades(this);
+			this.useUpgrades();
+			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
 			let sourceSlot = this.container.getSlot("slotSource");
 			let resultSlot = this.container.getSlot("slotResult");
 			if (sourceSlot.id > 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)) {
-				if (this.data.energy >= this.data.energy_consume) {
-					this.data.energy -= this.data.energy_consume;
-					this.data.progress += 1/this.data.work_time;
+				if (this.data.energy >= this.energyDemand) {
+					this.data.energy -= this.energyDemand;
+					this.data.progress += 1 / this.processTime;
 					newActive = true;
 				}
 				if (+this.data.progress.toFixed(3) >= 1) {
@@ -102,17 +83,11 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
 			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendChanges();
-		}
-
-		getEnergyStorage(): number {
-			return this.data.energy_storage;
 		}
 
 		getOperationSound(): string {

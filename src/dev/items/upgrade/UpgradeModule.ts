@@ -2,7 +2,7 @@ class UpgradeModule extends ItemCommon
 implements IUpgrade, ItemBehavior {
 	type: string;
 
-	constructor(stringID: string, name: string, type: string = name) {
+	constructor(stringID: string, name: string, type: string) {
 		super(stringID, `${name}_upgrade`, `upgrade_${name}`);
 		this.type = type;
 		UpgradeAPI.registerUpgrade(this.id, this);
@@ -22,7 +22,7 @@ implements IUpgrade, ItemBehavior {
 			case "transformer": {
 				return name + "§7\n" + Translation.translate("tooltip.upgrade.transformer");
 			}
-			case "energy_storage": {
+			case "energyStorage": {
 				let capacity = this.getExtraEnergyStorage(item, null);
 				return name + "§7\n" + Translation.translate("tooltip.upgrade.storage").replace("%s", ItemName.displayEnergy(capacity, false));
 			}
@@ -60,16 +60,16 @@ implements IUpgrade, ItemBehavior {
 	}
 
 	getExtraEnergyStorage(item: ItemInstance, machine: TileEntityBase): number {
-		if (this.type == "energy_storage") {
+		if (this.type == "energyStorage") {
 			return 10000;
 		}
 		return 0;
 	}
 
-	getRedstoneInput(item: ItemInstance, machine: TileEntityBase, signal: number): number {
+	modifyRedstone(item: ItemInstance, machine: TileEntityBase): boolean {
 		if (this.type == "redstone") {
-			return 15 - signal;
+			return true
 		}
-		return signal;
+		return false;
 	}
 }

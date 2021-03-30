@@ -24,22 +24,36 @@ namespace UpgradeAPI {
 		data[id] = upgrade;
 	}
 
-	export function getUpgrades(machine: TileEntity): UpgradeSet {
+	export function useUpgrades(machine: TileEntity): UpgradeSet {
 		return new UpgradeSet(machine);
 	}
 
+	/** @deprecated */
 	export function executeUpgrades(machine: TileEntity): UpgradeSet {
+		let upgrades = useUpgrades(machine);
+		// reverse compatibility with Advanced Machines
+		let data = machine.data;
+		if ("power_tier" in data) {
+			data.power_tier = upgrades.getTier(data.power_tier);
+		}
+		if ("energy_storage" in data) {
+			data.energy_storage = upgrades.getEnergyStorage(data.energy_storage);
+		}
+		if ("isHeating" in data) {
+			data.isHeating = upgrades.getRedstoneInput(data.isHeating);
+		}
 		StorageInterface.checkHoppers(machine);
-		return getUpgrades(machine);
+		return upgrades;
 	}
 
-	class UpgradeSet {
+	export class UpgradeSet {
 		tileEntity: TileEntity;
 		augmentation: number;
 		processTimeMultiplier: number;
 		energyDemandMultiplier: number;
 		extraEnergyStorage: number;
 		extraTier: number;
+		invertRedstone: boolean;
 
 		constructor(tileEntity: TileEntity) {
 			this.tileEntity = tileEntity;
@@ -92,6 +106,9 @@ namespace UpgradeAPI {
 			if ("getExtraTier" in upgrade) {
 				this.extraTier += upgrade.getExtraTier(stack, this.tileEntity) * stack.count;
 			}
+			if ("modifyRedstone" in upgrade) {
+				this.invertRedstone ||= upgrade.modifyRedstone(stack, this.tileEntity);
+			}
 			if ("onTick" in upgrade) {
 				upgrade.onTick(stack, this.tileEntity);
 			}
@@ -114,6 +131,13 @@ namespace UpgradeAPI {
 
 		getTier(defaultTier: number): number {
 			return Math.min(defaultTier + this.extraTier, 14);
+		}
+
+		getRedstoneInput(powered: boolean): boolean {
+			if (this.invertRedstone) {
+				return !powered;
+			}
+			return powered;
 		}
 	}
 }

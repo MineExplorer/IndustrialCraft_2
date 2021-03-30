@@ -47,17 +47,18 @@ namespace Machine {
 	export class InductionFurnace extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
-			tier: 2,
-			energy_storage: 10000,
 			progress: 0,
-			isHeating: false,
-			heat: 0,
-			signal: 0
+			heat: 0
 		}
 
+		energyDemand = 16;
+		defaultTier = 2;
+		defaultEnergyStorage = 10000;
+		defaultDrop = BlockID.machineBlockAdvanced;
 		upgrades = ["transformer", "energyStorage", "redstone", "itemEjector", "itemPulling"];
 
-		defaultDrop = BlockID.machineBlockAdvanced;
+		isHeating: boolean = false;
+		isPowered: boolean;
 
 		getScreenByName() {
 			return guiInductionFurnace;
@@ -78,15 +79,17 @@ namespace Machine {
 			}
 		}
 
-		resetValues(): void {
-			this.data.tier = this.defaultValues.tier;
-			this.data.energy_storage = this.defaultValues.energy_storage;
-			this.data.isHeating = this.data.signal > 0;
+		useUpgrades(): UpgradeAPI.UpgradeSet {
+			let upgrades = UpgradeAPI.useUpgrades(this);
+			this.tier = upgrades.getTier(this.defaultTier);
+			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
+			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
+			return upgrades;
 		}
 
 		onTick(): void {
-			this.resetValues();
-			UpgradeAPI.executeUpgrades(this);
+			this.useUpgrades();
+			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
 			let sourceSlot1 = this.container.getSlot("slotSource1");
@@ -96,8 +99,8 @@ namespace Machine {
 			let result1 = this.getRecipeResult(sourceSlot1.id, sourceSlot1.data);
 			let result2 = this.getRecipeResult(sourceSlot2.id, sourceSlot2.data);
 			if (this.checkResult(result1, resultSlot1) || this.checkResult(result2, resultSlot2)) {
-				if (this.data.energy >= 16 && this.data.progress < 100) {
-					this.data.energy -= 16;
+				if (this.data.energy >= this.energyDemand && this.data.progress < 100) {
+					this.data.energy -= this.energyDemand;
 					if (this.data.heat < 10000) {this.data.heat++;}
 					this.data.progress += this.data.heat / 1200;
 					newActive = true;
@@ -110,7 +113,7 @@ namespace Machine {
 			}
 			else {
 				this.data.progress = 0;
-				if (this.data.isHeating && this.data.energy > 0) {
+				if (this.isHeating && this.data.energy > 0) {
 					if (this.data.heat < 10000) {this.data.heat++;}
 					this.data.energy--;
 				}
@@ -120,22 +123,16 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
 			this.container.setScale("progressScale", this.data.progress / 100);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.setText("textInfo2", Math.floor(this.data.heat / 100) + "%");
 			this.container.sendChanges();
 		}
 
 		onRedstoneUpdate(signal: number): void {
-			this.data.signal = signal;
-		}
-
-		getEnergyStorage(): number {
-			return this.data.energy_storage;
+			this.isPowered = signal > 0;
 		}
 
 		getStartingSound(): string {

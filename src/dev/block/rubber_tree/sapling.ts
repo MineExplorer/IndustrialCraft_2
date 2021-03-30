@@ -63,7 +63,6 @@ Callback.addCallback("ItemUse", function(coords: Callback.ItemUseCoordinates, it
 		}
 		if (Math.random() < 0.25) {
 			let region = BlockSource.getDefaultForActor(player);
-			region.setBlock(coords.x, coords.y, coords.z, 0, 0);
 			RubberTreeGenerator.generateRubberTree(coords.x, coords.y, coords.z, region);
 		}
 	}

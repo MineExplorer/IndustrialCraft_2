@@ -1,6 +1,6 @@
 interface IUpgrade {
 	type: string;
-	getAugmentation?(item: ItemInstance, machine: TileEntity): number;
+	getSpeedModifier?(item: ItemInstance, machine: TileEntity): number;
 	getEnergyDemandMultiplier?(item: ItemInstance, machine: TileEntity): number;
 	getProcessTimeMultiplier?(item: ItemInstance, machine: TileEntity): number;
 	getExtraTier?(item: ItemInstance, machine: TileEntity): number;

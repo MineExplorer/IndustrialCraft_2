@@ -1,9 +1,11 @@
 /// <reference path="UpgradeModule.ts" />
 
-abstract class UpgradeTransporting extends UpgradeModule {
+abstract class UpgradeTransporting extends UpgradeModule
+implements ItemBehavior {
 	onNameOverride(item: ItemInstance, name: string) {
 		let sideName = Translation.translate(this.getSideName(item.data - 1));
-		return name + "§7\n" + Translation.translate(this.getTooltip()).replace("%s", sideName);
+		let tooltip = Translation.translate(this.getTooltip()).replace("%s", sideName);
+		return name + "§7\n" + tooltip;
 	}
 
 	getSideName(side: number): string {
@@ -33,7 +35,7 @@ abstract class UpgradeTransporting extends UpgradeModule {
 	}
 
 	onIconOverride(item: ItemInstance): Item.TextureData {
-		return {name: this.icon.name, meta: item.data}
+		return {name: this.icon.name, meta: item.data};
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {

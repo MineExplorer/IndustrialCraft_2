@@ -1,9 +1,7 @@
 /// <reference path="UpgradeTransporting.ts" />
 
 class UpgradeFluidEjector extends UpgradeTransporting {
-	constructor() {
-		super("upgradeFluidEjector", "fluid_ejector", "fluidEjector");
-	}
+	type = "fluidEjector";
 
 	getTooltip(): string {
 		return "tooltip.upgrade.ejector";

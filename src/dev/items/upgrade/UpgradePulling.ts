@@ -1,9 +1,7 @@
 /// <reference path="UpgradeTransporting.ts" />
 
 class UpgradePulling extends UpgradeTransporting {
-	constructor() {
-		super("upgradePulling", "pulling", "itemPulling");
-	}
+	type = "itemPulling";
 
 	getTooltip(): string {
 		return "tooltip.upgrade.pulling";

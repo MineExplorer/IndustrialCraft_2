@@ -27,21 +27,20 @@ extends ElectricTool {
 		let player = new PlayerEntity(playerUid);
 		for (let i = 9; i < 45; i++) {
 			let stack = player.getInventorySlot(i);
-			if (stack.id == 50) {
-				if (Block.isSolid(block.id)) {
-					region.setBlock(place, 50, (6 - coords.side)%6);
+			if (stack.id != 50) continue;
+			if (Block.isSolid(block.id)) {
+				region.setBlock(place, 50, (6 - coords.side)%6);
+			} else {
+				let blockID = region.getBlockId(place.x, place.y - 1, place.z);
+				if (Block.isSolid(blockID)) {
+					region.setBlock(place, 50, 5);
 				} else {
-					let blockID = region.getBlockId(place.x, place.y - 1, place.z);
-					if (Block.isSolid(blockID)) {
-						region.setBlock(place, 50, 5);
-					} else {
-						break;
-					}
+					break;
 				}
-				stack.decrease(1);
-				player.setInventorySlot(i, stack);
-				break;
 			}
+			stack.decrease(1);
+			player.setInventorySlot(i, stack);
+			break;
 		}
 	}
 

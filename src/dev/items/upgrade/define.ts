@@ -1,19 +1,19 @@
-/// <reference path="UpgradeModule.ts" />
+/// <reference path="UpgradeOverclocker.ts" />
+/// <reference path="UpgradeTransformer.ts" />
+/// <reference path="UpgradeEnergyStorage.ts" />
 /// <reference path="UpgradeEjector.ts" />
 /// <reference path="UpgradePulling.ts" />
 /// <reference path="UpgradeFluidEjector.ts" />
 /// <reference path="UpgradeFluidPulling.ts" />
 
-ItemRegistry.registerItem(new UpgradeModule("upgradeOverclocker", "overclocker", "overclocker"));
-ItemRegistry.registerItem(new UpgradeModule("upgradeTransformer", "transformer", "transformer"));
-ItemRegistry.registerItem(new UpgradeModule("upgradeEnergyStorage", "energy_storage", "energyStorage"));
+ItemRegistry.registerItem(new UpgradeOverclocker("upgradeOverclocker", "overclocker"));
+ItemRegistry.registerItem(new UpgradeTransformer("upgradeTransformer", "transformer"));
+ItemRegistry.registerItem(new UpgradeEnergyStorage("upgradeEnergyStorage", "energy_storage"));
 ItemRegistry.registerItem(new UpgradeModule("upgradeRedstone", "redstone_inv", "redstone"));
-ItemRegistry.registerItem(new UpgradeEjector());
-ItemRegistry.registerItem(new UpgradePulling());
-ItemRegistry.registerItem(new UpgradeFluidEjector());
-ItemRegistry.registerItem(new UpgradeFluidPulling());
-
-ItemRegistry.createItem("upgradeMFSU", {name: "mfsu_upgrade", icon: "mfsu_upgrade"});
+ItemRegistry.registerItem(new UpgradeEjector("upgradeEjector", "ejector"));
+ItemRegistry.registerItem(new UpgradePulling("upgradePulling", "pulling"));
+ItemRegistry.registerItem(new UpgradeFluidEjector("upgradeFluidEjector", "fluid_ejector"));
+ItemRegistry.registerItem(new UpgradeFluidPulling("upgradeFluidPulling", "fluid_pulling"));
 
 Item.addCreativeGroup("ic2_upgrade", Translation.translate("Machine Upgrades"), [
 	ItemID.upgradeOverclocker,
@@ -25,7 +25,6 @@ Item.addCreativeGroup("ic2_upgrade", Translation.translate("Machine Upgrades"), 
 	ItemID.upgradeFluidEjector,
 	ItemID.upgradeFluidPulling
 ]);
-
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: ItemID.upgradeOverclocker, count: 2, data: 0}, [
@@ -82,22 +81,5 @@ Callback.addCallback("PreLoaded", function() {
 		" # ",
 		"x x",
 	], ['x', ItemID.plateTin, -1, '#', ItemID.electricMotor, -1, 'c', ItemID.treetap, 0]);
-
-	Recipes.addShaped({id: ItemID.upgradeMFSU, count: 1, data: 0}, [
-		"aca",
-		"axa",
-		"aba"
-	], ['b', ItemID.bronzeWrench, 0, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, -1]);
 });
 
-Item.registerUseFunction("upgradeMFSU", function(coords, item, block, player) {
-	if (block.id == BlockID.storageMFE) {
-		let region = WorldRegion.getForActor(player);
-		let tile = region.getTileEntity(coords);
-		tile.selfDestroy();
-		region.setBlock(coords, BlockID.storageMFSU, tile.getFacing());
-		let newTile = region.addTileEntity(coords);
-		newTile.data = tile.data;
-		Entity.setCarriedItem(player, item.id, item.count - 1, 0);
-	}
-});

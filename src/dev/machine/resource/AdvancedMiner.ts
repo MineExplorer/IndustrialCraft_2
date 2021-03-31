@@ -117,7 +117,7 @@ namespace Machine {
 		setUpgradeStats(): void {
 			let upgrades = UpgradeAPI.useUpgrades(this);
 			this.tier = upgrades.getTier(this.defaultTier);
-			this.maxScanCount = 5 * (upgrades.augmentation + 1);
+			this.maxScanCount = 5 * upgrades.speedModifier;
 		}
 
 		onTick(): void {

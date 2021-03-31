@@ -48,7 +48,7 @@ namespace UpgradeAPI {
 
 	export class UpgradeSet {
 		tileEntity: TileEntity;
-		augmentation: number;
+		speedModifier: number;
 		processTimeMultiplier: number;
 		energyDemandMultiplier: number;
 		extraEnergyStorage: number;
@@ -62,7 +62,7 @@ namespace UpgradeAPI {
 		}
 
 		resetRates(): void {
-			this.augmentation = 0;
+			this.speedModifier = 1;
 			this.processTimeMultiplier = 1;
 			this.energyDemandMultiplier = 1;
 			this.extraEnergyStorage = 0;
@@ -91,23 +91,19 @@ namespace UpgradeAPI {
 		}
 
 		executeUprade(upgrade: IUpgrade, stack: ItemInstance) {
-			if ("getAugmentation" in upgrade) {
-				this.augmentation += upgrade.getAugmentation(stack, this.tileEntity) * stack.count;
-			}
-			if ("getProcessTimeMultiplier" in upgrade) {
+			if (upgrade.type == "overclocker") {
+				this.speedModifier += upgrade.getSpeedModifier(stack, this.tileEntity) * stack.count;
 				this.processTimeMultiplier *= Math.pow(upgrade.getProcessTimeMultiplier(stack, this.tileEntity), stack.count);
-			}
-			if ("getEnergyDemandMultiplier" in upgrade) {
 				this.energyDemandMultiplier *= Math.pow(upgrade.getEnergyDemandMultiplier(stack, this.tileEntity), stack.count);
 			}
-			if ("getExtraEnergyStorage" in upgrade) {
+			if (upgrade.type == "energyStorage") {
 				this.extraEnergyStorage += upgrade.getExtraEnergyStorage(stack, this.tileEntity) * stack.count;
 			}
-			if ("getExtraTier" in upgrade) {
+			if (upgrade.type == "transformer") {
 				this.extraTier += upgrade.getExtraTier(stack, this.tileEntity) * stack.count;
 			}
-			if ("modifyRedstone" in upgrade) {
-				this.invertRedstone ||= upgrade.modifyRedstone(stack, this.tileEntity);
+			if (upgrade.type == "redstone") {
+				this.invertRedstone = true;
 			}
 			if ("onTick" in upgrade) {
 				upgrade.onTick(stack, this.tileEntity);

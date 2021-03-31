@@ -46,20 +46,19 @@ Item.registerUseFunctionForID(BlockID.rubberTreeSapling, function(coords, item, 
 });
 
 // bone use
-Callback.addCallback("ItemUse", function(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal: boolean, player: number) {
-	if (IC2Config.getMinecraftVersion() == 11 ? (item.id == 351 && item.data == 15) : (item.id == VanillaItemID.bone_meal)) {
-		if (block.id == BlockID.rubberTreeSapling) {
-			Game.prevent();
-			if (Game.isItemSpendingAllowed(player)) {
-				Entity.setCarriedItem(player, item.id, item.count - 1, item.data);
-			}
-			let region = WorldRegion.getForActor(player);
-			if (Math.random() < 0.25) {
-				RubberTreeGenerator.growRubberTree(region.blockSource, coords.x, coords.y, coords.z);
-			}
-			if (IC2Config.getMinecraftVersion() == 11) {
-				region.sendPacketInRadius(coords, 64, "ic2.growPlantParticles", {x: coords.x, y: coords.y, z: coords.z});
-			}
+Callback.addCallback("ItemUse", function(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal: boolean, playerUid: number) {
+	if (block.id == BlockID.rubberTreeSapling && (item.id == 351 && item.data == 15 || item.id == VanillaItemID.bone_meal)) {
+		Game.prevent();
+		let region = WorldRegion.getForActor(playerUid);
+		let player = new PlayerEntity(playerUid);
+		if (player.getGameMode() != 1) {
+			player.setCarriedItem(item.id, item.count - 1, item.data);
+		}
+		if (player.getGameMode() == 1 || Math.random() < 0.25) {
+			RubberTreeGenerator.growRubberTree(region.blockSource, coords.x, coords.y, coords.z);
+		}
+		if (IC2Config.getMinecraftVersion() == 11) {
+			region.sendPacketInRadius(coords, 64, "ic2.growPlantParticles", {x: coords.x, y: coords.y, z: coords.z});
 		}
 	}
 });
@@ -69,6 +68,7 @@ Network.addClientPacket("ic2.growPlantParticles", function(data: {x: number, y: 
 		let px = data.x + Math.random();
 		let pz = data.z + Math.random();
 		let py = data.y + Math.random();
+		// TODO: fix particle type in new version
 		Particles.addParticle(ParticleType.happyVillager, px, py, pz, 0, 0, 0);
 	}
 });

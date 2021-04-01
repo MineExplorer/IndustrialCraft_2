@@ -136,26 +136,16 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, new FluidHeatGenerator());
 
-	StorageInterface.createInterface(BlockID.fluidHeatGenerator, {
+	MachineRegistry.createStorageInterface(BlockID.fluidHeatGenerator, {
 		slots: {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
-
 		isValidInput: function(item: ItemInstance) {
 			let empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
 			if (!empty) return false;
 			return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 		},
-
-		getLiquidStorage: function() {
-			return this.tileEntity.liquidTank;
-		},
-
-		canReceiveLiquid: function(liquid: string) {
-			return this.getLiquidStorage().isValidLiquid(liquid);
-		},
-
 		canTransportLiquid: () => false
 	});
 }

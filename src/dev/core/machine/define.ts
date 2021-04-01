@@ -79,6 +79,18 @@ namespace MachineRegistry {
 		this.registerElectricMachine(id, Prototype);
 	}
 
+	export function createStorageInterface(blockID: number, descriptor: StorageDescriptor) {
+		descriptor.liquidUnitRatio = 0.001;
+		descriptor.getLiquidStorage ??= function() {
+			return this.tileEntity.liquidTank;
+		}
+		descriptor.canReceiveLiquid ??= function(liquid: string) {
+			return this.getLiquidStorage().isValidLiquid(liquid);
+		}
+		descriptor.canTransportLiquid ??= () => true;
+		StorageInterface.createInterface(blockID, descriptor);
+	}
+
 	export function setStoragePlaceFunction(blockID: string | number, hasVerticalRotation?: boolean) {
 		Block.registerPlaceFunction(blockID, function(coords, item, block, player, blockSource) {
 			let region = new WorldRegion(blockSource);

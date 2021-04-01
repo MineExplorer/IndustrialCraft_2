@@ -268,7 +268,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.canner, new Canner());
 
-	StorageInterface.createInterface(BlockID.canner, {
+	MachineRegistry.createStorageInterface(BlockID.canner, {
 		slots: {
 			"slotSource": {input: true,
 				isValid: (item: ItemInstance, side: number, tileEntity: Machine.Canner) => {
@@ -283,7 +283,6 @@ namespace Machine {
 			"slotResult": {output: true}
 		},
 		canReceiveLiquid: () => true,
-		canTransportLiquid: () => true,
 		getLiquidStorage: function(name: string) {
 			if (name == "input") return this.tileEntity.inputTank;
 			return this.tileEntity.outputTank;

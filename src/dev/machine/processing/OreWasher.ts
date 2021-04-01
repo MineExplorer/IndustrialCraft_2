@@ -157,7 +157,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.oreWasher, new OreWasher());
 
-	StorageInterface.createInterface(BlockID.oreWasher, {
+	MachineRegistry.createStorageInterface(BlockID.oreWasher, {
 		slots: {
 			"slotSource": {input: true, isValid: (item: ItemInstance) => {
 					return MachineRecipeRegistry.hasRecipeFor("oreWasher", item.id, item.data);
@@ -170,12 +170,6 @@ namespace Machine {
 			"slotResult2": {output: true},
 			"slotResult3": {output: true}
 		},
-
-		getLiquidStorage: function() {
-			return this.tileEntity.liquidTank;
-		},
-
-		canReceiveLiquid: (liquid: string) => liquid == "water",
 		canTransportLiquid: () => false
 	});
 }

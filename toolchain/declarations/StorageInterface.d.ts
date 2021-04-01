@@ -5,6 +5,7 @@ interface StorageDescriptor {
     slots?: {
         [key: string]: SlotData;
     };
+    liquidUnitRatio?: number;
     isValidInput?(item: ItemInstance, side: number, tileEntity: TileEntity): boolean;
     addItem?(item: ItemInstance, side?: number, maxCount?: number): number;
     getInputSlots?(side?: number): string[] | number[];
@@ -52,6 +53,7 @@ declare class NativeContainerInterface implements Storage {
     clearContainer(): void;
 }
 declare class TileEntityInterface implements Storage {
+    readonly liquidUnitRatio: number;
     readonly slots?: {
         [key: string]: SlotData;
     };

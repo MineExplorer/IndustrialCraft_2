@@ -97,6 +97,7 @@ var NativeContainerInterface = /** @class */ (function () {
 /// <reference path="Storage.ts" />
 var TileEntityInterface = /** @class */ (function () {
     function TileEntityInterface(tileEntity) {
+        this.liquidUnitRatio = 1;
         this.isNativeContainer = false;
         this.tileEntity = tileEntity;
         this.container = tileEntity.container;
@@ -240,18 +241,18 @@ var TileEntityInterface = /** @class */ (function () {
         return this.tileEntity.liquidStorage.getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT;
     };
     TileEntityInterface.prototype.canTransportLiquid = function (liquid, side) {
-        return this.tileEntity.liquidStorage.getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT;
+        return true;
     };
     TileEntityInterface.prototype.addLiquid = function (liquid, amount) {
         var liquidStorage = this.getLiquidStorage("input");
         var storedLiquid = liquidStorage.getLiquidStored();
         if (!storedLiquid || storedLiquid == liquid) {
-            return liquidStorage.addLiquid(liquid, amount);
+            return liquidStorage.addLiquid(liquid, amount / this.liquidUnitRatio) * this.liquidUnitRatio;
         }
         return amount;
     };
     TileEntityInterface.prototype.getLiquid = function (liquid, amount) {
-        return this.getLiquidStorage("output").getLiquid(liquid, amount);
+        return this.getLiquidStorage("output").getLiquid(liquid, amount / this.liquidUnitRatio) * this.liquidUnitRatio;
     };
     TileEntityInterface.prototype.getLiquidStored = function (storageName) {
         return this.getLiquidStorage(storageName).getLiquidStored();
@@ -371,7 +372,7 @@ var StorageInterface;
             return new NativeContainerInterface(nativeTileEntity);
         }
         var tileEntity = World.getTileEntity(x, y, z, region);
-        if (tileEntity && tileEntity.container) {
+        if (tileEntity && tileEntity.container && tileEntity.__initialized) {
             return new TileEntityInterface(tileEntity);
         }
         return null;
@@ -380,7 +381,7 @@ var StorageInterface;
     /** Returns storage interface for TileEntity with liquid storage */
     function getLiquidStorage(region, x, y, z) {
         var tileEntity = World.getTileEntity(x, y, z, region);
-        if (tileEntity && tileEntity.liquidStorage) {
+        if (tileEntity && tileEntity.liquidStorage && tileEntity.__initialized) {
             return new TileEntityInterface(tileEntity);
         }
         return null;

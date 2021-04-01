@@ -172,21 +172,14 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.pump, new Pump());
 
-	StorageInterface.createInterface(BlockID.pump, {
+	MachineRegistry.createStorageInterface(BlockID.pump, {
 		slots: {
 			"slotLiquid1": {input: true},
 			"slotLiquid2": {output: true}
 		},
-
 		isValidInput: (item: ItemInstance) => (
 			!!LiquidItemRegistry.getFullItem(item.id, item.data, "water")
 		),
-
-		getLiquidStorage: function() {
-			return this.tileEntity.liquidTank;
-		},
-
-		canReceiveLiquid: () => false,
-		canTransportLiquid: () => true
+		canReceiveLiquid: () => false
 	});
 }

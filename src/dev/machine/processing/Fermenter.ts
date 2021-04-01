@@ -137,7 +137,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.icFermenter, new Fermenter());
 
-	StorageInterface.createInterface(BlockID.icFermenter, {
+	MachineRegistry.createStorageInterface(BlockID.icFermenter, {
 		slots: {
 			"slotBiomass0": {input: true},
 			"slotBiomass1": {output: true},
@@ -146,7 +146,6 @@ namespace Machine {
 			"slotFertilizer": {output: true}
 		},
 		canReceiveLiquid: (liquid: string) => liquid == "biomass",
-		canTransportLiquid: () => true,
 		getLiquidStorage: function(storage: string) {
 			return storage == "input" ? this.tileEntity.inputTank : this.tileEntity.outputTank;
 		}

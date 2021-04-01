@@ -97,21 +97,14 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.geothermalGenerator, new GeothermalGenerator());
 
-	StorageInterface.createInterface(BlockID.geothermalGenerator, {
+	MachineRegistry.createStorageInterface(BlockID.geothermalGenerator, {
 		slots: {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
-
 		isValidInput: (item: ItemInstance) => (
 			LiquidItemRegistry.getItemLiquid(item.id, item.data) == "lava"
 		),
-
-		getLiquidStorage: function() {
-			return this.tileEntity.liquidTank;
-		},
-
-		canReceiveLiquid: (liquid: string) => liquid == "lava",
 		canTransportLiquid: (liquid: string) => false
 	});
 }

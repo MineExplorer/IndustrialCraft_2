@@ -78,7 +78,7 @@ namespace Machine {
 	MachineRegistry.registerPrototype(BlockID.tank, new FluidTank());
 }
 
-StorageInterface.createInterface(BlockID.tank, {
+MachineRegistry.createStorageInterface(BlockID.tank, {
 	slots: {
 		"slotLiquid1": {input: true, isValid: (item: ItemInstance) => {
 			return !!LiquidItemRegistry.getEmptyItem(item.id, item.data);
@@ -88,11 +88,5 @@ StorageInterface.createInterface(BlockID.tank, {
 		}},
 		"slotOutput": {output: true}
 	},
-
-	getLiquidStorage: function() {
-		return this.tileEntity.liquidTank;
-	},
-
-	canReceiveLiquid: () => true,
-	canTransportLiquid: () => true
+	canReceiveLiquid: () => true
 });

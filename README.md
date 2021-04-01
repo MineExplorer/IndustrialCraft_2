@@ -17,9 +17,8 @@ Join our [Discord server](https://discord.gg/jPFntnP)!
 
 ### Building
 1. Clone repository
-2. Download mod toolchain (https://github.com/zheka2304/innercore-mod-toolchain)
-2. Install toolchain manually: extract files from toolchain-mod folder into repository without replacing existing files
-4. Build using Build Everything task in VS Code (Ctrl+Shift+B)
+2. Build repository using 'Build Everything' task in VS Code (Ctrl+Shift+B)
+3. You're ready to work! Run 'Build and Push Everything' task to test your changes on phone.
 
 ## Note
 I'm not associated with IC2 developer team which develops original mod for PC, this is unofficial port of their mod to Minecraft on Android.

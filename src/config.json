@@ -1,6 +1,6 @@
 {
   "enabled": true,
-  "debug_mode": true,
+  "debug_mode": false,
   "sound_enabled": true,
   "machine_sounds": true,
   "voltage_enabled": true,

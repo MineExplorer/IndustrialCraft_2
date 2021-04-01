@@ -29,6 +29,10 @@ namespace Machine {
 			timer: 300
 		}
 
+		getScreenName(): string {
+			return null;
+		}
+
 		explode(radius: number): void {
 			SoundManager.playSound("NukeExplosion.ogg");
 			let entities = Entity.getAll();
@@ -71,7 +75,7 @@ namespace Machine {
 			this.sendPacket("explodeAnimation", {rad: radius});
 		}
 
-		tick(): void {
+		onTick(): void {
 			if (this.data.activated) {
 				if (this.data.timer <= 0) {
 					this.explode(20);

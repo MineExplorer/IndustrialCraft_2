@@ -108,7 +108,7 @@ Recipes.addShaped({id: ItemID.nightvisionGoggles, count: 1, data: ELECTRIC_ITEM_
 	"xbx",
 	"aga",
 	"rcr"
-], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'x', ItemID.heatExchangerAdv, 1, 'g', 20, 0,'r', ItemID.rubber, 0], ChargeItemRegistry.transferEnergy);
+], ['a', BlockID.luminator, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, 0, 'x', ItemID.heatExchangerAdv, 1, 'g', 20, 0, 'r', ItemID.rubber, 0], ChargeItemRegistry.transferEnergy);
 
 // Nano Suit
 Recipes.addShaped({id: ItemID.nanoHelmet, count: 1, data: ELECTRIC_ITEM_MAX_DAMAGE}, [

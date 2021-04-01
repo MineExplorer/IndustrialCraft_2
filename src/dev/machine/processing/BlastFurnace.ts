@@ -51,14 +51,14 @@ namespace Machine {
 			progress: 0,
 			air: 0,
 			sourceID: 0,
-			isHeating: false,
 			heat: 0,
-			signal: 0
 		}
 
+		defaultDrop = BlockID.machineBlockBasic;
 		upgrades = ["redstone", "itemEjector", "itemPulling"]
 
-		defaultDrop = BlockID.machineBlockBasic;
+		isHeating: boolean = false;
+		isPowered: boolean;
 
 		getScreenByName() {
 		   return guiBlastFurnace;
@@ -71,6 +71,10 @@ namespace Machine {
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
 			});
+		}
+
+		isWrenchable(): boolean {
+			return true;
 		}
 
 		getRecipeResult(id: number): {result: number[], duration: number} {
@@ -118,26 +122,14 @@ namespace Machine {
 			return false;
 		}
 
-		@ContainerEvent(Side.Client)
-		showAirImage(container: ItemContainer, window: any, content: any, data: {show: boolean}): void {
-			if (content) {
-				if (data.show && !content.elements["indicatorAir"])
-					content.elements["indicatorAir"] = {type: "image", x: 344 + 128*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
-				else
-					content.elements["indicatorAir"] = null;
-			}
+		useUpgrades(): void {
+			let upgrades = UpgradeAPI.useUpgrades(this);
+			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
 		}
 
-		@ContainerEvent(Side.Client)
-		setIndicator(container: ItemContainer, window: any, content: any, data: string): void {
-			if (content) {
-				content.elements["indicator"].bitmap = "indicator_" + data;
-			}
-		}
-
-		tick(): void {
-			this.data.isHeating = this.data.signal > 0;
-			UpgradeAPI.executeUpgrades(this);
+		onTick(): void {
+			this.useUpgrades();
+			StorageInterface.checkHoppers(this);
 
 			let maxHeat = this.getMaxHeat();
 			this.data.heat = Math.min(this.data.heat, maxHeat);
@@ -186,7 +178,7 @@ namespace Machine {
 		}
 
 		onRedstoneUpdate(signal: number): void {
-			this.data.signal = signal > 0;
+			this.isPowered = signal > 0;
 		}
 
 		canReceiveHeat(side: number): boolean {
@@ -203,8 +195,21 @@ namespace Machine {
 			return 0;
 		}
 
-		isWrenchable(): boolean {
-			return true;
+		@ContainerEvent(Side.Client)
+		showAirImage(container: ItemContainer, window: any, content: any, data: {show: boolean}): void {
+			if (content) {
+				if (data.show && !content.elements["indicatorAir"])
+					content.elements["indicatorAir"] = {type: "image", x: 344 + 128*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
+				else
+					content.elements["indicatorAir"] = null;
+			}
+		}
+
+		@ContainerEvent(Side.Client)
+		setIndicator(container: ItemContainer, window: any, content: any, data: string): void {
+			if (content) {
+				content.elements["indicator"].bitmap = "indicator_" + data;
+			}
 		}
 	}
 

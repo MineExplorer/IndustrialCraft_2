@@ -70,10 +70,10 @@ declare class WorldRegion {
      */
     getDimension(): number;
     /**
-     * @returns Tile object with id and data propeties of the block at coords
+     * @returns BlockState object of the block at coords
      */
-    getBlock(coords: Vector): Tile;
-    getBlock(x: number, y: number, z: number): Tile;
+    getBlock(coords: Vector): BlockState;
+    getBlock(x: number, y: number, z: number): BlockState;
     /**
      * @returns block's id at coords
      */
@@ -89,8 +89,10 @@ declare class WorldRegion {
      * @param id - id of the block to set
      * @param data - data of the block to set
      */
-    setBlock(coords: Vector, id: number, data: number): number;
-    setBlock(x: number, y: number, z: number, id: number, data: number): number;
+    setBlock(coords: Vector, state: BlockState): void;
+    setBlock(coords: Vector, id: number, data: number): void;
+    setBlock(x: number, y: number, z: number, state: BlockState): void;
+    setBlock(x: number, y: number, z: number, id: number, data: number): void;
     /**
      * Destroys block on coords producing appropriate drop and particles.
      * @param drop whether to provide drop for the block or not
@@ -231,6 +233,12 @@ declare class WorldRegion {
      * @param pitch sound pitch, from 0 to 1. Default is 1.
      */
     playSoundAtEntity(ent: number, name: string, volume?: number, pitch?: number): void;
+    /**
+     * Sends network packet for players in a radius from specified coords
+     * @param packetName name of the packet to send
+     * @param data packet data object
+     */
+    sendPacketInRadius(coords: Vector, radius: number, packetName: string, data: object): void;
 }
 declare class PlayerEntity {
     actor: PlayerActor;
@@ -554,6 +562,8 @@ declare enum EnumRarity {
     EPIC = 3
 }
 declare namespace ItemRegistry {
+    export function isBlock(id: number): boolean;
+    export function isItem(id: number): boolean;
     export function getInstanceOf(itemID: string | number): Nullable<ItemBase>;
     /**
      * @returns EnumRarity value for item
@@ -608,7 +618,7 @@ declare namespace ItemRegistry {
     interface ToolDescription {
         name: string;
         icon: string | Item.TextureData;
-        material: string;
+        material: string | ToolAPI.ToolMaterial;
         inCreative?: boolean;
         category?: number;
         glint?: boolean;
@@ -691,6 +701,11 @@ declare abstract class TileEntityBase implements TileEntity {
      * @returns true if should prevent opening UI.
     */
     onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean;
+    private _clickPrevented;
+    /**
+     * Prevents all actions on click
+     */
+    preventClick(): void;
     onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean;
     destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void;
     redstone(params: {
@@ -715,4 +730,71 @@ declare abstract class TileEntityBase implements TileEntity {
         liquid: string;
         amount: number;
     }): void;
+}
+/**
+ * Registry for liquid storage items. Compatible with LiquidRegistry.
+ */
+declare namespace LiquidItemRegistry {
+    /**
+     * @amount liquid amount able to extract
+     */
+    type EmptyData = {
+        id: number;
+        data: number;
+        liquid: string;
+        amount: number;
+        storage?: number;
+    };
+    /**
+     * @amount free liquid amount
+     */
+    type FullData = {
+        id: number;
+        data: number;
+        amount: number;
+        storage?: number;
+    };
+    export let EmptyByFull: {};
+    export let FullByEmpty: {};
+    /**
+     * Registers liquid storage item
+     * @param liquid liquid name
+     * @param emptyId empty item id
+     * @param fullId id of item with luquid
+     * @param storage capacity of liquid in mB
+     */
+    export function registerItem(liquid: string, emptyId: number, fullId: number, storage: number): void;
+    export function getItemLiquid(id: number, data: number): string;
+    export function getEmptyItem(id: number, data: number): EmptyData;
+    export function getFullItem(id: number, data: number, liquid: string): FullData;
+    export {};
+}
+declare namespace BlockEngine {
+    class LiquidTank {
+        tileEntity: TileEntity;
+        readonly name: string;
+        limit: number;
+        liquids: object;
+        data: {
+            liquid: string;
+            amount: number;
+        };
+        constructor(tileEntity: TileEntity, name: string, limit: number, liquids?: string[]);
+        setParent(tileEntity: TileEntity): void;
+        getLiquidStored(): string;
+        getLimit(): number;
+        isValidLiquid(liquid: string): boolean;
+        setValidLiquids(liquids: string[]): void;
+        getAmount(liquid?: string): number;
+        setAmount(liquid: string, amount: number): void;
+        getRelativeAmount(): number;
+        addLiquid(liquid: string, amount: number): number;
+        getLiquid(amount: number): number;
+        getLiquid(liquid: string, amount: number): number;
+        isFull(): boolean;
+        isEmpty(): boolean;
+        addLiquidToItem(inputSlot: ItemContainerSlot, outputSlot: ItemContainerSlot): boolean;
+        getLiquidFromItem(inputSlot: ItemContainerSlot, outputSlot: ItemContainerSlot): boolean;
+        updateUiScale(scale: string): void;
+    }
 }

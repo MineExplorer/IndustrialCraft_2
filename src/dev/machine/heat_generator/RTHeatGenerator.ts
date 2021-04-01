@@ -44,7 +44,7 @@ namespace Machine {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id) => (id == ItemID.rtgPellet));
 		}
 
-		tick(): void {
+		calculateOutput(): number {
 			let output = 1;
 			for (let i = 0; i < 6; i++) {
 				let slot = this.container.getSlot("slot"+i);
@@ -52,19 +52,28 @@ namespace Machine {
 					output *= 2;
 				}
 			}
-			if (output < 2) output = 0;
-			let maxOutput = output;
+			return output > 1 ? output : 0;
+		}
 
-			if (output > 0) {
-				output = this.spreadHeat(output);
-			}
-
-			this.setActive(output > 0);
+		getOutputText(output: number): string {
 			let outputText = output.toString();
 			for (let i = outputText.length; i < 6; i++) {
 				outputText += " ";
 			}
-			this.container.setText("textInfo1", outputText + "/");
+			return outputText;
+		}
+
+		onTick(): void {
+			let output = this.calculateOutput();
+			let maxOutput = output;
+
+			let isActive = output > 0;
+			if (isActive) {
+				output = this.spreadHeat(output);
+			}
+			this.setActive(isActive);
+
+			this.container.setText("textInfo1", this.getOutputText(output) + "/");
 			this.container.setText("textInfo2", maxOutput);
 			this.container.sendChanges();
 		}

@@ -25,6 +25,10 @@ namespace Machine {
 
 		defaultDrop = BlockID.machineBlockAdvanced;
 
+		getScreenName(): string {
+			return null;
+		}
+
 		getNearestStorages(): TileEntity[] {
 			let storages = [];
 			for (let side = 0; side < 6; side++) {
@@ -62,7 +66,7 @@ namespace Machine {
 			return entities;
 		}
 
-		tick(): void {
+		onTick(): void {
 			if (World.getThreadTime() % 11 == 0 && this.data.isActive && this.data.frequency) {
 				let storages = this.getNearestStorages();
 				let energyAvailable = 0;
@@ -80,7 +84,7 @@ namespace Machine {
 						if (!weight) continue;
 
 						let energyNeed = weight * receive.energy;
-						if (ConfigIC.debugMode) Debug.m(energyNeed);
+						if (IC2Config.debugMode) Debug.m(energyNeed);
 						if (energyNeed <= energyAvailable) {
 							for (let i in storages) {
 								let data = storages[i].data;
@@ -102,10 +106,6 @@ namespace Machine {
 			let isActive = signal > 0;
 			this.data.isActive = isActive
 			this.setActive(isActive);
-		}
-
-		onItemUse(): boolean {
-			return true;
 		}
 	}
 

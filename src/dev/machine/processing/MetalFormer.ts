@@ -107,36 +107,35 @@ namespace Machine {
 	export class MetalFormer extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,
-			tier: 1,
-			energy_storage: 4000,
-			energy_consume: 10,
-			work_time: 200,
 			progress: 0,
 			mode: 0
 		}
 
+		defaultEnergyStorage = 4000;
+		defaultEnergyDemand = 10;
+		defaultProcessTime = 200;
 		upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
 		getScreenByName() {
 			return guiMetalFormer;
 		}
 
-		getRecipeResult(id: number) {
+		getRecipeResult(id: number): MachineRecipeRegistry.RecipeData {
 			return MachineRecipeRegistry.getRecipeResult("metalFormer" + this.data.mode, id);
 		}
 
-		tick(): void {
-			this.resetValues();
-			UpgradeAPI.executeUpgrades(this);
+		onTick(): void {
+			this.useUpgrades();
+			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
 			let sourceSlot = this.container.getSlot("slotSource");
 			let resultSlot = this.container.getSlot("slotResult");
 			let result = this.getRecipeResult(sourceSlot.id);
 			if (result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
-				if (this.data.energy >= this.data.energy_consume) {
-					this.data.energy -= this.data.energy_consume;
-					this.data.progress += 1/this.data.work_time;
+				if (this.data.energy >= this.energyDemand) {
+					this.data.energy -= this.energyDemand;
+					this.data.progress += 1 / this.processTime;
 					newActive = true;
 				}
 				if (+this.data.progress.toFixed(3) >= 1) {
@@ -150,12 +149,10 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
 			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendEvent("setModeIcon", {mode: this.data.mode});
 			this.container.sendChanges();
 		}

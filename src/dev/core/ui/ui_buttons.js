@@ -6,7 +6,7 @@ Callback.addCallback("NativeGuiChanged", function(screenName) {
 	}
 });
 
-var button_scale = ConfigIC.getInt("button_scale");
+var button_scale = IC2Config.getInt("button_scale");
 var UIbuttons = {
 	data: {},
 	onSwitch: {},
@@ -254,7 +254,7 @@ Callback.addCallback("LocalTick", function() {
 			}
 			playSound = true;
 		}
-		if (playSound && ConfigIC.soundEnabled) {
+		if (playSound && IC2Config.soundEnabled) {
 			if (hoverMode) {
 				SoundManager.startPlaySound(SourceType.ENTITY, Player.get(), "JetpackLoop.ogg", 0.8);
 			} else {

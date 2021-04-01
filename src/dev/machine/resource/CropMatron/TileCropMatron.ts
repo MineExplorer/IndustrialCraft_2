@@ -1,5 +1,6 @@
 namespace Machine {
 	export class CropMatron extends ElectricMachine {
+		liquidTank: BlockEngine.LiquidTank;
 		defaultValues = {
 			energy: 0,
 			scanX: -5,
@@ -12,33 +13,33 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit("water", 2);
+			this.liquidTank = this.addLiquidTank("fluid", 2000, ["water"]);
+
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
-				if (name == "slotWaterIn") return LiquidLib.getItemLiquid(id, data) == "water";
+				if (name == "slotWaterIn") return LiquidItemRegistry.getItemLiquid(id, data) == "water";
 				if (name.startsWith("slotFertilizer")) return id == ItemID.fertilizer;
 				if (name.startsWith("slotWeedEx")) return id == ItemID.weedEx;
 				return false;
 			});
 		}
 
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
-			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
-		}
-
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				return this.getLiquidFromItem("water", item, new ItemStack(), true);
+				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
+					this.preventClick();
+					return true;
+				}
 			}
 			return super.onItemUse(coords, item, player);
 		}
 
-		tick(): void {
+		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
 			let slot1 = this.container.getSlot("slotWaterIn");
 			let slot2 = this.container.getSlot("slotWaterOut");
-			this.getLiquidFromItem("water", slot1, slot2);
+			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			if (this.data.energy >= 31) {
 				this.scan();
@@ -47,12 +48,10 @@ namespace Machine {
 				this.setActive(false);
 			}
 
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
-			this.updateLiquidScale("liquidScale", "water");
+			this.liquidTank.updateUiScale("liquidScale");
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendChanges();
 		}
 
@@ -79,11 +78,11 @@ namespace Machine {
 					this.decreaseSlot(slotFertilizer, 1);
 					this.data.energy -= 10;
 				}
-				let liquidAmount = this.liquidStorage.getAmount("water");
+				let liquidAmount = this.liquidTank.getAmount("water");
 				if (liquidAmount > 0) {
 					let amount = tileentity.applyHydration(liquidAmount);
 					if (amount > 0) {
-						this.liquidStorage.getLiquid("water", amount / 1000);
+						this.liquidTank.getLiquid(amount);
 					}
 				}
 				var stack = new ItemStack(weedExSlot);

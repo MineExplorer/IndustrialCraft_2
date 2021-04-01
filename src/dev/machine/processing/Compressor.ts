@@ -87,22 +87,15 @@ const guiCompressor = InventoryWindow("Compressor", {
 
 namespace Machine {
 	export class Compressor extends ProcessingMachine {
-		defaultValues = {
-			energy: 0,
-			tier: 1,
-			energy_storage: 1200,
-			energy_consume: 2,
-			work_time: 400,
-			progress: 0
-		}
-
+		defaultEnergyDemand = 2;
+		defaultProcessTime = 400;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
 		getScreenByName() {
 			return guiCompressor;
 		}
 
-		getRecipeResult(id: number, data: number) {
+		getRecipeResult(id: number, data: number): MachineRecipeRegistry.RecipeData {
 			return MachineRecipeRegistry.getRecipeResult("compressor", id, data);
 		}
 

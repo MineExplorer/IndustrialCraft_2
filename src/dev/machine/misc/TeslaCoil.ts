@@ -20,11 +20,15 @@ namespace Machine {
 			isActive: false
 		}
 
+		getScreenName(): string {
+			return null;
+		}
+
 		getTier(): number {
 			return 3;
 		}
 
-		tick(): void {
+		onTick(): void {
 			if (this.data.energy >= 400 && this.data.isActive) {
 				if (World.getThreadTime()%32 == 0) {
 					let entities = Entity.getAll();
@@ -57,10 +61,6 @@ namespace Machine {
 
 		getEnergyStorage(): number {
 			return 10000;
-		}
-
-		onItemUse(): boolean {
-			return true;
 		}
 	}
 

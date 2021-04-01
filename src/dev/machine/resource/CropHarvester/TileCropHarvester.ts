@@ -9,21 +9,30 @@ namespace Machine {
 			scanZ: -5
 		};
 
+		defaultTier = 1;
+		defaultEnergyStorage = 10000;
+		defaultDrop = BlockID.machineBlockBasic;
 		upgrades = ["transformer", "energyStorage", "itemEjector"];
 
-		defaultDrop = BlockID.machineBlockBasic;
+		tier: number;
+		energyStorage: number;
 
 		getScreenByName() {
 			return guiCropHarvester;
 		}
 
 		getTier(): number {
-			return this.data.tier;
+			return this.tier;
 		}
 
-		resetValues(): void {
-			this.data.tier = this.defaultValues.tier;
-			this.data.energy_storage = this.defaultValues.energy_storage;
+		getEnergyStorage(): number {
+			return this.energyStorage;
+		}
+
+		useUpgrades(): void {
+			let upgrades = UpgradeAPI.useUpgrades(this);
+			this.tier = upgrades.getTier(this.defaultTier);
+			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 		}
 
 		setupContainer(): void {
@@ -33,19 +42,14 @@ namespace Machine {
 			});
 		}
 
-		tick(): void {
-			this.resetValues();
-			UpgradeAPI.executeUpgrades(this);
+		onTick(): void {
+			this.useUpgrades();
 			StorageInterface.checkHoppers(this);
 
 			if (this.data.energy > 100) this.scan();
-
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
-			this.container.validateAll();
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendChanges();
 		}
 
@@ -102,10 +106,6 @@ namespace Machine {
 				if (!slot.id || slot.count < maxStack) return false;
 			}
 			return true;
-		}
-
-		getEnergyStorage(): number {
-			return this.data.energy_storage;
 		}
 	}
 }

@@ -83,7 +83,7 @@ namespace Machine {
 			return 0;
 		}
 
-		tick(): void {
+		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
 			this.data.output = 0;

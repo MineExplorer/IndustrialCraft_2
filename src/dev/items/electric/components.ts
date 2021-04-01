@@ -59,13 +59,13 @@ Callback.addCallback("PreLoaded", function() {
 		"acs",
 		"axe",
 		"acs"
-	], ['x', ItemID.circuitBasic, 0, 'e', ItemID.electricMotor, 0,  'a', ItemID.storageBattery, -1, 's', ItemID.casingIron, 0, 'c', ItemID.cableCopper0, 0]);
+	], ['x', ItemID.circuitBasic, 0, 'e', ItemID.electricMotor, 0, 'a', ItemID.storageBattery, -1, 's', ItemID.casingIron, 0, 'c', ItemID.cableCopper0, 0]);
 
 	Recipes.addShaped({id: ItemID.powerUnitSmall, count: 1, data: 0}, [
 		" cs",
 		"axe",
 		" cs"
-	], ['x', ItemID.circuitBasic, 0, 'e', ItemID.electricMotor, 0,  'a', ItemID.storageBattery, -1, 's', ItemID.casingIron, 0, 'c', ItemID.cableCopper0, 0]);
+	], ['x', ItemID.circuitBasic, 0, 'e', ItemID.electricMotor, 0, 'a', ItemID.storageBattery, -1, 's', ItemID.casingIron, 0, 'c', ItemID.cableCopper0, 0]);
 
 	Recipes.addShaped({id: ItemID.heatConductor, count: 1, data: 0}, [
 		"aсa",

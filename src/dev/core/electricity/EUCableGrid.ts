@@ -1,6 +1,6 @@
 class EUCableGrid extends EnergyGrid {
 	onOverload(voltage: number): void {
-		if (ConfigIC.voltageEnabled) {
+		if (IC2Config.voltageEnabled) {
 			for (let key in this.blocksMap) {
 				let coords = key.split(':');
 				// @ts-ignore

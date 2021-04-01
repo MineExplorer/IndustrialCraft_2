@@ -62,7 +62,7 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("matterSlot", () => 0);
 		}
 
-		tick(): void {
+		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
 			if (this.data.isEnabled && this.data.energy > 0) {

@@ -79,7 +79,7 @@ namespace Machine {
 			tile.data = this.data;
 		}
 
-		tick(): void {
+		onTick(): void {
 			if (this.data.isActive && this.data.energy >= 0.25) {
 				this.setBlock(BlockID.luminator_on)
 			}
@@ -94,7 +94,7 @@ namespace Machine {
 			return true;
 		}
 
-		tick(): void {
+		onTick(): void {
 			if (this.data.energy < 0.25) {
 				this.setBlock(BlockID.luminator);
 			} else {

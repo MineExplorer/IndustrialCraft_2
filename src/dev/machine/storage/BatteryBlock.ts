@@ -45,7 +45,7 @@ namespace Machine {
 			return false;
 		}
 
-		tick(): void {
+		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
 			this.dischargeSlot("slot2");
@@ -67,10 +67,6 @@ namespace Machine {
 
 		getEnergyStorage(): number {
 			return this.capacity;
-		}
-
-		isEnergySource(): boolean {
-			return true;
 		}
 
 		canReceiveEnergy(side: number): boolean {

@@ -41,6 +41,7 @@ const guiSemifluidGenerator = InventoryWindow("Semifluid Generator", {
 
 namespace Machine {
 	export class FluidGenerator extends Generator {
+		liquidTank: BlockEngine.LiquidTank;
 		defaultValues = {
 			energy: 0,
 			fuel: 0,
@@ -52,16 +53,19 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit(null, 10);
+			let liquidFuel = MachineRecipeRegistry.requireRecipesFor("fluidFuel");
+			this.liquidTank = this.addLiquidTank("fluid", 10000, Object.keys(liquidFuel));
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
 			});
+
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				let empty = LiquidLib.getEmptyItem(id, data);
+				let empty = LiquidItemRegistry.getEmptyItem(id, data);
 				if (!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			});
+
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
 
@@ -69,31 +73,28 @@ namespace Machine {
 			return MachineRecipeRegistry.getRecipeResult("fluidFuel", liquid);
 		}
 
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
-			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
-		}
-
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				let liquid = this.liquidStorage.getLiquidStored();
-				return this.getLiquidFromItem(liquid, item, new ItemStack(), true);
+				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
+					this.preventClick();
+					return true;
+				}
 			}
 			return super.onItemUse(coords, item, player);
 		}
 
-		tick(): void {
+		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
-			let liquid = this.liquidStorage.getLiquidStored();
 			let slot1 = this.container.getSlot("slot1");
 			let slot2 = this.container.getSlot("slot2");
-			this.getLiquidFromItem(liquid, slot1, slot2);
+			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
-			const energyStorage = this.getEnergyStorage();
 			if (this.data.fuel <= 0) {
+				let liquid = this.liquidTank.getLiquidStored();
 				let fuel = this.getFuel(liquid);
-				if (fuel && this.liquidStorage.getAmount(liquid).toFixed(3) as any >= fuel.amount/1000 && this.data.energy + fuel.power * fuel.amount <= energyStorage) {
-					this.liquidStorage.getLiquid(liquid, fuel.amount/1000);
+				if (fuel && this.liquidTank.getAmount() >= fuel.amount && this.data.energy + fuel.power * fuel.amount <= this.getEnergyStorage()) {
+					this.liquidTank.getLiquid(fuel.amount);
 					this.data.fuel = fuel.amount;
 					this.data.liquid = liquid;
 				}
@@ -101,7 +102,7 @@ namespace Machine {
 			if (this.data.fuel > 0) {
 				let fuel = this.getFuel(this.data.liquid);
 				this.data.energy += fuel.power;
-				this.data.fuel -= fuel.amount/20;
+				this.data.fuel -= fuel.amount / 20;
 				this.setActive(true);
 			}
 			else {
@@ -110,8 +111,8 @@ namespace Machine {
 			}
 
 			this.chargeSlot("slotEnergy");
-			this.updateLiquidScale("liquidScale", liquid);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.liquidTank.updateUiScale("liquidScale");
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.sendChanges();
 		}
 
@@ -126,17 +127,16 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.semifluidGenerator, new FluidGenerator());
 
-	StorageInterface.createInterface(BlockID.semifluidGenerator, {
+	MachineRegistry.createStorageInterface(BlockID.semifluidGenerator, {
 		slots: {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => {
-			let empty = LiquidLib.getEmptyItem(item.id, item.data);
+		isValidInput: function(item: ItemInstance) {
+			let empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
 			if (!empty) return false;
-			return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+			return this.canReceiveLiquid(empty.liquid);
 		},
-		canReceiveLiquid: (liquid: string) => MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid),
-		canTransportLiquid: (liquid: string) => false
+		canTransportLiquid: () => false
 	});
 }

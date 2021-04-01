@@ -173,4 +173,11 @@ Callback.addCallback("PreLoaded", function() {
 	}
 
 	Recipes.addShapeless({id: ItemID.icPainter16, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 19}]);
+
+	// MFSU Upgrade Kit
+	Recipes.addShaped({id: ItemID.upgradeMFSU, count: 1, data: 0}, [
+        "aca",
+        "axa",
+        "aba"
+    ], ['b', ItemID.bronzeWrench, 0, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, -1]);
 });

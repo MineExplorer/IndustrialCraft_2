@@ -14,13 +14,15 @@ Callback.addCallback("PreLoaded", function() {
 
 const guiTank = InventoryWindow("Tank", {
 	drawing: [
-		{type: "bitmap", x: 611, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 46*GUI_SCALE, y: 50 + 12*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE},
+		{type: "bitmap", x: 400 + 80*GUI_SCALE, y: 159, bitmap: "liquid_bar_arrow", scale: GUI_SCALE}
 	],
 
 	elements: {
-		"liquidScale": {type: "scale", x: 400 + 70*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"slotLiquid1": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 16*GUI_SCALE},
-		"slotLiquid2": {type: "slot", x: 400 + 94*GUI_SCALE, y: 50 + 40*GUI_SCALE},
+		"liquidScale": {type: "scale", x: 400 + 50*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+		"slotLiquid1": {type: "slot", x: 400 + 74*GUI_SCALE, y: 95},
+		"slotLiquid2": {type: "slot", x: 400 + 74*GUI_SCALE, y: 203},
+		"slotOutput": {type: "slot", x: 400 + 106*GUI_SCALE, y: 149},
 		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE},
 		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE},
 		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE},
@@ -30,6 +32,7 @@ const guiTank = InventoryWindow("Tank", {
 
 namespace Machine {
 	export class FluidTank extends MachineBase {
+		liquidTank: BlockEngine.LiquidTank;
 		upgrades = ["fluidEjector", "fluidPulling"];
 
 		getScreenByName() {
@@ -37,47 +40,37 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit(null, 16);
+			this.liquidTank = this.addLiquidTank("fluid", 16000);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name == "slotLiquid1") {
-					return !!(LiquidRegistry.getFullItem(id, data, "water") || LiquidLib.getEmptyItem(id, data));
-				}
-				if (name == "slotLiquid2") return false;
+				if (name == "slotLiquid1") return !!LiquidItemRegistry.getEmptyItem(id, data);
+				if (name == "slotLiquid2") return !!LiquidRegistry.getFullItem(id, data, "water");
+				if (name == "slotOutput") return false;
 				return UpgradeAPI.isValidUpgrade(id, this);
 			});
 		}
 
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean): boolean {
-			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
-		}
-
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				let liquid = this.liquidStorage.getLiquidStored();
-				return this.getLiquidFromItem(liquid, item, new ItemStack());
+				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
+					this.preventClick();
+					return true;
+				}
 			}
 			return super.onItemUse(coords, item, player);
 		}
 
-		tick(): void {
-			UpgradeAPI.executeUpgrades(this);
+		onTick(): void {
+			UpgradeAPI.useUpgrades(this);
+			StorageInterface.checkHoppers(this);
 
-			let storage = this.liquidStorage;
-			let liquid = storage.getLiquidStored();
 			let slot1 = this.container.getSlot("slotLiquid1");
 			let slot2 = this.container.getSlot("slotLiquid2");
-			this.getLiquidFromItem(liquid, slot1, slot2);
-			if (liquid) {
-				let full = LiquidLib.getFullItem(slot1.id, slot1.data, liquid);
-				if (full && storage.getAmount(liquid) >= full.storage && (slot2.id == full.id && slot2.data == full.data && slot2.count < Item.getMaxStack(full.id) || slot2.id == 0)) {
-					storage.getLiquid(liquid, full.storage);
-					slot1.setSlot(slot1.id, slot1.count - 1, slot1.data);
-					slot1.validate();
-					slot2.setSlot(full.id, slot2.count + 1, full.data);
-				}
-			}
-			storage.updateUiScale("liquidScale", storage.getLiquidStored());
+			let slotOutput = this.container.getSlot("slotOutput");
+			this.liquidTank.getLiquidFromItem(slot1, slotOutput);
+			this.liquidTank.addLiquidToItem(slot2, slotOutput);
+
+			this.liquidTank.updateUiScale("liquidScale");
 			this.container.sendChanges();
 		}
 	}
@@ -85,14 +78,15 @@ namespace Machine {
 	MachineRegistry.registerPrototype(BlockID.tank, new FluidTank());
 }
 
-StorageInterface.createInterface(BlockID.tank, {
+MachineRegistry.createStorageInterface(BlockID.tank, {
 	slots: {
-		"slotLiquid1": {input: true},
-		"slotLiquid2": {output: true}
+		"slotLiquid1": {input: true, isValid: (item: ItemInstance) => {
+			return !!LiquidItemRegistry.getEmptyItem(item.id, item.data);
+		}},
+		"slotLiquid2": {input: true, isValid: (item: ItemInstance) => {
+			return !!LiquidItemRegistry.getFullItem(item.id, item.data, "water");
+		}},
+		"slotOutput": {output: true}
 	},
-	isValidInput: (item: ItemInstance) => {
-		return !!(LiquidRegistry.getFullItem(item.id, item.data, "water") || LiquidLib.getEmptyItem(item.id, item.data));
-	},
-	canReceiveLiquid: () => true,
-	canTransportLiquid: () => true
+	canReceiveLiquid: () => true
 });

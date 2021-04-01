@@ -14,7 +14,7 @@ implements IWrech {
 		return energyStored >= this.energyPerUse * damage;
 	}
 
-	useItem(item: ItemInstance, damage: number, player: number): boolean {
+	useItem(item: ItemStack, damage: number, player: number): boolean {
 		return ICTool.useElectricItem(item, this.energyPerUse * damage, player);
 	}
 }

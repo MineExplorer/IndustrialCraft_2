@@ -46,8 +46,8 @@ namespace ItemName {
 		return color + name + '\n' + ItemName.getItemStorageText(item);
 	}
 
-	export function displayEnergy(energy: number) {
-		if (!ConfigIC.debugMode) {
+	export function displayEnergy(energy: number, debug: boolean = IC2Config.debugMode): string {
+		if (!debug) {
 			if (energy >= 1e6) {
 				return Math.floor(energy / 1e5) / 10 + "M";
 			}
@@ -55,6 +55,6 @@ namespace ItemName {
 				return Math.floor(energy / 100) / 10 + "K";
 			}
 		}
-		return energy;
+		return energy.toString();
 	}
 }

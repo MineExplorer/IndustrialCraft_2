@@ -58,7 +58,7 @@ namespace Machine {
 				return id == ItemID.drill || id == ItemID.diamondDrill;
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slotPipe", (name, id) => {
-				return ToolLib.isBlock(id) && !TileEntity.isTileEntityBlock(id);
+				return ItemRegistry.isBlock(id) && !TileEntity.isTileEntityBlock(id);
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slotScanner", (name, id) => {
 				return id == ItemID.scanner || id == ItemID.scannerAdvanced;
@@ -170,7 +170,7 @@ namespace Machine {
 			}
 		}
 
-		tick(): void {
+		onTick(): void {
 			let region = this.region;
 			if (this.data.progress == 0) {
 				let y = this.y;
@@ -258,7 +258,7 @@ namespace Machine {
 					if (this.data.progress >= 20) {
 						this.drop([new ItemStack(BlockID.miningPipe, 1, 0)]);
 						let pipeSlot = this.container.getSlot("slotPipe");
-						if (pipeSlot.id != 0 && pipeSlot.id != BlockID.miningPipe && ToolLib.isBlock(pipeSlot.id) && !TileEntity.isTileEntityBlock(pipeSlot.id)) {
+						if (pipeSlot.id != 0 && pipeSlot.id != BlockID.miningPipe && ItemRegistry.isBlock(pipeSlot.id) && !TileEntity.isTileEntityBlock(pipeSlot.id)) {
 							let blockId = Block.convertItemToBlockId(pipeSlot.id);
 							region.setBlock(this.x, this.data.y, this.z, blockId, pipeSlot.data);
 							this.decreaseSlot(pipeSlot, 1);

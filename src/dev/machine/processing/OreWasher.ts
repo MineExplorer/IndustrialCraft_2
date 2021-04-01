@@ -56,15 +56,11 @@ const guiOreWasher = InventoryWindow("Ore Washing Plant", {
 
 namespace Machine {
 	export class OreWasher extends ProcessingMachine {
-		defaultValues = {
-			energy: 0,
-			tier: 1,
-			energy_storage: 10000,
-			energy_consume: 16,
-			work_time: 500,
-			progress: 0,
-		}
+		liquidTank: BlockEngine.LiquidTank;
 
+		defaultEnergyStorage = 10000;
+		defaultEnergyDemand = 16;
+		defaultProcessTime = 500;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidPulling"];
 
 		getScreenByName() {
@@ -72,11 +68,12 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit("water", 8);
+			this.liquidTank = this.addLiquidTank("fluid", 8000, ["water"]);
+
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotSource") return !!this.getRecipeResult(id);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
-				if (name == "slotLiquid1") return LiquidLib.getItemLiquid(id, data) == "water";
+				if (name == "slotLiquid1") return LiquidItemRegistry.getItemLiquid(id, data) == "water";
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
 			});
@@ -96,7 +93,7 @@ namespace Machine {
 		}
 
 		putResult(result: number[]) {
-			this.liquidStorage.getLiquid("water", 1);
+			this.liquidTank.getLiquid(1000);
 			for (let i = 1; i < 4; i++) {
 				let id = result[(i-1) * 2];
 				if (!id) break;
@@ -106,25 +103,25 @@ namespace Machine {
 			}
 		}
 
-		getRecipeResult(id: number) {
+		getRecipeResult(id: number): number[] {
 			return MachineRecipeRegistry.getRecipeResult("oreWasher", id);
 		}
 
-		tick(): void {
-			this.resetValues();
-			UpgradeAPI.executeUpgrades(this);
+		onTick(): void {
+			this.useUpgrades();
+			StorageInterface.checkHoppers(this);
 
 			let slot1 = this.container.getSlot("slotLiquid1");
 			let slot2 = this.container.getSlot("slotLiquid2");
-			this.getLiquidFromItem("water", slot1, slot2);
+			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			let newActive = false;
 			let sourceSlot = this.container.getSlot("slotSource");
 			let result = this.getRecipeResult(sourceSlot.id);
-			if (result && this.checkResult(result) && this.liquidStorage.getAmount("water") >= 1) {
-				if (this.data.energy >= this.data.energy_consume) {
-					this.data.energy -= this.data.energy_consume;
-					this.data.progress += 1/this.data.work_time;
+			if (result && this.checkResult(result) && this.liquidTank.getAmount("water") >= 1000) {
+				if (this.data.energy >= this.energyDemand) {
+					this.data.energy -= this.energyDemand;
+					this.data.progress += 1 / this.processTime;
 					newActive = true;
 				}
 				if (+this.data.progress.toFixed(3) >= 1) {
@@ -138,22 +135,20 @@ namespace Machine {
 			}
 			this.setActive(newActive);
 
-			const energyStorage = this.getEnergyStorage();
-			this.data.energy = Math.min(this.data.energy, energyStorage);
 			this.dischargeSlot("slotEnergy");
 
+			this.liquidTank.updateUiScale("liquidScale");
 			this.container.setScale("progressScale", this.data.progress);
-			this.updateLiquidScale("liquidScale", "water");
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
-		}
-
-		getLiquidFromItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance, byHand?: boolean) {
-			return MachineRegistry.getLiquidFromItem.call(this, liquid, inputItem, outputItem, byHand);
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.sendChanges();
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {
 			if (Entity.getSneaking(player)) {
-				return this.getLiquidFromItem("lava", item, null, true);
+				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
+					this.preventClick();
+					return true;
+				}
 			}
 			return super.onItemUse(coords, item, player);
 		}
@@ -162,20 +157,19 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.oreWasher, new OreWasher());
 
-	StorageInterface.createInterface(BlockID.oreWasher, {
+	MachineRegistry.createStorageInterface(BlockID.oreWasher, {
 		slots: {
 			"slotSource": {input: true, isValid: (item: ItemInstance) => {
 					return MachineRecipeRegistry.hasRecipeFor("oreWasher", item.id, item.data);
 			}},
 			"slotLiquid1": {input: true, isValid: (item: ItemInstance) => {
-				return LiquidLib.getItemLiquid(item.id, item.data) == "water";
+				return LiquidItemRegistry.getItemLiquid(item.id, item.data) == "water";
 			}},
 			"slotLiquid2": {output: true},
 			"slotResult1": {output: true},
 			"slotResult2": {output: true},
 			"slotResult3": {output: true}
 		},
-		canReceiveLiquid: (liquid: string) => liquid == "water",
 		canTransportLiquid: () => false
 	});
 }

@@ -75,7 +75,7 @@ namespace Machine {
 			return maxOutput;
 		}
 
-		tick(): void {
+		onTick(): void {
 			let maxOutput = this.calcOutput();
 			let output = 0;
 
@@ -101,10 +101,9 @@ namespace Machine {
 				this.container.setText("textInfo1", "0     /");
 			}
 
-			const energyStorage = this.getEnergyStorage()
 			this.dischargeSlot("slotEnergy");
 
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
 			this.container.setText("textInfo2", maxOutput);
 			this.container.sendChanges();
 		}

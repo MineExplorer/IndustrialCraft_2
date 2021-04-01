@@ -41,18 +41,10 @@ const guiElectricFurnace = InventoryWindow("Electric Furnace", {
 
 namespace Machine {
 	export class ElectricFurnace extends ProcessingMachine {
-		defaultValues = {
-			energy: 0,
-			tier: 1,
-			energy_storage: 1200,
-			energy_consume: 3,
-			work_time: 130,
-			progress: 0
-		}
-
-		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
-
+		defaultEnergyDemand = 3;
+		defaultProcessTime = 130;
 		defaultDrop = BlockID.ironFurnace;
+		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
 		getScreenByName() {
 			return guiElectricFurnace;

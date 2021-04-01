@@ -33,12 +33,14 @@ Callback.addCallback("DestroyBlockStart", function (coords: Callback.ItemUseCoor
 
 Network.addServerPacket("icpe.cutterLongClick", function (client: NetworkClient, coords: Vector) {
 	let playerUid = client.getPlayerUid();
-	let item = Entity.getCarriedItem(playerUid);
+	let player = new PlayerEntity(playerUid);
+	let item = player.getCarriedItem();
 	let region = BlockSource.getDefaultForActor(playerUid);
 	let block = region.getBlock(coords.x, coords.y, coords.z);
 	let cableData = CableRegistry.getCableData(block.id);
 	if (item.id == ItemID.cutter && cableData && cableData.insulation > 0) {
-		ToolLib.breakCarriedTool(1, playerUid);
+		item.applyDamage(1);
+		player.setCarriedItem(item);
 		SoundManager.playSoundAtBlock(coords, "InsulationCutters.ogg", 1);
 		let blockID = Block.getNumericId(cableData.name + (cableData.insulation - 1));
 		region.setBlock(coords.x, coords.y, coords.z, blockID, 0);

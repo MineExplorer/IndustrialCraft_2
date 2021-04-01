@@ -17,8 +17,9 @@ implements IWrech {
 		return true;
 	}
 
-	useItem(item: ItemInstance, damage: number, player: number): boolean {
-		ToolLib.breakCarriedTool(damage, player);
+	useItem(item: ItemStack, damage: number, player: number): boolean {
+		item.applyDamage(damage);
+		Entity.setCarriedItem(player, item.id, 1, item.data, item.extra);
 		return true;
 	}
 }

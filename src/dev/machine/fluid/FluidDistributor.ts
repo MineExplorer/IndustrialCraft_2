@@ -38,6 +38,8 @@ const guiFluidDistributor = InventoryWindow("Fluid Distributor", {
 
 namespace Machine {
 	export class FluidDistributor extends MachineBase {
+		liquidTank: BlockEngine.LiquidTank;
+
 		defaultValues = {
 			inverted: false
 		}
@@ -48,54 +50,51 @@ namespace Machine {
 			return guiFluidDistributor;
 		}
 
+		isWrenchable() {
+			return true;
+		}
+
 		onInit(): void {
 			super.onInit();
 			this.setActive(this.data.inverted);
 		}
 
 		setupContainer(): void {
-			this.liquidStorage.setLimit(null, 1);
+			this.liquidTank = this.addLiquidTank("fluid", 1000);
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, amount, data) => {
-				return !!LiquidLib.getFullItem(id, data, "water");
+				return !!LiquidItemRegistry.getFullItem(id, data, "water");
 			});
 			this.container.setSlotAddTransferPolicy("slotLiquid2", () => 0);
 		}
 
-		addLiquidToItem(liquid: string, inputItem: ItemInstance, outputItem: ItemInstance): void {
-			return MachineRegistry.addLiquidToItem.call(this, liquid, inputItem, outputItem);
-		}
-
-		tick(): void {
+		onTick(): void {
 			if (this.data.inverted) {
 				this.container.setText("text2", Translation.translate("Concentrate"));
 			} else {
 				this.container.setText("text2", Translation.translate("Distribute"));
 			}
 
-			let liquid = this.liquidStorage.getLiquidStored();
 			let slot1 = this.container.getSlot("slot1");
 			let slot2 = this.container.getSlot("slot2");
-			this.addLiquidToItem(liquid, slot1, slot2);
+			this.liquidTank.addLiquidToItem(slot1, slot2);
 
-			liquid = this.liquidStorage.getLiquidStored();
-			if (liquid) {
-				let facing = this.getFacing();
-				for (let side = 0; side < 6; side++) {
-					if (this.data.inverted == (side != facing)) continue;
-					let storage = StorageInterface.getNeighbourLiquidStorage(this.blockSource, this, side);
-					if (storage) {
-						StorageInterface.transportLiquid(liquid, 0.25, this, storage, side);
-					}
-				}
-			}
-
-			this.updateLiquidScale("liquidScale", liquid);
+			this.transportLiquid();
+			this.liquidTank.updateUiScale("liquidScale");
 			this.container.sendChanges();
 		}
 
-		isWrenchable() {
-			return true;
+		transportLiquid(): void {
+			let liquid = this.liquidTank.getLiquidStored();
+			if (!liquid) return;
+			let facing = this.getFacing();
+			for (let side = 0; side < 6; side++) {
+				if (this.data.inverted == (side != facing)) continue;
+				let storage = StorageInterface.getNeighbourLiquidStorage(this.blockSource, this, side);
+				if (storage) {
+					StorageInterface.transportLiquid(liquid, 0.25, this, storage, side);
+				}
+			}
 		}
 
 		@ContainerEvent(Side.Server)
@@ -107,18 +106,17 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.fluidDistributor, new FluidDistributor());
 
-	StorageInterface.createInterface(BlockID.fluidDistributor, {
+	MachineRegistry.createStorageInterface(BlockID.fluidDistributor, {
 		slots: {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
 		isValidInput: (item: ItemInstance) => {
-			return !!LiquidLib.getFullItem(item.id, item.data, "water")
+			return !!LiquidItemRegistry.getFullItem(item.id, item.data, "water")
 		},
 		canReceiveLiquid: function(liquid: string, side: number): boolean {
 			let data = this.tileEntity.data;
 			return (side == this.tileEntity.getFacing()) != data.inverted;
-		},
-		canTransportLiquid: () => true
+		}
 	});
 }

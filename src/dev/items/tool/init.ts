@@ -16,6 +16,7 @@
 /// <reference path="CropAnalyser.ts" />
 /// <reference path="WeedingTrovel.ts" />
 /// <reference path="Painter.ts" />
+/// <reference path="UpgradeMFSU.ts" />
 
 ItemRegistry.addToolMaterial("bronze", {
 	durability: 225,
@@ -69,3 +70,5 @@ for (let i = 0; i < 16; i++) {
 	painterCreativeGroup.push(item.id);
 }
 Item.addCreativeGroup("ic2_painter", Translation.translate("Painters"), painterCreativeGroup);
+
+ItemRegistry.registerItem(new UpgradeMFSU());

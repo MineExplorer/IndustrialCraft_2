@@ -26,9 +26,7 @@ namespace Machine {
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
-			if (item.id == ItemID.debugItem || item.id == ItemID.EUMeter) {
-				return true;
-			}
+			if (item.id == ItemID.EUMeter) return true;
 			return super.onItemUse(coords, item, player);
 		}
 
@@ -46,7 +44,7 @@ namespace Machine {
 		energyReceive(type: string, amount: number, voltage: number): number {
 			var maxVoltage = this.getMaxPacketSize();
 			if (voltage > maxVoltage) {
-				if (ConfigIC.voltageEnabled) {
+				if (IC2Config.voltageEnabled) {
 					this.blockSource.setBlock(this.x, this.y, this.z, 0, 0);
 					this.blockSource.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.getExplosionPower(), true);
 					SoundManager.playSoundAtBlock(this, "MachineOverload.ogg", 1, 32);

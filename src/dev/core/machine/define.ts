@@ -11,15 +11,31 @@ namespace MachineRegistry {
 
 	// register IC2 Machine
 	export function registerPrototype(id: number, Prototype: TileEntity.TileEntityPrototype) {
-		// register ID
+		// setup legacy prototypes
+		if (!(Prototype instanceof TileEntityBase)) {
+			const BasePrototype = Machine.MachineBase.prototype;
+			Prototype.id = id;
+			Prototype.getDefaultDrop ??= BasePrototype.getDefaultDrop;
+			Prototype.adjustDrop ??= BasePrototype.adjustDrop;
+			Prototype.startPlaySound ??= BasePrototype.startPlaySound;
+			Prototype.stopPlaySound ??= BasePrototype.stopPlaySound;
+			Prototype.setActive ??= function(isActive: boolean) {
+				if (this.data.isActive != isActive) {
+					this.data.isActive = isActive;
+					TileRenderer.mapAtCoords(this.x, this.y, this.z, this.blockID, this.data.meta + (isActive? 4 : 0));
+				}
+			}
+			Prototype.activate ??= function() {
+				this.setActive(true);
+			}
+			Prototype.deactivate ??= function() {
+				this.setActive(false);
+			}
+		}
+
+		// register prototype
 		machineIDs[id] = true;
-
 		TileEntity.registerPrototype(id, Prototype);
-
-		// setup drop
-		const BasePrototype = Machine.MachineBase.prototype;
-		Prototype.getDefaultDrop = Prototype.getDefaultDrop || BasePrototype.getDefaultDrop;
-		Prototype.adjustDrop = Prototype.adjustDrop || BasePrototype.adjustDrop;
 		setMachineDrop(id, Prototype.defaultDrop);
 
 		if (Prototype instanceof Machine.ElectricMachine) {
@@ -45,10 +61,10 @@ namespace MachineRegistry {
 		}
 
 		const BasePrototype = Machine.ElectricMachine.prototype;
-		Prototype.getTier = Prototype.getTier || BasePrototype.getTier;
-		Prototype.getMaxPacketSize = Prototype.getMaxPacketSize || BasePrototype.getMaxPacketSize;
-		Prototype.getExplosionPower = Prototype.getExplosionPower || BasePrototype.getExplosionPower;
-		Prototype.energyReceive = Prototype.energyReceive || BasePrototype.energyReceive;
+		Prototype.getTier ??= BasePrototype.getTier;
+		Prototype.getMaxPacketSize ??= BasePrototype.getMaxPacketSize;
+		Prototype.getExplosionPower ??= BasePrototype.getExplosionPower;
+		Prototype.energyReceive ??= BasePrototype.energyReceive;
 
 		this.registerPrototype(id, Prototype);
 		// register for energy net
@@ -57,20 +73,35 @@ namespace MachineRegistry {
 
 	export function registerGenerator(id: number, Prototype: TileEntity.TileEntityPrototype) {
 		const BasePrototype = Machine.Generator.prototype;
-		Prototype.energyTick = Prototype.energyTick || BasePrototype.energyTick;
-		Prototype.canReceiveEnergy = Prototype.canReceiveEnergy || BasePrototype.canReceiveEnergy;
-		Prototype.canExtractEnergy = Prototype.canExtractEnergy || BasePrototype.canExtractEnergy;
+		Prototype.energyTick ??= BasePrototype.energyTick;
+		Prototype.canReceiveEnergy ??= BasePrototype.canReceiveEnergy;
+		Prototype.canExtractEnergy ??= BasePrototype.canExtractEnergy;
 		this.registerElectricMachine(id, Prototype);
 	}
 
-	// standard functions
+	export function createStorageInterface(blockID: number, descriptor: StorageDescriptor) {
+		descriptor.liquidUnitRatio = 0.001;
+		descriptor.getInputTank ??= function() {
+			return this.tileEntity.liquidTank;
+		}
+		descriptor.getOutputTank ??= function() {
+			return this.tileEntity.liquidTank;
+		}
+		descriptor.canReceiveLiquid ??= function(liquid: string) {
+			return this.getInputTank().isValidLiquid(liquid);
+		}
+		descriptor.canTransportLiquid ??= () => true;
+		StorageInterface.createInterface(blockID, descriptor);
+	}
+
 	export function setStoragePlaceFunction(blockID: string | number, hasVerticalRotation?: boolean) {
-		Block.registerPlaceFunction(Block.getNumericId(blockID), function(coords, item, block, player, region) {
+		Block.registerPlaceFunction(blockID, function(coords, item, block, player, blockSource) {
+			let region = new WorldRegion(blockSource);
 			let place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
 			let rotation = TileRenderer.getBlockRotation(player, hasVerticalRotation);
-			region.setBlock(place.x, place.y, place.z, item.id, rotation);
-			// World.playSound(place.x, place.y, place.z, "dig.stone", 1, 0.8)
-			let tile = World.addTileEntity(place.x, place.y, place.z, region);
+			region.setBlock(place, item.id, rotation);
+			// region.playSound(place.x + .5, place.y + .5, place.z + .5, "dig.stone", 1, 0.8)
+			let tile = region.addTileEntity(place);
 			if (item.extra) {
 				tile.data.energy = item.extra.getInt("energy");
 			}
@@ -103,63 +134,29 @@ namespace MachineRegistry {
 		});
 	}
 
-	export function getLiquidFromItem(liquid: string, inputItem: ItemContainerSlot | ItemInstance, outputItem: ItemContainerSlot | ItemInstance, byHand?: boolean): boolean {
-		let storage = StorageInterface.getInterface(this);
-		let empty = LiquidLib.getEmptyItem(inputItem.id, inputItem.data);
-		if (empty && (!liquid && storage.canReceiveLiquid(empty.liquid) || empty.liquid == liquid) && !this.liquidStorage.isFull(empty.liquid) &&
-			(outputItem.id == empty.id && outputItem.data == empty.data && outputItem.count < Item.getMaxStack(empty.id) || outputItem.id == 0)) {
-			let liquidLimit = this.liquidStorage.getLimit(empty.liquid);
-			let storedAmount = this.liquidStorage.getAmount(liquid).toFixed(3);
-			let count = Math.min(byHand? inputItem.count : 1, Math.floor((liquidLimit - storedAmount) / empty.amount));
+	export function fillTankOnClick(tank: BlockEngine.LiquidTank, item: ItemInstance, playerUid: number): boolean {
+		let liquid = tank.getLiquidStored();
+		let empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
+		if (empty && (!liquid && tank.isValidLiquid(empty.liquid) || empty.liquid == liquid) && !tank.isFull()) {
+			let player = new PlayerEntity(playerUid);
+			let liquidLimit = tank.getLimit();
+			let storedAmount = tank.getAmount(liquid);
+			let count = Math.min(item.count, Math.floor((liquidLimit - storedAmount) / empty.amount));
 			if (count > 0) {
-				this.liquidStorage.addLiquid(empty.liquid, empty.amount * count);
-				inputItem.count -= count;
-				outputItem.id = empty.id;
-				outputItem.count += count;
-				outputItem.data = empty.data;
-				if (inputItem.count == 0) inputItem.id = inputItem.data = 0;
+				tank.addLiquid(empty.liquid, empty.amount * count);
+				player.addItemToInventory(new ItemStack(empty.id, count, empty.data));
+				item.count -= count;
+				player.setCarriedItem(item);
 			}
-			else if (inputItem.count == 1 && empty.storage) {
+			else if (item.count == 1 && empty.storage) {
 				let amount = Math.min(liquidLimit - storedAmount, empty.amount);
-				this.liquidStorage.addLiquid(empty.liquid, amount);
-				inputItem.data += amount * 1000;
-			}
-			if (byHand) {
-				if (outputItem.id) {
-					Player.addItemToInventory(outputItem.id, outputItem.count, outputItem.data);
-				}
-				Player.setCarriedItem(inputItem.id, inputItem.count, inputItem.data);
-			} else {
-				(inputItem as ItemContainerSlot).markDirty();
-				(outputItem as ItemContainerSlot).markDirty();
+				tank.addLiquid(empty.liquid, amount);
+				item.data += amount;
+				player.setCarriedItem(item);
 			}
 			return true;
 		}
 		return false;
-	}
-
-	export function addLiquidToItem(liquid: string, inputItem: ItemContainerSlot, outputItem: ItemContainerSlot): void {
-		let amount = this.liquidStorage.getAmount(liquid).toFixed(3);
-		if (amount > 0) {
-			let full = LiquidLib.getFullItem(inputItem.id, inputItem.data, liquid);
-			if (full && (outputItem.id == full.id && outputItem.data == full.data && outputItem.count < Item.getMaxStack(full.id) || outputItem.id == 0)) {
-				if (amount >= full.amount) {
-					this.liquidStorage.getLiquid(liquid, full.amount);
-					inputItem.setSlot(inputItem.id, inputItem.count - 1, inputItem.data);
-					inputItem.validate();
-					outputItem.setSlot(full.id, outputItem.count + 1, full.data);
-				}
-				else if (inputItem.count == 1 && full.storage) {
-					if (inputItem.id == full.id) {
-						amount = this.liquidStorage.getLiquid(liquid, full.amount);
-						inputItem.setSlot(inputItem.id, 1, inputItem.data - amount * 1000);
-					} else {
-						amount = this.liquidStorage.getLiquid(liquid, full.storage);
-						inputItem.setSlot(full.id, 1, (full.storage - amount)*1000);
-					}
-				}
-			}
-		}
 	}
 
 	/** @deprecated */

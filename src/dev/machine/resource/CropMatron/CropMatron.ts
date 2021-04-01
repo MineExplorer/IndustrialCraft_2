@@ -19,16 +19,17 @@ Callback.addCallback("PreLoaded", function () {
 
 MachineRegistry.registerPrototype(BlockID.cropMatron, new Machine.CropMatron());
 
-StorageInterface.createInterface(BlockID.cropMatron, {
+MachineRegistry.createStorageInterface(BlockID.cropMatron, {
     slots: {
         "slotFertilizer^0-6": { input: true, isValid: (item: ItemInstance) => item.id == ItemID.fertilizer },
         "slotWeedEx^0-6": { input: true, isValid: (item: ItemInstance) => item.id == ItemID.weedEx },
         "slotWaterIn": {
             input: true, isValid: (item: ItemInstance) => {
-                return LiquidLib.getItemLiquid(item.id, item.data) == "water";
+                return LiquidItemRegistry.getItemLiquid(item.id, item.data) == "water";
             }
         },
         "slotWaterOut": { output: true }
     },
+
     canReceiveLiquid: (liquid: string) => liquid == "water"
 });

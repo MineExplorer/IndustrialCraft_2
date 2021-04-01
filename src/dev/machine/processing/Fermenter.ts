@@ -145,9 +145,11 @@ namespace Machine {
 			"slotBiogas1": {output: true},
 			"slotFertilizer": {output: true}
 		},
-		canReceiveLiquid: (liquid: string) => liquid == "biomass",
-		getLiquidStorage: function(storage: string) {
-			return storage == "input" ? this.tileEntity.inputTank : this.tileEntity.outputTank;
+		getInputTank: function() {
+			return this.tileEntity.inputTank;
+		},
+		getOutputTank: function() {
+			return this.tileEntity.outputTank;
 		}
 	});
 }

@@ -283,8 +283,10 @@ namespace Machine {
 			"slotResult": {output: true}
 		},
 		canReceiveLiquid: () => true,
-		getLiquidStorage: function(name: string) {
-			if (name == "input") return this.tileEntity.inputTank;
+		getInputTank: function() {
+			return this.tileEntity.inputTank
+		},
+		getOutputTank: function() {
 			return this.tileEntity.outputTank;
 		}
 	});

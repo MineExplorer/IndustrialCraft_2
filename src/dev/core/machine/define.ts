@@ -81,11 +81,14 @@ namespace MachineRegistry {
 
 	export function createStorageInterface(blockID: number, descriptor: StorageDescriptor) {
 		descriptor.liquidUnitRatio = 0.001;
-		descriptor.getLiquidStorage ??= function() {
+		descriptor.getInputTank ??= function() {
+			return this.tileEntity.liquidTank;
+		}
+		descriptor.getOutputTank ??= function() {
 			return this.tileEntity.liquidTank;
 		}
 		descriptor.canReceiveLiquid ??= function(liquid: string) {
-			return this.getLiquidStorage().isValidLiquid(liquid);
+			return this.getInputTank().isValidLiquid(liquid);
 		}
 		descriptor.canTransportLiquid ??= () => true;
 		StorageInterface.createInterface(blockID, descriptor);

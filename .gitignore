@@ -2,12 +2,9 @@
 Thumbs.db
 
 .vscode/.ropeproject
-toolchain/adb
 toolchain/build
 toolchain/temp
-toolchain/ndk
 output
-!.idea/runConfigurations
 **/__pycache__
 **/tsconfig.json
 

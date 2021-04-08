@@ -47,7 +47,8 @@ Item.registerUseFunctionForID(BlockID.rubberTreeSapling, function(coords, item, 
 
 // bone use
 Callback.addCallback("ItemUse", function(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal: boolean, playerUid: number) {
-	if (block.id == BlockID.rubberTreeSapling && (item.id == 351 && item.data == 15 || item.id == VanillaItemID.bone_meal)) {
+	const boneMeal = IDConverter.getIDData("bone_meal");
+	if (block.id == BlockID.rubberTreeSapling && item.id == boneMeal.id && item.data == boneMeal.data) {
 		Game.prevent();
 		let region = WorldRegion.getForActor(playerUid);
 		let player = new PlayerEntity(playerUid);

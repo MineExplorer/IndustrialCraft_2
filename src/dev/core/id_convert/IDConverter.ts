@@ -17,4 +17,22 @@ namespace IDConverter {
 		}
 		return new ItemStack(VanillaItemID[stringId], count, data, extra);
 	}
+
+	export function getIDData(stringId: string): IDDataPair {
+		if (IC2Config.getMinecraftVersion() == 11) {
+			return oldData[stringId];
+		} else {
+			return { id: VanillaItemID[stringId], data: 0 }
+		}
+	}
+
+	export function getID(stringId: string): number {
+		if (IC2Config.getMinecraftVersion() == 11) return oldData[stringId].id;
+		else return VanillaItemID[stringId];
+	}
+
+	export function getData(stringId: string): number {
+		if (IC2Config.getMinecraftVersion() == 11) return oldData[stringId].data;
+		else return 0;
+	}
 }

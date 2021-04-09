@@ -1,3 +1,7 @@
+declare namespace BlockEngine {
+    function getGameVersion(): number[];
+    function getMainGameVersion(): number;
+}
 declare enum Side {
     Client = 0,
     Server = 1

@@ -30,10 +30,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 3,
+    version: 4,
     shared: false,
     api: "CoreEngine"
 });
+var BlockEngine;
+(function (BlockEngine) {
+    var gameVersion = getMCPEVersion().array;
+    function getGameVersion() {
+        return gameVersion;
+    }
+    BlockEngine.getGameVersion = getGameVersion;
+    function getMainGameVersion() {
+        return gameVersion[1];
+    }
+    BlockEngine.getMainGameVersion = getMainGameVersion;
+})(BlockEngine || (BlockEngine = {}));
 var Side;
 (function (Side) {
     Side[Side["Client"] = 0] = "Client";

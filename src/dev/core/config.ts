@@ -16,10 +16,6 @@ namespace IC2Config {
 	export function getFloat(name: string): number {
 		return __config__.getNumber(name).floatValue();
 	}
-
-	export function getMinecraftVersion(): number {
-		return getMCPEVersion().array[1];
-	}
 }
 
 let isLevelDisplayed = false;

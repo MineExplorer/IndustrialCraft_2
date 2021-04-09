@@ -58,7 +58,7 @@ Callback.addCallback("ItemUse", function(coords: Callback.ItemUseCoordinates, it
 		if (player.getGameMode() == 1 || Math.random() < 0.25) {
 			RubberTreeGenerator.growRubberTree(region.blockSource, coords.x, coords.y, coords.z);
 		}
-		if (IC2Config.getMinecraftVersion() == 11) {
+		if (BlockEngine.getMainGameVersion() == 11) {
 			region.sendPacketInRadius(coords, 64, "ic2.growPlantParticles", {x: coords.x, y: coords.y, z: coords.z});
 		}
 	}

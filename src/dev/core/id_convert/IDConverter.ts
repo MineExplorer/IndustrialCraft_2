@@ -11,7 +11,7 @@ namespace IDConverter {
 	}
 
 	export function getStack(stringId: string, count: number = 1, data: number = 0, extra: ItemExtraData = null): ItemStack {
-		if (IC2Config.getMinecraftVersion() == 11) {
+		if (BlockEngine.getMainGameVersion() == 11) {
 			const oldPair: IDDataPair = oldData[stringId];
 			return new ItemStack(oldPair.id, count, oldPair.data, extra);
 		}
@@ -19,7 +19,7 @@ namespace IDConverter {
 	}
 
 	export function getIDData(stringId: string): IDDataPair {
-		if (IC2Config.getMinecraftVersion() == 11) {
+		if (BlockEngine.getMainGameVersion() == 11) {
 			return oldData[stringId];
 		} else {
 			return { id: VanillaItemID[stringId], data: 0 }
@@ -27,12 +27,12 @@ namespace IDConverter {
 	}
 
 	export function getID(stringId: string): number {
-		if (IC2Config.getMinecraftVersion() == 11) return oldData[stringId].id;
+		if (BlockEngine.getMainGameVersion() == 11) return oldData[stringId].id;
 		else return VanillaItemID[stringId];
 	}
 
 	export function getData(stringId: string): number {
-		if (IC2Config.getMinecraftVersion() == 11) return oldData[stringId].data;
+		if (BlockEngine.getMainGameVersion() == 11) return oldData[stringId].data;
 		else return 0;
 	}
 }

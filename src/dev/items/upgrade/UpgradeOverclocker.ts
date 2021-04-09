@@ -4,7 +4,7 @@ implements ItemBehavior {
 
     onNameOverride(item: ItemInstance, name: string): string {
         let percent = "%%"; // it's one % in name
-        if (IC2Config.getMinecraftVersion() == 11) percent += "%%";
+        if (BlockEngine.getMainGameVersion() == 11) percent += "%%";
         if (currentUIscreen == "in_game_play_screen" || currentUIscreen == "world_loading_progress_screen - local_world_load") {
             percent += percent; // this game is broken
         }

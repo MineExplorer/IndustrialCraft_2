@@ -88,7 +88,7 @@ SwampBiomeIDs.forEach(function(id) {
 	RubberTreeGenerator.biomeData[id] = chance;
 });
 
-World.addGenerationCallback(IC2Config.getMinecraftVersion() == 11 ? "GenerateChunk" : "PreProcessChunk", function(chunkX: number, chunkZ: number, random: java.util.Random) {
+World.addGenerationCallback(BlockEngine.getMainGameVersion() == 11 ? "GenerateChunk" : "PreProcessChunk", function(chunkX: number, chunkZ: number, random: java.util.Random) {
 	let region = BlockSource.getCurrentWorldGenRegion();
 	let biome = region.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16);
 	if (random.nextDouble() < RubberTreeGenerator.getBiomeChance(biome)) {

@@ -85,19 +85,19 @@ Callback.addCallback("PreLoaded", function() {
 		"x x"
 	], ['x', ItemID.matter, -1]);
 
-	Recipes.addShaped({id: 351, count: 48, data: 0}, [
+	Recipes.addShaped(IDConverter.getStack("ink_sac", 48), [
 		" xx",
 		" xx",
 		" x "
 	], ['x', ItemID.matter, -1]);
 
-	Recipes.addShaped({id: 351, count: 32, data: 3}, [
+	Recipes.addShaped(IDConverter.getStack("cocoa_beans", 32), [
 		"xx ",
 		"  x",
 		"xx "
 	], ['x', ItemID.matter, -1]);
 
-	Recipes.addShaped({id: 351, count: 9, data: 4}, [
+	Recipes.addShaped(IDConverter.getStack("lapis_lazuli", 9), [
 		" x ",
 		" x ",
 		" xx"

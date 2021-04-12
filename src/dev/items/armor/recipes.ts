@@ -51,19 +51,19 @@ Recipes.addShaped({id: ItemID.hazmatHelmet, count: 1, data: 0}, [
 	" d ",
 	"xax",
 	"x#x"
-], ['x', ItemID.rubber, 0, 'a', 20, -1, 'd', 351, 14, '#', 101, -1]);
+], ['x', ItemID.rubber, 0, 'a', 20, -1, 'd', IDConverter.getID("orange_dye"), IDConverter.getData("orange_dye"), '#', 101, -1]);
 
 Recipes.addShaped({id: ItemID.hazmatChestplate, count: 1, data: 0}, [
 	"x x",
 	"xdx",
 	"xdx"
-], ['x', ItemID.rubber, 0, 'd', 351, 14]);
+], ['x', ItemID.rubber, 0, 'd', IDConverter.getID("orange_dye"), IDConverter.getData("orange_dye")]);
 
 Recipes.addShaped({id: ItemID.hazmatLeggings, count: 1, data: 0}, [
 	"xdx",
 	"x x",
 	"x x"
-], ['x', ItemID.rubber, 0, 'd', 351, 14]);
+], ['x', ItemID.rubber, 0, 'd', IDConverter.getID("orange_dye"), IDConverter.getData("orange_dye")]);
 
 Recipes.addShaped({id: ItemID.rubberBoots, count: 1, data: 0}, [
 	"x x",

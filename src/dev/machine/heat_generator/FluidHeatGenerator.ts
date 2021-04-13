@@ -43,7 +43,7 @@ namespace Machine {
 		liquidTank: BlockEngine.LiquidTank;
 
 		defaultValues = {
-			output: 0,
+			heat: 0,
 			fuel: 0,
 			liquid: null
 		}
@@ -79,6 +79,10 @@ namespace Machine {
 			return super.onItemUse(coords, item, player);
 		}
 
+		getFuel(liquid: string): {power: number, amount: number} {
+			return MachineRecipeRegistry.getFluidRecipe("fluidFuel", liquid);
+		}
+
 		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
@@ -86,17 +90,18 @@ namespace Machine {
 			let slot2 = this.container.getSlot("slot2");
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
-			let liquid = this.liquidTank.getLiquidStored();
-			let fuel = MachineRecipeRegistry.getRecipeResult("fluidFuel", this.data.liquid || liquid);
-			if (fuel && this.data.fuel <= 0 && this.liquidTank.getAmount() >= fuel.amount && this.spreadHeat(fuel.power * 2)) {
-				this.liquidTank.getLiquid(fuel.amount);
-				this.data.fuel = fuel.amount;
-				this.data.liquid = liquid;
-			}
-			if (fuel && this.data.fuel > 0) {
-				if (this.data.fuel < fuel.amount) {
-					this.spreadHeat(fuel.power * 2);
+			if (this.data.fuel <= 0 && this.data.heat == 0) {
+				let liquid = this.liquidTank.getLiquidStored();
+				let fuel = this.getFuel(liquid);
+				if (fuel && this.liquidTank.getAmount() >= fuel.amount) {
+					this.liquidTank.getLiquid(fuel.amount);
+					this.data.fuel = fuel.amount;
+					this.data.liquid = liquid;
 				}
+			}
+			if (this.data.fuel > 0) {
+				let fuel = this.getFuel(this.data.liquid);
+				this.data.heat = fuel.power * 2;
 				this.data.fuel -= fuel.amount / 20;
 				this.setActive(true);
 				this.container.setText("textInfo2", "Max Emit: " + fuel.power * 2);
@@ -104,12 +109,18 @@ namespace Machine {
 			else {
 				this.data.liquid = null;
 				this.setActive(false);
-				this.container.setText("textInfo1", "Emit: 0");
 				this.container.setText("textInfo2", "Max Emit: 0");
 			}
 
+			if (this.data.heat > 0) {
+				let output = this.spreadHeat(this.data.heat);
+				this.container.setText("textInfo1", "Emit: " + output);
+				if (output > 0) this.data.heat = 0;
+			} else {
+				this.container.setText("textInfo1", "Emit: 0");
+			}
+
 			this.liquidTank.updateUiScale("liquidScale");
-			this.container.setText("textInfo1", "Emit: " + this.data.output);
 			this.container.sendChanges();
 		}
 
@@ -117,20 +128,14 @@ namespace Machine {
 			return "GeothermalLoop.ogg";
 		}
 
-		getEnergyStorage(): number {
-			return 10000;
-		}
-
 		spreadHeat(heat: number): number {
 			let side = this.getFacing();
 			let coords = StorageInterface.getRelativeCoords(this, side);
-			let TE = this.region.getTileEntity(coords);
-			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
-				this.data.output = TE.heatReceive(heat);
-			} else {
-				this.data.output = 0;
+			let tile = this.region.getTileEntity(coords) as IHeatConsumer;
+			if (tile && tile.canReceiveHeat && tile.canReceiveHeat(side ^ 1)) {
+				return tile.receiveHeat(heat);
 			}
-			return this.data.output;
+			return 0;
 		}
 	}
 

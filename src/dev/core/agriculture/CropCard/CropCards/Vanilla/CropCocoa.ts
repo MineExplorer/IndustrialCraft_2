@@ -26,8 +26,7 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: 351,
-				data: 3,
+				...IDConverter.getIDData("cocoa_beans"),
 				size: 1,
 				growth: 0,
 				gain: 0,
@@ -52,7 +51,7 @@ namespace Agriculture {
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			return { id: 351, count: 1, data: 3 };
+			return IDConverter.getStack("cocoa_beans", 1);
 		}
 
 		getGrowthDuration(te: ICropTileEntity): number {

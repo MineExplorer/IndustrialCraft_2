@@ -42,7 +42,7 @@ namespace Machine {
 			return side == this.getFacing();
 		}
 
-		heatReceive(amount: number): number {
+		receiveHeat(amount: number): number {
 			if (this.data.energy == 0) {
 				this.data.energy = Math.round(amount / 2);
 				return amount;

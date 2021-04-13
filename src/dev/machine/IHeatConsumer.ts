@@ -1,6 +1,6 @@
 namespace Machine {
-	export interface IHeatConsumer {
+	export interface IHeatConsumer extends TileEntity {
 		canReceiveHeat(side: number): boolean;
-		heatReceive(amount: number): number;
+		receiveHeat(amount: number): number;
 	}
 }

@@ -111,7 +111,7 @@ namespace Machine {
 			return side == this.getFacing();
 		}
 
-		heatReceive(amount: number): number {
+		receiveHeat(amount: number): number {
 			let outputSlot = this.container.getSlot("slotFertilizer");
 			if (this.inputTank.getAmount("biomass") >= 20 && this.outputTank.getAmount("biogas") <= 1600 && outputSlot.count < 64) {
 				this.data.heat = amount;

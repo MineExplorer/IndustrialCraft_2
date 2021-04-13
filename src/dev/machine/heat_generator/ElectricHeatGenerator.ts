@@ -82,9 +82,9 @@ namespace Machine {
 			if (this.data.energy >= 1) {
 				let side = this.getFacing();
 				let coords = StorageInterface.getRelativeCoords(this, side);
-				let TE = this.region.getTileEntity(coords);
-				if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
-					output = TE.heatReceive(Math.min(maxOutput, this.data.energy));
+				let tile = this.region.getTileEntity(coords) as IHeatConsumer;
+				if (tile && tile.canReceiveHeat && tile.canReceiveHeat(side ^ 1)) {
+					output = tile.receiveHeat(Math.min(maxOutput, this.data.energy));
 					if (output > 0) {
 						this.setActive(true);
 						this.data.energy -= output;

@@ -185,7 +185,7 @@ namespace Machine {
 			return side == this.getFacing();
 		}
 
-		heatReceive(amount: number): number {
+		receiveHeat(amount: number): number {
 			let slot = this.container.getSlot("slotSource");
 			if (this.data.isHeating || this.data.sourceID > 0 || this.getRecipeResult(slot.id)) {
 				amount = Math.min(this.getMaxHeat() - this.data.heat, amount);

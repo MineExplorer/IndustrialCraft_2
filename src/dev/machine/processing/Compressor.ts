@@ -45,7 +45,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.plateLead": {id: ItemID.densePlateLead, count: 1, data: 0, sourceCount: 9},
 		// Compact
 		331: {id: 152, count: 1, data: 0, sourceCount: 9},
-		"351:4": {id: 22, count: 1, data: 0, sourceCount: 9},
+		"minecraft:lapis_lazuli": {id: 22, count: 1, data: 0, sourceCount: 9},
 		264: {id: 57, count: 1, data: 0, sourceCount: 9},
 		388: {id: 133, count: 1, data: 0, sourceCount: 9},
 		265: {id: 42, count: 1, data: 0, sourceCount: 9},

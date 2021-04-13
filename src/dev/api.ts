@@ -9,7 +9,7 @@ ModAPI.registerAPI("ICore", {
 	Radiation: RadiationAPI,
 	Tool: ICTool,
 	Sound: SoundManager,
-	Agriculture: AgricultureAPI,
+	Agriculture: Agriculture,
 	ItemName: ItemName,
 	UI: UIbuttons,
 	Config: IC2Config,

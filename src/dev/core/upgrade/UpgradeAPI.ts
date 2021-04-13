@@ -1,5 +1,3 @@
-/// <reference path="IUpgrade.ts" />
-
 namespace UpgradeAPI {
 	const data = {};
 

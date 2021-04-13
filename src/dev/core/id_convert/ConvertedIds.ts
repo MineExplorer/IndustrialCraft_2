@@ -1,3 +1,5 @@
+/// <reference path="IDConverter.ts" />
+
 IDConverter.registerOld("ink_sac", 351, 0);
 IDConverter.registerOld("red_dye", 351, 1);
 IDConverter.registerOld("green_dye", 351, 2);

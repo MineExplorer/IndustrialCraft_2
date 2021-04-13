@@ -18,3 +18,5 @@ IDConverter.registerOld("black_dye", 351, 16);
 IDConverter.registerOld("brown_dye", 351, 17);
 IDConverter.registerOld("blue_dye", 351, 18);
 IDConverter.registerOld("white_dye", 351, 19);
+IDConverter.registerOld("cooked_cod", VanillaItemID.cooked_fish, 0);
+IDConverter.registerOld("cod", VanillaItemID.fish, 0);

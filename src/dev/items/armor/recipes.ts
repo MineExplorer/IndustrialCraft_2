@@ -47,23 +47,43 @@ Recipes.addShaped({id: ItemID.compositeBoots, count: 1, data: 0}, [
 ], ['x', ItemID.plateAlloy, 0, 'a', VanillaItemID.iron_boots, 0]);
 
 // Hazmat
-Recipes.addShaped({id: ItemID.hazmatHelmet, count: 1, data: 0}, [
-	" d ",
-	"xax",
-	"x#x"
-], ['x', ItemID.rubber, 0, 'a', 20, -1, 'd', IDConverter.getID("orange_dye"), IDConverter.getData("orange_dye"), '#', 101, -1]);
+if (BlockEngine.getMainGameVersion() == 11) {
+	Recipes.addShaped({id: ItemID.hazmatHelmet, count: 1, data: 0}, [
+		" d ",
+		"xax",
+		"x#x"
+	], ['x', ItemID.rubber, 0, 'a', 20, -1, 'd', 351, 14, '#', 101, -1]);
 
-Recipes.addShaped({id: ItemID.hazmatChestplate, count: 1, data: 0}, [
-	"x x",
-	"xdx",
-	"xdx"
-], ['x', ItemID.rubber, 0, 'd', IDConverter.getID("orange_dye"), IDConverter.getData("orange_dye")]);
+	Recipes.addShaped({id: ItemID.hazmatChestplate, count: 1, data: 0}, [
+		"x x",
+		"xdx",
+		"xdx"
+	], ['x', ItemID.rubber, 0, 'd', 351, 14]);
 
-Recipes.addShaped({id: ItemID.hazmatLeggings, count: 1, data: 0}, [
-	"xdx",
-	"x x",
-	"x x"
-], ['x', ItemID.rubber, 0, 'd', IDConverter.getID("orange_dye"), IDConverter.getData("orange_dye")]);
+	Recipes.addShaped({id: ItemID.hazmatLeggings, count: 1, data: 0}, [
+		"xdx",
+		"x x",
+		"x x"
+	], ['x', ItemID.rubber, 0, 'd', 351, 14]);
+} else {
+	Recipes.addShaped({id: ItemID.hazmatHelmet, count: 1, data: 0}, [
+		" d ",
+		"xax",
+		"x#x"
+	], ['x', ItemID.rubber, 0, 'a', 20, -1, 'd', VanillaItemID.orange_dye, 0, '#', 101, -1]);
+
+	Recipes.addShaped({id: ItemID.hazmatChestplate, count: 1, data: 0}, [
+		"x x",
+		"xdx",
+		"xdx"
+	], ['x', ItemID.rubber, 0, 'd', VanillaItemID.orange_dye, 0]);
+
+	Recipes.addShaped({id: ItemID.hazmatLeggings, count: 1, data: 0}, [
+		"xdx",
+		"x x",
+		"x x"
+	], ['x', ItemID.rubber, 0, 'd', VanillaItemID.orange_dye, 0]);
+}
 
 Recipes.addShaped({id: ItemID.rubberBoots, count: 1, data: 0}, [
 	"x x",

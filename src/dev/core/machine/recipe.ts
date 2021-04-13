@@ -7,11 +7,18 @@ namespace MachineRecipeRegistry {
 			let newData = {};
 			for (let key in data) {
 				let newKey: any;
-				if (key.indexOf(":") != -1) {
+				if (key.includes(":")) {
 					let keyArray = key.split(":");
 					if (keyArray[0] == "minecraft") {
-						let source = IDConverter.getIDData(keyArray[1]);
-						newKey = source.id + ":" + source.data;
+						let stringID = keyArray[1];
+						let numericID = VanillaBlockID[stringID] || VanillaItemID[stringID];
+						if (!numericID) {
+							let source = IDConverter.getIDData(stringID);
+							newKey = source.id + ":" + source.data;
+						} else {
+							newKey = numericID;
+							if (keyArray[2]) newKey += ":" + keyArray[2];
+						}
 					} else {
 						newKey = eval(keyArray[0]) + ":" + keyArray[1];
 					}
@@ -31,13 +38,7 @@ namespace MachineRecipeRegistry {
 			recipes.push({input: input, result: result});
 		}
 		else {
-			if (typeof input == "string" && input.startsWith("minecraft:")) {
-				let stringID = input.split(":")[1];
-				let source = IDConverter.getIDData(stringID);
-				recipes[source.id + ":" + source.data] = result;
-			} else {
-				recipes[input] = result;
-			}
+			recipes[input] = result;
 		}
 	}
 

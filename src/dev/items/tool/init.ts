@@ -1,5 +1,5 @@
 /// <reference path="DebugItem.ts" />
-/// <reference path="eu-meter.js" />
+/// <reference path="EUReader.ts" />
 /// <reference path="Transmitter.ts" />
 /// <reference path="Scanner.ts" />
 /// <reference path="Treetap.ts" />
@@ -44,6 +44,7 @@ ItemRegistry.registerItem(new ElectricWrench());
 ItemRegistry.registerItem(new ElectricTreetap());
 ItemRegistry.registerItem(new ElectricHoe());
 ItemRegistry.registerItem(new CropAnalyser());
+ItemRegistry.registerItem(new EUReader());
 
 ItemRegistry.registerItem(new ElectricChainsaw("chainsaw", "chainsaw", { energyPerUse: 100, level: 3, efficiency: 12, damage: 6 }, 30000, 100, 1));
 

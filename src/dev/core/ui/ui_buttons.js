@@ -23,7 +23,7 @@ var UIbuttons = {
 		drawing: [{type: "background", color: 0}],
 		elements: {}
 	}),
-	
+
 	setArmorButton: function(id, name) {
 		var data = {type: 0, name: name};
 		if (!this.data[id]) {
@@ -32,7 +32,7 @@ var UIbuttons = {
 			this.data[id].push(data);
 		}
 	},
-	
+
 	setToolButton: function(id, name, notHidden) {
 		var data = {type: 1, name: name, hidden: !notHidden};
 		if (!this.data[id]) {
@@ -41,20 +41,20 @@ var UIbuttons = {
 			this.data[id].push(data);
 		}
 	},
-	
+
 	getButtons: function(id) {
 		return this.data[id];
 	},
-	
+
 	registerButton: function(name, properties) {
 		buttonContent[name] = properties;
 		buttonMap[name] = false;
 	},
-	
+
 	registerSwitchFunction: function(id, func) {
 		this.onSwitch[id] = func;
 	},
-	
+
 	onButtonUpdate: function(name, func) {
 		this.onUpdate[name] = func;
 	}

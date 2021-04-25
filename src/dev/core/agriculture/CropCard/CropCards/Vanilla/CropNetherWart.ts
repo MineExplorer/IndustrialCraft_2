@@ -30,7 +30,7 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: 372
+				...IDConverter.getIDData("nether_wart")
 			};
 		}
 
@@ -43,7 +43,7 @@ namespace Agriculture {
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			return { id: 372, count: 1, data: 0 };
+			return IDConverter.getStack("nether_wart");
 		}
 
 		tick(te: ICropTileEntity): void {

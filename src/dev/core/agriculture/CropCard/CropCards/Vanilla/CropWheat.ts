@@ -27,7 +27,7 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: 295
+				id: VanillaItemID.wheat_seeds
 			};
 		}
 
@@ -40,11 +40,11 @@ namespace Agriculture {
 		}
 
 		getProduct(): ItemInstance {
-			return { id: 296, count: 1, data: 0 };
+			return IDConverter.getStack("wheat");
 		}
 
 		getSeed(te: ICropTileEntity): ItemInstance {
-			return { id: 295, count: 1, data: 0 };
+			return { id: VanillaItemID.wheat_seeds, count: 1, data: 0 };
 		}
 	}
 }

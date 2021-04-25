@@ -27,7 +27,7 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: 391
+				id: VanillaItemID.carrot
 			};
 		}
 
@@ -36,7 +36,7 @@ namespace Agriculture {
 		}
 
 		getProduct(): ItemInstance {
-			return { id: 391, count: 1, data: 0 };
+			return { id: VanillaItemID.carrot, count: 1, data: 0 };
 		}
 
 		getSeed(te: ICropTileEntity): ItemInstance {

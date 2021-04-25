@@ -27,7 +27,7 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: 338,
+				id: IDConverter.getID("reeds"),
 				size: 1,
 				growth: 3,
 				gain: 0,
@@ -44,7 +44,7 @@ namespace Agriculture {
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			return { id: 338, count: te.data.currentSize - 1, data: 0 };
+			return IDConverter.getStack("reeds",  te.data.currentSize - 1);
 		}
 
 		onEntityCollision(te: ICropTileEntity, entity: number) { return false }

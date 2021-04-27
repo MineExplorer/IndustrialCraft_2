@@ -46,7 +46,7 @@ namespace Agriculture {
 	CropCardManager.registerCropCard(new CropRedMushroom());
 	CropCardManager.registerCropCard(new CropBrownMushroom());
 	// Flowers
-	CropCardManager.registerCropCard(new CropColorFlowerCard("dandelion", ["Yellow", "Flower"], 0, {
+	CropCardManager.registerCropCard(new CropColorFlowerCard("dandelion", ["Yellow", "Flower"], IDConverter.getStack("black_dye"), {
 		id: 37,
 		size: 4,
 		growth: 1,
@@ -54,7 +54,7 @@ namespace Agriculture {
 		resistance: 1,
 		addToCreative: true
 	}));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("rose", ["Red", "Flower", "Rose"], 1, {
+	CropCardManager.registerCropCard(new CropColorFlowerCard("rose", ["Red", "Flower", "Rose"], IDConverter.getStack("red_dye"), {
 		id: 38,
 		size: 4,
 		growth: 1,
@@ -62,9 +62,9 @@ namespace Agriculture {
 		resistance: 1,
 		addToCreative: true
 	}));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("blackthorn", ["Black", "Flower", "Rose"], 0));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("tulip", ["Purple", "Flower", "Tulip"], 5));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("cyazint", ["Blue", "Flower"], 6));
+	CropCardManager.registerCropCard(new CropColorFlowerCard("blackthorn", ["Black", "Flower", "Rose"], IDConverter.getStack("black_dye")));
+	CropCardManager.registerCropCard(new CropColorFlowerCard("tulip", ["Purple", "Flower", "Tulip"], IDConverter.getStack("purple_dye")));
+	CropCardManager.registerCropCard(new CropColorFlowerCard("cyazint", ["Blue", "Flower"], IDConverter.getStack("cyan_dye")));
 	// Metal common
 	CropCardManager.registerCropCard(new CropBaseMetalCommon("ferru",
 		["Gray", "Leaves", "Metal"],

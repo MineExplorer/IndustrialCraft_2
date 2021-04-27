@@ -46,8 +46,9 @@ namespace Agriculture {
 	CropCardManager.registerCropCard(new CropRedMushroom());
 	CropCardManager.registerCropCard(new CropBrownMushroom());
 	// Flowers
-	CropCardManager.registerCropCard(new CropColorFlowerCard("dandelion", ["Yellow", "Flower"], IDConverter.getStack("black_dye"), {
-		id: 37,
+
+	CropCardManager.registerCropCard(new CropColorFlowerCard("dandelion", ["Yellow", "Flower"], IDConverter.getStack("yellow_dye"), {
+		id: VanillaBlockID.yellow_flower,
 		size: 4,
 		growth: 1,
 		gain: 1,
@@ -55,7 +56,7 @@ namespace Agriculture {
 		addToCreative: true
 	}));
 	CropCardManager.registerCropCard(new CropColorFlowerCard("rose", ["Red", "Flower", "Rose"], IDConverter.getStack("red_dye"), {
-		id: 38,
+		id: VanillaBlockID.red_flower,
 		size: 4,
 		growth: 1,
 		gain: 1,
@@ -68,7 +69,7 @@ namespace Agriculture {
 	// Metal common
 	CropCardManager.registerCropCard(new CropBaseMetalCommon("ferru",
 		["Gray", "Leaves", "Metal"],
-		[15, 42],
+		[VanillaBlockID.iron_ore, VanillaBlockID.iron_block],
 		{ id: ItemID.dustSmallIron, count: 1, data: 0 }));
 	CropCardManager.registerCropCard(new CropBaseMetalCommon("cyprium",
 		["Orange", "Leaves", "Metal"],
@@ -84,8 +85,8 @@ namespace Agriculture {
 		{ id: ItemID.dustSmallLead, count: 1, data: 0 }));
 	CropCardManager.registerCropCard(new CropBaseMetalUncommon("aurelia",
 		["Gold", "Leaves", "Metal"],
-		[14, 41],
-		{ id: 371, count: 1, data: 0 }));
+		[VanillaBlockID.gold_ore, VanillaBlockID.gold_block],
+		IDConverter.getStack("gold_nugget")));
 	CropCardManager.registerCropCard(new CropBaseMetalUncommon("shining",
 		["Silver", "Leaves", "Metal"],
 		[BlockID.blockSilver, BlockID.oreSilver],

@@ -28,6 +28,5 @@ IDConverter.registerOld("melon_slice", VanillaItemID.melon, 0);
 IDConverter.registerOld("beetroot", 457, 0);
 IDConverter.registerOld("nether_wart", 372, 0);
 IDConverter.registerOld("pumpkin", 86, 0);
-IDConverter.registerOld("melon_slice", VanillaItemID.melon, 0);
 IDConverter.registerOld("reeds", 338, 0);
 IDConverter.registerOld("wheat", 296, 0);

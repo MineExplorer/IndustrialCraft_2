@@ -13,12 +13,12 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: 40
+				id: VanillaBlockID.red_mushroom
 			};
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			return { id: 40, count: 1, data: 0 };
+			return IDConverter.getStack("red_mushroom");
 		}
 	}
 }

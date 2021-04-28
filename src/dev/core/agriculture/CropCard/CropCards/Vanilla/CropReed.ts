@@ -27,7 +27,7 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: IDConverter.getID("reeds"),
+				id: VanillaBlockID.reeds,
 				size: 1,
 				growth: 3,
 				gain: 0,

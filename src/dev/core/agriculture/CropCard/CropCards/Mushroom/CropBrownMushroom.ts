@@ -18,7 +18,7 @@ namespace Agriculture {
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			return IDConverter.getStack("red_mushroom");
+			return IDConverter.getStack("brown_mushroom");
 		}
 	}
 }

@@ -69,7 +69,7 @@ namespace Agriculture {
 	// Metal common
 	CropCardManager.registerCropCard(new CropBaseMetalCommon("ferru",
 		["Gray", "Leaves", "Metal"],
-		[VanillaBlockID.iron_ore, VanillaBlockID.iron_block],
+		[VanillaTileID.iron_ore, VanillaTileID.iron_block],
 		{ id: ItemID.dustSmallIron, count: 1, data: 0 }));
 	CropCardManager.registerCropCard(new CropBaseMetalCommon("cyprium",
 		["Orange", "Leaves", "Metal"],
@@ -85,7 +85,7 @@ namespace Agriculture {
 		{ id: ItemID.dustSmallLead, count: 1, data: 0 }));
 	CropCardManager.registerCropCard(new CropBaseMetalUncommon("aurelia",
 		["Gold", "Leaves", "Metal"],
-		[VanillaBlockID.gold_ore, VanillaBlockID.gold_block],
+		[VanillaTileID.gold_ore, VanillaTileID.gold_block],
 		IDConverter.getStack("gold_nugget")));
 	CropCardManager.registerCropCard(new CropBaseMetalUncommon("shining",
 		["Silver", "Leaves", "Metal"],

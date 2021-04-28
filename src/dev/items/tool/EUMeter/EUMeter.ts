@@ -1,13 +1,13 @@
-/// <reference path="EUReaderUpdatable.ts" />
+/// <reference path="EUMeterUpdatable.ts" />
 
-class EUReader extends ItemCommon
+class EUMeter extends ItemCommon
 implements ItemBehavior {
 	constructor() {
 		super("EUMeter", "eu_meter", "eu_meter");
 		this.setMaxStack(1);
 		this.setCategory(ItemCategory.EQUIPMENT);
 		ItemContainer.registerScreenFactory("eu_meter.ui", function (container, name) {
-			return EUReader.gui;
+			return EUMeter.gui;
 		});
 	}
 
@@ -18,7 +18,7 @@ implements ItemBehavior {
 		let region = BlockSource.getDefaultForActor(player);
 		let node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
 		if (node) {
-			let updatable = new EUReaderUpdatable(node)
+			let updatable = EUMeterUpdatable.getUpdatable(node);
 			Updatable.addUpdatable(updatable);
 			updatable.openGuiFor(client);
 		}
@@ -43,8 +43,8 @@ implements ItemBehavior {
 			"textAvg": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 164, width: 256, height: 42, text: Translation.translate("Avg:")},
 			"textAvgValue": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 194, width: 256, height: 42, text: "0 EU/t"},
 			"textMaxMin": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 240, width: 256, height: 42, text: Translation.translate("Max/Min")},
-			"textMax": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 270, width: 256, height: 42, text: "0 EU/t"},
-			"textMin": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 300, width: 256, height: 42, text: "0 EU/t"},
+			"textMaxValue": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 270, width: 256, height: 42, text: "0 EU/t"},
+			"textMinValue": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 300, width: 256, height: 42, text: "0 EU/t"},
 			"textMode1": {type: "text", font: {size: 22, color: Color.GREEN}, x: 554, y: 164, width: 100, height: 42, text: Translation.translate("Mode:")},
 			"textMode2": {type: "text", font: {size: 22, color: Color.GREEN}, x: 554, y: 348, width: 256, height: 42, text: Translation.translate("EnergyIn")},
 			"textTime": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 348, width: 256, height: 42, text: "Cycle: 0 sec"},

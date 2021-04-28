@@ -392,7 +392,7 @@ declare class ItemStack implements ItemInstance {
     extra?: ItemExtraData;
     constructor();
     constructor(item: ItemInstance);
-    constructor(id: number, count: number, data: number, extra?: ItemExtraData);
+    constructor(id: number, count: number, data?: number, extra?: ItemExtraData);
     getItemInstance(): Nullable<ItemBase>;
     getMaxStack(): number;
     getMaxDamage(): number;

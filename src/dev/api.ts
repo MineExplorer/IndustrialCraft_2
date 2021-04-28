@@ -15,6 +15,7 @@ ModAPI.registerAPI("ICore", {
 	Config: IC2Config,
 	Ore: OreGenerator,
 	Integration: IntegrationAPI,
+	WindSim: WindSim,
 
 	requireGlobal: function(command: string) {
 		return eval(command);

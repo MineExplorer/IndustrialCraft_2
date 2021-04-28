@@ -28,6 +28,13 @@ Callback.addCallback("PreLoaded", function() {
 		"xsx"
 	], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
 
+	// Windmeter
+	Recipes.addShaped({id: ItemID.windMeter, count: 1, data: 27}, [
+		" c",
+		"cbc",
+		" cx"
+	], ['x', ItemID.powerUnitSmall, 0, 'b', ItemID.casingBronze, 0, 'c', ItemID.casingTin, 0]);
+
 	// Treetap
 	Recipes.addShaped({id: ItemID.treetap, count: 1, data: 0}, [
 		" x ",

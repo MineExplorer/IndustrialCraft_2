@@ -1,11 +1,13 @@
 class ElectricTreetap
 extends ItemElectric {
+	energyPerUse = 50;
+
 	constructor() {
 		super("electricTreetap", "electric_treetap", 10000, 100, 1);
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
-		if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, 50, player)) {
+		if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, this.energyPerUse, player)) {
 			let region = WorldRegion.getForActor(player);
 			SoundManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");
 			region.setBlock(coords, BlockID.rubberTreeLogLatex, block.data - 4);

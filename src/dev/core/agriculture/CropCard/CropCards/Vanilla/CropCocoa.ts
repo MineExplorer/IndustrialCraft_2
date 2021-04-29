@@ -51,7 +51,7 @@ namespace Agriculture {
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			return IDConverter.getStack("cocoa_beans", 1);
+			return IDConverter.getStack("cocoa_beans");
 		}
 
 		getGrowthDuration(te: ICropTileEntity): number {

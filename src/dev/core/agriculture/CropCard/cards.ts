@@ -86,7 +86,7 @@ namespace Agriculture {
 	CropCardManager.registerCropCard(new CropBaseMetalUncommon("aurelia",
 		["Gold", "Leaves", "Metal"],
 		[VanillaTileID.gold_ore, VanillaTileID.gold_block],
-		IDConverter.getStack("gold_nugget")));
+		{ id: VanillaItemID.gold_nugget, count: 1, data: 0 }));
 	CropCardManager.registerCropCard(new CropBaseMetalUncommon("shining",
 		["Silver", "Leaves", "Metal"],
 		[BlockID.blockSilver, BlockID.oreSilver],

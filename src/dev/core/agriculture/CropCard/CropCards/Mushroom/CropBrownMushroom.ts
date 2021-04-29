@@ -18,7 +18,7 @@ namespace Agriculture {
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			return IDConverter.getStack("brown_mushroom");
+			return { id: VanillaBlockID.brown_mushroom, count: 1, data: 0 };
 		}
 	}
 }

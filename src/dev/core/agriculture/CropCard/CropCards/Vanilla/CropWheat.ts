@@ -44,7 +44,7 @@ namespace Agriculture {
 		}
 
 		getSeed(te: ICropTileEntity): ItemInstance {
-			return IDConverter.getStack("wheat_seeds");
+			return { id: VanillaItemID.wheat_seeds, count: 1, data: 0 };
 		}
 	}
 }

@@ -14,19 +14,23 @@ class EUMeterUpdatable {
 	minValue: number;
 	maxValue: number;
 	remove: boolean;
+	update: () => void;
 
 	constructor(protected node: EnergyNode) {
-		this.container = new ItemContainer();
+		const container = new ItemContainer();
+		this.setupContainer(container);
+		this.container = container;
 		this.resetValues();
+		this.update = () => this.tick();
 	}
 
-	setupContainer(): void {
-		this.container.setClientContainerTypeName("eu_meter.ui");
-		this.container.addServerCloseListener(() => {
+	setupContainer(container: ItemContainer): void {
+		container.setClientContainerTypeName("eu_meter.ui");
+		container.addServerCloseListener(() => {
 			this.destroy();
 		});
-		this.container.addServerEventListener("reset", () => this.resetValues());
-		this.container.addServerEventListener("setMode", (container, client, data: {mode: number}) => {
+		container.addServerEventListener("reset", () => this.resetValues());
+		container.addServerEventListener("setMode", (container, client, data: {mode: number}) => {
 			this.mode = data.mode;
 			this.resetValues();
 		});
@@ -43,7 +47,7 @@ class EUMeterUpdatable {
 		this.maxValue = -2e9;
 	}
 
-	update(): void {
+	tick(): void {
 		let node = this.node;
 		if (node.removed) {
 			this.destroy();
@@ -83,15 +87,5 @@ class EUMeterUpdatable {
 
 	destroy(): void {
 		this.remove = true;
-	}
-
-	static getUpdatable(node: EnergyNode): EUMeterUpdatable {
-		let instance = new EUMeterUpdatable(node);
-		let obj: any = {};
-		for (let key in instance) {
-			obj[key] = instance[key];
-		}
-		obj.setupContainer();
-		return obj;
 	}
 }

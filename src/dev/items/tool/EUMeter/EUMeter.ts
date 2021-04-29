@@ -22,7 +22,7 @@ implements ItemBehavior {
 		let region = BlockSource.getDefaultForActor(player);
 		let node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
 		if (node) {
-			let updatable = EUMeterUpdatable.getUpdatable(node);
+			let updatable = new EUMeterUpdatable(node);
 			Updatable.addUpdatable(updatable);
 			updatable.openGuiFor(client);
 		}

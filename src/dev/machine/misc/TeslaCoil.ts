@@ -17,7 +17,7 @@ namespace Machine {
 	export class TeslaCoil extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
-			isActive: false
+			isEnabled: false
 		}
 
 		getScreenName(): string {
@@ -29,34 +29,26 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			if (this.data.energy >= 400 && this.data.isActive) {
-				if (World.getThreadTime()%32 == 0) {
-					let entities = Entity.getAll();
-					let discharge = false;
-					let damage = Math.floor(this.data.energy/400);
-					for (let i in entities) {
-						let ent = entities[i];
-						let coords = Entity.getPosition(ent);
-						let dx = this.x + 0.5 - coords.x;
-						let dy = this.y + 0.5 - coords.y;
-						let dz = this.z + 0.5 - coords.z;
-						if (Math.sqrt(dx*dx + dy*dy + dz*dz) < 4.5 && EntityHelper.canTakeDamage(ent, DamageSource.electricity)) {
-							discharge = true;
-							if (damage >= 24) {
-								Entity.setFire(ent, 1, true);
-								Entity.damageEntity(ent, damage, 6);
-							}
-							else Entity.damageEntity(ent, damage);
-						}
-					}
-					if (discharge) this.data.energy = 1;
-				}
+			if (this.data.isEnabled && this.data.energy >= 400) {
 				this.data.energy--;
+				if (World.getThreadTime()%32 == 0) {
+					let entities = this.region.listEntitiesInAABB(this.x - 4, this.y - 4, this.z - 4, this.x + 5, this.y + 5, this.z + 5);
+					let damage = Math.floor(this.data.energy / 400);
+					for (let ent of entities) {
+						if (!EntityHelper.canTakeDamage(ent, DamageSource.electricity)) continue;
+						if (damage >= 24) {
+							Entity.setFire(ent, 1, true);
+						}
+						Entity.damageEntity(ent, damage, 6);
+						this.data.energy -= damage * 400;
+						return;
+					}
+				}
 			}
 		}
 
 		onRedstoneUpdate(signal: number): void {
-			this.data.isActive = signal > 0;
+			this.data.isEnabled = signal > 0;
 		}
 
 		getEnergyStorage(): number {

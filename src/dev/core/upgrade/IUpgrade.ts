@@ -5,6 +5,5 @@ interface IUpgrade {
 	getProcessTimeMultiplier?(item: ItemInstance, machine: TileEntity): number;
 	getExtraTier?(item: ItemInstance, machine: TileEntity): number;
 	getExtraEnergyStorage?(item: ItemInstance, machine: TileEntity): number;
-	modifyRedstone?(item: ItemInstance, machine: TileEntity): boolean;
 	onTick?(item: ItemInstance, machine: TileEntity): void;
 }

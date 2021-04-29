@@ -83,7 +83,7 @@ namespace Agriculture {
 					this.updateRender();
 					return;
 				}
-				if (IC2Config.debugMode && id == 351 && this.data.crossingBase) {
+				if (IC2Config.debugMode && id == IDConverter.getID("bone_meal") && this.data.crossingBase) {
 					this.attemptCrossing();
 					return;
 				}

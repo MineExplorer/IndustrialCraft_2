@@ -23,7 +23,7 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: 458
+				id: VanillaItemID.beetroot_seeds
 			};
 		}
 
@@ -32,11 +32,11 @@ namespace Agriculture {
 		}
 
 		getSeed(te: ICropTileEntity): ItemInstance {
-			return { id: 458, count: 1, data: 0 };
+			return { id: VanillaItemID.beetroot_seeds, count: 1, data: 0 };
 		}
 
 		getProduct(): ItemInstance {
-			return { id: 457, count: 1, data: 0 };
+			return IDConverter.getStack("beetroot");
 		}
 	}
 }

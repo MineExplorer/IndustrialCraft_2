@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.electricMotor, 0, 'a', 265, 0, 'm', ItemID.miningLaser, -1, 'c', ItemID.coil, 0]);
 
 	MachineRecipeRegistry.registerRecipesFor("thermalCentrifuge", {
-		//4: {result: [ItemID.dustStone, 1], heat: 100},
+		//"minecraft:cobblestone": {result: [ItemID.dustStone, 1], heat: 100},
 		"ItemID.crushedCopper": {result: [ItemID.dustSmallTin, 1, ItemID.dustCopper, 1, ItemID.dustStone, 1], heat: 500},
 		"ItemID.crushedTin": {result: [ItemID.dustSmallIron, 1, ItemID.dustTin, 1, ItemID.dustStone, 1], heat: 1000},
 		"ItemID.crushedIron": {result: [ItemID.dustSmallGold, 1, ItemID.dustIron, 1, ItemID.dustStone, 1], heat: 1500},

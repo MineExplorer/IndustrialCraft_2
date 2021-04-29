@@ -26,15 +26,17 @@ namespace EntityHelper {
 		return isFriendlyMobType(type) || isHostileMobType(type);
 	}
 
+	export function isPlayer(entity: number): boolean {
+		let type = Entity.getType(entity);
+		return type == 1 || type == 63;
+	}
+
 	export function canTakeDamage(entity: number, damageSource: number): boolean {
 		if (Entity.getHealth(entity) <= 0) return false;
-		if (!IC2Config.wireDamageEnabled && damageSource == DamageSource.electricity) return false;
-
-		let type = Entity.getType(entity);
-		if (type == 1) {
-			if (new PlayerActor(entity).getGameMode() == 1) return false;
+		if (isPlayer(entity)) {
+			let player = new PlayerActor(entity);
+			if (player.getGameMode() == 1) return false;
 			if (damageSource == DamageSource.electricity) {
-				let player = new PlayerActor(entity);
 				if (player.getArmor(0).id == ItemID.hazmatHelmet && player.getArmor(1).id == ItemID.hazmatChestplate &&
 				player.getArmor(2).id == ItemID.hazmatLeggings && player.getArmor(3).id == ItemID.rubberBoots) {
 					return false;
@@ -86,7 +88,7 @@ namespace EntityHelper {
 			let entities = Entity.getAll();
 			for (let i in entities) {
 				let ent = entities[i];
-				if (canTakeDamage(ent, DamageSource.electricity)) {
+				if ((isPlayer(ent) || IC2Config.wireDamageEnabled) && canTakeDamage(ent, DamageSource.electricity)) {
 					let coords = Entity.getPosition(ent);
 					dealDamageFromCables(ent, Math.floor(coords.x), Math.floor(coords.y), Math.floor(coords.z));
 				}

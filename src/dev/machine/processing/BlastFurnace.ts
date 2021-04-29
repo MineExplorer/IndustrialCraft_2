@@ -17,8 +17,8 @@ Callback.addCallback("PreLoaded", function() {
 	], ['s', BlockID.machineBlockBasic, 0, 'a', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
 
 	MachineRecipeRegistry.registerRecipesFor("blastFurnace", {
-		15: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
-		265: {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
+		"minecraft:iron_ore": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
+		"minecraft:iron_ingot": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"ItemID.dustIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"ItemID.crushedPurifiedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"ItemID.crushedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000}
@@ -185,7 +185,7 @@ namespace Machine {
 			return side == this.getFacing();
 		}
 
-		heatReceive(amount: number): number {
+		receiveHeat(amount: number): number {
 			let slot = this.container.getSlot("slotSource");
 			if (this.data.isHeating || this.data.sourceID > 0 || this.getRecipeResult(slot.id)) {
 				amount = Math.min(this.getMaxHeat() - this.data.heat, amount);

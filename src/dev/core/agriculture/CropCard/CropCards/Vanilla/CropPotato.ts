@@ -24,7 +24,7 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: 392
+				id: VanillaItemID.potato
 			};
 		}
 
@@ -46,9 +46,9 @@ namespace Agriculture {
 
 		getGain(te: ICropTileEntity): ItemInstance {
 			if (te.data.currentSize >= 4 && Math.random() < 0.05) {
-				return { id: 394, count: 1, data: 0 };
+				return { id: VanillaItemID.poisonous_potato, count: 1, data: 0 };
 			} else if (te.data.currentSize >= 3) {
-				return { id: 392, count: 1, data: 0 };
+				return { id: VanillaItemID.potato, count: 1, data: 0 };
 			}
 			return null;
 		}

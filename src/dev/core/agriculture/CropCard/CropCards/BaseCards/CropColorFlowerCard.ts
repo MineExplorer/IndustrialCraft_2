@@ -3,7 +3,7 @@
 /// <reference path="../../../CropTile/ICropTileEntity.ts" />
 namespace Agriculture {
 	export class CropColorFlowerCard extends CropCard {
-		constructor(protected id: string, protected attributes: string[], protected color: number, protected baseSeed?: BaseSeed) {
+		constructor(protected id: string, protected attributes: string[], protected dye: ItemInstance, protected baseSeed?: BaseSeed) {
 			super();
 		}
 
@@ -41,10 +41,6 @@ namespace Agriculture {
 			return 4;
 		}
 
-		getColor(): number {
-			return this.color;
-		}
-
 		getOptimalHarvestSize(): number {
 			return 4;
 		}
@@ -55,7 +51,7 @@ namespace Agriculture {
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			return new ItemStack(351, 1, this.getColor());
+			return this.dye;
 		}
 
 		getSizeAfterHarvest(te: ICropTileEntity): number {

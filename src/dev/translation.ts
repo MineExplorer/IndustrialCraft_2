@@ -336,6 +336,7 @@ Translation.addTranslation("wrench", {en: "Wrench", ru: "Гаечный ключ
 Translation.addTranslation("electric_wrench", {en: "Electric Wrench", ru: "Электроключ", es: "Llave Inglesa Eléctrica", pt: "Chave de Grifo Elétrica", zh: "电动扳手"});
 Translation.addTranslation("electric_hoe", {en: "Electric Hoe", ru: "Электромотыга", es: "Azada Eléctrica", pt: "Enxada Elétrica", zh: "电动锄"});
 Translation.addTranslation("electric_treetap", {en: "Electric Treetap", ru: "Электрокраник", es: "Grifo para Resina Eléctrico", pt: "Drenador Elétrico", zh: "电动树脂提取器"});
+Translation.addTranslation("wind_meter", {en: "Windmeter", ru: "Измеритель ветра", es: "Piranómetro", pt: "Anemômetro", zh: "风力计"});
 Translation.addTranslation("chainsaw", {en: "Chainsaw", ru: "Электропила", es: "Motosierra", pt: "Serra Elétrica", zh: "链锯"});
 Translation.addTranslation("drill", {en: "Mining Drill", ru: "Шахтёрский бур", es: "Taladro", pt: "Broca de Mineração", zh: "采矿钻头"});
 Translation.addTranslation("diamond_drill", {en: "Diamond Drill", ru: "Алмазный бур", es: "Taladro de Diamante", pt: "Broca de Diamante", zh: "钻石钻头"});

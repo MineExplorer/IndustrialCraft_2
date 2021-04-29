@@ -25,7 +25,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.crushedSilver": [ItemID.crushedPurifiedSilver, 1, ItemID.dustSmallSilver, 2, ItemID.dustStone, 1],
 		"ItemID.crushedLead": [ItemID.crushedPurifiedLead, 1, ItemID.dustSmallSulfur, 3, ItemID.dustStone, 1],
 		"ItemID.crushedUranium": [ItemID.crushedPurifiedUranium, 1, ItemID.dustSmallLead, 2, ItemID.dustStone, 1],
-		//13: [318, 1, ItemID.dustStone, 1]
+		"minecraft:gravel": [318, 1, ItemID.dustStone, 1]
 	}, true);
 });
 

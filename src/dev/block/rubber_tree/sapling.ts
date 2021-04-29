@@ -47,7 +47,8 @@ Item.registerUseFunctionForID(BlockID.rubberTreeSapling, function(coords, item, 
 
 // bone use
 Callback.addCallback("ItemUse", function(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, isExternal: boolean, playerUid: number) {
-	if (block.id == BlockID.rubberTreeSapling && (item.id == 351 && item.data == 15 || item.id == VanillaItemID.bone_meal)) {
+	const boneMeal = IDConverter.getIDData("bone_meal");
+	if (block.id == BlockID.rubberTreeSapling && item.id == boneMeal.id && item.data == boneMeal.data) {
 		Game.prevent();
 		let region = WorldRegion.getForActor(playerUid);
 		let player = new PlayerEntity(playerUid);
@@ -57,7 +58,7 @@ Callback.addCallback("ItemUse", function(coords: Callback.ItemUseCoordinates, it
 		if (player.getGameMode() == 1 || Math.random() < 0.25) {
 			RubberTreeGenerator.growRubberTree(region.blockSource, coords.x, coords.y, coords.z);
 		}
-		if (IC2Config.getMinecraftVersion() == 11) {
+		if (BlockEngine.getMainGameVersion() == 11) {
 			region.sendPacketInRadius(coords, 64, "ic2.growPlantParticles", {x: coords.x, y: coords.y, z: coords.z});
 		}
 	}

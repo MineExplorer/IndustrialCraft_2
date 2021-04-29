@@ -1,7 +1,8 @@
 /// <reference path="DebugItem.ts" />
-/// <reference path="eu-meter.js" />
+/// <reference path="EUMeter/EUMeter.ts" />
 /// <reference path="Transmitter.ts" />
 /// <reference path="Scanner.ts" />
+/// <reference path="WindMeter.ts" />
 /// <reference path="Treetap.ts" />
 /// <reference path="crafting.ts" />
 /// <reference path="Wrench.ts" />
@@ -37,13 +38,14 @@ ItemRegistry.registerItem(new DebugItem());
 ItemRegistry.registerItem(new ItemTransmitter());
 ItemRegistry.registerItem(new ItemScanner("scanner", "scanner", 10000, 100, 1));
 ItemRegistry.registerItem(new ItemScanner("scannerAdvanced", "scanner_advanced", 100000, 256, 2));
-
+ItemRegistry.registerItem(new ItemWindMeter());
 ItemRegistry.registerItem(new ItemTreetap());
 ItemRegistry.registerItem(new ToolWrench("bronzeWrench", "wrench", "bronze_wrench", 0.8));
 ItemRegistry.registerItem(new ElectricWrench());
 ItemRegistry.registerItem(new ElectricTreetap());
 ItemRegistry.registerItem(new ElectricHoe());
 ItemRegistry.registerItem(new CropAnalyser());
+ItemRegistry.registerItem(new EUMeter());
 
 ItemRegistry.registerItem(new ElectricChainsaw("chainsaw", "chainsaw", { energyPerUse: 100, level: 3, efficiency: 12, damage: 6 }, 30000, 100, 1));
 

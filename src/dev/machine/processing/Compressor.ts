@@ -21,12 +21,12 @@ Callback.addCallback("PreLoaded", function() {
 
 	MachineRecipeRegistry.registerRecipesFor("compressor", {
 		// Blocks
-		80: {id: 79, count: 1, data: 0},
-		12: {id: 24, count: 1, data: 0, sourceCount: 4},
-		336: {id: 45, count: 1, data: 0, sourceCount: 4},
-		405: {id: 112, count: 1, data: 0, sourceCount: 4},
-		348: {id: 89, count: 1, data: 0, sourceCount: 4},
-		406: {id: 155, count: 1, data: 0, sourceCount: 4},
+		"minecraft:snow": {id: 79, count: 1, data: 0},
+		"minecraft:sand": {id: 24, count: 1, data: 0, sourceCount: 4},
+		"minecraft:brick": {id: 45, count: 1, data: 0, sourceCount: 4},
+		"minecraft:netherbrick": {id: 112, count: 1, data: 0, sourceCount: 4},
+		"minecraft:glowstone": {id: 89, count: 1, data: 0, sourceCount: 4},
+		"minecraft:quartz": {id: 155, count: 1, data: 0, sourceCount: 4},
 		// Items
 		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), sourceCount: 9},
 		"ItemID.ingotAlloy": {id: ItemID.plateAlloy, count: 1, data: 0},
@@ -44,12 +44,12 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.plateSteel": {id: ItemID.densePlateSteel, count: 1, data: 0, sourceCount: 9},
 		"ItemID.plateLead": {id: ItemID.densePlateLead, count: 1, data: 0, sourceCount: 9},
 		// Compact
-		331: {id: 152, count: 1, data: 0, sourceCount: 9},
-		"351:4": {id: 22, count: 1, data: 0, sourceCount: 9},
-		264: {id: 57, count: 1, data: 0, sourceCount: 9},
-		388: {id: 133, count: 1, data: 0, sourceCount: 9},
-		265: {id: 42, count: 1, data: 0, sourceCount: 9},
-		266: {id: 41, count: 1, data: 0, sourceCount: 9},
+		"minecraft:redstone": {id: 152, count: 1, data: 0, sourceCount: 9},
+		"minecraft:lapis_lazuli": {id: 22, count: 1, data: 0, sourceCount: 9},
+		"minecraft:diamond": {id: 57, count: 1, data: 0, sourceCount: 9},
+		"minecraft:emerald": {id: 133, count: 1, data: 0, sourceCount: 9},
+		"minecraft:iron_ingot": {id: 42, count: 1, data: 0, sourceCount: 9},
+		"minecraft:gold_ingot": {id: 41, count: 1, data: 0, sourceCount: 9},
 		"ItemID.ingotCopper": {id: BlockID.blockCopper, count: 1, data: 0, sourceCount: 9},
 		"ItemID.ingotTin": {id: BlockID.blockTin, count: 1, data: 0, sourceCount: 9},
 		"ItemID.ingotLead": {id: BlockID.blockLead, count: 1, data: 0, sourceCount: 9},

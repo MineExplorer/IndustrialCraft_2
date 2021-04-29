@@ -4,7 +4,7 @@ let SCRAP_BOX_RANDOM_DROP = [
 	{chance: 1, id: 14, data: 0},
 	{chance: 3, id: 331, data: 0},
 	{chance: 0.8, id: 348, data: 0},
-	{chance: 5, id: 351, data: 15},
+	{chance: 5, ...IDConverter.getIDData("bone_meal")},
 	{chance: 2, id: 17, data: 0},
 	{chance: 2, id: 6, data: 0},
 	{chance: 2, id: 263, data: 0},

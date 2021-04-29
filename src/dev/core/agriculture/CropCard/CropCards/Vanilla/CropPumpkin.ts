@@ -23,7 +23,7 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: 361
+				id: VanillaItemID.pumpkin_seeds
 			};
 		}
 
@@ -36,11 +36,11 @@ namespace Agriculture {
 		}
 
 		getProduct(): ItemInstance {
-			return { id: 86, count: 1, data: 0 };
+			return { id: VanillaBlockID.pumpkin, count: 1, data: 0 };
 		}
 
 		getSeed(te: ICropTileEntity): ItemInstance {
-			return { id: 361, count: randomInt(1, 4), data: 0 };
+			return { id: VanillaItemID.pumpkin_seeds, count: randomInt(1, 4), data: 0 };
 		}
 
 		getGrowthDuration(te: ICropTileEntity): number {

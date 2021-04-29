@@ -16,7 +16,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', BlockID.machineBlockBasic, 0, 'c', ItemID.cellEmpty, 0, 'p', ItemID.casingIron, 0]);
 });
 
-MachineRecipeRegistry.registerRecipesFor("fluidFuel", {
+MachineRecipeRegistry.registerFluidRecipes("fluidFuel", {
 	"biomass": {power: 8, amount: 20},
 	"oil": {power: 8, amount: 10},
 	"biogas": {power: 16, amount: 10},
@@ -53,7 +53,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			let liquidFuel = MachineRecipeRegistry.requireRecipesFor("fluidFuel");
+			let liquidFuel = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
 			this.liquidTank = this.addLiquidTank("fluid", 10000, Object.keys(liquidFuel));
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
@@ -69,10 +69,6 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
 
-		getFuel(liquid: string): {power: number, amount: number} {
-			return MachineRecipeRegistry.getRecipeResult("fluidFuel", liquid);
-		}
-
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
 				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
@@ -81,6 +77,10 @@ namespace Machine {
 				}
 			}
 			return super.onItemUse(coords, item, player);
+		}
+
+		getFuel(liquid: string): {power: number, amount: number} {
+			return MachineRecipeRegistry.getFluidRecipe("fluidFuel", liquid);
 		}
 
 		onTick(): void {
@@ -93,7 +93,8 @@ namespace Machine {
 			if (this.data.fuel <= 0) {
 				let liquid = this.liquidTank.getLiquidStored();
 				let fuel = this.getFuel(liquid);
-				if (fuel && this.liquidTank.getAmount() >= fuel.amount && this.data.energy + fuel.power * fuel.amount <= this.getEnergyStorage()) {
+				let freeCapacity = this.getEnergyStorage() - this.data.energy;
+				if (fuel && this.liquidTank.getAmount() >= fuel.amount && fuel.power * fuel.amount <= freeCapacity) {
 					this.liquidTank.getLiquid(fuel.amount);
 					this.data.fuel = fuel.amount;
 					this.data.liquid = liquid;

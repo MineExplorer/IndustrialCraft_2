@@ -30,10 +30,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 3,
+    version: 4,
     shared: false,
     api: "CoreEngine"
 });
+var BlockEngine;
+(function (BlockEngine) {
+    var gameVersion = getMCPEVersion().array;
+    function getGameVersion() {
+        return gameVersion;
+    }
+    BlockEngine.getGameVersion = getGameVersion;
+    function getMainGameVersion() {
+        return gameVersion[1];
+    }
+    BlockEngine.getMainGameVersion = getMainGameVersion;
+})(BlockEngine || (BlockEngine = {}));
 var Side;
 (function (Side) {
     Side[Side["Client"] = 0] = "Client";
@@ -458,7 +470,21 @@ var WorldRegion = /** @class */ (function () {
             var pos1 = x1, pos2 = y1;
             return this.listEntitiesInAABB(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, z1, x2);
         }
-        return this.blockSource.listEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
+        var entities = this.blockSource.listEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
+        if ((type == 1 || type == 63) != blacklist) {
+            var players = Network.getConnectedPlayers();
+            var dimension = this.getDimension();
+            for (var _i = 0, players_1 = players; _i < players_1.length; _i++) {
+                var ent = players_1[_i];
+                if (Entity.getDimension(ent) != dimension)
+                    continue;
+                var c = Entity.getPosition(ent);
+                if ((c.x >= x1 && c.x <= x2) && (c.y >= y1 && c.y <= y2) && (c.z >= z1 && c.z <= z2)) {
+                    entities.push(ent);
+                }
+            }
+        }
+        return entities;
     };
     /**
      * Plays standart Minecraft sound on the specified coordinates
@@ -1351,6 +1377,82 @@ var ItemRegistry;
     }
     ItemRegistry.createTool = createTool;
 })(ItemRegistry || (ItemRegistry = {}));
+// By NikolaySavenko (https://github.com/NikolaySavenko)
+var IDConverter;
+(function (IDConverter) {
+    var oldIDPairs = {};
+    function registerOld(stringId, oldId, oldData) {
+        oldIDPairs[stringId] = { id: oldId, data: oldData };
+    }
+    IDConverter.registerOld = registerOld;
+    function getStack(stringId, count, data, extra) {
+        if (count === void 0) { count = 1; }
+        if (data === void 0) { data = 0; }
+        if (extra === void 0) { extra = null; }
+        if (BlockEngine.getMainGameVersion() == 11) {
+            var oldPair = oldIDPairs[stringId];
+            if (oldPair) {
+                return new ItemStack(oldPair.id, count, oldPair.data, extra);
+            }
+        }
+        return new ItemStack(VanillaItemID[stringId] || VanillaBlockID[stringId], count, data, extra);
+    }
+    IDConverter.getStack = getStack;
+    function getIDData(stringId) {
+        if (BlockEngine.getMainGameVersion() == 11) {
+            return oldIDPairs[stringId];
+        }
+        else {
+            return { id: VanillaItemID[stringId] || VanillaBlockID[stringId], data: 0 };
+        }
+    }
+    IDConverter.getIDData = getIDData;
+    function getID(stringId) {
+        if (BlockEngine.getMainGameVersion() == 11)
+            return oldIDPairs[stringId].id;
+        else
+            return VanillaItemID[stringId] || VanillaBlockID[stringId];
+    }
+    IDConverter.getID = getID;
+    function getData(stringId) {
+        if (BlockEngine.getMainGameVersion() == 11)
+            return oldIDPairs[stringId].data;
+        else
+            return 0;
+    }
+    IDConverter.getData = getData;
+})(IDConverter || (IDConverter = {}));
+/// <reference path="IDConverter.ts" />
+IDConverter.registerOld("ink_sac", 351, 0);
+IDConverter.registerOld("red_dye", 351, 1);
+IDConverter.registerOld("green_dye", 351, 2);
+IDConverter.registerOld("cocoa_beans", 351, 3);
+IDConverter.registerOld("lapis_lazuli", 351, 4);
+IDConverter.registerOld("purple_dye", 351, 5);
+IDConverter.registerOld("cyan_dye", 351, 6);
+IDConverter.registerOld("light_gray_dye", 351, 7);
+IDConverter.registerOld("gray_dye", 351, 8);
+IDConverter.registerOld("pink_dye", 351, 9);
+IDConverter.registerOld("lime_dye", 351, 10);
+IDConverter.registerOld("yellow_dye", 351, 11);
+IDConverter.registerOld("light_blue_dye", 351, 12);
+IDConverter.registerOld("magenta_dye", 351, 13);
+IDConverter.registerOld("orange_dye", 351, 14);
+IDConverter.registerOld("bone_meal", 351, 15);
+IDConverter.registerOld("black_dye", 351, 16);
+IDConverter.registerOld("brown_dye", 351, 17);
+IDConverter.registerOld("blue_dye", 351, 18);
+IDConverter.registerOld("white_dye", 351, 19);
+IDConverter.registerOld("cooked_cod", VanillaItemID.cooked_fish, 0);
+IDConverter.registerOld("cod", VanillaItemID.fish, 0);
+IDConverter.registerOld("charcoal", VanillaItemID.coal, 1);
+IDConverter.registerOld("melon_slice", VanillaItemID.melon, 0);
+IDConverter.registerOld("oak_boat", 333, 0);
+IDConverter.registerOld("spruce_boat", 333, 1);
+IDConverter.registerOld("birch_boat", 333, 2);
+IDConverter.registerOld("jungle_boat", 333, 3);
+IDConverter.registerOld("acacia_boat", 333, 4);
+IDConverter.registerOld("dark_oak_boat", 333, 5);
 var TileEntityBase = /** @class */ (function () {
     function TileEntityBase() {
         var _a;
@@ -1706,4 +1808,5 @@ EXPORT("Side", Side);
 EXPORT("ItemRegistry", ItemRegistry);
 EXPORT("LiquidItemRegistry", LiquidItemRegistry);
 EXPORT("EntityCustomData", EntityCustomData);
+EXPORT("IDConverter", IDConverter);
 EXPORT("BlockEngine", BlockEngine);

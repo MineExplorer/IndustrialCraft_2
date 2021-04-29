@@ -28,6 +28,13 @@ Callback.addCallback("PreLoaded", function() {
 		"xsx"
 	], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
 
+	// Windmeter
+	Recipes.addShaped({id: ItemID.windMeter, count: 1, data: 27}, [
+		" c",
+		"cbc",
+		" cx"
+	], ['x', ItemID.powerUnitSmall, 0, 'b', ItemID.casingBronze, 0, 'c', ItemID.casingTin, 0]);
+
 	// Treetap
 	Recipes.addShaped({id: ItemID.treetap, count: 1, data: 0}, [
 		" x ",
@@ -162,17 +169,17 @@ Callback.addCallback("PreLoaded", function() {
 		"x  "
 	], ['x', 265, -1, 'a', 35, 0]);
 
-	Recipes.addShapeless({id: ItemID.icPainter1, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 16}]);
-	Recipes.addShapeless({id: ItemID.icPainter2, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 1}]);
-	Recipes.addShapeless({id: ItemID.icPainter3, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 2}]);
-	Recipes.addShapeless({id: ItemID.icPainter4, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 17}]);
-	Recipes.addShapeless({id: ItemID.icPainter5, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 18}]);
+	Recipes.addShapeless({id: ItemID.icPainter1, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("black_dye")]);
+	Recipes.addShapeless({id: ItemID.icPainter2, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("red_dye")]);
+	Recipes.addShapeless({id: ItemID.icPainter3, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("green_dye")]);
+	Recipes.addShapeless({id: ItemID.icPainter4, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("brown_dye")]);
+	Recipes.addShapeless({id: ItemID.icPainter5, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("blue_dye")]);
 
 	for (let i = 6; i <= 15; i++) {
 		Recipes.addShapeless({id: ItemID["icPainter"+i], count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: i-1}]);
 	}
 
-	Recipes.addShapeless({id: ItemID.icPainter16, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: 19}]);
+	Recipes.addShapeless({id: ItemID.icPainter16, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("white_dye")]);
 
 	// MFSU Upgrade Kit
 	Recipes.addShaped({id: ItemID.upgradeMFSU, count: 1, data: 0}, [

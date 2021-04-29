@@ -52,7 +52,7 @@ namespace Agriculture {
 				return new ItemStack(ItemID.grinPowder, 1, 0);
 			}
 			if (te.data.currentSize >= 4) {
-				return new ItemStack(351, 1, 5);
+				return IDConverter.getStack("purple_dye", 1);
 			}
 			return null;
 		}

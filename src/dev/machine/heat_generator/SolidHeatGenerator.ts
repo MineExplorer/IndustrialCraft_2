@@ -76,9 +76,9 @@ namespace Machine {
 		spreadHeat(): number {
 			let side = this.getFacing();
 			let coords = StorageInterface.getRelativeCoords(this, side);
-			let TE = this.region.getTileEntity(coords);
-			if (TE && TE.canReceiveHeat && TE.canReceiveHeat(side ^ 1)) {
-				return this.data.output = TE.heatReceive(20);
+			let tile = this.region.getTileEntity(coords) as IHeatConsumer;
+			if (tile && tile.canReceiveHeat && tile.canReceiveHeat(side ^ 1)) {
+				return this.data.output = tile.receiveHeat(20);
 			}
 			return 0;
 		}

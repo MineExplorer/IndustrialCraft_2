@@ -1,5 +1,3 @@
-/// <reference path="IUpgrade.ts" />
-
 namespace UpgradeAPI {
 	const data = {};
 
@@ -47,7 +45,6 @@ namespace UpgradeAPI {
 	}
 
 	export class UpgradeSet {
-		tileEntity: TileEntity;
 		speedModifier: number;
 		processTimeMultiplier: number;
 		energyDemandMultiplier: number;
@@ -55,8 +52,7 @@ namespace UpgradeAPI {
 		extraTier: number;
 		invertRedstone: boolean;
 
-		constructor(tileEntity: TileEntity) {
-			this.tileEntity = tileEntity;
+		constructor(protected tileEntity: TileEntity) {
 			this.resetRates();
 			this.useUpgrades();
 		}
@@ -84,10 +80,7 @@ namespace UpgradeAPI {
 
 		isValidUpgrade(upgrade: IUpgrade): boolean {
 			let validUpgrades = this.tileEntity["upgrades"];
-			if (!validUpgrades || validUpgrades.indexOf(upgrade.type) != -1) {
-				return true;
-			}
-			return false;
+			return (!validUpgrades || validUpgrades.indexOf(upgrade.type) != -1);
 		}
 
 		executeUprade(upgrade: IUpgrade, stack: ItemInstance) {
@@ -130,10 +123,7 @@ namespace UpgradeAPI {
 		}
 
 		getRedstoneInput(powered: boolean): boolean {
-			if (this.invertRedstone) {
-				return !powered;
-			}
-			return powered;
+			return this.invertRedstone ? !powered : powered;
 		}
 	}
 }

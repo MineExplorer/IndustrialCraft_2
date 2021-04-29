@@ -23,7 +23,7 @@ namespace Agriculture {
 		getBaseSeed(): BaseSeed {
 			return {
 				...super.getBaseSeed(),
-				id: 362
+				id: VanillaItemID.melon_seeds
 			};
 		}
 
@@ -37,13 +37,13 @@ namespace Agriculture {
 
 		getProduct(): ItemInstance {
 			if (Math.random() < 0.5) {
-				return { id: 103, count: 1, data: 0 };
+				return { id: VanillaBlockID.melon_block, count: 1, data: 0 };
 			}
-			return { id: 360, count: randomInt(2, 6), data: 0 };
+			return IDConverter.getStack("melon_slice", randomInt(2, 6));
 		}
 
 		getSeed(te: ICropTileEntity): ItemInstance {
-			return { id: 362, count: randomInt(1, 3), data: 0 };
+			return { id: VanillaItemID.melon_seeds, count: randomInt(1, 3), data: 0 };
 		}
 
 		getGrowthDuration(te: ICropTileEntity): number {

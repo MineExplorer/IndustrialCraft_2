@@ -3,6 +3,7 @@
 header.ts
 translation.ts
 
+core/id_convert/*
 core/**/*
 
 block/rubber_tree/**

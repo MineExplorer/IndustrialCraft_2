@@ -61,7 +61,7 @@ function(api, field, result) {
 	result.id = result.count = 0;
 });
 
-Recipes.addShapeless({id: ItemID.lzhCondensator, count: 1, data: 1}, [{id: ItemID.lzhCondensator, data: -1}, {id: 351, data: 4}],
+Recipes.addShapeless({id: ItemID.lzhCondensator, count: 1, data: 1}, [{id: ItemID.lzhCondensator, data: -1}, IDConverter.getIDData("lapis_lazuli")],
 function(api, field, result) {
 	let index = 0;
 	let canBeRepaired = false;

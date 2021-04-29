@@ -9,12 +9,13 @@ ModAPI.registerAPI("ICore", {
 	Radiation: RadiationAPI,
 	Tool: ICTool,
 	Sound: SoundManager,
-	Agriculture: AgricultureAPI,
+	Agriculture: Agriculture,
 	ItemName: ItemName,
 	UI: UIbuttons,
 	Config: IC2Config,
 	Ore: OreGenerator,
 	Integration: IntegrationAPI,
+	WindSim: WindSim,
 
 	requireGlobal: function(command: string) {
 		return eval(command);

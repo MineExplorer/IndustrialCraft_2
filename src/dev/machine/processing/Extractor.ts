@@ -22,8 +22,8 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.latex": {id: ItemID.rubber, count: 3},
 		"BlockID.rubberTreeSapling": {id: ItemID.rubber, count: 1},
 		"BlockID.rubberTreeLog": {id: ItemID.rubber, count: 1},
-		35: {id: 35, count: 1},
-		289: {id: ItemID.dustSulfur, count: 1},
+		"minecraft:wool": {id: 35, count: 1},
+		"minecraft:gunpowder": {id: ItemID.dustSulfur, count: 1},
 		"ItemID.tinCanFull": {id: ItemID.tinCanEmpty, count: 1},
 	}, true);
 });

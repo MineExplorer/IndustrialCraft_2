@@ -1,3 +1,7 @@
+declare namespace BlockEngine {
+    function getGameVersion(): number[];
+    function getMainGameVersion(): number;
+}
 declare enum Side {
     Client = 0,
     Server = 1
@@ -388,7 +392,7 @@ declare class ItemStack implements ItemInstance {
     extra?: ItemExtraData;
     constructor();
     constructor(item: ItemInstance);
-    constructor(id: number, count: number, data: number, extra?: ItemExtraData);
+    constructor(id: number, count: number, data?: number, extra?: ItemExtraData);
     getItemInstance(): Nullable<ItemBase>;
     getMaxStack(): number;
     getMaxDamage(): number;
@@ -625,6 +629,18 @@ declare namespace ItemRegistry {
         rarity?: number;
     }
     export function createTool(stringID: string, params: ToolDescription, toolData?: ToolParams): ItemTool;
+    export {};
+}
+declare namespace IDConverter {
+    type IDDataPair = {
+        id: number;
+        data: number;
+    };
+    export function registerOld(stringId: string, oldId: number, oldData: number): void;
+    export function getStack(stringId: string, count?: number, data?: number, extra?: ItemExtraData): ItemStack;
+    export function getIDData(stringId: string): IDDataPair;
+    export function getID(stringId: string): number;
+    export function getData(stringId: string): number;
     export {};
 }
 declare abstract class TileEntityBase implements TileEntity {

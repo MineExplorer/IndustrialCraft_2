@@ -43,8 +43,8 @@ Callback.addCallback("PreLoaded", function() {
 	// rolling
 	MachineRecipeRegistry.registerRecipesFor("metalFormer0", {
 		// ingots
-		265: {id: ItemID.plateIron, count: 1},
-		266: {id: ItemID.plateGold, count: 1},
+		"minecraft:iron_ingot": {id: ItemID.plateIron, count: 1},
+		"minecraft:gold_ingot": {id: ItemID.plateGold, count: 1},
 		"ItemID.ingotCopper": {id: ItemID.plateCopper, count: 1},
 		"ItemID.ingotTin": {id: ItemID.plateTin, count: 1},
 		"ItemID.ingotBronze": {id: ItemID.plateBronze, count: 1},
@@ -71,8 +71,8 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.ingotTin": {id: ItemID.cableTin0, count: 3},
 		"ItemID.ingotCopper": {id: ItemID.cableCopper0, count: 3},
 		"ItemID.ingotGold": {id: ItemID.cableGold0, count: 4},
-		265: {id: ItemID.cableIron0, count: 4},
-		266: {id: ItemID.cableGold0, count: 4},
+		"minecraft:iron_ingot": {id: ItemID.cableIron0, count: 4},
+		"minecraft:gold_ingot": {id: ItemID.cableGold0, count: 4},
 		"ItemID.casingTin": {id: ItemID.tinCanEmpty, count: 1},
 		"ItemID.plateIron": {id: ItemID.fuelRod, count: 1},
 	}, true);

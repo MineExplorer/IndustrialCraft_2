@@ -46,29 +46,30 @@ namespace Agriculture {
 	CropCardManager.registerCropCard(new CropRedMushroom());
 	CropCardManager.registerCropCard(new CropBrownMushroom());
 	// Flowers
-	CropCardManager.registerCropCard(new CropColorFlowerCard("dandelion", ["Yellow", "Flower"], 0, {
-		id: 37,
+
+	CropCardManager.registerCropCard(new CropColorFlowerCard("dandelion", ["Yellow", "Flower"], IDConverter.getStack("yellow_dye"), {
+		id: VanillaBlockID.yellow_flower,
 		size: 4,
 		growth: 1,
 		gain: 1,
 		resistance: 1,
 		addToCreative: true
 	}));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("rose", ["Red", "Flower", "Rose"], 1, {
-		id: 38,
+	CropCardManager.registerCropCard(new CropColorFlowerCard("rose", ["Red", "Flower", "Rose"], IDConverter.getStack("red_dye"), {
+		id: VanillaBlockID.red_flower,
 		size: 4,
 		growth: 1,
 		gain: 1,
 		resistance: 1,
 		addToCreative: true
 	}));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("blackthorn", ["Black", "Flower", "Rose"], 0));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("tulip", ["Purple", "Flower", "Tulip"], 5));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("cyazint", ["Blue", "Flower"], 6));
+	CropCardManager.registerCropCard(new CropColorFlowerCard("blackthorn", ["Black", "Flower", "Rose"], IDConverter.getStack("black_dye")));
+	CropCardManager.registerCropCard(new CropColorFlowerCard("tulip", ["Purple", "Flower", "Tulip"], IDConverter.getStack("purple_dye")));
+	CropCardManager.registerCropCard(new CropColorFlowerCard("cyazint", ["Blue", "Flower"], IDConverter.getStack("cyan_dye")));
 	// Metal common
 	CropCardManager.registerCropCard(new CropBaseMetalCommon("ferru",
 		["Gray", "Leaves", "Metal"],
-		[15, 42],
+		[VanillaTileID.iron_ore, VanillaTileID.iron_block],
 		{ id: ItemID.dustSmallIron, count: 1, data: 0 }));
 	CropCardManager.registerCropCard(new CropBaseMetalCommon("cyprium",
 		["Orange", "Leaves", "Metal"],
@@ -84,8 +85,8 @@ namespace Agriculture {
 		{ id: ItemID.dustSmallLead, count: 1, data: 0 }));
 	CropCardManager.registerCropCard(new CropBaseMetalUncommon("aurelia",
 		["Gold", "Leaves", "Metal"],
-		[14, 41],
-		{ id: 371, count: 1, data: 0 }));
+		[VanillaTileID.gold_ore, VanillaTileID.gold_block],
+		{ id: VanillaItemID.gold_nugget, count: 1, data: 0 }));
 	CropCardManager.registerCropCard(new CropBaseMetalUncommon("shining",
 		["Silver", "Leaves", "Metal"],
 		[BlockID.blockSilver, BlockID.oreSilver],

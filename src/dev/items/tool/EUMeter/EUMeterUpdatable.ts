@@ -16,20 +16,19 @@ class EUMeterUpdatable {
 	remove: boolean;
 
 	constructor(protected node: EnergyNode) {
-		const container = new ItemContainer();
-		this.setupContainer(container);
-		this.container = container;
+		this.container = new ItemContainer();
 		this.resetValues();
 	}
 
-	setupContainer(container: ItemContainer): void {
-		container.setClientContainerTypeName("eu_meter.ui");
-		container.addServerCloseListener(() => {
+	setupContainer(): void {
+		this.container.setClientContainerTypeName("eu_meter.ui");
+		this.container.addServerCloseListener(() => {
 			this.destroy();
 		});
-		container.addServerEventListener("reset", () => this.resetValues());
-		container.addServerEventListener("setMode", (container, client, data: {mode: number}) => {
+		this.container.addServerEventListener("reset", () => this.resetValues());
+		this.container.addServerEventListener("setMode", (container, client, data: {mode: number}) => {
 			this.mode = data.mode;
+			this.resetValues();
 		});
 	}
 
@@ -57,10 +56,13 @@ class EUMeterUpdatable {
 		switch (this.mode) {
 		case 0:
 			value = node.energyIn;
+		break;
 		case 1:
 			value = node.energyOut;
+		break;
 		case 2:
 			value = node.energyIn - node.energyOut;
+		break;
 		case 3:
 			value = node.energyPower;
 		break;
@@ -68,15 +70,15 @@ class EUMeterUpdatable {
 		this.minValue = Math.min(this.minValue, value);
 		this.maxValue = Math.max(this.maxValue, value);
 		this.sum += value;
-		this.container.setText("textMinValue", `${this.roundValue(this.minValue)} ${unit}`);
-		this.container.setText("textMaxValue", `${this.roundValue(this.maxValue)} ${unit}`);
-		this.container.setText("textAvgValue", `${this.roundValue(this.sum / this.time)} ${unit}`);
+		this.container.setText("textMinValue", this.displayValue(this.minValue, unit));
+		this.container.setText("textMaxValue", this.displayValue(this.maxValue, unit));
+		this.container.setText("textAvgValue", this.displayValue(this.sum / this.time, unit));
 		this.container.setText("textTime", Translation.translate("Cycle: ") + Math.floor(this.time / 20) + " " + Translation.translate("sec"));
 		this.container.sendChanges();
 	}
 
-	roundValue(value: number): number {
-		return Math.round(value * 100) / 100;
+	displayValue(value: number, unit: string): string {
+		return `${Math.round(value * 100) / 100} ${unit}`;
 	}
 
 	destroy(): void {
@@ -89,6 +91,7 @@ class EUMeterUpdatable {
 		for (let key in instance) {
 			obj[key] = instance[key];
 		}
+		obj.setupContainer();
 		return obj;
 	}
 }

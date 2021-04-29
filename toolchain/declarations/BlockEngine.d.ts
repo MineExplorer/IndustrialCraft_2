@@ -631,6 +631,18 @@ declare namespace ItemRegistry {
     export function createTool(stringID: string, params: ToolDescription, toolData?: ToolParams): ItemTool;
     export {};
 }
+declare namespace IDConverter {
+    type IDDataPair = {
+        id: number;
+        data: number;
+    };
+    export function registerOld(stringId: string, oldId: number, oldData: number): void;
+    export function getStack(stringId: string, count?: number, data?: number, extra?: ItemExtraData): ItemStack;
+    export function getIDData(stringId: string): IDDataPair;
+    export function getID(stringId: string): number;
+    export function getData(stringId: string): number;
+    export {};
+}
 declare abstract class TileEntityBase implements TileEntity {
     constructor();
     x: number;

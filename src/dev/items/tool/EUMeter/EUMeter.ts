@@ -7,7 +7,11 @@ implements ItemBehavior {
 		this.setMaxStack(1);
 		this.setCategory(ItemCategory.EQUIPMENT);
 		ItemContainer.registerScreenFactory("eu_meter.ui", function (container, name) {
-			return EUMeter.gui;
+			const gui = EUMeter.gui;
+			const elements: any = gui.getContent().elements;
+			elements.arrow.bitmap = "eu_meter_arrow_0";
+			elements.textMode2.text = Translation.translate("EnergyIn");
+			return gui;
 		});
 	}
 
@@ -60,33 +64,37 @@ implements ItemBehavior {
 				}
 			}},
 			"arrowButton0": {type: "button", x: 576, y: 206, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-				onClick: function(pos: Vector, container: ItemContainer, _, window: UI.Window) {
+				onClick: function(pos: Vector, container: ItemContainer) {
 					container.sendEvent("setMode", {mode: 0});
-					var elements: any = window.getContent().elements;
+					//@ts-ignore
+					const elements = container.getWindow().getContent().elements;
 					elements.arrow.bitmap = "eu_meter_arrow_0";
 					elements.textMode2.text = Translation.translate("EnergyIn");
 				}
 			}},
 			"arrowButton1": {type: "button", x: 640, y: 206, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-				onClick: function(pos: Vector, container: ItemContainer, _, window: UI.Window) {
+				onClick: function(pos: Vector, container: ItemContainer) {
 					container.sendEvent("setMode", {mode: 1});
-					const elements: any = window.getContent().elements;
+					//@ts-ignore
+					const elements = container.getWindow().getContent().elements;
 					elements.arrow.bitmap = "eu_meter_arrow_1";
 					elements.textMode2.text = Translation.translate("EnergyOut");
 				}
 			}},
 			"arrowButton2": {type: "button", x: 576, y: 270, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-				onClick: function(pos: Vector, container: ItemContainer, _, window: UI.Window) {
+				onClick: function(pos: Vector, container: ItemContainer) {
 					container.sendEvent("setMode", {mode: 2});
-					const elements: any = window.getContent().elements;
+					//@ts-ignore
+					const elements = container.getWindow().getContent().elements;
 					elements.arrow.bitmap = "eu_meter_arrow_2";
 					elements.textMode2.text = Translation.translate("EnergyGain");
 				}
 			}},
 			"arrowButton3": {type: "button", x: 640, y: 270, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-				onClick: function(pos: Vector, container: ItemContainer, _, window: UI.Window) {
+				onClick: function(pos: Vector, container: ItemContainer) {
 					container.sendEvent("setMode", {mode: 3});
-					const elements: any = window.getContent().elements;
+					//@ts-ignore
+					const elements = container.getWindow().getContent().elements;
 					elements.arrow.bitmap = "eu_meter_arrow_3";
 					elements.textMode2.text = Translation.translate("Voltage");
 				}

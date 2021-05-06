@@ -103,7 +103,7 @@ namespace Machine {
 
 			this.dischargeSlot("slotEnergy");
 
-			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.setText("textInfo2", maxOutput);
 			this.container.sendChanges();
 		}

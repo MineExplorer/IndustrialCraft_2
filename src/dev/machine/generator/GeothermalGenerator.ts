@@ -70,8 +70,7 @@ namespace Machine {
 			let slot2 = this.container.getSlot("slot2");
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
-			const energyStorage = this.getEnergyStorage();
-			if (this.liquidTank.getAmount("lava") >= 1 && this.data.energy + 20 <= energyStorage) {
+			if (this.liquidTank.getAmount("lava") >= 1 && this.data.energy + 20 <= this.getEnergyStorage()) {
 				this.data.energy += 20;
 				this.liquidTank.getLiquid(1);
 				this.setActive(true);
@@ -82,7 +81,7 @@ namespace Machine {
 
 			this.chargeSlot("slotEnergy");
 			this.liquidTank.updateUiScale("liquidScale");
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendChanges();
 		}
 

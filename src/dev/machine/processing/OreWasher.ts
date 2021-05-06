@@ -139,7 +139,7 @@ namespace Machine {
 
 			this.liquidTank.updateUiScale("liquidScale");
 			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendChanges();
 		}
 

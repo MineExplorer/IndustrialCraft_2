@@ -140,7 +140,7 @@ namespace Machine {
 				this.container.setText("textInfoXYZ", "");
 			}
 
-			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendEvent("setSilktouchIcon", {mode: this.data.silk_touch});
 			this.container.sendChanges();
 		}
@@ -193,13 +193,14 @@ namespace Machine {
 		}
 
 		harvestBlock(x: number, y: number, z: number, block: Tile): boolean {
-			// @ts-ignore
-			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, 100, {silk: this.data.silk_touch});
+			let enchant = ToolAPI.getEnchantExtraData();
+			enchant.silk = this.data.silk_touch;
+			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, 100, enchant);
 			if (this.checkDrop(drop)) return false;
 			this.region.setBlock(x, y, z, 0, 0);
 			let items = [];
-			for (let i in drop) {
-				items.push(new ItemStack(drop[i][0], drop[i][1], drop[i][2], drop[i][3]));
+			for (let item of drop) {
+				items.push(new ItemStack(item[0], item[1], item[2], item[3]));
 			}
 			this.drop(items);
 			this.data.energy -= 512;
@@ -208,10 +209,12 @@ namespace Machine {
 
 		checkDrop(drop: ItemInstanceArray[]): boolean {
 			if (drop.length == 0) return true;
-			for (let i in drop) {
-				for (let j = 0; j < 16; j++) {
-					let slot = this.container.getSlot("slot"+j);
-					if (slot.id == drop[i][0] && slot.data == drop[i][2]) {return !this.data.whitelist;}
+			for (let item of drop) {
+				for (let i = 0; i < 16; i++) {
+					let slot = this.container.getSlot("slot"+i);
+					if (slot.id == item[0] && slot.data == item[2]) {
+						return !this.data.whitelist;
+					}
 				}
 			}
 			return this.data.whitelist;
@@ -220,8 +223,7 @@ namespace Machine {
 		drop(items: ItemInstance[]): void {
 			let containers = StorageInterface.getNearestContainers(this, this.blockSource);
 			StorageInterface.putItems(items, containers);
-			for (let i in items) {
-				let item = items[i];
+			for (let item of items) {
 				if (item.count > 0) {
 					this.region.dropItem(this.x + .5, this.y + 1, this.z + .5, item);
 				}

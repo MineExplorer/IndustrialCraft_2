@@ -230,7 +230,7 @@ namespace Machine {
 			this.inputTank.updateUiScale("liquidInputScale");
 			this.outputTank.updateUiScale("liquidOutputScale");
 			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendChanges();
 		}
 

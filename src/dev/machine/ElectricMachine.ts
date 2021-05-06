@@ -21,6 +21,10 @@ namespace Machine {
 			return 0;
 		}
 
+		getRelativeEnergy(): number {
+			return this.data.energy / this.getEnergyStorage();
+		}
+
 		getMaxPacketSize(): number {
 			return 8 << this.getTier()*2;
 		}

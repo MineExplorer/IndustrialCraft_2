@@ -105,8 +105,9 @@ namespace Machine {
 				}
 			}
 
-			this.container.setScale("energyScale", this.data.progress / ENERGY_PER_MATTER);
-			this.container.setText("textInfo2", Math.floor(100 * this.data.progress / ENERGY_PER_MATTER) + "%");
+			let relProgress = this.data.progress / ENERGY_PER_MATTER;
+			this.container.setScale("energyScale", relProgress);
+			this.container.setText("textInfo2", Math.floor(100 * relProgress) + "%");
 			this.container.sendChanges();
 		}
 

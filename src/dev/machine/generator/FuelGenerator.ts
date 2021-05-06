@@ -76,8 +76,8 @@ namespace Machine {
 
 		onTick(): void {
 			StorageInterface.checkHoppers(this);
-			const energyStorage = this.getEnergyStorage();
 
+			const energyStorage = this.getEnergyStorage();
 			if (this.data.burn <= 0 && this.data.energy + 10 <= energyStorage) {
 				this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel") / 4;
 			}
@@ -91,7 +91,7 @@ namespace Machine {
 
 			this.chargeSlot("slotEnergy");
 			this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.setText("textInfo1", this.data.energy + "/");
 			this.container.sendChanges();
 		}

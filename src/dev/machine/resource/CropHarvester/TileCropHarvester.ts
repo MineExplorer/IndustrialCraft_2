@@ -49,7 +49,7 @@ namespace Machine {
 			if (this.data.energy > 100) this.scan();
 			this.dischargeSlot("slotEnergy");
 
-			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendChanges();
 		}
 
@@ -78,8 +78,7 @@ namespace Machine {
 					drops = cropTile.performHarvest();
 				}
 				if (drops && drops.length) {
-					for (let i in drops) {
-						let item = drops[i];
+					for (let item of drops) {
 						this.putItem(item);
 						this.data.energy -= 100;
 						if (item.count > 0) {

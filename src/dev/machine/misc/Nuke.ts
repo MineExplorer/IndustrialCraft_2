@@ -35,13 +35,13 @@ namespace Machine {
 
 		explode(radius: number): void {
 			SoundManager.playSound("NukeExplosion.ogg");
-			let entities = Entity.getAll();
-			let damageRad = radius * 1.5;
-			for (let i in entities) {
-				let ent = entities[i];
-				let dist = Entity.getDistanceBetweenCoords(this, Entity.getPosition(ent))
-				if (dist <= damageRad) {
-					let damage = Math.ceil(damageRad*damageRad * 25 / (dist*dist));
+			let r = radius * 1.5;
+			let epicenter = new Vector3(this.x + .5, this.y + .5, this.z + .5);
+			let entities = this.region.listEntitiesInAABB(epicenter.x - r, epicenter.y - r, epicenter.z - r, epicenter.x + r, epicenter.y + r, epicenter.z + r);
+			for (let ent of entities) {
+				let dist = Entity.getDistanceBetweenCoords(epicenter, Entity.getPosition(ent))
+				if (dist <= r) {
+					let damage = Math.ceil(r*r * 25 / (dist*dist));
 					if (damage >= 100) {
 						Entity.damageEntity(ent, damage);
 					} else {
@@ -61,9 +61,7 @@ namespace Machine {
 						this.blockSource.setBlock(xx, yy, zz, 0, 0);
 						if (Math.random() < 0.01) {
 							let drop = ToolLib.getBlockDrop(new Vector3(xx, yy, zz), block.id, block.data, 100);
-							if (drop)
-							for (let i in drop) {
-								let item = drop[i];
+							for (let item of drop) {
 								this.blockSource.spawnDroppedItem(xx + .5, yy + .5, zz + .5, item[0], item[1], item[2], item[3] || null);
 							}
 						}

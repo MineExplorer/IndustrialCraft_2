@@ -135,7 +135,7 @@ namespace Machine {
 				this.container.setText("textInfoMode", Translation.translate("Mode: Blacklist"));
 			}
 			if (this.data.y < 0) {
-				this.container.setText("textInfoXYZ", "X: "+ this.data.x + ", Y: "+ Math.min(this.data.y, -1) + ", Z: "+ this.data.z);
+				this.container.setText("textInfoXYZ", `X: ${this.data.x}, Y: ${this.data.y}, Z: ${this.data.z}`);
 			} else {
 				this.container.setText("textInfoXYZ", "");
 			}
@@ -147,30 +147,33 @@ namespace Machine {
 
 		operate(): void {
 			let newActive = false;
-			if (this.data.isEnabled && this.y + this.data.y >= 0 && this.data.energy >= 512) {
+			let data = this.data;
+			if (data.isEnabled && this.y + data.y >= 0 && data.energy >= 512) {
 				let scanner = this.container.getSlot("slotScanner");
 				let scanR = this.getScanRadius(scanner.id);
 				let energyStored = ChargeItemRegistry.getEnergyStored(scanner);
 				if (scanR > 0 && energyStored >= 64) {
 					newActive = true;
 					if (World.getThreadTime()%20 == 0) {
-						if (this.data.y == 0) {
-							this.data.x = -scanR;
-							this.data.y = -1;
-							this.data.z = -scanR;
+						if (data.y == 0) {
+							data.x = -scanR;
+							data.y = -1;
+							data.z = -scanR;
 						}
 						for (let i = 0; i < this.maxScanCount; i++) {
-							if (this.data.x > scanR) {
-								this.data.x = -scanR;
-								this.data.z++;
+							if (data.x > scanR) {
+								data.x = -scanR;
+								data.z++;
 							}
-							if (this.data.z > scanR) {
-								this.data.z = -scanR;
-								this.data.y--;
+							if (data.z > scanR) {
+								data.z = -scanR;
+								data.y--;
 							}
 							energyStored -= 64;
-							let x = this.x + this.data.x, y = this.y + this.data.y, z = this.z + this.data.z;
-							this.data.x++;
+							let x = this.x + data.x;
+							let y = this.y + data.y;
+							let z = this.z + data.z;
+							data.x++;
 							let block = this.region.getBlock(x, y, z);
 							if (this.isValidBlock(block.id, block.data)) {
 								if (this.harvestBlock(x, y, z, block))
@@ -197,13 +200,14 @@ namespace Machine {
 			enchant.silk = this.data.silk_touch;
 			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, 100, enchant);
 			if (this.checkDrop(drop)) return false;
+
+			this.data.energy -= 512;
 			this.region.setBlock(x, y, z, 0, 0);
 			let items = [];
 			for (let item of drop) {
 				items.push(new ItemStack(item[0], item[1], item[2], item[3]));
 			}
 			this.drop(items);
-			this.data.energy -= 512;
 			return true;
 		}
 

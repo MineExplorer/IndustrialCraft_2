@@ -1,4 +1,7 @@
 let ore_blocks = [14, 15, 16, 21, 73, 74, 56, 129, 153];
+if (BlockEngine.getMainGameVersion() >= 16) {
+	ore_blocks.push(VanillaTileID.nether_gold_ore, VanillaTileID.gilded_blackstone, VanillaTileID.ancient_debris);
+}
 
 Callback.addCallback("PreLoaded", function() {
 	for (let id in BlockID) {
@@ -10,9 +13,6 @@ Callback.addCallback("PreLoaded", function() {
 
 class ItemScanner
 extends ItemElectric {
-	energyPerUse: number;
-	radius: number;
-
 	constructor(stringID: string, name: string, maxCharge: number, transferLimit: number, tier: number) {
 		super(stringID, name, maxCharge, transferLimit, tier);
 	}
@@ -32,10 +32,11 @@ extends ItemElectric {
 			client.sendMessage(Translation.translate("Scan Result: ") + coords.x + ", " + coords.y + ", " + coords.z);
 			let ores = {};
 			let radius = this.getScanRadius();
+			let region = BlockSource.getDefaultForActor(player);
 			for (let x = coords.x - radius; x <= coords.x + radius; x++) {
 				for (let y = coords.y - radius; y <= coords.y + radius; y++) {
 					for (let z = coords.z - radius; z <= coords.z + radius; z++) {
-						let blockID = World.getBlockID(x, y, z);
+						let blockID = region.getBlockId(x, y, z);
 						if (ore_blocks.indexOf(blockID) != -1) {
 							if (!ores[blockID]) ores[blockID] = 0;
 							ores[blockID]++;
@@ -44,7 +45,8 @@ extends ItemElectric {
 				}
 			}
 			for (let id in ores) {
-				client.sendMessage(Item.getName(parseInt(id), 0) + " - " + ores[id])
+				let itemID = Block.convertBlockToItemId(parseInt(id));
+				client.sendMessage(Item.getName(itemID, 0) + " - " + ores[id])
 			}
 		}
 	}

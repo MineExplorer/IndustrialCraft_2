@@ -346,7 +346,8 @@ namespace Machine {
 				}
 			}
 			if (power >= 0.7 && World.getThreadTime()%20 == 0) {
-				let entities = this.region.listEntitiesInAABB(this.x - 3, this.y - 3, this.z -3, this.x + 4, this.y + 4, this.z + 4);
+				let pos = new Vector3(this.x + .5, this.y + .5, this.z + .5);
+				let entities = EntityHelper.getEntitiesInRadius(this.region, pos, 4);
 				for (let ent of entities) {
 					if (EntityHelper.canTakeDamage(ent, DamageSource.radiation)) {
 						RadiationAPI.addEffect(ent, Math.floor(4 * this.data.hem));

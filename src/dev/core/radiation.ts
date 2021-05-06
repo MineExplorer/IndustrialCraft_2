@@ -80,7 +80,7 @@ namespace RadiationAPI {
 		}
 	}
 
-	export function addEffectInRange(x: number, y: number, z: number, region: WorldRegion, radius: number, duration: number): void {
+	export function addEffectInRange(region: WorldRegion, x: number, y: number, z: number, radius: number, duration: number): void {
 		let entities = EntityHelper.getEntitiesInRadius(region, new Vector3(x, y, z), radius);
 		for (let ent of entities) {
 			if (EntityHelper.canTakeDamage(ent, DamageSource.radiation)) {
@@ -119,7 +119,7 @@ namespace RadiationAPI {
 				let source: RadiationSource = sources[i];
 				let region = WorldRegion.getForDimension(source.dimension);
 				if (!region) continue;
-				addEffectInRange(source.x, source.y, source.z, region, source.radius, 10);
+				addEffectInRange(region, source.x, source.y, source.z, source.radius, 10);
 				source.timer--;
 				if (source.timer <= 0) {
 					sources.splice(i--, 1);

@@ -35,18 +35,16 @@ namespace Machine {
 
 		explode(radius: number): void {
 			SoundManager.playSound("NukeExplosion.ogg");
-			let r = radius * 1.5;
+			let damageRad = radius * 1.5;
 			let epicenter = new Vector3(this.x + .5, this.y + .5, this.z + .5);
-			let entities = this.region.listEntitiesInAABB(epicenter.x - r, epicenter.y - r, epicenter.z - r, epicenter.x + r, epicenter.y + r, epicenter.z + r);
+			let entities = EntityHelper.getEntitiesInRadius(this.region, epicenter, damageRad);
 			for (let ent of entities) {
 				let dist = Entity.getDistanceBetweenCoords(epicenter, Entity.getPosition(ent))
-				if (dist <= r) {
-					let damage = Math.ceil(r*r * 25 / (dist*dist));
-					if (damage >= 100) {
-						Entity.damageEntity(ent, damage);
-					} else {
-						Entity.damageEntity(ent, damage, 11);
-					}
+				let damage = Math.ceil(damageRad*damageRad * 25 / (dist*dist));
+				if (damage >= 100) {
+					Entity.damageEntity(ent, damage);
+				} else {
+					Entity.damageEntity(ent, damage, 11);
 				}
 			}
 

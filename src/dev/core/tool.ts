@@ -1,7 +1,7 @@
 interface IWrech {
 	dropChance: number;
 	isUseable(item: ItemInstance, damage: number): boolean;
-	useItem(item: ItemStack, damage: number, player: number): boolean;
+	useItem(item: ItemStack, damage: number, player: number): void;
 }
 
 namespace ICTool {
@@ -24,9 +24,9 @@ namespace ICTool {
 		return wrench?.isUseable(item, damage);
 	}
 
-	export function useWrench(item: ItemStack, damage: number, player: number): boolean {
+	export function useWrench(item: ItemStack, damage: number, player: number): void {
 		let wrench = getWrenchData(item.id);
-		return wrench?.useItem(item, damage, player);
+		wrench?.useItem(item, damage, player);
 	}
 
 	export function rotateMachine(tileEntity: TileEntity, side: number, item: ItemStack, player: number): void {

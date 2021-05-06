@@ -10511,6 +10511,12 @@ declare namespace TileEntity {
                  */
                 [eventName: string]: (container: ItemContainer, window: UI.Window | UI.StandartWindow | UI.StandardWindow | UI.TabbedWindow | null, windowContent: UI.WindowContent | null, eventData: any) => void;
             }
+	
+	    /**
+              * Any other user-defined methods and properties
+              */
+            [key: string]: any
+	    
         },
 
         /**
@@ -10625,6 +10631,10 @@ declare interface TileEntity extends TileEntity.TileEntityPrototype {
      * dimension where the TileEntity is located
      */
     readonly dimension: number,
+    /**
+     * block id of TileEntity
+     */
+    readonly blockID: number,
     /**
      * TileEntity data values object
      */

@@ -114,22 +114,21 @@ namespace ICTool {
 	});
 
 	Network.addServerPacket("icpe.demontageMachine", function (client: NetworkClient, data: Vector) {
-		const player = client.getPlayerUid();
-		const region = WorldRegion.getForActor(player);
-		const blockID = region.getBlockId(data);
+		let player = client.getPlayerUid();
+		let region = WorldRegion.getForActor(player);
+		let blockID = region.getBlockId(data);
 		if (MachineRegistry.isMachine(blockID)) {
-			const item = new ItemStack(Entity.getCarriedItem(player));
+			let item = new ItemStack(Entity.getCarriedItem(player));
 			if (ICTool.isUseableWrench(item, 10)) {
-				ICTool.useWrench(item, 10, player);
-				const tileEntity = region.getTileEntity(data) || region.addTileEntity(data);
-				if (tileEntity) {
-					const chance = ICTool.getWrenchData(item.id).dropChance;
-					const dropID = Math.random() < chance ? tileEntity.blockID : tileEntity.getDefaultDrop();
-					const drop = tileEntity.adjustDrop(new ItemStack(dropID, 1, 0));
-					region.dropItem(data.x + .5, data.y + .5, data.z + .5, drop);
-					TileEntity.destroyTileEntity(tileEntity);
-				}
+				let tileEntity = (region.getTileEntity(data) || region.addTileEntity(data)) as Machine.IWrenchable;
+				if (!tileEntity) return;
+				let chance = ICTool.getWrenchData(item.id).dropChance;
+				let dropID = (Math.random() < chance)? tileEntity.blockID : tileEntity.getDefaultDrop();
+				let drop = tileEntity.adjustDrop(new ItemStack(dropID, 1, 0));
+				TileEntity.destroyTileEntity(tileEntity);
 				region.setBlock(data.x, data.y, data.z, 0, 0);
+				region.dropItem(data.x + .5, data.y + .5, data.z + .5, drop);
+				ICTool.useWrench(item, 10, player);
 				SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg", 1);
 			}
 		}

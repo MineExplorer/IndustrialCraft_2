@@ -80,16 +80,11 @@ namespace RadiationAPI {
 		}
 	}
 
-	export function addEffectInRange(x: number, y: number, z: number, dimension: number, radius: number, duration: number): void {
-		let entities = Entity.getAll();
-		for (let i in entities) {
-			let ent = entities[i];
-			if (Entity.getDimension(ent) == dimension && EntityHelper.canTakeDamage(ent, DamageSource.radiation)) {
-				let c = Entity.getPosition(ent);
-				let xx = Math.abs(x - c.x), yy = Math.abs(y - c.y), zz = Math.abs(z - c.z);
-				if (Math.sqrt(xx*xx + yy*yy + zz*zz) <= radius) {
-					addEffect(ent, duration);
-				}
+	export function addEffectInRange(region: WorldRegion, x: number, y: number, z: number, radius: number, duration: number): void {
+		let entities = EntityHelper.getEntitiesInRadius(region, new Vector3(x, y, z), radius);
+		for (let ent of entities) {
+			if (EntityHelper.canTakeDamage(ent, DamageSource.radiation)) {
+				addEffect(ent, duration);
 			}
 		}
 	}
@@ -122,7 +117,9 @@ namespace RadiationAPI {
 		if (World.getThreadTime()%20 == 0) {
 			for (let i = 0; i < sources.length; i++) {
 				let source: RadiationSource = sources[i];
-				addEffectInRange(source.x, source.y, source.z, source.dimension, source.radius, 10);
+				let region = WorldRegion.getForDimension(source.dimension);
+				if (!region) continue;
+				addEffectInRange(region, source.x, source.y, source.z, source.radius, 10);
 				source.timer--;
 				if (source.timer <= 0) {
 					sources.splice(i--, 1);

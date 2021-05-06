@@ -294,9 +294,8 @@ namespace Machine {
 		}
 
 		destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void {
-			for (let i in this.chambers) {
-				let coords = this.chambers[i];
-				this.region.destroyBlock(coords, true);
+			for (let chamber of this.chambers) {
+				this.region.destroyBlock(chamber, true);
 			}
 		}
 
@@ -347,14 +346,11 @@ namespace Machine {
 				}
 			}
 			if (power >= 0.7 && World.getThreadTime()%20 == 0) {
-				let entities = Entity.getAll();
-				for (let i in entities) {
-					let ent = entities[i];
-					if (Entity.getDimension(ent) == this.dimension && EntityHelper.canTakeDamage(ent, DamageSource.radiation)) {
-						let c = Entity.getPosition(ent);
-						if (Math.abs(this.x + .5 - c.x) <= 3.5 && Math.abs(this.y + .5 - c.y) <= 3.5 && Math.abs(this.z + .5 - c.z) <= 3.5) {
-							RadiationAPI.addEffect(ent, Math.floor(4 * this.data.hem));
-						}
+				let pos = new Vector3(this.x + .5, this.y + .5, this.z + .5);
+				let entities = EntityHelper.getEntitiesInRadius(this.region, pos, 4);
+				for (let ent of entities) {
+					if (EntityHelper.canTakeDamage(ent, DamageSource.radiation)) {
+						RadiationAPI.addEffect(ent, Math.floor(4 * this.data.hem));
 					}
 				}
 			}

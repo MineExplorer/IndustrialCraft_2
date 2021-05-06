@@ -132,8 +132,8 @@ namespace Machine {
 		mineBlock(x: number, y: number, z: number, block: Tile, level: number): void {
 			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, level);
 			let items: ItemInstance[] = [];
-			for (let i in drop) {
-				items.push(new ItemStack(drop[i][0], drop[i][1], drop[i][2], drop[i][3]));
+			for (let item of drop) {
+				items.push(new ItemStack(item[0], item[1], item[2], item[3]));
 			}
 			let container = this.region.getContainer(x, y, z);
 			if (container) {
@@ -162,8 +162,7 @@ namespace Machine {
 		drop(items: ItemInstance[]): void {
 			let containers = StorageInterface.getNearestContainers(this, this.blockSource);
 			StorageInterface.putItems(items, containers);
-			for (let i in items) {
-				let item = items[i]
+			for (let item of items) {
 				if (item.count > 0) {
 					this.region.dropItem(this.x + .5, this.y + 1, this.z + .5, item);
 				}
@@ -276,7 +275,7 @@ namespace Machine {
 			this.chargeSlot("slotDrill");
 			this.chargeSlot("slotScanner");
 			this.dischargeSlot("slotEnergy");
-			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendChanges();
 		}
 

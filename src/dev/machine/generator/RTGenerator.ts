@@ -52,15 +52,14 @@ namespace Machine {
 					output *= 2;
 				}
 			}
-			const energyStorage = this.getEnergyStorage();
 			if (output >= 1) {
 				this.setActive(true);
-				this.data.energy = Math.min(this.data.energy + output, energyStorage);
+				this.data.energy = Math.min(this.data.energy + output, this.getEnergyStorage());
 			} else {
 				this.setActive(false);
 			}
 
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.setText("textInfo1", this.data.energy + "/");
 			this.container.sendChanges();
 		}

@@ -51,10 +51,9 @@ namespace Machine {
 			this.dischargeSlot("slot2");
 			this.chargeSlot("slot1");
 
-			const energyStorage = this.getEnergyStorage();
-			this.container.setScale("energyScale", this.data.energy / energyStorage);
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.setText("textInfo1", Math.floor(this.data.energy) + "/");
-			this.container.setText("textInfo2", energyStorage);
+			this.container.setText("textInfo2", this.getEnergyStorage());
 			this.container.sendChanges();
 		}
 

@@ -135,42 +135,45 @@ namespace Machine {
 				this.container.setText("textInfoMode", Translation.translate("Mode: Blacklist"));
 			}
 			if (this.data.y < 0) {
-				this.container.setText("textInfoXYZ", "X: "+ this.data.x + ", Y: "+ Math.min(this.data.y, -1) + ", Z: "+ this.data.z);
+				this.container.setText("textInfoXYZ", `X: ${this.data.x}, Y: ${this.data.y}, Z: ${this.data.z}`);
 			} else {
 				this.container.setText("textInfoXYZ", "");
 			}
 
-			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendEvent("setSilktouchIcon", {mode: this.data.silk_touch});
 			this.container.sendChanges();
 		}
 
 		operate(): void {
 			let newActive = false;
-			if (this.data.isEnabled && this.y + this.data.y >= 0 && this.data.energy >= 512) {
+			let data = this.data;
+			if (data.isEnabled && this.y + data.y >= 0 && data.energy >= 512) {
 				let scanner = this.container.getSlot("slotScanner");
 				let scanR = this.getScanRadius(scanner.id);
 				let energyStored = ChargeItemRegistry.getEnergyStored(scanner);
 				if (scanR > 0 && energyStored >= 64) {
 					newActive = true;
 					if (World.getThreadTime()%20 == 0) {
-						if (this.data.y == 0) {
-							this.data.x = -scanR;
-							this.data.y = -1;
-							this.data.z = -scanR;
+						if (data.y == 0) {
+							data.x = -scanR;
+							data.y = -1;
+							data.z = -scanR;
 						}
 						for (let i = 0; i < this.maxScanCount; i++) {
-							if (this.data.x > scanR) {
-								this.data.x = -scanR;
-								this.data.z++;
+							if (data.x > scanR) {
+								data.x = -scanR;
+								data.z++;
 							}
-							if (this.data.z > scanR) {
-								this.data.z = -scanR;
-								this.data.y--;
+							if (data.z > scanR) {
+								data.z = -scanR;
+								data.y--;
 							}
 							energyStored -= 64;
-							let x = this.x + this.data.x, y = this.y + this.data.y, z = this.z + this.data.z;
-							this.data.x++;
+							let x = this.x + data.x;
+							let y = this.y + data.y;
+							let z = this.z + data.z;
+							data.x++;
 							let block = this.region.getBlock(x, y, z);
 							if (this.isValidBlock(block.id, block.data)) {
 								if (this.harvestBlock(x, y, z, block))
@@ -193,25 +196,29 @@ namespace Machine {
 		}
 
 		harvestBlock(x: number, y: number, z: number, block: Tile): boolean {
-			// @ts-ignore
-			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, 100, {silk: this.data.silk_touch});
+			let enchant = ToolAPI.getEnchantExtraData();
+			enchant.silk = this.data.silk_touch;
+			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, 100, enchant);
 			if (this.checkDrop(drop)) return false;
+
+			this.data.energy -= 512;
 			this.region.setBlock(x, y, z, 0, 0);
 			let items = [];
-			for (let i in drop) {
-				items.push(new ItemStack(drop[i][0], drop[i][1], drop[i][2], drop[i][3]));
+			for (let item of drop) {
+				items.push(new ItemStack(item[0], item[1], item[2], item[3]));
 			}
 			this.drop(items);
-			this.data.energy -= 512;
 			return true;
 		}
 
 		checkDrop(drop: ItemInstanceArray[]): boolean {
 			if (drop.length == 0) return true;
-			for (let i in drop) {
-				for (let j = 0; j < 16; j++) {
-					let slot = this.container.getSlot("slot"+j);
-					if (slot.id == drop[i][0] && slot.data == drop[i][2]) {return !this.data.whitelist;}
+			for (let item of drop) {
+				for (let i = 0; i < 16; i++) {
+					let slot = this.container.getSlot("slot"+i);
+					if (slot.id == item[0] && slot.data == item[2]) {
+						return !this.data.whitelist;
+					}
 				}
 			}
 			return this.data.whitelist;
@@ -220,8 +227,7 @@ namespace Machine {
 		drop(items: ItemInstance[]): void {
 			let containers = StorageInterface.getNearestContainers(this, this.blockSource);
 			StorageInterface.putItems(items, containers);
-			for (let i in items) {
-				let item = items[i];
+			for (let item of items) {
 				if (item.count > 0) {
 					this.region.dropItem(this.x + .5, this.y + 1, this.z + .5, item);
 				}

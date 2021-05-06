@@ -173,7 +173,7 @@ namespace Machine {
 			}
 			this.container.setScale("progressScale", this.data.progress);
 			this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
-			this.container.setScale("energyScale", this.data.energy / this.getEnergyStorage());
+			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendChanges();
 		}
 

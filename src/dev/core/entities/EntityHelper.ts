@@ -59,6 +59,17 @@ namespace EntityHelper {
 		Entity.addEffect(entity, PotionEffect.slow_falling, 1, 3);
 	}
 
+	export function getEntitiesInRadius(region: WorldRegion, pos: Vector, rad: number): number[] {
+		let list = region.listEntitiesInAABB(pos.x - rad, pos.y - rad, pos.z - rad, pos.x + rad, pos.y + rad, pos.z + rad);
+		let entities = [];
+		for (let ent of list) {
+			if (Entity.getDistanceBetweenCoords(pos, Entity.getPosition(ent)) <= rad) {
+				entities.push(ent);
+			}
+		}
+		return entities;
+	}
+
 	let insulationMaxVolt = {
 		0: 5,
 		1: 128,

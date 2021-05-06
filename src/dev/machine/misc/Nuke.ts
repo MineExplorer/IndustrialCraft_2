@@ -35,18 +35,16 @@ namespace Machine {
 
 		explode(radius: number): void {
 			SoundManager.playSound("NukeExplosion.ogg");
-			let entities = Entity.getAll();
 			let damageRad = radius * 1.5;
-			for (let i in entities) {
-				let ent = entities[i];
-				let dist = Entity.getDistanceBetweenCoords(this, Entity.getPosition(ent))
-				if (dist <= damageRad) {
-					let damage = Math.ceil(damageRad*damageRad * 25 / (dist*dist));
-					if (damage >= 100) {
-						Entity.damageEntity(ent, damage);
-					} else {
-						Entity.damageEntity(ent, damage, 11);
-					}
+			let epicenter = new Vector3(this.x + .5, this.y + .5, this.z + .5);
+			let entities = EntityHelper.getEntitiesInRadius(this.region, epicenter, damageRad);
+			for (let ent of entities) {
+				let dist = Entity.getDistanceBetweenCoords(epicenter, Entity.getPosition(ent))
+				let damage = Math.ceil(damageRad*damageRad * 25 / (dist*dist));
+				if (damage >= 100) {
+					Entity.damageEntity(ent, damage);
+				} else {
+					Entity.damageEntity(ent, damage, 11);
 				}
 			}
 
@@ -61,9 +59,7 @@ namespace Machine {
 						this.blockSource.setBlock(xx, yy, zz, 0, 0);
 						if (Math.random() < 0.01) {
 							let drop = ToolLib.getBlockDrop(new Vector3(xx, yy, zz), block.id, block.data, 100);
-							if (drop)
-							for (let i in drop) {
-								let item = drop[i];
+							for (let item of drop) {
 								this.blockSource.spawnDroppedItem(xx + .5, yy + .5, zz + .5, item[0], item[1], item[2], item[3] || null);
 							}
 						}
@@ -71,7 +67,7 @@ namespace Machine {
 				}
 			}
 
-			RadiationAPI.addRadiationSource(this.x + .5, this.y + .5, this.z + .5, this.dimension, radius * 2, 300);
+			RadiationAPI.addRadiationSource(epicenter.x, epicenter.y, epicenter.z, this.dimension, radius * 2, 300);
 			this.sendPacket("explodeAnimation", {rad: radius});
 		}
 

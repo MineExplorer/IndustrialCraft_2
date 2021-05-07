@@ -100,8 +100,9 @@ items/crop/coffee_beans.ts
 
 items/food/terra_wart.ts
 items/food/mug.ts
-items/food/coffee.js
 items/food/can.ts
+items/food/coffee/IC2Coffee.ts
+items/food/coffee/CoffeeMugs.ts
 
 items/electric/cable.ts
 items/electric/components.ts

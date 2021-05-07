@@ -1,6 +1,6 @@
 namespace Machine {
     export interface IWrenchable extends TileEntity {
-        isWrenchable(): boolean;
+        canRotate(side: number): boolean;
         getFacing(): number;
         setFacing(side: number): void;
         getDefaultDrop(): number;

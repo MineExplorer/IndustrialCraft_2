@@ -117,7 +117,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		isWrenchable(): boolean {
+		canRotate(): boolean {
 			return true;
 		}
 	}

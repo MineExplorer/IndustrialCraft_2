@@ -64,7 +64,7 @@ namespace Machine {
 			return !this.data.increaseMode;
 		}
 
-		isWrenchable(): boolean {
+		canRotate(): boolean {
 			return true;
 		}
 

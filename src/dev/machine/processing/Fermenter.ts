@@ -120,7 +120,7 @@ namespace Machine {
 			return 0;
 		}
 
-		isWrenchable(): boolean {
+		canRotate(): boolean {
 			return true;
 		}
 

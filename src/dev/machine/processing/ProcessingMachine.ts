@@ -85,5 +85,9 @@ namespace Machine {
 			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendChanges();
 		}
+
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
 	}
 }

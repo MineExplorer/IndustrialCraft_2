@@ -126,6 +126,10 @@ namespace Machine {
 		getExplosionPower(): number {
 			return 15;
 		}
+
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
 	}
 
 	MachineRegistry.registerPrototype(BlockID.massFabricator, new MassFabricator());

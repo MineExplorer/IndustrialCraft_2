@@ -12,15 +12,8 @@ namespace Machine {
 		defaultDrop?: number;
 
 		onInit(): void {
-			if (this.data.meta !== undefined) {
-				Logger.Log(`Update tile with ID ${this.blockID}, data ${this.data.meta}`, "IC2");
-				let facing = this.data.meta;
-				if (!this.isWrenchable()) facing += 2;
-				this.setFacing(facing);
-				delete this.data.meta;
-			}
 			this.networkData.putInt("blockId", this.blockID);
-			this.networkData.putInt("blockData", this.getFacing());
+			this.networkData.putInt("facing", this.getFacing());
 			this.networkData.sendChanges();
 			this.setupContainer();
 			delete this.liquidStorage;
@@ -38,14 +31,18 @@ namespace Machine {
 			return tank;
 		}
 
-		isWrenchable(): boolean {
+		canRotate(side: number): boolean {
 			return false;
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (item.id == ItemID.debugItem) return true;
-			if (this.isWrenchable() && ICTool.isUseableWrench(item, 1)) {
-				ICTool.rotateMachine(this, coords.side, item, player);
+			let side = coords.side;
+			if (Entity.getSneaking(player)) {
+				side ^= 1;
+			}
+			if (this.canRotate(side) && ICTool.isUseableWrench(item, 1)) {
+				ICTool.rotateMachine(this, side, item, player);
 				return true;
 			}
 			return false;
@@ -53,18 +50,18 @@ namespace Machine {
 
 		setActive(isActive: boolean): void {
 			// TODO: sounds
-			if (this.networkData.getBoolean("isActive") !== isActive) {
-				this.networkData.putBoolean("isActive", isActive);
+			if (this.networkData.getBoolean("active") !== isActive) {
+				this.networkData.putBoolean("active", isActive);
 				this.networkData.sendChanges();
 			}
 		}
 
 		@ClientSide
 		renderModel(): void {
-			if (this.networkData.getBoolean("isActive")) {
+			if (this.networkData.getBoolean("active")) {
 				let blockId = Network.serverToLocalId(this.networkData.getInt("blockId"));
-				let blockData = this.networkData.getInt("blockData");
-				TileRenderer.mapAtCoords(this.x, this.y, this.z, blockId, blockData);
+				let facing = this.networkData.getInt("facing");
+				TileRenderer.mapAtCoords(this.x, this.y, this.z, blockId, facing);
 			} else {
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 			}

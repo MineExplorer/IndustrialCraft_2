@@ -113,6 +113,10 @@ namespace Machine {
 		getOperationSound(): string {
 			return "IronFurnaceOp.ogg";
 		}
+
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
 	}
 
 	MachineRegistry.registerPrototype(BlockID.ironFurnace, new IronFurnace());

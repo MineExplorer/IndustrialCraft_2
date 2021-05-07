@@ -286,6 +286,10 @@ namespace Machine {
 		getEnergyStorage(): number {
 			return 10000;
 		}
+
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
 	}
 
 	MachineRegistry.registerPrototype(BlockID.miner, new Miner());

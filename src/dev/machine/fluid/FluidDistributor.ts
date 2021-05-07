@@ -50,7 +50,7 @@ namespace Machine {
 			return guiFluidDistributor;
 		}
 
-		isWrenchable() {
+		canRotate(): boolean {
 			return true;
 		}
 

@@ -268,6 +268,10 @@ namespace Machine {
 				content.elements.button_silk.bitmap = "miner_button_silk_" + iconIndex;
 			}
 		}
+
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
 	}
 
 	MachineRegistry.registerPrototype(BlockID.advancedMiner, new AdvancedMiner());

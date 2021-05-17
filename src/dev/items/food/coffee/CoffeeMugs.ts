@@ -1,11 +1,6 @@
-IDRegistry.genItemID("mugColdCoffee");
-Item.createFoodItem("mugColdCoffee", "mug_cold_coffee", {name: "mug_cold_coffee"}, {stack: 1});
-
-IDRegistry.genItemID("mugDarkCoffee");
-Item.createFoodItem("mugDarkCoffee", "mug_dark_coffee", {name: "mug_dark_coffee"}, {stack: 1});
-
-IDRegistry.genItemID("mugCoffee");
-Item.createFoodItem("mugCoffee", "mug_coffee", {name: "mug_coffee"}, {stack: 1});
+ItemRegistry.createItem("mugColdCoffee", {name: "mug_cold_coffee", icon: "mug_cold_coffee", stack: 1});
+ItemRegistry.createItem("mugDarkCoffee", {name: "mug_dark_coffee", icon: "mug_dark_coffee", stack: 1});
+ItemRegistry.createItem("mugCoffee", {name: "mug_coffee", icon: "mug_coffee", stack: 1});
 
 Item.addCreativeGroup("mug_coffee", Translation.translate("Coffee"), [
 	ItemID.mugEmpty,

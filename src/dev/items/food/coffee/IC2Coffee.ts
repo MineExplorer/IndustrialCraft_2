@@ -38,7 +38,7 @@ namespace IC2Coffee {
     }
 
 	export function onDeath(entity: number, attacker: number, damageType: number): void {
-		if (Entity.getType(entity) != EEntityType.PLAYER && entityEffects[entity]) return;
+		if (EntityHelper.isPlayer(entity) && entityEffects[entity]) return;
 		delete entityEffects[entity];
 	}
 
@@ -76,9 +76,9 @@ namespace IC2Coffee {
 			default: return;
 		}
 		let highest = 0;
-		let x = this.amplifyEffect(PotionEffect.movementSpeed, maxAmplifier, extraDuration);
+		let x = amplifyEffect(player, PotionEffect.movementSpeed, maxAmplifier, extraDuration);
 		if (x > highest) highest = x;
-		x = this.amplifyEffect(PotionEffect.digSpeed, maxAmplifier, extraDuration);
+		x = amplifyEffect(player, PotionEffect.digSpeed, maxAmplifier, extraDuration);
 
 		if (x > highest) highest = x;
 		if (itemId == ItemID.mugCoffee) highest -= 2;
@@ -111,4 +111,24 @@ namespace IC2Coffee {
 			}
 		}
 	}
+
+	Callback.addCallback("FoodEaten", foodEaten);
+	Callback.addCallback("ServerPlayerTick", serverPlayerTick);
+	Callback.addCallback("EntityDeath", onDeath);
+
+	Callback.addCallback("PreLoaded", function() {
+		Recipes.addShaped({id: ItemID.mugColdCoffee, count: 1, data: 0}, [
+			"x",
+			"y",
+			"z",
+		], ['x', ItemID.coffeePowder, 0, 'y', 325, 8, 'z', ItemID.mugEmpty, 0], IC2Coffee.craftFunction);
+
+		Recipes.addShaped({id: ItemID.mugCoffee, count: 1, data: 0}, [
+			"x",
+			"y",
+			"z",
+		], ['x', 353, 0, 'y', 325, 1, 'z', ItemID.mugDarkCoffee, 0], IC2Coffee.craftFunction);
+
+		Recipes.addFurnace(ItemID.mugColdCoffee, ItemID.mugDarkCoffee, 0);
+	});
 }

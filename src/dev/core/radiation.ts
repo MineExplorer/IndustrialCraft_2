@@ -146,7 +146,7 @@ namespace RadiationAPI {
 	});
 
 	Callback.addCallback("EntityDeath", function(entity: number) {
-		if (Entity.getType(entity) == 1 && getRadiation(entity) > 0) {
+		if (EntityHelper.isPlayer(entity) && getRadiation(entity) > 0) {
 			resetRadiation(entity);
 		}
 	});

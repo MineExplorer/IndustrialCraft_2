@@ -3,7 +3,7 @@
 
 class ArmorQuantumSuit
 extends ArmorElectric {
-	constructor(stringID: string, name: string, params: ArmorParams, isDischarged: boolean = false) {
+	constructor(stringID: string, name: string, params: ArmorParams) {
 		super(stringID, name, params, 1e7, 12000, 4);
 		this.setRarity(EnumRarity.RARE);
 		RadiationAPI.registerHazmatArmor(this.id);

@@ -1371,9 +1371,10 @@ declare class BlockSource {
 	 * @param x X coord of the block
 	 * @param y Y coord of the block
 	 * @param z Z coord of the block
-	 * @returns interface to the vanilla TileEntity (chest, furnace, etc.) on the coords
+	 * @returns interface to the vanilla TileEntity (chest, furnace, etc.) 
+	 * on the coords, and null if it's not found
 	 */
-	getBlockEntity(x: number, y: number, z: number): NativeTileEntity;
+	getBlockEntity(x: number, y: number, z: number): Nullable<NativeTileEntity>;
 
 	/**
 	 * @param x X coord of the block
@@ -1497,6 +1498,7 @@ declare class BlockSource {
 	 */
 	static getCurrentWorldGenRegion(): Nullable<BlockSource>;
 }
+
 /**
  * Class to work with vanilla blocks parameters
  */
@@ -1726,7 +1728,7 @@ declare namespace Callback {
     function addCallback(name: "CustomBlockTessellation", func: CustomBlockTessellationFunction): void;
 
     function addCallback(name: "ServerPlayerTick", func: ServerPlayerTickFunction): void;
-	
+
     function addCallback(name: "CustomDimensionTransfer", func: CustomDimensionTransferFunction): void;
 
     function addCallback(name: "BlockEventEntityInside", func: BlockEventEntityInsideFunction): void;
@@ -1765,7 +1767,6 @@ declare namespace Callback {
 
     function addCallback(name: "EntityPickUpDrop", func: EntityPickUpDropFunction): void;
 
-    
 
     /**
      * Invokes callback with any name and up to 10 additional parameters. You
@@ -1803,7 +1804,7 @@ declare namespace Callback {
      * @param workbenchContainer workbench container instance
      */
     interface VanillaWorkbenchCraftFunction {
-        (result: ItemInstance, workbenchContainer: UI.Container): void
+        (result: ItemInstance, workbenchContainer: UI.Container, player: number): void
     }
 
     /**
@@ -9563,7 +9564,7 @@ declare namespace Recipes {
      * @param result recipe result item instance
      */
     interface CraftingFunction {
-        (api: WorkbenchFieldAPI, field: UI.Slot[], result: ItemInstance): void
+        (api: WorkbenchFieldAPI, field: UI.Slot[], result: ItemInstance, player: number): void
     }
 
     /**

@@ -1,4 +1,4 @@
-ModAPI.registerAPI("ICore", {
+const ICore = {
 	Machine: MachineRegistry,
 	Recipe: MachineRecipeRegistry,
 	Render: TileRenderer,
@@ -20,6 +20,8 @@ ModAPI.registerAPI("ICore", {
 	requireGlobal: function(command: string) {
 		return eval(command);
 	}
-});
+}
+
+ModAPI.registerAPI("ICore", ICore);
 
 Logger.Log("Industrial Core API shared with name ICore.", "API");

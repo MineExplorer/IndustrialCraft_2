@@ -3,9 +3,8 @@ class EUCableGrid extends EnergyGrid {
 		if (IC2Config.voltageEnabled) {
 			for (let key in this.blocksMap) {
 				let coords = key.split(':');
-				// @ts-ignore
-				let x = Math.floor(coords[0]), y = Math.floor(coords[1]), z = Math.floor(coords[2]);
-				World.setBlock(x, y, z, 0, 0);
+				let x = parseInt(coords[0]), y = parseInt(coords[1]), z = parseInt(coords[2]);
+				this.region.setBlock(x, y, z, 0, 0);
 				this.addBurnParticles(x, y, z);
 			}
 			this.destroy();

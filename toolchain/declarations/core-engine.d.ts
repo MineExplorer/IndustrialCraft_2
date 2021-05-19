@@ -2094,7 +2094,7 @@ declare namespace Callback {
      * @param i some integer value
      */
     interface PopBlockResourcesFunction {
-        (coords: Vector, block: Tile, f: number, i: number): void
+        (coords: Vector, block: Tile, f: number, i: number, region: BlockSource): void
     }
 
     /**

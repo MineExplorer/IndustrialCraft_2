@@ -32,7 +32,7 @@ var __extends = (this && this.__extends) || (function () {
 */
 LIBRARY({
     name: "EnergyNet",
-    version: 8,
+    version: 9,
     shared: true,
     api: "CoreEngine"
 });
@@ -75,15 +75,11 @@ var EnergyRegistry;
             return type1.value / type2.value;
         }
         else {
-            Logger.Log("get energy value ratio failed: some of this 2 energy types is not defiled: " + [name1, name2], "ERROR");
+            Logger.Log("get energy value ratio failed: some of this 2 energy types is not defined: " + [name1, name2], "ERROR");
             return -1;
         }
     }
     EnergyRegistry.getValueRatio = getValueRatio;
-    function getWireData(blockID) {
-        return EnergyRegistry.wireData[blockID];
-    }
-    EnergyRegistry.getWireData = getWireData;
     function registerWire(blockID, type, maxValue, energyGridClass) {
         if (energyGridClass === void 0) { energyGridClass = EnergyGrid; }
         EnergyRegistry.wireData[blockID] = {
@@ -93,6 +89,10 @@ var EnergyRegistry;
         };
     }
     EnergyRegistry.registerWire = registerWire;
+    function getWireData(blockID) {
+        return EnergyRegistry.wireData[blockID];
+    }
+    EnergyRegistry.getWireData = getWireData;
     function isWire(blockID, type) {
         var wireData = getWireData(blockID);
         if (wireData) {
@@ -150,7 +150,6 @@ var EnergyNode = /** @class */ (function () {
     function EnergyNode(energyType, dimension) {
         this.energyTypes = {};
         this.maxValue = 2e9;
-        this.initialized = false;
         this.removed = false;
         this.blocksMap = {};
         this.entries = [];
@@ -173,7 +172,7 @@ var EnergyNode = /** @class */ (function () {
         this.blocksMap[x + ":" + y + ":" + z] = true;
     };
     EnergyNode.prototype.removeCoords = function (x, y, z) {
-        delete this.blocksMap[x + ":" + y + ":" + z];
+        this.blocksMap[x + ":" + y + ":" + z] = false;
     };
     EnergyNode.prototype.addEntry = function (node) {
         if (this.entries.indexOf(node) == -1) {
@@ -199,7 +198,7 @@ var EnergyNode = /** @class */ (function () {
     };
     /**
      * @param node receiver node
-     * @returns true if link to the node was removed, false if it already removed
+     * @returns true if link to the node was removed, false if it's already removed
      */
     EnergyNode.prototype.removeReceiver = function (node) {
         var index = this.receivers.indexOf(node);
@@ -268,13 +267,17 @@ var EnergyNode = /** @class */ (function () {
         }
         var currentNodeList = __assign({}, packet.nodeList);
         var receiversCount = this.receivers.length;
-        for (var i = 0; i < receiversCount; i++) {
-            var node = this.receivers[i];
+        var k = 0;
+        for (var i = 0; i < this.receivers.length; i++) {
             if (amount <= 0)
                 break;
+            var node = this.receivers[i];
             if (packet.validateNode(node.id)) {
-                amount -= node.receiveEnergy(Math.ceil(amount / (receiversCount - i)), packet);
+                amount -= node.receiveEnergy(Math.ceil(amount / (receiversCount - k)), packet);
+                if (node.removed)
+                    i--;
             }
+            k++;
         }
         packet.nodeList = currentNodeList;
         for (var _i = 0, _a = this.receivers; _i < _a.length; _i++) {
@@ -317,8 +320,6 @@ var EnergyNode = /** @class */ (function () {
         }
         return false;
     };
-    EnergyNode.prototype.init = function () {
-    };
     EnergyNode.prototype.tick = function () {
         this.energyIn = this.currentIn;
         this.currentIn = 0;
@@ -341,6 +342,7 @@ var EnergyGrid = /** @class */ (function (_super) {
     __extends(EnergyGrid, _super);
     function EnergyGrid(energyType, maxValue, wireID, region) {
         var _this = _super.call(this, energyType, region.getDimension()) || this;
+        _this.rebuild = false;
         _this.maxValue = maxValue;
         _this.blockID = wireID;
         _this.region = region;
@@ -367,6 +369,17 @@ var EnergyGrid = /** @class */ (function (_super) {
         }
         grid.destroy();
         return this;
+    };
+    EnergyGrid.prototype.rebuildGrid = function () {
+        this.destroy();
+        for (var key in this.blocksMap) {
+            if (!this.blocksMap[key]) {
+                var keyArr = key.split(":");
+                var x = parseInt(keyArr[0]), y = parseInt(keyArr[1]), z = parseInt(keyArr[2]);
+                Game.message("Rebuild " + x + ", " + y + ", " + z);
+                EnergyGridBuilder.onWireDestroyed(this.region, x, y, z, this.blockID);
+            }
+        }
     };
     EnergyGrid.prototype.rebuildRecursive = function (x, y, z, side) {
         if (this.removed)
@@ -414,12 +427,21 @@ var EnergyGrid = /** @class */ (function (_super) {
             }
         }
     };
+    EnergyGrid.prototype.tick = function () {
+        if (this.rebuild) {
+            this.rebuildGrid();
+        }
+        else {
+            _super.prototype.tick.call(this);
+        }
+    };
     return EnergyGrid;
 }(EnergyNode));
 var EnergyTileNode = /** @class */ (function (_super) {
     __extends(EnergyTileNode, _super);
     function EnergyTileNode(energyType, parent) {
         var _this = _super.call(this, energyType, parent.dimension) || this;
+        _this.initialized = false;
         _this.tileEntity = parent;
         return _this;
     }
@@ -558,7 +580,7 @@ var EnergyGridBuilder;
         var blockID = region.getBlockId(x, y, z);
         var wire = EnergyRegistry.getWireData(blockID);
         if (wire) {
-            var grid = new wire.class(wire.type, wire.value, blockID, region);
+            var grid = new wire.class(wire.type, wire.maxValue, blockID, region);
             EnergyNet.addEnergyNode(grid);
             grid.rebuildRecursive(x, y, z);
             return grid;
@@ -575,7 +597,7 @@ var EnergyGridBuilder;
     }
     EnergyGridBuilder.rebuildWireGrid = rebuildWireGrid;
     function rebuildForWire(region, x, y, z, wireID) {
-        if (region.getBlockId(x, y, z) == wireID) {
+        if (region.getBlockId(x, y, z) == wireID && !EnergyNet.getNodeOnCoords(region, x, y, z)) {
             return buildWireGrid(region, x, y, z);
         }
         return null;
@@ -598,22 +620,29 @@ var EnergyGridBuilder;
     }
     EnergyGridBuilder.onWirePlaced = onWirePlaced;
     function onWireDestroyed(region, x, y, z, id) {
-        var node = EnergyNet.getNodeOnCoords(region, x, y, z);
-        if (node) {
-            node.destroy();
-            EnergyGridBuilder.rebuildForWire(region, x - 1, y, z, id);
-            EnergyGridBuilder.rebuildForWire(region, x + 1, y, z, id);
-            EnergyGridBuilder.rebuildForWire(region, x, y - 1, z, id);
-            EnergyGridBuilder.rebuildForWire(region, x, y + 1, z, id);
-            EnergyGridBuilder.rebuildForWire(region, x, y, z - 1, id);
-            EnergyGridBuilder.rebuildForWire(region, x, y, z + 1, id);
-        }
+        EnergyGridBuilder.rebuildForWire(region, x - 1, y, z, id);
+        EnergyGridBuilder.rebuildForWire(region, x + 1, y, z, id);
+        EnergyGridBuilder.rebuildForWire(region, x, y - 1, z, id);
+        EnergyGridBuilder.rebuildForWire(region, x, y + 1, z, id);
+        EnergyGridBuilder.rebuildForWire(region, x, y, z - 1, id);
+        EnergyGridBuilder.rebuildForWire(region, x, y, z + 1, id);
     }
     EnergyGridBuilder.onWireDestroyed = onWireDestroyed;
     Callback.addCallback("DestroyBlock", function (coords, block, player) {
         if (EnergyRegistry.isWire(block.id)) {
             var region = BlockSource.getDefaultForActor(player);
-            onWireDestroyed(region, coords.x, coords.y, coords.z, block.id);
+            var node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
+            if (node) {
+                node.destroy();
+                onWireDestroyed(region, coords.x, coords.y, coords.z, block.id);
+            }
+        }
+    });
+    Callback.addCallback("PopBlockResources", function (coords, block, f, i, region) {
+        if (EnergyRegistry.isWire(block.id)) {
+            var node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
+            node.removeCoords(coords.x, coords.y, coords.z);
+            node.rebuild = true;
         }
     });
 })(EnergyGridBuilder || (EnergyGridBuilder = {}));

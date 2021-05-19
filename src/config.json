@@ -4,7 +4,6 @@
   "sound_enabled": true,
   "machine_sounds": true,
   "voltage_enabled": true,
-  "wire_damage_enabled": false,
   "reactor_explosion_max_power": 45,
   "button_scale": 55,
   "rubber_tree_gen": {

@@ -376,7 +376,6 @@ var EnergyGrid = /** @class */ (function (_super) {
             if (!this.blocksMap[key]) {
                 var keyArr = key.split(":");
                 var x = parseInt(keyArr[0]), y = parseInt(keyArr[1]), z = parseInt(keyArr[2]);
-                Game.message("Rebuild " + x + ", " + y + ", " + z);
                 EnergyGridBuilder.onWireDestroyed(this.region, x, y, z, this.blockID);
             }
         }

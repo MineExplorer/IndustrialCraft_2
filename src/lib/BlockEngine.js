@@ -479,7 +479,7 @@ var WorldRegion = /** @class */ (function () {
                 if (Entity.getDimension(ent) != dimension)
                     continue;
                 var c = Entity.getPosition(ent);
-                if ((c.x >= x1 && c.x <= x2) && (c.y >= y1 && c.y <= y2) && (c.z >= z1 && c.z <= z2)) {
+                if ((c.x >= x1 && c.x <= x2) && (c.y - 1.62 >= y1 && c.y - 1.62 <= y2) && (c.z >= z1 && c.z <= z2)) {
                     entities.push(ent);
                 }
             }

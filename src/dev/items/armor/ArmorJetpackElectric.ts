@@ -9,10 +9,6 @@ extends ArmorElectric {
 		UIbuttons.setArmorButton(this.id, "button_hover");
 	}
 
-	getIcon(armorName: string): string {
-		return armorName;
-	}
-
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		return JetpackProvider.onTick(item, playerUid);
 	}

@@ -197,7 +197,7 @@ function updateUIbuttons() {
 }
 
 
-Callback.addCallback("LocalTick", function() {
+Callback.addCallback("tick", function() {
 	var armor = [Player.getArmorSlot(0), Player.getArmorSlot(1), Player.getArmorSlot(2), Player.getArmorSlot(3)];
 	for (var i in armor) {
 		var buttons = UIbuttons.getButtons(armor[i].id);

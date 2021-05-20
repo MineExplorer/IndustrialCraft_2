@@ -2,8 +2,8 @@
 
 class ArmorNanoSuit
 extends ArmorElectric {
-	constructor(stringID: string, name: string, params: ArmorParams) {
-		super(stringID, name, params, 1000000, 2048, 3);
+	constructor(stringID: string, name: string, params: ArmorParams, inCreative?: boolean) {
+		super(stringID, name, params, 1000000, 2048, 3, inCreative);
 		this.setRarity(EnumRarity.UNCOMMON);
 	}
 

@@ -7,10 +7,6 @@ extends ArmorElectric {
 		this.canProvideEnergy = true;
 	}
 
-	getIcon(armorName: string): string {
-		return armorName;
-	}
-
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		if (World.getThreadTime() % 20 == 0) {
 			let carried = Entity.getCarriedItem(playerUid);

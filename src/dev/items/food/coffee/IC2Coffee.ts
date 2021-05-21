@@ -95,19 +95,20 @@ namespace IC2Coffee {
 		playerEntity.addItemToInventory(ItemID.mugEmpty, 1, 0);
 	}
 
-	export function craftFunction(api: Recipes.WorkbenchFieldAPI, field: UI.Slot[], result: ItemInstance): void {
-		for (const item of field) {
+	export function craftFunction(api: Recipes.WorkbenchFieldAPI, field: UI.Slot[], result: ItemInstance, player: number): void {
+		for (let i = 0; i < 9; i++) {
+			const item = field[i];
 			if (item.id == VanillaItemID.bucket) {
 				if (item.count == 1) {
 					item.data = 0;
 				} else {
-					api.decreaseFieldSlot(+i);
-					// TODO: make addItemToInventory to player
-					Player.addItemToInventory(VanillaItemID.bucket, 1, 0);
+					api.decreaseFieldSlot(i);
+					const playerEntity = new PlayerEntity(player);
+					playerEntity.addItemToInventory(VanillaItemID.bucket, 1, 0);
 				}
 			}
 			else {
-				api.decreaseFieldSlot(+i);
+				api.decreaseFieldSlot(i);
 			}
 		}
 	}

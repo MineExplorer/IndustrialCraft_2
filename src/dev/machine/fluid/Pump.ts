@@ -168,6 +168,10 @@ namespace Machine {
 		getOperationSound(): string {
 			return "PumpOp.ogg";
 		}
+
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
 	}
 
 	MachineRegistry.registerPrototype(BlockID.pump, new Pump());

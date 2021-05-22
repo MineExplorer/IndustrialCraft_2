@@ -33,31 +33,24 @@ namespace CableRegistry {
 				let blockID = BlockID[stringID + index];
 				insulationData[blockID] = {name: stringID, insulation: index, maxInsulation: maxInsulationLevel};
 				EU.registerWire(blockID, maxVoltage, EUCableGrid);
-
-				let itemID = ItemID[stringID + index];
-				Block.registerDropFunction(stringID + index, function(coords, id, data) {
-					return [[itemID, 1, 0]];
-				});
-
-				Block.registerPopResourcesFunction(stringID + index, function(coords, block, region) {
-					if (Math.random() < 0.25) {
-						region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, itemID, 1, 0);
-					}
-					EnergyGridBuilder.onWireDestroyed(region, coords.x, coords.y, coords.z, block.id);
-				});
+				setupDrop(stringID + index, ItemID[stringID + index]);
 			}
 		} else {
 			EU.registerWire(BlockID[stringID], maxVoltage, EUCableGrid);
-			Block.registerDropFunction(stringID, function(coords, id, data) {
-				return [[ItemID[stringID], 1, 0]];
-			});
-			Block.registerPopResourcesFunction(stringID, function(coords, block, region) {
-				if (Math.random() < 0.25) {
-					region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, ItemID[stringID], 1, 0);
-				}
-				EnergyGridBuilder.onWireDestroyed(region, coords.x, coords.y, coords.z, block.id);
-			});
+			setupDrop(stringID, ItemID[stringID]);
 		}
+	}
+
+	export function setupDrop(blockID: string, itemID: number): void {
+		Block.registerDropFunction(blockID, function(coords, id, data) {
+			return [[itemID, 1, 0]];
+		});
+
+		Block.registerPopResourcesFunction(blockID, function(coords, block, region) {
+			if (Math.random() < 0.25) {
+				region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, itemID, 1, 0);
+			}
+		});
 	}
 
 	export function setupModel(id: number, width: number): void {

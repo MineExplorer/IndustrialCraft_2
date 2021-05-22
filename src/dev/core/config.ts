@@ -3,7 +3,6 @@ namespace IC2Config {
 	export let soundEnabled = getBool("sound_enabled");
 	export let machineSoundEnabled = getBool("machine_sounds");
 	export let voltageEnabled = getBool("voltage_enabled");
-	export let wireDamageEnabled = getBool("wire_damage_enabled");
 
 	export function getBool(name: string): boolean {
 		return __config__.getBool(name);

@@ -479,7 +479,7 @@ var WorldRegion = /** @class */ (function () {
                 if (Entity.getDimension(ent) != dimension)
                     continue;
                 var c = Entity.getPosition(ent);
-                if ((c.x >= x1 && c.x <= x2) && (c.y >= y1 && c.y <= y2) && (c.z >= z1 && c.z <= z2)) {
+                if ((c.x >= x1 && c.x <= x2) && (c.y - 1.62 >= y1 && c.y - 1.62 <= y2) && (c.z >= z1 && c.z <= z2)) {
                     entities.push(ent);
                 }
             }
@@ -1453,6 +1453,9 @@ IDConverter.registerOld("birch_boat", 333, 2);
 IDConverter.registerOld("jungle_boat", 333, 3);
 IDConverter.registerOld("acacia_boat", 333, 4);
 IDConverter.registerOld("dark_oak_boat", 333, 5);
+IDConverter.registerOld("milk_bucket", 325, 1);
+IDConverter.registerOld("water_bucket", 325, 8);
+IDConverter.registerOld("lava_bucket", 325, 10);
 var TileEntityBase = /** @class */ (function () {
     function TileEntityBase() {
         var _a;

@@ -17,9 +17,12 @@ implements IWrech {
 		return true;
 	}
 
-	useItem(item: ItemStack, damage: number, player: number): boolean {
+	useItem(item: ItemStack, damage: number, player: number): void {
 		item.applyDamage(damage);
 		Entity.setCarriedItem(player, item.id, 1, item.data, item.extra);
-		return true;
+		if (item.id == 0) {
+			let region = WorldRegion.getForActor(player);
+			region.playSoundAtEntity(player, "random.break");
+		}
 	}
 }

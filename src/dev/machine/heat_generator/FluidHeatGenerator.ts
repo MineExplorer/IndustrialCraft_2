@@ -65,7 +65,7 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
 
-		isWrenchable(): boolean {
+		canRotate(): boolean {
 			return true;
 		}
 

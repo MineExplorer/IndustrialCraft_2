@@ -6,6 +6,6 @@ extends ItemArmor {
 
 	setArmorTexture(name: string): void {
 		let index = (this.armorType == "leggings")? 2 : 1;
-		this.texture = 'armor/' + name + '_' + index + '.png';
+		this.texture = `armor/${name}_${index}.png`;
 	}
 }

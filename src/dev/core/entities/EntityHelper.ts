@@ -69,41 +69,4 @@ namespace EntityHelper {
 		}
 		return entities;
 	}
-
-	let insulationMaxVolt = {
-		0: 5,
-		1: 128,
-		2: 512
-	}
-
-	export function dealDamageFromCables(entity: number, x: number, y: number, z: number): void {
-		let region = BlockSource.getDefaultForActor(entity);
-		for (let yy = y - 2; yy <= y + 1; yy++)
-		for (let xx = x - 1; xx <= x + 1; xx++)
-		for (let zz = z - 1; zz <= z + 1; zz++) {
-			let blockID = region.getBlockId(xx, yy, zz);
-			let cableData = CableRegistry.getCableData(blockID);
-			if (cableData && cableData.insulation < cableData.maxInsulation) {
-				let node = EnergyNet.getNodeOnCoords(region, xx, yy, zz);
-				if (node && node.baseEnergy == "Eu" && node.energyPower > insulationMaxVolt[cableData.insulation]) {
-					let damage = Math.ceil(node.energyPower / 32);
-					Entity.damageEntity(entity, damage);
-					return;
-				}
-			}
-		}
-	}
-
-	Callback.addCallback("tick", function() {
-		if (World.getThreadTime()%20 == 0) {
-			let entities = Entity.getAll();
-			for (let i in entities) {
-				let ent = entities[i];
-				if ((isPlayer(ent) || IC2Config.wireDamageEnabled) && canTakeDamage(ent, DamageSource.electricity)) {
-					let coords = Entity.getPosition(ent);
-					dealDamageFromCables(ent, Math.floor(coords.x), Math.floor(coords.y), Math.floor(coords.z));
-				}
-			}
-		}
-	});
 }

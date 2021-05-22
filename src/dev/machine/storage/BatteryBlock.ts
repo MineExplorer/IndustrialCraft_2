@@ -33,7 +33,7 @@ namespace Machine {
 			});
 		}
 
-		isWrenchable(): boolean {
+		canRotate(): boolean {
 			return true;
 		}
 

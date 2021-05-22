@@ -1,46 +1,18 @@
 /// <reference path="init.ts" />
 
 Callback.addCallback("PreLoaded", function() {
-	// EU Meter
-	Recipes.addShaped({id: ItemID.EUMeter, count: 1, data: 0}, [
-		" g ",
-		"xcx",
-		"x x"
-	], ['c', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'g', 348, -1]);
+	// Tool Box
+	Recipes.addShaped({id: ItemID.toolbox, count: 1, data: 0}, [
+		"axa",
+		"aaa",
+	], ['x', 54, -1, 'a', ItemID.casingBronze, 0]);
 
-	// Frequency Transmitter
-	Recipes.addShaped({id: ItemID.freqTransmitter, count: 1, data: 0}, [
-		"x",
-		"#",
-		"b"
-	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'b', ItemID.casingIron, 0]);
-
-	// Scanners
-	Recipes.addShaped({id: ItemID.scanner, count: 1, data: 27}, [
-		"gdg",
-		"cbc",
-		"xxx"
-	], ['x', ItemID.cableCopper1, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
-
-	Recipes.addShaped({id: ItemID.scannerAdvanced, count: 1, data: 27}, [
-		"gbg",
-		"dcd",
-		"xsx"
-	], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
-
-	// Windmeter
-	Recipes.addShaped({id: ItemID.windMeter, count: 1, data: 27}, [
-		" c",
-		"cbc",
-		" cx"
-	], ['x', ItemID.powerUnitSmall, 0, 'b', ItemID.casingBronze, 0, 'c', ItemID.casingTin, 0]);
-
-	// Treetap
-	Recipes.addShaped({id: ItemID.treetap, count: 1, data: 0}, [
-		" x ",
-		"xxx",
-		"x  "
-	], ['x', 5, -1]);
+	// Containment Box
+	Recipes.addShaped({id: ItemID.containmentBox, count: 1, data: 0}, [
+		"aaa",
+		"axa",
+		"aaa",
+	], ['x', 54, -1, 'a', ItemID.casingLead, 0]);
 
 	// Crafting tools
 	Recipes.addShaped({id: ItemID.craftingHammer, count: 1, data: 0}, [
@@ -85,6 +57,47 @@ Callback.addCallback("PreLoaded", function() {
 		" b",
 		" b"
 	], ['a', ItemID.ingotBronze, 0, 'b', 280, 0]);
+
+	// EU Meter
+	Recipes.addShaped({id: ItemID.EUMeter, count: 1, data: 0}, [
+		" g ",
+		"xcx",
+		"x x"
+	], ['c', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'g', 348, -1]);
+
+	// Frequency Transmitter
+	Recipes.addShaped({id: ItemID.freqTransmitter, count: 1, data: 0}, [
+		"x",
+		"#",
+		"b"
+	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.cableCopper1, 0, 'b', ItemID.casingIron, 0]);
+
+	// Scanners
+	Recipes.addShaped({id: ItemID.scanner, count: 1, data: 27}, [
+		"gdg",
+		"cbc",
+		"xxx"
+	], ['x', ItemID.cableCopper1, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
+
+	Recipes.addShaped({id: ItemID.scannerAdvanced, count: 1, data: 27}, [
+		"gbg",
+		"dcd",
+		"xsx"
+	], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
+
+	// Windmeter
+	Recipes.addShaped({id: ItemID.windMeter, count: 1, data: 27}, [
+		" c",
+		"cbc",
+		" cx"
+	], ['x', ItemID.powerUnitSmall, 0, 'b', ItemID.casingBronze, 0, 'c', ItemID.casingTin, 0]);
+
+	// Treetap
+	Recipes.addShaped({id: ItemID.treetap, count: 1, data: 0}, [
+		" x ",
+		"xxx",
+		"x  "
+	], ['x', 5, -1]);
 
 	// Wrenches
 	Recipes.addShaped({id: ItemID.bronzeWrench, count: 1, data: 0}, [

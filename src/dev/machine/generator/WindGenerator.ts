@@ -52,6 +52,10 @@ namespace Machine {
 			}
 			src.addAll(this.data.output);
 		}
+
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
 	}
 
 	MachineRegistry.registerPrototype(BlockID.genWindmill, new WindGenerator());

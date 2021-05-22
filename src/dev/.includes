@@ -100,8 +100,9 @@ items/crop/coffee_beans.ts
 
 items/food/terra_wart.ts
 items/food/mug.ts
-items/food/coffee.js
 items/food/can.ts
+items/food/coffee/IC2Coffee.ts
+items/food/coffee/CoffeeMugs.ts
 
 items/electric/cable.ts
 items/electric/components.ts
@@ -121,9 +122,6 @@ items/reactor/condensator.ts
 items/armor/init.ts
 items/armor/recipes.ts
 
-items/tool/ToolBox.ts
-items/tool/ContainmentBox.ts
-items/tool/CropAnalyser.ts
 items/tool/init.ts
 items/tool/recipes.ts
 

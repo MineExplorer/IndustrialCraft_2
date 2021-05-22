@@ -1,3 +1,5 @@
+/// <reference path="ToolBox.ts" />
+/// <reference path="ContainmentBox.ts" />
 /// <reference path="DebugItem.ts" />
 /// <reference path="EUMeter/EUMeter.ts" />
 /// <reference path="Transmitter.ts" />

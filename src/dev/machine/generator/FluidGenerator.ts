@@ -124,6 +124,10 @@ namespace Machine {
 		getEnergyStorage(): number {
 			return 1000
 		}
+
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
 	}
 
 	MachineRegistry.registerPrototype(BlockID.semifluidGenerator, new FluidGenerator());

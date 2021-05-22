@@ -34,7 +34,7 @@ namespace Machine {
 			return 4;
 		}
 
-		isWrenchable() {
+		canRotate(): boolean {
 			return true;
 		}
 

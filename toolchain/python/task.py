@@ -194,10 +194,12 @@ def task_exclude_directories():
 @task("buildPackage", lock=["push", "assemble", "native", "java"])
 def task_build_package():
 	import shutil
-	output_dir = get_make_config().get_path("output")
-	output_file = get_make_config().get_path("IndustrialCraft2.icmod")
-	output_root_tmp = get_make_config().get_path("toolchain/build")
-	output_dir_tmp = output_root_tmp + "/IndustrialCraft2"
+	config = get_make_config()
+	output_dir = config.get_path("output")
+	mod_folder = config.get_value("make.modFolder")
+	output_file = config.get_path(mod_folder + ".icmod")
+	output_root_tmp = config.get_path("toolchain/build")
+	output_dir_tmp = output_root_tmp + "/" + mod_folder
 	output_file_tmp = output_root_tmp + "/mod.zip"
 	ensure_directory(output_dir)
 	ensure_file_dir(output_file_tmp)
@@ -206,7 +208,7 @@ def task_build_package():
 	if os.path.isfile(output_file_tmp):
 		os.remove(output_file_tmp)
 	shutil.move(output_dir, output_dir_tmp)
-	shutil.make_archive(output_file_tmp[:-4], 'zip', output_root_tmp, "IndustrialCraft2")
+	shutil.make_archive(output_file_tmp[:-4], 'zip', output_root_tmp, mod_folder)
 	os.rename(output_file_tmp, output_file)
 	shutil.move(output_dir_tmp, output_dir)
 	return 0
@@ -228,7 +230,7 @@ def stop_horizon():
 	if result != 0:
 		print("\033[91mno devices/emulators found, try to use task \"Connect to ADB\"\033[0m")
 	return result
-	
+
 @task("loadDocs")
 def task_load_docs():
 	import urllib.request

@@ -1453,6 +1453,9 @@ IDConverter.registerOld("birch_boat", 333, 2);
 IDConverter.registerOld("jungle_boat", 333, 3);
 IDConverter.registerOld("acacia_boat", 333, 4);
 IDConverter.registerOld("dark_oak_boat", 333, 5);
+IDConverter.registerOld("milk_bucket", 325, 1);
+IDConverter.registerOld("water_bucket", 325, 8);
+IDConverter.registerOld("lava_bucket", 325, 10);
 var TileEntityBase = /** @class */ (function () {
     function TileEntityBase() {
         var _a;

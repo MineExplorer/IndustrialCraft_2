@@ -98,18 +98,12 @@ namespace IC2Coffee {
 	export function craftFunction(api: Recipes.WorkbenchFieldAPI, field: UI.Slot[], result: ItemInstance, player: number): void {
 		for (let i = 0; i < 9; i++) {
 			const item = field[i];
-			if (item.id == VanillaItemID.bucket) {
-				if (item.count == 1) {
-					item.data = 0;
-				} else {
-					api.decreaseFieldSlot(i);
-					const playerEntity = new PlayerEntity(player);
-					playerEntity.addItemToInventory(VanillaItemID.bucket, 1, 0);
-				}
+			const emptyItem = LiquidItemRegistry.getEmptyItem(item.id, item.data);
+			if (emptyItem) {
+				const playerEntity = new PlayerEntity(player);
+				playerEntity.addItemToInventory(emptyItem.id, 1, emptyItem.data);
 			}
-			else {
-				api.decreaseFieldSlot(i);
-			}
+			api.decreaseFieldSlot(i);
 		}
 	}
 	Callback.addCallback("FoodEaten", foodEaten);

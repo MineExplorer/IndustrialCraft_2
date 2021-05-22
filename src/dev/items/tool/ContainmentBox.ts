@@ -1,11 +1,5 @@
 ItemRegistry.createItem("containmentBox", {name: "containment_box", icon: "containment_box", stack: 1, category: ItemCategory.EQUIPMENT});
 
-Recipes.addShaped({id: ItemID.containmentBox, count: 1, data: 0}, [
-	"aaa",
-	"axa",
-	"aaa",
-], ['x', 54, -1, 'a', ItemID.casingLead, 0]);
-
 const guiContainmentBox = new UI.StandartWindow({
 	standard: {
 		header: {text: {text: Translation.translate("Containment Box")}},

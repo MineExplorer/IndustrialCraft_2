@@ -122,9 +122,6 @@ items/reactor/condensator.ts
 items/armor/init.ts
 items/armor/recipes.ts
 
-items/tool/ToolBox.ts
-items/tool/ContainmentBox.ts
-items/tool/CropAnalyser.ts
 items/tool/init.ts
 items/tool/recipes.ts
 

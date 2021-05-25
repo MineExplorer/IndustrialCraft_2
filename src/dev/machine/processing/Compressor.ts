@@ -25,7 +25,7 @@ Callback.addCallback("PreLoaded", function() {
 		"minecraft:sand": {id: 24, count: 1, data: 0, sourceCount: 4},
 		"minecraft:brick": {id: 45, count: 1, data: 0, sourceCount: 4},
 		"minecraft:netherbrick": {id: 112, count: 1, data: 0, sourceCount: 4},
-		"minecraft:glowstone": {id: 89, count: 1, data: 0, sourceCount: 4},
+		"minecraft:glowstone_dust": {id: 89, count: 1, data: 0, sourceCount: 4},
 		"minecraft:quartz": {id: 155, count: 1, data: 0, sourceCount: 4},
 		// Items
 		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), sourceCount: 9},

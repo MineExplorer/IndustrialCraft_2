@@ -1,15 +1,17 @@
 /// <reference path="Drill.ts" />
 
-class ToolDrillIridium
-extends ToolDrill {
+class ToolDrillIridium extends ToolDrill
+implements IModeSwitchAction {
 	constructor() {
 		super("iridiumDrill", "iridium_drill", {energyPerUse: 800, level: 100, efficiency: 24, damage: 5}, 1000000, 2048, 3);
 		this.setGlint(true);
 		this.setRarity(EnumRarity.RARE);
-		UIbuttons.setToolButton(this.id, "button_switch");
-		UIbuttons.registerSwitchFunction(this.id, (item: ItemInstance, player: number) => {
-			this.onModeSwitch(item, player);
-		});
+		ToolHUD.setButtonFor(this.id, "button_switch");
+	}
+
+	readMode(extra: ItemExtraData): number {
+		if (!extra) return 0;
+		return extra.getInt("mode");
 	}
 
 	getModeName(mode: number): string {
@@ -27,33 +29,34 @@ extends ToolDrill {
 
 	onNameOverride(item: ItemInstance, name: string): string {
 		name = super.onNameOverride(item, name);
-		let mode = item.extra? item.extra.getInt("mode") : 0;
+		let mode = this.readMode(item.extra);
 		return name + "\n" + this.getModeName(mode);
 	}
 
 	onModeSwitch(item: ItemInstance, player: number): void {
+		let client = Network.getClientForPlayer(player);
 		let extra = item.extra || new ItemExtraData();
 		let mode = (extra.getInt("mode") + 1) % 4;
 		extra.putInt("mode", mode);
 		switch (mode) {
 			case 0:
-				Game.message("§e" + this.getModeName(mode));
+				client.sendMessage("§e" + this.getModeName(mode));
 			break;
 			case 1:
-				Game.message("§9" + this.getModeName(mode));
+				client.sendMessage("§9" + this.getModeName(mode));
 			break;
 			case 2:
-				Game.message("§c" + this.getModeName(mode));
+				client.sendMessage("§c" + this.getModeName(mode));
 			break;
 			case 3:
-				Game.message("§2" + this.getModeName(mode));
+				client.sendMessage("§2" + this.getModeName(mode));
 			break;
 		}
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 	}
 
 	modifyEnchant(enchant: ToolAPI.EnchantData, item: ItemInstance): void {
-		let mode = item.extra? item.extra.getInt("mode") : 0;
+		let mode = this.readMode(item.extra);
 		if (mode % 2 == 0) {
 			enchant.fortune = 3;
 		} else {
@@ -74,7 +77,7 @@ extends ToolDrill {
 
 	calcDestroyTime(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, params: {base: number, devider: number, modifier: number}, destroyTime: number): number {
 		if (ChargeItemRegistry.getEnergyStored(item) >= this.energyPerUse) {
-			let mode = item.extra? item.extra.getInt("mode") : 0;
+			let mode = this.readMode(item.extra);
 			let material = ToolAPI.getBlockMaterialName(block.id);
 			if (mode >= 2 && (material == "dirt" || material == "stone")) {
 				destroyTime = 0;
@@ -97,7 +100,7 @@ extends ToolDrill {
 	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {
 		this.playDestroySound(item, block, player);
 		let region = WorldRegion.getForActor(player);
-		let mode = item.extra? item.extra.getInt("mode") : 0;
+		let mode = this.readMode(item.extra);
 		let material = ToolAPI.getBlockMaterialName(block.id);
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (mode >= 2 && (material == "dirt" || material == "stone") && energyStored >= this.energyPerUse) {

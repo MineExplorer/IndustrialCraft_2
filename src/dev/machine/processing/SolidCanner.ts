@@ -56,7 +56,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-const guiSolidCanner = InventoryWindow("Solid Canning Machine", {
+const guiSolidCanner = MachineRegistry.createInventoryWindow("Solid Canning Machine", {
 	drawing: [
 		{type: "bitmap", x: 400 + 52*GUI_SCALE, y: 50 + 33*GUI_SCALE, bitmap: "solid_canner_arrow", scale: GUI_SCALE},
 		{type: "bitmap", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, bitmap: "arrow_bar_background", scale: GUI_SCALE},

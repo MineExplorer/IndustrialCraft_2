@@ -1,4 +1,4 @@
-var currentUIscreen;
+/*var currentUIscreen;
 Callback.addCallback("NativeGuiChanged", function(screenName) {
 	currentUIscreen = screenName;
 	if (screenName != "in_game_play_screen" && UIbuttons.container) {
@@ -271,3 +271,4 @@ Callback.addCallback("tick", function() {
 	}
 	UIbuttons.isEnabled = false;
 });
+*/

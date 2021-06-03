@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'b', BlockID.miningPipe, 0]);
 });
 
-const guiMiner = InventoryWindow("Miner", {
+const guiMiner = MachineRegistry.createInventoryWindow("Miner", {
 	drawing: [
 		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],

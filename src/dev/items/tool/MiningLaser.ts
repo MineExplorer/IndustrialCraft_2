@@ -1,5 +1,5 @@
-class ItemMiningLaser
-extends ItemElectric {
+class ItemMiningLaser extends ItemElectric
+implements IModeSwitchAction {
 	modes = {
 		0: {name: "Mining", energy: 1250, power: 6},
 		1: {name: "Low-Focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1, sound: "MiningLaserLowFocus.ogg"},
@@ -14,24 +14,27 @@ extends ItemElectric {
 		super("miningLaser", "mining_laser", 1000000, 2048, 3);
 		this.setHandEquipped(true);
 		this.setRarity(EnumRarity.UNCOMMON);
-		UIbuttons.setToolButton(this.id, "button_switch", true);
-		UIbuttons.registerSwitchFunction(this.id, (item: ItemInstance, player: number) => {
-			this.onModeSwitch(item, player);
-		});
+		ToolHUD.setButtonFor(this.id, "button_switch");
+	}
+
+	readMode(extra: ItemExtraData): number {
+		if (!extra) return 0;
+		return extra.getInt("mode");
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
 		name = super.onNameOverride(item, name);
-		let mode = item.extra? item.extra.getInt("mode") : 0;
+		let mode = this.readMode(item.extra);
 		name += "\n"+this.getModeInfo(mode);
 		return name;
 	}
 
 	onModeSwitch(item: ItemInstance, player: number): void {
+		let client = Network.getClientForPlayer(player);
 		let extra = item.extra || new ItemExtraData();
-		let mode = (extra.getInt("mode")+1)%7;
+		let mode = (extra.getInt("mode") + 1) % 7;
 		extra.putInt("mode", mode);
-		Game.message(this.getModeInfo(mode));
+		client.sendMessage(this.getModeInfo(mode));
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 	}
 
@@ -45,7 +48,7 @@ extends ItemElectric {
 	}
 
 	makeShot(item: ItemInstance, player: number): void {
-		let laserSetting = item.extra? item.extra.getInt("mode") : 0;
+		let laserSetting = this.readMode(item.extra);
 		if (laserSetting == 3 || laserSetting == 6) return;
 		let mode = this.getModeData(laserSetting);
 		if (ICTool.useElectricItem(item, mode.energy, player)) {
@@ -80,7 +83,7 @@ extends ItemElectric {
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
-		let laserSetting = item.extra? item.extra.getInt("mode") : 0;
+		let laserSetting = this.readMode(item.extra);
 		if (laserSetting != 3 && laserSetting != 6) {
 			this.makeShot(item, player);
 			return;

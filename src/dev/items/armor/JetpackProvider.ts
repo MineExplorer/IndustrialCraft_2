@@ -1,4 +1,14 @@
 namespace JetpackProvider {
+	const playerData = {};
+
+	export function getFlying(playerUid: number): boolean {
+		return playerData[playerUid] || false;
+	}
+
+	export function setFlying(playerUid: number, fly: boolean): boolean {
+		return playerData[playerUid] = fly;
+	}
+
 	export function onTick(item: ItemInstance, playerUid: number): ItemInstance {
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (item.extra && item.extra.getBoolean("hover")) {
@@ -9,17 +19,34 @@ namespace JetpackProvider {
 				if (client) client.sendMessage("§4" + Translation.translate("Hover mode disabled"));
 				return item;
 			}
-			else if (vel.y < 0) {
-				EntityHelper.resetFallHeight(playerUid);
-				if (vel.y < -0.1) {
-					Entity.addVelocity(playerUid, 0, Math.min(0.25, -0.1 - vel.y), 0);
-					if (World.getThreadTime() % 5 == 0) {
-						ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
-						return item;
-					}
+			else {
+				if (vel.y < 0) {
+					EntityHelper.resetFallHeight(playerUid);
+				}
+				if (World.getThreadTime() % 5 == 0) {
+					let energyUse = getFlying(playerUid)? 40 : 20;
+					ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energyUse, 0));
+					return item;
 				}
 			}
+		} else if (getFlying(playerUid) && energyStored > 8) {
+			var vy = Entity.getVelocity(playerUid).y;
+			if (vy > -1.2 && vy < 0) {
+				EntityHelper.resetFallHeight(playerUid);
+			}
+			ChargeItemRegistry.setEnergyStored(item, energyStored - 8);
+			return item;
 		}
+		/*if (playSound && IC2Config.soundEnabled) {
+			if (hoverMode) {
+				SoundManager.startPlaySound(SourceType.ENTITY, playerUid, "JetpackLoop.ogg", 0.8);
+			} else {
+				SoundManager.startPlaySound(SourceType.ENTITY, playerUid, "JetpackLoop.ogg", 1);
+			}
+		}
+		if (!playSound) {
+			SoundManager.stopPlaySound(playerUid, "JetpackLoop.ogg");
+		}*/
 		return null;
 	}
 }

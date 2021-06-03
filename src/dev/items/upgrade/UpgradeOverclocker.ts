@@ -5,7 +5,7 @@ implements ItemBehavior {
     onNameOverride(item: ItemInstance, name: string): string {
         let percent = "%%"; // it's one % in name
         if (BlockEngine.getMainGameVersion() == 11) percent += "%%";
-        if (currentUIscreen == "in_game_play_screen" || currentUIscreen == "world_loading_progress_screen - local_world_load") {
+        if (ToolHUD.currentUIscreen == "in_game_play_screen" || ToolHUD.currentUIscreen == "world_loading_progress_screen - local_world_load") {
             percent += percent; // this game is broken
         }
         let energyDemandPercent = this.getEnergyDemandMultiplier(item) * 100  + percent;

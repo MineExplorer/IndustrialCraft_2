@@ -12,7 +12,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'c', ItemID.cellEmpty, 0]);
 });
 
-const guiTank = InventoryWindow("Tank", {
+const guiTank = MachineRegistry.createInventoryWindow("Tank", {
 	drawing: [
 		{type: "bitmap", x: 400 + 46*GUI_SCALE, y: 50 + 12*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE},
 		{type: "bitmap", x: 400 + 80*GUI_SCALE, y: 159, bitmap: "liquid_bar_arrow", scale: GUI_SCALE}

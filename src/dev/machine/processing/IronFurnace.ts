@@ -16,7 +16,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', 61, -1, 'x', ItemID.plateIron, 0]);
 });
 
-const guiIronFurnace = InventoryWindow("Iron Furnace", {
+const guiIronFurnace = MachineRegistry.createInventoryWindow("Iron Furnace", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 155, bitmap: "arrow_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "fire_background", scale: GUI_SCALE}

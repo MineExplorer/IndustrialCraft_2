@@ -175,6 +175,25 @@ namespace MachineRegistry {
 		let header = gui.getWindow("header");
 		header.contentProvider.drawing[2].text = Translation.translate(text);
 	}
+
+	export function createInventoryWindow(header: string, uiDescriptor: {drawing?: UI.DrawingSet, elements: UI.ElementSet}) {
+		const gui = new UI.StandartWindow({
+			standard: {
+				header: {text: {text: Translation.translate(header)}},
+				inventory: {standard: true},
+				background: {standard: true}
+			},
+
+			drawing: uiDescriptor.drawing || [],
+			elements: uiDescriptor.elements
+		});
+
+		Callback.addCallback("LevelLoaded", function() {
+			MachineRegistry.updateGuiHeader(gui, header);
+		});
+
+		return gui;
+	}
 }
 
 const transferByTier = {

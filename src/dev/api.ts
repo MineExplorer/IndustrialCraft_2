@@ -11,7 +11,7 @@ const ICore = {
 	Sound: SoundManager,
 	Agriculture: Agriculture,
 	ItemName: ItemName,
-	UI: UIbuttons,
+	UI: ToolHUD,
 	Config: IC2Config,
 	Ore: OreGenerator,
 	Integration: IntegrationAPI,

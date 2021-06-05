@@ -5,5 +5,5 @@ interface IHUDButton {
 	bindItem(id: number): void;
 	isBindedItem(id: number): boolean;
 	onClick(player: number): void;
-	onUpdate(): void;
+	onUpdate(element: UI.UIButtonElement): void;
 }

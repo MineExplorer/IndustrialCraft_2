@@ -107,6 +107,13 @@ extends ArmorQuantumSuit {
 		ToolHUD.setButtonFor(this.id, "button_hover");
 	}
 
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
+		if (BlockEngine.getMainGameVersion() >= 16 && params.type == 5 && !EntityHelper.isOnGround(playerUid)) {
+			Game.prevent();
+		}
+		return super.onHurt(params, item, index, playerUid);
+	}
+
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (energyStored > this.getEnergyPerDamage()) {

@@ -1,4 +1,5 @@
 #downlevelIteration: false
+#declaration: true
 
 header.ts
 translation.ts

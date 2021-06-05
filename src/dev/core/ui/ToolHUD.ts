@@ -55,7 +55,7 @@ namespace ToolHUD {
 				if (!elements[name]) {
 					elements[name] = button.uiElement;
 				}
-				button.onUpdate()
+				button.onUpdate(button.uiElement);
 				buttonMap[name] = false;
 			}
 			else {

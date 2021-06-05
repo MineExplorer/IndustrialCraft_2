@@ -1,7 +1,7 @@
 /// <reference path="Drill.ts" />
 
 class ToolDrillIridium extends ToolDrill
-implements IModeSwitchAction {
+implements IModeSwitchable {
 	constructor() {
 		super("iridiumDrill", "iridium_drill", {energyPerUse: 800, level: 100, efficiency: 24, damage: 5}, 1000000, 2048, 3);
 		this.setGlint(true);
@@ -76,7 +76,7 @@ implements IModeSwitchAction {
 	}
 
 	calcDestroyTime(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, params: {base: number, devider: number, modifier: number}, destroyTime: number): number {
-		if (ChargeItemRegistry.getEnergyStored(item) >= this.energyPerUse) {
+		if (ChargeItemRegistry.getEnergyStored(item) >= this.getEnergyPerUse(item)) {
 			let mode = this.readMode(item.extra);
 			let material = ToolAPI.getBlockMaterialName(block.id);
 			if (mode >= 2 && (material == "dirt" || material == "stone")) {
@@ -88,7 +88,7 @@ implements IModeSwitchAction {
 					let blockID = World.getBlockID(xx, yy, zz);
 					let material = ToolAPI.getBlockMaterial(blockID);
 					if (material && (material.name == "dirt" || material.name == "stone")) {
-						destroyTime = Math.max(destroyTime, Block.getDestroyTime(blockID) / material.multiplier / 24);
+						destroyTime = Math.max(destroyTime, Block.getDestroyTime(blockID) / material.multiplier / this.toolMaterial.efficiency);
 					}
 				}
 			}
@@ -104,6 +104,7 @@ implements IModeSwitchAction {
 		let material = ToolAPI.getBlockMaterialName(block.id);
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (mode >= 2 && (material == "dirt" || material == "stone") && energyStored >= this.energyPerUse) {
+			let consume = 0;
 			let rad = this.getOperationRadius(coords.side);
 			for (let xx = coords.x - rad.x; xx <= coords.x + rad.x; xx++)
 			for (let yy = coords.y - rad.y; yy <= coords.y + rad.y; yy++)
@@ -114,15 +115,15 @@ implements IModeSwitchAction {
 				let blockID = region.getBlockId(xx, yy, zz);
 				material = ToolAPI.getBlockMaterialName(blockID);
 				if (material == "dirt" || material == "stone") {
-					energyStored -= 800;
+					consume += this.energyPerUse;
 					region.destroyBlock(xx, yy, zz, true, player);
-					if (energyStored < 800) {
-						ChargeItemRegistry.setEnergyStored(item, energyStored);
+					if (energyStored < consume + this.energyPerUse) {
+						ICTool.dischargeItem(item, consume, player);
 						return true;
 					}
 				}
 			}
-			ChargeItemRegistry.setEnergyStored(item, energyStored);
+			if (consume > 0) ICTool.dischargeItem(item, consume, player);
 		}
 		return true;
 	}

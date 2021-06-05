@@ -19,12 +19,12 @@ namespace ToolHUD {
 			}
 		}
 
-		onUpdate(): void {
+		onUpdate(element: UI.UIButtonElement): void {
 			let extra = Player.getArmorSlot(1).extra;
 			if (extra?.getBoolean("hover")) {
-				this.uiElement.bitmap = "button_hover_on";
+				element.bitmap = "button_hover_on";
 			} else {
-				this.uiElement.bitmap = "button_hover_off";
+				element.bitmap = "button_hover_off";
 			}
 		}
 

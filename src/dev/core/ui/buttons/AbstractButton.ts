@@ -16,6 +16,6 @@ namespace ToolHUD {
 
 		onClick(player: number): void {}
 
-		onUpdate(): void {}
+		onUpdate(element: UI.UIButtonElement): void {}
 	}
 }

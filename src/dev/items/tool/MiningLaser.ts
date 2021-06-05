@@ -1,5 +1,5 @@
 class ItemMiningLaser extends ItemElectric
-implements IModeSwitchAction {
+implements IModeSwitchable {
 	modes = {
 		0: {name: "Mining", energy: 1250, power: 6},
 		1: {name: "Low-Focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1, sound: "MiningLaserLowFocus.ogg"},

@@ -1,3 +1,3 @@
-interface IModeSwitchAction extends ItemBase {
+interface IModeSwitchable extends ItemBase {
 	onModeSwitch(item: ItemInstance, player: number): void;
 }

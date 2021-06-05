@@ -1,6 +1,7 @@
 declare namespace BlockEngine {
     function getGameVersion(): number[];
     function getMainGameVersion(): number;
+    function sendUnlocalizedMessage(client: NetworkClient, ...texts: string[]): void;
 }
 declare enum Side {
     Client = 0,

@@ -125,7 +125,7 @@ items/armor/recipes.ts
 items/tool/init.ts
 items/tool/recipes.ts
 
-integration/recipe_viewer.js
+integration/recipe_viewer.ts
 integration/tree_capitator.js
 
 api.ts

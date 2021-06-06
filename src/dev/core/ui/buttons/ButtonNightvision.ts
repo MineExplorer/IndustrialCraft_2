@@ -21,15 +21,16 @@ namespace ToolHUD {
 		}
 
 		onClick(player: number) {
+			let client = Network.getClientForPlayer(player);
 			let slot = Entity.getArmorSlot(player, 0);
 			let extra = slot.extra || new ItemExtraData();
 			if (extra.getBoolean("nv")) {
 				extra.putBoolean("nv", false);
-				Game.message("§4" + Translation.translate("Nightvision mode disabled"));
+				BlockEngine.sendUnlocalizedMessage(client, "§4", "message.nightvision.disabled");
 			}
 			else {
 				extra.putBoolean("nv", true);
-				Game.message("§2" + Translation.translate("Nightvision mode enabled"));
+				BlockEngine.sendUnlocalizedMessage(client, "§2", "message.nightvision.enabled");
 			}
 			Entity.setArmorSlot(player, 0, slot.id, 1, slot.data, extra);
 		}

@@ -31,14 +31,15 @@ namespace ToolHUD {
 		onClick(player: number): void {
 			let slot = Entity.getArmorSlot(player, 1);
 			if (!EntityHelper.isOnGround(player) && ChargeItemRegistry.getEnergyStored(slot) >= 8) {
+				let client = Network.getClientForPlayer(player);
 				let extra = slot.extra || new ItemExtraData();
 				if (extra.getBoolean("hover")) {
 					extra.putBoolean("hover", false);
-					Game.message("§4" + Translation.translate("Hover mode disabled"));
+					BlockEngine.sendUnlocalizedMessage(client, "§4", "message.hover_mode.disabled");
 				}
 				else {
 					extra.putBoolean("hover", true);
-					Game.message("§2" + Translation.translate("Hover mode enabled"));
+					BlockEngine.sendUnlocalizedMessage(client, "§2", "message.hover_mode.enabled");
 				}
 				Entity.setArmorSlot(player, 1, slot.id, 1, slot.data, extra);
 			}

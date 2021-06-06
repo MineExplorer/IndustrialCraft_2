@@ -452,15 +452,16 @@ Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna II
 Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
 
 // Messages
-Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
-Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
-Translation.addTranslation("Hover mode disabled", {ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
-Translation.addTranslation("Hover mode enabled", {ru: "Режим парения включен", zh: "已启用悬浮模式"});
-Translation.addTranslation("Scan Result: ", {ru: "Результат сканирования: ", es: "Resultado de la exploración: ", pt: "Resultado do Escaneamento: ", zh: "扫描结果: "});
-Translation.addTranslation("Frequency Transmitter linked to Teleporter", {ru: "Частотный связыватель соединился с телепортером"});
-Translation.addTranslation("Can`t link Teleporter to itself", {ru: "Невозможно связать телепортер с самим собой"});
-Translation.addTranslation("Teleportation link established", {ru: "Телепортационная связь установлена"});
-Translation.addTranslation("Frequency Transmitter unlinked", {ru: "Частотный связыватель сброшен"});
+Translation.addTranslation("message.nightvision.enabled", {en: "Nightvision mode enabled", ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
+Translation.addTranslation("message.nightvision.disabled", {en: "Nightvision mode disabled", ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
+Translation.addTranslation("message.hover_mode.enabled", {en: "Hover mode disabled", ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
+Translation.addTranslation("message.hover_mode.disabled", {en: "Hover mode enabled", ru: "Режим парения включен", zh: "已启用悬浮模式"});
+Translation.addTranslation("message.scan_result", {en: "Scan Result: ", ru: "Результат сканирования: ", es: "Resultado de la exploración: ", pt: "Resultado do Escaneamento: ", zh: "扫描结果: "});
+Translation.addTranslation("message.freq_transmitter.linked", {en: "Frequency Transmitter linked to Teleporter", ru: "Частотный связыватель соединился с телепортером"});
+Translation.addTranslation("message.freq_transmitter.notlinked", {en: "Can`t link Teleporter to itself", ru: "Невозможно связать телепортер с самим собой"});
+Translation.addTranslation("message.freq_transmitter.established", {en: "Teleportation link established", ru: "Телепортационная связь установлена"});
+Translation.addTranslation("message.freq_transmitter.unlinked", {en: "Frequency Transmitter unlinked", ru: "Частотный связыватель сброшен"});
+Translation.addTranslation("message.mining_laser.aiming", {en: "Mining laser aiming angle too steep", ru: "Шахтёрский лазер направлен слишков высоко"});
 
 // Tooltips
 Translation.addTranslation("tooltip.tin_can", {en: "This looks bad...", ru: "Это выглядит несъедобно…", pt: "Isso parece ruim ...", zh: "这看起来很糟糕..."});

@@ -29,7 +29,7 @@ extends ItemElectric {
 		let client = Network.getClientForPlayer(player);
 		if (client && ICTool.useElectricItem(item, this.getEnergyPerUse(), player)) {
 			SoundManager.playSoundAtEntity(player, "ODScanner.ogg");
-			client.sendMessage(Translation.translate("Scan Result: ") + coords.x + ", " + coords.y + ", " + coords.z);
+			BlockEngine.sendUnlocalizedMessage(client, "message.scan_result", `${coords.x}, ${coords.y}, ${coords.z}`);
 			let ores = {};
 			let radius = this.getScanRadius();
 			let region = BlockSource.getDefaultForActor(player);
@@ -46,7 +46,7 @@ extends ItemElectric {
 			}
 			for (let id in ores) {
 				let itemID = Block.convertBlockToItemId(parseInt(id));
-				client.sendMessage(Item.getName(itemID, 0) + " - " + ores[id])
+				client.sendMessage(Item.getName(itemID, 0) + " - " + ores[id]);
 			}
 		}
 	}

@@ -129,7 +129,8 @@ implements IModeSwitchable {
 					}
 				}
 			} else {
-				Game.message("Mining laser aiming angle too steep");
+				let client = Network.getClientForPlayer(player);
+				BlockEngine.sendUnlocalizedMessage(client, "message.mining_laser.aiming");
 			}
 		}
 	}

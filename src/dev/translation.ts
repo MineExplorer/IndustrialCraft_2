@@ -455,8 +455,8 @@ Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание",
 // Messages
 Translation.addTranslation("message.nightvision.enabled", {en: "Nightvision mode enabled", ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
 Translation.addTranslation("message.nightvision.disabled", {en: "Nightvision mode disabled", ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
-Translation.addTranslation("message.hover_mode.enabled", {en: "Hover mode disabled", ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
-Translation.addTranslation("message.hover_mode.disabled", {en: "Hover mode enabled", ru: "Режим парения включен", zh: "已启用悬浮模式"});
+Translation.addTranslation("message.hover_mode.enabled", {en: "Hover mode enabled", ru: "Режим парения включен", zh: "已启用悬浮模式"});
+Translation.addTranslation("message.hover_mode.disabled", {en: "Hover mode disabled", ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
 Translation.addTranslation("message.scan_result", {en: "Scan Result: ", ru: "Результат сканирования: ", es: "Resultado de la exploración: ", pt: "Resultado do Escaneamento: ", zh: "扫描结果: "});
 Translation.addTranslation("message.freq_transmitter.linked", {en: "Frequency Transmitter linked to Teleporter", ru: "Частотный связыватель соединился с телепортером"});
 Translation.addTranslation("message.freq_transmitter.notlinked", {en: "Can`t link Teleporter to itself", ru: "Невозможно связать телепортер с самим собой"});

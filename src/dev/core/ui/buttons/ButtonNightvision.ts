@@ -3,21 +3,12 @@
 namespace ToolHUD {
 	export class ButtonNightvision extends AbstractButton {
 		constructor() {
-			super("button_nightvision", "armor");
-		}
-
-		uiElement: UI.UIButtonElement = {
-			x: 0,
-			y: 0,
-			type: "button",
-			bitmap: "button_nightvision_on",
-			bitmap2: "button_nightvision_off",
-			scale: 50,
-			clicker: {
-				onClick: () => {
-					ToolHUD.onClick(this.name);
-				}
-			}
+			super("button_nightvision", "armor", {
+				position: 0,
+				bitmap: "button_nightvision_on",
+				bitmap2: "button_nightvision_off",
+				scale: 50,
+			});
 		}
 
 		onClick(player: number) {

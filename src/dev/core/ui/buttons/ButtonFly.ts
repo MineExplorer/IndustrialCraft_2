@@ -5,16 +5,12 @@ namespace ToolHUD {
 		isTouched = false;
 
 		constructor() {
-			super("button_fly", "armor");
-		}
-
-		uiElement: UI.UIButtonElement = {
-			x: 0,
-			y: 1000,
-			type: "button",
-			bitmap: "button_fly_on",
-			bitmap2: "button_fly_off",
-			scale: 50
+			super("button_fly", "armor", {
+				position: 1,
+				bitmap: "button_fly_on",
+				bitmap2: "button_fly_off",
+				scale: 50
+			});
 		}
 
 		onUpdate(): void {

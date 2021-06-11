@@ -3,21 +3,12 @@
 namespace ToolHUD {
 	export class ButtonJump extends AbstractButton {
 		constructor() {
-			super("button_jump", "armor");
-		}
-
-		uiElement: UI.UIButtonElement = {
-			x: 0,
-			y: 3000,
-			type: "button",
-			bitmap: "button_jump_on",
-			bitmap2: "button_jump_off",
-			scale: 50,
-			clicker: {
-				onClick: () => {
-					ToolHUD.onClick(this.name);
-				}
-			}
+			super("button_jump", "armor", {
+				position: 3,
+				bitmap: "button_jump_on",
+				bitmap2: "button_jump_off",
+				scale: 50,
+			});
 		}
 
 		onClick(player: number) {

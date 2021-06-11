@@ -3,21 +3,12 @@
 namespace ToolHUD {
 	export class ButtonToolMode extends AbstractButton {
 		constructor() {
-			super("button_switch", "tool");
-		}
-
-		uiElement: UI.UIButtonElement = {
-			x: 0,
-			y: 4000,
-			type: "button",
-			bitmap: "button_switch",
-			bitmap2: "button_switch_touched",
-			scale: 25,
-			clicker: {
-				onClick: () => {
-					ToolHUD.onClick(this.name);
-				}
-			}
+			super("button_switch", "tool", {
+				position: 4,
+				bitmap: "button_switch",
+				bitmap2: "button_switch_touched",
+				scale: 25,
+			});
 		}
 
 		onClick(player: number) {

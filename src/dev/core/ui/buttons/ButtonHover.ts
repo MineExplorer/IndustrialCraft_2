@@ -3,20 +3,11 @@
 namespace ToolHUD {
 	export class ButtonHover extends AbstractButton {
 		constructor() {
-			super("button_hover", "armor");
-		}
-
-		uiElement: UI.UIButtonElement = {
-			x: 0,
-			y: 2000,
-			type: "button",
-			bitmap: "button_hover_off",
-			scale: 50,
-			clicker: {
-				onClick: () => {
-					ToolHUD.onClick(this.name);
-				}
-			}
+			super("button_hover", "armor", {
+				position: 2,
+				bitmap: "button_hover_off",
+				scale: 50,
+			});
 		}
 
 		onUpdate(element: UI.UIButtonElement): void {

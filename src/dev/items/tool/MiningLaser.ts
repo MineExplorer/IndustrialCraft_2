@@ -1,12 +1,12 @@
 class ItemMiningLaser extends ItemElectric
 implements IModeSwitchable {
 	modes = {
-		0: {name: "Mining", energy: 1250, power: 6},
-		1: {name: "Low-Focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1, sound: "MiningLaserLowFocus.ogg"},
-		2: {name: "Long-Range", energy: 5000, power: 20, sound: "MiningLaserLongRange.ogg"},
-		3: {name: "Horizontal", energy: 1250, power: 6},
-		4: {name: "Super-Heat", energy: 2500, power: 8, smelt: true},
-		5: {name: "Scatter", energy: 10000, power: 12, blockBreaks: 16, sound: "MiningLaserScatter.ogg"},
+		0: {name: "mining", energy: 1250, power: 6},
+		1: {name: "low_focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1, sound: "MiningLaserLowFocus.ogg"},
+		2: {name: "long_range", energy: 5000, power: 20, sound: "MiningLaserLongRange.ogg"},
+		3: {name: "horizontal", energy: 1250, power: 6},
+		4: {name: "super_heat", energy: 2500, power: 8, smelt: true},
+		5: {name: "scatter", energy: 10000, power: 12, blockBreaks: 16, sound: "MiningLaserScatter.ogg"},
 		6: {name: "3x3", energy: 10000, power: 6}
 	};
 
@@ -22,35 +22,34 @@ implements IModeSwitchable {
 		return extra.getInt("mode");
 	}
 
+	getModeProperties(mode: number): any {
+		return this.modes[mode];
+	}
+
+	getModeName(mode: number): string {
+		return "mining_laser." + this.getModeProperties(mode).name;
+	}
+
 	onNameOverride(item: ItemInstance, name: string): string {
 		name = super.onNameOverride(item, name);
 		let mode = this.readMode(item.extra);
-		name += "\n"+this.getModeInfo(mode);
+		name += "\n" + Translation.translate("Mode: ") + Translation.translate(this.getModeName(mode));
 		return name;
 	}
 
 	onModeSwitch(item: ItemInstance, player: number): void {
-		let client = Network.getClientForPlayer(player);
 		let extra = item.extra || new ItemExtraData();
 		let mode = (extra.getInt("mode") + 1) % 7;
 		extra.putInt("mode", mode);
-		client.sendMessage(this.getModeInfo(mode));
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
-	}
-
-	getModeData(mode: number): any {
-		return this.modes[mode];
-	}
-
-	getModeInfo(mode: number): string {
-		let modeName = this.getModeData(mode).name;
-		return Translation.translate("Mode: ") + Translation.translate(modeName);
+		let client = Network.getClientForPlayer(player);
+		BlockEngine.sendUnlocalizedMessage(client, "Mode: ", this.getModeName(mode));
 	}
 
 	makeShot(item: ItemInstance, player: number): void {
 		let laserSetting = this.readMode(item.extra);
 		if (laserSetting == 3 || laserSetting == 6) return;
-		let mode = this.getModeData(laserSetting);
+		let mode = this.getModeProperties(laserSetting);
 		if (ICTool.useElectricItem(item, mode.energy, player)) {
 			SoundManager.playSoundAtEntity(player, mode.sound || "MiningLaser.ogg");
 			let pos = Entity.getPosition(player);
@@ -88,7 +87,7 @@ implements IModeSwitchable {
 			this.makeShot(item, player);
 			return;
 		}
-		let mode = this.getModeData(laserSetting);
+		let mode = this.getModeProperties(laserSetting);
 		if (ICTool.useElectricItem(item, mode.energy, player)) {
 			SoundManager.playSoundAtEntity(player, mode.sound || "MiningLaser.ogg");
 			let pos = Entity.getPosition(player);

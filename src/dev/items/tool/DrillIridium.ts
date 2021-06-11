@@ -34,25 +34,25 @@ implements IModeSwitchable {
 	}
 
 	onModeSwitch(item: ItemInstance, player: number): void {
-		let client = Network.getClientForPlayer(player);
 		let extra = item.extra || new ItemExtraData();
 		let mode = (extra.getInt("mode") + 1) % 4;
 		extra.putInt("mode", mode);
+		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
+		let client = Network.getClientForPlayer(player);
 		switch (mode) {
 			case 0:
-				client.sendMessage("§e" + this.getModeName(mode));
+				BlockEngine.sendUnlocalizedMessage(client, "§e", "Mode: ", "Fortune III");
 			break;
 			case 1:
-				client.sendMessage("§9" + this.getModeName(mode));
+				BlockEngine.sendUnlocalizedMessage(client, "§9", "Mode: ", "Silk Touch");
 			break;
 			case 2:
-				client.sendMessage("§c" + this.getModeName(mode));
+				BlockEngine.sendUnlocalizedMessage(client, "§c", "Mode: ", "3x3 ", "Fortune III");
 			break;
 			case 3:
-				client.sendMessage("§2" + this.getModeName(mode));
+				BlockEngine.sendUnlocalizedMessage(client, "§2", "Mode: ", "3x3 ", "Silk Touch");
 			break;
 		}
-		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 	}
 
 	modifyEnchant(enchant: ToolAPI.EnchantData, item: ItemInstance): void {

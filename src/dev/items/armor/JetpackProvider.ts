@@ -10,13 +10,13 @@ namespace JetpackProvider {
 	}
 
 	export function onTick(item: ItemInstance, playerUid: number): ItemInstance {
-		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const vel = Entity.getVelocity(playerUid);
 		if (item.extra && item.extra.getBoolean("hover")) {
-			let vel = Entity.getVelocity(playerUid);
 			if (energyStored < 8 || EntityHelper.isOnGround(playerUid)) {
 				item.extra.putBoolean("hover", false);
-				let client = Network.getClientForPlayer(playerUid);
-				if (client) client.sendMessage("§4" + Translation.translate("Hover mode disabled"));
+				const client = Network.getClientForPlayer(playerUid);
+				if (client) BlockEngine.sendUnlocalizedMessage(client, "§4", "message.hover_mode.disabled");
 				return item;
 			}
 			else {
@@ -24,14 +24,13 @@ namespace JetpackProvider {
 					EntityHelper.resetFallHeight(playerUid);
 				}
 				if (World.getThreadTime() % 5 == 0) {
-					let energyUse = getFlying(playerUid)? 40 : 20;
+					const energyUse = getFlying(playerUid)? 40 : 20;
 					ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energyUse, 0));
 					return item;
 				}
 			}
 		} else if (getFlying(playerUid) && energyStored > 8) {
-			var vy = Entity.getVelocity(playerUid).y;
-			if (vy > -1.2 && vy < 0) {
+			if (vel.y > -1.2 && vel.y < 0) {
 				EntityHelper.resetFallHeight(playerUid);
 			}
 			ChargeItemRegistry.setEnergyStored(item, energyStored - 8);

@@ -419,10 +419,6 @@ Translation.addTranslation("beetroots", {en: "Beetroots", ru: "Свёкла", pt
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
-// Charging Batteries
-Translation.addTranslation("Mode: Disabled", {ru: "Режим: Выключен", pt: "Modo: Desabilitado", zh: "模式: 禁用"});
-Translation.addTranslation("Mode: Charge items not in hand", {ru: "Режим: Заряжать предметы, которые не в руке", pt: "Modo: Carregar itens que não estão nas mãos", zh: "模式: 手里没有要充电的东西"});
-Translation.addTranslation("Mode: Enabled", {ru: "Режим: Включён", pt: "Modo: Habilitado", zh: "模式: 启用"});
 // Fluid Distributor
 Translation.addTranslation("Mode:", {ru: "Режим:", es: "Modo:", pt: "Modo:", zh: "模式:"});
 Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "分配模式"});
@@ -440,13 +436,18 @@ Translation.addTranslation("Max/Min", {ru: "Макс./Мин.", pt: "Máx/Min", 
 Translation.addTranslation("Cycle: ", {ru: "Цикл: ", es: "Ciclo: ", pt: "Cíclo: ", zh: "周期: "});
 Translation.addTranslation("Reset", {ru: "Сброс", pt: "Resetar", zh: "重置"});
 Translation.addTranslation("sec", {ru: "сек", es: "sec", pt: "seg", zh: "秒"});
+// Charging Batteries
+Translation.addTranslation("charging.disabled", {en: "Disabled", ru: "Выключен", pt: "Desabilitado", zh: "禁用"});
+Translation.addTranslation("charging.not_in_hand", {en: "Charge items not in hand", ru: "Заряжать предметы, которые не в руке", pt: "Carregar itens que não estão nas mãos", zh: "手里没有要充电的东西"});
+Translation.addTranslation("charging.enabled", {en: "Enabled", ru: "Включён", pt: "Habilitado", zh: "启用"});
 // Mining Laser
-Translation.addTranslation("Mining", {ru: "Добыча", es: "Taladrando", pt: "Mineração", zh: "挖矿模式"});
-Translation.addTranslation("Low-Focus", {ru: "Короткого фокуса", es: "Baja Potencia", pt: "Baixo-Foco", zh: "低聚焦模式"});
-Translation.addTranslation("Long-Range", {ru: "Дальнего действия", es: "Largo Alcance", pt: "Longo Alcance", zh: "远距模式"});
-Translation.addTranslation("Horizontal", {ru: "Горизонтальный", zh: "水平模式"});
-Translation.addTranslation("Super-Heat", {ru: "Перегревающий", es: "Super-Calor", pt: "Super Quente", zh: "超级热线模式"});
-Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
+Translation.addTranslation("mining_laser.mining", {en: "Mining", ru: "Добыча", es: "Taladrando", pt: "Mineração", zh: "挖矿模式"});
+Translation.addTranslation("mining_laser.low_focus", {en: "Low-Focus", ru: "Короткого фокуса", es: "Baja Potencia", pt: "Baixo-Foco", zh: "低聚焦模式"});
+Translation.addTranslation("mining_laser.long_range", {en: "Long-Range", ru: "Дальнего действия", es: "Largo Alcance", pt: "Longo Alcance", zh: "远距模式"});
+Translation.addTranslation("mining_laser.horizontal", {en: "Horizontal", ru: "Горизонтальный", zh: "水平模式"});
+Translation.addTranslation("mining_laser.super_heat", {en: "Super-Heat", ru: "Перегревающий", es: "Super-Calor", pt: "Super Quente", zh: "超级热线模式"});
+Translation.addTranslation("mining_laser.scatter", {en: "Scatter", ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
+Translation.addTranslation("mining_laser.3x3", {en: "3x3"});
 // Iridium Drill
 Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna III", zh: "时运 III"});
 Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});

@@ -15,7 +15,7 @@ for (let i = 1; i < 7; i++) {
 	сropMatronGuiElements["slotFertilizer" + i] = { type: "slot", x: 441 + 60 * i, y: 75 };
 }
 
-const guiCropMatron = InventoryWindow("Crop Matron", {
+const guiCropMatron = MachineRegistry.createInventoryWindow("Crop Matron", {
 	drawing: [
 		{ type: "bitmap", x: 870, y: 270, bitmap: "energy_small_background", scale: GUI_SCALE },
 		{ type: "bitmap", x: 511, y: 243, bitmap: "water_storage_background", scale: GUI_SCALE }

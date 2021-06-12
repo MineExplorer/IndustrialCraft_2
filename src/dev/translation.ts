@@ -419,10 +419,6 @@ Translation.addTranslation("beetroots", {en: "Beetroots", ru: "Свёкла", pt
 Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
-// Charging Batteries
-Translation.addTranslation("Mode: Disabled", {ru: "Режим: Выключен", pt: "Modo: Desabilitado", zh: "模式: 禁用"});
-Translation.addTranslation("Mode: Charge items not in hand", {ru: "Режим: Заряжать предметы, которые не в руке", pt: "Modo: Carregar itens que não estão nas mãos", zh: "模式: 手里没有要充电的东西"});
-Translation.addTranslation("Mode: Enabled", {ru: "Режим: Включён", pt: "Modo: Habilitado", zh: "模式: 启用"});
 // Fluid Distributor
 Translation.addTranslation("Mode:", {ru: "Режим:", es: "Modo:", pt: "Modo:", zh: "模式:"});
 Translation.addTranslation("Distribute", {ru: "распростр.", es: "distribuir", pt: "Distribuir", zh: "分配模式"});
@@ -440,27 +436,33 @@ Translation.addTranslation("Max/Min", {ru: "Макс./Мин.", pt: "Máx/Min", 
 Translation.addTranslation("Cycle: ", {ru: "Цикл: ", es: "Ciclo: ", pt: "Cíclo: ", zh: "周期: "});
 Translation.addTranslation("Reset", {ru: "Сброс", pt: "Resetar", zh: "重置"});
 Translation.addTranslation("sec", {ru: "сек", es: "sec", pt: "seg", zh: "秒"});
+// Charging Batteries
+Translation.addTranslation("charging.disabled", {en: "Disabled", ru: "Выключен", pt: "Desabilitado", zh: "禁用"});
+Translation.addTranslation("charging.not_in_hand", {en: "Charge items not in hand", ru: "Заряжать предметы, которые не в руке", pt: "Carregar itens que não estão nas mãos", zh: "手里没有要充电的东西"});
+Translation.addTranslation("charging.enabled", {en: "Enabled", ru: "Включён", pt: "Habilitado", zh: "启用"});
 // Mining Laser
-Translation.addTranslation("Mining", {ru: "Добыча", es: "Taladrando", pt: "Mineração", zh: "挖矿模式"});
-Translation.addTranslation("Low-Focus", {ru: "Короткого фокуса", es: "Baja Potencia", pt: "Baixo-Foco", zh: "低聚焦模式"});
-Translation.addTranslation("Long-Range", {ru: "Дальнего действия", es: "Largo Alcance", pt: "Longo Alcance", zh: "远距模式"});
-Translation.addTranslation("Horizontal", {ru: "Горизонтальный", zh: "水平模式"});
-Translation.addTranslation("Super-Heat", {ru: "Перегревающий", es: "Super-Calor", pt: "Super Quente", zh: "超级热线模式"});
-Translation.addTranslation("Scatter", {ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
+Translation.addTranslation("mining_laser.mining", {en: "Mining", ru: "Добыча", es: "Taladrando", pt: "Mineração", zh: "挖矿模式"});
+Translation.addTranslation("mining_laser.low_focus", {en: "Low-Focus", ru: "Короткого фокуса", es: "Baja Potencia", pt: "Baixo-Foco", zh: "低聚焦模式"});
+Translation.addTranslation("mining_laser.long_range", {en: "Long-Range", ru: "Дальнего действия", es: "Largo Alcance", pt: "Longo Alcance", zh: "远距模式"});
+Translation.addTranslation("mining_laser.horizontal", {en: "Horizontal", ru: "Горизонтальный", zh: "水平模式"});
+Translation.addTranslation("mining_laser.super_heat", {en: "Super-Heat", ru: "Перегревающий", es: "Super-Calor", pt: "Super Quente", zh: "超级热线模式"});
+Translation.addTranslation("mining_laser.scatter", {en: "Scatter", ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
+Translation.addTranslation("mining_laser.3x3", {en: "3x3"});
 // Iridium Drill
 Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna III", zh: "时运 III"});
 Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
 
 // Messages
-Translation.addTranslation("Nightvision mode enabled", {ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
-Translation.addTranslation("Nightvision mode disabled", {ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
-Translation.addTranslation("Hover mode disabled", {ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
-Translation.addTranslation("Hover mode enabled", {ru: "Режим парения включен", zh: "已启用悬浮模式"});
-Translation.addTranslation("Scan Result: ", {ru: "Результат сканирования: ", es: "Resultado de la exploración: ", pt: "Resultado do Escaneamento: ", zh: "扫描结果: "});
-Translation.addTranslation("Frequency Transmitter linked to Teleporter", {ru: "Частотный связыватель соединился с телепортером"});
-Translation.addTranslation("Can`t link Teleporter to itself", {ru: "Невозможно связать телепортер с самим собой"});
-Translation.addTranslation("Teleportation link established", {ru: "Телепортационная связь установлена"});
-Translation.addTranslation("Frequency Transmitter unlinked", {ru: "Частотный связыватель сброшен"});
+Translation.addTranslation("message.nightvision.enabled", {en: "Nightvision mode enabled", ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
+Translation.addTranslation("message.nightvision.disabled", {en: "Nightvision mode disabled", ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
+Translation.addTranslation("message.hover_mode.enabled", {en: "Hover mode enabled", ru: "Режим парения включен", zh: "已启用悬浮模式"});
+Translation.addTranslation("message.hover_mode.disabled", {en: "Hover mode disabled", ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
+Translation.addTranslation("message.scan_result", {en: "Scan Result: ", ru: "Результат сканирования: ", es: "Resultado de la exploración: ", pt: "Resultado do Escaneamento: ", zh: "扫描结果: "});
+Translation.addTranslation("message.freq_transmitter.linked", {en: "Frequency Transmitter linked to Teleporter", ru: "Частотный связыватель соединился с телепортером"});
+Translation.addTranslation("message.freq_transmitter.notlinked", {en: "Can`t link Teleporter to itself", ru: "Невозможно связать телепортер с самим собой"});
+Translation.addTranslation("message.freq_transmitter.established", {en: "Teleportation link established", ru: "Телепортационная связь установлена"});
+Translation.addTranslation("message.freq_transmitter.unlinked", {en: "Frequency Transmitter unlinked", ru: "Частотный связыватель сброшен"});
+Translation.addTranslation("message.mining_laser.aiming", {en: "Mining laser aiming angle too steep", ru: "Шахтёрский лазер направлен слишков высоко"});
 
 // Tooltips
 Translation.addTranslation("tooltip.tin_can", {en: "This looks bad...", ru: "Это выглядит несъедобно…", pt: "Isso parece ruim ...", zh: "这看起来很糟糕..."});

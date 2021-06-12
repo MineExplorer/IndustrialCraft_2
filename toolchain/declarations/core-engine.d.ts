@@ -3704,7 +3704,7 @@ declare namespace Entity {
 
     /**
      * Sets entity's immobile state
-     * @param mobile if true, entity is immobilized, otherwise it can move
+     * @param mobile if true, entity can move, otherwise it is immobilized
      */
     function setMobile(ent: number, mobile: boolean): void;
 
@@ -6188,8 +6188,8 @@ declare namespace Item {
          */
         meta?: number
     }
-
 }
+
 interface TransferPolicy {
 	(container: ItemContainer, name: string, id: number, amount: number, data: number, extra: ItemExtraData, playerUid: number): number;
 }
@@ -6380,6 +6380,26 @@ declare class ItemContainer {
 	addServerOpenListener(listener: (container: ItemContainer, client: NetworkClient) => void): void;
 
 	addServerCloseListener(listener: (container: ItemContainer, client: NetworkClient) => void): void;
+	
+	/**
+     	 * Handler for moving items from inventory to container slot.
+     	 * Can be used in custom slot click events.
+     	 * Works only with the CLIENT instance of [[ItemContainer]]
+     	 * @param from numeric index of the inventory slot where the transaction happened
+     	 * @param to string name of the container slot where the transaction happened
+     	 * @param count count of the items to be moved
+     	 */
+    	handleInventoryToSlotTransaction(from: number, to: string, count: number): void;
+	
+    	/**
+    	 * Handler for moving items from container slot to inventory.
+   	 * Can be used in custom slot click events.
+    	 * Works only with the CLIENT instance of [[ItemContainer]]
+     	 * @param from string name of the container slot where the transaction happened
+     	 * @param count count of the items to be moved 
+     	 */
+    	handleSlotToInventoryTransaction(from: string, count: number): void;
+	
 
 	static registerScreenFactory(name: string, screenFactory: (container: ItemContainer, name: string) => UI.Window): void;
 }
@@ -7119,6 +7139,22 @@ declare namespace ModAPI {
          */
         props: object
     }
+}
+/**
+ * Interface representing ModPack
+ */
+interface ModPackJsAdapter {
+    
+    getRootDirectory(): java.io.File;
+
+    getRootDirectoryPath(): string;
+
+    getModsDirectoryPath(): string;
+
+    /**
+     * Other methods and properties
+     */
+    [key: string]: any
 }
 /**
  * Module containing enums that can make user code more readable
@@ -15189,6 +15225,11 @@ declare var __config__: Config;
  * Full path to current Horizon pack directory
  */
 declare var __packdir__: string;
+
+/**
+ * Full path to current Inner Core modpack directory
+ */
+declare var __modpack__: ModPackJsAdapter;
 
 /**
  * Module that allows to work with current Minecraft world

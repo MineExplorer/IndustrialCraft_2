@@ -1,12 +1,12 @@
-class ItemMiningLaser
-extends ItemElectric {
+class ItemMiningLaser extends ItemElectric
+implements IModeSwitchable {
 	modes = {
-		0: {name: "Mining", energy: 1250, power: 6},
-		1: {name: "Low-Focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1, sound: "MiningLaserLowFocus.ogg"},
-		2: {name: "Long-Range", energy: 5000, power: 20, sound: "MiningLaserLongRange.ogg"},
-		3: {name: "Horizontal", energy: 1250, power: 6},
-		4: {name: "Super-Heat", energy: 2500, power: 8, smelt: true},
-		5: {name: "Scatter", energy: 10000, power: 12, blockBreaks: 16, sound: "MiningLaserScatter.ogg"},
+		0: {name: "mining", energy: 1250, power: 6},
+		1: {name: "low_focus", energy: 100, range: 4, power: 6, blockBreaks: 1, dropChance: 1, sound: "MiningLaserLowFocus.ogg"},
+		2: {name: "long_range", energy: 5000, power: 20, sound: "MiningLaserLongRange.ogg"},
+		3: {name: "horizontal", energy: 1250, power: 6},
+		4: {name: "super_heat", energy: 2500, power: 8, smelt: true},
+		5: {name: "scatter", energy: 10000, power: 12, blockBreaks: 16, sound: "MiningLaserScatter.ogg"},
 		6: {name: "3x3", energy: 10000, power: 6}
 	};
 
@@ -14,40 +14,42 @@ extends ItemElectric {
 		super("miningLaser", "mining_laser", 1000000, 2048, 3);
 		this.setHandEquipped(true);
 		this.setRarity(EnumRarity.UNCOMMON);
-		UIbuttons.setToolButton(this.id, "button_switch", true);
-		UIbuttons.registerSwitchFunction(this.id, (item: ItemInstance, player: number) => {
-			this.onModeSwitch(item, player);
-		});
+		ToolHUD.setButtonFor(this.id, "button_switch");
+	}
+
+	readMode(extra: ItemExtraData): number {
+		if (!extra) return 0;
+		return extra.getInt("mode");
+	}
+
+	getModeProperties(mode: number): any {
+		return this.modes[mode];
+	}
+
+	getModeName(mode: number): string {
+		return "mining_laser." + this.getModeProperties(mode).name;
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
 		name = super.onNameOverride(item, name);
-		let mode = item.extra? item.extra.getInt("mode") : 0;
-		name += "\n"+this.getModeInfo(mode);
+		let mode = this.readMode(item.extra);
+		name += "\n" + Translation.translate("Mode: ") + Translation.translate(this.getModeName(mode));
 		return name;
 	}
 
 	onModeSwitch(item: ItemInstance, player: number): void {
 		let extra = item.extra || new ItemExtraData();
-		let mode = (extra.getInt("mode")+1)%7;
+		let mode = (extra.getInt("mode") + 1) % 7;
 		extra.putInt("mode", mode);
-		Game.message(this.getModeInfo(mode));
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
-	}
-
-	getModeData(mode: number): any {
-		return this.modes[mode];
-	}
-
-	getModeInfo(mode: number): string {
-		let modeName = this.getModeData(mode).name;
-		return Translation.translate("Mode: ") + Translation.translate(modeName);
+		let client = Network.getClientForPlayer(player);
+		BlockEngine.sendUnlocalizedMessage(client, "Mode: ", this.getModeName(mode));
 	}
 
 	makeShot(item: ItemInstance, player: number): void {
-		let laserSetting = item.extra? item.extra.getInt("mode") : 0;
+		let laserSetting = this.readMode(item.extra);
 		if (laserSetting == 3 || laserSetting == 6) return;
-		let mode = this.getModeData(laserSetting);
+		let mode = this.getModeProperties(laserSetting);
 		if (ICTool.useElectricItem(item, mode.energy, player)) {
 			SoundManager.playSoundAtEntity(player, mode.sound || "MiningLaser.ogg");
 			let pos = Entity.getPosition(player);
@@ -80,12 +82,12 @@ extends ItemElectric {
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
-		let laserSetting = item.extra? item.extra.getInt("mode") : 0;
+		let laserSetting = this.readMode(item.extra);
 		if (laserSetting != 3 && laserSetting != 6) {
 			this.makeShot(item, player);
 			return;
 		}
-		let mode = this.getModeData(laserSetting);
+		let mode = this.getModeProperties(laserSetting);
 		if (ICTool.useElectricItem(item, mode.energy, player)) {
 			SoundManager.playSoundAtEntity(player, mode.sound || "MiningLaser.ogg");
 			let pos = Entity.getPosition(player);
@@ -126,7 +128,8 @@ extends ItemElectric {
 					}
 				}
 			} else {
-				Game.message("Mining laser aiming angle too steep");
+				let client = Network.getClientForPlayer(player);
+				BlockEngine.sendUnlocalizedMessage(client, "message.mining_laser.aiming");
 			}
 		}
 	}

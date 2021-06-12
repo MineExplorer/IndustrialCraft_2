@@ -20,7 +20,7 @@ Callback.addCallback("PreLoaded", function() {
 
 const recyclerBlacklist = [102, 280, 78, 80, 332];
 
-const guiRecycler = InventoryWindow("Recycler", {
+const guiRecycler = MachineRegistry.createInventoryWindow("Recycler", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 155, bitmap: "recycler_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}

@@ -15,7 +15,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.reactorChamber, 0, 'x', BlockID.primalGenerator, 0, 'c', ItemID.casingIron, 0]);
 });
 
-const guiRTGenerator = InventoryWindow("Radioisotope Thermoelectric Generator", {
+const guiRTGenerator = MachineRegistry.createInventoryWindow("Radioisotope Thermoelectric Generator", {
 	drawing: [
 		{type: "bitmap", x: 630, y: 150, bitmap: "energy_bar_background", scale: GUI_SCALE},
 	],

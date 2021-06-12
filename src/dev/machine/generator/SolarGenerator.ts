@@ -12,7 +12,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
 });
 
-const guiSolarPanel = InventoryWindow("Solar Panel", {
+const guiSolarPanel = MachineRegistry.createInventoryWindow("Solar Panel", {
 	elements: {
 		"slotEnergy": {type: "slot", x: 600, y: 130},
 		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}

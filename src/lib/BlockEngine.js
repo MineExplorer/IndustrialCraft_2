@@ -30,7 +30,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 4,
+    version: 5,
     shared: false,
     api: "CoreEngine"
 });
@@ -45,7 +45,19 @@ var BlockEngine;
         return gameVersion[1];
     }
     BlockEngine.getMainGameVersion = getMainGameVersion;
+    function sendUnlocalizedMessage(client) {
+        var texts = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            texts[_i - 1] = arguments[_i];
+        }
+        client.send("blockengine.clientMessage", { texts: texts });
+    }
+    BlockEngine.sendUnlocalizedMessage = sendUnlocalizedMessage;
 })(BlockEngine || (BlockEngine = {}));
+Network.addClientPacket("blockengine.clientMessage", function (data) {
+    var message = data.texts.map(Translation.translate).join("");
+    Game.message(message);
+});
 var Side;
 (function (Side) {
     Side[Side["Client"] = 0] = "Client";

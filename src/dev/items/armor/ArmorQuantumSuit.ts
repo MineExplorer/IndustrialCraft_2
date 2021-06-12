@@ -34,7 +34,7 @@ class ArmorQuantumHelmet
 extends ArmorQuantumSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "helmet", defence: 3, texture: texture});
-		UIbuttons.setArmorButton(this.id, "button_nightvision");
+		ToolHUD.setButtonFor(this.id, "button_nightvision");
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
@@ -103,8 +103,15 @@ class ArmorQuantumChestplate
 extends ArmorQuantumSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "chestplate", defence: 8, texture: texture});
-		UIbuttons.setArmorButton(this.id, "button_fly");
-		UIbuttons.setArmorButton(this.id, "button_hover");
+		ToolHUD.setButtonFor(this.id, "button_fly");
+		ToolHUD.setButtonFor(this.id, "button_hover");
+	}
+
+	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
+		if (BlockEngine.getMainGameVersion() >= 16 && params.type == 5 && !EntityHelper.isOnGround(playerUid)) {
+			Game.prevent();
+		}
+		return super.onHurt(params, item, index, playerUid);
 	}
 
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
@@ -152,7 +159,7 @@ class ArmorQuantumBoots
 extends ArmorQuantumSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "boots", defence: 3, texture: texture});
-		UIbuttons.setArmorButton(this.id, "button_jump")
+		ToolHUD.setButtonFor(this.id, "button_jump")
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {

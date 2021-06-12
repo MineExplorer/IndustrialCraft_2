@@ -1,9 +1,9 @@
 #downlevelIteration: false
+#declaration: true
 
 header.ts
 translation.ts
 
-core/id_convert/*
 core/**/*
 
 block/rubber_tree/**
@@ -125,7 +125,6 @@ items/armor/recipes.ts
 items/tool/init.ts
 items/tool/recipes.ts
 
-integration/recipe_viewer.ts
-integration/tree_capitator.js
+integration/**/*
 
 api.ts

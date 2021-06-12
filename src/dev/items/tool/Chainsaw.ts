@@ -19,7 +19,7 @@ extends ElectricTool {
 
 	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {
 		if (Block.getDestroyTime(block.id) > 0) {
-			if (ICTool.dischargeItem(item, this.energyPerUse, player) && (block.id == 18 || block.id == 161)) {
+			if (ICTool.dischargeItem(item, this.getEnergyPerUse(item), player) && (block.id == 18 || block.id == 161)) {
 				let region = WorldRegion.getForActor(player);
 				region.destroyBlock(coords);
 				region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, block.id, 1, block.data);
@@ -29,7 +29,7 @@ extends ElectricTool {
 	}
 
 	onAttack(item: ItemInstance, victim: number, attacker: number): boolean {
-		if (ICTool.dischargeItem(item, this.energyPerUse, attacker)) {
+		if (ICTool.dischargeItem(item, this.getEnergyPerUse(item), attacker)) {
 			this.toolMaterial.damage = this.extraDamage;
 		}
 		else {

@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-const guiFermenter = InventoryWindow("Fermenter", {
+const guiFermenter = MachineRegistry.createInventoryWindow("Fermenter", {
 	drawing: [
 		{type: "bitmap", x: 390, y: 80, bitmap: "fermenter_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 758, y: 95, bitmap: "liquid_bar", scale: GUI_SCALE}

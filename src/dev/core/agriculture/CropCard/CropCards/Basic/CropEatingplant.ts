@@ -58,7 +58,7 @@ namespace Agriculture {
 			if (!entity) return;
 
 			Entity.damageEntity(entity, te.data.currentSize * 2);
-			if (Entity.getType(entity) == 1 && !this.hasMetalArmor(entity)) {
+			if (EntityHelper.isPlayer(entity) && !this.hasMetalArmor(entity)) {
 				Entity.addEffect(entity, PotionEffect.poison, 1, 50);
 			}
 			if (te.crop.canGrow(te)) te.data.growthPoints += 100;

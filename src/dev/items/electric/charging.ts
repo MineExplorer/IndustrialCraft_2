@@ -2,6 +2,11 @@
 
 class ItemBatteryCharging
 extends ItemBattery {
+	readMode(extra: ItemExtraData): number {
+		if (!extra) return 0;
+		return extra.getInt("mode");
+	}
+
 	onNoTargetUse(item: ItemStack, player: number) {
 		let extra = item.extra || new ItemExtraData();
 		let mode = (extra.getInt("mode") + 1) % 3;
@@ -9,31 +14,52 @@ extends ItemBattery {
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 
 		let client = Network.getClientForPlayer(player);
-		if (client) {
-			if (mode == 0) {
-				client.sendMessage(Translation.translate("Mode: Enabled"));
-			}
-			if (mode == 1) {
-				client.sendMessage(Translation.translate("Mode: Charge items not in hand"));
-			}
-			if (mode == 2) {
-				client.sendMessage(Translation.translate("Mode: Disabled"));
-			}
+		switch (mode) {
+			case 0:
+				BlockEngine.sendUnlocalizedMessage(client, "Mode: ", "charging.enabled");
+			break;
+			case 1:
+				BlockEngine.sendUnlocalizedMessage(client, "Mode: ", "charging.not_in_hand");
+			break;
+			case 2:
+				BlockEngine.sendUnlocalizedMessage(client, "Mode: ", "charging.disabled");
+			break;
+		}
+	}
+
+	getModeTooltip(mode: number): string {
+		switch (mode) {
+			case 0:
+				return Translation.translate("Mode: ") + Translation.translate("charging.enabled");
+			case 1:
+				return Translation.translate("Mode: ") + Translation.translate("charging.not_in_hand");
+			case 2:
+				return Translation.translate("Mode: ") + Translation.translate("charging.disabled");
 		}
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
-		let mode = item.extra? item.extra.getInt("mode") : 0;
-		if (mode == 0) {
-			var tooltip = Translation.translate("Mode: Enabled");
+		let mode = this.readMode(item.extra);
+		return super.onNameOverride(item, name) + '\n' + this.getModeTooltip(mode);
+	}
+
+	chargeItems(player: PlayerEntity, index: number, item: ItemInstance): void {
+		let mode = this.readMode(item.extra);
+		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		if (mode == 2 || energyStored <= 0) return;
+		for (let i = 0; i < 9; i++) {
+			if (mode == 1 && player.getSelectedSlot() == i) continue;
+			let stack = player.getInventorySlot(i);
+			if (!ChargeItemRegistry.isValidStorage(stack.id, "Eu", 5)) {
+				let energyAdd = ChargeItemRegistry.addEnergyTo(stack, "Eu", Math.min(energyStored, this.transferLimit * 20), this.tier, true);
+				if (energyAdd > 0) {
+					energyStored -= energyAdd;
+					player.setInventorySlot(i, stack);
+				}
+			}
 		}
-		if (mode == 1) {
-			var tooltip = Translation.translate("Mode: Charge items not in hand");
-		}
-		if (mode == 2) {
-			var tooltip = Translation.translate("Mode: Disabled");
-		}
-		return super.onNameOverride(item, name) + '\n' + tooltip;
+		ChargeItemRegistry.setEnergyStored(item, energyStored);
+		player.setInventorySlot(index, item);
 	}
 
 	static checkCharging(playerUid: number): void {
@@ -42,22 +68,7 @@ extends ItemBattery {
 			let slot = player.getInventorySlot(i);
 			let itemInstance = slot.getItemInstance();
 			if (itemInstance instanceof ItemBatteryCharging) {
-				let mode = slot.extra? slot.extra.getInt("mode") : 0;
-				let energyStored = ChargeItemRegistry.getEnergyStored(slot);
-				if (mode == 2 || energyStored <= 0) continue;
-				for (let index = 0; index < 9; index++) {
-					if (mode == 1 && player.getSelectedSlot() == index) continue;
-					let stack = player.getInventorySlot(index);
-					if (!ChargeItemRegistry.isValidStorage(stack.id, "Eu", 5)) {
-						let energyAdd = ChargeItemRegistry.addEnergyTo(stack, "Eu", Math.min(energyStored, itemInstance.transferLimit*20), itemInstance.tier, true);
-						if (energyAdd > 0) {
-							energyStored -= energyAdd;
-							player.setInventorySlot(index, stack);
-						}
-					}
-				}
-				ChargeItemRegistry.setEnergyStored(slot, energyStored);
-				player.setInventorySlot(i, slot);
+				itemInstance.chargeItems(player, i, slot);
 			}
 		}
 	}

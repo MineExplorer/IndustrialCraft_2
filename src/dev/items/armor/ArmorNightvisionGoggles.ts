@@ -4,7 +4,7 @@ class ArmorNightvisionGoggles
 extends ArmorElectric {
 	constructor() {
 		super("nightvisionGoggles", "nightvision_goggles", {type: "helmet", defence: 1, texture: "nightvision"}, 100000, 256, 2);
-		UIbuttons.setArmorButton(this.id, "button_nightvision");
+		ToolHUD.setButtonFor(this.id, "button_nightvision");
 	}
 
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {

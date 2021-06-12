@@ -25,7 +25,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-const guiGenerator = InventoryWindow("Generator", {
+const guiGenerator = MachineRegistry.createInventoryWindow("Generator", {
 	drawing: [
 		{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 450, y: 150, bitmap: "fire_background", scale: GUI_SCALE},
@@ -77,17 +77,19 @@ namespace Machine {
 		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
+			let newActive = false;
 			const energyStorage = this.getEnergyStorage();
-			if (this.data.burn <= 0 && this.data.energy + 10 <= energyStorage) {
-				this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel") / 4;
+			if (this.data.energy + 10 <= energyStorage) {
+				if (this.data.burn <= 0) {
+					this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel") / 4;
+				}
+				if (this.data.burn > 0) {
+					this.data.energy = Math.min(this.data.energy + 10, energyStorage);
+					this.data.burn--;
+					newActive = true;
+				}
 			}
-			if (this.data.burn > 0) {
-				this.data.energy = Math.min(this.data.energy + 10, energyStorage);
-				this.data.burn--;
-				this.setActive(true);
-			} else {
-				this.setActive(false);
-			}
+			this.setActive(newActive);
 
 			this.chargeSlot("slotEnergy");
 			this.container.setScale("burningScale", this.data.burn / this.data.burnMax || 0);

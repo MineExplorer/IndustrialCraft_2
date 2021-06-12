@@ -50,7 +50,7 @@ for (let y = 0; y < 6; y++) {
 	}
 }
 
-const guiNuclearReactor = InventoryWindow("Nuclear Reactor", {
+const guiNuclearReactor = MachineRegistry.createInventoryWindow("Nuclear Reactor", {
 	drawing: [
 		{type: "bitmap", x: 340, y: 370, bitmap: "reactor_info", scale: GUI_SCALE},
 	],

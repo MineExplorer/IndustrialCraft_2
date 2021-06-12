@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockAdvanced, 0, 'a', BlockID.teleporter, 0, 'e', BlockID.storageMFE, -1, 'm', BlockID.miner, -1, 'p', ItemID.plateAlloy, 0]);
 });
 
-const guiAdvancedMiner = InventoryWindow("Advanced Miner", {
+const guiAdvancedMiner = MachineRegistry.createInventoryWindow("Advanced Miner", {
 	drawing: [
 		{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 50 + 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 50 + 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},

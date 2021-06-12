@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', ItemID.circuitBasic, 0, 'x', ItemID.casingIron, 0, 'a', ItemID.heatConductor, 0, 'b', ItemID.storageBattery, -1]);
 });
 
-const guiElectricHeatGenerator = InventoryWindow("Electric Heater", {
+const guiElectricHeatGenerator = MachineRegistry.createInventoryWindow("Electric Heater", {
 	drawing: [
 		{type: "bitmap", x: 342, y: 110, bitmap: "energy_small_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 461, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}

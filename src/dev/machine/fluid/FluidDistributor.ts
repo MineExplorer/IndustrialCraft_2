@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'a', ItemID.upgradeFluidPulling, 0, 'c', ItemID.cellEmpty, 0]);
 });
 
-const guiFluidDistributor = InventoryWindow("Fluid Distributor", {
+const guiFluidDistributor = MachineRegistry.createInventoryWindow("Fluid Distributor", {
 	drawing: [
 		{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "fluid_distributor_background", scale: GUI_SCALE}
 	],

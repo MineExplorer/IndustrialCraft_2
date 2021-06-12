@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.reactorChamber, 0, 'x', ItemID.heatConductor, 0, 'c', ItemID.casingIron, 0]);
 });
 
-const guiRTHeatGenerator = InventoryWindow("Radioisotope Heat Generator", {
+const guiRTHeatGenerator = MachineRegistry.createInventoryWindow("Radioisotope Heat Generator", {
 	drawing: [
 		{type: "bitmap", x: 380, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],

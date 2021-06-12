@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-const guiGeothermalGenerator = InventoryWindow("Geothermal Generator", {
+const guiGeothermalGenerator = MachineRegistry.createInventoryWindow("Geothermal Generator", {
 	drawing: [
 		{type: "bitmap", x: 702, y: 91, bitmap: "energy_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},

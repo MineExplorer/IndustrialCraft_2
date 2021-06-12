@@ -25,7 +25,7 @@ Callback.addCallback("PreLoaded", function() {
 	}, true);
 });
 
-const guiBlastFurnace = InventoryWindow("Blast Furnace", {
+const guiBlastFurnace = MachineRegistry.createInventoryWindow("Blast Furnace", {
 	drawing: [
 		{type: "bitmap", x: 450, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE_NEW}
 	],

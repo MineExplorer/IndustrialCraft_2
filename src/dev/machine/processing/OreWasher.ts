@@ -30,7 +30,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-const guiOreWasher = InventoryWindow("Ore Washing Plant", {
+const guiOreWasher = MachineRegistry.createInventoryWindow("Ore Washing Plant", {
 	drawing: [
 		{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_SCALE_NEW},
 		{type: "bitmap", x: 415, y: 170, bitmap: "energy_small_background", scale: GUI_SCALE_NEW}

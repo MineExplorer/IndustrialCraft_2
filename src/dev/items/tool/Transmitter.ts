@@ -35,12 +35,12 @@ implements ItemBehavior {
 				extra.putInt("z", coords.z);
 				extra.putInt("dimension", dimension);
 				Entity.setCarriedItem(player, item.id, 1, item.data, extra);
-				client.sendMessage(Translation.translate("Frequency Transmitter linked to Teleporter"));
+				BlockEngine.sendUnlocalizedMessage(client, "message.freq_transmitter.linked");
 			}
 			else {
 				if (dimension != extra.getInt("dimension")) return;
 				if (receiveCoords.x == coords.x && receiveCoords.y == coords.y && receiveCoords.z == coords.z) {
-					client.sendMessage(Translation.translate("Can`t link Teleporter to itself"));
+					BlockEngine.sendUnlocalizedMessage(client, "message.freq_transmitter.notlinked");
 				}
 				else {
 					let region = WorldRegion.getForActor(player);
@@ -54,14 +54,14 @@ implements ItemBehavior {
 						data = receiver.data;
 						data.frequency = coords;
 						data.frequency.energy = basicTeleportCost;
-						client.sendMessage(Translation.translate("Teleportation link established"));
+						BlockEngine.sendUnlocalizedMessage(client, "message.freq_transmitter.established");
 					}
 				}
 			}
 		}
 		else if (receiveCoords) {
 			Entity.setCarriedItem(player, item.id, 1, item.data);
-			client.sendMessage(Translation.translate("Frequency Transmitter unlinked"));
+			BlockEngine.sendUnlocalizedMessage(client, "message.freq_transmitter.unlinked");
 		}
 	}
 }

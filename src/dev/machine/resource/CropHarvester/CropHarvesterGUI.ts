@@ -12,7 +12,7 @@ for (let i = 0; i < 15; i++) {
 	cropHarvesterGuiElements["outSlot" + i] = { type: "slot", x: 520 + x * 60, y: 50 + y * 60 };
 };
 
-const guiCropHarvester = InventoryWindow("Crop Harvester", {
+const guiCropHarvester = MachineRegistry.createInventoryWindow("Crop Harvester", {
 	drawing: [
 		{ type: "bitmap", x: 409, y: 167, bitmap: "energy_small_background", scale: GUI_SCALE }
 	],

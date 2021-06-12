@@ -17,10 +17,14 @@ Block.registerDropFunction("rubberTreeLeaves", function(coords: Vector, blockID:
 	if (level > 0 || item.id == 359) {
 		return [[blockID, 1, 2]];
 	}
+	let drop = [];
 	if (Math.random() < .04) {
-		return [[BlockID.rubberTreeSapling, 1, 0]]
+		drop.push([BlockID.rubberTreeSapling, 1, 0]);
 	}
-	return [];
+	if (Math.random() < .02) {
+		drop.push([280, 1, 0]);
+	}
+	return drop;
 });
 
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLeaves, "plant");
@@ -77,6 +81,9 @@ Block.setRandomTickCallback(BlockID.rubberTreeLeaves, function(x, y, z, id, data
 		updateLeaves(x, y, z, region);
 		if (Math.random() < .04) {
 			region.spawnDroppedItem(x, y, z, BlockID.rubberTreeSapling, 1, 0);
+		}
+		if (Math.random() < .02) {
+			region.spawnDroppedItem(x, y, z, 280, 1, 0);
 		}
 	}
 });

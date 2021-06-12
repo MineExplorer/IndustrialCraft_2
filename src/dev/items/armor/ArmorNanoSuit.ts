@@ -32,7 +32,7 @@ class ArmorNanoHelmet
 extends ArmorNanoSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "helmet", defence: 3, texture: texture});
-		UIbuttons.setArmorButton(this.id, "button_nightvision");
+		ToolHUD.setButtonFor(this.id, "button_nightvision");
 	}
 
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {

@@ -87,7 +87,7 @@ namespace Machine {
 }
 
 function BatteryBlockWindow(header: string) {
-	return InventoryWindow(header, {
+	return MachineRegistry.createInventoryWindow(header, {
 		drawing: [
 			{type: "bitmap", x: 530, y: 144, bitmap: "energy_bar_background", scale: GUI_SCALE},
 		],

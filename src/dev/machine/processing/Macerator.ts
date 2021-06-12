@@ -89,7 +89,7 @@ Callback.addCallback("PreLoaded", function() {
 		"minecraft:pumpkin": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		"minecraft:wheat": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		"minecraft:reeds": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
-		"minecraft:melon": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		"minecraft:melon_slice": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		"minecraft:carrot": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		"minecraft:potato": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		"minecraft:pumpkin_seeds": {id: ItemID.bioChaff, count: 1, sourceCount: 16},

@@ -25,7 +25,7 @@ namespace MachineRecipeRegistry {
 				} else {
 					newKey = eval(key);
 				}
-				newData[newKey] = data[key];
+				if (newKey) newData[newKey] = data[key];
 			}
 			data = newData;
 		}

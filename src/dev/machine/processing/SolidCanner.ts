@@ -42,7 +42,7 @@ Callback.addCallback("PreLoaded", function() {
 		"minecraft:carrot": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0}},
 		"minecraft:rabbit": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0}},
 		"minecraft:cookie": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
-		"minecraft:melon": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
+		"minecraft:melon_slice": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
 		"minecraft:chicken": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 1}},
 		"minecraft:spider_eye": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 2}},
 		"minecraft:cod": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
@@ -51,7 +51,7 @@ Callback.addCallback("PreLoaded", function() {
 		"minecraft:salmon": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
 		"minecraft:potato": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
 		"minecraft:beetroot": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
-		"minecraft:clownfish": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
+		"minecraft:tropical_fish": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
 	}, true);
 });
 

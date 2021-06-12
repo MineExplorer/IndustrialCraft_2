@@ -37,7 +37,11 @@ const guiOreWasher = MachineRegistry.createInventoryWindow("Ore Washing Plant", 
 	],
 
 	elements: {
-		"progressScale": {type: "scale", x: 400 + 98*GUI_SCALE_NEW, y: 50 + 35*GUI_SCALE_NEW, direction: 0, bitmap: "ore_washer_bar_scale", scale: GUI_SCALE_NEW},
+		"progressScale": {type: "scale", x: 400 + 98*GUI_SCALE_NEW, y: 50 + 35*GUI_SCALE_NEW, direction: 0, bitmap: "ore_washer_bar_scale", scale: GUI_SCALE_NEW, clicker: {
+			onClick: () => {
+				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_oreWasher");
+			}
+		}},
 		"energyScale": {type: "scale", x: 415, y: 170, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE_NEW},
 		"liquidScale": {type: "scale", x: 400 + 60*GUI_SCALE_NEW, y: 50 + 21*GUI_SCALE_NEW, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE_NEW},
 		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE_NEW, y: 50 + 58*GUI_SCALE_NEW, size: 54},

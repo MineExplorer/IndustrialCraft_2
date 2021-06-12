@@ -35,7 +35,11 @@ const guiCanner = MachineRegistry.createInventoryWindow("Fluid/Solid Canning Mac
 		"background": {type: "image", x: 400 + 51*GUI_SCALE_NEW, y: 50 + 12*GUI_SCALE_NEW, bitmap: "canner_background_0", scale: GUI_SCALE_NEW},
 		"liquidInputScale": {type: "scale", x: 496 + 4*GUI_SCALE_NEW, y: 50 + 42*GUI_SCALE_NEW, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE_NEW},
 		"liquidOutputScale": {type: "scale", x: 730 + 4*GUI_SCALE_NEW, y: 50 + 42*GUI_SCALE_NEW, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE_NEW},
-		"progressScale": {type: "scale", x: 400 + 67*GUI_SCALE_NEW, y: 50 + 18*GUI_SCALE_NEW, direction: 0, bitmap: "extractor_bar_scale", scale: GUI_SCALE_NEW},
+		"progressScale": {type: "scale", x: 400 + 67*GUI_SCALE_NEW, y: 50 + 18*GUI_SCALE_NEW, direction: 0, bitmap: "extractor_bar_scale", scale: GUI_SCALE_NEW, clicker: {
+			onClick: () => {
+				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_canner");
+			}
+		}},
 		"energyScale": {type: "scale", x: 406, y: 50 + 58*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE_NEW},
 		"slotEnergy": {type: "slot", x: 400, y: 50 + 75*GUI_SCALE_NEW, size: 54},
 		"slotSource": {type: "slot", x: 400 + 72*GUI_SCALE_NEW, y: 50 + 39*GUI_SCALE_NEW, size: 54, visual: false, bitmap: "canner_slot_source_0"},

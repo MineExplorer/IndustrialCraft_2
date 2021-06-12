@@ -73,10 +73,10 @@ namespace RadiationAPI {
 	}
 
 	export function addEffect(ent: number, duration: number): void {
-		let type = Entity.getType(ent);
-		if (type == 1 && !hasHazmatSuit(ent) || EntityHelper.isMob(ent)) {
+		let isPlayer = EntityHelper.isPlayer(ent);
+		if (isPlayer && !hasHazmatSuit(ent) || EntityHelper.isMob(ent)) {
 			Entity.addEffect(ent, PotionEffect.fatal_poison, 1, duration * 20);
-			if (type == 1) setRadiation(ent, duration);
+			if (isPlayer) setRadiation(ent, duration);
 		}
 	}
 

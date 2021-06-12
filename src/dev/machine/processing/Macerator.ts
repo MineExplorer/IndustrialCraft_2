@@ -89,7 +89,7 @@ Callback.addCallback("PreLoaded", function() {
 		"minecraft:pumpkin": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		"minecraft:wheat": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		"minecraft:reeds": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
-		"minecraft:melon": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
+		"minecraft:melon_slice": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		"minecraft:carrot": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		"minecraft:potato": {id: ItemID.bioChaff, count: 1, sourceCount: 8},
 		"minecraft:pumpkin_seeds": {id: ItemID.bioChaff, count: 1, sourceCount: 16},
@@ -108,7 +108,11 @@ const guiMacerator = MachineRegistry.createInventoryWindow("Macerator", {
 	],
 
 	elements: {
-		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, bitmap: "macerator_bar_scale", scale: GUI_SCALE},
+		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, bitmap: "macerator_bar_scale", scale: GUI_SCALE, clicker: {
+			onClick: () => {
+				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_macerator");
+			}
+		}},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 79},
 		"slotEnergy": {type: "slot", x: 441, y: 218},

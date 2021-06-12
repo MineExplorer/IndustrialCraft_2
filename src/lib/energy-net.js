@@ -640,8 +640,10 @@ var EnergyGridBuilder;
     Callback.addCallback("PopBlockResources", function (coords, block, f, i, region) {
         if (EnergyRegistry.isWire(block.id)) {
             var node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
-            node.removeCoords(coords.x, coords.y, coords.z);
-            node.rebuild = true;
+            if (node) {
+                node.removeCoords(coords.x, coords.y, coords.z);
+                node.rebuild = true;
+            }
         }
     });
 })(EnergyGridBuilder || (EnergyGridBuilder = {}));

@@ -70,7 +70,6 @@ Callback.addCallback("PreLoaded", function() {
 	MachineRecipeRegistry.registerRecipesFor("metalFormer2", {
 		"ItemID.ingotTin": {id: ItemID.cableTin0, count: 3},
 		"ItemID.ingotCopper": {id: ItemID.cableCopper0, count: 3},
-		"ItemID.ingotGold": {id: ItemID.cableGold0, count: 4},
 		"minecraft:iron_ingot": {id: ItemID.cableIron0, count: 4},
 		"minecraft:gold_ingot": {id: ItemID.cableGold0, count: 4},
 		"ItemID.casingTin": {id: ItemID.tinCanEmpty, count: 1},
@@ -86,7 +85,11 @@ const guiMetalFormer = MachineRegistry.createInventoryWindow("Metal Former", {
 	],
 
 	elements: {
-		"progressScale": {type: "scale", x: 530, y: 164, direction: 0, bitmap: "metalformer_bar_scale", scale: GUI_SCALE},
+		"progressScale": {type: "scale", x: 530, y: 164, direction: 0, bitmap: "metalformer_bar_scale", scale: GUI_SCALE, clicker: {
+			onClick: () => {
+				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_metalFormer");
+			}
+		}},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotSource": {type: "slot", x: 441, y: 79},
 		"slotEnergy": {type: "slot", x: 441, y: 218},

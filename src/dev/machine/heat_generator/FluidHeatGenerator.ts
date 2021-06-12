@@ -53,7 +53,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			let liquidFuel = MachineRecipeRegistry.requireRecipesFor("fluidFuel");
+			let liquidFuel = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
 			this.liquidTank = this.addLiquidTank("fluid", 10000, Object.keys(liquidFuel));
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {

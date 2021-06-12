@@ -42,7 +42,7 @@ Callback.addCallback("PreLoaded", function() {
 		"minecraft:carrot": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0}},
 		"minecraft:rabbit": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0}},
 		"minecraft:cookie": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
-		"minecraft:melon": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
+		"minecraft:melon_slice": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
 		"minecraft:chicken": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 1}},
 		"minecraft:spider_eye": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 2}},
 		"minecraft:cod": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
@@ -51,7 +51,7 @@ Callback.addCallback("PreLoaded", function() {
 		"minecraft:salmon": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
 		"minecraft:potato": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
 		"minecraft:beetroot": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
-		"minecraft:clownfish": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
+		"minecraft:tropical_fish": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
 	}, true);
 });
 
@@ -64,7 +64,11 @@ const guiSolidCanner = MachineRegistry.createInventoryWindow("Solid Canning Mach
 	],
 
 	elements: {
-		"progressScale": {type: "scale", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE},
+		"progressScale": {type: "scale", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
+			onClick: () => {
+				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_solidCanner");
+			}
+		}},
 		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
 		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE},
 		"slotSource": {type: "slot", x: 400 + 32*GUI_SCALE, y: 50 + 32*GUI_SCALE},

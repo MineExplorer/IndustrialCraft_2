@@ -184,7 +184,7 @@ extends ArmorQuantumSuit {
 }
 
 Callback.addCallback("EntityHurt", function(attacker: number, victim: number, damage: number, type: number) {
-	if (damage > 0 && Entity.getType(victim) == 1 && (type == 2 || type == 3 || type == 11)) {
+	if (damage > 0 && EntityHelper.isPlayer(victim) && (type == 2 || type == 3 || type == 11)) {
 		let defencePoints = 0;
 		for (let i = 0; i < 4; i++) {
 			let item = Entity.getArmorSlot(victim, i);

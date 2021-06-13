@@ -8,7 +8,7 @@ implements ItemBehavior {
 		this.setCategory(ItemCategory.EQUIPMENT);
 		ItemContainer.registerScreenFactory("eu_meter.ui", function (container, name) {
 			const gui = EUMeter.gui;
-			const elements: any = gui.getContent().elements;
+			const elements = gui.getContent().elements as any;
 			elements.arrow.bitmap = "eu_meter_arrow_0";
 			elements.textMode2.text = Translation.translate("EnergyIn");
 			return gui;
@@ -19,10 +19,10 @@ implements ItemBehavior {
 		const client = Network.getClientForPlayer(player);
 		if (!client) return;
 
-		let region = BlockSource.getDefaultForActor(player);
-		let node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
+		const region = BlockSource.getDefaultForActor(player);
+		const node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
 		if (node) {
-			let updatable = new EUMeterUpdatable(node);
+			const updatable = new EUMeterUpdatable(node);
 			Updatable.addUpdatable(updatable);
 			updatable.openGuiFor(client);
 		}
@@ -43,7 +43,7 @@ implements ItemBehavior {
 
 		elements: {
 			"arrow": {type: "image", x: 576, y: 206, bitmap: "eu_meter_arrow_0", scale: GUI_SCALE},
-			"textName": {type: "text", font: {size: 36}, x: 378, y: 46, width: 256, height: 42, text: Translation.translate("eu_meter")},
+			"textName": {type: "text", font: {size: 32}, x: 378, y: 48, width: 256, height: 42, text: Translation.translate("eu_meter")},
 			"textAvg": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 164, width: 256, height: 42, text: Translation.translate("Avg:")},
 			"textAvgValue": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 194, width: 256, height: 42, text: "0 EU/t"},
 			"textMaxMin": {type: "text", font: {size: 22, color: Color.GREEN}, x: 266, y: 240, width: 256, height: 42, text: Translation.translate("Max/Min")},
@@ -106,5 +106,5 @@ implements ItemBehavior {
 Callback.addCallback("LevelLoaded", function() {
 	const content = EUMeter.gui.getContent();
 	const element = content.elements.textName as UI.UITextElement;
-	element.text = Translation.translate("EU Meter");
+	element.text = Translation.translate("eu_meter");
 });

@@ -30,7 +30,7 @@ namespace Agriculture {
         }
 
         static getCardFromSeed(item: ItemStack) {
-            for (var i in this.cropCards) {
+            for (let i in this.cropCards) {
                 const seed = this.cropCards[i].getBaseSeed();
                 if (seed && seed.id == item.id && (!seed.data || seed.data == item.data)) {
                     return this.cropCards[i];
@@ -40,7 +40,7 @@ namespace Agriculture {
         }
 
         static getCardFromID(id: string): CropCard {
-            for (var i in this.cropCards) {
+            for (let i in this.cropCards) {
                 if (this.cropCards[i].getID() == id) {
                     return this.cropCards[i];
                 }

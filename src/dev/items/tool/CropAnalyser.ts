@@ -147,8 +147,8 @@ class CropAnalyser extends ItemCommon {
 		}
 	}
 	static showAllValues(container: ItemContainer, seedBagSlot: ItemInstance) {
-		var level = seedBagSlot.extra.getInt("scan");
-		var crop: Agriculture.CropCard = Agriculture.CropCardManager.getCropCardByIndex(seedBagSlot.data)
+		let level = seedBagSlot.extra.getInt("scan");
+		let crop: Agriculture.CropCard = Agriculture.CropCardManager.getCropCardByIndex(seedBagSlot.data)
 
 		switch (level) {
 			case 4:
@@ -293,7 +293,7 @@ const guiAnalyserObject: UI.WindowContent = {
 	}
 };
 
-for (var i = 0; i < 10; i++) {
+for (let i = 0; i < 10; i++) {
 	guiAnalyserObject.elements["slot" + i] = { type: "invSlot", x: 270 + i * 45, y: 455, size: GUI_SCALE * guiAddConst, index: i };
 }
 

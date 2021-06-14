@@ -376,43 +376,43 @@ Translation.addTranslation("mug_coffee", {en: "Coffee", ru: "Кофе", es: "Caf
 
 // Crop Items
 Translation.addTranslation("crop_seed_bag", {en: "Seed Bag (%s)", ru: "Мешок с семенами (%s)", es: "Semillas Desconocidas (%s)", pt: "Saco de sementes (%s)", zh: "种子袋 (%s)"});
-Translation.addTranslation("crop_stick", {en: "Crop", ru: "Жёрдочки", pt: "Muda", zh: "作物架"});
-Translation.addTranslation("grin_powder", {en: "Grin Powder", ru: "Токсичная пыль", es: "Polvo Horrible", zh: "蛤蛤粉", pt: "Pó do Riso"});
+Translation.addTranslation("crop_stick", {en: "Crop", ru: "Жёрдочки",es:"Palo Para Cultivo", pt: "Muda", zh: "作物架"});
+Translation.addTranslation("grin_powder", {en: "Grin Powder", ru: "Токсичная пыль", es: "Polvo Tóxico", zh: "蛤蛤粉", pt: "Pó do Riso"});
 Translation.addTranslation("weed_ex", {en: "Weed EX", ru: "Средство от сорняков", es: "Veneno para Hierbas", pt: "Erbicida", zh: "除草剂"});
 Translation.addTranslation("fertilizer", {en: "Fertilizer", ru: "Удобрение", es: "Fertilizante", pt: "Fertilizante", zh: "肥料"});
-Translation.addTranslation("hydration_cell", {en: "Hydration Cell", ru: "Увлажняющая капсула", pt: "Líquido de Refrigeração", zh: "水化单元"});
+Translation.addTranslation("hydration_cell", {en: "Hydration Cell", ru: "Увлажняющая капсула",es: "Celda Hidratante", pt: "Líquido de Refrigeração", zh: "水化单元"});
 Translation.addTranslation("coffee_beans", {en: "Coffee Beans", ru: "Кофейные зёрна", es: "Granos de Café", pt: "Grãos de Café", zh: "咖啡豆"});
 
 // Crops
-Translation.addTranslation("wheat", {en: "Wheat", ru: "Пшеница", pt: "Trigo", zh: "小麦"});
+Translation.addTranslation("wheat", {en: "Wheat", ru: "Пшеница", es: "Trigo", pt: "Trigo", zh: "小麦"});
 Translation.addTranslation("weed", {en: "Weed", ru: "Сорняк", pt: "Erva Daninha", zh: "杂草"});
-Translation.addTranslation("pumpkin", {en: "Pumpkin", ru: "Тыква", pt: "Abóbora", zh: "南瓜"});
-Translation.addTranslation("melon", {en: "Melon", ru: "Арбуз", pt: "Melancia", zh: "西瓜"});
-Translation.addTranslation("dandelion", {en: "Dandelion", ru: "Одуванчик", pt: "Dente-de-Leão", zh: "蒲公英"});
-Translation.addTranslation("rose", {en: "Rose", ru: "Роза", pt: "Rosa", zh: "玫瑰"});
-Translation.addTranslation("blackthorn", {en: "Blackthorn", ru: "Терновник", pt: "Espinheiro-negro", zh: "黑刺李"});
-Translation.addTranslation("tulip", {en: "Tulip", ru: "Тюльпан", pt: "Tulipa", zh: "郁金香"});
-Translation.addTranslation("cyazint", {en: "Cyazint", ru: "Гиацинт", pt: "Cyazint", zh: "缤纷花"});
-Translation.addTranslation("venomilia", {en: "Venomilia", ru: "Веномилия", pt: "Venomilia", zh: "奇妙花"});
-Translation.addTranslation("reed", {en: "Reed", ru: "Сахарный тростник", pt: "Cana-de-açúcar", zh: "甘蔗"});
-Translation.addTranslation("stickreed", {en: "Stickreed", ru: "Резиновый тростник", zh: "粘性甘蔗", pt: "Cana-de-borracha"});
-Translation.addTranslation("cocoa", {en: "Cocoa", ru: "Какао", pt: "Cacau", zh: "可可"});
-Translation.addTranslation("red_mushroom", {en: "Red Mushroom", ru: "Красный гриб", pt: "Cogumelo Vermelho", zh: "红色蘑菇"});
-Translation.addTranslation("brown_mushroom", {en: "Brown Mushroom", ru: "Коричневый гриб", pt: "Cogumelo marrom", zh: "棕色蘑菇"});
-Translation.addTranslation("nether_wart", {en: "Nether Wart", ru: "Адский нарост", pt: "Fungo do Nether", zh: "地狱疣"});
+Translation.addTranslation("pumpkin", {en: "Pumpkin", ru: "Тыква", es: "Calabaza", pt: "Abóbora", zh: "南瓜"});
+Translation.addTranslation("melon", {en: "Melon", ru: "Арбуз", es: "Sandia", pt: "Melancia", zh: "西瓜"});
+Translation.addTranslation("dandelion", {en: "Dandelion", ru: "Одуванчик", es: "Diente de León", pt: "Dente-de-Leão", zh: "蒲公英"});
+Translation.addTranslation("rose", {en: "Rose", ru: "Роза", es: "Rosa", pt: "Rosa", zh: "玫瑰"});
+Translation.addTranslation("blackthorn", {en: "Blackthorn", ru: "Терновник", es: "Rosa del Whiter", pt: "Espinheiro-negro", zh: "黑刺李"});
+Translation.addTranslation("tulip", {en: "Tulip", ru: "Тюльпан", es: "Tulipán",pt: "Tulipa", zh: "郁金香"});
+Translation.addTranslation("cyazint", {en: "Cyazint", ru: "Гиацинт", es: "Aciano", pt: "Cyazint", zh: "缤纷花"});
+Translation.addTranslation("venomilia", {en: "Venomilia", ru: "Веномилия", es: "Venomilia", pt: "Venomilia", zh: "奇妙花"});
+Translation.addTranslation("reed", {en: "Reed", ru: "Сахарный тростник", es: "Caña de Azúcar",pt: "Cana-de-açúcar", zh: "甘蔗"});
+Translation.addTranslation("stickreed", {en: "Stickreed", ru: "Резиновый тростник", es: "Junco", zh: "粘性甘蔗", pt: "Cana-de-borracha"});
+Translation.addTranslation("cocoa", {en: "Cocoa", ru: "Какао", es: "Cacao", pt: "Cacau", zh: "可可"});
+Translation.addTranslation("red_mushroom", {en: "Red Mushroom", ru: "Красный гриб", es: "Champiñon Rojo",pt: "Cogumelo Vermelho", zh: "红色蘑菇"});
+Translation.addTranslation("brown_mushroom", {en: "Brown Mushroom", ru: "Коричневый гриб", es: "Champiñion Cafe", pt: "Cogumelo marrom", zh: "棕色蘑菇"});
+Translation.addTranslation("nether_wart", {en: "Nether Wart", ru: "Адский нарост", es: "Verruga de Nether",pt: "Fungo do Nether", zh: "地狱疣"});
 Translation.addTranslation("terra_wart", {en: "Terra Wart", ru: "Земляной нарост", es: "Verruga de Tierra", pt: "Fungo da Terra", zh: "大地疣"});
-Translation.addTranslation("ferru", {en: "Ferru", ru: "Феррий", pt: "Ferru", zh: "铁叶草"});
-Translation.addTranslation("cyprium", {en: "Cyprium", ru: "Куприй", pt: "Chipre", zh: "铜叶草"});
-Translation.addTranslation("stagnium", {en: "Stagnium", ru: "Стагний", pt: "Stagnium", zh: "银矿草"});
+Translation.addTranslation("ferru", {en: "Ferru", ru: "Феррий", es: "Ferru",pt: "Ferru", zh: "铁叶草"});
+Translation.addTranslation("cyprium", {en: "Cyprium", ru: "Куприй", es: "Cyclamen", pt: "Chipre", zh: "铜叶草"});
+Translation.addTranslation("stagnium", {en: "Stagnium", ru: "Стагний", es: "Stagnium", pt: "Stagnium", zh: "银矿草"});
 Translation.addTranslation("plumbiscus", {en: "Plumbiscus", ru: "Плюмбий", pt: "Biscoito de canela", zh: "铅叶草"});
 Translation.addTranslation("aurelia", {en: "Aurelia", ru: "Аурелия", pt: "Aurélia", zh: "金叶草"});
 Translation.addTranslation("shining", {en: "Shining", ru: "Аргентий", pt: "Brilhante", zh: "闪光"});
 Translation.addTranslation("redwheat", {en: "Red Wheat", ru: "Красная пшеница", pt: "Trigo Vermelho", zh: "红麦"});
-Translation.addTranslation("coffee", {en: "Coffee", ru: "Кофе", pt: "Café", zh: "咖啡"});
+Translation.addTranslation("coffee", {en: "Coffee", ru: "Кофе", es: "Cafe",pt: "Café", zh: "咖啡"});
 Translation.addTranslation("hops", {en: "Hops", ru: "Хмель", es: "Lúpulo", pt: "Lúpulo", zh: "啤酒花"});
-Translation.addTranslation("carrots", {en: "Carrots", ru: "Морковь", pt: "Cenouras", zh: "胡萝卜"});
-Translation.addTranslation("potato", {en: "Potato", ru: "Картофель", pt: "Batata", zh: "马铃薯"});
-Translation.addTranslation("eatingplant", {en: "Eating Plant", ru: "Плотоядное растение", pt: "Planta Carnívora", zh: "食人花"});
+Translation.addTranslation("carrots", {en: "Carrots", ru: "Морковь", es: "Zanaorias", pt: "Cenouras", zh: "胡萝卜"});
+Translation.addTranslation("potato", {en: "Potato", ru: "Картофель", es: "Patatas", pt: "Batata", zh: "马铃薯"});
+Translation.addTranslation("eatingplant", {en: "Eating Plant", ru: "Плотоядное растение", es: "Planta Carnivora", pt: "Planta Carnívora", zh: "食人花"});
 Translation.addTranslation("beetroots", {en: "Beetroots", ru: "Свёкла", pt: "Beterrabas", zh: "甜菜根"});
 
 // TEXT
@@ -437,9 +437,9 @@ Translation.addTranslation("Cycle: ", {ru: "Цикл: ", es: "Ciclo: ", pt: "Cí
 Translation.addTranslation("Reset", {ru: "Сброс", pt: "Resetar", zh: "重置"});
 Translation.addTranslation("sec", {ru: "сек", es: "sec", pt: "seg", zh: "秒"});
 // Charging Batteries
-Translation.addTranslation("charging.disabled", {en: "Disabled", ru: "Выключен", pt: "Desabilitado", zh: "禁用"});
-Translation.addTranslation("charging.not_in_hand", {en: "Charge items not in hand", ru: "Заряжать предметы, которые не в руке", pt: "Carregar itens que não estão nas mãos", zh: "手里没有要充电的东西"});
-Translation.addTranslation("charging.enabled", {en: "Enabled", ru: "Включён", pt: "Habilitado", zh: "启用"});
+Translation.addTranslation("charging.disabled", {en: "Disabled", ru: "Выключен",es: "Desabilitado", pt: "Desabilitado", zh: "禁用"});
+Translation.addTranslation("charging.not_in_hand", {en: "Charge items not in hand", ru: "Заряжать предметы, которые не в руке", es: "Cargar artículos que no están en la mano", pt: "Carregar itens que não estão nas mãos", zh: "手里没有要充电的东西"});
+Translation.addTranslation("charging.enabled", {en: "Enabled", ru: "Включён", es: "Habilitado",pt: "Habilitado", zh: "启用"});
 // Mining Laser
 Translation.addTranslation("mining_laser.mining", {en: "Mining", ru: "Добыча", es: "Taladrando", pt: "Mineração", zh: "挖矿模式"});
 Translation.addTranslation("mining_laser.low_focus", {en: "Low-Focus", ru: "Короткого фокуса", es: "Baja Potencia", pt: "Baixo-Foco", zh: "低聚焦模式"});
@@ -453,9 +453,9 @@ Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna II
 Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
 
 // Messages
-Translation.addTranslation("message.nightvision.enabled", {en: "Nightvision mode enabled", ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
-Translation.addTranslation("message.nightvision.disabled", {en: "Nightvision mode disabled", ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
-Translation.addTranslation("message.hover_mode.enabled", {en: "Hover mode enabled", ru: "Режим парения включен", zh: "已启用悬浮模式"});
+Translation.addTranslation("message.nightvision.enabled", {en: "Nightvision mode enabled", es: "Modo Vision Noctura Habilitado" ,ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});
+Translation.addTranslation("message.nightvision.disabled", {en: "Nightvision mode disabled",es: "Modo Vision Noctura Desabilitado", ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
+Translation.addTranslation("message.hover_mode.enabled", {en: "Hover mode enabled",  ru: "Режим парения включен", zh: "已启用悬浮模式"});
 Translation.addTranslation("message.hover_mode.disabled", {en: "Hover mode disabled", ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
 Translation.addTranslation("message.scan_result", {en: "Scan Result: ", ru: "Результат сканирования: ", es: "Resultado de la exploración: ", pt: "Resultado do Escaneamento: ", zh: "扫描结果: "});
 Translation.addTranslation("message.freq_transmitter.linked", {en: "Frequency Transmitter linked to Teleporter", ru: "Частотный связыватель соединился с телепортером"});

@@ -46,7 +46,7 @@ namespace Machine {
 		energyTick(type: string, src: any): void {}
 
 		energyReceive(type: string, amount: number, voltage: number): number {
-			var maxVoltage = this.getMaxPacketSize();
+			let maxVoltage = this.getMaxPacketSize();
 			if (voltage > maxVoltage) {
 				if (IC2Config.voltageEnabled) {
 					this.blockSource.setBlock(this.x, this.y, this.z, 0, 0);
@@ -55,10 +55,9 @@ namespace Machine {
 					this.selfDestroy();
 					return 1;
 				}
-				var add = Math.min(maxVoltage, this.getEnergyStorage() - this.data.energy);
-			} else {
-				var add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
+				amount = Math.min(amount, maxVoltage);
 			}
+			let add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
 			this.data.energy += add;
 			return add;
 		}

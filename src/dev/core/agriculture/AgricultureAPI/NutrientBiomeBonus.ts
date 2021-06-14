@@ -1,5 +1,5 @@
 namespace Agriculture {
-	export var NutrientBiomeBonus = {
+	export let NutrientBiomeBonus = {
 		21: 10,
 		22: 10,
 		23: 10,

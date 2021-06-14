@@ -85,10 +85,9 @@ namespace Machine {
 						this.liquidTank.getLiquid(amount);
 					}
 				}
-				var stack = new ItemStack(weedExSlot);
 				if (weedExSlot.id && tileentity.applyWeedEx(weedExSlot, false)) {
 					this.data.energy -= 10;
-					if (++weedExSlot.data >= stack.getMaxDamage()) {
+					if (++weedExSlot.data >= Item.getMaxDamage(weedExSlot.id)) {
 						weedExSlot.clear();
 					}
 					weedExSlot.markDirty();

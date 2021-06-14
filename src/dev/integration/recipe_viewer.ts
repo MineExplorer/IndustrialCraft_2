@@ -1,6 +1,6 @@
-var RV: {Core: any, RecipeType: typeof RecipeType, RecipeTypeRegistry: RecipeTypeRegistry};
+let RV: {Core: any, RecipeType: typeof RecipeType, RecipeTypeRegistry: RecipeTypeRegistry};
 
-ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof RecipeType, RecipeTypeRegistry: RecipeTypeRegistry}) => {
+ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	RV = api;
 
@@ -38,7 +38,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 			const list: RecipePattern[] = [];
 			const recipe: {[key: string]: MachineRecipeRegistry.RecipeData} = MachineRecipeRegistry.requireRecipesFor(this.recipeKey);
 			let input: string[];
-			for(let key in recipe){
+			for (let key in recipe) {
 				input = key.split(":");
 				list.push({
 					input: [{id: +input[0], count: recipe[key].sourceCount || 1, data: +input[1] || 0}],
@@ -75,7 +75,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 			const list: RecipePattern[] = [];
 			const recipe: {[key: string]: {can: number, result: ItemInstance}} = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 			let input: string[];
-			for(let key in recipe){
+			for (let key in recipe) {
 				input = key.split(":");
 				list.push({
 					input: [
@@ -120,7 +120,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 			const list: RecipePattern[] = [];
 			const solidRecipe: {[key: string]: {can: number, result: ItemInstance}} = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 			let item: string[];
-			for(let key in solidRecipe){
+			for (let key in solidRecipe) {
 				item = key.split(":");
 				list.push({
 					input: [
@@ -132,7 +132,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 				});
 			}
 			const fluidRecipe: {input: [string, {id: number, count: number}], output: string}[] = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
-			for(let i = 0; i < fluidRecipe.length; i++){
+			for (let i = 0; i < fluidRecipe.length; i++) {
 				list.push({
 					input: [
 						null,
@@ -145,7 +145,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 			}
 			let full: ItemInstance;
 			let empty: ItemInstance;
-			for(let key in LiquidRegistry.EmptyByFull){
+			for (let key in LiquidRegistry.EmptyByFull) {
 				item = key.split(":");
 				full = {id: +item[0], count: 1, data: +item[1] || 0};
 				empty = {id: LiquidRegistry.EmptyByFull[key].id, count: 1, data: LiquidRegistry.EmptyByFull[key].data || 0};
@@ -195,9 +195,9 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 			const list: RecipePattern[] = [];
 			let recipe: {[key: string]: MachineRecipeRegistry.RecipeData};
 			let input: string[];
-			for(let mode = 0; mode < 3; mode++){
+			for (let mode = 0; mode < 3; mode++) {
 				recipe = MachineRecipeRegistry.requireRecipesFor("metalFormer" + mode);
-				for(let key in recipe){
+				for (let key in recipe) {
 					input = key.split(":");
 					list.push({
 						input: [{id: +input[0], count: recipe[key].sourceCount || 1, data: +input[1] || 0}],
@@ -220,7 +220,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 
 	const numArray2Output = (arr: number[]): ItemInstance[] => {
 		const output: ItemInstance[] = [];
-		for(let i = 0; i < arr.length; i += 2){
+		for (let i = 0; i < arr.length; i += 2) {
 			output.push({id: arr[i], count: arr[i + 1], data: 0});
 		}
 		return output;
@@ -252,7 +252,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 			const list: RecipePattern[] = [];
 			const recipe: {[key: string]: number[]} = MachineRecipeRegistry.requireRecipesFor("oreWasher");
 			let input: string[];
-			for(let key in recipe){
+			for (let key in recipe) {
 				input = key.split(":");
 				list.push({
 					input: [{id: +input[0], count: 1, data: +input[1] || 0}],
@@ -292,7 +292,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 			const list: RecipePattern[] = [];
 			const recipe: {[key: string]: {result: number[], heat: number}} = MachineRecipeRegistry.requireRecipesFor("thermalCentrifuge");
 			let input: string[];
-			for(let key in recipe){
+			for (let key in recipe) {
 				input = key.split(":");
 				list.push({
 					input: [{id: +input[0], count: 1, data: +input[1] || 0}],
@@ -335,7 +335,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 			const list: RecipePattern[] = [];
 			const recipe: {[key: string]: {result: number[], duration: number}} = MachineRecipeRegistry.requireRecipesFor("blastFurnace");
 			let input: string[];
-			for(let key in recipe){
+			for (let key in recipe) {
 				input = key.split(":");
 				list.push({
 					input: [
@@ -404,7 +404,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
 			const recipe: {[key: string]: {power: number, amount: number}} = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
-			for(let liq in recipe){
+			for (let liq in recipe) {
 				list.push({
 					inputLiq: [{liquid: liq, amount: recipe[liq].amount}],
 					power: recipe[liq].power
@@ -420,6 +420,5 @@ ModAPI.addAPICallback("RecipeViewer", (api: {Core: any, RecipeType: typeof Recip
 	}
 
 	api.RecipeTypeRegistry.register("icpe_fluidFuel", new FluidFuelRecipe());
-
 
 });

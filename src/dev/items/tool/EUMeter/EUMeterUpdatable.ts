@@ -1,11 +1,3 @@
-namespace EUMeterGUI {
-	Callback.addCallback("LevelLoaded", function() {
-		const content = EUMeter.gui.getContent();
-		const element = content.elements.textName as UI.UITextElement;
-		element.text = Translation.translate("EU Meter");
-	});
-}
-
 class EUMeterUpdatable {
 	container: ItemContainer;
 	mode = 0;

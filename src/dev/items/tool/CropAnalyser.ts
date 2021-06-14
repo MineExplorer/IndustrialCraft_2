@@ -14,7 +14,7 @@ class CropAnalyser extends ItemCommon {
 			const region = WorldRegion.getForActor(player);
 			const tileEntity = region.getTileEntity(coords.x, coords.y, coords.z) as Agriculture.ICropTileEntity;
 			if (!tileEntity.crop) return;
-			this.showCropValues(tileEntity);
+			this.showCropValues(tileEntity, player);
 		} else {
 			this.onNoTargetUse(item, player);
 		}
@@ -41,17 +41,18 @@ class CropAnalyser extends ItemCommon {
 		container.openFor(client, "crop_analyser.ui");
 	}
 
-	showCropValues(tileEntity: Agriculture.ICropTileEntity): void {
+	showCropValues(tileEntity: Agriculture.ICropTileEntity, player: number): void {
+		const client = Network.getClientForPlayer(player);
 		switch (tileEntity.data.scanLevel) {
 			case 4:
-				Game.message("Growth: " + tileEntity.data.statGrowth);
-				Game.message("Gain: " + tileEntity.data.statGain);
-				Game.message("Resistance: " + tileEntity.data.statResistance);
+				client.sendMessage(`Growth: ${tileEntity.data.statGrowth}`);
+				client.sendMessage(`Gain: ${tileEntity.data.statGain}`);
+				client.sendMessage(`Resistance: ${tileEntity.data.statResistance}`);
 			case 2:
-				Game.message("Tier: " + tileEntity.crop.getProperties().tier);
-				Game.message("Discovered by: " + tileEntity.crop.getDiscoveredBy());
+				client.sendMessage(`Tier: ${tileEntity.crop.getProperties().tier}`);
+				client.sendMessage(`Discovered by: ${tileEntity.crop.getDiscoveredBy()}`);
 			case 1:
-				Game.message(Translation.translate(tileEntity.crop.getID()));
+				BlockEngine.sendUnlocalizedMessage(client, tileEntity.crop.getID());
 		}
 	}
 

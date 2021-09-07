@@ -1,7 +1,7 @@
 // BLOCKS
-Translation.addTranslation("Rubber Tree Log", {ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", pt: "Madeira de Seringueira", zh: "橡胶树原木"});
-Translation.addTranslation("Rubber Tree Leaves", {ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", pt: "Folhas de Seringueira", zh: "橡胶树树叶"});
-Translation.addTranslation("Rubber Tree Sapling", {ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", pt: "Muda de Seringueira", zh: "橡胶树树苗"});
+Translation.addTranslation("Rubber Tree Log", {ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", pt: "Madeira da árvore de borracha", zh: "橡胶树原木"});
+Translation.addTranslation("Rubber Tree Leaves", {ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", pt: "Folhas da árvore de borracha", zh: "橡胶树树叶"});
+Translation.addTranslation("Rubber Tree Sapling", {ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", pt: "Muda de árvore de borracha", zh: "橡胶树树苗"});
 Translation.addTranslation("Copper Ore", {ru: "Медная руда", es: "Mineral de Cobre", pt: "Minério de Cobre", zh: "铜矿石"});
 Translation.addTranslation("Tin Ore", {ru: "Оловянная руда", es: "Mineral de Estaño", pt: "Minério de Estanho", zh: "锡矿石"});
 Translation.addTranslation("Lead Ore", {ru: "Свинцовая руда", es: "Mineral de Plomo", pt: "Minério de Chumbo", zh: "铅矿石"});
@@ -18,27 +18,27 @@ Translation.addTranslation("Uranium Block", {ru: "Урановый блок", es
 Translation.addTranslation("Mining Pipe", {ru: "Буровая труба", es: "Tubo Minero", pt: "Tubo de Mineração", zh: "采矿管道"});
 Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", pt: "Pedra Reforçada", zh: "防爆石"});
 Translation.addTranslation("Reinforced Glass", {ru: "Укреплённое стекло", es: "Cristal Reforzado", pt: "Vidro Reforçado", zh: "防爆玻璃"});
-Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", pt: "Estrutura de Máquina Básica", zh: "基础机械外壳"});
-Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Estrutura de Máquina Avançada", zh: "高级机械外壳"});
+Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", pt: "Bloco de Máquina Básica", zh: "基础机械外壳"});
+Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Bloco de Máquina Avançada", zh: "高级机械外壳"});
 
 // Generators
 Translation.addTranslation("Generator", {ru: "Генератор", es: "Generador", pt: "Gerador", zh: "火力发电机"});
 Translation.addTranslation("Geothermal Generator", {ru: "Геотермальный генератор", es: "Generador Geotérmico", pt: "Gerador Geotérmico", zh: "地热发电机"});
 Translation.addTranslation("Solar Panel", {ru: "Солнечная панель", es: "Panel Solar", pt: "Painel Solar", zh: "太阳能发电机"});
-Translation.addTranslation("Water Mill", {ru: "Гидрогенератор", es: "Molino de Agua", pt: "Gerador Aquático", zh: "水力发电机"});
+Translation.addTranslation("Water Mill", {ru: "Гидрогенератор", es: "Molino de Agua", pt: "Moinho de água", zh: "水力发电机"});
 Translation.addTranslation("Wind Mill", {ru: "Ветрогенератор", es: "Molino de Viento", pt: "Cata-vento", zh: "风力发电机"});
 Translation.addTranslation("Radioisotope Thermoelectric Generator", {ru: "Радиоизотопный термоэлектрический генератор", es: "Generador Radioisotopos Termoeléctrico", pt: "Gerador Termoelétrico de Radioisótopos", zh: "放射性同位素温差发电机"});
-Translation.addTranslation("Semifluid Generator", {ru: "Полужидкостный генератор", es: "Generador a Semifluidos", pt: "Gerador à Semi-Fluidos", zh: "半流质发电机"});
-Translation.addTranslation("Stirling Generator", {ru: "Генератор Стирлинга", es: "Generador Stirling", pt: "Gerador à Calor", zh: "斯特林发电机"});
+Translation.addTranslation("Semifluid Generator", {ru: "Полужидкостный генератор", es: "Generador a Semifluidos", pt: "Gerador a Semi-Fluidos", zh: "半流质发电机"});
+Translation.addTranslation("Stirling Generator", {ru: "Генератор Стирлинга", es: "Generador Stirling", pt: "Gerador a Calor", zh: "斯特林发电机"});
 
 Translation.addTranslation("Nuclear Reactor", {ru: "Ядерный реактор", es: "Reactor Nuclear", pt: "Reator Nuclear", zh: "核反应堆"});
-Translation.addTranslation("Reactor Chamber", {ru: "Реакторная камера", es: "Cámara del Reactor", pt: "Câmara de Reator", zh: "核反应仓"});
+Translation.addTranslation("Reactor Chamber", {ru: "Реакторная камера", es: "Cámara del Reactor", pt: "Câmara do Reator", zh: "核反应仓"});
 
 // Heat Generators
-Translation.addTranslation("Liquid Fuel Firebox", {ru: "Жидкостный теплогенератор", es: "Generador de Calor Líquido", pt: "Aquecedor à Combustível Líquido", zh: "流体加热机"});
-Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor à Combustível Sólido", zh: "固体加热机"});
+Translation.addTranslation("Liquid Fuel Firebox", {ru: "Жидкостный теплогенератор", es: "Generador de Calor Líquido", pt: "Aquecedor a Combustível Líquido", zh: "流体加热机"});
+Translation.addTranslation("Solid Fuel Firebox", {ru: "Твердотопливный теплогенератор", es: "Generador de calor sólido", pt: "Aquecedor a Combustível Sólido", zh: "固体加热机"});
 Translation.addTranslation("Electric Heater", {ru: "Электрический теплогенератор", es: "Generador Eléctrico De Calor", pt: "Aquecedor Elétrico", zh: "电力加热机"});
-Translation.addTranslation("Radioisotope Heat Generator", {ru: "Радиоизотопный теплогенератор", es: "Generador de Calor de Radioisótopos", pt: "Aquecedor à Radioisótopos", zh: "放射性同位素温差加热机"});
+Translation.addTranslation("Radioisotope Heat Generator", {ru: "Радиоизотопный теплогенератор", es: "Generador de Calor de Radioisótopos", pt: "Aquecedor a Radioisótopos", zh: "放射性同位素温差加热机"});
 
 // Energy storage
 Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: "Caja de Baterías", pt: "Caixa de Baterias (CB)", zh: "储电箱"});
@@ -67,7 +67,7 @@ Translation.addTranslation("Thermal Centrifuge", {ru: "Термальная це
 Translation.addTranslation("Blast Furnace", {ru: "Доменная печь", es: "Alto Horno", pt: "Fornalha de Aquecimento", zh: "高炉"});
 Translation.addTranslation("Miner", {ru: "Буровая установка", es: "Perforadora", pt: "Minerador", zh: "采矿机"});
 Translation.addTranslation("Advanced Miner", {ru: "Продвинутый автошахтёр", es: "Minero Avanzado", pt: "Minerador Avançado", zh: "高级采矿机"});
-Translation.addTranslation("Tesla Coil", {ru: "Катушка теслы", es: "Bobina de Tesla", pt: "Bobina Tesla", zh: "特斯拉线圈"});
+Translation.addTranslation("Tesla Coil", {ru: "Катушка теслы", es: "Bobina de Tesla", pt: "Bobina de Tesla", zh: "特斯拉线圈"});
 Translation.addTranslation("Teleporter", {ru: "Телепортер", es: "Teletransportador", pt: "Teletransportador", zh: "传送机"});
 Translation.addTranslation("Mass Fabricator", {ru: "Производитель материи", es: "Materializador", pt: "Fabricador de Massa", zh: "物质生成机"});
 Translation.addTranslation("Fermenter", {ru: "Ферментер", es: "Fermentadora", pt: "Fermentador", zh: "发酵机"});

@@ -1,3 +1,5 @@
+declare let EntityGetYaw: any;
+declare let EntityGetPitch: any;
 declare namespace BlockEngine {
     function getGameVersion(): number[];
     function getMainGameVersion(): number;
@@ -99,12 +101,55 @@ declare class WorldRegion {
     setBlock(x: number, y: number, z: number, state: BlockState): void;
     setBlock(x: number, y: number, z: number, id: number, data: number): void;
     /**
+     * Sets extra block (for example, water inside another blocks), on given coords by given id and data.
+     * 1.16 only!
+     */
+    setExtraBlock(coords: Vector, state: BlockState): void;
+    setExtraBlock(coords: Vector, id: number, data: number): void;
+    setExtraBlock(x: number, y: number, z: number, id: number, data: number): void;
+    setExtraBlock(x: number, y: number, z: number, state: BlockState): void;
+    /**
+     * 1.16 only!
+     * @returns [[BlockState]] object of the extra block on given coords
+     */
+    getExtraBlock(coords: Vector): BlockState;
+    getExtraBlock(x: number, y: number, z: number): BlockState;
+    /**
      * Destroys block on coords producing appropriate drop and particles.
      * @param drop whether to provide drop for the block or not
      * @param player player entity if the block was destroyed by player
      */
     destroyBlock(coords: Vector, drop?: boolean, player?: number): void;
     destroyBlock(x: number, y: number, z: number, drop?: boolean, player?: number): void;
+    /**
+     * Destroys block on coords by entity using specified item.
+     * 1.16 only!
+     * @param x X coord of the block
+     * @param y Y coord of the block
+     * @param z Z coord of the block
+     * @param allowDrop whether to provide drop for the block or not
+     * @param entity Entity id or -1 id if entity is not specified
+     * @param item Tool which broke block
+     */
+    breakBlock(coords: Vector, allowDrop: boolean, entity: number, item: ItemInstance): void;
+    breakBlock(x: number, y: number, z: number, allowDrop: boolean, entity: number, item: ItemInstance): void;
+    /**
+     * Same as breakBlock, but returns object containing drop and experince.
+     * 1.16 only!
+     * @param x X coord of the block
+     * @param y Y coord of the block
+     * @param z Z coord of the block
+     * @param entity Entity id or -1 id if entity is not specified
+     * @param item Tool which broke block
+     */
+    breakBlockForJsResult(coords: Vector, player: number, item: ItemInstance): {
+        items: ItemInstance[];
+        experience: number;
+    };
+    breakBlockForJsResult(x: number, y: number, z: number, player: number, item: ItemInstance): {
+        items: ItemInstance[];
+        experience: number;
+    };
     /**
      * @returns interface to the vanilla TileEntity (chest, furnace, etc.) on the coords
      */
@@ -386,6 +431,17 @@ declare namespace EntityCustomData {
     function getField(entity: number, key: string): any;
     function putField(entity: number, key: string, value: any): void;
 }
+declare namespace BlockRegistry {
+    function getBlockRotation(player: any, hasVertical: any): number;
+    function setRotationFunction(id: string | number, hasVertical?: boolean, placeSound?: string): void;
+    function createBlockWithRotation(stringID: string, params: {
+        name: string;
+        texture: [string, number][];
+    }, blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
+    function registerDrop(nameID: string | number, dropFunc: Block.DropFunction, level?: number): void;
+    function setDestroyLevel(nameID: string | number, level: number): void;
+    function addBlockDropOnExplosion(nameID: string | number): void;
+}
 declare class ItemStack implements ItemInstance {
     id: number;
     count: number;
@@ -507,7 +563,6 @@ declare type ArmorMaterial = {
     enchantability?: number;
     repairMaterial?: number;
 };
-declare type ArmorType = "helmet" | "chestplate" | "leggings" | "boots";
 declare type ArmorParams = {
     type: ArmorType;
     defence: number;
@@ -569,6 +624,7 @@ declare enum EnumRarity {
 declare namespace ItemRegistry {
     export function isBlock(id: number): boolean;
     export function isItem(id: number): boolean;
+    export function getVanillaStringID(id: number): string;
     export function getInstanceOf(itemID: string | number): Nullable<ItemBase>;
     /**
      * @returns EnumRarity value for item
@@ -712,7 +768,7 @@ declare abstract class TileEntityBase implements TileEntity {
     clientTick(): void;
     onCheckerTick(isInitialized: boolean, isLoaded: boolean, wasLoaded: boolean): void;
     getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
-    getScreenByName(screenName: string): any;
+    getScreenByName(screenName: string): UI.IWindow;
     /**
      * Called when player uses some item on a TileEntity. Replaces "click" function.
      * @returns true if should prevent opening UI.

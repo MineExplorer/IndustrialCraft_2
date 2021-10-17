@@ -19,7 +19,7 @@ namespace Machine {
 		tier: number;
 		energyStorage: number;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiCropHarvester;
 		}
 

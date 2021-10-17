@@ -15,6 +15,7 @@ Block.createBlock("rubberTreeLog", [
 	{name: "Rubber Tree Log", texture: [["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood", 2], ["rubber_wood", 2]], inCreative: false},
 	{name: "Rubber Tree Log", texture: [["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 1], ["rubber_wood", 1]], inCreative: false}
 ], "wood");
+Item.setCategory(BlockID.rubberTreeLog, ItemCategory.NATURE);
 Block.registerDropFunction("rubberTreeLog", function(coords, blockID) {
 	return [[blockID, 1, 0]];
 });

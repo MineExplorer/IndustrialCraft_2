@@ -36,7 +36,7 @@ const guiRTHeatGenerator = MachineRegistry.createInventoryWindow("Radioisotope H
 
 namespace Machine {
 	export class RTHeatGenerator extends MachineBase {
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiRTHeatGenerator;
 		}
 

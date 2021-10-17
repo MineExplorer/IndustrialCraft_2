@@ -85,7 +85,7 @@ namespace Machine {
 		tier: number;
 		maxScanCount: number;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiAdvancedMiner;
 		}
 

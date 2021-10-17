@@ -46,7 +46,7 @@ namespace Machine {
 
 		defaultDrop = BlockID.machineBlockBasic;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiFluidDistributor;
 		}
 

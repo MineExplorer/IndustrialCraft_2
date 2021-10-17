@@ -130,7 +130,7 @@ namespace Machine {
 		defaultProcessTime = 300;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiMacerator;
 		}
 

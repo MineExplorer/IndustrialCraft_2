@@ -12,6 +12,7 @@ Block.createBlock("rubberTreeLeaves", [
 	translucency: 0.5,
 	sound: "grass"
 });
+Item.setCategory(BlockID.rubberTreeLeaves, ItemCategory.NATURE);
 
 Block.registerDropFunction("rubberTreeLeaves", function(coords: Vector, blockID: number, blockData: number, level: number, enchant: ToolAPI.EnchantData, item: ItemInstance) {
 	if (level > 0 || item.id == 359) {

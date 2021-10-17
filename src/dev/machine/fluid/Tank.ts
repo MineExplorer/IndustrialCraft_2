@@ -35,7 +35,7 @@ namespace Machine {
 		liquidTank: BlockEngine.LiquidTank;
 		upgrades = ["fluidEjector", "fluidPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiTank;
 		}
 

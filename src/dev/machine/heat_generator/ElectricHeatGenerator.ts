@@ -48,7 +48,7 @@ namespace Machine {
 			return 4;
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiElectricHeatGenerator;
 		}
 

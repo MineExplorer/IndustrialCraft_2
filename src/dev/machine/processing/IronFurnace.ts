@@ -43,7 +43,7 @@ namespace Machine {
 			burnMax: 0
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiIronFurnace;
 		}
 

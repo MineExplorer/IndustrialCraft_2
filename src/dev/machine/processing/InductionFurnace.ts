@@ -64,7 +64,7 @@ namespace Machine {
 		isHeating: boolean = false;
 		isPowered: boolean;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiInductionFurnace;
 		}
 

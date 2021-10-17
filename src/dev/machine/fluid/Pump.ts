@@ -62,7 +62,7 @@ namespace Machine {
 		energyDemand: number;
 		processTime: number;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiPump;
 		}
 

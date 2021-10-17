@@ -251,9 +251,10 @@ declare namespace Animation {
              */
             mesh?: RenderMesh,
             /**
-             * [[Render]] object to be displayed with animation
+             * Numeric id of the [[Render]] object to be displayed with animation.
+             * Can be obtained using [[Render.getId]]
              */
-            render?: Render,
+            render?: number,
             /**
              * Name of the texture to be used as render's skin
              */
@@ -430,37 +431,37 @@ declare namespace Armor {
      */
 	function preventDamaging(id: number | string): void;
 
+    interface ArmorGeneralFunction {
+        (item: ItemInstance, slot: number, player: number): void
+    }
+
+    interface ArmorHurtFunction {
+        (item: ItemInstance, slot: number, player: number, value: number, type: number, attacker: number, bool1: boolean, bool2: boolean): void
+    }
+
 	/**
      * This event is called every tick for every player that has this armor put on.
      * @returns the {id: , count: , data: , extra: } object to change armor item,
      * if nothing is returned, armor will not be changed.
      */
-    function registerOnTickListener(id: number, func: (
-        item: ItemInstance, slot: number, player: number
-    ) => void): ItemInstance | void;
+    function registerOnTickListener(id: number, func: ArmorGeneralFunction): ItemInstance | void;
 
     /**
      * This event is called when the damage is dealt to the player that has this armor put on.
      * @returns the {id: , count: , data: , extra: } object to change armor item,
      * if nothing is returned, armor will be damaged by default.
      */
-    function registerOnHurtListener(id: number, func: (
-        item: ItemInstance, slot: number, player: number, value: number, type: number, attacker: number, bool1: boolean, bool2: boolean
-    ) => void): ItemInstance | void;
+    function registerOnHurtListener(id: number, func: ArmorHurtFunction): ItemInstance | void;
 
     /**
      * This event is called when player takes on this armor, or spawns with it.
      */
-    function registerOnTakeOnListener(id: number, func: (
-        item: ItemInstance, slot: number, player: number
-    ) => void): void;
+    function registerOnTakeOnListener(id: number, func: ArmorGeneralFunction): void;
 
     /**
      * This event is called when player takes off or changes this armor item.
      */
-    function registerOnTakeOffListener(id: number, func: (
-        item: ItemInstance, slot: number, player: number
-    ) => void): void;
+    function registerOnTakeOffListener(id: number, func: ArmorGeneralFunction): void;
 }
 
 /**
@@ -802,6 +803,21 @@ declare namespace Block {
 
 	function registerNeighbourChangeFunctionForID(id: number, func: NeighbourChangeFunction): void;
 
+	function registerEntityStepOnFunction(id: string | number, func: EntityStepOnFunction): void;
+
+	function registerEntityStepOnFunctionForID(id: number, func: EntityStepOnFunction): void;
+
+	/**
+	 * @returns whether the block of given id can contain liquid inside
+	 */
+	function canContainLiquid(id: number): boolean;
+
+	/**
+	 * @returns whether the block of given id can be an extra block 
+	 * (it's the block that can be set inside of another blocks, for ex. water and other liquids)
+	 */
+	function canBeExtraBlock(id: number): boolean;
+
 	type ColorSource = "grass" | "leaves" | "water";
 
 	type Sound = "normal"
@@ -984,6 +1000,10 @@ declare namespace Block {
 		(blockCoords: Vector, block: Tile, entity: number): void
 	}
 
+	interface EntityStepOnFunction {
+		(coords: Vector, block: Tile, entity: number): void
+	}
+
 	/**
 	 * Function used to determine when block is broken by
 	 * environment (explosions, pistons, etc.)
@@ -1049,10 +1069,35 @@ declare namespace Block {
 	interface NeighbourChangeFunction {
 		(coords: Vector, block: Tile, changedCoords: Vector, region: BlockSource): void
 	}
-        /**
-         * @returns drop function of the block with given numeric id
-         */
-        function getDropFunction(id: number): Block.DropFunction;
+
+	/**
+	 * @returns drop function of the block with given numeric id
+	 */
+	function getDropFunction(id: number): Block.DropFunction;
+
+	/**
+	 * @returns given block's material numeric id
+	 */
+	function getMaterial(id: number): number;
+
+	function setBlockChangeCallbackEnabled(id: number, enabled: boolean): void;
+
+	function setEntityInsideCallbackEnabled(id: number, enabled: boolean): void;
+
+	function setEntityStepOnCallbackEnabled(id: number, enabled: boolean): void;
+
+	function setNeighbourChangeCallbackEnabled(id: number, enabled: boolean): void;
+
+	function setRedstoneConnector(id: number, data: number, redstone: boolean): void;
+
+	function setRedstoneEmitter(id: number, data: number, redstone: boolean): void;
+
+	interface BlockAtlasTextureCoords {
+		u1: number, v1: number, u2: number, v2: number;
+	}
+
+	function getBlockAtlasTextureCoords(str: string, int: number): BlockAtlasTextureCoords;
+
 }
 
 /**
@@ -1185,19 +1230,28 @@ declare namespace BlockRenderer {
      * Specifies custom collision shape for the block
      * @param id block id
      * @param data block data
-     * @param shape [[ICRender.CollisionShape]] object to be used as collision shape
-     * for the specified block
+     * @param shape [[ICRender.CollisionShape]] object to be used as 
+     * default collision shape for the specified block
      */
     function setCustomCollisionShape(id: number, data: number, shape: ICRender.CollisionShape): void;
 
     /**
-     * Specifies custom collision shape for the block
+     * Specifies custom raycast shape for the block
      * @param id block id
      * @param data block data or -1 to map all the data values
-     * @param shape [[ICRender.CollisionShape]] object to be used as raycast shape
-     * for the specified block
+     * @param shape [[ICRender.CollisionShape]] object to be used as
+     * default raycast shape for the specified block
      */
     function setCustomRaycastShape(id: number, data: number, shape: ICRender.CollisionShape): void;
+
+    /**
+     * Specifies custom collision and raycast shape for the block
+     * @param id block id
+     * @param data block data or -1 to map all the data values
+     * @param shape [[ICRender.CollisionShape]] object to be used as
+     * default collision and raycast shape for the specified block
+     */
+    function setCustomCollisionAndRaycastShape(id: number, data: number, shape: ICRender.CollisionShape): void;
 
     /**
      * Enables custom rendering for the specified block
@@ -1243,10 +1297,48 @@ declare namespace BlockRenderer {
     function unmapAtCoords(x: number, y: number, z: number, preventRebuild?: boolean): void;
 
     /**
+     * Changes collision shape of the block on given coords in given dimension
+     * @param shape [[ICRender.CollisionShape]] object to be used as new collision shape
+     */
+    function mapCollisionModelAtCoords(dimension: number, x: number, y: number, z: number, shape: ICRender.CollisionShape): void;
+
+    /**
+     * Changes raycast shape of the block on given coords in given dimension
+     * @param shape [[ICRender.CollisionShape]] object to be used as new raycast shape
+     */
+    function mapRaycastModelAtCoords(dimension: number, x: number, y: number, z: number, shape: ICRender.CollisionShape): void;
+
+    /**
+     * Changes both collision and raycast shape of the block on given coords in given dimension
+     * @param shape [[ICRender.CollisionShape]] object to be used as new collision and raycast shape
+     */
+    function mapCollisionAndRaycastModelAtCoords(dimension: number, x: number, y: number, z: number, shape: ICRender.CollisionShape): void;
+
+    /**
+     * Resets collision shape of the block to default on given coords in given dimension
+     */
+    function unmapCollisionModelAtCoords(dimension: number, x: number, y: number, z: number): void;
+
+    /**
+     * Resets raycast shape of the block to default on given coords in given dimension
+     */
+    function unmapRaycastModelAtCoords(dimension: number, x: number, y: number, z: number): void;
+
+    /**
+     * Resets both collision and raycast shape of the block to default on given coords in given dimension
+     */
+    function unmapCollisionAndRaycastModelAtCoords(dimension: number, x: number, y: number, z: number): void;
+
+    /**
      * Object used to manipulate rendered block during 
      * [[Callback.CustomBlockTessellationFunction]] calls
      */
     interface RenderAPI {
+        /**
+         * @returns pointer to native object instance of the following object,
+         * to be used in custom native code etc.
+         */
+        getAddr(): number;
         /**
          * Renders box at the specified coordinates of the specified size
          * @param id id of the block to be used as texture source
@@ -1348,6 +1440,21 @@ declare class BlockSource {
 	 */
 	setBlock(x: number, y: number, z: number, state: BlockState): void;
 
+	/**
+	 * Sets extra block (for example, water inside another blocks), on given coords by given id and data
+	 */
+	setExtraBlock(x: number, y: number, z: number, id: number, data: number): void;
+
+	/**
+	 * Sets extra block (for example, water inside another blocks), on given coords by given [[BlockState]]
+	 */
+	setExtraBlock(x: number, y: number, z: number, state: BlockState): void;
+
+	/**
+	 * @returns [[BlockState]] object of the extra block on given coords
+	 */
+	getExtraBlock(x: number, y: number, z: number): BlockState;
+
 	 /**
 	  * Creates an explosion on coords
 	  * @param power defines how many blocks can the explosion destroy and what
@@ -1366,6 +1473,27 @@ declare class BlockSource {
 	 * @param drop whether to provide drop for the block or not
 	 */
 	destroyBlock(x: number, y: number, z: number, drop?: boolean): void;
+
+	/**
+	 * Destroys block on coords by entity using specified item.
+	 * @param x X coord of the block
+	 * @param y Y coord of the block
+	 * @param z Z coord of the block
+	 * @param allowDrop whether to provide drop for the block or not
+	 * @param entity Entity id or -1 id if entity is not specified
+	 * @param item Tool which broke block
+	 */
+	breakBlock(x: number, y: number, z: number, allowDrop: boolean, entity: number, item: ItemInstance): void;
+
+	/**
+	 * Same as breakBlock, but returns object containing drop and experince.
+	 * @param x X coord of the block
+	 * @param y Y coord of the block
+	 * @param z Z coord of the block
+	 * @param entity Entity id or -1 id if entity is not specified
+	 * @param item Tool which broke block
+	 */
+	breakBlockForJsResult(x: number, y: number, z: number, player: number, item: ItemInstance): {items: ItemInstance[], experience: number};
 
 	/**
 	 * @param x X coord of the block
@@ -1393,6 +1521,11 @@ declare class BlockSource {
 	 * @returns temperature of the biome on coords
 	 */
 	getBiomeTemperatureAt(x: number, y: number, z: number): number;
+
+	/**
+	 * @returns downfall of the biome on coords
+	 */
+	getBiomeDownfallAt(x: number, y: number, z: number): number;
 
 	/**
 	* @param chunkX X coord of the chunk
@@ -1731,11 +1864,11 @@ declare namespace Callback {
 
     function addCallback(name: "CustomDimensionTransfer", func: CustomDimensionTransferFunction): void;
 
-    function addCallback(name: "BlockEventEntityInside", func: BlockEventEntityInsideFunction): void;
+    function addCallback(name: "BlockEventEntityInside", func: Block.EntityInsideFunction): void;
 
-    function addCallback(name: "BlockEventEntityStepOn", func: BlockEventEntityStepOnFunction): void;
+    function addCallback(name: "BlockEventEntityStepOn", func: Block.EntityStepOnFunction): void;
 
-    function addCallback(name: "BlockEventNeighbourChange", func: BlockEventNeighbourChangeFunction): void;
+    function addCallback(name: "BlockEventNeighbourChange", func: Block.NeighbourChangeFunction): void;
 
     function addCallback(name: "ConnectingToHost", func: ConnectingToHostFunction): void;
 
@@ -1767,6 +1900,9 @@ declare namespace Callback {
 
     function addCallback(name: "EntityPickUpDrop", func: EntityPickUpDropFunction): void;
 
+    function addCallback(name: "ServerPlayerLoaded", func: ServerPlayerLoadedFunction): void;
+
+    function addCallback(name: "GenerateCustomDimensionChunk", func: GenerateCustomDimensionChunkFunction): void;
 
     /**
      * Invokes callback with any name and up to 10 additional parameters. You
@@ -2153,7 +2289,7 @@ declare namespace Callback {
      * @param region BlockSource object
      */
     interface ItemDispensedFunction {
-        (coords: ItemUseCoordinates, item: ItemInstance, region: BlockSource): void
+        (coords: BlockPosition, item: ItemInstance, region: BlockSource): void
     }
 
     /**
@@ -2224,27 +2360,6 @@ declare namespace Callback {
     }
 
     /**
-     * Function used in "BlockEventEntityInside" callback
-     */
-    interface BlockEventEntityInsideFunction {
-        (coords: Vector, block: Tile, entity: number): void
-    }
-
-    /**
-     * Function used in "BlockEventEntityStepOn" callback
-     */
-    interface BlockEventEntityStepOnFunction {
-        (coords: Vector, block: Tile, entity: number): void
-    }
-
-    /**
-     * Function used in "BlockEventNeighbourChange" callback
-     */
-    interface BlockEventNeighbourChangeFunction {
-        (coords: Vector, block: Tile, changedCoords: Vector, world: BlockSource): void
-    }
-
-    /**
      * Function used in "ConnectingToHost" callback
      */
     interface ConnectingToHostFunction {
@@ -2284,6 +2399,21 @@ declare namespace Callback {
      */
     interface EntityPickUpDropFunction {
         (entity: number, dropEntity: number, dropStack: ItemInstance, count: number)
+    }
+
+    /**
+     * Function used in "ServerPlayerLoaded" callback
+     * @param player unique id of the player entity, that has been connected to server
+     */
+    interface ServerPlayerLoadedFunction {
+        (player: number): void
+    }
+
+    /**
+     * Function used in "GenerateCustomDimensionChunk" callback
+     */
+    interface GenerateCustomDimensionChunkFunction {
+        (chunkX: number, chunkZ: number, random: java.util.Random, dimensionId: number): void
     }
 
     /**
@@ -2616,6 +2746,13 @@ declare function getCoreAPILevel(): number;
 declare function runOnMainThread(func: () => void): void;
 
 /**
+ * Runs specified function in the client thread.
+ * Same as [[runOnMainThread]], but for the client side.
+ * @param func function to be run in the client thread
+ */
+declare function runOnClientThread(func: () => void): void;
+
+/**
  * @returns minecraft version information in some readable form
  * @param str string version representation, three dot-separated numbers
  * @param array array containing three version numbers
@@ -2694,18 +2831,34 @@ declare function EXPORT(name: string, lib: any): void;
  */
 declare function ConfigureMultiplayer(args: { name: string, version: string, isClientOnly: boolean }): void;
 
+/**
+ * String types of armor to be specified when calling [[Item.createArmorItem]]
+ */
+declare type ArmorType = "helmet" | "chestplate" | "leggings" | "boots";
 
 /**
  * Default render templates used inside of InnerCore,
  * currently there are only default armor models
  */
-declare type DefaultRenderTemplate = "helmet" | "chestplate" | "leggings" | "boots";
+declare type DefaultRenderTemplate = ArmorType;
 /**
  * Class used to create custom biomes. Note that Minecraft has a limit of 256 biomes
  * and there are already more than 100 vanilla biomes, so do not overuse 
  * this functionality. See {@page Biomes}
  */
 declare class CustomBiome {
+
+    /**
+     * @returns [[java.util.HashMap]] object instance, with all
+     * custom biomes registered by every mod
+     */
+    static getAllCustomBiomes(): java.util.Map<String, CustomBiome>;
+
+    /**
+     * @returns whether biome is invalid
+     */
+    isInvalid(): boolean;
+
     /**
      * Crates a new custom biome with specified string identifier
      * @param name string identifier of the biome
@@ -2715,7 +2868,18 @@ declare class CustomBiome {
     /**
      * custom biome numeric id
      */
-    id: number;
+    readonly id: number;
+
+    /**
+     * Custom biome name
+     */
+    readonly name: string;
+
+    /**
+     * Pointer to biome's native object,
+     * represented as long number
+     */
+    readonly pointer: number;
 
     /**
      * Sets biome's grass color. Grass color is interpolated on the bounds of 
@@ -2768,6 +2932,22 @@ declare class CustomBiome {
     setFoliageColor(color: number): CustomBiome;
 
     /**
+     * Sets biome's water color
+     * @param r red color component, value from 0 to 1
+     * @param g green color component, value from 0 to 1
+     * @param b blue color component, value from 0 to 1
+     * @returns reference to itself to be used in sequential calls
+     */
+    setWaterColor(r: number, g: number, b: number): CustomBiome;
+
+    /**
+     * Sets biome's water color
+     * @param color integer color value (you can specify it using hex value)
+     * @returns reference to itself to be used in sequential calls
+     */
+    setWaterColor(color: number): CustomBiome;
+
+    /**
      * Sets biome's temperature and downfall
      * @param temperature temperature value, from 0 to 1
      * @param downfall downfall value, from 0 to 1
@@ -2804,22 +2984,104 @@ declare class CustomBiome {
     setFillingBlock(id: number, data: number): CustomBiome;
 
     /**
+     * Sets the block that fills the floor at the bottom of the sea or the ocean.
+     * Vanilla biomes use gravel or stone filling
+     * @param id block's tile id
+     * @param data block data
+     * @returns reference to itself to be used in sequential calls
+     */
+    setSeaFloorBlock(id: number, data: number): CustomBiome;
+
+    /**
      * This method is mapped on native parameter with the same name and its 
      * effect is currently not known
      * @param id block's tile id
      * @param data block data
      * @returns reference to itself to be used in sequential calls
+     * @deprecated use [[CustomBiome.setSeaFloorBlock]] instead
      */
     setAdditionalBlock(id: number, data: number): CustomBiome;
+
+    /**
+     * Sets the average depth of the see floor in this biome.
+     * @param depth depth of the see floor by Y-axis
+     * @returns reference to itself to be used in sequential calls
+     */
+    setSeaFloorDepth(depth: number): CustomBiome;
 
     /**
      * This method is mapped on native parameter with the same name and its 
      * effect is currently not known
      * @param param some integer parameter. Default value is 7
      * @returns reference to itself to be used in sequential calls
+     * @deprecated use [[CustomBiome.setSeaFloorDepth]]
      */
     setSurfaceParam(param: number): CustomBiome;
+
+    /**
+     * Defines the server-side biome params from given JSON string.
+     * Throws [[java.lang.IllegalArgumentException]] if the string cannot be parsed.
+     * @returns reference to itself to be used in sequential calls
+     * ```js
+     * // many thanks to DansZbar2 for the example
+     * var cherry = new CustomBiome("environmental_cherry");
+     * cherry.setServerJson(JSON.stringify({
+     *     "minecraft:climate": {
+     *        "downfall": 0.0,
+     *        "snow_accumulation": [ 0.0, 0.0 ],
+     *        "temperature": 2.0,
+     *        "blue_spores": 0,
+     *        "red_spores": 0,
+     *        "white_ash": 0,
+     *        "ash": 0
+     *     },
+     *     "minecraft:overworld_height": {
+     *        "noise_type": "default"
+     *     },
+     *     "animal": {},
+     *     "monster": {},
+     *     "overworld": {},
+     *     "environmental_cherry": {},
+     *     "minecraft:surface_parameters": {
+     *        "top_material": "minecraft:grass",
+     *        "mid_material": "minecraft:dirt",
+     *        "foundation_material": "minecraft:stone",
+     *        "sea_floor_material": "minecraft:clay",
+     *        "sea_material": "minecraft:water",
+     *        "sea_floor_depth": 7
+     *     },
+     *     "minecraft:overworld_generation_rules": {
+     *        "hills_transformation": "jungle_hills",
+     *        "generate_for_climates": [ 
+     *            [ "cold", 5 ],
+     *            [ "medium", 20 ],
+     *            [ "warm", 35 ],
+     *        ]
+     *     }
+     * }));
+     * ```
+     */
+    setServerJson(json: string): CustomBiome;
+
+    /**
+     * Defines the client-side biome params from given JSON string.
+     * Throws [[java.lang.IllegalArgumentException]] if the string cannot be parsed.
+     * @returns reference to itself to be used in sequential calls
+     * ```js
+     * // many thanks to DansZbar2 for the example
+     * var cherry = new CustomBiome("environmental_cherry");
+     * cherry.setClientJson(JSON.stringify({
+     *     "water_surface_color": "#d176e1",
+     *     "water_fog_color": "#a35dc2",
+     *     "water_surface_transparency": 0.7,
+     *     "water_fog_distance": 11,
+     *     "fog_identifier": "environmental:environmental_cherry" // custom fog defined in the addon
+     * }));
+     * ```
+     */
+    setClientJson(json: string): CustomBiome;
 }
+
 /**
  * Defines some useful methods for debugging
  */
@@ -3272,6 +3534,7 @@ declare namespace Dimensions {
         setConversion(conversion: NoiseConversion): NoiseLayer;
     }
 
+    type NoiseOctaveStringType = "perlin" | "gray" | "chess" | "sine_x" | "sine_y" | "sine_z" | "sine_xy" | "sine_yz" | "sine_xz" | "sine_xyz";
     /**
      * Class representing noise octave. Each noise layer consists of multiple
      * noise octaves of different scale and weight
@@ -3295,7 +3558,7 @@ declare namespace Dimensions {
          * **"sine_xz"** (15) 
          * **"sine_xyz"** (16)
          */
-        constructor(type?: number | string);
+        constructor(type?: number | NoiseOctaveStringType);
 
         setTranslate(x: number, y: number, z: number): NoiseOctave;
 
@@ -3349,6 +3612,11 @@ declare namespace Dimensions {
     function transfer(entity: number, dimensionId: number): void;
 
     /**
+     * @returns JS object instance, containing all registered custom biomes
+     */
+    function getAllRegisteredCustomBiomes(): {[key: string]: CustomBiome};
+
+    /**
      * Function used to simplify the creation of terrain generator by passing 
      * a json-like structure as a single generator parameter. For detailed 
      * explanations see {@See Custom Dimensions} page
@@ -3359,41 +3627,41 @@ declare namespace Dimensions {
          * Specifies base generator, see [[CustomGenerator.constructor]] for 
          * details
          */
-        base: number | string,
+        base?: number | string,
         /**
          * Specifies whether to use vanilla biome surface cover blocks (grass, 
          * sand, podzol, etc.).
          * See [[CustomGenerator.setBuildVanillaSurfaces]] for details
          */
-        buildVanillaSurfaces: boolean,
+        buildVanillaSurfaces?: boolean,
         /**
          * Specifies whether to generate minecraft vanilla structures.
          * See [[CustomGenerator.setGenerateVanillaStructures]] for details
          */
-        generateVanillaStructures: boolean,
+        generateVanillaStructures?: boolean,
         /**
          * Can be either string for an existing dimensions ("overworld", 
          * "nether", "end") or -1 to disable mods generation. 
          * See [[CustomGenerator.setModGenerationBaseDimension]] for details
          */
-        modWorldgenDimension: number | string,
+        modWorldgenDimension?: number | string,
         /**
          * Specifies what generator type to use. Default and the only currently
          * available option is "mono", that is equivalent to creating a 
          * [[MonoBiomeTerrainGenerator]]
          */
-        type: string,
+        type?: string,
         /**
          * Sets base biome for the current terrain, applicable only to "mono"
          */
-        biome: number,
+        biome?: number,
 
         /**
          * An array of terrain layers descriptions, each one representing its 
          * own terrain layer. See [[MonoBiomeTerrainGenerator.addTerrainLayer]] 
          * for detailed explanation
          */
-        layers: TerrainLayerParams[]
+        layers?: TerrainLayerParams[]
 
     }): CustomGenerator;
 
@@ -5876,7 +6144,7 @@ declare namespace Item {
      * @param params.type armor type, should be one of the 'helmet', 
      * 'chestplate', 'leggings' or 'boots'
      */
-    function createArmorItem(nameID: string, name: string, texture: TextureData, params: { type: string, armor: number, durability: number, texture: string, isTech?: boolean }): NativeItem
+    function createArmorItem(nameID: string, name: string, texture: TextureData, params: { type: ArmorType, armor: number, durability: number, texture: string, isTech?: boolean }): NativeItem
 
     /**
      * Creates throwable item using specified parameters
@@ -5924,7 +6192,7 @@ declare namespace Item {
      * @param data no longer supported, do not use this parameter
      * @returns true, if an item with such id exists, false otherwise
      */
-    function isValid(id: number, data: number): boolean;
+    function isValid(id: number, data?: number): boolean;
 
     /**
      * Adds item to creative inventory
@@ -6118,6 +6386,15 @@ declare namespace Item {
     function addCreativeGroup(name: string, displayedName: string, ids: number[]): void
 
     /**
+     * Invoke click on the block in world
+     * @param coords Coords of click on the block
+     * @param item item which used on the block
+     * @param noModCallback if true, mod ItemUse callback will be not executed
+     * @param entity Player who clicked on the block
+     */
+    function invokeItemUseOn(coords: Callback.ItemUseCoordinates, item: ItemInstance, noModCallback: boolean, entity: number): void
+
+    /**
      * @deprecated Should not be used in new mods, consider using [[Item]] 
      * properties setters instead
      */
@@ -6188,6 +6465,17 @@ declare namespace Item {
          */
         meta?: number
     }
+    
+    /**
+     * All items name override functions object for internal use
+     */
+    var nameOverrideFunctions: {[key: number]: Callback.ItemNameOverrideFunction};
+
+    /**
+     * All items icon override functions object for internal use
+     */
+    var iconOverrideFunctions: {[key: number]: Callback.ItemIconOverrideFunction};
+
 }
 
 interface TransferPolicy {
@@ -6382,23 +6670,23 @@ declare class ItemContainer {
 	addServerCloseListener(listener: (container: ItemContainer, client: NetworkClient) => void): void;
 	
 	/**
-     	 * Handler for moving items from inventory to container slot.
-     	 * Can be used in custom slot click events.
-     	 * Works only with the CLIENT instance of [[ItemContainer]]
-     	 * @param from numeric index of the inventory slot where the transaction happened
-     	 * @param to string name of the container slot where the transaction happened
-     	 * @param count count of the items to be moved
-     	 */
-    	handleInventoryToSlotTransaction(from: number, to: string, count: number): void;
-	
-    	/**
-    	 * Handler for moving items from container slot to inventory.
-   	 * Can be used in custom slot click events.
-    	 * Works only with the CLIENT instance of [[ItemContainer]]
-     	 * @param from string name of the container slot where the transaction happened
-     	 * @param count count of the items to be moved 
-     	 */
-    	handleSlotToInventoryTransaction(from: string, count: number): void;
+	 * Handler for moving items from inventory to container slot.
+	 * Can be used in custom slot click events.
+	 * Works only with the CLIENT instance of [[ItemContainer]]
+	 * @param from numeric index of the inventory slot where the transaction happened
+	 * @param to string name of the container slot where the transaction happened
+	 * @param count count of the items to be moved
+	 */
+	handleInventoryToSlotTransaction(from: number, to: string, count: number): void;
+
+	/**
+	 * Handler for moving items from container slot to inventory.
+ 	 * Can be used in custom slot click events.
+	 * Works only with the CLIENT instance of [[ItemContainer]]
+	 * @param from string name of the container slot where the transaction happened
+	 * @param count count of the items to be moved 
+	 */
+	handleSlotToInventoryTransaction(from: string, count: number): void;
 	
 
 	static registerScreenFactory(name: string, screenFactory: (container: ItemContainer, name: string) => UI.Window): void;
@@ -7140,21 +7428,472 @@ declare namespace ModAPI {
         props: object
     }
 }
-/**
- * Interface representing ModPack
- */
-interface ModPackJsAdapter {
-    
-    getRootDirectory(): java.io.File;
+declare namespace Mod {
 
-    getRootDirectoryPath(): string;
+    /** 0 - RELEASE, 1 - DEVELOP */
+    type BuildType = number;
 
-    getModsDirectoryPath(): string;
+    /** 0 - RESOURCE, 1 - GUI */
+    type ResourceDirType = number;
+
+    /** 0 - PRELOADER, 1 - LAUNCHER, 2 - MOD, 3 - CUSTOM, 4 - LIBRARY */
+    type SourceType = number;
+
+    interface BuildConfig {
+
+        buildableDirs: java.util.ArrayList<BuildConfig.BuildableDir>;
+        defaultConfig: BuildConfig.DefaultConfig;
+        javaDirectories: java.util.ArrayList<BuildConfig.DeclaredDirectory>;
+        nativeDirectories: java.util.ArrayList<BuildConfig.DeclaredDirectory>;
+        resourceDirs: java.util.ArrayList<BuildConfig.ResourceDir>;
+        sourcesToCompile: java.util.ArrayList<BuildConfig.Source>;
+
+        save(file: java.io.File): void;
+        save(): void;
+
+        isValid(): boolean;
+
+        validate(): void;
+
+        read(): boolean;
+
+        getBuildType(): BuildType;
+
+        getDefaultAPI(): any;
+
+        getName(): string;
+
+        getAllSourcesToCompile(useApi: boolean): java.util.ArrayList<BuildConfig.Source>;
+
+        findRelatedBuildableDir(source: BuildConfig.Source): BuildConfig.BuildableDir;
+
+    }
+
+    namespace BuildConfig {
+
+        interface DeclaredDirectory {
+
+            readonly path: string;
+            readonly version: any;
+
+            getFile(root: java.io.File): java.io.File;
+
+        }
+
+        interface DefaultConfig {
+
+            apiInstance: any;
+            behaviorPacksDir: Nullable<string>;
+            buildType: BuildType;
+            readonly gameVersion: any;
+            json: org.json.JSONObject;
+            libDir: Nullable<string>;
+            optimizationLevel: number;
+            resourcePacksDir: Nullable<string>;
+            setupScriptDir: Nullable<string>;
+
+            setAPI(api: any): void;
+
+            setOptimizationLevel(level: number): void;
+
+            setBuildType(type: BuildType): void;
+
+            setLibDir(dir: string): void;
+
+            setMinecraftResourcePacksDir(dir: string): void;
+
+            setMinecraftBehaviorPacksDir(dir: string): void;
+
+            setSetupScriptDir(dir: string): void;
+            
+        }
+
+        interface BuildableDir {
+
+            dir: string;
+            json: org.json.JSONObject;
+            targetSource: string;
+
+            setDir(dir: string): void;
+
+            setTargetSource(dir: string): void;
+
+            isRelatedSource(source: Source): boolean;
+
+        }
+
+        interface ResourceDir {
+
+            readonly gameVersion: any;
+            json: org.json.JSONObject;
+            resourceType: ResourceDirType;
+
+            setPath(path: string): void;
+
+            setResourceType(type: ResourceDirType): void;
+
+        }
+
+        interface Source {
+
+            apiInstance: any;
+            readonly gameVersion: any;
+            json: org.json.JSONObject;
+            optimizationLevel: number;
+            path: string;
+            sourceName: string;
+            sourceType: SourceType;
+
+            setPath(path: string): void;
+
+            setSourceName(sourceName: string): void;
+
+            setSourceType(type: SourceType): void;
+
+            setOptimizationLevel(level: number): void;
+
+            setAPI(api: any): void;
+
+        }
+
+    }
+
+    interface CompiledSources {
+
+        saveSourceList(): void;
+
+        getCompiledSourceFilesFor(name: string): java.io.File[];
+
+        addCompiledSource(name: string, file: java.io.File, className: string): void;
+
+        getTargetCompilationFile(sourcePath: string): java.io.File;
+
+        reset(): void;
+
+    }
+
+    interface ModJsAdapter {
+
+        buildConfig: BuildConfig;
+        config: Config;
+        dir: string;
+        isEnabled: boolean;
+        isModRunning: boolean;
+
+        setModPackAndLocation(pack: ModPack.ModPack, locationName: string): void;
+
+        getModPack(): ModPack.ModPack;
+
+        getModPackLocationName(): string;
+
+        getConfig(): Config;
+
+        createCompiledSources(): CompiledSources;
+
+        onImport(): void;
+
+        getBuildType(): BuildType;
+
+        setBuildType(type: BuildType): void;
+        setBuildType(type: "release" | "develop"): void;
+
+        getGuiIcon(): string;
+
+        getName(): string;
+
+        getVersion(): string;
+
+        isClientOnly(): boolean;
+
+        isConfiguredForMultiplayer(): boolean;
+
+        getMultiplayerName(): string;
+
+        getMultiplayerVersion(): string;
+
+        getFormattedAPIName(): string;
+
+        getInfoProperty(name: string): java.lang.Object;
+
+        RunPreloaderScripts(): void;
+
+        RunLauncherScripts(): void;
+
+        RunMod(additionalScope: any): void;
+
+        configureMultiplayer(name: string, version: string, isClientOnly: boolean): void;
+
+        runCustomSource(name: string, additionalScope: any): void;
+
+        /**
+         * Other methods and properties
+         */
+        [key: string]: any
+    }
+
+
+}
+
+declare namespace ModPack {
 
     /**
-     * Other methods and properties
+     * Crutch to replace ModPackManifest.DeclaredDirectoryType enum
+     * 0 - RESOURCE,
+     * 1 - USER_DATA,
+     * 2 - CONFIG,
+     * 3 - CACHE,
+     * 4 - INVALID 
      */
-    [key: string]: any
+    type ModPackDeclaredDirectoryType = number;
+
+    /**
+     * Crutch to replace ModPackDirectory.DirectoryType enum
+     * 0 - MODS,
+     * 1 - MOD_ASSETS,
+     * 2 - ENGINE,
+     * 3 - CONFIG,
+     * 4 - CACHE,
+     * 5 - RESOURCE_PACKS,
+     * 6 - BEHAVIOR_PACKS,
+     * 7 - TEXTURE_PACKS,
+     * 8 - CUSTOM
+     */
+    type ModPackDirectoryType = number;
+
+    interface ModPack {
+
+        addDirectory(directory: ModPackDirectory): ModPack;
+
+        getRootDirectory(): java.io.File;
+
+        getManifestFile(): java.io.File;
+
+        getIconFile(): java.io.File;
+
+        getManifest(): ModPackManifest;
+
+        getPreferences(): ModPackPreferences;
+
+        getJsAdapter(): ModPackJsAdapter;
+
+        reloadAndValidateManifest(): boolean;
+
+        getAllDirectories(): java.util.List<ModPackDirectory>;
+
+        getDirectoriesOfType(type: ModPackDirectoryType): java.util.List<ModPackDirectory>;
+
+        getDirectoryOfType(type: ModPackDirectoryType): ModPackDirectory;
+
+        getRequestHandler(type: ModPackDirectoryType): DirectorySetRequestHandler;
+
+    }
+
+    interface ModPackManifest {
+
+        loadJson(json: org.json.JSONObject): void;
+
+        loadInputStream(stream: java.io.InputStream): void;
+
+        loadFile(file: java.io.File): void;
+
+        getPackName(): string;
+
+        getDisplayedName(): string;
+
+        getVersionName(): string;
+
+        getVersionCode(): number;
+
+        getDescription(): string;
+
+        getAuthor(): string;
+
+        getDeclaredDirectories(): java.util.List<ModPackDeclaredDirectory>;
+
+        createDeclaredDirectoriesForModPack(pack: ModPack): java.util.List<ModPackDirectory>;
+
+        setPackName(name: string): void;
+
+        setDisplayedName(name: string): void;
+
+        setVersionCode(code: number): void;
+
+        setVersionName(name: string): void;
+
+        setAuthor(author: string): void;
+
+        setDescription(descr: string): void;
+
+        edit(): ModPackManifestEditor;
+
+    }
+
+    interface ModPackManifestEditor {
+
+        addIfMissing(key: string, value: any): ModPackManifestEditor;
+
+        put(key: string, value: any): ModPackManifestEditor;
+
+        commit(): void;
+
+    }
+
+    interface ModPackPreferences {
+
+        getModPack(): ModPack;
+
+        getFile(): java.io.File;
+
+        reload(): ModPackPreferences;
+
+        save(): ModPackPreferences;
+
+        getString(key: string, fallback: string): string;
+
+        getInt(key: string, fallback: number): number;
+
+        getLong(key: string, fallback: number): number;
+
+        getDouble(key: string, fallback: number): number;
+
+        getBoolean(key: string, fallback: boolean): boolean;
+
+        setString(key: string, value: string): ModPackPreferences;
+
+        setInt(key: string, value: number): ModPackPreferences;
+
+        setLong(key: string, value: number): ModPackPreferences;
+
+        setDouble(key: string, value: number): ModPackPreferences;
+
+        setBoolean(key: string, value: boolean): ModPackPreferences;
+
+    }
+
+    interface ModPackDirectory {
+
+        assureDirectoryRoot(): boolean;
+
+        assignToModPack(pack: ModPack): void;
+
+        getType(): ModPackDirectoryType;
+
+        getLocation(): java.io.File;
+
+        getPathPattern(): string;
+
+        getPathPatternRegex(): java.util.regex.Pattern;
+
+        getLocalPathFromEntry(entryName: string): string;
+
+        getRequestStrategy(): DirectoryRequestStrategy;
+
+        getUpdateStrategy(): DirectoryUpdateStrategy;
+
+        getExtractStrategy(): DirectoryExtractStrategy;
+
+    }
+
+    interface DirectorySetRequestHandler {
+
+        getDirectories(): java.util.List<ModPackDirectory>;
+
+        add(dir: ModPackDirectory): void;
+
+        get(location: string, name: string): java.io.File;
+
+        get(location: string): java.io.File;
+
+        getAllAtLocation(location: string): java.util.List<java.io.File>;
+
+        getAllLocations(): java.util.List<string>;
+
+    }
+
+    interface ModPackDeclaredDirectory {
+
+        readonly path: string;
+        readonly type: ModPackDeclaredDirectoryType;
+
+        getPath(): string;
+
+        getType(): ModPackDeclaredDirectoryType;
+
+    }
+
+    interface IDirectoryAssignable {
+
+        assignToDirectory(dir: ModPackDirectory): void;
+
+        getAssignedDirectory(): ModPackDeclaredDirectory;
+
+    }
+
+    interface DirectoryRequestStrategy extends IDirectoryAssignable {
+
+        get(str: string): java.io.File;
+
+        get(str: string, str2: string): java.io.File;
+
+        getAll(str: string): java.util.List<java.io.File>;
+
+        getAllLocations(): java.util.List<string>;
+
+        assure(location: string, name: string): java.io.File;
+
+        remove(location: string, name: string): boolean;
+
+        getAllFiles(): java.util.List<java.io.File>;
+
+    }
+
+    interface DirectoryUpdateStrategy extends IDirectoryAssignable {
+
+        beginUpdate(): void;
+
+        finishUpdate(): void;
+
+        updateFile(str: string, stream: java.io.InputStream): void;
+
+    }
+
+    interface DirectoryExtractStrategy extends IDirectoryAssignable {
+
+        getEntryName(str: string, file: java.io.File): string;
+
+        getFilesToExtract(): java.util.List<java.io.File>;
+
+        getFullEntryName(file: java.io.File): string;
+
+    }
+
+    /**
+     * Interface representing ModPack
+     */
+    interface ModPackJsAdapter {
+
+        getModPack(): ModPack;
+        
+        getRootDirectory(): java.io.File;
+
+        getRootDirectoryPath(): string;
+
+        getModsDirectoryPath(): string;
+
+        getManifest(): ModPackManifest;
+
+        getPreferences(): ModPackPreferences;
+
+        getRequestHandler(type: string): DirectorySetRequestHandler;
+
+        getAllDirectories(): ModPackDirectory[];
+
+        getDirectoriesOfType(type: string): ModPackDirectory[];
+
+        getDirectoryOfType(type: string): ModPackDirectory;
+
+    }
+
 }
 /**
  * Module containing enums that can make user code more readable
@@ -9237,6 +9976,13 @@ declare class PlayerActor {
      * Sets player's score.
      */
     setScore(value: number): void;
+
+    getItemUseDuration(): number;
+
+    getItemUseIntervalProgress(): number;
+
+    getItemUseStartupProgress(): number;
+
 }
 
 /**
@@ -9415,9 +10161,19 @@ declare namespace Recipes {
      * @param resultId result item id
      * @param resultData result item data
      * @param prefix recipe prefix used for non-vanilla furnaces
-     * @returns java.util.Collection of 
+     * @returns [[java.util.Collection]] object with all furnace recipes found by given params
      */
     function getFurnaceRecipesByResult(resultId: number, resultData: number, prefix: string): java.util.Collection<FurnaceRecipe>;
+
+    /**
+     * @returns [[java.util.Collection]] object with all registered workbench recipes
+     */
+    function getAllWorkbenchRecipes(): java.util.Collection<WorkbenchRecipe>;
+
+    /**
+     * @returns [[java.util.Collection]] object with all registered furnace recipes
+     */
+    function getAllFurnaceRecipes(): java.util.Collection<FurnaceRecipe>;
 
     /**
      * Class used to simplify creation of custom workbenches
@@ -10020,11 +10776,24 @@ declare namespace Render {
  * and actually anywhere you need some physical shape
  */
 declare class RenderMesh {
+
+    /**
+     * @returns pointer to the native object instance of the
+     * following [[RenderMesh]], represented as long number
+     */
+    getPtr(): number;
+
+    getReadOnlyVertexData(): RenderMesh.ReadOnlyVertexData;
+
+    newGuiRenderMesh(): RenderMesh.GuiRenderMesh;
+
+    invalidate(): void;
+
     /**
      * Creates a new [[RenderMesh]] and initializes it from file. 
      * See [[RenderMesh.importFromFile]] for parameters details
      */
-    constructor(path: string, type: string, params: object);
+    constructor(path: string, type: string, params: Nullable<RenderMesh.ImportParams>);
 
     /**
      * Creates a new empty [[RenderMesh]]
@@ -10112,40 +10881,49 @@ declare class RenderMesh {
     rebuild(): void;
 
     /**
+     * Makes specified [[RenderMesh]] foliage tinted
+     */
+    setFoliageTinted(): void;
+    setFoliageTinted(int: number): void;
+
+    /**
+     * Makes specified [[RenderMesh]] grass tinted
+     */
+    setGrassTinted(): void;
+
+    /**
+     * Sets following [[RenderMesh]] light direction
+     */
+    setLightDir(x: number, y: number, z: number): void;
+
+    setLightIgnore(ignore: boolean, bool2: boolean): void;
+
+    setLightParams(float1: number, float2: number, float3: number): void;
+
+    /**
+     * Sets following [[RenderMesh]] light position
+     */
+    setLightPos(x: number, y: number, z: number): void;
+
+    /**
+     * Removes any tint from specified [[RenderMesh]]
+     */
+    setNoTint(): void;
+
+    /**
+     * Makes specified [[RenderMesh]] water tinted
+     */
+    setWaterTinted(): void;
+
+    /**
      * Imports mesh file using specified path
      * @param path path to the mesh file. Path should be absolute path or
      * be relative to the resources folder or to the "models/" folder
      * @param type file type to read mesh from. The only currently supported mesh file 
      * type is "obj"
-     * @param params additional import parameters
+     * @param params additional import parameters or null, if not needed
      */
-    importFromFile(path: string, type: string, params: {
-        /**
-         * If true, all existing vertices of the mesh are deleted before the file
-         * is imported
-         */
-        clear?: boolean,
-
-        /**
-         * If true, v of the texture is inverted
-         */
-        invertV: boolean,
-
-        /**
-         * Additional translation along x, y and z axis
-         */
-        translate?: [number, number, number],
-
-        /**
-         * Additional scale along x, y and z axis
-         */
-        scale?: [number, number, number],
-
-        /**
-         * 
-         */
-        noRebuild: boolean
-    }): void;
+    importFromFile(path: string, type: string, params: Nullable<RenderMesh.ImportParams>): void;
 
     /**
      * Adds new mesh to the current one on the specified coordinates with specified scale
@@ -10164,6 +10942,62 @@ declare class RenderMesh {
      * @param mesh [[RenderMesh]] object to be added to current mesh
      */
     addMesh(mesh: RenderMesh): void;
+}
+
+declare namespace RenderMesh {
+    /**
+     * Object used in [[RenderMesh.importFromFile]] and one of [[RenderMesh]] constructors.
+     * Here you can put some additional parameters, that will be applied to the mesh,
+     * when the file is being imported
+     */
+    interface ImportParams {
+        /**
+         * If true, all existing vertices of the mesh are deleted
+         * before the file is imported
+         */
+        clear?: boolean,
+        /**
+         * If true, v of the texture is inverted
+         */
+        invertV: boolean,
+        /**
+         * Additional translation along x, y and z axis
+         */
+        translate?: [number, number, number],
+        /**
+         * Additional scale along x, y and z axis
+         */
+        scale?: [number, number, number],
+        /**
+         * If true, Minecraft won't be forced to rebuild the following [[RenderMesh]]
+         * before the file is imported
+         */
+        noRebuild: boolean
+    }
+    /**
+     * Object returned by [[RenderMesh.getReadOnlyVertexData]].
+     */
+    interface ReadOnlyVertexData {
+        readonly colors: number[];
+        readonly dataSize: number;
+        readonly indices: number[];
+        readonly uvs: number[];
+        readonly vertices: number[];
+    }
+    /**
+     * Object returned by [[RenderMesh.newGuiRenderMesh]]
+     */
+    interface GuiRenderMesh extends Vector {
+        rx: number;
+        ry: number;
+        rz: number;
+        draw(gl: javax.microedition.khronos.opengles.GL10): void;
+        loadBitmap(bitmap: android.graphics.Bitmap): void;
+        setColors(floatArray: number[]): void;
+        setIndices(shortArray: number[]): void;
+        setTextureCoordinates(floatArray: number[]): void;
+        setVertices(floatArray: number[]): void;
+    }
 }
 /**
  * Module used to save data between world sessions
@@ -10636,7 +11470,7 @@ declare namespace TileEntity {
         /**
          * Called on client side, returns the window to open
          */
-        getScreenByName?: (screenName?: string) => UI.Window | UI.StandartWindow | UI.StandardWindow | UI.TabbedWindow;
+        getScreenByName?: (screenName?: string) => UI.IWindow;
 
         /**
          * Called when more liquid is required
@@ -11821,7 +12655,11 @@ declare namespace UI {
 		 * Set background color of window
 		 * @param color integer color value (you can specify it using hex value)
 		 */
-		setBackgroundColor(color: number);
+		setBackgroundColor(color: number): void;
+
+		updateScrollDimensions(): void;
+
+		updateWindowPositionAndSize(): void;
 	}
 
 
@@ -12201,6 +13039,11 @@ declare namespace UI {
 		 * Aligns text to the end of the element (right for English locale)
 		 */
 		static ALIGN_END: number;
+
+		/**
+		 * Aligns text to the center of the element horizontally
+		 */
+		static ALIGN_CENTER_HORIZONTAL: number;
 
 		/**
 		 * Constructs new instance of the font with specified parameters
@@ -13474,6 +14317,10 @@ declare namespace UI {
 
 		isDarkenAtZero?: boolean,
 
+		iconScale?: number,
+
+		disablePixelPerfect?: boolean,
+
 		text?: string,
 
 		/**
@@ -13679,6 +14526,11 @@ interface Updatable {
      * longer receive update calls
      */
     remove?: boolean;
+
+    /**
+     * Any other user-defined properties
+     */
+    [key: string]: any;
 }
 
 /**
@@ -15203,7 +16055,7 @@ declare enum VanillaTileID {
 /**
  * Java object of the mod, contains some useful values and methods
  */
-declare var __mod__: java.lang.Object;
+declare var __mod__: Mod.ModJsAdapter;
 
 /**
  * Mod name
@@ -15216,7 +16068,7 @@ declare var __name__: string;
 declare var __dir__: string;
 
 /**
- * Main mod configuration manager, settings are stored in config.json file. For 
+ * Main mod configuration manager, settings are stored in config.json file. For
  * more information about config.json, see {@page Mod Configuration Files}
  */
 declare var __config__: Config;
@@ -15229,7 +16081,7 @@ declare var __packdir__: string;
 /**
  * Full path to current Inner Core modpack directory
  */
-declare var __modpack__: ModPackJsAdapter;
+declare var __modpack__: ModPack.ModPackJsAdapter;
 
 /**
  * Module that allows to work with current Minecraft world
@@ -15252,12 +16104,18 @@ declare namespace World {
      * @returns current tick number since the player joined the world
      */
 	function getThreadTime(): number;
-	
+
 	/**
 	 * @param side number from 0 to 6 (exclusive)
      * @returns opposite side to argument
      */
     function getInverseBlockSide(side: number): number;
+
+    /**
+     * @param side block side
+     * @returns normal vector for this side
+     */
+    function getVectorByBlockSide(side: number): Vector;
 
     /**
      * Retrieves coordinates relative to the block. For example, the following code

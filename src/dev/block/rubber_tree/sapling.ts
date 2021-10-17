@@ -8,6 +8,7 @@ IDRegistry.genBlockID("rubberTreeSapling");
 Block.createBlock("rubberTreeSapling", [
 	{name: "Rubber Tree Sapling", texture: [["rubber_tree_sapling", 0]], inCreative: true}
 ], {rendertype: 1, sound: "grass"});
+Item.setCategory(BlockID.rubberTreeSapling, ItemCategory.NATURE);
 Block.setDestroyTime(BlockID.rubberTreeSapling, 0);
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeSapling, "plant");
 Block.setShape(BlockID.rubberTreeSapling, 1/8, 0, 1/8, 7/8, 1, 7/8);

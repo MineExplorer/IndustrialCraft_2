@@ -78,7 +78,7 @@ namespace Machine {
 
 		chambers: ReactorChamber[] = [];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiNuclearReactor;
 		}
 

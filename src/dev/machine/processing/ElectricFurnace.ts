@@ -50,7 +50,7 @@ namespace Machine {
 		defaultDrop = BlockID.ironFurnace;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiElectricFurnace;
 		}
 

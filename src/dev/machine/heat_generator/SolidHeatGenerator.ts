@@ -52,7 +52,7 @@ namespace Machine {
 			output: 0
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiSolidHeatGenerator;
 		}
 

@@ -40,7 +40,7 @@ namespace Machine {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id) => (id == ItemID.rtgPellet));
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiRTGenerator;
 		}
 

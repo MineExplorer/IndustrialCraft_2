@@ -57,7 +57,7 @@ namespace Machine {
 		defaultProcessTime = 400;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiExtractor;
 		}
 

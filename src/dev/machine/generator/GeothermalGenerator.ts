@@ -37,7 +37,7 @@ namespace Machine {
 	export class GeothermalGenerator extends Generator {
 		liquidTank: BlockEngine.LiquidTank;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiGeothermalGenerator;
 		}
 

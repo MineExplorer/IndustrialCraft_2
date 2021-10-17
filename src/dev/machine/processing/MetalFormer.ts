@@ -119,7 +119,7 @@ namespace Machine {
 		defaultProcessTime = 200;
 		upgrades: ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiMetalFormer;
 		}
 

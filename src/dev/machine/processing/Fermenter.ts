@@ -57,7 +57,7 @@ namespace Machine {
 
 		upgrades = ["itemEjector", "itemPulling", "fluidEjector", "fluidPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiFermenter;
 		}
 

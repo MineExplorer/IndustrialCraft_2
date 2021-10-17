@@ -48,7 +48,7 @@ namespace Machine {
 			liquid: null
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiFluidHeatGenerator;
 		}
 

@@ -10,7 +10,7 @@ namespace Machine {
 			scanZ: -5
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiCropMatron;
 		}
 

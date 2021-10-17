@@ -67,7 +67,7 @@ namespace Machine {
 		defaultProcessTime = 500;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiOreWasher;
 		}
 

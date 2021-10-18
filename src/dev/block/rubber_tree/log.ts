@@ -50,4 +50,4 @@ Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, da
 });
 
 Recipes.addFurnace(BlockID.rubberTreeLog, 17, 3);
-Recipes.addShapeless({id: 5, count: 3, data: 3}, [{id: BlockID.rubberTreeLog, data: -1}]);
+addSingleItemRecipe("planks_from_rubber_log", "block:rubberTreeLog", "planks", 3, 3);

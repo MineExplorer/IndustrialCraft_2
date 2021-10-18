@@ -21,6 +21,10 @@ IMPORT("TileRender");
 IMPORT("StorageInterface");
 IMPORT("SoundLib");
 IMPORT("BackpackAPI");
+IMPORT("VanillaRecipe");
+
+VanillaRecipe.setResourcePath(__dir__ + "assets/res/"); // for MC 1.11 recipes
+VanillaRecipe.setBehaviorPath(__dir__ + "minecraft_packs/behavior/"); // for MC 1.16 recipes
 
 // constants
 const GUI_SCALE = 3.2;
@@ -52,6 +56,20 @@ function addShapelessRecipe(result: ItemInstance, source: ItemInstance[]): void 
 		}
 	}
 	Recipes.addShapeless(result, ingredients);
+}
+
+function addSingleItemRecipe(recipeName: string, sourceID: string, resultID: string, count: number = 1, data: number = 0): void {
+	VanillaRecipe.addCraftingRecipe(recipeName, {
+		type: "shapeless",
+		ingredients: [
+		  { item: sourceID }
+		],
+		result: {
+		  item: resultID,
+		  data: data,
+		  count: count
+		}
+	}, true);
 }
 
 // vanilla items

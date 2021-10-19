@@ -8,10 +8,3 @@ declare namespace ToolLib {
     function isItem(id: number): boolean;
     function addBlockDropOnExplosion(nameID: string | number): void;
 }
-
-declare enum MiningLevel {
-	STONE = 1,
-	IRON = 2,
-	DIAMOND = 3,
-	OBSIDIAN = 4
-}

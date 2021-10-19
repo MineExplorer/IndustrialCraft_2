@@ -5,16 +5,34 @@ declare namespace BlockEngine {
     function getMainGameVersion(): number;
     function sendUnlocalizedMessage(client: NetworkClient, ...texts: string[]): void;
 }
-declare enum Side {
-    Client = 0,
-    Server = 1
-}
 declare namespace BlockEngine {
     namespace Decorators {
         function ClientSide(target: TileEntityBase, propertyName: string): void;
         function NetworkEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
         function ContainerEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
     }
+}
+declare enum Side {
+    Client = 0,
+    Server = 1
+}
+declare enum ItemCategory {
+    BUILDING = 1,
+    NATURE = 2,
+    EQUIPMENT = 3,
+    ITEMS = 4
+}
+declare enum EnumRarity {
+    COMMON = 0,
+    UNCOMMON = 1,
+    RARE = 2,
+    EPIC = 3
+}
+declare enum MiningLevel {
+    STONE = 1,
+    IRON = 2,
+    DIAMOND = 3,
+    OBSIDIAN = 4
 }
 declare class Vector3 implements Vector {
     static readonly DOWN: Vector3;
@@ -432,12 +450,10 @@ declare namespace EntityCustomData {
     function putField(entity: number, key: string, value: any): void;
 }
 declare namespace BlockRegistry {
-    function getBlockRotation(player: any, hasVertical: any): number;
+    function createBlock(nameID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType): number;
+    function getBlockRotation(player: number, hasVertical?: boolean): number;
     function setRotationFunction(id: string | number, hasVertical?: boolean, placeSound?: string): void;
-    function createBlockWithRotation(stringID: string, params: {
-        name: string;
-        texture: [string, number][];
-    }, blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
+    function createBlockWithRotation(stringID: string, params: Block.BlockVariation, blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
     function registerDrop(nameID: string | number, dropFunc: Block.DropFunction, level?: number): void;
     function setDestroyLevel(nameID: string | number, level: number): void;
     function addBlockDropOnExplosion(nameID: string | number): void;
@@ -608,18 +624,6 @@ declare class ItemTool extends ItemCommon implements ToolParams {
     toolMaterial: ToolMaterial;
     enchantType: number;
     constructor(stringID: string, name: string, icon: string | Item.TextureData, toolMaterial: string | ToolMaterial, toolData?: ToolParams, inCreative?: boolean);
-}
-declare enum ItemCategory {
-    BUILDING = 1,
-    NATURE = 2,
-    EQUIPMENT = 3,
-    ITEMS = 4
-}
-declare enum EnumRarity {
-    COMMON = 0,
-    UNCOMMON = 1,
-    RARE = 2,
-    EPIC = 3
 }
 declare namespace ItemRegistry {
     export function isBlock(id: number): boolean;

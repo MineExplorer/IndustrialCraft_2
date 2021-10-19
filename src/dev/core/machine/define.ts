@@ -119,18 +119,12 @@ namespace MachineRegistry {
 
 	export function setMachineDrop(blockID: string | number, dropID?: number) {
 		dropID ??= Block.getNumericId(blockID);
-		Block.registerDropFunction(blockID, function(coords, blockID, blockData, level) {
+		BlockRegistry.registerDrop(blockID, function(coords, blockID, blockData, level) {
 			let drop = [];
 			if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
 				drop.push([dropID, 1, 0]);
 			}
 			return drop;
-		});
-		// drop on explosion
-		Block.registerPopResourcesFunction(blockID, function(coords, block, region) {
-			if (Math.random() < 0.25) {
-				region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, dropID, 1, 0);
-			}
 		});
 	}
 

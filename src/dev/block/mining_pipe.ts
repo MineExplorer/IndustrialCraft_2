@@ -5,7 +5,7 @@ Block.createBlock("miningPipe", [
 ], {base: 1, destroytime: 2, renderlayer: 2, sound: "stone"});
 Block.setBlockShape(BlockID.miningPipe, {x: 5/16, y: 0, z: 5/16}, {x: 11/16, y: 1, z: 11/16}, 0);
 ToolAPI.registerBlockMaterial(BlockID.miningPipe, "stone", 1, true);
-Block.setDestroyLevel("miningPipe", 1);
+BlockRegistry.setDestroyLevel("miningPipe", 1);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.miningPipe, count: 8, data: 0}, [

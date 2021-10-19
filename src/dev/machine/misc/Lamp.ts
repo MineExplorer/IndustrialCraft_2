@@ -15,7 +15,7 @@ Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1, y: 1, z: 1/16}
 Block.setBlockShape(BlockID.luminator, {x: 15/16, y: 0, z: 0}, {x: 1, y: 1, z: 1}, 4);
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1/16, y: 1, z: 1}, 5);
 
-Block.registerDropFunction("luminator", function(coords, blockID, blockData, level, enchant) {
+BlockRegistry.registerDrop("luminator", function(coords, blockID, blockData, level, enchant) {
 	return [[blockID, 1, 1]];
 });
 
@@ -42,7 +42,7 @@ Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 0, z: 0}, {x: 1, y: 1, z: 1/
 Block.setBlockShape(BlockID.luminator_on, {x: 15/16, y: 0, z: 0}, {x: 1, y: 1, z: 1}, 4);
 Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 0, z: 0}, {x: 1/16, y: 1, z: 1}, 5);
 
-Block.registerDropFunction("luminator_on", function(coords, blockID, blockData, level, enchant) {
+BlockRegistry.registerDrop("luminator_on", function(coords, blockID, blockData, level, enchant) {
 	return [[BlockID.luminator, 1, 1]];
 });
 

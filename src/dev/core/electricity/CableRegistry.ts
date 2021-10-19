@@ -42,14 +42,8 @@ namespace CableRegistry {
 	}
 
 	export function setupDrop(blockID: string, itemID: number): void {
-		Block.registerDropFunction(blockID, function(coords, id, data) {
+		BlockRegistry.registerDrop(blockID, function(coords, id, data) {
 			return [[itemID, 1, 0]];
-		});
-
-		Block.registerPopResourcesFunction(blockID, function(coords, block, region) {
-			if (Math.random() < 0.25) {
-				region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, itemID, 1, 0);
-			}
 		});
 	}
 

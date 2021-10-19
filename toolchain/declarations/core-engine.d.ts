@@ -1654,7 +1654,7 @@ implements Tile {
      * Constructs new BlockState object
      * from given id and states object
      */
-    constructor(id: number, scriptable: {key: number});
+    constructor(id: number, scriptable: {[key: number]: number});
 
     /**
      * @returns id of the block

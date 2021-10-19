@@ -14,39 +14,35 @@ Block.createBlock("oreCopper", [
 	{name: "Copper Ore", texture: [["ore_copper", 0]], inCreative: true}
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreCopper, "stone", 2, true);
-Block.setDestroyLevel("oreCopper", 2);
-ToolLib.addBlockDropOnExplosion("oreCopper");
+BlockRegistry.setDestroyLevel("oreCopper", 2);
 
 IDRegistry.genBlockID("oreTin");
 Block.createBlock("oreTin", [
 	{name: "Tin Ore", texture: [["ore_tin", 0]], inCreative: true}
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreTin, "stone", 2, true);
-Block.setDestroyLevel("oreTin", 2);
-ToolLib.addBlockDropOnExplosion("oreTin");
+BlockRegistry.setDestroyLevel("oreTin", 2);
 
 IDRegistry.genBlockID("oreLead");
 Block.createBlock("oreLead", [
 	{name: "Lead Ore", texture: [["ore_lead", 0]], inCreative: true}
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreLead, "stone", 2, true);
-Block.setDestroyLevel("oreLead", 2);
-ToolLib.addBlockDropOnExplosion("oreLead");
+BlockRegistry.setDestroyLevel("oreLead", 2);
 
 IDRegistry.genBlockID("oreUranium");
 Block.createBlock("oreUranium", [
 	{name: "Uranium Ore", texture: [["ore_uranium", 0]], inCreative: true}
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreUranium, "stone", 3, true);
-Block.setDestroyLevel("oreUranium", 3);
-ToolLib.addBlockDropOnExplosion("oreUranium");
+BlockRegistry.setDestroyLevel("oreUranium", 3);
 
 IDRegistry.genBlockID("oreIridium");
 Block.createBlock("oreIridium", [
 	{name: "Iridium Ore", texture: [["ore_iridium", 0]], inCreative: true}
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreIridium, "stone", 4, true);
-Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, level, enchant) {
+BlockRegistry.registerDrop("oreIridium", function(coords, blockID, blockData, level, enchant) {
 	if (level > 3) {
 		if (enchant.silk) {
 			return [[blockID, 1, 0]];
@@ -58,7 +54,6 @@ Block.registerDropFunction("oreIridium", function(coords, blockID, blockData, le
 	}
 	return [];
 });
-ToolLib.addBlockDropOnExplosion("oreIridium");
 
 Item.addCreativeGroup("ores", Translation.translate("Ores"), [
 	BlockID.oreCopper,

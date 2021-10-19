@@ -13,56 +13,49 @@ Block.createBlock("blockCopper", [
 	{name: "Copper Block", texture: [["block_copper", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockCopper, "stone", 2, true);
-Block.setDestroyLevel("blockCopper", 2);
-ToolLib.addBlockDropOnExplosion("blockCopper");
+BlockRegistry.setDestroyLevel("blockCopper", 2);
 
 IDRegistry.genBlockID("blockTin");
 Block.createBlock("blockTin", [
 	{name: "Tin Block", texture: [["block_tin", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockTin, "stone", 2, true);
-Block.setDestroyLevel("blockTin", 2);
-ToolLib.addBlockDropOnExplosion("blockTin");
+BlockRegistry.setDestroyLevel("blockTin", 2);
 
 IDRegistry.genBlockID("blockBronze");
 Block.createBlock("blockBronze", [
 	{name: "Bronze Block", texture: [["block_bronze", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockBronze, "stone", 2, true);
-Block.setDestroyLevel("blockBronze", 2);
-ToolLib.addBlockDropOnExplosion("blockBronze");
+BlockRegistry.setDestroyLevel("blockBronze", 2);
 
 IDRegistry.genBlockID("blockLead");
 Block.createBlock("blockLead", [
 	{name: "Lead Block", texture: [["block_lead", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockLead, "stone", 2, true);
-Block.setDestroyLevel("blockLead", 2);
-ToolLib.addBlockDropOnExplosion("blockLead");
+BlockRegistry.setDestroyLevel("blockLead", 2);
 
 IDRegistry.genBlockID("blockSteel");
 Block.createBlock("blockSteel", [
 	{name: "Steel Block", texture: [["block_steel", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockSteel, "stone", 2, true);
-Block.setDestroyLevel("blockSteel", 2);
-ToolLib.addBlockDropOnExplosion("blockSteel");
+BlockRegistry.setDestroyLevel("blockSteel", 2);
 
 IDRegistry.genBlockID("blockSilver");
 Block.createBlock("blockSilver", [
 	{name: "Silver Block", texture: [["block_silver", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockSilver, "stone", 3, true);
-Block.setDestroyLevel("blockSilver", 3);
-ToolLib.addBlockDropOnExplosion("blockSilver");
+BlockRegistry.setDestroyLevel("blockSilver", 3);
 
 IDRegistry.genBlockID("blockUranium");
 Block.createBlock("blockUranium", [
 	{name: "Uranium Block", texture: [["block_uranium", 0], ["block_uranium", 0], ["block_uranium", 1]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockUranium, "stone", 3, true);
-Block.setDestroyLevel("blockUranium", 3);
-ToolLib.addBlockDropOnExplosion("blockUranium");
+BlockRegistry.setDestroyLevel("blockUranium", 3);
 
 Item.addCreativeGroup("blockMetal", Translation.translate("Metal Blocks"), [
 	BlockID.blockCopper,

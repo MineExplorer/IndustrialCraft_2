@@ -16,10 +16,9 @@ Block.createBlock("rubberTreeLog", [
 	{name: "Rubber Tree Log", texture: [["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 1], ["rubber_wood", 1]], inCreative: false}
 ], "wood");
 Item.setCategory(BlockID.rubberTreeLog, ItemCategory.NATURE);
-Block.registerDropFunction("rubberTreeLog", function(coords, blockID) {
+BlockRegistry.registerDrop("rubberTreeLog", function(coords, blockID) {
 	return [[blockID, 1, 0]];
 });
-ToolLib.addBlockDropOnExplosion("rubberTreeLog");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
 Block.registerPlaceFunction("rubberTreeLog", function(coords, item, block, player, region) {
 	if (World.canTileBeReplaced(block.id, block.data)) {
@@ -38,10 +37,9 @@ Block.createBlockWithRotation("rubberTreeLogLatex", [
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
 	{name: "tile.rubberTreeLogLatex.name", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: false},
 ], "wood");
-Block.registerDropFunction("rubberTreeLogLatex", function(coords, blockID) {
+BlockRegistry.registerDrop("rubberTreeLogLatex", function(coords, blockID) {
 	return [[BlockID.rubberTreeLog, 1, 0], [ItemID.latex, 1, 0]];
 });
-ToolLib.addBlockDropOnExplosion("rubberTreeLogLatex");
 ToolAPI.registerBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
 Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, data, region) {
 	if (data < 4 && Math.random() < 1/7) {

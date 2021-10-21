@@ -160,11 +160,11 @@ declare class WorldRegion {
      * @param entity Entity id or -1 id if entity is not specified
      * @param item Tool which broke block
      */
-    breakBlockForJsResult(coords: Vector, player: number, item: ItemInstance): {
+    breakBlockForResult(coords: Vector, player: number, item: ItemInstance): {
         items: ItemInstance[];
         experience: number;
     };
-    breakBlockForJsResult(x: number, y: number, z: number, player: number, item: ItemInstance): {
+    breakBlockForResult(x: number, y: number, z: number, player: number, item: ItemInstance): {
         items: ItemInstance[];
         experience: number;
     };
@@ -451,12 +451,15 @@ declare namespace EntityCustomData {
 }
 declare namespace BlockRegistry {
     function createBlock(nameID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType): number;
+    function createBlockWithRotation(stringID: string, params: Block.BlockVariation, blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
+    function setInventoryModel(blockID: number, texture: [string, number][]): void;
     function getBlockRotation(player: number, hasVertical?: boolean): number;
     function setRotationFunction(id: string | number, hasVertical?: boolean, placeSound?: string): void;
-    function createBlockWithRotation(stringID: string, params: Block.BlockVariation, blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
     function registerDrop(nameID: string | number, dropFunc: Block.DropFunction, level?: number): void;
     function setDestroyLevel(nameID: string | number, level: number): void;
+    function registerOnExplosionFunction(nameID: string | number, func: Block.PopResourcesFunction): void;
     function addBlockDropOnExplosion(nameID: string | number): void;
+    function getBlockDrop(x: number, y: number, z: number, block: Tile, level: number, item: ItemInstance, region?: BlockSource): ItemInstanceArray[];
 }
 declare class ItemStack implements ItemInstance {
     id: number;
@@ -469,9 +472,60 @@ declare class ItemStack implements ItemInstance {
     getItemInstance(): Nullable<ItemBase>;
     getMaxStack(): number;
     getMaxDamage(): number;
+    /**
+     * Decreases stack count by specified value.
+     * @param count amount to decrease
+     */
     decrease(count: number): void;
+    /**
+     * Sets all stack values to 0.
+     */
     clear(): void;
+    /**
+     * Applies damage to the item and destroys it if its max damage reached
+     * @param damage amount to apply
+     */
     applyDamage(damage: number): void;
+    /**
+     * @returns item's custom name
+     */
+    getCustomName(): string;
+    /**
+    * Sets item's custom name. Creates new ItemExtraData instance if
+    * it doesn't exist.
+    */
+    setCustomName(name: string): void;
+    /**
+     * @returns true if the item is enchanted, false otherwise
+     */
+    isEnchanted(): boolean;
+    /**
+     * Adds a new enchantment to the item. Creates new ItemExtraData instance if
+     * it doesn't exist.
+     * @param id enchantment id, one of the Native.Enchantment constants
+     * @param level enchantment level, generally between 1 and 5
+     */
+    addEnchant(id: number, level: number): void;
+    /**
+     * Removes enchantments by its id
+     * @param id enchantment id, one of the Native.Enchantment constants
+     */
+    removeEnchant(id: number): void;
+    /**
+     * Removes all the enchantments of the item
+     */
+    removeAllEnchants(): void;
+    /**
+     * @param id enchantment id, one of the Native.Enchantment constants
+     * @returns level of the specified enchantment
+     */
+    getEnchantLevel(id: number): number;
+    /**
+     * @returns all the enchantments of the item in the readable format
+     */
+    getEnchants(): {
+        [key: number]: number;
+    };
 }
 interface ItemBehavior {
     onNameOverride?(item: ItemInstance, translation: string, name: string): string;
@@ -626,8 +680,10 @@ declare class ItemTool extends ItemCommon implements ToolParams {
     constructor(stringID: string, name: string, icon: string | Item.TextureData, toolMaterial: string | ToolMaterial, toolData?: ToolParams, inCreative?: boolean);
 }
 declare namespace ItemRegistry {
+    export function getType(id: number): string;
     export function isBlock(id: number): boolean;
     export function isItem(id: number): boolean;
+    export function isVanilla(id: number): boolean;
     export function getVanillaStringID(id: number): string;
     export function getInstanceOf(itemID: string | number): Nullable<ItemBase>;
     /**

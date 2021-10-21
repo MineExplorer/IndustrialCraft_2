@@ -35,27 +35,23 @@ class LaserShot {
         if (hardness > 0) {
         	this.blockBreaks--;
        	}
+		let drop = this.region.breakBlockForResult(new Vector3(x, y, z), this.player, new ItemStack()).items;
        	let material = ToolAPI.getBlockMaterialName(block.id);
 		if (Math.random() < 0.5 && (material == "wood" || material == "plant" || material == "fibre" || material == "wool")) {
 			this.region.setBlock(x, y, z, 51, 0);
-		} else {
-			this.region.setBlock(x, y, z, 0, 0);
 		}
-		let drop = ToolLib.getBlockDrop({x: x, y: y, z: z}, block.id, block.data, 100);
-		if (drop)
-		for (let i in drop) {
-			let item = drop[i];
+		for (let item of drop) {
 			if (this.smelt && material == "stone") {
 				this.power = 0;
-				let result = Recipes.getFurnaceRecipeResult(item[0], item[2]);
+				let result = Recipes.getFurnaceRecipeResult(item.id, item.data);
 				if (result) {
-					item[0] = result.id;
-					item[2] = result.data;
+					item.id = result.id;
+					item.data = result.data;
 				}
-				this.region.dropItem(x + .5, y + .5, z + .5, item[0], item[1], item[2]);
+				this.region.dropItem(x + .5, y + .5, z + .5, item);
 			}
 			else if (Math.random() < this.dropChance) {
-				this.region.dropItem(x + .5, y + .5, z + .5, item[0], item[1], item[2]);
+				this.region.dropItem(x + .5, y + .5, z + .5, item);
 			}
 		}
 	}

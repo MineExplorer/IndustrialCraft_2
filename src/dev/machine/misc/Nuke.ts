@@ -56,12 +56,13 @@ namespace Machine {
 					let xx = this.x + dx, yy = this.y + dy, zz = this.z + dz;
 					let block = this.blockSource.getBlock(xx, yy, zz);
 					if (block.id > 0 && Block.getExplosionResistance(block.id) < 10000) {
-						this.blockSource.setBlock(xx, yy, zz, 0, 0);
 						if (Math.random() < 0.01) {
-							let drop = ToolLib.getBlockDrop(new Vector3(xx, yy, zz), block.id, block.data, 100);
-							for (let item of drop) {
-								this.blockSource.spawnDroppedItem(xx + .5, yy + .5, zz + .5, item[0], item[1], item[2], item[3] || null);
+							let drop = this.blockSource.breakBlockForJsResult(xx, yy, zz, -1, new ItemStack());
+							for (let item of drop.items) {
+								this.blockSource.spawnDroppedItem(xx + .5, yy + .5, zz + .5, item.id, item.count, item.data, item.extra || null);
 							}
+						} else {
+							this.blockSource.setBlock(xx, yy, zz, 0, 0);
 						}
 					}
 				}

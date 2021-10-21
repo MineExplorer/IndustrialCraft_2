@@ -113,29 +113,15 @@ var VanillaRecipe;
         return 0;
     }
     VanillaRecipe.getNumericID = getNumericID;
+    var nativeConvertNameID = ModAPI.requireGlobal("requireMethodFromNativeAPI('api.NativeAPI', 'convertNameId')");
     var __isValid__ = true;
     function convertToVanillaID(stringID) {
-        var newID = "";
         if (!getNumericID(stringID)) {
             Logger.Log("ID " + stringID + " is invalid", "ERROR");
             __isValid__ = false;
             return null;
         }
-        stringID = stringID.replace(":", "_");
-        var wasLowerCase = false;
-        for (var i = 0; i < stringID.length; i++) {
-            if (stringID[i] == stringID[i].toUpperCase()) {
-                if (wasLowerCase && stringID[i] != "_")
-                    newID += "_";
-                newID += stringID[i].toLowerCase();
-                wasLowerCase = false;
-            }
-            else {
-                newID += stringID[i];
-                wasLowerCase = true;
-            }
-        }
-        return "minecraft:" + newID;
+        return "minecraft:" + nativeConvertNameID(stringID.replace(":", "_"));
     }
     VanillaRecipe.convertToVanillaID = convertToVanillaID;
     function generateBlankFile(recipeName) {

@@ -406,7 +406,7 @@ var WorldRegion = /** @class */ (function () {
             this.blockSource.breakBlock(pos.x, pos.y, pos.z, allowDrop, entity, item);
         }
     };
-    WorldRegion.prototype.breakBlockForJsResult = function (x, y, z, player, item) {
+    WorldRegion.prototype.breakBlockForResult = function (x, y, z, player, item) {
         if (typeof x === "number") {
             return this.blockSource.breakBlockForJsResult(x, y, z, player, item);
         }
@@ -875,6 +875,33 @@ var BlockRegistry;
         return numericID;
     }
     BlockRegistry.createBlock = createBlock;
+    function createBlockWithRotation(stringID, params, blockType, hasVertical) {
+        var texture = params.texture;
+        var textures = [
+            [texture[3], texture[2], texture[0], texture[1], texture[4], texture[5]],
+            [texture[2], texture[3], texture[1], texture[0], texture[5], texture[4]],
+            [texture[0], texture[1], texture[3], texture[2], texture[5], texture[4]],
+            [texture[0], texture[1], texture[2], texture[3], texture[4], texture[5]],
+            [texture[0], texture[1], texture[4], texture[5], texture[3], texture[2]],
+            [texture[0], texture[1], texture[5], texture[4], texture[2], texture[3]]
+        ];
+        var variations = [];
+        for (var i = 0; i < textures.length; i++) {
+            variations.push({ name: params.name, texture: textures[i], inCreative: params.inCreative && i == 0 });
+        }
+        var numericID = createBlock(stringID, variations, blockType);
+        setInventoryModel(numericID, texture);
+        setRotationFunction(numericID, hasVertical);
+    }
+    BlockRegistry.createBlockWithRotation = createBlockWithRotation;
+    function setInventoryModel(blockID, texture) {
+        var render = new ICRender.Model();
+        var model = BlockRenderer.createTexturedBlock(texture);
+        render.addEntry(model);
+        ItemModel.getFor(blockID, 0).setHandModel(model);
+        ItemModel.getFor(blockID, 0).setUiModel(model);
+    }
+    BlockRegistry.setInventoryModel = setInventoryModel;
     function getBlockRotation(player, hasVertical) {
         var pitch = EntityGetPitch(player);
         if (hasVertical) {
@@ -900,29 +927,6 @@ var BlockRegistry;
         });
     }
     BlockRegistry.setRotationFunction = setRotationFunction;
-    function createBlockWithRotation(stringID, params, blockType, hasVertical) {
-        var texture = params.texture;
-        var textures = [
-            [texture[3], texture[2], texture[0], texture[1], texture[4], texture[5]],
-            [texture[2], texture[3], texture[1], texture[0], texture[5], texture[4]],
-            [texture[0], texture[1], texture[3], texture[2], texture[5], texture[4]],
-            [texture[0], texture[1], texture[2], texture[3], texture[4], texture[5]],
-            [texture[0], texture[1], texture[4], texture[5], texture[3], texture[2]],
-            [texture[0], texture[1], texture[5], texture[4], texture[2], texture[3]]
-        ];
-        var variations = [];
-        for (var i = 0; i < textures.length; i++) {
-            variations.push({ name: params.name, texture: textures[i], inCreative: params.inCreative && i == 0 });
-        }
-        var numericID = createBlock(stringID, variations, blockType);
-        var render = new ICRender.Model();
-        var model = BlockRenderer.createTexturedBlock(texture);
-        render.addEntry(model);
-        ItemModel.getFor(numericID, 0).setHandModel(model);
-        ItemModel.getFor(numericID, 0).setUiModel(model);
-        setRotationFunction(numericID, hasVertical);
-    }
-    BlockRegistry.createBlockWithRotation = createBlockWithRotation;
     function registerDrop(nameID, dropFunc, level) {
         Block.registerDropFunction(nameID, function (blockCoords, blockID, blockData, diggingLevel, enchant, item, region) {
             if (!level || diggingLevel >= level) {
@@ -942,6 +946,10 @@ var BlockRegistry;
         addBlockDropOnExplosion(nameID);
     }
     BlockRegistry.setDestroyLevel = setDestroyLevel;
+    function registerOnExplosionFunction(nameID, func) {
+        Block.registerPopResourcesFunction(nameID, func);
+    }
+    BlockRegistry.registerOnExplosionFunction = registerOnExplosionFunction;
     function addBlockDropOnExplosion(nameID) {
         Block.registerPopResourcesFunction(nameID, function (coords, block, region) {
             if (Math.random() >= 0.25)
@@ -957,6 +965,103 @@ var BlockRegistry;
         });
     }
     BlockRegistry.addBlockDropOnExplosion = addBlockDropOnExplosion;
+    var noDropBlocks = [26, 30, 31, 32, 51, 59, 92, 99, 100, 104, 105, 106, 115, 127, 132, 141, 142, 144, 161, 175, 199, 244, 385, 386, 388, 389, 390, 391, 392, 462];
+    function getBlockDrop(x, y, z, block, level, item, region) {
+        var id = block.id, data = block.data;
+        var enchant = ToolAPI.getEnchantExtraData(item.extra);
+        //@ts-ignore
+        var dropFunc = Block.dropFunctions[id];
+        if (dropFunc) {
+            region !== null && region !== void 0 ? region : (region = BlockSource.getDefaultForActor(Player.get()));
+            return dropFunc(new Vector3(x, y, z), id, data, level, enchant, item, region);
+        }
+        if (id == 3 || id == 5 || id == 6 || id == 12 || id == 19 || id == 35 || id == 85 || id == 158 || id == 171)
+            return [[id, 1, data]];
+        if (id == 17 || id == 162)
+            return [[id, 1, data]]; // log
+        if (id == 18 || id == 161) { // leaves
+            if (enchant.silk)
+                return [[id, 1, data]];
+            return [];
+        }
+        if (id == 47) { // bookshelf
+            if (enchant.silk)
+                return [[id, 1, 0]];
+            return [[340, 3, 0]];
+        }
+        if (id == 55)
+            return [[331, 1, 0]]; // redstone wire
+        if (id == 60)
+            return [[3, 1, 0]]; // farmland
+        if (id == 63 || id == 68)
+            return [[338, 1, 0]]; // sign
+        if (id == 64)
+            return [[324, 1, 0]]; // door
+        if (id == 75 || id == 76)
+            return [[76, 1, 0]]; // redstone torch
+        if (id == 79) { // ice
+            if (enchant.silk)
+                return [[id, 1, 0]];
+            return [];
+        }
+        if (id == 83)
+            return [[338, 1, 0]]; // sugar canes
+        if (id == 89)
+            return [[348, Math.floor(Math.random() * 3 + 2), 0]]; // glowstone
+        if (id == 93 || id == 94)
+            return [[356, 1, 0]]; // repeater
+        if (id == 103)
+            return [[360, Math.floor(Math.random() * 4 + 4), 0]]; // melon
+        if (id == 123 || id == 124)
+            return [[123, 1, 0]]; // redstone lamp
+        if (id == 140)
+            return [[390, 1, 0]]; // pot
+        if (id == 149 || id == 150)
+            return [[404, 1, 0]]; // comparator
+        if (id == 151 || id == 178)
+            return [[151, 1, 0]]; // daylight detector
+        // doors
+        if (id == 193)
+            return [[427, 1, 0]];
+        if (id == 194)
+            return [[428, 1, 0]];
+        if (id == 195)
+            return [[429, 1, 0]];
+        if (id == 196)
+            return [[430, 1, 0]];
+        if (id == 197)
+            return [[431, 1, 0]];
+        if (id == 393)
+            return [[335, 1, 0]]; // kelp
+        if (id == VanillaTileID.campfire) {
+            if (enchant.silk)
+                return [[id, 1, 0]];
+            var item_1 = IDConverter.getIDData("charcoal");
+            return [[item_1.id, 1, item_1.data]];
+        }
+        if (id == VanillaTileID.soul_campfire) {
+            if (enchant.silk)
+                return [[id, 1, 0]];
+            return [[VanillaTileID.soul_soil, 1, 0]];
+        }
+        // signs
+        if (id == 436 || id == 437)
+            return [[472, 1, 0]];
+        if (id == 441 || id == 442)
+            return [[473, 1, 0]];
+        if (id == 443 || id == 444)
+            return [[474, 1, 0]];
+        if (id == 445 || id == 446)
+            return [[475, 1, 0]];
+        if (id == 447 || id == 448)
+            return [[476, 1, 0]];
+        if (id == 467)
+            return [[-212, 1, data]]; // wood
+        if (noDropBlocks.indexOf(id) != -1)
+            return [];
+        return [[Block.convertBlockToItemId(id), 1, 0]];
+    }
+    BlockRegistry.getBlockDrop = getBlockDrop;
 })(BlockRegistry || (BlockRegistry = {}));
 var ItemStack = /** @class */ (function () {
     function ItemStack(item, count, data, extra) {
@@ -982,18 +1087,29 @@ var ItemStack = /** @class */ (function () {
     ItemStack.prototype.getMaxDamage = function () {
         return Item.getMaxDamage(this.id);
     };
+    /**
+     * Decreases stack count by specified value.
+     * @param count amount to decrease
+     */
     ItemStack.prototype.decrease = function (count) {
         this.count -= count;
         if (this.count <= 0)
             this.clear();
     };
+    /**
+     * Sets all stack values to 0.
+     */
     ItemStack.prototype.clear = function () {
         this.id = this.data = this.count = 0;
         this.extra = null;
     };
+    /**
+     * Applies damage to the item and destroys it if its max damage reached
+     * @param damage amount to apply
+     */
     ItemStack.prototype.applyDamage = function (damage) {
-        var enchant = ToolAPI.getEnchantExtraData(this.extra);
-        if (Math.random() < 1 / (enchant.unbreaking + 1)) {
+        var unbreakingLevel = this.getEnchantLevel(Native.Enchantment.UNBREAKING);
+        if (Math.random() < 1 / (unbreakingLevel + 1)) {
             this.data += damage;
         }
         if (this.data >= this.getMaxDamage()) {
@@ -1007,6 +1123,70 @@ var ItemStack = /** @class */ (function () {
                 this.clear();
             }
         }
+    };
+    /**
+     * @returns item's custom name
+     */
+    ItemStack.prototype.getCustomName = function () {
+        var _a;
+        return ((_a = this.extra) === null || _a === void 0 ? void 0 : _a.getCustomName()) || "";
+    };
+    /**
+    * Sets item's custom name. Creates new ItemExtraData instance if
+    * it doesn't exist.
+    */
+    ItemStack.prototype.setCustomName = function (name) {
+        var _a;
+        (_a = this.extra) !== null && _a !== void 0 ? _a : (this.extra = new ItemExtraData());
+        this.extra.setCustomName(name);
+    };
+    /**
+     * @returns true if the item is enchanted, false otherwise
+     */
+    ItemStack.prototype.isEnchanted = function () {
+        var _a;
+        return ((_a = this.extra) === null || _a === void 0 ? void 0 : _a.isEnchanted()) || false;
+    };
+    /**
+     * Adds a new enchantment to the item. Creates new ItemExtraData instance if
+     * it doesn't exist.
+     * @param id enchantment id, one of the Native.Enchantment constants
+     * @param level enchantment level, generally between 1 and 5
+     */
+    ItemStack.prototype.addEnchant = function (id, level) {
+        var _a;
+        (_a = this.extra) !== null && _a !== void 0 ? _a : (this.extra = new ItemExtraData());
+        this.extra.addEnchant(id, level);
+    };
+    /**
+     * Removes enchantments by its id
+     * @param id enchantment id, one of the Native.Enchantment constants
+     */
+    ItemStack.prototype.removeEnchant = function (id) {
+        var _a;
+        (_a = this.extra) === null || _a === void 0 ? void 0 : _a.removeEnchant(id);
+    };
+    /**
+     * Removes all the enchantments of the item
+     */
+    ItemStack.prototype.removeAllEnchants = function () {
+        var _a;
+        (_a = this.extra) === null || _a === void 0 ? void 0 : _a.removeAllEnchants();
+    };
+    /**
+     * @param id enchantment id, one of the Native.Enchantment constants
+     * @returns level of the specified enchantment
+     */
+    ItemStack.prototype.getEnchantLevel = function (id) {
+        var _a;
+        return ((_a = this.extra) === null || _a === void 0 ? void 0 : _a.getEnchantLevel(id)) || 0;
+    };
+    /**
+     * @returns all the enchantments of the item in the readable format
+     */
+    ItemStack.prototype.getEnchants = function () {
+        var _a;
+        return ((_a = this.extra) === null || _a === void 0 ? void 0 : _a.getEnchants()) || null;
     };
     return ItemStack;
 }());
@@ -1373,14 +1553,22 @@ var ItemRegistry;
     var items = {};
     var itemsRarity = {};
     var armorMaterials = {};
+    function getType(id) {
+        return IDRegistry.getIdInfo(id).split(":")[0];
+    }
+    ItemRegistry.getType = getType;
     function isBlock(id) {
-        return IDRegistry.getIdInfo(id).startsWith("block");
+        return getType(id) == "block";
     }
     ItemRegistry.isBlock = isBlock;
     function isItem(id) {
-        return IDRegistry.getIdInfo(id).startsWith("item");
+        return getType(id) == "item";
     }
     ItemRegistry.isItem = isItem;
+    function isVanilla(id) {
+        return !IDRegistry.getNameByID(id);
+    }
+    ItemRegistry.isVanilla = isVanilla;
     function getVanillaStringID(id) {
         return IDRegistry.getIdInfo(id).split(":")[1].split("#")[0];
     }
@@ -1600,7 +1788,7 @@ var IDConverter;
     IDConverter.getData = getData;
 })(IDConverter || (IDConverter = {}));
 /// <reference path="IDConverter.ts" />
-IDConverter.registerOld("charcoal", VanillaItemID.coal, 1);
+IDConverter.registerOld("charcoal", 263, 1);
 IDConverter.registerOld("oak_boat", 333, 0);
 IDConverter.registerOld("spruce_boat", 333, 1);
 IDConverter.registerOld("birch_boat", 333, 2);

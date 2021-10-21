@@ -16,6 +16,7 @@ class LaserShot {
 		let entity = region.spawnEntity(pos.x + vel.x, pos.y + vel.y, pos.z + vel.z, EntityType.ARROW);
 		Entity.setSkin(entity, "models/laser.png");
 		Entity.setVelocity(entity, vel.x, vel.y, vel.z);
+		this.player = player;
 		this.entity = entity;
 		this.region = region;
 		this.startPos = pos;

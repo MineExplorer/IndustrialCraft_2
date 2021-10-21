@@ -182,17 +182,10 @@ Callback.addCallback("PreLoaded", function() {
 		"x  "
 	], ['x', 265, -1, 'a', 35, 0]);
 
-	Recipes.addShapeless({id: ItemID.icPainter1, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("black_dye")]);
-	Recipes.addShapeless({id: ItemID.icPainter2, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("red_dye")]);
-	Recipes.addShapeless({id: ItemID.icPainter3, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("green_dye")]);
-	Recipes.addShapeless({id: ItemID.icPainter4, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("brown_dye")]);
-	Recipes.addShapeless({id: ItemID.icPainter5, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("blue_dye")]);
-
-	for (let i = 6; i <= 15; i++) {
-		Recipes.addShapeless({id: ItemID["icPainter"+i], count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: i-1}]);
+	for (let i = 1; i <= 16; i++) {
+		let dye = IDConverter.getIDData(COLOR_INDEX_TO_DYE[i-1]);
+		Recipes.addShapeless({id: ItemID["icPainter"+i], count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: dye.id, data: dye.data}]);
 	}
-
-	Recipes.addShapeless({id: ItemID.icPainter16, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("white_dye")]);
 
 	// MFSU Upgrade Kit
 	Recipes.addShaped({id: ItemID.upgradeMFSU, count: 1, data: 0}, [

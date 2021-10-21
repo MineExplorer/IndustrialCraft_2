@@ -200,7 +200,7 @@ namespace Machine {
 						}
 						if (this.data.progress >= params.time) {
 							level = ToolAPI.getToolLevelViaBlock(drillSlot.id, block.id);
-							this.mineBlock(coords.x, coords.y, coords.z, block, drillSlot);
+							this.mineBlock(coords.x, coords.y, coords.z, block, new ItemStack(drillSlot));
 						}
 					}
 				}

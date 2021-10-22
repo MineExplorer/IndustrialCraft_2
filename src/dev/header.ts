@@ -31,23 +31,23 @@ const GUI_SCALE_NEW = 3;
 const fallVelocity = -0.0784;
 const ELECTRIC_ITEM_MAX_DAMAGE = 27;
 
-const COLOR_INDEX_TO_DYE = {
-	0: "white_dye",
-	1: "orange_dye",
-	2: "magenta_dye",
-	3: "light_blue_dye",
-	4: "yellow_dye",
-	5: "lime_dye",
-	6: "pink_dye",
-	7: "gray_dye",
-	8: "light_gray_dye",
-	9: "cyan_dye",
-	10: "purple_dye",
-	11: "blue_dye",
-	12: "brown_dye",
-	13: "green_dye",
-	14: "red_dye",
-	15: "black_dye"
+const INDEX_TO_COLOR = {
+	0: "black",
+	1: "red",
+	2: "green",
+	3: "brown",
+	4: "blue",
+	5: "purple",
+	6: "cyan",
+	7: "light_gray",
+	8: "gray",
+	9: "pink",
+	10: "lime",
+	11: "yellow",
+	12: "light_blue",
+	13: "magenta",
+	14: "orange",
+	15: "white"
 }
 
 // import values

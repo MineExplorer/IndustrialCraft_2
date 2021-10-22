@@ -1,5 +1,5 @@
-declare let EntityGetYaw: any;
-declare let EntityGetPitch: any;
+declare const EntityGetYaw: any;
+declare const EntityGetPitch: any;
 declare namespace BlockEngine {
     function getGameVersion(): number[];
     function getMainGameVersion(): number;
@@ -662,12 +662,12 @@ interface ToolMaterial extends ToolAPI.ToolMaterial {
     repairMaterial?: number;
 }
 declare namespace ToolType {
-    let SWORD: ToolParams;
-    let SHOVEL: ToolParams;
-    let PICKAXE: ToolParams;
-    let AXE: ToolParams;
-    let HOE: ToolParams;
-    let SHEARS: ToolParams;
+    const SWORD: ToolParams;
+    const SHOVEL: ToolParams;
+    const PICKAXE: ToolParams;
+    const AXE: ToolParams;
+    const HOE: ToolParams;
+    const SHEARS: ToolParams;
 }
 declare class ItemTool extends ItemCommon implements ToolParams {
     handEquipped: boolean;
@@ -887,8 +887,8 @@ declare namespace LiquidItemRegistry {
         amount: number;
         storage?: number;
     };
-    export let EmptyByFull: {};
-    export let FullByEmpty: {};
+    export const EmptyByFull: {};
+    export const FullByEmpty: {};
     /**
      * Registers liquid storage item
      * @param liquid liquid name

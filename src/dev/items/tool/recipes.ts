@@ -183,7 +183,8 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', 265, -1, 'a', 35, 0]);
 
 	for (let i = 1; i <= 16; i++) {
-		let dye = IDConverter.getIDData(COLOR_INDEX_TO_DYE[i-1]);
+		const color = INDEX_TO_COLOR[i-1];
+		const dye = IDConverter.getIDData(color + "_dye");
 		Recipes.addShapeless({id: ItemID["icPainter"+i], count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: dye.id, data: dye.data}]);
 	}
 

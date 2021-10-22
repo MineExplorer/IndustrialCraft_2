@@ -886,7 +886,7 @@ var BlockRegistry;
             [texture[0], texture[1], texture[5], texture[4], texture[2], texture[3]]
         ];
         var variations = [];
-        for (var i = 0; i < textures.length; i++) {
+        for (var i = 0; i < 6; i++) {
             variations.push({ name: params.name, texture: textures[i], inCreative: params.inCreative && i == 0 });
         }
         var numericID = createBlock(stringID, variations, blockType);
@@ -959,8 +959,9 @@ var BlockRegistry;
             var item = new ItemStack();
             //@ts-ignore
             var drop = dropFunc(coords, block.id, block.data, 127, enchant, item, region);
-            for (var i in drop) {
-                region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, drop[i][0], drop[i][1], drop[i][2], drop[i][3] || null);
+            for (var _i = 0, drop_2 = drop; _i < drop_2.length; _i++) {
+                var item_1 = drop_2[_i];
+                region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_1[0], item_1[1], item_1[2], item_1[3] || null);
             }
         });
     }
@@ -1036,8 +1037,8 @@ var BlockRegistry;
         if (id == VanillaTileID.campfire) {
             if (enchant.silk)
                 return [[id, 1, 0]];
-            var item_1 = IDConverter.getIDData("charcoal");
-            return [[item_1.id, 1, item_1.data]];
+            var item_2 = IDConverter.getIDData("charcoal");
+            return [[item_2.id, 1, item_2.data]];
         }
         if (id == VanillaTileID.soul_campfire) {
             if (enchant.silk)
@@ -1957,9 +1958,8 @@ var TileEntityBase = /** @class */ (function () {
         var gui = container.getUiAdapter();
         if (gui) {
             var size = gui.getBinding(data.scale, "element_rect");
-            if (!size) {
+            if (!size)
                 return;
-            }
             var texture = LiquidRegistry.getLiquidUITexture(data.liquid, size.width(), size.height());
             gui.setBinding(data.scale, "texture", texture);
             gui.setBinding(data.scale, "value", data.amount);

@@ -867,15 +867,107 @@ var EntityCustomData;
         delete entities[entity];
     });
 })(EntityCustomData || (EntityCustomData = {}));
+var BlockModeler;
+(function (BlockModeler) {
+    function getRotatedBoxVertexes(box, rotation) {
+        switch (rotation) {
+            case 0:
+                return box;
+            case 1:
+                return [1 - box[3], box[1], 1 - box[5], 1 - box[0], box[4], 1 - box[2]]; // rotate 180°
+            case 2:
+                return [box[2], box[1], 1 - box[3], box[5], box[4], 1 - box[0]]; // rotate 270°
+            case 3:
+                return [1 - box[5], box[1], box[0], 1 - box[2], box[4], box[3]]; // rotate 90°
+        }
+    }
+    BlockModeler.getRotatedBoxVertexes = getRotatedBoxVertexes;
+    function setStairsRenderModel(id) {
+        var boxes = [
+            [0, 0, 0, 1, 0.5, 1],
+            [0.5, 0.5, 0.5, 1, 1, 1],
+            [0, 0.5, 0.5, 0.5, 1, 1],
+            [0.5, 0.5, 0, 1, 1, 0.5],
+            [0, 0.5, 0, 0.5, 1, 0.5]
+        ];
+        createStairsRenderModel(id, 0, boxes);
+        var newBoxes = [];
+        for (var _i = 0, boxes_1 = boxes; _i < boxes_1.length; _i++) {
+            var box = boxes_1[_i];
+            newBoxes.push([box[0], 1 - box[4], box[2], box[3], 1 - box[1], box[5]]);
+        }
+        createStairsRenderModel(id, 4, newBoxes);
+    }
+    BlockModeler.setStairsRenderModel = setStairsRenderModel;
+    function createStairsRenderModel(id, startData, boxes) {
+        var modelConditionData = [
+            { data: 3, posR: [-1, 0], posB: [0, 1] },
+            { data: 2, posR: [1, 0], posB: [0, -1] },
+            { data: 0, posR: [0, 1], posB: [1, 0] },
+            { data: 1, posR: [0, -1], posB: [-1, 0] }
+        ];
+        for (var i = 0; i < 4; i++) {
+            var conditionData = modelConditionData[i];
+            var data = startData + i;
+            var rBlockData = conditionData.data + startData;
+            var groupR = ICRender.getGroup("stairs:" + rBlockData);
+            var groupL = ICRender.getGroup("stairs:" + (rBlockData ^ 1));
+            var currentGroup = ICRender.getGroup("stairs:" + data);
+            currentGroup.add(id, data);
+            var render = new ICRender.Model();
+            var shape = new ICRender.CollisionShape();
+            var box0 = boxes[0];
+            render.addEntry(new BlockRenderer.Model(box0[0], box0[1], box0[2], box0[3], box0[4], box0[5], id, data)); // slabe box
+            shape.addEntry().addBox(box0[0], box0[1], box0[2], box0[3], box0[4], box0[5]);
+            var posR = conditionData.posR; // right block
+            var posB = conditionData.posB; // back block
+            var posF = [posB[0] * (-1), posB[1] * (-1)]; // front block
+            var conditionRight = ICRender.BLOCK(posR[0], 0, posR[1], currentGroup, false);
+            var conditionLeft = ICRender.BLOCK(posR[0] * (-1), 0, posR[1] * (-1), currentGroup, false);
+            var conditionBackNotR = ICRender.BLOCK(posB[0], 0, posB[1], groupR, true);
+            var conditionBackNotL = ICRender.BLOCK(posB[0], 0, posB[1], groupL, true);
+            var box1 = getRotatedBoxVertexes(boxes[1], i);
+            var model = new BlockRenderer.Model(box1[0], box1[1], box1[2], box1[3], box1[4], box1[5], id, data);
+            var condition0 = ICRender.OR(conditionBackNotR, conditionLeft);
+            render.addEntry(model).setCondition(condition0);
+            shape.addEntry().addBox(box1[0], box1[1], box1[2], box1[3], box1[4], box1[5]).setCondition(condition0);
+            var box2 = getRotatedBoxVertexes(boxes[2], i);
+            var condition1 = ICRender.OR(conditionBackNotL, conditionRight);
+            model = new BlockRenderer.Model(box2[0], box2[1], box2[2], box2[3], box2[4], box2[5], id, data);
+            render.addEntry(model).setCondition(condition1);
+            shape.addEntry().addBox(box2[0], box2[1], box2[2], box2[3], box2[4], box2[5]).setCondition(condition1);
+            var box3 = getRotatedBoxVertexes(boxes[3], i);
+            model = new BlockRenderer.Model(box3[0], box3[1], box3[2], box3[3], box3[4], box3[5], id, data);
+            var condition2 = ICRender.AND(conditionBackNotR, conditionBackNotL, ICRender.NOT(conditionLeft), ICRender.BLOCK(posF[0], 0, posF[1], groupL, false));
+            render.addEntry(model).setCondition(condition2);
+            shape.addEntry().addBox(box3[0], box3[1], box3[2], box3[3], box3[4], box3[5]).setCondition(condition2);
+            var box4 = getRotatedBoxVertexes(boxes[4], i);
+            model = new BlockRenderer.Model(box4[0], box4[1], box4[2], box4[3], box4[4], box4[5], id, data);
+            var condition3 = ICRender.AND(conditionBackNotR, conditionBackNotL, ICRender.NOT(conditionRight), ICRender.BLOCK(posF[0], 0, posF[1], groupR, false));
+            render.addEntry(model).setCondition(condition3);
+            shape.addEntry().addBox(box4[0], box4[1], box4[2], box4[3], box4[4], box4[5]).setCondition(condition3);
+            BlockRenderer.setStaticICRender(id, data, render);
+            BlockRenderer.setCustomCollisionShape(id, data, shape);
+            BlockRenderer.setCustomRaycastShape(id, data, shape);
+        }
+    }
+    BlockModeler.createStairsRenderModel = createStairsRenderModel;
+    function setInventoryModel(blockID, model, data) {
+        if (data === void 0) { data = -1; }
+        ItemModel.getFor(blockID, data).setHandModel(model);
+        ItemModel.getFor(blockID, data).setUiModel(model);
+    }
+    BlockModeler.setInventoryModel = setInventoryModel;
+})(BlockModeler || (BlockModeler = {}));
 var BlockRegistry;
 (function (BlockRegistry) {
     function createBlock(nameID, defineData, blockType) {
-        var numericID = IDRegistry.genBlockID(nameID);
+        IDRegistry.genBlockID(nameID);
         Block.createBlock(nameID, defineData, blockType);
-        return numericID;
     }
     BlockRegistry.createBlock = createBlock;
     function createBlockWithRotation(stringID, params, blockType, hasVertical) {
+        var numericID = IDRegistry.genBlockID(stringID);
         var texture = params.texture;
         var textures = [
             [texture[3], texture[2], texture[0], texture[1], texture[4], texture[5]],
@@ -889,19 +981,33 @@ var BlockRegistry;
         for (var i = 0; i < 6; i++) {
             variations.push({ name: params.name, texture: textures[i], inCreative: params.inCreative && i == 0 });
         }
-        var numericID = createBlock(stringID, variations, blockType);
-        setInventoryModel(numericID, texture);
+        Block.createBlock(stringID, variations, blockType);
+        BlockModeler.setInventoryModel(numericID, BlockRenderer.createTexturedBlock(texture));
         setRotationFunction(numericID, hasVertical);
     }
     BlockRegistry.createBlockWithRotation = createBlockWithRotation;
-    function setInventoryModel(blockID, texture) {
-        var render = new ICRender.Model();
-        var model = BlockRenderer.createTexturedBlock(texture);
-        render.addEntry(model);
-        ItemModel.getFor(blockID, 0).setHandModel(model);
-        ItemModel.getFor(blockID, 0).setUiModel(model);
+    function createStairs(stringID, defineData, blockType) {
+        var numericID = IDRegistry.genBlockID(stringID);
+        Block.createBlock(stringID, defineData, blockType);
+        Block.registerPlaceFunction(numericID, function (coords, item, block, player, region) {
+            var place = getPlacePosition(coords, block, region);
+            if (!place)
+                return;
+            var data = getBlockRotation(player) - 2;
+            if (coords.side == 0 || coords.side >= 2 && coords.vec.y - coords.y >= 0.5) {
+                data += 4;
+            }
+            region.setBlock(place.x, place.y, place.z, item.id, data);
+            //World.playSound(place.x, place.y, place.z, placeSound || "dig.stone", 1, 0.8);
+            return place;
+        });
+        BlockModeler.setStairsRenderModel(numericID);
+        var model = BlockRenderer.createModel();
+        model.addBox(0, 0, 0, 1, 0.5, 1, numericID, 0);
+        model.addBox(0, 0.5, 0, 1, 1, 0.5, numericID, 0);
+        BlockModeler.setInventoryModel(numericID, model);
     }
-    BlockRegistry.setInventoryModel = setInventoryModel;
+    BlockRegistry.createStairs = createStairs;
     function getBlockRotation(player, hasVertical) {
         var pitch = EntityGetPitch(player);
         if (hasVertical) {
@@ -917,9 +1023,21 @@ var BlockRegistry;
         return rotation;
     }
     BlockRegistry.getBlockRotation = getBlockRotation;
+    function getPlacePosition(coords, block, region) {
+        if (World.canTileBeReplaced(block.id, block.data))
+            return coords;
+        var place = coords.relative;
+        block = region.getBlock(place.x, place.y, place.z);
+        if (World.canTileBeReplaced(block.id, block.data))
+            return place;
+        return null;
+    }
+    BlockRegistry.getPlacePosition = getPlacePosition;
     function setRotationFunction(id, hasVertical, placeSound) {
         Block.registerPlaceFunction(id, function (coords, item, block, player, region) {
-            var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
+            var place = getPlacePosition(coords, block, region);
+            if (!place)
+                return;
             var rotation = getBlockRotation(player, hasVertical);
             region.setBlock(place.x, place.y, place.z, item.id, rotation);
             //World.playSound(place.x, place.y, place.z, placeSound || "dig.stone", 1, 0.8);
@@ -2194,9 +2312,10 @@ EXPORT("ItemCategory", ItemCategory);
 EXPORT("EnumRarity", EnumRarity);
 EXPORT("MiningLevel", MiningLevel);
 // APIs
+EXPORT("BlockEngine", BlockEngine);
+EXPORT("BlockModeler", BlockModeler);
 EXPORT("BlockRegistry", BlockRegistry);
 EXPORT("ItemRegistry", ItemRegistry);
 EXPORT("LiquidItemRegistry", LiquidItemRegistry);
 EXPORT("EntityCustomData", EntityCustomData);
 EXPORT("IDConverter", IDConverter);
-EXPORT("BlockEngine", BlockEngine);

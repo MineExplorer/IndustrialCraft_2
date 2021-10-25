@@ -449,11 +449,20 @@ declare namespace EntityCustomData {
     function getField(entity: number, key: string): any;
     function putField(entity: number, key: string, value: any): void;
 }
+declare namespace BlockModeler {
+    type BoxVertexes = [number, number, number, number, number, number];
+    export function getRotatedBoxVertexes(box: BoxVertexes, rotation: number): BoxVertexes;
+    export function setStairsRenderModel(id: number): void;
+    export function createStairsRenderModel(id: number, startData: number, boxes: BoxVertexes[]): void;
+    export function setInventoryModel(blockID: number, model: RenderMesh | ICRender.Model | BlockRenderer.Model, data?: number): void;
+    export {};
+}
 declare namespace BlockRegistry {
-    function createBlock(nameID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType): number;
+    function createBlock(nameID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType): void;
     function createBlockWithRotation(stringID: string, params: Block.BlockVariation, blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
-    function setInventoryModel(blockID: number, texture: [string, number][]): void;
+    function createStairs(stringID: string, defineData: Block.BlockVariation[], blockType: string | Block.SpecialType): void;
     function getBlockRotation(player: number, hasVertical?: boolean): number;
+    function getPlacePosition(coords: Callback.ItemUseCoordinates, block: Tile, region: BlockSource): Vector;
     function setRotationFunction(id: string | number, hasVertical?: boolean, placeSound?: string): void;
     function registerDrop(nameID: string | number, dropFunc: Block.DropFunction, level?: number): void;
     function setDestroyLevel(nameID: string | number, level: number): void;

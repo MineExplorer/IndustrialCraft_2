@@ -50,13 +50,13 @@ namespace CableRegistry {
 	export function setupModel(id: number, width: number): void {
 		TileRenderer.setupWireModel(id, 0, width, "ic-wire");
 
-		let group = ICRender.getGroup("ic-wire");
-		let groupPainted = ICRender.getGroup("ic-wire-painted");
+		const group = ICRender.getGroup("ic-wire");
+		const groupPainted = ICRender.getGroup("ic-wire-painted");
 		group.add(id, -1);
 
 		// painted cables
 		width /= 2;
-		let boxes = [
+		const boxes = [
 			{side: [1, 0, 0], box: [0.5 + width, 0.5 - width, 0.5 - width, 1, 0.5 + width, 0.5 + width]},
 			{side: [-1, 0, 0], box: [0, 0.5 - width, 0.5 - width, 0.5 - width, 0.5 + width, 0.5 + width]},
 			{side: [0, 1, 0], box: [0.5 - width, 0.5 + width, 0.5 - width, 0.5 + width, 1, 0.5 + width]},
@@ -66,41 +66,38 @@ namespace CableRegistry {
 		]
 
 		for (let data = 1; data < 16; data++) {
-			let groupColor = ICRender.getGroup("ic-wire" + data);
+			const groupColor = ICRender.getGroup("ic-wire" + data);
 			groupColor.add(id, data);
 			groupPainted.add(id, data);
 
-			let render = new ICRender.Model();
-			let shape = new ICRender.CollisionShape();
-			for (let i in boxes) {
-				let box = boxes[i];
+			const render = new ICRender.Model();
+			const shape = new ICRender.CollisionShape();
+			for (let box of boxes) {
 				// render
-				let model = BlockRenderer.createModel();
+				const model = BlockRenderer.createModel();
 				model.addBox(box.box[0], box.box[1], box.box[2], box.box[3], box.box[4], box.box[5], id, data);
-				let condition1 = ICRender.BLOCK(box.side[0], box.side[1], box.side[2], group, false);
-				let condition2 = ICRender.BLOCK(box.side[0], box.side[1], box.side[2], groupPainted, true);
-				let condition3 = ICRender.BLOCK(box.side[0], box.side[1], box.side[2], groupColor, false);
-				let condition = ICRender.AND(condition1, ICRender.OR(condition2, condition3));
+				const condition1 = ICRender.BLOCK(box.side[0], box.side[1], box.side[2], group, false);
+				const condition2 = ICRender.BLOCK(box.side[0], box.side[1], box.side[2], groupPainted, true);
+				const condition3 = ICRender.BLOCK(box.side[0], box.side[1], box.side[2], groupColor, false);
+				const condition = ICRender.AND(condition1, ICRender.OR(condition2, condition3));
 				render.addEntry(model).setCondition(condition);
 				// collision shape
-				let entry = shape.addEntry();
+				const entry = shape.addEntry();
 				entry.addBox(box.box[0], box.box[1], box.box[2], box.box[3], box.box[4], box.box[5]);
 				entry.setCondition(condition);
 			}
 
 			// central box
-			let model = BlockRenderer.createModel();
+			const model = BlockRenderer.createModel();
 			model.addBox(0.5 - width, 0.5 - width, 0.5 - width, 0.5 + width, 0.5 + width, 0.5 + width, id, data);
 			render.addEntry(model);
 
-			let entry = shape.addEntry();
+			const entry = shape.addEntry();
 			entry.addBox(0.5 - width, 0.5 - width, 0.5 - width, 0.5 + width, 0.5 + width, 0.5 + width);
-
-			let swidth = Math.max(width, 0.25);
-			Block.setShape(id, 0.5 - swidth, 0.5 - swidth, 0.5 - swidth, 0.5 + swidth, 0.5 + swidth, 0.5 + swidth, data);
 
 			BlockRenderer.setStaticICRender(id, data, render);
 			BlockRenderer.setCustomCollisionShape(id, data, shape);
+			BlockRenderer.setCustomRaycastShape(id, data, shape);
 		}
 	}
 }

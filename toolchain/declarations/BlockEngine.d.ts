@@ -459,7 +459,7 @@ declare namespace BlockModeler {
 }
 declare namespace BlockRegistry {
     function createBlock(nameID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType): void;
-    function createBlockWithRotation(stringID: string, params: Block.BlockVariation, blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
+    function createBlockWithRotation(stringID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
     function createStairs(stringID: string, defineData: Block.BlockVariation[], blockType: string | Block.SpecialType): void;
     function getBlockRotation(player: number, hasVertical?: boolean): number;
     function getPlacePosition(coords: Callback.ItemUseCoordinates, block: Tile, region: BlockSource): Vector;

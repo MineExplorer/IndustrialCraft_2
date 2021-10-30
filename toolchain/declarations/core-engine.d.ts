@@ -10999,6 +10999,9 @@ declare namespace RenderMesh {
         setVertices(floatArray: number[]): void;
     }
 }
+declare namespace Resources {
+	function addRuntimePack(type: string, name: string): string;
+}
 /**
  * Module used to save data between world sessions
  */

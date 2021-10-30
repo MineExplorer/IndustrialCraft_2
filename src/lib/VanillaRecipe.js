@@ -9,13 +9,13 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var IS_OLD = getMCPEVersion().main === 28;
 LIBRARY({
     name: "VanillaRecipe",
     version: 3,
-    shared: IS_OLD ? false : true,
+    shared: true,
     api: "CoreEngine"
 });
+var IS_OLD = getMCPEVersion().main === 28;
 var MOD_PREFIX = "mod_";
 var BEHAVIOR_NAME = "VanillaRecipe";
 var VanillaRecipe;
@@ -25,12 +25,18 @@ var VanillaRecipe;
     var behavior_recipes_path;
     var recipes = {};
     function setResourcePath(path) {
-        resource_path = path + "/definitions/recipe/";
-        FileTools.mkdir(resource_path);
-        resetRecipes(resource_path);
+        if (!IS_OLD)
+            return;
+        var resPath = path + "/definitions/recipe/";
+        if (!resource_path)
+            resource_path = resPath;
+        FileTools.mkdir(resPath);
+        resetRecipes(resPath);
     }
     VanillaRecipe.setResourcePath = setResourcePath;
     function setBehaviorPath(path) {
+        if (IS_OLD)
+            return;
         if (behavior_path) {
             recursiveDelete(new java.io.File(path + "/" + BEHAVIOR_NAME));
             return;

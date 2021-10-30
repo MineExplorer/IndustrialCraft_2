@@ -6,7 +6,7 @@ declare namespace TileRenderer {
     function getRotatedBoxVertexes(box: BoxVertexes, rotation: number): BoxVertexes;
     function setStaticModelWithRotation(id: number, boxes: BoxVertexes[]): void;
     function setCollisionShape(id: number, data: number, boxes: BoxVertexes[], setRaycastShape?: boolean): void;
-    function setShapeWithRotation(id: number, data: number, boxes: TileRenderer.BoxVertexes[]): void;
+    function setShapeWithRotation(id: number, data: number, boxes: BoxVertexes[]): void;
     function setEmptyCollisionShape(id: number): void;
     function setStandardModel(id: number, data: number, texture: BlockRenderer.ModelTextureSet): void;
     function setStandardModelWithRotation(id: number, data: number, texture: BlockRenderer.ModelTextureSet, hasVertical?: boolean): void;

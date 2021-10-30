@@ -99,7 +99,7 @@ var TileRenderer;
             try {
                 for (var boxes_3 = (e_3 = void 0, __values(boxes)), boxes_3_1 = boxes_3.next(); !boxes_3_1.done; boxes_3_1 = boxes_3.next()) {
                     var box = boxes_3_1.value;
-                    newBoxes.push(TileRenderer.getRotatedBoxVertexes(box, i));
+                    newBoxes.push(getRotatedBoxVertexes(box, i));
                 }
             }
             catch (e_3_1) { e_3 = { error: e_3_1 }; }
@@ -109,8 +109,8 @@ var TileRenderer;
                 }
                 finally { if (e_3) throw e_3.error; }
             }
-            TileRenderer.setStaticModel(id, data + i, newBoxes);
-            TileRenderer.setCollisionShape(id, data + i, newBoxes);
+            setStaticModel(id, data + i, newBoxes);
+            setCollisionShape(id, data + i, newBoxes);
         }
     }
     TileRenderer.setShapeWithRotation = setShapeWithRotation;
@@ -152,9 +152,7 @@ var TileRenderer;
     }
     TileRenderer.setStandartModel = setStandartModel;
     function setHandAndUiModel(id, data, texture) {
-        var render = new ICRender.Model();
         var model = BlockRenderer.createTexturedBlock(texture);
-        render.addEntry(model);
         ItemModel.getFor(id, data).setHandModel(model);
         ItemModel.getFor(id, data).setUiModel(model);
     }
@@ -241,7 +239,7 @@ var TileRenderer;
     function setRotationFunction(id, hasVertical, placeSound) {
         Block.registerPlaceFunction(id, function (coords, item, block, player, region) {
             var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
-            var rotation = TileRenderer.getBlockRotation(player, hasVertical);
+            var rotation = getBlockRotation(player, hasVertical);
             region.setBlock(place.x, place.y, place.z, item.id, rotation);
             World.playSound(place.x, place.y, place.z, placeSound || "dig.stone", 1, 0.8);
             return place;
@@ -254,12 +252,12 @@ var TileRenderer;
             var place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
             region.setBlock(place.x, place.y, place.z, item.id, 0);
             World.playSound(place.x, place.y, place.z, placeSound || "dig.stone", 1, 0.8);
-            var rotation = TileRenderer.getBlockRotation(player, hasVertical);
+            var rotation = getBlockRotation(player, hasVertical);
             if (!hasVertical)
                 rotation -= 2;
             var tile = World.addTileEntity(place.x, place.y, place.z, region);
             tile.data.meta = rotation;
-            TileRenderer.mapAtCoords(place.x, place.y, place.z, item.id, rotation);
+            mapAtCoords(place.x, place.y, place.z, item.id, rotation);
             return place;
         });
     }
@@ -312,6 +310,9 @@ var TileRenderer;
         BlockRenderer.setStaticICRender(id, data, render);
         BlockRenderer.setCustomCollisionShape(id, data, shape);
         BlockRenderer.setCustomRaycastShape(id, data, shape);
+        var itemModel = new BlockRenderer.Model(0, 0.5 - width, 0.5 - width, 1, 0.5 + width, 0.5 + width, id, data);
+        ItemModel.getFor(id, data).setHandModel(itemModel);
+        ItemModel.getFor(id, data).setUiModel(itemModel);
     }
     TileRenderer.setupWireModel = setupWireModel;
     function getCropModel(texture) {

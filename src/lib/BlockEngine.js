@@ -966,23 +966,28 @@ var BlockRegistry;
         Block.createBlock(nameID, defineData, blockType);
     }
     BlockRegistry.createBlock = createBlock;
-    function createBlockWithRotation(stringID, params, blockType, hasVertical) {
+    function createBlockWithRotation(stringID, defineData, blockType, hasVertical) {
         var numericID = IDRegistry.genBlockID(stringID);
-        var texture = params.texture;
-        var textures = [
-            [texture[3], texture[2], texture[0], texture[1], texture[4], texture[5]],
-            [texture[2], texture[3], texture[1], texture[0], texture[5], texture[4]],
-            [texture[0], texture[1], texture[3], texture[2], texture[5], texture[4]],
-            [texture[0], texture[1], texture[2], texture[3], texture[4], texture[5]],
-            [texture[0], texture[1], texture[4], texture[5], texture[3], texture[2]],
-            [texture[0], texture[1], texture[5], texture[4], texture[2], texture[3]]
-        ];
         var variations = [];
-        for (var i = 0; i < 6; i++) {
-            variations.push({ name: params.name, texture: textures[i], inCreative: params.inCreative && i == 0 });
+        for (var i = 0; i < defineData.length; i++) {
+            var variation = defineData[i];
+            var texture = variation.texture;
+            var textures = [
+                [texture[3], texture[2], texture[0], texture[1], texture[4], texture[5]],
+                [texture[2], texture[3], texture[1], texture[0], texture[5], texture[4]],
+                [texture[0], texture[1], texture[3], texture[2], texture[5], texture[4]],
+                [texture[0], texture[1], texture[2], texture[3], texture[4], texture[5]],
+                [texture[0], texture[1], texture[4], texture[5], texture[3], texture[2]],
+                [texture[0], texture[1], texture[5], texture[4], texture[2], texture[3]]
+            ];
+            for (var data = 0; data < 6; data++) {
+                variations.push({ name: variation.name, texture: textures[data], inCreative: variation.inCreative && data == 0 });
+            }
         }
         Block.createBlock(stringID, variations, blockType);
-        BlockModeler.setInventoryModel(numericID, BlockRenderer.createTexturedBlock(texture));
+        for (var i = 0; i < defineData.length; i++) {
+            BlockModeler.setInventoryModel(numericID, BlockRenderer.createTexturedBlock(defineData[i].texture), i * 6);
+        }
         setRotationFunction(numericID, hasVertical);
     }
     BlockRegistry.createBlockWithRotation = createBlockWithRotation;
@@ -1039,7 +1044,7 @@ var BlockRegistry;
             if (!place)
                 return;
             var rotation = getBlockRotation(player, hasVertical);
-            region.setBlock(place.x, place.y, place.z, item.id, rotation);
+            region.setBlock(place.x, place.y, place.z, item.id, (item.data - item.data % 6) + rotation);
             //World.playSound(place.x, place.y, place.z, placeSound || "dig.stone", 1, 0.8);
             return place;
         });

@@ -110,7 +110,7 @@ namespace OreGenerator {
 	export function randomCoords(random: java.util.Random, chunkX: number, chunkZ: number, minHeight: number = 0, maxHeight: number = 128): Vector {
 		let x = chunkX*16 + random.nextInt(16);
 		let z = chunkZ*16 + random.nextInt(16);
-		let y = random.nextInt(maxHeight - minHeight + 1) - minHeight;
+		let y = random.nextInt(maxHeight - minHeight + 1) + minHeight;
 		return {x: x, y: y, z: z};
 	}
 

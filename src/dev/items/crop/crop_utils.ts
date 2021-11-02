@@ -2,9 +2,40 @@ ItemRegistry.createItem("fertilizer", {name: "fertilizer", icon: "fertilizer"});
 ItemRegistry.createItem("weedEx", {name: "weed_ex", icon: "weed_ex", stack: 1, maxDamage: 64});
 
 Callback.addCallback("PreLoaded", function() {
-	Recipes.addShapeless({id: ItemID.fertilizer, count: 2, data: 0}, [{id: ItemID.scrap, data: 0}, IDConverter.getIDData("bone_meal")]);
-	Recipes.addShapeless({id: ItemID.fertilizer, count: 2, data: 0}, [{id: ItemID.scrap, data: 0}, {id: ItemID.ashes, data: 0}]);
-	Recipes.addShapeless({id: ItemID.fertilizer, count: 2, data: 0}, [{id: ItemID.scrap, data: 0}, {id: ItemID.scrap, data: 0}, {id: ItemID.fertilizer, data: 0}]);
+	const boneMeal: [string, number] = BlockEngine.getMainGameVersion() == 11 ? ["dye", 15] : ["bone_meal", 0];
+	VanillaRecipe.addShapelessRecipe("fertilizer", {
+		ingredients: [
+			{ item: "item:scrap" },
+			{ item: boneMeal[0], data: boneMeal[1] }
+		],
+		result: {
+			item: "item:fertilizer",
+			count: 2
+		}
+	}, true);
+
+	VanillaRecipe.addShapelessRecipe("fertilizer_from_scrap", {
+		ingredients: [
+			{ item: "item:scrap" },
+			{ item: "item:scrap" },
+			{ item: "item:fertilizer" }
+		],
+		result: {
+			item: "item:fertilizer",
+			count: 2
+		}
+	}, true);
+
+	VanillaRecipe.addShapelessRecipe("fertilizer_from_ashes", {
+		ingredients: [
+			{ item: "item:scrap" },
+			{ item: "item:ashes" }
+		],
+		result: {
+			item: "item:fertilizer",
+			count: 2
+		}
+	}, true);
 
 	Recipes.addShaped({id: ItemID.weedEx, count: 1, data: 0}, [
         "z",

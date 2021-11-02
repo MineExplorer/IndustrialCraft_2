@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
 };
 LIBRARY({
     name: "VanillaRecipe",
-    version: 3,
+    version: 4,
     shared: true,
     api: "CoreEngine"
 });
@@ -38,10 +38,11 @@ var VanillaRecipe;
         if (IS_OLD)
             return;
         if (behavior_path) {
-            recursiveDelete(new java.io.File(path + "/" + BEHAVIOR_NAME));
+            recursiveDelete(new java.io.File(path+ "/" + BEHAVIOR_NAME));
             return;
         }
         behavior_path = path + ("/" + BEHAVIOR_NAME + "/");
+        //behavior_path = Resources.addRuntimePack("behavior", BEHAVIOR_NAME) + "/";
         behavior_recipes_path = behavior_path + "recipes/";
         FileTools.mkdir(behavior_recipes_path);
         generateManifestJson();
@@ -109,7 +110,8 @@ var VanillaRecipe;
     }
     function getNumericID(stringID) {
         var stringArray = stringID.split(":");
-        if (stringArray.length == 1) {
+        if (stringArray.length == 1 || stringArray[0] == "minecraft") {
+            stringID = stringArray[stringArray.length - 1];
             return VanillaBlockID[stringID] || VanillaItemID[stringID];
         }
         if (stringArray[0] == "item")
@@ -127,7 +129,10 @@ var VanillaRecipe;
             __isValid__ = false;
             return null;
         }
-        return "minecraft:" + nativeConvertNameID(stringID.replace(":", "_"));
+        var nameID = nativeConvertNameID(stringID.replace(":", "_"));
+        if (!nameID.startsWith("minecraft:"))
+            nameID = "minecraft:" + nameID;
+        return nameID;
     }
     VanillaRecipe.convertToVanillaID = convertToVanillaID;
     function generateBlankFile(recipeName) {
@@ -142,7 +147,7 @@ var VanillaRecipe;
     VanillaRecipe.generateJSONRecipe = generateJSONRecipe;
     function addWorkbenchRecipeFromJSON(obj) {
         if (Array.isArray(obj.result)) {
-            Logger.Log("Recipes with multiple output are not supported in modded workbench", "ERROR");
+            Logger.Log("Recipes with multiple output are not supported in the modded workbench", "ERROR");
             return;
         }
         var result = {
@@ -212,6 +217,16 @@ var VanillaRecipe;
         }
     }
     VanillaRecipe.addCraftingRecipe = addCraftingRecipe;
+    function addShapedRecipe(name, obj, addToWorkbench) {
+        obj.type = "shaped";
+        addCraftingRecipe(name, obj, addToWorkbench);
+    }
+    VanillaRecipe.addShapedRecipe = addShapedRecipe;
+    function addShapelessRecipe(name, obj, addToWorkbench) {
+        obj.type = "shapeless";
+        addCraftingRecipe(name, obj, addToWorkbench);
+    }
+    VanillaRecipe.addShapelessRecipe = addShapelessRecipe;
     function deleteRecipe(name) {
         var recipe = recipes[name];
         if (recipe) {

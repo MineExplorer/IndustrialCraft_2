@@ -65,17 +65,6 @@ function randomInt(min: number, max: number): number {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function addShapelessRecipe(result: ItemInstance, source: ItemInstance[]): void {
-	let ingredients = [];
-	for (let i in source) {
-		let item = source[i];
-		for (let n = 0; n < item.count; n++) {
-			ingredients.push(item);
-		}
-	}
-	Recipes.addShapeless(result, ingredients);
-}
-
 function addSingleItemRecipe(recipeName: string, sourceID: string, resultID: string, count: number = 1, data: number = 0): void {
 	VanillaRecipe.addCraftingRecipe(recipeName, {
 		type: "shapeless",

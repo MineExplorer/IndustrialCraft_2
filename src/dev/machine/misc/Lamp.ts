@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("luminator");
-Block.createBlock("luminator", [
+BlockRegistry.createBlock("luminator", [
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "Luminator", texture: [["luminator", 0]], inCreative: true},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
@@ -20,8 +19,7 @@ BlockRegistry.registerDrop("luminator", function(coords, blockID, blockData, lev
 });
 
 
-IDRegistry.genBlockID("luminator_on");
-Block.createBlock("luminator_on", [
+BlockRegistry.createBlock("luminator_on", [
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},

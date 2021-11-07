@@ -1,7 +1,6 @@
 /// <reference path="ProcessingMachine.ts" />
 
-IDRegistry.genBlockID("electricFurnace");
-Block.createBlock("electricFurnace", [
+BlockRegistry.createBlock("electricFurnace", [
 	{name: "Electric Furnace", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.electricFurnace, "stone", 1, true);

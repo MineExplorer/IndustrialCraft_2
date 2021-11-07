@@ -1,7 +1,6 @@
 /// <reference path="ProcessingMachine.ts" />
 
-IDRegistry.genBlockID("extractor");
-Block.createBlock("extractor", [
+BlockRegistry.createBlock("extractor", [
 	{name: "Extractor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.extractor, "stone", 1, true);

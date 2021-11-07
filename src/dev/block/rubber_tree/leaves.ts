@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("rubberTreeLeaves");
-Block.createBlock("rubberTreeLeaves", [
+BlockRegistry.createBlock("rubberTreeLeaves", [
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false},
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false},
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: true}

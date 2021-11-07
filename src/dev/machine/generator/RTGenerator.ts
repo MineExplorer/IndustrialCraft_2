@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("rtGenerator");
-Block.createBlock("rtGenerator", [
+BlockRegistry.createBlock("rtGenerator", [
 	{name: "Radioisotope Thermoelectric Generator", texture: [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], inCreative: true},
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.rtGenerator, "stone", 1, true);

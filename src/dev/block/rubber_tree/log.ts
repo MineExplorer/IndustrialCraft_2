@@ -9,8 +9,7 @@ Block.createSpecialType({
 	sound: "wood"
 }, "wood");
 
-IDRegistry.genBlockID("rubberTreeLog");
-Block.createBlock("rubberTreeLog", [
+BlockRegistry.createBlock("rubberTreeLog", [
 	{name: "Rubber Tree Log", texture: [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]], inCreative: true},
 	{name: "Rubber Tree Log", texture: [["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood", 2], ["rubber_wood", 2]], inCreative: false},
 	{name: "Rubber Tree Log", texture: [["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 2], ["rubber_wood", 1], ["rubber_wood", 1]], inCreative: false}

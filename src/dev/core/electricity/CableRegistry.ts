@@ -3,15 +3,21 @@
 namespace CableRegistry {
 	type CableData = {name: string, insulation: number, maxInsulation: number};
 
-	let insulationData = {};
-	let paintData: number[] = [];
+	const insulationData = {};
+	const paintableBlocks: number[] = [];
+
+	export const maxSafetyVoltage = {
+		0: 5,
+		1: 128,
+		2: 512
+	}
 
 	export function getCableData(id: number): CableData {
 		return insulationData[id];
 	}
 
 	export function canBePainted(id: number): boolean {
-		return paintData.indexOf(id) != -1;
+		return paintableBlocks.indexOf(id) != -1;
 	}
 
 	export function getBlockID(stringID: string, insulation: number): number {
@@ -19,31 +25,31 @@ namespace CableRegistry {
 	}
 
 	export function createBlock(stringID: string, properties: {name: string, texture: string}, blockType?: string | Block.SpecialType): void {
-		let variations = [];
+		const variations = [];
 		for (let i = 0; i < 16; i++) {
 			variations.push({name: properties.name, texture: [[properties.texture, i]]});
 		}
-		Block.createBlock(stringID, variations, blockType);
-		paintData.push(BlockID[stringID]);
+		BlockRegistry.createBlock(stringID, variations, blockType);
+		paintableBlocks.push(Block.getNumericId(stringID));
 	}
 
 	export function registerCable(stringID: string, maxVoltage: number, maxInsulationLevel?: number): void {
 		if (maxInsulationLevel) {
 			for (let index = 0; index <= maxInsulationLevel; index++) {
-				let blockID = BlockID[stringID + index];
+				const blockID = Block.getNumericId(stringID + index);
 				insulationData[blockID] = {name: stringID, insulation: index, maxInsulation: maxInsulationLevel};
 				EU.registerWire(blockID, maxVoltage, EUCableGrid);
-				setupDrop(stringID + index, ItemID[stringID + index]);
+				setupDrop(stringID + index);
 			}
 		} else {
-			EU.registerWire(BlockID[stringID], maxVoltage, EUCableGrid);
-			setupDrop(stringID, ItemID[stringID]);
+			EU.registerWire(Block.getNumericId(stringID), maxVoltage, EUCableGrid);
+			setupDrop(stringID);
 		}
 	}
 
-	export function setupDrop(blockID: string, itemID: number): void {
+	export function setupDrop(blockID: string): void {
 		BlockRegistry.registerDrop(blockID, function(coords, id, data) {
-			return [[itemID, 1, 0]];
+			return [[Item.getNumericId(blockID), 1, 0]];
 		});
 	}
 

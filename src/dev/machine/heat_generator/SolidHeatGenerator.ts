@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("solidHeatGenerator");
-Block.createBlock("solidHeatGenerator", [
+BlockRegistry.createBlock("solidHeatGenerator", [
 	{name: "Solid Fuel Firebox", texture: [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]], inCreative: true},
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.solidHeatGenerator, "stone", 1, true);

@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("fluidDistributor");
-Block.createBlock("fluidDistributor", [
+BlockRegistry.createBlock("fluidDistributor", [
 	{name: "Fluid Distributor", texture: [["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 1], ["fluid_distributor", 0], ["fluid_distributor", 1], ["fluid_distributor", 1]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.fluidDistributor, "stone", 1, true);

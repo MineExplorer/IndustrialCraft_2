@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("miner");
-Block.createBlock("miner", [
+BlockRegistry.createBlock("miner", [
 	{name: "Miner", texture: [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "machine");
 

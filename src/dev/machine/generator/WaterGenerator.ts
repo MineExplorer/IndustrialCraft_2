@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("genWatermill");
-Block.createBlock("genWatermill", [
+BlockRegistry.createBlock("genWatermill", [
 	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.genWatermill, "stone", 1, true);

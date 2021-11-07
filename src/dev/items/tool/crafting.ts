@@ -8,7 +8,7 @@ Item.registerUseFunction("cutter", function(coords, item, block, playerUid) {
 		for (let i = 9; i < 45; i++) {
 			let stack = player.getInventorySlot(i);
 			if (stack.id == ItemID.rubber) {
-				let blockID = Block.getNumericId(cableData.name + (cableData.insulation + 1));
+				let blockID = CableRegistry.getBlockID(cableData.name, cableData.insulation + 1);
 				let region = BlockSource.getDefaultForActor(playerUid);
 				region.setBlock(coords.x, coords.y, coords.z, blockID, 0);
 				stack.decrease(1);
@@ -42,7 +42,7 @@ Network.addServerPacket("icpe.cutterLongClick", function (client: NetworkClient,
 		item.applyDamage(1);
 		player.setCarriedItem(item);
 		SoundManager.playSoundAtBlock(coords, "InsulationCutters.ogg", 1);
-		let blockID = Block.getNumericId(cableData.name + (cableData.insulation - 1));
+		let blockID = CableRegistry.getBlockID(cableData.name, cableData.insulation - 1);
 		region.setBlock(coords.x, coords.y, coords.z, blockID, 0);
 		region.spawnDroppedItem(coords.x + .5, coords.y + 1, coords.z + .5, ItemID.rubber, 1, 0);
 		if (block.data > 0) {

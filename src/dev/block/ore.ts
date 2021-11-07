@@ -9,36 +9,31 @@ Block.createSpecialType({
 	sound: "stone"
 }, "ore");
 
-IDRegistry.genBlockID("oreCopper");
-Block.createBlock("oreCopper", [
+BlockRegistry.createBlock("oreCopper", [
 	{name: "Copper Ore", texture: [["ore_copper", 0]], inCreative: true}
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreCopper, "stone", 2, true);
 BlockRegistry.setDestroyLevel("oreCopper", 2);
 
-IDRegistry.genBlockID("oreTin");
-Block.createBlock("oreTin", [
+BlockRegistry.createBlock("oreTin", [
 	{name: "Tin Ore", texture: [["ore_tin", 0]], inCreative: true}
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreTin, "stone", 2, true);
 BlockRegistry.setDestroyLevel("oreTin", 2);
 
-IDRegistry.genBlockID("oreLead");
-Block.createBlock("oreLead", [
+BlockRegistry.createBlock("oreLead", [
 	{name: "Lead Ore", texture: [["ore_lead", 0]], inCreative: true}
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreLead, "stone", 2, true);
 BlockRegistry.setDestroyLevel("oreLead", 2);
 
-IDRegistry.genBlockID("oreUranium");
-Block.createBlock("oreUranium", [
+BlockRegistry.createBlock("oreUranium", [
 	{name: "Uranium Ore", texture: [["ore_uranium", 0]], inCreative: true}
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreUranium, "stone", 3, true);
 BlockRegistry.setDestroyLevel("oreUranium", 3);
 
-IDRegistry.genBlockID("oreIridium");
-Block.createBlock("oreIridium", [
+BlockRegistry.createBlock("oreIridium", [
 	{name: "Iridium Ore", texture: [["ore_iridium", 0]], inCreative: true}
 ], "ore");
 ToolAPI.registerBlockMaterial(BlockID.oreIridium, "stone", 4, true);

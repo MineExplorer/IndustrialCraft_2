@@ -4,30 +4,21 @@ Block.createSpecialType({
 	renderlayer: 1,
 }, "cable");
 
-IDRegistry.genBlockID("cableTin0");
-IDRegistry.genBlockID("cableTin1");
-Block.createBlock("cableTin0", [
+BlockRegistry.createBlock("cableTin0", [
 	{name: "tile.cableTin.name", texture: [["cable_tin", 0]], inCreative: false}
 ], "cable");
 CableRegistry.createBlock("cableTin1", {name: "tile.cableTin.name", texture: "cable_tin1"}, "cable");
 ToolAPI.registerBlockMaterial(BlockID.cableTin0, "stone");
 ToolAPI.registerBlockMaterial(BlockID.cableTin1, "stone");
 
-
-IDRegistry.genBlockID("cableCopper0");
-IDRegistry.genBlockID("cableCopper1");
-Block.createBlock("cableCopper0", [
+BlockRegistry.createBlock("cableCopper0", [
 	{name: "tile.cableCopper.name", texture: [["cable_copper", 0]], inCreative: false},
 ], "cable");
 CableRegistry.createBlock("cableCopper1", {name: "tile.cableCopper.name", texture: "cable_copper1"}, "cable");
 ToolAPI.registerBlockMaterial(BlockID.cableCopper0, "stone");
 ToolAPI.registerBlockMaterial(BlockID.cableCopper1, "stone");
 
-
-IDRegistry.genBlockID("cableGold0");
-IDRegistry.genBlockID("cableGold1");
-IDRegistry.genBlockID("cableGold2");
-Block.createBlock("cableGold0", [
+BlockRegistry.createBlock("cableGold0", [
 	{name: "tile.cableGold.name", texture: [["cable_gold", 0]], inCreative: false},
 ], "cable");
 CableRegistry.createBlock("cableGold1", {name: "tile.cableGold.name", texture: "cable_gold1"}, "cable");
@@ -36,12 +27,7 @@ ToolAPI.registerBlockMaterial(BlockID.cableGold0, "stone");
 ToolAPI.registerBlockMaterial(BlockID.cableGold1, "stone");
 ToolAPI.registerBlockMaterial(BlockID.cableGold2, "stone");
 
-
-IDRegistry.genBlockID("cableIron0");
-IDRegistry.genBlockID("cableIron1");
-IDRegistry.genBlockID("cableIron2");
-IDRegistry.genBlockID("cableIron3");
-Block.createBlock("cableIron0", [
+BlockRegistry.createBlock("cableIron0", [
 	{name: "tile.cableIron.name", texture: [["cable_iron", 0]], inCreative: false},
 ], "cable");
 CableRegistry.createBlock("cableIron1", {name: "tile.cableIron.name", texture: "cable_iron1"}, "cable");
@@ -52,8 +38,6 @@ ToolAPI.registerBlockMaterial(BlockID.cableIron1, "stone");
 ToolAPI.registerBlockMaterial(BlockID.cableIron2, "stone");
 ToolAPI.registerBlockMaterial(BlockID.cableIron3, "stone");
 
-
-IDRegistry.genBlockID("cableOptic");
 CableRegistry.createBlock("cableOptic", {name: "tile.cableOptic.name", texture: "cable_glass"}, "cable");
 ToolAPI.registerBlockMaterial(BlockID.cableOptic, "stone");
 

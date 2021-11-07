@@ -1,7 +1,6 @@
 /// <reference path="IReactor.ts" />
 
-IDRegistry.genBlockID("nuclearReactor");
-Block.createBlock("nuclearReactor", [
+BlockRegistry.createBlock("nuclearReactor", [
 	{name: "Nuclear Reactor", texture: [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.nuclearReactor, "stone", 1, true);

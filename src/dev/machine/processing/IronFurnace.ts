@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("ironFurnace");
-Block.createBlock("ironFurnace", [
+BlockRegistry.createBlock("ironFurnace", [
 	{name: "Iron Furnace", texture: [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.ironFurnace, "stone", 1, true);

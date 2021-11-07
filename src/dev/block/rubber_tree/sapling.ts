@@ -4,8 +4,7 @@ let DIRT_TILES = {
 	60: true
 };
 
-IDRegistry.genBlockID("rubberTreeSapling");
-Block.createBlock("rubberTreeSapling", [
+BlockRegistry.createBlock("rubberTreeSapling", [
 	{name: "Rubber Tree Sapling", texture: [["rubber_tree_sapling", 0]], inCreative: true}
 ], {rendertype: 1, sound: "grass"});
 Item.setCategory(BlockID.rubberTreeSapling, ItemCategory.NATURE);

@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("recycler");
-Block.createBlock("recycler", [
+BlockRegistry.createBlock("recycler", [
 	{name: "Recycler", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.recycler, "stone", 1, true);

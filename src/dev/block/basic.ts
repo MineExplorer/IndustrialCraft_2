@@ -8,15 +8,13 @@ Block.createSpecialType({
 	sound: "stone"
 }, "machine");
 
-IDRegistry.genBlockID("machineBlockBasic");
-Block.createBlock("machineBlockBasic", [
+BlockRegistry.createBlock("machineBlockBasic", [
 	{name: "Machine Block", texture: [["machine_top", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.machineBlockBasic, "stone", 1, true);
 BlockRegistry.setDestroyLevel("machineBlockBasic", 1);
 
-IDRegistry.genBlockID("machineBlockAdvanced");
-Block.createBlock("machineBlockAdvanced", [
+BlockRegistry.createBlock("machineBlockAdvanced", [
 	{name: "Advanced Machine Block", texture: [["machine_advanced", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.machineBlockAdvanced, "stone", 1, true);

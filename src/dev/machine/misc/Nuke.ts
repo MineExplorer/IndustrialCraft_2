@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("nuke");
-Block.createBlock("nuke", [
+BlockRegistry.createBlock("nuke", [
 	{name: "Nuke", texture: [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.nuke, "stone", 1, true);

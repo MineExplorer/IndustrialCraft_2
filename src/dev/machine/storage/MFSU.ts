@@ -1,7 +1,6 @@
 /// <reference path="./BatteryBlock.ts" />
 
-IDRegistry.genBlockID("storageMFSU");
-Block.createBlock("storageMFSU", [
+BlockRegistry.createBlock("storageMFSU", [
 	{name: "MFSU", texture: [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.storageMFSU, "stone", 1, true);

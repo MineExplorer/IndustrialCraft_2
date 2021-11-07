@@ -1,7 +1,6 @@
 /// <reference path="./BatteryBlock.ts" />
 
-IDRegistry.genBlockID("storageMFE");
-Block.createBlock("storageMFE", [
+BlockRegistry.createBlock("storageMFE", [
 	{name: "MFE", texture: [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.storageMFE, "stone", 1, true);

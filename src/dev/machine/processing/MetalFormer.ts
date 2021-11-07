@@ -1,7 +1,6 @@
 /// <reference path="ProcessingMachine.ts" />
 
-IDRegistry.genBlockID("metalFormer");
-Block.createBlock("metalFormer", [
+BlockRegistry.createBlock("metalFormer", [
 	{name: "Metal Former", texture: [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.metalFormer, "stone", 1, true);

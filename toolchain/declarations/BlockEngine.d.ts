@@ -153,7 +153,8 @@ declare class WorldRegion {
     breakBlock(x: number, y: number, z: number, allowDrop: boolean, entity: number, item: ItemInstance): void;
     /**
      * Same as breakBlock, but returns object containing drop and experince.
-     * 1.16 only!
+     * Has reverse compatibility with 1.11 but it doesn't suppot experience and
+     * based on BlockRegistry.getBlockDrop.
      * @param x X coord of the block
      * @param y Y coord of the block
      * @param z Z coord of the block
@@ -608,6 +609,7 @@ declare class ItemBase {
      */
     addRepairItem(itemID: number): void;
     setRarity(rarity: number): void;
+    addDefaultToCreative(): void;
 }
 declare class ItemCommon extends ItemBase {
     constructor(stringID: string, name?: string, icon?: string | Item.TextureData, inCreative?: boolean);

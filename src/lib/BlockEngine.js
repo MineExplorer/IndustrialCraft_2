@@ -407,13 +407,27 @@ var WorldRegion = /** @class */ (function () {
         }
     };
     WorldRegion.prototype.breakBlockForResult = function (x, y, z, player, item) {
-        if (typeof x === "number") {
+        if (typeof x === "object") {
+            var pos = x;
+            player = y;
+            item = z;
+            return this.breakBlockForResult(pos.x, pos.y, pos.z, player, item);
+        }
+        if (BlockEngine.getMainGameVersion() >= 16) {
             return this.blockSource.breakBlockForJsResult(x, y, z, player, item);
         }
-        var pos = x;
-        player = y;
-        item = z;
-        return this.blockSource.breakBlockForJsResult(pos.x, pos.y, pos.z, player, item);
+        var block = this.blockSource.getBlock(x, y, z);
+        this.blockSource.setBlock(x, y, z, 0, 0);
+        var level = ToolAPI.getToolLevelViaBlock(item.id, block.id);
+        var drop = BlockRegistry.getBlockDrop(x, y, z, block, level, item, this.blockSource);
+        var items = [];
+        if (drop) {
+            for (var _i = 0, drop_2 = drop; _i < drop_2.length; _i++) {
+                var item_1 = drop_2[_i];
+                items.push(new ItemStack(item_1[0], item_1[1], item_1[2], item_1[3]));
+            }
+        }
+        return { items: items, experience: 0 };
     };
     WorldRegion.prototype.getNativeTileEntity = function (x, y, z) {
         if (typeof x === "number") {
@@ -1082,9 +1096,9 @@ var BlockRegistry;
             var item = new ItemStack();
             //@ts-ignore
             var drop = dropFunc(coords, block.id, block.data, 127, enchant, item, region);
-            for (var _i = 0, drop_2 = drop; _i < drop_2.length; _i++) {
-                var item_1 = drop_2[_i];
-                region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_1[0], item_1[1], item_1[2], item_1[3] || null);
+            for (var _i = 0, drop_3 = drop; _i < drop_3.length; _i++) {
+                var item_2 = drop_3[_i];
+                region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_2[0], item_2[1], item_2[2], item_2[3] || null);
             }
         });
     }
@@ -1160,8 +1174,8 @@ var BlockRegistry;
         if (id == VanillaTileID.campfire) {
             if (enchant.silk)
                 return [[id, 1, 0]];
-            var item_2 = IDConverter.getIDData("charcoal");
-            return [[item_2.id, 1, item_2.data]];
+            var item_3 = IDConverter.getIDData("charcoal");
+            return [[item_3.id, 1, item_3.data]];
         }
         if (id == VanillaTileID.soul_campfire) {
             if (enchant.silk)

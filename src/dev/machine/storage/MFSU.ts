@@ -1,7 +1,6 @@
 /// <reference path="./BatteryBlock.ts" />
 
-IDRegistry.genBlockID("storageMFSU");
-Block.createBlock("storageMFSU", [
+BlockRegistry.createBlock("storageMFSU", [
 	{name: "MFSU", texture: [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.storageMFSU, "stone", 1, true);
@@ -13,6 +12,13 @@ TileRenderer.setStandardModelWithRotation(BlockID.storageMFSU, 2, [["mfsu_top", 
 
 ItemRegistry.setRarity(BlockID.storageMFSU, EnumRarity.UNCOMMON);
 ItemName.addStorageBlockTooltip("storageMFSU", 4, "60M");
+
+Item.addCreativeGroup("EUStorages", Translation.translate("Energy Storages"), [
+	BlockID.storageBatBox,
+	BlockID.storageCESU,
+	BlockID.storageMFE,
+	BlockID.storageMFSU
+]);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.storageMFSU, count: 1, data: 0}, [

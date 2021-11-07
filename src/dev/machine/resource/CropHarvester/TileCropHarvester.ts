@@ -1,3 +1,5 @@
+/// <reference path="./CropHarvesterGUI.ts" />
+
 namespace Machine {
 	export class CropHarvester extends ElectricMachine {
 		defaultValues = {
@@ -17,7 +19,7 @@ namespace Machine {
 		tier: number;
 		energyStorage: number;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiCropHarvester;
 		}
 

@@ -1,7 +1,6 @@
 /// <reference path="./Transformer.ts" />
 
-IDRegistry.genBlockID("transformerHV");
-Block.createBlock("transformerHV", [
+BlockRegistry.createBlock("transformerHV", [
 	{name: "HV Transformer", texture: [["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0], ["hv_transformer_front", 0], ["hv_transformer_side", 0], ["hv_transformer_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.transformerHV, "stone", 1, true);

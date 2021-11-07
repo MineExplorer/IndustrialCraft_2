@@ -8,61 +8,47 @@ Block.createSpecialType({
 	sound: "stone"
 }, "stone");
 
-IDRegistry.genBlockID("blockCopper");
-Block.createBlock("blockCopper", [
+BlockRegistry.createBlock("blockCopper", [
 	{name: "Copper Block", texture: [["block_copper", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockCopper, "stone", 2, true);
-Block.setDestroyLevel("blockCopper", 2);
-ToolLib.addBlockDropOnExplosion("blockCopper");
+BlockRegistry.setDestroyLevel("blockCopper", 2);
 
-IDRegistry.genBlockID("blockTin");
-Block.createBlock("blockTin", [
+BlockRegistry.createBlock("blockTin", [
 	{name: "Tin Block", texture: [["block_tin", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockTin, "stone", 2, true);
-Block.setDestroyLevel("blockTin", 2);
-ToolLib.addBlockDropOnExplosion("blockTin");
+BlockRegistry.setDestroyLevel("blockTin", 2);
 
-IDRegistry.genBlockID("blockBronze");
-Block.createBlock("blockBronze", [
+BlockRegistry.createBlock("blockBronze", [
 	{name: "Bronze Block", texture: [["block_bronze", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockBronze, "stone", 2, true);
-Block.setDestroyLevel("blockBronze", 2);
-ToolLib.addBlockDropOnExplosion("blockBronze");
+BlockRegistry.setDestroyLevel("blockBronze", 2);
 
-IDRegistry.genBlockID("blockLead");
-Block.createBlock("blockLead", [
+BlockRegistry.createBlock("blockLead", [
 	{name: "Lead Block", texture: [["block_lead", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockLead, "stone", 2, true);
-Block.setDestroyLevel("blockLead", 2);
-ToolLib.addBlockDropOnExplosion("blockLead");
+BlockRegistry.setDestroyLevel("blockLead", 2);
 
-IDRegistry.genBlockID("blockSteel");
-Block.createBlock("blockSteel", [
+BlockRegistry.createBlock("blockSteel", [
 	{name: "Steel Block", texture: [["block_steel", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockSteel, "stone", 2, true);
-Block.setDestroyLevel("blockSteel", 2);
-ToolLib.addBlockDropOnExplosion("blockSteel");
+BlockRegistry.setDestroyLevel("blockSteel", 2);
 
-IDRegistry.genBlockID("blockSilver");
-Block.createBlock("blockSilver", [
+BlockRegistry.createBlock("blockSilver", [
 	{name: "Silver Block", texture: [["block_silver", 0]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockSilver, "stone", 3, true);
-Block.setDestroyLevel("blockSilver", 3);
-ToolLib.addBlockDropOnExplosion("blockSilver");
+BlockRegistry.setDestroyLevel("blockSilver", 3);
 
-IDRegistry.genBlockID("blockUranium");
-Block.createBlock("blockUranium", [
+BlockRegistry.createBlock("blockUranium", [
 	{name: "Uranium Block", texture: [["block_uranium", 0], ["block_uranium", 0], ["block_uranium", 1]], inCreative: true}
 ], "stone");
 ToolAPI.registerBlockMaterial(BlockID.blockUranium, "stone", 3, true);
-Block.setDestroyLevel("blockUranium", 3);
-ToolLib.addBlockDropOnExplosion("blockUranium");
+BlockRegistry.setDestroyLevel("blockUranium", 3);
 
 Item.addCreativeGroup("blockMetal", Translation.translate("Metal Blocks"), [
 	BlockID.blockCopper,
@@ -117,11 +103,11 @@ Callback.addCallback("PreLoaded", function() {
 		"xxx"
 	], ['x', ItemID.uranium238, 0]);
 
-	Recipes.addShapeless({id: ItemID.ingotCopper, count: 9, data: 0}, [{id: BlockID.blockCopper, data: 0}]);
-	Recipes.addShapeless({id: ItemID.ingotTin, count: 9, data: 0}, [{id: BlockID.blockTin, data: 0}]);
-	Recipes.addShapeless({id: ItemID.ingotBronze, count: 9, data: 0}, [{id: BlockID.blockBronze, data: 0}]);
-	Recipes.addShapeless({id: ItemID.ingotLead, count: 9, data: 0}, [{id: BlockID.blockLead, data: 0}]);
-	Recipes.addShapeless({id: ItemID.ingotSteel, count: 9, data: 0}, [{id: BlockID.blockSteel, data: 0}]);
-	Recipes.addShapeless({id: ItemID.ingotSilver, count: 9, data: 0}, [{id: BlockID.blockSilver, data: 0}]);
-	Recipes.addShapeless({id: ItemID.uranium238, count: 9, data: 0}, [{id: BlockID.blockUranium, data: 0}]);
+	addSingleItemRecipe("ingot_copper", "block:blockCopper", "item:ingotCopper", 9);
+	addSingleItemRecipe("ingot_tin", "block:blockTin", "item:ingotTin", 9);
+	addSingleItemRecipe("ingot_bronze", "block:blockBronze", "item:ingotBronze", 9);
+	addSingleItemRecipe("ingot_lead", "block:blockLead", "item:ingotLead", 9);
+	addSingleItemRecipe("ingot_steel", "block:blockSteel", "item:ingotSteel", 9);
+	addSingleItemRecipe("ingot_silver", "block:blockSilver", "item:ingotSilver", 9);
+	addSingleItemRecipe("uranium_238", "block:blockUranium", "item:uranium238", 9);
 });

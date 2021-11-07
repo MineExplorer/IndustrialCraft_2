@@ -8,21 +8,17 @@ Block.createSpecialType({
 	sound: "stone"
 }, "machine");
 
-IDRegistry.genBlockID("machineBlockBasic");
-Block.createBlock("machineBlockBasic", [
+BlockRegistry.createBlock("machineBlockBasic", [
 	{name: "Machine Block", texture: [["machine_top", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.machineBlockBasic, "stone", 1, true);
-Block.setDestroyLevel("machineBlockBasic", 1);
-ToolLib.addBlockDropOnExplosion("machineBlockBasic");
+BlockRegistry.setDestroyLevel("machineBlockBasic", 1);
 
-IDRegistry.genBlockID("machineBlockAdvanced");
-Block.createBlock("machineBlockAdvanced", [
+BlockRegistry.createBlock("machineBlockAdvanced", [
 	{name: "Advanced Machine Block", texture: [["machine_advanced", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.machineBlockAdvanced, "stone", 1, true);
-Block.setDestroyLevel("machineBlockAdvanced", 1);
-ToolLib.addBlockDropOnExplosion("machineBlockAdvanced");
+BlockRegistry.setDestroyLevel("machineBlockAdvanced", 1);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.machineBlockBasic, count: 1, data: 0}, [
@@ -43,5 +39,5 @@ Callback.addCallback("PreLoaded", function() {
 		" a "
 	], ['x', ItemID.carbonPlate, -1, 'a', ItemID.plateAlloy, -1, '#', BlockID.machineBlockBasic, 0]);
 
-	Recipes.addShapeless({id: ItemID.plateIron, count: 8, data: 0}, [{id: BlockID.machineBlockBasic, data: 0}]);
+	addSingleItemRecipe("iron_plate_from_machine_block", "block:machineBlockBasic", "item:plateIron", 8);
 });

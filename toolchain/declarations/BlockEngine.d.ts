@@ -1,11 +1,9 @@
+declare const EntityGetYaw: any;
+declare const EntityGetPitch: any;
 declare namespace BlockEngine {
     function getGameVersion(): number[];
     function getMainGameVersion(): number;
     function sendUnlocalizedMessage(client: NetworkClient, ...texts: string[]): void;
-}
-declare enum Side {
-    Client = 0,
-    Server = 1
 }
 declare namespace BlockEngine {
     namespace Decorators {
@@ -13,6 +11,28 @@ declare namespace BlockEngine {
         function NetworkEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
         function ContainerEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
     }
+}
+declare enum Side {
+    Client = 0,
+    Server = 1
+}
+declare enum ItemCategory {
+    BUILDING = 1,
+    NATURE = 2,
+    EQUIPMENT = 3,
+    ITEMS = 4
+}
+declare enum EnumRarity {
+    COMMON = 0,
+    UNCOMMON = 1,
+    RARE = 2,
+    EPIC = 3
+}
+declare enum MiningLevel {
+    STONE = 1,
+    IRON = 2,
+    DIAMOND = 3,
+    OBSIDIAN = 4
 }
 declare class Vector3 implements Vector {
     static readonly DOWN: Vector3;
@@ -99,12 +119,56 @@ declare class WorldRegion {
     setBlock(x: number, y: number, z: number, state: BlockState): void;
     setBlock(x: number, y: number, z: number, id: number, data: number): void;
     /**
+     * Sets extra block (for example, water inside another blocks), on given coords by given id and data.
+     * 1.16 only!
+     */
+    setExtraBlock(coords: Vector, state: BlockState): void;
+    setExtraBlock(coords: Vector, id: number, data: number): void;
+    setExtraBlock(x: number, y: number, z: number, id: number, data: number): void;
+    setExtraBlock(x: number, y: number, z: number, state: BlockState): void;
+    /**
+     * 1.16 only!
+     * @returns [[BlockState]] object of the extra block on given coords
+     */
+    getExtraBlock(coords: Vector): BlockState;
+    getExtraBlock(x: number, y: number, z: number): BlockState;
+    /**
      * Destroys block on coords producing appropriate drop and particles.
      * @param drop whether to provide drop for the block or not
      * @param player player entity if the block was destroyed by player
      */
     destroyBlock(coords: Vector, drop?: boolean, player?: number): void;
     destroyBlock(x: number, y: number, z: number, drop?: boolean, player?: number): void;
+    /**
+     * Destroys block on coords by entity using specified item.
+     * 1.16 only!
+     * @param x X coord of the block
+     * @param y Y coord of the block
+     * @param z Z coord of the block
+     * @param allowDrop whether to provide drop for the block or not
+     * @param entity Entity id or -1 id if entity is not specified
+     * @param item Tool which broke block
+     */
+    breakBlock(coords: Vector, allowDrop: boolean, entity: number, item: ItemInstance): void;
+    breakBlock(x: number, y: number, z: number, allowDrop: boolean, entity: number, item: ItemInstance): void;
+    /**
+     * Same as breakBlock, but returns object containing drop and experince.
+     * Has reverse compatibility with 1.11 but it doesn't suppot experience and
+     * based on BlockRegistry.getBlockDrop.
+     * @param x X coord of the block
+     * @param y Y coord of the block
+     * @param z Z coord of the block
+     * @param entity Entity id or -1 id if entity is not specified
+     * @param item Tool which broke block
+     */
+    breakBlockForResult(coords: Vector, player: number, item: ItemInstance): {
+        items: ItemInstance[];
+        experience: number;
+    };
+    breakBlockForResult(x: number, y: number, z: number, player: number, item: ItemInstance): {
+        items: ItemInstance[];
+        experience: number;
+    };
     /**
      * @returns interface to the vanilla TileEntity (chest, furnace, etc.) on the coords
      */
@@ -386,6 +450,27 @@ declare namespace EntityCustomData {
     function getField(entity: number, key: string): any;
     function putField(entity: number, key: string, value: any): void;
 }
+declare namespace BlockModeler {
+    type BoxVertexes = [number, number, number, number, number, number];
+    export function getRotatedBoxVertexes(box: BoxVertexes, rotation: number): BoxVertexes;
+    export function setStairsRenderModel(id: number): void;
+    export function createStairsRenderModel(id: number, startData: number, boxes: BoxVertexes[]): void;
+    export function setInventoryModel(blockID: number, model: RenderMesh | ICRender.Model | BlockRenderer.Model, data?: number): void;
+    export {};
+}
+declare namespace BlockRegistry {
+    function createBlock(nameID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType): void;
+    function createBlockWithRotation(stringID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
+    function createStairs(stringID: string, defineData: Block.BlockVariation[], blockType: string | Block.SpecialType): void;
+    function getBlockRotation(player: number, hasVertical?: boolean): number;
+    function getPlacePosition(coords: Callback.ItemUseCoordinates, block: Tile, region: BlockSource): Vector;
+    function setRotationFunction(id: string | number, hasVertical?: boolean, placeSound?: string): void;
+    function registerDrop(nameID: string | number, dropFunc: Block.DropFunction, level?: number): void;
+    function setDestroyLevel(nameID: string | number, level: number): void;
+    function registerOnExplosionFunction(nameID: string | number, func: Block.PopResourcesFunction): void;
+    function addBlockDropOnExplosion(nameID: string | number): void;
+    function getBlockDrop(x: number, y: number, z: number, block: Tile, level: number, item: ItemInstance, region?: BlockSource): ItemInstanceArray[];
+}
 declare class ItemStack implements ItemInstance {
     id: number;
     count: number;
@@ -397,9 +482,60 @@ declare class ItemStack implements ItemInstance {
     getItemInstance(): Nullable<ItemBase>;
     getMaxStack(): number;
     getMaxDamage(): number;
+    /**
+     * Decreases stack count by specified value.
+     * @param count amount to decrease
+     */
     decrease(count: number): void;
+    /**
+     * Sets all stack values to 0.
+     */
     clear(): void;
+    /**
+     * Applies damage to the item and destroys it if its max damage reached
+     * @param damage amount to apply
+     */
     applyDamage(damage: number): void;
+    /**
+     * @returns item's custom name
+     */
+    getCustomName(): string;
+    /**
+    * Sets item's custom name. Creates new ItemExtraData instance if
+    * it doesn't exist.
+    */
+    setCustomName(name: string): void;
+    /**
+     * @returns true if the item is enchanted, false otherwise
+     */
+    isEnchanted(): boolean;
+    /**
+     * Adds a new enchantment to the item. Creates new ItemExtraData instance if
+     * it doesn't exist.
+     * @param id enchantment id, one of the Native.Enchantment constants
+     * @param level enchantment level, generally between 1 and 5
+     */
+    addEnchant(id: number, level: number): void;
+    /**
+     * Removes enchantments by its id
+     * @param id enchantment id, one of the Native.Enchantment constants
+     */
+    removeEnchant(id: number): void;
+    /**
+     * Removes all the enchantments of the item
+     */
+    removeAllEnchants(): void;
+    /**
+     * @param id enchantment id, one of the Native.Enchantment constants
+     * @returns level of the specified enchantment
+     */
+    getEnchantLevel(id: number): number;
+    /**
+     * @returns all the enchantments of the item in the readable format
+     */
+    getEnchants(): {
+        [key: number]: number;
+    };
 }
 interface ItemBehavior {
     onNameOverride?(item: ItemInstance, translation: string, name: string): string;
@@ -420,6 +556,7 @@ declare class ItemBase {
     };
     maxStack: number;
     maxDamage: number;
+    inCreative: boolean;
     item: Item.NativeItem;
     constructor(stringID: string, name?: string, icon?: string | Item.TextureData);
     setName(name: string): void;
@@ -472,6 +609,7 @@ declare class ItemBase {
      */
     addRepairItem(itemID: number): void;
     setRarity(rarity: number): void;
+    addDefaultToCreative(): void;
 }
 declare class ItemCommon extends ItemBase {
     constructor(stringID: string, name?: string, icon?: string | Item.TextureData, inCreative?: boolean);
@@ -507,7 +645,6 @@ declare type ArmorMaterial = {
     enchantability?: number;
     repairMaterial?: number;
 };
-declare type ArmorType = "helmet" | "chestplate" | "leggings" | "boots";
 declare type ArmorParams = {
     type: ArmorType;
     defence: number;
@@ -537,12 +674,12 @@ interface ToolMaterial extends ToolAPI.ToolMaterial {
     repairMaterial?: number;
 }
 declare namespace ToolType {
-    let SWORD: ToolParams;
-    let SHOVEL: ToolParams;
-    let PICKAXE: ToolParams;
-    let AXE: ToolParams;
-    let HOE: ToolParams;
-    let SHEARS: ToolParams;
+    const SWORD: ToolParams;
+    const SHOVEL: ToolParams;
+    const PICKAXE: ToolParams;
+    const AXE: ToolParams;
+    const HOE: ToolParams;
+    const SHEARS: ToolParams;
 }
 declare class ItemTool extends ItemCommon implements ToolParams {
     handEquipped: boolean;
@@ -554,21 +691,12 @@ declare class ItemTool extends ItemCommon implements ToolParams {
     enchantType: number;
     constructor(stringID: string, name: string, icon: string | Item.TextureData, toolMaterial: string | ToolMaterial, toolData?: ToolParams, inCreative?: boolean);
 }
-declare enum ItemCategory {
-    BUILDING = 1,
-    NATURE = 2,
-    EQUIPMENT = 3,
-    ITEMS = 4
-}
-declare enum EnumRarity {
-    COMMON = 0,
-    UNCOMMON = 1,
-    RARE = 2,
-    EPIC = 3
-}
 declare namespace ItemRegistry {
+    export function getType(id: number): string;
     export function isBlock(id: number): boolean;
     export function isItem(id: number): boolean;
+    export function isVanilla(id: number): boolean;
+    export function getVanillaStringID(id: number): string;
     export function getInstanceOf(itemID: string | number): Nullable<ItemBase>;
     /**
      * @returns EnumRarity value for item
@@ -610,7 +738,7 @@ declare namespace ItemRegistry {
         rarity?: number;
         food?: number;
     }
-    export function createItem(stringID: string, params: ItemDescription): void;
+    export function createItem(stringID: string, params: ItemDescription): ItemBase;
     interface ArmorDescription extends ArmorParams {
         name: string;
         icon: string | Item.TextureData;
@@ -712,7 +840,7 @@ declare abstract class TileEntityBase implements TileEntity {
     clientTick(): void;
     onCheckerTick(isInitialized: boolean, isLoaded: boolean, wasLoaded: boolean): void;
     getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
-    getScreenByName(screenName: string): any;
+    getScreenByName(screenName: string): UI.IWindow;
     /**
      * Called when player uses some item on a TileEntity. Replaces "click" function.
      * @returns true if should prevent opening UI.
@@ -771,8 +899,8 @@ declare namespace LiquidItemRegistry {
         amount: number;
         storage?: number;
     };
-    export let EmptyByFull: {};
-    export let FullByEmpty: {};
+    export const EmptyByFull: {};
+    export const FullByEmpty: {};
     /**
      * Registers liquid storage item
      * @param liquid liquid name

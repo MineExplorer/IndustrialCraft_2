@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("massFabricator");
-Block.createBlock("massFabricator", [
+BlockRegistry.createBlock("massFabricator", [
 	{name: "Mass Fabricator", texture: [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
 ], "machine");
 
@@ -51,7 +50,7 @@ namespace Machine {
 			return 4;
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiMassFabricator;
 		}
 

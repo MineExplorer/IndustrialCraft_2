@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("reactorChamber");
-Block.createBlock("reactorChamber", [
+BlockRegistry.createBlock("reactorChamber", [
 	{name: "Reactor Chamber", texture: [["machine_bottom", 0], ["machine_top", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0]], inCreative: true},
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.reactorChamber, "stone", 1, true);

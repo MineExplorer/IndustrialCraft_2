@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("genWindmill");
-Block.createBlock("genWindmill", [
+BlockRegistry.createBlock("genWindmill", [
 	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.genWindmill, "stone", 1, true);
@@ -41,7 +40,7 @@ namespace Machine {
 			if (this.dimension != 0) this.selfDestroy();
 		}
 
-		energyTick(type: string, src: any): void {
+		energyTick(type: string, src: EnergyTileNode): void {
 			if (++this.data.ticker % 128 == 0) {
 				if (this.data.ticker % 1024 == 0) {
 					this.updateBlockCount();

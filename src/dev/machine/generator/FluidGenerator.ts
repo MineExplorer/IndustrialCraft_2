@@ -1,5 +1,5 @@
-IDRegistry.genBlockID("semifluidGenerator");
-Block.createBlock("semifluidGenerator", [
+
+BlockRegistry.createBlock("semifluidGenerator", [
 	{name: "Semifluid Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.semifluidGenerator, "stone", 1, true);
@@ -52,7 +52,7 @@ namespace Machine {
 			liquid: null,
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiSemifluidGenerator;
 		}
 

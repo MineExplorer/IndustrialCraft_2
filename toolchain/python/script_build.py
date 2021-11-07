@@ -128,11 +128,7 @@ def build_all_resources():
 				target = mod_structure.new_build_target(
 					resource_type,
 					resource_name,
-					exclude=True,
-					declare_default={
-						"resourcePacksDir": mod_structure.get_target_directories("minecraft_resource_pack")[0],
-						"behaviorPacksDir": mod_structure.get_target_directories("minecraft_behavior_pack")[0]
-					}
+					exclude=True
 				)
 			clear_directory(target)
 			copy_directory(source_path, target)

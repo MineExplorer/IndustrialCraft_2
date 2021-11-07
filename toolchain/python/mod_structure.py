@@ -107,6 +107,8 @@ class ModStructure:
 		default_config["readme"] = "this build config is generated automatically by mod development toolchain"
 		default_config["api"] = make_config.get_value("global.api", fallback="CoreEngine")
 		default_config["buildType"] = "develop"
+		default_config["resourcePacksDir"] = mod_structure.get_target_directories("minecraft_resource_pack")[0]
+		default_config["behaviorPacksDir"] = mod_structure.get_target_directories("minecraft_behavior_pack")[0]
 		self.write_build_config()
 
 	def update_build_config_list(self, list_name):

@@ -1,7 +1,6 @@
 /// <reference path="../Generator.ts" />
 
-IDRegistry.genBlockID("primalGenerator");
-Block.createBlock("primalGenerator", [
+BlockRegistry.createBlock("primalGenerator", [
 	{name: "Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.primalGenerator, "stone", 1, true);
@@ -11,6 +10,19 @@ TileRenderer.registerModelWithRotation(BlockID.primalGenerator, 2, [["machine_bo
 TileRenderer.setRotationFunction(BlockID.primalGenerator);
 
 Callback.addCallback("PreLoaded", function() {
+	Item.addCreativeGroup("EUGenerators", Translation.translate("Electric Generators"), [
+		BlockID.primalGenerator,
+		BlockID.geothermalGenerator,
+		BlockID.semifluidGenerator,
+		BlockID.solarPanel,
+		BlockID.genWindmill,
+		BlockID.genWatermill,
+		BlockID.rtGenerator,
+		BlockID.stirlingGenerator,
+		BlockID.nuclearReactor,
+		BlockID.reactorChamber
+	]);
+
 	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
 		"x",
 		"#",
@@ -49,7 +61,7 @@ namespace Machine {
 			burnMax: 0
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiGenerator;
 		}
 

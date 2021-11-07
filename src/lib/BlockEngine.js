@@ -30,10 +30,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 5,
-    shared: false,
+    version: 7,
+    shared: true,
     api: "CoreEngine"
 });
+var EntityGetYaw = ModAPI.requireGlobal("Entity.getYaw");
+var EntityGetPitch = ModAPI.requireGlobal("Entity.getPitch");
 var BlockEngine;
 (function (BlockEngine) {
     var gameVersion = getMCPEVersion().array;
@@ -58,11 +60,6 @@ Network.addClientPacket("blockengine.clientMessage", function (data) {
     var message = data.texts.map(Translation.translate).join("");
     Game.message(message);
 });
-var Side;
-(function (Side) {
-    Side[Side["Client"] = 0] = "Client";
-    Side[Side["Server"] = 1] = "Server";
-})(Side || (Side = {}));
 var BlockEngine;
 (function (BlockEngine) {
     var Decorators;
@@ -107,6 +104,32 @@ var BlockEngine;
         Decorators.ContainerEvent = ContainerEvent;
     })(Decorators = BlockEngine.Decorators || (BlockEngine.Decorators = {}));
 })(BlockEngine || (BlockEngine = {}));
+var Side;
+(function (Side) {
+    Side[Side["Client"] = 0] = "Client";
+    Side[Side["Server"] = 1] = "Server";
+})(Side || (Side = {}));
+var ItemCategory;
+(function (ItemCategory) {
+    ItemCategory[ItemCategory["BUILDING"] = 1] = "BUILDING";
+    ItemCategory[ItemCategory["NATURE"] = 2] = "NATURE";
+    ItemCategory[ItemCategory["EQUIPMENT"] = 3] = "EQUIPMENT";
+    ItemCategory[ItemCategory["ITEMS"] = 4] = "ITEMS";
+})(ItemCategory || (ItemCategory = {}));
+var EnumRarity;
+(function (EnumRarity) {
+    EnumRarity[EnumRarity["COMMON"] = 0] = "COMMON";
+    EnumRarity[EnumRarity["UNCOMMON"] = 1] = "UNCOMMON";
+    EnumRarity[EnumRarity["RARE"] = 2] = "RARE";
+    EnumRarity[EnumRarity["EPIC"] = 3] = "EPIC";
+})(EnumRarity || (EnumRarity = {}));
+var MiningLevel;
+(function (MiningLevel) {
+    MiningLevel[MiningLevel["STONE"] = 1] = "STONE";
+    MiningLevel[MiningLevel["IRON"] = 2] = "IRON";
+    MiningLevel[MiningLevel["DIAMOND"] = 3] = "DIAMOND";
+    MiningLevel[MiningLevel["OBSIDIAN"] = 4] = "OBSIDIAN";
+})(MiningLevel || (MiningLevel = {}));
 var Vector3 = /** @class */ (function () {
     function Vector3(vx, vy, vz) {
         if (typeof (vx) == "number") {
@@ -303,16 +326,51 @@ var WorldRegion = /** @class */ (function () {
     WorldRegion.prototype.setBlock = function (x, y, z, id, data) {
         if (typeof x === "number") {
             if (typeof id == "number") {
-                return this.blockSource.setBlock(x, y, z, id, data);
+                this.blockSource.setBlock(x, y, z, id, data);
             }
             else {
-                return this.blockSource.setBlock(x, y, z, id);
+                this.blockSource.setBlock(x, y, z, id);
             }
         }
+        else {
+            var pos = x;
+            id = y;
+            data = z;
+            if (typeof id == "number") {
+                this.blockSource.setBlock(pos.x, pos.y, pos.z, id, data);
+            }
+            else {
+                this.blockSource.setBlock(pos.x, pos.y, pos.z, id);
+            }
+        }
+    };
+    WorldRegion.prototype.setExtraBlock = function (x, y, z, id, data) {
+        if (typeof x === "number") {
+            if (typeof id == "number") {
+                this.blockSource.setExtraBlock(x, y, z, id, data);
+            }
+            else {
+                this.blockSource.setExtraBlock(x, y, z, id);
+            }
+        }
+        else {
+            var pos = x;
+            id = y;
+            data = z;
+            if (typeof id == "number") {
+                this.blockSource.setExtraBlock(pos.x, pos.y, pos.z, id, data);
+            }
+            else {
+                this.blockSource.setExtraBlock(pos.x, pos.y, pos.z, id);
+            }
+        }
+    };
+    WorldRegion.prototype.getExtraBlock = function (x, y, z) {
+        if (typeof x === "number") {
+            return this.blockSource.getExtraBlock(x, y, z);
+        }
         var pos = x;
-        id = y;
-        data = z;
-        return this.setBlock(pos.x, pos.y, pos.z, id, data);
+        return this.blockSource.getExtraBlock(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.destroyBlock = function (x, y, z, drop, player) {
         if (typeof x === "object") {
@@ -336,12 +394,47 @@ var WorldRegion = /** @class */ (function () {
             this.blockSource.destroyBlock(x, y, z, false);
         }
     };
+    WorldRegion.prototype.breakBlock = function (x, y, z, allowDrop, entity, item) {
+        if (typeof x === "number") {
+            this.blockSource.breakBlock(x, y, z, allowDrop, entity, item);
+        }
+        else {
+            var pos = x;
+            item = allowDrop;
+            entity = z;
+            allowDrop = y;
+            this.blockSource.breakBlock(pos.x, pos.y, pos.z, allowDrop, entity, item);
+        }
+    };
+    WorldRegion.prototype.breakBlockForResult = function (x, y, z, player, item) {
+        if (typeof x === "object") {
+            var pos = x;
+            player = y;
+            item = z;
+            return this.breakBlockForResult(pos.x, pos.y, pos.z, player, item);
+        }
+        if (BlockEngine.getMainGameVersion() >= 16) {
+            return this.blockSource.breakBlockForJsResult(x, y, z, player, item);
+        }
+        var block = this.blockSource.getBlock(x, y, z);
+        this.blockSource.setBlock(x, y, z, 0, 0);
+        var level = ToolAPI.getToolLevelViaBlock(item.id, block.id);
+        var drop = BlockRegistry.getBlockDrop(x, y, z, block, level, item, this.blockSource);
+        var items = [];
+        if (drop) {
+            for (var _i = 0, drop_2 = drop; _i < drop_2.length; _i++) {
+                var item_1 = drop_2[_i];
+                items.push(new ItemStack(item_1[0], item_1[1], item_1[2], item_1[3]));
+            }
+        }
+        return { items: items, experience: 0 };
+    };
     WorldRegion.prototype.getNativeTileEntity = function (x, y, z) {
         if (typeof x === "number") {
             return this.blockSource.getBlockEntity(x, y, z);
         }
         var pos = x;
-        return this.getNativeTileEntity(pos.x, pos.y, pos.z);
+        return this.blockSource.getBlockEntity(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.getTileEntity = function (x, y, z) {
         if (typeof x === "number") {
@@ -473,7 +566,7 @@ var WorldRegion = /** @class */ (function () {
      * @param amount experience amount
      */
     WorldRegion.prototype.spawnExpOrbs = function (x, y, z, amount) {
-        return this.blockSource.spawnExpOrbs(x, y, z, amount);
+        this.blockSource.spawnExpOrbs(x, y, z, amount);
     };
     WorldRegion.prototype.listEntitiesInAABB = function (x1, y1, z1, x2, y2, z2, type, blacklist) {
         if (type === void 0) { type = -1; }
@@ -483,7 +576,7 @@ var WorldRegion = /** @class */ (function () {
             return this.listEntitiesInAABB(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, z1, x2);
         }
         var entities = this.blockSource.listEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
-        if ((type == 1 || type == 63) != blacklist) {
+        if (BlockEngine.getMainGameVersion() == 11 && (type == Native.EntityType.PLAYER) != blacklist) {
             var players = Network.getConnectedPlayers();
             var dimension = this.getDimension();
             for (var _i = 0, players_1 = players; _i < players_1.length; _i++) {
@@ -788,6 +881,326 @@ var EntityCustomData;
         delete entities[entity];
     });
 })(EntityCustomData || (EntityCustomData = {}));
+var BlockModeler;
+(function (BlockModeler) {
+    function getRotatedBoxVertexes(box, rotation) {
+        switch (rotation) {
+            case 0:
+                return box;
+            case 1:
+                return [1 - box[3], box[1], 1 - box[5], 1 - box[0], box[4], 1 - box[2]]; // rotate 180°
+            case 2:
+                return [box[2], box[1], 1 - box[3], box[5], box[4], 1 - box[0]]; // rotate 270°
+            case 3:
+                return [1 - box[5], box[1], box[0], 1 - box[2], box[4], box[3]]; // rotate 90°
+        }
+    }
+    BlockModeler.getRotatedBoxVertexes = getRotatedBoxVertexes;
+    function setStairsRenderModel(id) {
+        var boxes = [
+            [0, 0, 0, 1, 0.5, 1],
+            [0.5, 0.5, 0.5, 1, 1, 1],
+            [0, 0.5, 0.5, 0.5, 1, 1],
+            [0.5, 0.5, 0, 1, 1, 0.5],
+            [0, 0.5, 0, 0.5, 1, 0.5]
+        ];
+        createStairsRenderModel(id, 0, boxes);
+        var newBoxes = [];
+        for (var _i = 0, boxes_1 = boxes; _i < boxes_1.length; _i++) {
+            var box = boxes_1[_i];
+            newBoxes.push([box[0], 1 - box[4], box[2], box[3], 1 - box[1], box[5]]);
+        }
+        createStairsRenderModel(id, 4, newBoxes);
+    }
+    BlockModeler.setStairsRenderModel = setStairsRenderModel;
+    function createStairsRenderModel(id, startData, boxes) {
+        var modelConditionData = [
+            { data: 3, posR: [-1, 0], posB: [0, 1] },
+            { data: 2, posR: [1, 0], posB: [0, -1] },
+            { data: 0, posR: [0, 1], posB: [1, 0] },
+            { data: 1, posR: [0, -1], posB: [-1, 0] }
+        ];
+        for (var i = 0; i < 4; i++) {
+            var conditionData = modelConditionData[i];
+            var data = startData + i;
+            var rBlockData = conditionData.data + startData;
+            var groupR = ICRender.getGroup("stairs:" + rBlockData);
+            var groupL = ICRender.getGroup("stairs:" + (rBlockData ^ 1));
+            var currentGroup = ICRender.getGroup("stairs:" + data);
+            currentGroup.add(id, data);
+            var render = new ICRender.Model();
+            var shape = new ICRender.CollisionShape();
+            var box0 = boxes[0];
+            render.addEntry(new BlockRenderer.Model(box0[0], box0[1], box0[2], box0[3], box0[4], box0[5], id, data)); // slabe box
+            shape.addEntry().addBox(box0[0], box0[1], box0[2], box0[3], box0[4], box0[5]);
+            var posR = conditionData.posR; // right block
+            var posB = conditionData.posB; // back block
+            var posF = [posB[0] * (-1), posB[1] * (-1)]; // front block
+            var conditionRight = ICRender.BLOCK(posR[0], 0, posR[1], currentGroup, false);
+            var conditionLeft = ICRender.BLOCK(posR[0] * (-1), 0, posR[1] * (-1), currentGroup, false);
+            var conditionBackNotR = ICRender.BLOCK(posB[0], 0, posB[1], groupR, true);
+            var conditionBackNotL = ICRender.BLOCK(posB[0], 0, posB[1], groupL, true);
+            var box1 = getRotatedBoxVertexes(boxes[1], i);
+            var model = new BlockRenderer.Model(box1[0], box1[1], box1[2], box1[3], box1[4], box1[5], id, data);
+            var condition0 = ICRender.OR(conditionBackNotR, conditionLeft);
+            render.addEntry(model).setCondition(condition0);
+            shape.addEntry().addBox(box1[0], box1[1], box1[2], box1[3], box1[4], box1[5]).setCondition(condition0);
+            var box2 = getRotatedBoxVertexes(boxes[2], i);
+            var condition1 = ICRender.OR(conditionBackNotL, conditionRight);
+            model = new BlockRenderer.Model(box2[0], box2[1], box2[2], box2[3], box2[4], box2[5], id, data);
+            render.addEntry(model).setCondition(condition1);
+            shape.addEntry().addBox(box2[0], box2[1], box2[2], box2[3], box2[4], box2[5]).setCondition(condition1);
+            var box3 = getRotatedBoxVertexes(boxes[3], i);
+            model = new BlockRenderer.Model(box3[0], box3[1], box3[2], box3[3], box3[4], box3[5], id, data);
+            var condition2 = ICRender.AND(conditionBackNotR, conditionBackNotL, ICRender.NOT(conditionLeft), ICRender.BLOCK(posF[0], 0, posF[1], groupL, false));
+            render.addEntry(model).setCondition(condition2);
+            shape.addEntry().addBox(box3[0], box3[1], box3[2], box3[3], box3[4], box3[5]).setCondition(condition2);
+            var box4 = getRotatedBoxVertexes(boxes[4], i);
+            model = new BlockRenderer.Model(box4[0], box4[1], box4[2], box4[3], box4[4], box4[5], id, data);
+            var condition3 = ICRender.AND(conditionBackNotR, conditionBackNotL, ICRender.NOT(conditionRight), ICRender.BLOCK(posF[0], 0, posF[1], groupR, false));
+            render.addEntry(model).setCondition(condition3);
+            shape.addEntry().addBox(box4[0], box4[1], box4[2], box4[3], box4[4], box4[5]).setCondition(condition3);
+            BlockRenderer.setStaticICRender(id, data, render);
+            BlockRenderer.setCustomCollisionShape(id, data, shape);
+            BlockRenderer.setCustomRaycastShape(id, data, shape);
+        }
+    }
+    BlockModeler.createStairsRenderModel = createStairsRenderModel;
+    function setInventoryModel(blockID, model, data) {
+        if (data === void 0) { data = 0; }
+        ItemModel.getFor(blockID, data).setHandModel(model);
+        ItemModel.getFor(blockID, data).setUiModel(model);
+    }
+    BlockModeler.setInventoryModel = setInventoryModel;
+})(BlockModeler || (BlockModeler = {}));
+var BlockRegistry;
+(function (BlockRegistry) {
+    function createBlock(nameID, defineData, blockType) {
+        IDRegistry.genBlockID(nameID);
+        Block.createBlock(nameID, defineData, blockType);
+    }
+    BlockRegistry.createBlock = createBlock;
+    function createBlockWithRotation(stringID, defineData, blockType, hasVertical) {
+        var numericID = IDRegistry.genBlockID(stringID);
+        var variations = [];
+        for (var i = 0; i < defineData.length; i++) {
+            var variation = defineData[i];
+            var texture = variation.texture;
+            var textures = [
+                [texture[3], texture[2], texture[0], texture[1], texture[4], texture[5]],
+                [texture[2], texture[3], texture[1], texture[0], texture[5], texture[4]],
+                [texture[0], texture[1], texture[3], texture[2], texture[5], texture[4]],
+                [texture[0], texture[1], texture[2], texture[3], texture[4], texture[5]],
+                [texture[0], texture[1], texture[4], texture[5], texture[3], texture[2]],
+                [texture[0], texture[1], texture[5], texture[4], texture[2], texture[3]]
+            ];
+            for (var data = 0; data < 6; data++) {
+                variations.push({ name: variation.name, texture: textures[data], inCreative: variation.inCreative && data == 0 });
+            }
+        }
+        Block.createBlock(stringID, variations, blockType);
+        for (var i = 0; i < defineData.length; i++) {
+            BlockModeler.setInventoryModel(numericID, BlockRenderer.createTexturedBlock(defineData[i].texture), i * 6);
+        }
+        setRotationFunction(numericID, hasVertical);
+    }
+    BlockRegistry.createBlockWithRotation = createBlockWithRotation;
+    function createStairs(stringID, defineData, blockType) {
+        var numericID = IDRegistry.genBlockID(stringID);
+        Block.createBlock(stringID, defineData, blockType);
+        Block.registerPlaceFunction(numericID, function (coords, item, block, player, region) {
+            var place = getPlacePosition(coords, block, region);
+            if (!place)
+                return;
+            var data = getBlockRotation(player) - 2;
+            if (coords.side == 0 || coords.side >= 2 && coords.vec.y - coords.y >= 0.5) {
+                data += 4;
+            }
+            region.setBlock(place.x, place.y, place.z, item.id, data);
+            //World.playSound(place.x, place.y, place.z, placeSound || "dig.stone", 1, 0.8);
+            return place;
+        });
+        BlockModeler.setStairsRenderModel(numericID);
+        var model = BlockRenderer.createModel();
+        model.addBox(0, 0, 0, 1, 0.5, 1, numericID, 0);
+        model.addBox(0, 0.5, 0, 1, 1, 0.5, numericID, 0);
+        BlockModeler.setInventoryModel(numericID, model);
+    }
+    BlockRegistry.createStairs = createStairs;
+    function getBlockRotation(player, hasVertical) {
+        var pitch = EntityGetPitch(player);
+        if (hasVertical) {
+            if (pitch < -45)
+                return 0;
+            if (pitch > 45)
+                return 1;
+        }
+        var rotation = Math.floor((EntityGetYaw(player) - 45) % 360 / 90);
+        if (rotation < 0)
+            rotation += 4;
+        rotation = [5, 3, 4, 2][rotation];
+        return rotation;
+    }
+    BlockRegistry.getBlockRotation = getBlockRotation;
+    function getPlacePosition(coords, block, region) {
+        if (World.canTileBeReplaced(block.id, block.data))
+            return coords;
+        var place = coords.relative;
+        block = region.getBlock(place.x, place.y, place.z);
+        if (World.canTileBeReplaced(block.id, block.data))
+            return place;
+        return null;
+    }
+    BlockRegistry.getPlacePosition = getPlacePosition;
+    function setRotationFunction(id, hasVertical, placeSound) {
+        Block.registerPlaceFunction(id, function (coords, item, block, player, region) {
+            var place = getPlacePosition(coords, block, region);
+            if (!place)
+                return;
+            var rotation = getBlockRotation(player, hasVertical);
+            region.setBlock(place.x, place.y, place.z, item.id, (item.data - item.data % 6) + rotation);
+            //World.playSound(place.x, place.y, place.z, placeSound || "dig.stone", 1, 0.8);
+            return place;
+        });
+    }
+    BlockRegistry.setRotationFunction = setRotationFunction;
+    function registerDrop(nameID, dropFunc, level) {
+        Block.registerDropFunction(nameID, function (blockCoords, blockID, blockData, diggingLevel, enchant, item, region) {
+            if (!level || diggingLevel >= level) {
+                return dropFunc(blockCoords, blockID, blockData, diggingLevel, enchant, item, region);
+            }
+            return [];
+        });
+        addBlockDropOnExplosion(nameID);
+    }
+    BlockRegistry.registerDrop = registerDrop;
+    function setDestroyLevel(nameID, level) {
+        Block.registerDropFunction(nameID, function (сoords, blockID, blockData, diggingLevel) {
+            if (diggingLevel >= level) {
+                return [[Block.getNumericId(nameID), 1, 0]];
+            }
+        });
+        addBlockDropOnExplosion(nameID);
+    }
+    BlockRegistry.setDestroyLevel = setDestroyLevel;
+    function registerOnExplosionFunction(nameID, func) {
+        Block.registerPopResourcesFunction(nameID, func);
+    }
+    BlockRegistry.registerOnExplosionFunction = registerOnExplosionFunction;
+    function addBlockDropOnExplosion(nameID) {
+        Block.registerPopResourcesFunction(nameID, function (coords, block, region) {
+            if (Math.random() >= 0.25)
+                return;
+            var dropFunc = Block.getDropFunction(block.id);
+            var enchant = ToolAPI.getEnchantExtraData();
+            var item = new ItemStack();
+            //@ts-ignore
+            var drop = dropFunc(coords, block.id, block.data, 127, enchant, item, region);
+            for (var _i = 0, drop_3 = drop; _i < drop_3.length; _i++) {
+                var item_2 = drop_3[_i];
+                region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_2[0], item_2[1], item_2[2], item_2[3] || null);
+            }
+        });
+    }
+    BlockRegistry.addBlockDropOnExplosion = addBlockDropOnExplosion;
+    var noDropBlocks = [26, 30, 31, 32, 51, 59, 92, 99, 100, 104, 105, 106, 115, 127, 132, 141, 142, 144, 161, 175, 199, 244, 385, 386, 388, 389, 390, 391, 392, 462];
+    function getBlockDrop(x, y, z, block, level, item, region) {
+        var id = block.id, data = block.data;
+        var enchant = ToolAPI.getEnchantExtraData(item.extra);
+        //@ts-ignore
+        var dropFunc = Block.dropFunctions[id];
+        if (dropFunc) {
+            region !== null && region !== void 0 ? region : (region = BlockSource.getDefaultForActor(Player.get()));
+            return dropFunc(new Vector3(x, y, z), id, data, level, enchant, item, region);
+        }
+        if (id == 3 || id == 5 || id == 6 || id == 12 || id == 19 || id == 35 || id == 85 || id == 158 || id == 171)
+            return [[id, 1, data]];
+        if (id == 17 || id == 162)
+            return [[id, 1, data]]; // log
+        if (id == 18 || id == 161) { // leaves
+            if (enchant.silk)
+                return [[id, 1, data]];
+            return [];
+        }
+        if (id == 47) { // bookshelf
+            if (enchant.silk)
+                return [[id, 1, 0]];
+            return [[340, 3, 0]];
+        }
+        if (id == 55)
+            return [[331, 1, 0]]; // redstone wire
+        if (id == 60)
+            return [[3, 1, 0]]; // farmland
+        if (id == 63 || id == 68)
+            return [[338, 1, 0]]; // sign
+        if (id == 64)
+            return [[324, 1, 0]]; // door
+        if (id == 75 || id == 76)
+            return [[76, 1, 0]]; // redstone torch
+        if (id == 79) { // ice
+            if (enchant.silk)
+                return [[id, 1, 0]];
+            return [];
+        }
+        if (id == 83)
+            return [[338, 1, 0]]; // sugar canes
+        if (id == 89)
+            return [[348, Math.floor(Math.random() * 3 + 2), 0]]; // glowstone
+        if (id == 93 || id == 94)
+            return [[356, 1, 0]]; // repeater
+        if (id == 103)
+            return [[360, Math.floor(Math.random() * 4 + 4), 0]]; // melon
+        if (id == 123 || id == 124)
+            return [[123, 1, 0]]; // redstone lamp
+        if (id == 140)
+            return [[390, 1, 0]]; // pot
+        if (id == 149 || id == 150)
+            return [[404, 1, 0]]; // comparator
+        if (id == 151 || id == 178)
+            return [[151, 1, 0]]; // daylight detector
+        // doors
+        if (id == 193)
+            return [[427, 1, 0]];
+        if (id == 194)
+            return [[428, 1, 0]];
+        if (id == 195)
+            return [[429, 1, 0]];
+        if (id == 196)
+            return [[430, 1, 0]];
+        if (id == 197)
+            return [[431, 1, 0]];
+        if (id == 393)
+            return [[335, 1, 0]]; // kelp
+        if (id == VanillaTileID.campfire) {
+            if (enchant.silk)
+                return [[id, 1, 0]];
+            var item_3 = IDConverter.getIDData("charcoal");
+            return [[item_3.id, 1, item_3.data]];
+        }
+        if (id == VanillaTileID.soul_campfire) {
+            if (enchant.silk)
+                return [[id, 1, 0]];
+            return [[VanillaTileID.soul_soil, 1, 0]];
+        }
+        // signs
+        if (id == 436 || id == 437)
+            return [[472, 1, 0]];
+        if (id == 441 || id == 442)
+            return [[473, 1, 0]];
+        if (id == 443 || id == 444)
+            return [[474, 1, 0]];
+        if (id == 445 || id == 446)
+            return [[475, 1, 0]];
+        if (id == 447 || id == 448)
+            return [[476, 1, 0]];
+        if (id == 467)
+            return [[-212, 1, data]]; // wood
+        if (noDropBlocks.indexOf(id) != -1)
+            return [];
+        return [[Block.convertBlockToItemId(id), 1, 0]];
+    }
+    BlockRegistry.getBlockDrop = getBlockDrop;
+})(BlockRegistry || (BlockRegistry = {}));
 var ItemStack = /** @class */ (function () {
     function ItemStack(item, count, data, extra) {
         if (typeof item == "object") {
@@ -812,18 +1225,29 @@ var ItemStack = /** @class */ (function () {
     ItemStack.prototype.getMaxDamage = function () {
         return Item.getMaxDamage(this.id);
     };
+    /**
+     * Decreases stack count by specified value.
+     * @param count amount to decrease
+     */
     ItemStack.prototype.decrease = function (count) {
         this.count -= count;
         if (this.count <= 0)
             this.clear();
     };
+    /**
+     * Sets all stack values to 0.
+     */
     ItemStack.prototype.clear = function () {
         this.id = this.data = this.count = 0;
         this.extra = null;
     };
+    /**
+     * Applies damage to the item and destroys it if its max damage reached
+     * @param damage amount to apply
+     */
     ItemStack.prototype.applyDamage = function (damage) {
-        var enchant = ToolAPI.getEnchantExtraData(this.extra);
-        if (Math.random() < 1 / (enchant.unbreaking + 1)) {
+        var unbreakingLevel = this.getEnchantLevel(Native.Enchantment.UNBREAKING);
+        if (Math.random() < 1 / (unbreakingLevel + 1)) {
             this.data += damage;
         }
         if (this.data >= this.getMaxDamage()) {
@@ -838,10 +1262,77 @@ var ItemStack = /** @class */ (function () {
             }
         }
     };
+    /**
+     * @returns item's custom name
+     */
+    ItemStack.prototype.getCustomName = function () {
+        var _a;
+        return ((_a = this.extra) === null || _a === void 0 ? void 0 : _a.getCustomName()) || "";
+    };
+    /**
+    * Sets item's custom name. Creates new ItemExtraData instance if
+    * it doesn't exist.
+    */
+    ItemStack.prototype.setCustomName = function (name) {
+        var _a;
+        (_a = this.extra) !== null && _a !== void 0 ? _a : (this.extra = new ItemExtraData());
+        this.extra.setCustomName(name);
+    };
+    /**
+     * @returns true if the item is enchanted, false otherwise
+     */
+    ItemStack.prototype.isEnchanted = function () {
+        var _a;
+        return ((_a = this.extra) === null || _a === void 0 ? void 0 : _a.isEnchanted()) || false;
+    };
+    /**
+     * Adds a new enchantment to the item. Creates new ItemExtraData instance if
+     * it doesn't exist.
+     * @param id enchantment id, one of the Native.Enchantment constants
+     * @param level enchantment level, generally between 1 and 5
+     */
+    ItemStack.prototype.addEnchant = function (id, level) {
+        var _a;
+        (_a = this.extra) !== null && _a !== void 0 ? _a : (this.extra = new ItemExtraData());
+        this.extra.addEnchant(id, level);
+    };
+    /**
+     * Removes enchantments by its id
+     * @param id enchantment id, one of the Native.Enchantment constants
+     */
+    ItemStack.prototype.removeEnchant = function (id) {
+        var _a;
+        (_a = this.extra) === null || _a === void 0 ? void 0 : _a.removeEnchant(id);
+    };
+    /**
+     * Removes all the enchantments of the item
+     */
+    ItemStack.prototype.removeAllEnchants = function () {
+        var _a;
+        (_a = this.extra) === null || _a === void 0 ? void 0 : _a.removeAllEnchants();
+    };
+    /**
+     * @param id enchantment id, one of the Native.Enchantment constants
+     * @returns level of the specified enchantment
+     */
+    ItemStack.prototype.getEnchantLevel = function (id) {
+        var _a;
+        return ((_a = this.extra) === null || _a === void 0 ? void 0 : _a.getEnchantLevel(id)) || 0;
+    };
+    /**
+     * @returns all the enchantments of the item in the readable format
+     */
+    ItemStack.prototype.getEnchants = function () {
+        var _a;
+        return ((_a = this.extra) === null || _a === void 0 ? void 0 : _a.getEnchants()) || null;
+    };
     return ItemStack;
 }());
 var ItemBase = /** @class */ (function () {
     function ItemBase(stringID, name, icon) {
+        this.maxStack = 64;
+        this.maxDamage = 0;
+        this.inCreative = false;
         this.stringID = stringID;
         this.id = IDRegistry.genItemID(stringID);
         this.setName(name || stringID);
@@ -929,6 +1420,14 @@ var ItemBase = /** @class */ (function () {
     ItemBase.prototype.setRarity = function (rarity) {
         ItemRegistry.setRarity(this.id, rarity);
     };
+    ItemBase.prototype.addDefaultToCreative = function () {
+        var _a;
+        var wasInCreative = (_a = ItemRegistry.getInstanceOf(this.id)) === null || _a === void 0 ? void 0 : _a.inCreative;
+        if (!wasInCreative) {
+            Item.addToCreative(this.id, 1, 0);
+            this.inCreative = true;
+        }
+    };
     return ItemBase;
 }());
 var ItemCommon = /** @class */ (function (_super) {
@@ -936,8 +1435,10 @@ var ItemCommon = /** @class */ (function (_super) {
     function ItemCommon(stringID, name, icon, inCreative) {
         if (inCreative === void 0) { inCreative = true; }
         var _this = _super.call(this, stringID, name, icon) || this;
-        _this.item = Item.createItem(_this.stringID, _this.name, _this.icon, { isTech: !inCreative });
+        _this.item = Item.createItem(_this.stringID, _this.name, _this.icon, { isTech: true });
         _this.setCategory(ItemCategory.ITEMS);
+        if (inCreative)
+            _this.addDefaultToCreative();
         return _this;
     }
     return ItemCommon;
@@ -947,8 +1448,10 @@ var ItemFood = /** @class */ (function (_super) {
     function ItemFood(stringID, name, icon, food, inCreative) {
         if (inCreative === void 0) { inCreative = true; }
         var _this = _super.call(this, stringID, name, icon) || this;
-        _this.item = Item.createFoodItem(_this.stringID, _this.name, _this.icon, { food: food, isTech: !inCreative });
+        _this.item = Item.createFoodItem(_this.stringID, _this.name, _this.icon, { food: food, isTech: true });
         _this.setCategory(ItemCategory.ITEMS);
+        if (inCreative)
+            _this.addDefaultToCreative();
         return _this;
     }
     ItemFood.prototype.onFoodEaten = function (item, food, saturation, player) { };
@@ -966,8 +1469,10 @@ var ItemThrowable = /** @class */ (function (_super) {
     function ItemThrowable(stringID, name, icon, inCreative) {
         if (inCreative === void 0) { inCreative = true; }
         var _this = _super.call(this, stringID, name, icon) || this;
-        _this.item = Item.createThrowableItem(_this.stringID, _this.name, _this.icon, { isTech: !inCreative });
+        _this.item = Item.createThrowableItem(_this.stringID, _this.name, _this.icon, { isTech: true });
         _this.setCategory(ItemCategory.ITEMS);
+        if (inCreative)
+            _this.addDefaultToCreative();
         Item.registerThrowableFunctionForID(_this.id, function (projectile, item, target) {
             _this.onProjectileHit(projectile, item, target);
         });
@@ -989,11 +1494,13 @@ var ItemArmor = /** @class */ (function (_super) {
             armor: _this.defence,
             durability: 0,
             texture: _this.texture,
-            isTech: !inCreative
+            isTech: true
         });
         _this.setCategory(ItemCategory.EQUIPMENT);
         if (params.material)
             _this.setMaterial(params.material);
+        if (inCreative)
+            _this.addDefaultToCreative();
         ItemArmor.registerListeners(_this.id, _this);
         return _this;
     }
@@ -1115,9 +1622,14 @@ var ToolType;
     };
     ToolType.HOE = {
         handEquipped: true,
+        enchantType: Native.EnchantType.pickaxe,
+        damage: 2,
+        blockTypes: ["plant"],
         onItemUse: function (coords, item, block, player) {
-            if ((block.id == 2 || block.id == 3) && coords.side == 1) {
+            if ((block.id == 2 || block.id == 3) && coords.side != 0) {
                 var region = WorldRegion.getForActor(player);
+                if (region.getBlockId(coords.x, coords.y + 1, coords.z) != 0)
+                    return;
                 region.setBlock(coords, 60, 0);
                 region.playSound(coords.x + .5, coords.y + 1, coords.z + .5, "step.gravel", 1, 0.8);
                 item.applyDamage(1);
@@ -1193,33 +1705,31 @@ var ItemTool = /** @class */ (function (_super) {
 /// <reference path="ItemThrowable.ts" />
 /// <reference path="ItemArmor.ts" />
 /// <reference path="ItemTool.ts" />
-var ItemCategory;
-(function (ItemCategory) {
-    ItemCategory[ItemCategory["BUILDING"] = 1] = "BUILDING";
-    ItemCategory[ItemCategory["NATURE"] = 2] = "NATURE";
-    ItemCategory[ItemCategory["EQUIPMENT"] = 3] = "EQUIPMENT";
-    ItemCategory[ItemCategory["ITEMS"] = 4] = "ITEMS";
-})(ItemCategory || (ItemCategory = {}));
-var EnumRarity;
-(function (EnumRarity) {
-    EnumRarity[EnumRarity["COMMON"] = 0] = "COMMON";
-    EnumRarity[EnumRarity["UNCOMMON"] = 1] = "UNCOMMON";
-    EnumRarity[EnumRarity["RARE"] = 2] = "RARE";
-    EnumRarity[EnumRarity["EPIC"] = 3] = "EPIC";
-})(EnumRarity || (EnumRarity = {}));
 var ItemRegistry;
 (function (ItemRegistry) {
     var items = {};
     var itemsRarity = {};
     var armorMaterials = {};
+    function getType(id) {
+        return IDRegistry.getIdInfo(id).split(":")[0];
+    }
+    ItemRegistry.getType = getType;
     function isBlock(id) {
-        return IDRegistry.getIdInfo(id).startsWith("block");
+        return getType(id) == "block";
     }
     ItemRegistry.isBlock = isBlock;
     function isItem(id) {
-        return IDRegistry.getIdInfo(id).startsWith("item");
+        return getType(id) == "item";
     }
     ItemRegistry.isItem = isItem;
+    function isVanilla(id) {
+        return !IDRegistry.getNameByID(id);
+    }
+    ItemRegistry.isVanilla = isVanilla;
+    function getVanillaStringID(id) {
+        return IDRegistry.getIdInfo(id).split(":")[1].split("#")[0];
+    }
+    ItemRegistry.getVanillaStringID = getVanillaStringID;
     function getInstanceOf(itemID) {
         var numericID = Item.getNumericId(itemID);
         return items[numericID] || null;
@@ -1330,36 +1840,33 @@ var ItemRegistry;
     }
     ItemRegistry.registerItemFuncs = registerItemFuncs;
     function createItem(stringID, params) {
-        var _a;
-        var numericID = IDRegistry.genItemID(stringID);
-        var inCreative = (_a = params.inCreative) !== null && _a !== void 0 ? _a : true;
-        var icon;
-        if (typeof params.icon == "string")
-            icon = { name: params.icon };
-        else
-            icon = params.icon;
+        var item;
         if (params.type == "food") {
-            Item.createFoodItem(stringID, params.name, icon, { food: params.food, stack: params.stack || 64, isTech: !inCreative });
+            item = new ItemFood(stringID, params.name, params.icon, params.food, params.inCreative);
         }
         else if (params.type == "throwable") {
-            Item.createThrowableItem(stringID, params.name, icon, { stack: params.stack || 64, isTech: !inCreative });
+            item = new ItemThrowable(stringID, params.name, params.icon, params.inCreative);
         }
         else {
-            Item.createItem(stringID, params.name, icon, { stack: params.stack || 64, isTech: !inCreative });
+            item = new ItemCommon(stringID, params.name, params.icon, params.inCreative);
         }
-        Item.setCategory(numericID, params.category || ItemCategory.ITEMS);
+        item.setCategory(params.category || ItemCategory.ITEMS);
+        if (params.stack)
+            item.setMaxStack(params.stack);
         if (params.maxDamage)
-            Item.setMaxDamage(numericID, params.maxDamage);
+            item.setMaxDamage(params.maxDamage);
         if (params.handEquipped)
-            Item.setToolRender(numericID, true);
+            item.setHandEquipped(true);
         if (params.allowedInOffhand)
-            Item.setAllowedInOffhand(numericID, true);
+            item.allowInOffHand();
         if (params.glint)
-            Item.setGlint(numericID, true);
+            item.setGlint(true);
         if (params.enchant)
-            Item.setEnchantType(numericID, params.enchant.type, params.enchant.value);
+            item.setEnchantType(params.enchant.type, params.enchant.value);
         if (params.rarity)
-            setRarity(numericID, params.rarity);
+            item.setRarity(params.rarity);
+        items[item.id] = item;
+        return item;
     }
     ItemRegistry.createItem = createItem;
     ;
@@ -1435,7 +1942,7 @@ var IDConverter;
     IDConverter.getData = getData;
 })(IDConverter || (IDConverter = {}));
 /// <reference path="IDConverter.ts" />
-IDConverter.registerOld("charcoal", VanillaItemID.coal, 1);
+IDConverter.registerOld("charcoal", 263, 1);
 IDConverter.registerOld("oak_boat", 333, 0);
 IDConverter.registerOld("spruce_boat", 333, 1);
 IDConverter.registerOld("birch_boat", 333, 2);
@@ -1604,9 +2111,8 @@ var TileEntityBase = /** @class */ (function () {
         var gui = container.getUiAdapter();
         if (gui) {
             var size = gui.getBinding(data.scale, "element_rect");
-            if (!size) {
+            if (!size)
                 return;
-            }
             var texture = LiquidRegistry.getLiquidUITexture(data.liquid, size.width(), size.height());
             gui.setBinding(data.scale, "texture", texture);
             gui.setBinding(data.scale, "value", data.amount);
@@ -1836,12 +2342,15 @@ EXPORT("ItemArmor", ItemArmor);
 EXPORT("ItemTool", ItemTool);
 EXPORT("ToolType", ToolType);
 // enums
+EXPORT("Side", Side);
 EXPORT("ItemCategory", ItemCategory);
 EXPORT("EnumRarity", EnumRarity);
-EXPORT("Side", Side);
+EXPORT("MiningLevel", MiningLevel);
 // APIs
+EXPORT("BlockEngine", BlockEngine);
+EXPORT("BlockModeler", BlockModeler);
+EXPORT("BlockRegistry", BlockRegistry);
 EXPORT("ItemRegistry", ItemRegistry);
 EXPORT("LiquidItemRegistry", LiquidItemRegistry);
 EXPORT("EntityCustomData", EntityCustomData);
 EXPORT("IDConverter", IDConverter);
-EXPORT("BlockEngine", BlockEngine);

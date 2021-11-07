@@ -1,19 +1,19 @@
 namespace MachineRecipeRegistry {
-	export let recipeData = {};
-	export let fluidRecipeData = {};
+	export const recipeData = {};
+	export const fluidRecipeData = {};
 
-	export function registerRecipesFor(name: string, data: any, validateKeys?: boolean) {
+	export function registerRecipesFor(name: string, data: any, validateKeys?: boolean): void {
 		if (validateKeys) {
-			let newData = {};
+			const newData = {};
 			for (let key in data) {
 				let newKey: any;
 				if (key.includes(":")) {
-					let keyArray = key.split(":");
+					const keyArray = key.split(":");
 					if (keyArray[0] == "minecraft") {
-						let stringID = keyArray[1];
-						let numericID = VanillaBlockID[stringID] || VanillaItemID[stringID];
+						const stringID = keyArray[1];
+						const numericID = VanillaBlockID[stringID] || VanillaItemID[stringID];
 						if (!numericID) {
-							let source = IDConverter.getIDData(stringID);
+							const source = IDConverter.getIDData(stringID);
 							newKey = source.id + ":" + source.data;
 						} else {
 							newKey = numericID;
@@ -33,7 +33,7 @@ namespace MachineRecipeRegistry {
 	}
 
 	export function addRecipeFor(name: string, input: any, result: any): void {
-		let recipes = this.requireRecipesFor(name, true);
+		const recipes = this.requireRecipesFor(name, true);
 		if (Array.isArray(recipes)) {
 			recipes.push({input: input, result: result});
 		}
@@ -49,19 +49,19 @@ namespace MachineRecipeRegistry {
 		return recipeData[name];
 	}
 
-	export function getRecipeResult(name: string, key1: string|number, key2?: string|number) {
-		let data = this.requireRecipesFor(name);
-		if (data) {
+	export function getRecipeResult(name: string, key1: string | number, key2?: string | number) {
+		const data = this.requireRecipesFor(name);
+		if (data && key1) {
 			return data[key1] || data[key1+":"+key2];
 		}
 		return null;
 	}
 
-	export function hasRecipeFor(name: string, key1: string|number, key2?: string|number) {
-		return this.getRecipeResult(name, key1, key2)? true : false;
+	export function hasRecipeFor(name: string, key1: string | number, key2?: string | number): boolean {
+		return !!this.getRecipeResult(name, key1, key2);
 	}
 
-	export function registerFluidRecipes(name: string, data: any) {
+	export function registerFluidRecipes(name: string, data: any): void {
 		fluidRecipeData[name] = data;
 	}
 
@@ -73,12 +73,12 @@ namespace MachineRecipeRegistry {
 	}
 
 	export function addFluidRecipe(name: string, liquid: string, data: any) {
-		let recipes = requireFluidRecipes(name);
+		const recipes = requireFluidRecipes(name);
 		recipes[liquid] = data;
 	}
 
 	export function getFluidRecipe(name: string, liquid: string) {
-		let recipes = requireFluidRecipes(name);
+		const recipes = requireFluidRecipes(name);
 		return recipes[liquid];
 	}
 

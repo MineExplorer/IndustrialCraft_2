@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("thermalCentrifuge");
-Block.createBlock("thermalCentrifuge", [
+BlockRegistry.createBlock("thermalCentrifuge", [
 	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.thermalCentrifuge, "stone", 1, true);
@@ -90,7 +89,7 @@ namespace Machine {
 		isHeating: boolean = false;
 		isPowered: boolean;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiCentrifuge;
 		}
 

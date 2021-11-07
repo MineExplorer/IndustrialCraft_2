@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("teleporter");
-Block.createBlock("teleporter", [
+BlockRegistry.createBlock("teleporter", [
 	{name: "Teleporter", texture: [["machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]], inCreative: true},
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.teleporter, "stone", 1, true);

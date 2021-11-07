@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("luminator");
-Block.createBlock("luminator", [
+BlockRegistry.createBlock("luminator", [
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "Luminator", texture: [["luminator", 0]], inCreative: true},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
@@ -15,13 +14,12 @@ Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1, y: 1, z: 1/16}
 Block.setBlockShape(BlockID.luminator, {x: 15/16, y: 0, z: 0}, {x: 1, y: 1, z: 1}, 4);
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1/16, y: 1, z: 1}, 5);
 
-Block.registerDropFunction("luminator", function(coords, blockID, blockData, level, enchant) {
+BlockRegistry.registerDrop("luminator", function(coords, blockID, blockData, level, enchant) {
 	return [[blockID, 1, 1]];
 });
 
 
-IDRegistry.genBlockID("luminator_on");
-Block.createBlock("luminator_on", [
+BlockRegistry.createBlock("luminator_on", [
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
@@ -42,7 +40,7 @@ Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 0, z: 0}, {x: 1, y: 1, z: 1/
 Block.setBlockShape(BlockID.luminator_on, {x: 15/16, y: 0, z: 0}, {x: 1, y: 1, z: 1}, 4);
 Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 0, z: 0}, {x: 1/16, y: 1, z: 1}, 5);
 
-Block.registerDropFunction("luminator_on", function(coords, blockID, blockData, level, enchant) {
+BlockRegistry.registerDrop("luminator_on", function(coords, blockID, blockData, level, enchant) {
 	return [[BlockID.luminator, 1, 1]];
 });
 

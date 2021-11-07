@@ -9,12 +9,12 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	abstract class RecipeTypeForICPE extends api.RecipeType {
 
-		constructor(name: string, icon: number, content: any){
+		constructor(name: string, icon: number, content: {params?: UI.BindingsSet, drawing?: UI.DrawingSet, elements: {[key: string]: object}}){
 			content.params ??= {};
 			content.drawing ??= [];
 			content.params.slot = "classic_slot";
 			content.drawing.unshift({type: "frame", x: 0, y: 0, width: 1000, height: 540, bitmap: "classic_frame_bg_light", scale: 2});
-			super(name, icon, content);
+			super(Translation.translate(name), icon, content);
 		}
 
 	}
@@ -397,7 +397,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 					text: {type: "text", x: 450, y: 320, font: {size: 40, color: Color.WHITE, shadow: 0.5}}
 				}
 			});
-			 this.setDescription("Fuel");
+			this.setDescription("Fuel");
 			this.setTankLimit(100);
 		}
 

@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("rubberTreeLeaves");
-Block.createBlock("rubberTreeLeaves", [
+BlockRegistry.createBlock("rubberTreeLeaves", [
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false},
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: false},
 	{name: "Rubber Tree Leaves", texture: [["rubber_tree_leaves", 0]], inCreative: true}
@@ -12,6 +11,7 @@ Block.createBlock("rubberTreeLeaves", [
 	translucency: 0.5,
 	sound: "grass"
 });
+Item.setCategory(BlockID.rubberTreeLeaves, ItemCategory.NATURE);
 
 Block.registerDropFunction("rubberTreeLeaves", function(coords: Vector, blockID: number, blockData: number, level: number, enchant: ToolAPI.EnchantData, item: ItemInstance) {
 	if (level > 0 || item.id == 359) {

@@ -1,6 +1,6 @@
 /// <reference path="CropTile.ts"/>
-IDRegistry.genBlockID("crop");
-Block.createBlock("crop", [
+
+BlockRegistry.createBlock("crop", [
 	{ name: "crop", texture: [["stick", 0]], inCreative: false }
 ], { base: 59, rendertype: 6, explosionres: 0 });
 ToolAPI.registerBlockMaterial(BlockID.crop, "wood");

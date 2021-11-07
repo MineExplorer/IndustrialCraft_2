@@ -21,7 +21,7 @@ implements ItemBehavior {
 			block = region.getBlock(place.x, place.y, place.z);
 			if (!World.canTileBeReplaced(block.id, block.data)) return;
 		}
-		region.setBlock(place.x, place.y, place.z, BlockID[this.stringID], 0);
+		region.setBlock(place.x, place.y, place.z, Block.getNumericId(this.stringID), 0);
 		if (Game.isItemSpendingAllowed(player)) {
 			Entity.setCarriedItem(player, item.id, item.count - 1, item.data);
 		}
@@ -78,16 +78,118 @@ Callback.addCallback("PreLoaded", function() {
 	ICTool.addRecipe({id: ItemID.cableGold0, count: 3, data: 0}, [{id: ItemID.plateGold, data: 0}], ItemID.cutter);
 
 	// insulation recipes
-	Recipes.addShapeless({id: ItemID.cableTin1, count: 1, data: 0}, [{id: ItemID.cableTin0, data: 0}, {id: ItemID.rubber, data: 0}]);
-	Recipes.addShapeless({id: ItemID.cableCopper1, count: 1, data: 0}, [{id: ItemID.cableCopper0, data: 0}, {id: ItemID.rubber, data: 0}]);
+	VanillaRecipe.addShapelessRecipe("insulated_tin_cable", {
+		ingredients: [
+			{ item: "item:cableTin0" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableTin1"
+		}
+	}, true);
 
-	Recipes.addShapeless({id: ItemID.cableGold1, count: 1, data: 0}, [{id: ItemID.cableGold0, data: 0}, {id: ItemID.rubber, data: 0}]);
-	Recipes.addShapeless({id: ItemID.cableGold2, count: 1, data: 0}, [{id: ItemID.cableGold1, data: 0}, {id: ItemID.rubber, data: 0}]);
-	addShapelessRecipe({id: ItemID.cableGold2, count: 1, data: 0}, [{id: ItemID.cableGold0, count: 1, data: 0}, {id: ItemID.rubber, count: 2, data: 0}]);
+	VanillaRecipe.addShapelessRecipe("insulated_copper_cable", {
+		ingredients: [
+			{ item: "item:cableCopper0" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableCopper1"
+		}
+	}, true);
 
-	Recipes.addShapeless({id: ItemID.cableIron1, count: 1, data: 0}, [{id: ItemID.cableIron0, data: 0}, {id: ItemID.rubber, data: 0}]);
-	Recipes.addShapeless({id: ItemID.cableIron2, count: 1, data: 0}, [{id: ItemID.cableIron1, data: 0}, {id: ItemID.rubber, data: 0}]);
-	Recipes.addShapeless({id: ItemID.cableIron3, count: 1, data: 0}, [{id: ItemID.cableIron2, data: 0}, {id: ItemID.rubber, data: 0}]);
-	addShapelessRecipe({id: ItemID.cableIron3, count: 1, data: 0}, [{id: ItemID.cableIron1, count: 1, data: 0}, {id: ItemID.rubber, count: 2, data: 0}]);
-	addShapelessRecipe({id: ItemID.cableIron3, count: 1, data: 0}, [{id: ItemID.cableIron0, count: 1, data: 0}, {id: ItemID.rubber, count: 3, data: 0}]);
+	VanillaRecipe.addShapelessRecipe("insulated_gold_cable", {
+		ingredients: [
+			{ item: "item:cableGold0" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableGold1"
+		}
+	}, true);
+
+	VanillaRecipe.addShapelessRecipe("insulated_gold_cable_1to2x", {
+		ingredients: [
+			{ item: "item:cableGold1" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableGold2"
+		}
+	}, true);
+
+	VanillaRecipe.addShapelessRecipe("insulated_gold_cable_2x", {
+		ingredients: [
+			{ item: "item:cableGold0" },
+			{ item: "item:rubber" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableGold2"
+		}
+	}, true);
+
+	VanillaRecipe.addShapelessRecipe("insulated_iron_cable", {
+		ingredients: [
+			{ item: "item:cableIron0" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableIron1"
+		}
+	}, true);
+
+	VanillaRecipe.addShapelessRecipe("insulated_iron_cable_1to2x", {
+		ingredients: [
+			{ item: "item:cableIron1" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableIron2"
+		}
+	}, true);
+
+	VanillaRecipe.addShapelessRecipe("insulated_iron_cable_2to3x", {
+		ingredients: [
+			{ item: "item:cableIron2" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableIron3"
+		}
+	}, true);
+
+	VanillaRecipe.addShapelessRecipe("insulated_iron_cable_1to3x", {
+		ingredients: [
+			{ item: "item:cableIron1" },
+			{ item: "item:rubber" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableIron3"
+		}
+	}, true);
+
+	VanillaRecipe.addShapelessRecipe("insulated_iron_cable_2x", {
+		ingredients: [
+			{ item: "item:cableIron0" },
+			{ item: "item:rubber" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableIron2"
+		}
+	}, true);
+
+	VanillaRecipe.addShapelessRecipe("insulated_iron_cable_3x", {
+		ingredients: [
+			{ item: "item:cableIron0" },
+			{ item: "item:rubber" },
+			{ item: "item:rubber" },
+			{ item: "item:rubber" }
+		],
+		result: {
+			item: "item:cableIron3"
+		}
+	}, true);
 });

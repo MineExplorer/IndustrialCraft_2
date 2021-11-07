@@ -1,7 +1,6 @@
 /// <reference path="ProcessingMachine.ts" />
 
-IDRegistry.genBlockID("compressor");
-Block.createBlock("compressor", [
+BlockRegistry.createBlock("compressor", [
 	{name: "Compressor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.compressor, "stone", 1, true);
@@ -95,7 +94,7 @@ namespace Machine {
 		defaultProcessTime = 400;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiCompressor;
 		}
 

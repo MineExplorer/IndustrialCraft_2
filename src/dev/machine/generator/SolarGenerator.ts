@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("solarPanel");
-Block.createBlock("solarPanel", [
+BlockRegistry.createBlock("solarPanel", [
 	{name: "Solar Panel", texture: [["machine_bottom", 0], ["solar_panel", 0], ["machine", 0], ["machine", 0], ["machine", 0], ["machine", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.solarPanel, "stone", 1, true);
@@ -28,7 +27,7 @@ namespace Machine {
 
 		defaultDrop = BlockID.machineBlockBasic;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiSolarPanel;
 		}
 

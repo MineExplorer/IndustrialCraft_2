@@ -1,7 +1,6 @@
 ﻿/// <reference path="ProcessingMachine.ts" />
 
-IDRegistry.genBlockID("macerator");
-Block.createBlock("macerator", [
+BlockRegistry.createBlock("macerator", [
 {name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.macerator, "stone", 1, true);
@@ -130,7 +129,7 @@ namespace Machine {
 		defaultProcessTime = 300;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiMacerator;
 		}
 

@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("ironFurnace");
-Block.createBlock("ironFurnace", [
+BlockRegistry.createBlock("ironFurnace", [
 	{name: "Iron Furnace", texture: [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.ironFurnace, "stone", 1, true);
@@ -9,6 +8,24 @@ TileRenderer.registerModelWithRotation(BlockID.ironFurnace, 2, [["iron_furnace_b
 TileRenderer.setRotationFunction(BlockID.ironFurnace);
 
 Callback.addCallback("PreLoaded", function() {
+	Item.addCreativeGroup("IC2ProcessingMachines", Translation.translate("Processing Machines"), [
+		BlockID.ironFurnace,
+		BlockID.electricFurnace,
+		BlockID.inductionFurnace,
+		BlockID.macerator,
+		BlockID.compressor,
+		BlockID.extractor,
+		BlockID.solidCanner,
+		BlockID.canner,
+		BlockID.recycler,
+		BlockID.metalFormer,
+		BlockID.oreWasher,
+		BlockID.thermalCentrifuge,
+		BlockID.blastFurnace,
+		BlockID.icFermenter,
+		BlockID.massFabricator
+	]);
+
 	Recipes.addShaped({id: BlockID.ironFurnace, count: 1, data: 0}, [
 		" x ",
 		"x x",
@@ -43,7 +60,7 @@ namespace Machine {
 			burnMax: 0
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiIronFurnace;
 		}
 

@@ -21,15 +21,31 @@ Item.addCreativeGroup("ic2_material", Translation.translate("Materials"), [
 ]);
 
 Callback.addCallback("PreLoaded", function() {
-	Recipes.addShaped({id: ItemID.carbonFibre, count: 1, data: 0}, [
-		"xx",
-		"xx"
-	], ['x', ItemID.dustCoal, 0]);
+	VanillaRecipe.addShapedRecipe("carbon_fibre", {
+		pattern: [
+			"XX",
+			"XX"
+		],
+		key: {
+			"X": { item: "item:dustCoal" }
+		},
+		result: {
+			item: "item:carbonFibre"
+		}
+	}, true);
 
-	Recipes.addShaped({id: ItemID.carbonMesh, count: 1, data: 0}, [
-		"x",
-		"x"
-	], ['x', ItemID.carbonFibre, 0]);
+	VanillaRecipe.addShapedRecipe("carbon_mesh", {
+		pattern: [
+			"X",
+			"X"
+		],
+		key: {
+			"X": { item: "item:carbonFibre" }
+		},
+		result: {
+			item: "item:carbonMesh"
+		}
+	}, true);
 
 	Recipes.addShaped({id: ItemID.coalBall, count: 1, data: 0}, [
 		"xxx",

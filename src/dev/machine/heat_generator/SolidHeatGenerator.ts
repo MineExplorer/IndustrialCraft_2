@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("solidHeatGenerator");
-Block.createBlock("solidHeatGenerator", [
+BlockRegistry.createBlock("solidHeatGenerator", [
 	{name: "Solid Fuel Firebox", texture: [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]], inCreative: true},
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.solidHeatGenerator, "stone", 1, true);
@@ -14,6 +13,13 @@ TileRenderer.registerModelWithRotation(BlockID.solidHeatGenerator, 2, [["machine
 TileRenderer.setRotationFunction(BlockID.solidHeatGenerator, true);
 
 Callback.addCallback("PreLoaded", function() {
+	Item.addCreativeGroup("IC2HeatGenerators", Translation.translate("Heat Generators"), [
+		BlockID.solidHeatGenerator,
+		BlockID.electricHeatGenerator,
+		BlockID.fluidHeatGenerator,
+		BlockID.rtHeatGenerator
+	]);
+
 	Recipes.addShaped({id: BlockID.solidHeatGenerator, count: 1, data: 0}, [
 		"a",
 		"x",
@@ -52,7 +58,7 @@ namespace Machine {
 			output: 0
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiSolidHeatGenerator;
 		}
 

@@ -1,5 +1,5 @@
-IDRegistry.genBlockID("tank");
-Block.createBlock("tank", [
+
+BlockRegistry.createBlock("tank", [
 	{name: "Tank", texture: [["machine_bottom", 0], ["machine_top", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.tank, "stone", 1, true);
@@ -35,7 +35,7 @@ namespace Machine {
 		liquidTank: BlockEngine.LiquidTank;
 		upgrades = ["fluidEjector", "fluidPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiTank;
 		}
 

@@ -1,3 +1,5 @@
+/// <reference path="./CropMatronGUI.ts" />
+
 namespace Machine {
 	export class CropMatron extends ElectricMachine {
 		liquidTank: BlockEngine.LiquidTank;
@@ -8,7 +10,7 @@ namespace Machine {
 			scanZ: -5
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiCropMatron;
 		}
 

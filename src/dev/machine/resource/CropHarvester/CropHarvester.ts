@@ -1,5 +1,6 @@
-IDRegistry.genBlockID("cropHarvester");
-Block.createBlock("cropHarvester", [
+/// <reference path="./TileCropHarvester.ts" />
+
+BlockRegistry.createBlock("cropHarvester", [
 	{ name: "Crop Harvester", texture: [["machine_bottom", 0], ["crop_harvester", 0]], inCreative: true }
 ], "machine");
 ItemName.addTierTooltip("cropHarvester", 1);

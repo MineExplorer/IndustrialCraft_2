@@ -1,5 +1,6 @@
-IDRegistry.genBlockID("cropMatron");
-Block.createBlock("cropMatron", [
+/// <reference path="./TileCropMatron.ts" />
+
+BlockRegistry.createBlock("cropMatron", [
     { name: "Crop Matron", texture: [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0]], inCreative: true }
 ], "machine");
 

@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("geothermalGenerator");
-Block.createBlock("geothermalGenerator", [
+BlockRegistry.createBlock("geothermalGenerator", [
 	{name: "Geothermal Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.geothermalGenerator, "stone", 1, true);
@@ -37,7 +36,7 @@ namespace Machine {
 	export class GeothermalGenerator extends Generator {
 		liquidTank: BlockEngine.LiquidTank;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiGeothermalGenerator;
 		}
 

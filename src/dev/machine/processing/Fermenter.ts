@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("icFermenter");
-Block.createBlock("icFermenter", [
+BlockRegistry.createBlock("icFermenter", [
 	{name: "Fermenter", texture: [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], inCreative: true},
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.icFermenter, "stone", 1, true);
@@ -57,7 +56,7 @@ namespace Machine {
 
 		upgrades = ["itemEjector", "itemPulling", "fluidEjector", "fluidPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiFermenter;
 		}
 

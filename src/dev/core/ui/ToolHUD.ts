@@ -7,7 +7,7 @@ namespace ToolHUD {
 		}
 	});
 
-	let buttonScale = IC2Config.getInt("button_scale");
+	const buttonScale = IC2Config.getInt("button_scale");
 	let isEnabled = false;
 	export let container = null;
 	export const Window = new UI.Window({
@@ -22,8 +22,8 @@ namespace ToolHUD {
 	});
 	Window.setAsGameOverlay(true);
 
-	let buttonMap = {};
-	export let buttons: {[key: string]: IHUDButton} = {};
+	const buttonMap = {};
+	export const buttons: {[key: string]: IHUDButton} = {};
 
 	export function registerButton(button: IHUDButton): void {
 		buttons[button.name] = button;

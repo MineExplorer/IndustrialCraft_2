@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("solidCanner");
-Block.createBlock("solidCanner", [
+BlockRegistry.createBlock("solidCanner", [
 	{name: "Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.solidCanner, "stone", 1, true);
@@ -88,7 +87,7 @@ namespace Machine {
 		defaultProcessTime = 200;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiSolidCanner;
 		}
 

@@ -106,14 +106,28 @@ Callback.addCallback("PreLoaded", function() {
 		" a "
 	], ['a', ItemID.ingotBronze, 0]);
 
-	Recipes.addShapeless({id: ItemID.electricWrench, count: 1, data: 27}, [
-		{id: ItemID.bronzeWrench, data: 0}, {id: ItemID.powerUnitSmall, data: 0}
-	]);
+	VanillaRecipe.addShapelessRecipe("electric_wrench", {
+		ingredients: [
+			{ item: "item:powerUnitSmall" },
+			{ item: "item:bronzeWrench", data: 0 }
+		],
+		result: {
+			item: "item:electricWrench",
+    		data: 27
+		}
+	}, true);
 
 	// Electric Treetap
-	Recipes.addShapeless({id: ItemID.electricTreetap, count: 1, data: 27}, [
-		{id: ItemID.powerUnitSmall, data: 0}, {id: ItemID.treetap, data: 0}
-	]);
+	VanillaRecipe.addShapelessRecipe("electric_treetap", {
+		ingredients: [
+			{ item: "item:powerUnitSmall" },
+			{ item: "item:treetap", data: 0 }
+		],
+		result: {
+			item: "item:electricTreetap",
+    		data: 27
+		}
+	}, true);
 
 	// Electric Hoe
 	Recipes.addShaped({id: ItemID.electricHoe, count: 1, data: 27}, [
@@ -182,17 +196,11 @@ Callback.addCallback("PreLoaded", function() {
 		"x  "
 	], ['x', 265, -1, 'a', 35, 0]);
 
-	Recipes.addShapeless({id: ItemID.icPainter1, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("black_dye")]);
-	Recipes.addShapeless({id: ItemID.icPainter2, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("red_dye")]);
-	Recipes.addShapeless({id: ItemID.icPainter3, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("green_dye")]);
-	Recipes.addShapeless({id: ItemID.icPainter4, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("brown_dye")]);
-	Recipes.addShapeless({id: ItemID.icPainter5, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("blue_dye")]);
-
-	for (let i = 6; i <= 15; i++) {
-		Recipes.addShapeless({id: ItemID["icPainter"+i], count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: 351, data: i-1}]);
+	for (let i = 1; i <= 16; i++) {
+		const color = INDEX_TO_COLOR[i-1];
+		const dye = IDConverter.getIDData(color + "_dye");
+		Recipes.addShapeless({id: ItemID["icPainter"+i], count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, {id: dye.id, data: dye.data}]);
 	}
-
-	Recipes.addShapeless({id: ItemID.icPainter16, count: 1, data: 0}, [{id: ItemID.icPainter, data: 0}, IDConverter.getIDData("white_dye")]);
 
 	// MFSU Upgrade Kit
 	Recipes.addShaped({id: ItemID.upgradeMFSU, count: 1, data: 0}, [

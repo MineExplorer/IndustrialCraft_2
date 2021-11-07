@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("electricHeatGenerator");
-Block.createBlock("electricHeatGenerator", [
+BlockRegistry.createBlock("electricHeatGenerator", [
 	{name: "Electric Heater", texture: [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.electricHeatGenerator, "stone", 1, true);
@@ -48,7 +47,7 @@ namespace Machine {
 			return 4;
 		}
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiElectricHeatGenerator;
 		}
 

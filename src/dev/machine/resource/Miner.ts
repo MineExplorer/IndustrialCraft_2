@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("miner");
-Block.createBlock("miner", [
+BlockRegistry.createBlock("miner", [
 	{name: "Miner", texture: [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "machine");
 
@@ -45,7 +44,7 @@ namespace Machine {
 
 		defaultDrop = BlockID.machineBlockBasic;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiMiner;
 		}
 
@@ -129,25 +128,9 @@ namespace Machine {
 			return null;
 		}
 
-		mineBlock(x: number, y: number, z: number, block: Tile, level: number): void {
-			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, level);
-			let items: ItemInstance[] = [];
-			for (let item of drop) {
-				items.push(new ItemStack(item[0], item[1], item[2], item[3]));
-			}
-			let container = this.region.getContainer(x, y, z);
-			if (container) {
-				let slots = StorageInterface.getContainerSlots(container) as any[];
-				for (let i in slots) {
-					let slot = container.getSlot(slots[i]);
-					if (slot.id > 0) {
-						items.push(new ItemStack(slot));
-						container.setSlot(slots[i], 0, 0, 0);
-					}
-				}
-			}
-			this.region.setBlock(x, y, z, (block.id == 79)? 8 : 0, 0);
-			this.drop(items);
+		mineBlock(x: number, y: number, z: number, block: Tile, item: ItemInstance): void {
+			let result = this.region.breakBlockForResult(x, y, z, -1, item);
+			this.drop(result.items);
 			this.data.progress = 0;
 		}
 
@@ -216,7 +199,7 @@ namespace Machine {
 						}
 						if (this.data.progress >= params.time) {
 							level = ToolAPI.getToolLevelViaBlock(drillSlot.id, block.id);
-							this.mineBlock(coords.x, coords.y, coords.z, block, level);
+							this.mineBlock(coords.x, coords.y, coords.z, block, new ItemStack(drillSlot));
 						}
 					}
 				}
@@ -241,7 +224,7 @@ namespace Machine {
 						}
 						if (this.data.progress >= params.time) {
 							level = ToolAPI.getToolLevelViaBlock(drillSlot.id, block.id);
-							this.mineBlock(this.x, this.data.y-1, this.z, block, level);
+							this.mineBlock(this.x, this.data.y-1, this.z, block, drillSlot);
 							this.setPipe(this.data.y);
 						}
 					}

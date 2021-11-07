@@ -1,5 +1,4 @@
-IDRegistry.genBlockID("advancedMiner");
-Block.createBlock("advancedMiner", [
+BlockRegistry.createBlock("advancedMiner", [
 	{name: "Advanced Miner", texture: [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "machine");
 
@@ -85,7 +84,7 @@ namespace Machine {
 		tier: number;
 		maxScanCount: number;
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiAdvancedMiner;
 		}
 
@@ -196,18 +195,15 @@ namespace Machine {
 		}
 
 		harvestBlock(x: number, y: number, z: number, block: Tile): boolean {
-			let enchant = ToolAPI.getEnchantExtraData();
-			enchant.silk = this.data.silk_touch;
-			let drop = ToolLib.getBlockDrop(new Vector3(x, y, z), block.id, block.data, 100, enchant);
-			if (this.checkDrop(drop)) return false;
-
-			this.data.energy -= 512;
-			this.region.setBlock(x, y, z, 0, 0);
-			let items = [];
-			for (let item of drop) {
-				items.push(new ItemStack(item[0], item[1], item[2], item[3]));
+			const item = new ItemStack(VanillaItemID.diamond_pickaxe, 1, 0);
+			if (this.data.silk_touch) {
+				item.addEnchant(EEnchantment.SILK_TOUCH, 1);
 			}
-			this.drop(items);
+			const drop = BlockRegistry.getBlockDrop(x, y, z, block, 100, item, this.blockSource);
+			if (this.checkDrop(drop)) return false;
+			this.data.energy -= 512;
+			const result = this.region.breakBlockForResult(x, y, z, -1, item);
+			this.drop(result.items);
 			return true;
 		}
 

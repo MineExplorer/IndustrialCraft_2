@@ -1,7 +1,6 @@
 /// <reference path="IReactor.ts" />
 
-IDRegistry.genBlockID("nuclearReactor");
-Block.createBlock("nuclearReactor", [
+BlockRegistry.createBlock("nuclearReactor", [
 	{name: "Nuclear Reactor", texture: [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]], inCreative: true}
 ], "machine");
 ToolAPI.registerBlockMaterial(BlockID.nuclearReactor, "stone", 1, true);
@@ -78,7 +77,7 @@ namespace Machine {
 
 		chambers: ReactorChamber[] = [];
 
-		getScreenByName() {
+		getScreenByName(): UI.IWindow {
 			return guiNuclearReactor;
 		}
 
@@ -178,7 +177,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		energyTick(type: string, src: any): void {
+		energyTick(type: string, src: EnergyTileNode): void {
 			let output = this.getEnergyOutput();
 			src.add(output, Math.min(output, 8192));
 		}

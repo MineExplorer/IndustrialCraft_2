@@ -350,22 +350,22 @@ Translation.addTranslation("weeding_trowel", {en: "Weeding Trowel", ru: "Про�
 
 // Painter
 Translation.addTranslation("painter", {en: "Painter", ru: "Валик", es: "Rodillo de Pintar", pt: "Rolo de Pintura", zh: "刷子"});
-Translation.addTranslation("painter.0", {en: "Black Painter", ru: "Чёрный валик", es: "Rodillo Negro", pt: "Rolo de Pintura Preto", zh: "黑色刷子"});
-Translation.addTranslation("painter.1", {en: "Blue Painter", ru: "Синий валик", es: "Rodillo Azul", pt: "Rolo de Pintura Azul", zh: "蓝色刷子"});
-Translation.addTranslation("painter.2", {en: "Brown Painter", ru: "Коричневый валик", es: "Rodillo Marrón", pt: "Rolo de Pintura Marrom", zh: "棕色刷子"});
-Translation.addTranslation("painter.3", {en: "Light Blue Painter", ru: "Светло-голубой валик", es: "Rodillo Celeste", pt: "Rolo de Pintura Azul Claro", zh: "淡蓝色刷子"});
-Translation.addTranslation("painter.4", {en: "Cyan Painter", ru: "Бирюзовый валик", es: "Rodillo Cian", pt: "Rolo de Pintura Ciano", zh: "青色刷子"});
-Translation.addTranslation("painter.5", {en: "Dark Grey Painter", ru: "Тёмно-серый валик", es: "Rodillo Gris Oscuro", pt: "Rolo de Pintura Cinza", zh: "灰色刷子"});
-Translation.addTranslation("painter.6", {en: "Green Painter", ru: "Зелёный валик", es: "Rodillo Verde", pt: "Rolo de Pintura Verde", zh: "绿色刷子"});
-Translation.addTranslation("painter.7", {en: "Light Grey Painter", ru: "Светло-серый валик", es: "Rodillo Gris Claro", pt: "Rolo de Pintura Cinza Claro", zh: "淡灰色刷子"});
-Translation.addTranslation("painter.8", {en: "Lime Painter", ru: "Лаймовый валик", es: "Rodillo Lima", pt: "Rolo de Pintura Verde-Limão", zh: "柠檬色刷子"});
-Translation.addTranslation("painter.9", {en: "Magenta Painter", ru: "Сиреневый валик", es: "Rodillo Magenta", pt: "Rolo de Pintura Lilás", zh: "品红色刷子"});
-Translation.addTranslation("painter.10", {en: "Orange Painter", ru: "Оранжевый валик", es: "Rodillo Naranja", pt: "Rolo de Pintura Laranjado", zh: "橙色刷子"});
-Translation.addTranslation("painter.11", {en: "Pink Painter", ru: "Розовый валик", es: "Rodillo Rosa", pt: "Rolo de Pintura Rosa", zh: "粉色刷子"});
-Translation.addTranslation("painter.12", {en: "Purple Painter", ru: "Фиолетовый валик", es: "Rodillo Púrpura", pt: "Rolo de Pintura Roxo", zh: "紫色刷子"});
-Translation.addTranslation("painter.13", {en: "Red Painter", ru: "Красный валик", es: "Rodillo Rojo", pt: "Rolo de Pintura Vermelho", zh: "红色刷子"});
-Translation.addTranslation("painter.14", {en: "White Painter", ru: "Белый валик", es: "Rodillo Blanco", pt: "Rolo de Pintura Branco", zh: "白色刷子"});
-Translation.addTranslation("painter.15", {en: "Yellow Painter", ru: "Жёлтый валик", es: "Rodillo Amarillo", pt: "Rolo de Pintura Amarelo", zh: "黄色刷子"});
+Translation.addTranslation("painter.black", {en: "Black Painter", ru: "Чёрный валик", es: "Rodillo Negro", pt: "Rolo de Pintura Preto", zh: "黑色刷子"});
+Translation.addTranslation("painter.red", {en: "Red Painter", ru: "Красный валик", es: "Rodillo Rojo", pt: "Rolo de Pintura Vermelho", zh: "红色刷子"});
+Translation.addTranslation("painter.green", {en: "Green Painter", ru: "Зелёный валик", es: "Rodillo Verde", pt: "Rolo de Pintura Verde", zh: "绿色刷子"});
+Translation.addTranslation("painter.brown", {en: "Brown Painter", ru: "Коричневый валик", es: "Rodillo Marrón", pt: "Rolo de Pintura Marrom", zh: "棕色刷子"});
+Translation.addTranslation("painter.blue", {en: "Blue Painter", ru: "Синий валик", es: "Rodillo Azul", pt: "Rolo de Pintura Azul", zh: "蓝色刷子"});
+Translation.addTranslation("painter.purple", {en: "Purple Painter", ru: "Фиолетовый валик", es: "Rodillo Púrpura", pt: "Rolo de Pintura Roxo", zh: "紫色刷子"});
+Translation.addTranslation("painter.cyan", {en: "Cyan Painter", ru: "Бирюзовый валик", es: "Rodillo Cian", pt: "Rolo de Pintura Ciano", zh: "青色刷子"});
+Translation.addTranslation("painter.light_gray", {en: "Light Grey Painter", ru: "Светло-серый валик", es: "Rodillo Gris Claro", pt: "Rolo de Pintura Cinza Claro", zh: "淡灰色刷子"});
+Translation.addTranslation("painter.gray", {en: "Dark Grey Painter", ru: "Тёмно-серый валик", es: "Rodillo Gris Oscuro", pt: "Rolo de Pintura Cinza", zh: "灰色刷子"});
+Translation.addTranslation("painter.pink", {en: "Pink Painter", ru: "Розовый валик", es: "Rodillo Rosa", pt: "Rolo de Pintura Rosa", zh: "粉色刷子"});
+Translation.addTranslation("painter.lime", {en: "Lime Painter", ru: "Лаймовый валик", es: "Rodillo Lima", pt: "Rolo de Pintura Verde-Limão", zh: "柠檬色刷子"});
+Translation.addTranslation("painter.yellow", {en: "Yellow Painter", ru: "Жёлтый валик", es: "Rodillo Amarillo", pt: "Rolo de Pintura Amarelo", zh: "黄色刷子"});
+Translation.addTranslation("painter.light_blue", {en: "Light Blue Painter", ru: "Светло-голубой валик", es: "Rodillo Celeste", pt: "Rolo de Pintura Azul Claro", zh: "淡蓝色刷子"});
+Translation.addTranslation("painter.magenta", {en: "Magenta Painter", ru: "Сиреневый валик", es: "Rodillo Magenta", pt: "Rolo de Pintura Lilás", zh: "品红色刷子"});
+Translation.addTranslation("painter.orange", {en: "Orange Painter", ru: "Оранжевый валик", es: "Rodillo Naranja", pt: "Rolo de Pintura Laranjado", zh: "橙色刷子"});
+Translation.addTranslation("painter.white", {en: "White Painter", ru: "Белый валик", es: "Rodillo Blanco", pt: "Rolo de Pintura Branco", zh: "白色刷子"});
 
 // Coffee
 Translation.addTranslation("coffee_powder", {en: "Coffee Powder", ru: "Молотый кофе", es: "Polvo de Café", pt: "Pó de Café", zh: "咖啡粉"});
@@ -488,6 +488,10 @@ Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "
 // Creative Groups
 Translation.addTranslation("Ores", {ru: "Руды", pt: "Minérios", zh: "矿石"});
 Translation.addTranslation("Metal Blocks", {ru: "Блоки металлов", pt: "Blocos de metal", zh: "金属块"});
+Translation.addTranslation("Electric Generators", {ru: "Электрогенераторы"});
+Translation.addTranslation("Heat Generators", {ru: "Теплогенераторы"});
+Translation.addTranslation("Processing Machines", {ru: "Машины-обработчики"});
+Translation.addTranslation("Energy Storages", {ru: "Энергохранилища"});
 Translation.addTranslation("Transformers", {ru: "Трансформаторы", pt: "Transformadores", zh: "变压器"});
 Translation.addTranslation("Cables", {ru: "Провода", pt: "Cabos", zh: "导线"});
 Translation.addTranslation("Battery Packs", {ru: "Аккумуляторные ранцы", pt: "Mochilas de Baterias", zh: "电池背包"});

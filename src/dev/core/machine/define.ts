@@ -3,7 +3,7 @@
 /// <reference path="../../machine/Generator.ts" />
 
 namespace MachineRegistry {
-	let machineIDs = {}
+	const machineIDs = {}
 
 	export function isMachine(id: number) {
 		return machineIDs[id];
@@ -96,12 +96,12 @@ namespace MachineRegistry {
 
 	export function setStoragePlaceFunction(blockID: string | number, hasVerticalRotation?: boolean) {
 		Block.registerPlaceFunction(blockID, function(coords, item, block, player, blockSource) {
-			let region = new WorldRegion(blockSource);
-			let place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
-			let rotation = TileRenderer.getBlockRotation(player, hasVerticalRotation);
+			const region = new WorldRegion(blockSource);
+			const place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
+			const rotation = TileRenderer.getBlockRotation(player, hasVerticalRotation);
 			region.setBlock(place, item.id, rotation);
 			// region.playSound(place.x + .5, place.y + .5, place.z + .5, "dig.stone", 1, 0.8)
-			let tile = region.addTileEntity(place);
+			const tile = region.addTileEntity(place);
 			if (item.extra) {
 				tile.data.energy = item.extra.getInt("energy");
 			}
@@ -109,9 +109,9 @@ namespace MachineRegistry {
 	}
 
 	export function getMachineDrop(blockID: number, level: number): ItemInstanceArray[] {
-		let drop = [];
+		const drop = [];
 		if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
-			let dropID = TileEntity.getPrototype(blockID).getDefaultDrop();
+			const dropID = TileEntity.getPrototype(blockID).getDefaultDrop();
 			drop.push([dropID, 1, 0]);
 		}
 		return drop;
@@ -119,29 +119,23 @@ namespace MachineRegistry {
 
 	export function setMachineDrop(blockID: string | number, dropID?: number) {
 		dropID ??= Block.getNumericId(blockID);
-		Block.registerDropFunction(blockID, function(coords, blockID, blockData, level) {
-			let drop = [];
+		BlockRegistry.registerDrop(blockID, function(coords, blockID, blockData, level) {
+			const drop = [];
 			if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
 				drop.push([dropID, 1, 0]);
 			}
 			return drop;
 		});
-		// drop on explosion
-		Block.registerPopResourcesFunction(blockID, function(coords, block, region) {
-			if (Math.random() < 0.25) {
-				region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, dropID, 1, 0);
-			}
-		});
 	}
 
 	export function fillTankOnClick(tank: BlockEngine.LiquidTank, item: ItemInstance, playerUid: number): boolean {
-		let liquid = tank.getLiquidStored();
-		let empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
+		const liquid = tank.getLiquidStored();
+		const empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
 		if (empty && (!liquid && tank.isValidLiquid(empty.liquid) || empty.liquid == liquid) && !tank.isFull()) {
-			let player = new PlayerEntity(playerUid);
-			let liquidLimit = tank.getLimit();
-			let storedAmount = tank.getAmount(liquid);
-			let count = Math.min(item.count, Math.floor((liquidLimit - storedAmount) / empty.amount));
+			const player = new PlayerEntity(playerUid);
+			const liquidLimit = tank.getLimit();
+			const storedAmount = tank.getAmount(liquid);
+			const count = Math.min(item.count, Math.floor((liquidLimit - storedAmount) / empty.amount));
 			if (count > 0) {
 				tank.addLiquid(empty.liquid, empty.amount * count);
 				player.addItemToInventory(new ItemStack(empty.id, count, empty.data));
@@ -149,7 +143,7 @@ namespace MachineRegistry {
 				player.setCarriedItem(item);
 			}
 			else if (item.count == 1 && empty.storage) {
-				let amount = Math.min(liquidLimit - storedAmount, empty.amount);
+				const amount = Math.min(liquidLimit - storedAmount, empty.amount);
 				tank.addLiquid(empty.liquid, amount);
 				item.data += amount;
 				player.setCarriedItem(item);
@@ -161,18 +155,18 @@ namespace MachineRegistry {
 
 	/** @deprecated */
 	export function isValidEUItem(id: number, count: number, data: number, container: UI.Container): boolean {
-		let level = container.tileEntity.getTier();
+		const level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidItem(id, "Eu", level);
 	}
 
 	/** @deprecated */
 	export function isValidEUStorage(id: number, count: number, data: number, container: UI.Container): boolean {
-		let level = container.tileEntity.getTier();
+		const level = container.tileEntity.getTier();
 		return ChargeItemRegistry.isValidStorage(id, "Eu", level);
 	}
 
 	export function updateGuiHeader(gui: any, text: string): void {
-		let header = gui.getWindow("header");
+		const header = gui.getWindow("header");
 		header.contentProvider.drawing[2].text = Translation.translate(text);
 	}
 

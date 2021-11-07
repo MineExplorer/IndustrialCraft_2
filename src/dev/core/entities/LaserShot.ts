@@ -36,7 +36,7 @@ class LaserShot {
         if (hardness > 0) {
         	this.blockBreaks--;
        	}
-		let drop = this.region.breakBlockForResult(new Vector3(x, y, z), -1, new ItemStack(ItemID.iridiumDrill, 1, 0)).items;
+		let drop = this.region.breakBlockForResult(x, y, z, -1, new ItemStack(ItemID.iridiumDrill, 1, 0)).items;
        	let material = ToolAPI.getBlockMaterialName(block.id);
 		if (Math.random() < 0.5 && (material == "wood" || material == "plant" || material == "fibre" || material == "wool")) {
 			this.region.setBlock(x, y, z, 51, 0);

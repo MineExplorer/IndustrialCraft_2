@@ -1482,7 +1482,7 @@ var ItemArmor = /** @class */ (function (_super) {
             texture: _this.texture,
             isTech: true
         });
-        _this.inCreative = inCreative;
+        _this.setCategory(ItemCategory.EQUIPMENT);
         if (params.material)
             _this.setMaterial(params.material);
         if (inCreative)
@@ -1826,7 +1826,7 @@ var ItemRegistry;
     }
     ItemRegistry.registerItemFuncs = registerItemFuncs;
     function createItem(stringID, params) {
-        var item = getInstanceOf(stringID);
+        var item;
         if (params.type == "food") {
             item = new ItemFood(stringID, params.name, params.icon, params.food, params.inCreative);
         }

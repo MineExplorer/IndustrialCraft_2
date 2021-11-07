@@ -10,6 +10,19 @@ TileRenderer.registerModelWithRotation(BlockID.primalGenerator, 2, [["machine_bo
 TileRenderer.setRotationFunction(BlockID.primalGenerator);
 
 Callback.addCallback("PreLoaded", function() {
+	Item.addCreativeGroup("EUGenerators", Translation.translate("Electric Generators"), [
+		BlockID.primalGenerator,
+		BlockID.geothermalGenerator,
+		BlockID.semifluidGenerator,
+		BlockID.solarPanel,
+		BlockID.genWindmill,
+		BlockID.genWatermill,
+		BlockID.rtGenerator,
+		BlockID.stirlingGenerator,
+		BlockID.nuclearReactor,
+		BlockID.reactorChamber
+	]);
+
 	Recipes.addShaped({id: BlockID.primalGenerator, count: 1, data: 0}, [
 		"x",
 		"#",

@@ -13,6 +13,13 @@ TileRenderer.registerModelWithRotation(BlockID.solidHeatGenerator, 2, [["machine
 TileRenderer.setRotationFunction(BlockID.solidHeatGenerator, true);
 
 Callback.addCallback("PreLoaded", function() {
+	Item.addCreativeGroup("IC2HeatGenerators", Translation.translate("Heat Generators"), [
+		BlockID.solidHeatGenerator,
+		BlockID.electricHeatGenerator,
+		BlockID.fluidHeatGenerator,
+		BlockID.rtHeatGenerator
+	]);
+
 	Recipes.addShaped({id: BlockID.solidHeatGenerator, count: 1, data: 0}, [
 		"a",
 		"x",

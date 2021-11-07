@@ -13,6 +13,13 @@ TileRenderer.setStandardModelWithRotation(BlockID.storageMFSU, 2, [["mfsu_top", 
 ItemRegistry.setRarity(BlockID.storageMFSU, EnumRarity.UNCOMMON);
 ItemName.addStorageBlockTooltip("storageMFSU", 4, "60M");
 
+Item.addCreativeGroup("EUStorages", Translation.translate("Energy Storages"), [
+	BlockID.storageBatBox,
+	BlockID.storageCESU,
+	BlockID.storageMFE,
+	BlockID.storageMFSU
+]);
+
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.storageMFSU, count: 1, data: 0}, [
 		"aca",

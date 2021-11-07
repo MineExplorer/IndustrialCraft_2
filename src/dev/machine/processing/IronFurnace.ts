@@ -8,6 +8,24 @@ TileRenderer.registerModelWithRotation(BlockID.ironFurnace, 2, [["iron_furnace_b
 TileRenderer.setRotationFunction(BlockID.ironFurnace);
 
 Callback.addCallback("PreLoaded", function() {
+	Item.addCreativeGroup("IC2ProcessingMachines", Translation.translate("Processing Machines"), [
+		BlockID.ironFurnace,
+		BlockID.electricFurnace,
+		BlockID.inductionFurnace,
+		BlockID.macerator,
+		BlockID.compressor,
+		BlockID.extractor,
+		BlockID.solidCanner,
+		BlockID.canner,
+		BlockID.recycler,
+		BlockID.metalFormer,
+		BlockID.oreWasher,
+		BlockID.thermalCentrifuge,
+		BlockID.blastFurnace,
+		BlockID.icFermenter,
+		BlockID.massFabricator
+	]);
+
 	Recipes.addShaped({id: BlockID.ironFurnace, count: 1, data: 0}, [
 		" x ",
 		"x x",

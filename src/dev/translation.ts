@@ -488,6 +488,10 @@ Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "
 // Creative Groups
 Translation.addTranslation("Ores", {ru: "Руды", pt: "Minérios", zh: "矿石"});
 Translation.addTranslation("Metal Blocks", {ru: "Блоки металлов", pt: "Blocos de metal", zh: "金属块"});
+Translation.addTranslation("Electric Generators", {ru: "Электрогенераторы"});
+Translation.addTranslation("Heat Generators", {ru: "Теплогенераторы"});
+Translation.addTranslation("Processing Machines", {ru: "Машины-обработчики"});
+Translation.addTranslation("Energy Storages", {ru: "Энергохранилища"});
 Translation.addTranslation("Transformers", {ru: "Трансформаторы", pt: "Transformadores", zh: "变压器"});
 Translation.addTranslation("Cables", {ru: "Провода", pt: "Cabos", zh: "导线"});
 Translation.addTranslation("Battery Packs", {ru: "Аккумуляторные ранцы", pt: "Mochilas de Baterias", zh: "电池背包"});

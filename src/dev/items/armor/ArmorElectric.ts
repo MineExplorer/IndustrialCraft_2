@@ -1,7 +1,6 @@
 /// <reference path="./ArmorIC2.ts" />
 
-abstract class ArmorElectric
-extends ArmorIC2
+abstract class ArmorElectric extends ArmorIC2
 implements IElectricItem, OnHurtListener, OnTickListener {
 	energy: string = "Eu";
 	maxCharge: number;

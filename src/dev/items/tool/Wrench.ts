@@ -1,5 +1,4 @@
-class ToolWrench
-extends ItemCommon
+class ToolWrench extends ItemCommon
 implements IWrech {
 	dropChance: number;
 

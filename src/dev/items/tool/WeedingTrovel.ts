@@ -1,5 +1,4 @@
-class ItemWeedingTrowel
-extends ItemCommon {
+class ItemWeedingTrowel extends ItemCommon {
     constructor() {
         super("weedingTrowel", "weeding_trowel", "weeding_trowel");
         this.setMaxStack(1);

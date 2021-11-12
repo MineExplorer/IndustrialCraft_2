@@ -1,15 +1,16 @@
 LIBRARY({
     name: "SoundLib",
-    version: 1,
+    version: 2,
     shared: false,
     api: "CoreEngine"
 });
 var SoundManager;
 (function (SoundManager) {
-    var settings_path = "/storage/emulated/0/games/Horizon/minecraftpe/options.txt";
+    var settings_folder = getMCPEVersion().main === 28 ? "Horizon" : "com.mojang";
+    var settings_path = "/storage/emulated/0/games/" + settings_folder + "/minecraftpe/options.txt";
     SoundManager.maxStreams = 0;
     SoundManager.playingStreams = 0;
-    SoundManager.soundPath = "";
+    SoundManager.resourcePath = "";
     SoundManager.soundData = {};
     SoundManager.audioSources = [];
     function readSettings() {
@@ -24,29 +25,34 @@ var SoundManager;
     }
     SoundManager.init = init;
     function setResourcePath(path) {
-        SoundManager.soundPath = path;
+        SoundManager.resourcePath = path;
     }
     SoundManager.setResourcePath = setResourcePath;
     function registerSound(soundName, path, looping) {
         if (looping === void 0) { looping = false; }
+        var sounds;
         if (Array.isArray(path)) {
-            var soundID = [];
+            sounds = [];
             for (var i in path) {
-                soundID.push(SoundManager.soundPool.load(SoundManager.soundPath + path[i], 1));
+                var soundPath = SoundManager.resourcePath + path[i];
+                sounds.push(new Sound(soundName, SoundManager.soundPool, soundPath, looping));
             }
         }
         else {
-            path = SoundManager.soundPath + path;
-            var soundID = SoundManager.soundPool.load(path, 1);
+            var soundPath = SoundManager.resourcePath + path;
+            sounds = new Sound(soundName, SoundManager.soundPool, soundPath, looping);
         }
-        SoundManager.soundData[soundName] = { id: soundID, path: path, looping: looping };
-        return soundID;
+        SoundManager.soundData[soundName] = sounds;
     }
     SoundManager.registerSound = registerSound;
-    function getSoundData(soundName) {
-        return SoundManager.soundData[soundName];
+    function getSound(soundName) {
+        var sound = SoundManager.soundData[soundName];
+        if (Array.isArray(sound)) {
+            return sound[Math.floor(Math.random() * sound.length)];
+        }
+        return sound;
     }
-    SoundManager.getSoundData = getSoundData;
+    SoundManager.getSound = getSound;
     function getSoundDuration(soundName) {
         var sound = SoundManager.soundData[soundName];
         if (sound) {
@@ -66,7 +72,7 @@ var SoundManager;
     function playSound(soundName, volume, pitch) {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
-        var sound = getSoundData(soundName);
+        var sound = getSound(soundName);
         if (!sound) {
             Logger.Log("Cannot find sound: " + soundName, "ERROR");
             return 0;
@@ -112,12 +118,12 @@ var SoundManager;
     }
     SoundManager.playSoundAtBlock = playSoundAtBlock;
     function createSource(sourceType, source, soundName, volume, radius) {
-        if (sourceType == SourceType.ENTITY && typeof (source) != "number") {
-            Logger.Log("Invalid source type " + typeof (source) + "for AudioSource.ENTITY", "ERROR");
+        if (sourceType == SourceType.ENTITY && typeof source != "number") {
+            Logger.Log("Invalid source type " + typeof source + "for AudioSource.ENTITY", "ERROR");
             return null;
         }
-        if (sourceType == SourceType.TILEENTITY && typeof (source) != "object") {
-            Logger.Log("Invalid source type " + typeof (source) + "for AudioSource.TILEENTITY", "ERROR");
+        if (sourceType == SourceType.TILEENTITY && typeof source != "object") {
+            Logger.Log("Invalid source type " + typeof source + "for AudioSource.TILEENTITY", "ERROR");
             return null;
         } /*
         let soundID = getSoundID(soundName);
@@ -262,8 +268,24 @@ var SoundManager;
     });
 })(SoundManager || (SoundManager = {}));
 var Sound = /** @class */ (function () {
-    function Sound() {
+    function Sound(name, soundPool, path, looping) {
+        this.name = name;
+        this.soundPool = soundPool;
+        this.path = path;
+        this.looping = looping;
+        this.id = soundPool.load(path, 1);
     }
+    Sound.prototype.getDuration = function () {
+        if (!this.duration) {
+            var mmr = new android.media.MediaMetadataRetriever();
+            mmr.setDataSource(this.path);
+            var durationStr = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+            var duration = parseInt(durationStr);
+            this.duration = duration - duration % 50;
+            Game.message(this.name + " - " + this.duration);
+        }
+        return this.duration;
+    };
     return Sound;
 }());
 var SourceType;
@@ -293,7 +315,7 @@ var AudioSource = /** @class */ (function () {
         }
         this.radius = radius;
         this.volume = volume;
-        var soundData = SoundManager.getSoundData(soundName);
+        var soundData = SoundManager.getSound(soundName);
         this.isLooping = soundData.looping;
         this.startTime = Debug.sysTime();
         this.play();
@@ -316,7 +338,7 @@ var AudioSource = /** @class */ (function () {
         this.stop();
         if (this.soundName) {
             this.soundName = this.nextSound;
-            this.isLooping = SoundManager.getSoundData(this.soundName).looping;
+            this.isLooping = SoundManager.getSound(this.soundName).looping;
             this.nextSound = "";
             this.play();
         }

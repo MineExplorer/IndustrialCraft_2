@@ -1,7 +1,6 @@
 /// <reference path="./ArmorIC2.ts" />
 
-class ArmorSolarHelmet
-extends ArmorIC2
+class ArmorSolarHelmet extends ArmorIC2
 implements OnTickListener {
 	constructor(stringID: string, name: string, params: ArmorParams) {
 		super(stringID, name, params);

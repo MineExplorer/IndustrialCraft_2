@@ -1,5 +1,4 @@
-class ElectricWrench
-extends ItemElectric
+class ElectricWrench extends ItemElectric
 implements IWrech {
 	dropChance = 1;
 	energyPerUse = 100;

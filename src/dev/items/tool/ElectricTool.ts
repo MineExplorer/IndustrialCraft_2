@@ -1,13 +1,15 @@
-abstract class ElectricTool
-extends ItemElectric
+abstract class ElectricTool extends ItemElectric
 implements ToolParams {
 	energyPerUse: number;
 	damage: number = 0;
 	toolMaterial: ToolAPI.ToolMaterial;
 
-	constructor(stringID: string, name: string, toolData: {energyPerUse: number, level: number, efficiency: number, damage: number}, blockMaterials: string[], maxCharge: number, transferLimit: number, tier: number) {
+	constructor(stringID: string, name: string, maxCharge: number, transferLimit: number, tier: number) {
 		super(stringID, name, maxCharge, transferLimit, tier);
 		this.setHandEquipped(true);
+	}
+
+	setToolParams(toolData: {energyPerUse: number, level: number, efficiency: number, damage: number, blockMaterials?: string[]}): void {
 		this.energyPerUse = toolData.energyPerUse;
 		let toolMaterial = {
 			level: toolData.level,
@@ -15,7 +17,7 @@ implements ToolParams {
 			damage: toolData.damage,
 			durability: Item.getMaxDamage(this.id)
 		}
-		ToolAPI.registerTool(this.id, toolMaterial, blockMaterials, this);
+		ToolAPI.registerTool(this.id, toolMaterial, toolData.blockMaterials || [], this);
 	}
 
 	getEnergyPerUse(item: ItemInstance): number {

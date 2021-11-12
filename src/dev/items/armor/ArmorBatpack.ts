@@ -1,7 +1,6 @@
 /// <reference path="./ArmorElectric.ts" />
 
-class ArmorBatpack
-extends ArmorElectric {
+class ArmorBatpack extends ArmorElectric {
 	constructor(stringID: string, name: string, maxCharge: number, transferLimit: number, tier: number) {
 		super(stringID, name, {type: "chestplate", defence: 3, texture: name}, maxCharge, transferLimit, tier);
 		this.canProvideEnergy = true;

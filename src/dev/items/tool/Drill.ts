@@ -1,9 +1,10 @@
 /// <reference path="ElectricTool.ts" />
 
-class ToolDrill
-extends ElectricTool {
-	constructor(stringID: string, name: string, toolData: {energyPerUse: number, level: number, efficiency: number, damage: number}, maxCharge: number, transferLimit: number, tier: number) {
-		super(stringID, name, toolData, ["stone", "dirt"], maxCharge, transferLimit, tier);
+class ToolDrill extends ElectricTool {
+	constructor(stringID: string, name: string, toolData: {energyPerUse: number, level: number, efficiency: number, damage: number, blockMaterials?: string[]}, maxCharge: number, transferLimit: number, tier: number) {
+		super(stringID, name, maxCharge, transferLimit, tier);
+		toolData.blockMaterials = ["stone", "dirt"];
+		this.setToolParams(toolData);
 	}
 
 	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {

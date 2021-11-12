@@ -5,8 +5,10 @@ extends ElectricTool {
 	damage: number = 4;
 	extraDamage: number;
 
-	constructor(stringID: string, name: string, toolData: {energyPerUse: number, level: number, efficiency: number, damage: number}, maxCharge: number, transferLimit: number, tier: number) {
-		super(stringID, name, toolData, ["wood", "wool", "fibre", "plant"], maxCharge, transferLimit, tier);
+	constructor(stringID: string, name: string, toolData: {energyPerUse: number, level: number, efficiency: number, damage: number, blockMaterials?: string[]}, maxCharge: number, transferLimit: number, tier: number) {
+		super(stringID, name, maxCharge, transferLimit, tier);
+		toolData.blockMaterials = ["wood", "wool", "fibre", "plant"];
+		this.setToolParams(toolData);
 		this.extraDamage = toolData.damage;
 		ICTool.setOnHandSound(this.id, "ChainsawIdle.ogg", "ChainsawStop.ogg");
 	}

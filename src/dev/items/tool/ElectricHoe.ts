@@ -1,10 +1,11 @@
-class ElectricHoe
-extends ItemElectric {
+/// <reference path="ElectricTool.ts" />
+
+class ElectricHoe extends ElectricTool {
 	energyPerUse = 50;
 
 	constructor() {
 		super("electricHoe", "electric_hoe", 10000, 100, 1);
-		this.setHandEquipped(true);
+		this.setToolParams({energyPerUse: 50, level: 3, efficiency: 16, damage: 2, blockMaterials: ["plant"]});
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {

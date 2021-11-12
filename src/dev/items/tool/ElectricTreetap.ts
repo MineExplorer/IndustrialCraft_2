@@ -1,5 +1,4 @@
-class ElectricTreetap
-extends ItemElectric {
+class ElectricTreetap extends ItemElectric {
 	energyPerUse = 50;
 
 	constructor() {

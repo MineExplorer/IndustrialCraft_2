@@ -1,10 +1,10 @@
 namespace ItemName {
-	export function setRarity(id: number, rarity: number) {
+	export function setRarity(id: number, rarity: number): void {
 		ItemRegistry.setRarity(id, rarity);
 	}
 
-	export function getRarity(id: number) {
-		ItemRegistry.getRarity(id);
+	export function getRarity(id: number): number {
+		return ItemRegistry.getRarity(id);
 	}
 
 	export function addTooltip(id: number, tooltip: string): void {

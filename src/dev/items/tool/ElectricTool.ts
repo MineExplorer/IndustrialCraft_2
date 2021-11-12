@@ -9,12 +9,12 @@ implements ToolParams {
 		this.setHandEquipped(true);
 	}
 
-	setToolParams(toolData: {energyPerUse: number, level: number, efficiency: number, damage: number, blockMaterials?: string[]}): void {
+	setToolParams(toolData: {energyPerUse: number, level: number, efficiency: number, damage?: number, blockMaterials?: string[]}): void {
 		this.energyPerUse = toolData.energyPerUse;
 		let toolMaterial = {
 			level: toolData.level,
 			efficiency: toolData.efficiency,
-			damage: toolData.damage,
+			damage: toolData.damage || 0,
 			durability: Item.getMaxDamage(this.id)
 		}
 		ToolAPI.registerTool(this.id, toolMaterial, toolData.blockMaterials || [], this);
@@ -24,7 +24,9 @@ implements ToolParams {
 		return this.energyPerUse;
 	}
 
-	onBroke(): boolean {return true;}
+	onBroke(): boolean {
+		return true;
+	}
 
 	onAttack(item: ItemInstance, victim: number, attacker: number): boolean {
 		ICTool.dischargeItem(item, this.getEnergyPerUse(item), attacker);

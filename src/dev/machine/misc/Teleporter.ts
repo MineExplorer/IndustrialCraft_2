@@ -65,7 +65,7 @@ namespace Machine {
 						if (!weight) continue;
 
 						let energyNeed = weight * receive.energy;
-						if (IC2Config.debugMode) Debug.m(energyNeed);
+						if (Game.isDeveloperMode) Debug.m(energyNeed);
 						if (energyNeed <= energyAvailable) {
 							for (let i in storages) {
 								let data = storages[i].data;

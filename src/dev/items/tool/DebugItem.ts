@@ -4,7 +4,7 @@ extends ItemElectric {
 
 	constructor() {
 		super("debugItem", "debug_item", -1, -1, 0, false);
-		if (IC2Config.debugMode) Item.addToCreative(this.id, 1, 0);
+		if (Game.isDeveloperMode) Item.addToCreative(this.id, 1, 0);
 	}
 
 	onCharge(item: ItemInstance, amount: number, tier: number): number {

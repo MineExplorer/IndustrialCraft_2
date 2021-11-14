@@ -46,7 +46,7 @@ namespace ItemName {
 		return color + name + '\n' + ItemName.getItemStorageText(item);
 	}
 
-	export function displayEnergy(energy: number, debug: boolean = IC2Config.debugMode): string {
+	export function displayEnergy(energy: number, debug: boolean = Game.isDeveloperMode): string {
 		if (!debug) {
 			if (energy >= 1e6) {
 				return Math.floor(energy / 1e5) / 10 + "M";

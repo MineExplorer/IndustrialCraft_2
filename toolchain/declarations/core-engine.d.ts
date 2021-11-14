@@ -2543,6 +2543,27 @@ declare class Config {
 
     /**
      * @param name option name, supports multi-layer calls, separated by '.'
+     * @return number config value specified in config or 0 if no value was
+     * specified
+     */
+     getInteger(name: string): number;
+
+    /**
+     * @param name option name, supports multi-layer calls, separated by '.'
+     * @return number config value specified in config or 0 if no value was
+     * specified
+     */
+    getFloat(name: string): number;
+
+    /**
+     * @param name option name, supports multi-layer calls, separated by '.'
+     * @return number config value specified in config or 0 if no value was
+     * specified
+     */
+    getDouble(name: string): number;
+
+    /**
+     * @param name option name, supports multi-layer calls, separated by '.'
      * @return string config value specified in config or null if no value was
      * specified
      */
@@ -5584,6 +5605,11 @@ declare namespace Game {
      * @returns true if item spending allowed
      */
     function isItemSpendingAllowed(player?: number): boolean;
+
+    /**
+     * true if developer mode was enabled in InnerCore config, false otherwise
+     */
+    let isDeveloperMode: boolean;
 }
 /**
  * Class used to create and manipulate game objects. Game objects are [[Updatable]]s 

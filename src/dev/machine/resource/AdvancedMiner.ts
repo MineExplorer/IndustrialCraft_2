@@ -155,11 +155,12 @@ namespace Machine {
 					newActive = true;
 					if (World.getThreadTime()%20 == 0) {
 						if (data.y == 0) {
-							data.x = -scanR;
+							data.x = -1 - scanR;
 							data.y = -1;
 							data.z = -scanR;
 						}
 						for (let i = 0; i < this.maxScanCount; i++) {
+							data.x++;
 							if (data.x > scanR) {
 								data.x = -scanR;
 								data.z++;
@@ -172,7 +173,6 @@ namespace Machine {
 							let x = this.x + data.x;
 							let y = this.y + data.y;
 							let z = this.z + data.z;
-							data.x++;
 							let block = this.region.getBlock(x, y, z);
 							if (this.isValidBlock(block.id, block.data)) {
 								if (this.harvestBlock(x, y, z, block))

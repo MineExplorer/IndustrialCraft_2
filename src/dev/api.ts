@@ -22,6 +22,8 @@ const ICore = {
 	}
 }
 
+Logger.Log(`IndustrialCraft2 loading finished in ${(Debug.sysTime() - startTime)} ms`, "INFO");
+
 ModAPI.registerAPI("ICore", ICore);
 
 Logger.Log("Industrial Core API shared with name ICore.", "API");

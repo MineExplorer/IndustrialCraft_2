@@ -1710,6 +1710,9 @@ var ItemRegistry;
     var items = {};
     var itemsRarity = {};
     var armorMaterials = {};
+    /**
+     * @returns item type ("block" or "item")
+     */
     function getType(id) {
         return IDRegistry.getIdInfo(id).split(":")[0];
     }
@@ -1722,14 +1725,23 @@ var ItemRegistry;
         return getType(id) == "item";
     }
     ItemRegistry.isItem = isItem;
+    /**
+     * @returns whether item is item from the original game
+     */
     function isVanilla(id) {
         return !IDRegistry.getNameByID(id);
     }
     ItemRegistry.isVanilla = isVanilla;
+    /**
+     * @returns item string id in the game, it differs for custom items
+     */
     function getVanillaStringID(id) {
         return IDRegistry.getIdInfo(id).split(":")[1].split("#")[0];
     }
     ItemRegistry.getVanillaStringID = getVanillaStringID;
+    /**
+     * @returns instance of item class if it exists
+     */
     function getInstanceOf(itemID) {
         var numericID = Item.getNumericId(itemID);
         return items[numericID] || null;
@@ -1737,7 +1749,6 @@ var ItemRegistry;
     ItemRegistry.getInstanceOf = getInstanceOf;
     /**
      * @returns EnumRarity value for item
-     * @param itemID item's id
      */
     function getRarity(itemID) {
         var _a;
@@ -1760,12 +1771,16 @@ var ItemRegistry;
     ItemRegistry.getRarityColor = getRarityColor;
     /**
      * @returns chat color for item's rarity
-     * @param itemID item's id
      */
     function getItemRarityColor(itemID) {
         return getRarityColor(getRarity(itemID));
     }
     ItemRegistry.getItemRarityColor = getItemRarityColor;
+    /**
+     * @param id item id
+     * @param rarity one of EnumRarity values
+     * @param preventNameOverride prevent registration of name override function
+     */
     function setRarity(id, rarity, preventNameOverride) {
         var numericID = Item.getNumericId(id);
         itemsRarity[numericID] = rarity;
@@ -1777,29 +1792,56 @@ var ItemRegistry;
         }
     }
     ItemRegistry.setRarity = setRarity;
+    /**
+     * Creates new armor material with specified parameters
+     * @param name new (or existing) material name
+     * @param material material properties
+     */
     function addArmorMaterial(name, material) {
         armorMaterials[name] = material;
     }
     ItemRegistry.addArmorMaterial = addArmorMaterial;
+    /**
+     * @returns armor material by name
+     */
     function getArmorMaterial(name) {
         return armorMaterials[name];
     }
     ItemRegistry.getArmorMaterial = getArmorMaterial;
+    /**
+     * Registers new tool material in ToolAPI. Some of the tool
+     * materials are already registered:
+     * *wood*, *stone*, *iron*, *golden* and *diamond*
+     * @param name new (or existing) material name
+     * @param material material properties
+     */
     function addToolMaterial(name, material) {
         ToolAPI.addToolMaterial(name, material);
     }
     ItemRegistry.addToolMaterial = addToolMaterial;
+    /**
+     * @returns tool material by name registered in ToolAPI
+     */
     function getToolMaterial(name) {
         //@ts-ignore
         return ToolAPI.toolMaterials[name];
     }
     ItemRegistry.getToolMaterial = getToolMaterial;
+    /**
+     * Registers item instance and it's functions.
+     * @param itemInstance item class instance
+     * @returns item instance back
+     */
     function registerItem(itemInstance) {
         items[itemInstance.id] = itemInstance;
         registerItemFuncs(itemInstance.id, itemInstance);
         return itemInstance;
     }
     ItemRegistry.registerItem = registerItem;
+    /**
+     * Registers all item functions from given object.
+     * @param itemFuncs object which implements ItemBehavior interface
+     */
     function registerItemFuncs(itemID, itemFuncs) {
         if ('onNameOverride' in itemFuncs) {
             Item.registerNameOverrideFunction(itemID, function (item, translation, name) {
@@ -1839,6 +1881,13 @@ var ItemRegistry;
         }
     }
     ItemRegistry.registerItemFuncs = registerItemFuncs;
+    /**
+     * Creates item from given description. Automatically generates item id
+     * from given string id.
+     * @param stringID item string id.
+     * @param params item description
+     * @returns item class instance
+     */
     function createItem(stringID, params) {
         var item;
         if (params.type == "food") {
@@ -1870,6 +1919,13 @@ var ItemRegistry;
     }
     ItemRegistry.createItem = createItem;
     ;
+    /**
+     * Creates armor item from given description. Automatically generates item id
+     * from given string id.
+     * @param stringID item string id
+     * @param params item and armor parameters
+     * @returns item class instance
+     */
     function createArmor(stringID, params) {
         var item = new ItemArmor(stringID, params.name, params.icon, params, params.inCreative);
         registerItem(item);
@@ -1883,6 +1939,14 @@ var ItemRegistry;
     }
     ItemRegistry.createArmor = createArmor;
     ;
+    /**
+     * Creates tool item and registers it in ToolAPI. Automatically generates item id
+     * from given string id.
+     * @param stringID item string id
+     * @param params object with item parameters and tool material
+     * @param toolData tool parameters and functions
+     * @returns item class instance
+     */
     function createTool(stringID, params, toolData) {
         var item = new ItemTool(stringID, params.name, params.icon, params.material, toolData, params.inCreative);
         registerItem(item);

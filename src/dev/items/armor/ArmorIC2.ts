@@ -1,5 +1,4 @@
-class ArmorIC2
-extends ItemArmor {
+class ArmorIC2 extends ItemArmor {
 	constructor(stringID: string, name: string, params: ArmorParams, inCreative?: boolean) {
 		super(stringID, name, name, params, inCreative);
 	}

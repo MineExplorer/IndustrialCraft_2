@@ -1,5 +1,4 @@
-class ItemPainter
-extends ItemCommon {
+class ItemPainter extends ItemCommon {
 	readonly color: number;
 
 	constructor(colorIndex: number) {

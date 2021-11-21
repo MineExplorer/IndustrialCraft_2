@@ -1,5 +1,4 @@
-class ItemTreetap
-extends ItemCommon {
+class ItemTreetap extends ItemCommon {
 	constructor() {
 		super("treetap", "treetap", "treetap");
 		this.setMaxStack(1);

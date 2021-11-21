@@ -1,5 +1,4 @@
-class ItemTransmitter
-extends ItemCommon
+class ItemTransmitter extends ItemCommon
 implements ItemBehavior {
 	constructor() {
 		super("freqTransmitter", "frequency_transmitter", "frequency_transmitter");

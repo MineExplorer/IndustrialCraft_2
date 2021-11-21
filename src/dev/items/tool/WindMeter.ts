@@ -1,5 +1,4 @@
-class ItemWindMeter
-extends ItemElectric
+class ItemWindMeter extends ItemElectric
 implements ItemBehavior {
 	energyPerUse = 50;
 

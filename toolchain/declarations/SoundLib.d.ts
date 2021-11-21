@@ -1,55 +1,55 @@
 declare namespace SoundManager {
-    type SoundData = {
-        id: number | number[];
-        path: string;
-        looping: boolean;
-        duration?: number;
+    let soundVolume: number;
+    let musicVolume: number;
+    let soundPool: android.media.SoundPool;
+    let maxStreams: number;
+    let playingStreams: number;
+    let resourcePath: string;
+    let soundData: {
+        [key: string]: Sound | Sound[];
     };
-    export let soundVolume: number;
-    export let musicVolume: number;
-    export let soundPool: android.media.SoundPool;
-    export let maxStreams: number;
-    export let playingStreams: number;
-    export let soundPath: string;
-    export let soundData: object;
-    export let audioSources: Array<AudioSource>;
-    export function readSettings(): void;
-    export function init(maxStreamsCount: number): void;
-    export function setResourcePath(path: string): void;
-    export function registerSound(soundName: string, path: string | string[], looping?: boolean): void;
-    export function getSoundData(soundName: string): SoundData;
-    export function getSoundDuration(soundName: string): any;
-    export function playSound(soundName: string, volume?: number, pitch?: number): number;
-    export function playSoundAt(x: number, y: number, z: number, soundName: string, volume?: number, pitch?: number, radius?: number): number;
-    export function playSoundAtEntity(entity: number, soundName: string, volume?: number, pitch?: number, radius?: number): number;
-    export function playSoundAtBlock(tile: any, soundName: string, volume?: number, radius?: number): number;
-    export function createSource(sourceType: SourceType, source: any, soundName: string, volume?: number, radius?: number): AudioSource;
-    export function getSource(source: any, soundName?: string): AudioSource;
-    export function getAllSources(source: any, soundName?: string): AudioSource[];
-    export function removeSource(audioSource: AudioSource): void;
-    export function startPlaySound(sourceType: SourceType, source: any, soundName: string, volume?: number, radius?: number): AudioSource;
-    export function stopPlaySound(source: any, soundName?: string): boolean;
-    export function setVolume(streamID: number, leftVolume: number, rightVolume?: number): void;
-    export function stop(streamID: number): void;
-    export function pause(streamID: number): void;
-    export function resume(streamID: number): void;
-    export function stopAll(): void;
-    export function autoPause(): void;
-    export function autoResume(): void;
-    export function release(): void;
-    export function tick(): void;
-    export {};
+    let audioSources: Array<AudioSource>;
+    function readSettings(): void;
+    function init(maxStreamsCount: number): void;
+    function setResourcePath(path: string): void;
+    function registerSound(soundName: string, path: string | string[], looping?: boolean): void;
+    function getSound(soundName: string): Sound;
+    function playSound(soundName: string | Sound, volume?: number, pitch?: number): number;
+    function playSoundAt(x: number, y: number, z: number, soundName: string | Sound, volume?: number, pitch?: number, radius?: number): number;
+    function playSoundAtEntity(entity: number, soundName: string | Sound, volume?: number, pitch?: number, radius?: number): number;
+    function playSoundAtBlock(tile: any, soundName: string | Sound, volume?: number, radius?: number): number;
+    function createSource(sourceType: SourceType, source: any, soundName: string, volume?: number, radius?: number): AudioSource;
+    function getSource(source: any, soundName?: string): AudioSource;
+    function getAllSources(source: any, soundName?: string): AudioSource[];
+    function removeSource(audioSource: AudioSource): void;
+    function startPlaySound(sourceType: SourceType, source: any, soundName: string, volume?: number, radius?: number): AudioSource;
+    function stopPlaySound(source: any, soundName?: string): boolean;
+    function setVolume(streamID: number, leftVolume: number, rightVolume?: number): void;
+    function stop(streamID: number): void;
+    function pause(streamID: number): void;
+    function resume(streamID: number): void;
+    function stopAll(): void;
+    function autoPause(): void;
+    function autoResume(): void;
+    function release(): void;
+    function tick(): void;
 }
 declare class Sound {
-    soundID: number;
-    path: number;
-    constructor();
+    name: string;
+    soundPool: android.media.SoundPool;
+    path: string;
+    looping: boolean;
+    id: number;
+    private duration;
+    constructor(name: string, soundPool: android.media.SoundPool, path: string, looping: boolean);
+    getDuration(): number;
 }
 declare enum SourceType {
     ENTITY = 0,
     TILEENTITY = 1
 }
 declare class AudioSource {
+    sound: Sound;
     soundName: string;
     nextSound: string;
     sourceType: SourceType;
@@ -59,7 +59,6 @@ declare class AudioSource {
     dimension: number;
     streamID: number;
     volume: number;
-    isLooping: boolean;
     isPlaying: boolean;
     startTime: number;
     remove: boolean;

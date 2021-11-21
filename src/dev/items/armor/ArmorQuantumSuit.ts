@@ -1,8 +1,7 @@
 /// <reference path="./ArmorElectric.ts" />
 /// <reference path="./JetpackProvider.ts" />
 
-class ArmorQuantumSuit
-extends ArmorElectric {
+class ArmorQuantumSuit extends ArmorElectric {
 	constructor(stringID: string, name: string, params: ArmorParams, inCreative?: boolean) {
 		super(stringID, name, params, 1e7, 12000, 4, inCreative);
 		this.setRarity(EnumRarity.RARE);
@@ -30,8 +29,7 @@ extends ArmorElectric {
 	}
 }
 
-class ArmorQuantumHelmet
-extends ArmorQuantumSuit {
+class ArmorQuantumHelmet extends ArmorQuantumSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "helmet", defence: 3, texture: texture});
 		ToolHUD.setButtonFor(this.id, "button_nightvision");
@@ -99,8 +97,7 @@ extends ArmorQuantumSuit {
 	}
 }
 
-class ArmorQuantumChestplate
-extends ArmorQuantumSuit {
+class ArmorQuantumChestplate extends ArmorQuantumSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "chestplate", defence: 8, texture: texture});
 		ToolHUD.setButtonFor(this.id, "button_fly");
@@ -123,8 +120,7 @@ extends ArmorQuantumSuit {
 	}
 }
 
-class ArmorQuantumLeggings
-extends ArmorQuantumSuit {
+class ArmorQuantumLeggings extends ArmorQuantumSuit {
 	runTime: number;
 
 	constructor(stringID: string, name: string, texture: string) {
@@ -155,8 +151,7 @@ extends ArmorQuantumSuit {
 	}
 }
 
-class ArmorQuantumBoots
-extends ArmorQuantumSuit {
+class ArmorQuantumBoots extends ArmorQuantumSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "boots", defence: 3, texture: texture});
 		ToolHUD.setButtonFor(this.id, "button_jump")

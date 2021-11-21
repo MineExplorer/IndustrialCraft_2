@@ -11,8 +11,7 @@ Callback.addCallback("PreLoaded", function() {
 	}
 });
 
-class ItemScanner
-extends ItemElectric {
+class ItemScanner extends ItemElectric {
 	constructor(stringID: string, name: string, maxCharge: number, transferLimit: number, tier: number) {
 		super(stringID, name, maxCharge, transferLimit, tier);
 	}

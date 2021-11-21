@@ -1,7 +1,6 @@
 /// <reference path="./ArmorElectric.ts" />
 
-class ArmorNightvisionGoggles
-extends ArmorElectric {
+class ArmorNightvisionGoggles extends ArmorElectric {
 	constructor() {
 		super("nightvisionGoggles", "nightvision_goggles", {type: "helmet", defence: 1, texture: "nightvision"}, 100000, 256, 2);
 		ToolHUD.setButtonFor(this.id, "button_nightvision");

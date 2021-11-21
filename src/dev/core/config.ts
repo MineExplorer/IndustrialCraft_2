@@ -1,5 +1,4 @@
 namespace IC2Config {
-	export let debugMode = getBool("debug_mode");
 	export let soundEnabled = getBool("sound_enabled");
 	export let machineSoundEnabled = getBool("machine_sounds");
 	export let voltageEnabled = getBool("voltage_enabled");
@@ -25,12 +24,12 @@ Callback.addCallback("LevelLeft", function() {
 	isLevelDisplayed = false;
 });
 
-// debug
+// show tps
 let lasttime = -1;
 let frame = 0;
 
-if (IC2Config.debugMode) {
-	Callback.addCallback("tick", function() {
+Callback.addCallback("tick", function() {
+	if (Game.isDeveloperMode) {
 		let t = Debug.sysTime();
 		if (frame++ % 20 == 0) {
 			if (lasttime != -1) {
@@ -39,5 +38,5 @@ if (IC2Config.debugMode) {
 			}
 			lasttime = t
 		}
-	});
-}
+	}
+});

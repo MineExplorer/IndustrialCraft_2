@@ -1,8 +1,8 @@
-class ItemNanoSaber
-extends ElectricTool {
+class ItemNanoSaber extends ElectricTool {
 	damage = 4;
 	constructor() {
-		super("nanoSaber", "nano_saber", {energyPerUse: 64, level: 0, damage: 16, efficiency: 4}, [], 1000000, 2048, 3);
+		super("nanoSaber", "nano_saber", 1000000, 2048, 3);
+		this.setToolParams({energyPerUse: 64, level: 0, damage: 16, efficiency: 4});
 		this.setRarity(EnumRarity.UNCOMMON);
 		//ICTool.setOnHandSound(this.id, "NanosaberIdle.ogg");
 	}

@@ -1,7 +1,6 @@
 /// <reference path="./ArmorIC2.ts" />
 
-class ArmorHazmat
-extends ArmorIC2
+class ArmorHazmat extends ArmorIC2
 implements OnHurtListener, OnTickListener {
 	constructor(stringID: string, name: string, params: ArmorParams) {
 		super(stringID, name, params);

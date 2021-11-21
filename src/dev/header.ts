@@ -25,6 +25,9 @@ IMPORT("VanillaRecipe");
 VanillaRecipe.setResourcePath(__dir__ + "assets/res/"); // for MC 1.11 recipes
 VanillaRecipe.setBehaviorPath(__dir__ + "minecraft_packs/behavior/"); // for MC 1.16 recipes
 
+const startTime = Debug.sysTime();
+ItemModel.setCurrentCacheGroup("industrial-craft", "1")
+
 // constants
 const GUI_SCALE = 3.2;
 const GUI_SCALE_NEW = 3;

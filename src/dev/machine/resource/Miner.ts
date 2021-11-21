@@ -128,8 +128,8 @@ namespace Machine {
 			return null;
 		}
 
-		mineBlock(x: number, y: number, z: number, block: Tile, item: ItemInstance): void {
-			let result = this.region.breakBlockForResult(x, y, z, -1, item);
+		mineBlock(x: number, y: number, z: number, block: Tile, item: ItemContainerSlot): void {
+			let result = this.region.breakBlockForResult(x, y, z, -1, new ItemStack(item));
 			this.drop(result.items);
 			this.data.progress = 0;
 		}
@@ -199,7 +199,7 @@ namespace Machine {
 						}
 						if (this.data.progress >= params.time) {
 							level = ToolAPI.getToolLevelViaBlock(drillSlot.id, block.id);
-							this.mineBlock(coords.x, coords.y, coords.z, block, new ItemStack(drillSlot));
+							this.mineBlock(coords.x, coords.y, coords.z, block, drillSlot);
 						}
 					}
 				}

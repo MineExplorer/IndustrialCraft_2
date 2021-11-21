@@ -1,7 +1,6 @@
 /// <reference path="./ArmorElectric.ts" />
 
-class ArmorNanoSuit
-extends ArmorElectric {
+class ArmorNanoSuit extends ArmorElectric {
 	constructor(stringID: string, name: string, params: ArmorParams, inCreative?: boolean) {
 		super(stringID, name, params, 1000000, 2048, 3, inCreative);
 		this.setRarity(EnumRarity.UNCOMMON);
@@ -28,8 +27,7 @@ extends ArmorElectric {
 	}
 }
 
-class ArmorNanoHelmet
-extends ArmorNanoSuit {
+class ArmorNanoHelmet extends ArmorNanoSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "helmet", defence: 3, texture: texture});
 		ToolHUD.setButtonFor(this.id, "button_nightvision");
@@ -57,22 +55,19 @@ extends ArmorNanoSuit {
 	}
 }
 
-class ArmorNanoChestplate
-extends ArmorNanoSuit {
+class ArmorNanoChestplate extends ArmorNanoSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "chestplate", defence: 8, texture: texture});
 	}
 }
 
-class ArmorNanoLeggings
-extends ArmorNanoSuit {
+class ArmorNanoLeggings extends ArmorNanoSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "leggings", defence: 6, texture: texture});
 	}
 }
 
-class ArmorNanoBoots
-extends ArmorNanoSuit {
+class ArmorNanoBoots extends ArmorNanoSuit {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "boots", defence: 3, texture: texture});
 	}

@@ -542,6 +542,20 @@ declare namespace Block {
 	function createBlockWithRotation(nameID: string, defineData: BlockVariation[], blockType?: SpecialType | string): void;
 
 	/**
+	 * Creates new liquid block using specified params
+	 * @param nameID string id of the block. You should register it via
+	 * [[IDRegistry.genBlockID]] call first
+	 * @param defineData object containing all needed params to describe your custom liquid block.
+	 * There you can specify custom name IDs for static and dynamic liquid blocks separately,
+	 * and if you do this, you have to register those name IDs
+	 * via [[IDRegistry.genBlockID]] before using them
+	 * @param blockType [[SpecialType]] object, either java-object returned by
+	 * [[Block.createSpecialType]] or js-object with the required properties,
+	 * you can also pass special type name, if the type was previously registered
+	 */
+	function createLiquidBlock(nameID: string, defineData: LiquidDescriptor, blockType?: SpecialType | string): void;
+
+	/**
 	 * @param id numeric block id
 	 * @returns true, if the specified block id is a vanilla block
 	 */
@@ -808,6 +822,18 @@ declare namespace Block {
 	function registerEntityStepOnFunctionForID(id: number, func: EntityStepOnFunction): void;
 
 	/**
+	 * Defines custom behavior when the player clicks on the block with definite id
+	 * @param nameId block's numeric or string id
+	 * @param func function that will be called when the player clicks the block with given id
+	 */
+	function registerClickFunction(nameId: string | number, func: ClickFunction): void;
+
+	/**
+	 * Same as [[Block.registerClickFunction]], but only numeric block id can be passed
+	 */
+	function registerClickFunctionForID(id: number, func: ClickFunction): void;
+
+	/**
 	 * @returns whether the block of given id can contain liquid inside
 	 */
 	function canContainLiquid(id: number): boolean;
@@ -980,6 +1006,78 @@ declare namespace Block {
 	}
 
 	/**
+	 * Object to specify needed params for custom liquid block
+	 */
+	interface LiquidDescriptor {
+		/**
+		 * Name of the block to be displayed 
+		 */
+		name: string,
+		/**
+		 * Delay between liquid spreading steps in ticks.
+		 * This is optional, default value is 10
+		 */		
+		tickDelay?: number,
+		/**
+		 * True if the liquid will be renewable, as water,
+		 * this parameter is false by default
+		 */
+		isRenewable?: boolean,
+		/**
+		 * Object to describe static liquid block
+		 * texture, and name id additionally
+		 */
+		still: {
+			/**
+			 * Optional, name id for static liquid block,
+			 * by default it is `nameId_still`
+			 */
+			id?: string,
+			/**
+			 * For static liquid block,
+			 * textures must be of standard block texture format
+			 */
+			texture: [string, number]
+		},
+		/**
+		 * Object to describe dynamic liquid block
+		 * texture, and name id additionally
+		 */
+		flowing: {
+			/**
+			 * Optional, name id for dynamic liquid block,
+			 * by default it is `nameId`
+			 */
+			id?: string,
+			/**
+			 * Unlike static liquid blocks,
+			 * for dynamic ones, texture must look like
+			 * `texture.liquid.png` (with no index)
+			 */
+			texture: [string, number]
+		},
+		/**
+		 * Optional section, if added, this will create fully
+		 * functional (including dispensers) bucket items
+		 */
+		bucket?: {
+			/**
+			 * Optional, name id for bucket item,
+			 * by default it is `nameId_bucket`
+			 */
+			id?: string,
+			texture: { name: string, meta?: number }
+		},
+		/**
+		 * Whether to add liquid block to creative inventory,
+		 * default is false
+		 */
+		inCreative?: boolean,
+		uiTextures?: string,
+		modelTextures?: string
+	}
+
+	/**
 	 * Function used to determine block drop
 	 * @param blockCoords coordinates where the block is destroyed and side from
 	 * where it is destroyed
@@ -1068,6 +1166,18 @@ declare namespace Block {
 	 */
 	interface NeighbourChangeFunction {
 		(coords: Vector, block: Tile, changedCoords: Vector, region: BlockSource): void
+	}
+
+	/**
+	 * Function used to define how the block will behave when the player clicks on it
+	 * @param coords set of all coordinate values that can be useful to write 
+	 * custom logics on click
+	 * @param item item that was in the player's hand when he touched the block
+	 * @param block block that was touched
+	 * @param player unique id of the player entity
+	 */
+	interface ClickFunction {
+		(coords: Callback.ItemUseCoordinates, item: ItemInstance, block: Tile, player: number): void;
 	}
 
 	/**
@@ -1610,7 +1720,8 @@ declare class BlockSource {
 	 * and all except the entities of the given type, if blacklist value is true
 	 */
 	listEntitiesInAABB(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, type: number, blacklist: boolean): number[];
-
+	
+	setDestroyParticlesEnabled(destroyParticlesEnabled: boolean): void;
 
 	/**
 	 * @returns interface to given dimension by default 
@@ -2284,12 +2395,15 @@ declare namespace Callback {
 
     /**
      * Function used in "ItemDispensed" callback
-     * @param coords coordinates of the spawned drop item entity
+     * @param coords full coords object, where the main coords are the position of the dispenser block,
+     * `relative` ones are the position of the block to which the dispenser is pointed,
+     * and `vec` are the coords for the item to be dropped at
      * @param item item that was dispensed
      * @param region BlockSource object
+     * @param slot numeric id of the slot from which the item was dispensed
      */
     interface ItemDispensedFunction {
-        (coords: BlockPosition, item: ItemInstance, region: BlockSource): void
+        (coords: Callback.ItemUseCoordinates, item: ItemInstance, region: BlockSource, slot: number): void
     }
 
     /**
@@ -2540,6 +2654,27 @@ declare class Config {
      * specified
      */
     getNumber(name: string): java.lang.Number;
+
+    /**
+     * @param name option name, supports multi-layer calls, separated by '.'
+     * @return number config value specified in config or 0 if no value was
+     * specified
+     */
+     getInteger(name: string): number;
+
+    /**
+     * @param name option name, supports multi-layer calls, separated by '.'
+     * @return number config value specified in config or 0 if no value was
+     * specified
+     */
+    getFloat(name: string): number;
+
+    /**
+     * @param name option name, supports multi-layer calls, separated by '.'
+     * @return number config value specified in config or 0 if no value was
+     * specified
+     */
+    getDouble(name: string): number;
 
     /**
      * @param name option name, supports multi-layer calls, separated by '.'
@@ -3082,6 +3217,147 @@ declare class CustomBiome {
     setClientJson(json: string): CustomBiome;
 }
 
+/**
+ * Module to create custom enchantments.
+ * Available starting from InnerCore 2.2.1b105
+ */
+declare namespace CustomEnchant {
+
+    /**
+     * Object returned by [[CustomEnchant.newEnchant]] method.
+     * Used to configure different custom enchantment behaviors
+     */
+    interface EnchantSetupInterface {
+
+        /**
+         * The numeric id of the following enchantment
+         * to be used in different operations.
+         * This id will not change after the first generation,
+         * same as it works with blocks' and items' ids.
+         */
+        readonly id: number;
+
+        /**
+         * Sets the following enchantment frequency, possibly used in treasures.
+         * Default value is 3
+         * @returns reference to itself to be used in sequential calls
+         */
+        setFrequency(freq: number): EnchantSetupInterface;
+
+        /**
+         * Sets whether the following enchantment will be able 
+         * to be found in dungeon chests or not.
+         * Default value is true.
+         * @returns reference to itself to be used in sequential calls
+         */
+        setIsLootable(lootable: boolean): EnchantSetupInterface;
+
+        /**
+         * Sets whether the following enchantment will be able
+         * to be received on the enchanting table or not.
+         * Default value is true.
+         * @returns reference to itself to be used in sequential calls
+         */
+        setIsDiscoverable(discoverable: boolean): EnchantSetupInterface;
+
+        /**
+         * Sets whether the following enchantment will be able
+         * to be caught during fishing as a treasure, or not.
+         * Default value is false.
+         * @returns reference to itself to be used in sequential calls
+         */
+        setIsTreasure(treasure: boolean): EnchantSetupInterface;
+
+        /**
+         * Sets the mask of items, that the following enchantment can be applied to, 
+         * paired parameter for item is enchant slot, default is -1 = 0xFFFFFFFF - all
+         * @returns reference to itself to be used in sequential calls
+         */
+        setMask(mask: number): EnchantSetupInterface;
+
+        /**
+         * Sets minimum and maximum level, that the following enchantment
+         * will be able to have in legal conditions.
+         * Default is 1-5
+         * @returns reference to itself to be used in sequential calls
+         */
+        setMinMaxLevel(min: number, max: number): EnchantSetupInterface;
+
+        /**
+         * Sets linear dependency of enchant cost by level,
+         * the formula is `level * b + c`
+         * @returns reference to itself to be used in sequential calls
+         */
+        setMinMaxCost(bMin: number, cMin: number, bMax: number, cMax: number): EnchantSetupInterface;
+
+        /**
+         * Defines the function that will be called, when item with following enchantment is used for attack.
+         * The function must return bonus damage dealt to the victim. 
+         * NOTE: this method is highly experimental right now
+         * @returns reference to itself to be used in sequential calls
+         */
+        setAttackDamageBonusProvider(func: AttackDamageBonusProvider): EnchantSetupInterface;
+
+        /**
+         * Defines the function that will be called after the item with following enchantment is used for attack.
+         * NOTE: this method is highly experimental right now
+         * @returns reference to itself to be used in sequential calls
+         */
+        setPostAttackCallback(func: DamageCallback): EnchantSetupInterface;
+
+        /**
+         * Defines the function that will be called, when the entity wearing item
+         * with following enchantment, is hit.
+         * The function must return bonus protection value.
+         * NOTE: this method is highly experimental right now
+         * @returns reference to itself to be used in sequential calls
+         */
+        setProtectionBonusProvider(func: ProtectionBonusProvider): EnchantSetupInterface;
+
+        /**
+         * Defines the function that will be called, when the entity wearing item
+         * with following enchantment, is hit.
+         * NOTE: this method is highly experimental right now
+         * @returns reference to itself to be used in sequential calls
+         */
+        setPostHurtCallback(func: DamageCallback): EnchantSetupInterface;
+
+    }
+
+    /**
+     * Registers new custom enchantment from given name id and displayed name
+     * @param nameID internal string id of the enchantment
+     * @param displayedName enchantment name that will be displayed in the
+     * tooltips of the items having this enchant.
+     * Use [[Translation]] module to make localization of the displayed name
+     * @returns object to work with different enchantment behaviors
+     */
+    function newEnchant(nameID: string, displayedName: string): EnchantSetupInterface;
+
+    /**
+     * Function interface used in [[EnchantSetupInterface.setAttackDamageBonusProvider]] method
+     */
+    interface AttackDamageBonusProvider {
+        (damage: number, entity: number): number;
+    }
+
+    /**
+     * Function interface used in
+     * [[EnchantSetupInterface.setPostAttackCallback]] and
+     * [[EnchantSetupInterface.setPostHurtCallback]] methods
+     */
+    interface DamageCallback {
+        (item: ItemInstance, damage: number, entity1: number, entity2: number): void;
+    }
+
+    /**
+     * Function interface used in [[EnchantSetupInterface.setProtectionBonusProvider]] method
+     */
+    interface ProtectionBonusProvider {
+        (damage: number, damageType: number, entity: number): number;
+    }
+
+}
 /**
  * Defines some useful methods for debugging
  */
@@ -3770,7 +4046,9 @@ declare namespace Entity {
 
     /**
      * Adds an effect to the mob
-     * @param effectId effect id, should be one of the [[Native.PotionEffect]]
+     * @param effectId effect id, should be one
+     * one of [[Native.PotionEffect]] or [[EPotionEffect]] values.
+     * @returns whether the ]]
      * values
      * @param effectData effect amplifier
      * @param effectTime effect time in ticks
@@ -4256,6 +4534,22 @@ declare namespace Entity {
      * the way to get there
      */
     function getPathNavigation(ent: number): PathNavigation;
+
+    /**
+     * @param effectId numeric id of the potion effect,
+     * one of [[Native.PotionEffect]] or [[EPotionEffect]] values.
+     * @returns whether the given entity is affected by the potion effect with given numeric id
+     */
+    function hasEffect(entity: number, effectId: number): boolean;
+
+    interface EffectInstance { level: number, duration: number }
+
+    /**
+     * @returns object with duration and level of the potion effect with given numeric id
+     * on the given entity. These fields are set to 0, if the given effect doesn't affect
+     * the given entity at the moment.
+     */
+    function getEffect(entity: number, effectId: number): EffectInstance;
 
     /**
      * Object used to build path and move mobs to the required coordinates using
@@ -5037,7 +5331,7 @@ declare enum EEnchantment {
  * Defines all vanilla entity type numeric ids
  */
 declare enum EEntityType {
-    PLAYER = 1,
+    PLAYER = 63,
     CHICKEN = 10,
     COW = 11,
     PIG = 12,
@@ -5584,6 +5878,11 @@ declare namespace Game {
      * @returns true if item spending allowed
      */
     function isItemSpendingAllowed(player?: number): boolean;
+
+    /**
+     * true if developer mode was enabled in InnerCore config, false otherwise
+     */
+    let isDeveloperMode: boolean;
 }
 /**
  * Class used to create and manipulate game objects. Game objects are [[Updatable]]s 
@@ -7244,6 +7543,21 @@ declare namespace LiquidRegistry {
         updateUiScale(scale: string, liquid: string, container?: UI.Container): void;
         _setContainerScale(container: UI.Container, scale: string, liquid: string, val: number): void;
     }
+
+    /**
+     * @returns string id of a liquid for given block,
+     * or null, if a block with given id is not a liquid
+     */
+    function getLiquidByBlock(id: number): Nullable<string>;
+
+    /**
+     * @returns numeric id of the liquid block by given [[LiquidRegistry]] string id.
+     * If `isStatic` param is passed and it is true, the static liquid block id will be returned,
+     * otherwise the dynamic block id will be returned.
+     * This function will return 0 if no liquid with given string id exists
+     */
+    function getBlockByLiquid(liquidId: string, isStatic?: boolean): number;
+
 }
 /**
  * Module used to log messages to Inner Core log and android log
@@ -8053,7 +8367,7 @@ declare namespace Native {
         PIG = 12,
         PIG_ZOMBIE = 36,
         PILLAGER = 114,
-        PLAYER = 63,
+        PLAYER = 1,
         POLAR_BEAR = 28,
         PRIMED_TNT = 65,
         PUFFERFISH = 108,

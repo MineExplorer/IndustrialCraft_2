@@ -1,10 +1,10 @@
 namespace ItemName {
-	export function setRarity(id: number, rarity: number) {
+	export function setRarity(id: number, rarity: number): void {
 		ItemRegistry.setRarity(id, rarity);
 	}
 
-	export function getRarity(id: number) {
-		ItemRegistry.getRarity(id);
+	export function getRarity(id: number): number {
+		return ItemRegistry.getRarity(id);
 	}
 
 	export function addTooltip(id: number, tooltip: string): void {
@@ -46,7 +46,7 @@ namespace ItemName {
 		return color + name + '\n' + ItemName.getItemStorageText(item);
 	}
 
-	export function displayEnergy(energy: number, debug: boolean = IC2Config.debugMode): string {
+	export function displayEnergy(energy: number, debug: boolean = Game.isDeveloperMode): string {
 		if (!debug) {
 			if (energy >= 1e6) {
 				return Math.floor(energy / 1e5) / 10 + "M";

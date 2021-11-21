@@ -59,7 +59,7 @@ namespace Machine {
 				let receive = this.data.frequency;
 
 				if (energyAvailable > receive.energy * 100) {
-					let entities = this.region.listEntitiesInAABB(this.x - 1, this.y, this.z - 1, this.x + 2, this.y + 3, this.z + 2);
+					let entities = this.region.listEntitiesInAABB(this.x - 1, this.y, this.z - 1, this.x + 2, this.y + 3, this.z + 2, 63);
 					for (let ent of entities) {
 						let weight = this.getWeight(ent);
 						if (!weight) continue;

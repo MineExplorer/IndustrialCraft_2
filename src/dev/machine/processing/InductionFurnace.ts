@@ -29,7 +29,7 @@ const guiInductionFurnace = MachineRegistry.createInventoryWindow("Induction Fur
 	elements: {
 		"progressScale": {type: "scale", x: 630, y: 146, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("furnace");
+				RV?.RecipeTypeRegistry.openRecipePage("furnace");
 			}
 		}},
 		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},

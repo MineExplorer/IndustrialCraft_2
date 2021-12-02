@@ -42,7 +42,7 @@ const guiIronFurnace = MachineRegistry.createInventoryWindow("Iron Furnace", {
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("furnace");
+				RV?.RecipeTypeRegistry.openRecipePage("furnace");
 			}
 		}},
 		"burningScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},

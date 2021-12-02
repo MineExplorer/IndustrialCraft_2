@@ -26,7 +26,7 @@ const guiFermenter = MachineRegistry.createInventoryWindow("Fermenter", {
 	elements: {
 		"progressScale": {type: "scale", x: 492, y: 150, direction: 0, value: .5, bitmap: "fermenter_progress_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_fermenter");
+				RV?.RecipeTypeRegistry.openRecipePage("icpe_fermenter");
 			}
 		}},
 		"fertilizerScale": {type: "scale", x: 480, y: 301, direction: 0, value: .5, bitmap: "fertilizer_progress_scale", scale: GUI_SCALE},

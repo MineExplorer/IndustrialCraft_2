@@ -32,7 +32,7 @@ const guiSemifluidGenerator = MachineRegistry.createInventoryWindow("Semifluid G
 	elements: {
 		"scaleArrow": {type: "image", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_fluidFuel");
+				RV?.RecipeTypeRegistry.openRecipePage("icpe_fluidFuel");
 			}
 		}},
 		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},

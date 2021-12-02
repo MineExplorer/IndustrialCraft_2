@@ -65,7 +65,7 @@ const guiSolidCanner = MachineRegistry.createInventoryWindow("Solid Canning Mach
 	elements: {
 		"progressScale": {type: "scale", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_solidCanner");
+				RV?.RecipeTypeRegistry.openRecipePage("icpe_solidCanner");
 			}
 		}},
 		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},

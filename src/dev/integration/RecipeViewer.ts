@@ -343,7 +343,6 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 						{id: ItemID.cellAir, count: 1, data: 0}
 					],
 					output: numArray2Output(recipe[key].result),
-					inputLiq: [{liquid: "water", amount: 1000}]
 				});
 			}
 			return list;

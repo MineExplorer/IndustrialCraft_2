@@ -36,7 +36,7 @@ const guiExtractor = MachineRegistry.createInventoryWindow("Extractor", {
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, bitmap: "extractor_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_extractor");
+				RV?.RecipeTypeRegistry.openRecipePage("icpe_extractor");
 			}
 		}},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},

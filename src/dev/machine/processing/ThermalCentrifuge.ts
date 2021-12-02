@@ -52,7 +52,7 @@ const guiCentrifuge = MachineRegistry.createInventoryWindow("Thermal Centrifuge"
 	elements: {
 		"progressScale": {type: "scale", x: 400 + 80*GUI_SCALE_NEW, y: 50 + 22*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "thermal_centrifuge_scale", scale: GUI_SCALE_NEW, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_thermalCentrifuge");
+				RV?.RecipeTypeRegistry.openRecipePage("icpe_thermalCentrifuge");
 			}
 		}},
 		"heatScale": {type: "scale", x: 400 + 64*GUI_SCALE_NEW, y: 50 + 63*GUI_SCALE_NEW, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE_NEW},

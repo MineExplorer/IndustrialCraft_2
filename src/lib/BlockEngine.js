@@ -30,7 +30,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 7,
+    version: 8,
     shared: true,
     api: "CoreEngine"
 });
@@ -67,11 +67,13 @@ var BlockEngine;
         function createField(target, field) {
             target[field] = __assign({}, target[field]);
         }
+        /** Client side method decorator for TileEntity */
         function ClientSide(target, propertyName) {
             createField(target, "client");
             target.client[propertyName] = target[propertyName];
         }
         Decorators.ClientSide = ClientSide;
+        /** Adds method as network event in TileEntity */
         function NetworkEvent(side) {
             return function (target, propertyName) {
                 if (side == Side.Client) {
@@ -87,6 +89,7 @@ var BlockEngine;
             };
         }
         Decorators.NetworkEvent = NetworkEvent;
+        /** Adds method as container event in TileEntity */
         function ContainerEvent(side) {
             return function (target, propertyName) {
                 if (side == Side.Client) {
@@ -1726,7 +1729,7 @@ var ItemRegistry;
     }
     ItemRegistry.isItem = isItem;
     /**
-     * @returns whether item is item from the original game
+     * @returns whether item is an item from the original game
      */
     function isVanilla(id) {
         return !IDRegistry.getNameByID(id);
@@ -2072,16 +2075,20 @@ var TileEntityBase = /** @class */ (function () {
     TileEntityBase.prototype.created = function () {
         this.onCreate();
     };
+    /** @deprecated */
     TileEntityBase.prototype.init = function () {
         this.region = new WorldRegion(this.blockSource);
         this.onInit();
     };
+    /** @deprecated */
     TileEntityBase.prototype.load = function () {
         this.onLoad();
     };
+    /** @deprecated */
     TileEntityBase.prototype.unload = function () {
         this.onUnload();
     };
+    /** @deprecated */
     TileEntityBase.prototype.tick = function () {
         this.onTick();
     };
@@ -2105,8 +2112,17 @@ var TileEntityBase = /** @class */ (function () {
      * Called every tick and should be used for all the updates of the TileEntity
      */
     TileEntityBase.prototype.onTick = function () { };
+    /**
+     * Called when the client copy is created
+     */
     TileEntityBase.prototype.clientLoad = function () { };
+    /**
+     * Called on destroying the client copy
+     */
     TileEntityBase.prototype.clientUnload = function () { };
+    /**
+     * Called every tick on client thread
+     */
     TileEntityBase.prototype.clientTick = function () { };
     TileEntityBase.prototype.onCheckerTick = function (isInitialized, isLoaded, wasLoaded) { };
     TileEntityBase.prototype.getScreenName = function (player, coords) {
@@ -2142,7 +2158,7 @@ var TileEntityBase = /** @class */ (function () {
             return false;
         }
         var screenName = this.getScreenName(player, coords);
-        if (screenName) {
+        if (screenName && this.getScreenByName("main")) {
             var client = Network.getClientForPlayer(player);
             if (client) {
                 this.container.openFor(client, screenName);
@@ -2152,11 +2168,12 @@ var TileEntityBase = /** @class */ (function () {
         return false;
     };
     TileEntityBase.prototype.destroyBlock = function (coords, player) { };
+    /** @deprecated */
     TileEntityBase.prototype.redstone = function (params) {
         this.onRedstoneUpdate(params.power);
     };
     /**
-     * Occurs when redstone signal on TileEntity block was updated. Replaces "redstone" function
+     * Occurs when redstone signal on TileEntity block was updated
      * @param signal signal power (0-15)
      */
     TileEntityBase.prototype.onRedstoneUpdate = function (signal) { };

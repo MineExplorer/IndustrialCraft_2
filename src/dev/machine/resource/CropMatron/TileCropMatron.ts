@@ -72,22 +72,22 @@ namespace Machine {
 			}
 			this.data.energy -= 1;
 
-			let tileentity = this.region.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
+			const tileentity = this.region.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ);
 			if (tileentity && tileentity.crop) {
-				let slotFertilizer = this.getSlot("slotFertilizer");
-				let weedExSlot = this.getSlot("slotWeedEx");
+				const slotFertilizer = this.getSlot("slotFertilizer");
+				const weedExSlot = this.getSlot("slotWeedEx");
 				if (slotFertilizer && tileentity.applyFertilizer(false)) {
 					this.decreaseSlot(slotFertilizer, 1);
 					this.data.energy -= 10;
 				}
-				let liquidAmount = this.liquidTank.getAmount("water");
+				const liquidAmount = this.liquidTank.getAmount("water");
 				if (liquidAmount > 0) {
-					let amount = tileentity.applyHydration(liquidAmount);
+					const amount = tileentity.applyHydration(liquidAmount);
 					if (amount > 0) {
 						this.liquidTank.getLiquid(amount);
 					}
 				}
-				if (weedExSlot.id && tileentity.applyWeedEx(weedExSlot, false)) {
+				if (weedExSlot && weedExSlot.id && tileentity.applyWeedEx(weedExSlot, false)) {
 					this.data.energy -= 10;
 					if (++weedExSlot.data >= Item.getMaxDamage(weedExSlot.id)) {
 						weedExSlot.clear();
@@ -97,7 +97,7 @@ namespace Machine {
 			}
 		}
 
-		getSlot(type: string): ItemContainerSlot {
+		getSlot(type: string): Nullable<ItemContainerSlot> {
 			for (let i = 0; i < 7; i++) {
 				let slot = this.container.getSlot(type + i);
 				if (slot.id) return slot;

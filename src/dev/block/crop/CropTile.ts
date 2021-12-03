@@ -48,7 +48,7 @@ namespace Agriculture {
 			this.updateRender();
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.checkGround();
 			const entities = this.region.listEntitiesInAABB(this.x, this.y, this.z, this.x + 1, this.y + 1, this.z + 1, 1, false);
 			if (entities.length > 0) {
@@ -597,6 +597,7 @@ namespace Agriculture {
 		}
 	}
 }
+
 Callback.addCallback("DestroyBlockStart", function (coords: Callback.ItemUseCoordinates, block: Tile, playerUid: number): void {
 	if (block.id == BlockID.crop) {
 		// ? TEST IT!!! i think it can cause problem

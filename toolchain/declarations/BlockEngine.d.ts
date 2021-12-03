@@ -7,8 +7,11 @@ declare namespace BlockEngine {
 }
 declare namespace BlockEngine {
     namespace Decorators {
+        /** Client side method decorator for TileEntity */
         function ClientSide(target: TileEntityBase, propertyName: string): void;
+        /** Adds method as network event in TileEntity */
         function NetworkEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
+        /** Adds method as container event in TileEntity */
         function ContainerEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
     }
 }
@@ -699,7 +702,7 @@ declare namespace ItemRegistry {
     export function isBlock(id: number): boolean;
     export function isItem(id: number): boolean;
     /**
-     * @returns whether item is item from the original game
+     * @returns whether item is an item from the original game
      */
     export function isVanilla(id: number): boolean;
     /**
@@ -875,9 +878,13 @@ declare abstract class TileEntityBase implements TileEntity {
     region: WorldRegion;
     private _runInit;
     created(): void;
+    /** @deprecated */
     init(): void;
+    /** @deprecated */
     load(): void;
+    /** @deprecated */
     unload(): void;
+    /** @deprecated */
     tick(): void;
     /**
      * Called when a TileEntity is created
@@ -899,8 +906,17 @@ declare abstract class TileEntityBase implements TileEntity {
      * Called every tick and should be used for all the updates of the TileEntity
      */
     onTick(): void;
+    /**
+     * Called when the client copy is created
+     */
     clientLoad(): void;
+    /**
+     * Called on destroying the client copy
+     */
     clientUnload(): void;
+    /**
+     * Called every tick on client thread
+     */
     clientTick(): void;
     onCheckerTick(isInitialized: boolean, isLoaded: boolean, wasLoaded: boolean): void;
     getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
@@ -917,13 +933,14 @@ declare abstract class TileEntityBase implements TileEntity {
     preventClick(): void;
     onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean;
     destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void;
+    /** @deprecated */
     redstone(params: {
         power: number;
         signal: number;
         onLoad: boolean;
     }): void;
     /**
-     * Occurs when redstone signal on TileEntity block was updated. Replaces "redstone" function
+     * Occurs when redstone signal on TileEntity block was updated
      * @param signal signal power (0-15)
      */
     onRedstoneUpdate(signal: number): void;

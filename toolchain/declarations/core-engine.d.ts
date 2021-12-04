@@ -581,12 +581,10 @@ declare namespace Block {
 	 */
 	function registerDropFunctionForID(numericID: number, dropFunc: DropFunction, level?: number): boolean;
 
-	function registerEntityInsideFunctionForID(numericID: number, entityInsideFunc: EntityInsideFunction): void
-
 	/**
 	 * Registers function used by Core Engine to determine block drop for the 
 	 * specified block id
-	 * @param numericID tile string or numeric id
+	 * @param nameID tile string or numeric id
 	 * @param dropFunc function to be called to determine what will be dropped 
 	 * when the block is broken
 	 * @param level if level is specified and is not 0, digging level of the
@@ -600,18 +598,18 @@ declare namespace Block {
 	 * Same as [[Block.registerPopResourcesFunction]] but accepts only numeric 
 	 * tile id as the first param
 	 */
-	function registerPopResourcesFunctionForID(numericID: number, func: PopResourcesFunction): void;
+	function registerPopResourcesFunctionForID(numericID: number, func: PopResourcesFunction): boolean;
 
 	/**
 	 * Registered function used by Core Engine to determine block drop for the
 	 * specified block id
-	 * @param nameID tile string or numeric id 
+	 * @param nameID tile string or numeric id
 	 * @param func function to be called when a block in the world is broken by
 	 * environment (explosions, pistons, etc.)
 	 * @returns true, if specified string or numeric id exists and the function
 	 * was registered correctly, false otherwise
 	 */
-	function registerPopResourcesFunction(nameID: string | number, func: PopResourcesFunction): void;
+	function registerPopResourcesFunction(nameID: string | number, func: PopResourcesFunction): boolean;
 
 	/**
 	 * Same as [[Block.setDestroyLevel]] but accepts only numeric 
@@ -813,13 +811,47 @@ declare namespace Block {
 	 */
 	function setupAsNonRedstoneTile(id: number | string): void;
 
-	function registerNeighbourChangeFunction(name: string | number, func: NeighbourChangeFunction): void;
+	/**
+	 * Registers function on neighbour blocks updates
+	 * @param numericID tile string or numeric id
+	 * @param func function to be called when neighbour block updates
+	 * @returns true, if the function was registered correctly, false otherwise
+	 */
+	function registerNeighbourChangeFunction(name: string | number, func: NeighbourChangeFunction): boolean;
 
-	function registerNeighbourChangeFunctionForID(id: number, func: NeighbourChangeFunction): void;
+	/**
+	 * Same as [[Block.registerNeighbourChangeFunction]] but accepts only numeric
+	 * tile id as the first param
+	 */
+	function registerNeighbourChangeFunctionForID(id: number, func: NeighbourChangeFunction): boolean;
 
-	function registerEntityStepOnFunction(id: string | number, func: EntityStepOnFunction): void;
+	/**
+	 * Registers function on entity being inside the block. Can be used to create portals.
+	 * @param numericID tile string or numeric id
+	 * @param func function to be called when entity is inside the block
+	 * @returns true, if the function was registered correctly, false otherwise
+	 */
+	function registerEntityInsideFunction(nameID: string | number, func: EntityInsideFunction): boolean
 
-	function registerEntityStepOnFunctionForID(id: number, func: EntityStepOnFunction): void;
+	/**
+	 * Same as [[Block.registerEntityInsideFunction]] but accepts only numeric
+	 * tile id as the first param
+	 */
+	function registerEntityInsideFunctionForID(numericID: number, func: EntityInsideFunction): boolean
+
+	/**
+	 * Registers function on entity step on the block.
+	 * @param numericID tile string or numeric id
+	 * @param func function to be called when entity step on the block
+	 * @returns true, if the function was registered correctly, false otherwise
+	 */
+	function registerEntityStepOnFunction(id: string | number, func: EntityStepOnFunction): boolean;
+
+	/**
+	 * Same as [[Block.registerEntityStepOnFunction]] but accepts only numeric
+	 * tile id as the first param
+	 */
+	function registerEntityStepOnFunctionForID(id: number, func: EntityStepOnFunction): boolean;
 
 	/**
 	 * Defines custom behavior when the player clicks on the block with definite id
@@ -853,7 +885,7 @@ declare namespace Block {
 		| "metal"
 		| "stone"
 		| "cloth"
-		| "glass"	
+		| "glass"
 		| "sand"
 		| "snow"
 		| "ladder"
@@ -914,12 +946,12 @@ declare namespace Block {
 
 		/**
 		 * If non-zero value is used, the block emits light of that value. 
-		 * Default is false, use values from 1 to 15 to set light level
+		 * Default is 0, use values from 1 to 15 to set light level
 		 */
 		lightlevel?: number,
 
 		/**
-		 * Specifies how opaque the block is. Default is 0 (solid), use values 
+		 * Specifies how opaque the block is. Default is 0 (transparent), use values 
 		 * from 1 to 15 to make the block opaque
 		 */
 		lightopacity?: number,
@@ -942,8 +974,8 @@ declare namespace Block {
 		destroytime?: number,
 
 		/**
-		 * Specifies render of shadows on the block. Default is 0 (no shadows),
-		 * allows float values from 0 to 1
+		 * If non-zero value is used, the shadows will be rendered on the block.
+		 * Default is 0, allows float values from 0 to 1
 		 */
 		translucency?: number,
 
@@ -953,7 +985,7 @@ declare namespace Block {
 		mapcolor?: number,
 
 		/**
-		 * Block color when displayed on the vanilla maps
+		 * Makes block use biome color source when displayed on the vanilla maps
 		 */
 		color_source?: ColorSource,
 
@@ -1016,7 +1048,7 @@ declare namespace Block {
 		/**
 		 * Delay between liquid spreading steps in ticks.
 		 * This is optional, default value is 10
-		 */		
+		 */
 		tickDelay?: number,
 		/**
 		 * True if the liquid will be renewable, as water,

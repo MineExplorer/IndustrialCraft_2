@@ -5,9 +5,7 @@ ToolAPI.registerBlockMaterial(BlockID.reactorChamber, "stone", 1, true);
 ItemRegistry.setRarity(BlockID.reactorChamber, EnumRarity.UNCOMMON);
 
 Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block, player, region) {
-	let x = coords.relative.x;
-	let y = coords.relative.y;
-	let z = coords.relative.z;
+	const {x, y, z} = coords.relative;
 	let reactorConnect = 0;
 	for (let i = 0; i < 6; i++) {
 		let c = World.getRelativeCoords(x, y, z, i);

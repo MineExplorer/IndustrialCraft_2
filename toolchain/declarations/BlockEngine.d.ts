@@ -461,8 +461,190 @@ declare namespace BlockModeler {
     export function setInventoryModel(blockID: number, model: RenderMesh | ICRender.Model | BlockRenderer.Model, data?: number): void;
     export {};
 }
+/**
+ * Block functions
+ */
+interface BlockBehavior {
+    getDrop?(coords: Callback.ItemUseCoordinates, block: Tile, diggingLevel: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[];
+    onDestroy?(coords: Vector, block: Tile, region: BlockSource): void;
+    onPlace?(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number, region: BlockSource): Vector | void;
+    onNeighbourChange?(coords: Vector, block: Tile, changeCoords: Vector, region: BlockSource): void;
+    onEntityInside?(coords: Vector, block: Tile, entity: number): void;
+    onEntityStepOn?(coords: Vector, block: Tile, entity: number): void;
+    onRandomTick?(x: number, y: number, z: number, block: Tile, region: BlockSource): void;
+    onAnimateTick?(x: number, y: number, z: number, id: number, data: number): void;
+    onClick?(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void;
+}
+declare class BlockBase implements BlockBehavior {
+    stringID: string;
+    id: number;
+    variations: Array<Block.BlockVariation>;
+    constructor(stringID: string, blockType?: Block.SpecialType | string);
+    addVariation(name: string, texture: [string, number][], inCreative?: boolean): void;
+    createVariations(): void;
+    getDrop(coords: Vector, block: Tile, diggingLevel: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[];
+    onDestroy(coords: Vector, block: Tile, region: BlockSource): void;
+    setDestroyTime(destroyTime: number): void;
+    setBlockMaterial(material: string, level?: number, isNative?: boolean): void;
+    setShape(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, data?: number): void;
+    /**
+     * Sets the block type of another block, which allows to inherit some of its properties
+     * @param baseBlock id of the block to inherit type
+     */
+    setBaseBlock(baseBlock: number): void;
+    /**
+     * Sets sound type of the block.
+     * @param sound block sound type
+     */
+    setSoundType(sound: Block.Sound): void;
+    /**
+     * Sets block to be transparent or opaque.
+     * @param isSolid if true, sets block to be opaque.
+     */
+    setSolid(isSolid: boolean): void;
+    /**
+     * @param renderAllFaces If true, all block faces are rendered, otherwise back faces are not
+     * rendered (for optimization purposes). Default is false
+     */
+    setRenderAllFaces(renderAllFaces: boolean): void;
+    /**
+     * Sets render type of the block.
+     * @param renderType default is 0 (full block), use other values to change block's model
+     */
+    setRenderType(renderType: number): void;
+    /**
+     * Specifies the layer that is used to render the block.
+     * @param renderLayer default is 4
+     */
+    setRenderLayer(renderLayer: number): void;
+    /**
+     * Sets level of the light emitted by the block.
+     * @param lightLevel value from 0 (no light) to 15
+     */
+    setLightLevel(lightLevel: number): void;
+    /**
+     * Specifies how opaque block is.
+     * @param lightOpacity Value from 0 to 15 which will be substracted
+     * from the light level when the light passes through the block
+     */
+    setLightOpacity(lightOpacity: number): void;
+    /**
+     * Specifies how block resists to the explosions.
+     * @param resistance integer value, default is 3
+     */
+    setExplosionResistance(resistance: number): void;
+    /**
+     * Sets block friction. It specifies how player walks on the block.
+     * The higher the friction is, the more difficult it is to change speed
+     * and direction.
+     * @param friction float value, default is 0.6
+     */
+    setFriction(friction: number): void;
+    /**
+     * Specifies rendering of shadows on the block.
+     * @param translucency float value from 0 (no shadows) to 1
+     */
+    setTranslucency(translucency: number): void;
+    /**
+     * Sets block color when displayed on the vanilla maps
+     * @param color map color of the block
+     */
+    setMapColor(color: number): void;
+    /**
+     * Makes block use biome color when displayed on the vanilla maps.
+     * @param color block color source
+     */
+    setBlockColorSource(color: Block.ColorSource): void;
+    /**
+     * Sets item creative category
+     * @param category item category, should be integer from 1 to 4.
+     */
+    setCategory(category: number): void;
+    setRarity(rarity: number): void;
+    registerTileEntity(prototype: TileEntity.TileEntityPrototype): void;
+}
+declare const NativeBlock: any;
 declare namespace BlockRegistry {
     function createBlock(nameID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType): void;
+    /**
+     * @returns instance of block class if it exists
+     */
+    function getInstanceOf(blockID: string | number): Nullable<BlockBase>;
+    function registerBlock(block: BlockBase): BlockBase;
+    function registerBlockFuncs(blockID: string | number, blockFuncs: BlockBehavior): void;
+    /**
+     * Sets destroy time for the block with specified id
+     * @param time block destroy time
+     */
+    function setDestroyTime(blockID: string | number, time: number): void;
+    /**
+     * Sets the block type of another block, which allows to inherit some of its properties
+     * @param baseBlock id of the block to inherit type
+     */
+    function setBaseBlock(blockID: string | number, baseBlock: number): void;
+    /**
+     * Sets sound type of the block.
+     * @param sound block sound type
+     */
+    function setSoundType(blockID: string | number, sound: Block.Sound): void;
+    /**
+     * Sets block to be transparent or opaque.
+     * @param isSolid if true, sets block to be opaque.
+     */
+    function setSolid(blockID: string | number, isSolid: boolean): void;
+    /**
+     * @param renderAllFaces If true, all block faces are rendered, otherwise back faces are not
+     * rendered (for optimization purposes). Default is false
+     */
+    function setRenderAllFaces(blockID: string | number, renderAllFaces: boolean): void;
+    /**
+     * Sets render type of the block.
+     * @param renderType default is 0 (full block), use other values to change block's model
+     */
+    function setRenderType(blockID: string | number, renderType: number): void;
+    /**
+     * Specifies the layer that is used to render the block.
+     * @param renderLayer default is 4
+     */
+    function setRenderLayer(blockID: string | number, renderLayer: number): void;
+    /**
+     * Sets level of the light emitted by the block.
+     * @param lightLevel value from 0 (no light) to 15
+     */
+    function setLightLevel(blockID: string | number, lightLevel: number): void;
+    /**
+     * Specifies how opaque block is.
+     * @param lightOpacity Value from 0 to 15 which will be substracted
+     * from the light level when the light passes through the block
+     */
+    function setLightOpacity(blockID: string | number, lightOpacity: number): void;
+    /**
+     * Specifies how block resists to the explosions.
+     * @param resistance integer value, default is 3
+     */
+    function setExplosionResistance(blockID: string | number, resistance: number): void;
+    /**
+     * Sets block friction. It specifies how player walks on the block.
+     * The higher the friction is, the more difficult it is to change speed
+     * and direction.
+     * @param friction float value, default is 0.6
+     */
+    function setFriction(blockID: string | number, friction: number): void;
+    /**
+     * Specifies rendering of shadows on the block.
+     * @param translucency float value from 0 (no shadows) to 1
+     */
+    function setTranslucency(blockID: string | number, translucency: number): void;
+    /**
+     * Sets block color when displayed on the vanilla maps
+     * @param color map color of the block
+     */
+    function setMapColor(blockID: string | number, color: number): void;
+    /**
+     * Makes block use biome color when displayed on the vanilla maps.
+     * @param color block color source
+     */
+    function setBlockColorSource(blockID: string | number, color: Block.ColorSource): void;
     function createBlockWithRotation(stringID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
     function createStairs(stringID: string, defineData: Block.BlockVariation[], blockType: string | Block.SpecialType): void;
     function getBlockRotation(player: number, hasVertical?: boolean): number;
@@ -540,14 +722,22 @@ declare class ItemStack implements ItemInstance {
         [key: number]: number;
     };
 }
-interface ItemBehavior {
+/**
+ * Functions which can be used both for blocks and items
+ */
+interface BlockItemBehavior {
     onNameOverride?(item: ItemInstance, translation: string, name: string): string;
-    onIconOverride?(item: ItemInstance, isModUi: boolean): Item.TextureData;
     onItemUse?(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void;
+    onDispense?(coords: Callback.ItemUseCoordinates, item: ItemStack, region: WorldRegion): void;
+}
+/**
+ * Item functions
+ */
+interface ItemBehavior extends BlockItemBehavior {
+    onIconOverride?(item: ItemInstance, isModUi: boolean): Item.TextureData;
     onNoTargetUse?(item: ItemStack, player: number): void;
     onUsingReleased?(item: ItemStack, ticks: number, player: number): void;
     onUsingComplete?(item: ItemStack, player: number): void;
-    onDispense?(coords: Callback.ItemUseCoordinates, item: ItemStack, region: WorldRegion): void;
 }
 declare class ItemBase {
     readonly stringID: string;
@@ -625,23 +815,17 @@ declare class ItemThrowable extends ItemBase {
     constructor(stringID: string, name?: string, icon?: string | Item.TextureData, inCreative?: boolean);
     onProjectileHit(projectile: number, item: ItemInstance, target: Callback.ProjectileHitTarget): void;
 }
-interface OnHurtListener {
-    onHurt: (params: {
+interface ArmorListeners {
+    onHurt?(params: {
         attacker: number;
         type: number;
         damage: number;
         bool1: boolean;
         bool2: boolean;
-    }, item: ItemInstance, slot: number, player: number) => ItemInstance | void;
-}
-interface OnTickListener {
-    onTick: (item: ItemInstance, slot: number, player: number) => ItemInstance | void;
-}
-interface OnTakeOnListener {
-    onTakeOn: (item: ItemInstance, slot: number, player: number) => void;
-}
-interface OnTakeOffListener {
-    onTakeOff: (item: ItemInstance, slot: number, player: number) => void;
+    }, item: ItemInstance, slot: number, player: number): ItemInstance | void;
+    onTick?(item: ItemInstance, slot: number, player: number): ItemInstance | void;
+    onTakeOn?(item: ItemInstance, slot: number, player: number): void;
+    onTakeOff?(item: ItemInstance, slot: number, player: number): void;
 }
 declare type ArmorMaterial = {
     durabilityFactor: number;
@@ -664,7 +848,7 @@ declare class ItemArmor extends ItemBase {
     setArmorTexture(texture: string): void;
     setMaterial(armorMaterial: string | ArmorMaterial): void;
     preventDamaging(): void;
-    static registerListeners(id: number, armorFuncs: ItemArmor | OnHurtListener | OnTickListener | OnTakeOnListener | OnTakeOffListener): void;
+    static registerListeners(id: number, armorFuncs: ItemArmor | ArmorListeners): void;
 }
 interface ToolParams extends ToolAPI.ToolParams {
     handEquipped?: boolean;
@@ -764,7 +948,7 @@ declare namespace ItemRegistry {
      * Registers all item functions from given object.
      * @param itemFuncs object which implements ItemBehavior interface
      */
-    export function registerItemFuncs(itemID: string | number, itemFuncs: ItemBase | ItemBehavior): void;
+    export function registerItemFuncs(itemID: string | number, itemFuncs: ItemBehavior): void;
     interface ItemDescription {
         name: string;
         icon: string | Item.TextureData;

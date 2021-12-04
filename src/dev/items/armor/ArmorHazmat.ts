@@ -1,7 +1,7 @@
 /// <reference path="./ArmorIC2.ts" />
 
 class ArmorHazmat extends ArmorIC2
-implements OnHurtListener, OnTickListener {
+implements ArmorListeners {
 	constructor(stringID: string, name: string, params: ArmorParams) {
 		super(stringID, name, params);
 		this.setMaxDamage(64);

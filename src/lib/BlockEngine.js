@@ -976,13 +976,352 @@ var BlockModeler;
     }
     BlockModeler.setInventoryModel = setInventoryModel;
 })(BlockModeler || (BlockModeler = {}));
+var BlockBase = /** @class */ (function () {
+    function BlockBase(stringID, blockType) {
+        this.variations = [];
+        this.stringID = stringID;
+        this.id = IDRegistry.genBlockID(stringID);
+        this.createVariations();
+        Block.createBlock(this.stringID, this.variations, blockType);
+    }
+    BlockBase.prototype.addVariation = function (name, texture, inCreative) {
+        if (inCreative === void 0) { inCreative = false; }
+        this.variations.push({ name: name, texture: texture, inCreative: inCreative });
+    };
+    BlockBase.prototype.createVariations = function () {
+        this.addVariation(this.stringID + ".name", [["__missing", 0]]);
+    };
+    BlockBase.prototype.getDrop = function (coords, block, diggingLevel, enchant, item, region) {
+        return [[block.id, 1, block.data]];
+    };
+    BlockBase.prototype.onDestroy = function (coords, block, region) {
+        if (Math.random() >= 0.25)
+            return;
+        var enchant = ToolAPI.getEnchantExtraData();
+        var item = new ItemStack();
+        var drop = this.getDrop(coords, block, 127, enchant, item, region);
+        for (var _i = 0, drop_3 = drop; _i < drop_3.length; _i++) {
+            var item_2 = drop_3[_i];
+            region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_2[0], item_2[1], item_2[2], item_2[3] || null);
+        }
+    };
+    BlockBase.prototype.setDestroyTime = function (destroyTime) {
+        Block.setDestroyTime(this.id, destroyTime);
+    };
+    BlockBase.prototype.setBlockMaterial = function (material, level, isNative) {
+        ToolAPI.registerBlockMaterial(this.id, material, level, isNative);
+    };
+    BlockBase.prototype.setShape = function (x1, y1, z1, x2, y2, z2, data) {
+        Block.setShape(this.id, x1, y1, z1, x2, y2, z2, data);
+    };
+    /**
+     * Sets the block type of another block, which allows to inherit some of its properties
+     * @param baseBlock id of the block to inherit type
+     */
+    BlockBase.prototype.setBaseBlock = function (baseBlock) {
+        NativeBlock.setMaterialBase(this.id, baseBlock);
+    };
+    /**
+     * Sets sound type of the block.
+     * @param sound block sound type
+     */
+    BlockBase.prototype.setSoundType = function (sound) {
+        NativeBlock.setSoundType(this.id, sound);
+    };
+    /**
+     * Sets block to be transparent or opaque.
+     * @param isSolid if true, sets block to be opaque.
+     */
+    BlockBase.prototype.setSolid = function (isSolid) {
+        NativeBlock.setSolid(this.id, isSolid);
+    };
+    /**
+     * @param renderAllFaces If true, all block faces are rendered, otherwise back faces are not
+     * rendered (for optimization purposes). Default is false
+     */
+    BlockBase.prototype.setRenderAllFaces = function (renderAllFaces) {
+        NativeBlock.setRenderAllFaces(this.id, renderAllFaces);
+    };
+    /**
+     * Sets render type of the block.
+     * @param renderType default is 0 (full block), use other values to change block's model
+     */
+    BlockBase.prototype.setRenderType = function (renderType) {
+        NativeBlock.setRenderType(this.id, renderType);
+    };
+    /**
+     * Specifies the layer that is used to render the block.
+     * @param renderLayer default is 4
+     */
+    BlockBase.prototype.setRenderLayer = function (renderLayer) {
+        NativeBlock.setRenderLayer(this.id, renderLayer);
+    };
+    /**
+     * Sets level of the light emitted by the block.
+     * @param lightLevel value from 0 (no light) to 15
+     */
+    BlockBase.prototype.setLightLevel = function (lightLevel) {
+        NativeBlock.setLightLevel(this.id, lightLevel);
+    };
+    /**
+     * Specifies how opaque block is.
+     * @param lightOpacity Value from 0 to 15 which will be substracted
+     * from the light level when the light passes through the block
+     */
+    BlockBase.prototype.setLightOpacity = function (lightOpacity) {
+        NativeBlock.setLightOpacity(this.id, lightOpacity);
+    };
+    /**
+     * Specifies how block resists to the explosions.
+     * @param resistance integer value, default is 3
+     */
+    BlockBase.prototype.setExplosionResistance = function (resistance) {
+        NativeBlock.setExplosionResistance(this.id, resistance);
+    };
+    /**
+     * Sets block friction. It specifies how player walks on the block.
+     * The higher the friction is, the more difficult it is to change speed
+     * and direction.
+     * @param friction float value, default is 0.6
+     */
+    BlockBase.prototype.setFriction = function (friction) {
+        NativeBlock.setFriction(this.id, friction);
+    };
+    /**
+     * Specifies rendering of shadows on the block.
+     * @param translucency float value from 0 (no shadows) to 1
+     */
+    BlockBase.prototype.setTranslucency = function (translucency) {
+        NativeBlock.setTranslucency(this.id, translucency);
+    };
+    /**
+     * Sets block color when displayed on the vanilla maps
+     * @param color map color of the block
+     */
+    BlockBase.prototype.setMapColor = function (color) {
+        NativeBlock.setMapColor(this.id, color);
+    };
+    /**
+     * Makes block use biome color when displayed on the vanilla maps.
+     * @param color block color source
+     */
+    BlockBase.prototype.setBlockColorSource = function (color) {
+        NativeBlock.setBlockColorSource(this.id, color);
+    };
+    /**
+     * Sets item creative category
+     * @param category item category, should be integer from 1 to 4.
+     */
+    BlockBase.prototype.setCategory = function (category) {
+        Item.setCategory(this.id, category);
+    };
+    BlockBase.prototype.setRarity = function (rarity) {
+        ItemRegistry.setRarity(this.id, rarity);
+    };
+    BlockBase.prototype.registerTileEntity = function (prototype) {
+        TileEntity.registerPrototype(this.id, prototype);
+    };
+    return BlockBase;
+}());
+/// <reference path="BlockBehavior.ts" />
+/// <reference path="BlockBase.ts" />
+//@ts-ignore
+var NativeBlock = com.zhekasmirnov.innercore.api.NativeBlock;
 var BlockRegistry;
 (function (BlockRegistry) {
+    var blocks = {};
     function createBlock(nameID, defineData, blockType) {
         IDRegistry.genBlockID(nameID);
         Block.createBlock(nameID, defineData, blockType);
     }
     BlockRegistry.createBlock = createBlock;
+    /**
+     * @returns instance of block class if it exists
+     */
+    function getInstanceOf(blockID) {
+        var numericID = Block.getNumericId(blockID);
+        return blocks[numericID] || null;
+    }
+    BlockRegistry.getInstanceOf = getInstanceOf;
+    function registerBlock(block) {
+        blocks[block.id] = block;
+        registerBlockFuncs(block.id, block);
+        return block;
+    }
+    BlockRegistry.registerBlock = registerBlock;
+    function registerBlockFuncs(blockID, blockFuncs) {
+        var numericID = Block.getNumericId(blockID);
+        if ('getDrop' in blockFuncs) {
+            Block.registerDropFunction(numericID, function (coords, blockID, blockData, diggingLevel, enchant, item, region) {
+                return blockFuncs.getDrop(coords, { id: blockID, data: blockData }, diggingLevel, enchant, new ItemStack(item), region);
+            });
+        }
+        if ('onDestroy' in blockFuncs) {
+            Block.registerPopResourcesFunction(numericID, function (coords, block, region) {
+                blockFuncs.onDestroy(coords, block, region);
+            });
+        }
+        if ('onPlace' in blockFuncs) {
+            Block.registerPlaceFunction(numericID, function (coords, item, block, player, region) {
+                return blockFuncs.onPlace(coords, new ItemStack(item), block, player, region);
+            });
+        }
+        if ('onNeighbourChange' in blockFuncs) {
+            Block.registerNeighbourChangeFunction(numericID, function (coords, block, changeCoords, region) {
+                blockFuncs.onNeighbourChange(coords, block, changeCoords, region);
+            });
+        }
+        if ('onEntityInside' in blockFuncs) {
+            Block.registerEntityInsideFunction(numericID, function (coords, block, entity) {
+                blockFuncs.onEntityInside(coords, block, entity);
+            });
+        }
+        if ('onEntityStepOn' in blockFuncs) {
+            Block.registerEntityInsideFunction(numericID, function (coords, block, entity) {
+                blockFuncs.onEntityStepOn(coords, block, entity);
+            });
+        }
+        if ('onRandomTick' in blockFuncs) {
+            Block.setRandomTickCallback(numericID, function (x, y, z, id, data, region) {
+                blockFuncs.onRandomTick(x, y, z, { id: id, data: data }, region);
+            });
+        }
+        if ('onAnimateTick' in blockFuncs) {
+            Block.setAnimateTickCallback(numericID, function (x, y, z, id, data) {
+                blockFuncs.onAnimateTick(x, y, z, id, data);
+            });
+        }
+        if ('onClick' in blockFuncs) {
+            if (Block.registerClickFunction) {
+                Block.registerClickFunction(numericID, function (coords, item, block, player) {
+                    blockFuncs.onClick(coords, new ItemStack(item), block, player);
+                });
+            }
+            else {
+                Callback.addCallback("ItemUse", function (coords, item, block, isExternal, player) {
+                    if (block.id == numericID) {
+                        blockFuncs.onClick(coords, new ItemStack(item), block, player);
+                    }
+                });
+            }
+        }
+    }
+    BlockRegistry.registerBlockFuncs = registerBlockFuncs;
+    /**
+     * Sets destroy time for the block with specified id
+     * @param time block destroy time
+     */
+    function setDestroyTime(blockID, time) {
+        Block.setDestroyTime(blockID, time);
+    }
+    BlockRegistry.setDestroyTime = setDestroyTime;
+    /**
+     * Sets the block type of another block, which allows to inherit some of its properties
+     * @param baseBlock id of the block to inherit type
+     */
+    function setBaseBlock(blockID, baseBlock) {
+        NativeBlock.setMaterialBase(Block.getNumericId(blockID), baseBlock);
+    }
+    BlockRegistry.setBaseBlock = setBaseBlock;
+    /**
+     * Sets sound type of the block.
+     * @param sound block sound type
+     */
+    function setSoundType(blockID, sound) {
+        NativeBlock.setSoundType(Block.getNumericId(blockID), sound);
+    }
+    BlockRegistry.setSoundType = setSoundType;
+    /**
+     * Sets block to be transparent or opaque.
+     * @param isSolid if true, sets block to be opaque.
+     */
+    function setSolid(blockID, isSolid) {
+        NativeBlock.setSolid(Block.getNumericId(blockID), isSolid);
+    }
+    BlockRegistry.setSolid = setSolid;
+    /**
+     * @param renderAllFaces If true, all block faces are rendered, otherwise back faces are not
+     * rendered (for optimization purposes). Default is false
+     */
+    function setRenderAllFaces(blockID, renderAllFaces) {
+        NativeBlock.setRenderAllFaces(Block.getNumericId(blockID), renderAllFaces);
+    }
+    BlockRegistry.setRenderAllFaces = setRenderAllFaces;
+    /**
+     * Sets render type of the block.
+     * @param renderType default is 0 (full block), use other values to change block's model
+     */
+    function setRenderType(blockID, renderType) {
+        NativeBlock.setRenderType(Block.getNumericId(blockID), renderType);
+    }
+    BlockRegistry.setRenderType = setRenderType;
+    /**
+     * Specifies the layer that is used to render the block.
+     * @param renderLayer default is 4
+     */
+    function setRenderLayer(blockID, renderLayer) {
+        NativeBlock.setRenderLayer(Block.getNumericId(blockID), renderLayer);
+    }
+    BlockRegistry.setRenderLayer = setRenderLayer;
+    /**
+     * Sets level of the light emitted by the block.
+     * @param lightLevel value from 0 (no light) to 15
+     */
+    function setLightLevel(blockID, lightLevel) {
+        NativeBlock.setLightLevel(Block.getNumericId(blockID), lightLevel);
+    }
+    BlockRegistry.setLightLevel = setLightLevel;
+    /**
+     * Specifies how opaque block is.
+     * @param lightOpacity Value from 0 to 15 which will be substracted
+     * from the light level when the light passes through the block
+     */
+    function setLightOpacity(blockID, lightOpacity) {
+        NativeBlock.setLightOpacity(Block.getNumericId(blockID), lightOpacity);
+    }
+    BlockRegistry.setLightOpacity = setLightOpacity;
+    /**
+     * Specifies how block resists to the explosions.
+     * @param resistance integer value, default is 3
+     */
+    function setExplosionResistance(blockID, resistance) {
+        NativeBlock.setExplosionResistance(Block.getNumericId(blockID), resistance);
+    }
+    BlockRegistry.setExplosionResistance = setExplosionResistance;
+    /**
+     * Sets block friction. It specifies how player walks on the block.
+     * The higher the friction is, the more difficult it is to change speed
+     * and direction.
+     * @param friction float value, default is 0.6
+     */
+    function setFriction(blockID, friction) {
+        NativeBlock.setFriction(Block.getNumericId(blockID), friction);
+    }
+    BlockRegistry.setFriction = setFriction;
+    /**
+     * Specifies rendering of shadows on the block.
+     * @param translucency float value from 0 (no shadows) to 1
+     */
+    function setTranslucency(blockID, translucency) {
+        NativeBlock.setTranslucency(Block.getNumericId(blockID), translucency);
+    }
+    BlockRegistry.setTranslucency = setTranslucency;
+    /**
+     * Sets block color when displayed on the vanilla maps
+     * @param color map color of the block
+     */
+    function setMapColor(blockID, color) {
+        NativeBlock.setMapColor(Block.getNumericId(blockID), color);
+    }
+    BlockRegistry.setMapColor = setMapColor;
+    /**
+     * Makes block use biome color when displayed on the vanilla maps.
+     * @param color block color source
+     */
+    function setBlockColorSource(blockID, color) {
+        NativeBlock.setBlockColorSource(Block.getNumericId(blockID), color);
+    }
+    BlockRegistry.setBlockColorSource = setBlockColorSource;
     function createBlockWithRotation(stringID, defineData, blockType, hasVertical) {
         var numericID = IDRegistry.genBlockID(stringID);
         var variations = [];
@@ -1099,9 +1438,9 @@ var BlockRegistry;
             var item = new ItemStack();
             //@ts-ignore
             var drop = dropFunc(coords, block.id, block.data, 127, enchant, item, region);
-            for (var _i = 0, drop_3 = drop; _i < drop_3.length; _i++) {
-                var item_2 = drop_3[_i];
-                region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_2[0], item_2[1], item_2[2], item_2[3] || null);
+            for (var _i = 0, drop_4 = drop; _i < drop_4.length; _i++) {
+                var item_3 = drop_4[_i];
+                region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_3[0], item_3[1], item_3[2], item_3[3] || null);
             }
         });
     }
@@ -1177,8 +1516,8 @@ var BlockRegistry;
         if (id == VanillaTileID.campfire) {
             if (enchant.silk)
                 return [[id, 1, 0]];
-            var item_3 = IDConverter.getIDData("charcoal");
-            return [[item_3.id, 1, item_3.data]];
+            var item_4 = IDConverter.getIDData("charcoal");
+            return [[item_4.id, 1, item_4.data]];
         }
         if (id == VanillaTileID.soul_campfire) {
             if (enchant.silk)
@@ -1702,6 +2041,7 @@ var ItemTool = /** @class */ (function (_super) {
     }
     return ItemTool;
 }(ItemCommon));
+/// <reference path="ItemBehavior.ts" />
 /// <reference path="ItemBase.ts" />
 /// <reference path="ItemCommon.ts" />
 /// <reference path="ItemFood.ts" />
@@ -1846,38 +2186,39 @@ var ItemRegistry;
      * @param itemFuncs object which implements ItemBehavior interface
      */
     function registerItemFuncs(itemID, itemFuncs) {
+        var numericID = Item.getNumericId(itemID);
         if ('onNameOverride' in itemFuncs) {
-            Item.registerNameOverrideFunction(itemID, function (item, translation, name) {
+            Item.registerNameOverrideFunction(numericID, function (item, translation, name) {
                 return getItemRarityColor(item.id) + itemFuncs.onNameOverride(item, translation, name);
             });
         }
         if ('onIconOverride' in itemFuncs) {
-            Item.registerIconOverrideFunction(itemID, function (item, isModUi) {
+            Item.registerIconOverrideFunction(numericID, function (item, isModUi) {
                 return itemFuncs.onIconOverride(item, isModUi);
             });
         }
         if ('onItemUse' in itemFuncs) {
-            Item.registerUseFunction(itemID, function (coords, item, block, player) {
+            Item.registerUseFunction(numericID, function (coords, item, block, player) {
                 itemFuncs.onItemUse(coords, new ItemStack(item), block, player);
             });
         }
         if ('onNoTargetUse' in itemFuncs) {
-            Item.registerNoTargetUseFunction(itemID, function (item, player) {
+            Item.registerNoTargetUseFunction(numericID, function (item, player) {
                 itemFuncs.onNoTargetUse(new ItemStack(item), player);
             });
         }
         if ('onUsingReleased' in itemFuncs) {
-            Item.registerUsingReleasedFunction(itemID, function (item, ticks, player) {
+            Item.registerUsingReleasedFunction(numericID, function (item, ticks, player) {
                 itemFuncs.onUsingReleased(new ItemStack(item), ticks, player);
             });
         }
         if ('onUsingComplete' in itemFuncs) {
-            Item.registerUsingCompleteFunction(itemID, function (item, player) {
+            Item.registerUsingCompleteFunction(numericID, function (item, player) {
                 itemFuncs.onUsingComplete(new ItemStack(item), player);
             });
         }
         if ('onDispense' in itemFuncs) {
-            Item.registerDispenseFunction(itemID, function (coords, item, blockSource) {
+            Item.registerDispenseFunction(numericID, function (coords, item, blockSource) {
                 var region = new WorldRegion(blockSource);
                 itemFuncs.onDispense(coords, new ItemStack(item), region);
             });
@@ -2415,6 +2756,7 @@ EXPORT("ItemStack", ItemStack);
 EXPORT("Vector3", Vector3);
 EXPORT("WorldRegion", WorldRegion);
 EXPORT("PlayerEntity", PlayerEntity);
+EXPORT("BlockBase", BlockBase);
 EXPORT("TileEntityBase", TileEntityBase);
 EXPORT("ItemCommon", ItemCommon);
 EXPORT("ItemFood", ItemFood);

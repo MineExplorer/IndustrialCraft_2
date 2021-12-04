@@ -1,12 +1,7 @@
-Block.createSpecialType({
-	base: 1,
-	solid: true,
-	destroytime: 5,
-	explosionres: 30,
-	lightopacity: 15,
-	renderlayer: 2,
-	sound: "stone"
-}, "machine");
+BlockRegistry.createBlockType("machine", {
+	extends: "stone",
+	destroyTime: 3
+});
 
 BlockRegistry.createBlock("machineBlockBasic", [
 	{name: "Machine Block", texture: [["machine_top", 0]], inCreative: true}

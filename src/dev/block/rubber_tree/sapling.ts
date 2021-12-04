@@ -7,17 +7,18 @@ implements BlockItemBehavior {
 	}
 
 	constructor() {
-		super("rubberTreeSapling", {rendertype: 1, destroytime: 0, sound: "grass"});
+		super("rubberTreeSapling", {
+			renderType: 1,
+			destroyTime: 0,
+			sound: "grass"
+		});
+		this.addVariation("Rubber Tree Sapling", [["rubber_tree_sapling", 0]], true);
 		this.setCategory(ItemCategory.NATURE);
 		this.setBlockMaterial("plant");
 		this.setShape(this.id, 1/8, 0, 1/8, 7/8, 1, 7/8);
 		TileRenderer.setEmptyCollisionShape(this.id);
 		Recipes.addFurnaceFuel(this.id, -1, 100);
 		ItemRegistry.registerItemFuncs(this.id, this);
-	}
-
-	createVariations(): void {
-		this.addVariation("Rubber Tree Sapling", [["rubber_tree_sapling", 0]], true);
 	}
 
 	getDrop(): ItemInstanceArray[] {

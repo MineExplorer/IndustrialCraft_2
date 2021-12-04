@@ -461,6 +461,79 @@ declare namespace BlockModeler {
     export function setInventoryModel(blockID: number, model: RenderMesh | ICRender.Model | BlockRenderer.Model, data?: number): void;
     export {};
 }
+interface BlockType {
+    /**
+     * Block type to inherit properties
+     */
+    extends?: string;
+    /**
+     * Vanilla block ID to inherit some of the properties. Default is 0
+     */
+    baseBlock?: number;
+    /**
+     * Block material constant. Default is 3
+     */
+    material?: number;
+    /**
+     * If true, the block is not transparent. Default is false
+     */
+    solid?: boolean;
+    /**
+     * If true, all block faces are rendered, otherwise back faces are not
+     * rendered (for optimization purposes). Default is false
+     */
+    renderAllFaces?: boolean;
+    /**
+     * Sets render type of the block. Default is 0 (full block), use other
+     * values to change block's shape
+     */
+    renderType?: number;
+    /**
+     * Specifies the layer that is used to render the block. Default is 4
+     */
+    renderLayer?: number;
+    /**
+     * If non-zero value is used, the block emits light of that value.
+     * Default is 0, use values from 1 to 15 to set light level
+     */
+    lightLevel?: number;
+    /**
+     * Specifies how opaque the block is. Default is 0 (transparent), use values
+     * from 1 to 15 to make the block opaque
+     */
+    lightOpacity?: number;
+    /**
+     * Specifies how block resists to the explosions. Default value is 3
+     */
+    explosionResistance?: number;
+    /**
+     * Specifies how player walks on this block. The higher the friction is,
+     * the more difficult it is to change speed and direction. Default value
+     * is 0.6000000238418579
+     */
+    friction?: number;
+    /**
+     * Specifies the time required to destroy the block, in ticks
+     */
+    destroyTime?: number;
+    /**
+     * If non-zero value is used, the shadows will be rendered on the block.
+     * Default is 0, allows float values from 0 to 1
+     */
+    translucency?: number;
+    /**
+     * Block color when displayed on the vanilla maps
+     */
+    mapColor?: number;
+    /**
+     * Makes block use biome color source when displayed on the vanilla maps
+     */
+    colorSource?: Block.ColorSource;
+    /**
+     * Specifies sounds of the block
+     */
+    sound?: Block.Sound;
+}
 /**
  * Block functions
  */
@@ -476,12 +549,14 @@ interface BlockBehavior {
     onClick?(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void;
 }
 declare class BlockBase implements BlockBehavior {
-    stringID: string;
-    id: number;
+    readonly stringID: string;
+    readonly id: number;
+    category: number;
     variations: Array<Block.BlockVariation>;
-    constructor(stringID: string, blockType?: Block.SpecialType | string);
+    blockType: BlockType;
+    constructor(stringID: string, properties?: BlockType);
     addVariation(name: string, texture: [string, number][], inCreative?: boolean): void;
-    createVariations(): void;
+    createBlock(): void;
     getDrop(coords: Vector, block: Tile, diggingLevel: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[];
     onDestroy(coords: Vector, block: Tile, region: BlockSource): void;
     setDestroyTime(destroyTime: number): void;
@@ -492,11 +567,6 @@ declare class BlockBase implements BlockBehavior {
      * @param baseBlock id of the block to inherit type
      */
     setBaseBlock(baseBlock: number): void;
-    /**
-     * Sets sound type of the block.
-     * @param sound block sound type
-     */
-    setSoundType(sound: Block.Sound): void;
     /**
      * Sets block to be transparent or opaque.
      * @param isSolid if true, sets block to be opaque.
@@ -546,6 +616,11 @@ declare class BlockBase implements BlockBehavior {
      */
     setTranslucency(translucency: number): void;
     /**
+     * Sets sound type of the block.
+     * @param sound block sound type
+     */
+    setSoundType(sound: Block.Sound): void;
+    /**
      * Sets block color when displayed on the vanilla maps
      * @param color map color of the block
      */
@@ -554,7 +629,7 @@ declare class BlockBase implements BlockBehavior {
      * Makes block use biome color when displayed on the vanilla maps.
      * @param color block color source
      */
-    setBlockColorSource(color: Block.ColorSource): void;
+    setBlockColorSource(colorSource: Block.ColorSource): void;
     /**
      * Sets item creative category
      * @param category item category, should be integer from 1 to 4.
@@ -565,7 +640,10 @@ declare class BlockBase implements BlockBehavior {
 }
 declare const NativeBlock: any;
 declare namespace BlockRegistry {
-    function createBlock(nameID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType): void;
+    function createBlock(nameID: string, defineData: Block.BlockVariation[], blockType?: string | BlockType): void;
+    function getBlockType(name: string): Nullable<BlockType>;
+    function createBlockType(name: string, type: BlockType, isNative?: boolean): void;
+    function convertBlockTypeToSpecialType(properites: BlockType): Block.SpecialType;
     /**
      * @returns instance of block class if it exists
      */
@@ -582,11 +660,6 @@ declare namespace BlockRegistry {
      * @param baseBlock id of the block to inherit type
      */
     function setBaseBlock(blockID: string | number, baseBlock: number): void;
-    /**
-     * Sets sound type of the block.
-     * @param sound block sound type
-     */
-    function setSoundType(blockID: string | number, sound: Block.Sound): void;
     /**
      * Sets block to be transparent or opaque.
      * @param isSolid if true, sets block to be opaque.
@@ -635,6 +708,11 @@ declare namespace BlockRegistry {
      * @param translucency float value from 0 (no shadows) to 1
      */
     function setTranslucency(blockID: string | number, translucency: number): void;
+    /**
+     * Sets sound type of the block.
+     * @param sound block sound type
+     */
+    function setSoundType(blockID: string | number, sound: Block.Sound): void;
     /**
      * Sets block color when displayed on the vanilla maps
      * @param color map color of the block

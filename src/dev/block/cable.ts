@@ -1,8 +1,8 @@
-Block.createSpecialType({
-	destroytime: 0.05,
-	explosionres: 0.5,
-	renderlayer: 1,
-}, "cable");
+BlockRegistry.createBlockType("cable", {
+	destroyTime: 0.05,
+	explosionResistance: 0.5,
+	renderLayer: 1,
+});
 
 BlockRegistry.createBlock("cableTin0", [
 	{name: "tile.cableTin.name", texture: [["cable_tin", 0]], inCreative: false}

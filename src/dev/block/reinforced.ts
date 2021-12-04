@@ -1,14 +1,9 @@
 BlockRegistry.createBlock("reinforcedStone", [
 	{name: "Reinforced Stone", texture: [["reinforced_block", 0]], inCreative: true}
 ], {
-	base: 1,
-	solid: true,
-	destroytime: 25,
-	explosionres: 150,
-	lightopacity: 15,
-	renderlayer: 2,
-	translucency: 0,
-	sound: "stone"
+	extends: "stone",
+	destroyTime: 25,
+	explosionResistance: 150,
 });
 ToolAPI.registerBlockMaterial(BlockID.reinforcedStone, "stone", 2, true);
 BlockRegistry.setDestroyLevel("reinforcedStone", 2);
@@ -16,10 +11,10 @@ BlockRegistry.setDestroyLevel("reinforcedStone", 2);
 BlockRegistry.createBlock("reinforcedGlass", [
 	{name: "Reinforced Glass", texture: [["reinforced_glass", 0]], inCreative: true}
 ], {
-	base: 1,
-	destroytime: 25,
-	explosionres: 150,
-	renderlayer: 1,
+	baseBlock: 1,
+	destroyTime: 25,
+	explosionResistance: 150,
+	renderLayer: 1,
 	sound: "stone"
 });
 ToolAPI.registerBlockMaterial(BlockID.reinforcedGlass, "stone", 2, true);

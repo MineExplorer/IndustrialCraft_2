@@ -1,14 +1,3 @@
-Block.createSpecialType({
-	base: 1,
-	solid: true,
-	destroytime: 3,
-	explosionres: 15,
-	lightopacity: 15,
-	renderlayer: 2,
-	translucency: 0,
-	sound: "stone"
-}, "ore");
-
 BlockRegistry.createBlock("oreCopper", [
 	{name: "Copper Ore", texture: [["ore_copper", 0]], inCreative: true}
 ], "ore");

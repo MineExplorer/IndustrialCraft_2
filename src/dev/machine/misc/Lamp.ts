@@ -5,7 +5,7 @@ BlockRegistry.createBlock("luminator", [
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
 	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false}
-], {renderlayer: 7});
+], {destroyTime: 2, explosionResistance: 0.5, renderLayer: 7});
 
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 15/16, z: 0}, {x: 1, y: 1, z: 1}, 0);
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1, y: 1/16, z: 1}, 1);
@@ -27,10 +27,10 @@ BlockRegistry.createBlock("luminator_on", [
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
 	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false}
 ], {
-	destroytime: 2,
-	explosionres: 0.5,
-	lightlevel: 15,
-	renderlayer: 7
+	destroyTime: 2,
+	explosionResistance: 0.5,
+	lightLevel: 15,
+	renderLayer: 7
 });
 
 Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 15/16, z: 0}, {x: 1, y: 1, z: 1}, 0);

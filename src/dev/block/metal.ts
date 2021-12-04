@@ -1,12 +1,4 @@
-Block.createSpecialType({
-	base: 1,
-	solid: true,
-	destroytime: 5,
-	explosionres: 30,
-	lightopacity: 15,
-	renderlayer: 2,
-	sound: "stone"
-}, "stone");
+
 
 BlockRegistry.createBlock("blockCopper", [
 	{name: "Copper Block", texture: [["block_copper", 0]], inCreative: true}

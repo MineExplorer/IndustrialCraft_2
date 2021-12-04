@@ -760,8 +760,9 @@ declare namespace Block {
 	 * name
 	 * @param description special type properties
 	 * @param nameKey string name to register the special type
+	 * @returns special type name
 	 */
-	function createSpecialType(description: SpecialType, nameKey?: string): number;
+	function createSpecialType(description: SpecialType, nameKey?: string): string;
 
 
 	/**

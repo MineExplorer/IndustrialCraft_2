@@ -976,20 +976,28 @@ var BlockModeler;
     }
     BlockModeler.setInventoryModel = setInventoryModel;
 })(BlockModeler || (BlockModeler = {}));
+/// <reference path="BlockType.ts" />
+/// <reference path="BlockBehavior.ts" />
 var BlockBase = /** @class */ (function () {
-    function BlockBase(stringID, blockType) {
+    function BlockBase(stringID, properties) {
+        if (properties === void 0) { properties = {}; }
         this.variations = [];
         this.stringID = stringID;
         this.id = IDRegistry.genBlockID(stringID);
-        this.createVariations();
-        Block.createBlock(this.stringID, this.variations, blockType);
+        this.blockType = properties;
     }
     BlockBase.prototype.addVariation = function (name, texture, inCreative) {
         if (inCreative === void 0) { inCreative = false; }
         this.variations.push({ name: name, texture: texture, inCreative: inCreative });
     };
-    BlockBase.prototype.createVariations = function () {
-        this.addVariation(this.stringID + ".name", [["__missing", 0]]);
+    BlockBase.prototype.createBlock = function () {
+        if (this.variations.length == 0) {
+            this.addVariation(this.stringID + ".name", [["__missing", 0]]);
+        }
+        var blockType = BlockRegistry.convertBlockTypeToSpecialType(this.blockType);
+        Block.createBlock(this.stringID, this.variations, blockType);
+        if (this.category)
+            Item.setCategory(this.id, this.category);
     };
     BlockBase.prototype.getDrop = function (coords, block, diggingLevel, enchant, item, region) {
         return [[block.id, 1, block.data]];
@@ -1006,7 +1014,7 @@ var BlockBase = /** @class */ (function () {
         }
     };
     BlockBase.prototype.setDestroyTime = function (destroyTime) {
-        Block.setDestroyTime(this.id, destroyTime);
+        this.blockType.destroyTime = destroyTime;
     };
     BlockBase.prototype.setBlockMaterial = function (material, level, isNative) {
         ToolAPI.registerBlockMaterial(this.id, material, level, isNative);
@@ -1019,49 +1027,42 @@ var BlockBase = /** @class */ (function () {
      * @param baseBlock id of the block to inherit type
      */
     BlockBase.prototype.setBaseBlock = function (baseBlock) {
-        NativeBlock.setMaterialBase(this.id, baseBlock);
-    };
-    /**
-     * Sets sound type of the block.
-     * @param sound block sound type
-     */
-    BlockBase.prototype.setSoundType = function (sound) {
-        NativeBlock.setSoundType(this.id, sound);
+        this.blockType.baseBlock = baseBlock;
     };
     /**
      * Sets block to be transparent or opaque.
      * @param isSolid if true, sets block to be opaque.
      */
     BlockBase.prototype.setSolid = function (isSolid) {
-        NativeBlock.setSolid(this.id, isSolid);
+        this.blockType.solid = isSolid;
     };
     /**
      * @param renderAllFaces If true, all block faces are rendered, otherwise back faces are not
      * rendered (for optimization purposes). Default is false
      */
     BlockBase.prototype.setRenderAllFaces = function (renderAllFaces) {
-        NativeBlock.setRenderAllFaces(this.id, renderAllFaces);
+        this.blockType.renderAllFaces = renderAllFaces;
     };
     /**
      * Sets render type of the block.
      * @param renderType default is 0 (full block), use other values to change block's model
      */
     BlockBase.prototype.setRenderType = function (renderType) {
-        NativeBlock.setRenderType(this.id, renderType);
+        this.blockType.renderType = renderType;
     };
     /**
      * Specifies the layer that is used to render the block.
      * @param renderLayer default is 4
      */
     BlockBase.prototype.setRenderLayer = function (renderLayer) {
-        NativeBlock.setRenderLayer(this.id, renderLayer);
+        this.blockType.renderLayer = renderLayer;
     };
     /**
      * Sets level of the light emitted by the block.
      * @param lightLevel value from 0 (no light) to 15
      */
     BlockBase.prototype.setLightLevel = function (lightLevel) {
-        NativeBlock.setLightLevel(this.id, lightLevel);
+        this.blockType.lightLevel = lightLevel;
     };
     /**
      * Specifies how opaque block is.
@@ -1069,14 +1070,14 @@ var BlockBase = /** @class */ (function () {
      * from the light level when the light passes through the block
      */
     BlockBase.prototype.setLightOpacity = function (lightOpacity) {
-        NativeBlock.setLightOpacity(this.id, lightOpacity);
+        this.blockType.lightOpacity = lightOpacity;
     };
     /**
      * Specifies how block resists to the explosions.
      * @param resistance integer value, default is 3
      */
     BlockBase.prototype.setExplosionResistance = function (resistance) {
-        NativeBlock.setExplosionResistance(this.id, resistance);
+        this.blockType.explosionResistance = resistance;
     };
     /**
      * Sets block friction. It specifies how player walks on the block.
@@ -1085,35 +1086,42 @@ var BlockBase = /** @class */ (function () {
      * @param friction float value, default is 0.6
      */
     BlockBase.prototype.setFriction = function (friction) {
-        NativeBlock.setFriction(this.id, friction);
+        this.blockType.friction = friction;
     };
     /**
      * Specifies rendering of shadows on the block.
      * @param translucency float value from 0 (no shadows) to 1
      */
     BlockBase.prototype.setTranslucency = function (translucency) {
-        NativeBlock.setTranslucency(this.id, translucency);
+        this.blockType.translucency = translucency;
+    };
+    /**
+     * Sets sound type of the block.
+     * @param sound block sound type
+     */
+    BlockBase.prototype.setSoundType = function (sound) {
+        this.blockType.sound = sound;
     };
     /**
      * Sets block color when displayed on the vanilla maps
      * @param color map color of the block
      */
     BlockBase.prototype.setMapColor = function (color) {
-        NativeBlock.setMapColor(this.id, color);
+        this.blockType.mapColor = color;
     };
     /**
      * Makes block use biome color when displayed on the vanilla maps.
      * @param color block color source
      */
-    BlockBase.prototype.setBlockColorSource = function (color) {
-        NativeBlock.setBlockColorSource(this.id, color);
+    BlockBase.prototype.setBlockColorSource = function (colorSource) {
+        this.blockType.colorSource = colorSource;
     };
     /**
      * Sets item creative category
      * @param category item category, should be integer from 1 to 4.
      */
     BlockBase.prototype.setCategory = function (category) {
-        Item.setCategory(this.id, category);
+        this.category = category;
     };
     BlockBase.prototype.setRarity = function (rarity) {
         ItemRegistry.setRarity(this.id, rarity);
@@ -1123,18 +1131,129 @@ var BlockBase = /** @class */ (function () {
     };
     return BlockBase;
 }());
-/// <reference path="BlockBehavior.ts" />
 /// <reference path="BlockBase.ts" />
 //@ts-ignore
 var NativeBlock = com.zhekasmirnov.innercore.api.NativeBlock;
 var BlockRegistry;
 (function (BlockRegistry) {
     var blocks = {};
+    var blockTypes = {};
     function createBlock(nameID, defineData, blockType) {
         IDRegistry.genBlockID(nameID);
+        if (typeof blockType == "object") {
+            extendBlockType(blockType);
+            blockType = convertBlockTypeToSpecialType(blockType);
+        }
         Block.createBlock(nameID, defineData, blockType);
     }
     BlockRegistry.createBlock = createBlock;
+    function getBlockType(name) {
+        return blockTypes[name] || null;
+    }
+    BlockRegistry.getBlockType = getBlockType;
+    function extendBlockType(type) {
+        if (type.extends) {
+            var parent = getBlockType(type.extends);
+            for (var key in parent) {
+                if (!(key in type)) {
+                    type[key] = parent[key];
+                }
+            }
+        }
+    }
+    function createBlockType(name, type, isNative) {
+        extendBlockType(type);
+        blockTypes[name] = type;
+        if (!isNative)
+            Block.createSpecialType(convertBlockTypeToSpecialType(type), name);
+    }
+    BlockRegistry.createBlockType = createBlockType;
+    createBlockType("opaque", {
+        baseBlock: 1,
+        solid: true,
+        lightOpacity: 15,
+        explosionResistance: 4,
+        renderLayer: 3,
+        translucency: 0,
+        sound: "stone"
+    });
+    createBlockType("stone", {
+        extends: "opaque",
+        destroyTime: 1.5,
+        explosionResistance: 30
+    });
+    createBlockType("ore", {
+        extends: "opaque",
+        destroyTime: 3,
+        explosionResistance: 15
+    });
+    createBlockType("wood", {
+        extends: "opaque",
+        baseBlock: 17,
+        destroyTime: 2,
+        explosionResistance: 10,
+        sound: "wood"
+    });
+    createBlockType("leaves", {
+        baseBlock: 18,
+        destroyTime: 0.2,
+        explosionResistance: 1,
+        renderAllFaces: true,
+        renderLayer: 1,
+        lightOpacity: 1,
+        translucency: 0.5,
+        sound: "grass"
+    });
+    createBlockType("dirt", {
+        extends: "opaque",
+        baseBlock: 2,
+        destroyTime: 0.5,
+        explosionResistance: 2.5,
+        sound: "gravel"
+    });
+    function convertBlockTypeToSpecialType(properites) {
+        var type = {};
+        for (var key in properites) {
+            switch (key) {
+                case "baseBlock":
+                    type.base = properites[key];
+                    break;
+                case "renderAllFaces":
+                    type.renderallfaces = properites[key];
+                    break;
+                case "renderType":
+                    type.rendertype = properites[key];
+                    break;
+                case "renderLayer":
+                    type.renderlayer = properites[key];
+                    break;
+                case "lightLevel":
+                    type.lightlevel = properites[key];
+                    break;
+                case "lightOpacity":
+                    type.lightopacity = properites[key];
+                    break;
+                case "explosionResistance":
+                    type.explosionres = properites[key];
+                    break;
+                case "destroyTime":
+                    type.destroytime = properites[key];
+                    break;
+                case "mapColor":
+                    type.mapcolor = properites[key];
+                    break;
+                case "colorSource":
+                    type.color_source = properites[key];
+                    break;
+                case "extends": continue;
+                default:
+                    type[key] = properites[key];
+                    break;
+            }
+        }
+        return type;
+    }
+    BlockRegistry.convertBlockTypeToSpecialType = convertBlockTypeToSpecialType;
     /**
      * @returns instance of block class if it exists
      */
@@ -1145,6 +1264,7 @@ var BlockRegistry;
     BlockRegistry.getInstanceOf = getInstanceOf;
     function registerBlock(block) {
         blocks[block.id] = block;
+        block.createBlock();
         registerBlockFuncs(block.id, block);
         return block;
     }
@@ -1224,14 +1344,6 @@ var BlockRegistry;
     }
     BlockRegistry.setBaseBlock = setBaseBlock;
     /**
-     * Sets sound type of the block.
-     * @param sound block sound type
-     */
-    function setSoundType(blockID, sound) {
-        NativeBlock.setSoundType(Block.getNumericId(blockID), sound);
-    }
-    BlockRegistry.setSoundType = setSoundType;
-    /**
      * Sets block to be transparent or opaque.
      * @param isSolid if true, sets block to be opaque.
      */
@@ -1306,6 +1418,14 @@ var BlockRegistry;
         NativeBlock.setTranslucency(Block.getNumericId(blockID), translucency);
     }
     BlockRegistry.setTranslucency = setTranslucency;
+    /**
+     * Sets sound type of the block.
+     * @param sound block sound type
+     */
+    function setSoundType(blockID, sound) {
+        NativeBlock.setSoundType(Block.getNumericId(blockID), sound);
+    }
+    BlockRegistry.setSoundType = setSoundType;
     /**
      * Sets block color when displayed on the vanilla maps
      * @param color map color of the block

@@ -5,7 +5,7 @@ interface IWrech {
 }
 
 namespace ICTool {
-	let wrenchData = {}
+	const wrenchData = {}
 
 	export function registerWrench(id: number, properties: IWrech) {
 		wrenchData[id] = properties;
@@ -20,12 +20,12 @@ namespace ICTool {
 	}
 
 	export function isUseableWrench(item: ItemInstance, damage: number = 1): boolean {
-		let wrench = getWrenchData(item.id);
+		const wrench = getWrenchData(item.id);
 		return wrench?.isUseable(item, damage);
 	}
 
 	export function useWrench(item: ItemStack, damage: number, player: number): void {
-		let wrench = getWrenchData(item.id);
+		const wrench = getWrenchData(item.id);
 		wrench?.useItem(item, damage, player);
 	}
 
@@ -55,14 +55,14 @@ namespace ICTool {
 
 	export function dischargeItem(item: ItemInstance, consume: number, player: number): boolean {
 		let energy = 0;
-		let armor = Entity.getArmorSlot(player, 1);
-		let itemChargeLevel = ChargeItemRegistry.getItemData(item.id).tier;
-		let armorChargeData = ChargeItemRegistry.getItemData(armor.id);
+		const armor = Entity.getArmorSlot(player, 1);
+		const itemChargeLevel = ChargeItemRegistry.getItemData(item.id).tier;
+		const armorChargeData = ChargeItemRegistry.getItemData(armor.id);
 		if (armorChargeData && armorChargeData.tier >= itemChargeLevel) {
 			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, 100, true);
 			consume -= energy;
 		}
-		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (energyStored >= consume) {
 			if (energy > 0) {
 				Entity.setArmorSlot(player, 1, armor.id, 1, armor.data, armor.extra);
@@ -90,8 +90,8 @@ namespace ICTool {
 	export function setOnHandSound(itemID: number, idleSound: string, stopSound?: string) {
 		Callback.addCallback("LocalTick", function() {
 			if (!IC2Config.soundEnabled) {return;}
-			let item = Player.getCarriedItem();
-			let tool = ToolAPI.getToolData(item.id) as any;
+			const item = Player.getCarriedItem();
+			const tool = ToolAPI.getToolData(item.id) as any;
 			if (item.id == itemID && (!tool || !tool.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.energyPerUse)) {
 				SoundManager.startPlaySound(SourceType.ENTITY, Player.get(), idleSound);
 			}
@@ -103,7 +103,7 @@ namespace ICTool {
 
 	Callback.addCallback("DestroyBlockStart", function(coords: Callback.ItemUseCoordinates, block: Tile) {
 		if (MachineRegistry.isMachine(block.id)) {
-			let item = Player.getCarriedItem();
+			const item = Player.getCarriedItem();
 			if (ICTool.isUseableWrench(item, 10)) {
 				Network.sendToServer("icpe.demontageMachine", {x: coords.x, y: coords.y, z: coords.z});
 			}
@@ -111,17 +111,17 @@ namespace ICTool {
 	});
 
 	Network.addServerPacket("icpe.demontageMachine", function (client: NetworkClient, data: Vector) {
-		let player = client.getPlayerUid();
-		let region = WorldRegion.getForActor(player);
-		let blockID = region.getBlockId(data);
+		const player = client.getPlayerUid();
+		const region = WorldRegion.getForActor(player);
+		const blockID = region.getBlockId(data);
 		if (MachineRegistry.isMachine(blockID)) {
-			let item = new ItemStack(Entity.getCarriedItem(player));
+			const item = new ItemStack(Entity.getCarriedItem(player));
 			if (ICTool.isUseableWrench(item, 10)) {
-				let tileEntity = (region.getTileEntity(data) || region.addTileEntity(data)) as Machine.IWrenchable;
+				const tileEntity = (region.getTileEntity(data) || region.addTileEntity(data)) as Machine.IWrenchable;
 				if (!tileEntity) return;
-				let chance = ICTool.getWrenchData(item.id).dropChance;
-				let dropID = (Math.random() < chance)? tileEntity.blockID : tileEntity.getDefaultDrop();
-				let drop = tileEntity.adjustDrop(new ItemStack(dropID, 1, 0));
+				const chance = ICTool.getWrenchData(item.id).dropChance;
+				const dropID = (Math.random() < chance)? tileEntity.blockID : tileEntity.getDefaultDrop();
+				const drop = tileEntity.adjustDrop(new ItemStack(dropID, 1, 0));
 				TileEntity.destroyTileEntity(tileEntity);
 				region.setBlock(data.x, data.y, data.z, 0, 0);
 				region.dropItem(data.x + .5, data.y + .5, data.z + .5, drop);

@@ -2,12 +2,12 @@ namespace LaserShotProvider {
 	let laserShots: LaserShot[] = [];
 
 	export function shootLaser(player: number, pos: Vector, vel: Vector, params: {power: number, range?: number, blockBreaks?: number, smelt?: boolean, dropChance?: number}) {
-		let laser = new LaserShot(player, pos, vel, params);
+		const laser = new LaserShot(player, pos, vel, params);
 		laserShots.push(laser);
 	}
 
 	export function removeShot(laser: LaserShot) {
-		let index = laserShots.indexOf(laser);
+		const index = laserShots.indexOf(laser);
 		if (index >= 0) {
 			Entity.remove(laser.entity);
 			laserShots.splice(index, 1);
@@ -16,8 +16,8 @@ namespace LaserShotProvider {
 
 	export function updateAll() {
 		for (let i = 0; i < laserShots.length; i++) {
-			let laser = laserShots[i];
-			let distance = Entity.getDistanceBetweenCoords(Entity.getPosition(laser.entity), laser.startPos)
+			const laser = laserShots[i];
+			const distance = Entity.getDistanceBetweenCoords(Entity.getPosition(laser.entity), laser.startPos)
 			if (laser.power <= 0 || laser.blockBreaks <= 0 || distance > laser.range) {
 				Entity.remove(laser.entity);
 				laserShots.splice(i, 1);
@@ -28,9 +28,9 @@ namespace LaserShotProvider {
 				} else {
 					laser.power -= 0.25;
 				}
-				let vel = laser.velocity;
+				const vel = laser.velocity;
 				Entity.setVelocity(laser.entity, vel.x, vel.y, vel.z);
-				let c = Entity.getPosition(laser.entity);
+				const c = Entity.getPosition(laser.entity);
 				laser.checkBlock(Math.floor(c.x), Math.floor(c.y), Math.floor(c.z));
 			}
 		}

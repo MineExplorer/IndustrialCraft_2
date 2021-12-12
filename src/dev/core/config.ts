@@ -30,10 +30,10 @@ let frame = 0;
 
 Callback.addCallback("tick", function() {
 	if (Game.isDeveloperMode) {
-		let t = Debug.sysTime();
+		const t = Debug.sysTime();
 		if (frame++ % 20 == 0) {
 			if (lasttime != -1) {
-				let tps = 1000 / (t - lasttime) * 20
+				const tps = 1000 / (t - lasttime) * 20
 				Game.tipMessage(Math.round(tps * 10) / 10 + "tps")
 			}
 			lasttime = t

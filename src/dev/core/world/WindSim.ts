@@ -3,7 +3,7 @@ namespace WindSim {
 
 	export function getWindAt(height: number) {
 		let windMultiplier = Math.max(1 - Math.abs((160 - height)/96) ** 2, 0);
-		let wether = World.getWeather();
+		const wether = World.getWeather();
 		if (wether.thunder)
 			windMultiplier *= 1.5;
 		else if (wether.rain)

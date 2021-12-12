@@ -764,7 +764,6 @@ declare namespace Block {
 	 */
 	function createSpecialType(description: SpecialType, nameKey?: string): string;
 
-
 	/**
 	 * @deprecated No longer supported
 	 */
@@ -11957,7 +11956,7 @@ declare namespace ToolAPI {
      * @param id numeric item id
      * @param toolMaterial registered tool material name or tool material object
      * used to register the tool
-     * @param blockMaterials block material names that can be broken with this 
+     * @param blockMaterials block material names that can be broken by this 
      * instrument. For example, you can use *["stone"]* for the pickaxes
      * @param params additional tool parameters
      */
@@ -12203,6 +12202,17 @@ declare namespace ToolAPI {
          */
         damage?: number,
 
+		/**
+		 * Properties of the tool material. Defined by [[ToolAPI.registerTool]]
+		 */
+		toolMaterial?: ToolMaterial,
+
+		/**
+		 * List of block material names that can be broken by this instrument.
+		 * Defined by [[ToolAPI.registerTool]]
+		 */
+		blockMaterials?: {[key: string]: boolean}
+
         /**
          * Function used to recalculate block destroy time based on some custom 
          * logic
@@ -12279,9 +12289,13 @@ declare namespace ToolAPI {
          * @param carried an item in player's hand
          * @param fullTile block that was destroyed
          */
-        onMineBlock?: (coords: Callback.ItemUseCoordinates, carried: ItemInstance, fullTile: Tile) => void
-    }
+        onMineBlock?: (coords: Callback.ItemUseCoordinates, carried: ItemInstance, fullTile: Tile) => void,
 
+		/**
+         * Any other user-defined methods and properties
+         */
+		[key: string]: any
+    }
 
     /**
      * Object containing some of the enchants that are used to calculate block 

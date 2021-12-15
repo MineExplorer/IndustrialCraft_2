@@ -3,7 +3,7 @@
 BlockRegistry.createBlock("electricFurnace", [
 	{name: "Electric Furnace", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.electricFurnace, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.electricFurnace, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.electricFurnace, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.electricFurnace, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]]);

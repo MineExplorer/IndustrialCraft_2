@@ -1,31 +1,31 @@
 BlockRegistry.createBlock("oreCopper", [
 	{name: "Copper Ore", texture: [["ore_copper", 0]], inCreative: true}
 ], "ore");
-ToolAPI.registerBlockMaterial(BlockID.oreCopper, "stone", 2, true);
+BlockRegistry.setBlockMaterial(BlockID.oreCopper, "stone", 2);
 BlockRegistry.setDestroyLevel("oreCopper", 2);
 
 BlockRegistry.createBlock("oreTin", [
 	{name: "Tin Ore", texture: [["ore_tin", 0]], inCreative: true}
 ], "ore");
-ToolAPI.registerBlockMaterial(BlockID.oreTin, "stone", 2, true);
+BlockRegistry.setBlockMaterial(BlockID.oreTin, "stone", 2);
 BlockRegistry.setDestroyLevel("oreTin", 2);
 
 BlockRegistry.createBlock("oreLead", [
 	{name: "Lead Ore", texture: [["ore_lead", 0]], inCreative: true}
 ], "ore");
-ToolAPI.registerBlockMaterial(BlockID.oreLead, "stone", 2, true);
+BlockRegistry.setBlockMaterial(BlockID.oreLead, "stone", 2);
 BlockRegistry.setDestroyLevel("oreLead", 2);
 
 BlockRegistry.createBlock("oreUranium", [
 	{name: "Uranium Ore", texture: [["ore_uranium", 0]], inCreative: true}
 ], "ore");
-ToolAPI.registerBlockMaterial(BlockID.oreUranium, "stone", 3, true);
+BlockRegistry.setBlockMaterial(BlockID.oreUranium, "stone", 3);
 BlockRegistry.setDestroyLevel("oreUranium", 3);
 
 BlockRegistry.createBlock("oreIridium", [
 	{name: "Iridium Ore", texture: [["ore_iridium", 0]], inCreative: true}
 ], "ore");
-ToolAPI.registerBlockMaterial(BlockID.oreIridium, "stone", 4, true);
+BlockRegistry.setBlockMaterial(BlockID.oreIridium, "stone", 4);
 BlockRegistry.registerDrop("oreIridium", function(coords, blockID, blockData, level, enchant) {
 	if (level > 3) {
 		if (enchant.silk) {

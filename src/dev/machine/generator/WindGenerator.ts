@@ -1,7 +1,7 @@
 BlockRegistry.createBlock("genWindmill", [
 	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.genWindmill, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.genWindmill, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.genWindmill);

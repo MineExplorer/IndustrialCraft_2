@@ -3,7 +3,7 @@
 BlockRegistry.createBlock("storageCESU", [
 	{name: "CESU", texture: [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.storageCESU, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.storageCESU, "stone", 1);
 
 TileRenderer.setHandAndUiModel(BlockID.storageCESU, 0, [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]]);
 TileRenderer.setStandardModel(BlockID.storageCESU, 0, [["cesu_front", 0], ["cesu_back", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);

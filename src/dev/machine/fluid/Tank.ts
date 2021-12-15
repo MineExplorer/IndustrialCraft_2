@@ -2,7 +2,7 @@
 BlockRegistry.createBlock("tank", [
 	{name: "Tank", texture: [["machine_bottom", 0], ["machine_top", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.tank, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.tank, "stone", 1);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.tank, count: 1, data: 0}, [

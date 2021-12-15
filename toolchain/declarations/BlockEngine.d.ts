@@ -557,13 +557,15 @@ declare class BlockBase implements BlockBehavior {
         [key: number]: BlockModeler.BoxVertexes;
     };
     isDefined: boolean;
+    blockMaterial: string;
+    miningLevel: number;
     constructor(stringID: string, blockType?: BlockType | string);
     addVariation(name: string, texture: [string, number][], inCreative?: boolean): void;
     createBlock(): void;
-    getDrop(coords: Vector, block: Tile, diggingLevel: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[];
+    getDrop(coords: Vector, block: Tile, level: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[];
     onDestroy(coords: Vector, block: Tile, region: BlockSource): void;
     setDestroyTime(destroyTime: number): void;
-    setBlockMaterial(material: string, level?: number, isNative?: boolean): void;
+    setBlockMaterial(material: string, level?: number): void;
     /**
      * Sets block box shape
      * @param id block numeric id
@@ -734,6 +736,15 @@ declare namespace BlockRegistry {
      * @param color block color source
      */
     function setBlockColorSource(blockID: string | number, color: Block.ColorSource): void;
+    /**
+     * Registers block material and digging level. If you are registering
+     * block with 'stone' material ensure that its block type has baseBlock
+     * id 1 to be correctly destroyed by pickaxes
+     * @param nameID block numeric or string id
+     * @param material material name
+     * @param level block's digging level
+     */
+    function setBlockMaterial(blockID: string | number, material: string, level?: number): void;
     function createBlockWithRotation(stringID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
     function createStairs(stringID: string, defineData: Block.BlockVariation[], blockType: string | Block.SpecialType): void;
     function getBlockRotation(player: number, hasVertical?: boolean): number;

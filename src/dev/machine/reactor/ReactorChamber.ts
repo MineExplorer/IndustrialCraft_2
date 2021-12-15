@@ -1,7 +1,7 @@
 BlockRegistry.createBlock("reactorChamber", [
 	{name: "Reactor Chamber", texture: [["machine_bottom", 0], ["machine_top", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0]], inCreative: true},
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.reactorChamber, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.reactorChamber, "stone", 1);
 ItemRegistry.setRarity(BlockID.reactorChamber, EnumRarity.UNCOMMON);
 
 Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block, player, region) {

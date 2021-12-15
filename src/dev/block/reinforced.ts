@@ -5,7 +5,7 @@ BlockRegistry.createBlock("reinforcedStone", [
 	destroyTime: 25,
 	explosionResistance: 150,
 });
-ToolAPI.registerBlockMaterial(BlockID.reinforcedStone, "stone", 2, true);
+BlockRegistry.setBlockMaterial(BlockID.reinforcedStone, "stone", 2);
 BlockRegistry.setDestroyLevel("reinforcedStone", 2);
 
 BlockRegistry.createBlock("reinforcedGlass", [
@@ -17,7 +17,7 @@ BlockRegistry.createBlock("reinforcedGlass", [
 	renderLayer: 1,
 	sound: "stone"
 });
-ToolAPI.registerBlockMaterial(BlockID.reinforcedGlass, "stone", 2, true);
+BlockRegistry.setBlockMaterial(BlockID.reinforcedGlass, "stone", 2);
 BlockRegistry.setDestroyLevel("reinforcedGlass", 2);
 
 Callback.addCallback("PreLoaded", function() {

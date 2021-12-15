@@ -700,8 +700,9 @@ declare namespace Block {
 	 * @param nameID block numeric or string id
 	 * @param material material name
 	 * @param level block's digging level
+	 * @returns true if specified string or numeric id exists, false otherwise
 	 */
-	function setBlockMaterial(nameID: string | number, material: string, level: number): void;
+	function setBlockMaterial(nameID: string | number, material: string, level: number): boolean;
 
 	/**
 	 * Makes block accept redstone signal

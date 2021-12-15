@@ -984,6 +984,7 @@ var BlockBase = /** @class */ (function () {
         this.variations = [];
         this.shapes = {};
         this.isDefined = false;
+        this.miningLevel = 0;
         this.stringID = stringID;
         this.id = IDRegistry.genBlockID(stringID);
         if (typeof blockType == "string") {
@@ -1010,8 +1011,11 @@ var BlockBase = /** @class */ (function () {
         if (this.category)
             Item.setCategory(this.id, this.category);
     };
-    BlockBase.prototype.getDrop = function (coords, block, diggingLevel, enchant, item, region) {
-        return [[block.id, 1, block.data]];
+    BlockBase.prototype.getDrop = function (coords, block, level, enchant, item, region) {
+        if (level >= this.miningLevel) {
+            return [[block.id, 1, block.data]];
+        }
+        return [];
     };
     BlockBase.prototype.onDestroy = function (coords, block, region) {
         if (Math.random() >= 0.25)
@@ -1027,8 +1031,11 @@ var BlockBase = /** @class */ (function () {
     BlockBase.prototype.setDestroyTime = function (destroyTime) {
         this.blockType.destroyTime = destroyTime;
     };
-    BlockBase.prototype.setBlockMaterial = function (material, level, isNative) {
-        ToolAPI.registerBlockMaterial(this.id, material, level, isNative);
+    BlockBase.prototype.setBlockMaterial = function (material, level) {
+        if (level === void 0) { level = 0; }
+        this.blockMaterial = material;
+        this.miningLevel = level;
+        BlockRegistry.setBlockMaterial(this.id, material, level);
     };
     /**
      * Sets block box shape
@@ -1419,6 +1426,18 @@ var BlockRegistry;
         NativeBlock.setBlockColorSource(Block.getNumericId(blockID), color);
     }
     BlockRegistry.setBlockColorSource = setBlockColorSource;
+    /**
+     * Registers block material and digging level. If you are registering
+     * block with 'stone' material ensure that its block type has baseBlock
+     * id 1 to be correctly destroyed by pickaxes
+     * @param nameID block numeric or string id
+     * @param material material name
+     * @param level block's digging level
+     */
+    function setBlockMaterial(blockID, material, level) {
+        ToolAPI.registerBlockMaterial(Block.getNumericId(blockID), material, level, material == "stone");
+    }
+    BlockRegistry.setBlockMaterial = setBlockMaterial;
     function createBlockWithRotation(stringID, defineData, blockType, hasVertical) {
         var numericID = IDRegistry.genBlockID(stringID);
         var variations = [];

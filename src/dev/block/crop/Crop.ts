@@ -3,7 +3,7 @@
 BlockRegistry.createBlock("crop", [
 	{ name: "crop", texture: [["stick", 0]], inCreative: false }
 ], { baseBlock: 59, renderType: 6, explosionResistance: 0 });
-ToolAPI.registerBlockMaterial(BlockID.crop, "wood");
+BlockRegistry.setBlockMaterial(BlockID.crop, "wood");
 TileRenderer.setEmptyCollisionShape(BlockID.crop);
 BlockRenderer.enableCoordMapping(BlockID.crop, 0, TileRenderer.getCropModel(["stick", 0]));
 

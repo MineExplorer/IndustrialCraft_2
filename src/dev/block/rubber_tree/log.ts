@@ -7,7 +7,7 @@ Item.setCategory(BlockID.rubberTreeLog, ItemCategory.NATURE);
 BlockRegistry.registerDrop("rubberTreeLog", function(coords, blockID) {
 	return [[blockID, 1, 0]];
 });
-ToolAPI.registerBlockMaterial(BlockID.rubberTreeLog, "wood");
+BlockRegistry.setBlockMaterial(BlockID.rubberTreeLog, "wood");
 Block.registerPlaceFunction("rubberTreeLog", function(coords, item, block, player, region) {
 	if (World.canTileBeReplaced(block.id, block.data)) {
 		var place = coords as Vector;
@@ -28,7 +28,7 @@ Block.createBlockWithRotation("rubberTreeLogLatex", [
 BlockRegistry.registerDrop("rubberTreeLogLatex", function(coords, blockID) {
 	return [[BlockID.rubberTreeLog, 1, 0], [ItemID.latex, 1, 0]];
 });
-ToolAPI.registerBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
+BlockRegistry.setBlockMaterial(BlockID.rubberTreeLogLatex, "wood");
 Block.setRandomTickCallback(BlockID.rubberTreeLogLatex, function(x, y, z, id, data, region) {
 	if (data < 4 && Math.random() < 1/7) {
 		region.setBlock(x, y, z, id, data + 4);

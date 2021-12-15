@@ -3,7 +3,7 @@
 BlockRegistry.createBlock("extractor", [
 	{name: "Extractor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.extractor, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.extractor, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.extractor, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.extractor, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 1], ["extractor_side", 1], ["extractor_side", 1]]);

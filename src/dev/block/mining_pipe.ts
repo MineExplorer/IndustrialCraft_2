@@ -3,7 +3,7 @@ BlockRegistry.createBlock("miningPipe", [
 	{name: "tile.mining_pipe.name", texture: [["mining_pipe", 1]], inCreative: false}
 ], {baseBlock: 1, destroyTime: 2, renderLayer: 2, sound: "stone"});
 Block.setBlockShape(BlockID.miningPipe, {x: 5/16, y: 0, z: 5/16}, {x: 11/16, y: 1, z: 11/16}, 0);
-ToolAPI.registerBlockMaterial(BlockID.miningPipe, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.miningPipe, "stone", 1);
 BlockRegistry.setDestroyLevel("miningPipe", 1);
 
 Callback.addCallback("PreLoaded", function() {

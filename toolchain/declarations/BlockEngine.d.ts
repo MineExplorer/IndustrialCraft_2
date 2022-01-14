@@ -538,7 +538,8 @@ interface BlockType {
  */
 interface BlockBehavior {
     getDrop?(coords: Callback.ItemUseCoordinates, block: Tile, diggingLevel: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[];
-    onDestroy?(coords: Vector, block: Tile, region: BlockSource): void;
+    onDestroy?(coords: Vector, block: Tile, region: BlockSource, player: number): void;
+    onBreak?(coords: Vector, block: Tile, region: BlockSource): void;
     onPlace?(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number, region: BlockSource): Vector | void;
     onNeighbourChange?(coords: Vector, block: Tile, changeCoords: Vector, region: BlockSource): void;
     onEntityInside?(coords: Vector, block: Tile, entity: number): void;
@@ -563,7 +564,7 @@ declare class BlockBase implements BlockBehavior {
     addVariation(name: string, texture: [string, number][], inCreative?: boolean): void;
     createBlock(): void;
     getDrop(coords: Vector, block: Tile, level: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[];
-    onDestroy(coords: Vector, block: Tile, region: BlockSource): void;
+    onBreak(coords: Vector, block: Tile, region: BlockSource): void;
     setDestroyTime(destroyTime: number): void;
     setBlockMaterial(material: string, level?: number): void;
     /**

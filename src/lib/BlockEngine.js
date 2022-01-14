@@ -1017,7 +1017,7 @@ var BlockBase = /** @class */ (function () {
         }
         return [];
     };
-    BlockBase.prototype.onDestroy = function (coords, block, region) {
+    BlockBase.prototype.onBreak = function (coords, block, region) {
         if (Math.random() >= 0.25)
             return;
         var enchant = ToolAPI.getEnchantExtraData();
@@ -1261,8 +1261,15 @@ var BlockRegistry;
             });
         }
         if ('onDestroy' in blockFuncs) {
+            Callback.addCallback("DestroyBlock", function (coords, block, player) {
+                if (block.id == numericID) {
+                    blockFuncs.onDestroy(coords, block, BlockSource.getDefaultForActor(player), player);
+                }
+            });
+        }
+        if ('onBreak' in blockFuncs) {
             Block.registerPopResourcesFunction(numericID, function (coords, block, region) {
-                blockFuncs.onDestroy(coords, block, region);
+                blockFuncs.onBreak(coords, block, region);
             });
         }
         if ('onPlace' in blockFuncs) {

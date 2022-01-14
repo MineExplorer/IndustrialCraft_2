@@ -77,7 +77,7 @@ class EUCableGrid extends EnergyGrid {
 	}
 
 	getCoordsFromString(coordKey: string): Vector {
-		const coordArr = coordKey.split(":");
-		return {x: parseInt(coordArr[0]), y: parseInt(coordArr[1]), z: parseInt(coordArr[2])};
+		const coordArray = coordKey.split(':').map((c) => parseInt(c));
+		return {x: coordArray[0], y: coordArray[1], z: coordArray[2]};
 	}
 }

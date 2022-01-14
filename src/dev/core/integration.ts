@@ -3,6 +3,6 @@ namespace IntegrationAPI {
 		recyclerBlacklist.push(id);
 	}
 	export function addToolBooxValidItem(id: number): void {
-		toolbox_items.push(id);
+		toolboxItems.push(id);
 	}
 }

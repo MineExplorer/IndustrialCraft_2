@@ -63,8 +63,8 @@ class RubberTreeLeaves extends BlockBase {
 				const checkingLeaves = explored;
 				explored = {};
 				for (let coords in checkingLeaves) {
-					const c = coords.split(':');
-					if (this.checkLeavesFor6Sides(parseInt(c[0]), parseInt(c[1]), parseInt(c[2]), region, explored)) {
+					const coordArray = coords.split(':').map((c) => parseInt(c));
+					if (this.checkLeavesFor6Sides(coordArray[0], coordArray[1], coordArray[2], region, explored)) {
 						region.setBlock(x, y, z, BlockID.rubberTreeLeaves, 0);
 						return;
 					}
@@ -79,8 +79,12 @@ class RubberTreeLeaves extends BlockBase {
 		}
 	}
 
-	//TODO: function on destruction by player
-	onDestroy(coords: Vector, block: Tile, region: BlockSource): void {
+	onDestroy(coords: Vector, block: Tile, region: BlockSource, player: number): void {
+		this.updateLeaves(coords.x, coords.y, coords.z, region);
+	}
+
+	onBreak(coords: Vector, block: Tile, region: BlockSource) {
+		super.onBreak(coords, block, region);
 		this.updateLeaves(coords.x, coords.y, coords.z, region);
 	}
 }

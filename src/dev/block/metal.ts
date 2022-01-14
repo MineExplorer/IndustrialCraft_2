@@ -1,5 +1,3 @@
-
-
 BlockRegistry.createBlock("blockCopper", [
 	{name: "Copper Block", texture: [["block_copper", 0]], inCreative: true}
 ], "stone");

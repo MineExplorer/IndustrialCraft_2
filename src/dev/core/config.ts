@@ -8,11 +8,11 @@ namespace IC2Config {
 	}
 
 	export function getInt(name: string): number {
-		return __config__.getNumber(name).intValue();
+		return __config__.getInteger(name);
 	}
 
 	export function getFloat(name: string): number {
-		return __config__.getNumber(name).floatValue();
+		return __config__.getFloat(name);
 	}
 }
 

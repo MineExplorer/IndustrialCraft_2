@@ -1926,6 +1926,14 @@ var ItemBase = /** @class */ (function () {
     ItemBase.prototype.addRepairItem = function (itemID) {
         this.item.addRepairItem(itemID);
     };
+    /**
+    * Sets properties for the item from JSON-like object. Uses vanilla mechanics.
+    * @param id string or numeric item id
+    * @param props object containing properties
+    */
+    ItemBase.prototype.setProperties = function (props) {
+        this.item.setProperties(JSON.stringify(props));
+    };
     ItemBase.prototype.setRarity = function (rarity) {
         ItemRegistry.setRarity(this.id, rarity);
     };
@@ -1954,18 +1962,42 @@ var ItemCommon = /** @class */ (function (_super) {
 }(ItemBase));
 var ItemFood = /** @class */ (function (_super) {
     __extends(ItemFood, _super);
-    function ItemFood(stringID, name, icon, food, inCreative) {
+    function ItemFood(stringID, name, icon, params, inCreative) {
         if (inCreative === void 0) { inCreative = true; }
+        var _a;
         var _this = _super.call(this, stringID, name, icon) || this;
-        _this.item = Item.createFoodItem(_this.stringID, _this.name, _this.icon, { food: food, isTech: true });
-        _this.setCategory(ItemCategory.ITEMS);
-        if (inCreative)
-            _this.addDefaultToCreative();
+        var foodProperties = {
+            nutrition: params.food || 0,
+            saturation_modifier: params.saturation || "normal",
+            is_meat: params.isMeat || false,
+            can_always_eat: params.canAlwaysEat || false,
+            effects: params.effects || []
+        };
+        if (params.usingConvertsTo) {
+            foodProperties["using_converts_to"] = params.usingConvertsTo;
+        }
+        (_a = params.useDuration) !== null && _a !== void 0 ? _a : (params.useDuration = 32);
+        if (BlockEngine.getMainGameVersion() == 11) {
+            _this.setProperties({
+                use_duration: params.useDuration,
+                food: foodProperties
+            });
+        }
+        else {
+            _this.setProperties({
+                components: {
+                    "minecraft:use_duration": params.useDuration,
+                    "minecraft:food": foodProperties
+                }
+            });
+        }
+        _this.item.setUseAnimation(1);
+        _this.item.setMaxUseDuration(params.useDuration);
         return _this;
     }
     ItemFood.prototype.onFoodEaten = function (item, food, saturation, player) { };
     return ItemFood;
-}(ItemBase));
+}(ItemCommon));
 Callback.addCallback("FoodEaten", function (food, saturation, player) {
     var item = Entity.getCarriedItem(player);
     var itemInstance = ItemRegistry.getInstanceOf(item.id);
@@ -2001,6 +2033,7 @@ var ItemArmor = /** @class */ (function (_super) {
         _this.item = Item.createArmorItem(_this.stringID, _this.name, _this.icon, {
             type: _this.armorType,
             armor: _this.defence,
+            knockbackResist: params.knockbackResistance * 0.1125 || 0,
             durability: 0,
             texture: _this.texture,
             isTech: true
@@ -2402,7 +2435,7 @@ var ItemRegistry;
     function createItem(stringID, params) {
         var item;
         if (params.type == "food") {
-            item = new ItemFood(stringID, params.name, params.icon, params.food, params.inCreative);
+            return createFood(stringID, params);
         }
         else if (params.type == "throwable") {
             item = new ItemThrowable(stringID, params.name, params.icon, params.inCreative);
@@ -2429,6 +2462,20 @@ var ItemRegistry;
         return item;
     }
     ItemRegistry.createItem = createItem;
+    function createFood(stringID, params) {
+        var item = new ItemFood(stringID, params.name, params.icon, params, params.inCreative);
+        if (params.stack)
+            item.setMaxStack(params.stack);
+        if (params.category)
+            item.setCategory(params.category);
+        if (params.glint)
+            item.setGlint(true);
+        if (params.rarity)
+            item.setRarity(params.rarity);
+        items[item.id] = item;
+        return item;
+    }
+    ItemRegistry.createFood = createFood;
     ;
     /**
      * Creates armor item from given description. Automatically generates item id

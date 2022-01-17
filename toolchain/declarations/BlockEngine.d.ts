@@ -902,14 +902,34 @@ declare abstract class ItemBase {
      * @param itemID item id to be used as repair material
      */
     addRepairItem(itemID: number): void;
+    /**
+    * Sets properties for the item from JSON-like object. Uses vanilla mechanics.
+    * @param id string or numeric item id
+    * @param props object containing properties
+    */
+    setProperties(props: object): void;
     setRarity(rarity: number): void;
     addDefaultToCreative(): void;
 }
 declare class ItemCommon extends ItemBase {
     constructor(stringID: string, name?: string, icon?: string | Item.TextureData, inCreative?: boolean);
 }
-declare class ItemFood extends ItemBase {
-    constructor(stringID: string, name?: string, icon?: string | Item.TextureData, food?: number, inCreative?: boolean);
+declare type FoodParams = {
+    food?: number;
+    useDuration?: number;
+    saturation?: "poor" | "low" | "normal" | "good" | "max" | "supernatural";
+    canAlwaysEat?: boolean;
+    isMeat?: boolean;
+    usingConvertsTo?: string;
+    effects?: {
+        name: string;
+        duration: number;
+        amplifier: number;
+        chance: number;
+    }[];
+};
+declare class ItemFood extends ItemCommon {
+    constructor(stringID: string, name: string, icon: string | Item.TextureData, params: FoodParams, inCreative?: boolean);
     onFoodEaten(item: ItemInstance, food: number, saturation: number, player: number): void;
 }
 declare class ItemThrowable extends ItemBase {
@@ -936,6 +956,7 @@ declare type ArmorMaterial = {
 declare type ArmorParams = {
     type: ArmorType;
     defence: number;
+    knockbackResistance?: number;
     texture: string;
     material?: string | ArmorMaterial;
 };
@@ -1076,6 +1097,16 @@ declare namespace ItemRegistry {
      * @returns item class instance
      */
     export function createItem(stringID: string, params: ItemDescription): ItemBase;
+    interface FoodDescription extends FoodParams {
+        name: string;
+        icon: string | Item.TextureData;
+        stack?: number;
+        inCreative?: boolean;
+        category?: number;
+        glint?: boolean;
+        rarity?: number;
+    }
+    export function createFood(stringID: string, params: FoodDescription): ItemFood;
     interface ArmorDescription extends ArmorParams {
         name: string;
         icon: string | Item.TextureData;

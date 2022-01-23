@@ -487,7 +487,7 @@ Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "
 
 // Creative Groups
 Translation.addTranslation("Ores", {ru: "Руды", pt: "Minérios", zh: "矿石"});
-Translation.addTranslation("Metal Blocks", {ru: "Блоки металлов", pt: "Blocos de metal", zh: "金属块"});
+Translation.addTranslation("Resource Blocks", {ru: "Блоки ресурсов"});
 Translation.addTranslation("Electric Generators", {ru: "Электрогенераторы"});
 Translation.addTranslation("Heat Generators", {ru: "Теплогенераторы"});
 Translation.addTranslation("Processing Machines", {ru: "Машины-обработчики"});

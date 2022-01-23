@@ -1,5 +1,5 @@
 BlockRegistry.createBlock("reinforcedStone", [
-	{name: "Reinforced Stone", texture: [["reinforced_block", 0]], inCreative: true}
+	{name: "reinforced_stone", texture: [["reinforced_block", 0]], inCreative: true}
 ], {
 	extends: "stone",
 	destroyTime: 25,
@@ -9,7 +9,7 @@ BlockRegistry.setBlockMaterial(BlockID.reinforcedStone, "stone", 2);
 BlockRegistry.setDestroyLevel("reinforcedStone", 2);
 
 BlockRegistry.createBlock("reinforcedGlass", [
-	{name: "Reinforced Glass", texture: [["reinforced_glass", 0]], inCreative: true}
+	{name: "reinforced_glass", texture: [["reinforced_glass", 0]], inCreative: true}
 ], {
 	baseBlock: 1,
 	destroyTime: 25,

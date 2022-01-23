@@ -12,7 +12,7 @@ implements BlockItemBehavior {
 			destroyTime: 0,
 			sound: "grass"
 		});
-		this.addVariation("Rubber Tree Sapling", [["rubber_tree_sapling", 0]], true);
+		this.addVariation("rubber_tree_sapling", [["rubber_tree_sapling", 0]], true);
 		this.setCategory(ItemCategory.NATURE);
 		this.setBlockMaterial("plant");
 		this.setShape(this.id, 1/8, 0, 1/8, 7/8, 1, 7/8);

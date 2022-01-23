@@ -1,5 +1,5 @@
 BlockRegistry.createBlock("miningPipe", [
-	{name: "Mining Pipe", texture: [["mining_pipe", 0]], inCreative: true},
+	{name: "mining_pipe", texture: [["mining_pipe", 0]], inCreative: true},
 	{name: "tile.mining_pipe.name", texture: [["mining_pipe", 1]], inCreative: false}
 ], {baseBlock: 1, destroyTime: 2, renderLayer: 2, sound: "stone"});
 Block.setBlockShape(BlockID.miningPipe, {x: 5/16, y: 0, z: 5/16}, {x: 11/16, y: 1, z: 11/16}, 0);

@@ -1,19 +1,20 @@
+class StoneBlock extends BlockBase {
+	constructor(id: string, name: string, texture: [string, number][], miningLevel: number = 1) {
+		super(id, "stone");
+		this.addVariation(name, texture, true);
+		this.setBlockMaterial("stone", miningLevel);
+		this.setDestroyTime(3);
+	}
+}
+
+// legacy
 BlockRegistry.createBlockType("machine", {
 	extends: "stone",
 	destroyTime: 3
 });
 
-BlockRegistry.createBlock("machineBlockBasic", [
-	{name: "Machine Block", texture: [["machine_top", 0]], inCreative: true}
-], "machine");
-BlockRegistry.setBlockMaterial(BlockID.machineBlockBasic, "stone", 1);
-BlockRegistry.setDestroyLevel("machineBlockBasic", 1);
-
-BlockRegistry.createBlock("machineBlockAdvanced", [
-	{name: "Advanced Machine Block", texture: [["machine_advanced", 0]], inCreative: true}
-], "machine");
-BlockRegistry.setBlockMaterial(BlockID.machineBlockAdvanced, "stone", 1);
-BlockRegistry.setDestroyLevel("machineBlockAdvanced", 1);
+BlockRegistry.registerBlock(new StoneBlock("machineBlockBasic", "machine_block", [["machine_top", 0]]));
+BlockRegistry.registerBlock(new StoneBlock("machineBlockAdvanced", "advanced_machine_block", [["machine_advanced", 0]]));
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.machineBlockBasic, count: 1, data: 0}, [

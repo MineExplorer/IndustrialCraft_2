@@ -108,6 +108,7 @@ namespace MachineRegistry {
 		});
 	}
 
+	/**@deprecated */
 	export function getMachineDrop(blockID: number, level: number): ItemInstanceArray[] {
 		const drop = [];
 		if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {

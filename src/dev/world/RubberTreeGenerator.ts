@@ -67,21 +67,21 @@ namespace RubberTreeGenerator {
 	const ForestBiomeIDs = [4, 18, 27, 28, 132, 155, 156];
 	const JungleBiomeIDs = [21, 22, 23, 149, 151];
 	const SwampBiomeIDs = [6, 134];
-	
-	function readRubberTreeConfig() {
+
+	export function readRubberTreeConfig() {
 		let chance = IC2Config.getInt("rubber_tree_gen.plains");
 		biomeData[1] = chance;
-		
+
 		chance = IC2Config.getInt("rubber_tree_gen.forest");
 		ForestBiomeIDs.forEach(function(id) {
 			biomeData[id] = chance;
 		});
-		
+
 		chance = IC2Config.getInt("rubber_tree_gen.jungle");
 		JungleBiomeIDs.forEach(function(id) {
 			biomeData[id] = chance;
 		});
-		
+
 		chance = IC2Config.getInt("rubber_tree_gen.swamp");
 		SwampBiomeIDs.forEach(function(id) {
 			biomeData[id] = chance;
@@ -89,16 +89,16 @@ namespace RubberTreeGenerator {
 	}
 
 	readRubberTreeConfig();
-	
+
 	World.addGenerationCallback(BlockEngine.getMainGameVersion() == 11 ? "GenerateChunk" : "PreProcessChunk", function(chunkX: number, chunkZ: number, random: java.util.Random) {
 		const region = BlockSource.getCurrentWorldGenRegion();
 		const biome = region.getBiome((chunkX + 0.5) * 16, (chunkZ + 0.5) * 16);
-		if (random.nextDouble() < RubberTreeGenerator.getBiomeChance(biome)) {
+		if (random.nextDouble() < getBiomeChance(biome)) {
 			const treeCount = 1 + random.nextInt(6);
 			for (let i = 0; i < treeCount; i++) {
 				const coords = GenerationUtils.findSurface(chunkX*16 + random.nextInt(16), 96, chunkZ*16 + random.nextInt(16));
 				if (region.getBlockId(coords.x, coords.y, coords.z) == 2) {
-					RubberTreeGenerator.generateRubberTree(region, coords.x, coords.y + 1, coords.z, random);
+					generateRubberTree(region, coords.x, coords.y + 1, coords.z, random);
 				}
 			}
 		}

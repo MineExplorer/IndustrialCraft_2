@@ -1,4 +1,4 @@
-class ResourceBlock extends BlockBase {
+class BlockResource extends BlockBase {
 	constructor(id: string, resourceName: string, miningLevel: number) {
 		super(id, "stone");
 		const name = resourceName + "_block";
@@ -9,13 +9,13 @@ class ResourceBlock extends BlockBase {
 	}
 }
 
-BlockRegistry.registerBlock(new ResourceBlock("blockCopper", "copper", 2));
-BlockRegistry.registerBlock(new ResourceBlock("blockTin", "tin", 2));
-BlockRegistry.registerBlock(new ResourceBlock("blockBronze", "bronze", 2));
-BlockRegistry.registerBlock(new ResourceBlock("blockLead", "lead", 2));
-BlockRegistry.registerBlock(new ResourceBlock("blockSteel", "steel", 2));
-BlockRegistry.registerBlock(new ResourceBlock("blockSilver", "silver", 3));
-BlockRegistry.registerBlock(new ResourceBlock("blockUranium", "uranium", 3));
+BlockRegistry.registerBlock(new BlockResource("blockCopper", "copper", 2));
+BlockRegistry.registerBlock(new BlockResource("blockTin", "tin", 2));
+BlockRegistry.registerBlock(new BlockResource("blockBronze", "bronze", 2));
+BlockRegistry.registerBlock(new BlockResource("blockLead", "lead", 2));
+BlockRegistry.registerBlock(new BlockResource("blockSteel", "steel", 2));
+BlockRegistry.registerBlock(new BlockResource("blockSilver", "silver", 3));
+BlockRegistry.registerBlock(new BlockResource("blockUranium", "uranium", 3));
 
 Item.addCreativeGroup("blockResource", Translation.translate("Resource Blocks"), [
 	BlockID.blockCopper,

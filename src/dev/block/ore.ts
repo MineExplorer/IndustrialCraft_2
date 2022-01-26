@@ -1,4 +1,4 @@
-class OreBlock extends BlockBase {
+class BlockOre extends BlockBase {
 	constructor(id: string, oreName: string, miningLevel: number) {
 		super(id, "ore");
 		const name = oreName + "_ore";
@@ -8,11 +8,11 @@ class OreBlock extends BlockBase {
 	}
 }
 
-BlockRegistry.registerBlock(new OreBlock("oreCopper", "copper", 2));
-BlockRegistry.registerBlock(new OreBlock("oreTin", "tin", 2));
-BlockRegistry.registerBlock(new OreBlock("oreLead", "lead", 2));
-BlockRegistry.registerBlock(new OreBlock("oreUranium", "uranium", 3));
-BlockRegistry.registerBlock(new OreBlock("oreIridium", "iridium", 4));
+BlockRegistry.registerBlock(new BlockOre("oreCopper", "copper", 2));
+BlockRegistry.registerBlock(new BlockOre("oreTin", "tin", 2));
+BlockRegistry.registerBlock(new BlockOre("oreLead", "lead", 2));
+BlockRegistry.registerBlock(new BlockOre("oreUranium", "uranium", 3));
+BlockRegistry.registerBlock(new BlockOre("oreIridium", "iridium", 4));
 BlockRegistry.registerDrop("oreIridium", function(coords, blockID, blockData, level, enchant) {
 	if (level > 3) {
 		if (enchant.silk) {

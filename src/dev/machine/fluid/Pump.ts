@@ -1,4 +1,3 @@
-
 BlockRegistry.createBlock("pump", [
 	{name: "Pump", texture: [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]], inCreative: true}
 ], "machine");

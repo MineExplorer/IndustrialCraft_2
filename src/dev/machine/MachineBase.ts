@@ -1,9 +1,7 @@
 /// <reference path="IWrenchable.ts" />
 
 namespace Machine {
-	export let ClientSide = BlockEngine.Decorators.ClientSide;
-	export let NetworkEvent = BlockEngine.Decorators.NetworkEvent;
-	export let ContainerEvent = BlockEngine.Decorators.ContainerEvent;
+	export let {ClientSide, NetworkEvent, ContainerEvent} = BlockEngine.Decorators;
 
 	export abstract class MachineBase
 	extends TileEntityBase

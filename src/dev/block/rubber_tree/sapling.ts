@@ -1,4 +1,4 @@
-class BlockRubberSapling extends BlockBase
+class BlockRubberTreeSapling extends BlockBase
 implements BlockItemBehavior {
 	PLACEABLE_TILES = {
 		2: true,
@@ -70,7 +70,7 @@ implements BlockItemBehavior {
 	}
 }
 
-BlockRegistry.registerBlock(new BlockRubberSapling());
+BlockRegistry.registerBlock(new BlockRubberTreeSapling());
 
 Network.addClientPacket("ic2.growPlantParticles", function(data: {x: number, y: number, z: number}) {
 	for (let i = 0; i < 16; i++) {

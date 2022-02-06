@@ -651,9 +651,23 @@ declare class BlockBase implements BlockBehavior {
     setRarity(rarity: number): void;
     registerTileEntity(prototype: TileEntity.TileEntityPrototype): void;
 }
+declare class BlockRotative extends BlockBase {
+    hasVerticalFacings: boolean;
+    constructor(stringID: string, blockType?: string | Block.SpecialType, hasVerticalFacings?: boolean);
+    addVariation(name: string, texture: [string, number][], inCreative?: boolean): void;
+    createBlock(): void;
+    onPlace(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number, region: BlockSource): Vector;
+}
+declare class BlockStairs extends BlockBase {
+    constructor(stringID: string, defineData: Block.BlockVariation, blockType?: string | Block.SpecialType);
+    createItemModel(): void;
+    onPlace(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number, region: BlockSource): Vector;
+}
 declare const NativeBlock: any;
 declare namespace BlockRegistry {
-    function createBlock(nameID: string, defineData: Block.BlockVariation[], blockType?: string | BlockType): void;
+    function createBlock(stringID: string, defineData: Block.BlockVariation[], blockType?: string | BlockType): void;
+    function createBlockWithRotation(stringID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType, hasVerticalFacings?: boolean): void;
+    function createStairs(stringID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType): void;
     function getBlockType(name: string): Nullable<BlockType>;
     function extendBlockType(type: BlockType): void;
     function createBlockType(name: string, type: BlockType, isNative?: boolean): void;
@@ -746,8 +760,6 @@ declare namespace BlockRegistry {
      * @param level block's digging level
      */
     function setBlockMaterial(blockID: string | number, material: string, level?: number): void;
-    function createBlockWithRotation(stringID: string, defineData: Block.BlockVariation[], blockType?: string | Block.SpecialType, hasVertical?: boolean): void;
-    function createStairs(stringID: string, defineData: Block.BlockVariation[], blockType: string | Block.SpecialType): void;
     function getBlockRotation(player: number, hasVertical?: boolean): number;
     function getPlacePosition(coords: Callback.ItemUseCoordinates, block: Tile, region: BlockSource): Vector;
     function setRotationFunction(id: string | number, hasVertical?: boolean, placeSound?: string): void;

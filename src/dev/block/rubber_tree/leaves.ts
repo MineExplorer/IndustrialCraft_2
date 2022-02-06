@@ -1,10 +1,10 @@
-class RubberTreeLeaves extends BlockBase {
+class BlockRubberTreeLeaves extends BlockBase {
 	constructor() {
 		super("rubberTreeLeaves", "leaves");
 		const name = "rubber_tree_leaves";
-		this.addVariation(name, [[name, 0]]);
-		this.addVariation(name, [[name, 0]]);
-		this.addVariation(name, [[name, 0]], true);
+		for (let i = 0; i < 3; i++){
+			this.addVariation(name, [[name, 0]], i == 2);
+		}
 		this.setCategory(ItemCategory.NATURE);
 		this.setBlockMaterial("plant");
 	}
@@ -90,4 +90,4 @@ class RubberTreeLeaves extends BlockBase {
 	}
 }
 
-BlockRegistry.registerBlock(new RubberTreeLeaves());
+BlockRegistry.registerBlock(new BlockRubberTreeLeaves());

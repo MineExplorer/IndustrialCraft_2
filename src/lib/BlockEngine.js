@@ -987,7 +987,10 @@ var BlockBase = /** @class */ (function () {
         this.miningLevel = 0;
         this.stringID = stringID;
         this.id = IDRegistry.genBlockID(stringID);
-        if (typeof blockType == "string") {
+        if (typeof blockType == "object") {
+            BlockRegistry.extendBlockType(blockType);
+        }
+        else {
             blockType = BlockRegistry.getBlockType(blockType);
         }
         this.blockType = blockType;
@@ -1000,8 +1003,21 @@ var BlockBase = /** @class */ (function () {
         if (this.variations.length == 0) {
             this.addVariation(this.stringID + ".name", [["__missing", 0]]);
         }
-        BlockRegistry.extendBlockType(this.blockType);
-        var blockType = BlockRegistry.convertBlockTypeToSpecialType(this.blockType);
+        var blockType = null;
+        if (this.blockType) {
+            blockType = BlockRegistry.convertBlockTypeToSpecialType(this.blockType);
+        }
+        // remove duplicated items in creative
+        var duplicatedInstance = BlockRegistry.getInstanceOf(this.id);
+        if (duplicatedInstance) {
+            var variations = duplicatedInstance.variations;
+            for (var i = 0; i < Math.min(this.variations.length, variations.length); i++) {
+                if (variations[i].inCreative) {
+                    this.variations[i].inCreative = false;
+                    Logger.Log("Skipped duplicated adding to creative for block " + this.stringID + ":" + i, "BlockEngine");
+                }
+            }
+        }
         Block.createBlock(this.stringID, this.variations, blockType);
         this.isDefined = true;
         for (var data in this.shapes) {
@@ -1158,32 +1174,120 @@ var BlockBase = /** @class */ (function () {
     return BlockBase;
 }());
 /// <reference path="BlockBase.ts" />
+var BlockRotative = /** @class */ (function (_super) {
+    __extends(BlockRotative, _super);
+    function BlockRotative(stringID, blockType, hasVerticalFacings) {
+        if (hasVerticalFacings === void 0) { hasVerticalFacings = false; }
+        var _this = _super.call(this, stringID, blockType) || this;
+        _this.hasVerticalFacings = hasVerticalFacings;
+        return _this;
+    }
+    BlockRotative.prototype.addVariation = function (name, texture, inCreative) {
+        var textures = [
+            [texture[3], texture[2], texture[0], texture[1], texture[4], texture[5]],
+            [texture[2], texture[3], texture[1], texture[0], texture[5], texture[4]],
+            [texture[0], texture[1], texture[3], texture[2], texture[5], texture[4]],
+            [texture[0], texture[1], texture[2], texture[3], texture[4], texture[5]],
+            [texture[0], texture[1], texture[4], texture[5], texture[3], texture[2]],
+            [texture[0], texture[1], texture[5], texture[4], texture[2], texture[3]]
+        ];
+        if (!this.hasVerticalFacings) {
+            textures[0] = textures[1] = textures[3];
+        }
+        for (var data = 0; data < 6; data++) {
+            this.variations.push({ name: name, texture: textures[data], inCreative: inCreative && data == 0 });
+        }
+    };
+    BlockRotative.prototype.createBlock = function () {
+        _super.prototype.createBlock.call(this);
+        if (this.hasVerticalFacings) {
+            for (var i = 0; i < this.variations.length; i += 6) {
+                BlockModeler.setInventoryModel(this.id, BlockRenderer.createTexturedBlock(this.variations[i + 3].texture), i);
+            }
+        }
+    };
+    BlockRotative.prototype.onPlace = function (coords, item, block, player, region) {
+        var place = BlockRegistry.getPlacePosition(coords, block, region);
+        if (!place)
+            return;
+        var rotation = BlockRegistry.getBlockRotation(player, this.hasVerticalFacings);
+        var data = (item.data - item.data % 6) + rotation;
+        region.setBlock(place.x, place.y, place.z, item.id, data);
+        return place;
+    };
+    return BlockRotative;
+}(BlockBase));
+/// <reference path="BlockBase.ts" />
+var BlockStairs = /** @class */ (function (_super) {
+    __extends(BlockStairs, _super);
+    function BlockStairs(stringID, defineData, blockType) {
+        var _this = _super.call(this, stringID, blockType) || this;
+        _this.variations.push(defineData);
+        BlockModeler.setStairsRenderModel(_this.id);
+        _this.createItemModel();
+        return _this;
+    }
+    BlockStairs.prototype.createItemModel = function () {
+        var model = BlockRenderer.createModel();
+        model.addBox(0, 0, 0, 1, 0.5, 1, this.id, 0);
+        model.addBox(0, 0.5, 0, 1, 1, 0.5, this.id, 0);
+        BlockModeler.setInventoryModel(this.id, model);
+    };
+    BlockStairs.prototype.onPlace = function (coords, item, block, player, region) {
+        var place = BlockRegistry.getPlacePosition(coords, block, region);
+        if (!place)
+            return;
+        var data = BlockRegistry.getBlockRotation(player) - 2;
+        if (coords.side == 0 || coords.side >= 2 && coords.vec.y - coords.y >= 0.5) {
+            data += 4;
+        }
+        region.setBlock(place.x, place.y, place.z, item.id, data);
+        return place;
+    };
+    return BlockStairs;
+}(BlockBase));
+/// <reference path="BlockBase.ts" />
+/// <reference path="BlockRotative.ts" />
+/// <reference path="BlockStairs.ts" />
 //@ts-ignore
 var NativeBlock = com.zhekasmirnov.innercore.api.NativeBlock;
 var BlockRegistry;
 (function (BlockRegistry) {
     var blocks = {};
     var blockTypes = {};
-    function createBlock(nameID, defineData, blockType) {
-        IDRegistry.genBlockID(nameID);
-        if (typeof blockType == "object") {
-            extendBlockType(blockType);
-            blockType = convertBlockTypeToSpecialType(blockType);
+    function createBlock(stringID, defineData, blockType) {
+        var block = new BlockBase(stringID, blockType);
+        for (var _i = 0, defineData_1 = defineData; _i < defineData_1.length; _i++) {
+            var variation = defineData_1[_i];
+            block.addVariation(variation.name, variation.texture, variation.inCreative);
         }
-        Block.createBlock(nameID, defineData, blockType);
+        registerBlock(block);
     }
     BlockRegistry.createBlock = createBlock;
+    function createBlockWithRotation(stringID, defineData, blockType, hasVerticalFacings) {
+        var block = new BlockRotative(stringID, blockType, hasVerticalFacings);
+        for (var _i = 0, defineData_2 = defineData; _i < defineData_2.length; _i++) {
+            var variation = defineData_2[_i];
+            block.addVariation(variation.name, variation.texture, variation.inCreative);
+        }
+        registerBlock(block);
+    }
+    BlockRegistry.createBlockWithRotation = createBlockWithRotation;
+    function createStairs(stringID, defineData, blockType) {
+        registerBlock(new BlockStairs(stringID, defineData[0], blockType));
+    }
+    BlockRegistry.createStairs = createStairs;
     function getBlockType(name) {
         return blockTypes[name] || null;
     }
     BlockRegistry.getBlockType = getBlockType;
     function extendBlockType(type) {
-        if (type.extends) {
-            var parent = getBlockType(type.extends);
-            for (var key in parent) {
-                if (!(key in type)) {
-                    type[key] = parent[key];
-                }
+        if (!type.extends)
+            return;
+        var parent = getBlockType(type.extends);
+        for (var key in parent) {
+            if (!(key in type)) {
+                type[key] = parent[key];
             }
         }
     }
@@ -1191,8 +1295,9 @@ var BlockRegistry;
     function createBlockType(name, type, isNative) {
         extendBlockType(type);
         blockTypes[name] = type;
-        if (!isNative)
+        if (!isNative) {
             Block.createSpecialType(convertBlockTypeToSpecialType(type), name);
+        }
     }
     BlockRegistry.createBlockType = createBlockType;
     function convertBlockTypeToSpecialType(properites) {
@@ -1247,9 +1352,9 @@ var BlockRegistry;
     }
     BlockRegistry.getInstanceOf = getInstanceOf;
     function registerBlock(block) {
-        blocks[block.id] = block;
         block.createBlock();
         registerBlockFuncs(block.id, block);
+        blocks[block.id] = block;
         return block;
     }
     BlockRegistry.registerBlock = registerBlock;
@@ -1445,53 +1550,6 @@ var BlockRegistry;
         ToolAPI.registerBlockMaterial(Block.getNumericId(blockID), material, level, material == "stone");
     }
     BlockRegistry.setBlockMaterial = setBlockMaterial;
-    function createBlockWithRotation(stringID, defineData, blockType, hasVertical) {
-        var numericID = IDRegistry.genBlockID(stringID);
-        var variations = [];
-        for (var i = 0; i < defineData.length; i++) {
-            var variation = defineData[i];
-            var texture = variation.texture;
-            var textures = [
-                [texture[3], texture[2], texture[0], texture[1], texture[4], texture[5]],
-                [texture[2], texture[3], texture[1], texture[0], texture[5], texture[4]],
-                [texture[0], texture[1], texture[3], texture[2], texture[5], texture[4]],
-                [texture[0], texture[1], texture[2], texture[3], texture[4], texture[5]],
-                [texture[0], texture[1], texture[4], texture[5], texture[3], texture[2]],
-                [texture[0], texture[1], texture[5], texture[4], texture[2], texture[3]]
-            ];
-            for (var data = 0; data < 6; data++) {
-                variations.push({ name: variation.name, texture: textures[data], inCreative: variation.inCreative && data == 0 });
-            }
-        }
-        Block.createBlock(stringID, variations, blockType);
-        for (var i = 0; i < defineData.length; i++) {
-            BlockModeler.setInventoryModel(numericID, BlockRenderer.createTexturedBlock(defineData[i].texture), i * 6);
-        }
-        setRotationFunction(numericID, hasVertical);
-    }
-    BlockRegistry.createBlockWithRotation = createBlockWithRotation;
-    function createStairs(stringID, defineData, blockType) {
-        var numericID = IDRegistry.genBlockID(stringID);
-        Block.createBlock(stringID, defineData, blockType);
-        Block.registerPlaceFunction(numericID, function (coords, item, block, player, region) {
-            var place = getPlacePosition(coords, block, region);
-            if (!place)
-                return;
-            var data = getBlockRotation(player) - 2;
-            if (coords.side == 0 || coords.side >= 2 && coords.vec.y - coords.y >= 0.5) {
-                data += 4;
-            }
-            region.setBlock(place.x, place.y, place.z, item.id, data);
-            //World.playSound(place.x, place.y, place.z, placeSound || "dig.stone", 1, 0.8);
-            return place;
-        });
-        BlockModeler.setStairsRenderModel(numericID);
-        var model = BlockRenderer.createModel();
-        model.addBox(0, 0, 0, 1, 0.5, 1, numericID, 0);
-        model.addBox(0, 0.5, 0, 1, 1, 0.5, numericID, 0);
-        BlockModeler.setInventoryModel(numericID, model);
-    }
-    BlockRegistry.createStairs = createStairs;
     function getBlockRotation(player, hasVertical) {
         var pitch = EntityGetPitch(player);
         if (hasVertical) {
@@ -1940,7 +1998,10 @@ var ItemBase = /** @class */ (function () {
     ItemBase.prototype.addDefaultToCreative = function () {
         var _a;
         var wasInCreative = (_a = ItemRegistry.getInstanceOf(this.id)) === null || _a === void 0 ? void 0 : _a.inCreative;
-        if (!wasInCreative) {
+        if (wasInCreative) {
+            Logger.Log("Skipped duplicated adding to creative for item " + this.stringID, "BlockEngine");
+        }
+        else {
             Item.addToCreative(this.id, 1, 0);
             this.inCreative = true;
         }

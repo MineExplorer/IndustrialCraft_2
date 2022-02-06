@@ -48,10 +48,10 @@ namespace ToolHUD {
 	}
 
 	function updateUIbuttons() {
-		let elements = Window.getContent().elements;
+		const elements = Window.getContent().elements;
 		for (let name in buttonMap) {
 			if (buttonMap[name]) {
-				let button = getButton(name);
+				const button = getButton(name);
 				if (!elements[name]) {
 					elements[name] = button.uiElement;
 				}
@@ -66,14 +66,14 @@ namespace ToolHUD {
 
 	function onUpdate(): void {
 		if (currentUIscreen == "in_game_play_screen") {
-			let item = Player.getCarriedItem();
-			let armor = [];
+			const item = Player.getCarriedItem();
+			const armor = [];
 			for (let i = 0; i < 4; i++) {
-				let slot = Player.getArmorSlot(i);
+				const slot = Player.getArmorSlot(i);
 				if (slot.id > 0) armor.push(slot);
 			}
 			for (let name in buttons) {
-				let button = buttons[name];
+				const button = buttons[name];
 				if (button.type == "armor") {
 					for (let slot of armor) {
 						if (button.isBindedItem(slot.id)) {
@@ -108,12 +108,12 @@ namespace ToolHUD {
 
 	// Server Side
 	Network.addServerPacket("icpe.clickHUDButton", function (client: NetworkClient, data: {name: string}) {
-		let player = client.getPlayerUid();
+		const player = client.getPlayerUid();
 		getButton(data.name).onClick(player);
 	});
 
 	Network.addServerPacket("icpe.setFlying", function (client: NetworkClient, data: {fly: boolean}) {
-		let player = client.getPlayerUid();
+		const player = client.getPlayerUid();
 		JetpackProvider.setFlying(player, data.fly);
 	});
 }

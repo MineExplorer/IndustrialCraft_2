@@ -3,7 +3,7 @@
 BlockRegistry.createBlock("transformerMV", [
 	{name: "MV Transformer", texture: [["mv_transformer_side", 0], ["mv_transformer_side", 0], ["mv_transformer_side", 0], ["mv_transformer_front", 0], ["mv_transformer_side", 0], ["mv_transformer_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.transformerMV, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.transformerMV, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.transformerMV, 0, [["mv_transformer_side", 0], ["mv_transformer_side", 0], ["mv_transformer_side", 0], ["mv_transformer_front", 0], ["mv_transformer_side", 0], ["mv_transformer_side", 0]], true);
 TileRenderer.setRotationFunction(BlockID.transformerMV, true);

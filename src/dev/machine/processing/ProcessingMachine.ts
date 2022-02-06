@@ -1,4 +1,4 @@
-/// <reference path="../Electricmachine.ts" />
+/// <reference path="../ElectricMachine.ts" />
 
 namespace Machine {
 	export abstract class ProcessingMachine

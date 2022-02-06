@@ -1,4 +1,4 @@
-let SCRAP_BOX_RANDOM_DROP = [
+const SCRAP_BOX_RANDOM_DROP = [
 	{chance: 0.1, id: 264, data: 0},
 	{chance: 1.8, id: 15, data: 0},
 	{chance: 1, id: 14, data: 0},
@@ -48,7 +48,7 @@ implements ItemBehavior {
 		for (let i in SCRAP_BOX_RANDOM_DROP) {
 			total += SCRAP_BOX_RANDOM_DROP[i].chance;
 		}
-		let random = Math.random() * total * 1.35;
+		const random = Math.random() * total * 1.35;
 		let current = 0;
 		for (let i in SCRAP_BOX_RANDOM_DROP) {
 			let drop = SCRAP_BOX_RANDOM_DROP[i];
@@ -62,9 +62,10 @@ implements ItemBehavior {
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
-		let region = WorldRegion.getForActor(player);
-		let drop = this.getDropItem();
-		region.dropItem(coords.relative.x + .5, coords.relative.y + .1, coords.relative.z + .5, drop.id, 1, drop.data);
+		const region = WorldRegion.getForActor(player);
+		const drop = this.getDropItem();
+		const {x, y, z} = coords.relative;
+		region.dropItem(x + .5, y + .1, z + .5, drop.id, 1, drop.data);
 		Entity.setCarriedItem(player, item.id, item.count - 1, 0);
 	}
 }

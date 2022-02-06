@@ -1,30 +1,19 @@
 declare namespace VanillaRecipe {
+    type ItemObj = {
+        item: string;
+        data?: number;
+        count?: number;
+    };
     type RecipeFormat = {
         type?: string;
         tags?: string[];
         priority?: number;
         pattern?: string[];
         key?: {
-            [key: string]: {
-                item: string;
-                data?: number;
-                count?: number;
-            };
+            [key: string]: ItemObj;
         };
-        ingredients?: {
-            item: string;
-            data?: number;
-            count?: number;
-        }[];
-        result: {
-            item: string;
-            data?: number;
-            count?: number;
-        } | {
-            item: string;
-            data?: number;
-            count?: number;
-        }[];
+        ingredients?: ItemObj[];
+        result: ItemObj | ItemObj[];
     };
     export function setResourcePath(path: string): void;
     export function setBehaviorPath(path: string): void;
@@ -40,4 +29,5 @@ declare namespace VanillaRecipe {
     export function addShapelessRecipe(name: string, obj: RecipeFormat, addToWorkbench?: boolean): void;
     export function deleteRecipe(name: string): void;
     export function addStonecutterRecipe(name: string, obj: RecipeFormat): void;
+    export {};
 }

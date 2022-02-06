@@ -1,25 +1,25 @@
 // BLOCKS
-Translation.addTranslation("Rubber Tree Log", {ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", pt: "Madeira da árvore de borracha", zh: "橡胶树原木"});
-Translation.addTranslation("Rubber Tree Leaves", {ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", pt: "Folhas da árvore de borracha", zh: "橡胶树树叶"});
-Translation.addTranslation("Rubber Tree Sapling", {ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", pt: "Muda de árvore de borracha", zh: "橡胶树树苗"});
-Translation.addTranslation("Copper Ore", {ru: "Медная руда", es: "Mineral de Cobre", pt: "Minério de Cobre", zh: "铜矿石"});
-Translation.addTranslation("Tin Ore", {ru: "Оловянная руда", es: "Mineral de Estaño", pt: "Minério de Estanho", zh: "锡矿石"});
-Translation.addTranslation("Lead Ore", {ru: "Свинцовая руда", es: "Mineral de Plomo", pt: "Minério de Chumbo", zh: "铅矿石"});
-Translation.addTranslation("Uranium Ore", {ru: "Урановая руда", es: "Mineral de Uranium", pt: "Minério de Urânio", zh: "铀矿石"});
-Translation.addTranslation("Iridium Ore", {ru: "Иридиевая руда", es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱矿石"});
-Translation.addTranslation("Copper Block", {ru: "Медный блок", es: "Bloque de Cobre", pt: "Bloco de Cobre", zh: "铜块"});
-Translation.addTranslation("Tin Block", {ru: "Оловянный блок", es: "Bloque de Estaño", pt: "Bloco de Estanho", zh: "锡块"});
-Translation.addTranslation("Bronze Block", {ru: "Бронзовый блок", es: "Bloque de Bronce", pt: "Bloco de Bronze", zh: "青铜块"});
-Translation.addTranslation("Lead Block", {ru: "Свинцовый блок", es: "Bloque de Plomo", pt: "Bloco de Chumbo", zh: "铅块"});
-Translation.addTranslation("Steel Block", {ru: "Стальной блок", es: "Bloque de Hierro Refinado", pt: "Bloco de Aço", zh: "钢块"});
-Translation.addTranslation("Silver Block", {ru: "Серебряный блок", es: "Bloque de Plata", pt: "Bloco de Prata", zh: "银块"});
-Translation.addTranslation("Uranium Block", {ru: "Урановый блок", es: "Bloque de Uranio", pt: "Bloco de Urânio", zh: "铀块"});
+Translation.addTranslation("rubber_tree_log", {en: "Rubber Tree Log", ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", pt: "Madeira da árvore de borracha", zh: "橡胶树原木"});
+Translation.addTranslation("rubber_tree_leaves", {en: "Rubber Tree Leaves", ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", pt: "Folhas da árvore de borracha", zh: "橡胶树树叶"});
+Translation.addTranslation("rubber_tree_sapling", {en: "Rubber Tree Sapling", ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", pt: "Muda de árvore de borracha", zh: "橡胶树树苗"});
+Translation.addTranslation("copper_ore", {en: "Copper Ore", ru: "Медная руда", es: "Mineral de Cobre", pt: "Minério de Cobre", zh: "铜矿石"});
+Translation.addTranslation("tin_ore", {en: "Tin Ore", ru: "Оловянная руда", es: "Mineral de Estaño", pt: "Minério de Estanho", zh: "锡矿石"});
+Translation.addTranslation("lead_ore", {en: "Lead Ore", ru: "Свинцовая руда", es: "Mineral de Plomo", pt: "Minério de Chumbo", zh: "铅矿石"});
+Translation.addTranslation("uranium_ore", {en: "Uranium Ore", ru: "Урановая руда", es: "Mineral de Uranium", pt: "Minério de Urânio", zh: "铀矿石"});
+Translation.addTranslation("iridium_ore", {en: "Iridium Ore", ru: "Иридиевая руда", es: "Mineral de Iridio", pt: "Minério de Irídio", zh: "铱矿石"});
+Translation.addTranslation("copper_block", {en: "Copper Block", ru: "Медный блок", es: "Bloque de Cobre", pt: "Bloco de Cobre", zh: "铜块"});
+Translation.addTranslation("tin_block", {en: "Tin Block", ru: "Оловянный блок", es: "Bloque de Estaño", pt: "Bloco de Estanho", zh: "锡块"});
+Translation.addTranslation("bronze_block", {en: "Bronze Block", ru: "Бронзовый блок", es: "Bloque de Bronce", pt: "Bloco de Bronze", zh: "青铜块"});
+Translation.addTranslation("lead_block", {en: "Lead Block", ru: "Свинцовый блок", es: "Bloque de Plomo", pt: "Bloco de Chumbo", zh: "铅块"});
+Translation.addTranslation("steel_block", {en: "Steel Block", ru: "Стальной блок", es: "Bloque de Hierro Refinado", pt: "Bloco de Aço", zh: "钢块"});
+Translation.addTranslation("silver_block", {en: "Silver Block", ru: "Серебряный блок", es: "Bloque de Plata", pt: "Bloco de Prata", zh: "银块"});
+Translation.addTranslation("uranium_block", {en: "Uranium Block", ru: "Урановый блок", es: "Bloque de Uranio", pt: "Bloco de Urânio", zh: "铀块"});
 
-Translation.addTranslation("Mining Pipe", {ru: "Буровая труба", es: "Tubo Minero", pt: "Tubo de Mineração", zh: "采矿管道"});
-Translation.addTranslation("Reinforced Stone", {ru: "Укреплённый камень", es: "Piedra Reforzada", pt: "Pedra Reforçada", zh: "防爆石"});
-Translation.addTranslation("Reinforced Glass", {ru: "Укреплённое стекло", es: "Cristal Reforzado", pt: "Vidro Reforçado", zh: "防爆玻璃"});
-Translation.addTranslation("Machine Block", {ru: "Машинный блок", es: "Máquina", pt: "Bloco de Máquina Básica", zh: "基础机械外壳"});
-Translation.addTranslation("Advanced Machine Block", {ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Bloco de Máquina Avançada", zh: "高级机械外壳"});
+Translation.addTranslation("mining_pipe", {en: "Mining Pipe", ru: "Буровая труба", es: "Tubo Minero", pt: "Tubo de Mineração", zh: "采矿管道"});
+Translation.addTranslation("reinforced_stone", {en: "Reinforced Stone", ru: "Укреплённый камень", es: "Piedra Reforzada", pt: "Pedra Reforçada", zh: "防爆石"});
+Translation.addTranslation("reinforced_glass", {en: "Reinforced Glass", ru: "Укреплённое стекло", es: "Cristal Reforzado", pt: "Vidro Reforçado", zh: "防爆玻璃"});
+Translation.addTranslation("machine_block", {en: "Machine Block", ru: "Машинный блок", es: "Máquina", pt: "Bloco de Máquina Básica", zh: "基础机械外壳"});
+Translation.addTranslation("advanced_machine_block", {en: "Advanced Machine Block", ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Bloco de Máquina Avançada", zh: "高级机械外壳"});
 
 // Generators
 Translation.addTranslation("Generator", {ru: "Генератор", es: "Generador", pt: "Gerador", zh: "火力发电机"});
@@ -487,7 +487,7 @@ Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "
 
 // Creative Groups
 Translation.addTranslation("Ores", {ru: "Руды", pt: "Minérios", zh: "矿石"});
-Translation.addTranslation("Metal Blocks", {ru: "Блоки металлов", pt: "Blocos de metal", zh: "金属块"});
+Translation.addTranslation("Resource Blocks", {ru: "Блоки ресурсов"});
 Translation.addTranslation("Electric Generators", {ru: "Электрогенераторы"});
 Translation.addTranslation("Heat Generators", {ru: "Теплогенераторы"});
 Translation.addTranslation("Processing Machines", {ru: "Машины-обработчики"});

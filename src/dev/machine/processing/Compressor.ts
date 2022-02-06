@@ -3,7 +3,7 @@
 BlockRegistry.createBlock("compressor", [
 	{name: "Compressor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.compressor, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.compressor, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.compressor, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.compressor, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -74,7 +74,7 @@ const guiCompressor = MachineRegistry.createInventoryWindow("Compressor", {
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, bitmap: "compressor_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_compressor");
+				RV?.RecipeTypeRegistry.openRecipePage("icpe_compressor");
 			}
 		}},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},

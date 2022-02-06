@@ -3,7 +3,7 @@
 BlockRegistry.createBlock("electricFurnace", [
 	{name: "Electric Furnace", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.electricFurnace, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.electricFurnace, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.electricFurnace, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.electricFurnace, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -28,7 +28,7 @@ const guiElectricFurnace = MachineRegistry.createInventoryWindow("Electric Furna
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("furnace");
+				RV?.RecipeTypeRegistry.openRecipePage("furnace");
 			}
 		}},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},

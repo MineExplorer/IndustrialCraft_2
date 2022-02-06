@@ -1,8 +1,7 @@
-
 BlockRegistry.createBlock("pump", [
 	{name: "Pump", texture: [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.pump, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.pump, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.pump, 2, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.pump, 2, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 1], ["pump_side", 1], ["pump_side", 1]]);

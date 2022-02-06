@@ -1,7 +1,7 @@
 BlockRegistry.createBlock("icFermenter", [
 	{name: "Fermenter", texture: [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], inCreative: true},
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.icFermenter, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.icFermenter, "stone", 1);
 
 TileRenderer.setHandAndUiModel(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
 TileRenderer.setStandardModelWithRotation(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], true);
@@ -26,7 +26,7 @@ const guiFermenter = MachineRegistry.createInventoryWindow("Fermenter", {
 	elements: {
 		"progressScale": {type: "scale", x: 492, y: 150, direction: 0, value: .5, bitmap: "fermenter_progress_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_fermenter");
+				RV?.RecipeTypeRegistry.openRecipePage("icpe_fermenter");
 			}
 		}},
 		"fertilizerScale": {type: "scale", x: 480, y: 301, direction: 0, value: .5, bitmap: "fertilizer_progress_scale", scale: GUI_SCALE},

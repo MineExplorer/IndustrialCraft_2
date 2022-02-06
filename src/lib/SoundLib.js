@@ -250,6 +250,7 @@ var SoundManager;
     /*Volume in the settings*/
     var prevScreen = false;
     Callback.addCallback("NativeGuiChanged", function (screenName) {
+        // TODO: check audio settings screen
         var currentScreen = screenName.includes("controls_and_settings");
         if (prevScreen && !currentScreen) {
             readSettings();
@@ -272,7 +273,7 @@ var Sound = /** @class */ (function () {
             var durationStr = mmr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
             var duration = parseInt(durationStr);
             this.duration = duration - duration % 50;
-            Game.message(this.name + " - " + this.duration);
+            Logger.Log("Sound " + this.name + ": duration " + this.duration + " ms", "DEBUG");
         }
         return this.duration;
     };

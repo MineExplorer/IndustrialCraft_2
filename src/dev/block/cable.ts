@@ -1,31 +1,31 @@
-Block.createSpecialType({
-	destroytime: 0.05,
-	explosionres: 0.5,
-	renderlayer: 1,
-}, "cable");
+BlockRegistry.createBlockType("cable", {
+	destroyTime: 0.05,
+	explosionResistance: 0.5,
+	renderLayer: 1,
+});
 
 BlockRegistry.createBlock("cableTin0", [
 	{name: "tile.cableTin.name", texture: [["cable_tin", 0]], inCreative: false}
 ], "cable");
 CableRegistry.createBlock("cableTin1", {name: "tile.cableTin.name", texture: "cable_tin1"}, "cable");
-ToolAPI.registerBlockMaterial(BlockID.cableTin0, "stone");
-ToolAPI.registerBlockMaterial(BlockID.cableTin1, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableTin0, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableTin1, "stone");
 
 BlockRegistry.createBlock("cableCopper0", [
 	{name: "tile.cableCopper.name", texture: [["cable_copper", 0]], inCreative: false},
 ], "cable");
 CableRegistry.createBlock("cableCopper1", {name: "tile.cableCopper.name", texture: "cable_copper1"}, "cable");
-ToolAPI.registerBlockMaterial(BlockID.cableCopper0, "stone");
-ToolAPI.registerBlockMaterial(BlockID.cableCopper1, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableCopper0, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableCopper1, "stone");
 
 BlockRegistry.createBlock("cableGold0", [
 	{name: "tile.cableGold.name", texture: [["cable_gold", 0]], inCreative: false},
 ], "cable");
 CableRegistry.createBlock("cableGold1", {name: "tile.cableGold.name", texture: "cable_gold1"}, "cable");
 CableRegistry.createBlock("cableGold2", {name: "tile.cableGold.name", texture: "cable_gold2"}, "cable");
-ToolAPI.registerBlockMaterial(BlockID.cableGold0, "stone");
-ToolAPI.registerBlockMaterial(BlockID.cableGold1, "stone");
-ToolAPI.registerBlockMaterial(BlockID.cableGold2, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableGold0, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableGold1, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableGold2, "stone");
 
 BlockRegistry.createBlock("cableIron0", [
 	{name: "tile.cableIron.name", texture: [["cable_iron", 0]], inCreative: false},
@@ -33,13 +33,13 @@ BlockRegistry.createBlock("cableIron0", [
 CableRegistry.createBlock("cableIron1", {name: "tile.cableIron.name", texture: "cable_iron1"}, "cable");
 CableRegistry.createBlock("cableIron2", {name: "tile.cableIron.name", texture: "cable_iron2"}, "cable");
 CableRegistry.createBlock("cableIron3", {name: "tile.cableIron.name", texture: "cable_iron3"}, "cable");
-ToolAPI.registerBlockMaterial(BlockID.cableIron0, "stone");
-ToolAPI.registerBlockMaterial(BlockID.cableIron1, "stone");
-ToolAPI.registerBlockMaterial(BlockID.cableIron2, "stone");
-ToolAPI.registerBlockMaterial(BlockID.cableIron3, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableIron0, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableIron1, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableIron2, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableIron3, "stone");
 
 CableRegistry.createBlock("cableOptic", {name: "tile.cableOptic.name", texture: "cable_glass"}, "cable");
-ToolAPI.registerBlockMaterial(BlockID.cableOptic, "stone");
+BlockRegistry.setBlockMaterial(BlockID.cableOptic, "stone");
 
 // energy net
 CableRegistry.registerCable("cableTin", 32, 1);

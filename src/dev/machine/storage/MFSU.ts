@@ -3,7 +3,7 @@
 BlockRegistry.createBlock("storageMFSU", [
 	{name: "MFSU", texture: [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.storageMFSU, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.storageMFSU, "stone", 1);
 
 TileRenderer.setHandAndUiModel(BlockID.storageMFSU, 0, [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]]);
 TileRenderer.setStandardModel(BlockID.storageMFSU, 0, [["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 1], ["mfsu_side", 1]]);

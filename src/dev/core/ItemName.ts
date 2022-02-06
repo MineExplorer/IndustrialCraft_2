@@ -24,25 +24,23 @@ namespace ItemName {
 	}
 
 	export function showBlockStorage(item: ItemInstance, name: string, tier: number, capacity: string): string {
-		let tierText = "§7" + Translation.translate("tooltip.power_tier").replace("%s", tier.toString());
-
+		const tierText = "§7" + Translation.translate("tooltip.power_tier").replace("%s", tier.toString());
 		let energy = 0;
 		if (item.extra) {
 			energy = item.extra.getInt("energy");
 		}
-		let energyText = displayEnergy(energy) + "/" + capacity + " EU";
-
+		const energyText = displayEnergy(energy) + "/" + capacity + " EU";
 		return name + "\n" + tierText + "\n" +energyText;
 	}
 
 	export function getItemStorageText(item: ItemInstance): string {
-		let capacity = ChargeItemRegistry.getMaxCharge(item.id);
-		let energy = ChargeItemRegistry.getEnergyStored(item);
+		const capacity = ChargeItemRegistry.getMaxCharge(item.id);
+		const energy = ChargeItemRegistry.getEnergyStored(item);
 		return "§7" + displayEnergy(energy) + "/" + displayEnergy(capacity) + " EU";
 	}
 
 	export function showItemStorage(item: ItemInstance, name: string): string {
-		let color = ItemRegistry.getItemRarityColor(item.id);
+		const color = ItemRegistry.getItemRarityColor(item.id);
 		return color + name + '\n' + ItemName.getItemStorageText(item);
 	}
 

@@ -24,7 +24,7 @@ extends ElectricTool {
 			if (ICTool.dischargeItem(item, this.getEnergyPerUse(item), player) && (block.id == 18 || block.id == 161)) {
 				let region = WorldRegion.getForActor(player);
 				region.destroyBlock(coords);
-				region.dropItem(coords.x + .5, coords.y + .5, coords.z + .5, block.id, 1, block.data);
+				region.dropAtBlock(coords.x, coords.y, coords.z, block.id, 1, block.data);
 			}
 		}
 		return true;

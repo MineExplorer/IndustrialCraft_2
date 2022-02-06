@@ -27,7 +27,19 @@ namespace Agriculture {
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
-			return { id: 0, count: 1, data: 0 }
+			return null;
+		}
+
+		onLeftClick(te: ICropTileEntity, player: number): boolean {
+			return false;
+		}
+
+		canBeHarvested(te: ICropTileEntity): boolean {
+			return false;
+		}
+
+		onEntityCollision(te: ICropTileEntity, entity: number): boolean {
+			return false;
 		}
 	}
 }

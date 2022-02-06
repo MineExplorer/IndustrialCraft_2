@@ -12,8 +12,8 @@ class LaserShot {
 	hitBlock: boolean;
 
 	constructor(player: number, pos: Vector, vel: Vector, params: {power: number, range?: number, blockBreaks?: number, smelt?: boolean, dropChance?: number}) {
-		let region = WorldRegion.getForActor(player);
-		let entity = region.spawnEntity(pos.x + vel.x, pos.y + vel.y, pos.z + vel.z, EntityType.ARROW);
+		const region = WorldRegion.getForActor(player);
+		const entity = region.spawnEntity(pos.x + vel.x, pos.y + vel.y, pos.z + vel.z, EntityType.ARROW);
 		Entity.setSkin(entity, "models/laser.png");
 		Entity.setVelocity(entity, vel.x, vel.y, vel.z);
 		this.player = player;
@@ -30,35 +30,35 @@ class LaserShot {
 	}
 
 	destroyBlock(x: number, y: number, z: number, block: Tile): void {
-		let hardness = Block.getDestroyTime(block.id);
+		const hardness = Block.getDestroyTime(block.id);
 		this.power -= hardness / 1.5;
 		if (this.power < 0) return;
         if (hardness > 0) {
         	this.blockBreaks--;
        	}
-		let drop = this.region.breakBlockForResult(x, y, z, -1, new ItemStack(ItemID.iridiumDrill, 1, 0)).items;
-       	let material = ToolAPI.getBlockMaterialName(block.id);
+		const drop = this.region.breakBlockForResult(x, y, z, -1, new ItemStack(ItemID.iridiumDrill, 1, 0)).items;
+       	const material = ToolAPI.getBlockMaterialName(block.id);
 		if (Math.random() < 0.5 && (material == "wood" || material == "plant" || material == "fibre" || material == "wool")) {
 			this.region.setBlock(x, y, z, 51, 0);
 		}
 		for (let item of drop) {
 			if (this.smelt && material == "stone") {
 				this.power = 0;
-				let result = Recipes.getFurnaceRecipeResult(item.id, item.data);
+				const result = Recipes.getFurnaceRecipeResult(item.id, item.data);
 				if (result) {
 					item.id = result.id;
 					item.data = result.data;
 				}
-				this.region.dropItem(x + .5, y + .5, z + .5, item);
+				this.region.dropAtBlock(x, y, z, item);
 			}
 			else if (Math.random() < this.dropChance) {
-				this.region.dropItem(x + .5, y + .5, z + .5, item);
+				this.region.dropAtBlock(x, y, z, item);
 			}
 		}
 	}
 
 	checkBlock(x: number, y: number, z: number): void {
-		let block = World.getBlock(x, y, z);
+		const block = World.getBlock(x, y, z);
 		if (ToolAPI.getBlockMaterialName(block.id) == "unbreaking") {
 			this.power = 0;
 		}
@@ -73,12 +73,12 @@ class LaserShot {
 		}
 		if (target.coords) {
 			Game.prevent();
-			let c = target.coords;
-			let block = World.getBlock(c.x, c.y, c.z);
+			const c = target.coords;
+			const block = World.getBlock(c.x, c.y, c.z);
 			if (block.id != 7 && block.id != 120) {
 				this.destroyBlock(c.x, c.y, c.z, block);
 				this.hitBlock = true;
-				let vel = this.velocity;
+				const vel = this.velocity;
 				Entity.setVelocity(this.entity, vel.x, vel.y, vel.z);
 			} else {
 				LaserShotProvider.removeShot(this);

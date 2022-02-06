@@ -8,8 +8,8 @@ namespace RadiationAPI {
 		timer: number
 	}
 
-	export let radioactiveItems = {};
-	export let hazmatArmor = {};
+	export const radioactiveItems = {};
+	export const hazmatArmor = {};
 	export let sources: RadiationSource[] = [];
 	export let effectDuration = {};
 
@@ -26,7 +26,7 @@ namespace RadiationAPI {
 	}
 
 	export function emitItemRadiation(entity: number, itemID: number): void {
-		let radiation = getRadioactivity(itemID);
+		const radiation = getRadioactivity(itemID);
 		if (radiation) {
 			if (radiation.stack) {
 				addRadiation(entity, radiation.duration);
@@ -66,14 +66,14 @@ namespace RadiationAPI {
 
 	export function hasHazmatSuit(playerUid: number): boolean {
 		for (let i = 0; i < 4; i++) {
-			let itemID = Entity.getArmorSlot(playerUid, i).id;
+			const itemID = Entity.getArmorSlot(playerUid, i).id;
 			if (!isHazmatArmor(itemID)) return false;
 		}
 		return true;
 	}
 
 	export function addEffect(ent: number, duration: number): void {
-		let isPlayer = EntityHelper.isPlayer(ent);
+		const isPlayer = EntityHelper.isPlayer(ent);
 		if (isPlayer && !hasHazmatSuit(ent) || EntityHelper.isMob(ent)) {
 			Entity.addEffect(ent, PotionEffect.fatal_poison, 1, duration * 20);
 			if (isPlayer) setRadiation(ent, duration);
@@ -81,7 +81,7 @@ namespace RadiationAPI {
 	}
 
 	export function addEffectInRange(region: WorldRegion, x: number, y: number, z: number, radius: number, duration: number): void {
-		let entities = EntityHelper.getEntitiesInRadius(region, new Vector3(x, y, z), radius);
+		const entities = EntityHelper.getEntitiesInRadius(region, new Vector3(x, y, z), radius);
 		for (let ent of entities) {
 			if (EntityHelper.canTakeDamage(ent, DamageSource.radiation)) {
 				addEffect(ent, duration);
@@ -116,8 +116,8 @@ namespace RadiationAPI {
 	Callback.addCallback("tick", function() {
 		if (World.getThreadTime()%20 == 0) {
 			for (let i = 0; i < sources.length; i++) {
-				let source: RadiationSource = sources[i];
-				let region = WorldRegion.getForDimension(source.dimension);
+				const source: RadiationSource = sources[i];
+				const region = WorldRegion.getForDimension(source.dimension);
 				if (!region) continue;
 				addEffectInRange(region, source.x, source.y, source.z, source.radius, 10);
 				source.timer--;
@@ -131,13 +131,13 @@ namespace RadiationAPI {
 	Callback.addCallback("ServerPlayerTick", function(playerUid: number) {
 		if (World.getThreadTime()%20 == 0) {
 			if (!hasHazmatSuit(playerUid)) {
-				let player = new PlayerActor(playerUid);
+				const player = new PlayerActor(playerUid);
 				for (let i = 9; i < 45; i++) {
-					let itemID = player.getInventorySlot(i).id;
+					const itemID = player.getInventorySlot(i).id;
 					emitItemRadiation(playerUid, itemID);
 				}
 			}
-			let duration = effectDuration[playerUid];
+			const duration = effectDuration[playerUid];
 			if (duration > 0) {
 				Entity.addEffect(playerUid, PotionEffect.fatal_poison, 1, duration * 20);
 				effectDuration[playerUid]--;

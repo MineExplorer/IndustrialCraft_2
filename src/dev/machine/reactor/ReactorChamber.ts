@@ -1,13 +1,11 @@
 BlockRegistry.createBlock("reactorChamber", [
 	{name: "Reactor Chamber", texture: [["machine_bottom", 0], ["machine_top", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0], ["reactor_chamber", 0]], inCreative: true},
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.reactorChamber, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.reactorChamber, "stone", 1);
 ItemRegistry.setRarity(BlockID.reactorChamber, EnumRarity.UNCOMMON);
 
 Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block, player, region) {
-	let x = coords.relative.x;
-	let y = coords.relative.y;
-	let z = coords.relative.z;
+	const {x, y, z} = coords.relative;
 	let reactorConnect = 0;
 	for (let i = 0; i < 6; i++) {
 		let c = World.getRelativeCoords(x, y, z, i);

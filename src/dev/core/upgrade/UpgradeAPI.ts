@@ -10,8 +10,8 @@ namespace UpgradeAPI {
 	}
 
 	export function isValidUpgrade(id: number, machine: TileEntity): boolean {
-		let upgrade = getUpgrade(id);
-		let validUpgrades = machine["upgrades"];
+		const upgrade = getUpgrade(id);
+		const validUpgrades = machine["upgrades"];
 		if (upgrade && (!validUpgrades || validUpgrades.indexOf(upgrade.type) != -1)) {
 			return true;
 		}
@@ -28,9 +28,9 @@ namespace UpgradeAPI {
 
 	/** @deprecated */
 	export function executeUpgrades(machine: TileEntity): UpgradeSet {
-		let upgrades = useUpgrades(machine);
+		const upgrades = useUpgrades(machine);
 		// reverse compatibility with Advanced Machines
-		let data = machine.data;
+		const data = machine.data;
 		if ("power_tier" in data) {
 			data.power_tier = upgrades.getTier(data.power_tier);
 		}
@@ -66,11 +66,11 @@ namespace UpgradeAPI {
 		}
 
 		useUpgrades(): void {
-			let container = this.tileEntity.container;
+			const container = this.tileEntity.container;
 			for (let slotName in container.slots) {
 				if (slotName.match(/Upgrade/)) {
-					let slot = container.getSlot(slotName);
-					let upgrade = getUpgrade(slot.id);
+					const slot = container.getSlot(slotName);
+					const upgrade = getUpgrade(slot.id);
 					if (upgrade && this.isValidUpgrade(upgrade)) {
 						this.executeUprade(upgrade, slot);
 					}
@@ -79,7 +79,7 @@ namespace UpgradeAPI {
 		}
 
 		isValidUpgrade(upgrade: IUpgrade): boolean {
-			let validUpgrades = this.tileEntity["upgrades"];
+			const validUpgrades = this.tileEntity["upgrades"];
 			return (!validUpgrades || validUpgrades.indexOf(upgrade.type) != -1);
 		}
 
@@ -112,8 +112,8 @@ namespace UpgradeAPI {
 		}
 
 		getEnergyStorage(defaultEnergyStorage: number): number {
-			let energyStorage = defaultEnergyStorage + this.extraEnergyStorage;
-			let tileData = this.tileEntity.data;
+			const energyStorage = defaultEnergyStorage + this.extraEnergyStorage;
+			const tileData = this.tileEntity.data;
 			tileData.energy = Math.min(tileData.energy, energyStorage);
 			return energyStorage;
 		}

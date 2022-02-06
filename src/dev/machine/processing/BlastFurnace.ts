@@ -1,7 +1,7 @@
 BlockRegistry.createBlock("blastFurnace", [
 	{name: "Blast Furnace", texture: [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.blastFurnace, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.blastFurnace, "stone", 1);
 
 TileRenderer.setHandAndUiModel(BlockID.blastFurnace, 0, [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
 TileRenderer.setStandardModelWithRotation(BlockID.blastFurnace, 0, [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);
@@ -32,7 +32,7 @@ const guiBlastFurnace = MachineRegistry.createInventoryWindow("Blast Furnace", {
 	elements: {
 		"progressScale": {type: "scale", x: 450 + 50*GUI_SCALE_NEW, y: 50 + 27*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "blast_furnace_scale", scale: GUI_SCALE_NEW, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_blastFurnace");
+				RV?.RecipeTypeRegistry.openRecipePage("icpe_blastFurnace");
 			}
 		}},
 		"heatScale": {type: "scale", x: 450 + 46*GUI_SCALE_NEW, y: 50 + 63*GUI_SCALE_NEW, direction: 0, value: 0.5, bitmap: "heat_scale", scale: GUI_SCALE_NEW},

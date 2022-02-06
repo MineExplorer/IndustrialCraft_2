@@ -3,16 +3,14 @@
 BlockRegistry.createBlock("nuclearReactor", [
 	{name: "Nuclear Reactor", texture: [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.nuclearReactor, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.nuclearReactor, "stone", 1);
 ItemRegistry.setRarity(BlockID.nuclearReactor, EnumRarity.UNCOMMON);
 
 TileRenderer.setStandardModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1]]);
 
 Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block, player, region) {
-	let x = coords.relative.x;
-	let y = coords.relative.y;
-	let z = coords.relative.z;
+	const {x, y, z} = coords.relative;
 	for (let i = 0; i < 6; i++) {
 		let c = World.getRelativeCoords(x, y, z, i);
 		if (region.getBlockId(c.x, c.y, c.z) == BlockID.reactorChamber) {
@@ -123,7 +121,7 @@ namespace Machine {
 				let slotName = this.getSlotName(x, y);
 				let slot = this.container.getSlot(slotName);
 				if (slot.id > 0) {
-					this.region.dropItem(chamber.x + .5, chamber.y + .5, chamber.z + .5, slot);
+					this.region.dropAtBlock(chamber.x, chamber.y, chamber.z, slot);
 					this.container.setSlot(slotName, 0, 0, 0);
 				}
 			}

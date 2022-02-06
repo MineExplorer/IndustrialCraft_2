@@ -11,15 +11,15 @@ var __assign = (this && this.__assign) || function () {
 };
 LIBRARY({
     name: "VanillaRecipe",
-    version: 4,
+    version: 5,
     shared: true,
     api: "CoreEngine"
 });
-var IS_OLD = getMCPEVersion().main === 28;
-var MOD_PREFIX = "mod_";
-var BEHAVIOR_NAME = "VanillaRecipe";
 var VanillaRecipe;
 (function (VanillaRecipe) {
+    var IS_OLD = getMCPEVersion().main === 28;
+    var MOD_PREFIX = "mod_";
+    var BEHAVIOR_NAME = "VanillaRecipe";
     var resource_path;
     var behavior_path;
     var behavior_recipes_path;
@@ -28,8 +28,7 @@ var VanillaRecipe;
         if (!IS_OLD)
             return;
         var resPath = path + "/definitions/recipe/";
-        if (!resource_path)
-            resource_path = resPath;
+        resource_path !== null && resource_path !== void 0 ? resource_path : (resource_path = resPath);
         FileTools.mkdir(resPath);
         resetRecipes(resPath);
     }
@@ -38,7 +37,7 @@ var VanillaRecipe;
         if (IS_OLD)
             return;
         if (behavior_path) {
-            recursiveDelete(new java.io.File(path+ "/" + BEHAVIOR_NAME));
+            recursiveDelete(new java.io.File(path + "/" + BEHAVIOR_NAME));
             return;
         }
         behavior_path = path + ("/" + BEHAVIOR_NAME + "/");
@@ -68,8 +67,9 @@ var VanillaRecipe;
     }
     VanillaRecipe.resetRecipes = resetRecipes;
     function recursiveDelete(file) {
-        if (!file.exists())
+        if (!file.exists()) {
             return;
+        }
         if (file.isDirectory()) {
             var files = file.listFiles();
             for (var i in files) {
@@ -145,6 +145,10 @@ var VanillaRecipe;
         FileTools.WriteJSON(getFilePath(name), obj, true);
     }
     VanillaRecipe.generateJSONRecipe = generateJSONRecipe;
+    function parseItem(jsonItem) {
+        var _a;
+        return { id: getNumericID(jsonItem.item), data: (_a = jsonItem.data) !== null && _a !== void 0 ? _a : -1 };
+    }
     function addWorkbenchRecipeFromJSON(obj) {
         if (Array.isArray(obj.result)) {
             Logger.Log("Recipes with multiple output are not supported in the modded workbench", "ERROR");
@@ -155,19 +159,18 @@ var VanillaRecipe;
             count: obj.result.count || 1,
             data: obj.result.data || 0
         };
+        var ingredients = [];
         if (obj.key) {
-            var ingredients = [];
             for (var key in obj.key) {
                 ingredients.push(key);
-                var item = obj.key[key];
-                ingredients.push(getNumericID(item.item), item.data || -1);
+                var item = parseItem(obj.key[key]);
+                ingredients.push(item.id, item.data);
             }
             Recipes.addShaped(result, obj.pattern, ingredients);
         }
         else {
-            var ingredients = [];
             obj.ingredients.forEach(function (item) {
-                ingredients.push({ id: getNumericID(item.item), data: item.data || 0 });
+                ingredients.push(parseItem(item));
             });
             Recipes.addShapeless(result, ingredients);
         }
@@ -175,6 +178,7 @@ var VanillaRecipe;
     VanillaRecipe.addWorkbenchRecipeFromJSON = addWorkbenchRecipeFromJSON;
     function addCraftingRecipe(name, obj, addToWorkbench) {
         var _a;
+        var _b;
         if (recipes[name])
             return;
         recipes[name] = true;
@@ -182,8 +186,7 @@ var VanillaRecipe;
             addWorkbenchRecipeFromJSON(obj);
         var type = obj.type;
         obj.type = "crafting_" + obj.type;
-        if (!obj.tags)
-            obj.tags = ["crafting_table"];
+        (_b = obj.tags) !== null && _b !== void 0 ? _b : (obj.tags = ["crafting_table"]);
         __isValid__ = true;
         var items = obj.key || obj.ingredients;
         for (var i in items) {

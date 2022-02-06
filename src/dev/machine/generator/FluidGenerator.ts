@@ -1,8 +1,7 @@
-
 BlockRegistry.createBlock("semifluidGenerator", [
 	{name: "Semifluid Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.semifluidGenerator, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.semifluidGenerator, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
@@ -32,7 +31,7 @@ const guiSemifluidGenerator = MachineRegistry.createInventoryWindow("Semifluid G
 	elements: {
 		"scaleArrow": {type: "image", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_fluidFuel");
+				RV?.RecipeTypeRegistry.openRecipePage("icpe_fluidFuel");
 			}
 		}},
 		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},

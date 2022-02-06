@@ -3,7 +3,7 @@
 BlockRegistry.createBlock("metalFormer", [
 	{name: "Metal Former", texture: [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.metalFormer, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.metalFormer, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.metalFormer, 2, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.metalFormer, 2, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -86,7 +86,7 @@ const guiMetalFormer = MachineRegistry.createInventoryWindow("Metal Former", {
 	elements: {
 		"progressScale": {type: "scale", x: 530, y: 164, direction: 0, bitmap: "metalformer_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV && RV.RecipeTypeRegistry.openRecipePage("icpe_metalFormer");
+				RV?.RecipeTypeRegistry.openRecipePage("icpe_metalFormer");
 			}
 		}},
 		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},

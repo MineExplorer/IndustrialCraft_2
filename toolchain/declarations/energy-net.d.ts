@@ -39,7 +39,6 @@ declare class EnergyPacket {
     validateNode(nodeId: number): boolean;
     setNodePassed(nodeId: number): void;
 }
-declare let GLOBAL_NODE_ID: number;
 declare class EnergyNode {
     id: number;
     baseEnergy: string;

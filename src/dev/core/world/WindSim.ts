@@ -1,9 +1,9 @@
 namespace WindSim {
-	export let windStrength = 0;
+	export let windStrength = randomInt(5, 25);
 
 	export function getWindAt(height: number) {
 		let windMultiplier = Math.max(1 - Math.abs((160 - height)/96) ** 2, 0);
-		let wether = World.getWeather();
+		const wether = World.getWeather();
 		if (wether.thunder)
 			windMultiplier *= 1.5;
 		else if (wether.rain)
@@ -34,7 +34,7 @@ namespace WindSim {
 
 	Saver.addSavesScope("windSim",
 		function read(scope: {strength: number}) {
-			windStrength = scope ? scope.strength : randomInt(5, 25);
+			windStrength = scope.strength || randomInt(5, 25);
 		},
 		function save() {
 			return {strength: windStrength};

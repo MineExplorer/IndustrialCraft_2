@@ -5,10 +5,11 @@ header.ts
 translation.ts
 
 core/**/*
+world/**
 
 block/rubber_tree/**
 block/ore.ts
-block/metal.ts
+block/resource.ts
 block/basic.ts
 block/reinforced.ts
 block/cable.ts

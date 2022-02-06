@@ -48,7 +48,7 @@ namespace Agriculture {
 			this.updateRender();
 		}
 
-		tick(): void {
+		onTick(): void {
 			this.checkGround();
 			const entities = this.region.listEntitiesInAABB(this.x, this.y, this.z, this.x + 1, this.y + 1, this.z + 1, 1, false);
 			if (entities.length > 0) {
@@ -61,7 +61,7 @@ namespace Agriculture {
 
 		onLongClick(playerUid: number): boolean {
 			if (this.data.crossingBase) {
-				this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
+				this.region.dropAtBlock(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
 				this.data.crossingBase = false;
 				this.data.dirty = true;
 				this.updateRender();
@@ -194,8 +194,9 @@ namespace Agriculture {
 				}
 				this.reset();
 
+				this.data.crossingBase = false;
 				this.data.crop = Agriculture.CropCardManager.getIndexByCropCardID("weed");
-				this.crop = Agriculture.CropCardManager.getCardFromID("weed");// AgricultureAPI.cropCards[this.data.crop];
+				this.crop = Agriculture.CropCardManager.getCardFromID("weed");
 				this.data.currentSize = 1;
 
 				this.updateRender();
@@ -573,7 +574,9 @@ namespace Agriculture {
 			else if (Math.random() <= firstchance * 1.5) dropCount++;
 
 			const item = this.crop.getSeeds(this) as ItemInstance;
-			this.region.dropItem(this.x, this.y, this.z, item.id, dropCount, item.data, item.extra);
+			if (item) {
+				this.region.dropItem(this.x, this.y, this.z, item.id, dropCount, item.data, item.extra);
+			}
 
 			this.reset();
 			this.updateRender();
@@ -597,6 +600,7 @@ namespace Agriculture {
 		}
 	}
 }
+
 Callback.addCallback("DestroyBlockStart", function (coords: Callback.ItemUseCoordinates, block: Tile, playerUid: number): void {
 	if (block.id == BlockID.crop) {
 		// ? TEST IT!!! i think it can cause problem

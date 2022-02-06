@@ -22,19 +22,19 @@ namespace EntityHelper {
 	}
 
 	export function isMob(entity: number): boolean {
-		let type = Entity.getType(entity);
+		const type = Entity.getType(entity);
 		return isFriendlyMobType(type) || isHostileMobType(type);
 	}
 
 	export function isPlayer(entity: number): boolean {
-		let type = Entity.getType(entity);
+		const type = Entity.getType(entity);
 		return type == 1 || type == 63;
 	}
 
 	export function canTakeDamage(entity: number, damageSource: number): boolean {
 		if (Entity.getHealth(entity) <= 0) return false;
 		if (isPlayer(entity)) {
-			let player = new PlayerActor(entity);
+			const player = new PlayerActor(entity);
 			if (player.getGameMode() == 1) return false;
 			if (damageSource == DamageSource.electricity) {
 				if (player.getArmor(0).id == ItemID.hazmatHelmet && player.getArmor(1).id == ItemID.hazmatChestplate &&
@@ -51,7 +51,7 @@ namespace EntityHelper {
 	}
 
 	export function isOnGround(entity: number): boolean {
-		let vel = Entity.getVelocity(entity);
+		const vel = Entity.getVelocity(entity);
 		return Math.abs(vel.y - fallVelocity) < 0.0001;
 	}
 
@@ -60,8 +60,8 @@ namespace EntityHelper {
 	}
 
 	export function getEntitiesInRadius(region: WorldRegion, pos: Vector, rad: number): number[] {
-		let list = region.listEntitiesInAABB(pos.x - rad, pos.y - rad, pos.z - rad, pos.x + rad, pos.y + rad, pos.z + rad);
-		let entities = [];
+		const list = region.listEntitiesInAABB(pos.x - rad, pos.y - rad, pos.z - rad, pos.x + rad, pos.y + rad, pos.z + rad);
+		const entities = [];
 		for (let ent of list) {
 			if (Entity.getDistanceBetweenCoords(pos, Entity.getPosition(ent)) <= rad) {
 				entities.push(ent);

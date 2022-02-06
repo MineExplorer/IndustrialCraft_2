@@ -1,7 +1,7 @@
 BlockRegistry.createBlock("teslaCoil", [
 	{name: "Tesla Coil", texture: [["tesla_coil", 0], ["tesla_coil", 0], ["tesla_coil", 1], ["tesla_coil", 1], ["tesla_coil", 1], ["tesla_coil", 1]], inCreative: true},
 ], "machine");
-ToolAPI.registerBlockMaterial(BlockID.teslaCoil, "stone", 1, true);
+BlockRegistry.setBlockMaterial(BlockID.teslaCoil, "stone", 1);
 ItemName.addTierTooltip("teslaCoil", 3);
 
 Callback.addCallback("PreLoaded", function() {

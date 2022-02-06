@@ -22,7 +22,6 @@
 /// <reference path="./CropCards/BaseCards/Metal/CropBaseMetalCommon.ts"/>
 /// <reference path="./CropCards/BaseCards/Metal/CropBaseMetalUncommon.ts"/>
 namespace Agriculture {
-	// ? "let" because addons can override general crop(i think)
 	// Basic
 	CropCardManager.registerCropCard(new CropWeed());
 	CropCardManager.registerCropCard(new CropVenomilia());

@@ -49,10 +49,10 @@ class LaserShot {
 					item.id = result.id;
 					item.data = result.data;
 				}
-				this.region.dropItem(x + .5, y + .5, z + .5, item);
+				this.region.dropAtBlock(x, y, z, item);
 			}
 			else if (Math.random() < this.dropChance) {
-				this.region.dropItem(x + .5, y + .5, z + .5, item);
+				this.region.dropAtBlock(x, y, z, item);
 			}
 		}
 	}

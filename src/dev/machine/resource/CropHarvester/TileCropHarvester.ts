@@ -84,7 +84,7 @@ namespace Machine {
 						this.putItem(item);
 						this.data.energy -= 100;
 						if (item.count > 0) {
-							this.region.dropItem(this.x, this.y + 1, this.z, item);
+							this.region.dropItem(this.x + .5, this.y + 1, this.z + .5, item);
 						}
 					}
 				}

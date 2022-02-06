@@ -123,8 +123,8 @@ namespace ICTool {
 				const dropID = (Math.random() < chance)? tileEntity.blockID : tileEntity.getDefaultDrop();
 				const drop = tileEntity.adjustDrop(new ItemStack(dropID, 1, 0));
 				TileEntity.destroyTileEntity(tileEntity);
-				region.setBlock(data.x, data.y, data.z, 0, 0);
-				region.dropItem(data.x + .5, data.y + .5, data.z + .5, drop);
+				region.setBlock(data, 0, 0);
+				region.dropAtBlock(data.x, data.y, data.z, drop);
 				ICTool.useWrench(item, 10, player);
 				SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg", 1);
 			}

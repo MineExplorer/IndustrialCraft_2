@@ -558,6 +558,9 @@ var WorldRegion = /** @class */ (function () {
         }
         return this.blockSource.spawnDroppedItem(x, y, z, item, count, data, extra || null);
     };
+    WorldRegion.prototype.dropAtBlock = function (x, y, z, item, count, data, extra) {
+        return this.dropItem(x + .5, y + .5, z + .5, item, count, data, extra);
+    };
     WorldRegion.prototype.spawnEntity = function (x, y, z, namespace, type, init_data) {
         if (type === void 0) {
             return this.blockSource.spawnEntity(x, y, z, namespace);

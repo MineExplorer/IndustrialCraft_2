@@ -51,7 +51,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.densePlateCopper": {id: ItemID.dustCopper, count: 9, data: 0},
 		"ItemID.densePlateTin": {id: ItemID.dustTin, count: 9, data: 0},
 		"ItemID.densePlateBronze": {id: ItemID.dustBronze, count: 9, data: 0},
-		"ItemID:densePlateSteel": {id: ItemID.dustSteel, count: 9, data: 0},
+		"ItemID.densePlateSteel": {id: ItemID.dustSteel, count: 9, data: 0},
 		"ItemID.densePlateLead": {id: ItemID.dustLead, count: 9, data: 0},
 		// other resources
 		"minecraft:lapis_block": {id: ItemID.dustLapis, count: 9, data: 0},

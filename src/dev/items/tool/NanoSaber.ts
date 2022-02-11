@@ -13,14 +13,14 @@ class ItemNanoSaber extends ElectricTool {
 		}
 		return {name: this.icon.name, meta: 0};
 	}
+	
+	getAttackDamageBonus(item: ItemInstance): number {
+		return item.extra && item.extra.getBoolean("active") ? 16 : 0;
+	}
 
 	onAttack(item: ItemInstance, victim: number, attacker: number): boolean {
-		if (item.extra && item.extra.getBoolean("active")) {
-			this.toolMaterial.damage = 16;
+		if (item.extra && item.extra.getBoolean("active"))
 			SoundManager.playSoundAtEntity(attacker, "NanosaberSwing.ogg");
-		} else {
-			this.toolMaterial.damage = 0;
-		}
 		return true;
 	}
 

@@ -1,5 +1,6 @@
 ConfigureMultiplayer({
 	isClientOnly: false
 });
-
-Launch();
+ModAPI.addAPICallback("KernelExtension", function(api) {
+	Launch(api);
+});

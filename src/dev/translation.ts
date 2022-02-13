@@ -465,33 +465,33 @@ Translation.addTranslation("message.freq_transmitter.unlinked", {en: "Frequency 
 Translation.addTranslation("message.mining_laser.aiming", {en: "Mining laser aiming angle too steep", ru: "Шахтёрский лазер направлен слишков высоко"});
 
 // Tooltips
-Translation.addTranslation("tooltip.tin_can", {en: "This looks bad...", ru: "Это выглядит несъедобно…", pt: "Isso parece ruim ...", zh: "这看起来很糟糕..."});
+Translation.addTranslation("tooltip.tin_can", {en: "This looks bad...", ru: "Это выглядит несъедобно…", pt: "Isso parece ruim...", zh: "这看起来很糟糕..."});
 Translation.addTranslation("tooltip.power_tier", {en: "Power Tier: %s", ru: "Энергоуровень: %s", zh: "能量等级: %s"});
-Translation.addTranslation("tooltip.max_voltage", {en: "Max voltage: %s EU/t", ru: "Макс. напряжение: %s EU/t", zh: "最大电压: %s EU/t"});
+Translation.addTranslation("tooltip.max_voltage", {en: "Max voltage: %s EU/t", ru: "Макс. напряжение: %s EU/t", pt: "Voltagem Máx: %s EU/t", zh: "最大电压: %s EU/t"});
 Translation.addTranslation("tooltip.upgrade.overclocker.time", {en: "Decrease process time to ", ru: "Уменьшает время работы до ", pt: "Diminui o tempo de processo para ", zh: "加工用时缩短为"});
 Translation.addTranslation("tooltip.upgrade.overclocker.power", {en: "Increase power to ", ru: "Увеличивает энергопотребление до ", pt: "Aumenta o Uso de Energia em ", zh: "能量增加到"});
 Translation.addTranslation("tooltip.upgrade.transformer", {en: "Increase energy tier by 1", ru: "Увеличивает энергоуровень на 1", pt: "Aumenta o nível da máquina em 1", zh: "增加一级输出电压"});
 Translation.addTranslation("tooltip.upgrade.storage", {en: "Increase energy storage by %s EU", ru: "Увеличивает энергоёмкость на %s EU", pt: "Aumenta o armazenamento de energia em %s EU", zh: "增加%s EU储能"});
-Translation.addTranslation("tooltip.upgrade.ejector", {en: "Automatically output to\nthe %s side", ru: "Автоматическое извлечение с %s стороны", zh: "自动输出到%s方向"});
-Translation.addTranslation("tooltip.upgrade.pulling", {en: "Automatically input from\nthe %s side", ru: "Автоматический ввод с %s стороны", zh: "自动从%s抽入物品"});
+Translation.addTranslation("tooltip.upgrade.ejector", {en: "Automatically output to\nthe %s side", ru: "Автоматическое извлечение с %s стороны", pt: "Saída automática para o %s", zh: "自动输出到%s方向"});
+Translation.addTranslation("tooltip.upgrade.pulling", {en: "Automatically input from\nthe %s side", ru: "Автоматический ввод с %s стороны", pt: "Entrada automática para o %s", zh: "自动从%s抽入物品"});
 Translation.addTranslation("tooltip.upgrade.anyside", {en: "first valid", ru: "первой подходящей", es: "Primera vez efectivo", pt: "Primeira vez eficaz", zh: "初次生效"});
-Translation.addTranslation("ic2.dir.bottom", {en: "bottom", ru: "нижней", es: "abajo", pt: "o lado de baixo", zh: "底部"});
-Translation.addTranslation("ic2.dir.top", {en: "top", ru: "верхней", es: "arriba", pt: "o lado de cima", zh: "顶部"});
-Translation.addTranslation("ic2.dir.north", {en: "north", ru: "северной", es: "norte", pt: "o norte", zh: "北边"});
-Translation.addTranslation("ic2.dir.south", {en: "south", ru: "южной", es: "sur", pt: "o sul", zh: "南边"});
-Translation.addTranslation("ic2.dir.east", {en: "east", ru: "восточной", es: "este", pt: "o leste", zh: "东边"});
-Translation.addTranslation("ic2.dir.west", {en: "west", ru: "западной", es: "oeste", pt: "o oeste", zh: "西边"});
+Translation.addTranslation("ic2.dir.bottom", {en: "bottom", ru: "нижней", es: "abajo", pt: "lado de baixo", zh: "底部"});
+Translation.addTranslation("ic2.dir.top", {en: "top", ru: "верхней", es: "arriba", pt: "lado de cima", zh: "顶部"});
+Translation.addTranslation("ic2.dir.north", {en: "north", ru: "северной", es: "norte", pt: "norte", zh: "北边"});
+Translation.addTranslation("ic2.dir.south", {en: "south", ru: "южной", es: "sur", pt: "sul", zh: "南边"});
+Translation.addTranslation("ic2.dir.east", {en: "east", ru: "восточной", es: "este", pt: "leste", zh: "东边"});
+Translation.addTranslation("ic2.dir.west", {en: "west", ru: "западной", es: "oeste", pt: "oeste", zh: "西边"});
 
 // Recipe Viewer
 Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "Calor: ", zh: "热量: "});
 
 // Creative Groups
 Translation.addTranslation("Ores", {ru: "Руды", pt: "Minérios", zh: "矿石"});
-Translation.addTranslation("Resource Blocks", {ru: "Блоки ресурсов"});
-Translation.addTranslation("Electric Generators", {ru: "Электрогенераторы"});
-Translation.addTranslation("Heat Generators", {ru: "Теплогенераторы"});
-Translation.addTranslation("Processing Machines", {ru: "Машины-обработчики"});
-Translation.addTranslation("Energy Storages", {ru: "Энергохранилища"});
+Translation.addTranslation("Resource Blocks", {ru: "Блоки ресурсов", pt: "Blocos de Recusrso"});
+Translation.addTranslation("Electric Generators", {ru: "Электрогенераторы", pt: "Geradores Elétricos"});
+Translation.addTranslation("Heat Generators", {ru: "Теплогенераторы", pt: "Geradores de Calor"});
+Translation.addTranslation("Processing Machines", {ru: "Машины-обработчики", pt: "Máquinas de Processamento"});
+Translation.addTranslation("Energy Storages", {ru: "Энергохранилища", pt: "Armazenamento de Energia"});
 Translation.addTranslation("Transformers", {ru: "Трансформаторы", pt: "Transformadores", zh: "变压器"});
 Translation.addTranslation("Cables", {ru: "Провода", pt: "Cabos", zh: "导线"});
 Translation.addTranslation("Battery Packs", {ru: "Аккумуляторные ранцы", pt: "Mochilas de Baterias", zh: "电池背包"});

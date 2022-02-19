@@ -26,7 +26,7 @@ class ToolDrill extends ElectricTool {
 			}
 		}
 		let player = new PlayerEntity(playerUid);
-		for (let i = 9; i < 45; i++) {
+		for (let i = 0; i < 36; i++) {
 			let stack = player.getInventorySlot(i);
 			if (stack.id != 50) continue;
 			if (Block.isSolid(block.id)) {

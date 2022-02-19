@@ -141,7 +141,7 @@ namespace RadiationAPI {
 			let emitRadiation = false;
 			if (!hasHazmatSuit(playerUid)) {
 				const player = new PlayerActor(playerUid);
-				for (let i = 9; i < 45; i++) {
+				for (let i = 0; i < 36; i++) {
 					const itemID = player.getInventorySlot(i).id;
 					emitRadiation ||= emitItemRadiation(playerUid, itemID);
 				}

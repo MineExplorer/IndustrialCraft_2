@@ -54,7 +54,7 @@ class ArmorQuantumHelmet extends ArmorQuantumSuit {
 
 		let newEnergyStored = energyStored;
 		if (RadiationAPI.getRadiation(playerUid) > 0 && energyStored >= 100000) {
-			RadiationAPI.resetRadiation(playerUid);
+			RadiationAPI.setRadiation(playerUid, 0);
 			newEnergyStored -= 100000;
 		}
 

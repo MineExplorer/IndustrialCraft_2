@@ -2159,6 +2159,7 @@ var ItemArmor = /** @class */ (function (_super) {
 var ToolType;
 (function (ToolType) {
     ToolType.SWORD = {
+        __flag: "__sword",
         handEquipped: true,
         isWeapon: true,
         enchantType: Native.EnchantType.weapon,
@@ -2175,6 +2176,7 @@ var ToolType;
         }
     };
     ToolType.SHOVEL = {
+        __flag: "__shovel",
         handEquipped: true,
         enchantType: Native.EnchantType.shovel,
         damage: 2,
@@ -2190,12 +2192,14 @@ var ToolType;
         }
     };
     ToolType.PICKAXE = {
+        __flag: "__pickaxe",
         handEquipped: true,
         enchantType: Native.EnchantType.pickaxe,
         damage: 2,
         blockTypes: ["stone"],
     };
     ToolType.AXE = {
+        __flag: "__axe",
         handEquipped: true,
         enchantType: Native.EnchantType.axe,
         damage: 3,
@@ -2227,6 +2231,7 @@ var ToolType;
         }
     };
     ToolType.HOE = {
+        __flag: "__hoe",
         handEquipped: true,
         enchantType: Native.EnchantType.pickaxe,
         damage: 2,
@@ -2244,6 +2249,7 @@ var ToolType;
         }
     };
     ToolType.SHEARS = {
+        __flag: "__shears",
         blockTypes: ["plant", "fibre", "wool"],
         modifyEnchant: function (enchantData, item, coords, block) {
             if (block) {

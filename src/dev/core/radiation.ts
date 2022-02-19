@@ -138,20 +138,17 @@ namespace RadiationAPI {
 
 	Callback.addCallback("ServerPlayerTick", function(playerUid: number) {
 		if (World.getThreadTime()%20 == 0) {
-			let emitRadiation = false;
 			if (!hasHazmatSuit(playerUid)) {
 				const player = new PlayerActor(playerUid);
 				for (let i = 0; i < 36; i++) {
 					const itemID = player.getInventorySlot(i).id;
-					emitRadiation ||= emitItemRadiation(playerUid, itemID);
+					emitItemRadiation(playerUid, itemID);
 				}
 			}
 			const duration = effectDuration[playerUid];
 			if (duration > 0) {
 				addPoisonEffect(playerUid, duration);
-				if (!emitRadiation) {
-					effectDuration[playerUid]--;
-				}
+				effectDuration[playerUid]--;
 			}
 		}
 	});

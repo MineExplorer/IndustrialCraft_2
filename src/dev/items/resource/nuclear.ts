@@ -23,7 +23,7 @@ ItemRegistry.createItem("mox", {name: "mox_fuel", icon: "mox"});
 RadiationAPI.setRadioactivity(ItemID.mox, 300);
 
 ItemRegistry.createItem("rtgPellet", {name: "rtg_pellet", icon: "rtg_pellet", stack: 1});
-RadiationAPI.setRadioactivity(ItemID.rtgPellet, 1, true);
+RadiationAPI.setRadioactivity(ItemID.rtgPellet, 2, true);
 
 Item.addCreativeGroup("nuclear", Translation.translate("Nuclear"), [
 	ItemID.uranium,

@@ -75,7 +75,7 @@ namespace RadiationAPI {
 	}
 
 	function addPoisonEffect(ent: number, duration: number): void {
-		Entity.addEffect(ent, PotionEffect.fatal_poison, 1, duration * 20);
+		Entity.addEffect(ent, PotionEffect.fatal_poison, 1, duration * 20 + 1);
 	}
 
 	export function addEffect(ent: number, duration: number): void {

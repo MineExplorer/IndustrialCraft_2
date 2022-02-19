@@ -12,9 +12,9 @@ TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 
 Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block, player, region) {
 	const {x, y, z} = coords.relative;
 	for (let i = 0; i < 6; i++) {
-		let c = World.getRelativeCoords(x, y, z, i);
+		const c = World.getRelativeCoords(x, y, z, i);
 		if (region.getBlockId(c.x, c.y, c.z) == BlockID.reactorChamber) {
-			let tileEnt = World.getTileEntity(c.x, c.y, c.z, region);
+			const tileEnt = World.getTileEntity(c.x, c.y, c.z, region);
 			if (tileEnt.core) {
 				item.count++;
 				return;
@@ -42,7 +42,7 @@ const reactorElements: UI.ElementSet = {
 
 for (let y = 0; y < 6; y++) {
 	for (let x = 0; x < 9; x++) {
-		let i = x*6 + y;
+		const i = x*6 + y;
 		reactorElements["slot"+i] = {type: "slot", x: 400 + 54 * x, y: 40 + 54 * y, size: 54}
 	}
 }
@@ -85,9 +85,9 @@ namespace Machine {
 			this.rebuildGrid();
 			this.__initialized = true;
 			for (let i = 0; i < 6; i++) {
-				let coords = StorageInterface.getRelativeCoords(this, i);
+				const coords = StorageInterface.getRelativeCoords(this, i);
 				if (this.region.getBlockId(coords) == BlockID.reactorChamber) {
-					let tileEnt = this.region.getTileEntity(coords) as ReactorChamber;
+					const tileEnt = this.region.getTileEntity(coords) as ReactorChamber;
 					if (tileEnt) {
 						this.addChamber(tileEnt);
 					}
@@ -116,10 +116,10 @@ namespace Machine {
 
 		removeChamber(chamber: ReactorChamber): void {
 			this.chambers.splice(this.chambers.indexOf(chamber), 1);
-			let x = this.getReactorSize();
+			const x = this.getReactorSize();
 			for (let y = 0; y < 6; y++) {
-				let slotName = this.getSlotName(x, y);
-				let slot = this.container.getSlot(slotName);
+				const slotName = this.getSlotName(x, y);
+				const slot = this.container.getSlot(slotName);
 				if (slot.id > 0) {
 					this.region.dropAtBlock(chamber.x, chamber.y, chamber.z, slot);
 					this.container.setSlot(slotName, 0, 0, 0);
@@ -132,12 +132,12 @@ namespace Machine {
 		}
 
 		processChambers(): void {
-			let size = this.getReactorSize();
+			const size = this.getReactorSize();
 			for (let pass = 0; pass < 2; pass++) {
 				for (let y = 0; y < 6; y++) {
 					for (let x = 0; x < size; x++) {
-						let slot = this.container.getSlot(this.getSlotName(x, y));
-						let component = ReactorItem.getComponent(slot.id);
+						const slot = this.container.getSlot(this.getSlotName(x, y));
+						const component = ReactorItem.getComponent(slot.id);
 						if (component) {
 							component.processChamber(slot, this, x, y, pass == 0);
 						}
@@ -147,7 +147,7 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			let reactorSize = this.getReactorSize();
+			const reactorSize = this.getReactorSize();
 			this.container.sendEvent("setFieldSize", {size: reactorSize});
 			if (World.getThreadTime() % 20 == 0) {
 				if (this.data.isEnabled) {
@@ -155,11 +155,11 @@ namespace Machine {
 					this.data.hem = 1;
 					this.data.output = 0;
 					this.processChambers();
-					if (this.calculateHeatEffects()) {
-						return;
-					}
 				} else {
 					this.data.output = 0;
+				}
+				if (this.calculateHeatEffects()) {
+					return;
 				}
 				this.setActive(this.data.heat >= 1000 || this.data.output > 0);
 			}
@@ -176,7 +176,7 @@ namespace Machine {
 		}
 
 		energyTick(type: string, src: EnergyTileNode): void {
-			let output = this.getEnergyOutput();
+			const output = this.getEnergyOutput();
 			src.add(output, Math.min(output, 8192));
 		}
 
@@ -301,10 +301,10 @@ namespace Machine {
 			let boomPower = 10;
 			let boomMod = 1;
 			for (let i = 0; i < this.getReactorSize() * 6; i++) {
-				let slot = this.container.getSlot("slot"+i);
-				let component = ReactorItem.getComponent(slot.id);
+				const slot = this.container.getSlot("slot"+i);
+				const component = ReactorItem.getComponent(slot.id);
 				if (component) {
-					let f = component.influenceExplosion(slot, this)
+					const f = component.influenceExplosion(slot, this)
 					if (f > 0 && f < 1) {
 						boomMod *= f;
 					} else {
@@ -323,28 +323,30 @@ namespace Machine {
 		}
 
 		calculateHeatEffects(): boolean {
-			let power = this.data.heat / this.data.maxHeat;
+			const power = this.data.heat / this.data.maxHeat;
 			if (power >= 1) {
 				this.explode();
 				return true;
 			}
 			if (power >= 0.85 && Math.random() <= 0.2 * this.data.hem) {
-				let coord = this.getRandCoord(2);
-				let block = this.region.getBlockId(coord);
-				let material = ToolAPI.getBlockMaterialName(block);
-				if (block == BlockID.nuclearReactor) {
-					let tileEntity = this.region.getTileEntity(coord);
-					if (tileEntity) {
-						tileEntity.explode();
-					}
+				const coord = this.getRandCoord(2);
+				const blockId = this.region.getBlockId(coord);
+				const material = ToolAPI.getBlockMaterialName(blockId);
+				if (blockId == 0) {
+					this.region.setBlock(coord, 51, 0);
 				}
-				else if (material == "stone" || material == "dirt") {
-					this.region.setBlock(coord, 11, 1);
+				else if (Block.getDestroyTime(blockId) > 0 && this.region.getTileEntity(coord) == null) {
+					if ((material == "stone" || material == "dirt") && !(blockId == VanillaTileID.ice || ItemRegistry.getVanillaStringID(blockId).endsWith("_ice"))) {
+						this.region.setBlock(coord, 11, 1);
+					}
+					else {
+						this.region.setBlock(coord, 51, 0);
+					}
 				}
 			}
 			if (power >= 0.7 && World.getThreadTime()%20 == 0) {
-				let pos = new Vector3(this.x + .5, this.y + .5, this.z + .5);
-				let entities = EntityHelper.getEntitiesInRadius(this.region, pos, 4);
+				const pos = new Vector3(this.x + .5, this.y + .5, this.z + .5);
+				const entities = EntityHelper.getEntitiesInRadius(this.region, pos, 4);
 				for (let ent of entities) {
 					if (EntityHelper.canTakeDamage(ent, DamageSource.radiation)) {
 						RadiationAPI.addEffect(ent, Math.floor(4 * this.data.hem));
@@ -352,19 +354,19 @@ namespace Machine {
 				}
 			}
 			if (power >= 0.5 && Math.random() <= this.data.hem) {
-				let coord = this.getRandCoord(2);
-				let block = this.region.getBlockId(coord);
-				if (block == 8 || block == 9) {
+				const coord = this.getRandCoord(2);
+				const blockId = this.region.getBlockId(coord);
+				if (blockId == 8 || blockId == 9) {
 					this.region.setBlock(coord, 0, 0);
 				}
 			}
 			if (power >= 0.4 && Math.random() <= this.data.hem) {
-				let coord = this.getRandCoord(2);
-				let block = this.region.getBlockId(coord);
-				let material = ToolAPI.getBlockMaterialName(block);
-				if (block != 49 && (material == "wood" || material == "wool" || material == "fibre" || material == "plant")) {
+				const coord = this.getRandCoord(2);
+				const blockId = this.region.getBlockId(coord);
+				const material = ToolAPI.getBlockMaterialName(blockId);
+				if (material == "wood" || material == "wool" || material == "fibre" || material == "plant") {
 					for (let i = 0; i < 6; i++) {
-						let coord2 = World.getRelativeCoords(coord.x, coord.y, coord.z, i);
+						const coord2 = World.getRelativeCoords(coord.x, coord.y, coord.z, i);
 						if (this.region.getBlockId(coord2) == 0) {
 							this.region.setBlock(coord2, 51, 0);
 							break;
@@ -384,7 +386,7 @@ namespace Machine {
 			if (content) {
 				for (let y = 0; y < 6; y++) {
 					for (let x = 0; x < 9; x++) {
-						let newX = (x < data.size) ? 400 + 54 * x : 1400;
+						const newX = (x < data.size) ? 400 + 54 * x : 1400;
 						content.elements["slot" + (x*6 + y)].x = newX;
 					}
 				}

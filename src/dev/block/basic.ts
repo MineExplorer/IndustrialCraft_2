@@ -24,16 +24,16 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', ItemID.plateIron, -1]);
 
 	Recipes.addShaped({id: BlockID.machineBlockAdvanced, count: 1, data: 0}, [
-		" x ",
+		"scs",
 		"a#a",
-		" x "
-	], ['x', ItemID.carbonPlate, -1, 'a', ItemID.plateAlloy, -1, '#', BlockID.machineBlockBasic, 0]);
+		"scs"
+	], ['#', BlockID.machineBlockBasic, -1, 'c', ItemID.carbonPlate, -1, 'a', ItemID.plateAlloy, -1, 's', ItemID.plateSteel, -1]);
 
 	Recipes.addShaped({id: BlockID.machineBlockAdvanced, count: 1, data: 0}, [
-		" a ",
-		"x#x",
-		" a "
-	], ['x', ItemID.carbonPlate, -1, 'a', ItemID.plateAlloy, -1, '#', BlockID.machineBlockBasic, 0]);
+		"sas",
+		"c#c",
+		"sas"
+	], ['#', BlockID.machineBlockBasic, -1, 'c', ItemID.carbonPlate, -1, 'a', ItemID.plateAlloy, -1, 's', ItemID.plateSteel, -1]);
 
 	addSingleItemRecipe("iron_plate_from_machine_block", "block:machineBlockBasic", "item:plateIron", 8);
 });

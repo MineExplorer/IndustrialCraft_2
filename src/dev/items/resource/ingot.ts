@@ -53,22 +53,23 @@ Callback.addCallback("PreLoaded", function() {
 	Recipes.addFurnace(ItemID.plateGold, 266, 0);
 	Recipes.addFurnace(ItemID.plateLead, ItemID.ingotLead, 0);
 
+	const ironPlate = IC2Config.hardRecipes ? ItemID.plateSteel : ItemID.plateIron;
 	Recipes.addShaped({id: ItemID.ingotAlloy, count: 2, data: 0}, [
 		"aaa",
 		"bbb",
 		"ccc"
-	], ['a', ItemID.plateSteel, 0, 'b', ItemID.plateBronze, 0, 'c', ItemID.plateTin, 0]);
+	], ['a', ironPlate, -1, 'b', ItemID.plateBronze, -1, 'c', ItemID.plateTin, -1]);
 
 	// alternative
 	Recipes.addShaped({id: 66, count: 12, data: 0}, [
 		"a a",
 		"axa",
 		"a a"
-	], ['x', 280, 0, 'a', ItemID.ingotBronze, 0]);
+	], ['x', 280, -1, 'a', ItemID.ingotBronze, -1]);
 
 	Recipes.addShaped({id: 33, count: 1, data: 0}, [
 		"ppp",
 		"cbc",
 		"cxc"
-	], ['x', 331, 0, 'b', ItemID.ingotBronze, 0, 'c', 4, -1, 'p', 5, -1]);
+	], ['x', 331, -1, 'b', ItemID.ingotBronze, -1, 'c', 4, -1, 'p', 5, -1]);
 });

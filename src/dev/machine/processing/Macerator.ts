@@ -12,11 +12,19 @@ TileRenderer.setRotationFunction(BlockID.macerator);
 ItemName.addTierTooltip("macerator", 1);
 
 Callback.addCallback("PreLoaded", function() {
-	Recipes.addShaped({id: BlockID.macerator, count: 1, data: 0}, [
-		"xxx",
-		"b#b",
-		" a "
-	], ['#', BlockID.machineBlockBasic, 0, 'x', 318, 0, 'b', 4, -1, 'a', ItemID.circuitBasic, 0]);
+	if (IC2Config.hardRecipes) {
+		Recipes.addShaped({id: BlockID.macerator, count: 1, data: 0}, [
+			"xxx",
+			"b#b",
+			" a "
+		], ['#', BlockID.machineBlockBasic, -1, 'x', 264, -1, 'b', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1]);
+	} else {
+		Recipes.addShaped({id: BlockID.macerator, count: 1, data: 0}, [
+			"xxx",
+			"b#b",
+			" a "
+		], ['#', BlockID.machineBlockBasic, -1, 'x', 318, -1, 'b', 4, -1, 'a', ItemID.circuitBasic, -1]);
+	}
 
 	MachineRecipeRegistry.registerRecipesFor("macerator", {
 		// ores

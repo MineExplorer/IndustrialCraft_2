@@ -52,9 +52,7 @@ implements BlockItemBehavior {
 			if (player.getGameMode() == 1 || Math.random() < 0.25) {
 				RubberTreeGenerator.growRubberTree(region.blockSource, coords.x, coords.y, coords.z);
 			}
-			if (BlockEngine.getMainGameVersion() == 11) {
-				region.sendPacketInRadius(coords, 64, "ic2.growPlantParticles", {x: coords.x, y: coords.y, z: coords.z});
-			}
+			region.sendPacketInRadius(coords, 64, "ic2.growPlantParticles", {x: coords.x, y: coords.y, z: coords.z});
 		}
 	}
 
@@ -77,7 +75,6 @@ Network.addClientPacket("ic2.growPlantParticles", function(data: {x: number, y: 
 		const px = data.x + Math.random();
 		const pz = data.z + Math.random();
 		const py = data.y + Math.random();
-		// TODO: fix particle type in new version
 		Particles.addParticle(ParticleType.happyVillager, px, py, pz, 0, 0, 0);
 	}
 });

@@ -12,19 +12,11 @@ TileRenderer.setRotationFunction(BlockID.extractor);
 ItemName.addTierTooltip("extractor", 1);
 
 Callback.addCallback("PreLoaded", function() {
-	if (IC2Config.hardRecipes) {
-		Recipes.addShaped({id: BlockID.extractor, count: 1, data: 0}, [
-			"x#x",
-			"xbx",
-			" a "
-		], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1, 'b', ItemID.electricMotor, -1]);
-	} else {
-		Recipes.addShaped({id: BlockID.extractor, count: 1, data: 0}, [
-			"x#x",
-			"xax"
-		], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
-	}
-
+	Recipes.addShaped({id: BlockID.extractor, count: 1, data: 0}, [
+		"x#x",
+		"xax"
+	], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
+	
 	MachineRecipeRegistry.registerRecipesFor("extractor", {
 		"ItemID.latex": {id: ItemID.rubber, count: 3},
 		"BlockID.rubberTreeSapling": {id: ItemID.rubber, count: 1},

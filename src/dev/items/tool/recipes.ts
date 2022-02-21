@@ -115,26 +115,28 @@ Callback.addCallback("PreLoaded", function() {
 		{id: ItemID.powerUnitSmall, data: 0}, {id: ItemID.treetap, data: 0}
 	]);
 
+	const ironPlate = IC2Config.hardRecipes ? ItemID.plateSteel : ItemID.plateIron;
+
 	// Electric Hoe
 	Recipes.addShaped({id: ItemID.electricHoe, count: 1, data: 27}, [
 		"pp",
 		" p",
 		" x"
-	], ['x', ItemID.powerUnitSmall, 0, 'p', ItemID.plateIron, 0]);
+	], ['x', ItemID.powerUnitSmall, 0, 'p', ironPlate, 0]);
 
 	// Chainsaw
 	Recipes.addShaped({id: ItemID.chainsaw, count: 1, data: 27}, [
 		" pp",
 		"ppp",
 		"xp "
-	], ['x', ItemID.powerUnit, 0, 'p', ItemID.plateIron, 0]);
+	], ['x', ItemID.powerUnit, 0, 'p', ironPlate, 0]);
 
 	// Drills
 	Recipes.addShaped({id: ItemID.drill, count: 1, data: 27}, [
 		" p ",
 		"ppp",
 		"pxp"
-	], ['x', ItemID.powerUnit, 0, 'p', ItemID.plateIron, 0]);
+	], ['x', ItemID.powerUnit, 0, 'p', ironPlate, 0]);
 
 	Recipes.addShaped({id: ItemID.diamondDrill, count: 1, data: 27}, [
 		" a ",

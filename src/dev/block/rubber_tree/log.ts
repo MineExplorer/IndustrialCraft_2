@@ -33,4 +33,4 @@ class BlockRubberTreeLog extends BlockBase {
 BlockRegistry.registerBlock(new BlockRubberTreeLog());
 
 Recipes.addFurnace(BlockID.rubberTreeLog, 17, 3);
-addSingleItemRecipe("planks_from_rubber_log", "block:rubberTreeLog", "planks", 3, 3);
+Recipes.addShapeless({id: 5, count: 3, data: 3}, [{id: BlockID.rubberTreeLog, data: -1}]);

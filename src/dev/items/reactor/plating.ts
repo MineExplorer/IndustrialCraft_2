@@ -14,26 +14,16 @@ Item.addCreativeGroup("ic2_reactorPlating", Translation.translate("Reactor Plati
     ItemID.reactorPlatingHeat
 ]);
 
-VanillaRecipe.addShapelessRecipe("reactor_plating", {
-	ingredients: [
-		{ item: "item:plateAlloy" },
-		{ item: "item:plateLead" }
-	],
-	result: {
-		item: "item:reactorPlating"
-	}
-}, true);
+Recipes.addShapeless({id: ItemID.reactorPlating, count: 1, data: 0}, [
+	{id: ItemID.plateAlloy, data: 0},
+	{id: ItemID.plateLead, data: 0}
+]);
 
-VanillaRecipe.addShapelessRecipe("containment_reactor_plating", {
-	ingredients: [
-		{ item: "item:reactorPlating" },
-		{ item: "item:plateAlloy" },
-		{ item: "item:plateAlloy" }
-	],
-	result: {
-		item: "item:reactorPlatingContainment"
-	}
-}, true);
+Recipes.addShapeless({id: ItemID.reactorPlatingContainment, count: 1, data: 0}, [
+	{id: ItemID.reactorPlating, data: 0},
+	{id: ItemID.plateAlloy, data: 0},
+	{id: ItemID.plateAlloy, data: 0}
+]);
 
 Recipes.addShaped({id: ItemID.reactorPlatingHeat, count: 1, data: 0}, [
 	"aaa",

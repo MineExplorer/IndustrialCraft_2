@@ -57,44 +57,26 @@ Recipes.addShaped({id: ItemID.dustEnergium, count: 9, data: 0}, [
 	"xax",
 ], ['x', 331, 0, 'a', ItemID.dustDiamond, 0]);
 
-VanillaRecipe.addShapelessRecipe("dust_bronze", {
-	ingredients: [
-		{ item: "item:dustCopper" },
-		{ item: "item:dustCopper" },
-		{ item: "item:dustCopper" },
-		{ item: "item:dustTin" }
-	],
-	result: {
-		item: "item:dustBronze",
-		count: 4
-	}
-}, true);
+Recipes.addShapeless({id: ItemID.dustBronze, count: 4, data: 0}, [
+	{id: ItemID.crushedCopper, data: 0},
+	{id: ItemID.crushedCopper, data: 0},
+	{id: ItemID.crushedCopper, data: 0},
+	{id: ItemID.crushedTin, data: 0}
+]);
 
-VanillaRecipe.addShapelessRecipe("dust_bronze_from_crushed_ore", {
-	ingredients: [
-		{ item: "item:crushedCopper" },
-		{ item: "item:crushedCopper" },
-		{ item: "item:crushedCopper" },
-		{ item: "item:crushedTin" }
-	],
-	result: {
-		item: "item:dustBronze",
-		count: 4
-	}
-}, true);
+Recipes.addShapeless({id: ItemID.dustBronze, count: 4, data: 0}, [
+	{id: ItemID.crushedPurifiedCopper, data: 0},
+	{id: ItemID.crushedPurifiedCopper, data: 0},
+	{id: ItemID.crushedPurifiedCopper, data: 0},
+	{id: ItemID.crushedPurifiedTin, data: 0}
+]);
 
-VanillaRecipe.addShapelessRecipe("dust_bronze_from_purified_ore", {
-	ingredients: [
-		{ item: "item:crushedPurifiedCopper" },
-		{ item: "item:crushedPurifiedCopper" },
-		{ item: "item:crushedPurifiedCopper" },
-		{ item: "item:crushedPurifiedTin" }
-	],
-	result: {
-		item: "item:dustBronze",
-		count: 4
-	}
-}, true);
+Recipes.addShapeless({id: ItemID.dustBronze, count: 4, data: 0}, [
+	{id: ItemID.dustCopper, data: 0},
+	{id: ItemID.dustCopper, data: 0},
+	{id: ItemID.dustCopper, data: 0},
+	{id: ItemID.dustTin, data: 0}
+]);
 
 Recipes.addShaped({id: ItemID.dustCopper, count: 1, data: 0}, [
 	"xxx",

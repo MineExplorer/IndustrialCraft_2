@@ -106,28 +106,14 @@ Callback.addCallback("PreLoaded", function() {
 		" a "
 	], ['a', ItemID.ingotBronze, 0]);
 
-	VanillaRecipe.addShapelessRecipe("electric_wrench", {
-		ingredients: [
-			{ item: "item:powerUnitSmall" },
-			{ item: "item:bronzeWrench", data: 0 }
-		],
-		result: {
-			item: "item:electricWrench",
-    		data: 27
-		}
-	}, true);
+	Recipes.addShapeless({id: ItemID.electricWrench, count: 1, data: 27}, [
+		{id: ItemID.bronzeWrench, data: 0}, {id: ItemID.powerUnitSmall, data: 0}
+	]);
 
 	// Electric Treetap
-	VanillaRecipe.addShapelessRecipe("electric_treetap", {
-		ingredients: [
-			{ item: "item:powerUnitSmall" },
-			{ item: "item:treetap", data: 0 }
-		],
-		result: {
-			item: "item:electricTreetap",
-    		data: 27
-		}
-	}, true);
+	Recipes.addShapeless({id: ItemID.electricTreetap, count: 1, data: 27}, [
+		{id: ItemID.powerUnitSmall, data: 0}, {id: ItemID.treetap, data: 0}
+	]);
 
 	// Electric Hoe
 	Recipes.addShaped({id: ItemID.electricHoe, count: 1, data: 27}, [

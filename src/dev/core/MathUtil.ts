@@ -3,9 +3,12 @@ namespace MathUtil {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 
-	export function inRange(value: number, minValue: number, maxValue: number) {
+	export function setInRange(value: number, minValue: number, maxValue: number) {
 		if (value < minValue) return minValue;
 		if (value > maxValue) return maxValue;
 		return value;
 	}
 }
+
+/** @deprecated */
+const randomInt = MathUtil.randomInt

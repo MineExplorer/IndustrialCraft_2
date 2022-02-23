@@ -8,8 +8,8 @@
         },
         "sound_enabled": {
             "name": {
-                "en": "Sounds enabled",
-                "ru": "Звуки"
+                "en": "Mod sounds",
+                "ru": "Звуки мода"
             }
         },
          "machine_sounds": {

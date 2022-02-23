@@ -72,6 +72,10 @@
 			"targetDir": "."
 		},
 		{
+			"source": "src/config.info.json",
+			"targetDir": "."
+		},
+		{
 			"source": "src/assets/sounds",
 			"targetDir": "assets"
 		}

@@ -1,4 +1,4 @@
 ItemRegistry.createItem("coffeeBeans", {name: "coffee_beans", icon: "coffee_beans"});
 ItemRegistry.createItem("coffeePowder", {name: "coffee_powder", icon: "coffee_powder"});
 
-addSingleItemRecipe("coffee_powder", "item:coffeeBeans", "item:coffeePowder");
+Recipes.addShapeless({id: ItemID.coffeePowder, count: 1, data: 0}, [{id: ItemID.coffeeBeans, data: 0}]);

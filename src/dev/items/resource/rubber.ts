@@ -3,31 +3,14 @@ ItemRegistry.createItem("rubber", {name: "rubber", icon: "rubber"});
 
 Recipes.addFurnace(ItemID.latex, ItemID.rubber, 0);
 
-VanillaRecipe.addShapedRecipe("alternative_sticky_piston", {
-	pattern: [
-		"S",
-		"P"
-	],
-	key: {
-		"P": { item: "piston" },
-		"S": { item: "item:latex" }
-	},
-	result: {
-		item: "sticky_piston"
-	}
-}, true);
+// alternative sticky piston
+Recipes.addShaped({id: 29, count: 1, data: 0}, [
+	"x",
+	"p"
+], ['x', ItemID.latex, 0, 'p', 33, 0]);
 
-VanillaRecipe.addShapedRecipe("alternative_torch", {
-	pattern: [
-		"X",
-    	"#"
-	],
-	key: {
-		"X": { item: "item:latex" },
-		"#": { item: "stick" }
-	},
-	result: {
-		item: "torch",
-		count: 4
-	}
-}, true);
+// alternative torch
+Recipes.addShaped({id: 50, count: 4, data: 0}, [
+	"x",
+	"#"
+], ['x', ItemID.latex, 0, '#', 280, 0]);

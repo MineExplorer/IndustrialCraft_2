@@ -23,7 +23,7 @@ ItemRegistry.createItem("mox", {name: "mox_fuel", icon: "mox"});
 RadiationAPI.setRadioactivity(ItemID.mox, 300);
 
 ItemRegistry.createItem("rtgPellet", {name: "rtg_pellet", icon: "rtg_pellet", stack: 1});
-RadiationAPI.setRadioactivity(ItemID.rtgPellet, 1, true);
+RadiationAPI.setRadioactivity(ItemID.rtgPellet, 2, true);
 
 Item.addCreativeGroup("nuclear", Translation.translate("Nuclear"), [
 	ItemID.uranium,
@@ -67,5 +67,5 @@ Recipes.addShaped({id: ItemID.rtgPellet, count: 1, data: 0}, [
 	"xxx"
 ], ['x', ItemID.densePlateIron, 0, 'a', ItemID.plutonium, 0]);
 
-addSingleItemRecipe("small_uranium_235", "item:uranium235", "item:smallUranium235", 9);
-addSingleItemRecipe("small_plutonium", "item:plutonium", "item:smallPlutonium", 9);
+Recipes.addShapeless({id: ItemID.smallUranium235, count: 9, data: 0}, [{id: ItemID.uranium235, data: 0}]);
+Recipes.addShapeless({id: ItemID.smallPlutonium, count: 9, data: 0}, [{id: ItemID.plutonium, data: 0}]);

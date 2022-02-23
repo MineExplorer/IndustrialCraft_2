@@ -186,8 +186,8 @@ namespace Agriculture {
 			}
 
 			if (!this.crop && (!this.data.crossingBase || !this.attemptCrossing())) {
-				if (randomInt(0, 100) != 0 || this.data.storageWeedEX > 0) {
-					if (this.data.storageWeedEX > 0 && randomInt(0, 10) == 0) {
+				if (MathUtil.randomInt(0, 100) != 0 || this.data.storageWeedEX > 0) {
+					if (this.data.storageWeedEX > 0 && MathUtil.randomInt(0, 10) == 0) {
 						this.data.storageWeedEX--;
 					}
 					return;
@@ -219,7 +219,7 @@ namespace Agriculture {
 			if (this.data.storageNutrients > 0) this.data.storageNutrients--;
 			if (this.data.storageWater > 0) this.data.storageWater--;
 
-			if (this.crop.isWeed(this) && randomInt(0, 50) - this.data.statGrowth <= 2) {
+			if (this.crop.isWeed(this) && MathUtil.randomInt(0, 50) - this.data.statGrowth <= 2) {
 				this.performWeedWork();
 			}
 		}
@@ -267,7 +267,7 @@ namespace Agriculture {
 			if (!this.crop) return;
 
 			let totalGrowth = 0;
-			const baseGrowth = 3 + randomInt(0, 7) + this.data.statGrowth;
+			const baseGrowth = 3 + MathUtil.randomInt(0, 7) + this.data.statGrowth;
 			const properties = this.crop.getProperties();
 			const sumOfStats = this.data.statGrowth + this.data.statGain + this.data.statResistance;
 			let minimumQuality = (properties.tier - 1) * 4 + sumOfStats;
@@ -279,7 +279,7 @@ namespace Agriculture {
 			}
 			else {
 				const aux = (minimumQuality - providedQuality) * 4;
-				if (aux > 100 && randomInt(0, 32) > this.data.statResistance) {
+				if (aux > 100 && MathUtil.randomInt(0, 32) > this.data.statResistance) {
 					totalGrowth = 0;
 
 					this.reset();
@@ -295,13 +295,13 @@ namespace Agriculture {
 
 		performWeedWork(): void {
 			const relativeCropCoords = this.getRelativeCoords();
-			const coords = relativeCropCoords[randomInt(0, 3)];
+			const coords = relativeCropCoords[MathUtil.randomInt(0, 3)];
 			const preCoords = [this.x + coords[0], this.y + coords[0], this.z + coords[0]];
 			if (this.region.getBlockId(preCoords[0], preCoords[1], preCoords[2]) == BlockID.crop) {
 				const TE = this.region.getTileEntity(preCoords[0], preCoords[1], preCoords[2]);
-				if (!TE.crop || (!TE.crop.isWeed(this) && !TE.hasWeedEX() && randomInt(0, 32) >= TE.data.statResistance)) {
+				if (!TE.crop || (!TE.crop.isWeed(this) && !TE.hasWeedEX() && MathUtil.randomInt(0, 32) >= TE.data.statResistance)) {
 					let newGrowth = Math.max(this.data.statGrowth, TE.data.statGrowth);
-					if (newGrowth < 31 && randomInt(0, 1)) newGrowth++;
+					if (newGrowth < 31 && MathUtil.randomInt(0, 1)) newGrowth++;
 
 					TE.reset();
 					TE.data.crop = Agriculture.CropCardManager.getIndexByCropCardID("weed");
@@ -341,7 +341,7 @@ namespace Agriculture {
 
 		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		attemptCrossing(): boolean { // modified from the original
-			if (randomInt(0, 3) != 0) return false;
+			if (MathUtil.randomInt(0, 3) != 0) return false;
 
 			const cropCoords = this.askCropJoinCross(this.getRelativeCoords());
 			if (cropCoords.length < 2) return false;
@@ -358,7 +358,7 @@ namespace Agriculture {
 				}
 				ratios[j] = total;
 			}
-			const search = randomInt(0, total);
+			const search = MathUtil.randomInt(0, total);
 			let min = 0;
 			let max = ratios.length - 1;
 			while (min < max) {
@@ -393,9 +393,9 @@ namespace Agriculture {
 			this.data.statResistance = Math.floor(this.data.statResistance / count);
 			this.data.statGain = Math.floor(this.data.statGain / count);
 
-			this.data.statGrowth += Math.round(randomInt(0, 1 + 2 * count) - count);
-			this.data.statGain += Math.round(randomInt(0, 1 + 2 * count) - count);
-			this.data.statResistance += Math.round(randomInt(0, 1 + 2 * count) - count);
+			this.data.statGrowth += Math.round(MathUtil.randomInt(0, 1 + 2 * count) - count);
+			this.data.statGain += Math.round(MathUtil.randomInt(0, 1 + 2 * count) - count);
+			this.data.statResistance += Math.round(MathUtil.randomInt(0, 1 + 2 * count) - count);
 
 			this.data.statGrowth = this.lim(this.data.statGrowth, 0, 31);
 			this.data.statGain = this.lim(this.data.statGain, 0, 31);
@@ -432,7 +432,7 @@ namespace Agriculture {
 				if (sideTileEntity.data.statResistance >= 28) {
 					base += 27 - sideTileEntity.data.statResistance;
 				}
-				if (base >= randomInt(0, 20)) cropsCoords.push(coords);
+				if (base >= MathUtil.randomInt(0, 20)) cropsCoords.push(coords);
 			}
 			return cropsCoords;
 		}
@@ -523,7 +523,7 @@ namespace Agriculture {
 			const ret = [];
 			for (let i = 0; i < dropCount2; i++) {
 				ret[i] = this.crop.getGain(this);
-				if (ret[i] && randomInt(0, 100) <= this.data.statGain) {
+				if (ret[i] && MathUtil.randomInt(0, 100) <= this.data.statGain) {
 					ret[i] = ret[i].count++;
 				}
 			}

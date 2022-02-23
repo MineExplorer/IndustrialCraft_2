@@ -11,10 +11,11 @@ class EUCableGrid extends EnergyGrid {
 
 	onOverload(voltage: number): void {
 		if (IC2Config.voltageEnabled) {
+			const region = new WorldRegion(this.region);
 			for (let key in this.blocksMap) {
-				const {x, y, z} = this.getCoordsFromString(key);
-				this.region.setBlock(x, y, z, 0, 0);
-				this.addBurnParticles(x, y, z);
+				const coords = this.getCoordsFromString(key);
+				region.setBlock(coords, 0, 0);
+				region.sendPacketInRadius(coords, 64, "ic2.cableBurnParticles", coords);
 			}
 			this.destroy();
 		}
@@ -81,3 +82,12 @@ class EUCableGrid extends EnergyGrid {
 		return {x: coordArray[0], y: coordArray[1], z: coordArray[2]};
 	}
 }
+
+Network.addClientPacket("ic2.cableBurnParticles", function(data: {x: number, y: number, z: number}) {
+	for (let i = 0; i < 32; i++) {
+		const px = data.x + Math.random();
+		const pz = data.z + Math.random();
+		const py = data.y + Math.random();
+		Particles.addParticle(ParticleType.smoke2, px, py, pz, 0, 0.01, 0);
+	}
+});

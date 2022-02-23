@@ -14,7 +14,7 @@ class ElectricTreetap extends ItemElectric {
 				coords.relative.x,
 				coords.relative.y,
 				coords.relative.z,
-				ItemID.latex, randomInt(1, 3), 0
+				ItemID.latex, MathUtil.randomInt(1, 3), 0
 			);
 			Entity.setVelocity(entity,
 				(coords.relative.x - coords.x) * 0.25,

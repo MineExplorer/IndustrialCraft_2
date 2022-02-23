@@ -12,11 +12,18 @@ TileRenderer.setRotationFunction(BlockID.compressor);
 ItemName.addTierTooltip("compressor", 1);
 
 Callback.addCallback("PreLoaded", function() {
-	Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
-		"x x",
-		"x#x",
-		"xax"
-	], ['#', BlockID.machineBlockBasic, 0, 'x', 1, -1, 'a', ItemID.circuitBasic, 0]);
+	if (IC2Config.hardRecipes) {
+		Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
+			"p#p",
+			"xax"
+		], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1, 'p', VanillaBlockID.piston, -1]);
+	} else {
+		Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
+			"x x",
+			"x#x",
+			"xax"
+		], ['#', BlockID.machineBlockBasic, -1, 'x', 1, -1, 'a', ItemID.circuitBasic, -1]);
+	}
 
 	MachineRecipeRegistry.registerRecipesFor("compressor", {
 		// Blocks

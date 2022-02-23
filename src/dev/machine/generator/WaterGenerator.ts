@@ -47,9 +47,9 @@ namespace Machine {
 						output *= 1.5 * Math.sin(World.getWorldTime()%6000 / (6000 / Math.PI));
 					}
 					let tile = this.region.getBlockId(
-						this.x - randomInt(-radius, radius),
-						this.y - randomInt(-radius, radius),
-						this.z - randomInt(-radius, radius)
+						this.x - MathUtil.randomInt(-radius, radius),
+						this.y - MathUtil.randomInt(-radius, radius),
+						this.z - MathUtil.randomInt(-radius, radius)
 					);
 					if (tile == 8 || tile == 9) {
 						this.data.output = Math.round(output) / 20;

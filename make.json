@@ -3,7 +3,7 @@
 		"info": {
 			"name": "IndustrialCraft PE",
 			"author": "Mine Explorer and Nikolay Savenko",
-			"version": "2.3 prerelease 11",
+			"version": "2.3 prerelease 12",
 			"description": "Electricity, machines and power tools",
 			"icon": "src/icon.png"
 		},
@@ -69,6 +69,10 @@
 	"additional": [
 		{
 			"source": "src/config.json",
+			"targetDir": "."
+		},
+		{
+			"source": "src/config.info.json",
 			"targetDir": "."
 		},
 		{

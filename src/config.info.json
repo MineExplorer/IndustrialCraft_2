@@ -1,0 +1,254 @@
+{
+    "properties": {
+        "enabled": {
+            "name": {
+                "en": "Enable mod",
+                "ru": "Включить мод"
+            }
+        },
+        "sound_enabled": {
+            "name": {
+                "en": "Mod sounds",
+                "ru": "Звуки мода"
+            }
+        },
+         "machine_sounds": {
+            "name": {
+                "en": "Machine sounds",
+                "ru": "Звуки механизмов"
+            }
+        },
+         "voltage_enabled": {
+            "name": {
+                "en": "Voltage enabled",
+                "ru": "Напряжение"
+            },
+            "description": {
+                "en": "If enabled, machines can explode from overvoltage",
+                "ru": "Если включено, машины могут взорваться от перенапряжения"
+            }
+        },
+         "hard_recipes": {
+            "name": {
+                "en": "Hard recipes",
+                "ru": "Усложнённые рецепты"
+            }
+        },
+         "reactor_explosion_max_power": {
+            "name": {
+                "en": "Reactor explosion max power",
+                "ru": "Максимальная мощность взрыва реактора"
+            }
+        },
+        "button_scale": {
+            "name": {
+                "en": "HUD button scale",
+                "ru": "Размер кнопок брони"
+            }
+        },
+        "rubber_tree_gen": {
+            "name": {
+                "en": "Rubber tree generation",
+                "ru": "Генерация гевеи"
+            },
+            "collapsible": true
+        },
+        "rubber_tree_gen.plains": {
+            "name": {
+                "en": "Plains",
+                "ru": "Равнины"
+            }
+        },
+        "rubber_tree_gen.forest": {
+            "name": {
+                "en": "Forest",
+                "ru": "Лес"
+            }
+        },
+        "rubber_tree_gen.jungle": {
+            "name": {
+                "en": "Jungle",
+                "ru": "Джунгли"
+            }
+        },
+        "rubber_tree_gen.swamp": {
+            "name": {
+                "en": "Swamp",
+                "ru": "Болото"
+            }
+        },
+        "copper_ore": {
+            "name": {
+                "en": "Copper ore",
+                "ru": "Медная руда"
+            },
+            "collapsible": true
+        },
+        "copper_ore.enabled": {
+            "name": {
+                "en": "Enabled",
+                "ru": "Включена"
+            }
+        },
+        "copper_ore.count": {
+            "name": {
+                "en": "Vein count",
+                "ru": "Количество жил"
+            }
+        },
+        "copper_ore.size": {
+            "name": {
+                "en": "Vein size",
+                "ru": "Размер жилы"
+            }
+        },
+        "copper_ore.minHeight": {
+            "name": {
+                "en": "Min height",
+                "ru": "Минимальная высота"
+            }
+        },
+        "copper_ore.maxHeight": {
+            "name": {
+                "en": "Max Height",
+                "ru": "Максимальная высота"
+            }
+        },
+        "tin_ore": {
+            "name": {
+                "en": "Tin ore",
+                "ru": "Оловянная руда"
+            },
+            "collapsible": true
+        },
+        "tin_ore.enabled": {
+            "name": {
+                "en": "Enabled",
+                "ru": "Включена"
+            }
+        },
+        "tin_ore.count": {
+            "name": {
+                "en": "Vein count",
+                "ru": "Количество жил"
+            }
+        },
+        "tin_ore.size": {
+            "name": {
+                "en": "Vein size",
+                "ru": "Размер жилы"
+            }
+        },
+        "tin_ore.minHeight": {
+            "name": {
+                "en": "Min height",
+                "ru": "Минимальная высота"
+            }
+        },
+        "tin_ore.maxHeight": {
+            "name": {
+                "en": "Max Height",
+                "ru": "Максимальная высота"
+            }
+        },
+        "lead_ore": {
+            "name": {
+                "en": "Lead ore",
+                "ru": "Свинцовая руда"
+            },
+            "collapsible": true
+        },
+        "lead_ore.enabled": {
+            "name": {
+                "en": "Enabled",
+                "ru": "Включена"
+            }
+        },
+        "lead_ore.count": {
+            "name": {
+                "en": "Vein count",
+                "ru": "Количество жил"
+            }
+        },
+        "lead_ore.size": {
+            "name": {
+                "en": "Vein size",
+                "ru": "Размер жилы"
+            }
+        },
+        "lead_ore.minHeight": {
+            "name": {
+                "en": "Min height",
+                "ru": "Минимальная высота"
+            }
+        },
+        "lead_ore.maxHeight": {
+            "name": {
+                "en": "Max Height",
+                "ru": "Максимальная высота"
+            }
+        },
+        "uranium_ore": {
+            "name": {
+                "en": "Uranium ore",
+                "ru": "Урановая руда"
+            },
+            "collapsible": true
+        },
+        "uranium_ore.enabled": {
+            "name": {
+                "en": "Enabled",
+                "ru": "Включена"
+            }
+        },
+        "uranium_ore.count": {
+            "name": {
+                "en": "Vein count",
+                "ru": "Количество жил"
+            }
+        },
+        "uranium_ore.size": {
+            "name": {
+                "en": "Vein size",
+                "ru": "Размер жилы"
+            }
+        },
+        "uranium_ore.minHeight": {
+            "name": {
+                "en": "Min height",
+                "ru": "Минимальная высота"
+            }
+        },
+        "uranium_ore.maxHeight": {
+            "name": {
+                "en": "Max Height",
+                "ru": "Максимальная высота"
+            }
+        },
+        "iridium_ore": {
+            "name": {
+                "en": "Iridium ore",
+                "ru": "Иридиевая руда"
+            },
+            "collapsible": true
+        },
+        "iridium_ore.chance": {
+            "name": {
+                "en": "Chance",
+                "ru": "Шанс"
+            }
+        },
+        "iridium_ore.minHeight": {
+            "name": {
+                "en": "Min height",
+                "ru": "Минимальная высота"
+            }
+        },
+        "iridium_ore.maxHeight": {
+            "name": {
+                "en": "Max Height",
+                "ru": "Максимальная высота"
+            }
+        }
+   }
+}

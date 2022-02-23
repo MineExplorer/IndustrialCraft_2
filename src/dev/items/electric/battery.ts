@@ -11,7 +11,8 @@ extends ItemElectric {
 	}
 
 	onIconOverride(item: ItemInstance): Item.TextureData {
-		return {name: this.icon.name, meta: Math.round((27 - item.data) / 26 * 4)};
+		const data = MathUtil.setInRange(item.data, 1, 27);
+		return {name: this.icon.name, meta: Math.round((27 - data) / 26 * 4)};
 	}
 }
 

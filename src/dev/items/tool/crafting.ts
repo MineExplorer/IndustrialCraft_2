@@ -5,7 +5,7 @@ Item.registerUseFunction("cutter", function(coords, item, block, playerUid) {
 	let cableData = CableRegistry.getCableData(block.id);
 	if (cableData && cableData.insulation < cableData.maxInsulation) {
 		let player = new PlayerEntity(playerUid);
-		for (let i = 9; i < 45; i++) {
+		for (let i = 0; i < 36; i++) {
 			let stack = player.getInventorySlot(i);
 			if (stack.id == ItemID.rubber) {
 				let blockID = CableRegistry.getBlockID(cableData.name, cableData.insulation + 1);

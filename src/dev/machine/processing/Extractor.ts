@@ -15,8 +15,8 @@ Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.extractor, count: 1, data: 0}, [
 		"x#x",
 		"xax"
-	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, 0]);
-
+	], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
+	
 	MachineRecipeRegistry.registerRecipesFor("extractor", {
 		"ItemID.latex": {id: ItemID.rubber, count: 3},
 		"BlockID.rubberTreeSapling": {id: ItemID.rubber, count: 1},

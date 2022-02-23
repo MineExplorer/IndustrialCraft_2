@@ -20,10 +20,6 @@ IMPORT("TileRender");
 IMPORT("StorageInterface");
 IMPORT("SoundLib");
 IMPORT("BackpackAPI");
-IMPORT("VanillaRecipe");
-
-VanillaRecipe.setResourcePath(__dir__ + "assets/res/"); // for MC 1.11 recipes
-VanillaRecipe.setBehaviorPath(__dir__ + "minecraft_packs/behavior/"); // for MC 1.16 recipes
 
 const startTime = Debug.sysTime();
 ItemModel.setCurrentCacheGroup("industrial-craft", "1")
@@ -62,25 +58,6 @@ const EntityType = Native.EntityType;
 
 // energy (Eu)
 const EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
-
-// API
-function randomInt(min: number, max: number): number {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function addSingleItemRecipe(recipeName: string, sourceID: string, resultID: string, count: number = 1, data: number = 0): void {
-	VanillaRecipe.addCraftingRecipe(recipeName, {
-		type: "shapeless",
-		ingredients: [
-		  { item: sourceID }
-		],
-		result: {
-		  item: resultID,
-		  data: data,
-		  count: count
-		}
-	}, true);
-}
 
 // vanilla items
 Recipes.addFurnaceFuel(325, 10, 2000); // lava bucket

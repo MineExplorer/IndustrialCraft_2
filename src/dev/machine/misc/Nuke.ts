@@ -103,9 +103,9 @@ namespace Machine {
 			let radius = data.rad;
 			let count = radius * radius * radius / 25;
 			for (let i = 0; i < count; i++) {
-				let dx = randomInt(-radius, radius);
-				let dy = randomInt(-radius/2, radius/2);
-				let dz = randomInt(-radius, radius);
+				let dx = MathUtil.randomInt(-radius, radius);
+				let dy = MathUtil.randomInt(-radius/2, radius/2);
+				let dz = MathUtil.randomInt(-radius, radius);
 				if (Math.sqrt(dx*dx + dy*dy*4 + dz*dz) <= radius) {
 					Particles.addParticle(ParticleType.hugeexplosionSeed, this.x + dx, this.y + dy, this.z + dz, 0, 0, 0);
 				}

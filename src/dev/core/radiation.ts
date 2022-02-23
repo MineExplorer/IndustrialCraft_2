@@ -25,35 +25,18 @@ namespace RadiationAPI {
 		return !!radioactiveItems[itemID];
 	}
 
-	export function emitItemRadiation(entity: number, itemID: number): void {
+	export function emitItemRadiation(entity: number, itemID: number): boolean {
 		const radiation = getRadioactivity(itemID);
 		if (radiation) {
 			if (radiation.stack) {
 				addRadiation(entity, radiation.duration);
-			} else {
+				return true;
+			}
+			if (getRadiation(entity) < radiation.duration) {
 				setRadiation(entity, radiation.duration);
+				return true;
 			}
 		}
-	}
-
-	export function getRadiation(playerUid: number): number {
-		return effectDuration[playerUid] || 0;
-	}
-
-	export function resetRadiation(playerUid: number): void {
-		effectDuration[playerUid] = 0;
-		Entity.clearEffect(playerUid, PotionEffect.fatal_poison);
-	}
-
-	export function setRadiation(playerUid: number, duration: number): void {
-		if (duration > getRadiation(playerUid)) {
-			effectDuration[playerUid] = duration;
-		}
-	}
-
-	export function addRadiation(playerUid: number, duration: number): void {
-		duration = Math.max(getRadiation(playerUid) + duration, 0);
-		effectDuration[playerUid] = duration;
 	}
 
 	export function registerHazmatArmor(itemID: number): void {
@@ -72,11 +55,36 @@ namespace RadiationAPI {
 		return true;
 	}
 
+	export function getRadiation(playerUid: number): number {
+		return effectDuration[playerUid] || 0;
+	}
+
+	export function setRadiation(playerUid: number, duration: number): void {
+		duration = Math.max(duration, 0);
+		if (duration < getRadiation(playerUid)) {
+			Entity.clearEffect(playerUid, PotionEffect.fatal_poison);
+			if (duration > 0) {
+				addPoisonEffect(playerUid, duration);
+			}
+		}
+		effectDuration[playerUid] = duration;
+	}
+
+	export function addRadiation(playerUid: number, duration: number): void {
+		setRadiation(playerUid, getRadiation(playerUid) + duration);
+	}
+
+	function addPoisonEffect(ent: number, duration: number): void {
+		Entity.addEffect(ent, PotionEffect.fatal_poison, 1, duration * 20 + 1);
+	}
+
 	export function addEffect(ent: number, duration: number): void {
 		const isPlayer = EntityHelper.isPlayer(ent);
 		if (isPlayer && !hasHazmatSuit(ent) || EntityHelper.isMob(ent)) {
-			Entity.addEffect(ent, PotionEffect.fatal_poison, 1, duration * 20);
-			if (isPlayer) setRadiation(ent, duration);
+			addPoisonEffect(ent, duration);
+			if (isPlayer && getRadiation(ent) < duration) {
+				setRadiation(ent, duration);
+			}
 		}
 	}
 
@@ -132,14 +140,14 @@ namespace RadiationAPI {
 		if (World.getThreadTime()%20 == 0) {
 			if (!hasHazmatSuit(playerUid)) {
 				const player = new PlayerActor(playerUid);
-				for (let i = 9; i < 45; i++) {
+				for (let i = 0; i < 36; i++) {
 					const itemID = player.getInventorySlot(i).id;
 					emitItemRadiation(playerUid, itemID);
 				}
 			}
 			const duration = effectDuration[playerUid];
 			if (duration > 0) {
-				Entity.addEffect(playerUid, PotionEffect.fatal_poison, 1, duration * 20);
+				addPoisonEffect(playerUid, duration);
 				effectDuration[playerUid]--;
 			}
 		}
@@ -147,7 +155,7 @@ namespace RadiationAPI {
 
 	Callback.addCallback("EntityDeath", function(entity: number) {
 		if (EntityHelper.isPlayer(entity) && getRadiation(entity) > 0) {
-			resetRadiation(entity);
+			setRadiation(entity, 0);
 		}
 	});
 }

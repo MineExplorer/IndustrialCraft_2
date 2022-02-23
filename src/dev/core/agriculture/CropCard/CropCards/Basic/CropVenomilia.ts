@@ -83,10 +83,10 @@ namespace Agriculture {
 		onEntityCollision(te: ICropTileEntity, entity: number): boolean {
 			if (te.data.currentSize == 5) {
 				const armorSlot = new PlayerEntity(entity).getArmor(3);
-				if (randomInt(0, 50) && armorSlot.id != 0) {
+				if (MathUtil.randomInt(0, 50) && armorSlot.id != 0) {
 					return super.onEntityCollision(te, entity);
 				}
-				Entity.addEffect(entity, PotionEffect.poison, 1, (randomInt(0, 10) + 5) * 20);
+				Entity.addEffect(entity, PotionEffect.poison, 1, (MathUtil.randomInt(0, 10) + 5) * 20);
 				te.data.currentSize = 4;
 				te.updateRender();
 			}

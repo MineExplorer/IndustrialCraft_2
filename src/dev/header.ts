@@ -59,11 +59,6 @@ const EntityType = Native.EntityType;
 // energy (Eu)
 const EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 
-// API
-function randomInt(min: number, max: number): number {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 // vanilla items
 Recipes.addFurnaceFuel(325, 10, 2000); // lava bucket
 ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone

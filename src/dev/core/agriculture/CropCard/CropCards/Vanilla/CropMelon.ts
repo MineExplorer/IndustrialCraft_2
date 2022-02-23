@@ -39,11 +39,11 @@ namespace Agriculture {
 			if (Math.random() < 0.5) {
 				return { id: VanillaBlockID.melon_block, count: 1, data: 0 };
 			}
-			return IDConverter.getStack("melon_slice", randomInt(2, 6));
+			return IDConverter.getStack("melon_slice", MathUtil.randomInt(2, 6));
 		}
 
 		getSeed(te: ICropTileEntity): ItemInstance {
-			return { id: VanillaItemID.melon_seeds, count: randomInt(1, 3), data: 0 };
+			return { id: VanillaItemID.melon_seeds, count: MathUtil.randomInt(1, 3), data: 0 };
 		}
 
 		getGrowthDuration(te: ICropTileEntity): number {

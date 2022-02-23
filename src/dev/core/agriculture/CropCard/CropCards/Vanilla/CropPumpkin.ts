@@ -40,7 +40,7 @@ namespace Agriculture {
 		}
 
 		getSeed(te: ICropTileEntity): ItemInstance {
-			return { id: VanillaItemID.pumpkin_seeds, count: randomInt(1, 4), data: 0 };
+			return { id: VanillaItemID.pumpkin_seeds, count: MathUtil.randomInt(1, 4), data: 0 };
 		}
 
 		getGrowthDuration(te: ICropTileEntity): number {

@@ -378,7 +378,7 @@ namespace Machine {
 		}
 
 		getRandCoord(rad: number): Vector {
-			return new Vector3(this.x + randomInt(-rad, rad), this.y + randomInt(-rad, rad), this.z + randomInt(-rad, rad));
+			return new Vector3(this.x + MathUtil.randomInt(-rad, rad), this.y + MathUtil.randomInt(-rad, rad), this.z + MathUtil.randomInt(-rad, rad));
 		}
 
 		@ContainerEvent(Side.Client)

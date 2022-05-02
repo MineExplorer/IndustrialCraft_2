@@ -1,5 +1,5 @@
 # IndustrialCraft2 PE
-Port of IC2 Experimental for PC to Minecraft on Android for Inner Core modloader
+Port of IC2 Experimental for MC Java Edition to Inner Core modloader for Minecraft on Android
 
 ## How to play?
 1. Install Horizon app in Play Market: https://play.google.com/store/apps/details?id=com.zheka.horizon
@@ -21,8 +21,8 @@ Join our [Discord server](https://discord.gg/jPFntnP)!
 3. You're ready to work! Run 'Build and Push Everything' task to test your changes on phone.
 
 ## Note
-I'm not associated with IC2 developer team which develops original mod for PC, this is unofficial port of their mod to Minecraft on Android.
-All rights for textures from IC2 for PC reserved by IC2 developer team.
+I'm not associated with IC2 developer team which develops original mod for MC Java Edition, this is unofficial port of the mod to Inner Core modloader.
+All rights for textures from original IC2 are reserved by IC2 developer team.
 
 ## Credits
 Thanks to:

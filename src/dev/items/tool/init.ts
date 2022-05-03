@@ -42,7 +42,7 @@ ItemRegistry.registerItem(new ItemScanner("scanner", "scanner", 10000, 100, 1));
 ItemRegistry.registerItem(new ItemScanner("scannerAdvanced", "scanner_advanced", 100000, 256, 2));
 ItemRegistry.registerItem(new ItemWindMeter());
 ItemRegistry.registerItem(new ItemTreetap());
-ItemRegistry.registerItem(new ToolWrench("bronzeWrench", "wrench", "bronze_wrench", 0.8));
+ItemRegistry.registerItem(new ToolWrench("bronzeWrench", "wrench", "bronze_wrench"));
 ItemRegistry.registerItem(new ElectricWrench());
 ItemRegistry.registerItem(new ElectricTreetap());
 ItemRegistry.registerItem(new ElectricHoe());

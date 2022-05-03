@@ -18,7 +18,7 @@ implements IElectricItem, ArmorListeners {
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
-		return name + '\n' + ItemName.getItemStorageText(item);
+		return `${name}\n§7${ItemName.getPowerTierText(this.tier)}\n${ItemName.getItemStorageText(item)}`;
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {

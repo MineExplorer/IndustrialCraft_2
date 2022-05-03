@@ -17,6 +17,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -30,7 +32,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 8,
+    version: 9,
     shared: true,
     api: "CoreEngine"
 });
@@ -1017,7 +1019,7 @@ var BlockBase = /** @class */ (function () {
             for (var i = 0; i < Math.min(this.variations.length, variations.length); i++) {
                 if (variations[i].inCreative) {
                     this.variations[i].inCreative = false;
-                    Logger.Log("Skipped duplicated adding to creative for block " + this.stringID + ":" + i, "BlockEngine");
+                    Logger.Log("Skipped duplicated adding to creative for block ".concat(this.stringID, ":").concat(i), "BlockEngine");
                 }
             }
         }
@@ -2002,7 +2004,7 @@ var ItemBase = /** @class */ (function () {
         var _a;
         var wasInCreative = (_a = ItemRegistry.getInstanceOf(this.id)) === null || _a === void 0 ? void 0 : _a.inCreative;
         if (wasInCreative) {
-            Logger.Log("Skipped duplicated adding to creative for item " + this.stringID, "BlockEngine");
+            Logger.Log("Skipped duplicated adding to creative for item ".concat(this.stringID), "BlockEngine");
         }
         else {
             Item.addToCreative(this.id, 1, 0);
@@ -2028,8 +2030,9 @@ var ItemFood = /** @class */ (function (_super) {
     __extends(ItemFood, _super);
     function ItemFood(stringID, name, icon, params, inCreative) {
         if (inCreative === void 0) { inCreative = true; }
+        var _this = this;
         var _a;
-        var _this = _super.call(this, stringID, name, icon) || this;
+        _this = _super.call(this, stringID, name, icon) || this;
         var foodProperties = {
             nutrition: params.food || 0,
             saturation_modifier: params.saturation || "normal",
@@ -2159,6 +2162,7 @@ var ItemArmor = /** @class */ (function (_super) {
 var ToolType;
 (function (ToolType) {
     ToolType.SWORD = {
+        __flag: "__sword",
         handEquipped: true,
         isWeapon: true,
         enchantType: Native.EnchantType.weapon,
@@ -2175,6 +2179,7 @@ var ToolType;
         }
     };
     ToolType.SHOVEL = {
+        __flag: "__shovel",
         handEquipped: true,
         enchantType: Native.EnchantType.shovel,
         damage: 2,
@@ -2190,43 +2195,56 @@ var ToolType;
         }
     };
     ToolType.PICKAXE = {
+        __flag: "__pickaxe",
         handEquipped: true,
         enchantType: Native.EnchantType.pickaxe,
         damage: 2,
         blockTypes: ["stone"],
     };
     ToolType.AXE = {
+        __flag: "__axe",
         handEquipped: true,
         enchantType: Native.EnchantType.axe,
         damage: 3,
         blockTypes: ["wood"],
-        onItemUse: function (coords, item, block, player) {
-            var region = WorldRegion.getForActor(player);
-            var logID;
-            if (block.id == 17) {
-                if (block.data == 0)
-                    logID = VanillaTileID.stripped_oak_log;
-                if (block.data == 1)
-                    logID = VanillaTileID.stripped_spruce_log;
-                if (block.data == 2)
-                    logID = VanillaTileID.stripped_birch_log;
-                if (block.data == 3)
-                    logID = VanillaTileID.stripped_jungle_log;
-            }
-            else if (block.id == 162) {
-                if (block.data == 0)
-                    logID = VanillaTileID.stripped_acacia_log;
-                else
-                    logID = VanillaTileID.stripped_dark_oak_log;
-            }
+        onItemUse: function (coords, item, tile, player) {
+            var logID = this.getStrippedLogId(tile);
             if (logID) {
-                region.setBlock(coords, logID, 0);
+                var region = WorldRegion.getForActor(player);
+                var block = region.getBlock(coords);
+                var states = { "pillar_axis": block.getState(EBlockStates.PILLAR_AXIS) };
+                if (logID == VanillaTileID.stripped_warped_stem || logID == VanillaTileID.stripped_crimson_stem) {
+                    states["deprecated"] = 0;
+                }
+                var block2 = new BlockState(logID, states);
+                region.setBlock(coords, block2);
                 item.applyDamage(1);
                 Entity.setCarriedItem(player, item.id, item.count, item.data, item.extra);
+            }
+        },
+        getStrippedLogId: function (block) {
+            switch (block.id) {
+                case 17:
+                    if (block.data == 0)
+                        return VanillaTileID.stripped_oak_log;
+                    if (block.data == 1)
+                        return VanillaTileID.stripped_spruce_log;
+                    if (block.data == 2)
+                        return VanillaTileID.stripped_birch_log;
+                    return VanillaTileID.stripped_jungle_log;
+                case 162:
+                    if (block.data == 0)
+                        return VanillaTileID.stripped_acacia_log;
+                    return VanillaTileID.stripped_dark_oak_log;
+                case VanillaTileID.warped_stem:
+                    return VanillaTileID.stripped_warped_stem;
+                case VanillaTileID.crimson_stem:
+                    return VanillaTileID.stripped_crimson_stem;
             }
         }
     };
     ToolType.HOE = {
+        __flag: "__hoe",
         handEquipped: true,
         enchantType: Native.EnchantType.pickaxe,
         damage: 2,
@@ -2244,6 +2262,7 @@ var ToolType;
         }
     };
     ToolType.SHEARS = {
+        __flag: "__shears",
         blockTypes: ["plant", "fibre", "wool"],
         modifyEnchant: function (enchantData, item, coords, block) {
             if (block) {

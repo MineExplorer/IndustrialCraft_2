@@ -1,5 +1,4 @@
 interface IWrech {
-	dropChance: number;
 	isUseable(item: ItemInstance, damage: number): boolean;
 	useItem(item: ItemStack, damage: number, player: number): void;
 }
@@ -119,9 +118,8 @@ namespace ICTool {
 			if (ICTool.isUseableWrench(item, 10)) {
 				const tileEntity = (region.getTileEntity(data) || region.addTileEntity(data)) as Machine.IWrenchable;
 				if (!tileEntity) return;
-				const chance = ICTool.getWrenchData(item.id).dropChance;
-				const dropID = (Math.random() < chance)? tileEntity.blockID : tileEntity.getDefaultDrop();
-				const drop = tileEntity.adjustDrop(new ItemStack(dropID, 1, 0));
+
+				const drop = tileEntity.adjustDrop(new ItemStack(tileEntity.blockID, 1, 0));
 				TileEntity.destroyTileEntity(tileEntity);
 				region.setBlock(data, 0, 0);
 				region.dropAtBlock(data.x, data.y, data.z, drop);

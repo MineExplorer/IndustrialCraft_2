@@ -1,14 +1,10 @@
 class ToolWrench extends ItemCommon
 implements IWrech {
-	dropChance: number;
-
-	constructor(stringID: string, name: string, icon: string, dropChance: number) {
+	constructor(stringID: string, name: string, icon: string) {
 		super(stringID, name, icon);
 		this.setMaxStack(1);
 		this.setMaxDamage(161);
 		this.setCategory(ItemCategory.EQUIPMENT);
-
-		this.dropChance = dropChance;
 		ICTool.registerWrench(this.id, this);
 	}
 
@@ -20,7 +16,7 @@ implements IWrech {
 		item.applyDamage(damage);
 		Entity.setCarriedItem(player, item.id, 1, item.data, item.extra);
 		if (item.id == 0) {
-			let region = WorldRegion.getForActor(player);
+			const region = WorldRegion.getForActor(player);
 			region.playSoundAtEntity(player, "random.break");
 		}
 	}

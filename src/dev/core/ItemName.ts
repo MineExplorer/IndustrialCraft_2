@@ -15,12 +15,12 @@ namespace ItemName {
 		});
 	}
 
-	export function addTierTooltip(stringID: string, tier: number): void {
-		addTooltip(Block.getNumericId(stringID), getPowerTierText(tier));
+	export function addTierTooltip(blockID: string | number, tier: number): void {
+		addTooltip(Block.getNumericId(blockID), getPowerTierText(tier));
 	}
 
-	export function addStorageBlockTooltip(stringID: string, tier: number, capacity: string): void {
-		Item.registerNameOverrideFunction(Block.getNumericId(stringID), function(item: ItemInstance, name: string) {
+	export function addStorageBlockTooltip(blockID: string | number, tier: number, capacity: string): void {
+		Item.registerNameOverrideFunction(Block.getNumericId(blockID), function(item: ItemInstance, name: string) {
 			const color = ItemRegistry.getItemRarityColor(item.id);
 			return color + name + "\n§7" + getBlockStorageText(item, tier, capacity);
 		});

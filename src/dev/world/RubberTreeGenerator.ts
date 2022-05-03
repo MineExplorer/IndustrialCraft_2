@@ -2,12 +2,12 @@ namespace RubberTreeGenerator {
 	export let biomeData = {};
 
 	export function getBiomeChance(biomeID: number): number {
-		let chance = biomeData[biomeID] || 0;
+		const chance = biomeData[biomeID] || 0;
 		return chance / 100;
 	}
 
 	export function growRubberTree(region: BlockSource, x: number, y: number, z: number): void {
-		let random = new java.util.Random(Debug.sysTime());
+		const random = new java.util.Random(Debug.sysTime());
 		generateRubberTree(region, x, y, z, random, true);
 	}
 

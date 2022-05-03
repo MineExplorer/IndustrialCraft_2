@@ -2,6 +2,7 @@ BlockRegistry.createBlock("solarPanel", [
 	{name: "Solar Panel", texture: [["machine_bottom", 0], ["solar_panel", 0], ["machine", 0], ["machine", 0], ["machine", 0], ["machine", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.solarPanel, "stone", 1);
+ItemName.addTierTooltip(BlockID.solarPanel, 1);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [

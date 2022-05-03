@@ -2,6 +2,7 @@ BlockRegistry.createBlock("genWatermill", [
 	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.genWatermill, "stone", 1);
+ItemName.addTierTooltip(BlockID.genWatermill, 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.genWatermill, 2, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]]);
 TileRenderer.setRotationFunction(BlockID.genWatermill);
@@ -39,7 +40,7 @@ namespace Machine {
 					let output = 50;
 					let radius = 1;
 					let wether = World.getWeather();
-					if (wether.thunder && wether.rain) {
+					if (wether.thunder || wether.rain) {
 						if (wether.thunder) {output *= 2;}
 						else {output *= 1.5;}
 					}
@@ -59,7 +60,7 @@ namespace Machine {
 					}
 				}
 			}
-			src.addAll(this.data.output);
+			src.add(this.data.output);
 		}
 
 		canRotate(side: number): boolean {

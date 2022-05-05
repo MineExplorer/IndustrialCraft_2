@@ -26,12 +26,11 @@ namespace Machine {
 
 		updateBlockCount(): void {
 			let blockCount = -1;
-			for (let x = -4; x <= 4; x++) {
-				for (let y = -2; y <= 2; y++) {
-					for (let z = -4; z <= 4; z++) {
-						if (this.blockSource.getBlockId(this.x + x, this.y + y, this.z + z) != 0)
-						blockCount++;
-					}
+			for (let x = -4; x <= 4; x++)
+			for (let y = -2; y <= 2; y++)
+			for (let z = -4; z <= 4; z++) {
+				if (this.blockSource.getBlockId(this.x + x, this.y + y, this.z + z) != 0) {
+					blockCount++;
 				}
 			}
 			this.data.blockCount = blockCount;

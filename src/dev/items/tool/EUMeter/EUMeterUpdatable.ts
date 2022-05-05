@@ -40,41 +40,42 @@ class EUMeterUpdatable {
 	}
 
 	tick(): void {
-		let node = this.node;
-		if (node.removed) {
+		if (this.node.removed) {
 			this.destroy();
 			this.container.close();
 			return;
 		}
 		this.time++;
-		let unit = (this.mode < 3) ? "EU/t" : "V";
-		let value: number;
-		switch (this.mode) {
-		case 0:
-			value = node.energyIn;
-		break;
-		case 1:
-			value = node.energyOut;
-		break;
-		case 2:
-			value = node.energyIn - node.energyOut;
-		break;
-		case 3:
-			value = node.energyPower;
-		break;
-		}
+		const value = this.getValue();
 		this.minValue = Math.min(this.minValue, value);
 		this.maxValue = Math.max(this.maxValue, value);
 		this.sum += value;
-		this.container.setText("textMinValue", this.displayValue(this.minValue, unit));
-		this.container.setText("textMaxValue", this.displayValue(this.maxValue, unit));
-		this.container.setText("textAvgValue", this.displayValue(this.sum / this.time, unit));
+		this.container.setText("textMinValue", this.displayValue(this.minValue));
+		this.container.setText("textMaxValue", this.displayValue(this.maxValue));
+		this.container.setText("textAvgValue", this.displayValue(this.sum / this.time));
 		this.container.setText("textTime", Translation.translate("Cycle: ") + Math.floor(this.time / 20) + " " + Translation.translate("sec"));
 		this.container.sendChanges();
 	}
 
-	displayValue(value: number, unit: string): string {
-		return `${Math.round(value * 100) / 100} ${unit}`;
+	getUnit(): string {
+		return (this.mode < 3) ? "EU/t" : "V";
+	}
+
+	getValue(): number {
+		switch (this.mode) {
+			case 0:
+				return this.node.energyIn;
+			case 1:
+				return this.node.energyOut;
+			case 2:
+				return this.node.energyIn - this.node.energyOut;
+			case 3:
+				return this.node.energyPower;
+		}
+	}
+
+	displayValue(value: number): string {
+		return `${Math.round(value * 100) / 100} ${this.getUnit()}`;
 	}
 
 	destroy(): void {

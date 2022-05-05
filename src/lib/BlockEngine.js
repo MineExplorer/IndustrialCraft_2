@@ -276,7 +276,9 @@ EXPORT("Vector3", Vector3);
  */
 var WorldRegion = /** @class */ (function () {
     function WorldRegion(blockSource) {
+        this.isDeprecated = false;
         this.blockSource = blockSource;
+        this.isDeprecated = BlockEngine.getMainGameVersion() < 16;
     }
     /**
      * @returns interface to given dimension
@@ -349,7 +351,19 @@ var WorldRegion = /** @class */ (function () {
             }
         }
     };
+    WorldRegion.prototype.getExtraBlock = function (x, y, z) {
+        if (this.isDeprecated) {
+            return { id: 0, data: 0 };
+        }
+        if (typeof x === "number") {
+            return this.blockSource.getExtraBlock(x, y, z);
+        }
+        var pos = x;
+        return this.blockSource.getExtraBlock(pos.x, pos.y, pos.z);
+    };
     WorldRegion.prototype.setExtraBlock = function (x, y, z, id, data) {
+        if (this.isDeprecated)
+            return;
         if (typeof x === "number") {
             if (typeof id == "number") {
                 this.blockSource.setExtraBlock(x, y, z, id, data);
@@ -370,18 +384,10 @@ var WorldRegion = /** @class */ (function () {
             }
         }
     };
-    WorldRegion.prototype.getExtraBlock = function (x, y, z) {
-        if (typeof x === "number") {
-            return this.blockSource.getExtraBlock(x, y, z);
-        }
-        var pos = x;
-        return this.blockSource.getExtraBlock(pos.x, pos.y, pos.z);
-    };
     WorldRegion.prototype.destroyBlock = function (x, y, z, drop, player) {
         if (typeof x === "object") {
-            var pos = x, drop_1 = y, player_1 = z;
-            this.destroyBlock(pos.x, pos.y, pos.z, drop_1, player_1);
-            return;
+            var pos = x;
+            return this.destroyBlock(pos.x, pos.y, pos.z, arguments[1], arguments[2]);
         }
         if (drop) {
             var block = this.getBlock(x, y, z);
@@ -400,39 +406,37 @@ var WorldRegion = /** @class */ (function () {
         }
     };
     WorldRegion.prototype.breakBlock = function (x, y, z, allowDrop, entity, item) {
-        if (typeof x === "number") {
+        if (this.isDeprecated) {
+            this.destroyBlock(x, y, z, allowDrop, entity);
+        }
+        else if (typeof x === "number") {
             this.blockSource.breakBlock(x, y, z, allowDrop, entity, item);
         }
         else {
             var pos = x;
-            item = allowDrop;
-            entity = z;
-            allowDrop = y;
-            this.blockSource.breakBlock(pos.x, pos.y, pos.z, allowDrop, entity, item);
+            this.blockSource.breakBlock(pos.x, pos.y, pos.z, arguments[1], arguments[2], arguments[3]);
         }
     };
-    WorldRegion.prototype.breakBlockForResult = function (x, y, z, player, item) {
+    WorldRegion.prototype.breakBlockForResult = function (x, y, z, entity, item) {
         if (typeof x === "object") {
             var pos = x;
-            player = y;
-            item = z;
-            return this.breakBlockForResult(pos.x, pos.y, pos.z, player, item);
+            return this.breakBlockForResult(pos.x, pos.y, pos.z, arguments[1], arguments[2]);
         }
-        if (BlockEngine.getMainGameVersion() >= 16) {
-            return this.blockSource.breakBlockForJsResult(x, y, z, player, item);
-        }
-        var block = this.blockSource.getBlock(x, y, z);
-        this.blockSource.setBlock(x, y, z, 0, 0);
-        var level = ToolAPI.getToolLevelViaBlock(item.id, block.id);
-        var drop = BlockRegistry.getBlockDrop(x, y, z, block, level, item, this.blockSource);
-        var items = [];
-        if (drop) {
-            for (var _i = 0, drop_2 = drop; _i < drop_2.length; _i++) {
-                var item_1 = drop_2[_i];
-                items.push(new ItemStack(item_1[0], item_1[1], item_1[2], item_1[3]));
+        if (this.isDeprecated) {
+            var block = this.blockSource.getBlock(x, y, z);
+            this.blockSource.setBlock(x, y, z, 0, 0);
+            var level = ToolAPI.getToolLevelViaBlock(item.id, block.id);
+            var drop = BlockRegistry.getBlockDrop(x, y, z, block, level, item, this.blockSource);
+            var items = [];
+            if (drop) {
+                for (var _i = 0, drop_1 = drop; _i < drop_1.length; _i++) {
+                    var item_1 = drop_1[_i];
+                    items.push(new ItemStack(item_1[0], item_1[1], item_1[2], item_1[3]));
+                }
             }
+            return { items: items, experience: 0 };
         }
-        return { items: items, experience: 0 };
+        return this.blockSource.breakBlockForJsResult(x, y, z, entity, item);
     };
     WorldRegion.prototype.getNativeTileEntity = function (x, y, z) {
         if (typeof x === "number") {
@@ -476,9 +480,7 @@ var WorldRegion = /** @class */ (function () {
         }
         else {
             var pos = x;
-            power = y;
-            fire = z || false;
-            this.blockSource.explode(pos.x, pos.y, pos.z, power, fire);
+            this.blockSource.explode(pos.x, pos.y, pos.z, arguments[1], arguments[2] || false);
         }
     };
     /**
@@ -584,7 +586,7 @@ var WorldRegion = /** @class */ (function () {
             return this.listEntitiesInAABB(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, z1, x2);
         }
         var entities = this.blockSource.listEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
-        if (BlockEngine.getMainGameVersion() == 11 && (type == Native.EntityType.PLAYER) != blacklist) {
+        if (this.isDeprecated && (type == Native.EntityType.PLAYER) != blacklist) {
             var players = Network.getConnectedPlayers();
             var dimension = this.getDimension();
             for (var _i = 0, players_1 = players; _i < players_1.length; _i++) {
@@ -1044,8 +1046,8 @@ var BlockBase = /** @class */ (function () {
         var enchant = ToolAPI.getEnchantExtraData();
         var item = new ItemStack();
         var drop = this.getDrop(coords, block, 127, enchant, item, region);
-        for (var _i = 0, drop_3 = drop; _i < drop_3.length; _i++) {
-            var item_2 = drop_3[_i];
+        for (var _i = 0, drop_2 = drop; _i < drop_2.length; _i++) {
+            var item_2 = drop_2[_i];
             region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_2[0], item_2[1], item_2[2], item_2[3] || null);
         }
     };
@@ -1624,8 +1626,8 @@ var BlockRegistry;
             var item = new ItemStack();
             //@ts-ignore
             var drop = dropFunc(coords, block.id, block.data, 127, enchant, item, region);
-            for (var _i = 0, drop_4 = drop; _i < drop_4.length; _i++) {
-                var item_3 = drop_4[_i];
+            for (var _i = 0, drop_3 = drop; _i < drop_3.length; _i++) {
+                var item_3 = drop_3[_i];
                 region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_3[0], item_3[1], item_3[2], item_3[3] || null);
             }
         });
@@ -2211,13 +2213,18 @@ var ToolType;
             var logID = this.getStrippedLogId(tile);
             if (logID) {
                 var region = WorldRegion.getForActor(player);
-                var block = region.getBlock(coords);
-                var states = { "pillar_axis": block.getState(EBlockStates.PILLAR_AXIS) };
-                if (logID == VanillaTileID.stripped_warped_stem || logID == VanillaTileID.stripped_crimson_stem) {
-                    states["deprecated"] = 0;
+                if (BlockEngine.getMainGameVersion() >= 16) {
+                    var block = region.getBlock(coords);
+                    var states = { "pillar_axis": block.getState(EBlockStates.PILLAR_AXIS) };
+                    if (logID == VanillaTileID.stripped_warped_stem || logID == VanillaTileID.stripped_crimson_stem) {
+                        states["deprecated"] = 0;
+                    }
+                    var block2 = new BlockState(logID, states);
+                    region.setBlock(coords, block2);
                 }
-                var block2 = new BlockState(logID, states);
-                region.setBlock(coords, block2);
+                else {
+                    region.setBlock(coords, logID, 0);
+                }
                 item.applyDamage(1);
                 Entity.setCarriedItem(player, item.id, item.count, item.data, item.extra);
             }

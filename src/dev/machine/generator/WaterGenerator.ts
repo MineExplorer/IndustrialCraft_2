@@ -19,46 +19,80 @@ namespace Machine {
 	export class WaterGenerator extends Generator {
 		defaultValues = {
 			energy: 0,
-			output: 0
+			output: 0,
+			biome: null,
+			ticker: -1,
+			blockCount: 0
 		}
 
-		biomeCheck(x: number, z: number) {
-			let coords = [[x, z], [x-7, z], [x+7, z], [x, z-7], [x, z+7]];
+		BASE_POWER = 3;
+
+		isOcean(biome: number): boolean {
+			return biome == 0 || biome == 24;
+		}
+
+		isRiver(biome: number): boolean {
+			return biome == 7;
+		}
+
+		getBiome(x: number, z: number): number {
+			const coords = [[x, z], [x-7, z], [x+7, z], [x, z-7], [x, z+7]];
 			for (let c of coords) {
 				let biome = this.region.getBiome(c[0], c[1]);
-				if (biome==0 || biome==24) {return "ocean";}
-				if (biome==7) {return "river";}
+				if (this.isOcean(biome)) {
+					return biome;
+				}
+				if (this.isRiver(biome)) {
+					return biome;
+				}
 			}
-			return null;
+			return -1;
+		}
+
+		onInit(): void {
+			if (this.data.biome == null) {
+				this.data.biome = this.getBiome(this.x, this.z);
+				this.data.ticker = -1; // for old blocks
+				if (this.data.biome == -1) {
+					this.selfDestroy();
+				}
+			}
+		}
+
+		updateBlockCount(): void {
+			let blockCount = 0;
+			if (this.y >= 32 && this.y < 64) {
+				for (let x = -1; x <= 1; x++)
+				for (let y = -1; y <= 1; y++)
+				for (let z = -1; z <= 1; z++) {
+					const coords = new Vector3(this.x + x, this.y + y, this.z + z);
+					const blockId = this.region.getExtraBlock(coords).id || this.region.getBlockId(coords);
+					if (blockId == 8 || blockId == 9) {
+						blockCount++;
+					}
+				}
+			}
+			this.data.blockCount = blockCount;
 		}
 
 		energyTick(type: string, src: EnergyTileNode): void {
-			if (World.getThreadTime()%20 == 0) {
-				this.data.output = 0;
-				let biome = this.biomeCheck(this.x, this.z);
-				if (biome && this.y >= 32 && this.y < 64) {
-					let output = 50;
-					let radius = 1;
-					let wether = World.getWeather();
-					if (wether.thunder || wether.rain) {
-						if (wether.thunder) {output *= 2;}
-						else {output *= 1.5;}
+			if (++this.data.ticker % 128 == 0) {
+				this.updateBlockCount();
+				let output = this.BASE_POWER;
+				if (this.isOcean(this.data.biome)) {
+					output *= 1.5 * Math.sin(World.getWorldTime()%6000 / (6000 / Math.PI));
+				}
+				else {
+					const wether = World.getWeather();
+					if (wether.thunder) {
+						output *= 2;
 					}
-					else if (biome == "ocean") {
-						output *= 1.5 * Math.sin(World.getWorldTime()%6000 / (6000 / Math.PI));
-					}
-					let tile = this.region.getBlockId(
-						this.x - MathUtil.randomInt(-radius, radius),
-						this.y - MathUtil.randomInt(-radius, radius),
-						this.z - MathUtil.randomInt(-radius, radius)
-					);
-					if (tile == 8 || tile == 9) {
-						this.data.output = Math.round(output) / 20;
-					}
-					else {
-						this.data.output = 0;
+					else if (wether.rain) {
+						output *= 1.5;
 					}
 				}
+				output *= this.data.blockCount / 26;
+				this.data.output = Math.round(output * 10) / 10;
 			}
 			src.add(this.data.output);
 		}

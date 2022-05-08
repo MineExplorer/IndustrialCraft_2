@@ -20,19 +20,19 @@ extends ItemElectric {
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
-		let client = Network.getClientForPlayer(player);
+		const client = Network.getClientForPlayer(player);
 		if (!client) return;
 
 		client.sendMessage(block.id+":"+block.data);
-		let region = WorldRegion.getForActor(player);
-		let tile = region.getTileEntity(coords);
+		const region = WorldRegion.getForActor(player);
+		const tile = region.getTileEntity(coords);
 		if (tile) {
-			let liquid = tile.liquidStorage?.getLiquidStored();
+			const liquid = tile.liquidStorage?.getLiquidStored();
 			if (liquid) {
 				client.sendMessage(`${liquid} - ${tile.liquidStorage.getAmount(liquid)*1000} mB`);
 			}
 			for (let key in tile.data) {
-				let value = tile.data[key];
+				const value = tile.data[key];
 				if (key == "energy") {
 					client.sendMessage(`energy: ${value}/${tile.getEnergyStorage()}`);
 				}
@@ -48,7 +48,7 @@ extends ItemElectric {
 			}
 		}
 
-		let node = EnergyNet.getNodeOnCoords(region.blockSource, coords.x, coords.y, coords.z);
+		const node = EnergyNet.getNodeOnCoords(region.blockSource, coords.x, coords.y, coords.z);
 		if (node) client.sendMessage(node.toString());
 	}
 }

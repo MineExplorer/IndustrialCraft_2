@@ -5,11 +5,20 @@ BlockRegistry.setBlockMaterial(BlockID.solarPanel, "stone", 1);
 ItemName.addTierTooltip(BlockID.solarPanel, 1);
 
 Callback.addCallback("PreLoaded", function() {
-	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
-		"aaa",
-		"xxx",
-		"b#b"
-	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
+	if (IC2Config.hardRecipes) {
+		Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
+			"aaa",
+			"xxx",
+			"b#b"
+		], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustLapis, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
+	}
+	else {
+		Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
+			"aaa",
+			"xxx",
+			"b#b"
+		], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
+	}
 });
 
 const guiSolarPanel = MachineRegistry.createInventoryWindow("Solar Panel", {

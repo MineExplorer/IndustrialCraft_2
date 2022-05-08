@@ -79,7 +79,7 @@ declare class Vector3 implements Vector {
  */
 declare class WorldRegion {
     blockSource: BlockSource;
-    isDeprecated: boolean;
+    private isDeprecated;
     constructor(blockSource: BlockSource);
     /**
      * @returns interface to given dimension

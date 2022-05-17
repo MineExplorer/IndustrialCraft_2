@@ -2303,7 +2303,7 @@ var ItemTool = /** @class */ (function (_super) {
         var _this = _super.call(this, stringID, name, icon, inCreative) || this;
         _this.handEquipped = false;
         _this.brokenId = 0;
-        _this.damage = 0;
+        _this.damage = 1;
         _this.isWeapon = false;
         _this.blockTypes = [];
         _this.setMaxStack(1);

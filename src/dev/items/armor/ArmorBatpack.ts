@@ -7,15 +7,22 @@ class ArmorBatpack extends ArmorElectric {
 	}
 
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
-		if (World.getThreadTime() % 20 == 0) {
-			let carried = Entity.getCarriedItem(playerUid);
-			if (ChargeItemRegistry.isValidItem(carried.id, "Eu", this.tier)) {
-				let energyStored = ChargeItemRegistry.getEnergyStored(item);
-				let energyAdd = ChargeItemRegistry.addEnergyTo(carried, "Eu", Math.min(energyStored, this.transferLimit*20), this.tier);
-				if (energyAdd > 0) {
-					ChargeItemRegistry.setEnergyStored(item, energyStored - energyAdd);
+		return ArmorBatpack.chargeCarriedItem(this, item, playerUid);
+	}
+
+	static chargeCarriedItem(itemData: IElectricItem, stack: ItemInstance, playerUid: number): ItemInstance {
+		const tickDelay = 20;
+		if (World.getThreadTime() % tickDelay == 0) {
+			const carried = Entity.getCarriedItem(playerUid);
+			const carriedData = ChargeItemRegistry.getItemData(carried.id);
+			if (carriedData && carriedData.transferLimit > 0 && carriedData.energy == itemData.energy && carriedData.tier <= itemData.tier) {
+				const energyStored = ChargeItemRegistry.getEnergyStored(stack);
+				const energyAmount = Math.min(energyStored, itemData.transferLimit * tickDelay);
+				const energyAdded = ChargeItemRegistry.addEnergyTo(carried, itemData.energy, energyAmount, itemData.tier, true);
+				if (energyAdded > 0) {
+					ChargeItemRegistry.setEnergyStored(stack, energyStored - energyAdded);
 					Entity.setCarriedItem(playerUid, carried.id, 1, carried.data, carried.extra);
-					return item;
+					return stack;
 				}
 			}
 		}

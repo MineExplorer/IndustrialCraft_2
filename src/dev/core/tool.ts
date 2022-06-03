@@ -53,17 +53,18 @@ namespace ICTool {
 	}
 
 	export function dischargeItem(item: ItemInstance, consume: number, player: number): boolean {
-		let energy = 0;
+		let energyGot = 0;
+		const itemTier = ChargeItemRegistry.getItemData(item.id).tier;
 		const armor = Entity.getArmorSlot(player, 1);
-		const itemChargeLevel = ChargeItemRegistry.getItemData(item.id).tier;
-		const armorChargeData = ChargeItemRegistry.getItemData(armor.id);
-		if (armorChargeData && armorChargeData.tier >= itemChargeLevel) {
-			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, 100, true);
-			consume -= energy;
+		const armorEnergy = ChargeItemRegistry.getEnergyStored(armor);
+		const armorData = ChargeItemRegistry.getItemData(armor.id);
+		if (armorEnergy > 0 && armorData.energy == EU.name && armorData.tier >= itemTier) {
+			energyGot = Math.min(armorEnergy, consume);
 		}
-		const energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyStored = ChargeItemRegistry.getEnergyStored(item) + energyGot;
 		if (energyStored >= consume) {
-			if (energy > 0) {
+			if (energyGot > 0) {
+				ChargeItemRegistry.setEnergyStored(armor, armorEnergy - energyGot);
 				Entity.setArmorSlot(player, 1, armor.id, 1, armor.data, armor.extra);
 			}
 			ChargeItemRegistry.setEnergyStored(item, energyStored - consume);

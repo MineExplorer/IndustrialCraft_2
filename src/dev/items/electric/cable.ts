@@ -14,7 +14,7 @@ implements ItemBehavior {
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
-		let region = BlockSource.getDefaultForActor(player);
+		const region = BlockSource.getDefaultForActor(player);
 		let place: Vector = coords;
 		if (!World.canTileBeReplaced(block.id, block.data)) {
 			place = coords.relative;

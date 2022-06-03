@@ -68,11 +68,13 @@ ItemRegistry.registerItem(new ItemWeedingTrowel());
 // Painters
 ItemRegistry.createItem("icPainter", { name: "painter", icon: "ic_painter", stack: 1, category: ItemCategory.EQUIPMENT });
 
-const painterCreativeGroup = [ItemID.icPainter];
-for (let i = 0; i < 16; i++) {
-	let item = ItemRegistry.registerItem(new ItemPainter(i));
-	painterCreativeGroup.push(item.id);
-}
-Item.addCreativeGroup("ic2_painter", Translation.translate("Painters"), painterCreativeGroup);
+(function() {
+	const painterCreativeGroup = [ItemID.icPainter];
+	for (let i = 0; i < 16; i++) {
+		let item = ItemRegistry.registerItem(new ItemPainter(i));
+		painterCreativeGroup.push(item.id);
+	}
+	Item.addCreativeGroup("ic2_painter", Translation.translate("Painters"), painterCreativeGroup);
+})();
 
 ItemRegistry.registerItem(new UpgradeMFSU());

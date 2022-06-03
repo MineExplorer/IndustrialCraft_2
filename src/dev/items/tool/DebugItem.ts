@@ -1,5 +1,4 @@
-class DebugItem
-extends ItemElectric {
+class DebugItem extends ItemElectric {
 	canProvideEnergy: boolean = true;
 
 	constructor() {
@@ -7,11 +6,11 @@ extends ItemElectric {
 		if (Game.isDeveloperMode) Item.addToCreative(this.id, 1, 0);
 	}
 
-	onCharge(item: ItemInstance, amount: number, tier: number): number {
+	onCharge(item: ItemInstance, amount: number, tier: number, addAll: boolean): number {
 		return amount;
 	}
 
-	onDischarge(item: ItemInstance, amount: number, tier: number): number {
+	onDischarge(item: ItemInstance, amount: number, tier: number, getAll: boolean): number {
 		return amount;
 	}
 

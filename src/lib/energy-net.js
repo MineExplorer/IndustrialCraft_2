@@ -17,6 +17,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -32,7 +34,7 @@ var __extends = (this && this.__extends) || (function () {
 */
 LIBRARY({
     name: "EnergyNet",
-    version: 9,
+    version: 10,
     shared: true,
     api: "CoreEngine"
 });
@@ -42,8 +44,8 @@ var EnergyRegistry;
     EnergyRegistry.energyTypes = {};
     EnergyRegistry.wireData = {};
     /**
-     * name - name of this energy type,
-     * value - value of one unit in [Eu] (IC2 Energy)
+     * @param name - name of this energy type
+     * @param value - value of one unit in [Eu] (IC2 Energy)
     */
     function createEnergyType(name, value) {
         if (EnergyRegistry.energyTypes[name]) {
@@ -260,20 +262,24 @@ var EnergyNode = /** @class */ (function () {
     EnergyNode.prototype.transferEnergy = function (amount, packet) {
         if (this.receivers.length == 0)
             return 0;
-        var receivedAmount = amount;
+        var leftAmount = amount;
         if (packet.size > this.maxValue) {
-            amount = Math.min(amount, packet.size);
+            leftAmount = Math.min(leftAmount, packet.size);
             this.onOverload(packet.size);
         }
         var currentNodeList = __assign({}, packet.nodeList);
         var receiversCount = this.receivers.length;
         var k = 0;
         for (var i = 0; i < this.receivers.length; i++) {
-            if (amount <= 0)
+            if (leftAmount <= 0)
                 break;
             var node = this.receivers[i];
             if (packet.validateNode(node.id)) {
-                amount -= node.receiveEnergy(Math.ceil(amount / (receiversCount - k)), packet);
+                var receiveAmount = leftAmount;
+                if (receiveAmount > 1 && receiversCount - k > 1) {
+                    receiveAmount = Math.ceil(receiveAmount / (receiversCount - k));
+                }
+                leftAmount -= node.receiveEnergy(receiveAmount, packet);
                 if (node.removed)
                     i--;
             }
@@ -282,13 +288,13 @@ var EnergyNode = /** @class */ (function () {
         packet.nodeList = currentNodeList;
         for (var _i = 0, _a = this.receivers; _i < _a.length; _i++) {
             var node = _a[_i];
-            if (amount <= 0)
+            if (leftAmount <= 0)
                 break;
             if (packet.validateNode(node.id)) {
-                amount -= node.receiveEnergy(amount, packet);
+                leftAmount -= node.receiveEnergy(leftAmount, packet);
             }
         }
-        var energyOut = receivedAmount - amount;
+        var energyOut = amount - leftAmount;
         if (energyOut > 0) {
             this.currentPower = Math.max(this.currentPower, packet.size);
             this.currentOut += energyOut;
@@ -334,7 +340,7 @@ var EnergyNode = /** @class */ (function () {
         EnergyNet.removeEnergyNode(this);
     };
     EnergyNode.prototype.toString = function () {
-        return "[EnergyNode id=" + this.id + ", type=" + this.baseEnergy + ", entries=" + this.entries.length + ", receivers=" + this.receivers.length + ", energyIn=" + this.energyIn + ", energyOut=" + this.energyOut + ", power=" + this.energyPower + "]";
+        return "[EnergyNode id=".concat(this.id, ", type=").concat(this.baseEnergy, ", entries=").concat(this.entries.length, ", receivers=").concat(this.receivers.length, ", energyIn=").concat(this.energyIn, ", energyOut=").concat(this.energyOut, ", power=").concat(this.energyPower, "]");
     };
     return EnergyNode;
 }());
@@ -383,7 +389,7 @@ var EnergyGrid = /** @class */ (function (_super) {
     EnergyGrid.prototype.rebuildRecursive = function (x, y, z, side) {
         if (this.removed)
             return;
-        var coordKey = x + ":" + y + ":" + z;
+        var coordKey = "".concat(x, ":").concat(y, ":").concat(z);
         if (this.blocksMap[coordKey]) {
             return;
         }
@@ -534,10 +540,12 @@ Callback.addCallback("TileEntityAdded", function (tileEntity) {
         var node = void 0;
         for (var name in tileEntity.energyTypes) {
             var type = tileEntity.energyTypes[name];
-            if (!node)
+            if (!node) {
                 node = new EnergyTileNode(type, tileEntity);
-            else
+            }
+            else {
                 node.addEnergyType(type);
+            }
         }
         tileEntity.energyNode = node;
         EnergyNet.addEnergyNode(node);
@@ -558,8 +566,8 @@ var EnergyGridBuilder;
     function buildGridForTile(te) {
         var tileNode = te.energyNode;
         for (var side = 0; side < 6; side++) {
-            var c = World.getRelativeCoords(te.x, te.y, te.z, side);
-            var node = EnergyNet.getNodeOnCoords(te.blockSource, c.x, c.y, c.z);
+            var coords = World.getRelativeCoords(te.x, te.y, te.z, side);
+            var node = EnergyNet.getNodeOnCoords(te.blockSource, coords.x, coords.y, coords.z);
             if (node && tileNode.isCompatible(node)) {
                 var energyType = node.baseEnergy;
                 if (tileNode.canExtractEnergy(side, energyType) && node.canReceiveEnergy(side ^ 1, energyType)) {
@@ -570,7 +578,7 @@ var EnergyGridBuilder;
                 }
             }
             else {
-                buildWireGrid(te.blockSource, c.x, c.y, c.z);
+                buildWireGrid(te.blockSource, coords.x, coords.y, coords.z);
             }
         }
     }
@@ -676,7 +684,7 @@ var EnergyNet;
             return tileEntity.energyNode;
         }
         var nodes = getNodesByDimension(region.getDimension());
-        var coordKey = x + ":" + y + ":" + z;
+        var coordKey = "".concat(x, ":").concat(y, ":").concat(z);
         for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
             var node = nodes_1[_i];
             if (node.blocksMap[coordKey])

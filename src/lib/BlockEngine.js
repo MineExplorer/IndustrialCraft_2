@@ -66,44 +66,25 @@ var BlockEngine;
 (function (BlockEngine) {
     var Decorators;
     (function (Decorators) {
-        function createField(target, field) {
-            target[field] = __assign({}, target[field]);
-        }
         /** Client side method decorator for TileEntity */
         function ClientSide(target, propertyName) {
-            createField(target, "client");
-            target.client[propertyName] = target[propertyName];
+            target.__clientMethods = __assign({}, target.__clientMethods);
+            target.__clientMethods[propertyName] = true;
         }
         Decorators.ClientSide = ClientSide;
         /** Adds method as network event in TileEntity */
         function NetworkEvent(side) {
             return function (target, propertyName) {
-                if (side == Side.Client) {
-                    createField(target, "client");
-                    createField(target.client, "events");
-                    target.client.events[propertyName] = target[propertyName];
-                    delete target[propertyName];
-                }
-                else {
-                    createField(target, "events");
-                    target.events[propertyName] = target[propertyName];
-                }
+                target.__networkEvents = __assign({}, target.__networkEvents);
+                target.__networkEvents[propertyName] = side;
             };
         }
         Decorators.NetworkEvent = NetworkEvent;
         /** Adds method as container event in TileEntity */
         function ContainerEvent(side) {
             return function (target, propertyName) {
-                if (side == Side.Client) {
-                    createField(target, "client");
-                    createField(target.client, "containerEvents");
-                    target.client.containerEvents[propertyName] = target[propertyName];
-                    delete target[propertyName];
-                }
-                else {
-                    createField(target, "containerEvents");
-                    target.containerEvents[propertyName] = target[propertyName];
-                }
+                target.__containerEvents = __assign({}, target.__containerEvents);
+                target.__containerEvents[propertyName] = side;
             };
         }
         Decorators.ContainerEvent = ContainerEvent;
@@ -333,7 +314,7 @@ var WorldRegion = /** @class */ (function () {
     WorldRegion.prototype.setBlock = function (x, y, z, id, data) {
         if (typeof x === "number") {
             if (typeof id == "number") {
-                this.blockSource.setBlock(x, y, z, id, data);
+                this.blockSource.setBlock(x, y, z, id, data || 0);
             }
             else {
                 this.blockSource.setBlock(x, y, z, id);
@@ -341,13 +322,11 @@ var WorldRegion = /** @class */ (function () {
         }
         else {
             var pos = x;
-            id = y;
-            data = z;
-            if (typeof id == "number") {
-                this.blockSource.setBlock(pos.x, pos.y, pos.z, id, data);
+            if (typeof arguments[1] == "number") {
+                this.blockSource.setBlock(pos.x, pos.y, pos.z, arguments[1], arguments[2] || 0);
             }
             else {
-                this.blockSource.setBlock(pos.x, pos.y, pos.z, id);
+                this.blockSource.setBlock(pos.x, pos.y, pos.z, arguments[1]);
             }
         }
     };
@@ -366,7 +345,7 @@ var WorldRegion = /** @class */ (function () {
             return;
         if (typeof x === "number") {
             if (typeof id == "number") {
-                this.blockSource.setExtraBlock(x, y, z, id, data);
+                this.blockSource.setExtraBlock(x, y, z, id, data || 0);
             }
             else {
                 this.blockSource.setExtraBlock(x, y, z, id);
@@ -374,13 +353,11 @@ var WorldRegion = /** @class */ (function () {
         }
         else {
             var pos = x;
-            id = y;
-            data = z;
-            if (typeof id == "number") {
-                this.blockSource.setExtraBlock(pos.x, pos.y, pos.z, id, data);
+            if (typeof arguments[1] == "number") {
+                this.blockSource.setExtraBlock(pos.x, pos.y, pos.z, arguments[1], arguments[2] || 0);
             }
             else {
-                this.blockSource.setExtraBlock(pos.x, pos.y, pos.z, id);
+                this.blockSource.setExtraBlock(pos.x, pos.y, pos.z, arguments[1]);
             }
         }
     };
@@ -556,26 +533,39 @@ var WorldRegion = /** @class */ (function () {
         var pos = x;
         return this.blockSource.getGrassColor(pos.x, pos.y, pos.z);
     };
-    WorldRegion.prototype.dropItem = function (x, y, z, item, count, data, extra) {
-        if (typeof item == "object") {
-            return this.blockSource.spawnDroppedItem(x, y, z, item.id, item.count, item.data, item.extra || null);
+    WorldRegion.prototype.dropItem = function (x, y, z, id, count, data, extra) {
+        if (typeof x == "object") {
+            var pos = x;
+            if (typeof y == "object") {
+                var item = y;
+                return this.dropItem(pos.x, pos.y, pos.z, item);
+            }
+            return this.dropItem(pos.x, pos.y, pos.z, arguments[1], arguments[2], arguments[3], arguments[4]);
         }
-        return this.blockSource.spawnDroppedItem(x, y, z, item, count, data, extra || null);
+        if (typeof id == "object") {
+            var item = id;
+            return this.dropItem(x, y, z, item.id, item.count, item.data, item.extra);
+        }
+        return this.blockSource.spawnDroppedItem(x, y, z, id, count || 1, data || 0, extra || null);
     };
-    WorldRegion.prototype.dropAtBlock = function (x, y, z, item, count, data, extra) {
-        return this.dropItem(x + .5, y + .5, z + .5, item, count, data, extra);
+    WorldRegion.prototype.dropAtBlock = function (x, y, z, id, count, data, extra) {
+        if (typeof x == "object") {
+            var pos = x;
+            return this.dropItem(pos.x + .5, pos.y + .5, pos.z + .5, arguments[1], arguments[2], arguments[3], arguments[4]);
+        }
+        return this.dropItem(x + .5, y + .5, z + .5, id, count, data, extra);
     };
     WorldRegion.prototype.spawnEntity = function (x, y, z, namespace, type, init_data) {
-        if (type === void 0) {
+        if (type === undefined) {
             return this.blockSource.spawnEntity(x, y, z, namespace);
         }
         return this.blockSource.spawnEntity(x, y, z, namespace, type, init_data);
     };
-    /**
-     * Spawns experience orbs on coords
-     * @param amount experience amount
-     */
     WorldRegion.prototype.spawnExpOrbs = function (x, y, z, amount) {
+        if (typeof x == "object") {
+            var pos = x;
+            this.spawnExpOrbs(pos.x, pos.y, pos.z, arguments[1]);
+        }
         this.blockSource.spawnExpOrbs(x, y, z, amount);
     };
     WorldRegion.prototype.listEntitiesInAABB = function (x1, y1, z1, x2, y2, z2, type, blacklist) {
@@ -1793,11 +1783,34 @@ var ItemStack = /** @class */ (function () {
     ItemStack.prototype.getItemInstance = function () {
         return ItemRegistry.getInstanceOf(this.id);
     };
+    /**
+     * Creates a copy of current ItemStack object
+     * @returns a created copy of the ItemStack
+     */
+    ItemStack.prototype.copy = function () {
+        var _a;
+        return new ItemStack(this.id, this.count, this.data, (_a = this.extra) === null || _a === void 0 ? void 0 : _a.copy());
+    };
+    /**
+     * @returns maximum stack size for the item
+     */
     ItemStack.prototype.getMaxStack = function () {
         return Item.getMaxStack(this.id);
     };
+    /**
+     * @returns maximum damage value for the item
+     */
     ItemStack.prototype.getMaxDamage = function () {
         return Item.getMaxDamage(this.id);
+    };
+    /**
+     * @returns true if all stack values are empty, false otherwise
+     */
+    ItemStack.prototype.isEmpty = function () {
+        return this.id == 0 &&
+            this.count == 0 &&
+            this.data == 0 &&
+            this.extra == null;
     };
     /**
      * Decreases stack count by specified value.
@@ -2709,13 +2722,33 @@ IDConverter.registerOld("music_disc_11", VanillaItemID.record_11, 0);
 IDConverter.registerOld("music_disc_wait", VanillaItemID.record_wait, 0);
 var TileEntityBase = /** @class */ (function () {
     function TileEntityBase() {
-        var _a;
         this.useNetworkItemContainer = true;
         this._clickPrevented = false;
-        (_a = this.client) !== null && _a !== void 0 ? _a : (this.client = {});
-        this.client.load = this.clientLoad;
-        this.client.unload = this.clientUnload;
-        this.client.tick = this.clientTick;
+        this.client = {
+            load: this.clientLoad,
+            unload: this.clientUnload,
+            tick: this.clientTick,
+            events: {},
+            containerEvents: {}
+        };
+        this.events = {};
+        this.containerEvents = {};
+        for (var propertyName in this.__clientMethods) {
+            this.client[propertyName] = this[propertyName];
+        }
+        for (var eventName in this.__networkEvents) {
+            var side = this.__networkEvents[eventName];
+            var target = (side == Side.Client) ? this.client.events : this.events;
+            target[eventName] = this[eventName];
+        }
+        for (var eventName in this.__containerEvents) {
+            var side = this.__containerEvents[eventName];
+            var target = (side == Side.Client) ? this.client.containerEvents : this.containerEvents;
+            target[eventName] = this[eventName];
+        }
+        delete this.__clientMethods;
+        delete this.__networkEvents;
+        delete this.__containerEvents;
     }
     TileEntityBase.prototype.created = function () {
         this.onCreate();

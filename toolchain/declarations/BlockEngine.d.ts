@@ -119,9 +119,9 @@ declare class WorldRegion {
      * @param data - data of the block to set
      */
     setBlock(coords: Vector, state: BlockState): void;
-    setBlock(coords: Vector, id: number, data: number): void;
+    setBlock(coords: Vector, id: number, data?: number): void;
     setBlock(x: number, y: number, z: number, state: BlockState): void;
-    setBlock(x: number, y: number, z: number, id: number, data: number): void;
+    setBlock(x: number, y: number, z: number, id: number, data?: number): void;
     /**
      * Doesn't support Legacy version.
      * @returns [[BlockState]] object of the extra block on given coords
@@ -133,8 +133,8 @@ declare class WorldRegion {
      * Doesn't support Legacy version.
      */
     setExtraBlock(coords: Vector, state: BlockState): void;
-    setExtraBlock(coords: Vector, id: number, data: number): void;
-    setExtraBlock(x: number, y: number, z: number, id: number, data: number): void;
+    setExtraBlock(coords: Vector, id: number, data?: number): void;
+    setExtraBlock(x: number, y: number, z: number, id: number, data?: number): void;
     setExtraBlock(x: number, y: number, z: number, state: BlockState): void;
     /**
      * Destroys block on coords producing appropriate drop and particles.
@@ -271,8 +271,10 @@ declare class WorldRegion {
      * @param z Z coord of the place where item will be dropped
      * @returns drop entity id
      */
+    dropItem(coords: Vector, item: ItemInstance): number;
+    dropItem(coords: Vector, id: number, count?: number, data?: number, extra?: ItemExtraData): number;
     dropItem(x: number, y: number, z: number, item: ItemInstance): number;
-    dropItem(x: number, y: number, z: number, id: number, count: number, data: number, extra?: ItemExtraData): number;
+    dropItem(x: number, y: number, z: number, id: number, count?: number, data?: number, extra?: ItemExtraData): number;
     /**
      * Creates dropped item at the block center and returns entity id
      * @param x X coord of the block where item will be dropped
@@ -280,6 +282,8 @@ declare class WorldRegion {
      * @param z Z coord of the block where item will be dropped
      * @returns drop entity id
      */
+    dropAtBlock(coords: Vector, item: ItemInstance): number;
+    dropAtBlock(coords: Vector, id: number, count: number, data: number, extra?: ItemExtraData): number;
     dropAtBlock(x: number, y: number, z: number, item: ItemInstance): number;
     dropAtBlock(x: number, y: number, z: number, id: number, count: number, data: number, extra?: ItemExtraData): number;
     /**
@@ -291,7 +295,8 @@ declare class WorldRegion {
      * Spawns experience orbs on coords
      * @param amount experience amount
      */
-    spawnExpOrbs(x: number, y: number, z: number, amount: number): void;
+    spawnExpOrbs(coords: Vector, amount: number): void;
+    spawnExpOrbs(x: any, y: number, z: number, amount: number): void;
     /**
      * @returns the list of entity IDs in given box,
      * that are equal to the given type, if blacklist value is false,
@@ -786,8 +791,23 @@ declare class ItemStack implements ItemInstance {
     constructor(item: ItemInstance);
     constructor(id: number, count: number, data?: number, extra?: ItemExtraData);
     getItemInstance(): Nullable<ItemBase>;
+    /**
+     * Creates a copy of current ItemStack object
+     * @returns a created copy of the ItemStack
+     */
+    copy(): ItemStack;
+    /**
+     * @returns maximum stack size for the item
+     */
     getMaxStack(): number;
+    /**
+     * @returns maximum damage value for the item
+     */
     getMaxDamage(): number;
+    /**
+     * @returns true if all stack values are empty, false otherwise
+     */
+    isEmpty(): boolean;
     /**
      * Decreases stack count by specified value.
      * @param count amount to decrease
@@ -1177,6 +1197,15 @@ declare namespace IDConverter {
 }
 declare abstract class TileEntityBase implements TileEntity {
     constructor();
+    __clientMethods: {
+        [key: string]: boolean;
+    };
+    __networkEvents: {
+        [key: string]: Side;
+    };
+    __containerEvents: {
+        [key: string]: Side;
+    };
     x: number;
     y: number;
     z: number;
@@ -1191,18 +1220,22 @@ declare abstract class TileEntityBase implements TileEntity {
     };
     defaultValues: {};
     client: {
-        load?: () => void;
-        unload?: () => void;
-        tick?: () => void;
-        events?: {
+        load: () => void;
+        unload: () => void;
+        tick: () => void;
+        events: {
             [packetName: string]: (packetData: any, packetExtra: any) => void;
         };
-        containerEvents?: {
-            [eventName: string]: (container: ItemContainer, window: UI.Window | UI.StandartWindow | UI.TabbedWindow | null, windowContent: UI.WindowContent | null, eventData: any) => void;
+        containerEvents: {
+            [eventName: string]: (container: ItemContainer, window: UI.IWindow | null, windowContent: UI.WindowContent | null, eventData: any) => void;
         };
     };
-    events: {};
-    containerEvents: {};
+    events: {
+        [packetName: string]: (packetData: any, packetExtra: any, connectedClient: NetworkClient) => void;
+    };
+    containerEvents: {
+        [eventName: string]: (container: ItemContainer, window: UI.IWindow | null, windowContent: UI.WindowContent | null, eventData: any) => void;
+    };
     container: ItemContainer;
     liquidStorage: LiquidRegistry.Storage;
     blockSource: BlockSource;

@@ -458,11 +458,11 @@ Translation.addTranslation("message.nightvision.disabled", {en: "Nightvision mod
 Translation.addTranslation("message.hover_mode.enabled", {en: "Hover mode enabled", ru: "Режим парения включен", zh: "已启用悬浮模式"});
 Translation.addTranslation("message.hover_mode.disabled", {en: "Hover mode disabled", ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
 Translation.addTranslation("message.scan_result", {en: "Scan Result: ", ru: "Результат сканирования: ", es: "Resultado de la exploración: ", pt: "Resultado do Escaneamento: ", zh: "扫描结果: "});
-Translation.addTranslation("message.freq_transmitter.linked", {en: "Frequency Transmitter linked to Teleporter", ru: "Частотный связыватель соединился с телепортером"});
-Translation.addTranslation("message.freq_transmitter.notlinked", {en: "Can`t link Teleporter to itself", ru: "Невозможно связать телепортер с самим собой"});
-Translation.addTranslation("message.freq_transmitter.established", {en: "Teleportation link established", ru: "Телепортационная связь установлена"});
-Translation.addTranslation("message.freq_transmitter.unlinked", {en: "Frequency Transmitter unlinked", ru: "Частотный связыватель сброшен"});
-Translation.addTranslation("message.mining_laser.aiming", {en: "Mining laser aiming angle too steep", ru: "Шахтёрский лазер направлен слишков высоко"});
+Translation.addTranslation("message.freq_transmitter.linked", {en: "Frequency Transmitter linked to Teleporter", ru: "Частотный связыватель соединился с телепортером", zh: "遥控器已连接至传送机"});
+Translation.addTranslation("message.freq_transmitter.notlinked", {en: "Can`t link Teleporter to itself", ru: "Невозможно связать телепортер с самим собой", zh: "传送机不能连接自己"});
+Translation.addTranslation("message.freq_transmitter.established", {en: "Teleportation link established", ru: "Телепортационная связь установлена", zh: "已建立传送点"});
+Translation.addTranslation("message.freq_transmitter.unlinked", {en: "Frequency Transmitter unlinked", ru: "Частотный связыватель сброшен", zh: "已断开遥控器"});
+Translation.addTranslation("message.mining_laser.aiming", {en: "Mining laser aiming angle too steep", ru: "Шахтёрский лазер направлен слишков высоко", zh: "镭射枪瞄准角度过小"});
 
 // Tooltips
 Translation.addTranslation("tooltip.tin_can", {en: "This looks bad...", ru: "Это выглядит несъедобно…", pt: "Isso parece ruim...", zh: "这看起来很糟糕..."});
@@ -487,11 +487,11 @@ Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "
 
 // Creative Groups
 Translation.addTranslation("Ores", {ru: "Руды", pt: "Minérios", zh: "矿石"});
-Translation.addTranslation("Resource Blocks", {ru: "Блоки ресурсов", pt: "Blocos de Recusrso"});
-Translation.addTranslation("Electric Generators", {ru: "Электрогенераторы", pt: "Geradores Elétricos"});
-Translation.addTranslation("Heat Generators", {ru: "Теплогенераторы", pt: "Geradores de Calor"});
-Translation.addTranslation("Processing Machines", {ru: "Машины-обработчики", pt: "Máquinas de Processamento"});
-Translation.addTranslation("Energy Storages", {ru: "Энергохранилища", pt: "Armazenamento de Energia"});
+Translation.addTranslation("Resource Blocks", {ru: "Блоки ресурсов", pt: "Blocos de Recusrso", zh: "资源方块"});
+Translation.addTranslation("Electric Generators", {ru: "Электрогенераторы", pt: "Geradores Elétricos", zh: "发电机"});
+Translation.addTranslation("Heat Generators", {ru: "Теплогенераторы", pt: "Geradores de Calor", zh: "加热机"});
+Translation.addTranslation("Processing Machines", {ru: "Машины-обработчики", pt: "Máquinas de Processamento", zh: "加工机器"});
+Translation.addTranslation("Energy Storages", {ru: "Энергохранилища", pt: "Armazenamento de Energia", zh: "能量储存"});
 Translation.addTranslation("Transformers", {ru: "Трансформаторы", pt: "Transformadores", zh: "变压器"});
 Translation.addTranslation("Cables", {ru: "Провода", pt: "Cabos", zh: "导线"});
 Translation.addTranslation("Battery Packs", {ru: "Аккумуляторные ранцы", pt: "Mochilas de Baterias", zh: "电池背包"});

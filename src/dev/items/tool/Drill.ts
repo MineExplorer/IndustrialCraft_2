@@ -9,7 +9,7 @@ class ToolDrill extends ElectricTool {
 
 	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {
 		if (Block.getDestroyTime(block.id) > 0) {
-			ICTool.dischargeItem(item, this.energyPerUse, player);
+			ICTool.dischargeItem(item, this.getEnergyPerUse(item), player);
 			this.playDestroySound(item, block, player);
 		}
 		return true;
@@ -52,7 +52,7 @@ class ToolDrill extends ElectricTool {
 	}
 
 	playDestroySound(item: ItemInstance, block: Tile, player: number): void {
-		if (IC2Config.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.energyPerUse) {
+		if (IC2Config.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.getEnergyPerUse(item)) {
 			let hardness = Block.getDestroyTime(block.id);
 			if (hardness > 1 || hardness < 0) {
 				SoundManager.startPlaySound(SourceType.ENTITY, player, "DrillHard.ogg");

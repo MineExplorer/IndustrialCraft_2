@@ -1,5 +1,4 @@
 interface IWrech {
-	dropChance: number;
 	isUseable(item: ItemInstance, damage: number): boolean;
 	useItem(item: ItemStack, damage: number, player: number): void;
 }
@@ -54,17 +53,18 @@ namespace ICTool {
 	}
 
 	export function dischargeItem(item: ItemInstance, consume: number, player: number): boolean {
-		let energy = 0;
+		let energyGot = 0;
+		const itemTier = ChargeItemRegistry.getItemData(item.id).tier;
 		const armor = Entity.getArmorSlot(player, 1);
-		const itemChargeLevel = ChargeItemRegistry.getItemData(item.id).tier;
-		const armorChargeData = ChargeItemRegistry.getItemData(armor.id);
-		if (armorChargeData && armorChargeData.tier >= itemChargeLevel) {
-			energy = ChargeItemRegistry.getEnergyFrom(armor, "Eu", consume, 100, true);
-			consume -= energy;
+		const armorEnergy = ChargeItemRegistry.getEnergyStored(armor);
+		const armorData = ChargeItemRegistry.getItemData(armor.id);
+		if (armorEnergy > 0 && armorData.energy == EU.name && armorData.tier >= itemTier) {
+			energyGot = Math.min(armorEnergy, consume);
 		}
-		const energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyStored = ChargeItemRegistry.getEnergyStored(item) + energyGot;
 		if (energyStored >= consume) {
-			if (energy > 0) {
+			if (energyGot > 0) {
+				ChargeItemRegistry.setEnergyStored(armor, armorEnergy - energyGot);
 				Entity.setArmorSlot(player, 1, armor.id, 1, armor.data, armor.extra);
 			}
 			ChargeItemRegistry.setEnergyStored(item, energyStored - consume);
@@ -119,9 +119,8 @@ namespace ICTool {
 			if (ICTool.isUseableWrench(item, 10)) {
 				const tileEntity = (region.getTileEntity(data) || region.addTileEntity(data)) as Machine.IWrenchable;
 				if (!tileEntity) return;
-				const chance = ICTool.getWrenchData(item.id).dropChance;
-				const dropID = (Math.random() < chance)? tileEntity.blockID : tileEntity.getDefaultDrop();
-				const drop = tileEntity.adjustDrop(new ItemStack(dropID, 1, 0));
+
+				const drop = tileEntity.adjustDrop(new ItemStack(tileEntity.blockID, 1, 0));
 				TileEntity.destroyTileEntity(tileEntity);
 				region.setBlock(data, 0, 0);
 				region.dropAtBlock(data.x, data.y, data.z, drop);

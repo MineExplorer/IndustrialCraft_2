@@ -2,6 +2,7 @@ BlockRegistry.createBlock("semifluidGenerator", [
 	{name: "Semifluid Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.semifluidGenerator, "stone", 1);
+ItemName.addTierTooltip(BlockID.semifluidGenerator, 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
@@ -56,7 +57,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			let liquidFuel = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
+			const liquidFuel = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
 			this.liquidTank = this.addLiquidTank("fluid", 10000, Object.keys(liquidFuel));
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
@@ -64,7 +65,7 @@ namespace Machine {
 			});
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				let empty = LiquidItemRegistry.getEmptyItem(id, data);
+				const empty = LiquidItemRegistry.getEmptyItem(id, data);
 				if (!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			});
@@ -89,14 +90,14 @@ namespace Machine {
 		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
-			let slot1 = this.container.getSlot("slot1");
-			let slot2 = this.container.getSlot("slot2");
+			const slot1 = this.container.getSlot("slot1");
+			const slot2 = this.container.getSlot("slot2");
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			if (this.data.fuel <= 0) {
-				let liquid = this.liquidTank.getLiquidStored();
-				let fuel = this.getFuel(liquid);
-				let freeCapacity = this.getEnergyStorage() - this.data.energy;
+				const liquid = this.liquidTank.getLiquidStored();
+				const fuel = this.getFuel(liquid);
+				const freeCapacity = this.getEnergyStorage() - this.data.energy;
 				if (fuel && this.liquidTank.getAmount() >= fuel.amount && fuel.power * fuel.amount <= freeCapacity) {
 					this.liquidTank.getLiquid(fuel.amount);
 					this.data.fuel = fuel.amount;
@@ -104,7 +105,7 @@ namespace Machine {
 				}
 			}
 			if (this.data.fuel > 0) {
-				let fuel = this.getFuel(this.data.liquid);
+				const fuel = this.getFuel(this.data.liquid);
 				this.data.energy += fuel.power;
 				this.data.fuel -= fuel.amount / 20;
 				this.setActive(true);
@@ -141,7 +142,7 @@ namespace Machine {
 			"slot2": {output: true}
 		},
 		isValidInput: function(item: ItemInstance) {
-			let empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
+			const empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
 			if (!empty) return false;
 			return this.canReceiveLiquid(empty.liquid);
 		},

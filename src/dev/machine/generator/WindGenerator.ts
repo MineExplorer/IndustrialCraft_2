@@ -2,6 +2,7 @@ BlockRegistry.createBlock("genWindmill", [
 	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.genWindmill, "stone", 1);
+ItemName.addTierTooltip(BlockID.genWindmill, 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.genWindmill);
@@ -25,12 +26,11 @@ namespace Machine {
 
 		updateBlockCount(): void {
 			let blockCount = -1;
-			for (let x = -4; x <= 4; x++) {
-				for (let y = -2; y <= 2; y++) {
-					for (let z = -4; z <= 4; z++) {
-						if (this.blockSource.getBlockId(this.x + x, this.y + y, this.z + z) != 0)
-						blockCount++;
-					}
+			for (let x = -4; x <= 4; x++)
+			for (let y = -2; y <= 2; y++)
+			for (let z = -4; z <= 4; z++) {
+				if (this.blockSource.getBlockId(this.x + x, this.y + y, this.z + z) != 0) {
+					blockCount++;
 				}
 			}
 			this.data.blockCount = blockCount;
@@ -49,7 +49,7 @@ namespace Machine {
 				if (wind < 0) wind = 0;
 				this.data.output = Math.round(wind/3 * 10)/10;
 			}
-			src.addAll(this.data.output);
+			src.add(this.data.output);
 		}
 
 		canRotate(side: number): boolean {

@@ -8,12 +8,12 @@ extends ItemBattery {
 	}
 
 	onNoTargetUse(item: ItemStack, player: number) {
-		let extra = item.extra || new ItemExtraData();
-		let mode = (extra.getInt("mode") + 1) % 3;
+		const extra = item.extra || new ItemExtraData();
+		const mode = (extra.getInt("mode") + 1) % 3;
 		extra.putInt("mode", mode);
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 
-		let client = Network.getClientForPlayer(player);
+		const client = Network.getClientForPlayer(player);
 		switch (mode) {
 			case 0:
 				BlockEngine.sendUnlocalizedMessage(client, "Mode: ", "charging.enabled");
@@ -39,19 +39,20 @@ extends ItemBattery {
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
-		let mode = this.readMode(item.extra);
+		const mode = this.readMode(item.extra);
 		return super.onNameOverride(item, name) + '\n' + this.getModeTooltip(mode);
 	}
 
 	chargeItems(player: PlayerEntity, index: number, item: ItemInstance): void {
-		let mode = this.readMode(item.extra);
+		const mode = this.readMode(item.extra);
 		let energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (mode == 2 || energyStored <= 0) return;
 		for (let i = 0; i < 9; i++) {
 			if (mode == 1 && player.getSelectedSlot() == i) continue;
-			let stack = player.getInventorySlot(i);
+			const stack = player.getInventorySlot(i);
 			if (!ChargeItemRegistry.isValidStorage(stack.id, "Eu", 5)) {
-				let energyAdd = ChargeItemRegistry.addEnergyTo(stack, "Eu", Math.min(energyStored, this.transferLimit * 20), this.tier, true);
+				const energyAmount = Math.min(energyStored, this.transferLimit * 20);
+				const energyAdd = ChargeItemRegistry.addEnergyTo(stack, "Eu", energyAmount, this.tier, true);
 				if (energyAdd > 0) {
 					energyStored -= energyAdd;
 					player.setInventorySlot(i, stack);
@@ -63,10 +64,10 @@ extends ItemBattery {
 	}
 
 	static checkCharging(playerUid: number): void {
-		let player = new PlayerEntity(playerUid);
+		const player = new PlayerEntity(playerUid);
 		for (let i = 0; i < 36; i++) {
-			let slot = player.getInventorySlot(i);
-			let itemInstance = slot.getItemInstance();
+			const slot = player.getInventorySlot(i);
+			const itemInstance = slot.getItemInstance();
 			if (itemInstance instanceof ItemBatteryCharging) {
 				itemInstance.chargeItems(player, i, slot);
 			}

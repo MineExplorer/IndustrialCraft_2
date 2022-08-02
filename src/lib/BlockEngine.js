@@ -17,6 +17,8 @@ var __extends = (this && this.__extends) || (function () {
         return extendStatics(d, b);
     };
     return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -30,7 +32,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 8,
+    version: 9,
     shared: true,
     api: "CoreEngine"
 });
@@ -64,44 +66,25 @@ var BlockEngine;
 (function (BlockEngine) {
     var Decorators;
     (function (Decorators) {
-        function createField(target, field) {
-            target[field] = __assign({}, target[field]);
-        }
         /** Client side method decorator for TileEntity */
         function ClientSide(target, propertyName) {
-            createField(target, "client");
-            target.client[propertyName] = target[propertyName];
+            target.__clientMethods = __assign({}, target.__clientMethods);
+            target.__clientMethods[propertyName] = true;
         }
         Decorators.ClientSide = ClientSide;
         /** Adds method as network event in TileEntity */
         function NetworkEvent(side) {
             return function (target, propertyName) {
-                if (side == Side.Client) {
-                    createField(target, "client");
-                    createField(target.client, "events");
-                    target.client.events[propertyName] = target[propertyName];
-                    delete target[propertyName];
-                }
-                else {
-                    createField(target, "events");
-                    target.events[propertyName] = target[propertyName];
-                }
+                target.__networkEvents = __assign({}, target.__networkEvents);
+                target.__networkEvents[propertyName] = side;
             };
         }
         Decorators.NetworkEvent = NetworkEvent;
         /** Adds method as container event in TileEntity */
         function ContainerEvent(side) {
             return function (target, propertyName) {
-                if (side == Side.Client) {
-                    createField(target, "client");
-                    createField(target.client, "containerEvents");
-                    target.client.containerEvents[propertyName] = target[propertyName];
-                    delete target[propertyName];
-                }
-                else {
-                    createField(target, "containerEvents");
-                    target.containerEvents[propertyName] = target[propertyName];
-                }
+                target.__containerEvents = __assign({}, target.__containerEvents);
+                target.__containerEvents[propertyName] = side;
             };
         }
         Decorators.ContainerEvent = ContainerEvent;
@@ -274,7 +257,9 @@ EXPORT("Vector3", Vector3);
  */
 var WorldRegion = /** @class */ (function () {
     function WorldRegion(blockSource) {
+        this.isDeprecated = false;
         this.blockSource = blockSource;
+        this.isDeprecated = BlockEngine.getMainGameVersion() < 16;
     }
     /**
      * @returns interface to given dimension
@@ -329,7 +314,7 @@ var WorldRegion = /** @class */ (function () {
     WorldRegion.prototype.setBlock = function (x, y, z, id, data) {
         if (typeof x === "number") {
             if (typeof id == "number") {
-                this.blockSource.setBlock(x, y, z, id, data);
+                this.blockSource.setBlock(x, y, z, id, data || 0);
             }
             else {
                 this.blockSource.setBlock(x, y, z, id);
@@ -337,20 +322,30 @@ var WorldRegion = /** @class */ (function () {
         }
         else {
             var pos = x;
-            id = y;
-            data = z;
-            if (typeof id == "number") {
-                this.blockSource.setBlock(pos.x, pos.y, pos.z, id, data);
+            if (typeof arguments[1] == "number") {
+                this.blockSource.setBlock(pos.x, pos.y, pos.z, arguments[1], arguments[2] || 0);
             }
             else {
-                this.blockSource.setBlock(pos.x, pos.y, pos.z, id);
+                this.blockSource.setBlock(pos.x, pos.y, pos.z, arguments[1]);
             }
         }
     };
+    WorldRegion.prototype.getExtraBlock = function (x, y, z) {
+        if (this.isDeprecated) {
+            return { id: 0, data: 0 };
+        }
+        if (typeof x === "number") {
+            return this.blockSource.getExtraBlock(x, y, z);
+        }
+        var pos = x;
+        return this.blockSource.getExtraBlock(pos.x, pos.y, pos.z);
+    };
     WorldRegion.prototype.setExtraBlock = function (x, y, z, id, data) {
+        if (this.isDeprecated)
+            return;
         if (typeof x === "number") {
             if (typeof id == "number") {
-                this.blockSource.setExtraBlock(x, y, z, id, data);
+                this.blockSource.setExtraBlock(x, y, z, id, data || 0);
             }
             else {
                 this.blockSource.setExtraBlock(x, y, z, id);
@@ -358,28 +353,18 @@ var WorldRegion = /** @class */ (function () {
         }
         else {
             var pos = x;
-            id = y;
-            data = z;
-            if (typeof id == "number") {
-                this.blockSource.setExtraBlock(pos.x, pos.y, pos.z, id, data);
+            if (typeof arguments[1] == "number") {
+                this.blockSource.setExtraBlock(pos.x, pos.y, pos.z, arguments[1], arguments[2] || 0);
             }
             else {
-                this.blockSource.setExtraBlock(pos.x, pos.y, pos.z, id);
+                this.blockSource.setExtraBlock(pos.x, pos.y, pos.z, arguments[1]);
             }
         }
-    };
-    WorldRegion.prototype.getExtraBlock = function (x, y, z) {
-        if (typeof x === "number") {
-            return this.blockSource.getExtraBlock(x, y, z);
-        }
-        var pos = x;
-        return this.blockSource.getExtraBlock(pos.x, pos.y, pos.z);
     };
     WorldRegion.prototype.destroyBlock = function (x, y, z, drop, player) {
         if (typeof x === "object") {
-            var pos = x, drop_1 = y, player_1 = z;
-            this.destroyBlock(pos.x, pos.y, pos.z, drop_1, player_1);
-            return;
+            var pos = x;
+            return this.destroyBlock(pos.x, pos.y, pos.z, arguments[1], arguments[2]);
         }
         if (drop) {
             var block = this.getBlock(x, y, z);
@@ -398,39 +383,37 @@ var WorldRegion = /** @class */ (function () {
         }
     };
     WorldRegion.prototype.breakBlock = function (x, y, z, allowDrop, entity, item) {
-        if (typeof x === "number") {
+        if (this.isDeprecated) {
+            this.destroyBlock(x, y, z, allowDrop, entity);
+        }
+        else if (typeof x === "number") {
             this.blockSource.breakBlock(x, y, z, allowDrop, entity, item);
         }
         else {
             var pos = x;
-            item = allowDrop;
-            entity = z;
-            allowDrop = y;
-            this.blockSource.breakBlock(pos.x, pos.y, pos.z, allowDrop, entity, item);
+            this.blockSource.breakBlock(pos.x, pos.y, pos.z, arguments[1], arguments[2], arguments[3]);
         }
     };
-    WorldRegion.prototype.breakBlockForResult = function (x, y, z, player, item) {
+    WorldRegion.prototype.breakBlockForResult = function (x, y, z, entity, item) {
         if (typeof x === "object") {
             var pos = x;
-            player = y;
-            item = z;
-            return this.breakBlockForResult(pos.x, pos.y, pos.z, player, item);
+            return this.breakBlockForResult(pos.x, pos.y, pos.z, arguments[1], arguments[2]);
         }
-        if (BlockEngine.getMainGameVersion() >= 16) {
-            return this.blockSource.breakBlockForJsResult(x, y, z, player, item);
-        }
-        var block = this.blockSource.getBlock(x, y, z);
-        this.blockSource.setBlock(x, y, z, 0, 0);
-        var level = ToolAPI.getToolLevelViaBlock(item.id, block.id);
-        var drop = BlockRegistry.getBlockDrop(x, y, z, block, level, item, this.blockSource);
-        var items = [];
-        if (drop) {
-            for (var _i = 0, drop_2 = drop; _i < drop_2.length; _i++) {
-                var item_1 = drop_2[_i];
-                items.push(new ItemStack(item_1[0], item_1[1], item_1[2], item_1[3]));
+        if (this.isDeprecated) {
+            var block = this.blockSource.getBlock(x, y, z);
+            this.blockSource.setBlock(x, y, z, 0, 0);
+            var level = ToolAPI.getToolLevelViaBlock(item.id, block.id);
+            var drop = BlockRegistry.getBlockDrop(x, y, z, block, level, item, this.blockSource);
+            var items = [];
+            if (drop) {
+                for (var _i = 0, drop_1 = drop; _i < drop_1.length; _i++) {
+                    var item_1 = drop_1[_i];
+                    items.push(new ItemStack(item_1[0], item_1[1], item_1[2], item_1[3]));
+                }
             }
+            return { items: items, experience: 0 };
         }
-        return { items: items, experience: 0 };
+        return this.blockSource.breakBlockForJsResult(x, y, z, entity, item);
     };
     WorldRegion.prototype.getNativeTileEntity = function (x, y, z) {
         if (typeof x === "number") {
@@ -474,9 +457,7 @@ var WorldRegion = /** @class */ (function () {
         }
         else {
             var pos = x;
-            power = y;
-            fire = z || false;
-            this.blockSource.explode(pos.x, pos.y, pos.z, power, fire);
+            this.blockSource.explode(pos.x, pos.y, pos.z, arguments[1], arguments[2] || false);
         }
     };
     /**
@@ -552,26 +533,39 @@ var WorldRegion = /** @class */ (function () {
         var pos = x;
         return this.blockSource.getGrassColor(pos.x, pos.y, pos.z);
     };
-    WorldRegion.prototype.dropItem = function (x, y, z, item, count, data, extra) {
-        if (typeof item == "object") {
-            return this.blockSource.spawnDroppedItem(x, y, z, item.id, item.count, item.data, item.extra || null);
+    WorldRegion.prototype.dropItem = function (x, y, z, id, count, data, extra) {
+        if (typeof x == "object") {
+            var pos = x;
+            if (typeof y == "object") {
+                var item = y;
+                return this.dropItem(pos.x, pos.y, pos.z, item);
+            }
+            return this.dropItem(pos.x, pos.y, pos.z, arguments[1], arguments[2], arguments[3], arguments[4]);
         }
-        return this.blockSource.spawnDroppedItem(x, y, z, item, count, data, extra || null);
+        if (typeof id == "object") {
+            var item = id;
+            return this.dropItem(x, y, z, item.id, item.count, item.data, item.extra);
+        }
+        return this.blockSource.spawnDroppedItem(x, y, z, id, count || 1, data || 0, extra || null);
     };
-    WorldRegion.prototype.dropAtBlock = function (x, y, z, item, count, data, extra) {
-        return this.dropItem(x + .5, y + .5, z + .5, item, count, data, extra);
+    WorldRegion.prototype.dropAtBlock = function (x, y, z, id, count, data, extra) {
+        if (typeof x == "object") {
+            var pos = x;
+            return this.dropItem(pos.x + .5, pos.y + .5, pos.z + .5, arguments[1], arguments[2], arguments[3], arguments[4]);
+        }
+        return this.dropItem(x + .5, y + .5, z + .5, id, count, data, extra);
     };
     WorldRegion.prototype.spawnEntity = function (x, y, z, namespace, type, init_data) {
-        if (type === void 0) {
+        if (type === undefined) {
             return this.blockSource.spawnEntity(x, y, z, namespace);
         }
         return this.blockSource.spawnEntity(x, y, z, namespace, type, init_data);
     };
-    /**
-     * Spawns experience orbs on coords
-     * @param amount experience amount
-     */
     WorldRegion.prototype.spawnExpOrbs = function (x, y, z, amount) {
+        if (typeof x == "object") {
+            var pos = x;
+            this.spawnExpOrbs(pos.x, pos.y, pos.z, arguments[1]);
+        }
         this.blockSource.spawnExpOrbs(x, y, z, amount);
     };
     WorldRegion.prototype.listEntitiesInAABB = function (x1, y1, z1, x2, y2, z2, type, blacklist) {
@@ -582,7 +576,7 @@ var WorldRegion = /** @class */ (function () {
             return this.listEntitiesInAABB(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, z1, x2);
         }
         var entities = this.blockSource.listEntitiesInAABB(x1, y1, z1, x2, y2, z2, type, blacklist);
-        if (BlockEngine.getMainGameVersion() == 11 && (type == Native.EntityType.PLAYER) != blacklist) {
+        if (this.isDeprecated && (type == Native.EntityType.PLAYER) != blacklist) {
             var players = Network.getConnectedPlayers();
             var dimension = this.getDimension();
             for (var _i = 0, players_1 = players; _i < players_1.length; _i++) {
@@ -1017,7 +1011,7 @@ var BlockBase = /** @class */ (function () {
             for (var i = 0; i < Math.min(this.variations.length, variations.length); i++) {
                 if (variations[i].inCreative) {
                     this.variations[i].inCreative = false;
-                    Logger.Log("Skipped duplicated adding to creative for block " + this.stringID + ":" + i, "BlockEngine");
+                    Logger.Log("Skipped duplicated adding to creative for block ".concat(this.stringID, ":").concat(i), "BlockEngine");
                 }
             }
         }
@@ -1042,8 +1036,8 @@ var BlockBase = /** @class */ (function () {
         var enchant = ToolAPI.getEnchantExtraData();
         var item = new ItemStack();
         var drop = this.getDrop(coords, block, 127, enchant, item, region);
-        for (var _i = 0, drop_3 = drop; _i < drop_3.length; _i++) {
-            var item_2 = drop_3[_i];
+        for (var _i = 0, drop_2 = drop; _i < drop_2.length; _i++) {
+            var item_2 = drop_2[_i];
             region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_2[0], item_2[1], item_2[2], item_2[3] || null);
         }
     };
@@ -1622,8 +1616,8 @@ var BlockRegistry;
             var item = new ItemStack();
             //@ts-ignore
             var drop = dropFunc(coords, block.id, block.data, 127, enchant, item, region);
-            for (var _i = 0, drop_4 = drop; _i < drop_4.length; _i++) {
-                var item_3 = drop_4[_i];
+            for (var _i = 0, drop_3 = drop; _i < drop_3.length; _i++) {
+                var item_3 = drop_3[_i];
                 region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_3[0], item_3[1], item_3[2], item_3[3] || null);
             }
         });
@@ -1789,11 +1783,34 @@ var ItemStack = /** @class */ (function () {
     ItemStack.prototype.getItemInstance = function () {
         return ItemRegistry.getInstanceOf(this.id);
     };
+    /**
+     * Creates a copy of current ItemStack object
+     * @returns a created copy of the ItemStack
+     */
+    ItemStack.prototype.copy = function () {
+        var _a;
+        return new ItemStack(this.id, this.count, this.data, (_a = this.extra) === null || _a === void 0 ? void 0 : _a.copy());
+    };
+    /**
+     * @returns maximum stack size for the item
+     */
     ItemStack.prototype.getMaxStack = function () {
         return Item.getMaxStack(this.id);
     };
+    /**
+     * @returns maximum damage value for the item
+     */
     ItemStack.prototype.getMaxDamage = function () {
         return Item.getMaxDamage(this.id);
+    };
+    /**
+     * @returns true if all stack values are empty, false otherwise
+     */
+    ItemStack.prototype.isEmpty = function () {
+        return this.id == 0 &&
+            this.count == 0 &&
+            this.data == 0 &&
+            this.extra == null;
     };
     /**
      * Decreases stack count by specified value.
@@ -2002,7 +2019,7 @@ var ItemBase = /** @class */ (function () {
         var _a;
         var wasInCreative = (_a = ItemRegistry.getInstanceOf(this.id)) === null || _a === void 0 ? void 0 : _a.inCreative;
         if (wasInCreative) {
-            Logger.Log("Skipped duplicated adding to creative for item " + this.stringID, "BlockEngine");
+            Logger.Log("Skipped duplicated adding to creative for item ".concat(this.stringID), "BlockEngine");
         }
         else {
             Item.addToCreative(this.id, 1, 0);
@@ -2028,8 +2045,9 @@ var ItemFood = /** @class */ (function (_super) {
     __extends(ItemFood, _super);
     function ItemFood(stringID, name, icon, params, inCreative) {
         if (inCreative === void 0) { inCreative = true; }
+        var _this = this;
         var _a;
-        var _this = _super.call(this, stringID, name, icon) || this;
+        _this = _super.call(this, stringID, name, icon) || this;
         var foodProperties = {
             nutrition: params.food || 0,
             saturation_modifier: params.saturation || "normal",
@@ -2159,6 +2177,7 @@ var ItemArmor = /** @class */ (function (_super) {
 var ToolType;
 (function (ToolType) {
     ToolType.SWORD = {
+        __flag: "__sword",
         handEquipped: true,
         isWeapon: true,
         enchantType: Native.EnchantType.weapon,
@@ -2175,6 +2194,7 @@ var ToolType;
         }
     };
     ToolType.SHOVEL = {
+        __flag: "__shovel",
         handEquipped: true,
         enchantType: Native.EnchantType.shovel,
         damage: 2,
@@ -2190,43 +2210,61 @@ var ToolType;
         }
     };
     ToolType.PICKAXE = {
+        __flag: "__pickaxe",
         handEquipped: true,
         enchantType: Native.EnchantType.pickaxe,
         damage: 2,
         blockTypes: ["stone"],
     };
     ToolType.AXE = {
+        __flag: "__axe",
         handEquipped: true,
         enchantType: Native.EnchantType.axe,
         damage: 3,
         blockTypes: ["wood"],
-        onItemUse: function (coords, item, block, player) {
-            var region = WorldRegion.getForActor(player);
-            var logID;
-            if (block.id == 17) {
-                if (block.data == 0)
-                    logID = VanillaTileID.stripped_oak_log;
-                if (block.data == 1)
-                    logID = VanillaTileID.stripped_spruce_log;
-                if (block.data == 2)
-                    logID = VanillaTileID.stripped_birch_log;
-                if (block.data == 3)
-                    logID = VanillaTileID.stripped_jungle_log;
-            }
-            else if (block.id == 162) {
-                if (block.data == 0)
-                    logID = VanillaTileID.stripped_acacia_log;
-                else
-                    logID = VanillaTileID.stripped_dark_oak_log;
-            }
+        onItemUse: function (coords, item, tile, player) {
+            var logID = this.getStrippedLogId(tile);
             if (logID) {
-                region.setBlock(coords, logID, 0);
+                var region = WorldRegion.getForActor(player);
+                if (BlockEngine.getMainGameVersion() >= 16) {
+                    var block = region.getBlock(coords);
+                    var states = { "pillar_axis": block.getState(EBlockStates.PILLAR_AXIS) };
+                    if (logID == VanillaTileID.stripped_warped_stem || logID == VanillaTileID.stripped_crimson_stem) {
+                        states["deprecated"] = 0;
+                    }
+                    var block2 = new BlockState(logID, states);
+                    region.setBlock(coords, block2);
+                }
+                else {
+                    region.setBlock(coords, logID, 0);
+                }
                 item.applyDamage(1);
                 Entity.setCarriedItem(player, item.id, item.count, item.data, item.extra);
+            }
+        },
+        getStrippedLogId: function (block) {
+            switch (block.id) {
+                case 17:
+                    if (block.data == 0)
+                        return VanillaTileID.stripped_oak_log;
+                    if (block.data == 1)
+                        return VanillaTileID.stripped_spruce_log;
+                    if (block.data == 2)
+                        return VanillaTileID.stripped_birch_log;
+                    return VanillaTileID.stripped_jungle_log;
+                case 162:
+                    if (block.data == 0)
+                        return VanillaTileID.stripped_acacia_log;
+                    return VanillaTileID.stripped_dark_oak_log;
+                case VanillaTileID.warped_stem:
+                    return VanillaTileID.stripped_warped_stem;
+                case VanillaTileID.crimson_stem:
+                    return VanillaTileID.stripped_crimson_stem;
             }
         }
     };
     ToolType.HOE = {
+        __flag: "__hoe",
         handEquipped: true,
         enchantType: Native.EnchantType.pickaxe,
         damage: 2,
@@ -2244,6 +2282,7 @@ var ToolType;
         }
     };
     ToolType.SHEARS = {
+        __flag: "__shears",
         blockTypes: ["plant", "fibre", "wool"],
         modifyEnchant: function (enchantData, item, coords, block) {
             if (block) {
@@ -2277,7 +2316,7 @@ var ItemTool = /** @class */ (function (_super) {
         var _this = _super.call(this, stringID, name, icon, inCreative) || this;
         _this.handEquipped = false;
         _this.brokenId = 0;
-        _this.damage = 0;
+        _this.damage = 1;
         _this.isWeapon = false;
         _this.blockTypes = [];
         _this.setMaxStack(1);
@@ -2683,13 +2722,33 @@ IDConverter.registerOld("music_disc_11", VanillaItemID.record_11, 0);
 IDConverter.registerOld("music_disc_wait", VanillaItemID.record_wait, 0);
 var TileEntityBase = /** @class */ (function () {
     function TileEntityBase() {
-        var _a;
         this.useNetworkItemContainer = true;
         this._clickPrevented = false;
-        (_a = this.client) !== null && _a !== void 0 ? _a : (this.client = {});
-        this.client.load = this.clientLoad;
-        this.client.unload = this.clientUnload;
-        this.client.tick = this.clientTick;
+        this.client = {
+            load: this.clientLoad,
+            unload: this.clientUnload,
+            tick: this.clientTick,
+            events: {},
+            containerEvents: {}
+        };
+        this.events = {};
+        this.containerEvents = {};
+        for (var propertyName in this.__clientMethods) {
+            this.client[propertyName] = this[propertyName];
+        }
+        for (var eventName in this.__networkEvents) {
+            var side = this.__networkEvents[eventName];
+            var target = (side == Side.Client) ? this.client.events : this.events;
+            target[eventName] = this[eventName];
+        }
+        for (var eventName in this.__containerEvents) {
+            var side = this.__containerEvents[eventName];
+            var target = (side == Side.Client) ? this.client.containerEvents : this.containerEvents;
+            target[eventName] = this[eventName];
+        }
+        delete this.__clientMethods;
+        delete this.__networkEvents;
+        delete this.__containerEvents;
     }
     TileEntityBase.prototype.created = function () {
         this.onCreate();

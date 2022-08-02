@@ -15,7 +15,7 @@ implements BlockItemBehavior {
 		this.addVariation("rubber_tree_sapling", [["rubber_tree_sapling", 0]], true);
 		this.setCategory(ItemCategory.NATURE);
 		this.setBlockMaterial("plant");
-		this.setShape(this.id, 1/8, 0, 1/8, 7/8, 1, 7/8);
+		this.setShape(1/8, 0, 1/8, 7/8, 1, 7/8);
 		TileRenderer.setEmptyCollisionShape(this.id);
 		Recipes.addFurnaceFuel(this.id, -1, 100);
 		ItemRegistry.registerItemFuncs(this.id, this);

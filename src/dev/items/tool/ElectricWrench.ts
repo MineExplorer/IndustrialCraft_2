@@ -1,6 +1,5 @@
 class ElectricWrench extends ItemElectric
 implements IWrech {
-	dropChance = 1;
 	energyPerUse = 100;
 
 	constructor() {
@@ -9,7 +8,7 @@ implements IWrech {
 	}
 
 	isUseable(item: ItemInstance, damage: number): boolean {
-		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyStored = ChargeItemRegistry.getEnergyStored(item);
 		return energyStored >= this.energyPerUse * damage;
 	}
 

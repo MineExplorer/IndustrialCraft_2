@@ -97,7 +97,7 @@ Callback.addCallback("PreLoaded", function() {
 		{id: ItemID.rubber, data: 0}
 	]);
 	Recipes.addShapeless({id: ItemID.cableGold2, count: 1, data: 0}, [
-		{id: ItemID.cableGold1, data: 0},
+		{id: ItemID.cableGold0, data: 0},
 		{id: ItemID.rubber, data: 0},
 		{id: ItemID.rubber, data: 0}
 	]);

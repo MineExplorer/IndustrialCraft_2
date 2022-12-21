@@ -11927,12 +11927,12 @@ declare namespace TileEntity {
 		/**
          * Called on server side and returns UI name to open on click
          */
-        getScreenName?: (player: number, coords: Vector) => string;
+        getScreenName?: (player: number, coords: Callback.ItemUseCoordinates) => string;
 
         /**
          * Called on client side, returns the window to open
          */
-        getScreenByName?: (screenName?: string) => UI.IWindow;
+        getScreenByName?: (screenName: string, container: ItemContainer) => UI.IWindow;
 
         /**
          * Called when more liquid is required

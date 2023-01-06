@@ -1142,9 +1142,10 @@ declare namespace Block {
 	 * where it is destroyed
 	 * @param block information about block that is broken
 	 * @param region BlockSource object
+	 * @param i unknown parameter, supposed to always be zero
 	 */
 	interface PopResourcesFunction {
-		(blockCoords: Vector, block: Tile, region: BlockSource): void
+		(blockCoords: Vector, block: Tile, region: BlockSource, explosionRadius: number, i: number): void
 	}
 
 
@@ -1217,6 +1218,12 @@ declare namespace Block {
 	 * @returns drop function of the block with given numeric id
 	 */
 	function getDropFunction(id: number): Block.DropFunction;
+
+	/**
+	 * @returns place function of the block with given numeric id,
+	 * or undefined if it was not specified
+	 */
+	function getPlaceFunc(id: number): Block.PlaceFunction;
 
 	/**
 	 * @returns given block's material numeric id
@@ -1731,8 +1738,13 @@ declare class BlockSource {
 	  */
 	spawnEntity(x: number, y: number, z: number, type: number | string): number;
 
-	spawnEntity(x: number, y: number, z: number, namespace: string, type: string, init_data: string): number;
-
+	/**
+	 * Spawns entity of given type on coords with specified spawn event.
+	 * @param namespace namespace of the entity type: 'minecraft' or from add-on.
+	 * @param type entity type name
+	 * @param spawnEvent built-in event for entity spawn. Use 'minecraft:entity_born' to spawn baby mob.
+	 */
+	spawnEntity(x: number, y: number, z: number, namespace: string, type: string, spawnEvent: string): number;
 
 	/**
 	  * Spawns experience orbs on coords
@@ -2020,6 +2032,8 @@ declare namespace Callback {
     function addCallback(name: "BlockEventEntityStepOn", func: Block.EntityStepOnFunction, priority?: number): void;
 
     function addCallback(name: "BlockEventNeighbourChange", func: Block.NeighbourChangeFunction, priority?: number): void;
+
+    function addCallback(name: "PopBlockResources", func: PopBlockResourcesFunction, priority?: number): void;
 
     function addCallback(name: "ConnectingToHost", func: ConnectingToHostFunction, priority?: number): void;
 
@@ -2379,11 +2393,10 @@ declare namespace Callback {
      * Function used in "PopBlockResources" callback
      * @param coords coordinates of the block that was broken
      * @param block information about the block that was broken
-     * @param f some floating point value
-     * @param i some integer value
+     * @param i unknown parameter, supposed to always be zero
      */
     interface PopBlockResourcesFunction {
-        (coords: Vector, block: Tile, f: number, i: number, region: BlockSource): void
+        (coords: Vector, block: Tile, explosionRadius: number, i: number, region: BlockSource): void
     }
 
     /**
@@ -5860,6 +5873,13 @@ declare namespace Game {
      * For most callbacks it prevents default game behaviour
      */
     function prevent(): void;
+
+    /**
+     * @returns true if the current callback function has already been
+     * prevented from being called in Minecraft using [[Game.prevent]],
+     * false otherwise
+     */
+    function isActionPrevented(): boolean;
 
     /**
      * Writes message to the chat. Message can be formatted using 
@@ -11907,12 +11927,12 @@ declare namespace TileEntity {
 		/**
          * Called on server side and returns UI name to open on click
          */
-        getScreenName?: (player: number, coords: Vector) => string;
+        getScreenName?: (player: number, coords: Callback.ItemUseCoordinates) => string;
 
         /**
          * Called on client side, returns the window to open
          */
-        getScreenByName?: (screenName?: string) => UI.IWindow;
+        getScreenByName?: (screenName: string, container: ItemContainer) => UI.IWindow;
 
         /**
          * Called when more liquid is required

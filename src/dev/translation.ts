@@ -449,8 +449,10 @@ Translation.addTranslation("mining_laser.super_heat", {en: "Super-Heat", ru: "П
 Translation.addTranslation("mining_laser.scatter", {en: "Scatter", ru: "Разброс", es: "Esparcido", pt: "Dispersão", zh: "散射模式"});
 Translation.addTranslation("mining_laser.3x3", {en: "3x3"});
 // Iridium Drill
-Translation.addTranslation("Fortune III", {ru: "Удача III", pt: "Fortuna III", zh: "时运 III"});
-Translation.addTranslation("Silk Touch", {ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
+Translation.addTranslation("iridium_drill.fortune", {en: "Fortune III", ru: "Удача III", pt: "Fortuna III", zh: "时运 III"});
+Translation.addTranslation("iridium_drill.silk_touch", {en: "Silk Touch", ru: "Шёлковое касание", pt: "Toque suave", zh: "精准采集"});
+Translation.addTranslation("iridium_drill.fortune_3x3", {en: "Fortune III (3x3)", ru: "Удача III (3x3)", pt: "Fortuna III (3x3)", zh: "时运 III (3x3)"});
+Translation.addTranslation("iridium_drill.silk_touch_3x3", {en: "Silk Touch (3x3)", ru: "Шёлковое касание (3x3)", pt: "Toque suave (3x3)", zh: "精准采集 (3x3)"});
 
 // Messages
 Translation.addTranslation("message.nightvision.enabled", {en: "Nightvision mode enabled", es: "Modo Vision Noctura Habilitado", ru: "Режим ночного зрения включен", zh: "已启用夜视模式"});

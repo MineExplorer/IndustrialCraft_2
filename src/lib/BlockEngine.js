@@ -32,23 +32,32 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 9,
+    version: 10,
     shared: true,
     api: "CoreEngine"
 });
-var EntityGetYaw = ModAPI.requireGlobal("Entity.getYaw");
-var EntityGetPitch = ModAPI.requireGlobal("Entity.getPitch");
 var BlockEngine;
 (function (BlockEngine) {
     var gameVersion = getMCPEVersion().array;
+    /**
+     * @returns game version as array
+     */
     function getGameVersion() {
         return gameVersion;
     }
     BlockEngine.getGameVersion = getGameVersion;
+    /**
+     * @returns main game version number
+     */
     function getMainGameVersion() {
         return gameVersion[1];
     }
     BlockEngine.getMainGameVersion = getMainGameVersion;
+    /**
+     * Sends packet with message which will be translated by the client.
+     * @param client receiver client
+     * @param texts array of strings which will be translated and combined in one message.
+     */
     function sendUnlocalizedMessage(client) {
         var texts = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -116,6 +125,10 @@ var MiningLevel;
     MiningLevel[MiningLevel["DIAMOND"] = 3] = "DIAMOND";
     MiningLevel[MiningLevel["OBSIDIAN"] = 4] = "OBSIDIAN";
 })(MiningLevel || (MiningLevel = {}));
+/**
+ * Class which represents three-dimensional vector
+ * and basic operations with it.
+ */
 var Vector3 = /** @class */ (function () {
     function Vector3(vx, vy, vz) {
         if (typeof (vx) == "number") {
@@ -130,6 +143,10 @@ var Vector3 = /** @class */ (function () {
             this.z = v.z;
         }
     }
+    /**
+     * @param side block side
+     * @returns direction vector for specified side
+     */
     Vector3.getDirection = function (side) {
         switch (side) {
             case 0: return this.DOWN;
@@ -167,8 +184,14 @@ var Vector3 = /** @class */ (function () {
         var v = vx;
         return this.add(v.x, v.y, v.z);
     };
-    Vector3.prototype.addScaled = function (v, scale) {
-        return this.add(v.x * scale, v.y * scale, v.z * scale);
+    /**
+     * Adds vector scaled by factor.
+     * @param vector vector to add.
+     * @param scale scale factor
+     * @returns result vector.
+     */
+    Vector3.prototype.addScaled = function (vector, scale) {
+        return this.add(vector.x * scale, vector.y * scale, vector.z * scale);
     };
     Vector3.prototype.sub = function (vx, vy, vz) {
         if (typeof (vx) == "number") {
@@ -194,6 +217,10 @@ var Vector3 = /** @class */ (function () {
         var v = vx;
         return this.dot(v.x, v.y, v.z);
     };
+    /**
+     * Normalizes vector.
+     * @returns normalized vector.
+     */
     Vector3.prototype.normalize = function () {
         var len = this.length();
         this.x /= len;
@@ -201,12 +228,22 @@ var Vector3 = /** @class */ (function () {
         this.z /= len;
         return this;
     };
+    /**
+     * @returns vector length squared
+     */
     Vector3.prototype.lengthSquared = function () {
         return this.x * this.x + this.y * this.y + this.z * this.z;
     };
+    /**
+     * @returns vector length.
+     */
     Vector3.prototype.length = function () {
         return Math.sqrt(this.lengthSquared());
     };
+    /**
+     * Multiplies vector coords by -1.
+     * @returns opposite vector.
+     */
     Vector3.prototype.negate = function () {
         this.x = -this.x;
         this.y = -this.y;
@@ -230,12 +267,22 @@ var Vector3 = /** @class */ (function () {
         var v = vx;
         return this.distance(v.x, v.y, v.z);
     };
+    /**
+     * Scales vector coords by factor.
+     * @param factor scaling factor
+     * @returns scaled vector
+     */
     Vector3.prototype.scale = function (factor) {
         this.x *= factor;
         this.y *= factor;
         this.z *= factor;
         return this;
     };
+    /**
+     * Scales vector length to specified value.
+     * @param len target length
+     * @returns scaled vector
+     */
     Vector3.prototype.scaleTo = function (len) {
         var factor = len / this.length();
         return this.scale(factor);
@@ -253,18 +300,17 @@ var Vector3 = /** @class */ (function () {
 }());
 EXPORT("Vector3", Vector3);
 /**
- * Class to work with world based on BlockSource
+ * Class to work with world based on `BlockSource`
  */
 var WorldRegion = /** @class */ (function () {
     function WorldRegion(blockSource) {
-        this.isDeprecated = false;
         this.blockSource = blockSource;
         this.isDeprecated = BlockEngine.getMainGameVersion() < 16;
     }
     /**
      * @returns interface to given dimension
      * (null if given dimension is not loaded and this interface
-     * was not created yet)
+     * was not created yet).
      */
     WorldRegion.getForDimension = function (dimension) {
         var blockSource = BlockSource.getDefaultForDimension(dimension);
@@ -276,7 +322,7 @@ var WorldRegion = /** @class */ (function () {
     /**
      * @returns interface to the dimension where the given entity is
      * (null if given entity does not exist or the dimension is not loaded
-     * and interface was not created)
+     * and interface was not created).
      */
     WorldRegion.getForActor = function (entityUid) {
         var blockSource = BlockSource.getDefaultForActor(entityUid);
@@ -285,6 +331,9 @@ var WorldRegion = /** @class */ (function () {
         }
         return null;
     };
+    /**
+     * @returns `WorldRegion` for world generation callback.
+     */
     WorldRegion.getCurrentWorldGenRegion = function () {
         var blockSource = BlockSource.getCurrentWorldGenRegion();
         if (blockSource) {
@@ -293,7 +342,7 @@ var WorldRegion = /** @class */ (function () {
         return null;
     };
     /**
-     * @returns the dimension id to which the following object belongs
+     * @returns the dimension id to which the following object belongs.
      */
     WorldRegion.prototype.getDimension = function () {
         return this.blockSource.getDimension();
@@ -461,14 +510,14 @@ var WorldRegion = /** @class */ (function () {
         }
     };
     /**
-     * @returns biome id at X and Z coord
+     * @returns biome id at X and Z coord.
      */
     WorldRegion.prototype.getBiome = function (x, z) {
         return this.blockSource.getBiome(x, z);
     };
     /**
-     * Sets biome id by coords
-     * @param id - id of the biome to set
+     * Sets biome id by coords.
+     * @param biomeID - id of the biome to set
      */
     WorldRegion.prototype.setBiome = function (x, z, biomeID) {
         this.blockSource.setBiome(x, z, biomeID);
@@ -483,7 +532,7 @@ var WorldRegion = /** @class */ (function () {
     /**
      * @param chunkX X coord of the chunk
      * @param chunkZ Z coord of the chunk
-     * @returns true if chunk is loaded, false otherwise
+     * @returns true if chunk is loaded, false otherwise.
      */
     WorldRegion.prototype.isChunkLoaded = function (chunkX, chunkZ) {
         return this.blockSource.isChunkLoaded(chunkX, chunkZ);
@@ -491,7 +540,7 @@ var WorldRegion = /** @class */ (function () {
     /**
      * @param x X coord of the position
      * @param z Z coord of the position
-     * @returns true if chunk on the position is loaded, false otherwise
+     * @returns true if chunk on the position is loaded, false otherwise.
      */
     WorldRegion.prototype.isChunkLoadedAt = function (x, z) {
         return this.blockSource.isChunkLoadedAt(x, z);
@@ -499,7 +548,7 @@ var WorldRegion = /** @class */ (function () {
     /**
      * @param chunkX X coord of the chunk
      * @param chunkZ Z coord of the chunk
-     * @returns the loading state of the chunk by chunk coords
+     * @returns the loading state of the chunk by chunk coords.
      */
     WorldRegion.prototype.getChunkState = function (chunkX, chunkZ) {
         return this.blockSource.getChunkState(chunkX, chunkZ);
@@ -507,7 +556,7 @@ var WorldRegion = /** @class */ (function () {
     /**
      * @param x X coord of the position
      * @param z Z coord of the position
-     * @returns the loading state of the chunk by coords
+     * @returns the loading state of the chunk by coords.
      */
     WorldRegion.prototype.getChunkStateAt = function (x, z) {
         return this.blockSource.getChunkStateAt(x, z);
@@ -555,11 +604,11 @@ var WorldRegion = /** @class */ (function () {
         }
         return this.dropItem(x + .5, y + .5, z + .5, id, count, data, extra);
     };
-    WorldRegion.prototype.spawnEntity = function (x, y, z, namespace, type, init_data) {
+    WorldRegion.prototype.spawnEntity = function (x, y, z, namespace, type, spawnEvent) {
         if (type === undefined) {
             return this.blockSource.spawnEntity(x, y, z, namespace);
         }
-        return this.blockSource.spawnEntity(x, y, z, namespace, type, init_data);
+        return this.blockSource.spawnEntity(x, y, z, namespace, type, spawnEvent);
     };
     WorldRegion.prototype.spawnExpOrbs = function (x, y, z, amount) {
         if (typeof x == "object") {
@@ -591,20 +640,20 @@ var WorldRegion = /** @class */ (function () {
         }
         return entities;
     };
-    /**
-     * Plays standart Minecraft sound on the specified coordinates
-     * @param name sound name
-     * @param volume sound volume from 0 to 1. Default is 1.
-     * @param pitch sound pitch, from 0 to 1. Default is 1.
-     */
     WorldRegion.prototype.playSound = function (x, y, z, name, volume, pitch) {
-        if (volume === void 0) { volume = 1; }
-        if (pitch === void 0) { pitch = 1; }
-        var soundPos = new Vector3(x, y, z);
-        this.sendPacketInRadius(soundPos, 100, "WorldRegion.play_sound", __assign(__assign({}, soundPos), { name: name, volume: volume, pitch: pitch }));
+        var _a, _b;
+        if (typeof (x) == "number") {
+            var soundPos = new Vector3(x, y, z);
+            this.playSound(soundPos, name, volume, pitch);
+        }
+        else {
+            var coords = arguments[0];
+            this.sendPacketInRadius(coords, 100, "WorldRegion.play_sound", __assign(__assign({}, coords), { name: arguments[1], volume: (_a = arguments[2]) !== null && _a !== void 0 ? _a : 1, pitch: (_b = arguments[3]) !== null && _b !== void 0 ? _b : 1 }));
+        }
     };
     /**
-     * Plays standart Minecraft sound from the specified entity
+     * Plays standard Minecraft sound from the specified entity.
+     * @param ent entity id
      * @param name sound name
      * @param volume sound volume from 0 to 1. Default is 1.
      * @param pitch sound pitch, from 0 to 1. Default is 1.
@@ -616,7 +665,9 @@ var WorldRegion = /** @class */ (function () {
         this.sendPacketInRadius(soundPos, 100, "WorldRegion.play_sound_at", { ent: ent, name: name, volume: volume, pitch: pitch });
     };
     /**
-     * Sends network packet for players in a radius from specified coords
+     * Sends network packet for players within a radius from specified coords.
+     * @param coords coordinates from which players will be searched
+     * @param radius radius within which players will receive packet
      * @param packetName name of the packet to send
      * @param data packet data object
      */
@@ -640,13 +691,22 @@ Network.addClientPacket("WorldRegion.play_sound", function (data) {
 Network.addClientPacket("WorldRegion.play_sound_at", function (data) {
     World.playSoundAtEntity(data.ent, data.name, data.volume, data.pitch);
 });
+/**
+ * Class to manipulate player based on `PlayerActor`.
+ * Due to limitations of underlying PlayerActor class this class
+ * can be used only during 1 server tick!
+ */
 var PlayerEntity = /** @class */ (function () {
+    /**
+     * Creates new instance of `PlayerEntity`.
+     * @param playerUid player's numeric entity id
+     */
     function PlayerEntity(playerUid) {
         this.actor = new PlayerActor(playerUid);
         this.playerUid = playerUid;
     }
     /**
-     * @returns player's unique numeric entity id
+     * @returns player's unique numeric entity id.
      */
     PlayerEntity.prototype.getUid = function () {
         return this.playerUid;
@@ -705,7 +765,7 @@ var PlayerEntity = /** @class */ (function () {
         }
     };
     /**
-     * Decreases carried item count by specified number
+     * Decreases carried item count by specified number.
      * @param amount amount of items to decrease, default is 1
      */
     PlayerEntity.prototype.decreaseCarriedItem = function (amount) {
@@ -838,6 +898,15 @@ var PlayerEntity = /** @class */ (function () {
     PlayerEntity.prototype.setScore = function (value) {
         this.actor.setScore(value);
     };
+    PlayerEntity.prototype.getItemUseDuration = function () {
+        return this.actor.getItemUseDuration();
+    };
+    PlayerEntity.prototype.getItemUseIntervalProgress = function () {
+        return this.actor.getItemUseIntervalProgress();
+    };
+    PlayerEntity.prototype.getItemUseStartupProgress = function () {
+        return this.actor.getItemUseStartupProgress();
+    };
     return PlayerEntity;
 }());
 var EntityCustomData;
@@ -881,8 +950,16 @@ var EntityCustomData;
         delete entities[entity];
     });
 })(EntityCustomData || (EntityCustomData = {}));
+/**
+ * Module for creating block models.
+ */
 var BlockModeler;
 (function (BlockModeler) {
+    /**
+     * @returns box vertexes with specified rotation
+     * @param box array of box vertexes
+     * @rotation block rotation
+     */
     function getRotatedBoxVertexes(box, rotation) {
         switch (rotation) {
             case 0:
@@ -896,6 +973,10 @@ var BlockModeler;
         }
     }
     BlockModeler.getRotatedBoxVertexes = getRotatedBoxVertexes;
+    /**
+     * Sets stairs render model and shape to block.
+     * @param id block numeric id
+     */
     function setStairsRenderModel(id) {
         var boxes = [
             [0, 0, 0, 1, 0.5, 1],
@@ -913,6 +994,18 @@ var BlockModeler;
         createStairsRenderModel(id, 4, newBoxes);
     }
     BlockModeler.setStairsRenderModel = setStairsRenderModel;
+    /**
+     * Sets hand and ui model for the block.
+     * @param blockID block numeric id
+     * @param model block model
+     * @param data block data (0 by default)
+     */
+    function setInventoryModel(blockID, model, data) {
+        if (data === void 0) { data = 0; }
+        ItemModel.getFor(blockID, data).setHandModel(model);
+        ItemModel.getFor(blockID, data).setUiModel(model);
+    }
+    BlockModeler.setInventoryModel = setInventoryModel;
     function createStairsRenderModel(id, startData, boxes) {
         var modelConditionData = [
             { data: 3, posR: [-1, 0], posB: [0, 1] },
@@ -965,22 +1058,22 @@ var BlockModeler;
             BlockRenderer.setCustomRaycastShape(id, data, shape);
         }
     }
-    BlockModeler.createStairsRenderModel = createStairsRenderModel;
-    function setInventoryModel(blockID, model, data) {
-        if (data === void 0) { data = 0; }
-        ItemModel.getFor(blockID, data).setHandModel(model);
-        ItemModel.getFor(blockID, data).setUiModel(model);
-    }
-    BlockModeler.setInventoryModel = setInventoryModel;
 })(BlockModeler || (BlockModeler = {}));
-/// <reference path="BlockType.ts" />
-/// <reference path="BlockBehavior.ts" />
+/// <reference path="../interfaces/BlockType.ts" />
+/// <reference path="../interfaces/BlockBehavior.ts" />
+/**
+ * Base class for block
+ */
 var BlockBase = /** @class */ (function () {
     function BlockBase(stringID, blockType) {
         if (blockType === void 0) { blockType = {}; }
+        /** Array of block variations */
         this.variations = [];
+        /** Shapes of block variations */
         this.shapes = {};
+        /** Flag that defines whether block for this instance was defined or not. */
         this.isDefined = false;
+        /** Block mining level */
         this.miningLevel = 0;
         this.stringID = stringID;
         this.id = IDRegistry.genBlockID(stringID);
@@ -992,18 +1085,24 @@ var BlockBase = /** @class */ (function () {
         }
         this.blockType = blockType;
     }
+    /**
+     * Adds variation for the block.
+     * @param name item name
+     * @param texture block texture
+     * @param inCreative true if should be added to creative inventory
+     */
     BlockBase.prototype.addVariation = function (name, texture, inCreative) {
         if (inCreative === void 0) { inCreative = false; }
         this.variations.push({ name: name, texture: texture, inCreative: inCreative });
     };
+    /**
+     * Registers block in game.
+     */
     BlockBase.prototype.createBlock = function () {
         if (this.variations.length == 0) {
             this.addVariation(this.stringID + ".name", [["__missing", 0]]);
         }
-        var blockType = null;
-        if (this.blockType) {
-            blockType = BlockRegistry.convertBlockTypeToSpecialType(this.blockType);
-        }
+        var blockType = this.blockType ? BlockRegistry.convertBlockTypeToSpecialType(this.blockType) : null;
         // remove duplicated items in creative
         var duplicatedInstance = BlockRegistry.getInstanceOf(this.id);
         if (duplicatedInstance) {
@@ -1041,9 +1140,20 @@ var BlockBase = /** @class */ (function () {
             region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, item_2[0], item_2[1], item_2[2], item_2[3] || null);
         }
     };
+    /**
+     * Sets destroy time for the block.
+     * @param destroyTime block destroy time
+     */
     BlockBase.prototype.setDestroyTime = function (destroyTime) {
         this.blockType.destroyTime = destroyTime;
     };
+    /**
+     * Registers block material and digging level. If you are registering
+     * block with 'stone' material ensure that its block type has baseBlock
+     * id 1 to be correctly destroyed by pickaxes.
+     * @param material material name
+     * @param level block digging level
+     */
     BlockBase.prototype.setBlockMaterial = function (material, level) {
         if (level === void 0) { level = 0; }
         this.blockMaterial = material;
@@ -1051,8 +1161,7 @@ var BlockBase = /** @class */ (function () {
         BlockRegistry.setBlockMaterial(this.id, material, level);
     };
     /**
-     * Sets block box shape
-     * @param id block numeric id
+     * Sets block box shape.
      * @params x1, y1, z1 position of block lower corner (0, 0, 0 for solid block)
      * @params x2, y2, z2 position of block upper conner (1, 1, 1 for solid block)
      * @param data sets shape for one block variation if specified and for all variations otherwise
@@ -1062,7 +1171,7 @@ var BlockBase = /** @class */ (function () {
         this.shapes[data] = [x1, y1, z1, x2, y2, z2];
     };
     /**
-     * Sets the block type of another block, which allows to inherit some of its properties
+     * Sets the block type of another block, which allows to inherit some of its properties.
      * @param baseBlock id of the block to inherit type
      */
     BlockBase.prototype.setBaseBlock = function (baseBlock) {
@@ -1076,6 +1185,7 @@ var BlockBase = /** @class */ (function () {
         this.blockType.solid = isSolid;
     };
     /**
+     * Sets rendering of the block faces.
      * @param renderAllFaces If true, all block faces are rendered, otherwise back faces are not
      * rendered (for optimization purposes). Default is false
      */
@@ -1142,7 +1252,7 @@ var BlockBase = /** @class */ (function () {
         this.blockType.sound = sound;
     };
     /**
-     * Sets block color when displayed on the vanilla maps
+     * Sets block color when displayed on the vanilla maps.
      * @param color map color of the block
      */
     BlockBase.prototype.setMapColor = function (color) {
@@ -1156,21 +1266,29 @@ var BlockBase = /** @class */ (function () {
         this.blockType.colorSource = colorSource;
     };
     /**
-     * Sets item creative category
+     * Sets item category.
      * @param category item category, should be integer from 1 to 4.
      */
     BlockBase.prototype.setCategory = function (category) {
         this.category = category;
     };
+    /**
+     * Sets item rarity.
+     * @param rarity one of `EnumRarity` values
+     */
     BlockBase.prototype.setRarity = function (rarity) {
         ItemRegistry.setRarity(this.id, rarity);
     };
+    /**
+     * Registers TileEntity prototype for this block.
+     * @param prototype TileEntity prototype
+     */
     BlockBase.prototype.registerTileEntity = function (prototype) {
         TileEntity.registerPrototype(this.id, prototype);
     };
     return BlockBase;
 }());
-/// <reference path="BlockBase.ts" />
+/// <reference path="./BlockBase.ts" />
 var BlockRotative = /** @class */ (function (_super) {
     __extends(BlockRotative, _super);
     function BlockRotative(stringID, blockType, hasVerticalFacings) {
@@ -1214,7 +1332,7 @@ var BlockRotative = /** @class */ (function (_super) {
     };
     return BlockRotative;
 }(BlockBase));
-/// <reference path="BlockBase.ts" />
+/// <reference path="./BlockBase.ts" />
 var BlockStairs = /** @class */ (function (_super) {
     __extends(BlockStairs, _super);
     function BlockStairs(stringID, defineData, blockType) {
@@ -1243,15 +1361,109 @@ var BlockStairs = /** @class */ (function (_super) {
     };
     return BlockStairs;
 }(BlockBase));
-/// <reference path="BlockBase.ts" />
-/// <reference path="BlockRotative.ts" />
-/// <reference path="BlockStairs.ts" />
-//@ts-ignore
-var NativeBlock = com.zhekasmirnov.innercore.api.NativeBlock;
+/// <reference path="./BlockBase.ts" />
+var BlockSlab = /** @class */ (function (_super) {
+    __extends(BlockSlab, _super);
+    function BlockSlab() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BlockSlab.prototype.setDoubleSlab = function (blockID) {
+        this.doubleSlabID = blockID;
+    };
+    BlockSlab.prototype.createBlock = function () {
+        var defineData = this.variations;
+        this.variations = [];
+        for (var i = 0; i < 8; i++) {
+            if (i < defineData.length) {
+                this.variations.push(defineData[i]);
+            }
+            else {
+                this.addVariation(defineData[0].name, defineData[0].texture);
+            }
+        }
+        for (var i = 0; i < defineData.length; i++) {
+            this.addVariation(defineData[i].name, defineData[i].texture, false);
+        }
+        for (var i = 0; i < 8; i++) {
+            this.setShape(0, 0, 0, 1, 0.5, 1, i);
+        }
+        for (var i = 8; i < 16; i++) {
+            this.setShape(0, 0.5, 0, 1, 1, 1, i);
+        }
+        _super.prototype.createBlock.call(this);
+    };
+    BlockSlab.prototype.getDrop = function (coords, block, level) {
+        return [[this.id, 1, block.data % 8]];
+    };
+    BlockSlab.prototype.onPlace = function (coords, item, block, player, blockSource) {
+        var region = new WorldRegion(blockSource);
+        // make double slab
+        if (block.id == item.id && block.data % 8 == item.data && Math.floor(block.data / 8) == (coords.side ^ 1)) {
+            region.setBlock(coords, this.doubleSlabID, item.data);
+            return;
+        }
+        var place = coords;
+        if (!World.canTileBeReplaced(block.id, block.data)) {
+            place = coords.relative;
+            var tile = region.getBlock(place);
+            if (!World.canTileBeReplaced(tile.id, tile.data)) {
+                if (tile.id == item.id && tile.data % 8 == item.data) {
+                    region.setBlock(place, this.doubleSlabID, item.data);
+                }
+                return;
+            }
+            ;
+        }
+        if (coords.vec.y - place.y < 0.5) {
+            region.setBlock(place, item.id, item.data);
+        }
+        else {
+            region.setBlock(place, item.id, item.data + 8);
+        }
+    };
+    return BlockSlab;
+}(BlockBase));
+/// <reference path="./BlockBase.ts" />
+var BlockDoubleSlab = /** @class */ (function (_super) {
+    __extends(BlockDoubleSlab, _super);
+    function BlockDoubleSlab() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    BlockDoubleSlab.prototype.setSlab = function (blockID) {
+        this.slabID = blockID;
+    };
+    BlockDoubleSlab.prototype.getDrop = function (coords, block, level) {
+        return [[this.slabID, 1, block.data], [this.slabID, 1, block.data]];
+    };
+    return BlockDoubleSlab;
+}(BlockBase));
+/// <reference path="./interfaces/BlockType.ts" />
+/// <reference path="./interfaces/BlockBehavior.ts" />
+/// <reference path="./type/BlockBase.ts" />
+/// <reference path="./type/BlockRotative.ts" />
+/// <reference path="./type/BlockStairs.ts" />
+/// <reference path="./type/BlockSlab.ts" />
+/// <reference path="./type/BlockDoubleSlab.ts" />
+/**
+ * Module for advanced block definition.
+ */
 var BlockRegistry;
 (function (BlockRegistry) {
+    // Import native modules
+    var EntityGetYaw = ModAPI.requireGlobal("Entity.getYaw");
+    var EntityGetPitch = ModAPI.requireGlobal("Entity.getPitch");
+    //@ts-ignore
+    var NativeBlock = com.zhekasmirnov.innercore.api.NativeBlock;
     var blocks = {};
     var blockTypes = {};
+    /**
+     * Creates new block using specified params.
+     * @param stringID string id of the block.
+     * @param defineData array containing all variations of the block. Each
+     * variation corresponds to block data value, data values are assigned
+     * according to variations order.
+     * @param blockType BlockType object or block type name, if the type was previously registered.
+     */
     function createBlock(stringID, defineData, blockType) {
         var block = new BlockBase(stringID, blockType);
         for (var _i = 0, defineData_1 = defineData; _i < defineData_1.length; _i++) {
@@ -1261,6 +1473,14 @@ var BlockRegistry;
         registerBlock(block);
     }
     BlockRegistry.createBlock = createBlock;
+    /**
+     * Creates new block with horizontal or all sides rotation.
+     * @param stringID string id of the block
+     * @param defineData array containing all variations of the block. Supports 2 variations,
+     * each occupying 6 data values for rotation.
+     * @param blockType BlockType object or block type name, if the type was previously registered.
+     * @param hasVerticalFacings true if the block has vertical facings, false otherwise.
+     */
     function createBlockWithRotation(stringID, defineData, blockType, hasVerticalFacings) {
         var block = new BlockRotative(stringID, blockType, hasVerticalFacings);
         for (var _i = 0, defineData_2 = defineData; _i < defineData_2.length; _i++) {
@@ -1270,14 +1490,51 @@ var BlockRegistry;
         registerBlock(block);
     }
     BlockRegistry.createBlockWithRotation = createBlockWithRotation;
+    /**
+     * Creates stairs using specified params
+     * @param stringID string id of the block
+     * @param defineData array containing one variation of the block (for similarity with other methods).
+     * @param blockType BlockType object or block type name, if the type was previously registered.
+     */
     function createStairs(stringID, defineData, blockType) {
         registerBlock(new BlockStairs(stringID, defineData[0], blockType));
     }
     BlockRegistry.createStairs = createStairs;
+    /**
+     * Creates slabs and its double slabs using specified params
+     * @param slabID string id of the
+     * @param doubleSlabID string id of the double slab
+     * @param defineData array containing all variations of the block. Each
+     * variation corresponds to block data value, data values are assigned
+     * according to variations order.
+     * @param blockType BlockType object or block type name, if the type was previously registered.
+     */
+    function createSlabs(slabID, doubleSlabID, defineData, blockType) {
+        var slab = new BlockSlab(slabID, blockType);
+        slab.variations = defineData;
+        var doubleSlab = new BlockDoubleSlab(doubleSlabID, blockType);
+        for (var _i = 0, defineData_3 = defineData; _i < defineData_3.length; _i++) {
+            var variation = defineData_3[_i];
+            doubleSlab.addVariation(variation.name, variation.texture);
+        }
+        slab.setDoubleSlab(doubleSlab.id);
+        doubleSlab.setSlab(slab.id);
+        registerBlock(slab);
+        registerBlock(doubleSlab);
+    }
+    BlockRegistry.createSlabs = createSlabs;
+    /**
+     * @param name block type name
+     * @returns BlockType object by name
+     */
     function getBlockType(name) {
         return blockTypes[name] || null;
     }
     BlockRegistry.getBlockType = getBlockType;
+    /**
+     * Inherits default values from type specified in "extends" property.
+     * @param type BlockType object
+     */
     function extendBlockType(type) {
         if (!type.extends)
             return;
@@ -1289,6 +1546,12 @@ var BlockRegistry;
         }
     }
     BlockRegistry.extendBlockType = extendBlockType;
+    /**
+     * Registers block type in BlockEngine and as Block.SpecialType.
+     * @param name block type name
+     * @param type BlockType object
+     * @param isNative if true doesn't create special type
+     */
     function createBlockType(name, type, isNative) {
         extendBlockType(type);
         blockTypes[name] = type;
@@ -1297,6 +1560,11 @@ var BlockRegistry;
         }
     }
     BlockRegistry.createBlockType = createBlockType;
+    /**
+     * Converts block type to special type.
+     * @param properites BlockType object
+     * @returns block special type
+     */
     function convertBlockTypeToSpecialType(properites) {
         var type = {};
         for (var key in properites) {
@@ -1341,6 +1609,7 @@ var BlockRegistry;
     }
     BlockRegistry.convertBlockTypeToSpecialType = convertBlockTypeToSpecialType;
     /**
+     * @param blockID block numeric or string id
      * @returns instance of block class if it exists
      */
     function getInstanceOf(blockID) {
@@ -1348,6 +1617,11 @@ var BlockRegistry;
         return blocks[numericID] || null;
     }
     BlockRegistry.getInstanceOf = getInstanceOf;
+    /**
+     * Registers instance of BlockBase class and creates block for it.
+     * @param block instance of BlockBase class
+     * @returns the same BlockBase instance with `isDefined` flag set to true
+     */
     function registerBlock(block) {
         block.createBlock();
         registerBlockFuncs(block.id, block);
@@ -1355,6 +1629,11 @@ var BlockRegistry;
         return block;
     }
     BlockRegistry.registerBlock = registerBlock;
+    /**
+     * Registers all block functions.
+     * @param blockID block numeric or string id
+     * @param blockFuncs object containing block functions
+     */
     function registerBlockFuncs(blockID, blockFuncs) {
         var numericID = Block.getNumericId(blockID);
         if ('getDrop' in blockFuncs) {
@@ -1390,7 +1669,7 @@ var BlockRegistry;
             });
         }
         if ('onEntityStepOn' in blockFuncs) {
-            Block.registerEntityInsideFunction(numericID, function (coords, block, entity) {
+            Block.registerEntityStepOnFunction(numericID, function (coords, block, entity) {
                 blockFuncs.onEntityStepOn(coords, block, entity);
             });
         }
@@ -1418,10 +1697,14 @@ var BlockRegistry;
                 });
             }
         }
+        if ('onNameOverride' in blockFuncs || 'onItemUse' in blockFuncs || 'onDispense' in blockFuncs) {
+            ItemRegistry.registerItemFuncs(blockID, blockFuncs);
+        }
     }
     BlockRegistry.registerBlockFuncs = registerBlockFuncs;
     /**
-     * Sets destroy time for the block with specified id
+     * Sets destroy time for the block with specified id.
+     * @param blockID block numeric or string id
      * @param time block destroy time
      */
     function setDestroyTime(blockID, time) {
@@ -1429,7 +1712,8 @@ var BlockRegistry;
     }
     BlockRegistry.setDestroyTime = setDestroyTime;
     /**
-     * Sets the block type of another block, which allows to inherit some of its properties
+     * Sets the block type of another block, which allows to inherit some of its properties.
+     * @param blockID block numeric or string id
      * @param baseBlock id of the block to inherit type
      */
     function setBaseBlock(blockID, baseBlock) {
@@ -1438,6 +1722,7 @@ var BlockRegistry;
     BlockRegistry.setBaseBlock = setBaseBlock;
     /**
      * Sets block to be transparent or opaque.
+     * @param blockID block numeric or string id
      * @param isSolid if true, sets block to be opaque.
      */
     function setSolid(blockID, isSolid) {
@@ -1445,6 +1730,8 @@ var BlockRegistry;
     }
     BlockRegistry.setSolid = setSolid;
     /**
+     * Sets rendering of the block faces.
+     * @param blockID block numeric or string id
      * @param renderAllFaces If true, all block faces are rendered, otherwise back faces are not
      * rendered (for optimization purposes). Default is false
      */
@@ -1454,6 +1741,7 @@ var BlockRegistry;
     BlockRegistry.setRenderAllFaces = setRenderAllFaces;
     /**
      * Sets render type of the block.
+     * @param blockID block numeric or string id
      * @param renderType default is 0 (full block), use other values to change block's model
      */
     function setRenderType(blockID, renderType) {
@@ -1462,6 +1750,7 @@ var BlockRegistry;
     BlockRegistry.setRenderType = setRenderType;
     /**
      * Specifies the layer that is used to render the block.
+     * @param blockID block numeric or string id
      * @param renderLayer default is 4
      */
     function setRenderLayer(blockID, renderLayer) {
@@ -1470,6 +1759,7 @@ var BlockRegistry;
     BlockRegistry.setRenderLayer = setRenderLayer;
     /**
      * Sets level of the light emitted by the block.
+     * @param blockID block numeric or string id
      * @param lightLevel value from 0 (no light) to 15
      */
     function setLightLevel(blockID, lightLevel) {
@@ -1478,6 +1768,7 @@ var BlockRegistry;
     BlockRegistry.setLightLevel = setLightLevel;
     /**
      * Specifies how opaque block is.
+     * @param blockID block numeric or string id
      * @param lightOpacity Value from 0 to 15 which will be substracted
      * from the light level when the light passes through the block
      */
@@ -1487,6 +1778,7 @@ var BlockRegistry;
     BlockRegistry.setLightOpacity = setLightOpacity;
     /**
      * Specifies how block resists to the explosions.
+     * @param blockID block numeric or string id
      * @param resistance integer value, default is 3
      */
     function setExplosionResistance(blockID, resistance) {
@@ -1497,6 +1789,7 @@ var BlockRegistry;
      * Sets block friction. It specifies how player walks on the block.
      * The higher the friction is, the more difficult it is to change speed
      * and direction.
+     * @param blockID block numeric or string id
      * @param friction float value, default is 0.6
      */
     function setFriction(blockID, friction) {
@@ -1505,6 +1798,7 @@ var BlockRegistry;
     BlockRegistry.setFriction = setFriction;
     /**
      * Specifies rendering of shadows on the block.
+     * @param blockID block numeric or string id
      * @param translucency float value from 0 (no shadows) to 1
      */
     function setTranslucency(blockID, translucency) {
@@ -1513,6 +1807,7 @@ var BlockRegistry;
     BlockRegistry.setTranslucency = setTranslucency;
     /**
      * Sets sound type of the block.
+     * @param blockID block numeric or string id
      * @param sound block sound type
      */
     function setSoundType(blockID, sound) {
@@ -1520,7 +1815,8 @@ var BlockRegistry;
     }
     BlockRegistry.setSoundType = setSoundType;
     /**
-     * Sets block color when displayed on the vanilla maps
+     * Sets block color when displayed on the vanilla maps.
+     * @param blockID block numeric or string id
      * @param color map color of the block
      */
     function setMapColor(blockID, color) {
@@ -1529,6 +1825,7 @@ var BlockRegistry;
     BlockRegistry.setMapColor = setMapColor;
     /**
      * Makes block use biome color when displayed on the vanilla maps.
+     * @param blockID block numeric or string id
      * @param color block color source
      */
     function setBlockColorSource(blockID, color) {
@@ -1538,8 +1835,8 @@ var BlockRegistry;
     /**
      * Registers block material and digging level. If you are registering
      * block with 'stone' material ensure that its block type has baseBlock
-     * id 1 to be correctly destroyed by pickaxes
-     * @param nameID block numeric or string id
+     * id 1 to be correctly destroyed by pickaxes.
+     * @param blockID block numeric or string id
      * @param material material name
      * @param level block's digging level
      */
@@ -1547,6 +1844,11 @@ var BlockRegistry;
         ToolAPI.registerBlockMaterial(Block.getNumericId(blockID), material, level, material == "stone");
     }
     BlockRegistry.setBlockMaterial = setBlockMaterial;
+    /**
+     * @returns block side opposite to player rotation.
+     * @param player player uid
+     * @param hasVertical if true can return vertical sides as well
+     */
     function getBlockRotation(player, hasVertical) {
         var pitch = EntityGetPitch(player);
         if (hasVertical) {
@@ -1562,6 +1864,12 @@ var BlockRegistry;
         return rotation;
     }
     BlockRegistry.getBlockRotation = getBlockRotation;
+    /**
+     * @returns block place position for click coords in world.
+     * @param coords click coords
+     * @param block touched block
+     * @param region BlockSource
+     */
     function getPlacePosition(coords, block, region) {
         if (World.canTileBeReplaced(block.id, block.data))
             return coords;
@@ -1572,6 +1880,11 @@ var BlockRegistry;
         return null;
     }
     BlockRegistry.getPlacePosition = getPlacePosition;
+    /**
+     * Registers place function for block with rotation.
+     * @param id block numeric or string id
+     * @param hasVertical true if the block has vertical facings, false otherwise.
+     */
     function setRotationFunction(id, hasVertical, placeSound) {
         Block.registerPlaceFunction(id, function (coords, item, block, player, region) {
             var place = getPlacePosition(coords, block, region);
@@ -1584,31 +1897,50 @@ var BlockRegistry;
         });
     }
     BlockRegistry.setRotationFunction = setRotationFunction;
-    function registerDrop(nameID, dropFunc, level) {
-        Block.registerDropFunction(nameID, function (blockCoords, blockID, blockData, diggingLevel, enchant, item, region) {
+    /**
+     * Registers drop function for block.
+     * @param blockID block numeric or string id
+     * @param dropFunc drop function
+     * @param level mining level
+     */
+    function registerDrop(blockID, dropFunc, level) {
+        Block.registerDropFunction(blockID, function (blockCoords, blockID, blockData, diggingLevel, enchant, item, region) {
             if (!level || diggingLevel >= level) {
                 return dropFunc(blockCoords, blockID, blockData, diggingLevel, enchant, item, region);
             }
             return [];
         });
-        addBlockDropOnExplosion(nameID);
+        addBlockDropOnExplosion(blockID);
     }
     BlockRegistry.registerDrop = registerDrop;
-    function setDestroyLevel(nameID, level) {
-        Block.registerDropFunction(nameID, function (сoords, blockID, blockData, diggingLevel) {
+    /**
+     * Sets mining level for block.
+     * @param blockID block numeric or string id
+     * @param level mining level
+     */
+    function setDestroyLevel(blockID, level) {
+        Block.registerDropFunction(blockID, function (coords, blockID, blockData, diggingLevel) {
             if (diggingLevel >= level) {
-                return [[Block.getNumericId(nameID), 1, 0]];
+                return [[Block.getNumericId(blockID), 1, 0]];
             }
         });
-        addBlockDropOnExplosion(nameID);
+        addBlockDropOnExplosion(blockID);
     }
     BlockRegistry.setDestroyLevel = setDestroyLevel;
-    function registerOnExplosionFunction(nameID, func) {
-        Block.registerPopResourcesFunction(nameID, func);
+    /**
+     * Registers function called when block is destroyed by explosion.
+     * @param blockID block numeric or string id
+     * @param func function on explosion
+     */
+    function registerOnExplosionFunction(blockID, func) {
+        Block.registerPopResourcesFunction(blockID, func);
     }
     BlockRegistry.registerOnExplosionFunction = registerOnExplosionFunction;
-    function addBlockDropOnExplosion(nameID) {
-        Block.registerPopResourcesFunction(nameID, function (coords, block, region) {
+    /**
+     * Registers block drop on explosion with 25% chance.
+     */
+    function addBlockDropOnExplosion(blockID) {
+        Block.registerPopResourcesFunction(blockID, function (coords, block, region) {
             if (Math.random() >= 0.25)
                 return;
             var dropFunc = Block.getDropFunction(block.id);
@@ -1624,6 +1956,7 @@ var BlockRegistry;
     }
     BlockRegistry.addBlockDropOnExplosion = addBlockDropOnExplosion;
     var noDropBlocks = [26, 30, 31, 32, 51, 59, 92, 99, 100, 104, 105, 106, 115, 127, 132, 141, 142, 144, 161, 175, 199, 244, 385, 386, 388, 389, 390, 391, 392, 462];
+    /** @deprecated */
     function getBlockDrop(x, y, z, block, level, item, region) {
         var id = block.id, data = block.data;
         var enchant = ToolAPI.getEnchantExtraData(item.extra);
@@ -1765,6 +2098,628 @@ var BlockRegistry;
         sound: "gravel"
     });
 })(BlockRegistry || (BlockRegistry = {}));
+/// <reference path="./BlockItemBehavior.ts" />
+var ItemBase = /** @class */ (function () {
+    function ItemBase(stringID, name, icon) {
+        /**
+         * Maximum stack size of the item
+         */
+        this.maxStack = 64;
+        /**
+         * Maximum data value of the item
+         */
+        this.maxDamage = 0;
+        this.inCreative = false;
+        this.stringID = stringID;
+        this.id = IDRegistry.genItemID(stringID);
+        this.setName(name || stringID);
+        if (typeof icon == "string")
+            this.setIcon(icon);
+        else if (typeof icon == "object")
+            this.setIcon(icon.name, icon.meta || icon.data);
+        else
+            this.setIcon("missing_icon");
+    }
+    /**
+     * Method that can be overrided to modify item name before item creation.
+     * @param name item name passed to the constructor
+     */
+    ItemBase.prototype.setName = function (name) {
+        this.name = name;
+    };
+    /**
+     * Method that can be overrided to modify item textures before item creation.
+     * @param texture texture name
+     * @param index texture index
+     */
+    ItemBase.prototype.setIcon = function (texture, index) {
+        if (index === void 0) { index = 0; }
+        this.icon = { name: texture, meta: index };
+    };
+    /**
+     * Sets item creative category
+     * @param category item category, should be integer from 1 to 4.
+     */
+    ItemBase.prototype.setCategory = function (category) {
+        Item.setCategory(this.id, category);
+    };
+    /**
+     * Sets item maximum stack size
+     * @param maxStack maximum stack size for the item
+     */
+    ItemBase.prototype.setMaxStack = function (maxStack) {
+        this.maxStack = maxStack;
+        this.item.setMaxStackSize(maxStack);
+    };
+    /**
+     * Sets item maximum data value
+     * @param maxDamage maximum data value for the item
+     */
+    ItemBase.prototype.setMaxDamage = function (maxDamage) {
+        this.maxDamage = maxDamage;
+        this.item.setMaxDamage(maxDamage);
+    };
+    /**
+    * Specifies how the player should hold the item
+    * @param enabled if true, player holds the item as a tool, not as a simple
+    * item
+    */
+    ItemBase.prototype.setHandEquipped = function (enabled) {
+        this.item.setHandEquipped(enabled);
+    };
+    /**
+     * Allows item to be put in off hand
+     */
+    ItemBase.prototype.allowInOffHand = function () {
+        this.item.setAllowedInOffhand(true);
+    };
+    /**
+     * Allows item to click on liquid blocks
+     */
+    ItemBase.prototype.setLiquidClip = function () {
+        this.item.setLiquidClip(true);
+    };
+    /**
+     * Specifies how the item can be enchanted
+     * @param type enchant type defining whan enchants can or cannot be
+     * applied to this item, one of the Native.EnchantType
+     * @param enchantability quality of the enchants that are applied, the higher this
+     * value is, the better enchants you get with the same level
+     */
+    ItemBase.prototype.setEnchantType = function (type, enchantability) {
+        this.item.setEnchantType(type, enchantability);
+    };
+    /**
+     * Sets item as glint (like enchanted tools or golden apple)
+     * @param enabled if true, the item will be displayed as glint item
+     */
+    ItemBase.prototype.setGlint = function (enabled) {
+        this.item.setGlint(enabled);
+    };
+    /**
+     * Adds material that can be used to repair the item in the anvil
+     * @param itemID item id to be used as repair material
+     */
+    ItemBase.prototype.addRepairItem = function (itemID) {
+        this.item.addRepairItem(itemID);
+    };
+    /**
+    * Sets properties for the item from JSON-like object. Uses vanilla mechanics.
+    * @param props object containing properties
+    */
+    ItemBase.prototype.setProperties = function (props) {
+        this.item.setProperties(JSON.stringify(props));
+    };
+    /**
+     * Sets item rarity.
+     * @param rarity one of `EnumRarity` values
+     */
+    ItemBase.prototype.setRarity = function (rarity) {
+        ItemRegistry.setRarity(this.id, rarity);
+    };
+    ItemBase.prototype.addDefaultToCreative = function () {
+        var _a;
+        var wasInCreative = (_a = ItemRegistry.getInstanceOf(this.id)) === null || _a === void 0 ? void 0 : _a.inCreative;
+        if (wasInCreative) {
+            Logger.Log("Skipped duplicated adding to creative for item ".concat(this.stringID), "BlockEngine");
+        }
+        else {
+            Item.addToCreative(this.id, 1, 0);
+            this.inCreative = true;
+        }
+    };
+    return ItemBase;
+}());
+var ItemCommon = /** @class */ (function (_super) {
+    __extends(ItemCommon, _super);
+    function ItemCommon(stringID, name, icon, inCreative) {
+        if (inCreative === void 0) { inCreative = true; }
+        var _this = _super.call(this, stringID, name, icon) || this;
+        _this.item = Item.createItem(_this.stringID, _this.name, _this.icon, { isTech: true });
+        _this.setCategory(ItemCategory.ITEMS);
+        if (inCreative)
+            _this.addDefaultToCreative();
+        return _this;
+    }
+    return ItemCommon;
+}(ItemBase));
+var ItemFood = /** @class */ (function (_super) {
+    __extends(ItemFood, _super);
+    function ItemFood(stringID, name, icon, params, inCreative) {
+        if (inCreative === void 0) { inCreative = true; }
+        var _this = this;
+        var _a;
+        _this = _super.call(this, stringID, name, icon) || this;
+        var foodProperties = {
+            nutrition: params.food || 0,
+            saturation_modifier: params.saturation || "normal",
+            is_meat: params.isMeat || false,
+            can_always_eat: params.canAlwaysEat || false,
+            effects: params.effects || []
+        };
+        if (params.usingConvertsTo) {
+            foodProperties["using_converts_to"] = params.usingConvertsTo;
+        }
+        (_a = params.useDuration) !== null && _a !== void 0 ? _a : (params.useDuration = 32);
+        if (BlockEngine.getMainGameVersion() == 11) {
+            _this.setProperties({
+                use_duration: params.useDuration,
+                food: foodProperties
+            });
+        }
+        else {
+            _this.setProperties({
+                components: {
+                    "minecraft:use_duration": params.useDuration,
+                    "minecraft:food": foodProperties
+                }
+            });
+        }
+        _this.item.setUseAnimation(1);
+        _this.item.setMaxUseDuration(params.useDuration);
+        return _this;
+    }
+    ItemFood.prototype.onFoodEaten = function (item, food, saturation, player) { };
+    return ItemFood;
+}(ItemCommon));
+Callback.addCallback("FoodEaten", function (food, saturation, player) {
+    var item = Entity.getCarriedItem(player);
+    var itemInstance = ItemRegistry.getInstanceOf(item.id);
+    if (itemInstance && itemInstance.onFoodEaten) {
+        itemInstance.onFoodEaten(item, food, saturation, player);
+    }
+});
+var ItemThrowable = /** @class */ (function (_super) {
+    __extends(ItemThrowable, _super);
+    function ItemThrowable(stringID, name, icon, inCreative) {
+        if (inCreative === void 0) { inCreative = true; }
+        var _this = _super.call(this, stringID, name, icon) || this;
+        _this.item = Item.createThrowableItem(_this.stringID, _this.name, _this.icon, { isTech: true });
+        _this.setCategory(ItemCategory.ITEMS);
+        if (inCreative)
+            _this.addDefaultToCreative();
+        Item.registerThrowableFunctionForID(_this.id, function (projectile, item, target) {
+            _this.onProjectileHit(projectile, item, target);
+        });
+        return _this;
+    }
+    ItemThrowable.prototype.onProjectileHit = function (projectile, item, target) { };
+    return ItemThrowable;
+}(ItemBase));
+/// <reference path="../interfaces/ArmorListeners.ts" />
+var ItemArmor = /** @class */ (function (_super) {
+    __extends(ItemArmor, _super);
+    function ItemArmor(stringID, name, icon, params, inCreative) {
+        if (inCreative === void 0) { inCreative = true; }
+        var _this = _super.call(this, stringID, name, icon) || this;
+        _this.armorType = params.type;
+        _this.defence = params.defence;
+        _this.setArmorTexture(params.texture);
+        _this.item = Item.createArmorItem(_this.stringID, _this.name, _this.icon, {
+            type: _this.armorType,
+            armor: _this.defence,
+            knockbackResist: params.knockbackResistance * 0.1125 || 0,
+            durability: 0,
+            texture: _this.texture,
+            isTech: true
+        });
+        _this.setCategory(ItemCategory.EQUIPMENT);
+        if (params.material)
+            _this.setMaterial(params.material);
+        if (inCreative)
+            _this.addDefaultToCreative();
+        ItemArmor.registerListeners(_this.id, _this);
+        return _this;
+    }
+    /**
+     * Method that can be overrided to modify armor texture before item creation.
+     * @param texture armor texture path
+     */
+    ItemArmor.prototype.setArmorTexture = function (texture) {
+        this.texture = texture;
+    };
+    /**
+     * Sets armor properties from armor material.
+     * @param armorMaterial material name or object.
+     */
+    ItemArmor.prototype.setMaterial = function (armorMaterial) {
+        if (typeof armorMaterial == "string") {
+            armorMaterial = ItemRegistry.getArmorMaterial(armorMaterial);
+        }
+        this.armorMaterial = armorMaterial;
+        var index = Native.ArmorType[this.armorType];
+        var maxDamage = armorMaterial.durabilityFactor * ItemArmor.maxDamageArray[index];
+        this.setMaxDamage(maxDamage);
+        if (armorMaterial.enchantability) {
+            this.setEnchantType(Native.EnchantType[this.armorType], armorMaterial.enchantability);
+        }
+        if (armorMaterial.repairMaterial) {
+            this.addRepairItem(armorMaterial.repairMaterial);
+        }
+    };
+    /**
+     * Prevents armor from being damaged.
+     */
+    ItemArmor.prototype.preventDamaging = function () {
+        Armor.preventDamaging(this.id);
+    };
+    /**
+     * Registers all armor functions from given object.
+     * @param id armor item id
+     * @param armorFuncs object that implements `ArmorListener` interface
+     */
+    ItemArmor.registerListeners = function (id, armorFuncs) {
+        if ('onHurt' in armorFuncs) {
+            Armor.registerOnHurtListener(id, function (item, slot, player, type, value, attacker, bool1, bool2) {
+                return armorFuncs.onHurt({ attacker: attacker, type: type, damage: value, bool1: bool1, bool2: bool2 }, item, slot, player);
+            });
+        }
+        if ('onTick' in armorFuncs) {
+            Armor.registerOnTickListener(id, function (item, slot, player) {
+                return armorFuncs.onTick(item, slot, player);
+            });
+        }
+        if ('onTakeOn' in armorFuncs) {
+            Armor.registerOnTakeOnListener(id, function (item, slot, player) {
+                armorFuncs.onTakeOn(item, slot, player);
+            });
+        }
+        if ('onTakeOff' in armorFuncs) {
+            Armor.registerOnTakeOffListener(id, function (item, slot, player) {
+                armorFuncs.onTakeOff(item, slot, player);
+            });
+        }
+    };
+    ItemArmor.maxDamageArray = [11, 16, 15, 13];
+    return ItemArmor;
+}(ItemBase));
+/// <reference path="../interfaces/ToolParams.ts" />
+var ItemTool = /** @class */ (function (_super) {
+    __extends(ItemTool, _super);
+    function ItemTool(stringID, name, icon, toolMaterial, toolData, inCreative) {
+        var _this = _super.call(this, stringID, name, icon, inCreative) || this;
+        _this.handEquipped = false;
+        _this.brokenId = 0;
+        _this.damage = 1;
+        _this.isWeapon = false;
+        _this.blockTypes = [];
+        _this.setMaxStack(1);
+        _this.setCategory(ItemCategory.EQUIPMENT);
+        if (typeof toolMaterial == "string") {
+            toolMaterial = ItemRegistry.getToolMaterial(toolMaterial);
+        }
+        _this.toolMaterial = toolMaterial;
+        if (toolData) {
+            for (var key in toolData) {
+                _this[key] = toolData[key];
+            }
+        }
+        ToolAPI.registerTool(_this.id, _this.toolMaterial, _this.blockTypes, _this);
+        if (_this.enchantType && toolMaterial.enchantability) {
+            _this.setEnchantType(_this.enchantType, toolMaterial.enchantability);
+        }
+        if (toolMaterial.repairMaterial) {
+            _this.addRepairItem(toolMaterial.repairMaterial);
+        }
+        if (_this.handEquipped) {
+            _this.setHandEquipped(true);
+        }
+        return _this;
+    }
+    return ItemTool;
+}(ItemCommon));
+/// <reference path="./interfaces/ItemBehavior.ts" />
+/// <reference path="./type/ItemBase.ts" />
+/// <reference path="./type/ItemCommon.ts" />
+/// <reference path="./type/ItemFood.ts" />
+/// <reference path="./type/ItemThrowable.ts" />
+/// <reference path="./type/ItemArmor.ts" />
+/// <reference path="./type/ItemTool.ts" />
+/**
+ * Module for advanced item definition.
+ */
+var ItemRegistry;
+(function (ItemRegistry) {
+    var items = {};
+    var itemsRarity = {};
+    var armorMaterials = {};
+    /**
+     * @returns item type
+     */
+    function getType(id) {
+        return IDRegistry.getIdInfo(id).split(":")[0];
+    }
+    ItemRegistry.getType = getType;
+    /**
+     * @param id block id
+     * @returns true if a block identifier was given, false otherwise.
+     */
+    function isBlock(id) {
+        return getType(id) == "block";
+    }
+    ItemRegistry.isBlock = isBlock;
+    /**
+     * @param id item id
+     * @returns true if an item identifier was given, false otherwise.
+     */
+    function isItem(id) {
+        return getType(id) == "item";
+    }
+    ItemRegistry.isItem = isItem;
+    /**
+     * @returns whether the item is an item from the original game.
+     */
+    function isVanilla(id) {
+        return !IDRegistry.getNameByID(id);
+    }
+    ItemRegistry.isVanilla = isVanilla;
+    /**
+     * @returns item string id in the game (in snake_case format).
+     */
+    function getVanillaStringID(id) {
+        return IDRegistry.getIdInfo(id).split(":")[1].split("#")[0];
+    }
+    ItemRegistry.getVanillaStringID = getVanillaStringID;
+    /**
+     * @returns instance of item class if the item was added by BlockEngine, null otherwise.
+     */
+    function getInstanceOf(itemID) {
+        var numericID = Item.getNumericId(itemID);
+        return items[numericID] || null;
+    }
+    ItemRegistry.getInstanceOf = getInstanceOf;
+    /**
+     * @returns `EnumRarity` value for the item.
+     */
+    function getRarity(itemID) {
+        var _a;
+        return (_a = itemsRarity[itemID]) !== null && _a !== void 0 ? _a : EnumRarity.COMMON;
+    }
+    ItemRegistry.getRarity = getRarity;
+    /**
+     * @returns chat color for rarity.
+     * @param rarity one of `EnumRarity` values
+     */
+    function getRarityColor(rarity) {
+        if (rarity == EnumRarity.UNCOMMON)
+            return "§e";
+        if (rarity == EnumRarity.RARE)
+            return "§b";
+        if (rarity == EnumRarity.EPIC)
+            return "§d";
+        return "";
+    }
+    ItemRegistry.getRarityColor = getRarityColor;
+    /**
+     * @returns chat color for rare items.
+     */
+    function getItemRarityColor(itemID) {
+        return getRarityColor(getRarity(itemID));
+    }
+    ItemRegistry.getItemRarityColor = getItemRarityColor;
+    /**
+     * Sets item rarity.
+     * @param id item id
+     * @param rarity one of `EnumRarity` values
+     * @param preventNameOverride prevent registration of name override function
+     */
+    function setRarity(id, rarity, preventNameOverride) {
+        var numericID = Item.getNumericId(id);
+        itemsRarity[numericID] = rarity;
+        //@ts-ignore
+        if (!preventNameOverride && !Item.nameOverrideFunctions[numericID]) {
+            Item.registerNameOverrideFunction(numericID, function (item, translation, name) {
+                return getItemRarityColor(item.id) + translation;
+            });
+        }
+    }
+    ItemRegistry.setRarity = setRarity;
+    /**
+     * Creates new armor material with specified parameters.
+     * @param name new (or existing) material name
+     * @param material material properties
+     */
+    function addArmorMaterial(name, material) {
+        armorMaterials[name] = material;
+    }
+    ItemRegistry.addArmorMaterial = addArmorMaterial;
+    /**
+     * @returns armor material by name.
+     */
+    function getArmorMaterial(name) {
+        return armorMaterials[name];
+    }
+    ItemRegistry.getArmorMaterial = getArmorMaterial;
+    /**
+     * Registers new tool material in ToolAPI. Some of the tool
+     * materials are already registered:
+     * *wood*, *stone*, *iron*, *golden* and *diamond*
+     * @param name new (or existing) material name
+     * @param material material properties
+     */
+    function addToolMaterial(name, material) {
+        ToolAPI.addToolMaterial(name, material);
+    }
+    ItemRegistry.addToolMaterial = addToolMaterial;
+    /**
+     * @returns tool material by name registered in ToolAPI.
+     */
+    function getToolMaterial(name) {
+        //@ts-ignore
+        return ToolAPI.toolMaterials[name];
+    }
+    ItemRegistry.getToolMaterial = getToolMaterial;
+    /**
+     * Registers item instance and it's functions.
+     * @param itemInstance item class instance
+     * @returns item instance back
+     */
+    function registerItem(itemInstance) {
+        items[itemInstance.id] = itemInstance;
+        registerItemFuncs(itemInstance.id, itemInstance);
+        return itemInstance;
+    }
+    ItemRegistry.registerItem = registerItem;
+    /**
+     * Registers all item functions from given object.
+     * @param itemFuncs object which implements `ItemBehavior` interface
+     */
+    function registerItemFuncs(itemID, itemFuncs) {
+        var numericID = Item.getNumericId(itemID);
+        if ('onNameOverride' in itemFuncs) {
+            Item.registerNameOverrideFunction(numericID, function (item, translation, name) {
+                return getItemRarityColor(item.id) + itemFuncs.onNameOverride(item, translation, name);
+            });
+        }
+        if ('onIconOverride' in itemFuncs) {
+            Item.registerIconOverrideFunction(numericID, function (item, isModUi) {
+                return itemFuncs.onIconOverride(item, isModUi);
+            });
+        }
+        if ('onItemUse' in itemFuncs) {
+            Item.registerUseFunction(numericID, function (coords, item, block, player) {
+                itemFuncs.onItemUse(coords, new ItemStack(item), block, player);
+            });
+        }
+        if ('onNoTargetUse' in itemFuncs) {
+            Item.registerNoTargetUseFunction(numericID, function (item, player) {
+                itemFuncs.onNoTargetUse(new ItemStack(item), player);
+            });
+        }
+        if ('onUsingReleased' in itemFuncs) {
+            Item.registerUsingReleasedFunction(numericID, function (item, ticks, player) {
+                itemFuncs.onUsingReleased(new ItemStack(item), ticks, player);
+            });
+        }
+        if ('onUsingComplete' in itemFuncs) {
+            Item.registerUsingCompleteFunction(numericID, function (item, player) {
+                itemFuncs.onUsingComplete(new ItemStack(item), player);
+            });
+        }
+        if ('onDispense' in itemFuncs) {
+            Item.registerDispenseFunction(numericID, function (coords, item, blockSource, slot) {
+                var region = new WorldRegion(blockSource);
+                itemFuncs.onDispense(coords, new ItemStack(item), region, slot);
+            });
+        }
+    }
+    ItemRegistry.registerItemFuncs = registerItemFuncs;
+    /**
+     * Creates item from given description. Automatically generates item id
+     * from given string id.
+     * @param stringID item string id.
+     * @param params item description
+     * @returns item class instance
+     */
+    function createItem(stringID, params) {
+        var item;
+        if (params.type == "food") {
+            return createFood(stringID, params);
+        }
+        else if (params.type == "throwable") {
+            item = new ItemThrowable(stringID, params.name, params.icon, params.inCreative);
+        }
+        else {
+            item = new ItemCommon(stringID, params.name, params.icon, params.inCreative);
+        }
+        item.setCategory(params.category || ItemCategory.ITEMS);
+        if (params.stack)
+            item.setMaxStack(params.stack);
+        if (params.maxDamage)
+            item.setMaxDamage(params.maxDamage);
+        if (params.handEquipped)
+            item.setHandEquipped(true);
+        if (params.allowedInOffhand)
+            item.allowInOffHand();
+        if (params.glint)
+            item.setGlint(true);
+        if (params.enchant)
+            item.setEnchantType(params.enchant.type, params.enchant.value);
+        if (params.rarity)
+            item.setRarity(params.rarity);
+        items[item.id] = item;
+        return item;
+    }
+    ItemRegistry.createItem = createItem;
+    function createFood(stringID, params) {
+        var item = new ItemFood(stringID, params.name, params.icon, params, params.inCreative);
+        if (params.stack)
+            item.setMaxStack(params.stack);
+        if (params.category)
+            item.setCategory(params.category);
+        if (params.glint)
+            item.setGlint(true);
+        if (params.rarity)
+            item.setRarity(params.rarity);
+        items[item.id] = item;
+        return item;
+    }
+    ItemRegistry.createFood = createFood;
+    ;
+    /**
+     * Creates armor item from given description. Automatically generates item id
+     * from given string id.
+     * @param stringID item string id
+     * @param params item and armor parameters
+     * @returns item class instance
+     */
+    function createArmor(stringID, params) {
+        var item = new ItemArmor(stringID, params.name, params.icon, params, params.inCreative);
+        registerItem(item);
+        if (params.category)
+            item.setCategory(params.category);
+        if (params.glint)
+            item.setGlint(true);
+        if (params.rarity)
+            item.setRarity(params.rarity);
+        return item;
+    }
+    ItemRegistry.createArmor = createArmor;
+    ;
+    /**
+     * Creates tool item and registers it in ToolAPI. Automatically generates item id
+     * from given string id.
+     * @param stringID item string id
+     * @param params object with item parameters and tool material
+     * @param toolData tool parameters and functions
+     * @returns item class instance
+     */
+    function createTool(stringID, params, toolData) {
+        var item = new ItemTool(stringID, params.name, params.icon, params.material, toolData, params.inCreative);
+        registerItem(item);
+        if (params.category)
+            item.setCategory(params.category);
+        if (params.glint)
+            item.setGlint(true);
+        if (params.rarity)
+            item.setRarity(params.rarity);
+        return item;
+    }
+    ItemRegistry.createTool = createTool;
+})(ItemRegistry || (ItemRegistry = {}));
+/**
+ * Class representing item stack in the inventory.
+ */
 var ItemStack = /** @class */ (function () {
     function ItemStack(item, count, data, extra) {
         if (typeof item == "object") {
@@ -1780,6 +2735,9 @@ var ItemStack = /** @class */ (function () {
             this.extra = extra || null;
         }
     }
+    /**
+     * @returns instance of item class if the item was added by BlockEngine, null otherwise.
+     */
     ItemStack.prototype.getItemInstance = function () {
         return ItemRegistry.getInstanceOf(this.id);
     };
@@ -1915,265 +2873,10 @@ var ItemStack = /** @class */ (function () {
     };
     return ItemStack;
 }());
-var ItemBase = /** @class */ (function () {
-    function ItemBase(stringID, name, icon) {
-        this.maxStack = 64;
-        this.maxDamage = 0;
-        this.inCreative = false;
-        this.stringID = stringID;
-        this.id = IDRegistry.genItemID(stringID);
-        this.setName(name || stringID);
-        if (typeof icon == "string")
-            this.setIcon(icon);
-        else if (typeof icon == "object")
-            this.setIcon(icon.name, icon.meta || icon.data);
-        else
-            this.setIcon("missing_icon");
-    }
-    ItemBase.prototype.setName = function (name) {
-        this.name = name;
-    };
-    ItemBase.prototype.setIcon = function (texture, index) {
-        if (index === void 0) { index = 0; }
-        this.icon = { name: texture, meta: index };
-    };
-    /**
-     * Sets item creative category
-     * @param category item category, should be integer from 1 to 4.
-     */
-    ItemBase.prototype.setCategory = function (category) {
-        Item.setCategory(this.id, category);
-    };
-    /**
-     * Sets item maximum stack size
-     * @param maxStack maximum stack size for the item
-     */
-    ItemBase.prototype.setMaxStack = function (maxStack) {
-        this.maxStack = maxStack;
-        this.item.setMaxStackSize(maxStack);
-    };
-    /**
-     * Sets item maximum data value
-     * @param maxDamage maximum data value for the item
-     */
-    ItemBase.prototype.setMaxDamage = function (maxDamage) {
-        this.maxDamage = maxDamage;
-        this.item.setMaxDamage(maxDamage);
-    };
-    /**
-    * Specifies how the player should hold the item
-    * @param enabled if true, player holds the item as a tool, not as a simple
-    * item
-    */
-    ItemBase.prototype.setHandEquipped = function (enabled) {
-        this.item.setHandEquipped(enabled);
-    };
-    /**
-     * Allows item to be put in off hand
-     */
-    ItemBase.prototype.allowInOffHand = function () {
-        this.item.setAllowedInOffhand(true);
-    };
-    /**
-     * Allows item to click on liquid blocks
-     */
-    ItemBase.prototype.setLiquidClip = function () {
-        this.item.setLiquidClip(true);
-    };
-    /**
-     * Specifies how the item can be enchanted
-     * @param type enchant type defining whan enchants can or cannot be
-     * applied to this item, one of the Native.EnchantType
-     * @param enchantability quality of the enchants that are applied, the higher this
-     * value is, the better enchants you get with the same level
-     */
-    ItemBase.prototype.setEnchantType = function (type, enchantability) {
-        this.item.setEnchantType(type, enchantability);
-    };
-    /**
-     * Sets item as glint (like enchanted tools or golden apple)
-     * @param enabled if true, the item will be displayed as glint item
-     */
-    ItemBase.prototype.setGlint = function (enabled) {
-        this.item.setGlint(enabled);
-    };
-    /**
-     * Adds material that can be used to repair the item in the anvil
-     * @param itemID item id to be used as repair material
-     */
-    ItemBase.prototype.addRepairItem = function (itemID) {
-        this.item.addRepairItem(itemID);
-    };
-    /**
-    * Sets properties for the item from JSON-like object. Uses vanilla mechanics.
-    * @param id string or numeric item id
-    * @param props object containing properties
-    */
-    ItemBase.prototype.setProperties = function (props) {
-        this.item.setProperties(JSON.stringify(props));
-    };
-    ItemBase.prototype.setRarity = function (rarity) {
-        ItemRegistry.setRarity(this.id, rarity);
-    };
-    ItemBase.prototype.addDefaultToCreative = function () {
-        var _a;
-        var wasInCreative = (_a = ItemRegistry.getInstanceOf(this.id)) === null || _a === void 0 ? void 0 : _a.inCreative;
-        if (wasInCreative) {
-            Logger.Log("Skipped duplicated adding to creative for item ".concat(this.stringID), "BlockEngine");
-        }
-        else {
-            Item.addToCreative(this.id, 1, 0);
-            this.inCreative = true;
-        }
-    };
-    return ItemBase;
-}());
-var ItemCommon = /** @class */ (function (_super) {
-    __extends(ItemCommon, _super);
-    function ItemCommon(stringID, name, icon, inCreative) {
-        if (inCreative === void 0) { inCreative = true; }
-        var _this = _super.call(this, stringID, name, icon) || this;
-        _this.item = Item.createItem(_this.stringID, _this.name, _this.icon, { isTech: true });
-        _this.setCategory(ItemCategory.ITEMS);
-        if (inCreative)
-            _this.addDefaultToCreative();
-        return _this;
-    }
-    return ItemCommon;
-}(ItemBase));
-var ItemFood = /** @class */ (function (_super) {
-    __extends(ItemFood, _super);
-    function ItemFood(stringID, name, icon, params, inCreative) {
-        if (inCreative === void 0) { inCreative = true; }
-        var _this = this;
-        var _a;
-        _this = _super.call(this, stringID, name, icon) || this;
-        var foodProperties = {
-            nutrition: params.food || 0,
-            saturation_modifier: params.saturation || "normal",
-            is_meat: params.isMeat || false,
-            can_always_eat: params.canAlwaysEat || false,
-            effects: params.effects || []
-        };
-        if (params.usingConvertsTo) {
-            foodProperties["using_converts_to"] = params.usingConvertsTo;
-        }
-        (_a = params.useDuration) !== null && _a !== void 0 ? _a : (params.useDuration = 32);
-        if (BlockEngine.getMainGameVersion() == 11) {
-            _this.setProperties({
-                use_duration: params.useDuration,
-                food: foodProperties
-            });
-        }
-        else {
-            _this.setProperties({
-                components: {
-                    "minecraft:use_duration": params.useDuration,
-                    "minecraft:food": foodProperties
-                }
-            });
-        }
-        _this.item.setUseAnimation(1);
-        _this.item.setMaxUseDuration(params.useDuration);
-        return _this;
-    }
-    ItemFood.prototype.onFoodEaten = function (item, food, saturation, player) { };
-    return ItemFood;
-}(ItemCommon));
-Callback.addCallback("FoodEaten", function (food, saturation, player) {
-    var item = Entity.getCarriedItem(player);
-    var itemInstance = ItemRegistry.getInstanceOf(item.id);
-    if (itemInstance && itemInstance.onFoodEaten) {
-        itemInstance.onFoodEaten(item, food, saturation, player);
-    }
-});
-var ItemThrowable = /** @class */ (function (_super) {
-    __extends(ItemThrowable, _super);
-    function ItemThrowable(stringID, name, icon, inCreative) {
-        if (inCreative === void 0) { inCreative = true; }
-        var _this = _super.call(this, stringID, name, icon) || this;
-        _this.item = Item.createThrowableItem(_this.stringID, _this.name, _this.icon, { isTech: true });
-        _this.setCategory(ItemCategory.ITEMS);
-        if (inCreative)
-            _this.addDefaultToCreative();
-        Item.registerThrowableFunctionForID(_this.id, function (projectile, item, target) {
-            _this.onProjectileHit(projectile, item, target);
-        });
-        return _this;
-    }
-    ItemThrowable.prototype.onProjectileHit = function (projectile, item, target) { };
-    return ItemThrowable;
-}(ItemBase));
-var ItemArmor = /** @class */ (function (_super) {
-    __extends(ItemArmor, _super);
-    function ItemArmor(stringID, name, icon, params, inCreative) {
-        if (inCreative === void 0) { inCreative = true; }
-        var _this = _super.call(this, stringID, name, icon) || this;
-        _this.armorType = params.type;
-        _this.defence = params.defence;
-        _this.setArmorTexture(params.texture);
-        _this.item = Item.createArmorItem(_this.stringID, _this.name, _this.icon, {
-            type: _this.armorType,
-            armor: _this.defence,
-            knockbackResist: params.knockbackResistance * 0.1125 || 0,
-            durability: 0,
-            texture: _this.texture,
-            isTech: true
-        });
-        _this.setCategory(ItemCategory.EQUIPMENT);
-        if (params.material)
-            _this.setMaterial(params.material);
-        if (inCreative)
-            _this.addDefaultToCreative();
-        ItemArmor.registerListeners(_this.id, _this);
-        return _this;
-    }
-    ItemArmor.prototype.setArmorTexture = function (texture) {
-        this.texture = texture;
-    };
-    ItemArmor.prototype.setMaterial = function (armorMaterial) {
-        if (typeof armorMaterial == "string") {
-            armorMaterial = ItemRegistry.getArmorMaterial(armorMaterial);
-        }
-        this.armorMaterial = armorMaterial;
-        var index = Native.ArmorType[this.armorType];
-        var maxDamage = armorMaterial.durabilityFactor * ItemArmor.maxDamageArray[index];
-        this.setMaxDamage(maxDamage);
-        if (armorMaterial.enchantability) {
-            this.setEnchantType(Native.EnchantType[this.armorType], armorMaterial.enchantability);
-        }
-        if (armorMaterial.repairMaterial) {
-            this.addRepairItem(armorMaterial.repairMaterial);
-        }
-    };
-    ItemArmor.prototype.preventDamaging = function () {
-        Armor.preventDamaging(this.id);
-    };
-    ItemArmor.registerListeners = function (id, armorFuncs) {
-        if ('onHurt' in armorFuncs) {
-            Armor.registerOnHurtListener(id, function (item, slot, player, type, value, attacker, bool1, bool2) {
-                return armorFuncs.onHurt({ attacker: attacker, type: type, damage: value, bool1: bool1, bool2: bool2 }, item, slot, player);
-            });
-        }
-        if ('onTick' in armorFuncs) {
-            Armor.registerOnTickListener(id, function (item, slot, player) {
-                return armorFuncs.onTick(item, slot, player);
-            });
-        }
-        if ('onTakeOn' in armorFuncs) {
-            Armor.registerOnTakeOnListener(id, function (item, slot, player) {
-                armorFuncs.onTakeOn(item, slot, player);
-            });
-        }
-        if ('onTakeOff' in armorFuncs) {
-            Armor.registerOnTakeOffListener(id, function (item, slot, player) {
-                armorFuncs.onTakeOff(item, slot, player);
-            });
-        }
-    };
-    ItemArmor.maxDamageArray = [11, 16, 15, 13];
-    return ItemArmor;
-}(ItemBase));
+/// <reference path="./interfaces/ToolParams.ts" />
+/**
+ * Tool parameters for vanilla tool types.
+ */
 var ToolType;
 (function (ToolType) {
     ToolType.SWORD = {
@@ -2309,326 +3012,28 @@ var ToolType;
 })(ToolType || (ToolType = {}));
 ToolAPI.addBlockMaterial("wool", 1.5);
 ToolAPI.registerBlockMaterial(35, "wool");
-/// <reference path="ToolType.ts" />
-var ItemTool = /** @class */ (function (_super) {
-    __extends(ItemTool, _super);
-    function ItemTool(stringID, name, icon, toolMaterial, toolData, inCreative) {
-        var _this = _super.call(this, stringID, name, icon, inCreative) || this;
-        _this.handEquipped = false;
-        _this.brokenId = 0;
-        _this.damage = 1;
-        _this.isWeapon = false;
-        _this.blockTypes = [];
-        _this.setMaxStack(1);
-        _this.setCategory(ItemCategory.EQUIPMENT);
-        if (typeof toolMaterial == "string") {
-            toolMaterial = ItemRegistry.getToolMaterial(toolMaterial);
-        }
-        _this.toolMaterial = toolMaterial;
-        if (toolData) {
-            for (var key in toolData) {
-                _this[key] = toolData[key];
-            }
-        }
-        ToolAPI.registerTool(_this.id, _this.toolMaterial, _this.blockTypes, _this);
-        if (_this.enchantType && toolMaterial.enchantability) {
-            _this.setEnchantType(_this.enchantType, toolMaterial.enchantability);
-        }
-        if (toolMaterial.repairMaterial) {
-            _this.addRepairItem(toolMaterial.repairMaterial);
-        }
-        if (_this.handEquipped) {
-            _this.setHandEquipped(true);
-        }
-        return _this;
-    }
-    return ItemTool;
-}(ItemCommon));
-/// <reference path="ItemBehavior.ts" />
-/// <reference path="ItemBase.ts" />
-/// <reference path="ItemCommon.ts" />
-/// <reference path="ItemFood.ts" />
-/// <reference path="ItemThrowable.ts" />
-/// <reference path="ItemArmor.ts" />
-/// <reference path="ItemTool.ts" />
-var ItemRegistry;
-(function (ItemRegistry) {
-    var items = {};
-    var itemsRarity = {};
-    var armorMaterials = {};
-    /**
-     * @returns item type ("block" or "item")
-     */
-    function getType(id) {
-        return IDRegistry.getIdInfo(id).split(":")[0];
-    }
-    ItemRegistry.getType = getType;
-    function isBlock(id) {
-        return getType(id) == "block";
-    }
-    ItemRegistry.isBlock = isBlock;
-    function isItem(id) {
-        return getType(id) == "item";
-    }
-    ItemRegistry.isItem = isItem;
-    /**
-     * @returns whether item is an item from the original game
-     */
-    function isVanilla(id) {
-        return !IDRegistry.getNameByID(id);
-    }
-    ItemRegistry.isVanilla = isVanilla;
-    /**
-     * @returns item string id in the game, it differs for custom items
-     */
-    function getVanillaStringID(id) {
-        return IDRegistry.getIdInfo(id).split(":")[1].split("#")[0];
-    }
-    ItemRegistry.getVanillaStringID = getVanillaStringID;
-    /**
-     * @returns instance of item class if it exists
-     */
-    function getInstanceOf(itemID) {
-        var numericID = Item.getNumericId(itemID);
-        return items[numericID] || null;
-    }
-    ItemRegistry.getInstanceOf = getInstanceOf;
-    /**
-     * @returns EnumRarity value for item
-     */
-    function getRarity(itemID) {
-        var _a;
-        return (_a = itemsRarity[itemID]) !== null && _a !== void 0 ? _a : EnumRarity.COMMON;
-    }
-    ItemRegistry.getRarity = getRarity;
-    /**
-     * @returns chat color for rarity
-     * @param rarity one of EnumRarity values
-     */
-    function getRarityColor(rarity) {
-        if (rarity == EnumRarity.UNCOMMON)
-            return "§e";
-        if (rarity == EnumRarity.RARE)
-            return "§b";
-        if (rarity == EnumRarity.EPIC)
-            return "§d";
-        return "";
-    }
-    ItemRegistry.getRarityColor = getRarityColor;
-    /**
-     * @returns chat color for item's rarity
-     */
-    function getItemRarityColor(itemID) {
-        return getRarityColor(getRarity(itemID));
-    }
-    ItemRegistry.getItemRarityColor = getItemRarityColor;
-    /**
-     * @param id item id
-     * @param rarity one of EnumRarity values
-     * @param preventNameOverride prevent registration of name override function
-     */
-    function setRarity(id, rarity, preventNameOverride) {
-        var numericID = Item.getNumericId(id);
-        itemsRarity[numericID] = rarity;
-        //@ts-ignore
-        if (!preventNameOverride && !Item.nameOverrideFunctions[numericID]) {
-            Item.registerNameOverrideFunction(numericID, function (item, translation, name) {
-                return getItemRarityColor(item.id) + translation;
-            });
-        }
-    }
-    ItemRegistry.setRarity = setRarity;
-    /**
-     * Creates new armor material with specified parameters
-     * @param name new (or existing) material name
-     * @param material material properties
-     */
-    function addArmorMaterial(name, material) {
-        armorMaterials[name] = material;
-    }
-    ItemRegistry.addArmorMaterial = addArmorMaterial;
-    /**
-     * @returns armor material by name
-     */
-    function getArmorMaterial(name) {
-        return armorMaterials[name];
-    }
-    ItemRegistry.getArmorMaterial = getArmorMaterial;
-    /**
-     * Registers new tool material in ToolAPI. Some of the tool
-     * materials are already registered:
-     * *wood*, *stone*, *iron*, *golden* and *diamond*
-     * @param name new (or existing) material name
-     * @param material material properties
-     */
-    function addToolMaterial(name, material) {
-        ToolAPI.addToolMaterial(name, material);
-    }
-    ItemRegistry.addToolMaterial = addToolMaterial;
-    /**
-     * @returns tool material by name registered in ToolAPI
-     */
-    function getToolMaterial(name) {
-        //@ts-ignore
-        return ToolAPI.toolMaterials[name];
-    }
-    ItemRegistry.getToolMaterial = getToolMaterial;
-    /**
-     * Registers item instance and it's functions.
-     * @param itemInstance item class instance
-     * @returns item instance back
-     */
-    function registerItem(itemInstance) {
-        items[itemInstance.id] = itemInstance;
-        registerItemFuncs(itemInstance.id, itemInstance);
-        return itemInstance;
-    }
-    ItemRegistry.registerItem = registerItem;
-    /**
-     * Registers all item functions from given object.
-     * @param itemFuncs object which implements ItemBehavior interface
-     */
-    function registerItemFuncs(itemID, itemFuncs) {
-        var numericID = Item.getNumericId(itemID);
-        if ('onNameOverride' in itemFuncs) {
-            Item.registerNameOverrideFunction(numericID, function (item, translation, name) {
-                return getItemRarityColor(item.id) + itemFuncs.onNameOverride(item, translation, name);
-            });
-        }
-        if ('onIconOverride' in itemFuncs) {
-            Item.registerIconOverrideFunction(numericID, function (item, isModUi) {
-                return itemFuncs.onIconOverride(item, isModUi);
-            });
-        }
-        if ('onItemUse' in itemFuncs) {
-            Item.registerUseFunction(numericID, function (coords, item, block, player) {
-                itemFuncs.onItemUse(coords, new ItemStack(item), block, player);
-            });
-        }
-        if ('onNoTargetUse' in itemFuncs) {
-            Item.registerNoTargetUseFunction(numericID, function (item, player) {
-                itemFuncs.onNoTargetUse(new ItemStack(item), player);
-            });
-        }
-        if ('onUsingReleased' in itemFuncs) {
-            Item.registerUsingReleasedFunction(numericID, function (item, ticks, player) {
-                itemFuncs.onUsingReleased(new ItemStack(item), ticks, player);
-            });
-        }
-        if ('onUsingComplete' in itemFuncs) {
-            Item.registerUsingCompleteFunction(numericID, function (item, player) {
-                itemFuncs.onUsingComplete(new ItemStack(item), player);
-            });
-        }
-        if ('onDispense' in itemFuncs) {
-            Item.registerDispenseFunction(numericID, function (coords, item, blockSource) {
-                var region = new WorldRegion(blockSource);
-                itemFuncs.onDispense(coords, new ItemStack(item), region);
-            });
-        }
-    }
-    ItemRegistry.registerItemFuncs = registerItemFuncs;
-    /**
-     * Creates item from given description. Automatically generates item id
-     * from given string id.
-     * @param stringID item string id.
-     * @param params item description
-     * @returns item class instance
-     */
-    function createItem(stringID, params) {
-        var item;
-        if (params.type == "food") {
-            return createFood(stringID, params);
-        }
-        else if (params.type == "throwable") {
-            item = new ItemThrowable(stringID, params.name, params.icon, params.inCreative);
-        }
-        else {
-            item = new ItemCommon(stringID, params.name, params.icon, params.inCreative);
-        }
-        item.setCategory(params.category || ItemCategory.ITEMS);
-        if (params.stack)
-            item.setMaxStack(params.stack);
-        if (params.maxDamage)
-            item.setMaxDamage(params.maxDamage);
-        if (params.handEquipped)
-            item.setHandEquipped(true);
-        if (params.allowedInOffhand)
-            item.allowInOffHand();
-        if (params.glint)
-            item.setGlint(true);
-        if (params.enchant)
-            item.setEnchantType(params.enchant.type, params.enchant.value);
-        if (params.rarity)
-            item.setRarity(params.rarity);
-        items[item.id] = item;
-        return item;
-    }
-    ItemRegistry.createItem = createItem;
-    function createFood(stringID, params) {
-        var item = new ItemFood(stringID, params.name, params.icon, params, params.inCreative);
-        if (params.stack)
-            item.setMaxStack(params.stack);
-        if (params.category)
-            item.setCategory(params.category);
-        if (params.glint)
-            item.setGlint(true);
-        if (params.rarity)
-            item.setRarity(params.rarity);
-        items[item.id] = item;
-        return item;
-    }
-    ItemRegistry.createFood = createFood;
-    ;
-    /**
-     * Creates armor item from given description. Automatically generates item id
-     * from given string id.
-     * @param stringID item string id
-     * @param params item and armor parameters
-     * @returns item class instance
-     */
-    function createArmor(stringID, params) {
-        var item = new ItemArmor(stringID, params.name, params.icon, params, params.inCreative);
-        registerItem(item);
-        if (params.category)
-            item.setCategory(params.category);
-        if (params.glint)
-            item.setGlint(true);
-        if (params.rarity)
-            item.setRarity(params.rarity);
-        return item;
-    }
-    ItemRegistry.createArmor = createArmor;
-    ;
-    /**
-     * Creates tool item and registers it in ToolAPI. Automatically generates item id
-     * from given string id.
-     * @param stringID item string id
-     * @param params object with item parameters and tool material
-     * @param toolData tool parameters and functions
-     * @returns item class instance
-     */
-    function createTool(stringID, params, toolData) {
-        var item = new ItemTool(stringID, params.name, params.icon, params.material, toolData, params.inCreative);
-        registerItem(item);
-        if (params.category)
-            item.setCategory(params.category);
-        if (params.glint)
-            item.setGlint(true);
-        if (params.rarity)
-            item.setRarity(params.rarity);
-        return item;
-    }
-    ItemRegistry.createTool = createTool;
-})(ItemRegistry || (ItemRegistry = {}));
 // By NikolaySavenko (https://github.com/NikolaySavenko)
+/**
+ * Module to convert item ids depending on the game version.
+ */
 var IDConverter;
 (function (IDConverter) {
     var oldIDPairs = {};
+    /**
+     * Registers old id and data for new string id.
+     */
     function registerOld(stringId, oldId, oldData) {
         oldIDPairs[stringId] = { id: oldId, data: oldData };
     }
     IDConverter.registerOld = registerOld;
+    /**
+     * Creates ItemStack instance by string id.
+     * @param stringId new item string id
+     * @param count item count
+     * @param data item data
+     * @param extra item extra data
+     * @returns ItemStack instance
+     */
     function getStack(stringId, count, data, extra) {
         if (count === void 0) { count = 1; }
         if (data === void 0) { data = 0; }
@@ -2639,32 +3044,45 @@ var IDConverter;
                 return new ItemStack(oldPair.id, count, oldPair.data, extra);
             }
         }
-        return new ItemStack(VanillaItemID[stringId] || VanillaBlockID[stringId], count, data, extra);
+        return new ItemStack(getNumericId(stringId), count, data, extra);
     }
     IDConverter.getStack = getStack;
+    /**
+     * @param stringId new item string id
+     * @returns converted id data pair
+     */
     function getIDData(stringId) {
-        if (BlockEngine.getMainGameVersion() == 11) {
+        if (BlockEngine.getMainGameVersion() == 11 && oldIDPairs.hasOwnProperty(stringId)) {
             return oldIDPairs[stringId];
         }
-        else {
-            return { id: VanillaItemID[stringId] || VanillaBlockID[stringId], data: 0 };
-        }
+        return { id: getNumericId(stringId), data: 0 };
     }
     IDConverter.getIDData = getIDData;
+    /**
+     * @param stringId new item string id
+     * @returns converted numeric id
+     */
     function getID(stringId) {
-        if (BlockEngine.getMainGameVersion() == 11)
+        if (BlockEngine.getMainGameVersion() == 11 && oldIDPairs.hasOwnProperty(stringId)) {
             return oldIDPairs[stringId].id;
-        else
-            return VanillaItemID[stringId] || VanillaBlockID[stringId];
+        }
+        return getNumericId(stringId);
     }
     IDConverter.getID = getID;
+    /**
+     * @param stringId new item string id
+     * @returns converted data
+     */
     function getData(stringId) {
-        if (BlockEngine.getMainGameVersion() == 11)
+        if (BlockEngine.getMainGameVersion() == 11 && oldIDPairs.hasOwnProperty(stringId)) {
             return oldIDPairs[stringId].data;
-        else
-            return 0;
+        }
+        return 0;
     }
     IDConverter.getData = getData;
+    function getNumericId(stringId) {
+        return VanillaItemID[stringId] || VanillaBlockID[stringId];
+    }
 })(IDConverter || (IDConverter = {}));
 /// <reference path="IDConverter.ts" />
 IDConverter.registerOld("charcoal", 263, 1);
@@ -2806,7 +3224,7 @@ var TileEntityBase = /** @class */ (function () {
     TileEntityBase.prototype.getScreenName = function (player, coords) {
         return "main";
     };
-    TileEntityBase.prototype.getScreenByName = function (screenName) {
+    TileEntityBase.prototype.getScreenByName = function (screenName, container) {
         return null;
     };
     /**
@@ -2836,7 +3254,7 @@ var TileEntityBase = /** @class */ (function () {
             return false;
         }
         var screenName = this.getScreenName(player, coords);
-        if (screenName && this.getScreenByName("main")) {
+        if (screenName && this.getScreenByName(screenName, this.container)) {
             var client = Network.getClientForPlayer(player);
             if (client) {
                 this.container.openFor(client, screenName);
@@ -2883,14 +3301,15 @@ var TileEntityBase = /** @class */ (function () {
     return TileEntityBase;
 }());
 /**
- * Registry for liquid storage items. Compatible with LiquidRegistry.
+ * Registry for liquid storage items. Compatible with LiquidRegistry and extends it
+ * by adding items that can contain partial amounts of liquid.
  */
 var LiquidItemRegistry;
 (function (LiquidItemRegistry) {
     LiquidItemRegistry.EmptyByFull = {};
     LiquidItemRegistry.FullByEmpty = {};
     /**
-     * Registers liquid storage item
+     * Registers liquid storage item.
      * @param liquid liquid name
      * @param emptyId empty item id
      * @param fullId id of item with luquid
@@ -2904,6 +3323,12 @@ var LiquidItemRegistry;
             LiquidRegistry.registerItem(liquid, { id: emptyId, data: 0 }, { id: fullId, data: 0 });
     }
     LiquidItemRegistry.registerItem = registerItem;
+    /**
+     * Return liquid type stored in item
+     * @param id item id
+     * @param data item data
+     * @returns liquid type
+     */
     function getItemLiquid(id, data) {
         var empty = LiquidItemRegistry.EmptyByFull[id];
         if (empty) {
@@ -2912,6 +3337,13 @@ var LiquidItemRegistry;
         return LiquidRegistry.getItemLiquid(id, data);
     }
     LiquidItemRegistry.getItemLiquid = getItemLiquid;
+    /**
+     * Returns empty item and stored liquid data for item that contains liquid,
+     * null otherwise.
+     * @param id item id
+     * @param data item data
+     * @returns object that contains empty item and stored liquid.
+     */
     function getEmptyItem(id, data) {
         var emptyData = LiquidItemRegistry.EmptyByFull[id];
         if (emptyData) {
@@ -2925,9 +3357,17 @@ var LiquidItemRegistry;
         return null;
     }
     LiquidItemRegistry.getEmptyItem = getEmptyItem;
+    /**
+     * Returns full item and free liquid capacity for item that can be filled with liquid,
+     * null otherwise.
+     * @param id item id
+     * @param data item data
+     * @param liquid liquid type
+     * @returns object that contains full item and free liquid capacity
+     */
     function getFullItem(id, data, liquid) {
         var emptyData = LiquidItemRegistry.EmptyByFull[id];
-        if (emptyData && data > 0) {
+        if (emptyData && emptyData.liquid == liquid && data > 0) {
             return { id: id, data: 0, amount: data, storage: emptyData.storage };
         }
         var fullData = LiquidItemRegistry.FullByEmpty[id + ":" + liquid];
@@ -2944,7 +3384,17 @@ var LiquidItemRegistry;
 })(LiquidItemRegistry || (LiquidItemRegistry = {}));
 var BlockEngine;
 (function (BlockEngine) {
+    /**
+     * Class to store and manipulate liquids in TileEntity.
+     */
     var LiquidTank = /** @class */ (function () {
+        /**
+         * Creates new instance of `LiquidTank` and binds it to TileEntity.
+         * @param tileEntity TileEntity instance
+         * @param name liquid tank name
+         * @param limit max liquid amount
+         * @param liquids types of valid liquids
+         */
         function LiquidTank(tileEntity, name, limit, liquids) {
             this.name = name;
             this.limit = limit;
@@ -2952,6 +3402,10 @@ var BlockEngine;
                 this.setValidLiquids(liquids);
             this.setParent(tileEntity);
         }
+        /**
+         * Binds liquid tank to TileEntity.
+         * @param tileEntity TileEntity instance
+         */
         LiquidTank.prototype.setParent = function (tileEntity) {
             this.tileEntity = tileEntity;
             var liquidData = tileEntity.data[this.name] || {
@@ -2960,18 +3414,34 @@ var BlockEngine;
             };
             tileEntity.data[this.name] = this.data = liquidData;
         };
+        /**
+         * Gets type of liquid stored in tank.
+         * @returns liquid type
+         */
         LiquidTank.prototype.getLiquidStored = function () {
             return this.data.liquid;
         };
+        /**
+         * Gets max amount of liquid in tank.
+         * @returns amount of liquid
+         */
         LiquidTank.prototype.getLimit = function () {
             return this.limit;
         };
+        /**
+         * @param liquid liquid type
+         * @returns true if liquid can be stored in tank, false otherwise.
+         */
         LiquidTank.prototype.isValidLiquid = function (liquid) {
             if (!this.liquids) {
                 return true;
             }
             return this.liquids[liquid] || false;
         };
+        /**
+         * Sets liquids that can be stored in tank.
+         * @param liquids arrays of liquid types
+         */
         LiquidTank.prototype.setValidLiquids = function (liquids) {
             this.liquids = {};
             for (var _i = 0, liquids_1 = liquids; _i < liquids_1.length; _i++) {
@@ -2979,19 +3449,40 @@ var BlockEngine;
                 this.liquids[name] = true;
             }
         };
+        /**
+         * Gets amount of liquid in tank. If `liquid` parameter is set,
+         * returns amount of the specified liquid.
+         * @param liquid liquid type
+         * @returns amount of liquid
+         */
         LiquidTank.prototype.getAmount = function (liquid) {
             if (!liquid || this.data.liquid == liquid) {
                 return this.data.amount;
             }
             return 0;
         };
+        /**
+         * Sets liquid to tank.
+         * @param liquid liquid type
+         * @param amount amount of liquid
+         */
         LiquidTank.prototype.setAmount = function (liquid, amount) {
             this.data.liquid = liquid;
             this.data.amount = amount;
         };
+        /**
+         * Gets amount of liquid divided by max amount.
+         * @returns scalar value from 0 to 1
+         */
         LiquidTank.prototype.getRelativeAmount = function () {
             return this.data.amount / this.limit;
         };
+        /**
+         * Adds liquid to tank.
+         * @param liquid liquid type
+         * @param amount amount of liquid to add
+         * @returns amount of liquid that wasn't added
+         */
         LiquidTank.prototype.addLiquid = function (liquid, amount) {
             if (!this.data.liquid || this.data.liquid == liquid) {
                 this.data.liquid = liquid;
@@ -3016,12 +3507,24 @@ var BlockEngine;
             }
             return 0;
         };
+        /**
+         * @returns true if tank is full, false otherwise
+         */
         LiquidTank.prototype.isFull = function () {
             return this.data.amount >= this.limit;
         };
+        /**
+         * @returns true if tank is empty, false otherwise
+         */
         LiquidTank.prototype.isEmpty = function () {
             return this.data.amount <= 0;
         };
+        /**
+         * Tries to fill item with liquid from tank.
+         * @param inputSlot slot for empty item
+         * @param outputSlot slot for full item
+         * @returns true if liquid was added, false otherwise.
+         */
         LiquidTank.prototype.addLiquidToItem = function (inputSlot, outputSlot) {
             var liquid = this.getLiquidStored();
             if (!liquid)
@@ -3052,6 +3555,12 @@ var BlockEngine;
             }
             return false;
         };
+        /**
+         * Tries to fill tank with liquid from item.
+         * @param inputSlot slot for full item
+         * @param outputSlot slot for empty item
+         * @returns true if liquid was extracted, false otherwise.
+         */
         LiquidTank.prototype.getLiquidFromItem = function (inputSlot, outputSlot) {
             var liquid = this.getLiquidStored();
             var empty = LiquidItemRegistry.getEmptyItem(inputSlot.id, inputSlot.data);
@@ -3075,6 +3584,11 @@ var BlockEngine;
             }
             return false;
         };
+        /**
+         * Updates UI bar of liquid. Uses LiquidStorage method for legacy container
+         * and container event from TileEntityBase for multiplayer container.
+         * @param scale name of liquid bar
+         */
         LiquidTank.prototype.updateUiScale = function (scale) {
             var container = this.tileEntity.container;
             if (container.isLegacyContainer()) {
@@ -3094,6 +3608,7 @@ EXPORT("Vector3", Vector3);
 EXPORT("WorldRegion", WorldRegion);
 EXPORT("PlayerEntity", PlayerEntity);
 EXPORT("BlockBase", BlockBase);
+EXPORT("BlockRotative", BlockRotative);
 EXPORT("TileEntityBase", TileEntityBase);
 EXPORT("ItemCommon", ItemCommon);
 EXPORT("ItemFood", ItemFood);

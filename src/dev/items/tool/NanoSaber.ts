@@ -37,6 +37,11 @@ class ItemNanoSaber extends ElectricTool {
 		}
 	}
 
+	/** KEX compatibility for dynamic Nano Saber damage */
+	getAttackDamageBonus(item: ItemInstance): number {
+		return item.extra && item.extra.getBoolean("active") ? 16 : 0;
+	}
+
 	static onTick(playerUid: number): void {
 		if (World.getThreadTime() % 20 == 0) {
 			let player = new PlayerActor(playerUid);

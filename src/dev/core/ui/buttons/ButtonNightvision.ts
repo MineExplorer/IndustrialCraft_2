@@ -17,11 +17,11 @@ namespace ToolHUD {
 			let extra = slot.extra || new ItemExtraData();
 			if (extra.getBoolean("nv")) {
 				extra.putBoolean("nv", false);
-				BlockEngine.sendUnlocalizedMessage(client, "§4", "message.nightvision.disabled");
+				BlockEngine.sendMessage(client, "§4", "message.nightvision.disabled");
 			}
 			else {
 				extra.putBoolean("nv", true);
-				BlockEngine.sendUnlocalizedMessage(client, "§2", "message.nightvision.enabled");
+				BlockEngine.sendMessage(client, "§2", "message.nightvision.enabled");
 			}
 			Entity.setArmorSlot(player, 0, slot.id, 1, slot.data, extra);
 		}

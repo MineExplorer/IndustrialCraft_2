@@ -28,7 +28,7 @@ class ItemScanner extends ItemElectric {
 		let client = Network.getClientForPlayer(player);
 		if (client && ICTool.useElectricItem(item, this.getEnergyPerUse(), player)) {
 			SoundManager.playSoundAtEntity(player, "ODScanner.ogg");
-			BlockEngine.sendUnlocalizedMessage(client, "message.scan_result", `${coords.x}, ${coords.y}, ${coords.z}`);
+			BlockEngine.sendMessage(client, "message.scan_result", `${coords.x}, ${coords.y}, ${coords.z}`);
 			let ores = {};
 			let radius = this.getScanRadius();
 			let region = BlockSource.getDefaultForActor(player);

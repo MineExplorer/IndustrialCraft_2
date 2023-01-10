@@ -16,13 +16,13 @@ extends ItemBattery {
 		const client = Network.getClientForPlayer(player);
 		switch (mode) {
 			case 0:
-				BlockEngine.sendUnlocalizedMessage(client, "Mode: ", "charging.enabled");
+				BlockEngine.sendMessage(client, "Mode: %s", "charging.enabled");
 			break;
 			case 1:
-				BlockEngine.sendUnlocalizedMessage(client, "Mode: ", "charging.not_in_hand");
+				BlockEngine.sendMessage(client, "Mode: %s", "charging.not_in_hand");
 			break;
 			case 2:
-				BlockEngine.sendUnlocalizedMessage(client, "Mode: ", "charging.disabled");
+				BlockEngine.sendMessage(client, "Mode: %s", "charging.disabled");
 			break;
 		}
 	}
@@ -30,11 +30,11 @@ extends ItemBattery {
 	getModeTooltip(mode: number): string {
 		switch (mode) {
 			case 0:
-				return Translation.translate("Mode: ") + Translation.translate("charging.enabled");
+				return Translation.translate("Mode: %s").replace("%s", Translation.translate("charging.enabled"));
 			case 1:
-				return Translation.translate("Mode: ") + Translation.translate("charging.not_in_hand");
+				return Translation.translate("Mode: %s").replace("%s", Translation.translate("charging.not_in_hand"));
 			case 2:
-				return Translation.translate("Mode: ") + Translation.translate("charging.disabled");
+				return Translation.translate("Mode: %s").replace("%s", Translation.translate("charging.disabled"));
 		}
 	}
 

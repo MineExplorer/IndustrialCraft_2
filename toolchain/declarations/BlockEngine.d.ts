@@ -9,10 +9,26 @@ declare namespace BlockEngine {
     function getMainGameVersion(): number;
     /**
      * Sends packet with message which will be translated by the client.
-     * @param client receiver client
-     * @param texts array of strings which will be translated and combined in one message.
+     * @deprecated Use sendMessage instead.
      */
     function sendUnlocalizedMessage(client: NetworkClient, ...texts: string[]): void;
+    /**
+     * Sends packet with message which will be translated by the client,
+     * the message can be parametrized using '%s' symbols as placeholders.
+     * @param client receiver client
+     * @param message unlocalized string
+     * @param params array of unlocalized substrings that will be substituted into the message after translation
+     */
+    function sendMessage(client: NetworkClient, message: string, ...params: string[]): void;
+    /**
+     * Sends packet with message which will be translated by the client,
+     * the message can be parametrized using '%s' symbols as placeholders.
+     * @param client receiver client
+     * @param color chat color code
+     * @param message unlocalized string
+     * @param params array of unlocalized substrings that will be substituted into the message after translation
+     */
+    function sendMessage(client: NetworkClient, color: EColor, message: string, ...params: string[]): void;
 }
 declare namespace BlockEngine {
     namespace Decorators {

@@ -16,7 +16,7 @@ namespace JetpackProvider {
 			if (energyStored < 8 || EntityHelper.isOnGround(playerUid)) {
 				item.extra.putBoolean("hover", false);
 				const client = Network.getClientForPlayer(playerUid);
-				if (client) BlockEngine.sendUnlocalizedMessage(client, "§4", "message.hover_mode.disabled");
+				if (client) BlockEngine.sendMessage(client, "§4", "message.hover_mode.disabled");
 				return item;
 			}
 			else {

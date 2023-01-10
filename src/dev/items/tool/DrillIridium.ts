@@ -17,13 +17,13 @@ implements IModeSwitchable {
 	getModeName(mode: number): string {
 		switch (mode) {
 			case 0:
-				return Translation.translate("Mode: ") + Translation.translate("iridium_drill.fortune");
+				return Translation.translate("Mode: %s").replace("%s", Translation.translate("iridium_drill.fortune"));
 			case 1:
-				return Translation.translate("Mode: ") + Translation.translate("iridium_drill.silk_touch");
+				return Translation.translate("Mode: %s").replace("%s", Translation.translate("iridium_drill.silk_touch"));
 			case 2:
-				return Translation.translate("Mode: ") + Translation.translate("iridium_drill.fortune_3x3");
+				return Translation.translate("Mode: %s").replace("%s", Translation.translate("iridium_drill.fortune_3x3"));
 			case 3:
-				return Translation.translate("Mode: ") + Translation.translate("iridium_drill.silk_touch_3x3");
+				return Translation.translate("Mode: %s").replace("%s", Translation.translate("iridium_drill.silk_touch_3x3"));
 		}
 	}
 
@@ -41,16 +41,16 @@ implements IModeSwitchable {
 		const client = Network.getClientForPlayer(player);
 		switch (mode) {
 			case 0:
-				BlockEngine.sendUnlocalizedMessage(client, "§e", "Mode: ", "iridium_drill.fortune");
+				BlockEngine.sendMessage(client, "§e", "Mode: %s", "iridium_drill.fortune");
 			break;
 			case 1:
-				BlockEngine.sendUnlocalizedMessage(client, "§9", "Mode: ", "iridium_drill.silk_touch");
+				BlockEngine.sendMessage(client, "§9", "Mode: %s", "iridium_drill.silk_touch");
 			break;
 			case 2:
-				BlockEngine.sendUnlocalizedMessage(client, "§c", "Mode: ", "iridium_drill.fortune_3x3");
+				BlockEngine.sendMessage(client, "§c", "Mode: %s", "iridium_drill.fortune_3x3");
 			break;
 			case 3:
-				BlockEngine.sendUnlocalizedMessage(client, "§2", "Mode: ", "iridium_drill.silk_touch_3x3");
+				BlockEngine.sendMessage(client, "§2", "Mode: %s", "iridium_drill.silk_touch_3x3");
 			break;
 		}
 	}

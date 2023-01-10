@@ -34,12 +34,12 @@ implements ItemBehavior {
 				extra.putInt("z", coords.z);
 				extra.putInt("dimension", dimension);
 				Entity.setCarriedItem(player, item.id, 1, item.data, extra);
-				BlockEngine.sendUnlocalizedMessage(client, "message.freq_transmitter.linked");
+				BlockEngine.sendMessage(client, "message.freq_transmitter.linked");
 			}
 			else {
 				if (dimension != extra.getInt("dimension")) return;
 				if (receiveCoords.x == coords.x && receiveCoords.y == coords.y && receiveCoords.z == coords.z) {
-					BlockEngine.sendUnlocalizedMessage(client, "message.freq_transmitter.notlinked");
+					BlockEngine.sendMessage(client, "message.freq_transmitter.notlinked");
 				}
 				else {
 					let region = WorldRegion.getForActor(player);
@@ -53,14 +53,14 @@ implements ItemBehavior {
 						data = receiver.data;
 						data.frequency = coords;
 						data.frequency.energy = basicTeleportCost;
-						BlockEngine.sendUnlocalizedMessage(client, "message.freq_transmitter.established");
+						BlockEngine.sendMessage(client, "message.freq_transmitter.established");
 					}
 				}
 			}
 		}
 		else if (receiveCoords) {
 			Entity.setCarriedItem(player, item.id, 1, item.data);
-			BlockEngine.sendUnlocalizedMessage(client, "message.freq_transmitter.unlinked");
+			BlockEngine.sendMessage(client, "message.freq_transmitter.unlinked");
 		}
 	}
 }

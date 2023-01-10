@@ -33,7 +33,7 @@ implements IModeSwitchable {
 	onNameOverride(item: ItemInstance, name: string): string {
 		name = super.onNameOverride(item, name);
 		let mode = this.readMode(item.extra);
-		name += "\n" + Translation.translate("Mode: ") + Translation.translate(this.getModeName(mode));
+		name += "\n" + Translation.translate("Mode: %s").replace("%s", Translation.translate(this.getModeName(mode)));
 		return name;
 	}
 
@@ -43,7 +43,7 @@ implements IModeSwitchable {
 		extra.putInt("mode", mode);
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 		let client = Network.getClientForPlayer(player);
-		BlockEngine.sendUnlocalizedMessage(client, "Mode: ", this.getModeName(mode));
+		BlockEngine.sendMessage(client, "Mode: %s", this.getModeName(mode));
 	}
 
 	makeShot(item: ItemInstance, player: number): void {
@@ -129,7 +129,7 @@ implements IModeSwitchable {
 				}
 			} else {
 				let client = Network.getClientForPlayer(player);
-				BlockEngine.sendUnlocalizedMessage(client, "message.mining_laser.aiming");
+				BlockEngine.sendMessage(client, "message.mining_laser.aiming");
 			}
 		}
 	}

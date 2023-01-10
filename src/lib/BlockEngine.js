@@ -32,7 +32,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 10,
+    version: 11,
     shared: true,
     api: "CoreEngine"
 });
@@ -55,20 +55,40 @@ var BlockEngine;
     BlockEngine.getMainGameVersion = getMainGameVersion;
     /**
      * Sends packet with message which will be translated by the client.
-     * @param client receiver client
-     * @param texts array of strings which will be translated and combined in one message.
+     * @deprecated Use sendMessage instead.
      */
     function sendUnlocalizedMessage(client) {
         var texts = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             texts[_i - 1] = arguments[_i];
         }
-        client.send("blockengine.clientMessage", { texts: texts });
+        client.send("blockengine.clientMessageOld", { texts: texts });
     }
     BlockEngine.sendUnlocalizedMessage = sendUnlocalizedMessage;
+    function sendMessage(client, text) {
+        var params = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            params[_i - 2] = arguments[_i];
+        }
+        if (text[0] == '§' && params.length > 0) {
+            var message = params.shift();
+            client.send("blockengine.clientMessage", { msg: message, color: text, params: params });
+        }
+        else {
+            client.send("blockengine.clientMessage", { msg: text, params: params });
+        }
+    }
+    BlockEngine.sendMessage = sendMessage;
 })(BlockEngine || (BlockEngine = {}));
-Network.addClientPacket("blockengine.clientMessage", function (data) {
+Network.addClientPacket("blockengine.clientMessageOld", function (data) {
     var message = data.texts.map(Translation.translate).join("");
+    Game.message(message);
+});
+Network.addClientPacket("blockengine.clientMessage", function (data) {
+    var message = (data.color || "") + Translation.translate(data.msg);
+    data.params.forEach(function (substr) {
+        message = message.replace("%s", Translation.translate(substr));
+    });
     Game.message(message);
 });
 var BlockEngine;

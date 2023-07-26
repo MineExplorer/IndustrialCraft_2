@@ -200,7 +200,7 @@ namespace Machine {
 		startPlaySound(): void {
 			if (!IC2Config.machineSoundEnabled || this.remove) return;
 			if (!this.audioSource) {
-				this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, "NuclearReactorLoop.ogg");;
+				this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, "NuclearReactorLoop.ogg");
 			}
 			if (this.data.output < 40) {
 				var geigerSound = "GeigerLowEU.ogg";

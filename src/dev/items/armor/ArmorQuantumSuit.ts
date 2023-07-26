@@ -116,7 +116,7 @@ class ArmorQuantumChestplate extends ArmorQuantumSuit {
 		if (energyStored > this.getEnergyPerDamage()) {
 			Entity.setFire(playerUid, 0, true);
 		}
-		return JetpackProvider.onTick(item, playerUid);;
+		return JetpackProvider.onTick(item, playerUid);
 	}
 }
 

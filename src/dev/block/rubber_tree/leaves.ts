@@ -2,7 +2,7 @@ class BlockRubberTreeLeaves extends BlockBase {
 	constructor() {
 		super("rubberTreeLeaves", "leaves");
 		const name = "rubber_tree_leaves";
-		for (let i = 0; i < 3; i++){
+		for (let i = 0; i < 3; i++) {
 			this.addVariation(name, [[name, 0]], i == 2);
 		}
 		this.setCategory(ItemCategory.NATURE);

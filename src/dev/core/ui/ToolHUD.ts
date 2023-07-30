@@ -44,7 +44,7 @@ namespace ToolHUD {
 	}
 
 	export function onClick(name: string): void {
-		Network.sendToServer("icpe.clickHUDButton", {name: name});
+		Network.sendToServer(IC2NetworkPackets.hudClick, {name: name});
 	}
 
 	function updateUIbuttons() {
@@ -107,12 +107,12 @@ namespace ToolHUD {
 	Callback.addCallback("LocalTick", onUpdate);
 
 	// Server Side
-	Network.addServerPacket("icpe.clickHUDButton", function (client: NetworkClient, data: {name: string}) {
+	Network.addServerPacket(IC2NetworkPackets.hudClick, function (client: NetworkClient, data: {name: string}) {
 		const player = client.getPlayerUid();
 		getButton(data.name).onClick(player);
 	});
 
-	Network.addServerPacket("icpe.setFlying", function (client: NetworkClient, data: {fly: boolean}) {
+	Network.addServerPacket(IC2NetworkPackets.jetpackFlying, function (client: NetworkClient, data: {fly: boolean}) {
 		const player = client.getPlayerUid();
 		JetpackProvider.setFlying(player, data.fly);
 	});

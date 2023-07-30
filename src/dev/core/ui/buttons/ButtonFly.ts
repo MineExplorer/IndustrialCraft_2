@@ -17,7 +17,7 @@ namespace ToolHUD {
 			let isFlying = ToolHUD.container.isElementTouched(this.name);
 			if (this.isTouched != isFlying) {
 				this.isTouched = isFlying;
-				Network.sendToServer("icpe.setFlying", {fly: isFlying});
+				Network.sendToServer(IC2NetworkPackets.jetpackFlying, {fly: isFlying});
 			}
 			let armor = Player.getArmorSlot(1);
 			let hoverMode = armor.extra?.getBoolean("hover") || false;

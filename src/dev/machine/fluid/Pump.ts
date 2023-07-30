@@ -1,11 +1,12 @@
 BlockRegistry.createBlock("pump", [
-	{name: "Pump", texture: [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]], inCreative: true}
+	{name: "Pump", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_bottom", 0], ["pump_side", 0], ["pump_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.pump, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.pump, 2, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 0], ["pump_side", 0], ["pump_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.pump, 2, [["pump_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_front", 1], ["pump_side", 1], ["pump_side", 1]]);
-TileRenderer.setRotationFunction(BlockID.pump);
+TileRenderer.setHandAndUiModel(BlockID.pump, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_bottom", 0], ["pump_side", 0], ["pump_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.pump, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_bottom", 0], ["pump_side", 0], ["pump_side", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.pump, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_bottom", 1], ["pump_side", 1], ["pump_side", 1]], true);
+TileRenderer.setRotationFunction(BlockID.pump, true);
 
 ItemName.addTierTooltip("pump", 1);
 
@@ -115,7 +116,8 @@ namespace Machine {
 			let liquid = this.liquidTank.getLiquidStored();
 			if (this.y > 0 && this.liquidTank.getAmount() <= 7000 && this.data.energy >= this.energyDemand) {
 				if (this.data.progress == 0) {
-					this.data.coords = this.recursiveSearch(liquid, this.x, this.y - 1, this.z, {});
+					const startPos = this.getStartCoords();
+					this.data.coords = this.recursiveSearch(liquid, startPos.x, startPos.y, startPos.z, {});
 				}
 				if (this.data.coords) {
 					newActive = true;
@@ -145,13 +147,24 @@ namespace Machine {
 			if (!map[coordsKey] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
 				if (block.data == 0) return new Vector3(x, y, z);
 				map[coordsKey] = true;
-				return this.recursiveSearch(liquid, x, y+1, z, map) ||
-				this.recursiveSearch(liquid, x+1, y, z, map) ||
-				this.recursiveSearch(liquid, x-1, y, z, map) ||
-				this.recursiveSearch(liquid, x, y, z+1, map) ||
-				this.recursiveSearch(liquid, x, y, z-1, map);
+				return this.recursiveSearch(liquid, x, y + 1, z, map) ||
+				this.recursiveSearch(liquid, x + 1, y, z, map) ||
+				this.recursiveSearch(liquid, x - 1, y, z, map) ||
+				this.recursiveSearch(liquid, x, y, z + 1, map) ||
+				this.recursiveSearch(liquid, x, y, z - 1, map);
 			}
 			return null;
+		}
+
+		getStartCoords(): Vector {
+			const coords = World.getRelativeCoords(this.x, this.y, this.z, this.getFacing());
+			if (this.region.getBlockId(coords) == BlockID.miner) {
+				do {
+					coords.y--;
+				}
+				while(coords.y > 0 && this.region.getBlockId(coords) == BlockID.miningPipe);
+			}
+			return coords;
 		}
 
 		getLiquidType(liquid: string, block: Tile): string {
@@ -168,8 +181,8 @@ namespace Machine {
 			return "PumpOp.ogg";
 		}
 
-		canRotate(side: number): boolean {
-			return side > 1;
+		canRotate(): boolean {
+			return true;
 		}
 	}
 

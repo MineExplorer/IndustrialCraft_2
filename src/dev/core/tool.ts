@@ -28,7 +28,7 @@ namespace ICTool {
 		wrench?.useItem(item, damage, player);
 	}
 
-	export function rotateMachine(tileEntity: TileEntity, side: number, item: ItemStack, player: number): void {
+	export function rotateMachine(tileEntity: Machine.IWrenchable, side: number, item: ItemStack, player: number): void {
 		if (tileEntity.setFacing(side)) {
 			useWrench(item, 1, player);
 			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg", 1);
@@ -105,12 +105,12 @@ namespace ICTool {
 		if (MachineRegistry.isMachine(block.id)) {
 			const item = Player.getCarriedItem();
 			if (ICTool.isUseableWrench(item, 10)) {
-				Network.sendToServer("icpe.demontageMachine", {x: coords.x, y: coords.y, z: coords.z});
+				Network.sendToServer(IC2NetworkPackets.demontage, {x: coords.x, y: coords.y, z: coords.z});
 			}
 		}
 	});
 
-	Network.addServerPacket("icpe.demontageMachine", function (client: NetworkClient, data: Vector) {
+	Network.addServerPacket(IC2NetworkPackets.demontage, function (client: NetworkClient, data: Vector) {
 		const player = client.getPlayerUid();
 		const region = WorldRegion.getForActor(player);
 		const blockID = region.getBlockId(data);

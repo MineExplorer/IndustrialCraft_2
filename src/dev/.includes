@@ -2,6 +2,7 @@
 #declaration: true
 
 header.ts
+constants.ts
 translation.ts
 
 core/**/*

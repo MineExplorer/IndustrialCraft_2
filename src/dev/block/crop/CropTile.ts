@@ -605,11 +605,11 @@ Callback.addCallback("DestroyBlockStart", function (coords: Callback.ItemUseCoor
 	if (block.id == BlockID.crop) {
 		// ? TEST IT!!! i think it can cause problem
 		// Block.setTempDestroyTime(block.id, 1000);
-		Network.sendToServer("icpe.cropDestroyStart", { x: coords.x, y: coords.y, z: coords.z });
+		Network.sendToServer(IC2NetworkPackets.cropLongClick, { x: coords.x, y: coords.y, z: coords.z });
 	}
 });
 
-Network.addServerPacket("icpe.cropDestroyStart", function (client: NetworkClient, data: Vector) {
+Network.addServerPacket(IC2NetworkPackets.cropLongClick, function (client: NetworkClient, data: Vector) {
 	const region = WorldRegion.getForActor(client.getPlayerUid());
 	const tileEntity = region.getTileEntity(data.x, data.y, data.z);
 	if (tileEntity) {

@@ -27,11 +27,11 @@ Callback.addCallback("DestroyBlockStart", function (coords: Callback.ItemUseCoor
 	let cableData = CableRegistry.getCableData(block.id);
 	if (item.id == ItemID.cutter && cableData && cableData.insulation > 0) {
 		Game.prevent();
-		Network.sendToServer("icpe.cutterLongClick", { x: coords.x, y: coords.y, z: coords.z });
+		Network.sendToServer(IC2NetworkPackets.cutterLongClick, { x: coords.x, y: coords.y, z: coords.z });
 	}
 });
 
-Network.addServerPacket("icpe.cutterLongClick", function (client: NetworkClient, coords: Vector) {
+Network.addServerPacket(IC2NetworkPackets.cutterLongClick, function (client: NetworkClient, coords: Vector) {
 	let playerUid = client.getPlayerUid();
 	let player = new PlayerEntity(playerUid);
 	let item = player.getCarriedItem();

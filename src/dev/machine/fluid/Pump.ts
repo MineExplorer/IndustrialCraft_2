@@ -116,8 +116,7 @@ namespace Machine {
 			let liquid = this.liquidTank.getLiquidStored();
 			if (this.y > 0 && this.liquidTank.getAmount() <= 7000 && this.data.energy >= this.energyDemand) {
 				if (this.data.progress == 0) {
-					const startPos = this.getStartCoords();
-					this.data.coords = this.recursiveSearch(liquid, startPos.x, startPos.y, startPos.z, {});
+					this.data.coords = this.getLiquidCoords(liquid);
 				}
 				if (this.data.coords) {
 					newActive = true;
@@ -141,30 +140,39 @@ namespace Machine {
 			this.setActive(newActive);
 		}
 
-		recursiveSearch(liquid: string, x: number, y: number, z: number, map: {}): Vector {
+		recursiveSearch(liquid: string, x: number, y: number, z: number, checked: {}): Vector {
 			let block = this.region.getBlock(x, y, z);
 			let coordsKey = x+':'+y+':'+z;
-			if (!map[coordsKey] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
+			if (!checked[coordsKey] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
 				if (block.data == 0) return new Vector3(x, y, z);
-				map[coordsKey] = true;
-				return this.recursiveSearch(liquid, x, y + 1, z, map) ||
-				this.recursiveSearch(liquid, x + 1, y, z, map) ||
-				this.recursiveSearch(liquid, x - 1, y, z, map) ||
-				this.recursiveSearch(liquid, x, y, z + 1, map) ||
-				this.recursiveSearch(liquid, x, y, z - 1, map);
+				checked[coordsKey] = true;
+				return this.recursiveSearch(liquid, x, y + 1, z, checked)
+					|| this.recursiveSearch(liquid, x + 1, y, z, checked)
+					|| this.recursiveSearch(liquid, x - 1, y, z, checked)
+					|| this.recursiveSearch(liquid, x, y, z + 1, checked)
+					|| this.recursiveSearch(liquid, x, y, z - 1, checked);
 			}
 			return null;
 		}
 
-		getStartCoords(): Vector {
-			const coords = World.getRelativeCoords(this.x, this.y, this.z, this.getFacing());
-			if (this.region.getBlockId(coords) == BlockID.miner) {
-				do {
-					coords.y--;
+		getLiquidCoords(liquid: string): Vector {
+			const startPos = World.getRelativeCoords(this.x, this.y, this.z, this.getFacing());
+			if (this.region.getBlockId(startPos) == BlockID.miner) {
+				startPos.y--;
+				if (this.region.getBlockId(startPos) == BlockID.miningPipe) {
+					while(startPos.y > 0 && this.region.getBlockId(startPos.x, startPos.y - 1, startPos.z) == BlockID.miningPipe) {
+						startPos.y--;
+					}
+
+					var checked = {};
+					return this.recursiveSearch(liquid, startPos.x + 1, startPos.y, startPos.z, checked)
+						|| this.recursiveSearch(liquid, startPos.x - 1, startPos.y, startPos.z, checked)
+						|| this.recursiveSearch(liquid, startPos.x, startPos.y, startPos.z + 1, checked)
+						|| this.recursiveSearch(liquid, startPos.x, startPos.y, startPos.z - 1, checked)
+						|| this.recursiveSearch(liquid, startPos.x, startPos.y - 1, startPos.z, checked);
 				}
-				while(coords.y > 0 && this.region.getBlockId(coords) == BlockID.miningPipe);
 			}
-			return coords;
+			return this.recursiveSearch(liquid, startPos.x, startPos.y, startPos.z, {});
 		}
 
 		getLiquidType(liquid: string, block: Tile): string {

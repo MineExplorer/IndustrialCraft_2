@@ -26,11 +26,11 @@ namespace ToolHUD {
 				let extra = slot.extra || new ItemExtraData();
 				if (extra.getBoolean("hover")) {
 					extra.putBoolean("hover", false);
-					BlockEngine.sendUnlocalizedMessage(client, "§4", "message.hover_mode.disabled");
+					BlockEngine.sendMessage(client, "§4", "message.hover_mode.disabled");
 				}
 				else {
 					extra.putBoolean("hover", true);
-					BlockEngine.sendUnlocalizedMessage(client, "§2", "message.hover_mode.enabled");
+					BlockEngine.sendMessage(client, "§2", "message.hover_mode.enabled");
 				}
 				Entity.setArmorSlot(player, 1, slot.id, 1, slot.data, extra);
 			}

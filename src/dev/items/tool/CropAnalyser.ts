@@ -52,7 +52,7 @@ class CropAnalyser extends ItemCommon {
 				client.sendMessage(`Tier: ${tileEntity.crop.getProperties().tier}`);
 				client.sendMessage(`Discovered by: ${tileEntity.crop.getDiscoveredBy()}`);
 			case 1:
-				BlockEngine.sendUnlocalizedMessage(client, tileEntity.crop.getID());
+				BlockEngine.sendMessage(client, tileEntity.crop.getID());
 		}
 	}
 

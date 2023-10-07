@@ -416,7 +416,7 @@ Translation.addTranslation("eatingplant", {en: "Eating Plant", ru: "Плотоя
 Translation.addTranslation("beetroots", {en: "Beetroots", ru: "Свёкла", pt: "Beterrabas", zh: "甜菜根"});
 
 // TEXT
-Translation.addTranslation("Mode: ", {ru: "Режим: ", es: "Modo: ", pt: "Modo: ", zh: "模式: "});
+Translation.addTranslation("Mode: %s", {ru: "Режим: %s", es: "Modo: %s", pt: "Modo: %s", zh: "模式: %s"});
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
 // Fluid Distributor
@@ -459,7 +459,7 @@ Translation.addTranslation("message.nightvision.enabled", {en: "Nightvision mode
 Translation.addTranslation("message.nightvision.disabled", {en: "Nightvision mode disabled", es: "Modo Vision Noctura Desabilitado", ru: "Режим ночного зрения выключен", zh: "已禁用夜视模式"});
 Translation.addTranslation("message.hover_mode.enabled", {en: "Hover mode enabled", ru: "Режим парения включен", zh: "已启用悬浮模式"});
 Translation.addTranslation("message.hover_mode.disabled", {en: "Hover mode disabled", ru: "Режим парения выключен", zh: "已禁用悬浮模式"});
-Translation.addTranslation("message.scan_result", {en: "Scan Result: ", ru: "Результат сканирования: ", es: "Resultado de la exploración: ", pt: "Resultado do Escaneamento: ", zh: "扫描结果: "});
+Translation.addTranslation("message.scan_result", {en: "Scan Result: %s", ru: "Результат сканирования: %s", es: "Resultado de la exploración: %s", pt: "Resultado do Escaneamento: %s", zh: "扫描结果: %s"});
 Translation.addTranslation("message.freq_transmitter.linked", {en: "Frequency Transmitter linked to Teleporter", ru: "Частотный связыватель соединился с телепортером", zh: "遥控器已连接至传送机"});
 Translation.addTranslation("message.freq_transmitter.notlinked", {en: "Can`t link Teleporter to itself", ru: "Невозможно связать телепортер с самим собой", zh: "传送机不能连接自己"});
 Translation.addTranslation("message.freq_transmitter.established", {en: "Teleportation link established", ru: "Телепортационная связь установлена", zh: "已建立传送点"});

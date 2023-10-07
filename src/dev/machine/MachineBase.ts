@@ -10,8 +10,8 @@ namespace Machine {
 		defaultDrop?: number;
 
 		onInit(): void {
-			this.networkData.putInt("blockId", this.blockID);
-			this.networkData.putInt("facing", this.getFacing());
+			this.networkData.putInt(NetworkDataKeys.blockId, this.blockID);
+			this.networkData.putInt(NetworkDataKeys.facing, this.getFacing());
 			this.networkData.sendChanges();
 			this.setupContainer();
 			delete this.liquidStorage;
@@ -48,17 +48,17 @@ namespace Machine {
 
 		setActive(isActive: boolean): void {
 			// TODO: sounds
-			if (this.networkData.getBoolean("active") !== isActive) {
-				this.networkData.putBoolean("active", isActive);
+			if (this.networkData.getBoolean(NetworkDataKeys.isActive) !== isActive) {
+				this.networkData.putBoolean(NetworkDataKeys.isActive, isActive);
 				this.networkData.sendChanges();
 			}
 		}
 
 		@ClientSide
 		renderModel(): void {
-			if (this.networkData.getBoolean("active")) {
-				let blockId = Network.serverToLocalId(this.networkData.getInt("blockId"));
-				let facing = this.networkData.getInt("facing");
+			if (this.networkData.getBoolean(NetworkDataKeys.isActive)) {
+				let blockId = Network.serverToLocalId(this.networkData.getInt(NetworkDataKeys.blockId));
+				let facing = this.networkData.getInt(NetworkDataKeys.facing);
 				TileRenderer.mapAtCoords(this.x, this.y, this.z, blockId, facing);
 			} else {
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
@@ -83,7 +83,7 @@ namespace Machine {
 		setFacing(side: number): boolean {
 			if (this.getFacing() != side) {
 				this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, side);
-				this.networkData.putInt("blockData", side);
+				this.networkData.putInt(NetworkDataKeys.facing, side);
 				this.networkData.sendChanges();
 				return true;
 			}

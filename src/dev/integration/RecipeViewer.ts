@@ -9,7 +9,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	abstract class RecipeTypeForICPE extends api.RecipeType {
 
-		constructor(name: string, icon: number, content: {params?: UI.BindingsSet, drawing?: UI.DrawingSet, elements: {[key: string]: object}}){
+		constructor(name: string, icon: number, content: {params?: UI.BindingsSet, drawing?: UI.DrawingSet, elements: {[key: string]: object}}) {
 			content.params ??= {};
 			content.drawing ??= [];
 			content.params.slot = "classic_slot";
@@ -22,7 +22,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	class BasicMachineRecipe extends RecipeTypeForICPE {
 
-		constructor(private recipeKey: string, name: string, icon: number, scaleBmp: string){
+		constructor(private recipeKey: string, name: string, icon: number, scaleBmp: string) {
 			super(name, icon, {
 				drawing: [
 					{type: "bitmap", x: 430, y: 200, scale: 6, bitmap: scaleBmp}
@@ -57,7 +57,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	class SolidCannerRecipe extends RecipeTypeForICPE {
 
-		constructor(){
+		constructor() {
 			super("Solid Canning", BlockID.solidCanner, {
 				drawing: [
 					{type: "bitmap", x: 209 + 20 * 6, y: 200 + 1 * 6, scale: 6, bitmap: "solid_canner_arrow"},
@@ -95,7 +95,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	class CannerRecipe extends RecipeTypeForICPE {
 
-		constructor(){
+		constructor() {
 			super("Canning", BlockID.canner, {
 				drawing: [
 					{type: "bitmap", x: 212 + 34 * 6, y: 20 + 6 * 6, scale: 6, bitmap: "extractor_bar_scale"},
@@ -178,7 +178,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	class MetalFormerRecipe extends RecipeTypeForICPE {
 
-		constructor(){
+		constructor() {
 			super("Metal Former", BlockID.metalFormer, {
 				drawing: [
 					{type: "bitmap", x: 360, y: 220, scale: 6, bitmap: "metalformer_bar_scale"}
@@ -231,7 +231,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	class OreWasherRecipe extends RecipeTypeForICPE {
 
-		constructor(){
+		constructor() {
 			super("Ore Washing", BlockID.oreWasher, {
 				drawing: [
 					{type: "bitmap", x: 263, y: 110, scale: 6, bitmap: "ore_washer_background_trim"},
@@ -270,7 +270,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	class ThermalCentrifugeRecipe extends RecipeTypeForICPE {
 
-		constructor(){
+		constructor() {
 			super("Thermal Centrifuge", BlockID.thermalCentrifuge, {
 				drawing: [
 					{type: "bitmap", x: 314, y: 100, scale: 6, bitmap: "thermal_centrifuge_background"},
@@ -314,7 +314,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	class BlastFurnaceRecipe extends RecipeTypeForICPE {
 
-		constructor(){
+		constructor() {
 			super("Blast Furnace", BlockID.blastFurnace, {
 				drawing: [
 					{type: "bitmap", x: 200, y: 100 - 11 * 5, scale: 5, bitmap: "blast_furnace_background"},
@@ -355,7 +355,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	class FermenterRecipe extends RecipeTypeForICPE {
 
-		constructor(){
+		constructor() {
 			super("Fermenter", BlockID.icFermenter, {
 				drawing: [
 					{type: "bitmap", x: 20, y: 20, scale: 6, bitmap: "fermenter_background"},
@@ -385,7 +385,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	class FluidFuelRecipe extends RecipeTypeForICPE {
 
-		constructor(){
+		constructor() {
 			super("Fluid Fuel", ItemID.cellEmpty, {
 				drawing: [
 					{type: "bitmap", x: 290, y: 140, scale: 8, bitmap: "furnace_burn"},

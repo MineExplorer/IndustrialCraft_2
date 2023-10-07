@@ -91,7 +91,7 @@ namespace Machine {
 		}
 
 		isEmptyBlock(block: Tile): boolean {
-			return block.id == 0 || block.id == 51 || block.id >= 8 && block.id <= 11 && block.data > 0;
+			return block.id == 0 || block.id == 51 || block.id == 8 || block.id == 9;
 		}
 
 		canBeDestroyed(blockID: number, level: number): boolean {
@@ -204,7 +204,7 @@ namespace Machine {
 					}
 				}
 				else if (this.data.y > 0 && pipeSlot.id == BlockID.miningPipe) {
-					let block = region.getBlock(this.x, this.data.y-1, this.z);
+					let block = region.getBlock(this.x, this.data.y - 1, this.z);
 					if (this.isEmptyBlock(block)) {
 						if (this.data.energy >= 3) {
 							this.data.energy -= 3;
@@ -216,7 +216,7 @@ namespace Machine {
 						}
 					}
 					else if (this.canBeDestroyed(block.id, level)) {
-						let block = region.getBlock(this.x, this.data.y-1, this.z);
+						let block = region.getBlock(this.x, this.data.y - 1, this.z);
 						if (this.data.energy >= params.energy) {
 							this.data.energy -= params.energy;
 							this.data.progress++;
@@ -224,9 +224,12 @@ namespace Machine {
 						}
 						if (this.data.progress >= params.time) {
 							level = ToolAPI.getToolLevelViaBlock(drillSlot.id, block.id);
-							this.mineBlock(this.x, this.data.y-1, this.z, block, drillSlot);
+							this.mineBlock(this.x, this.data.y - 1, this.z, block, drillSlot);
 							this.setPipe(this.data.y);
 						}
+					}
+					else {
+						this.data.progress = 0;
 					}
 				}
 			}

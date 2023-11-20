@@ -8,7 +8,7 @@ Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block
 	const {x, y, z} = coords.relative;
 	let reactorConnect = 0;
 	for (let i = 0; i < 6; i++) {
-		let c = World.getRelativeCoords(x, y, z, i);
+		const c = World.getRelativeCoords(x, y, z, i);
 		if (region.getBlockId(c.x, c.y, c.z) == BlockID.nuclearReactor) {
 			reactorConnect++;
 			if (reactorConnect > 1) break;
@@ -61,17 +61,17 @@ namespace Machine {
 
 		onInit(): void {
 			if (this.data.corePos && this.region.getBlockId(this.data.corePos) == BlockID.nuclearReactor) {
-				let tileEnt = this.region.getTileEntity(this.data.corePos);
-				if (tileEnt) {
-					tileEnt.addChamber(this);
+				const tileEntity = this.region.getTileEntity(this.data.corePos);
+				if (tileEntity) {
+					tileEntity.addChamber(this);
 				}
 			}
 			else for (let i = 0; i < 6; i++) {
-				let coords = StorageInterface.getRelativeCoords(this, i);
+				const coords = StorageInterface.getRelativeCoords(this, i);
 				if (this.region.getBlockId(coords) == BlockID.nuclearReactor) {
-					let tileEnt = this.region.getTileEntity(coords);
-					if (tileEnt) {
-						tileEnt.addChamber(this);
+					const tileEntity = this.region.getTileEntity(coords);
+					if (tileEntity) {
+						tileEntity.addChamber(this);
 						break;
 					}
 				}

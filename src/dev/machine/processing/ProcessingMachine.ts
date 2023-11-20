@@ -42,7 +42,7 @@ namespace Machine {
 		}
 
 		useUpgrades(): UpgradeAPI.UpgradeSet {
-			let upgrades = UpgradeAPI.useUpgrades(this);
+			const upgrades = UpgradeAPI.useUpgrades(this);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.energyDemand = upgrades.getEnergyDemand(this.defaultEnergyDemand);
@@ -55,10 +55,10 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
-			let sourceSlot = this.container.getSlot("slotSource");
-			let result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
+			const sourceSlot = this.container.getSlot("slotSource");
+			const result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
 			if (result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)) {
-				let resultSlot = this.container.getSlot("slotResult");
+				const resultSlot = this.container.getSlot("slotResult");
 				if (resultSlot.id == result.id && (!result.data || resultSlot.data == result.data) && resultSlot.count <= 64 - result.count || resultSlot.id == 0) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
@@ -66,7 +66,7 @@ namespace Machine {
 						newActive = true;
 					}
 					if (+this.data.progress.toFixed(3) >= 1) {
-						let sourceCount = result.sourceCount || 1;
+						const sourceCount = result.sourceCount || 1;
 						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - sourceCount, sourceSlot.data);
 						sourceSlot.validate();
 						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data || 0);

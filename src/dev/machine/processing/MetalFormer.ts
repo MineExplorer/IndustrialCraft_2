@@ -131,9 +131,9 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
-			let sourceSlot = this.container.getSlot("slotSource");
-			let resultSlot = this.container.getSlot("slotResult");
-			let result = this.getRecipeResult(sourceSlot.id);
+			const sourceSlot = this.container.getSlot("slotSource");
+			const resultSlot = this.container.getSlot("slotResult");
+			const result = this.getRecipeResult(sourceSlot.id);
 			if (result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
 				if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;

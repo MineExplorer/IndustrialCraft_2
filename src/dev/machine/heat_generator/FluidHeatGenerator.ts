@@ -52,11 +52,11 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			let liquidFuel = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
+			const liquidFuel = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
 			this.liquidTank = this.addLiquidTank("fluid", 10000, Object.keys(liquidFuel));
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				let empty = LiquidItemRegistry.getEmptyItem(id, data);
+				const empty = LiquidItemRegistry.getEmptyItem(id, data);
 				if (!empty) return false;
 				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
 			});
@@ -85,13 +85,13 @@ namespace Machine {
 		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
-			let slot1 = this.container.getSlot("slot1");
-			let slot2 = this.container.getSlot("slot2");
+			const slot1 = this.container.getSlot("slot1");
+			const slot2 = this.container.getSlot("slot2");
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			if (this.data.fuel <= 0 && this.data.heat == 0) {
-				let liquid = this.liquidTank.getLiquidStored();
-				let fuel = this.getFuel(liquid);
+				const liquid = this.liquidTank.getLiquidStored();
+				const fuel = this.getFuel(liquid);
 				if (fuel && this.liquidTank.getAmount() >= fuel.amount) {
 					this.liquidTank.getLiquid(fuel.amount);
 					this.data.fuel = fuel.amount;
@@ -99,7 +99,7 @@ namespace Machine {
 				}
 			}
 			if (this.data.fuel > 0) {
-				let fuel = this.getFuel(this.data.liquid);
+				const fuel = this.getFuel(this.data.liquid);
 				this.data.heat = fuel.power * 2;
 				this.data.fuel -= fuel.amount / 20;
 				this.setActive(true);
@@ -112,7 +112,7 @@ namespace Machine {
 			}
 
 			if (this.data.heat > 0) {
-				let output = this.spreadHeat(this.data.heat);
+				const output = this.spreadHeat(this.data.heat);
 				this.container.setText("textInfo1", "Emit: " + output);
 				if (output > 0) this.data.heat = 0;
 			} else {
@@ -128,9 +128,9 @@ namespace Machine {
 		}
 
 		spreadHeat(heat: number): number {
-			let side = this.getFacing();
-			let coords = StorageInterface.getRelativeCoords(this, side);
-			let tile = this.region.getTileEntity(coords) as IHeatConsumer;
+			const side = this.getFacing();
+			const coords = StorageInterface.getRelativeCoords(this, side);
+			const tile = this.region.getTileEntity(coords) as IHeatConsumer;
 			if (tile && tile.canReceiveHeat && tile.canReceiveHeat(side ^ 1)) {
 				return tile.receiveHeat(heat);
 			}
@@ -146,9 +146,8 @@ namespace Machine {
 			"slot2": {output: true}
 		},
 		isValidInput: function(item: ItemInstance) {
-			let empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
-			if (!empty) return false;
-			return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+			const empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
+			return empty ? MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid) : false;
 		},
 		canTransportLiquid: () => false
 	});

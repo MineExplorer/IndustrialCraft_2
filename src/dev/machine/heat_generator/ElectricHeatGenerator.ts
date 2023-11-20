@@ -65,7 +65,7 @@ namespace Machine {
 		calcOutput(): number {
 			let maxOutput = 0;
 			for (let i = 0; i < 10; i++) {
-				let slot = this.container.getSlot("slot"+i);
+				const slot = this.container.getSlot("slot"+i);
 				if (slot.id == ItemID.coil) {
 					maxOutput += 10;
 				}
@@ -74,13 +74,13 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			let maxOutput = this.calcOutput();
+			const maxOutput = this.calcOutput();
 			let output = 0;
 
 			if (this.data.energy >= 1) {
-				let side = this.getFacing();
-				let coords = StorageInterface.getRelativeCoords(this, side);
-				let tile = this.region.getTileEntity(coords) as IHeatConsumer;
+				const side = this.getFacing();
+				const coords = StorageInterface.getRelativeCoords(this, side);
+				const tile = this.region.getTileEntity(coords) as IHeatConsumer;
 				if (tile && tile.canReceiveHeat && tile.canReceiveHeat(side ^ 1)) {
 					output = tile.receiveHeat(Math.min(maxOutput, this.data.energy));
 					if (output > 0) {

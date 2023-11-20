@@ -28,7 +28,7 @@ namespace Machine {
 		}
 
 		energyTick(type: string, src: EnergyTileNode): void {
-			let maxVoltage = this.getMaxPacketSize();
+			const maxVoltage = this.getMaxPacketSize();
 			if (this.data.increaseMode) {
 				if (this.data.energy >= maxVoltage) {
 					this.data.energy += src.add(maxVoltage, maxVoltage) - maxVoltage;
@@ -36,14 +36,14 @@ namespace Machine {
 			}
 			else {
 				if (this.data.energy >= maxVoltage/4) {
-					let output = this.data.energy;
+					const output = this.data.energy;
 					this.data.energy += src.add(output, maxVoltage/4) - output;
 				}
 			}
 		}
 
 		onRedstoneUpdate(signal: number): void {
-			let newMode = signal > 0;
+			const newMode = signal > 0;
 			if (this.data.increaseMode != newMode) {
 				this.data.increaseMode = newMode;
 				this.rebuildGrid();

@@ -86,7 +86,7 @@ namespace Machine {
 				return true;
 			}
 			if (this.data.mode == 3) {
-				let recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
+				const recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
 				for (let i in recipes) {
 					if (recipes[i].input[1].id == id) return true;
 				}
@@ -97,7 +97,7 @@ namespace Machine {
 		isValidCan(id: number, data: number): boolean {
 			switch (this.data.mode) {
 			case 0: {
-				let recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+				const recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 				for (let i in recipes) {
 					if (recipes[i].can == id) return true;
 				}

@@ -75,12 +75,12 @@ namespace Machine {
 		}
 
 		consumeFuel(): number {
-			let fuelSlot = this.container.getSlot("slotFuel");
+			const fuelSlot = this.container.getSlot("slotFuel");
 			if (fuelSlot.id > 0) {
-				let burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
+				const burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 				if (burn > 0) {
 					if (LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
-						let empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
+						const empty = LiquidRegistry.getEmptyItem(fuelSlot.id, fuelSlot.data);
 						fuelSlot.setSlot(empty.id, 1, empty.data);
 					} else {
 						this.decreaseSlot(fuelSlot, 1);
@@ -98,9 +98,9 @@ namespace Machine {
 		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
-			let sourceSlot = this.container.getSlot("slotSource");
-			let resultSlot = this.container.getSlot("slotResult");
-			let result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
+			const sourceSlot = this.container.getSlot("slotSource");
+			const resultSlot = this.container.getSlot("slotResult");
+			const result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
 			let resetProgress = true;
 			if (result && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count < 64 || resultSlot.id == 0)) {
 				if (this.data.burn == 0) {

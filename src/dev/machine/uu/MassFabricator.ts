@@ -67,8 +67,8 @@ namespace Machine {
 			if (this.data.isEnabled && this.data.energy > 0) {
 				this.setActive(true);
 				if (this.data.catalyser < Math.max(1000, this.data.energy)) {
-					let catalyserSlot = this.container.getSlot("catalyserSlot");
-					let catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
+					const catalyserSlot = this.container.getSlot("catalyserSlot");
+					const catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
 					if (catalyserData) {
 						this.data.catalyser += catalyserData.input;
 						this.decreaseSlot(catalyserSlot, 1);
@@ -77,7 +77,7 @@ namespace Machine {
 				if (this.data.catalyser > 0) {
 					this.container.setText("textInfo3", "Catalyser:");
 					this.container.setText("textInfo4", Math.floor(this.data.catalyser));
-					let transfer = Math.min((ENERGY_PER_MATTER - this.data.progress) / 6, Math.min(this.data.catalyser, this.data.energy));
+					const transfer = Math.min((ENERGY_PER_MATTER - this.data.progress) / 6, Math.min(this.data.catalyser, this.data.energy));
 					this.data.progress += transfer * 6;
 					this.data.energy -= transfer;
 					this.data.catalyser -= transfer;
@@ -89,7 +89,7 @@ namespace Machine {
 					this.container.setText("textInfo3", "");
 					this.container.setText("textInfo4", "");
 				}
-				let transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
+				const transfer = Math.min(ENERGY_PER_MATTER - this.data.progress, this.data.energy);
 				this.data.progress += transfer;
 				this.data.energy -= transfer;
 			}
@@ -97,14 +97,14 @@ namespace Machine {
 				this.setActive(false);
 			}
 			if (this.data.progress >= ENERGY_PER_MATTER) {
-				let matterSlot = this.container.getSlot("matterSlot");
+				const matterSlot = this.container.getSlot("matterSlot");
 				if (matterSlot.id == ItemID.matter && matterSlot.count < 64 || matterSlot.id == 0) {
 					matterSlot.setSlot(ItemID.matter, matterSlot.count + 1, 0);
 					this.data.progress = 0;
 				}
 			}
 
-			let relProgress = this.data.progress / ENERGY_PER_MATTER;
+			const relProgress = this.data.progress / ENERGY_PER_MATTER;
 			this.container.setScale("energyScale", relProgress);
 			this.container.setText("textInfo2", Math.floor(100 * relProgress) + "%");
 			this.container.sendChanges();

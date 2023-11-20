@@ -61,8 +61,8 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
-			let sourceSlot = this.container.getSlot("slotSource");
-			let resultSlot = this.container.getSlot("slotResult");
+			const sourceSlot = this.container.getSlot("slotSource");
+			const resultSlot = this.container.getSlot("slotResult");
 			if (sourceSlot.id != 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)) {
 				if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;

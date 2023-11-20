@@ -71,7 +71,7 @@ namespace Machine {
 
 		getFuel(fuelSlot: ItemInstance): number {
 			if (fuelSlot.id > 0) {
-				let burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
+				const burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 				if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
 					return burn;
 				}
@@ -80,9 +80,9 @@ namespace Machine {
 		}
 
 		spreadHeat(): number {
-			let side = this.getFacing();
-			let coords = StorageInterface.getRelativeCoords(this, side);
-			let tile = this.region.getTileEntity(coords) as IHeatConsumer;
+			const side = this.getFacing();
+			const coords = StorageInterface.getRelativeCoords(this, side);
+			const tile = this.region.getTileEntity(coords) as IHeatConsumer;
 			if (tile && tile.canReceiveHeat && tile.canReceiveHeat(side ^ 1)) {
 				return this.data.output = tile.receiveHeat(20);
 			}
@@ -93,10 +93,10 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			this.data.output = 0;
-			let slot = this.container.getSlot("slotAshes");
+			const slot = this.container.getSlot("slotAshes");
 			if (this.data.burn <= 0) {
-				let fuelSlot = this.container.getSlot("slotFuel");
-				let burn = this.getFuel(fuelSlot) / 4;
+				const fuelSlot = this.container.getSlot("slotFuel");
+				const burn = this.getFuel(fuelSlot) / 4;
 				if (burn && ((slot.id == ItemID.ashes && slot.count < 64) || slot.id == 0) && this.spreadHeat()) {
 					this.setActive(true);
 					this.data.burnMax = burn;

@@ -94,7 +94,7 @@ namespace Machine {
 		}
 
 		useUpgrades(): UpgradeAPI.UpgradeSet {
-			let upgrades = super.useUpgrades();
+			const upgrades = super.useUpgrades();
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
 			return upgrades;
 		}
@@ -105,9 +105,9 @@ namespace Machine {
 
 		checkResult(result: number[]): boolean {
 			for (let i = 1; i < 4; i++) {
-				let id = result[(i-1)*2];
-				let count = result[(i-1)*2+1];
-				let resultSlot = this.container.getSlot("slotResult"+i);
+				const id = result[(i-1) * 2];
+				const count = result[(i-1) * 2 + 1];
+				const resultSlot = this.container.getSlot("slotResult" + i);
 				if ((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0) {
 					return false;
 				}
@@ -117,9 +117,9 @@ namespace Machine {
 
 		putResult(result: number[]): void {
 			for (let i = 1; i < 4; i++) {
-				let id = result[(i-1)*2];
-				let count = result[(i-1)*2+1];
-				let resultSlot = this.container.getSlot("slotResult"+i);
+				const id = result[(i-1) * 2];
+				const count = result[(i-1) * 2 + 1];
+				const resultSlot = this.container.getSlot("slotResult" + i);
 				if (id) {
 					resultSlot.setSlot(id, resultSlot.count + count, 0);
 				}
@@ -135,8 +135,8 @@ namespace Machine {
 			}
 
 			let newActive = false;
-			let sourceSlot = this.container.getSlot("slotSource");
-			let recipe = this.getRecipeResult(sourceSlot.id);
+			const sourceSlot = this.container.getSlot("slotSource");
+			const recipe = this.getRecipeResult(sourceSlot.id);
 			if (recipe && this.checkResult(recipe.result) && this.data.energy > 0) {
 				this.data.maxHeat = recipe.heat;
 				if (this.data.heat < recipe.heat) {

@@ -47,7 +47,7 @@ namespace Machine {
 		onTick(): void {
 			let output = 0.5;
 			for (let i = 0; i < 6; i++) {
-				let slot = this.container.getSlot("slot"+i);
+				const slot = this.container.getSlot("slot"+i);
 				if (slot.id == ItemID.rtgPellet) {
 					output *= 2;
 				}

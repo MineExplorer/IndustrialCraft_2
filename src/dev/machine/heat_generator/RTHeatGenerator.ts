@@ -46,7 +46,7 @@ namespace Machine {
 		calculateOutput(): number {
 			let output = 1;
 			for (let i = 0; i < 6; i++) {
-				let slot = this.container.getSlot("slot"+i);
+				const slot = this.container.getSlot("slot"+i);
 				if (slot.id == ItemID.rtgPellet) {
 					output *= 2;
 				}
@@ -64,7 +64,7 @@ namespace Machine {
 
 		onTick(): void {
 			let output = this.calculateOutput();
-			let maxOutput = output;
+			const maxOutput = output;
 
 			let isActive = output > 0;
 			if (isActive) {
@@ -78,9 +78,9 @@ namespace Machine {
 		}
 
 		spreadHeat(heat: number): number {
-			let side = this.getFacing();
-			let coords = StorageInterface.getRelativeCoords(this, side);
-			let tile = this.region.getTileEntity(coords) as IHeatConsumer;
+			const side = this.getFacing();
+			const coords = StorageInterface.getRelativeCoords(this, side);
+			const tile = this.region.getTileEntity(coords) as IHeatConsumer;
 			if (tile && tile.canReceiveHeat && tile.canReceiveHeat(side ^ 1)) {
 				return tile.receiveHeat(heat);
 			}

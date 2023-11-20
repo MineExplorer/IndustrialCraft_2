@@ -63,9 +63,9 @@ namespace Machine {
 			UpgradeAPI.useUpgrades(this);
 			StorageInterface.checkHoppers(this);
 
-			let slot1 = this.container.getSlot("slotLiquid1");
-			let slot2 = this.container.getSlot("slotLiquid2");
-			let slotOutput = this.container.getSlot("slotOutput");
+			const slot1 = this.container.getSlot("slotLiquid1");
+			const slot2 = this.container.getSlot("slotLiquid2");
+			const slotOutput = this.container.getSlot("slotOutput");
 			this.liquidTank.getLiquidFromItem(slot1, slotOutput);
 			this.liquidTank.addLiquidToItem(slot2, slotOutput);
 

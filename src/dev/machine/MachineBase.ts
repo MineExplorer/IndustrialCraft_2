@@ -1,7 +1,7 @@
 /// <reference path="IWrenchable.ts" />
 
 namespace Machine {
-	export let {ClientSide, NetworkEvent, ContainerEvent} = BlockEngine.Decorators;
+	export const {ClientSide, NetworkEvent, ContainerEvent} = BlockEngine.Decorators;
 
 	export abstract class MachineBase
 	extends TileEntityBase
@@ -20,10 +20,10 @@ namespace Machine {
 		setupContainer(): void {}
 
 		addLiquidTank(name: string, limit: number, liquids?: string[]) {
-			let tank = new BlockEngine.LiquidTank(this, name, limit, liquids);
-			let liquid = this.liquidStorage.getLiquidStored();
+			const tank = new BlockEngine.LiquidTank(this, name, limit, liquids);
+			const liquid = this.liquidStorage.getLiquidStored();
 			if (liquid) {
-				let amount = this.liquidStorage.getLiquid(liquid, tank.getLimit() / 1000);
+				const amount = this.liquidStorage.getLiquid(liquid, tank.getLimit() / 1000);
 				tank.addLiquid(liquid, Math.round(amount * 1000));
 			}
 			return tank;
@@ -57,8 +57,8 @@ namespace Machine {
 		@ClientSide
 		renderModel(): void {
 			if (this.networkData.getBoolean(NetworkDataKeys.isActive)) {
-				let blockId = Network.serverToLocalId(this.networkData.getInt(NetworkDataKeys.blockId));
-				let facing = this.networkData.getInt(NetworkDataKeys.facing);
+				const blockId = Network.serverToLocalId(this.networkData.getInt(NetworkDataKeys.blockId));
+				const facing = this.networkData.getInt(NetworkDataKeys.facing);
 				TileRenderer.mapAtCoords(this.x, this.y, this.z, blockId, facing);
 			} else {
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);

@@ -32,7 +32,7 @@ namespace Machine {
 		}
 
 		useUpgrades(): void {
-			let upgrades = UpgradeAPI.useUpgrades(this);
+			const upgrades = UpgradeAPI.useUpgrades(this);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 		}
@@ -69,11 +69,11 @@ namespace Machine {
 				}
 			}
 			this.data.energy -= 1;
-			let cropTile = this.region.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ) as Agriculture.ICropTileEntity;
+			const cropTile = this.region.getTileEntity(this.x + this.data.scanX, this.y + this.data.scanY, this.z + this.data.scanZ) as Agriculture.ICropTileEntity;
 
 			if (cropTile && cropTile.crop && !this.isInventoryFull()) {
 				let drops = null;
-				let crop = cropTile.crop;
+				const crop = cropTile.crop;
 				if (cropTile.data.currentSize == crop.getOptimalHarvestSize(cropTile)) {
 					drops = cropTile.performHarvest();
 				} else if (cropTile.data.currentSize == cropTile.crop.getMaxSize()) {
@@ -93,7 +93,7 @@ namespace Machine {
 
 		putItem(item: ItemInstance): void {
 			for (let i = 0; i < 15; i++) {
-				let slot = this.container.getSlot("outSlot" + i);
+				const slot = this.container.getSlot("outSlot" + i);
 				if (StorageInterface.addItemToSlot(item, slot) > 0) {
 					slot.markDirty();
 				}
@@ -102,8 +102,8 @@ namespace Machine {
 
 		isInventoryFull(): boolean {
 			for (let i = 0; i < 15; i++) {
-				let slot = this.container.getSlot("outSlot" + i);
-				let maxStack = Item.getMaxStack(slot.id);
+				const slot = this.container.getSlot("outSlot" + i);
+				const maxStack = Item.getMaxStack(slot.id);
 				if (!slot.id || slot.count < maxStack) return false;
 			}
 			return true;

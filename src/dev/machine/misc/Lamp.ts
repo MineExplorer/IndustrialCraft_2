@@ -71,9 +71,9 @@ namespace Machine {
 
 		setBlock(blockID: number): void {
 			this.selfDestroy();
-			let blockData = this.region.getBlockData(this);
+			const blockData = this.region.getBlockData(this);
 			this.region.setBlock(this, blockID, blockData);
-			let tile = this.region.addTileEntity(this);
+			const tile = this.region.addTileEntity(this);
 			tile.data = this.data;
 		}
 
@@ -84,8 +84,7 @@ namespace Machine {
 		}
 	}
 
-	class LampOn
-	extends Lamp {
+	class LampOn extends Lamp {
 		onItemUse(): boolean {
 			this.data.isActive = false;
 			this.setBlock(BlockID.luminator);
@@ -106,10 +105,8 @@ namespace Machine {
 }
 
 Block.registerPlaceFunction("luminator", function(coords, item, block, player, region) {
-	let x = coords.relative.x;
-	let y = coords.relative.y;
-	let z = coords.relative.z;
-	let blockID = region.getBlockId(x, y, z)
+	const {x, y, z} = coords.relative;
+	const blockID = region.getBlockId(x, y, z)
 	if (GenerationUtils.isTransparentBlock(blockID)) {
 		region.setBlock(x, y, z, item.id, coords.side);
 		//World.playSound(x, y, z, "dig.stone", 1, 0.8)

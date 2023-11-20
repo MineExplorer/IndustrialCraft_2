@@ -74,8 +74,8 @@ namespace Machine {
 				this.container.setText("text2", Translation.translate("Distribute"));
 			}
 
-			let slot1 = this.container.getSlot("slot1");
-			let slot2 = this.container.getSlot("slot2");
+			const slot1 = this.container.getSlot("slot1");
+			const slot2 = this.container.getSlot("slot2");
 			this.liquidTank.addLiquidToItem(slot1, slot2);
 
 			this.transportLiquid();
@@ -84,12 +84,12 @@ namespace Machine {
 		}
 
 		transportLiquid(): void {
-			let liquid = this.liquidTank.getLiquidStored();
+			const liquid = this.liquidTank.getLiquidStored();
 			if (!liquid) return;
-			let facing = this.getFacing();
+			const facing = this.getFacing();
 			for (let side = 0; side < 6; side++) {
 				if (this.data.inverted == (side != facing)) continue;
-				let storage = StorageInterface.getNeighbourLiquidStorage(this.blockSource, this, side);
+				const storage = StorageInterface.getNeighbourLiquidStorage(this.blockSource, this, side);
 				if (storage) {
 					StorageInterface.transportLiquid(liquid, 0.25, this, storage, side);
 				}
@@ -114,7 +114,7 @@ namespace Machine {
 			return !!LiquidItemRegistry.getFullItem(item.id, item.data, "water")
 		},
 		canReceiveLiquid: function(liquid: string, side: number): boolean {
-			let data = this.tileEntity.data;
+			const data = this.tileEntity.data;
 			return (side == this.tileEntity.getFacing()) != data.inverted;
 		}
 	});

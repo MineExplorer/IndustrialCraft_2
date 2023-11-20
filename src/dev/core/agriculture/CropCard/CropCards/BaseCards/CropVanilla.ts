@@ -12,9 +12,9 @@ namespace Agriculture {
 			return { id: 0, count: 1, data: 0 }
 		}
 
-		canGrow(tileentity: ICropTileEntity) {
-			const light = tileentity.region.getLightLevel(tileentity.x, tileentity.y, tileentity.z);
-			return tileentity.data.currentSize < tileentity.crop.getMaxSize() && light >= 9;
+		canGrow(tileEntity: ICropTileEntity) {
+			const light = tileEntity.region.getLightLevel(tileEntity);
+			return tileEntity.data.currentSize < tileEntity.crop.getMaxSize() && light >= 9;
 		}
 
 		getGain(te: ICropTileEntity): ItemInstance {
@@ -23,7 +23,7 @@ namespace Agriculture {
 
 		getSeeds(te: ICropTileEntity): SeedBagStackData | ItemInstance {
 			if (te.data.statGain <= 1 && te.data.statGrowth <= 1 && te.data.statResistance <= 1) {
-				// TODO check reqursion
+				// TODO check recursion
 				return this.getSeed(te);
 				// return AgricultureAPI.abstractFunctions["CropVanilla"].getSeed();
 			}

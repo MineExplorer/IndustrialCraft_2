@@ -39,8 +39,8 @@ namespace Machine {
 		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
-			let slot1 = this.container.getSlot("slotWaterIn");
-			let slot2 = this.container.getSlot("slotWaterOut");
+			const slot1 = this.container.getSlot("slotWaterIn");
+			const slot2 = this.container.getSlot("slotWaterOut");
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			if (this.data.energy >= 31) {
@@ -99,7 +99,7 @@ namespace Machine {
 
 		getSlot(type: string): Nullable<ItemContainerSlot> {
 			for (let i = 0; i < 7; i++) {
-				let slot = this.container.getSlot(type + i);
+				const slot = this.container.getSlot(type + i);
 				if (slot.id) return slot;
 			}
 			return null;

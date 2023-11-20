@@ -116,6 +116,7 @@ namespace Agriculture {
 				const stack = new ItemStack(id, count, data, extra);
 				if (this.applyWeedEx(stack, true)) {
 					this.data.dirty = true;
+					player.decreaseCarriedItem();
 					return;
 				}
 				if (!this.crop && !this.data.crossingBase && card) {
@@ -139,8 +140,12 @@ namespace Agriculture {
 		destroyBlock(coords: Callback.ItemUseCoordinates, playerUid: number): void {
 			super.destroyBlock(coords, playerUid);
 			this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
-			if (this.data.crossingBase) this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
-			if (this.crop) this.crop.onLeftClick(this, playerUid);
+			if (this.data.crossingBase) {
+				this.region.dropItem(this.x, this.y, this.z, ItemID.cropStick, 1, 0);
+			}
+			if (this.crop) {
+				this.crop.onLeftClick(this, playerUid);
+			}
 		}
 
 		updateRender(): void {
@@ -227,8 +232,12 @@ namespace Agriculture {
 		updateTerrainHumidity(): void {
 			let humidity = Agriculture.BiomeBonusesManager.getHumidityBiomeBonus(this.x, this.z);
 
-			if (this.region.getBlockData(this.x, this.y - 1, this.z) == 7) humidity += 2
-			if (this.data.storageWater >= 5) humidity += 2;
+			if (this.region.getBlockData(this.x, this.y - 1, this.z) == 7) {
+				humidity += 2;
+			}
+			if (this.data.storageWater >= 5) {
+				humidity += 2;
+			}
 
 			humidity += (this.data.storageWater + 24) / 25;
 			this.data.terrainHumidity = humidity;
@@ -253,10 +262,14 @@ namespace Agriculture {
 			let fresh = 9;
 			for (let x = this.x - 1; x < this.x + 2; x++) {
 				for (let z = this.z - 1; z < this.z + 2; z++) {
-					if (this.region.getBlockId(x, this.y, z)) fresh--;
+					if (this.region.getBlockId(x, this.y, z)) {
+						fresh--;
+					}
 				}
 			}
-			if (this.region.canSeeSky(this.x, this.y + 1, this.z)) value += 2;
+			if (this.region.canSeeSky(this.x, this.y + 1, this.z)) {
+				value += 2;
+			}
 			value += Math.floor(fresh / 2);
 			value += height;
 
@@ -296,9 +309,9 @@ namespace Agriculture {
 		performWeedWork(): void {
 			const relativeCropCoords = this.getRelativeCoords();
 			const coords = relativeCropCoords[MathUtil.randomInt(0, 3)];
-			const preCoords = [this.x + coords[0], this.y + coords[0], this.z + coords[0]];
-			if (this.region.getBlockId(preCoords[0], preCoords[1], preCoords[2]) == BlockID.crop) {
-				const TE = this.region.getTileEntity(preCoords[0], preCoords[1], preCoords[2]);
+			const preCoords = new Vector3(this.x + coords[0], this.y + coords[0], this.z + coords[0]);
+			if (this.region.getBlockId(preCoords) == BlockID.crop) {
+				const TE = this.region.getTileEntity(preCoords);
 				if (!TE.crop || (!TE.crop.isWeed(this) && !TE.hasWeedEX() && MathUtil.randomInt(0, 32) >= TE.data.statResistance)) {
 					let newGrowth = Math.max(this.data.statGrowth, TE.data.statGrowth);
 					if (newGrowth < 31 && MathUtil.randomInt(0, 1)) newGrowth++;
@@ -311,8 +324,8 @@ namespace Agriculture {
 					TE.updateRender();
 				}
 			}
-			else if (this.region.getBlockId(preCoords[0], preCoords[1] - 1, preCoords[2]) == 60) {
-				this.region.setBlock(preCoords[0], preCoords[1] - 1, preCoords[2], 2, 0);
+			else if (this.region.getBlockId(preCoords.x, preCoords.y - 1, preCoords.z) == 60) {
+				this.region.setBlock(preCoords.x, preCoords.y - 1, preCoords.z, 2, 0);
 			}
 		}
 
@@ -476,11 +489,10 @@ namespace Agriculture {
 			if (stack.id == ItemID.weedEx) {
 				const limit = manual ? 100 : 150;
 				if (this.data.storageWeedEX >= limit) return false;
-
+				
 				const amount = manual ? 50 : 100;
 				this.data.storageWeedEX += amount;
-
-				if (manual) stack.applyDamage(1);
+				
 				return true;
 			}
 			return false;
@@ -546,7 +558,7 @@ namespace Agriculture {
 		}
 
 		nextGaussian(): number {
-			let v1, v2, s;
+			let v1: number, v2: number, s: number;
 			do {
 				v1 = 2 * Math.random() - 1; // Between -1.0 and 1.0.
 				v2 = 2 * Math.random() - 1; // Between -1.0 and 1.0.
@@ -571,8 +583,10 @@ namespace Agriculture {
 				chance *= Math.pow(.95, this.data.statGain - 23);
 				if (Math.random() <= chance) dropCount++;
 			}
-			else if (Math.random() <= firstchance * 1.5) dropCount++;
-
+			else if (Math.random() <= firstchance * 1.5) {
+				dropCount++;
+			}
+			
 			const item = this.crop.getSeeds(this) as ItemInstance;
 			if (item) {
 				this.region.dropItem(this.x, this.y, this.z, item.id, dropCount, item.data, item.extra);
@@ -583,7 +597,7 @@ namespace Agriculture {
 			return true;
 		}
 
-		generateSeeds(data): ItemInstance {
+		generateSeeds(data: CropTileData): ItemInstance {
 			const extra = Agriculture.SeedExtraCreator.generateExtraFromValues(data);
 			return new ItemStack(ItemID.cropSeedBag, 1, this.data.crop, extra);
 		}

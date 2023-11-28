@@ -235,11 +235,13 @@ def stop_horizon():
 def task_load_docs():
 	import urllib.request
 	print("downloading...")
-	response = urllib.request.urlopen("https://docs.mineprogramming.org/core-engine.d.ts")
-	content = response.read().decode('utf-8')
+	files = ["android.d.ts", "core-engine.d.ts"]
+	for file_name in files:
+		response = urllib.request.urlopen("https://raw.githubusercontent.com/MineExplorer/innercore-docs/master/headers/" + file_name)
+		content = response.read().decode('utf-8')
 
-	with open(make_config.get_path("toolchain/declarations/core-engine.d.ts"), 'w') as docs:
-		docs.write(content)
+		with open(make_config.get_path("toolchain/declarations/" + file_name), 'w', encoding='utf-8') as docs:
+			docs.write(content)
 
 	print("complete!")
 	return 0

@@ -4,6 +4,8 @@ Thumbs.db
 .vscode/.ropeproject
 toolchain/build
 toolchain/temp
+toolchain/declarations/android.d.ts
+toolchain/declarations/core-engine.d.ts
 output
 **/__pycache__
 **/tsconfig.json

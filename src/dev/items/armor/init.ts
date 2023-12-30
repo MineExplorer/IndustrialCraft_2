@@ -11,8 +11,8 @@ ItemRegistry.addArmorMaterial("bronze", {durabilityFactor: 14, enchantability: 1
 
 ItemRegistry.registerItem(new ArmorIC2("bronzeHelmet", "bronze_helmet", {type: "helmet", defence: 2, texture: "bronze", material: "bronze"}));
 ItemRegistry.registerItem(new ArmorIC2("bronzeChestplate", "bronze_chestplate", {type: "chestplate", defence: 6, texture: "bronze", material: "bronze"}));
-ItemRegistry.registerItem(new ArmorIC2("bronzeLeggings", "bronze_leggings", {type: "leggings", defence: 6, texture: "bronze", material: "bronze"}));
-ItemRegistry.registerItem(new ArmorIC2("bronzeBoots", "bronze_boots", {type: "boots", defence: 6, texture: "bronze", material: "bronze"}));
+ItemRegistry.registerItem(new ArmorIC2("bronzeLeggings", "bronze_leggings", {type: "leggings", defence: 5, texture: "bronze", material: "bronze"}));
+ItemRegistry.registerItem(new ArmorIC2("bronzeBoots", "bronze_boots", {type: "boots", defence: 2, texture: "bronze", material: "bronze"}));
 
 ItemRegistry.addArmorMaterial("composite", {durabilityFactor: 50, enchantability: 8, repairMaterial: ItemID.plateAlloy});
 

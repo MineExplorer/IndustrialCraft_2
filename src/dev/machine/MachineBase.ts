@@ -10,9 +10,6 @@ namespace Machine {
 		defaultDrop?: number;
 
 		onInit(): void {
-			this.networkData.putInt(NetworkDataKeys.blockId, this.blockID);
-			this.networkData.putInt(NetworkDataKeys.facing, this.getFacing());
-			this.networkData.sendChanges();
 			this.setupContainer();
 			delete this.liquidStorage;
 		}
@@ -57,9 +54,9 @@ namespace Machine {
 		@ClientSide
 		renderModel(): void {
 			if (this.networkData.getBoolean(NetworkDataKeys.isActive)) {
-				const blockId = Network.serverToLocalId(this.networkData.getInt(NetworkDataKeys.blockId));
-				const facing = this.networkData.getInt(NetworkDataKeys.facing);
-				TileRenderer.mapAtCoords(this.x, this.y, this.z, blockId, facing);
+				const region = BlockSource.getCurrentClientRegion();
+				const block = region.getBlock(this.x, this.y, this.z);
+				TileRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
 			} else {
 				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 			}
@@ -83,8 +80,6 @@ namespace Machine {
 		setFacing(side: number): boolean {
 			if (this.getFacing() != side) {
 				this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, side);
-				this.networkData.putInt(NetworkDataKeys.facing, side);
-				this.networkData.sendChanges();
 				return true;
 			}
 			return false;

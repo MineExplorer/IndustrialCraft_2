@@ -1,11 +1,9 @@
 BlockRegistry.createBlock("nuke", [
-	{name: "Nuke", texture: [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]], inCreative: true}
+	{name: "Nuke", texture: [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]], inCreative: true},
+	{name: "Nuke", texture: [["nuke_bottom_active", 0], ["nuke_top_active", 0], ["nuke_sides_active", 0], ["nuke_sides_active", 0], ["nuke_sides_active", 0], ["nuke_sides_active", 0]], inCreative: false},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.nuke, "stone", 1);
 ItemRegistry.setRarity(BlockID.nuke, EnumRarity.UNCOMMON);
-
-TileRenderer.setStandardModel(BlockID.nuke, 0, [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]]);
-TileRenderer.registerRenderModel(BlockID.nuke, 0, [["tnt_active", 0]]);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.nuke, count: 1, data: 0}, [
@@ -78,11 +76,6 @@ namespace Machine {
 					this.selfDestroy();
 					return;
 				}
-				if (this.data.timer % 10 < 5) {
-					this.sendPacket("renderLitModel", {lit: true});
-				} else {
-					this.sendPacket("renderLitModel", {lit: false});
-				}
 				this.data.timer--;
 			}
 		}
@@ -90,14 +83,10 @@ namespace Machine {
 		onRedstoneUpdate(signal: number): void {
 			if (signal > 0) {
 				this.data.activated = true;
+				this.region.setBlock(this, this.blockID, 1);
 			}
 		}
-
-		destroy(): boolean {
-			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-			return false;
-		}
-
+		
 		@NetworkEvent(Side.Client)
 		explodeAnimation(data: {rad: number}) {
 			const radius = data.rad;
@@ -109,15 +98,6 @@ namespace Machine {
 				if (Math.sqrt(dx*dx + dy*dy*4 + dz*dz) <= radius) {
 					Particles.addParticle(ParticleType.hugeexplosionSeed, this.x + dx, this.y + dy, this.z + dz, 0, 0, 0);
 				}
-			}
-		}
-
-		@NetworkEvent(Side.Client)
-		renderLitModel(data: {lit: boolean}) {
-			if (data.lit) {
-				TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.nuke, 0);
-			} else {
-				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 			}
 		}
 	}

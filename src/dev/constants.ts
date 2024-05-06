@@ -1,6 +1,4 @@
 const NetworkDataKeys = {
-  blockId: "blockId",
-  facing: "facing",
   isActive: "active"
 }
 

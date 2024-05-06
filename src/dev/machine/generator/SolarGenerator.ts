@@ -42,6 +42,7 @@ namespace Machine {
 		}
 
 		onInit(): void {
+			super.onInit();
 			this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
 		}
 

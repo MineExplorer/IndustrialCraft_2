@@ -6,7 +6,7 @@ BlockRegistry.createBlock("macerator", [
 BlockRegistry.setBlockMaterial(BlockID.macerator, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.macerator, 2, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.macerator, 2, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["macerator_front", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.macerator, 2, [["machine_bottom", 0], ["macerator_top_active", 0], ["machine_side", 0], ["macerator_front_active", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.macerator);
 
 ItemName.addTierTooltip("macerator", 1);

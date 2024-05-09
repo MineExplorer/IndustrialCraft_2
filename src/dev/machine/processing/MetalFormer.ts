@@ -5,8 +5,14 @@ BlockRegistry.createBlock("metalFormer", [
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.metalFormer, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.metalFormer, 2, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.metalFormer, 2, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModel(BlockID.metalFormer, 2, [["machine_bottom", 0], ["metal_former_top", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModel(BlockID.metalFormer, 3, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModel(BlockID.metalFormer, 4, [["machine_bottom", 0], ["metal_former_top2", 0], ["machine_side", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModel(BlockID.metalFormer, 5, [["machine_bottom", 0], ["metal_former_top2", 0], ["machine_side", 0], ["machine_side", 0], ["machine_side", 0], ["metal_former_front", 0]]);
+TileRenderer.registerRenderModel(BlockID.metalFormer, 2, [["machine_bottom", 0], ["metal_former_top_active", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.metalFormer, 3, [["machine_bottom", 0], ["metal_former_top_active", 0], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.metalFormer, 4, [["machine_bottom", 0], ["metal_former_top2_active", 0], ["machine_side", 0], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.metalFormer, 5, [["machine_bottom", 0], ["metal_former_top2_active", 0], ["machine_side", 0], ["machine_side", 0], ["machine_side", 0], ["metal_former_front", 1]]);
 TileRenderer.setRotationFunction(BlockID.metalFormer);
 
 ItemName.addTierTooltip("metalFormer", 1);

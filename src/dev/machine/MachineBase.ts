@@ -12,6 +12,9 @@ namespace Machine {
 		onInit(): void {
 			this.setupContainer();
 			delete this.liquidStorage;
+			if (this.getOperationSound() && IC2Config.machineSoundEnabled) {
+				this.audioSource = new TileEntityAudioSource(this);
+			}
 		}
 
 		setupContainer(): void {}
@@ -44,10 +47,14 @@ namespace Machine {
 		}
 
 		setActive(isActive: boolean): void {
-			// TODO: sounds
 			if (this.networkData.getBoolean(NetworkDataKeys.isActive) !== isActive) {
 				this.networkData.putBoolean(NetworkDataKeys.isActive, isActive);
 				this.networkData.sendChanges();
+				if (isActive) {
+					this.startPlaySound();
+				} else {
+					this.stopPlaySound();
+				}
 			}
 		}
 
@@ -100,8 +107,7 @@ namespace Machine {
 		}
 
 		// Audio
-		audioSource: AudioSource;
-		finishingSound: number;
+		audioSource: TileEntityAudioSource;
 
 		getOperationSound(): string {
 			return null;
@@ -116,28 +122,26 @@ namespace Machine {
 		}
 
 		startPlaySound(): void {
-			/*if (!IC2Config.machineSoundEnabled) return;
-			if (!this.audioSource && !this.remove) {
-				if (this.finishingSound != 0) {
-					SoundManager.stop(this.finishingSound);
-				}
-				if (this.getStartingSound()) {
-					this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getStartingSound());
-					//this.audioSource.setNextSound(this.getOperationSound(), true);
-				} else if (this.getOperationSound()) {
-					this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getOperationSound());
-				}
-			}*/
+			if (!IC2Config.machineSoundEnabled || !this.audioSource || this.remove) return;
+
+			if (this.getInterruptSound()) {
+				this.audioSource.stop(this.getInterruptSound());
+			}
+			if (this.getStartingSound()) {
+				//this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getStartingSound());
+				//this.audioSource.setNextSound(this.getOperationSound(), true);
+			} else if (this.getOperationSound()) {
+				this.audioSource.play(this.getOperationSound(), true);
+			}
 		}
 
 		stopPlaySound(): void {
-			/*if (this.audioSource) {
-				SoundManager.removeSource(this.audioSource);
-				this.audioSource = null;
+			if (this.audioSource) {
+				this.audioSource.stop(this.getOperationSound());
 				if (this.getInterruptSound()) {
-					this.finishingSound = SoundManager.playSoundAtBlock(this, this.getInterruptSound(), 1);
+					this.audioSource.play(this.getInterruptSound());
 				}
-			}*/
+			}
 		}
 	}
 }

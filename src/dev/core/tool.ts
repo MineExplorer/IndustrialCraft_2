@@ -31,7 +31,7 @@ namespace ICTool {
 	export function rotateMachine(tileEntity: Machine.IWrenchable, side: number, item: ItemStack, player: number): void {
 		if (tileEntity.setFacing(side)) {
 			useWrench(item, 1, player);
-			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg", 1);
+			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg");
 		}
 	}
 
@@ -125,7 +125,7 @@ namespace ICTool {
 				region.setBlock(data, 0, 0);
 				region.dropAtBlock(data.x, data.y, data.z, drop);
 				ICTool.useWrench(item, 10, player);
-				SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg", 1);
+				SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg");
 			}
 		}
 	});

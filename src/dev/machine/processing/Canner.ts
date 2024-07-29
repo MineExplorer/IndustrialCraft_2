@@ -237,6 +237,11 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
+		
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		switchMode(): void {
 			if (this.data.progress == 0) {
@@ -245,6 +250,7 @@ namespace Machine {
 			}
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		switchTanks(): void {
 			if (this.data.progress == 0) {
@@ -254,6 +260,7 @@ namespace Machine {
 			}
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		updateUI(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
 			if (content) {
@@ -266,10 +273,6 @@ namespace Machine {
 					element.visual = data.mode % 3 > 0;
 				}
 			}
-		}
-
-		canRotate(side: number): boolean {
-			return side > 1;
 		}
 	}
 

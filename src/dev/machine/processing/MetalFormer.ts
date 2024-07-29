@@ -165,11 +165,13 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		switchMode(): void {
 			this.data.mode = (this.data.mode + 1) % 3;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		setModeIcon(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
 			if (content) {

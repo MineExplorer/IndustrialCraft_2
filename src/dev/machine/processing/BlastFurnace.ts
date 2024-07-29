@@ -198,6 +198,7 @@ namespace Machine {
 			return 0;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		showAirImage(container: ItemContainer, window: any, content: any, data: {show: boolean}): void {
 			if (content) {
@@ -208,6 +209,7 @@ namespace Machine {
 			}
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		setIndicator(container: ItemContainer, window: any, content: any, data: string): void {
 			if (content) {

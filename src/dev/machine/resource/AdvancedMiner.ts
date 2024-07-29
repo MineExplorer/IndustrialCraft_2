@@ -242,31 +242,35 @@ namespace Machine {
 			this.data.isEnabled = (signal == 0);
 		}
 
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
+
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		switchWhitelist(): void {
 			this.data.whitelist = !this.data.whitelist;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		switchSilktouch(): void {
 			this.data.silk_touch = !this.data.silk_touch;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		restart(): void {
 			this.data.x = this.data.y = this.data.z = 0;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		setSilktouchIcon(container: ItemContainer, window: any, content: any, data: {mode: boolean}): void {
 			if (content) {
 				const iconIndex = data.mode? 1 : 0;
 				content.elements.button_silk.bitmap = "miner_button_silk_" + iconIndex;
 			}
-		}
-
-		canRotate(side: number): boolean {
-			return side > 1;
 		}
 	}
 

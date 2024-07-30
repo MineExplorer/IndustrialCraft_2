@@ -12,9 +12,6 @@ namespace Machine {
 		onInit(): void {
 			this.setupContainer();
 			delete this.liquidStorage;
-			if (this.getOperationSound() && IC2Config.machineSoundEnabled) {
-				this.audioSource = new TileEntityAudioSource(this);
-			}
 		}
 
 		setupContainer(): void {}
@@ -58,28 +55,6 @@ namespace Machine {
 			}
 		}
 
-		@ClientSide
-		renderModel(): void {
-			if (this.networkData.getBoolean(NetworkDataKeys.isActive)) {
-				const region = BlockSource.getCurrentClientRegion();
-				const block = region.getBlock(this.x, this.y, this.z);
-				TileRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
-			} else {
-				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-			}
-		}
-
-		clientLoad(): void {
-			this.renderModel();
-			this.networkData.addOnDataChangedListener((data, isExternal) => {
-				this.renderModel();
-			});
-		}
-
-		clientUnload(): void {
-			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-		}
-
 		getFacing(): number {
 			return this.blockSource.getBlockData(this.x, this.y, this.z);
 		}
@@ -106,42 +81,113 @@ namespace Machine {
 			return item;
 		}
 
-		// Audio
-		audioSource: TileEntityAudioSource;
+		// Audio (client only)
+		audioSource: AudioSourceClient;
+		wasActive: boolean;
 
+		@ClientSide
+		updateActivity(): void {
+			if (this.networkData.getBoolean(NetworkDataKeys.isActive)) {
+				const region = BlockSource.getCurrentClientRegion();
+				const block = region.getBlock(this.x, this.y, this.z);
+				TileRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
+				this.startPlaySound();
+			} else {
+				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+				this.stopPlaySound();
+			}
+		}
+
+		clientLoad(): void {
+			if (IC2Config.machineSoundEnabled) {
+				this.audioSource = new AudioSourceClient(this);
+			}
+			this.wasActive = this.networkData.getBoolean(NetworkDataKeys.isActive);
+		}
+
+		clientUnload(): void {
+			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+			this.audioSource?.unload();
+		}
+
+		clientTick(): void {
+			this.audioSource?.update();
+			const isActive = this.networkData.getBoolean(NetworkDataKeys.isActive);
+			if (this.wasActive != isActive) {
+				this.updateActivity();
+				this.wasActive = isActive;
+			}
+		}
+		
+		@ClientSide
 		getOperationSound(): string {
 			return null;
 		}
 
+		@ClientSide
 		getStartingSound(): string {
 			return null;
 		}
 
-		getInterruptSound(): string {
+		@ClientSide
+		getFinishingSound(): string {
 			return null;
 		}
 
+		@ClientSide
 		startPlaySound(): void {
 			if (!IC2Config.machineSoundEnabled || !this.audioSource || this.remove) return;
 
-			if (this.getInterruptSound()) {
-				this.audioSource.stop(this.getInterruptSound());
+			if (this.getFinishingSound()) {
+				this.audioSource.stop(this.getFinishingSound());
 			}
+			
+			const opSound = this.getOperationSound();
 			if (this.getStartingSound()) {
-				//this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getStartingSound());
-				//this.audioSource.setNextSound(this.getOperationSound(), true);
-			} else if (this.getOperationSound()) {
-				this.audioSource.play(this.getOperationSound(), true);
+				const stream = this.audioSource.play(this.getStartingSound());
+				if (opSound) {
+					if (stream) {
+						stream.setOnCompleteEvent((source, stream) => {
+                    		source.play(opSound, true, stream.volume, stream.radius);
+						});
+					}
+					else {
+						this.audioSource.play(opSound, true); // if failed to play starting sound set looping operation sound
+					}
+				}
+			} else if (opSound) {
+				this.audioSource.play(opSound, true);
 			}
 		}
 
+		@ClientSide
 		stopPlaySound(): void {
-			if (this.audioSource) {
-				this.audioSource.stop(this.getOperationSound());
-				if (this.getInterruptSound()) {
-					this.audioSource.play(this.getInterruptSound());
-				}
+			if (!IC2Config.machineSoundEnabled || !this.audioSource || this.remove) return;
+			
+			let wasPlayingSound = false;
+			if (this.getStartingSound()) {
+				wasPlayingSound = this.audioSource.stop(this.getStartingSound());
 			}
+			if (this.getOperationSound()) {
+				wasPlayingSound ||= this.audioSource.stop(this.getOperationSound());
+			}
+			if (wasPlayingSound && this.getFinishingSound()) {
+				this.audioSource.play(this.getFinishingSound());
+			}
+		}
+
+		/** @deprecated Network event, shouldn't be called */
+		@NetworkEvent(Side.Client)
+		playSound(packetData: {name: string, vol: number, rad: number}, packetExtra: any): void {
+			if (!this.audioSource) return;
+			const stream = this.audioSource.getStream(packetData.name);
+			if (!stream) {
+				this.audioSource.play(packetData.name, false, packetData.vol, packetData.rad);
+			}
+		}
+
+		playOnce(soundName: string, volume: number = 1, radius: number = 16) {
+			this.networkEntity.send("playSound", {name: soundName, vol: volume, rad: radius});
 		}
 	}
 }

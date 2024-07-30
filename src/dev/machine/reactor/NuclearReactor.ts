@@ -166,9 +166,9 @@ namespace Machine {
 			}
 
 			if (this.data.output > 0) {
-				this.startPlaySound();
+				this.startAmbientSound(); // TODO: rewrite sounds
 			} else {
-				this.stopPlaySound();
+				this.stopAmbientSound();
 			}
 
 			this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
@@ -198,7 +198,7 @@ namespace Machine {
 			return Math.floor(this.data.output * EUReactorModifier);
 		}
 
-		startPlaySound(): void {
+		startAmbientSound(): void {
 			if (!IC2Config.machineSoundEnabled || this.remove) return;
 			if (!this.audioSourceLoop) {
 				this.audioSourceLoop = SoundManager.createSource(SourceType.TILEENTITY, this, "NuclearReactorLoop.ogg");
@@ -218,7 +218,7 @@ namespace Machine {
 			}
 		}
 
-		stopPlaySound(): void {
+		stopAmbientSound(): void {
 			if (this.audioSourceLoop) {
 				SoundManager.removeSource(this.audioSourceLoop);
 				this.audioSourceLoop = null;
@@ -382,6 +382,7 @@ namespace Machine {
 			return new Vector3(this.x + MathUtil.randomInt(-rad, rad), this.y + MathUtil.randomInt(-rad, rad), this.z + MathUtil.randomInt(-rad, rad));
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		setFieldSize(container: ItemContainer, window: any, content: any, data: {size: number}): void {
 			if (content) {

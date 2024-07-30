@@ -146,7 +146,7 @@ namespace Machine {
 			return "InductionLoop.ogg";
 		}
 
-		getInterruptSound(): string {
+		getFinishingSound(): string {
 			return "InductionStop.ogg";
 		}
 	}

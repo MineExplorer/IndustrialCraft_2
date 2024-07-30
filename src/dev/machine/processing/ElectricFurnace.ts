@@ -63,7 +63,7 @@ namespace Machine {
 		getOperationSound(): string {
 			return "ElectroFurnaceLoop.ogg";
 		}
-		getInterruptSound(): string {
+		getFinishingSound(): string {
 			return "ElectroFurnaceStop.ogg";
 		}
 	}

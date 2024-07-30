@@ -17,7 +17,7 @@ declare namespace SoundManager {
     function registerSound(soundName: string, path: string | string[], looping?: boolean): void;
     function getSound(soundName: string): Sound;
     /**
-     * Starts playing sound and returns its streamId.
+     * Starts playing sound and returns its streamId and returns 0 if failes to play sound.
      * @param soundName
      * @param loop
      * @param volume
@@ -50,47 +50,15 @@ declare class Sound {
     path: string;
     looping: boolean;
     id: number;
-    nextSound: Sound;
     private duration;
+    /**
+     * @param name sound name
+     * @param soundPool SoundPool where sound is loaded
+     * @param path file path
+     * @param looping deprecated
+     */
     constructor(name: string, soundPool: android.media.SoundPool, path: string, looping: boolean);
     getDuration(): number;
-}
-declare class SoundSequence {
-    currentSound: Sound;
-    nextSequence: SoundSequence;
-    looping: boolean;
-}
-interface IAudioSource {
-    position: Vector;
-    dimension: number;
-    remove: boolean;
-    play(soundName: string, looping?: boolean, volume?: number, radius?: number): void;
-}
-declare class AmbientSound {
-    soundName: string;
-    volume: number;
-    radius: number;
-    isPlaying: boolean;
-    constructor(soundName: string, volume: number, radius: number);
-}
-/**
- * Class for playing sound from tile entity.
- */
-declare class TileEntityAudioSource implements IAudioSource {
-    source: TileEntity;
-    position: Vector;
-    radius: number;
-    dimension: number;
-    volume: number;
-    isPlaying: boolean;
-    remove: boolean;
-    sounds: AmbientSound[];
-    networkEntity: NetworkEntity;
-    constructor(tileEntity: TileEntity);
-    play(soundName: string, looping?: boolean, volume?: number, radius?: number): void;
-    stop(soundName: string): void;
-    pause(): void;
-    resume(): void;
 }
 declare class SoundPacket {
     x: number;
@@ -136,43 +104,129 @@ declare class AudioSource {
     resume(): void;
     updateVolume(): void;
 }
+declare enum SoundStreamState {
+    Idle = 0,
+    Started = 1,
+    Paused = 2,
+    Stopped = 3
+}
 declare class SoundStream {
-    name: string;
     sound: Sound;
+    streamId: number;
     looping: boolean;
     volume: number;
     radius: number;
-    streamId: number;
-    isPlaying: boolean;
+    name: string;
+    state: SoundStreamState;
     startTime: number;
-    constructor(soundName: string, looping: boolean, volume: number, radius: number);
+    onCompleteEvent?: (source: AudioSourceClient, stream: SoundStream) => void;
+    constructor(sound: Sound, streamId: number, looping: boolean, volume: number, radius: number);
+    setOnCompleteEvent(event: (source: AudioSourceClient, stream: SoundStream) => void): void;
+    onComplete(source: AudioSourceClient): void;
+    setStreamId(streamId: number): void;
+    reset(): void;
+    stop(): void;
+    pause(): void;
+    resume(): void;
+    setVolume(volume: number): void;
+    getDuration(): number;
+    isPlaying(): boolean;
 }
 /**
- * Position in the world emiting streams.
+ * Client side audio source.
  */
-declare class AudioSourceClient implements IAudioSource {
+declare class AudioSourceClient implements Updatable {
     position: Vector;
+    dimension: number;
+    volume: number;
+    remove: boolean;
+    streams: SoundStream[];
+    source: any;
+    constructor(position: Vector);
+    /**
+     * Updates source position.
+     * @param x x coord
+     * @param y y coord
+     * @param z z coord
+     */
+    setPosition(x: number, y: number, z: number): void;
+    /**
+     * Plays sound from this source.
+     * If the sound cannot be played and its looped it creates SoundStream object in pending state,
+     * otherwise it just skipped.
+     * @param sound sound name or object
+     * @param looping true if sound is looped, false otherwise
+     * @param volume value from 0 to 1
+     * @param radius the radius where the sound is heard
+     * @returns SoundStream object or null.
+     */
+    play(sound: string | Sound, looping?: boolean, volume?: number, radius?: number): Nullable<SoundStream>;
+    /**
+     * Finds stream by sound name
+     * @param soundName sound name
+     * @returns sound stream or null
+     */
+    getStream(soundName: string): Nullable<SoundStream>;
+    /**
+     * Stops playing sound by name
+     * @param soundName sound name
+     * @returns true if the sound was found, false otherwise
+     */
+    stop(soundName: string): boolean;
+    /**
+     * Stops all streams
+     */
+    stopAll(): void;
+    /**
+     * Pause all streams
+     */
+    pauseAll(): void;
+    /**
+     * Resumes all streams
+     */
+    resumeAll(): void;
+    /**
+     * Sets sound volume by name
+     * @param soundName sound name
+     * @param volume volume
+     */
+    setVolume(soundName: string, volume: number): void;
+    update: () => void;
+    unload(): void;
+    private playSound;
+    private updateStreams;
+    private updateVolume;
+}
+interface IAudioSource {
+    position: Vector;
+    dimension: number;
+    remove: boolean;
+    play(soundName: string, looping?: boolean, volume?: number, radius?: number): void;
+}
+declare class AmbientSound {
+    soundName: string;
+    volume: number;
+    radius: number;
+    isPlaying: boolean;
+    constructor(soundName: string, volume: number, radius: number);
+}
+/**
+ * Class for playing sound from tile entity.
+ */
+declare class TileEntityAudioSource implements IAudioSource {
+    source: TileEntity;
+    position: Vector;
+    radius: number;
     dimension: number;
     volume: number;
     isPlaying: boolean;
     remove: boolean;
-    streams: SoundStream[];
-    constructor(position: Vector);
-    setPosition(x: number, y: number, z: number): void;
-    playNextSound(stream: SoundStream, nextSound: Sound): void;
+    sounds: AmbientSound[];
+    networkEntity: NetworkEntity;
+    networkVisibilityDistance: number;
+    constructor(tileEntity: TileEntity);
     play(soundName: string, looping?: boolean, volume?: number, radius?: number): void;
-    /**
-     * Plays sound if there is enough sound streams.
-     * @param sound
-     * @param volume
-     * @returns true if sound was played, otherwise false.
-     */
-    private playSound;
     stop(soundName: string): void;
     pause(): void;
     resume(): void;
-    setVolume(soundName: string, volume: number): void;
-    updateVolume(): void;
-    update(): void;
-    unload(): void;
 }

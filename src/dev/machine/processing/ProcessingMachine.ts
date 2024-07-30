@@ -73,9 +73,17 @@ namespace Machine {
 						this.data.progress = 0;
 					}
 				}
+				if (this.networkData.getBoolean(NetworkDataKeys.isActive) && !newActive) {
+					if (this.getInterruptSound()) { // play interrupt sound if machine stopped working while processing item
+						this.playOnce(this.getInterruptSound());
+					}
+				}
 			}
-			else {
+			else if (this.data.progress > 0) {
 				this.data.progress = 0;
+				if (this.getInterruptSound()) { // play interrupt sound if the source item was extracted
+					this.playOnce(this.getInterruptSound());
+				}
 			}
 			this.setActive(newActive);
 
@@ -88,6 +96,10 @@ namespace Machine {
 
 		canRotate(side: number): boolean {
 			return side > 1;
+		}
+
+		getInterruptSound(): string {
+			return null;
 		}
 	}
 }

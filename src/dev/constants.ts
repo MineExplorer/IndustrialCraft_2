@@ -1,5 +1,6 @@
 const NetworkDataKeys = {
-  isActive: "active"
+  isActive: "active",
+  isBoosted: "boosted"
 }
 
 const IC2NetworkPackets = {

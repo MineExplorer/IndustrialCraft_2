@@ -64,7 +64,8 @@ namespace Machine {
 		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
-			if (this.data.isEnabled && this.data.energy > 0) {
+			let catalyserUsed = false;
+			if (this.data.isEnabled && this.data.energy > 0 && this.data.progress < ENERGY_PER_MATTER) {
 				this.setActive(true);
 				if (this.data.catalyser < Math.max(1000, this.data.energy)) {
 					const catalyserSlot = this.container.getSlot("catalyserSlot");
@@ -81,9 +82,7 @@ namespace Machine {
 					this.data.progress += transfer * 6;
 					this.data.energy -= transfer;
 					this.data.catalyser -= transfer;
-					if (World.getThreadTime() % 40 == 0 && transfer > 0) {
-						SoundManager.playSoundAtBlock(this, "MassFabScrapSolo.ogg");
-					}
+					catalyserUsed = true;
 				}
 				else {
 					this.container.setText("textInfo3", "");
@@ -96,6 +95,7 @@ namespace Machine {
 			else {
 				this.setActive(false);
 			}
+			this.setBoosted(catalyserUsed);
 			if (this.data.progress >= ENERGY_PER_MATTER) {
 				const matterSlot = this.container.getSlot("matterSlot");
 				if (matterSlot.id == ItemID.matter && matterSlot.count < 64 || matterSlot.id == 0) {
@@ -114,10 +114,6 @@ namespace Machine {
 			this.data.isEnabled = (signal == 0);
 		}
 
-		getOperationSound(): string {
-			return "MassFabLoop.ogg";
-		}
-
 		getEnergyStorage(): number {
 			return ENERGY_PER_MATTER - this.data.progress;
 		}
@@ -128,6 +124,37 @@ namespace Machine {
 
 		canRotate(side: number): boolean {
 			return side > 1;
+		}
+
+		setBoosted(isBoosted: boolean): void {
+			if (this.networkData.getBoolean(NetworkDataKeys.isBoosted) !== isBoosted) {
+				this.networkData.putBoolean(NetworkDataKeys.isBoosted, isBoosted);
+				this.networkData.sendChanges();
+			}
+		}
+
+		clientTick(): void {
+			super.clientTick();
+			this.updateBoostSound();
+		}
+
+		@ClientSide
+		updateBoostSound() {
+			const isBoosted = this.networkData.getBoolean(NetworkDataKeys.isBoosted);
+			const soundName = this.getBoostSound();
+			if (isBoosted && !this.audioSource.getStream(soundName)) { // repeating sound
+				this.audioSource.play(soundName, false);
+			}
+		}
+
+		@ClientSide
+		getOperationSound(): string {
+			return "MassFabLoop.ogg";
+		}
+
+		@ClientSide
+		getBoostSound(): string {
+			return "MassFabScrapSolo.ogg";
 		}
 	}
 

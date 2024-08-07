@@ -69,15 +69,15 @@ var SoundManager;
     }
     SoundManager.getSound = getSound;
     /**
-     * Starts playing sound and returns its streamId and returns 0 if failes to play sound.
+     * Starts playing sound and returns its streamId or 0 if failes to play sound.
      * @param soundName
-     * @param loop
+     * @param looping
      * @param volume
      * @param pitch
      * @returns
      */
-    function playSound(soundName, loop, volume, pitch) {
-        if (loop === void 0) { loop = false; }
+    function playSound(soundName, looping, volume, pitch) {
+        if (looping === void 0) { looping = false; }
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
         var sound;
@@ -95,7 +95,7 @@ var SoundManager;
             return 0;
         volume *= SoundManager.soundVolume;
         var startTime = Debug.sysTime();
-        var streamID = SoundManager.soundPool.play(sound.id, volume, volume, 0, loop ? -1 : 0, pitch);
+        var streamID = SoundManager.soundPool.play(sound.id, volume, volume, 0, looping ? -1 : 0, pitch);
         if (streamID != 0) {
             SoundManager.soundPool.setPriority(streamID, 1);
             var msg = "".concat(streamID, " - ").concat(sound.name, ", volume: ").concat(volume, " (took ").concat(Debug.sysTime() - startTime, " ms)");
@@ -103,15 +103,15 @@ var SoundManager;
                 Game.message(msg);
             }
             Logger.Log(msg, "SoundLib");
-            if (loop) {
+            if (looping) {
                 SoundManager.playingStreams.push(streamID);
             }
         }
         return streamID;
     }
     SoundManager.playSound = playSound;
-    function playSoundAt(x, y, z, soundName, loop, volume, pitch, radius) {
-        if (loop === void 0) { loop = false; }
+    function playSoundAt(x, y, z, soundName, looping, volume, pitch, radius) {
+        if (looping === void 0) { looping = false; }
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
         if (radius === void 0) { radius = 16; }
@@ -120,7 +120,7 @@ var SoundManager;
         if (distance >= radius)
             return 0;
         volume *= 1 - distance / radius;
-        var streamID = playSound(soundName, loop, volume, pitch);
+        var streamID = playSound(soundName, looping, volume, pitch);
         return streamID;
     }
     SoundManager.playSoundAt = playSoundAt;
@@ -130,12 +130,12 @@ var SoundManager;
         return playSoundAt(pos.x, pos.y, pos.z, soundName, false, volume, pitch, radius);
     }
     SoundManager.playSoundAtEntity = playSoundAtEntity;
-    function playSoundAtBlock(tile, soundName, loop, volume, radius) {
-        if (loop === void 0) { loop = false; }
+    function playSoundAtBlock(tile, soundName, looping, volume, radius) {
+        if (looping === void 0) { looping = false; }
         if (radius === void 0) { radius = 16; }
         if (tile.dimension != undefined && tile.dimension != Player.getDimension())
             return 0;
-        return playSoundAt(tile.x + .5, tile.y + .5, tile.z + .5, soundName, loop, volume, 1, radius);
+        return playSoundAt(tile.x + .5, tile.y + .5, tile.z + .5, soundName, looping, volume, 1, radius);
     }
     SoundManager.playSoundAtBlock = playSoundAtBlock;
     function createSource(sourceType, source, soundName, volume, radius) {
@@ -206,12 +206,15 @@ var SoundManager;
     SoundManager.setVolume = setVolume;
     function stop(streamID) {
         SoundManager.soundPool.stop(streamID);
-        var index = SoundManager.playingStreams.indexOf(streamID);
-        if (index != -1) {
-            SoundManager.playingStreams.splice(index, 1);
-        }
+        removePlayingStream(streamID);
     }
     SoundManager.stop = stop;
+    function setLooping(streamID, looping) {
+        SoundManager.soundPool.setLoop(streamID, looping ? -1 : 0);
+        if (!looping)
+            removePlayingStream(streamID);
+    }
+    SoundManager.setLooping = setLooping;
     function pause(streamID) {
         SoundManager.soundPool.pause(streamID);
     }
@@ -273,6 +276,12 @@ var SoundManager;
         }
     }
     SoundManager.tick = tick;
+    function removePlayingStream(streamID) {
+        var index = SoundManager.playingStreams.indexOf(streamID);
+        if (index != -1) {
+            SoundManager.playingStreams.splice(index, 1);
+        }
+    }
     Callback.addCallback("LocalTick", function () {
         SoundManager.tick();
     });
@@ -374,6 +383,65 @@ var AudioSourceNetworkType = new NetworkEntityType("soundlib.audiosource")
     .addClientPacketListener("setVolume", function (target, entity, packetData) {
     target.setVolume(packetData.soundName, packetData.volume);
 });
+/// <reference path="IAudioSource.ts" />
+var AmbientSound = /** @class */ (function () {
+    function AmbientSound(soundName, volume, radius) {
+        this.isPlaying = false;
+        this.soundName = soundName;
+        this.volume = volume;
+        this.radius = radius;
+    }
+    return AmbientSound;
+}());
+/**
+ * Class for playing sound from tile entity.
+ */
+var TileEntityAudioSource = /** @class */ (function () {
+    function TileEntityAudioSource(tileEntity) {
+        this.isPlaying = true;
+        this.remove = false;
+        this.sounds = [];
+        this.networkVisibilityDistance = 128;
+        this.source = tileEntity;
+        this.position = {
+            x: tileEntity.x + .5,
+            y: tileEntity.y + .5,
+            z: tileEntity.z + .5
+        };
+        this.dimension = tileEntity.dimension;
+        this.networkEntity = new NetworkEntity(AudioSourceNetworkType, this);
+    }
+    TileEntityAudioSource.prototype.play = function (soundName, looping, volume, radius) {
+        if (looping === void 0) { looping = false; }
+        if (volume === void 0) { volume = 1; }
+        if (radius === void 0) { radius = 16; }
+        Debug.m("[Server] Play sound ".concat(soundName, ", ").concat(looping));
+        if (looping) {
+            var sound = new AmbientSound(soundName, volume, radius);
+            this.sounds.push(sound);
+        }
+        this.networkEntity.send("play", {
+            soundName: soundName,
+            looping: looping,
+            volume: volume,
+            radius: radius
+        });
+    };
+    TileEntityAudioSource.prototype.stop = function (soundName) {
+        this.networkEntity.send("stop", {
+            soundName: soundName
+        });
+    };
+    TileEntityAudioSource.prototype.pause = function () {
+        this.isPlaying = false;
+        // TODO
+    };
+    TileEntityAudioSource.prototype.resume = function () {
+        this.isPlaying = true;
+        // TODO
+    };
+    return TileEntityAudioSource;
+}());
 var SourceType;
 (function (SourceType) {
     SourceType[SourceType["ENTITY"] = 0] = "ENTITY";
@@ -736,67 +804,8 @@ var AudioSourceClient = /** @class */ (function () {
     };
     return AudioSourceClient;
 }());
-/// <reference path="IAudioSource.ts" />
-var AmbientSound = /** @class */ (function () {
-    function AmbientSound(soundName, volume, radius) {
-        this.isPlaying = false;
-        this.soundName = soundName;
-        this.volume = volume;
-        this.radius = radius;
-    }
-    return AmbientSound;
-}());
-/**
- * Class for playing sound from tile entity.
- */
-var TileEntityAudioSource = /** @class */ (function () {
-    function TileEntityAudioSource(tileEntity) {
-        this.isPlaying = true;
-        this.remove = false;
-        this.sounds = [];
-        this.networkVisibilityDistance = 128;
-        this.source = tileEntity;
-        this.position = {
-            x: tileEntity.x + .5,
-            y: tileEntity.y + .5,
-            z: tileEntity.z + .5
-        };
-        this.dimension = tileEntity.dimension;
-        this.networkEntity = new NetworkEntity(AudioSourceNetworkType, this);
-    }
-    TileEntityAudioSource.prototype.play = function (soundName, looping, volume, radius) {
-        if (looping === void 0) { looping = false; }
-        if (volume === void 0) { volume = 1; }
-        if (radius === void 0) { radius = 16; }
-        Debug.m("[Server] Play sound ".concat(soundName, ", ").concat(looping));
-        if (looping) {
-            var sound = new AmbientSound(soundName, volume, radius);
-            this.sounds.push(sound);
-        }
-        this.networkEntity.send("play", {
-            soundName: soundName,
-            looping: looping,
-            volume: volume,
-            radius: radius
-        });
-    };
-    TileEntityAudioSource.prototype.stop = function (soundName) {
-        this.networkEntity.send("stop", {
-            soundName: soundName
-        });
-    };
-    TileEntityAudioSource.prototype.pause = function () {
-        this.isPlaying = false;
-        // TODO
-    };
-    TileEntityAudioSource.prototype.resume = function () {
-        this.isPlaying = true;
-        // TODO
-    };
-    return TileEntityAudioSource;
-}());
 /// <reference path="TileEntityAudioSource.ts" />
 EXPORT("SoundManager", SoundManager);
 EXPORT("SourceType", SourceType);
-EXPORT("AudioSourceNetworkType", AudioSourceNetworkType);
+EXPORT("TileEntityAudioSource", TileEntityAudioSource);
 EXPORT("AudioSourceClient", AudioSourceClient);

@@ -47,11 +47,6 @@ namespace Machine {
 			if (this.networkData.getBoolean(NetworkDataKeys.isActive) !== isActive) {
 				this.networkData.putBoolean(NetworkDataKeys.isActive, isActive);
 				this.networkData.sendChanges();
-				if (isActive) {
-					this.startPlaySound();
-				} else {
-					this.stopPlaySound();
-				}
 			}
 		}
 
@@ -81,13 +76,13 @@ namespace Machine {
 			return item;
 		}
 
-		// Audio (client only)
+		/* Client prototype */
 		audioSource: AudioSourceClient;
 		wasActive: boolean;
 
 		@ClientSide
-		updateActivity(): void {
-			if (this.networkData.getBoolean(NetworkDataKeys.isActive)) {
+		updateActivity(isActive: boolean): void {
+			if (isActive) {
 				const region = BlockSource.getCurrentClientRegion();
 				const block = region.getBlock(this.x, this.y, this.z);
 				TileRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
@@ -103,6 +98,7 @@ namespace Machine {
 				this.audioSource = new AudioSourceClient(this);
 			}
 			this.wasActive = this.networkData.getBoolean(NetworkDataKeys.isActive);
+			this.updateActivity(this.wasActive);
 		}
 
 		clientUnload(): void {
@@ -114,7 +110,7 @@ namespace Machine {
 			this.audioSource?.update();
 			const isActive = this.networkData.getBoolean(NetworkDataKeys.isActive);
 			if (this.wasActive != isActive) {
-				this.updateActivity();
+				this.updateActivity(isActive);
 				this.wasActive = isActive;
 			}
 		}

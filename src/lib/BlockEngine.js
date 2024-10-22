@@ -32,7 +32,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 11,
+    version: 12,
     shared: true,
     api: "CoreEngine"
 });
@@ -70,7 +70,7 @@ var BlockEngine;
         for (var _i = 2; _i < arguments.length; _i++) {
             params[_i - 2] = arguments[_i];
         }
-        if (text[0] == '§' && params.length > 0) {
+        if (text[0] == '§' && text.length == 2 && params.length > 0) {
             var message = params.shift();
             client.send("blockengine.clientMessage", { msg: message, color: text, params: params });
         }
@@ -1105,14 +1105,11 @@ var BlockBase = /** @class */ (function () {
         }
         this.blockType = blockType;
     }
-    /**
-     * Adds variation for the block.
-     * @param name item name
-     * @param texture block texture
-     * @param inCreative true if should be added to creative inventory
-     */
     BlockBase.prototype.addVariation = function (name, texture, inCreative) {
         if (inCreative === void 0) { inCreative = false; }
+        if (!Array.isArray(texture[0])) {
+            texture = [texture];
+        }
         this.variations.push({ name: name, texture: texture, inCreative: inCreative });
     };
     /**
@@ -1127,7 +1124,8 @@ var BlockBase = /** @class */ (function () {
         var duplicatedInstance = BlockRegistry.getInstanceOf(this.id);
         if (duplicatedInstance) {
             var variations = duplicatedInstance.variations;
-            for (var i = 0; i < Math.min(this.variations.length, variations.length); i++) {
+            var checkedVariationsLength = Math.min(this.variations.length, variations.length);
+            for (var i = 0; i < checkedVariationsLength; i++) {
                 if (variations[i].inCreative) {
                     this.variations[i].inCreative = false;
                     Logger.Log("Skipped duplicated adding to creative for block ".concat(this.stringID, ":").concat(i), "BlockEngine");
@@ -1180,15 +1178,17 @@ var BlockBase = /** @class */ (function () {
         this.miningLevel = level;
         BlockRegistry.setBlockMaterial(this.id, material, level);
     };
-    /**
-     * Sets block box shape.
-     * @params x1, y1, z1 position of block lower corner (0, 0, 0 for solid block)
-     * @params x2, y2, z2 position of block upper conner (1, 1, 1 for solid block)
-     * @param data sets shape for one block variation if specified and for all variations otherwise
-     */
     BlockBase.prototype.setShape = function (x1, y1, z1, x2, y2, z2, data) {
         if (data === void 0) { data = -1; }
-        this.shapes[data] = [x1, y1, z1, x2, y2, z2];
+        if (typeof (x1) == "object") {
+            var pos1 = x1;
+            var pos2 = y1;
+            data = z1;
+            this.setShape(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, data);
+        }
+        else {
+            this.shapes[data] = [x1, y1, z1, x2, y2, z2];
+        }
     };
     /**
      * Sets the block type of another block, which allows to inherit some of its properties.

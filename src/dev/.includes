@@ -8,13 +8,12 @@ translation.ts
 core/**/*
 world/**
 
-block/rubber_tree/**
+block/rubber_tree.ts
 block/ore.ts
 block/resource.ts
-block/basic.ts
 block/reinforced.ts
+block/mechanical.ts
 block/cable.ts
-block/mining_pipe.ts
 block/crop/Crop.ts
 
 block/crop/biome_bonuses.js

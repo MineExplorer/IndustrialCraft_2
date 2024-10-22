@@ -1,22 +1,17 @@
-class BlockStone extends BlockBase {
-	constructor(id: string, name: string, texture: [string, number][], miningLevel: number = 1) {
-		super(id, "stone");
-		this.addVariation(name, texture, true);
-		this.setBlockMaterial("stone", miningLevel);
-		this.setDestroyTime(3);
-	}
-}
+/// <reference path="./types/BlockMiningPipe.ts" />
+/// <reference path="./types/BlockMachine.ts" />
 
-// legacy
-BlockRegistry.createBlockType("machine", {
-	extends: "stone",
-	destroyTime: 3
-});
-
-BlockRegistry.registerBlock(new BlockStone("machineBlockBasic", "machine_block", [["machine_top", 0]]));
-BlockRegistry.registerBlock(new BlockStone("machineBlockAdvanced", "advanced_machine_block", [["machine_advanced", 0]]));
+BlockRegistry.registerBlock(new BlockMiningPipe("miningPipe", "mining_pipe"));
+BlockRegistry.registerBlock(new BlockMachine("machineBlockBasic", "machine_block", ["machine_top", 0]));
+BlockRegistry.registerBlock(new BlockMachine("machineBlockAdvanced", "advanced_machine_block", ["machine_advanced", 0]));
 
 Callback.addCallback("PreLoaded", function() {
+	Recipes.addShaped({id: BlockID.miningPipe, count: 8, data: 0}, [
+		"p p",
+		"p p",
+		"pxp",
+	], ['x', ItemID.treetap, 0, 'p', ItemID.plateIron, 0]);
+
 	Recipes.addShaped({id: BlockID.machineBlockBasic, count: 1, data: 0}, [
 		"xxx",
 		"x x",

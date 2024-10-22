@@ -68,8 +68,6 @@ implements BlockItemBehavior {
 	}
 }
 
-BlockRegistry.registerBlock(new BlockRubberTreeSapling());
-
 Network.addClientPacket("ic2.growPlantParticles", function(data: {x: number, y: number, z: number}) {
 	for (let i = 0; i < 16; i++) {
 		const px = data.x + Math.random();

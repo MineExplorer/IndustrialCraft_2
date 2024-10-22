@@ -1,30 +1,11 @@
-class BlockOre extends BlockBase {
-	constructor(id: string, oreName: string, miningLevel: number) {
-		super(id, "ore");
-		const name = oreName + "_ore";
-		const textureName = "ore_" + oreName;
-		this.addVariation(name, [[textureName, 0]], true);
-		this.setBlockMaterial("stone", miningLevel);
-	}
-}
+/// <reference path="./types/BlockOre.ts" />
+/// <reference path="./types/BlockOreIridium.ts" />
 
 BlockRegistry.registerBlock(new BlockOre("oreCopper", "copper", 2));
 BlockRegistry.registerBlock(new BlockOre("oreTin", "tin", 2));
 BlockRegistry.registerBlock(new BlockOre("oreLead", "lead", 2));
 BlockRegistry.registerBlock(new BlockOre("oreUranium", "uranium", 3));
-BlockRegistry.registerBlock(new BlockOre("oreIridium", "iridium", 4));
-BlockRegistry.registerDrop("oreIridium", function(coords, blockID, blockData, level, enchant) {
-	if (level > 3) {
-		if (enchant.silk) {
-			return [[blockID, 1, 0]];
-		}
-		let drop: ItemInstanceArray[] = [[ItemID.iridiumChunk, 1, 0]];
-		if (Math.random() < enchant.fortune/6) drop.push(drop[0]);
-		ToolAPI.dropOreExp(coords, 12, 28, enchant.experience);
-		return drop;
-	}
-	return [];
-});
+BlockRegistry.registerBlock(new BlockOreIridium("oreIridium", "iridium", 4));
 
 Item.addCreativeGroup("ores", Translation.translate("Ores"), [
 	BlockID.oreCopper,

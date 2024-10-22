@@ -1,24 +1,18 @@
-BlockRegistry.createBlock("reinforcedStone", [
-	{name: "reinforced_stone", texture: [["reinforced_block", 0]], inCreative: true}
-], {
+/// <reference path="./types/BlockStone.ts" />
+
+BlockRegistry.registerBlock(new BlockStone("reinforcedStone", "reinforced_stone", ["reinforced_block", 0], 2, {
 	extends: "stone",
 	destroyTime: 25,
 	explosionResistance: 150,
-});
-BlockRegistry.setBlockMaterial(BlockID.reinforcedStone, "stone", 2);
-BlockRegistry.setDestroyLevel("reinforcedStone", 2);
+}));
 
-BlockRegistry.createBlock("reinforcedGlass", [
-	{name: "reinforced_glass", texture: [["reinforced_glass", 0]], inCreative: true}
-], {
+BlockRegistry.registerBlock(new BlockStone("reinforcedGlass", "reinforced_glass", ["reinforced_glass", 0], 2, {
 	baseBlock: 1,
 	destroyTime: 25,
 	explosionResistance: 150,
 	renderLayer: 1,
 	sound: "stone"
-});
-BlockRegistry.setBlockMaterial(BlockID.reinforcedGlass, "stone", 2);
-BlockRegistry.setDestroyLevel("reinforcedGlass", 2);
+}));
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.reinforcedStone, count: 8, data: 0}, [

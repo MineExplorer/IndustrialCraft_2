@@ -9,7 +9,7 @@ class BlockRubberTreeLeaves extends BlockBase {
 		this.setBlockMaterial("plant");
 	}
 
-	getDrop(coords: Vector, block: Tile, level: number, enchant: ToolAPI.EnchantData, item: ItemStack): ItemInstanceArray[] {
+	getDrop(coords: Vector, block: Tile, level: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[] {
 		if (level > 0 || enchant.silk || item?.id == 359) {
 			return [[block.id, 1, 2]];
 		}
@@ -73,7 +73,7 @@ class BlockRubberTreeLeaves extends BlockBase {
 			}
 			region.setBlock(x, y, z, 0, 0);
 			this.updateLeaves(x, y, z, region);
-			const drop = this.getDrop(new Vector3(x, y, z), block, 0, ToolAPI.getEnchantExtraData(), null);
+			const drop = this.getDrop(new Vector3(x, y, z), block, 0, ToolAPI.getEnchantExtraData(), null, region);
 			for (let item of drop) {
 				region.spawnDroppedItem(x, y, z, item[0], item[1], item[2]);
 			}
@@ -89,5 +89,3 @@ class BlockRubberTreeLeaves extends BlockBase {
 		this.updateLeaves(coords.x, coords.y, coords.z, region);
 	}
 }
-
-BlockRegistry.registerBlock(new BlockRubberTreeLeaves());

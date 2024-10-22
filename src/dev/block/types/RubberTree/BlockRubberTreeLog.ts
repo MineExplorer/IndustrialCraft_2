@@ -29,8 +29,3 @@ class BlockRubberTreeLog extends BlockBase {
 		//World.playSound(place.x + .5, place.y + .5, place.z + .5, "dig.wood", 1, 0.8)
 	}
 }
-
-BlockRegistry.registerBlock(new BlockRubberTreeLog());
-
-Recipes.addFurnace(BlockID.rubberTreeLog, 17, 3);
-Recipes.addShapeless({id: 5, count: 3, data: 3}, [{id: BlockID.rubberTreeLog, data: -1}]);

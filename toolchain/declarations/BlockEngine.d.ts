@@ -821,9 +821,9 @@ declare class BlockBase implements BlockBehavior {
      * Adds variation for the block.
      * @param name item name
      * @param texture block texture
-     * @param inCreative true if should be added to creative inventory
+     * @param inCreative true if should be added to creative inventory, default is false
      */
-    addVariation(name: string, texture: [string, number][], inCreative?: boolean): void;
+    addVariation(name: string, texture: [string, number] | [string, number][], inCreative?: boolean): void;
     /**
      * Registers block in game.
      */
@@ -850,6 +850,13 @@ declare class BlockBase implements BlockBehavior {
      * @param data sets shape for one block variation if specified and for all variations otherwise
      */
     setShape(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, data?: number): void;
+    /**
+     * Sets block box shape
+     * @param pos1 block lower corner position, in voxels (1/16 of the block)
+     * @param pos2 block upper conner position, in voxels (1/16 of the block)
+     * @param data block data
+     */
+    setShape(pos1: Vector, pos2: Vector, data?: number): void;
     /**
      * Sets the block type of another block, which allows to inherit some of its properties.
      * @param baseBlock id of the block to inherit type

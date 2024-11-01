@@ -74,6 +74,8 @@ machine/resource/CropMatron/**
 
 machine/misc/**
 
+items/ItemReinforcedDoor.ts
+
 items/resource/rubber.ts
 items/resource/crushed.ts
 items/resource/dust.ts

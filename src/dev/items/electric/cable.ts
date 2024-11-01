@@ -1,5 +1,4 @@
-class ItemCable
-extends ItemCommon
+class ItemCable extends ItemCommon
 implements ItemBehavior {
 	maxVoltage: number;
 

@@ -599,6 +599,14 @@ declare namespace EntityCustomData {
     function putField(entity: number, key: string, value: any): void;
 }
 /**
+ * API to store temporary data about the block.
+ */
+declare namespace VirtualBlockData {
+    function getBlockEntry(dimension: number, x: number, y: number, z: number): any;
+    function addBlockEntry(entry: object, dimension: number, x: number, y: number, z: number): void;
+    function removeBlockEntry(dimension: number, x: number, y: number, z: number): void;
+}
+/**
  * Module for creating block models.
  */
 declare namespace BlockModeler {
@@ -791,6 +799,15 @@ interface BlockBehavior extends BlockItemBehavior {
      * @param player player uid
      */
     onClick?(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void;
+    /**
+     * Occurs when redstone signal on block was updated. Requires Block.setupAsRedstoneReceiver to be called on the block id.
+     * @param coords coords of the block
+     * @param region BlockSource object
+     */
+    onRedstoneUpdate?(coords: Vector, params: {
+        signal: number;
+        onLoad: boolean;
+    }, region: BlockSource): void;
 }
 /**
  * Base class for block
@@ -816,6 +833,11 @@ declare class BlockBase implements BlockBehavior {
     blockMaterial: string;
     /** Block mining level */
     miningLevel: number;
+    /** Redstone properties */
+    redstone: {
+        receiver: boolean;
+        connectToWires: boolean;
+    };
     constructor(stringID: string, blockType?: BlockType | string);
     /**
      * Adds variation for the block.
@@ -828,6 +850,7 @@ declare class BlockBase implements BlockBehavior {
      * Registers block in game.
      */
     createBlock(): void;
+    setupAsRedstoneReceiver(connectToWires: boolean): void;
     getDrop(coords: Vector, block: Tile, level: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[];
     onBreak(coords: Vector, block: Tile, region: BlockSource): void;
     /**

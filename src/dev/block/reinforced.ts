@@ -1,6 +1,7 @@
 /// <reference path="./types/BlockStone.ts" />
+/// <reference path="./types/BlockReinforcedDoor.ts" />
 
-BlockRegistry.registerBlock(new BlockStone("reinforcedStone", "reinforced_stone", ["reinforced_block", 0], 2, {
+BlockRegistry.registerBlock(new BlockStone("reinforcedStone", "reinforced_stone", ["reinforced_stone", 0], 2, {
 	extends: "stone",
 	destroyTime: 25,
 	explosionResistance: 150,
@@ -13,6 +14,8 @@ BlockRegistry.registerBlock(new BlockStone("reinforcedGlass", "reinforced_glass"
 	renderLayer: 1,
 	sound: "stone"
 }));
+
+BlockRegistry.registerBlock(new BlockReinforcedDoor("reinforcedDoor", [["reinforced_door_bottom", 0]], [["reinforced_door_top", 0]]));
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.reinforcedStone, count: 8, data: 0}, [

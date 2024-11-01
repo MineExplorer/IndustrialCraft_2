@@ -971,6 +971,37 @@ var EntityCustomData;
     });
 })(EntityCustomData || (EntityCustomData = {}));
 /**
+ * API to store temporary data about the block.
+ */
+var VirtualBlockData;
+(function (VirtualBlockData) {
+    var cacheMap = {};
+    function getKey(dimension, x, y, z) {
+        return "".concat(dimension, "/").concat(x, ",").concat(y, ",").concat(z);
+    }
+    function getBlockEntry(dimension, x, y, z) {
+        return cacheMap[getKey(dimension, x, y, z)] || null;
+    }
+    VirtualBlockData.getBlockEntry = getBlockEntry;
+    function addBlockEntry(entry, dimension, x, y, z) {
+        cacheMap[getKey(dimension, x, y, z)] = entry;
+    }
+    VirtualBlockData.addBlockEntry = addBlockEntry;
+    function removeBlockEntry(dimension, x, y, z) {
+        delete cacheMap[getKey(dimension, x, y, z)];
+    }
+    VirtualBlockData.removeBlockEntry = removeBlockEntry;
+    Callback.addCallback("LevelLeft", function () {
+        cacheMap = {};
+    });
+    Callback.addCallback("BreakBlock", function (blockSource, coords) {
+        if (Game.isActionPrevented()) {
+            return;
+        }
+        removeBlockEntry(blockSource.getDimension(), coords.x, coords.y, coords.z);
+    }, -1);
+})(VirtualBlockData || (VirtualBlockData = {}));
+/**
  * Module for creating block models.
  */
 var BlockModeler;
@@ -1095,6 +1126,8 @@ var BlockBase = /** @class */ (function () {
         this.isDefined = false;
         /** Block mining level */
         this.miningLevel = 0;
+        /** Redstone properties */
+        this.redstone = { receiver: false, connectToWires: false };
         this.stringID = stringID;
         this.id = IDRegistry.genBlockID(stringID);
         if (typeof blockType == "object") {
@@ -1138,8 +1171,15 @@ var BlockBase = /** @class */ (function () {
             var box = this.shapes[data];
             Block.setShape(this.id, box[0], box[1], box[2], box[3], box[4], box[5], parseInt(data));
         }
+        if (this.redstone.receiver) {
+            Block.setupAsRedstoneReceiver(this.id, this.redstone.connectToWires);
+        }
         if (this.category)
             Item.setCategory(this.id, this.category);
+    };
+    BlockBase.prototype.setupAsRedstoneReceiver = function (connectToWires) {
+        this.redstone.receiver = true;
+        this.redstone.connectToWires = connectToWires;
     };
     BlockBase.prototype.getDrop = function (coords, block, level, enchant, item, region) {
         if (level >= this.miningLevel) {
@@ -1184,7 +1224,7 @@ var BlockBase = /** @class */ (function () {
             var pos1 = x1;
             var pos2 = y1;
             data = z1;
-            this.setShape(pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z, data);
+            this.shapes[data] = [pos1.x, pos1.y, pos1.z, pos2.x, pos2.y, pos2.z];
         }
         else {
             this.shapes[data] = [x1, y1, z1, x2, y2, z2];
@@ -2116,6 +2156,13 @@ var BlockRegistry;
         destroyTime: 0.5,
         explosionResistance: 2.5,
         sound: "gravel"
+    });
+    Callback.addCallback("RedstoneSignal", function (coords, params, onLoad, blockSource) {
+        var blockId = blockSource.getBlockId(coords.x, coords.y, coords.z);
+        var instance = getInstanceOf(blockId);
+        if (instance && 'onRedstoneUpdate' in instance) {
+            instance.onRedstoneUpdate(coords, params, blockSource);
+        }
     });
 })(BlockRegistry || (BlockRegistry = {}));
 /// <reference path="./BlockItemBehavior.ts" />
@@ -3649,3 +3696,4 @@ EXPORT("ItemRegistry", ItemRegistry);
 EXPORT("LiquidItemRegistry", LiquidItemRegistry);
 EXPORT("EntityCustomData", EntityCustomData);
 EXPORT("IDConverter", IDConverter);
+EXPORT("VirtualBlockData", VirtualBlockData);

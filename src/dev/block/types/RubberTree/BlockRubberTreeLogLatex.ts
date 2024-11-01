@@ -8,6 +8,7 @@ class BlockRubberTreeLogLatex extends BlockBase {
 
 	createBlock() {
 		Block.createBlockWithRotation(this.stringID, this.variations, this.blockType);
+		this.isDefined = true;
 	}
 
 	getDrop(): ItemInstanceArray[] {

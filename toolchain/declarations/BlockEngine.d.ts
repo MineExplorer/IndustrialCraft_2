@@ -1843,6 +1843,11 @@ declare abstract class TileEntityBase implements TileEntity {
     readonly useNetworkItemContainer: boolean;
     remove: boolean;
     isLoaded: boolean;
+    /**
+     * `true` if tile cannot tick, update functions will
+     * not work in that case.
+     */
+    noupdate: boolean;
     __initialized: boolean;
     data: {
         [key: string]: any;
@@ -1868,8 +1873,10 @@ declare abstract class TileEntityBase implements TileEntity {
     container: ItemContainer;
     liquidStorage: LiquidRegistry.Storage;
     blockSource: BlockSource;
-    networkData: SyncedNetworkData;
-    networkEntity: NetworkEntity;
+    readonly networkData: SyncedNetworkData;
+    readonly networkEntity: NetworkEntity;
+    readonly networkEntityType: NetworkEntityType;
+    readonly networkEntityTypeName: string;
     /**
      * Interface for BlockSource of the TileEntity. Provides more functionality.
      */
@@ -1884,6 +1891,12 @@ declare abstract class TileEntityBase implements TileEntity {
     unload(): void;
     /** @deprecated */
     tick(): void;
+    /**
+     * Called every tick to {@link TileEntity.TileEntityPrototype.tick} each
+     * tile if {@link TileEntity.noupdate} not active.
+     */
+    update: () => void;
+    click: (id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData) => boolean | void;
     /**
      * Called when a TileEntity is created
      */

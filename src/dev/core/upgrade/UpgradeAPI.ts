@@ -68,7 +68,7 @@ namespace UpgradeAPI {
 		useUpgrades(): void {
 			const container = this.tileEntity.container;
 			for (let slotName in container.slots) {
-				if (slotName.match(/Upgrade/)) {
+				if (slotName.includes("Upgrade")) {
 					const slot = container.getSlot(slotName);
 					const upgrade = getUpgrade(slot.id);
 					if (upgrade && this.isValidUpgrade(upgrade)) {

@@ -42,18 +42,15 @@ implements BlockBehavior {
     }
 
     onRedstoneUpdate(coords: Vector, params: { signal: number; onLoad: boolean; }, blockSource: BlockSource): void {
-        //Game.message(`${coords.x},${coords.y},${coords.z} - ${JSON.stringify(params)}`);
-
-        const region = new WorldRegion(blockSource);
-        const block = region.getBlock(coords);
-        const dimensionId = region.getDimension();
+        const block = blockSource.getBlock(coords.x, coords.y, coords.z);
+        const dimensionId = blockSource.getDimension();
         
         if (params.onLoad) {
             VirtualBlockData.addBlockEntry({ signal: params.signal }, dimensionId, coords.x, coords.y, coords.z);
             return;
         }
         
-        const blockData = VirtualBlockData.getBlockEntry(dimensionId, coords.x, coords.y, coords.z);
+        const blockData: { signal: number } = VirtualBlockData.getBlockEntry(dimensionId, coords.x, coords.y, coords.z);
         if (!blockData) {
             Debug.error(`No data found for block ${coords.x}, ${coords.y}, ${coords.z}`);
             return;
@@ -61,22 +58,43 @@ implements BlockBehavior {
         const secondBlockData = block.data > 8 ? 
             VirtualBlockData.getBlockEntry(dimensionId, coords.x, coords.y - 1, coords.z) : 
             VirtualBlockData.getBlockEntry(dimensionId, coords.x, coords.y + 1, coords.z);
-        
+            
+        const secondBlockPowered = secondBlockData?.signal > 0;
         const isPowered = params.signal > 0;
         const wasPowered = blockData.signal > 0;
-        const secondBlockPowered = secondBlockData?.signal > 0;
-        if ((wasPowered || secondBlockPowered) !== (isPowered || secondBlockPowered)) {
-            const changeByData = [3, 1, -1, -3];
-            region.setBlock(coords.x, coords.y, coords.z, block.id, block.data + changeByData[block.data % 4]);
-            if (block.data >= 8) {
-                const secondBlockData = block.data - 8;
-                region.setBlock(coords.x, coords.y - 1, coords.z, block.id, secondBlockData + changeByData[secondBlockData % 4]);
-            } else {
-                const secondBlockData = block.data + 8;
-                region.setBlock(coords.x, coords.y + 1, coords.z, block.id, secondBlockData + changeByData[secondBlockData % 4]);
-            }
+        blockData.signal = params.signal;
+        let stateByData: number[];
+        if (wasPowered && !(isPowered || secondBlockPowered)) { // close door
+            stateByData = [2, 3, 1, 0];
+            //Debug.m(`close door: ${coords.x},${coords.y},${coords.z}`);
+        }
+        else if (!(wasPowered || secondBlockPowered) && isPowered) { // open door
+            stateByData = [3, 2, 0, 1];
+            //Debug.m(`open door: ${coords.x},${coords.y},${coords.z}`);
+        } else {
+            return;
         }
 
-        blockData.power = params.signal;
+        const newData = stateByData[block.data % 4];
+        this.updateState(blockSource, coords, block, newData);
+    }
+
+    updateState(blockSource: BlockSource, coords: Vector, block: Tile, newData: number) {
+        // invert data for right sided doors
+        if (block.data >= 4 && block.data <= 7 || block.data >= 12 && block.data <= 15) {
+            newData ^= 1;
+        }
+        blockSource.setBlock(coords.x, coords.y, coords.z, block.id, this.getNewData(block.data, newData));
+        if (block.data >= 8) {
+            const secondBlockData = block.data - 8;
+            blockSource.setBlock(coords.x, coords.y - 1, coords.z, block.id, this.getNewData(secondBlockData, newData));
+        } else {
+            const secondBlockData = block.data + 8;
+            blockSource.setBlock(coords.x, coords.y + 1, coords.z, block.id, this.getNewData(secondBlockData, newData));
+        }
+    }
+
+    getNewData(blockData: number, newData: number): number {
+        return blockData - blockData % 4 + newData;
     }
 }

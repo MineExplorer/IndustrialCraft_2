@@ -18,6 +18,7 @@ Translation.addTranslation("uranium_block", {en: "Uranium Block", ru: "Уран�
 Translation.addTranslation("mining_pipe", {en: "Mining Pipe", ru: "Буровая труба", es: "Tubo Minero", pt: "Tubo de Mineração", zh: "采矿管道"});
 Translation.addTranslation("reinforced_stone", {en: "Reinforced Stone", ru: "Укреплённый камень", es: "Piedra Reforzada", pt: "Pedra Reforçada", zh: "防爆石"});
 Translation.addTranslation("reinforced_glass", {en: "Reinforced Glass", ru: "Укреплённое стекло", es: "Cristal Reforzado", pt: "Vidro Reforçado", zh: "防爆玻璃"});
+Translation.addTranslation("reinforced_door", {en: "Reinforced Door", ru: "Укреплённая дверь", es: "Puerta Reforzada", pt: "Porta Reforçada", zh: "防爆门"});
 Translation.addTranslation("machine_block", {en: "Machine Block", ru: "Машинный блок", es: "Máquina", pt: "Bloco de Máquina Básica", zh: "基础机械外壳"});
 Translation.addTranslation("advanced_machine_block", {en: "Advanced Machine Block", ru: "Улучшенный машинный блок", es: "Máquina Avanzada", pt: "Bloco de Máquina Avançada", zh: "高级机械外壳"});
 

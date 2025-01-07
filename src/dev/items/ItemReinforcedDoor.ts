@@ -36,3 +36,11 @@ implements ItemBehavior {
 }
 
 ItemRegistry.registerItem(new ItemReinforcedDoor("reinforcedDoor", "reinforced_door"));
+
+Callback.addCallback("PreLoaded", function() {
+	Recipes.addShaped({id: ItemID.reinforcedDoor, count: 1, data: 0}, [
+		"aba",
+		"aba",
+		"aba"
+	], ['a', ItemID.plateIron, 0, 'b', ItemID.plateLead, 0]);
+});

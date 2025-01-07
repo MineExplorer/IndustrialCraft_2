@@ -9,7 +9,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	abstract class RecipeTypeForICPE extends api.RecipeType {
 
-		constructor(name: string, icon: number, content: {params?: UI.BindingsSet, drawing?: UI.DrawingSet, elements: {[key: string]: object}}) {
+		constructor(name: string, icon: number, content: {params?: UI.BindingSet, drawing?: UI.DrawingSet, elements: {[key: string]: object}}) {
 			content.params ??= {};
 			content.drawing ??= [];
 			content.params.slot = "classic_slot";

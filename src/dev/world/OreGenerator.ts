@@ -52,7 +52,7 @@ namespace OreGenerator {
 	export function generateOre(chunkX: number, chunkZ: number, blockID: number, properties: OreProperties, random: java.util.Random): void {
 		for (let i = 0; i < properties.count; i++) {
 			const coords = randomCoords(random, chunkX, chunkZ, properties.minHeight, properties.maxHeight);
-			GenerationUtils.generateOre(coords.x, coords.y, coords.z, blockID, 0, properties.size, false, random.nextInt());
+			GenerationUtils.generateOre(coords.x, coords.y, coords.z, blockID, 0, properties.size, false);
 		}
 	}
 }

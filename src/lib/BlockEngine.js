@@ -595,12 +595,11 @@ var WorldRegion = /** @class */ (function () {
         var pos = x;
         return this.blockSource.canSeeSky(pos.x, pos.y, pos.z);
     };
-    WorldRegion.prototype.getGrassColor = function (x, y, z) {
-        if (typeof x === "number") {
-            return this.blockSource.getGrassColor(x, y, z);
-        }
-        var pos = x;
-        return this.blockSource.getGrassColor(pos.x, pos.y, pos.z);
+    /**
+     * @returns grass color on coords
+     */
+    WorldRegion.prototype.getGrassColor = function (x, z) {
+        return this.blockSource.getGrassColor(x, z);
     };
     WorldRegion.prototype.dropItem = function (x, y, z, id, count, data, extra) {
         if (typeof x == "object") {
@@ -648,8 +647,8 @@ var WorldRegion = /** @class */ (function () {
         if (this.isDeprecated && (type == Native.EntityType.PLAYER) != blacklist) {
             var players = Network.getConnectedPlayers();
             var dimension = this.getDimension();
-            for (var _i = 0, players_1 = players; _i < players_1.length; _i++) {
-                var ent = players_1[_i];
+            for (var _i = 0, _a = players; _i < _a.length; _i++) {
+                var ent = _a[_i];
                 if (Entity.getDimension(ent) != dimension)
                     continue;
                 var c = Entity.getPosition(ent);
@@ -694,8 +693,8 @@ var WorldRegion = /** @class */ (function () {
     WorldRegion.prototype.sendPacketInRadius = function (coords, radius, packetName, data) {
         var dimension = this.getDimension();
         var clientsList = Network.getConnectedClients();
-        for (var _i = 0, clientsList_1 = clientsList; _i < clientsList_1.length; _i++) {
-            var client = clientsList_1[_i];
+        for (var _i = 0, _a = clientsList; _i < _a.length; _i++) {
+            var client = _a[_i];
             var player = client.getPlayerUid();
             var entPos = Entity.getPosition(player);
             if (Entity.getDimension(player) == dimension && Entity.getDistanceBetweenCoords(entPos, coords) <= radius) {
@@ -3255,6 +3254,8 @@ var TileEntityBase = /** @class */ (function () {
     TileEntityBase.prototype.tick = function () {
         this.onTick();
     };
+    /** @deprecated */
+    TileEntityBase.prototype.click = function () { };
     /**
      * Called when a TileEntity is created
      */
@@ -3292,6 +3293,10 @@ var TileEntityBase = /** @class */ (function () {
         return "main";
     };
     TileEntityBase.prototype.getScreenByName = function (screenName, container) {
+        return null;
+    };
+    /** @deprecated */
+    TileEntityBase.prototype.getGuiScreen = function () {
         return null;
     };
     /**

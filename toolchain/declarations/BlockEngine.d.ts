@@ -378,8 +378,7 @@ declare class WorldRegion {
     /**
      * @returns grass color on coords
      */
-    getGrassColor(coords: Vector): number;
-    getGrassColor(x: number, y: number, z: number): number;
+    getGrassColor(x: number, z: number): number;
     /**
      * Creates dropped item and returns entity id
      * @param coords coords of the place where item will be dropped
@@ -1835,18 +1834,14 @@ declare abstract class TileEntityBase implements TileEntity {
     __containerEvents: {
         [key: string]: Side;
     };
-    x: number;
-    y: number;
-    z: number;
+    readonly x: number;
+    readonly y: number;
+    readonly z: number;
     readonly dimension: number;
     readonly blockID: number;
     readonly useNetworkItemContainer: boolean;
     remove: boolean;
     isLoaded: boolean;
-    /**
-     * `true` if tile cannot tick, update functions will
-     * not work in that case.
-     */
     noupdate: boolean;
     __initialized: boolean;
     data: {
@@ -1882,6 +1877,7 @@ declare abstract class TileEntityBase implements TileEntity {
      */
     region: WorldRegion;
     private _runInit;
+    update: () => void;
     created(): void;
     /** @deprecated */
     init(): void;
@@ -1891,12 +1887,8 @@ declare abstract class TileEntityBase implements TileEntity {
     unload(): void;
     /** @deprecated */
     tick(): void;
-    /**
-     * Called every tick to {@link TileEntity.TileEntityPrototype.tick} each
-     * tile if {@link TileEntity.noupdate} not active.
-     */
-    update: () => void;
-    click: (id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData) => boolean | void;
+    /** @deprecated */
+    click(): void;
     /**
      * Called when a TileEntity is created
      */
@@ -1932,6 +1924,8 @@ declare abstract class TileEntityBase implements TileEntity {
     onCheckerTick(isInitialized: boolean, isLoaded: boolean, wasLoaded: boolean): void;
     getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
     getScreenByName(screenName: string, container: ItemContainer): UI.IWindow;
+    /** @deprecated */
+    getGuiScreen(): UI.IWindow;
     /**
      * Called when player uses some item on a TileEntity. Replaces "click" function.
      * @returns true if should prevent opening UI.

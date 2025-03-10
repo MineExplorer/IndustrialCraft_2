@@ -11,11 +11,15 @@ class LaserShot {
 	dropChance: number;
 	hitBlock: boolean;
 
-	constructor(player: number, pos: Vector, vel: Vector, params: {power: number, range?: number, blockBreaks?: number, smelt?: boolean, dropChance?: number}) {
+	constructor(player: number, pos: Vector, vel: Vector3, params: {power: number, range?: number, blockBreaks?: number, smelt?: boolean, dropChance?: number}) {
 		const region = WorldRegion.getForActor(player);
 		const entity = region.spawnEntity(pos.x + vel.x, pos.y + vel.y, pos.z + vel.z, EntityType.ARROW);
-		Entity.setSkin(entity, "models/laser.png");
+		
 		Entity.setVelocity(entity, vel.x, vel.y, vel.z);
+		const pitch = Math.asin(-vel.y);
+		const yaw = Math.atan2(vel.x, vel.z);
+		Entity.setLookAngle(entity, yaw, pitch);
+		
 		this.player = player;
 		this.entity = entity;
 		this.region = region;

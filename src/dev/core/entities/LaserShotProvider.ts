@@ -1,7 +1,7 @@
 namespace LaserShotProvider {
 	let laserShots: LaserShot[] = [];
 
-	export function shootLaser(player: number, pos: Vector, vel: Vector, params: {power: number, range?: number, blockBreaks?: number, smelt?: boolean, dropChance?: number}) {
+	export function shootLaser(player: number, pos: Vector, vel: Vector3, params: {power: number, range?: number, blockBreaks?: number, smelt?: boolean, dropChance?: number}) {
 		const laser = new LaserShot(player, pos, vel, params);
 		laserShots.push(laser);
 	}

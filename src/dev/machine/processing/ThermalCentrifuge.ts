@@ -145,7 +145,7 @@ namespace Machine {
 				}
 				else if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;
-					this.data.progress += 1 / this.processTime;
+					this.updateProgress();
 					newActive = true;
 				}
 				if (+this.data.progress.toFixed(3) >= 1) {

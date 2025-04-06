@@ -126,7 +126,7 @@ namespace Machine {
 				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
-						this.data.progress += 1 / this.processTime;
+						this.updateProgress();
 						newActive = true;
 					}
 					if (+this.data.progress.toFixed(3) >= 1) {

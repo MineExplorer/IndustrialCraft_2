@@ -62,7 +62,7 @@ namespace Machine {
 				if (resultSlot.id == result.id && (!result.data || resultSlot.data == result.data) && resultSlot.count <= 64 - result.count || resultSlot.id == 0) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
-						this.data.progress += 1 / this.processTime;
+						this.updateProgress();
 						newActive = true;
 					}
 					if (+this.data.progress.toFixed(3) >= 1) {
@@ -92,6 +92,10 @@ namespace Machine {
 			this.container.setScale("progressScale", this.data.progress);
 			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendChanges();
+		}
+
+		updateProgress() {
+			this.data.progress += 1 / this.processTime;
 		}
 
 		canRotate(side: number): boolean {

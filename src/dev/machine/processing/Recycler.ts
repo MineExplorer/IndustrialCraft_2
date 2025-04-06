@@ -66,7 +66,7 @@ namespace Machine {
 			if (sourceSlot.id != 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)) {
 				if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;
-					this.data.progress += 1 / this.processTime;
+					this.updateProgress();
 					newActive = true;
 				}
 				if (+this.data.progress.toFixed(3) >= 1) {

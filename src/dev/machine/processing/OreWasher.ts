@@ -124,7 +124,7 @@ namespace Machine {
 			if (result && this.checkResult(result) && this.liquidTank.getAmount("water") >= 1000) {
 				if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;
-					this.data.progress += 1 / this.processTime;
+					this.updateProgress();
 					newActive = true;
 				}
 				if (+this.data.progress.toFixed(3) >= 1) {

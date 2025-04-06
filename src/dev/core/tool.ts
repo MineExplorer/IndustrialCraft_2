@@ -39,10 +39,13 @@ namespace ICTool {
 		data.push({id: tool, data: -1});
 		Recipes.addShapeless(result, data, function(api, field, result) {
 			for (let i = 0; i < field.length; i++) {
-				if (field[i].id == tool) {
-					field[i].data++;
-					if (field[i].data >= Item.getMaxDamage(tool)) {
-						field[i].id = field[i].count = field[i].data = 0;
+				const slot = field[i];
+				if (slot.id == tool) {
+					if (slot.data + 1 >= Item.getMaxDamage(tool)) {
+						slot.set(0, 0, 0, null);
+					}
+					else {
+						slot.set(slot.id, 1, slot.data + 1, slot.extra);
 					}
 				}
 				else {

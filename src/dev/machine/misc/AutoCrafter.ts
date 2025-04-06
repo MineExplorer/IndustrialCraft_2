@@ -50,7 +50,7 @@ const WorkbenchFieldAPI = com.zhekasmirnov.innercore.api.mod.recipes.workbench.W
 
 namespace Machine {
 	export class AutoCrafter extends ProcessingMachine {
-        energyDemand = 2;
+        defaultEnergyDemand = 2;
 		defaultTier = 1;
 		defaultEnergyStorage = 20000;
         defaultProcessTime = 40;
@@ -100,7 +100,6 @@ namespace Machine {
 
             this.container.setScale("progressScale", this.data.progress);
             this.container.setScale("energyScale", this.getRelativeEnergy());
-            Game.message(this.getRelativeEnergy());
             this.container.sendChanges();
 		}
 

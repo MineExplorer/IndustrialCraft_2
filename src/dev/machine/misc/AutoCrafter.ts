@@ -14,34 +14,37 @@ Callback.addCallback("PreLoaded", function() {
 
 const guiAutoCrafter = MachineRegistry.createInventoryWindow("Industrial Crafter", {
 	drawing: [
-		{type: "bitmap", x: 750, y: 146, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 450, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
+		{type: "bitmap", x: 691, y: 139, bitmap: "arrow_bar_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 389, y: 135, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
 
 	elements: {
-		"progressScale": {type: "scale", x: 750, y: 146, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
+		"progressScale": {type: "scale", x: 691, y: 139, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("crafting");
+				RV?.RecipeTypeRegistry.openRecipePage("Crafting");
 			}
 		}},
-		"energyScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slot0": {type: "slot", x: 511, y: 75},
-		"slot1": {type: "slot", x: 571, y: 75},
-		"slot2": {type: "slot", x: 631, y: 75},
-		"slot3": {type: "slot", x: 511, y: 135},
-		"slot4": {type: "slot", x: 571, y: 135},
-		"slot5": {type: "slot", x: 631, y: 135},
-		"slot6": {type: "slot", x: 511, y: 195},
-		"slot7": {type: "slot", x: 571, y: 195},
-		"slot8": {type: "slot", x: 631, y: 195},
-		"slotEnergy": {type: "slot", x: 441, y: 212},
-		"slotResult": {type: "slot", x: 825, y: 142},
-		"slotUpgrade1": {type: "slot", x: 900, y: 60},
-		"slotUpgrade2": {type: "slot", x: 900, y: 119},
-		"slotUpgrade3": {type: "slot", x: 900, y: 178},
-		"slotUpgrade4": {type: "slot", x: 900, y: 237},
-		//"textInfo1": {type: "text", x: 402, y: 143, width: 100, height: 30, text: Translation.translate("Heat:")},
-		//"textInfo2": {type: "text", x: 402, y: 173, width: 100, height: 30, text: "0%"},
+		"energyScale": {type: "scale", x: 389, y: 135, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slot0": {type: "slot", x: 491, y: 75},
+		"slot1": {type: "slot", x: 551, y: 75},
+		"slot2": {type: "slot", x: 611, y: 75},
+		"slot3": {type: "slot", x: 491, y: 135},
+		"slot4": {type: "slot", x: 551, y: 135},
+		"slot5": {type: "slot", x: 611, y: 135},
+		"slot6": {type: "slot", x: 491, y: 195},
+		"slot7": {type: "slot", x: 551, y: 195},
+		"slot8": {type: "slot", x: 611, y: 195},
+		"slotEnergy": {type: "slot", x: 380, y: 195},
+		"slotResult": {type: "slot", x: 781, y: 135},
+		"slotUpgrade1": {type: "slot", x: 880, y: 60},
+		"slotUpgrade2": {type: "slot", x: 880, y: 119},
+		"slotUpgrade3": {type: "slot", x: 880, y: 178},
+		"slotUpgrade4": {type: "slot", x: 880, y: 237},
+        "slotPreviewResult": {type: "slot", x: 700, y: 75, bitmap: "transparent_slot", clicker: {
+            onClick: function(_, container: ItemContainer) {
+                container.sendEvent("resetRecipe", {});
+            }
+        }}
 	}
 });
 
@@ -64,7 +67,7 @@ namespace Machine {
             StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
-                if (name == "slotResult") return false;
+                if (name == "slotResult" || name == "slotPreviewResult") return false;
 				return true;
 			});
             this.container.setWorkbenchFieldPrefix("slot");
@@ -75,11 +78,12 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
             if (this.data.energy >= this.energyDemand) {
                 if (this.data.progress == 0) {
-                    let item = Recipes.getRecipeResult(this.container);
+                    let result = Recipes.getRecipeResult(this.container);
                     let resultSlot = this.container.getSlot("slotResult");
-                    if (this.validateResult(item, resultSlot)) {
+                    if (this.validateResult(result, resultSlot)) {
                         this.data.energy -= this.energyDemand;
 			            this.updateProgress();
+                        this.container.setSlot("slotPreviewResult", result.id, result.count, result.data, result.extra);
                     }
                 }
                 else {
@@ -92,6 +96,7 @@ namespace Machine {
                 const recipe = Recipes.getRecipeByField(this.container);
                 if (!recipe || !this.provideRecipe(recipe)) {
                     this.playOnce(this.getInterruptSound());
+                    this.resetPreviewSlot();
                 }
                 this.data.progress = 0;
             }
@@ -108,43 +113,134 @@ namespace Machine {
         }
 
         provideRecipe(recipe: Recipes.WorkbenchRecipe): boolean {
-            const result = recipe.getResult();
+            let result = recipe.getResult();
             const resultSlot = this.container.getSlot("slotResult");
             if (!this.validateResult(result, resultSlot)) 
                 return false;
 
-            const api = new WorkbenchFieldAPI(this.container);
-            const craftingFunction = recipe.getCallback();
-            if (craftingFunction) {
-                craftingFunction(api, this.container.asScriptableField() as UI.Slot[], result, -1);
-                for (let i = 0; i < 9; i++) {
-                    const slot = this.container.getSlot("slot" + i);
-                    slot.validate();
-                }
+            result = Recipes.provideRecipeForPlayer(this.container, "", -1);
+            if (result) {
+                resultSlot.setSlot(result.id, resultSlot.count + result.count, Math.max(result.data, 0), result.extra);
+                this.equalizeItems();
+                return true;
             }
-            else {
-                for (let i = 0; i < 9; i++) {
-                    const slot = this.container.getSlot("slot" + i);
-                    slot.setSlot(slot.id, slot.count - 1, slot.data);
-                    slot.validate();
-                }
-            }
+            return false;
+        }
 
-            resultSlot.set(result.id, resultSlot.count + result.count, result.data, result.extra);
-            return true;
+        destroy(): boolean {
+            this.resetRecipe();
+            return false;
         }
 
         getInterruptSound(): string {
 			return "InterruptOne.ogg";
 		}
+
+        equalizeItems(item?: ItemInstance): void {
+            let totalItems: {item: ItemStack, slots: ItemContainerSlot[]}[] = [];
+			for (let i = 0; i < 9; i++) {
+                const slotName = "slot" + i;
+                const slot = this.container.getSlot(slotName);
+                if ((!item || slot.id == item.id && slot.data == item.data) && Item.getMaxStack(slot.id, slot.data) > 1) {
+                    let found = false;
+                    for (let group of totalItems) {
+                        if (group.item.id == slot.id && group.item.data == slot.data) {
+                            group.item.count += slot.count;
+                            group.slots.push(slot);
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        totalItems.push({item: new ItemStack(slot), slots: [slot]});
+                    }
+                }
+            }
+
+            for (let group of totalItems) {
+                const avgCount = Math.floor(group.item.count / group.slots.length);
+                let leftCount = group.item.count % group.slots.length;
+                for (let slot of group.slots) {
+                    slot.count = avgCount;
+                    if (leftCount > 0) {
+                        slot.count++;
+                        leftCount--;
+                    }
+                    slot.markDirty();
+                }
+            }
+        }
+
+        
+        resetPreviewSlot() {
+            this.container.setSlot("slotPreviewResult", 0, 0, 0);
+        }
+
+        @ContainerEvent(Side.Server)
+        resetRecipe() {
+            this.resetPreviewSlot();
+            for (let i = 0; i < 9; i++) {
+                const slot = this.container.getSlot("slot" + i);
+                slot.validate();
+            }
+        }
 	}
 
 	MachineRegistry.registerPrototype(BlockID.industrialCrafter, new AutoCrafter());
+
+    export class AutoCrafterStorageInterface extends StorageInterface.TileEntityInterface {
+        container: ItemContainer;
+        tileEntity: AutoCrafter;
+        getInputSlots(side?: number): string[] {
+            const inputSlots = [];
+            for (let slotName in this.slots) {
+                const slotData = this.slots[slotName];
+                if (slotData.input && this.tileEntity.container.getSlot(slotName).id != 0) {
+                    inputSlots.push(slotName);
+                }
+            }
+            return inputSlots;
+        }
+
+        addItem(item: ItemInstance, side: number = -1, maxCount: number = 64): number {
+            if (Item.getMaxStack(item.id, item.data) == 1) {
+                return this.addNonStackableItem(item);
+            }
+            const added = super.addItem(item, side, maxCount);
+            if (added > 0) {
+                this.tileEntity.equalizeItems(item);
+            }
+            return added;
+		}
+
+        addNonStackableItem(item: ItemInstance): number {
+            let added = 0;
+            for (let i = 0; i < 9; i++) {
+                const slotName = "slot" + i;
+                const slot = this.container.getSlot(slotName);
+                if (slot.id == item.id && slot.count < 1 && 
+                  (slot.data == item.data || this.isGhostSlot(slot))) {
+                    slot.setSlot(item.id, 1, item.data, item.extra);
+                    item.count--;
+                    if (item.count == 0) {
+                        item.id = item.data = 0;
+                        item.extra = null;
+                    }
+                    added++;
+                }
+            }
+            return added;
+        }
+
+        isGhostSlot(slot: ItemContainerSlot): boolean {
+            return slot.count == 0 && slot.data > 0 && Item.getMaxDamage(slot.id) > 0;
+        }
+    }
 
     StorageInterface.createInterface(BlockID.industrialCrafter, {
 		slots: {
 			"slot^0-8": {input: true},
 			"slotResult": {output: true}
-		}
-	});
+		},
+	}, AutoCrafterStorageInterface);
 }

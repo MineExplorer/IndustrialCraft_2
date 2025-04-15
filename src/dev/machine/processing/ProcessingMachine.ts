@@ -67,8 +67,7 @@ namespace Machine {
 					}
 					if (+this.data.progress.toFixed(3) >= 1) {
 						const sourceCount = result.sourceCount || 1;
-						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - sourceCount, sourceSlot.data);
-						sourceSlot.validate();
+						this.decreaseSlot(sourceSlot, sourceCount);
 						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data || 0);
 						this.data.progress = 0;
 					}

@@ -42,7 +42,7 @@ const guiAutoCrafter = MachineRegistry.createInventoryWindow("Industrial Crafter
 		"slotUpgrade4": {type: "slot", x: 880, y: 237},
         "slotPreviewResult": {type: "slot", x: 700, y: 75, bitmap: "transparent_slot", clicker: {
             onClick: function(_, container: ItemContainer) {
-                container.sendEvent("resetRecipe", {});
+                container.sendEvent("resetRecipeCheck", {});
             }
         }}
 	}
@@ -53,6 +53,11 @@ const WorkbenchFieldAPI = com.zhekasmirnov.innercore.api.mod.recipes.workbench.W
 
 namespace Machine {
 	export class AutoCrafter extends ProcessingMachine {
+        defaultValues = { 
+            energy: 0,
+			progress: 0,
+            recipeChecked: false
+        };
         defaultEnergyDemand = 2;
 		defaultTier = 1;
 		defaultEnergyStorage = 20000;
@@ -68,22 +73,47 @@ namespace Machine {
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
                 if (name == "slotResult" || name == "slotPreviewResult") return false;
+                
+                const slot = this.container.getSlot(name);
+                if (slot.id == 0) {
+                    this.data.recipeChecked = false;
+                }
 				return true;
 			});
+            this.container.setGlobalGetTransferPolicy((container, name, id, amount, data) => {
+                if (name.match(/slot[0-9]/)) {
+                    this.data.recipeChecked = false;
+                }
+                return amount;
+            });
             this.container.setWorkbenchFieldPrefix("slot");
         }
 
 		onTick(): void {
 			this.useUpgrades();
 			StorageInterface.checkHoppers(this);
+
+            if (!this.data.recipeChecked) {
+                const result = Recipes.getRecipeResult(this.container);
+                if (result) {
+                    this.container.setSlot("slotPreviewResult", result.id, result.count, result.data, result.extra);
+                } else {
+                    this.resetRecipe();
+                    if (this.data.progress > 0) {
+                        this.data.progress = 0;
+                        this.playOnce(this.getInterruptSound());
+                    }
+                }
+                this.data.recipeChecked = true;
+            }
+
             if (this.data.energy >= this.energyDemand) {
                 if (this.data.progress == 0) {
-                    let result = Recipes.getRecipeResult(this.container);
-                    let resultSlot = this.container.getSlot("slotResult");
-                    if (this.validateResult(result, resultSlot)) {
+                    const recipeResult = Recipes.getRecipeResult(this.container);
+                    const resultSlot = this.container.getSlot("slotResult");
+                    if (this.validateResult(recipeResult, resultSlot)) {
                         this.data.energy -= this.energyDemand;
-			            this.updateProgress();
-                        this.container.setSlot("slotPreviewResult", result.id, result.count, result.data, result.extra);
+                        this.updateProgress();
                     }
                 }
                 else {
@@ -91,14 +121,14 @@ namespace Machine {
                     this.data.energy -= this.energyDemand;
                     this.updateProgress();
                 }
-            }
-            if (+this.data.progress.toFixed(3) >= 1) {
-                const recipe = Recipes.getRecipeByField(this.container);
-                if (!recipe || !this.provideRecipe(recipe)) {
-                    this.playOnce(this.getInterruptSound());
-                    this.resetPreviewSlot();
+                
+                if (this.isCompletedProgress()) {
+                    const recipe = Recipes.getRecipeByField(this.container);
+                    if (recipe) {
+                        this.provideRecipe(recipe)
+                    }
+                    this.data.progress = 0;
                 }
-                this.data.progress = 0;
             }
 
             this.dischargeSlot("slotEnergy");
@@ -109,7 +139,9 @@ namespace Machine {
 		}
 
         validateResult(item: ItemInstance, resultSlot: ItemContainerSlot): boolean {
-            return item && (resultSlot.id == 0 || resultSlot.id == item.id && resultSlot.data == item.data && resultSlot.count + item.count <= Item.getMaxStack(item.id, item.data))
+            return item && (resultSlot.id == 0 || resultSlot.id == item.id && 
+                (item.data == -1 || resultSlot.data == item.data) && 
+                resultSlot.count + item.count <= Item.getMaxStack(item.id, item.data))
         }
 
         provideRecipe(recipe: Recipes.WorkbenchRecipe): boolean {
@@ -136,7 +168,7 @@ namespace Machine {
 			return "InterruptOne.ogg";
 		}
 
-        equalizeItems(item?: ItemInstance): void {
+        equalizeItems(item?: {id: number, data: number}): void {
             let totalItems: {item: ItemStack, slots: ItemContainerSlot[]}[] = [];
 			for (let i = 0; i < 9; i++) {
                 const slotName = "slot" + i;
@@ -171,18 +203,17 @@ namespace Machine {
             }
         }
 
-        
-        resetPreviewSlot() {
-            this.container.setSlot("slotPreviewResult", 0, 0, 0);
-        }
-
-        @ContainerEvent(Side.Server)
         resetRecipe() {
-            this.resetPreviewSlot();
+            this.container.setSlot("slotPreviewResult", 0, 0, 0);
             for (let i = 0; i < 9; i++) {
                 const slot = this.container.getSlot("slot" + i);
                 slot.validate();
             }
+        }
+
+        @ContainerEvent(Side.Server)
+        resetRecipeCheck() {
+            this.data.recipeChecked = false;
         }
 	}
 
@@ -206,9 +237,10 @@ namespace Machine {
             if (Item.getMaxStack(item.id, item.data) == 1) {
                 return this.addNonStackableItem(item);
             }
+            const addedItem = {id: item.id, data: item.data};
             const added = super.addItem(item, side, maxCount);
             if (added > 0) {
-                this.tileEntity.equalizeItems(item);
+                this.tileEntity.equalizeItems(addedItem);
             }
             return added;
 		}

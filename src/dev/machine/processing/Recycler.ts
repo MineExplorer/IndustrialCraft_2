@@ -69,7 +69,7 @@ namespace Machine {
 					this.updateProgress();
 					newActive = true;
 				}
-				if (+this.data.progress.toFixed(3) >= 1) {
+				if (this.isCompletedProgress()) {
 					this.decreaseSlot(sourceSlot, 1);
 					if (Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1) {
 						resultSlot.setSlot(ItemID.scrap, resultSlot.count + 1, 0);

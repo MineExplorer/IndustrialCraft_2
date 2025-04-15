@@ -129,7 +129,7 @@ namespace Machine {
 						this.updateProgress();
 						newActive = true;
 					}
-					if (+this.data.progress.toFixed(3) >= 1) {
+					if (this.isCompletedProgress()) {
 						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - 1, 0);
 						canSlot.setSlot(canSlot.id, canSlot.count - result.count, 0);
 						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);

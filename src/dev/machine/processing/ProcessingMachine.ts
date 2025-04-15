@@ -65,7 +65,7 @@ namespace Machine {
 						this.updateProgress();
 						newActive = true;
 					}
-					if (+this.data.progress.toFixed(3) >= 1) {
+					if (this.isCompletedProgress()) {
 						const sourceCount = result.sourceCount || 1;
 						this.decreaseSlot(sourceSlot, sourceCount);
 						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data || 0);
@@ -95,6 +95,10 @@ namespace Machine {
 
 		updateProgress() {
 			this.data.progress += 1 / this.processTime;
+		}
+
+		isCompletedProgress() {
+			return +this.data.progress.toFixed(3) >= 1;
 		}
 
 		canRotate(side: number): boolean {

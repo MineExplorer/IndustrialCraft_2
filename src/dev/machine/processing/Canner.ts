@@ -145,7 +145,7 @@ namespace Machine {
 							this.updateProgress();
 							newActive = true;
 						}
-						if (+this.data.progress.toFixed(3) >= 1) {
+						if (this.isCompletedProgress()) {
 							this.decreaseSlot(sourceSlot, 1);
 							this.decreaseSlot(canSlot, result.count);
 							resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);
@@ -166,7 +166,7 @@ namespace Machine {
 						this.updateProgress();
 						newActive = true;
 					}
-					if (+this.data.progress.toFixed(3) >= 1) {
+					if (this.isCompletedProgress()) {
 						this.outputTank.getLiquidFromItem(canSlot, resultSlot);
 						this.data.progress = 0;
 					}
@@ -187,7 +187,7 @@ namespace Machine {
 							this.updateProgress();
 							newActive = true;
 						}
-						if (+this.data.progress.toFixed(3) >= 1) {
+						if (this.isCompletedProgress()) {
 							this.inputTank.addLiquidToItem(canSlot, resultSlot);
 							this.data.progress = 0;
 						}
@@ -212,7 +212,7 @@ namespace Machine {
 							this.updateProgress();
 							newActive = true;
 						}
-						if (+this.data.progress.toFixed(3) >= 1) {
+						if (this.isCompletedProgress()) {
 							this.inputTank.getLiquid(1000);
 							this.decreaseSlot(sourceSlot, source.count);
 							this.outputTank.addLiquid(recipe.output, 1000);

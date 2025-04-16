@@ -2,7 +2,7 @@ BlockRegistry.createBlock("industrialCrafter", [
 	{name: "Industrial Crafter", texture: [["industrial_workbench_bottom", 0], ["industrial_workbench_top", 0], ["industrial_workbench_back", 0], ["industrial_workbench_front", 0], ["industrial_workbench_left", 0], ["industrial_workbench_right", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.industrialCrafter, "stone", 1);
-ItemName.addTierTooltip("industrialCrafter", 3);
+ItemName.addTierTooltip("industrialCrafter", 2);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.industrialCrafter, count: 1, data: 0}, [
@@ -59,7 +59,7 @@ namespace Machine {
             recipeChecked: false
         };
         defaultEnergyDemand = 2;
-		defaultTier = 1;
+		defaultTier = 2;
 		defaultEnergyStorage = 20000;
         defaultProcessTime = 40;
 		defaultDrop = BlockID.machineBlockAdvanced;

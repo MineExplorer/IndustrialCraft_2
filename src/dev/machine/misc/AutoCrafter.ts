@@ -1,18 +1,18 @@
-BlockRegistry.createBlock("industrialCrafter", [
-	{name: "Industrial Crafter", texture: [["industrial_workbench_bottom", 0], ["industrial_workbench_top", 0], ["industrial_workbench_back", 0], ["industrial_workbench_front", 0], ["industrial_workbench_left", 0], ["industrial_workbench_right", 0]], inCreative: true},
+BlockRegistry.createBlock("autoCrafter", [
+	{name: "Automatic Crafter", texture: [["industrial_workbench_bottom", 0], ["industrial_workbench_top", 0], ["industrial_workbench_back", 0], ["industrial_workbench_front", 0], ["industrial_workbench_left", 0], ["industrial_workbench_right", 0]], inCreative: true},
 ], "machine");
-BlockRegistry.setBlockMaterial(BlockID.industrialCrafter, "stone", 1);
-ItemName.addTierTooltip("industrialCrafter", 2);
+BlockRegistry.setBlockMaterial(BlockID.autoCrafter, "stone", 1);
+ItemName.addTierTooltip("autoCrafter", 2);
 
 Callback.addCallback("PreLoaded", function() {
-	Recipes.addShaped({id: BlockID.industrialCrafter, count: 1, data: 0}, [
+	Recipes.addShaped({id: BlockID.autoCrafter, count: 1, data: 0}, [
 		" w ",
 		"x#x",
 		"abc"
-	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.circuitAdvanced, 0, 'a', ItemID.craftingHammer, 0, 'b', ItemID.bronzeWrench, 0, 'c', ItemID.cutter, 0]);
+	], ['#', BlockID.machineBlockAdvanced, 0, 'w', BlockID.industrialCrafter, 0, 'x', ItemID.circuitAdvanced, 0, 'a', ItemID.craftingHammer, 0, 'b', ItemID.bronzeWrench, 0, 'c', ItemID.cutter, 0]);
 });
 
-const guiAutoCrafter = MachineRegistry.createInventoryWindow("Industrial Crafter", {
+const guiAutoCrafter = MachineRegistry.createInventoryWindow("Automatic Crafter", {
 	drawing: [
 		{type: "bitmap", x: 691, y: 139, bitmap: "arrow_bar_background", scale: GUI_SCALE},
 		{type: "bitmap", x: 389, y: 135, bitmap: "energy_small_background", scale: GUI_SCALE}
@@ -48,9 +48,6 @@ const guiAutoCrafter = MachineRegistry.createInventoryWindow("Industrial Crafter
 	}
 });
 
-//@ts-ignore
-const WorkbenchFieldAPI = com.zhekasmirnov.innercore.api.mod.recipes.workbench.WorkbenchFieldAPI;
-
 namespace Machine {
 	export class AutoCrafter extends ProcessingMachine {
         defaultValues = { 
@@ -81,7 +78,7 @@ namespace Machine {
 				return true;
 			});
             this.container.setGlobalGetTransferPolicy((container, name, id, amount, data) => {
-                if (name.match(/slot[0-9]/)) {
+                if (name.match(/slot[0-8]/)) {
                     this.data.recipeChecked = false;
                 }
                 return amount;
@@ -171,9 +168,8 @@ namespace Machine {
         equalizeItems(item?: {id: number, data: number}): void {
             let totalItems: {item: ItemStack, slots: ItemContainerSlot[]}[] = [];
 			for (let i = 0; i < 9; i++) {
-                const slotName = "slot" + i;
-                const slot = this.container.getSlot(slotName);
-                if ((!item || slot.id == item.id && slot.data == item.data) && Item.getMaxStack(slot.id, slot.data) > 1) {
+                const slot = this.container.getSlot("slot" + i);
+                if ((!item || slot.id == item.id && slot.data == item.data) && slot.extra == null && Item.getMaxStack(slot.id, slot.data) > 1) {
                     let found = false;
                     for (let group of totalItems) {
                         if (group.item.id == slot.id && group.item.data == slot.data) {
@@ -217,7 +213,7 @@ namespace Machine {
         }
 	}
 
-	MachineRegistry.registerPrototype(BlockID.industrialCrafter, new AutoCrafter());
+	MachineRegistry.registerPrototype(BlockID.autoCrafter, new AutoCrafter());
 
     export class AutoCrafterStorageInterface extends StorageInterface.TileEntityInterface {
         container: ItemContainer;
@@ -269,7 +265,7 @@ namespace Machine {
         }
     }
 
-    StorageInterface.createInterface(BlockID.industrialCrafter, {
+    StorageInterface.createInterface(BlockID.autoCrafter, {
 		slots: {
 			"slot^0-8": {input: true},
 			"slotResult": {output: true}

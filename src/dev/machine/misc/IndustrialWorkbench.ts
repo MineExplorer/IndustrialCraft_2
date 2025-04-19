@@ -30,7 +30,11 @@ const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial
 		"slotInput6": {type: "slot", x: 491, y: 160},
 		"slotInput7": {type: "slot", x: 551, y: 160},
 		"slotInput8": {type: "slot", x: 611, y: 160},
-		"slotResult": {type: "slot", x: 781, y: 100},
+		"slotResult": {type: "slot", x: 781, y: 100, clicker: {
+            onClick: function(_, container: ItemContainer) {
+                container.sendEvent("craftClick", {});
+            }
+        }},
         "slot0": {type: "slot", x: 300 + 22*GUI_SCALE, y: 130 + 37*GUI_SCALE},
 		"slot1": {type: "slot", x: 300 + 41*GUI_SCALE, y: 130 + 37*GUI_SCALE},
 		"slot2": {type: "slot", x: 300 + 60*GUI_SCALE, y: 130 + 37*GUI_SCALE},
@@ -74,10 +78,6 @@ namespace Machine {
 				return true;
 			});
             this.container.setGlobalGetTransferPolicy((container, name, id, amount, data) => {
-                if (name == "slotResult") {
-                    this.data.recipeChecked = false;
-                    return this.provideRecipe();
-                }
                 if (name.match(/slotInput[0-8]/)) {
                     this.data.recipeChecked = false;
                 }
@@ -108,19 +108,20 @@ namespace Machine {
             return false;
         }
 
-        provideRecipe(): number {
+        provideRecipe(): ItemInstance {
             const recipe = Recipes.getRecipeByField(this.container);
             if (!recipe)
-                return 0;
+                return null;
 
             const result = Recipes.provideRecipeForPlayer(this.container, "", -1);
             if (result) {
-                const resultSlot = this.container.getSlot("slotResult");
-                resultSlot.setSlot(result.id, resultSlot.count, Math.max(result.data, 0), result.extra);
                 this.refillItems();
-                return resultSlot.count;
+                this.container.setSlot("slotResult", 0, 0, 0);
+                this.data.recipeChecked = false;
+                result.data = Math.max(result.data, 0);
+                return result;
             }
-            return 0;
+            return null;
         }
 
         refillItems(): void {
@@ -130,7 +131,7 @@ namespace Machine {
                     for (let j = 0; j < 18; j++) {
                         const slot = this.container.getSlot("slot" + j);
                         if (slot.id == inputSlot.id && (slot.data == inputSlot.data || 
-                            inputSlot.count == 0 && inputSlot.data > 0 && Item.getMaxDamage(slot.id) > 0)
+                            inputSlot.count == 0 && inputSlot.data > 0 && Item.getMaxDamage(slot.id) > 0) // allow damaged items to be replaced
                         ) {
                             inputSlot.setSlot(slot.id, inputSlot.count + 1, slot.data, slot.extra);
                             slot.count--;
@@ -142,6 +143,15 @@ namespace Machine {
                 }
                 inputSlot.validate();
                 inputSlot.markDirty();
+            }
+        }
+
+        /** @deprecated Container event, shouldn't be called directly */
+        @ContainerEvent(Side.Server)
+        craftClick(packetData: any, client: NetworkClient) {
+            const result = this.provideRecipe();
+            if (result) {
+                new PlayerActor(client.getPlayerUid()).addItemToInventory(result.id, result.count, result.data, result.extra, true);
             }
         }
 	}

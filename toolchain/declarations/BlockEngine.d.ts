@@ -1863,7 +1863,7 @@ declare abstract class TileEntityBase implements TileEntity {
         [packetName: string]: (packetData: any, packetExtra: any, connectedClient: NetworkClient) => void;
     };
     containerEvents: {
-        [eventName: string]: (container: ItemContainer, window: UI.IWindow | null, windowContent: UI.WindowContent | null, eventData: any) => void;
+        [eventName: string]: (packetData: any, connectedClient: NetworkClient) => void;
     };
     container: ItemContainer;
     liquidStorage: LiquidRegistry.Storage;

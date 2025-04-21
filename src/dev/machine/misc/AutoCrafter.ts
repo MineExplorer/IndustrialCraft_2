@@ -4,12 +4,15 @@ BlockRegistry.createBlock("autoCrafter", [
 BlockRegistry.setBlockMaterial(BlockID.autoCrafter, "stone", 1);
 ItemName.addTierTooltip("autoCrafter", 2);
 
+TileRenderer.setStandardModelWithRotation(BlockID.autoCrafter, 2, [["industrial_workbench_bottom", 0], ["industrial_workbench_top", 0], ["industrial_workbench_back", 0], ["industrial_workbench_front", 0], ["industrial_workbench_left", 0], ["industrial_workbench_right", 0]]);
+TileRenderer.setRotationFunction(BlockID.autoCrafter);
+
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.autoCrafter, count: 1, data: 0}, [
 		" w ",
 		"x#x",
-		"abc"
-	], ['#', BlockID.machineBlockAdvanced, 0, 'w', BlockID.industrialCrafter, 0, 'x', ItemID.circuitAdvanced, 0, 'a', ItemID.craftingHammer, 0, 'b', ItemID.bronzeWrench, 0, 'c', ItemID.cutter, 0]);
+		" e "
+	], ['#', BlockID.machineBlockAdvanced, 0, 'w', BlockID.industrialCrafter, 0, 'x', ItemID.circuitAdvanced, 0, 'e', ItemID.electricWrench, -1]);
 });
 
 const guiAutoCrafter = MachineRegistry.createInventoryWindow("Automatic Crafter", {
@@ -60,6 +63,7 @@ namespace Machine {
 		defaultEnergyStorage = 20000;
         defaultProcessTime = 40;
 		defaultDrop = BlockID.machineBlockAdvanced;
+        upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 
 		getScreenByName(): UI.IWindow {
 			return guiAutoCrafter;

@@ -256,7 +256,7 @@ def task_connect_to_adb():
 
 	ip = None
 	port = None
-	pattern = re.compile(r"(\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}):(\d{5})")
+	pattern = re.compile(r"(\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}):(\d{1,5})")
 	for arg in sys.argv:
 		match = pattern.search(arg)
 		if match:

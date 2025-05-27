@@ -196,6 +196,15 @@ declare class AudioSourceClient implements Updatable {
      */
     play(sound: string | Sound, looping?: boolean, volume?: number, radius?: number): Nullable<SoundStream>;
     /**
+     * Start playing sound from this source if it's not started.
+     * @param sound sound name or object
+     * @param looping true if sound is looped, false otherwise
+     * @param volume value from 0 to 1
+     * @param radius the radius where the sound is heard
+     * @returns SoundStream object or null.
+     */
+    playSingle(sound: string | Sound, looping?: boolean, volume?: number, radius?: number): void;
+    /**
      * Finds stream by sound name
      * @param soundName sound name
      * @returns sound stream or null

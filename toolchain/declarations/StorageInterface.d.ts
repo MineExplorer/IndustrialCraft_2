@@ -45,19 +45,21 @@ interface ILiquidStorage {
     isFull(liquid?: string): boolean;
     isEmpty(liquid?: string): boolean;
 }
-declare class NativeContainerInterface implements Storage {
-    readonly container: NativeTileEntity;
-    readonly isNativeContainer = true;
-    constructor(container: NativeTileEntity);
-    getSlot(index: number): ItemInstance;
-    setSlot(index: number, id: number, count: number, data: number, extra?: ItemExtraData): void;
-    getContainerSlots(): any[];
-    getInputSlots(side: number): number[];
-    getReceivingItemCount(item: ItemInstance, side: number): number;
-    addItemToSlot(index: number, item: ItemInstance, maxCount?: number): number;
-    addItem(item: ItemInstance, side: number, maxCount?: number): number;
-    getOutputSlots(): number[];
-    clearContainer(): void;
+declare namespace StorageInterface {
+    class NativeContainerInterface implements Storage {
+        readonly container: NativeTileEntity;
+        readonly isNativeContainer = true;
+        constructor(container: NativeTileEntity);
+        getSlot(index: number): ItemInstance;
+        setSlot(index: number, id: number, count: number, data: number, extra?: ItemExtraData): void;
+        getContainerSlots(): any[];
+        getInputSlots(side: number): number[];
+        getReceivingItemCount(item: ItemInstance, side: number): number;
+        addItemToSlot(index: number, item: ItemInstance, maxCount?: number): number;
+        addItem(item: ItemInstance, side: number, maxCount?: number): number;
+        getOutputSlots(): number[];
+        clearContainer(): void;
+    }
 }
 declare namespace StorageInterface {
     class TileEntityInterface implements Storage {
@@ -189,5 +191,4 @@ declare namespace StorageInterface {
      * Use it in tick function of TileEntity
     */
     export function checkHoppers(tile: TileEntity): void;
-    export {};
 }

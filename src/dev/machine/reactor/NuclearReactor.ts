@@ -61,9 +61,6 @@ let EUReactorModifier = 5;
 namespace Machine {
 	export class NuclearReactor extends Generator
 	implements IReactor {
-		audioSourceLoop: AudioSource;
-		audioSourceGeiger: AudioSource;
-
 		defaultValues = {
 			energy: 0,
 			isEnabled: false,
@@ -163,12 +160,10 @@ namespace Machine {
 					return;
 				}
 				this.setActive(this.data.heat >= 1000 || this.data.output > 0);
-			}
-
-			if (this.data.output > 0) {
-				this.startAmbientSound(); // TODO: rewrite sounds
-			} else {
-				this.stopAmbientSound();
+				if (this.networkData.getDouble(NetworkDataKeys.powerOutput) !== this.data.output) {
+					this.networkData.putDouble(NetworkDataKeys.powerOutput, this.data.output);
+					this.networkData.sendChanges();
+				}
 			}
 
 			this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
@@ -196,37 +191,6 @@ namespace Machine {
 
 		getEnergyOutput(): number {
 			return Math.floor(this.data.output * EUReactorModifier);
-		}
-
-		startAmbientSound(): void {
-			if (!IC2Config.machineSoundEnabled || this.remove) return;
-			if (!this.audioSourceLoop) {
-				this.audioSourceLoop = SoundManager.createSource(SourceType.TILEENTITY, this, "NuclearReactorLoop.ogg");
-			}
-			if (this.data.output < 40) {
-				var geigerSound = "GeigerLowEU.ogg";
-			} else if (this.data.output < 80) {
-				var geigerSound = "GeigerMedEU.ogg";
-			} else {
-				var geigerSound = "GeigerHighEU.ogg";
-			}
-			if (!this.audioSourceGeiger) {
-				this.audioSourceGeiger = SoundManager.createSource(SourceType.TILEENTITY, this, geigerSound);
-			}
-			else if (this.audioSourceGeiger.soundName != geigerSound) {
-				this.audioSourceGeiger.setSound(geigerSound);
-			}
-		}
-
-		stopAmbientSound(): void {
-			if (this.audioSourceLoop) {
-				SoundManager.removeSource(this.audioSourceLoop);
-				this.audioSourceLoop = null;
-			}
-			if (this.audioSourceGeiger) {
-				SoundManager.removeSource(this.audioSourceGeiger);
-				this.audioSourceGeiger = null;
-			}
 		}
 
 		getHeat(): number {
@@ -380,6 +344,51 @@ namespace Machine {
 
 		getRandCoord(rad: number): Vector {
 			return new Vector3(this.x + MathUtil.randomInt(-rad, rad), this.y + MathUtil.randomInt(-rad, rad), this.z + MathUtil.randomInt(-rad, rad));
+		}
+
+		// Client Prototype
+		clientTick(): void {
+			super.clientTick();
+			const output = this.networkData.getDouble(NetworkDataKeys.powerOutput);
+			if (output > 0) {
+				this.audioSource.playSingle(this.getLoopSound(), true);
+				const geigerSound = this.getGeigerSound(output);
+				const geigerStream = this.audioSource.streams.find(a => a.name.startsWith("Geiger"));
+				if (!geigerStream) {
+					this.audioSource.play(geigerSound, true);
+				}
+				else if (geigerStream.name !== geigerSound) {
+					geigerStream.stop();
+					this.audioSource.play(geigerSound, true);
+				}
+			} else {
+				this.audioSource.stopAll();
+			}
+		}
+
+		@ClientSide
+		startPlaySound(): void { }
+
+		@ClientSide
+		stopPlaySound(): void { }
+
+		@ClientSide
+		getLoopSound(): string {
+			return "NuclearReactorLoop.ogg";
+		}
+
+		@ClientSide
+		getGeigerSound(output: number): string {
+			if (output == 0) {
+				return null;
+			}
+			if (output < 40) {
+				return "GeigerLowEU.ogg";
+			}
+			if (output < 80) {
+				return "GeigerMedEU.ogg";
+			}
+			return "GeigerHighEU.ogg";
 		}
 
 		/** @deprecated Container event, shouldn't be called */

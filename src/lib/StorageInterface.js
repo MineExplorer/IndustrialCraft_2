@@ -274,7 +274,10 @@ var StorageInterface;
 var StorageInterfaceFactory;
 (function (StorageInterfaceFactory) {
     function getTileEntityInterface(tileEntity) {
-        var storagePrototype = StorageInterface.getData(tileEntity.blockID);
+        if (tileEntity.__storageInterface) {
+            return tileEntity.__storageInterface;
+        }
+        var storagePrototype = StorageInterface.getPrototype(tileEntity.blockID);
         var interface = new storagePrototype.classType(tileEntity);
         if (storagePrototype) {
             for (var key in storagePrototype) {
@@ -283,6 +286,7 @@ var StorageInterfaceFactory;
                 interface[key] = storagePrototype[key];
             }
         }
+        tileEntity.__storageInterface = interface;
         return interface;
     }
     StorageInterfaceFactory.getTileEntityInterface = getTileEntityInterface;
@@ -293,10 +297,11 @@ var StorageInterfaceFactory;
 var StorageInterface;
 (function (StorageInterface) {
     StorageInterface.data = {};
-    function getData(id) {
+    /** @returns TileEntity StorageInterface prototype by block id */
+    function getPrototype(id) {
         return StorageInterface.data[id];
     }
-    StorageInterface.getData = getData;
+    StorageInterface.getPrototype = getPrototype;
     /** Registers interface for block container */
     function createInterface(id, descriptor, classType) {
         if (classType === void 0) { classType = StorageInterface.TileEntityInterface; }

@@ -88,6 +88,11 @@ namespace Machine {
 			this.data.isActive = isActive
 			this.setActive(isActive);
 		}
+
+		@ClientSide
+		getOperationSound(): string {
+			return "TeleChargedLoop.ogg";
+		}
 	}
 
 	MachineRegistry.registerPrototype(BlockID.teleporter, new Teleporter());

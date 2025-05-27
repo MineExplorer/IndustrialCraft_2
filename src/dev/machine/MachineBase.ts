@@ -152,7 +152,7 @@ namespace Machine {
 					}
 				}
 			} else if (opSound) {
-				this.audioSource.play(opSound, true);
+				this.audioSource.playSingle(opSound, true);
 			}
 		}
 

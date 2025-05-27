@@ -22,7 +22,7 @@
 		],
 		"excludeFromRelease": [],
 		"modFolder": "IndustrialCraft2",
-		"pushTo": "storage/emulated/0/games/horizon/packs/Inner_Core/innercore/mods/IndustrialCraft2",
+		"pushTo": "sdcard/games/horizon/packs/Inner_Core__ARM64_/innercore/mods/IndustrialCraft2",
 		"ndkPath": null
 	},
 	"resources": [

@@ -62,7 +62,7 @@ class LaserShot {
 	}
 
 	checkBlock(x: number, y: number, z: number): void {
-		const block = World.getBlock(x, y, z);
+		const block = this.region.getBlock(x, y, z);
 		if (ToolAPI.getBlockMaterialName(block.id) == "unbreaking") {
 			this.power = 0;
 		}
@@ -78,7 +78,7 @@ class LaserShot {
 		if (target.coords) {
 			Game.prevent();
 			const c = target.coords;
-			const block = World.getBlock(c.x, c.y, c.z);
+			const block = this.region.getBlock(c.x, c.y, c.z);
 			if (block.id != 7 && block.id != 120) {
 				this.destroyBlock(c.x, c.y, c.z, block);
 				this.hitBlock = true;
@@ -89,7 +89,9 @@ class LaserShot {
 			}
 		}
 		else {
-			if (target.entity == this.player) return;
+			if (target.entity == this.player) {
+				return;
+			}
 			let damage = this.power;
 			if (damage > 0) {
 				if (this.smelt) damage *= 2;

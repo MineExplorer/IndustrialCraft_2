@@ -85,6 +85,34 @@ namespace ICTool {
 	/** @deprecated */
 	export function registerElectricTreetap(stringID: string) {}
 
+	export function onDemontage(client: NetworkClient, coords: Vector) {
+		const player = client.getPlayerUid();
+		if (Entity.getDistanceToCoords(player, coords) <= 10) {
+			const region = WorldRegion.getForActor(player);
+			const blockID = region.getBlockId(coords);
+			if (!MachineRegistry.isMachine(blockID)) {
+				return;
+			}
+
+			const item = new ItemStack(Entity.getCarriedItem(player));
+			if (!ICTool.isUseableWrench(item, 10)) {
+				return;
+			}
+			
+			const tileEntity = (region.getTileEntity(coords) || region.addTileEntity(coords)) as Machine.IWrenchable;
+			if (!tileEntity) {
+				return;
+			}
+
+			const drop = tileEntity.adjustDrop(new ItemStack(tileEntity.blockID, 1, 0));
+			TileEntity.destroyTileEntity(tileEntity);
+			region.setBlock(coords, 0, 0);
+			region.dropAtBlock(coords.x, coords.y, coords.z, drop);
+			ICTool.useWrench(item, 10, player);
+			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg");
+		}
+	}
+
 	export function setOnHandSound(itemID: number, idleSound: string, stopSound?: string) {
 		Callback.addCallback("LocalTick", function() {
 			if (!IC2Config.soundEnabled) {return;}
@@ -98,33 +126,17 @@ namespace ICTool {
 			}
 		});
 	}
-
-	Callback.addCallback("DestroyBlockStart", function(coords: Callback.ItemUseCoordinates, block: Tile) {
-		if (MachineRegistry.isMachine(block.id)) {
-			const item = Player.getCarriedItem();
-			if (ICTool.isUseableWrench(item, 10)) {
-				Network.sendToServer(IC2NetworkPackets.demontage, {x: coords.x, y: coords.y, z: coords.z});
-			}
-		}
-	});
-
-	Network.addServerPacket(IC2NetworkPackets.demontage, function (client: NetworkClient, data: Vector) {
-		const player = client.getPlayerUid();
-		const region = WorldRegion.getForActor(player);
-		const blockID = region.getBlockId(data);
-		if (MachineRegistry.isMachine(blockID)) {
-			const item = new ItemStack(Entity.getCarriedItem(player));
-			if (ICTool.isUseableWrench(item, 10)) {
-				const tileEntity = (region.getTileEntity(data) || region.addTileEntity(data)) as Machine.IWrenchable;
-				if (!tileEntity) return;
-
-				const drop = tileEntity.adjustDrop(new ItemStack(tileEntity.blockID, 1, 0));
-				TileEntity.destroyTileEntity(tileEntity);
-				region.setBlock(data, 0, 0);
-				region.dropAtBlock(data.x, data.y, data.z, drop);
-				ICTool.useWrench(item, 10, player);
-				SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg");
-			}
-		}
-	});
 }
+
+Callback.addCallback("DestroyBlockStart", function(coords: Callback.ItemUseCoordinates, block: Tile) {
+	if (MachineRegistry.isMachine(block.id)) {
+		const item = Player.getCarriedItem();
+		if (ICTool.isUseableWrench(item, 10)) {
+			Network.sendToServer(IC2NetworkPackets.demontage, {x: coords.x, y: coords.y, z: coords.z});
+		}
+	}
+});
+
+Network.addServerPacket(IC2NetworkPackets.demontage, function (client: NetworkClient, data: Vector) {
+	ICTool.onDemontage(client, data);
+});

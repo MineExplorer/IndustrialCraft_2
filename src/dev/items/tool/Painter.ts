@@ -26,7 +26,7 @@ class ItemPainter extends ItemCommon {
 					item.id = ItemID.icPainter;
 				Entity.setCarriedItem(player, item.id, 1, item.data);
 			}
-			SoundManager.playSoundAt(coords.x + .5, coords.y + .5, coords.z + .5, "Painters.ogg");
+			SoundManager.playSoundAtBlock(coords, region.getDimension(), "Painters.ogg");
 		}
 	}
 }

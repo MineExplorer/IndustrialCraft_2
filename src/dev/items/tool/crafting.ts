@@ -42,7 +42,7 @@ Network.addServerPacket(IC2NetworkPackets.cutterLongClick, function (client: Net
 		if (item.id == ItemID.cutter && cableData && cableData.insulation > 0) {
 			item.applyDamage(1);
 			player.setCarriedItem(item);
-			SoundManager.playSoundAtBlock(coords, "InsulationCutters.ogg");
+			SoundManager.playSoundAtBlock(coords, region.getDimension(), "InsulationCutters.ogg");
 			const blockID = CableRegistry.getBlockID(cableData.name, cableData.insulation - 1);
 			region.setBlock(coords.x, coords.y, coords.z, blockID, 0);
 			region.spawnDroppedItem(coords.x + .5, coords.y + 1, coords.z + .5, ItemID.rubber, 1, 0);

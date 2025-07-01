@@ -98,7 +98,7 @@ implements IModeSwitchable {
 	}
 
 	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {
-		this.playDestroySound(item, block, player);
+		this.playDestroySound(coords, item, block, player);
 		const mode = this.readMode(item.extra);
 		const material = ToolAPI.getBlockMaterialName(block.id);
 		const energyStored = ChargeItemRegistry.getEnergyStored(item);

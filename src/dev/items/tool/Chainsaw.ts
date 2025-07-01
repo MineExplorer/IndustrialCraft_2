@@ -10,7 +10,7 @@ extends ElectricTool {
 		toolData.blockMaterials = ["wood", "wool", "fibre", "plant"];
 		this.setToolParams(toolData);
 		this.extraDamage = toolData.damage;
-		ICTool.setOnHandSound(this.id, "ChainsawIdle.ogg", "ChainsawStop.ogg");
+		//ICTool.setOnHandSound(this.id, "ChainsawIdle.ogg", "ChainsawStop.ogg");
 	}
 
 	modifyEnchants(enchantData: ToolAPI.EnchantData, item: ItemInstance, coords?: Callback.ItemUseCoordinates, block?: Tile): void {

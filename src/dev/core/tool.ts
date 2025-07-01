@@ -31,7 +31,7 @@ namespace ICTool {
 	export function rotateMachine(tileEntity: Machine.IWrenchable, side: number, item: ItemStack, player: number): void {
 		if (tileEntity.setFacing(side)) {
 			useWrench(item, 1, player);
-			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg");
+			SoundManager.playSoundAtBlock(tileEntity, tileEntity.dimension, "Wrench.ogg");
 		}
 	}
 
@@ -109,12 +109,12 @@ namespace ICTool {
 			region.setBlock(coords, 0, 0);
 			region.dropAtBlock(coords.x, coords.y, coords.z, drop);
 			ICTool.useWrench(item, 10, player);
-			SoundManager.playSoundAtBlock(tileEntity, "Wrench.ogg");
+			SoundManager.playSoundAtBlock(tileEntity, tileEntity.dimension, "Wrench.ogg");
 		}
 	}
 
 	export function setOnHandSound(itemID: number, idleSound: string, stopSound?: string) {
-		Callback.addCallback("LocalTick", function() {
+		/*Callback.addCallback("LocalTick", function() {
 			if (!IC2Config.soundEnabled) {return;}
 			const item = Player.getCarriedItem();
 			const tool = ToolAPI.getToolData(item.id) as any;
@@ -124,7 +124,7 @@ namespace ICTool {
 			else if (SoundManager.stopPlaySound(Player.get(), idleSound) && stopSound) {
 				SoundManager.playSound(stopSound);
 			}
-		});
+		});*/
 	}
 }
 

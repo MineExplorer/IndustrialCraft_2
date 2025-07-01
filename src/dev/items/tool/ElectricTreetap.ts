@@ -8,7 +8,7 @@ class ElectricTreetap extends ItemElectric {
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2 && ICTool.useElectricItem(item, this.energyPerUse, player)) {
 			const region = WorldRegion.getForActor(player);
-			SoundManager.playSoundAt(coords.vec.x, coords.vec.y, coords.vec.z, "Treetap.ogg");
+			SoundManager.playSoundAt(coords.vec, region.getDimension(), "Treetap.ogg");
 			region.setBlock(coords, BlockID.rubberTreeLogLatex, block.data - 4);
 			const entity = region.dropAtBlock(
 				coords.relative.x,

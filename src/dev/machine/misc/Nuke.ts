@@ -31,7 +31,7 @@ namespace Machine {
 		}
 
 		explode(radius: number): void {
-			SoundManager.playSound("NukeExplosion.ogg");
+			SoundManager.playSoundAtBlock(this, this.dimension, "NukeExplosion.ogg", 1, 100_000);
 			const damageRad = radius * 1.5;
 			const epicenter = new Vector3(this.x + .5, this.y + .5, this.z + .5);
 			const entities = EntityHelper.getEntitiesInRadius(this.region, epicenter, damageRad);

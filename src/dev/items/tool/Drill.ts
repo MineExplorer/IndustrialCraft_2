@@ -10,7 +10,7 @@ class ToolDrill extends ElectricTool {
 	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {
 		if (Block.getDestroyTime(block.id) > 0) {
 			ICTool.dischargeItem(item, this.getEnergyPerUse(item), player);
-			this.playDestroySound(item, block, player);
+			this.playDestroySound(coords, item, block, player);
 		}
 		return true;
 	}
@@ -45,20 +45,22 @@ class ToolDrill extends ElectricTool {
 		}
 	}
 
-	continueDestroyBlock(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, progress: number): void {
+	/*continueDestroyBlock(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, progress: number): void {
 		if (progress > 0) {
 			this.playDestroySound(item, block, Player.get());
 		}
-	}
+	}*/
 
-	playDestroySound(item: ItemInstance, block: Tile, player: number): void {
+	playDestroySound(coords: Vector, item: ItemInstance, block: Tile, player: number): void {
 		if (IC2Config.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.getEnergyPerUse(item)) {
-			let hardness = Block.getDestroyTime(block.id);
+			const hardness = Block.getDestroyTime(block.id);
 			if (hardness > 1 || hardness < 0) {
-				SoundManager.startPlaySound(SourceType.ENTITY, player, "DrillHard.ogg");
+				//SoundManager.startPlaySound(SourceType.ENTITY, player, "DrillHard.ogg");
+				SoundManager.playSoundAtBlock(coords, Entity.getDimension(player), "DrillHard.ogg");
 			}
 			else if (hardness > 0) {
-				SoundManager.startPlaySound(SourceType.ENTITY, player, "DrillSoft.ogg");
+				//SoundManager.startPlaySound(SourceType.ENTITY, player, "DrillSoft.ogg");
+				SoundManager.playSoundAtBlock(coords, Entity.getDimension(player), "DrillSoft.ogg");
 			}
 		}
 	}

@@ -4,7 +4,15 @@ interface IWrech {
 }
 
 namespace ICTool {
-	const wrenchData = {}
+	type OnHandSoundData = {
+		idleSound: string;
+		stopSound?: string;
+	};
+
+	const wrenchData: {[key: number]: IWrech} = {};
+	const onHandSounds: {[key: number]: OnHandSoundData} = {};
+	let lastCarriedItem: ItemInstance = new ItemStack();
+	let playerAudioSource: AudioSourceClient;
 
 	export function registerWrench(id: number, properties: IWrech) {
 		wrenchData[id] = properties;
@@ -79,12 +87,6 @@ namespace ICTool {
 		return false;
 	}
 
-	/** @deprecated */
-	export function registerElectricHoe(stringID: string) {}
-
-	/** @deprecated */
-	export function registerElectricTreetap(stringID: string) {}
-
 	export function onDemontage(client: NetworkClient, coords: Vector) {
 		const player = client.getPlayerUid();
 		if (Entity.getDistanceToCoords(player, coords) <= 10) {
@@ -114,18 +116,61 @@ namespace ICTool {
 	}
 
 	export function setOnHandSound(itemID: number, idleSound: string, stopSound?: string) {
-		/*Callback.addCallback("LocalTick", function() {
-			if (!IC2Config.soundEnabled) {return;}
-			const item = Player.getCarriedItem();
-			const tool = ToolAPI.getToolData(item.id) as any;
-			if (item.id == itemID && (!tool || !tool.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.energyPerUse)) {
-				SoundManager.startPlaySound(SourceType.ENTITY, Player.get(), idleSound);
-			}
-			else if (SoundManager.stopPlaySound(Player.get(), idleSound) && stopSound) {
-				SoundManager.playSound(stopSound);
-			}
-		});*/
+		onHandSounds[itemID] = {idleSound: idleSound, stopSound: stopSound};
 	}
+
+	export function startPlayerSound(soundName: string, looping: boolean, volume: number = 1) {
+		if (!IC2Config.soundEnabled) return;
+
+		const stream = playerAudioSource.getStream(soundName);
+		if (!stream) {
+			playerAudioSource.play(soundName, looping, volume);
+		}
+		else if (stream.volume != volume) {
+			stream.volume = volume;
+			stream.updateVolume(1);
+		}
+	}
+
+	export function stopPlayerSound(soundName: string) {
+		playerAudioSource?.stop(soundName);
+	}
+
+	Callback.addCallback("LocalLevelLoaded", function() {
+		if (IC2Config.soundEnabled) {
+			playerAudioSource = new AudioSourceClient(Player.get());
+		}
+	});
+
+	Callback.addCallback("LocalLevelLeft", function() {
+		playerAudioSource?.unload();
+	});
+
+	Callback.addCallback("LocalTick", function() {
+		if (!IC2Config.soundEnabled) return;
+
+		playerAudioSource.update();
+
+		const item = Player.getCarriedItem();
+		if (item.id != lastCarriedItem.id) {
+			const soundData = onHandSounds[lastCarriedItem.id];
+			if (soundData) {
+				const wasPlaying = playerAudioSource.isPlaying(soundData.idleSound);
+				playerAudioSource.stop(soundData.idleSound);
+				if (wasPlaying && soundData.stopSound) {
+					playerAudioSource.play(soundData.stopSound);
+				}
+			}
+			const nextSoundData = onHandSounds[item.id];
+			if (nextSoundData) {
+				const tool = ToolAPI.getToolData(item.id) as ElectricTool;
+				if (!tool || !tool.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.energyPerUse) {
+					playerAudioSource.playSingle(nextSoundData.idleSound, true);
+				}
+			}
+		}
+		lastCarriedItem = item;
+	});
 }
 
 Callback.addCallback("DestroyBlockStart", function(coords: Callback.ItemUseCoordinates, block: Tile) {

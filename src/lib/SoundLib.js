@@ -315,12 +315,13 @@ var SoundStreamState;
     SoundStreamState[SoundStreamState["Stopped"] = 3] = "Stopped";
 })(SoundStreamState || (SoundStreamState = {}));
 var SoundStream = /** @class */ (function () {
-    function SoundStream(sound, streamId, looping, volume, radius) {
+    function SoundStream(sound, streamId, looping, volume, radius, relativePosition) {
         this.sound = sound;
         this.streamId = streamId;
         this.looping = looping;
         this.volume = volume;
         this.radius = radius;
+        this.relativePosition = relativePosition;
         this.name = sound.name;
         this.setStreamId(streamId);
         this._soundClient = SoundManager.getClient();
@@ -361,8 +362,8 @@ var SoundStream = /** @class */ (function () {
         this._soundClient.resume(this.streamId);
         this.state = SoundStreamState.Started;
     };
-    SoundStream.prototype.setVolume = function (volume) {
-        this._soundClient.setVolume(this.streamId, volume);
+    SoundStream.prototype.updateVolume = function (volumeMod) {
+        this._soundClient.setVolume(this.streamId, this.volume * volumeMod);
     };
     SoundStream.prototype.getDuration = function () {
         if (!this.startTime)
@@ -379,16 +380,25 @@ var SoundStream = /** @class */ (function () {
  * Client side audio source.
  */
 var AudioSourceClient = /** @class */ (function () {
-    function AudioSourceClient(position) {
+    function AudioSourceClient(source) {
         var _this = this;
         this.remove = false;
         this.streams = [];
         // Legacy kostyl
         this.update = function () {
+            if (_this.entitySource && Entity.isExist(_this.entitySource)) {
+                _this.position = Entity.getPosition(_this.entitySource);
+            }
             _this.updateStreams();
             _this.updateVolume();
         };
-        this.position = position;
+        if (typeof source == "number") {
+            this.entitySource = source;
+            this.position = Entity.getPosition(source);
+        }
+        else {
+            this.position = source;
+        }
     }
     /**
      * Updates source position.
@@ -411,7 +421,7 @@ var AudioSourceClient = /** @class */ (function () {
      * @param radius the radius where the sound is heard
      * @returns SoundStream object or null.
      */
-    AudioSourceClient.prototype.play = function (soundName, looping, volume, radius) {
+    AudioSourceClient.prototype.play = function (soundName, looping, volume, radius, relativePosition) {
         if (looping === void 0) { looping = false; }
         if (volume === void 0) { volume = 1; }
         if (radius === void 0) { radius = 16; }
@@ -419,9 +429,10 @@ var AudioSourceClient = /** @class */ (function () {
         if (!sound) {
             return null;
         }
-        var streamId = this.playSound(sound, looping, volume, radius);
+        var sourcePos = relativePosition ? this.position : this.getAbsolutePosition(relativePosition);
+        var streamId = this.playSound(sourcePos, sound, looping, volume, radius);
         if (streamId != 0 || looping) {
-            var stream = new SoundStream(sound, streamId, looping, volume, radius);
+            var stream = new SoundStream(sound, streamId, looping, volume, radius, relativePosition);
             this.streams.push(stream);
             return stream;
         }
@@ -435,9 +446,9 @@ var AudioSourceClient = /** @class */ (function () {
      * @param radius the radius where the sound is heard
      * @returns SoundStream object or null.
      */
-    AudioSourceClient.prototype.playSingle = function (soundName, looping, volume, radius) {
+    AudioSourceClient.prototype.playSingle = function (soundName, looping, volume, radius, relativePosition) {
         if (!this.getStream(soundName)) {
-            this.play(soundName, looping, volume, radius);
+            this.play(soundName, looping, volume, radius, relativePosition);
         }
     };
     /**
@@ -447,6 +458,10 @@ var AudioSourceClient = /** @class */ (function () {
      */
     AudioSourceClient.prototype.getStream = function (soundName) {
         return this.streams.find(function (s) { return s.name == soundName; }) || null;
+    };
+    AudioSourceClient.prototype.isPlaying = function (soundName) {
+        var stream = this.getStream(soundName);
+        return stream && stream.isPlaying();
     };
     /**
      * Stops playing sound by name
@@ -532,9 +547,17 @@ var AudioSourceClient = /** @class */ (function () {
     };
     AudioSourceClient.prototype.unload = function () {
         this.stopAll();
+        this.remove = true;
     };
-    AudioSourceClient.prototype.playSound = function (sound, looping, volume, radius) {
-        var streamId = SoundManager.getClient().playSoundAt(this.position.x, this.position.y, this.position.z, sound, looping, volume, 1, radius);
+    AudioSourceClient.prototype.getAbsolutePosition = function (relativeCoords) {
+        return {
+            x: this.position.x + relativeCoords.x,
+            y: this.position.y + relativeCoords.y,
+            z: this.position.z + relativeCoords.z
+        };
+    };
+    AudioSourceClient.prototype.playSound = function (position, sound, looping, volume, radius) {
+        var streamId = SoundManager.getClient().playSoundAt(position.x, position.y, position.z, sound, looping, volume, 1, radius);
         return streamId;
     };
     AudioSourceClient.prototype.updateStreams = function () {
@@ -551,28 +574,29 @@ var AudioSourceClient = /** @class */ (function () {
     };
     AudioSourceClient.prototype.updateVolume = function () {
         var e_6, _a;
-        //if (this.source == Player.get()) return;
-        var s = this.position;
-        var p = Player.getPosition();
-        var distance = Math.sqrt(Math.pow(s.x - p.x, 2) + Math.pow(s.y - p.y, 2) + Math.pow(s.z - p.z, 2));
+        if (this.entitySource == Player.get())
+            return;
+        var playerPos = Player.getPosition();
         try {
             for (var _b = __values(this.streams), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var stream = _c.value;
+                var sourcePos = stream.relativePosition ? this.position : this.getAbsolutePosition(stream.relativePosition);
+                var distance = Entity.getDistanceBetweenCoords(sourcePos, playerPos);
                 if (stream.looping && distance >= stream.radius) {
                     if (stream.isPlaying()) {
                         stream.reset();
                     }
                 }
                 else {
-                    var volume = stream.volume * Math.max(0, 1 - distance / stream.radius);
+                    var volumeMod = Math.max(0, 1 - distance / stream.radius);
                     if (stream.state == SoundStreamState.Idle) {
-                        var streamId = this.playSound(stream.sound, stream.looping, volume, stream.radius);
+                        var streamId = this.playSound(sourcePos, stream.sound, stream.looping, stream.volume * volumeMod, stream.radius);
                         if (streamId != 0) {
                             stream.setStreamId(streamId);
                         }
                     }
                     else {
-                        stream.setVolume(volume);
+                        stream.updateVolume(volumeMod);
                     }
                 }
             }

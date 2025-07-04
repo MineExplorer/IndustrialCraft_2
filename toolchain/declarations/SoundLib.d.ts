@@ -99,12 +99,13 @@ declare class SoundStream {
     looping: boolean;
     volume: number;
     radius: number;
+    relativePosition?: Vector;
     name: string;
     state: SoundStreamState;
     startTime: number;
     onCompleteEvent?: (source: AudioSourceClient, stream: SoundStream) => void;
     private _soundClient;
-    constructor(sound: Sound, streamId: number, looping: boolean, volume: number, radius: number);
+    constructor(sound: Sound, streamId: number, looping: boolean, volume: number, radius: number, relativePosition?: Vector);
     setOnCompleteEvent(event: (source: AudioSourceClient, stream: SoundStream) => void): void;
     onComplete(source: AudioSourceClient): void;
     setStreamId(streamId: number): void;
@@ -112,7 +113,7 @@ declare class SoundStream {
     stop(): void;
     pause(): void;
     resume(): void;
-    setVolume(volume: number): void;
+    updateVolume(volumeMod: number): void;
     getDuration(): number;
     isPlaying(): boolean;
 }
@@ -121,11 +122,11 @@ declare class SoundStream {
  */
 declare class AudioSourceClient implements Updatable {
     position: Vector;
-    dimension: number;
     volume: number;
     remove: boolean;
     streams: SoundStream[];
-    source: any;
+    entitySource?: number;
+    constructor(entity: number);
     constructor(position: Vector);
     /**
      * Updates source position.
@@ -144,7 +145,7 @@ declare class AudioSourceClient implements Updatable {
      * @param radius the radius where the sound is heard
      * @returns SoundStream object or null.
      */
-    play(soundName: string, looping?: boolean, volume?: number, radius?: number): Nullable<SoundStream>;
+    play(soundName: string, looping?: boolean, volume?: number, radius?: number, relativePosition?: Vector): Nullable<SoundStream>;
     /**
      * Start playing sound from this source if it's not started.
      * @param sound sound name or object
@@ -153,13 +154,14 @@ declare class AudioSourceClient implements Updatable {
      * @param radius the radius where the sound is heard
      * @returns SoundStream object or null.
      */
-    playSingle(soundName: string, looping?: boolean, volume?: number, radius?: number): void;
+    playSingle(soundName: string, looping?: boolean, volume?: number, radius?: number, relativePosition?: Vector): void;
     /**
      * Finds stream by sound name
      * @param soundName sound name
      * @returns sound stream or null
      */
     getStream(soundName: string): Nullable<SoundStream>;
+    isPlaying(soundName: string): boolean;
     /**
      * Stops playing sound by name
      * @param soundName sound name
@@ -186,6 +188,7 @@ declare class AudioSourceClient implements Updatable {
     setVolume(soundName: string, volume: number): void;
     update: () => void;
     unload(): void;
+    getAbsolutePosition(relativeCoords: Vector): Vector;
     private playSound;
     private updateStreams;
     private updateVolume;

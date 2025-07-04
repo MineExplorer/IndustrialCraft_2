@@ -95,7 +95,11 @@ namespace Machine {
 
 		clientLoad(): void {
 			if (IC2Config.machineSoundEnabled) {
-				this.audioSource = new AudioSourceClient(this);
+				this.audioSource = new AudioSourceClient({
+					x: this.x + .5,
+					y: this.y + .5,
+					z: this.z + .5
+				});
 			}
 			this.wasActive = this.networkData.getBoolean(NetworkDataKeys.isActive);
 			this.updateActivity(this.wasActive);

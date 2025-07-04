@@ -27,7 +27,7 @@ class ItemScanner extends ItemElectric {
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		let client = Network.getClientForPlayer(player);
 		if (client && ICTool.useElectricItem(item, this.getEnergyPerUse(), player)) {
-			SoundManager.playSoundAtEntity(player, "ODScanner.ogg");
+			SoundLib.playSoundAtEntity(player, "ODScanner.ogg");
 			BlockEngine.sendMessage(client, "message.scan_result", `${coords.x}, ${coords.y}, ${coords.z}`);
 			let ores = {};
 			let radius = this.getScanRadius();

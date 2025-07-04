@@ -17,7 +17,7 @@ class ItemNanoSaber extends ElectricTool {
 	onAttack(item: ItemInstance, victim: number, attacker: number): boolean {
 		if (item.extra && item.extra.getBoolean("active")) {
 			this.toolMaterial.damage = 16;
-			SoundManager.playSoundAtEntity(attacker, "NanosaberSwing.ogg");
+			SoundLib.playSoundAtEntity(attacker, "NanosaberSwing.ogg");
 		} else {
 			this.toolMaterial.damage = 0;
 		}
@@ -33,7 +33,7 @@ class ItemNanoSaber extends ElectricTool {
 		else if (ChargeItemRegistry.getEnergyStored(item) >= 64) {
 			extra.putBoolean("active", true);
 			Entity.setCarriedItem(player, item.id, 1, item.data, extra);
-			SoundManager.playSoundAtEntity(player, "NanosaberPowerup.ogg");
+			SoundLib.playSoundAtEntity(player, "NanosaberPowerup.ogg");
 		}
 	}
 

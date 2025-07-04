@@ -9,6 +9,21 @@ var __values = (this && this.__values) || function(o) {
     };
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 LIBRARY({
     name: "SoundLib",
     version: 3,
@@ -16,49 +31,52 @@ LIBRARY({
     api: "CoreEngine"
 });
 var IS_OLD = getMCPEVersion().main === 28;
-var SoundRegistry;
-(function (SoundRegistry) {
-    SoundRegistry.resourcePath = __dir__;
-    SoundRegistry.soundData = {};
-    /**
-     * Path to your resources folder
-     * @param path must end with "/"
-     */
-    function setBasePath(path) {
-        SoundRegistry.resourcePath = path;
-    }
-    SoundRegistry.setBasePath = setBasePath;
-    function registerSound(name, filePath) {
-        SoundRegistry.soundData[name] = new Sound(name, SoundRegistry.resourcePath + filePath);
-    }
-    SoundRegistry.registerSound = registerSound;
-    function registerMultiSound(name, filePaths) {
-        var soundIds = [];
-        for (var i = 0; i < filePaths.length; i++) {
-            var soundId = "".concat(name, ":").concat(i);
-            SoundRegistry.soundData[soundId] = new Sound(soundId, SoundRegistry.resourcePath + filePaths[i]);
-            soundIds.push(soundId);
+var SoundLib;
+(function (SoundLib) {
+    var Registry;
+    (function (Registry) {
+        Registry.resourcePath = __dir__;
+        Registry.soundData = {};
+        /**
+         * Path to your resources folder
+         * @param path must end with "/"
+         */
+        function setBasePath(path) {
+            Registry.resourcePath = path;
         }
-        SoundRegistry.soundData[name] = new MultiSound(name, soundIds);
-    }
-    SoundRegistry.registerMultiSound = registerMultiSound;
-    function getSound(name) {
-        var sound = SoundRegistry.soundData[name];
-        if (!sound) {
-            Logger.Log("Cannot find sound: ".concat(name), "ERROR");
-            return null;
+        Registry.setBasePath = setBasePath;
+        function registerSound(name, filePath) {
+            Registry.soundData[name] = new Sound(name, Registry.resourcePath + filePath);
         }
-        if (sound instanceof MultiSound) {
-            return getSound(sound.getRandomSoundId());
+        Registry.registerSound = registerSound;
+        function registerMultiSound(name, filePaths) {
+            var soundIds = [];
+            for (var i = 0; i < filePaths.length; i++) {
+                var soundId = "".concat(name, ":").concat(i);
+                Registry.soundData[soundId] = new Sound(soundId, Registry.resourcePath + filePaths[i]);
+                soundIds.push(soundId);
+            }
+            Registry.soundData[name] = new MultiSound(name, soundIds);
         }
-        return sound;
-    }
-    SoundRegistry.getSound = getSound;
-    function getAllSounds() {
-        return Object.values(SoundRegistry.soundData).filter(function (s) { return s instanceof Sound; });
-    }
-    SoundRegistry.getAllSounds = getAllSounds;
-})(SoundRegistry || (SoundRegistry = {}));
+        Registry.registerMultiSound = registerMultiSound;
+        function getSound(name) {
+            var sound = Registry.soundData[name];
+            if (!sound) {
+                Logger.Log("Cannot find sound: ".concat(name), "ERROR");
+                return null;
+            }
+            if (sound instanceof MultiSound) {
+                return getSound(sound.getRandomSoundId());
+            }
+            return sound;
+        }
+        Registry.getSound = getSound;
+        function getAllSounds() {
+            return Object.values(Registry.soundData).filter(function (s) { return s instanceof Sound; });
+        }
+        Registry.getAllSounds = getAllSounds;
+    })(Registry = SoundLib.Registry || (SoundLib.Registry = {}));
+})(SoundLib || (SoundLib = {}));
 /**
  * For wrapping SoundPool object
  */
@@ -107,7 +125,7 @@ var SoundManagerClient = /** @class */ (function () {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
         if (typeof sound === "string") {
-            sound = SoundRegistry.getSound(sound);
+            sound = SoundLib.Registry.getSound(sound);
         }
         volume *= this.soundVolume;
         var startTime = Debug.sysTime();
@@ -168,23 +186,23 @@ var SoundManagerClient = /** @class */ (function () {
     return SoundManagerClient;
 }());
 /// <reference path="./SoundManagerClient.ts" />
-var SoundManager;
-(function (SoundManager) {
+var SoundLib;
+(function (SoundLib) {
     var _client;
     function getClient() {
         return _client;
     }
-    SoundManager.getClient = getClient;
+    SoundLib.getClient = getClient;
     /**
      * Initializes client side code
      * @param maxStreamsCount max count of concurrently playing streams
      */
     function init(maxStreamsCount) {
         if (!Game.isDedicatedServer || !Game.isDedicatedServer()) {
-            _client = new SoundManagerClient(maxStreamsCount, SoundRegistry.getAllSounds());
+            _client = new SoundManagerClient(maxStreamsCount, SoundLib.Registry.getAllSounds());
         }
     }
-    SoundManager.init = init;
+    SoundLib.init = init;
     function playSoundAt(x, y, z, dimension, soundName, volume, pitch, radius) {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
@@ -193,7 +211,7 @@ var SoundManager;
             var coords = x;
             return playSoundAt(coords.x, coords.y, coords.z, y, z, dimension, soundName, volume);
         }
-        var sound = SoundRegistry.getSound(soundName);
+        var sound = SoundLib.Registry.getSound(soundName);
         if (!sound)
             return;
         sendPacketInRadius({ x: x, y: y, z: z }, dimension, radius, "SoundManager.play_sound", {
@@ -206,19 +224,19 @@ var SoundManager;
             radius: radius
         });
     }
-    SoundManager.playSoundAt = playSoundAt;
+    SoundLib.playSoundAt = playSoundAt;
     function playSoundAtEntity(entity, soundName, volume, pitch, radius) {
         if (radius === void 0) { radius = 16; }
         var pos = Entity.getPosition(entity);
         var dimension = Entity.getDimension(entity);
         return playSoundAt(pos.x, pos.y, pos.z, dimension, soundName, volume, pitch, radius);
     }
-    SoundManager.playSoundAtEntity = playSoundAtEntity;
+    SoundLib.playSoundAtEntity = playSoundAtEntity;
     function playSoundAtBlock(coords, dimension, soundName, volume, radius) {
         if (radius === void 0) { radius = 16; }
         return playSoundAt(coords.x + .5, coords.y + .5, coords.z + .5, dimension, soundName, volume, 1, radius);
     }
-    SoundManager.playSoundAtBlock = playSoundAtBlock;
+    SoundLib.playSoundAtBlock = playSoundAtBlock;
     /**
      * Sends network packet for players within a radius from specified coords.
      * @param coords coordinates from which players will be searched
@@ -269,7 +287,7 @@ var SoundManager;
     Network.addClientPacket("SoundManager.play_sound", function (data) {
         _client === null || _client === void 0 ? void 0 : _client.playSoundAt(data.x, data.y, data.z, data.name, false, data.volume, data.pitch, data.radius);
     });
-})(SoundManager || (SoundManager = {}));
+})(SoundLib || (SoundLib = {}));
 var Sound = /** @class */ (function () {
     /**
      * @param name sound name id
@@ -324,7 +342,7 @@ var SoundStream = /** @class */ (function () {
         this.relativePosition = relativePosition;
         this.name = sound.name;
         this.setStreamId(streamId);
-        this._soundClient = SoundManager.getClient();
+        this._soundClient = SoundLib.getClient();
     }
     SoundStream.prototype.setOnCompleteEvent = function (event) {
         this.onCompleteEvent = event;
@@ -380,25 +398,15 @@ var SoundStream = /** @class */ (function () {
  * Client side audio source.
  */
 var AudioSourceClient = /** @class */ (function () {
-    function AudioSourceClient(source) {
+    function AudioSourceClient(position) {
         var _this = this;
         this.remove = false;
         this.streams = [];
-        // Legacy kostyl
+        // Horrible legacy
         this.update = function () {
-            if (_this.entitySource && Entity.isExist(_this.entitySource)) {
-                _this.position = Entity.getPosition(_this.entitySource);
-            }
-            _this.updateStreams();
-            _this.updateVolume();
+            _this.onUpdate();
         };
-        if (typeof source == "number") {
-            this.entitySource = source;
-            this.position = Entity.getPosition(source);
-        }
-        else {
-            this.position = source;
-        }
+        this.position = position;
     }
     /**
      * Updates source position.
@@ -425,11 +433,11 @@ var AudioSourceClient = /** @class */ (function () {
         if (looping === void 0) { looping = false; }
         if (volume === void 0) { volume = 1; }
         if (radius === void 0) { radius = 16; }
-        var sound = SoundRegistry.getSound(soundName);
+        var sound = SoundLib.Registry.getSound(soundName);
         if (!sound) {
             return null;
         }
-        var sourcePos = relativePosition ? this.position : this.getAbsolutePosition(relativePosition);
+        var sourcePos = relativePosition ? this.getAbsolutePosition(relativePosition) : this.position;
         var streamId = this.playSound(sourcePos, sound, looping, volume, radius);
         if (streamId != 0 || looping) {
             var stream = new SoundStream(sound, streamId, looping, volume, radius, relativePosition);
@@ -545,6 +553,10 @@ var AudioSourceClient = /** @class */ (function () {
             stream.volume = volume;
         }
     };
+    AudioSourceClient.prototype.onUpdate = function () {
+        this.updateStreams();
+        this.updateVolume();
+    };
     AudioSourceClient.prototype.unload = function () {
         this.stopAll();
         this.remove = true;
@@ -557,7 +569,7 @@ var AudioSourceClient = /** @class */ (function () {
         };
     };
     AudioSourceClient.prototype.playSound = function (position, sound, looping, volume, radius) {
-        var streamId = SoundManager.getClient().playSoundAt(position.x, position.y, position.z, sound, looping, volume, 1, radius);
+        var streamId = SoundLib.getClient().playSoundAt(position.x, position.y, position.z, sound, looping, volume, 1, radius);
         return streamId;
     };
     AudioSourceClient.prototype.updateStreams = function () {
@@ -574,13 +586,11 @@ var AudioSourceClient = /** @class */ (function () {
     };
     AudioSourceClient.prototype.updateVolume = function () {
         var e_6, _a;
-        if (this.entitySource == Player.get())
-            return;
         var playerPos = Player.getPosition();
         try {
             for (var _b = __values(this.streams), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var stream = _c.value;
-                var sourcePos = stream.relativePosition ? this.position : this.getAbsolutePosition(stream.relativePosition);
+                var sourcePos = stream.relativePosition ? this.getAbsolutePosition(stream.relativePosition) : this.position;
                 var distance = Entity.getDistanceBetweenCoords(sourcePos, playerPos);
                 if (stream.looping && distance >= stream.radius) {
                     if (stream.isPlaying()) {
@@ -611,7 +621,29 @@ var AudioSourceClient = /** @class */ (function () {
     };
     return AudioSourceClient;
 }());
-/// <reference path="./AudioSource/AudioSourceClient.ts" />
-EXPORT("SoundRegistry", SoundRegistry);
-EXPORT("SoundManager", SoundManager);
+var AudioSourceEntityClient = /** @class */ (function (_super) {
+    __extends(AudioSourceEntityClient, _super);
+    function AudioSourceEntityClient(entity) {
+        var _this = _super.call(this, Entity.getPosition(entity)) || this;
+        _this.entity = entity;
+        _this.entity = entity;
+        return _this;
+    }
+    AudioSourceEntityClient.prototype.onUpdate = function () {
+        if (Entity.isExist(this.entity)) {
+            this.position = Entity.getPosition(this.entity);
+        }
+        _super.prototype.onUpdate.call(this);
+    };
+    AudioSourceEntityClient.prototype.updateVolume = function () {
+        if (this.entity != Player.get()) {
+            _super.prototype.updateVolume.call(this);
+        }
+    };
+    return AudioSourceEntityClient;
+}(AudioSourceClient));
+/// <reference path="./AudioSource/AudioSourceEntityClient.ts" />
+EXPORT("SoundLib", SoundLib);
+EXPORT("SoundStream", SoundStream);
 EXPORT("AudioSourceClient", AudioSourceClient);
+EXPORT("AudioSourceEntityClient", AudioSourceEntityClient);

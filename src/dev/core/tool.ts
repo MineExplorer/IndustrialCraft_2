@@ -12,7 +12,7 @@ namespace ICTool {
 	const wrenchData: {[key: number]: IWrech} = {};
 	const onHandSounds: {[key: number]: OnHandSoundData} = {};
 	let lastCarriedItem: ItemInstance = new ItemStack();
-	let playerAudioSource: AudioSourceClient;
+	let playerAudioSource: AudioSourceEntityClient;
 
 	export function registerWrench(id: number, properties: IWrech) {
 		wrenchData[id] = properties;
@@ -39,7 +39,7 @@ namespace ICTool {
 	export function rotateMachine(tileEntity: Machine.IWrenchable, side: number, item: ItemStack, player: number): void {
 		if (tileEntity.setFacing(side)) {
 			useWrench(item, 1, player);
-			SoundManager.playSoundAtBlock(tileEntity, tileEntity.dimension, "Wrench.ogg");
+			SoundLib.playSoundAtBlock(tileEntity, tileEntity.dimension, "Wrench.ogg");
 		}
 	}
 
@@ -111,7 +111,7 @@ namespace ICTool {
 			region.setBlock(coords, 0, 0);
 			region.dropAtBlock(coords.x, coords.y, coords.z, drop);
 			ICTool.useWrench(item, 10, player);
-			SoundManager.playSoundAtBlock(tileEntity, tileEntity.dimension, "Wrench.ogg");
+			SoundLib.playSoundAtBlock(tileEntity, tileEntity.dimension, "Wrench.ogg");
 		}
 	}
 
@@ -138,7 +138,7 @@ namespace ICTool {
 
 	Callback.addCallback("LocalLevelLoaded", function() {
 		if (IC2Config.soundEnabled) {
-			playerAudioSource = new AudioSourceClient(Player.get());
+			playerAudioSource = new AudioSourceEntityClient(Player.get());
 		}
 	});
 

@@ -74,8 +74,8 @@ namespace Machine {
 								energyNeed -= energyChange;
 								if (energyNeed <= 0) break;
 							}
-							SoundManager.playSoundAt(this.x + .5, this.y + 1, this.z + .5, this.dimension, "TeleUse.ogg");
-							SoundManager.playSoundAt(receive.x + .5, receive.y + 1, receive.z + .5, this.dimension, "TeleUse.ogg");
+							SoundLib.playSoundAt(this.x + .5, this.y + 1, this.z + .5, this.dimension, "TeleUse.ogg");
+							SoundLib.playSoundAt(receive.x + .5, receive.y + 1, receive.z + .5, this.dimension, "TeleUse.ogg");
 							Entity.setPosition(ent, receive.x + .5, receive.y + 3, receive.z + .5);
 						}
 					}

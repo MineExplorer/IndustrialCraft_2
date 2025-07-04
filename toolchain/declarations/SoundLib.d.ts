@@ -1,18 +1,20 @@
 declare const IS_OLD: boolean;
-declare namespace SoundRegistry {
-    let resourcePath: string;
-    const soundData: {
-        [key: string]: Sound | MultiSound;
-    };
-    /**
-     * Path to your resources folder
-     * @param path must end with "/"
-     */
-    function setBasePath(path: string): void;
-    function registerSound(name: string, filePath: string): void;
-    function registerMultiSound(name: string, filePaths: string[]): void;
-    function getSound(name: string): Nullable<Sound>;
-    function getAllSounds(): Sound[];
+declare namespace SoundLib {
+    namespace Registry {
+        let resourcePath: string;
+        const soundData: {
+            [key: string]: Sound | MultiSound;
+        };
+        /**
+         * Path to your resources folder
+         * @param path must end with "/"
+         */
+        function setBasePath(path: string): void;
+        function registerSound(name: string, filePath: string): void;
+        function registerMultiSound(name: string, filePaths: string[]): void;
+        function getSound(name: string): Nullable<Sound>;
+        function getAllSounds(): Sound[];
+    }
 }
 /**
  * For wrapping SoundPool object
@@ -47,7 +49,7 @@ declare class SoundManagerClient {
     resumeAll(): void;
     release(): void;
 }
-declare namespace SoundManager {
+declare namespace SoundLib {
     type SoundPacketData = {
         x: number;
         y: number;
@@ -125,8 +127,6 @@ declare class AudioSourceClient implements Updatable {
     volume: number;
     remove: boolean;
     streams: SoundStream[];
-    entitySource?: number;
-    constructor(entity: number);
     constructor(position: Vector);
     /**
      * Updates source position.
@@ -186,10 +186,17 @@ declare class AudioSourceClient implements Updatable {
      * @param volume volume
      */
     setVolume(soundName: string, volume: number): void;
+    onUpdate(): void;
     update: () => void;
     unload(): void;
     getAbsolutePosition(relativeCoords: Vector): Vector;
-    private playSound;
-    private updateStreams;
-    private updateVolume;
+    protected playSound(position: Vector, sound: Sound, looping: boolean, volume: number, radius: number): number;
+    protected updateStreams(): void;
+    protected updateVolume(): void;
+}
+declare class AudioSourceEntityClient extends AudioSourceClient {
+    entity: number;
+    constructor(entity: number);
+    onUpdate(): void;
+    protected updateVolume(): void;
 }

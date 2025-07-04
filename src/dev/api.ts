@@ -8,7 +8,7 @@ const ICore = {
 	ReactorItem: ReactorItem,
 	Radiation: RadiationAPI,
 	Tool: ICTool,
-	Sound: SoundManager,
+	Sound: SoundLib,
 	Agriculture: Agriculture,
 	ItemName: ItemName,
 	UI: ToolHUD,

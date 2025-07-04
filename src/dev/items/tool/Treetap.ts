@@ -9,7 +9,7 @@ class ItemTreetap extends ItemCommon {
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		if (block.id == BlockID.rubberTreeLogLatex && block.data >= 4 && block.data == coords.side + 2) {
 			const region = WorldRegion.getForActor(player);
-			SoundManager.playSoundAt(coords.vec, region.getDimension(), "Treetap.ogg");
+			SoundLib.playSoundAt(coords.vec, region.getDimension(), "Treetap.ogg");
 			region.setBlock(coords, BlockID.rubberTreeLogLatex, block.data - 4);
 			Entity.setCarriedItem(player, item.id, ++item.data < 17 ? item.count : 0, item.data);
 			const entity = region.dropAtBlock(

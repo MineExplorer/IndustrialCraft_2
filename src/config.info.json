@@ -12,13 +12,7 @@
                 "ru": "Звуки мода"
             }
         },
-         "machine_sounds": {
-            "name": {
-                "en": "Machine sounds",
-                "ru": "Звуки механизмов"
-            }
-        },
-         "voltage_enabled": {
+        "voltage_enabled": {
             "name": {
                 "en": "Voltage enabled",
                 "ru": "Напряжение"
@@ -28,13 +22,13 @@
                 "ru": "Если включено, машины могут взорваться от перенапряжения"
             }
         },
-         "hard_recipes": {
+        "hard_recipes": {
             "name": {
                 "en": "Hard recipes",
                 "ru": "Усложнённые рецепты"
             }
         },
-         "reactor_explosion_max_power": {
+        "reactor_explosion_max_power": {
             "name": {
                 "en": "Reactor explosion max power",
                 "ru": "Максимальная мощность взрыва реактора"

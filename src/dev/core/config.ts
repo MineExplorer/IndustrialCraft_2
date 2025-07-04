@@ -1,6 +1,5 @@
 namespace IC2Config {
 	export let soundEnabled = getBool("sound_enabled");
-	export let machineSoundEnabled = getBool("machine_sounds");
 	export let voltageEnabled = getBool("voltage_enabled");
 	export let hardRecipes = getBool("hard_recipes");
 

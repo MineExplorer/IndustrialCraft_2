@@ -94,7 +94,7 @@ namespace Machine {
 		}
 
 		clientLoad(): void {
-			if (IC2Config.machineSoundEnabled) {
+			if (IC2Config.soundEnabled) {
 				this.audioSource = new AudioSourceClient({
 					x: this.x + .5,
 					y: this.y + .5,
@@ -136,7 +136,7 @@ namespace Machine {
 
 		@ClientSide
 		startPlaySound(): void {
-			if (!IC2Config.machineSoundEnabled || !this.audioSource || this.remove) return;
+			if (!IC2Config.soundEnabled || !this.audioSource || this.remove) return;
 
 			if (this.getFinishingSound()) {
 				this.audioSource.stop(this.getFinishingSound());
@@ -162,7 +162,7 @@ namespace Machine {
 
 		@ClientSide
 		stopPlaySound(): void {
-			if (!IC2Config.machineSoundEnabled || !this.audioSource || this.remove) return;
+			if (!IC2Config.soundEnabled || !this.audioSource || this.remove) return;
 			
 			let wasPlayingSound = false;
 			if (this.getStartingSound()) {

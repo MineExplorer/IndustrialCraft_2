@@ -1,7 +1,6 @@
 {
   "enabled": true,
   "sound_enabled": true,
-  "machine_sounds": true,
   "voltage_enabled": true,
   "hard_recipes": false,
   "reactor_explosion_max_power": 45,

@@ -204,9 +204,6 @@ var SoundLib;
     }
     SoundLib.init = init;
     function playSoundAt(x, y, z, dimension, soundName, volume, pitch, radius) {
-        if (volume === void 0) { volume = 1; }
-        if (pitch === void 0) { pitch = 1; }
-        if (radius === void 0) { radius = 16; }
         if (typeof x == "object") {
             var coords = x;
             return playSoundAt(coords.x, coords.y, coords.z, y, z, dimension, soundName, volume);
@@ -214,13 +211,14 @@ var SoundLib;
         var sound = SoundLib.Registry.getSound(soundName);
         if (!sound)
             return;
+        radius !== null && radius !== void 0 ? radius : (radius = 16);
         sendPacketInRadius({ x: x, y: y, z: z }, dimension, radius, "SoundManager.play_sound", {
             x: x,
             y: y,
             z: z,
             name: sound.name,
-            volume: volume,
-            pitch: pitch,
+            volume: volume !== null && volume !== void 0 ? volume : 1,
+            pitch: pitch !== null && pitch !== void 0 ? pitch : 1,
             radius: radius
         });
     }
@@ -265,9 +263,6 @@ var SoundLib;
             finally { if (e_2) throw e_2.error; }
         }
     }
-    //Callback.addCallback("LocalTick", function() {
-    //	SoundManager.tick();
-    //});
     Callback.addCallback("MinecraftActivityStopped", function () {
         _client === null || _client === void 0 ? void 0 : _client.stopAll();
     });

@@ -100,13 +100,13 @@
 		{
 			"id": "ip",
 			"description": "IP:",
-			"default": "192.168.31.74",
+			"default": "127.0.0.1",
 			"type": "promptString"
 		},
 		{
 			"id": "port",
 			"description": "Port:",
-			"default": "5037",
+			"default": "5555",
 			"type": "promptString"
 		}
 	]

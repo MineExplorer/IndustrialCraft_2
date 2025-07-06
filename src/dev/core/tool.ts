@@ -3,15 +3,24 @@ interface IWrech {
 	useItem(item: ItemStack, damage: number, player: number): void;
 }
 
-namespace ICTool {
-	type OnHandSoundData = {
-		idleSound: string;
-		stopSound?: string;
-	};
+interface IHandEquippedFuncs {
+	/**
+	 * Called every tick when item is in hand
+	 * @param item item that being equipped
+	 */
+	onHandEquippedLocal?(item: ItemInstance): void;
+	/**
+	 * Called when carried item slot changed
+	 * @param item item that being uneqipped
+	 */
+	onHandUnequippedLocal?(item: ItemInstance): void;
+}
 
+namespace ICTool {
 	const wrenchData: {[key: number]: IWrech} = {};
-	const onHandSounds: {[key: number]: OnHandSoundData} = {};
+	const handEquippedFuncs: {[key: number]: IHandEquippedFuncs} = {};
 	let lastCarriedItem: ItemInstance = new ItemStack();
+	let lastSelectedSlot: number = 0;
 	let playerAudioSource: AudioSourceEntityClient;
 
 	export function registerWrench(id: number, properties: IWrech) {
@@ -115,11 +124,17 @@ namespace ICTool {
 		}
 	}
 
-	export function setOnHandSound(itemID: number, idleSound: string, stopSound?: string) {
-		onHandSounds[itemID] = {idleSound: idleSound, stopSound: stopSound};
+	export function setOnHandEquipped(itemID: number, funcs: IHandEquippedFuncs) {
+		handEquippedFuncs[itemID] = funcs;
 	}
 
-	export function startPlayerSound(soundName: string, looping: boolean, volume: number = 1) {
+	/**
+	 * Client-side only
+	 * @param soundName sound name 
+	 * @param looping true if sound is looped, false otherwise
+	 * @param volume value from 0 to 1
+	 */
+	export function startPlaySound(soundName: string, looping: boolean, volume: number = 1): void {
 		if (!IC2Config.soundEnabled) return;
 
 		const stream = playerAudioSource.getStream(soundName);
@@ -132,44 +147,42 @@ namespace ICTool {
 		}
 	}
 
-	export function stopPlayerSound(soundName: string) {
-		playerAudioSource?.stop(soundName);
+	export function stopPlaySound(soundName: string): boolean {
+		if (!IC2Config.soundEnabled) return;
+
+		const wasPlaying = playerAudioSource.isPlaying(soundName);
+		playerAudioSource.stop(soundName);
+		return wasPlaying;
 	}
 
 	Callback.addCallback("LocalLevelLoaded", function() {
 		if (IC2Config.soundEnabled) {
 			playerAudioSource = new AudioSourceEntityClient(Player.get());
+			Updatable.addLocalUpdatable(playerAudioSource);
 		}
 	});
 
 	Callback.addCallback("LocalLevelLeft", function() {
 		playerAudioSource?.unload();
+		lastCarriedItem = new ItemStack();
+		lastSelectedSlot = 0;
 	});
 
 	Callback.addCallback("LocalTick", function() {
-		if (!IC2Config.soundEnabled) return;
-
-		playerAudioSource.update();
-
 		const item = Player.getCarriedItem();
-		if (item.id != lastCarriedItem.id) {
-			const soundData = onHandSounds[lastCarriedItem.id];
-			if (soundData) {
-				const wasPlaying = playerAudioSource.isPlaying(soundData.idleSound);
-				playerAudioSource.stop(soundData.idleSound);
-				if (wasPlaying && soundData.stopSound) {
-					playerAudioSource.play(soundData.stopSound);
-				}
-			}
-			const nextSoundData = onHandSounds[item.id];
-			if (nextSoundData) {
-				const tool = ToolAPI.getToolData(item.id) as ElectricTool;
-				if (!tool || !tool.energyPerUse || ChargeItemRegistry.getEnergyStored(item) >= tool.energyPerUse) {
-					playerAudioSource.playSingle(nextSoundData.idleSound, true);
-				}
+		const selectedSlot = Player.getSelectedSlotId();
+		if (item.id != lastCarriedItem.id || selectedSlot != lastSelectedSlot) {
+			const handEquippedData = handEquippedFuncs[lastCarriedItem.id];
+			if (handEquippedData && 'onHandUnequippedLocal' in handEquippedData) {
+				handEquippedData.onHandUnequippedLocal(lastCarriedItem);
 			}
 		}
+		const handEquippedData = handEquippedFuncs[item.id];
+		if (handEquippedData && 'onHandEquippedLocal' in handEquippedData) {
+			handEquippedData.onHandEquippedLocal(item);
+		}
 		lastCarriedItem = item;
+		lastSelectedSlot = selectedSlot;
 	});
 }
 

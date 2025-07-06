@@ -84,6 +84,7 @@ var SoundManagerClient = /** @class */ (function () {
     function SoundManagerClient(maxStreamsCount, sounds) {
         this.settingsFolder = IS_OLD ? "Horizon" : "com.mojang";
         this.settingsPath = "/storage/emulated/0/games/".concat(this.settingsFolder, "/minecraftpe/options.txt");
+        this.isDebugMode = Game.isDeveloperMode;
         this.maxStreams = 0;
         this.soundPool = new android.media.SoundPool.Builder().setMaxStreams(maxStreamsCount).build();
         this.maxStreams = maxStreamsCount;
@@ -98,6 +99,7 @@ var SoundManagerClient = /** @class */ (function () {
     };
     SoundManagerClient.prototype.loadSounds = function (sounds) {
         var e_1, _a;
+        var startTime = Debug.sysTime();
         try {
             for (var sounds_1 = __values(sounds), sounds_1_1 = sounds_1.next(); !sounds_1_1.done; sounds_1_1 = sounds_1.next()) {
                 var sound = sounds_1_1.value;
@@ -111,6 +113,8 @@ var SoundManagerClient = /** @class */ (function () {
             }
             finally { if (e_1) throw e_1.error; }
         }
+        var loadTime = Debug.sysTime() - startTime;
+        Logger.Log("Loaded sounds in ".concat(loadTime, " ms"), "SoundLib");
     };
     /**
      * Starts playing sound and returns its streamId or 0 if failes to play sound.
@@ -132,11 +136,11 @@ var SoundManagerClient = /** @class */ (function () {
         var streamId = this.soundPool.play(sound.internalId, volume, volume, 0, looping ? -1 : 0, pitch);
         if (streamId != 0) {
             this.soundPool.setPriority(streamId, 1);
-            if (Game.isDeveloperMode) {
+            if (this.isDebugMode) {
                 Debug.m("Playing sound ".concat(sound.name, " - id: ").concat(streamId, ", volume: ").concat(volume, " (took ").concat(Debug.sysTime() - startTime, " ms)"));
             }
         }
-        else if (Game.isDeveloperMode) {
+        else if (this.isDebugMode) {
             Debug.m("Failed to play sound ".concat(sound.name, ", volume: ").concat(volume));
         }
         return streamId;
@@ -418,7 +422,7 @@ var AudioSourceClient = /** @class */ (function () {
      * Plays sound from this source.
      * If the sound cannot be played and its looped it creates SoundStream object in pending state,
      * otherwise it just skipped.
-     * @param sound sound name or object
+     * @param sound sound name
      * @param looping true if sound is looped, false otherwise
      * @param volume value from 0 to 1
      * @param radius the radius where the sound is heard
@@ -443,7 +447,7 @@ var AudioSourceClient = /** @class */ (function () {
     };
     /**
      * Start playing sound from this source if it's not started.
-     * @param sound sound name or object
+     * @param sound sound name
      * @param looping true if sound is looped, false otherwise
      * @param volume value from 0 to 1
      * @param radius the radius where the sound is heard

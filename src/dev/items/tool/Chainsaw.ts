@@ -1,7 +1,7 @@
 /// <reference path="ElectricTool.ts" />
 
-class ElectricChainsaw
-extends ElectricTool {
+class ElectricChainsaw extends ElectricTool
+implements IHandEquippedFuncs {
 	damage: number = 4;
 	extraDamage: number;
 
@@ -10,7 +10,7 @@ extends ElectricTool {
 		toolData.blockMaterials = ["wood", "wool", "fibre", "plant"];
 		this.setToolParams(toolData);
 		this.extraDamage = toolData.damage;
-		//ICTool.setOnHandSound(this.id, "ChainsawIdle.ogg", "ChainsawStop.ogg");
+		ICTool.setOnHandEquipped(this.id, this);
 	}
 
 	modifyEnchants(enchantData: ToolAPI.EnchantData, item: ItemInstance, coords?: Callback.ItemUseCoordinates, block?: Tile): void {
@@ -38,5 +38,27 @@ extends ElectricTool {
 			this.toolMaterial.damage = 0;
 		}
 		return true;
+	}
+
+	onHandEquippedLocal(item: ItemInstance) {
+		if (this.canEmitSound(item)) {
+			ICTool.startPlaySound("ChainsawIdle.ogg", true);
+		} else {
+			this.stopPlaySound();
+		}
+	}
+
+	onHandUnequippedLocal() {
+		this.stopPlaySound();
+	}
+
+	canEmitSound(item: ItemInstance): boolean {
+		return ChargeItemRegistry.getEnergyStored(item) >= this.energyPerUse;
+	}
+
+	stopPlaySound() {
+		if (ICTool.stopPlaySound("ChainsawIdle.ogg")) {
+			ICTool.startPlaySound("ChainsawStop.ogg", false);
+		}
 	}
 }

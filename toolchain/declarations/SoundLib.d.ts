@@ -25,6 +25,7 @@ declare class SoundManagerClient {
     soundVolume: number;
     musicVolume: number;
     soundPool: android.media.SoundPool;
+    isDebugMode: boolean;
     maxStreams: number;
     constructor(maxStreamsCount: number, sounds: Sound[]);
     readSettings(): void;
@@ -139,7 +140,7 @@ declare class AudioSourceClient implements Updatable {
      * Plays sound from this source.
      * If the sound cannot be played and its looped it creates SoundStream object in pending state,
      * otherwise it just skipped.
-     * @param sound sound name or object
+     * @param sound sound name
      * @param looping true if sound is looped, false otherwise
      * @param volume value from 0 to 1
      * @param radius the radius where the sound is heard
@@ -148,7 +149,7 @@ declare class AudioSourceClient implements Updatable {
     play(soundName: string, looping?: boolean, volume?: number, radius?: number, relativePosition?: Vector): Nullable<SoundStream>;
     /**
      * Start playing sound from this source if it's not started.
-     * @param sound sound name or object
+     * @param sound sound name
      * @param looping true if sound is looped, false otherwise
      * @param volume value from 0 to 1
      * @param radius the radius where the sound is heard

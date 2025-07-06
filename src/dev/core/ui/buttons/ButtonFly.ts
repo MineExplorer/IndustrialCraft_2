@@ -45,9 +45,9 @@ namespace ToolHUD {
 				}
 			}
 			if (playSound) {
-				ICTool.startPlayerSound(this.jetpackSound, true, hoverMode ? 0.8 : 1)
+				ICTool.startPlaySound(this.jetpackSound, true, hoverMode ? 0.8 : 1)
 			} else {
-				ICTool.stopPlayerSound(this.jetpackSound);
+				ICTool.stopPlaySound(this.jetpackSound);
 			}
 		}
 	}

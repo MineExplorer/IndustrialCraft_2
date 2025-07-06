@@ -1,4 +1,3 @@
-declare const IS_OLD: boolean;
 declare namespace SoundLib {
     namespace Registry {
         let resourcePath: string;
@@ -17,21 +16,23 @@ declare namespace SoundLib {
     }
 }
 /**
- * For wrapping SoundPool object
+ * Class for wrapping SoundPool object and provide client-side methods to play sounds
  */
 declare class SoundManagerClient {
     settingsFolder: string;
     settingsPath: string;
+    globalVolume: number;
     soundVolume: number;
     musicVolume: number;
     soundPool: android.media.SoundPool;
-    isDebugMode: boolean;
     maxStreams: number;
-    constructor(maxStreamsCount: number, sounds: Sound[]);
+    constructor(maxStreamsCount: number, globalVolume: number, sounds: Sound[]);
     readSettings(): void;
+    getSoundVolume(): number;
+    getMusicVolume(): number;
     loadSounds(sounds: Sound[]): void;
     /**
-     * Starts playing sound and returns its streamId or 0 if failes to play sound.
+     * Starts playing ssoundVolumeound and returns its streamId or 0 if failes to play sound.
      * @param sound sound name or object
      * @param looping true if sound is looped, false otherwise
      * @param volume value from 0 to 1
@@ -51,25 +52,57 @@ declare class SoundManagerClient {
     release(): void;
 }
 declare namespace SoundLib {
-    type SoundPacketData = {
-        x: number;
-        y: number;
-        z: number;
-        name: string;
-        volume: number;
-        pitch: number;
-        radius: number;
-    };
-    function getClient(): SoundManagerClient;
     /**
-     * Initializes client side code
-     * @param maxStreamsCount max count of concurrently playing streams
+     * @returns SoundManagerClient if it was initialized or null
      */
-    function init(maxStreamsCount: number): void;
-    function playSoundAt(coords: Vector, dimension: number, soundName: string, volume?: number, pitch?: number, radius?: number): number;
-    function playSoundAt(x: number, y: number, z: number, dimension: number, soundName: string, volume?: number, pitch?: number, radius?: number): number;
-    function playSoundAtEntity(entity: number, soundName: string, volume?: number, pitch?: number, radius?: number): number;
-    function playSoundAtBlock(coords: Vector, dimension: number, soundName: string, volume?: number, radius?: number): number;
+    function getClient(): Nullable<SoundManagerClient>;
+    /**
+     * Initializes client side code if the current instance of game has a client
+     * @param maxStreamsCount max count of concurrently playing streams
+     * @param globalVolume volume modifier for all sounds
+     */
+    function init(maxStreamsCount: number, globalVolume?: number): void;
+    /**
+     * Plays sound at coords
+     * @param coords coords
+     * @param dimension dimension
+     * @param soundName sound name
+     * @param volume value from 0 to 1
+     * @param pitch value from 0 to 1
+     * @param radius radius in blocks, 16 by default
+     */
+    function playSoundAt(coords: Vector, dimension: number, soundName: string, volume?: number, pitch?: number, radius?: number): void;
+    /**
+     * Plays sound at coords
+     * @param x x coord
+     * @param y y coord
+     * @param z z coord
+     * @param dimension dimension
+     * @param soundName sound name
+     * @param radius radius in blocks, 16 by default
+     * @param volume value from 0 to 1
+     * @param pitch value from 0 to 1
+     */
+    function playSoundAt(x: number, y: number, z: number, dimension: number, soundName: string, radius?: number, volume?: number, pitch?: number): void;
+    /**
+     * Plays sound at entity coords and dimension
+     * @param entity entity id
+     * @param soundName sound name
+     * @param radius radius in blocks, 16 by default
+     * @param volume value from 0 to 1
+     * @param pitch value from 0 to 1
+     */
+    function playSoundAtEntity(entity: number, soundName: string, radius?: number, volume?: number, pitch?: number): void;
+    /**
+     * Plays sound at center of the block
+     * @param coords block coords
+     * @param dimension dimension
+     * @param soundName sound name
+     * @param radius radius in blocks, 16 by default
+     * @param volume value from 0 to 1
+     * @param pitch value from 0 to 1
+     */
+    function playSoundAtBlock(coords: Vector, dimension: number, soundName: string, radius?: number, volume?: number, pitch?: number): void;
 }
 declare class Sound {
     name: string;

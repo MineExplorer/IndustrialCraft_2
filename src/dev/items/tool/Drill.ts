@@ -55,11 +55,9 @@ class ToolDrill extends ElectricTool {
 		if (IC2Config.soundEnabled && ChargeItemRegistry.getEnergyStored(item) >= this.getEnergyPerUse(item)) {
 			const hardness = Block.getDestroyTime(block.id);
 			if (hardness > 1 || hardness < 0) {
-				//SoundLib.startPlaySound(SourceType.ENTITY, player, "DrillHard.ogg");
 				SoundLib.playSoundAtBlock(coords, Entity.getDimension(player), "DrillHard.ogg");
 			}
 			else if (hardness > 0) {
-				//SoundLib.startPlaySound(SourceType.ENTITY, player, "DrillSoft.ogg");
 				SoundLib.playSoundAtBlock(coords, Entity.getDimension(player), "DrillSoft.ogg");
 			}
 		}

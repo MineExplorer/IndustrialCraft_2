@@ -42,6 +42,7 @@ namespace Machine {
 		}
 
 		onInit(): void {
+			super.onInit();
 			this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
 		}
 
@@ -67,6 +68,7 @@ namespace Machine {
 			return 1;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		setSolarElement(container: ItemContainer, window: any, content: any, data: string): void {
 			if (content) {

@@ -11,11 +11,15 @@ class LaserShot {
 	dropChance: number;
 	hitBlock: boolean;
 
-	constructor(player: number, pos: Vector, vel: Vector, params: {power: number, range?: number, blockBreaks?: number, smelt?: boolean, dropChance?: number}) {
+	constructor(player: number, pos: Vector, vel: Vector3, params: {power: number, range?: number, blockBreaks?: number, smelt?: boolean, dropChance?: number}) {
 		const region = WorldRegion.getForActor(player);
 		const entity = region.spawnEntity(pos.x + vel.x, pos.y + vel.y, pos.z + vel.z, EntityType.ARROW);
-		Entity.setSkin(entity, "models/laser.png");
+		
 		Entity.setVelocity(entity, vel.x, vel.y, vel.z);
+		const pitch = Math.asin(-vel.y);
+		const yaw = Math.atan2(vel.x, vel.z);
+		Entity.setLookAngle(entity, yaw, pitch);
+		
 		this.player = player;
 		this.entity = entity;
 		this.region = region;
@@ -58,7 +62,7 @@ class LaserShot {
 	}
 
 	checkBlock(x: number, y: number, z: number): void {
-		const block = World.getBlock(x, y, z);
+		const block = this.region.getBlock(x, y, z);
 		if (ToolAPI.getBlockMaterialName(block.id) == "unbreaking") {
 			this.power = 0;
 		}
@@ -74,7 +78,7 @@ class LaserShot {
 		if (target.coords) {
 			Game.prevent();
 			const c = target.coords;
-			const block = World.getBlock(c.x, c.y, c.z);
+			const block = this.region.getBlock(c.x, c.y, c.z);
 			if (block.id != 7 && block.id != 120) {
 				this.destroyBlock(c.x, c.y, c.z, block);
 				this.hitBlock = true;
@@ -85,7 +89,9 @@ class LaserShot {
 			}
 		}
 		else {
-			if (target.entity == this.player) return;
+			if (target.entity == this.player) {
+				return;
+			}
 			let damage = this.power;
 			if (damage > 0) {
 				if (this.smelt) damage *= 2;

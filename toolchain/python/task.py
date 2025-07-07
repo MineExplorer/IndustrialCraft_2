@@ -218,7 +218,7 @@ def task_build_package():
 def task_launch_horizon():
 	from subprocess import call
 	call([make_config.get_adb(), "shell", "touch", "/storage/emulated/0/games/horizon/.flag_auto_launch"], stdout=devnull, stderr=devnull)
-	result = call([make_config.get_adb(), "shell", "monkey", "-p", "com.zheka.horizon", "-c", "android.intent.category.LAUNCHER", "1"], stdout=devnull, stderr=devnull)
+	result = call([make_config.get_adb(), "shell", "monkey", "-p", "com.zheka.horizon64", "-c", "android.intent.category.LAUNCHER", "1"], stdout=devnull, stderr=devnull)
 	if result != 0:
 		print("\033[91mno devices/emulators found, try to use task \"Connect to ADB\"\033[0m")
 	return 0
@@ -226,7 +226,7 @@ def task_launch_horizon():
 @task("stopHorizon")
 def stop_horizon():
 	from subprocess import call
-	result = call([make_config.get_adb(), "shell", "am", "force-stop", "com.zheka.horizon"], stdout=devnull, stderr=devnull)
+	result = call([make_config.get_adb(), "shell", "am", "force-stop", "com.zheka.horizon64"], stdout=devnull, stderr=devnull)
 	if result != 0:
 		print("\033[91mno devices/emulators found, try to use task \"Connect to ADB\"\033[0m")
 	return result
@@ -235,11 +235,16 @@ def stop_horizon():
 def task_load_docs():
 	import urllib.request
 	print("downloading...")
-	response = urllib.request.urlopen("https://docs.mineprogramming.org/core-engine.d.ts")
-	content = response.read().decode('utf-8')
+	files = [
+		("android.d.ts", "https://raw.githubusercontent.com/MineExplorer/innercore-docs/master/headers/android.d.ts"), 
+		("core-engine.d.ts", "https://nernar.github.io/declarations/core-engine.d.ts")
+	]
+	for file in files:
+		response = urllib.request.urlopen(file[1])
+		content = response.read().decode('utf-8')
 
-	with open(make_config.get_path("toolchain/declarations/core-engine.d.ts"), 'w') as docs:
-		docs.write(content)
+		with open(make_config.get_path("toolchain/declarations/" + file[0]), 'w', encoding='utf-8') as docs:
+			docs.write(content)
 
 	print("complete!")
 	return 0
@@ -251,7 +256,7 @@ def task_connect_to_adb():
 
 	ip = None
 	port = None
-	pattern = re.compile(r"(\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}):(\d{5})")
+	pattern = re.compile(r"(\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}):(\d{1,5})")
 	for arg in sys.argv:
 		match = pattern.search(arg)
 		if match:

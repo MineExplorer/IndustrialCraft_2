@@ -31,8 +31,8 @@ namespace Machine {
 			if (this.data.isEnabled && this.data.energy >= 400) {
 				this.data.energy--;
 				if (World.getThreadTime()%32 == 0) {
-					let entities = this.region.listEntitiesInAABB(this.x - 4, this.y - 4, this.z - 4, this.x + 5, this.y + 5, this.z + 5);
-					let damage = Math.floor(this.data.energy / 400);
+					const entities = this.region.listEntitiesInAABB(this.x - 4, this.y - 4, this.z - 4, this.x + 5, this.y + 5, this.z + 5);
+					const damage = Math.floor(this.data.energy / 400);
 					for (let ent of entities) {
 						if (!EntityHelper.canTakeDamage(ent, DamageSource.electricity)) continue;
 						if (damage >= 24) {

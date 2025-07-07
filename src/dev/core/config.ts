@@ -1,6 +1,7 @@
 namespace IC2Config {
+	const defaultConfig = FileTools.ReadText(__dir__ + "default.config.json");
+	__config__.checkAndRestore(defaultConfig);
 	export let soundEnabled = getBool("sound_enabled");
-	export let machineSoundEnabled = getBool("machine_sounds");
 	export let voltageEnabled = getBool("voltage_enabled");
 	export let hardRecipes = getBool("hard_recipes");
 
@@ -16,14 +17,6 @@ namespace IC2Config {
 		return __config__.getFloat(name);
 	}
 }
-
-let isLevelDisplayed = false;
-Callback.addCallback("LevelDisplayed", function() {
-	isLevelDisplayed = true;
-});
-Callback.addCallback("LevelLeft", function() {
-	isLevelDisplayed = false;
-});
 
 // show tps
 let lasttime = -1;

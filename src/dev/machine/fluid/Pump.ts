@@ -86,7 +86,7 @@ namespace Machine {
 		}
 
 		useUpgrades(): void {
-			let upgrades = UpgradeAPI.useUpgrades(this);
+			const upgrades = UpgradeAPI.useUpgrades(this);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.energyDemand = upgrades.getEnergyDemand(this.defaultEnergyDemand);
@@ -99,8 +99,8 @@ namespace Machine {
 
 			this.extractLiquid();
 
-			let slot1 = this.container.getSlot("slotLiquid1");
-			let slot2 = this.container.getSlot("slotLiquid2");
+			const slot1 = this.container.getSlot("slotLiquid1");
+			const slot2 = this.container.getSlot("slotLiquid2");
 			this.liquidTank.addLiquidToItem(slot1, slot2);
 
 			this.dischargeSlot("slotEnergy");
@@ -123,11 +123,10 @@ namespace Machine {
 					this.data.energy -= this.energyDemand;
 					this.data.progress += 1 / this.processTime;
 					if (+this.data.progress.toFixed(3) >= 1) {
-						let coords = this.data.coords;
-						let block = this.region.getBlock(coords);
+						const block = this.region.getBlock(this.data.coords);
 						liquid = this.getLiquidType(liquid, block);
 						if (liquid && block.data == 0) {
-							this.region.setBlock(coords, 0, 0);
+							this.region.setBlock(this.data.coords, 0, 0);
 							this.liquidTank.addLiquid(liquid, 1000);
 						}
 						this.data.progress = 0;
@@ -141,8 +140,8 @@ namespace Machine {
 		}
 
 		recursiveSearch(liquid: string, x: number, y: number, z: number, checked: {}): Vector {
-			let block = this.region.getBlock(x, y, z);
-			let coordsKey = x+':'+y+':'+z;
+			const block = this.region.getBlock(x, y, z);
+			const coordsKey = x+':'+y+':'+z;
 			if (!checked[coordsKey] && Math.abs(this.x - x) <= 64 && Math.abs(this.z - z) <= 64 && this.getLiquidType(liquid, block)) {
 				if (block.data == 0) return new Vector3(x, y, z);
 				checked[coordsKey] = true;

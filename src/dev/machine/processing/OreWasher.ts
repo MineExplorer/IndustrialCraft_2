@@ -84,10 +84,10 @@ namespace Machine {
 
 		checkResult(result: number[]) {
 			for (let i = 1; i < 4; i++) {
-				let id = result[(i-1) * 2];
+				const id = result[(i-1) * 2];
 				if (!id) return true;
-				let count = result[(i-1) * 2 + 1];
-				let resultSlot = this.container.getSlot("slotResult"+i);
+				const count = result[(i-1) * 2 + 1];
+				const resultSlot = this.container.getSlot("slotResult"+i);
 				if (resultSlot.id != 0 && (resultSlot.id != id || resultSlot.count + count > 64)) {
 					return false;
 				}
@@ -98,10 +98,10 @@ namespace Machine {
 		putResult(result: number[]) {
 			this.liquidTank.getLiquid(1000);
 			for (let i = 1; i < 4; i++) {
-				let id = result[(i-1) * 2];
+				const id = result[(i-1) * 2];
 				if (!id) break;
-				let count = result[(i-1) * 2 + 1];
-				let resultSlot = this.container.getSlot("slotResult"+i);
+				const count = result[(i-1) * 2 + 1];
+				const resultSlot = this.container.getSlot("slotResult"+i);
 				resultSlot.setSlot(id, resultSlot.count + count, 0);
 			}
 		}
@@ -114,20 +114,20 @@ namespace Machine {
 			this.useUpgrades();
 			StorageInterface.checkHoppers(this);
 
-			let slot1 = this.container.getSlot("slotLiquid1");
-			let slot2 = this.container.getSlot("slotLiquid2");
+			const slot1 = this.container.getSlot("slotLiquid1");
+			const slot2 = this.container.getSlot("slotLiquid2");
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			let newActive = false;
-			let sourceSlot = this.container.getSlot("slotSource");
-			let result = this.getRecipeResult(sourceSlot.id);
+			const sourceSlot = this.container.getSlot("slotSource");
+			const result = this.getRecipeResult(sourceSlot.id);
 			if (result && this.checkResult(result) && this.liquidTank.getAmount("water") >= 1000) {
 				if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;
-					this.data.progress += 1 / this.processTime;
+					this.updateProgress();
 					newActive = true;
 				}
-				if (+this.data.progress.toFixed(3) >= 1) {
+				if (this.isCompletedProgress()) {
 					this.decreaseSlot(sourceSlot, 1);
 					this.putResult(result);
 					this.data.progress = 0;
@@ -155,7 +155,6 @@ namespace Machine {
 			}
 			return super.onItemUse(coords, item, player);
 		}
-
 	}
 
 	MachineRegistry.registerPrototype(BlockID.oreWasher, new OreWasher());

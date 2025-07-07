@@ -1,5 +1,4 @@
-class ItemElectric
-extends ItemCommon
+class ItemElectric extends ItemCommon
 implements IElectricItem, ItemBehavior {
 	energy: string = "Eu";
 	maxCharge: number;

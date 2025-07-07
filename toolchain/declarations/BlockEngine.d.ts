@@ -378,8 +378,7 @@ declare class WorldRegion {
     /**
      * @returns grass color on coords
      */
-    getGrassColor(coords: Vector): number;
-    getGrassColor(x: number, y: number, z: number): number;
+    getGrassColor(x: number, z: number): number;
     /**
      * Creates dropped item and returns entity id
      * @param coords coords of the place where item will be dropped
@@ -599,6 +598,14 @@ declare namespace EntityCustomData {
     function putField(entity: number, key: string, value: any): void;
 }
 /**
+ * API to store temporary data about the block.
+ */
+declare namespace VirtualBlockData {
+    function getBlockEntry(dimension: number, x: number, y: number, z: number): any;
+    function addBlockEntry(entry: object, dimension: number, x: number, y: number, z: number): void;
+    function removeBlockEntry(dimension: number, x: number, y: number, z: number): void;
+}
+/**
  * Module for creating block models.
  */
 declare namespace BlockModeler {
@@ -791,6 +798,15 @@ interface BlockBehavior extends BlockItemBehavior {
      * @param player player uid
      */
     onClick?(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void;
+    /**
+     * Occurs when redstone signal on block was updated. Requires Block.setupAsRedstoneReceiver to be called on the block id.
+     * @param coords coords of the block
+     * @param region BlockSource object
+     */
+    onRedstoneUpdate?(coords: Vector, params: {
+        signal: number;
+        onLoad: boolean;
+    }, region: BlockSource): void;
 }
 /**
  * Base class for block
@@ -816,18 +832,24 @@ declare class BlockBase implements BlockBehavior {
     blockMaterial: string;
     /** Block mining level */
     miningLevel: number;
+    /** Redstone properties */
+    redstone: {
+        receiver: boolean;
+        connectToWires: boolean;
+    };
     constructor(stringID: string, blockType?: BlockType | string);
     /**
      * Adds variation for the block.
      * @param name item name
      * @param texture block texture
-     * @param inCreative true if should be added to creative inventory
+     * @param inCreative true if should be added to creative inventory, default is false
      */
-    addVariation(name: string, texture: [string, number][], inCreative?: boolean): void;
+    addVariation(name: string, texture: [string, number] | [string, number][], inCreative?: boolean): void;
     /**
      * Registers block in game.
      */
     createBlock(): void;
+    setupAsRedstoneReceiver(connectToWires: boolean): void;
     getDrop(coords: Vector, block: Tile, level: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[];
     onBreak(coords: Vector, block: Tile, region: BlockSource): void;
     /**
@@ -850,6 +872,13 @@ declare class BlockBase implements BlockBehavior {
      * @param data sets shape for one block variation if specified and for all variations otherwise
      */
     setShape(x1: number, y1: number, z1: number, x2: number, y2: number, z2: number, data?: number): void;
+    /**
+     * Sets block box shape
+     * @param pos1 block lower corner position, in voxels (1/16 of the block)
+     * @param pos2 block upper conner position, in voxels (1/16 of the block)
+     * @param data block data
+     */
+    setShape(pos1: Vector, pos2: Vector, data?: number): void;
     /**
      * Sets the block type of another block, which allows to inherit some of its properties.
      * @param baseBlock id of the block to inherit type
@@ -1805,14 +1834,15 @@ declare abstract class TileEntityBase implements TileEntity {
     __containerEvents: {
         [key: string]: Side;
     };
-    x: number;
-    y: number;
-    z: number;
+    readonly x: number;
+    readonly y: number;
+    readonly z: number;
     readonly dimension: number;
     readonly blockID: number;
     readonly useNetworkItemContainer: boolean;
     remove: boolean;
     isLoaded: boolean;
+    noupdate: boolean;
     __initialized: boolean;
     data: {
         [key: string]: any;
@@ -1833,18 +1863,21 @@ declare abstract class TileEntityBase implements TileEntity {
         [packetName: string]: (packetData: any, packetExtra: any, connectedClient: NetworkClient) => void;
     };
     containerEvents: {
-        [eventName: string]: (container: ItemContainer, window: UI.IWindow | null, windowContent: UI.WindowContent | null, eventData: any) => void;
+        [eventName: string]: (packetData: any, connectedClient: NetworkClient) => void;
     };
     container: ItemContainer;
     liquidStorage: LiquidRegistry.Storage;
     blockSource: BlockSource;
-    networkData: SyncedNetworkData;
-    networkEntity: NetworkEntity;
+    readonly networkData: SyncedNetworkData;
+    readonly networkEntity: NetworkEntity;
+    readonly networkEntityType: NetworkEntityType;
+    readonly networkEntityTypeName: string;
     /**
      * Interface for BlockSource of the TileEntity. Provides more functionality.
      */
     region: WorldRegion;
     private _runInit;
+    update: () => void;
     created(): void;
     /** @deprecated */
     init(): void;
@@ -1854,6 +1887,8 @@ declare abstract class TileEntityBase implements TileEntity {
     unload(): void;
     /** @deprecated */
     tick(): void;
+    /** @deprecated */
+    click(): void;
     /**
      * Called when a TileEntity is created
      */
@@ -1889,6 +1924,8 @@ declare abstract class TileEntityBase implements TileEntity {
     onCheckerTick(isInitialized: boolean, isLoaded: boolean, wasLoaded: boolean): void;
     getScreenName(player: number, coords: Callback.ItemUseCoordinates): string;
     getScreenByName(screenName: string, container: ItemContainer): UI.IWindow;
+    /** @deprecated */
+    getGuiScreen(): UI.IWindow;
     /**
      * Called when player uses some item on a TileEntity. Replaces "click" function.
      * @returns true if should prevent opening UI.

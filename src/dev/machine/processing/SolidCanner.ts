@@ -96,7 +96,7 @@ namespace Machine {
 				if (name == "slotSource") return !!this.getRecipeResult(id);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotCan") {
-					let recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+					const recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 					for (let i in recipes) {
 						if (recipes[i].can == id) return true;
 					}
@@ -115,21 +115,21 @@ namespace Machine {
 			this.useUpgrades();
 			StorageInterface.checkHoppers(this);
 
-			let sourceSlot = this.container.getSlot("slotSource");
-			let resultSlot = this.container.getSlot("slotResult");
-			let canSlot = this.container.getSlot("slotCan");
+			const sourceSlot = this.container.getSlot("slotSource");
+			const resultSlot = this.container.getSlot("slotResult");
+			const canSlot = this.container.getSlot("slotCan");
 
 			let newActive = false;
-			let recipe = this.getRecipeResult(sourceSlot.id);
+			const recipe = this.getRecipeResult(sourceSlot.id);
 			if (recipe) {
-				let result = recipe.result;
+				const result = recipe.result;
 				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
-						this.data.progress += 1 / this.processTime;
+						this.updateProgress();
 						newActive = true;
 					}
-					if (+this.data.progress.toFixed(3) >= 1) {
+					if (this.isCompletedProgress()) {
 						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - 1, 0);
 						canSlot.setSlot(canSlot.id, canSlot.count - result.count, 0);
 						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);
@@ -159,7 +159,7 @@ namespace Machine {
 				return MachineRecipeRegistry.hasRecipeFor("solidCanner", item.id);
 			}},
 			"slotCan": {input: true, isValid: (item: ItemInstance) => {
-				let recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+				const recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 				for (let i in recipes) {
 					if (recipes[i].can == item.id) return true;
 				}

@@ -66,8 +66,8 @@ namespace Machine {
 		onTick(): void {
 			StorageInterface.checkHoppers(this);
 
-			let slot1 = this.container.getSlot("slot1");
-			let slot2 = this.container.getSlot("slot2");
+			const slot1 = this.container.getSlot("slot1");
+			const slot2 = this.container.getSlot("slot2");
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			if (this.liquidTank.getAmount("lava") >= 1 && this.data.energy + 20 <= this.getEnergyStorage()) {

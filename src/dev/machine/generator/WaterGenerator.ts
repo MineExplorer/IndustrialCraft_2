@@ -1,10 +1,11 @@
 BlockRegistry.createBlock("genWatermill", [
-	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]], inCreative: true}
+	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["windmill", 0], ["watermill_left", 0], ["watermill_right", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.genWatermill, "stone", 1);
 ItemName.addTierTooltip(BlockID.genWatermill, 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.genWatermill, 2, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["watermill_front", 0], ["watermill_left", 0], ["watermill_right", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.genWatermill, 2, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["windmill", 0], ["watermill_left", 0], ["watermill_right", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.genWatermill, 2, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["windmill_rotating", 0], ["watermill_left", 0], ["watermill_right", 0]]);
 TileRenderer.setRotationFunction(BlockID.genWatermill);
 
 Callback.addCallback("PreLoaded", function() {
@@ -50,6 +51,7 @@ namespace Machine {
 		}
 
 		onInit(): void {
+			super.onInit();
 			if (this.data.biome == null) {
 				this.data.biome = this.getBiome(this.x, this.z);
 				this.data.ticker = -1; // for old blocks
@@ -75,7 +77,7 @@ namespace Machine {
 			this.data.blockCount = blockCount;
 		}
 
-		energyTick(type: string, src: EnergyTileNode): void {
+		onTick(): void {
 			if (++this.data.ticker % 128 == 0) {
 				this.updateBlockCount();
 				let output = this.BASE_POWER;
@@ -94,7 +96,13 @@ namespace Machine {
 				output *= this.data.blockCount / 26;
 				this.data.output = Math.round(output * 10) / 10;
 			}
-			src.add(this.data.output);
+			this.setActive(this.data.output > 0);
+		}
+
+		energyTick(type: string, src: EnergyTileNode): void {
+			if (this.data.output > 0) {
+				src.add(this.data.output);
+			}
 		}
 
 		canRotate(side: number): boolean {

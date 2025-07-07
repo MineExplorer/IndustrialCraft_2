@@ -29,7 +29,7 @@ implements ItemBehavior {
 			item.decrease(count);
 			player.setCarriedItem(item);
 			player.addItemToInventory(ItemID.tinCanEmpty, count, 0);
-			SoundManager.playSoundAtEntity(playerUid, "eat.ogg");
+			SoundLib.playSoundAtEntity(playerUid, "eat.ogg");
 		}
 	}
 }

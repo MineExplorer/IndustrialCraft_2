@@ -29,10 +29,10 @@ namespace Machine {
 		}
 
 		getNearestStorages(): TileEntity[] {
-			let storages = [];
+			const storages = [];
 			for (let side = 0; side < 6; side++) {
-				let coords = StorageInterface.getRelativeCoords(this, side);
-				let tileEntity = this.region.getTileEntity(coords);
+				const coords = StorageInterface.getRelativeCoords(this, side);
+				const tileEntity = this.region.getTileEntity(coords);
 				if (tileEntity && MachineRegistry.isMachine(tileEntity.blockID) && tileEntity.isTeleporterCompatible) {
 					storages.push(tileEntity);
 				}
@@ -41,7 +41,7 @@ namespace Machine {
 		}
 
 		getWeight(ent: number): number {
-			let type = Entity.getType(ent);
+			const type = Entity.getType(ent);
 			if (type == 1 || type == 63 || type == EntityType.MINECART) return 1000;
 			if (type == EntityType.ITEM) return 100;
 			if (EntityHelper.isFriendlyMobType(type)) return 200;
@@ -51,7 +51,7 @@ namespace Machine {
 
 		onTick(): void {
 			if (World.getThreadTime() % 11 == 0 && this.data.isActive && this.data.frequency) {
-				let storages = this.getNearestStorages();
+				const storages = this.getNearestStorages();
 				let energyAvailable = 0;
 				for (let i in storages) {
 					energyAvailable += storages[i].data.energy;
@@ -59,23 +59,23 @@ namespace Machine {
 				let receive = this.data.frequency;
 
 				if (energyAvailable > receive.energy * 100) {
-					let entities = this.region.listEntitiesInAABB(this.x - 1, this.y, this.z - 1, this.x + 2, this.y + 3, this.z + 2, 63);
+					const entities = this.region.listEntitiesInAABB(this.x - 1, this.y, this.z - 1, this.x + 2, this.y + 3, this.z + 2, 63);
 					for (let ent of entities) {
-						let weight = this.getWeight(ent);
+						const weight = this.getWeight(ent);
 						if (!weight) continue;
 
 						let energyNeed = weight * receive.energy;
 						if (Game.isDeveloperMode) Debug.m(energyNeed);
 						if (energyNeed <= energyAvailable) {
 							for (let i in storages) {
-								let data = storages[i].data;
-								let energyChange = Math.min(energyNeed, data.energy);
+								const data = storages[i].data;
+								const energyChange = Math.min(energyNeed, data.energy);
 								data.energy -= energyChange;
 								energyNeed -= energyChange;
 								if (energyNeed <= 0) break;
 							}
-							SoundManager.playSoundAt(this.x + .5, this.y + 1, this.z + .5, "TeleUse.ogg");
-							SoundManager.playSoundAt(receive.x + .5, receive.y + 1, receive.z + .5, "TeleUse.ogg");
+							SoundLib.playSoundAt(this.x + .5, this.y + 1, this.z + .5, this.dimension, "TeleUse.ogg");
+							SoundLib.playSoundAt(receive.x + .5, receive.y + 1, receive.z + .5, this.dimension, "TeleUse.ogg");
 							Entity.setPosition(ent, receive.x + .5, receive.y + 3, receive.z + .5);
 						}
 					}
@@ -84,9 +84,14 @@ namespace Machine {
 		}
 
 		onRedstoneUpdate(signal: number): void {
-			let isActive = signal > 0;
+			const isActive = signal > 0;
 			this.data.isActive = isActive
 			this.setActive(isActive);
+		}
+
+		@ClientSide
+		getOperationSound(): string {
+			return "TeleChargedLoop.ogg";
 		}
 	}
 

@@ -42,7 +42,7 @@ namespace Machine {
 		}
 
 		useUpgrades(): UpgradeAPI.UpgradeSet {
-			let upgrades = UpgradeAPI.useUpgrades(this);
+			const upgrades = UpgradeAPI.useUpgrades(this);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.energyDemand = upgrades.getEnergyDemand(this.defaultEnergyDemand);
@@ -55,27 +55,34 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
-			let sourceSlot = this.container.getSlot("slotSource");
-			let result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
+			const sourceSlot = this.container.getSlot("slotSource");
+			const result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
 			if (result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)) {
-				let resultSlot = this.container.getSlot("slotResult");
+				const resultSlot = this.container.getSlot("slotResult");
 				if (resultSlot.id == result.id && (!result.data || resultSlot.data == result.data) && resultSlot.count <= 64 - result.count || resultSlot.id == 0) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
-						this.data.progress += 1 / this.processTime;
+						this.updateProgress();
 						newActive = true;
 					}
-					if (+this.data.progress.toFixed(3) >= 1) {
-						let sourceCount = result.sourceCount || 1;
-						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - sourceCount, sourceSlot.data);
-						sourceSlot.validate();
+					if (this.isCompletedProgress()) {
+						const sourceCount = result.sourceCount || 1;
+						this.decreaseSlot(sourceSlot, sourceCount);
 						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data || 0);
 						this.data.progress = 0;
 					}
 				}
+				if (this.networkData.getBoolean(NetworkDataKeys.isActive) && !newActive) {
+					if (this.getInterruptSound()) { // play interrupt sound if machine stopped working while processing item
+						this.playOnce(this.getInterruptSound());
+					}
+				}
 			}
-			else {
+			else if (this.data.progress > 0) {
 				this.data.progress = 0;
+				if (this.getInterruptSound()) { // play interrupt sound if the source item was extracted
+					this.playOnce(this.getInterruptSound());
+				}
 			}
 			this.setActive(newActive);
 
@@ -86,8 +93,20 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
+		updateProgress() {
+			this.data.progress += 1 / this.processTime;
+		}
+
+		isCompletedProgress() {
+			return +this.data.progress.toFixed(3) >= 1;
+		}
+
 		canRotate(side: number): boolean {
 			return side > 1;
+		}
+
+		getInterruptSound(): string {
+			return null;
 		}
 	}
 }

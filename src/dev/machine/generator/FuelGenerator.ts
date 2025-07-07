@@ -76,9 +76,9 @@ namespace Machine {
 		}
 
 		consumeFuel(slotName: string): number {
-			let fuelSlot = this.container.getSlot(slotName);
+			const fuelSlot = this.container.getSlot(slotName);
 			if (fuelSlot.id > 0) {
-				let burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
+				const burn = Recipes.getFuelBurnDuration(fuelSlot.id, fuelSlot.data);
 				if (burn && !LiquidRegistry.getItemLiquid(fuelSlot.id, fuelSlot.data)) {
 					this.decreaseSlot(fuelSlot, 1);
 					return burn;

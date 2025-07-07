@@ -4,7 +4,7 @@ BlockRegistry.createBlock("recycler", [
 BlockRegistry.setBlockMaterial(BlockID.recycler, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.recycler, 2, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.recycler, 2, [["machine_bottom", 0], ["macerator_top", 1], ["machine_side", 0], ["recycler_front", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.recycler, 2, [["machine_bottom", 0], ["macerator_top_active", 0], ["machine_side", 0], ["recycler_front_active", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.recycler);
 
 ItemName.addTierTooltip("recycler", 1);
@@ -61,15 +61,15 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
-			let sourceSlot = this.container.getSlot("slotSource");
-			let resultSlot = this.container.getSlot("slotResult");
+			const sourceSlot = this.container.getSlot("slotSource");
+			const resultSlot = this.container.getSlot("slotResult");
 			if (sourceSlot.id != 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)) {
 				if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;
-					this.data.progress += 1 / this.processTime;
+					this.updateProgress();
 					newActive = true;
 				}
-				if (+this.data.progress.toFixed(3) >= 1) {
+				if (this.isCompletedProgress()) {
 					this.decreaseSlot(sourceSlot, 1);
 					if (Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1) {
 						resultSlot.setSlot(ItemID.scrap, resultSlot.count + 1, 0);

@@ -1,11 +1,9 @@
 BlockRegistry.createBlock("nuke", [
-	{name: "Nuke", texture: [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]], inCreative: true}
+	{name: "Nuke", texture: [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]], inCreative: true},
+	{name: "Nuke", texture: [["nuke_bottom_active", 0], ["nuke_top_active", 0], ["nuke_sides_active", 0], ["nuke_sides_active", 0], ["nuke_sides_active", 0], ["nuke_sides_active", 0]], inCreative: false},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.nuke, "stone", 1);
 ItemRegistry.setRarity(BlockID.nuke, EnumRarity.UNCOMMON);
-
-TileRenderer.setStandardModel(BlockID.nuke, 0, [["nuke_bottom", 0], ["nuke_top", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0], ["nuke_sides", 0]]);
-TileRenderer.registerRenderModel(BlockID.nuke, 0, [["tnt_active", 0]]);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.nuke, count: 1, data: 0}, [
@@ -33,13 +31,13 @@ namespace Machine {
 		}
 
 		explode(radius: number): void {
-			SoundManager.playSound("NukeExplosion.ogg");
-			let damageRad = radius * 1.5;
-			let epicenter = new Vector3(this.x + .5, this.y + .5, this.z + .5);
-			let entities = EntityHelper.getEntitiesInRadius(this.region, epicenter, damageRad);
+			SoundLib.playSoundAtBlock(this, this.dimension, "NukeExplosion.ogg", 1, 1, 100_000);
+			const damageRad = radius * 1.5;
+			const epicenter = new Vector3(this.x + .5, this.y + .5, this.z + .5);
+			const entities = EntityHelper.getEntitiesInRadius(this.region, epicenter, damageRad);
 			for (let ent of entities) {
-				let dist = Entity.getDistanceBetweenCoords(epicenter, Entity.getPosition(ent))
-				let damage = Math.ceil(damageRad*damageRad * 25 / (dist*dist));
+				const dist = Entity.getDistanceBetweenCoords(epicenter, Entity.getPosition(ent))
+				const damage = Math.ceil(damageRad*damageRad * 25 / (dist*dist));
 				if (damage >= 100) {
 					Entity.damageEntity(ent, damage);
 				} else {
@@ -47,16 +45,16 @@ namespace Machine {
 				}
 			}
 
-			let height = radius/2;
+			const height = radius/2;
 			for (let dx = -radius; dx <= radius; dx++)
 			for (let dy = -height; dy <= height; dy++)
 			for (let dz = -radius; dz <= radius; dz++) {
 				if (Math.sqrt(dx*dx + dy*dy*4 + dz*dz) <= radius) {
-					let xx = this.x + dx, yy = this.y + dy, zz = this.z + dz;
-					let block = this.blockSource.getBlock(xx, yy, zz);
+					const xx = this.x + dx, yy = this.y + dy, zz = this.z + dz;
+					const block = this.blockSource.getBlock(xx, yy, zz);
 					if (block.id > 0 && Block.getExplosionResistance(block.id) < 10000) {
 						if (Math.random() < 0.01) {
-							let drop = this.blockSource.breakBlockForJsResult(xx, yy, zz, -1, new ItemStack());
+							const drop = this.blockSource.breakBlockForJsResult(xx, yy, zz, -1, new ItemStack());
 							for (let item of drop.items) {
 								this.blockSource.spawnDroppedItem(xx + .5, yy + .5, zz + .5, item.id, item.count, item.data, item.extra || null);
 							}
@@ -78,11 +76,6 @@ namespace Machine {
 					this.selfDestroy();
 					return;
 				}
-				if (this.data.timer % 10 < 5) {
-					this.sendPacket("renderLitModel", {lit: true});
-				} else {
-					this.sendPacket("renderLitModel", {lit: false});
-				}
 				this.data.timer--;
 			}
 		}
@@ -90,34 +83,21 @@ namespace Machine {
 		onRedstoneUpdate(signal: number): void {
 			if (signal > 0) {
 				this.data.activated = true;
+				this.region.setBlock(this, this.blockID, 1);
 			}
 		}
-
-		destroy(): boolean {
-			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-			return false;
-		}
-
+		
 		@NetworkEvent(Side.Client)
 		explodeAnimation(data: {rad: number}) {
-			let radius = data.rad;
-			let count = radius * radius * radius / 25;
+			const radius = data.rad;
+			const count = radius * radius * radius / 200;
 			for (let i = 0; i < count; i++) {
-				let dx = MathUtil.randomInt(-radius, radius);
-				let dy = MathUtil.randomInt(-radius/2, radius/2);
-				let dz = MathUtil.randomInt(-radius, radius);
+				const dx = MathUtil.randomInt(-radius, radius);
+				const dy = MathUtil.randomInt(-radius/2, radius/2);
+				const dz = MathUtil.randomInt(-radius, radius);
 				if (Math.sqrt(dx*dx + dy*dy*4 + dz*dz) <= radius) {
 					Particles.addParticle(ParticleType.hugeexplosionSeed, this.x + dx, this.y + dy, this.z + dz, 0, 0, 0);
 				}
-			}
-		}
-
-		@NetworkEvent(Side.Client)
-		renderLitModel(data: {lit: boolean}) {
-			if (data.lit) {
-				TileRenderer.mapAtCoords(this.x, this.y, this.z, BlockID.nuke, 0);
-			} else {
-				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 			}
 		}
 	}

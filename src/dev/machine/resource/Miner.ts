@@ -74,14 +74,14 @@ namespace Machine {
 		}
 
 		findOre(level: number): boolean {
-			let r = this.data.scanR;
+			const r = this.data.scanR;
 			while (r) {
 				if (this.data.x > this.x + r) {
 					this.data.x = this.x - r;
 					this.data.z++;
 				}
 				if (this.data.z > this.z + r) break;
-				let blockID = this.region.getBlockId(this.data.x, this.data.scanY, this.data.z);
+				const blockID = this.region.getBlockId(this.data.x, this.data.scanY, this.data.z);
 				if (ore_blocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)) {
 					return true;
 				}
@@ -102,10 +102,10 @@ namespace Machine {
 		}
 
 		findPath(x: number, y: number, z: number, sprc: number, level: number): Vector {
-			let block = this.region.getBlock(x, y, z);
+			const block = this.region.getBlock(x, y, z);
 			if (block.id == BlockID.miningPipe || this.isEmptyBlock(block)) {
-				let dx = this.data.x - x;
-				let dz = this.data.z - z;
+				const dx = this.data.x - x;
+				const dz = this.data.z - z;
 				if (Math.abs(dx) == Math.abs(dz)) {
 					var prc = sprc;
 				} else if (Math.abs(dx) > Math.abs(dz)) {
@@ -129,7 +129,7 @@ namespace Machine {
 		}
 
 		mineBlock(x: number, y: number, z: number, block: Tile, item: ItemContainerSlot): void {
-			let result = this.region.breakBlockForResult(x, y, z, -1, new ItemStack(item));
+			const result = this.region.breakBlockForResult(x, y, z, -1, new ItemStack(item));
 			this.drop(result.items);
 			this.data.progress = 0;
 		}
@@ -143,7 +143,7 @@ namespace Machine {
 		}
 
 		drop(items: ItemInstance[]): void {
-			let containers = StorageInterface.getNearestContainers(this, this.blockSource);
+			const containers = StorageInterface.getNearestContainers(this, this.blockSource);
 			StorageInterface.putItems(items, containers);
 			for (let item of items) {
 				if (item.count > 0) {
@@ -153,7 +153,7 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			let region = this.region;
+			const region = this.region;
 			if (this.data.progress == 0) {
 				let y = this.y;
 				while (region.getBlockId(this.x, y - 1, this.z) == BlockID.miningPipe) {
@@ -163,16 +163,16 @@ namespace Machine {
 			}
 
 			let newActive = false;
-			let drillSlot = this.container.getSlot("slotDrill");
-			let pipeSlot = this.container.getSlot("slotPipe");
-			let params = this.getMiningValues(drillSlot.id);
+			const drillSlot = this.container.getSlot("slotDrill");
+			const pipeSlot = this.container.getSlot("slotPipe");
+			const params = this.getMiningValues(drillSlot.id);
 			if (params) {
 				if (this.data.y < this.y && this.data.scanY != this.data.y) {
 					let radius = 0;
-					let scannerSlot = this.container.getSlot("slotScanner");
-					let energyStored = ChargeItemRegistry.getEnergyStored(scannerSlot);
+					const scannerSlot = this.container.getSlot("slotScanner");
+					const energyStored = ChargeItemRegistry.getEnergyStored(scannerSlot);
 					if (scannerSlot.id == ItemID.scanner || scannerSlot.id == ItemID.scannerAdvanced) {
-						let tool = ItemRegistry.getInstanceOf(scannerSlot.id) as ItemScanner;
+						const tool = ItemRegistry.getInstanceOf(scannerSlot.id) as ItemScanner;
 						ChargeItemRegistry.setEnergyStored(scannerSlot, energyStored - tool.getEnergyPerUse());
 						radius = tool.getScanRadius();
 					}
@@ -183,15 +183,15 @@ namespace Machine {
 				}
 				let level = ToolAPI.getToolLevel(drillSlot.id);
 				if (this.data.y < this.y && this.findOre(level)) {
-					let dx = this.data.x - this.x;
-					let dz = this.data.z - this.z;
+					const dx = this.data.x - this.x;
+					const dz = this.data.z - this.z;
 					let prc = 0;
 					if (Math.abs(dx) > Math.abs(dz)) {
 						prc = 1;
 					}
-					let coords = this.findPath(this.x, this.data.y, this.z, prc, level);
+					const coords = this.findPath(this.x, this.data.y, this.z, prc, level);
 					if (coords) {
-						let block = region.getBlock(coords.x, coords.y, coords.z);
+						const block = region.getBlock(coords.x, coords.y, coords.z);
 						if (this.data.energy >= params.energy) {
 							this.data.energy -= params.energy;
 							this.data.progress++;
@@ -204,7 +204,7 @@ namespace Machine {
 					}
 				}
 				else if (this.data.y > 0 && pipeSlot.id == BlockID.miningPipe) {
-					let block = region.getBlock(this.x, this.data.y - 1, this.z);
+					const block = region.getBlock(this.x, this.data.y - 1, this.z);
 					if (this.isEmptyBlock(block)) {
 						if (this.data.energy >= 3) {
 							this.data.energy -= 3;
@@ -216,7 +216,7 @@ namespace Machine {
 						}
 					}
 					else if (this.canBeDestroyed(block.id, level)) {
-						let block = region.getBlock(this.x, this.data.y - 1, this.z);
+						const block = region.getBlock(this.x, this.data.y - 1, this.z);
 						if (this.data.energy >= params.energy) {
 							this.data.energy -= params.energy;
 							this.data.progress++;
@@ -242,9 +242,9 @@ namespace Machine {
 					}
 					if (this.data.progress >= 20) {
 						this.drop([new ItemStack(BlockID.miningPipe, 1, 0)]);
-						let pipeSlot = this.container.getSlot("slotPipe");
+						const pipeSlot = this.container.getSlot("slotPipe");
 						if (pipeSlot.id != 0 && pipeSlot.id != BlockID.miningPipe && ItemRegistry.isBlock(pipeSlot.id) && !TileEntity.isTileEntityBlock(pipeSlot.id)) {
-							let blockId = Block.convertItemToBlockId(pipeSlot.id);
+							const blockId = Block.convertItemToBlockId(pipeSlot.id);
 							region.setBlock(this.x, this.data.y, this.z, blockId, pipeSlot.data);
 							this.decreaseSlot(pipeSlot, 1);
 						}

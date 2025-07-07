@@ -3,6 +3,7 @@
 namespace ToolHUD {
 	export class ButtonFly extends AbstractButton {
 		isTouched = false;
+		jetpackSound = "JetpackLoop.ogg";
 
 		constructor() {
 			super("button_fly", "armor", {
@@ -14,30 +15,39 @@ namespace ToolHUD {
 		}
 
 		onUpdate(): void {
-			let isFlying = ToolHUD.container.isElementTouched(this.name);
+			const isFlying = ToolHUD.container.isElementTouched(this.name);
 			if (this.isTouched != isFlying) {
 				this.isTouched = isFlying;
 				Network.sendToServer(IC2NetworkPackets.jetpackFlying, {fly: isFlying});
 			}
-			let armor = Player.getArmorSlot(1);
-			let hoverMode = armor.extra?.getBoolean("hover") || false;
-			let energyStored = ChargeItemRegistry.getEnergyStored(armor);
-			let posY = Player.getPosition().y;
+			const armor = Player.getArmorSlot(1);
+			const hoverMode = armor.extra?.getBoolean("hover") || false;
+			const energyStored = ChargeItemRegistry.getEnergyStored(armor);
+			const posY = Player.getPosition().y;
+			let playSound = false;
 			if (energyStored >= 8 && posY < 256) {
-				let vy = Player.getVelocity().y;
+				const vy = Player.getVelocity().y;
 				if (isFlying) {
-					let maxVel = Math.min(32, 265 - posY) / 160; // max 0.2
-					if (hoverMode) {
-						if (vy < 0.2)
+					playSound = true;
+					const maxVel = Math.min(32, 265 - posY) / 160; // max 0.2
+					if (hoverMode && vy < 0.2) {
 						Player.addVelocity(0, Math.min(maxVel, 0.2 - vy), 0);
 					}
-					else if (vy < 0.67) {
+					else if (!hoverMode && vy < 0.67) {
 						Player.addVelocity(0, Math.min(maxVel, 0.67 - vy), 0);
 					}
-				} else if (hoverMode) {
-					if (vy < -0.1)
-					Player.addVelocity(0, Math.min(0.25, -0.1 - vy), 0);
 				}
+				else if (hoverMode) {
+					if (vy < -0.1) {
+						Player.addVelocity(0, Math.min(0.25, -0.1 - vy), 0);
+					}
+					playSound = true;
+				}
+			}
+			if (playSound) {
+				ICTool.startPlaySound(this.jetpackSound, true, hoverMode ? 0.8 : 1)
+			} else {
+				ICTool.stopPlaySound(this.jetpackSound);
 			}
 		}
 	}

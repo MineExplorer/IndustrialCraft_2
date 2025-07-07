@@ -83,7 +83,7 @@ namespace Machine {
 		}
 
 		useUpgrades(): UpgradeAPI.UpgradeSet {
-			let upgrades = UpgradeAPI.useUpgrades(this);
+			const upgrades = UpgradeAPI.useUpgrades(this);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
@@ -95,12 +95,12 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
-			let sourceSlot1 = this.container.getSlot("slotSource1");
-			let sourceSlot2 = this.container.getSlot("slotSource2");
-			let resultSlot1 = this.container.getSlot("slotResult1");
-			let resultSlot2 = this.container.getSlot("slotResult2");
-			let result1 = this.getRecipeResult(sourceSlot1.id, sourceSlot1.data);
-			let result2 = this.getRecipeResult(sourceSlot2.id, sourceSlot2.data);
+			const sourceSlot1 = this.container.getSlot("slotSource1");
+			const sourceSlot2 = this.container.getSlot("slotSource2");
+			const resultSlot1 = this.container.getSlot("slotResult1");
+			const resultSlot2 = this.container.getSlot("slotResult2");
+			const result1 = this.getRecipeResult(sourceSlot1.id, sourceSlot1.data);
+			const result2 = this.getRecipeResult(sourceSlot2.id, sourceSlot2.data);
 			if (this.checkResult(result1, resultSlot1) || this.checkResult(result2, resultSlot2)) {
 				if (this.data.energy >= this.energyDemand && this.data.progress < 100) {
 					this.data.energy -= this.energyDemand;
@@ -146,7 +146,7 @@ namespace Machine {
 			return "InductionLoop.ogg";
 		}
 
-		getInterruptSound(): string {
+		getFinishingSound(): string {
 			return "InductionStop.ogg";
 		}
 	}

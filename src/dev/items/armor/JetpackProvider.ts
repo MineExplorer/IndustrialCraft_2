@@ -36,16 +36,6 @@ namespace JetpackProvider {
 			ChargeItemRegistry.setEnergyStored(item, energyStored - 8);
 			return item;
 		}
-		/*if (playSound && IC2Config.soundEnabled) {
-			if (hoverMode) {
-				SoundManager.startPlaySound(SourceType.ENTITY, playerUid, "JetpackLoop.ogg", 0.8);
-			} else {
-				SoundManager.startPlaySound(SourceType.ENTITY, playerUid, "JetpackLoop.ogg", 1);
-			}
-		}
-		if (!playSound) {
-			SoundManager.stopPlaySound(playerUid, "JetpackLoop.ogg");
-		}*/
 		return null;
 	}
 }

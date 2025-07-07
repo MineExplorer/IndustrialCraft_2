@@ -4,7 +4,7 @@ BlockRegistry.createBlock("thermalCentrifuge", [
 BlockRegistry.setBlockMaterial(BlockID.thermalCentrifuge, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.thermalCentrifuge, 2, [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, 2, [["machine_advanced", 0], ["thermal_centrifuge_top", 1], ["machine_side", 0], ["thermal_centrifuge_front", 1], ["thermal_centrifuge_side", 1], ["thermal_centrifuge_side", 1]]);
+TileRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, 2, [["machine_advanced", 0], ["thermal_centrifuge_top_active", 0], ["machine_side", 0], ["thermal_centrifuge_front_active", 0], ["thermal_centrifuge_side_active", 0], ["thermal_centrifuge_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.thermalCentrifuge);
 
 ItemName.addTierTooltip("thermalCentrifuge", 2);
@@ -94,7 +94,7 @@ namespace Machine {
 		}
 
 		useUpgrades(): UpgradeAPI.UpgradeSet {
-			let upgrades = super.useUpgrades();
+			const upgrades = super.useUpgrades();
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
 			return upgrades;
 		}
@@ -105,9 +105,9 @@ namespace Machine {
 
 		checkResult(result: number[]): boolean {
 			for (let i = 1; i < 4; i++) {
-				let id = result[(i-1)*2];
-				let count = result[(i-1)*2+1];
-				let resultSlot = this.container.getSlot("slotResult"+i);
+				const id = result[(i-1) * 2];
+				const count = result[(i-1) * 2 + 1];
+				const resultSlot = this.container.getSlot("slotResult" + i);
 				if ((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0) {
 					return false;
 				}
@@ -117,9 +117,9 @@ namespace Machine {
 
 		putResult(result: number[]): void {
 			for (let i = 1; i < 4; i++) {
-				let id = result[(i-1)*2];
-				let count = result[(i-1)*2+1];
-				let resultSlot = this.container.getSlot("slotResult"+i);
+				const id = result[(i-1) * 2];
+				const count = result[(i-1) * 2 + 1];
+				const resultSlot = this.container.getSlot("slotResult" + i);
 				if (id) {
 					resultSlot.setSlot(id, resultSlot.count + count, 0);
 				}
@@ -135,8 +135,8 @@ namespace Machine {
 			}
 
 			let newActive = false;
-			let sourceSlot = this.container.getSlot("slotSource");
-			let recipe = this.getRecipeResult(sourceSlot.id);
+			const sourceSlot = this.container.getSlot("slotSource");
+			const recipe = this.getRecipeResult(sourceSlot.id);
 			if (recipe && this.checkResult(recipe.result) && this.data.energy > 0) {
 				this.data.maxHeat = recipe.heat;
 				if (this.data.heat < recipe.heat) {
@@ -145,10 +145,10 @@ namespace Machine {
 				}
 				else if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;
-					this.data.progress += 1 / this.processTime;
+					this.updateProgress();
 					newActive = true;
 				}
-				if (+this.data.progress.toFixed(3) >= 1) {
+				if (this.isCompletedProgress()) {
 					this.decreaseSlot(sourceSlot, 1);
 					this.putResult(recipe.result);
 					this.data.progress = 0;
@@ -184,6 +184,7 @@ namespace Machine {
 			this.isPowered = signal > 0;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		setIndicator(container: ItemContainer, window: any, content: any, data: string): void {
 			if (content) {

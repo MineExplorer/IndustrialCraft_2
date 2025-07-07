@@ -114,7 +114,7 @@ namespace Machine {
 		}
 
 		setUpgradeStats(): void {
-			let upgrades = UpgradeAPI.useUpgrades(this);
+			const upgrades = UpgradeAPI.useUpgrades(this);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.maxScanCount = 5 * upgrades.speedModifier;
 		}
@@ -146,10 +146,10 @@ namespace Machine {
 
 		operate(): void {
 			let newActive = false;
-			let data = this.data;
+			const data = this.data;
 			if (data.isEnabled && this.y + data.y >= 0 && data.energy >= 512) {
-				let scanner = this.container.getSlot("slotScanner");
-				let scanR = this.getScanRadius(scanner.id);
+				const scanner = this.container.getSlot("slotScanner");
+				const scanR = this.getScanRadius(scanner.id);
 				let energyStored = ChargeItemRegistry.getEnergyStored(scanner);
 				if (scanR > 0 && energyStored >= 64) {
 					newActive = true;
@@ -170,10 +170,10 @@ namespace Machine {
 								data.y--;
 							}
 							energyStored -= 64;
-							let x = this.x + data.x;
-							let y = this.y + data.y;
-							let z = this.z + data.z;
-							let block = this.region.getBlock(x, y, z);
+							const x = this.x + data.x;
+							const y = this.y + data.y;
+							const z = this.z + data.z;
+							const block = this.region.getBlock(x, y, z);
 							if (this.isValidBlock(block.id, block.data)) {
 								if (this.harvestBlock(x, y, z, block))
 								break;
@@ -211,7 +211,7 @@ namespace Machine {
 			if (drop.length == 0) return true;
 			for (let item of drop) {
 				for (let i = 0; i < 16; i++) {
-					let slot = this.container.getSlot("slot"+i);
+					const slot = this.container.getSlot("slot"+i);
 					if (slot.id == item[0] && slot.data == item[2]) {
 						return !this.data.whitelist;
 					}
@@ -221,7 +221,7 @@ namespace Machine {
 		}
 
 		drop(items: ItemInstance[]): void {
-			let containers = StorageInterface.getNearestContainers(this, this.blockSource);
+			const containers = StorageInterface.getNearestContainers(this, this.blockSource);
 			StorageInterface.putItems(items, containers);
 			for (let item of items) {
 				if (item.count > 0) {
@@ -232,7 +232,7 @@ namespace Machine {
 
 		adjustDrop(item: ItemInstance): ItemInstance {
 			if (item.id == this.blockID && this.data.energy > 0) {
-				let extra = new ItemExtraData();
+				const extra = new ItemExtraData();
 				item.extra = extra.putInt("energy", this.data.energy);
 			}
 			return item;
@@ -242,31 +242,35 @@ namespace Machine {
 			this.data.isEnabled = (signal == 0);
 		}
 
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
+
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		switchWhitelist(): void {
 			this.data.whitelist = !this.data.whitelist;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		switchSilktouch(): void {
 			this.data.silk_touch = !this.data.silk_touch;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		restart(): void {
 			this.data.x = this.data.y = this.data.z = 0;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		setSilktouchIcon(container: ItemContainer, window: any, content: any, data: {mode: boolean}): void {
 			if (content) {
-				let iconIndex = data.mode? 1 : 0;
+				const iconIndex = data.mode? 1 : 0;
 				content.elements.button_silk.bitmap = "miner_button_silk_" + iconIndex;
 			}
-		}
-
-		canRotate(side: number): boolean {
-			return side > 1;
 		}
 	}
 

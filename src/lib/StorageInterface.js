@@ -1,6 +1,17 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 LIBRARY({
     name: "StorageInterface",
-    version: 12,
+    version: 13,
     shared: true,
     api: "CoreEngine"
 });
@@ -95,181 +106,226 @@ var NativeContainerInterface = /** @class */ (function () {
     return NativeContainerInterface;
 }());
 /// <reference path="Storage.ts" />
-var TileEntityInterface = /** @class */ (function () {
-    function TileEntityInterface(tileEntity) {
-        this.liquidUnitRatio = 1;
-        this.isNativeContainer = false;
-        this.tileEntity = tileEntity;
-        this.container = tileEntity.container;
-        var storagePrototype = StorageInterface.getData(tileEntity.blockID);
-        if (storagePrototype) {
-            for (var key in storagePrototype) {
-                this[key] = storagePrototype[key];
+var StorageInterface;
+(function (StorageInterface) {
+    var TileEntityInterface = /** @class */ (function () {
+        function TileEntityInterface(tileEntity) {
+            this.liquidUnitRatio = 1;
+            this.isNativeContainer = false;
+            this.tileEntity = tileEntity;
+            this.container = tileEntity.container;
+        }
+        TileEntityInterface.prototype.getSlot = function (name) {
+            return this.container.getSlot(name);
+        };
+        TileEntityInterface.prototype.setSlot = function (name, id, count, data, extra) {
+            if (extra === void 0) { extra = null; }
+            this.container.setSlot(name, id, count, data, extra);
+        };
+        TileEntityInterface.prototype.getSlotData = function (name) {
+            if (this.slots) {
+                return this.slots[name];
             }
-        }
-    }
-    TileEntityInterface.prototype.getSlot = function (name) {
-        return this.container.getSlot(name);
-    };
-    TileEntityInterface.prototype.setSlot = function (name, id, count, data, extra) {
-        if (extra === void 0) { extra = null; }
-        this.container.setSlot(name, id, count, data, extra);
-    };
-    TileEntityInterface.prototype.getSlotData = function (name) {
-        if (this.slots) {
-            return this.slots[name];
-        }
-        return null;
-    };
-    TileEntityInterface.prototype.getSlotMaxStack = function (name) {
-        var data = this.getSlotData(name);
-        return data && data.maxStack || 64;
-    };
-    TileEntityInterface.prototype.isValidSlotSide = function (slotSide, side) {
-        if (slotSide == undefined || side == -1)
-            return true;
-        if (typeof slotSide == "number")
-            return slotSide == side;
-        switch (slotSide) {
-            case "horizontal": return side > 1;
-            case "verctical": return side <= 1;
-            case "down": return side == 0;
-            case "up": return side == 1;
-        }
-        return false;
-    };
-    TileEntityInterface.prototype.isValidSlotInput = function (name, item, side) {
-        var slotData = this.getSlotData(name);
-        return !slotData || !slotData.isValid || slotData.isValid(item, side, this.tileEntity);
-    };
-    TileEntityInterface.prototype.getContainerSlots = function () {
-        return Object.keys(this.slots || this.container.slots);
-    };
-    TileEntityInterface.prototype.getDefaultSlots = function (type) {
-        if (this.tileEntity.getTransportSlots) { // old standard compatibility
-            return this.tileEntity.getTransportSlots()[type];
-        }
-        return this.getContainerSlots();
-    };
-    TileEntityInterface.prototype.getInputSlots = function (side) {
-        if (side === void 0) { side = -1; }
-        if (!this.slots) {
-            return this.getDefaultSlots("input");
-        }
-        var slotNames = [];
-        for (var name in this.slots) {
+            return null;
+        };
+        TileEntityInterface.prototype.getSlotMaxStack = function (name) {
+            var data = this.getSlotData(name);
+            return data && data.maxStack || 64;
+        };
+        TileEntityInterface.prototype.isValidSlotSide = function (slotSide, side) {
+            if (slotSide == undefined || side == -1)
+                return true;
+            if (typeof slotSide == "number")
+                return slotSide == side;
+            switch (slotSide) {
+                case "horizontal": return side > 1;
+                case "verctical": return side <= 1;
+                case "down": return side == 0;
+                case "up": return side == 1;
+            }
+            return false;
+        };
+        TileEntityInterface.prototype.isValidSlotInput = function (name, item, side) {
             var slotData = this.getSlotData(name);
-            if (slotData.input && this.isValidSlotSide(slotData.side, side)) {
-                slotNames.push(name);
+            return !slotData || !slotData.isValid || slotData.isValid(item, side, this.tileEntity);
+        };
+        TileEntityInterface.prototype.getContainerSlots = function () {
+            return Object.keys(this.slots || this.container.slots);
+        };
+        TileEntityInterface.prototype.getDefaultSlots = function (type) {
+            if (this.tileEntity.getTransportSlots) { // old standard compatibility
+                return this.tileEntity.getTransportSlots()[type];
             }
-        }
-        return slotNames;
-    };
-    TileEntityInterface.prototype.getReceivingItemCount = function (item, side) {
-        if (side === void 0) { side = -1; }
-        if (!this.isValidInput(item, side, this.tileEntity))
-            return 0;
-        var slots = this.getInputSlots(side);
-        var count = 0;
-        for (var _i = 0, slots_2 = slots; _i < slots_2.length; _i++) {
-            var name = slots_2[_i];
-            if (!this.isValidSlotInput(name, item, side))
-                continue;
-            var slot = this.getSlot(name);
-            if (slot.id == 0 || slot.id == item.id && slot.data == item.data) {
-                var maxStack = Math.min(Item.getMaxStack(item.id), this.getSlotMaxStack(name));
-                count += maxStack - slot.count;
-                if (count >= item.count)
-                    break;
+            return this.getContainerSlots();
+        };
+        TileEntityInterface.prototype.getInputSlots = function (side) {
+            if (side === void 0) { side = -1; }
+            if (!this.slots) {
+                return this.getDefaultSlots("input");
             }
-        }
-        return Math.min(item.count, count);
-    };
-    TileEntityInterface.prototype.isValidInput = function (item, side, tileEntity) {
-        return true;
-    };
-    TileEntityInterface.prototype.addItemToSlot = function (name, item, maxCount) {
-        if (maxCount === void 0) { maxCount = 64; }
-        var slot = this.getSlot(name);
-        var maxStack = this.getSlotMaxStack(name);
-        var added = StorageInterface.addItemToSlot(item, slot, Math.min(maxCount, maxStack));
-        if (added > 0) {
-            this.setSlot(name, slot.id, slot.count, slot.data, slot.extra);
-        }
-        return added;
-    };
-    TileEntityInterface.prototype.addItem = function (item, side, maxCount) {
-        if (side === void 0) { side = -1; }
-        if (maxCount === void 0) { maxCount = 64; }
-        if (!this.isValidInput(item, side, this.tileEntity))
-            return 0;
-        var count = 0;
-        var slots = this.getInputSlots(side);
-        for (var _i = 0, slots_3 = slots; _i < slots_3.length; _i++) {
-            var name = slots_3[_i];
-            if (this.isValidSlotInput(name, item, side)) {
-                count += this.addItemToSlot(name, item, maxCount - count);
-                if (item.count == 0 || count >= maxCount)
-                    break;
-            }
-        }
-        return count;
-    };
-    TileEntityInterface.prototype.getOutputSlots = function (side) {
-        if (side === void 0) { side = -1; }
-        if (!this.slots) {
-            return this.getDefaultSlots("output");
-        }
-        var slotNames = [];
-        for (var name in this.slots) {
-            var slotData = this.slots[name];
-            if (slotData.output) {
-                var item = this.container.getSlot(name);
-                if (this.isValidSlotSide(slotData.side, side) && (!slotData.canOutput || slotData.canOutput(item, side, this.tileEntity))) {
+            var slotNames = [];
+            for (var name in this.slots) {
+                var slotData = this.getSlotData(name);
+                if (slotData.input && this.isValidSlotSide(slotData.side, side)) {
                     slotNames.push(name);
                 }
             }
+            return slotNames;
+        };
+        TileEntityInterface.prototype.getReceivingItemCount = function (item, side) {
+            if (side === void 0) { side = -1; }
+            if (!this.isValidInput(item, side, this.tileEntity))
+                return 0;
+            var slots = this.getInputSlots(side);
+            var count = 0;
+            for (var _i = 0, slots_2 = slots; _i < slots_2.length; _i++) {
+                var name = slots_2[_i];
+                if (!this.isValidSlotInput(name, item, side))
+                    continue;
+                var slot = this.getSlot(name);
+                if (slot.id == 0 || slot.id == item.id && slot.data == item.data) {
+                    var maxStack = Math.min(Item.getMaxStack(item.id), this.getSlotMaxStack(name));
+                    count += maxStack - slot.count;
+                    if (count >= item.count)
+                        break;
+                }
+            }
+            return Math.min(item.count, count);
+        };
+        TileEntityInterface.prototype.isValidInput = function (item, side, tileEntity) {
+            return true;
+        };
+        TileEntityInterface.prototype.addItemToSlot = function (name, item, maxCount) {
+            if (maxCount === void 0) { maxCount = 64; }
+            var slot = this.getSlot(name);
+            var maxStack = this.getSlotMaxStack(name);
+            var added = StorageInterface.addItemToSlot(item, slot, Math.min(maxCount, maxStack));
+            if (added > 0) {
+                this.setSlot(name, slot.id, slot.count, slot.data, slot.extra);
+            }
+            return added;
+        };
+        TileEntityInterface.prototype.addItem = function (item, side, maxCount) {
+            if (side === void 0) { side = -1; }
+            if (maxCount === void 0) { maxCount = 64; }
+            if (!this.isValidInput(item, side, this.tileEntity))
+                return 0;
+            var count = 0;
+            var slots = this.getInputSlots(side);
+            for (var _i = 0, slots_3 = slots; _i < slots_3.length; _i++) {
+                var name = slots_3[_i];
+                if (this.isValidSlotInput(name, item, side)) {
+                    count += this.addItemToSlot(name, item, maxCount - count);
+                    if (item.count == 0 || count >= maxCount)
+                        break;
+                }
+            }
+            return count;
+        };
+        TileEntityInterface.prototype.getOutputSlots = function (side) {
+            if (side === void 0) { side = -1; }
+            if (!this.slots) {
+                return this.getDefaultSlots("output");
+            }
+            var slotNames = [];
+            for (var name in this.slots) {
+                var slotData = this.slots[name];
+                if (slotData.output) {
+                    var item = this.container.getSlot(name);
+                    if (this.isValidSlotSide(slotData.side, side) && (!slotData.canOutput || slotData.canOutput(item, side, this.tileEntity))) {
+                        slotNames.push(name);
+                    }
+                }
+            }
+            return slotNames;
+        };
+        TileEntityInterface.prototype.clearContainer = function () {
+            for (var name in this.container.slots) {
+                this.container.clearSlot(name);
+            }
+        };
+        TileEntityInterface.prototype.canReceiveLiquid = function (liquid, side) {
+            return this.getInputTank(side).getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT;
+        };
+        TileEntityInterface.prototype.canTransportLiquid = function (liquid, side) {
+            return true;
+        };
+        TileEntityInterface.prototype.receiveLiquid = function (liquidStorage, liquid, amount) {
+            var storedLiquid = liquidStorage.getLiquidStored();
+            if (!storedLiquid || storedLiquid == liquid) {
+                return amount - liquidStorage.addLiquid(liquid, amount / this.liquidUnitRatio) * this.liquidUnitRatio;
+            }
+            return 0;
+        };
+        TileEntityInterface.prototype.extractLiquid = function (liquidStorage, liquid, amount) {
+            return liquidStorage.getLiquid(liquid, amount / this.liquidUnitRatio) * this.liquidUnitRatio;
+        };
+        TileEntityInterface.prototype.getInputTank = function (side) {
+            return this.tileEntity.liquidStorage;
+        };
+        TileEntityInterface.prototype.getOutputTank = function (side) {
+            return this.tileEntity.liquidStorage;
+        };
+        return TileEntityInterface;
+    }());
+    StorageInterface.TileEntityInterface = TileEntityInterface;
+})(StorageInterface || (StorageInterface = {}));
+/// <reference path="TileEntityInterface.ts" />
+var StorageInterfaceFactory;
+(function (StorageInterfaceFactory) {
+    function getTileEntityInterface(tileEntity) {
+        if (tileEntity.__storageInterface) {
+            return tileEntity.__storageInterface;
         }
-        return slotNames;
-    };
-    TileEntityInterface.prototype.clearContainer = function () {
-        for (var name in this.container.slots) {
-            this.container.clearSlot(name);
+        var storagePrototype = StorageInterface.getPrototype(tileEntity.blockID);
+        var interface = new storagePrototype.classType(tileEntity);
+        if (storagePrototype) {
+            for (var key in storagePrototype) {
+                if (key == "classType")
+                    continue;
+                interface[key] = storagePrototype[key];
+            }
         }
-    };
-    TileEntityInterface.prototype.canReceiveLiquid = function (liquid, side) {
-        return this.getInputTank(side).getLimit(liquid) < LIQUID_STORAGE_MAX_LIMIT;
-    };
-    TileEntityInterface.prototype.canTransportLiquid = function (liquid, side) {
-        return true;
-    };
-    TileEntityInterface.prototype.receiveLiquid = function (liquidStorage, liquid, amount) {
-        var storedLiquid = liquidStorage.getLiquidStored();
-        if (!storedLiquid || storedLiquid == liquid) {
-            return amount - liquidStorage.addLiquid(liquid, amount / this.liquidUnitRatio) * this.liquidUnitRatio;
-        }
-        return 0;
-    };
-    TileEntityInterface.prototype.extractLiquid = function (liquidStorage, liquid, amount) {
-        return liquidStorage.getLiquid(liquid, amount / this.liquidUnitRatio) * this.liquidUnitRatio;
-    };
-    TileEntityInterface.prototype.getInputTank = function (side) {
-        return this.tileEntity.liquidStorage;
-    };
-    TileEntityInterface.prototype.getOutputTank = function (side) {
-        return this.tileEntity.liquidStorage;
-    };
-    return TileEntityInterface;
-}());
+        tileEntity.__storageInterface = interface;
+        return interface;
+    }
+    StorageInterfaceFactory.getTileEntityInterface = getTileEntityInterface;
+})(StorageInterfaceFactory || (StorageInterfaceFactory = {}));
 /// <reference path="NativeContainerInterface.ts" />
 /// <reference path="TileEntityInterface.ts" />
+/// <reference path="StorageInterfaceFactory.ts" />
 var StorageInterface;
 (function (StorageInterface) {
     StorageInterface.data = {};
-    function getData(id) {
+    /** @returns TileEntity StorageInterface prototype by block id */
+    function getPrototype(id) {
         return StorageInterface.data[id];
     }
-    StorageInterface.getData = getData;
+    StorageInterface.getPrototype = getPrototype;
+    /** Registers interface for block container */
+    function createInterface(id, descriptor, classType) {
+        if (classType === void 0) { classType = StorageInterface.TileEntityInterface; }
+        var prototype = __assign({}, descriptor);
+        if (descriptor.slots) {
+            for (var name in descriptor.slots) {
+                if (name.includes('^')) {
+                    var slotData = descriptor.slots[name];
+                    var str = name.split('^');
+                    var index = str[1].split('-');
+                    for (var i = parseInt(index[0]); i <= parseInt(index[1]); i++) {
+                        descriptor.slots[str[0] + i] = slotData;
+                    }
+                    delete descriptor.slots[name];
+                }
+            }
+        }
+        else {
+            prototype.slots = {};
+        }
+        prototype.classType = classType;
+        StorageInterface.data[id] = prototype;
+    }
+    StorageInterface.createInterface = createInterface;
     StorageInterface.directionsBySide = [
         { x: 0, y: -1, z: 0 },
         { x: 0, y: 1, z: 0 },
@@ -307,35 +363,14 @@ var StorageInterface;
     /** Creates new interface instance for TileEntity or Container */
     function getInterface(storage) {
         if ("container" in storage) {
-            return new TileEntityInterface(storage);
+            return StorageInterfaceFactory.getTileEntityInterface(storage);
         }
         if ("getParent" in storage) {
-            return new TileEntityInterface(storage.getParent());
+            return StorageInterfaceFactory.getTileEntityInterface(storage.getParent());
         }
         return new NativeContainerInterface(storage);
     }
     StorageInterface.getInterface = getInterface;
-    /** Registers interface for block container */
-    function createInterface(id, descriptor) {
-        if (descriptor.slots) {
-            for (var name in descriptor.slots) {
-                if (name.includes('^')) {
-                    var slotData = descriptor.slots[name];
-                    var str = name.split('^');
-                    var index = str[1].split('-');
-                    for (var i = parseInt(index[0]); i <= parseInt(index[1]); i++) {
-                        descriptor.slots[str[0] + i] = slotData;
-                    }
-                    delete descriptor.slots[name];
-                }
-            }
-        }
-        else {
-            descriptor.slots = {};
-        }
-        StorageInterface.data[id] = descriptor;
-    }
-    StorageInterface.createInterface = createInterface;
     /** Trasfers item to slot
      * @count amount to transfer. Default is 64.
      * @returns transfered amount
@@ -372,7 +407,7 @@ var StorageInterface;
         }
         var tileEntity = World.getTileEntity(x, y, z, region);
         if (tileEntity && tileEntity.container && tileEntity.__initialized) {
-            return new TileEntityInterface(tileEntity);
+            return StorageInterfaceFactory.getTileEntityInterface(tileEntity);
         }
         return null;
     }
@@ -381,7 +416,7 @@ var StorageInterface;
     function getLiquidStorage(region, x, y, z) {
         var tileEntity = World.getTileEntity(x, y, z, region);
         if (tileEntity && tileEntity.__initialized) {
-            return new TileEntityInterface(tileEntity);
+            return StorageInterfaceFactory.getTileEntityInterface(tileEntity);
         }
         return null;
     }
@@ -525,8 +560,8 @@ var StorageInterface;
      * @returns left liquid amount
     */
     function extractLiquid(liquid, maxAmount, inputStorage, outputStorage, inputSide) {
-        if (!(inputStorage instanceof TileEntityInterface)) { // reverse compatibility
-            inputStorage = new TileEntityInterface(inputStorage);
+        if (!(inputStorage instanceof StorageInterface.TileEntityInterface)) { // reverse compatibility
+            inputStorage = StorageInterfaceFactory.getTileEntityInterface(inputStorage);
         }
         var outputSide = inputSide ^ 1;
         var inputTank = inputStorage.getInputTank(inputSide);
@@ -546,8 +581,8 @@ var StorageInterface;
     StorageInterface.extractLiquid = extractLiquid;
     /** Similar to StorageInterface.extractLiquid, but liquid must be specified */
     function transportLiquid(liquid, maxAmount, outputStorage, inputStorage, outputSide) {
-        if (!(outputStorage instanceof TileEntityInterface)) { // reverse compatibility
-            outputStorage = new TileEntityInterface(outputStorage);
+        if (!(outputStorage instanceof StorageInterface.TileEntityInterface)) { // reverse compatibility
+            outputStorage = StorageInterfaceFactory.getTileEntityInterface(outputStorage);
         }
         var inputSide = outputSide ^ 1;
         var inputTank = inputStorage.getInputTank(inputSide);
@@ -588,13 +623,13 @@ var StorageInterface;
         }
     }
     StorageInterface.checkHoppers = checkHoppers;
+    Callback.addCallback("TileEntityAdded", function (tileEntity, created) {
+        if (created) { // fix of TileEntity access from ItemContainer
+            tileEntity.container.setParent(tileEntity);
+        }
+        if (StorageInterface.data[tileEntity.blockID]) { // reverse compatibility
+            tileEntity.interface = StorageInterfaceFactory.getTileEntityInterface(tileEntity);
+        }
+    });
 })(StorageInterface || (StorageInterface = {}));
-Callback.addCallback("TileEntityAdded", function (tileEntity, created) {
-    if (created) { // fix of TileEntity access from ItemContainer
-        tileEntity.container.setParent(tileEntity);
-    }
-    if (StorageInterface.data[tileEntity.blockID]) { // reverse compatibility
-        tileEntity.interface = new TileEntityInterface(tileEntity);
-    }
-});
 EXPORT("StorageInterface", StorageInterface);

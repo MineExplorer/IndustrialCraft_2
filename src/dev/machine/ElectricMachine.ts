@@ -39,25 +39,25 @@ namespace Machine {
 		}
 
 		dischargeSlot(slotName: string) {
-			let amount = this.getEnergyStorage() - this.data.energy;
+			const amount = this.getEnergyStorage() - this.data.energy;
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot(slotName), "Eu", amount, this.getTier());
 		}
 
 		energyTick(type: string, src: EnergyTileNode): void {}
 
 		energyReceive(type: string, amount: number, voltage: number): number {
-			let maxVoltage = this.getMaxPacketSize();
+			const maxVoltage = this.getMaxPacketSize();
 			if (voltage > maxVoltage) {
 				if (IC2Config.voltageEnabled) {
 					this.blockSource.setBlock(this.x, this.y, this.z, 0, 0);
 					this.blockSource.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.getExplosionPower(), true);
-					SoundManager.playSoundAtBlock(this, "MachineOverload.ogg", 1, 32);
+					SoundLib.playSoundAtBlock(this, this.dimension, "MachineOverload.ogg", 1, 1, 32);
 					this.selfDestroy();
 					return 1;
 				}
 				amount = Math.min(amount, maxVoltage);
 			}
-			let add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
+			const add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
 			this.data.energy += add;
 			return add;
 		}

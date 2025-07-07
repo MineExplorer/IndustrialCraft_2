@@ -5,8 +5,14 @@ BlockRegistry.createBlock("metalFormer", [
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.metalFormer, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.metalFormer, 2, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.metalFormer, 2, [["machine_bottom", 0], ["metal_former_top", 1], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModel(BlockID.metalFormer, 2, [["machine_bottom", 0], ["metal_former_top", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModel(BlockID.metalFormer, 3, [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModel(BlockID.metalFormer, 4, [["machine_bottom", 0], ["metal_former_top2", 0], ["machine_side", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModel(BlockID.metalFormer, 5, [["machine_bottom", 0], ["metal_former_top2", 0], ["machine_side", 0], ["machine_side", 0], ["machine_side", 0], ["metal_former_front", 0]]);
+TileRenderer.registerRenderModel(BlockID.metalFormer, 2, [["machine_bottom", 0], ["metal_former_top_active", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.metalFormer, 3, [["machine_bottom", 0], ["metal_former_top_active", 0], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.metalFormer, 4, [["machine_bottom", 0], ["metal_former_top2_active", 0], ["machine_side", 0], ["machine_side", 0], ["metal_former_front", 1], ["machine_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.metalFormer, 5, [["machine_bottom", 0], ["metal_former_top2_active", 0], ["machine_side", 0], ["machine_side", 0], ["machine_side", 0], ["metal_former_front", 1]]);
 TileRenderer.setRotationFunction(BlockID.metalFormer);
 
 ItemName.addTierTooltip("metalFormer", 1);
@@ -131,16 +137,16 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
-			let sourceSlot = this.container.getSlot("slotSource");
-			let resultSlot = this.container.getSlot("slotResult");
-			let result = this.getRecipeResult(sourceSlot.id);
+			const sourceSlot = this.container.getSlot("slotSource");
+			const resultSlot = this.container.getSlot("slotResult");
+			const result = this.getRecipeResult(sourceSlot.id);
 			if (result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
 				if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;
-					this.data.progress += 1 / this.processTime;
+					this.updateProgress();
 					newActive = true;
 				}
-				if (+this.data.progress.toFixed(3) >= 1) {
+				if (this.isCompletedProgress()) {
 					this.decreaseSlot(sourceSlot, 1);
 					resultSlot.setSlot(result.id, resultSlot.count + result.count, 0);
 					this.data.progress = 0;
@@ -159,11 +165,13 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		switchMode(): void {
 			this.data.mode = (this.data.mode + 1) % 3;
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		setModeIcon(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
 			if (content) {

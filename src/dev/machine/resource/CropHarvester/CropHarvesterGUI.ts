@@ -7,8 +7,8 @@ const cropHarvesterGuiElements: UI.ElementSet = {
 };
 
 for (let i = 0; i < 15; i++) {
-	let x = i % 5;
-	let y = Math.floor(i / 5) + 1;
+	const x = i % 5;
+	const y = Math.floor(i / 5) + 1;
 	cropHarvesterGuiElements["outSlot" + i] = { type: "slot", x: 520 + x * 60, y: 50 + y * 60 };
 };
 

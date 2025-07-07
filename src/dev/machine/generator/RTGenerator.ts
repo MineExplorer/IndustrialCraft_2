@@ -5,7 +5,7 @@ BlockRegistry.setBlockMaterial(BlockID.rtGenerator, "stone", 1);
 ItemName.addTierTooltip(BlockID.rtGenerator, 1);
 
 TileRenderer.setStandardModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
-TileRenderer.registerRenderModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top", 1], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top_active", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.rtGenerator, count: 1, data: 0}, [
@@ -47,7 +47,7 @@ namespace Machine {
 		onTick(): void {
 			let output = 0.5;
 			for (let i = 0; i < 6; i++) {
-				let slot = this.container.getSlot("slot"+i);
+				const slot = this.container.getSlot("slot"+i);
 				if (slot.id == ItemID.rtgPellet) {
 					output *= 2;
 				}

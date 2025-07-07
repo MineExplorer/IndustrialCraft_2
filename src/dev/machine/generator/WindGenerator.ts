@@ -5,6 +5,7 @@ BlockRegistry.setBlockMaterial(BlockID.genWindmill, "stone", 1);
 ItemName.addTierTooltip(BlockID.genWindmill, 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill_rotating", 0], ["windmill_rotating", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.genWindmill);
 
 Callback.addCallback("PreLoaded", function() {
@@ -37,10 +38,12 @@ namespace Machine {
 		}
 
 		onInit(): void {
-			if (this.dimension != 0) this.selfDestroy();
+			super.onInit();
+			if (this.dimension != 0)
+				this.selfDestroy();
 		}
 
-		energyTick(type: string, src: EnergyTileNode): void {
+		onTick(): void {
 			if (++this.data.ticker % 128 == 0) {
 				if (this.data.ticker % 1024 == 0) {
 					this.updateBlockCount();
@@ -49,7 +52,13 @@ namespace Machine {
 				if (wind < 0) wind = 0;
 				this.data.output = Math.round(wind/3 * 10)/10;
 			}
-			src.add(this.data.output);
+			this.setActive(this.data.output > 0);
+		}
+
+		energyTick(type: string, src: EnergyTileNode): void {
+			if (this.data.output > 0) {
+				src.add(this.data.output);
+			}
 		}
 
 		canRotate(side: number): boolean {

@@ -88,7 +88,7 @@ namespace Machine {
 					this.data.progress = 0;
 				}
 
-				let outputSlot = this.container.getSlot("slotFertilizer");
+				const outputSlot = this.container.getSlot("slotFertilizer");
 				if (this.data.fertilizer >= 25) {
 					this.data.fertilizer = 0;
 					outputSlot.setSlot(ItemID.fertilizer, outputSlot.count + 1, 0);
@@ -115,7 +115,7 @@ namespace Machine {
 		}
 
 		receiveHeat(amount: number): number {
-			let outputSlot = this.container.getSlot("slotFertilizer");
+			const outputSlot = this.container.getSlot("slotFertilizer");
 			if (this.inputTank.getAmount("biomass") >= 20 && this.outputTank.getAmount("biogas") <= 1600 && outputSlot.count < 64) {
 				this.data.heat = amount;
 				return amount;

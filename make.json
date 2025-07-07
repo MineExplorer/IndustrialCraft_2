@@ -3,7 +3,7 @@
 		"info": {
 			"name": "IndustrialCraft PE",
 			"author": "Mine Explorer and Nikolay Savenko",
-			"version": "2.3 prerelease 14",
+			"version": "2.4",
 			"description": "Electricity, machines and power tools",
 			"icon": "src/icon.png"
 		},
@@ -22,7 +22,7 @@
 		],
 		"excludeFromRelease": [],
 		"modFolder": "IndustrialCraft2",
-		"pushTo": "storage/emulated/0/games/horizon/packs/Inner_Core/innercore/mods/IndustrialCraft2",
+		"pushTo": "sdcard/games/horizon/packs/Inner_Core__ARM64_/innercore/mods/",
 		"ndkPath": null
 	},
 	"resources": [
@@ -68,7 +68,7 @@
 	],
 	"additional": [
 		{
-			"source": "src/config.json",
+			"source": "src/default.config.json",
 			"targetDir": "."
 		},
 		{

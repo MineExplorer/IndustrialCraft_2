@@ -1,7 +1,7 @@
 /// <reference path="IWrenchable.ts" />
 
 namespace Machine {
-	export let {ClientSide, NetworkEvent, ContainerEvent} = BlockEngine.Decorators;
+	export const {ClientSide, NetworkEvent, ContainerEvent} = BlockEngine.Decorators;
 
 	export abstract class MachineBase
 	extends TileEntityBase
@@ -10,9 +10,6 @@ namespace Machine {
 		defaultDrop?: number;
 
 		onInit(): void {
-			this.networkData.putInt(NetworkDataKeys.blockId, this.blockID);
-			this.networkData.putInt(NetworkDataKeys.facing, this.getFacing());
-			this.networkData.sendChanges();
 			this.setupContainer();
 			delete this.liquidStorage;
 		}
@@ -20,10 +17,10 @@ namespace Machine {
 		setupContainer(): void {}
 
 		addLiquidTank(name: string, limit: number, liquids?: string[]) {
-			let tank = new BlockEngine.LiquidTank(this, name, limit, liquids);
-			let liquid = this.liquidStorage.getLiquidStored();
+			const tank = new BlockEngine.LiquidTank(this, name, limit, liquids);
+			const liquid = this.liquidStorage.getLiquidStored();
 			if (liquid) {
-				let amount = this.liquidStorage.getLiquid(liquid, tank.getLimit() / 1000);
+				const amount = this.liquidStorage.getLiquid(liquid, tank.getLimit() / 1000);
 				tank.addLiquid(liquid, Math.round(amount * 1000));
 			}
 			return tank;
@@ -47,33 +44,10 @@ namespace Machine {
 		}
 
 		setActive(isActive: boolean): void {
-			// TODO: sounds
 			if (this.networkData.getBoolean(NetworkDataKeys.isActive) !== isActive) {
 				this.networkData.putBoolean(NetworkDataKeys.isActive, isActive);
 				this.networkData.sendChanges();
 			}
-		}
-
-		@ClientSide
-		renderModel(): void {
-			if (this.networkData.getBoolean(NetworkDataKeys.isActive)) {
-				let blockId = Network.serverToLocalId(this.networkData.getInt(NetworkDataKeys.blockId));
-				let facing = this.networkData.getInt(NetworkDataKeys.facing);
-				TileRenderer.mapAtCoords(this.x, this.y, this.z, blockId, facing);
-			} else {
-				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
-			}
-		}
-
-		clientLoad(): void {
-			this.renderModel();
-			this.networkData.addOnDataChangedListener((data, isExternal) => {
-				this.renderModel();
-			});
-		}
-
-		clientUnload(): void {
-			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
 		}
 
 		getFacing(): number {
@@ -83,8 +57,6 @@ namespace Machine {
 		setFacing(side: number): boolean {
 			if (this.getFacing() != side) {
 				this.blockSource.setBlock(this.x, this.y, this.z, this.blockID, side);
-				this.networkData.putInt(NetworkDataKeys.facing, side);
-				this.networkData.sendChanges();
 				return true;
 			}
 			return false;
@@ -104,45 +76,118 @@ namespace Machine {
 			return item;
 		}
 
-		// Audio
-		audioSource: AudioSource;
-		finishingSound: number;
+		/* Client prototype */
+		audioSource: AudioSourceClient;
+		wasActive: boolean;
 
+		@ClientSide
+		updateActivity(isActive: boolean): void {
+			if (isActive) {
+				const region = BlockSource.getCurrentClientRegion();
+				const block = region.getBlock(this.x, this.y, this.z);
+				TileRenderer.mapAtCoords(this.x, this.y, this.z, block.id, block.data);
+				this.startPlaySound();
+			} else {
+				BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+				this.stopPlaySound();
+			}
+		}
+
+		clientLoad(): void {
+			if (IC2Config.soundEnabled) {
+				this.audioSource = new AudioSourceClient({
+					x: this.x + .5,
+					y: this.y + .5,
+					z: this.z + .5
+				});
+			}
+			this.wasActive = this.networkData.getBoolean(NetworkDataKeys.isActive);
+			this.updateActivity(this.wasActive);
+		}
+
+		clientUnload(): void {
+			BlockRenderer.unmapAtCoords(this.x, this.y, this.z);
+			this.audioSource?.unload();
+		}
+
+		clientTick(): void {
+			this.audioSource?.update();
+			const isActive = this.networkData.getBoolean(NetworkDataKeys.isActive);
+			if (this.wasActive != isActive) {
+				this.updateActivity(isActive);
+				this.wasActive = isActive;
+			}
+		}
+		
+		@ClientSide
 		getOperationSound(): string {
 			return null;
 		}
 
+		@ClientSide
 		getStartingSound(): string {
 			return null;
 		}
 
-		getInterruptSound(): string {
+		@ClientSide
+		getFinishingSound(): string {
 			return null;
 		}
 
+		@ClientSide
 		startPlaySound(): void {
-			/*if (!IC2Config.machineSoundEnabled) return;
-			if (!this.audioSource && !this.remove) {
-				if (this.finishingSound != 0) {
-					SoundManager.stop(this.finishingSound);
+			if (!IC2Config.soundEnabled || !this.audioSource || this.remove) return;
+
+			if (this.getFinishingSound()) {
+				this.audioSource.stop(this.getFinishingSound());
+			}
+			
+			const opSound = this.getOperationSound();
+			if (this.getStartingSound()) {
+				const stream = this.audioSource.play(this.getStartingSound());
+				if (opSound) {
+					if (stream) {
+						stream.setOnCompleteEvent((source, stream) => {
+                    		source.play(opSound, true, stream.volume, stream.radius);
+						});
+					}
+					else {
+						this.audioSource.play(opSound, true); // if failed to play starting sound set looping operation sound
+					}
 				}
-				if (this.getStartingSound()) {
-					this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getStartingSound());
-					//this.audioSource.setNextSound(this.getOperationSound(), true);
-				} else if (this.getOperationSound()) {
-					this.audioSource = SoundManager.createSource(SourceType.TILEENTITY, this, this.getOperationSound());
-				}
-			}*/
+			} else if (opSound) {
+				this.audioSource.playSingle(opSound, true);
+			}
 		}
 
+		@ClientSide
 		stopPlaySound(): void {
-			/*if (this.audioSource) {
-				SoundManager.removeSource(this.audioSource);
-				this.audioSource = null;
-				if (this.getInterruptSound()) {
-					this.finishingSound = SoundManager.playSoundAtBlock(this, this.getInterruptSound(), 1);
-				}
-			}*/
+			if (!IC2Config.soundEnabled || !this.audioSource || this.remove) return;
+			
+			let wasPlayingSound = false;
+			if (this.getStartingSound()) {
+				wasPlayingSound = this.audioSource.stop(this.getStartingSound());
+			}
+			if (this.getOperationSound()) {
+				wasPlayingSound ||= this.audioSource.stop(this.getOperationSound());
+			}
+			if (wasPlayingSound && this.getFinishingSound()) {
+				this.audioSource.play(this.getFinishingSound());
+			}
+		}
+
+		/** @deprecated Network event, shouldn't be called */
+		@NetworkEvent(Side.Client)
+		playSound(packetData: {name: string, vol: number, rad: number}, packetExtra: any): void {
+			if (!this.audioSource) return;
+			const stream = this.audioSource.getStream(packetData.name);
+			if (!stream) {
+				this.audioSource.play(packetData.name, false, packetData.vol, packetData.rad);
+			}
+		}
+
+		playOnce(soundName: string, volume: number = 1, radius: number = 16) {
+			this.networkEntity.send("playSound", {name: soundName, vol: volume, rad: radius});
 		}
 	}
 }

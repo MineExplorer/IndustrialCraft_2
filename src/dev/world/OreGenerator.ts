@@ -37,22 +37,22 @@ namespace OreGenerator {
 
 	export function addFlag(oreName: string, flagName: string, disableOre?: boolean): void {
 		if (this[oreName].enabled) {
-			let flag = !Flags.addFlag(flagName)
+			const flag = !Flags.addFlag(flagName)
 			if (disableOre) this[oreName].enabled = flag;
 		}
 	}
 
 	export function randomCoords(random: java.util.Random, chunkX: number, chunkZ: number, minHeight: number = 0, maxHeight: number = 128): Vector {
-		let x = chunkX*16 + random.nextInt(16);
-		let z = chunkZ*16 + random.nextInt(16);
-		let y = random.nextInt(maxHeight - minHeight + 1) + minHeight;
+		const x = chunkX*16 + random.nextInt(16);
+		const z = chunkZ*16 + random.nextInt(16);
+		const y = random.nextInt(maxHeight - minHeight + 1) + minHeight;
 		return {x: x, y: y, z: z};
 	}
 
 	export function generateOre(chunkX: number, chunkZ: number, blockID: number, properties: OreProperties, random: java.util.Random): void {
 		for (let i = 0; i < properties.count; i++) {
-			let coords = randomCoords(random, chunkX, chunkZ, properties.minHeight, properties.maxHeight);
-			GenerationUtils.generateOre(coords.x, coords.y, coords.z, blockID, 0, properties.size, false, random.nextInt());
+			const coords = randomCoords(random, chunkX, chunkZ, properties.minHeight, properties.maxHeight);
+			GenerationUtils.generateOre(coords.x, coords.y, coords.z, blockID, 0, properties.size, false);
 		}
 	}
 }
@@ -76,7 +76,7 @@ Callback.addCallback("GenerateChunk", function(chunkX, chunkZ, random) {
 		OreGenerator.generateOre(chunkX, chunkZ, BlockID.oreUranium, OreGenerator.uranium, random);
 	}
 	if (random.nextDouble() < OreGenerator.iridium.chance) {
-		let coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.iridium.minHeight, OreGenerator.iridium.maxHeight);
+		const coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.iridium.minHeight, OreGenerator.iridium.maxHeight);
 		if (World.getBlockID(coords.x, coords.y, coords.z) == 1)
 			World.setBlock(coords.x, coords.y, coords.z, BlockID.oreIridium, 0);
 	}

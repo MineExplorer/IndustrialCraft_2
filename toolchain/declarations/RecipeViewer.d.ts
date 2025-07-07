@@ -15,7 +15,7 @@ declare interface RecipePattern {
 
 declare abstract class RecipeType {
 
-    constructor(name: string, icon: number | Tile, content: {params?: UI.BindingsSet, drawing?: UI.DrawingSet, elements: {[key: string]: object}});
+    constructor(name: string, icon: number | Tile, content: {params?: UI.BindingSet, drawing?: UI.DrawingSet, elements: {[key: string]: object}});
 
     setDescription(text: string): this;
     setTankLimit(limit: number | {[key: string]: number}): this;

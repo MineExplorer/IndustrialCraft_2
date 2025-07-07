@@ -17,8 +17,8 @@ Callback.addCallback("PreLoaded", function() {
 	]);
 
 	Recipes.addShaped({id: ItemID.weedEx, count: 1, data: 0}, [
-        "z",
-        "x",
-        "c"
-    ], ['z', 331, 0, 'x', ItemID.grinPowder, 0, 'c', ItemID.cellEmpty, 0]);
+		"z",
+		"x",
+		"c"
+	], ['z', 331, 0, 'x', ItemID.grinPowder, 0, 'c', ItemID.cellEmpty, 0]);
 });

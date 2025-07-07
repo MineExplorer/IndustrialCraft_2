@@ -86,7 +86,7 @@ namespace Machine {
 				return true;
 			}
 			if (this.data.mode == 3) {
-				let recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
+				const recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
 				for (let i in recipes) {
 					if (recipes[i].input[1].id == id) return true;
 				}
@@ -97,7 +97,7 @@ namespace Machine {
 		isValidCan(id: number, data: number): boolean {
 			switch (this.data.mode) {
 			case 0: {
-				let recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+				const recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 				for (let i in recipes) {
 					if (recipes[i].can == id) return true;
 				}
@@ -142,10 +142,10 @@ namespace Machine {
 					if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
 						if (this.data.energy >= this.energyDemand) {
 							this.data.energy -= this.energyDemand;
-							this.data.progress += 1 / this.processTime;
+							this.updateProgress();
 							newActive = true;
 						}
-						if (+this.data.progress.toFixed(3) >= 1) {
+						if (this.isCompletedProgress()) {
 							this.decreaseSlot(sourceSlot, 1);
 							this.decreaseSlot(canSlot, result.count);
 							resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);
@@ -163,10 +163,10 @@ namespace Machine {
 				if (empty && (!liquid || empty.liquid == liquid) && !this.outputTank.isFull()) {
 					if (this.data.energy >= this.energyDemand && (resultSlot.id == empty.id && resultSlot.data == empty.data && resultSlot.count < Item.getMaxStack(empty.id) || resultSlot.id == 0)) {
 						this.data.energy -= this.energyDemand;
-						this.data.progress += 1 / this.processTime;
+						this.updateProgress();
 						newActive = true;
 					}
-					if (+this.data.progress.toFixed(3) >= 1) {
+					if (this.isCompletedProgress()) {
 						this.outputTank.getLiquidFromItem(canSlot, resultSlot);
 						this.data.progress = 0;
 					}
@@ -184,10 +184,10 @@ namespace Machine {
 						resetProgress = false;
 						if (this.data.energy >= this.energyDemand && (resultSlot.id == full.id && resultSlot.data == full.data && resultSlot.count < Item.getMaxStack(full.id) || resultSlot.id == 0)) {
 							this.data.energy -= this.energyDemand;
-							this.data.progress += 1/this.processTime;
+							this.updateProgress();
 							newActive = true;
 						}
-						if (+this.data.progress.toFixed(3) >= 1) {
+						if (this.isCompletedProgress()) {
 							this.inputTank.addLiquidToItem(canSlot, resultSlot);
 							this.data.progress = 0;
 						}
@@ -209,10 +209,10 @@ namespace Machine {
 						let outputLiquid = this.outputTank.getLiquidStored()
 						if ((!outputLiquid || recipe.output == outputLiquid && this.outputTank.getAmount() <= 7000) && this.data.energy >= this.energyDemand) {
 							this.data.energy -= this.energyDemand;
-							this.data.progress += 1 / this.processTime;
+							this.updateProgress();
 							newActive = true;
 						}
-						if (+this.data.progress.toFixed(3) >= 1) {
+						if (this.isCompletedProgress()) {
 							this.inputTank.getLiquid(1000);
 							this.decreaseSlot(sourceSlot, source.count);
 							this.outputTank.addLiquid(recipe.output, 1000);
@@ -237,6 +237,11 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
+		canRotate(side: number): boolean {
+			return side > 1;
+		}
+		
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		switchMode(): void {
 			if (this.data.progress == 0) {
@@ -245,6 +250,7 @@ namespace Machine {
 			}
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
 		switchTanks(): void {
 			if (this.data.progress == 0) {
@@ -254,6 +260,7 @@ namespace Machine {
 			}
 		}
 
+		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Client)
 		updateUI(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
 			if (content) {
@@ -266,10 +273,6 @@ namespace Machine {
 					element.visual = data.mode % 3 > 0;
 				}
 			}
-		}
-
-		canRotate(side: number): boolean {
-			return side > 1;
 		}
 	}
 

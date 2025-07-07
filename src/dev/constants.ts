@@ -1,7 +1,7 @@
 const NetworkDataKeys = {
-  blockId: "blockId",
-  facing: "facing",
-  isActive: "active"
+  isActive: "active",
+  isBoosted: "boosted",
+  powerOutput: "power"
 }
 
 const IC2NetworkPackets = {

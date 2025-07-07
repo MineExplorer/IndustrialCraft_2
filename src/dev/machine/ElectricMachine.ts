@@ -51,7 +51,7 @@ namespace Machine {
 				if (IC2Config.voltageEnabled) {
 					this.blockSource.setBlock(this.x, this.y, this.z, 0, 0);
 					this.blockSource.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.getExplosionPower(), true);
-					SoundLib.playSoundAtBlock(this, this.dimension, "MachineOverload.ogg", 32);
+					SoundLib.playSoundAtBlock(this, this.dimension, "MachineOverload.ogg", 1, 1, 32);
 					this.selfDestroy();
 					return 1;
 				}

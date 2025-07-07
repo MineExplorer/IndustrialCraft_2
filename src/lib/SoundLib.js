@@ -45,10 +45,20 @@ var SoundLib;
             Registry.resourcePath = path;
         }
         Registry.setBasePath = setBasePath;
+        /**
+         * Registers sound.
+         * @param name sound string identifier
+         * @param filePath file path
+         */
         function registerSound(name, filePath) {
             Registry.soundData[name] = new Sound(name, Registry.resourcePath + filePath);
         }
         Registry.registerSound = registerSound;
+        /**
+         * Registers multiple sounds for the same string id.
+         * @param name string id that can be used to play one of the folowing sounds randomly
+         * @param filePaths file paths array
+         */
         function registerMultiSound(name, filePaths) {
             var soundIds = [];
             for (var i = 0; i < filePaths.length; i++) {
@@ -59,6 +69,10 @@ var SoundLib;
             Registry.soundData[name] = new MultiSound(name, soundIds);
         }
         Registry.registerMultiSound = registerMultiSound;
+        /**
+         * @param name sound name
+         * @returns returns sound by its name or random sound if multi-sound id provided
+         */
         function getSound(name) {
             var sound = Registry.soundData[name];
             if (!sound) {
@@ -71,6 +85,9 @@ var SoundLib;
             return sound;
         }
         Registry.getSound = getSound;
+        /**
+         * @internal Returns all registered sounds
+         */
         function getAllSounds() {
             return Object.values(Registry.soundData).filter(function (s) { return s instanceof Sound; });
         }
@@ -81,7 +98,7 @@ var SoundLib;
  * Class for wrapping SoundPool object and provide client-side methods to play sounds
  */
 var SoundManagerClient = /** @class */ (function () {
-    function SoundManagerClient(maxStreamsCount, globalVolume, sounds) {
+    function SoundManagerClient(maxStreamsCount, globalVolume) {
         this.settingsFolder = IS_OLD ? "Horizon" : "com.mojang";
         this.settingsPath = "/storage/emulated/0/games/".concat(this.settingsFolder, "/minecraftpe/options.txt");
         this.maxStreams = 0;
@@ -89,7 +106,6 @@ var SoundManagerClient = /** @class */ (function () {
         this.maxStreams = maxStreamsCount;
         this.globalVolume = globalVolume;
         this.readSettings();
-        this.loadSounds(sounds);
     }
     SoundManagerClient.prototype.readSettings = function () {
         var options = FileTools.ReadKeyValueFile(this.settingsPath);
@@ -123,7 +139,7 @@ var SoundManagerClient = /** @class */ (function () {
         Logger.Log("Loaded sounds in ".concat(loadTime, " ms"), "SoundLib");
     };
     /**
-     * Starts playing ssoundVolumeound and returns its streamId or 0 if failes to play sound.
+     * Starts playing sound and returns its streamId or 0 if failes to play sound.
      * @param sound sound name or object
      * @param looping true if sound is looped, false otherwise
      * @param volume value from 0 to 1
@@ -136,6 +152,10 @@ var SoundManagerClient = /** @class */ (function () {
         if (pitch === void 0) { pitch = 1; }
         if (typeof sound === "string") {
             sound = SoundLib.Registry.getSound(sound);
+        }
+        if (!sound || !sound.isLoaded()) {
+            Logger.Log("Attempted to play not loaded sound ".concat(sound.name), "ERROR");
+            return 0;
         }
         volume *= this.getSoundVolume();
         var startTime = Debug.sysTime();
@@ -208,21 +228,22 @@ var SoundLib;
     }
     SoundLib.getClient = getClient;
     /**
-     * Initializes client side code if the current instance of game has a client
+     * Initializes client side code if the current instance of game is not a dedicated server
      * @param maxStreamsCount max count of concurrently playing streams
      * @param globalVolume volume modifier for all sounds
      */
-    function init(maxStreamsCount, globalVolume) {
+    function initClient(maxStreamsCount, globalVolume) {
         if (globalVolume === void 0) { globalVolume = 1; }
         if (!Game.isDedicatedServer || !Game.isDedicatedServer()) {
-            _client = new SoundManagerClient(maxStreamsCount, globalVolume, SoundLib.Registry.getAllSounds());
+            _client = new SoundManagerClient(maxStreamsCount, globalVolume);
+            _client.loadSounds(SoundLib.Registry.getAllSounds());
         }
     }
-    SoundLib.init = init;
-    function playSoundAt(x, y, z, dimension, soundName, radius, volume, pitch) {
+    SoundLib.initClient = initClient;
+    function playSoundAt(x, y, z, dimension, soundName, volume, pitch, radius) {
         if (typeof x == "object") {
             var coords = x;
-            return playSoundAt(coords.x, coords.y, coords.z, y, z, dimension, soundName, radius);
+            return playSoundAt(coords.x, coords.y, coords.z, y, z, dimension, soundName, volume);
         }
         var sound = SoundLib.Registry.getSound(soundName);
         if (!sound)
@@ -243,11 +264,11 @@ var SoundLib;
      * Plays sound at entity coords and dimension
      * @param entity entity id
      * @param soundName sound name
-     * @param radius radius in blocks, 16 by default
      * @param volume value from 0 to 1
      * @param pitch value from 0 to 1
+     * @param radius radius in blocks, 16 by default
      */
-    function playSoundAtEntity(entity, soundName, radius, volume, pitch) {
+    function playSoundAtEntity(entity, soundName, volume, pitch, radius) {
         var pos = Entity.getPosition(entity);
         var dimension = Entity.getDimension(entity);
         return playSoundAt(pos.x, pos.y, pos.z, dimension, soundName, volume, pitch, radius);
@@ -258,11 +279,11 @@ var SoundLib;
      * @param coords block coords
      * @param dimension dimension
      * @param soundName sound name
-     * @param radius radius in blocks, 16 by default
      * @param volume value from 0 to 1
      * @param pitch value from 0 to 1
+     * @param radius radius in blocks, 16 by default
      */
-    function playSoundAtBlock(coords, dimension, soundName, radius, volume, pitch) {
+    function playSoundAtBlock(coords, dimension, soundName, volume, pitch, radius) {
         return playSoundAt(coords.x + .5, coords.y + .5, coords.z + .5, dimension, soundName, volume, pitch, radius);
     }
     SoundLib.playSoundAtBlock = playSoundAtBlock;
@@ -325,6 +346,9 @@ var Sound = /** @class */ (function () {
     }
     Sound.prototype.load = function (soundPool) {
         this.internalId = soundPool.load(this.path, 1);
+    };
+    Sound.prototype.isLoaded = function () {
+        return !!this.internalId;
     };
     Sound.prototype.getDuration = function () {
         if (!this.duration) {
@@ -447,8 +471,8 @@ var AudioSourceClient = /** @class */ (function () {
     };
     /**
      * Plays sound from this source.
-     * If the sound cannot be played and its looped it creates SoundStream object in pending state,
-     * otherwise it just skipped.
+     * If the sound cannot be played and its looped it creates SoundStream object in a pending state,
+     * otherwise it is just skipped.
      * @param sound sound name
      * @param looping true if sound is looped, false otherwise
      * @param volume value from 0 to 1
@@ -493,6 +517,10 @@ var AudioSourceClient = /** @class */ (function () {
     AudioSourceClient.prototype.getStream = function (soundName) {
         return this.streams.find(function (s) { return s.name == soundName; }) || null;
     };
+    /**
+     * Сhecks if the given sound is playing
+     * @param soundName sound name
+     */
     AudioSourceClient.prototype.isPlaying = function (soundName) {
         var stream = this.getStream(soundName);
         return stream && stream.isPlaying();

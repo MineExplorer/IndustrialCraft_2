@@ -60,6 +60,9 @@ SoundLib.Registry.registerSound("NanosaberPowerup.ogg", "Tools/Nanosaber/Nanosab
 SoundLib.Registry.registerMultiSound("NanosaberSwing.ogg", ["Tools/Nanosaber/NanosaberSwing1.ogg", "Tools/Nanosaber/NanosaberSwing2.ogg", "Tools/Nanosaber/NanosaberSwing3.ogg"]);
 SoundLib.Registry.registerSound("QuantumsuitBoots.ogg", "Tools/QuantumSuit/QuantumsuitBoots.ogg");
 
-if (IC2Config.soundEnabled) {
-    SoundLib.init(16);
-}
+// Init sounds in a callback to allow add-on sounds to be registered before loading
+Callback.addCallback("PreLoaded", function() {
+    if (IC2Config.soundEnabled) {
+        SoundLib.initClient(16);
+    }
+});

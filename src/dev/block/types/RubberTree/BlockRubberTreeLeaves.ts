@@ -10,7 +10,7 @@ class BlockRubberTreeLeaves extends BlockBase {
 	}
 
 	getDrop(coords: Vector, block: Tile, level: number, enchant: ToolAPI.EnchantData, item: ItemStack, region: BlockSource): ItemInstanceArray[] {
-		if (level > 0 || enchant.silk || item?.id == 359) {
+		if (enchant.silk || item?.id == 359) {
 			return [[block.id, 1, 2]];
 		}
 		const drop = [];

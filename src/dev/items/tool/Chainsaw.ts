@@ -13,7 +13,7 @@ implements IHandEquippedFuncs {
 		ICTool.setOnHandEquipped(this.id, this);
 	}
 
-	modifyEnchants(enchantData: ToolAPI.EnchantData, item: ItemInstance, coords?: Callback.ItemUseCoordinates, block?: Tile): void {
+	modifyEnchant(enchantData: ToolAPI.EnchantData, item: ItemInstance, coords?: Callback.ItemUseCoordinates, block?: Tile): void {
 		if (block && ToolAPI.getBlockMaterialName(block.id) == "plant") {
 			enchantData.silk = true;
 		}
@@ -22,7 +22,7 @@ implements IHandEquippedFuncs {
 	onDestroy(item: ItemInstance, coords: Callback.ItemUseCoordinates, block: Tile, player: number): boolean {
 		if (Block.getDestroyTime(block.id) > 0) {
 			if (ICTool.dischargeItem(item, this.getEnergyPerUse(item), player) && (block.id == 18 || block.id == 161)) {
-				let region = WorldRegion.getForActor(player);
+				const region = WorldRegion.getForActor(player);
 				region.destroyBlock(coords);
 				region.dropAtBlock(coords.x, coords.y, coords.z, block.id, 1, block.data);
 			}

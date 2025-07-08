@@ -17,94 +17,98 @@ LIBRARY({
 });
 var LIQUID_STORAGE_MAX_LIMIT = 99999999;
 /// <reference path="Storage.ts" />
-var NativeContainerInterface = /** @class */ (function () {
-    function NativeContainerInterface(container) {
-        this.isNativeContainer = true;
-        this.container = container;
-    }
-    NativeContainerInterface.prototype.getSlot = function (index) {
-        return this.container.getSlot(index);
-    };
-    NativeContainerInterface.prototype.setSlot = function (index, id, count, data, extra) {
-        if (extra === void 0) { extra = null; }
-        this.container.setSlot(index, id, count, data, extra);
-    };
-    NativeContainerInterface.prototype.getContainerSlots = function () {
-        var slots = [];
-        var size = this.container.getSize();
-        for (var i = 0; i < size; i++) {
-            slots.push(i);
+var StorageInterface;
+(function (StorageInterface) {
+    var NativeContainerInterface = /** @class */ (function () {
+        function NativeContainerInterface(container) {
+            this.isNativeContainer = true;
+            this.container = container;
         }
-        return slots;
-    };
-    NativeContainerInterface.prototype.getInputSlots = function (side) {
-        var type = this.container.getType();
-        switch (type) {
-            case 1:
-            case 38:
-            case 39:
-                return [(side == 1) ? 0 : 1];
-            case 8:
-                return [(side == 1) ? 0 : 4];
-            default:
-                return this.getContainerSlots();
-        }
-    };
-    NativeContainerInterface.prototype.getReceivingItemCount = function (item, side) {
-        var slots = this.getInputSlots(side);
-        var count = 0;
-        for (var _i = 0, slots_1 = slots; _i < slots_1.length; _i++) {
-            var name = slots_1[_i];
-            var slot = this.getSlot(name);
-            if (slot.id == 0 || slot.id == item.id && slot.data == item.data) {
-                count += Item.getMaxStack(item.id) - slot.count;
-                if (count >= item.count)
+        NativeContainerInterface.prototype.getSlot = function (index) {
+            return this.container.getSlot(index);
+        };
+        NativeContainerInterface.prototype.setSlot = function (index, id, count, data, extra) {
+            if (extra === void 0) { extra = null; }
+            this.container.setSlot(index, id, count, data, extra);
+        };
+        NativeContainerInterface.prototype.getContainerSlots = function () {
+            var slots = [];
+            var size = this.container.getSize();
+            for (var i = 0; i < size; i++) {
+                slots.push(i);
+            }
+            return slots;
+        };
+        NativeContainerInterface.prototype.getInputSlots = function (side) {
+            var type = this.container.getType();
+            switch (type) {
+                case 1:
+                case 38:
+                case 39:
+                    return [(side == 1) ? 0 : 1];
+                case 8:
+                    return [(side == 1) ? 0 : 4];
+                default:
+                    return this.getContainerSlots();
+            }
+        };
+        NativeContainerInterface.prototype.getReceivingItemCount = function (item, side) {
+            var slots = this.getInputSlots(side);
+            var count = 0;
+            for (var _i = 0, slots_1 = slots; _i < slots_1.length; _i++) {
+                var name = slots_1[_i];
+                var slot = this.getSlot(name);
+                if (slot.id == 0 || slot.id == item.id && slot.data == item.data) {
+                    count += Item.getMaxStack(item.id) - slot.count;
+                    if (count >= item.count)
+                        break;
+                }
+            }
+            return Math.min(item.count, count);
+        };
+        NativeContainerInterface.prototype.addItemToSlot = function (index, item, maxCount) {
+            var slot = this.getSlot(index);
+            var added = StorageInterface.addItemToSlot(item, slot, maxCount);
+            if (added > 0) {
+                this.setSlot(index, slot.id, slot.count, slot.data, slot.extra);
+            }
+            return added;
+        };
+        NativeContainerInterface.prototype.addItem = function (item, side, maxCount) {
+            if (maxCount === void 0) { maxCount = 64; }
+            var count = 0;
+            var slots = this.getInputSlots(side);
+            for (var i = 0; i < slots.length; i++) {
+                count += this.addItemToSlot(i, item, maxCount);
+                if (item.count == 0 || count >= maxCount) {
                     break;
+                }
             }
-        }
-        return Math.min(item.count, count);
-    };
-    NativeContainerInterface.prototype.addItemToSlot = function (index, item, maxCount) {
-        var slot = this.getSlot(index);
-        var added = StorageInterface.addItemToSlot(item, slot, maxCount);
-        if (added > 0) {
-            this.setSlot(index, slot.id, slot.count, slot.data, slot.extra);
-        }
-        return added;
-    };
-    NativeContainerInterface.prototype.addItem = function (item, side, maxCount) {
-        if (maxCount === void 0) { maxCount = 64; }
-        var count = 0;
-        var slots = this.getInputSlots(side);
-        for (var i = 0; i < slots.length; i++) {
-            count += this.addItemToSlot(i, item, maxCount);
-            if (item.count == 0 || count >= maxCount) {
-                break;
+            return count;
+        };
+        NativeContainerInterface.prototype.getOutputSlots = function () {
+            var type = this.container.getType();
+            switch (type) {
+                case 1:
+                case 38:
+                case 39:
+                    return [2];
+                case 8:
+                    return [1, 2, 3];
+                default:
+                    return this.getContainerSlots();
             }
-        }
-        return count;
-    };
-    NativeContainerInterface.prototype.getOutputSlots = function () {
-        var type = this.container.getType();
-        switch (type) {
-            case 1:
-            case 38:
-            case 39:
-                return [2];
-            case 8:
-                return [1, 2, 3];
-            default:
-                return this.getContainerSlots();
-        }
-    };
-    NativeContainerInterface.prototype.clearContainer = function () {
-        var size = this.container.getSize();
-        for (var i = 0; i < size; i++) {
-            this.container.setSlot(i, 0, 0, 0);
-        }
-    };
-    return NativeContainerInterface;
-}());
+        };
+        NativeContainerInterface.prototype.clearContainer = function () {
+            var size = this.container.getSize();
+            for (var i = 0; i < size; i++) {
+                this.container.setSlot(i, 0, 0, 0);
+            }
+        };
+        return NativeContainerInterface;
+    }());
+    StorageInterface.NativeContainerInterface = NativeContainerInterface;
+})(StorageInterface || (StorageInterface = {}));
 /// <reference path="Storage.ts" />
 var StorageInterface;
 (function (StorageInterface) {
@@ -368,7 +372,7 @@ var StorageInterface;
         if ("getParent" in storage) {
             return StorageInterfaceFactory.getTileEntityInterface(storage.getParent());
         }
-        return new NativeContainerInterface(storage);
+        return new StorageInterface.NativeContainerInterface(storage);
     }
     StorageInterface.getInterface = getInterface;
     /** Trasfers item to slot
@@ -403,7 +407,7 @@ var StorageInterface;
     function getStorage(region, x, y, z) {
         var nativeTileEntity = region.getBlockEntity(x, y, z);
         if (nativeTileEntity && nativeTileEntity.getSize() > 0) {
-            return new NativeContainerInterface(nativeTileEntity);
+            return new StorageInterface.NativeContainerInterface(nativeTileEntity);
         }
         var tileEntity = World.getTileEntity(x, y, z, region);
         if (tileEntity && tileEntity.container && tileEntity.__initialized) {
@@ -626,9 +630,6 @@ var StorageInterface;
     Callback.addCallback("TileEntityAdded", function (tileEntity, created) {
         if (created) { // fix of TileEntity access from ItemContainer
             tileEntity.container.setParent(tileEntity);
-        }
-        if (StorageInterface.data[tileEntity.blockID]) { // reverse compatibility
-            tileEntity.interface = StorageInterfaceFactory.getTileEntityInterface(tileEntity);
         }
     });
 })(StorageInterface || (StorageInterface = {}));

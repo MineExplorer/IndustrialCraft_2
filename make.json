@@ -68,6 +68,10 @@
 	],
 	"additional": [
 		{
+			"source": "src/config.json",
+			"targetDir": "."
+		},
+		{
 			"source": "src/default.config.json",
 			"targetDir": "."
 		},

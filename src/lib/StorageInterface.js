@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
 };
 LIBRARY({
     name: "StorageInterface",
-    version: 13,
+    version: 14,
     shared: true,
     api: "CoreEngine"
 });
@@ -282,13 +282,17 @@ var StorageInterfaceFactory;
             return tileEntity.__storageInterface;
         }
         var storagePrototype = StorageInterface.getPrototype(tileEntity.blockID);
-        var interface = new storagePrototype.classType(tileEntity);
+        var interface;
         if (storagePrototype) {
+            interface = new storagePrototype.classType(tileEntity);
             for (var key in storagePrototype) {
                 if (key == "classType")
                     continue;
                 interface[key] = storagePrototype[key];
             }
+        }
+        else {
+            interface = new StorageInterface.TileEntityInterface(tileEntity);
         }
         tileEntity.__storageInterface = interface;
         return interface;
@@ -382,7 +386,7 @@ var StorageInterface;
     function addItemToSlot(item, slot, count) {
         if (count === void 0) { count = 64; }
         if (slot.id == 0 || slot.id == item.id && slot.data == item.data) {
-            var maxStack = Item.getMaxStack(item.id);
+            var maxStack = Item.getMaxStack(item.id, item.data);
             var add = Math.min(item.count, maxStack - slot.count);
             if (count < add)
                 add = count;

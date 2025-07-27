@@ -14,6 +14,7 @@ namespace MachineRecipeRegistry {
 						const numericID = VanillaBlockID[stringID] || VanillaItemID[stringID];
 						if (!numericID) {
 							const source = IDConverter.getIDData(stringID);
+							if (!source.id) continue;
 							newKey = source.id + ":" + source.data;
 						} else {
 							newKey = numericID;

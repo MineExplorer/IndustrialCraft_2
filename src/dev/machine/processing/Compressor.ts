@@ -33,8 +33,8 @@ Callback.addCallback("PreLoaded", function() {
 		"minecraft:netherbrick": {id: 112, count: 1, data: 0, sourceCount: 4},
 		"minecraft:glowstone_dust": {id: 89, count: 1, data: 0, sourceCount: 4},
 		"minecraft:quartz": {id: 155, count: 1, data: 0, sourceCount: 4},
-		"minecraft:packed_ice": {id: VanillaBlockID.ice, count: 1, data: 0, sourceCount: 9},
-		"minecraft:blue_ice": {id: VanillaBlockID.packed_ice, count: 1, data: 0, sourceCount: 9},
+		"minecraft:ice": {id: VanillaBlockID.packed_ice, count: 1, data: 0, sourceCount: 9},
+		"minecraft:packed_ice": {id: VanillaBlockID.blue_ice, count: 1, data: 0, sourceCount: 9},
 		// Items
 		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), sourceCount: 9},
 		"ItemID.ingotAlloy": {id: ItemID.plateAlloy, count: 1, data: 0},

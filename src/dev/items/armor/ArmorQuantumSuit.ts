@@ -17,11 +17,11 @@ class ArmorQuantumSuit extends ArmorElectric {
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
-		let energyStored = ChargeItemRegistry.getEnergyStored(item);
-		let energyPerDamage = this.getEnergyPerDamage();
-		let type = params.type;
+		const energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyPerDamage = this.getEnergyPerDamage();
+		const type = params.type;
 		if (energyStored >= energyPerDamage && (type == 2 || type == 3 || type == 11)) {
-			let energy = params.damage * energyPerDamage;
+			const energy = params.damage * energyPerDamage;
 			ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
 			return item;
 		}
@@ -36,35 +36,40 @@ class ArmorQuantumHelmet extends ArmorQuantumSuit {
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
-		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (params.type == 9 && energyStored >= 500) {
 			Game.prevent();
-			Entity.addEffect(playerUid, PotionEffect.waterBreathing, 1, 60);
+			Entity.addEffect(playerUid, EPotionEffect.WATER_BREATHING, 1, 60);
 			ChargeItemRegistry.setEnergyStored(item, energyStored - 500);
 		}
 		return super.onHurt(params, item, index, playerUid);
 	}
 
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
-		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (energyStored <= 0) return null;
 
-		Entity.clearEffect(playerUid, PotionEffect.poison);
-		Entity.clearEffect(playerUid, PotionEffect.wither);
-
 		let newEnergyStored = energyStored;
-		if (RadiationAPI.getRadiation(playerUid) > 0 && energyStored >= 100000) {
+		if (newEnergyStored >= 10000 && RadiationAPI.getRadiation(playerUid)) {
 			RadiationAPI.setRadiation(playerUid, 0);
-			newEnergyStored -= 100000;
+			newEnergyStored -= 10000;
+		}
+		if (newEnergyStored >= 10000 && Entity.getEffect(playerUid, EPotionEffect.POISON).duration > 0) {
+			Entity.clearEffect(playerUid, EPotionEffect.POISON);
+			newEnergyStored -= 10000;
+		}
+		if (newEnergyStored >= 25000 && Entity.getEffect(playerUid, EPotionEffect.WITHER).duration > 0) {
+			Entity.clearEffect(playerUid, EPotionEffect.WITHER);
+			newEnergyStored -= 25000;
 		}
 
-		let player = new PlayerEntity(playerUid);
-		let hunger = player.getHunger();
+		const player = new PlayerEntity(playerUid);
+		const hunger = player.getHunger();
 		if (hunger < 20 && newEnergyStored >= 500) {
-			let i = World.getThreadTime()%36;
-			let stack = player.getInventorySlot(i);
+			const i = World.getThreadTime()%36;
+			const stack = player.getInventorySlot(i);
 			if (stack.id == ItemID.tinCanFull) {
-				let count = Math.min(20 - hunger, stack.count);
+				const count = Math.min(20 - hunger, stack.count);
 				player.setHunger(hunger + count);
 				stack.decrease(count);
 				player.setInventorySlot(i, stack);
@@ -75,14 +80,14 @@ class ArmorQuantumHelmet extends ArmorQuantumSuit {
 
 		// night vision
 		if (newEnergyStored > 0 && item.extra && item.extra.getBoolean("nv")) {
-			let coords = Entity.getPosition(playerUid);
-			let time = World.getWorldTime() % 24000;
-			let region = WorldRegion.getForActor(playerUid);
+			const coords = Entity.getPosition(playerUid);
+			const time = World.getWorldTime() % 24000;
+			const region = WorldRegion.getForActor(playerUid);
 			if (region.getLightLevel(coords.x, coords.y, coords.z) > 13 && time <= 12000) {
-				Entity.addEffect(playerUid, PotionEffect.blindness, 1, 25);
-				Entity.clearEffect(playerUid, PotionEffect.nightVision);
+				Entity.addEffect(playerUid, EPotionEffect.BLINDNESS, 1, 25);
+				Entity.clearEffect(playerUid, EPotionEffect.NIGHT_VISION);
 			} else {
-				Entity.addEffect(playerUid, PotionEffect.nightVision, 1, 225);
+				Entity.addEffect(playerUid, EPotionEffect.NIGHT_VISION, 1, 225);
 			}
 			if (World.getThreadTime()%20 == 0) {
 				newEnergyStored = Math.max(newEnergyStored - 20, 0);
@@ -112,7 +117,7 @@ class ArmorQuantumChestplate extends ArmorQuantumSuit {
 	}
 
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
-		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (energyStored > this.getEnergyPerDamage()) {
 			Entity.setFire(playerUid, 0, true);
 		}
@@ -128,11 +133,11 @@ class ArmorQuantumLeggings extends ArmorQuantumSuit {
 	}
 
 	onTick(item: ItemInstance, index: number, playerUid: number): ItemInstance {
-		let energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyStored = ChargeItemRegistry.getEnergyStored(item);
 		if (energyStored <= 0) return null;
 
-		let vel = Entity.getVelocity(playerUid);
-		let horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z);
+		const vel = Entity.getVelocity(playerUid);
+		const horizontalVel = Math.sqrt(vel.x*vel.x + vel.z*vel.z);
 		// Game.tipMessage(horizontalVel);
 		if (horizontalVel <= 0.15) {
 			this.runTime = 0;
@@ -141,7 +146,7 @@ class ArmorQuantumLeggings extends ArmorQuantumSuit {
 			this.runTime++;
 		}
 		if (this.runTime > 2 && !Player.getFlying()) {
-			Entity.addEffect(playerUid, PotionEffect.movementSpeed, 6, 5);
+			Entity.addEffect(playerUid, EPotionEffect.MOVEMENT_SPEED, 6, 5);
 			if (World.getThreadTime()%5 == 0) {
 				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - Math.floor(horizontalVel*600)));
 				return item;
@@ -158,11 +163,11 @@ class ArmorQuantumBoots extends ArmorQuantumSuit {
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
-		let energyStored = ChargeItemRegistry.getEnergyStored(item);
-		let energyPerDamage = this.getEnergyPerDamage();
+		const energyStored = ChargeItemRegistry.getEnergyStored(item);
+		const energyPerDamage = this.getEnergyPerDamage();
 		if (params.type == 5) {
-			let damageReduce = Math.min(params.damage, Math.floor(energyStored / energyPerDamage));
-			let damageTaken = params.damage - damageReduce;
+			const damageReduce = Math.min(params.damage, Math.floor(energyStored / energyPerDamage));
+			const damageTaken = params.damage - damageReduce;
 			if (damageTaken > 0) {
 				Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - damageTaken);
 			} else {
@@ -182,8 +187,8 @@ Callback.addCallback("EntityHurt", function(attacker: number, victim: number, da
 	if (damage > 0 && EntityHelper.isPlayer(victim) && (type == 2 || type == 3 || type == 11)) {
 		let defencePoints = 0;
 		for (let i = 0; i < 4; i++) {
-			let item = Entity.getArmorSlot(victim, i);
-			let armor = ItemRegistry.getInstanceOf(item.id);
+			const item = Entity.getArmorSlot(victim, i);
+			const armor = ItemRegistry.getInstanceOf(item.id);
 			if (armor instanceof ArmorNanoSuit || armor instanceof ArmorQuantumSuit) {
 				if (ChargeItemRegistry.getEnergyStored(item) >= armor.getEnergyPerDamage() * damage) {
 					defencePoints += armor.getExtraDefence();
@@ -192,15 +197,17 @@ Callback.addCallback("EntityHurt", function(attacker: number, victim: number, da
 		}
 		if (defencePoints > 0) {
 			let damageGot = damage / 5;
-			let damageReceived = damageGot * ( 20 - defencePoints) / 20;
-			if (damageGot > 1) damageGot = Math.floor(damageGot);
+			const damageReceived = damageGot * ( 20 - defencePoints) / 20;
+			if (damageGot > 1) {
+				damageGot = Math.floor(damageGot);
+			}
 			let damageAbsorbed = Math.ceil(damageGot - Math.floor(damageReceived));
-			let health = Math.min(Entity.getMaxHealth(victim), Entity.getHealth(victim));
+			const health = Math.min(Entity.getMaxHealth(victim), Entity.getHealth(victim));
 			if (damageReceived < 1) {
 				if (damageGot < 1) {
 					if (Math.random() >= damageReceived / damageGot) {
 						runOnMainThread(() => {
-							let curHealth = Entity.getHealth(victim);
+							const curHealth = Entity.getHealth(victim);
 							if (curHealth < health) {
 								Entity.setHealth(victim, curHealth + 1);
 							}

@@ -14,10 +14,10 @@ ItemName.addTierTooltip("macerator", 1);
 Callback.addCallback("PreLoaded", function() {
 	if (IC2Config.hardRecipes) {
 		Recipes.addShaped({id: BlockID.macerator, count: 1, data: 0}, [
-			"xxx",
+			"xfx",
 			"b#b",
 			" a "
-		], ['#', BlockID.machineBlockBasic, -1, 'x', 264, -1, 'b', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1]);
+		], ['#', BlockID.machineBlockBasic, -1, 'x', 264, -1, 'f', 318, -1, 'b', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1]);
 	} else {
 		Recipes.addShaped({id: BlockID.macerator, count: 1, data: 0}, [
 			"xxx",

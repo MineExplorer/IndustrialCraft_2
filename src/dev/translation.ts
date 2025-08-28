@@ -245,6 +245,7 @@ Translation.addTranslation("steel_plate", {en: "Steel Plate", ru: "Стальн�
 Translation.addTranslation("gold_plate", {en: "Gold Plate", ru: "Золотая пластина", es: "Placa de Oro", pt: "Placa de Ouro", zh: "金板"});
 Translation.addTranslation("lapis_plate", {en: "Lapis Plate", ru: "Лазуритовая пластина", es: "Placa de Lapislázuli", pt: "Placa de Lápis-Lazúli", zh: "青金石板"});
 Translation.addTranslation("lead_plate", {en: "Lead Plate", ru: "Свинцовая пластина", es: "Placa de Plomo", pt: "Placa de Chumbo", zh: "铅板"});
+Translation.addTranslation("silver_plate", {en: "Silver Plate", ru: "Серебряная пластина", es: "Placa de Plata", pt: "Placa de Prata", zh: "银板"});
 
 // Dense Plates
 Translation.addTranslation("dense_copper_plate", {en: "Dense Copper Plate", ru: "Плотная медная пластина", es: "Placa de Cobre Denso", pt: "Placa Densa de Cobre", zh: "致密铜板"});

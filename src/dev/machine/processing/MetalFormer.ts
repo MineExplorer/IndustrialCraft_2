@@ -55,6 +55,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.ingotBronze": {id: ItemID.plateBronze, count: 1},
 		"ItemID.ingotSteel": {id: ItemID.plateSteel, count: 1},
 		"ItemID.ingotLead": {id: ItemID.plateLead, count: 1},
+		"ItemID.ingotSilver": {id: ItemID.plateSilver, count: 1},
 		// plates
 		"ItemID.plateIron": {id: ItemID.casingIron, count: 2},
 		"ItemID.plateGold": {id: ItemID.casingGold, count: 2},

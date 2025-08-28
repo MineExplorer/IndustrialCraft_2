@@ -1,10 +1,10 @@
 BlockRegistry.createBlock("autoCrafter", [
-	{name: "Automatic Crafter", texture: [["industrial_workbench_bottom", 0], ["industrial_workbench_top", 0], ["industrial_workbench_back", 0], ["industrial_workbench_front", 0], ["industrial_workbench_left", 0], ["industrial_workbench_right", 0]], inCreative: true},
+	{name: "Automatic Crafter", texture: [["autocrafter_bottom", 0], ["autocrafter_top", 0], ["autocrafter_back", 0], ["autocrafter_front", 0], ["autocrafter_left", 0], ["autocrafter_right", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.autoCrafter, "stone", 1);
 ItemName.addTierTooltip("autoCrafter", 2);
 
-TileRenderer.setStandardModelWithRotation(BlockID.autoCrafter, 2, [["industrial_workbench_bottom", 0], ["industrial_workbench_top", 0], ["industrial_workbench_back", 0], ["industrial_workbench_front", 0], ["industrial_workbench_left", 0], ["industrial_workbench_right", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.autoCrafter, 2, [["autocrafter_bottom", 0], ["autocrafter_top", 0], ["autocrafter_back", 0], ["autocrafter_front", 0], ["autocrafter_left", 0], ["autocrafter_right", 0]]);
 TileRenderer.setRotationFunction(BlockID.autoCrafter);
 
 Callback.addCallback("PreLoaded", function() {

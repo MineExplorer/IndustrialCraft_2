@@ -73,8 +73,15 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.dustSmallCopper": {id: ItemID.dustCopper, count: 1, data: 0, sourceCount: 9},
 		"ItemID.dustSmallTin": {id: ItemID.dustTin, count: 1, data: 0, sourceCount: 9},
 		"ItemID.dustSmallLead": {id: ItemID.dustLead, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallSilver": {id: ItemID.dustSilver, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallSulfur": {id: ItemID.dustSulfur, count: 1, data: 0, sourceCount: 9},
 		"ItemID.smallUranium235": {id: ItemID.uranium235, count: 1, data: 0, sourceCount: 9},
-		"ItemID.smallPlutonium": {id: ItemID.plutonium, count: 1, data: 0, sourceCount: 9}
+		"ItemID.smallPlutonium": {id: ItemID.plutonium, count: 1, data: 0, sourceCount: 9},
+		// RedPower
+		"ItemID.nikolite": {id: BlockID.blockNikolite, count: 1, data: 0, sourceCount: 9},
+		"ItemID.gemRuby": {id: BlockID.blockRuby, count: 1, data: 0, sourceCount: 9},
+		"ItemID.gemSapphire": {id: BlockID.blockSapphire, count: 1, data: 0, sourceCount: 9},
+		"ItemID.gemGreenSapphire": {id: BlockID.blockGreenSapphire, count: 1, data: 0, sourceCount: 9},
 	}, true);
 });
 

@@ -51,6 +51,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.plateBronze": {id: ItemID.densePlateBronze, count: 1, data: 0, sourceCount: 9},
 		"ItemID.plateSteel": {id: ItemID.densePlateSteel, count: 1, data: 0, sourceCount: 9},
 		"ItemID.plateLead": {id: ItemID.densePlateLead, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateSilver": {id: ItemID.densePlateSilver, count: 1, data: 0, sourceCount: 9},
 		// Compact
 		"minecraft:redstone": {id: 152, count: 1, data: 0, sourceCount: 9},
 		"minecraft:lapis_lazuli": {id: 22, count: 1, data: 0, sourceCount: 9},

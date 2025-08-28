@@ -52,6 +52,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.plateBronze": {id: ItemID.dustBronze, count: 1, data: 0},
 		"ItemID.plateSteel": {id: ItemID.dustSteel, count: 1, data: 0},
 		"ItemID.plateLead": {id: ItemID.dustLead, count: 1, data: 0},
+		"ItemID.plateSilver": {id: ItemID.dustSilver, count: 1, data: 0},
 		"ItemID.plateLapis": {id: ItemID.dustLapis, count: 1, data: 0},
 		// dense plates
 		"ItemID.densePlateIron": {id: ItemID.dustIron, count: 9, data: 0},
@@ -61,6 +62,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.densePlateBronze": {id: ItemID.dustBronze, count: 9, data: 0},
 		"ItemID.densePlateSteel": {id: ItemID.dustSteel, count: 9, data: 0},
 		"ItemID.densePlateLead": {id: ItemID.dustLead, count: 9, data: 0},
+		"ItemID.densePlateSilver": {id: ItemID.dustSilver, count: 9, data: 0},
 		// other resources
 		"minecraft:lapis_block": {id: ItemID.dustLapis, count: 9, data: 0},
 		"minecraft:coal_block": {id: ItemID.dustCoal, count: 9, data: 0},

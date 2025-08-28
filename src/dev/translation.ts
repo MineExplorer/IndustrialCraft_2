@@ -255,6 +255,7 @@ Translation.addTranslation("dense_iron_plate", {en: "Dense Iron Plate", ru: "П�
 Translation.addTranslation("dense_steel_plate", {en: "Dense Steel Plate", ru: "Плотная стальная пластина", es: "Placa de Hierro Refinado Denso", pt: "Placa Densa de Aço", zh: "致密钢板"});
 Translation.addTranslation("dense_gold_plate", {en: "Dense Gold Plate", ru: "Плотная золотая пластина", es: "Placa Densa de Oro", pt: "Placa Densa de Ouro", zh: "致密金板"});
 Translation.addTranslation("dense_lead_plate", {en: "Dense Lead Plate", ru: "Плотная свинцовая пластина", es: "Placa Densa de Plomo", pt: "Placa Densa de Chumbo", zh: "致密铅板"});
+Translation.addTranslation("dense_silver_plate", {en: "Dense Silver Plate", ru: "Плотная серебряная пластина", es: "Placa Densa de Plata", pt: "Placa Densa de Prata", zh: "致密银板"});
 
 // Casings
 Translation.addTranslation("copper_casing", {en: "Copper Casing", ru: "Медная оболочка", es: "Carcasa para Objetos de Cobre", pt: "Invólucro de Cobre", zh: "铜质外壳"});

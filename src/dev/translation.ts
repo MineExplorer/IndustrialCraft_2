@@ -265,6 +265,7 @@ Translation.addTranslation("iron_casing", {en: "Iron Casing", ru: "Железн�
 Translation.addTranslation("steel_casing", {en: "Steel Casing", ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Aço", zh: "钢质外壳"});
 Translation.addTranslation("gold_casing", {en: "Gold Casing", ru: "Золотая оболочка", es: "Carcasa para Objetos de Oro", pt: "Invólucro de Ouro", zh: "黄金外壳"});
 Translation.addTranslation("lead_casing", {en: "Lead Casing", ru: "Свинцовая оболочка", es: "Carcasa para Objetos de Plomo", pt: "Invólucro de Chumbo", zh: "铅质外壳"});
+Translation.addTranslation("silver_casing", {en: "Silver Casing", ru: "Серебряная оболочка", es: "Carcasa para Objetos de Plata", pt: "Invólucro de Prata", zh: "银质外壳"});
 
 // Cans
 Translation.addTranslation("tin_can", {en: "Tin Can", ru: "Консервная банка", es: "Lata de Estaño", pt: "Lata de Estanho", zh: "锡罐(空)"});

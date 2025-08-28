@@ -63,7 +63,8 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.plateCopper": {id: ItemID.casingCopper, count: 2},
 		"ItemID.plateBronze": {id: ItemID.casingBronze, count: 2},
 		"ItemID.plateSteel": {id: ItemID.casingSteel, count: 2},
-		"ItemID.plateLead": {id: ItemID.casingLead, count: 2}
+		"ItemID.plateLead": {id: ItemID.casingLead, count: 2},
+		"ItemID.plateSilver": {id: ItemID.casingSilver, count: 2}
 	}, true);
 	// cutting
 	MachineRecipeRegistry.registerRecipesFor("metalFormer1", {

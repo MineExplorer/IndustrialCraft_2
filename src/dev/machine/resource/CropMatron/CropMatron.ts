@@ -14,8 +14,8 @@ Callback.addCallback("PreLoaded", function () {
     Recipes.addShaped({ id: BlockID.cropMatron, count: 1, data: 0 }, [
         "cxc",
         "a#a",
-        "nnn"
-    ], ['#', BlockID.machineBlockBasic, 0, 'x', 54, -1, 'c', ItemID.circuitBasic, 0, 'a', ItemID.cellEmpty, 0, 'n', ItemID.cropStick, 0]);
+        "php"
+    ], ['#', BlockID.machineBlockBasic, 0, 'x', 54, -1, 'c', ItemID.circuitBasic, 0, 'a', ItemID.cellEmpty, 0, 'p', ItemID.plateIron, 0, 'h', VanillaItemID.iron_hoe, 0]);
 });
 
 MachineRegistry.registerPrototype(BlockID.cropMatron, new Machine.CropMatron());

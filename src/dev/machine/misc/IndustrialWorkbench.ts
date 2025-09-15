@@ -21,7 +21,7 @@ const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial
 	elements: {
 		"progressScale": {type: "scale", x: 691, y: 104, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("Crafting");
+				RV?.RecipeTypeRegistry.openRecipePage("workbench");
 			}
 		}},
 		"slotInput0": {type: "slot", x: 491, y: 40},

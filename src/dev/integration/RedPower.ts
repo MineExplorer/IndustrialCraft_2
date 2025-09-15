@@ -1,4 +1,4 @@
-ModAPI.addAPICallback("RedCore", (api: any) => {
+ModAPI.addAPICallback("RedCore", (api: typeof RedCore) => {
 	api.Integration.addDeployerItem(ItemID.cableTin0);
 	api.Integration.addDeployerItem(ItemID.cableTin1);
 	api.Integration.addDeployerItem(ItemID.cableCopper0);

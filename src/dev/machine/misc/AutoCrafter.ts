@@ -24,7 +24,7 @@ const guiAutoCrafter = MachineRegistry.createInventoryWindow("Automatic Crafter"
 	elements: {
 		"progressScale": {type: "scale", x: 691, y: 139, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("Crafting");
+				RV?.RecipeTypeRegistry.openRecipePage("workbench");
 			}
 		}},
 		"energyScale": {type: "scale", x: 389, y: 135, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},

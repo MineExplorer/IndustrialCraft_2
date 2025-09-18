@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 const guiAutoCrafter = MachineRegistry.createInventoryWindow("Automatic Crafter", {
 	drawing: [
 		{type: "bitmap", x: 691, y: 139, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 389, y: 135, bitmap: "energy_small_background", scale: GUI_SCALE}
+		{type: "bitmap", x: 379, y: 135, bitmap: "energy_small_background", scale: GUI_SCALE}
 	],
 
 	elements: {
@@ -27,25 +27,33 @@ const guiAutoCrafter = MachineRegistry.createInventoryWindow("Automatic Crafter"
 				RV?.RecipeTypeRegistry.openRecipePage("workbench");
 			}
 		}},
-		"energyScale": {type: "scale", x: 389, y: 135, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slot0": {type: "slot", x: 491, y: 75},
-		"slot1": {type: "slot", x: 551, y: 75},
-		"slot2": {type: "slot", x: 611, y: 75},
-		"slot3": {type: "slot", x: 491, y: 135},
-		"slot4": {type: "slot", x: 551, y: 135},
-		"slot5": {type: "slot", x: 611, y: 135},
-		"slot6": {type: "slot", x: 491, y: 195},
-		"slot7": {type: "slot", x: 551, y: 195},
-		"slot8": {type: "slot", x: 611, y: 195},
-		"slotEnergy": {type: "slot", x: 380, y: 195},
-		"slotResult": {type: "slot", x: 781, y: 135},
-		"slotUpgrade1": {type: "slot", x: 880, y: 60},
-		"slotUpgrade2": {type: "slot", x: 880, y: 119},
-		"slotUpgrade3": {type: "slot", x: 880, y: 178},
-		"slotUpgrade4": {type: "slot", x: 880, y: 237},
+		"energyScale": {type: "scale", x: 379, y: 135, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"slotInput0": {type: "slot", x: 490, y: 75},
+		"slotInput1": {type: "slot", x: 550, y: 75},
+		"slotInput2": {type: "slot", x: 610, y: 75},
+		"slotInput3": {type: "slot", x: 490, y: 135},
+		"slotInput4": {type: "slot", x: 550, y: 135},
+		"slotInput5": {type: "slot", x: 610, y: 135},
+		"slotInput6": {type: "slot", x: 490, y: 195},
+		"slotInput7": {type: "slot", x: 550, y: 195},
+		"slotInput8": {type: "slot", x: 610, y: 195},
+		"slot0": {type: "slot", x: 370, y: 300},
+        "slot1": {type: "slot", x: 430, y: 300},
+        "slot2": {type: "slot", x: 490, y: 300},
+        "slot3": {type: "slot", x: 550, y: 300},
+        "slot4": {type: "slot", x: 610, y: 300},
+        "slot5": {type: "slot", x: 670, y: 300},
+        "slot6": {type: "slot", x: 730, y: 300},
+        "slot7": {type: "slot", x: 790, y: 300},
+        "slot8": {type: "slot", x: 850, y: 300},
+		"slotEnergy": {type: "slot", x: 370, y: 195},
+		"slotResult": {type: "slot", x: 780, y: 131, size: 68},
+		"slotUpgrade1": {type: "slot", x: 880, y: 75},
+		"slotUpgrade2": {type: "slot", x: 880, y: 135},
+		"slotUpgrade3": {type: "slot", x: 880, y: 195},
         "slotPreviewResult": {type: "slot", x: 700, y: 75, bitmap: "transparent_slot", clicker: {
             onClick: function(_, container: ItemContainer) {
-                container.sendEvent("resetRecipeCheck", {});
+                //container.sendEvent("resetRecipeCheck", {});
             }
         }}
 	}
@@ -58,7 +66,7 @@ namespace Machine {
 			progress: 0,
             recipeChecked: false
         };
-        defaultEnergyDemand = 2;
+        defaultEnergyDemand = 16;
 		defaultTier = 2;
 		defaultEnergyStorage = 20000;
         defaultProcessTime = 40;
@@ -70,30 +78,37 @@ namespace Machine {
 		}
 
         setupContainer(): void {
-            StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
-				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
-                if (name == "slotResult" || name == "slotPreviewResult") return false;
-                
-                const slot = this.container.getSlot(name);
-                if (slot.id == 0) {
-                    this.data.recipeChecked = false;
+            this.container.setGlobalAddTransferPolicy((container, name, id, amount, data) => {
+                if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier()) ? amount : 0;
+				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this) ? amount : 0;
+                if (name == "slotResult" || name == "slotPreviewResult") return 0;
+                if (name.match(/slotInput[0-8]/)) {
+                    const slot = this.container.getSlot(name);
+                    if (slot.id == 0) {
+                        this.data.recipeChecked = false;
+                        return 1;
+                    }
+                    return 0;
                 }
-				return true;
-			});
+                return amount;
+            });
             this.container.setGlobalGetTransferPolicy((container, name, id, amount, data) => {
-                if (name.match(/slot[0-8]/)) {
+                if (name.match(/slotInput[0-8]/)) {
                     this.data.recipeChecked = false;
                 }
                 return amount;
             });
-            this.container.setWorkbenchFieldPrefix("slot");
+            this.container.setWorkbenchFieldPrefix("slotInput");
         }
 
+        // Pattern slots have a max stack of 1
+        // Before starting the machine checks that buffer slots have enough items for the recipe in the grid
+        // Each time crafting is complete, items from the buffer are transferred to the grid, just like in an industrial workbench.
+        // Buffer slots accept only items presented in the grid, up to the number of slots in the grid that can hold them
+        // This way we ensure that the buffer will not fill up with useless items or only one type of item
 		onTick(): void {
 			this.useUpgrades();
 			StorageInterface.checkHoppers(this);
-
             if (!this.data.recipeChecked) {
                 const result = Recipes.getRecipeResult(this.container);
                 if (result) {
@@ -110,9 +125,9 @@ namespace Machine {
 
             if (this.data.energy >= this.energyDemand) {
                 if (this.data.progress == 0) {
-                    const recipeResult = Recipes.getRecipeResult(this.container);
+                    const recipe = Recipes.getRecipeByField(this.container);
                     const resultSlot = this.container.getSlot("slotResult");
-                    if (this.validateResult(recipeResult, resultSlot)) {
+                    if (recipe && this.validateResult(recipe.getResult(), resultSlot) && this.hasEnoughItems(recipe)) {
                         this.data.energy -= this.energyDemand;
                         this.updateProgress();
                     }
@@ -147,14 +162,15 @@ namespace Machine {
 
         provideRecipe(recipe: Recipes.WorkbenchRecipe): boolean {
             let result = recipe.getResult();
+
             const resultSlot = this.container.getSlot("slotResult");
-            if (!this.validateResult(result, resultSlot)) 
+            if (!this.validateResult(result, resultSlot) || !this.hasEnoughItems(recipe)) 
                 return false;
 
             result = Recipes.provideRecipeForPlayer(this.container, "", -1);
             if (result) {
                 resultSlot.setSlot(result.id, resultSlot.count + result.count, Math.max(result.data, 0), result.extra);
-                this.equalizeItems();
+                this.refillItems();
                 return true;
             }
             return false;
@@ -169,38 +185,57 @@ namespace Machine {
 			return "InterruptOne.ogg";
 		}
 
-        equalizeItems(item?: {id: number, data: number}): void {
-            let totalItems: {item: ItemStack, slots: ItemContainerSlot[]}[] = [];
+        hasEnoughItems(recipe: Recipes.WorkbenchRecipe): boolean {
+            const requiredItems: ItemInstance[] = [];
 			for (let i = 0; i < 9; i++) {
+                const slot = this.container.getSlot("slotInput" + i);
+                if (slot.id == 0) continue;
+
+                const item = requiredItems.find(it => this.canStackBeReplaced(it, slot));
+                if (item) {
+                    item.count++;
+                } else {
+                    requiredItems.push({id: slot.id, data: slot.data, count: 1, extra: slot.extra});
+                }
+            }
+            
+            for (let i = 0; i < 9; i++) {
                 const slot = this.container.getSlot("slot" + i);
-                if ((!item || slot.id == item.id && slot.data == item.data) && slot.extra == null && Item.getMaxStack(slot.id, slot.data) > 1) {
-                    let found = false;
-                    for (let group of totalItems) {
-                        if (group.item.id == slot.id && group.item.data == slot.data) {
-                            group.item.count += slot.count;
-                            group.slots.push(slot);
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        totalItems.push({item: new ItemStack(slot), slots: [slot]});
+                if (slot.id == 0) continue;
+
+                for (let item of requiredItems) {
+                    if (this.canStackBeReplaced(item, slot)) {
+                        item.count -= slot.count;
+                        break;
                     }
                 }
             }
 
-            for (let group of totalItems) {
-                const avgCount = Math.floor(group.item.count / group.slots.length);
-                let leftCount = group.item.count % group.slots.length;
-                for (let slot of group.slots) {
-                    slot.count = avgCount;
-                    if (leftCount > 0) {
-                        slot.count++;
-                        leftCount--;
+            return requiredItems.every(it => it.count <= 0);
+        }
+
+        refillItems(): void {
+            for (let i = 0; i < 9; i++) {
+                const inputSlot = this.container.getSlot("slotInput" + i);
+                if (inputSlot.id != 0 && inputSlot.count < Item.getMaxStack(inputSlot.id, inputSlot.data)) {
+                    for (let j = 0; j < 18; j++) {
+                        const slot = this.container.getSlot("slot" + j);
+                        if (inputSlot.count == 0 && this.canStackBeReplaced(inputSlot, slot)) {
+                            inputSlot.setSlot(slot.id, inputSlot.count + 1, slot.data, slot.extra);
+                            slot.count--;
+                            slot.validate();
+                            slot.markDirty();
+                            break;
+                        }
                     }
-                    slot.markDirty();
                 }
+                inputSlot.validate();
+                inputSlot.markDirty();
             }
+        }
+
+        canStackBeReplaced(item: ItemInstance, slot: ItemContainerSlot): boolean {
+            return slot.id == item.id && (slot.data == item.data || item.data > 0 && Item.getMaxDamage(item.id) > 0);
         }
 
         resetRecipe() {
@@ -222,50 +257,42 @@ namespace Machine {
     export class AutoCrafterStorageInterface extends StorageInterface.TileEntityInterface {
         container: ItemContainer;
         tileEntity: AutoCrafter;
-        getInputSlots(side?: number): string[] {
-            const inputSlots = [];
-            for (let slotName in this.slots) {
-                const slotData = this.slots[slotName];
-                if (slotData.input && this.tileEntity.container.getSlot(slotName).id != 0) {
-                    inputSlots.push(slotName);
+
+        isValidInput(item: ItemInstance, side: number, tileEntity: TileEntity): boolean {
+            return this.getRecipeEntriesCount(item) > 0;
+        }
+
+        getRecipeEntriesCount(item: ItemInstance): number {
+            let count = 0;
+            for (let i = 0; i < 9; i++) {
+                const slot = this.container.getSlot("slotInput" + i);
+                if (this.tileEntity.canStackBeReplaced(item, slot)) {
+                    count++;
                 }
             }
-            return inputSlots;
+            return count;
         }
 
         addItem(item: ItemInstance, side: number = -1, maxCount: number = 64): number {
-            if (Item.getMaxStack(item.id, item.data) == 1) {
-                return this.addNonStackableItem(item);
-            }
-            const addedItem = {id: item.id, data: item.data};
-            const added = super.addItem(item, side, maxCount);
-            if (added > 0) {
-                this.tileEntity.equalizeItems(addedItem);
-            }
-            return added;
-		}
+            let maxItemSlots = this.getRecipeEntriesCount(item);
+            if (maxItemSlots == 0) return 0;
 
-        addNonStackableItem(item: ItemInstance): number {
-            let added = 0;
-            for (let i = 0; i < 9; i++) {
-                const slotName = "slot" + i;
+            let count = 0;
+            const slots = this.getInputSlots(side);
+			for (let slotName of slots) { // try add to existing stacks first
                 const slot = this.container.getSlot(slotName);
-                if (slot.id == item.id && slot.count < 1 && 
-                  (slot.data == item.data || this.isGhostSlot(slot))) {
-                    slot.setSlot(item.id, 1, item.data, item.extra);
-                    item.count--;
-                    if (item.count == 0) {
-                        item.id = item.data = 0;
-                        item.extra = null;
+                if (this.tileEntity.canStackBeReplaced(item, slot)) {
+                    count += this.addItemToSlot(slotName, item, maxCount - count);
+                    maxItemSlots--;
+					if (item.count == 0 || count >= maxCount || maxItemSlots == 0) {
+                        break;
                     }
-                    added++;
                 }
             }
-            return added;
-        }
-
-        isGhostSlot(slot: ItemContainerSlot): boolean {
-            return slot.count == 0 && slot.data > 0 && Item.getMaxDamage(slot.id) > 0;
+            if (item.count > 0 && maxItemSlots > 0) {
+                count += super.addItem(item, side, maxCount - count);
+            }
+            return count;
         }
     }
 

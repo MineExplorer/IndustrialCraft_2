@@ -64,7 +64,8 @@ namespace Machine {
         defaultValues = { 
             energy: 0,
 			progress: 0,
-            recipeChecked: false
+            recipeChecked: false,
+            inputChecked: false
         };
         defaultEnergyDemand = 16;
 		defaultTier = 2;
@@ -96,6 +97,9 @@ namespace Machine {
                 if (name.match(/slotInput[0-8]/)) {
                     this.data.recipeChecked = false;
                 }
+                else if (name.match(/slot[0-8]/)) {
+                    this.data.inputChecked = false;
+                }
                 return amount;
             });
             this.container.setWorkbenchFieldPrefix("slotInput");
@@ -124,26 +128,28 @@ namespace Machine {
             }
 
             if (this.data.energy >= this.energyDemand) {
-                if (this.data.progress == 0) {
-                    const recipe = Recipes.getRecipeByField(this.container);
+                if (!this.data.inputChecked) {
+                    const previewSlot = this.container.getSlot("slotPreviewResult");
                     const resultSlot = this.container.getSlot("slotResult");
-                    if (recipe && this.validateResult(recipe.getResult(), resultSlot) && this.hasEnoughItems(recipe)) {
-                        this.data.energy -= this.energyDemand;
-                        this.updateProgress();
+                    if (previewSlot.id != 0 && this.validateResult(previewSlot, resultSlot) && this.hasEnoughItems()) {
+                        this.data.inputChecked = true; // cache input check for optimization
+                    }
+                    else if (this.data.progress > 0) {
+                        this.data.progress = 0;
+                        this.playOnce(this.getInterruptSound());
                     }
                 }
-                else {
-                    // skip intermediate checks for optimization
+                if (this.data.inputChecked) {
                     this.data.energy -= this.energyDemand;
                     this.updateProgress();
-                }
-                
-                if (this.isCompletedProgress()) {
-                    const recipe = Recipes.getRecipeByField(this.container);
-                    if (recipe) {
-                        this.provideRecipe(recipe)
+                    if (this.isCompletedProgress()) {
+                        const recipe = Recipes.getRecipeByField(this.container);
+                        if (recipe) {
+                            this.provideRecipe(recipe);
+                        }
+                        this.data.progress = 0;
+                        this.data.inputChecked = false;
                     }
-                    this.data.progress = 0;
                 }
             }
 
@@ -164,7 +170,7 @@ namespace Machine {
             let result = recipe.getResult();
 
             const resultSlot = this.container.getSlot("slotResult");
-            if (!this.validateResult(result, resultSlot) || !this.hasEnoughItems(recipe)) 
+            if (!this.validateResult(result, resultSlot) || !this.hasEnoughItems()) 
                 return false;
 
             result = Recipes.provideRecipeForPlayer(this.container, "", -1);
@@ -173,6 +179,7 @@ namespace Machine {
                 this.refillItems();
                 return true;
             }
+            this.resetRecipe();
             return false;
         }
 
@@ -185,7 +192,7 @@ namespace Machine {
 			return "InterruptOne.ogg";
 		}
 
-        hasEnoughItems(recipe: Recipes.WorkbenchRecipe): boolean {
+        hasEnoughItems(): boolean {
             const requiredItems: ItemInstance[] = [];
 			for (let i = 0; i < 9; i++) {
                 const slot = this.container.getSlot("slotInput" + i);
@@ -218,7 +225,7 @@ namespace Machine {
             for (let i = 0; i < 9; i++) {
                 const inputSlot = this.container.getSlot("slotInput" + i);
                 if (inputSlot.id != 0 && inputSlot.count < Item.getMaxStack(inputSlot.id, inputSlot.data)) {
-                    for (let j = 0; j < 18; j++) {
+                    for (let j = 0; j < 9; j++) {
                         const slot = this.container.getSlot("slot" + j);
                         if (inputSlot.count == 0 && this.canStackBeReplaced(inputSlot, slot)) {
                             inputSlot.setSlot(slot.id, inputSlot.count + 1, slot.data, slot.extra);

@@ -35,7 +35,7 @@ implements BlockBehavior {
 
     onNeighbourChange(coords: Vector, block: Tile, changeCoords: Vector, region: BlockSource): void {
         if (block.data < 8 && (changeCoords.y < coords.y || changeCoords.y > coords.y && region.getBlockId(changeCoords.x, changeCoords.y, changeCoords.z) !== block.id)
-            || block.data > 8 && changeCoords.y < coords.y && region.getBlockId(changeCoords.x, changeCoords.y, changeCoords.z) !== block.id
+            || block.data >= 8 && changeCoords.y < coords.y && region.getBlockId(changeCoords.x, changeCoords.y, changeCoords.z) !== block.id
         ) {
             region.destroyBlock(coords.x, coords.y, coords.z, true);
         }

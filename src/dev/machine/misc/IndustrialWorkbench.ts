@@ -33,9 +33,12 @@ const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial
 		"slotInput6": {type: "slot", x: 491, y: 160},
 		"slotInput7": {type: "slot", x: 551, y: 160},
 		"slotInput8": {type: "slot", x: 611, y: 160},
-		"slotResult": {type: "slot", x: 781, y: 100, clicker: {
+		"slotResult": {type: "slot", x: 781, y: 100, visual: true, clicker: {
             onClick: function(_, container: ItemContainer) {
-                container.sendEvent("craftClick", {});
+                container.sendEvent("craft", {allAtOnce: false});
+            },
+            onLongClick: function(_, container: ItemContainer) {
+                container.sendEvent("craft", {allAtOnce: true});
             }
         }},
         "slot0": {type: "slot", x: 300 + 22*GUI_SCALE, y: 130 + 37*GUI_SCALE},
@@ -72,9 +75,6 @@ namespace Machine {
 
         setupContainer(): void {
             StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-                if (name == "slotResult") {
-                    return false;
-                }
                 if (name.match(/slotInput[0-8]/)) {
                     this.data.recipeChecked = false;
                 }
@@ -151,7 +151,7 @@ namespace Machine {
 
         /** @deprecated Container event, shouldn't be called directly */
         @ContainerEvent(Side.Server)
-        craftClick(packetData: any, client: NetworkClient) {
+        craft(packetData: {allAtOnce: boolean}, client: NetworkClient) {
             const playerUid = client.getPlayerUid();
             const result = this.provideRecipe(playerUid);
             if (result) {

@@ -52,9 +52,7 @@ const guiAutoCrafter = MachineRegistry.createInventoryWindow("Automatic Crafter"
 		"slotUpgrade1": {type: "slot", x: 880, y: 75},
 		"slotUpgrade2": {type: "slot", x: 880, y: 135},
 		"slotUpgrade3": {type: "slot", x: 880, y: 195},
-        "slotPreviewResult": {type: "slot", x: 700, y: 75, bitmap: "transparent_slot", clicker: {
-            onClick: function(_, container: ItemContainer) { }
-        }}
+        "slotPreviewResult": {type: "slot", x: 700, y: 75, bitmap: "transparent_slot", visual: true}
 	}
 });
 
@@ -78,11 +76,10 @@ namespace Machine {
 		}
 
         setupContainer(): void {
-            this.container.sealSlot("slotPreviewResult");
             this.container.setGlobalAddTransferPolicy((container, name, id, amount, data) => {
                 if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier()) ? amount : 0;
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this) ? amount : 0;
-                if (name == "slotResult" || name == "slotPreviewResult") return 0;
+                if (name == "slotResult") return 0;
                 if (name.match(/slotGrid[0-8]/)) {
                     const slot = this.container.getSlot(name);
                     if (slot.id == 0) {

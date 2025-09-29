@@ -130,7 +130,7 @@ namespace Machine {
                     const previewSlot = this.container.getSlot("slotPreviewResult");
                     const resultSlot = this.container.getSlot("slotResult");
                     if (previewSlot.id != 0 && this.validateResult(previewSlot, resultSlot) && this.hasEnoughItems()) {
-                        this.data.inputChecked = true; // cache input check for optimization
+                        this.data.inputChecked = true; // cache input buffer check for optimization
                     }
                     else if (this.data.progress > 0) {
                         this.data.progress = 0;

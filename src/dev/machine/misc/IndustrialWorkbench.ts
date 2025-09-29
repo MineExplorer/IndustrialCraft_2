@@ -111,20 +111,29 @@ namespace Machine {
             return false;
         }
 
-        provideRecipe(playerUid: number): ItemInstance {
-            const recipe = Recipes.getRecipeByField(this.container);
-            if (!recipe)
-                return null;
-
-            const result = Recipes.provideRecipeForPlayer(this.container, "", playerUid);
-            if (result) {
-                this.refillItems();
-                this.container.setSlot("slotResult", 0, 0, 0);
-                this.data.recipeChecked = false;
-                result.data = Math.max(result.data, 0);
-                return result;
+        provideRecipe(playerUid: number, allAtOnce: boolean): void {
+            const recipe = Recipes.getRecipeByField(this.container, "");
+            while(recipe) {
+                const result = Recipes.provideRecipeForPlayer(this.container, "", playerUid);
+                if (result) {
+                    new PlayerActor(playerUid).addItemToInventory(result.id, result.count, result.data !== -1 ? result.data : 0, result.extra || null, true);
+                    this.refillItems();
+                }
+                const newRecipe = Recipes.getRecipeByField(this.container, "");
+                if (newRecipe !== recipe) {
+                    if (newRecipe) {
+                        const result = newRecipe.getResult();
+                        this.container.setSlot("slotResult", result.id, result.count, result.data, result.extra);
+                    } else {
+                        this.container.setSlot("slotResult", 0, 0, 0);
+                    }
+                    break;
+                }
+                if (!allAtOnce) {
+                    break;
+                }
             }
-            return null;
+            this.container.sendChanges();
         }
 
         refillItems(): void {
@@ -152,11 +161,7 @@ namespace Machine {
         /** @deprecated Container event, shouldn't be called directly */
         @ContainerEvent(Side.Server)
         craft(packetData: {allAtOnce: boolean}, client: NetworkClient) {
-            const playerUid = client.getPlayerUid();
-            const result = this.provideRecipe(playerUid);
-            if (result) {
-                new PlayerActor(playerUid).addItemToInventory(result.id, result.count, result.data, result.extra, true);
-            }
+            this.provideRecipe(client.getPlayerUid(), packetData.allAtOnce);
         }
 	}
 

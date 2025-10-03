@@ -26,8 +26,6 @@ namespace Machine {
 			blockCount: 0
 		}
 
-		BASE_POWER = 3;
-
 		isOcean(biome: number): boolean {
 			return biome == 0 || biome == 24;
 		}
@@ -80,7 +78,7 @@ namespace Machine {
 		onTick(): void {
 			if (++this.data.ticker % 128 == 0) {
 				this.updateBlockCount();
-				let output = this.BASE_POWER;
+				let output = EnergyProductionModifiers.Watermill;
 				if (this.isOcean(this.data.biome)) {
 					output *= 1.5 * Math.sin(World.getWorldTime()%6000 / (6000 / Math.PI));
 				}

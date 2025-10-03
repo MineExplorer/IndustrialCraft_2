@@ -92,12 +92,13 @@ namespace Machine {
 
 			let newActive = false;
 			const energyStorage = this.getEnergyStorage();
-			if (this.data.energy + 10 <= energyStorage) {
+			const energyOutput = EnergyProductionModifiers.FuelGenerator;
+			if (this.data.energy + energyOutput <= energyStorage) {
 				if (this.data.burn <= 0) {
 					this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel") / 4;
 				}
 				if (this.data.burn > 0) {
-					this.data.energy = Math.min(this.data.energy + 10, energyStorage);
+					this.data.energy = Math.min(this.data.energy + energyOutput, energyStorage);
 					this.data.burn--;
 					newActive = true;
 				}

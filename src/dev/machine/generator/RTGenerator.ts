@@ -45,14 +45,14 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			let output = 0.5;
+			let output = 0;
 			for (let i = 0; i < 6; i++) {
-				const slot = this.container.getSlot("slot"+i);
+				const slot = this.container.getSlot("slot" + i);
 				if (slot.id == ItemID.rtgPellet) {
-					output *= 2;
+					output = output > 0 ? output * 2 : EnergyProductionModifiers.RTGenerator;
 				}
 			}
-			if (output >= 1) {
+			if (output > 0) {
 				this.setActive(true);
 				this.data.energy = Math.min(this.data.energy + output, this.getEnergyStorage());
 			} else {

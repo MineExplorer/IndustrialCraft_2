@@ -14,7 +14,7 @@ namespace Machine {
 		}
 
 		energyTick(type: string, src: EnergyTileNode): void {
-			let output = Math.min(this.data.energy, this.getMaxPacketSize());
+			const output = Math.min(this.data.energy, this.getMaxPacketSize());
 			this.data.energy += src.add(output) - output;
 		}
 	}

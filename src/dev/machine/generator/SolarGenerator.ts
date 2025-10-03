@@ -55,17 +55,18 @@ namespace Machine {
 				this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
 			}
 			if (this.data.canSeeSky && this.region.getLightLevel(this.x, this.y + 1, this.z) == 15) {
-				this.data.energy = 1;
+				this.data.energy = EnergyProductionModifiers.SolarPanel;
 				this.chargeSlot("slotEnergy");
 				this.container.sendEvent("setSolarElement", "on");
 				this.container.sendChanges();
 			} else {
+				this.data.energy = 0;
 				this.container.sendEvent("setSolarElement", "off")
 			}
 		}
 
 		getEnergyStorage(): number {
-			return 1;
+			return 32;
 		}
 
 		/** @deprecated Container event, shouldn't be called */

@@ -56,8 +56,6 @@ const guiNuclearReactor = MachineRegistry.createInventoryWindow("Nuclear Reactor
 });
 
 
-let EUReactorModifier = 5;
-
 namespace Machine {
 	export class NuclearReactor extends Generator
 	implements IReactor {
@@ -190,7 +188,7 @@ namespace Machine {
 		}
 
 		getEnergyOutput(): number {
-			return Math.floor(this.data.output * EUReactorModifier);
+			return Math.floor(this.data.output * EnergyProductionModifiers.EUReactor);
 		}
 
 		getHeat(): number {

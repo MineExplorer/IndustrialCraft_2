@@ -50,7 +50,8 @@ namespace Machine {
 				}
 				let wind = WindSim.getWindAt(this.y) * (1 - this.data.blockCount/567);
 				if (wind < 0) wind = 0;
-				this.data.output = Math.round(wind/3 * 10)/10;
+				const rawOutput = wind / 30 * EnergyProductionModifiers.Windmill;
+				this.data.output = Math.round(rawOutput * 10)/10;
 			}
 			this.setActive(this.data.output > 0);
 		}

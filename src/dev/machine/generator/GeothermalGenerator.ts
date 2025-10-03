@@ -70,8 +70,9 @@ namespace Machine {
 			const slot2 = this.container.getSlot("slot2");
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
-			if (this.liquidTank.getAmount("lava") >= 1 && this.data.energy + 20 <= this.getEnergyStorage()) {
-				this.data.energy += 20;
+			const energyOutput = EnergyProductionModifiers.GeothermalGenerator;
+			if (this.liquidTank.getAmount("lava") >= 1 && this.data.energy + energyOutput <= this.getEnergyStorage()) {
+				this.data.energy += energyOutput;
 				this.liquidTank.getLiquid(1);
 				this.setActive(true);
 			}

@@ -53,7 +53,7 @@ const guiNuclearReactor = MachineRegistry.createInventoryWindow("Nuclear Reactor
 	],
 
 	elements: reactorElements
-});
+}, 450);
 
 
 namespace Machine {

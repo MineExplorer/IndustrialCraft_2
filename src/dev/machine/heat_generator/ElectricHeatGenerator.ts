@@ -18,25 +18,25 @@ Callback.addCallback("PreLoaded", function() {
 
 const guiElectricHeatGenerator = MachineRegistry.createInventoryWindow("Electric Heater", {
 	drawing: [
-		{type: "bitmap", x: 342, y: 110, bitmap: "energy_small_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 461, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
+		{type: "bitmap", x: 399, y: 110, bitmap: "energy_small_background", scale: GUI_SCALE},
+		{type: "bitmap", x: 511, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
 	],
 
 	elements: {
-		"slot0": {type: "slot", x: 440, y: 120},
-		"slot1": {type: "slot", x: 500, y: 120},
-		"slot2": {type: "slot", x: 560, y: 120},
-		"slot3": {type: "slot", x: 620, y: 120},
-		"slot4": {type: "slot", x: 680, y: 120},
-		"slot5": {type: "slot", x: 440, y: 180},
-		"slot6": {type: "slot", x: 500, y: 180},
-		"slot7": {type: "slot", x: 560, y: 180},
-		"slot8": {type: "slot", x: 620, y: 180},
-		"slot9": {type: "slot", x: 680, y: 180},
-		"slotEnergy": {type: "slot", x: 340, y: 180},
-		"energyScale": {type: "scale", x: 342, y: 110, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 530, y: 264, width: 300, height: 30, text: "0    /"},
-		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 630, y: 264, width: 300, height: 30, text: "0"}
+		"slot0": {type: "slot", x: 490, y: 120},
+		"slot1": {type: "slot", x: 550, y: 120},
+		"slot2": {type: "slot", x: 610, y: 120},
+		"slot3": {type: "slot", x: 670, y: 120},
+		"slot4": {type: "slot", x: 730, y: 120},
+		"slot5": {type: "slot", x: 490, y: 180},
+		"slot6": {type: "slot", x: 550, y: 180},
+		"slot7": {type: "slot", x: 610, y: 180},
+		"slot8": {type: "slot", x: 670, y: 180},
+		"slot9": {type: "slot", x: 730, y: 180},
+		"slotEnergy": {type: "slot", x: 390, y: 180},
+		"energyScale": {type: "scale", x: 399, y: 110, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 580, y: 264, width: 300, height: 30, text: "0    /"},
+		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 680, y: 264, width: 300, height: 30, text: "0"}
 	}
 });
 

@@ -21,7 +21,7 @@ const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial
 	elements: {
 		"progressScale": {type: "scale", x: 691, y: 104, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
 			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("Crafting");
+				RV?.RecipeTypeRegistry.openRecipePage("workbench");
 			}
 		}},
 		"slotInput0": {type: "slot", x: 491, y: 40},
@@ -33,9 +33,12 @@ const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial
 		"slotInput6": {type: "slot", x: 491, y: 160},
 		"slotInput7": {type: "slot", x: 551, y: 160},
 		"slotInput8": {type: "slot", x: 611, y: 160},
-		"slotResult": {type: "slot", x: 781, y: 100, clicker: {
+		"slotResult": {type: "slot", x: 781, y: 100, visual: true, clicker: {
             onClick: function(_, container: ItemContainer) {
-                container.sendEvent("craftClick", {});
+                container.sendEvent("craft", {allAtOnce: false});
+            },
+            onLongClick: function(_, container: ItemContainer) {
+                container.sendEvent("craft", {allAtOnce: true});
             }
         }},
         "slot0": {type: "slot", x: 300 + 22*GUI_SCALE, y: 130 + 37*GUI_SCALE},
@@ -72,9 +75,6 @@ namespace Machine {
 
         setupContainer(): void {
             StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-                if (name == "slotResult") {
-                    return false;
-                }
                 if (name.match(/slotInput[0-8]/)) {
                     this.data.recipeChecked = false;
                 }
@@ -111,20 +111,29 @@ namespace Machine {
             return false;
         }
 
-        provideRecipe(playerUid: number): ItemInstance {
-            const recipe = Recipes.getRecipeByField(this.container);
-            if (!recipe)
-                return null;
-
-            const result = Recipes.provideRecipeForPlayer(this.container, "", playerUid);
-            if (result) {
-                this.refillItems();
-                this.container.setSlot("slotResult", 0, 0, 0);
-                this.data.recipeChecked = false;
-                result.data = Math.max(result.data, 0);
-                return result;
+        provideRecipe(playerUid: number, allAtOnce: boolean): void {
+            const recipe = Recipes.getRecipeByField(this.container, "");
+            while(recipe) {
+                const result = Recipes.provideRecipeForPlayer(this.container, "", playerUid);
+                if (result) {
+                    new PlayerActor(playerUid).addItemToInventory(result.id, result.count, result.data !== -1 ? result.data : 0, result.extra || null, true);
+                    this.refillItems();
+                }
+                const newRecipe = Recipes.getRecipeByField(this.container, "");
+                if (newRecipe !== recipe) {
+                    if (newRecipe) {
+                        const result = newRecipe.getResult();
+                        this.container.setSlot("slotResult", result.id, result.count, result.data, result.extra);
+                    } else {
+                        this.container.setSlot("slotResult", 0, 0, 0);
+                    }
+                    break;
+                }
+                if (!allAtOnce) {
+                    break;
+                }
             }
-            return null;
+            this.container.sendChanges();
         }
 
         refillItems(): void {
@@ -151,12 +160,8 @@ namespace Machine {
 
         /** @deprecated Container event, shouldn't be called directly */
         @ContainerEvent(Side.Server)
-        craftClick(packetData: any, client: NetworkClient) {
-            const playerUid = client.getPlayerUid();
-            const result = this.provideRecipe(playerUid);
-            if (result) {
-                new PlayerActor(playerUid).addItemToInventory(result.id, result.count, result.data, result.extra, true);
-            }
+        craft(packetData: {allAtOnce: boolean}, client: NetworkClient) {
+            this.provideRecipe(client.getPlayerUid(), packetData.allAtOnce);
         }
 	}
 

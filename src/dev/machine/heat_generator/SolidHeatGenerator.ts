@@ -46,7 +46,7 @@ const guiSolidHeatGenerator = MachineRegistry.createInventoryWindow("Solid Fuel 
 		"slotAshes": {type: "slot", x: 591, y: 212},
 		"burningScale": {type: "scale", x: 450, y: 160, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
 		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
-		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 600, y: 344, width: 300, height: 30, text: "20"}
+		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 600, y: 344, width: 300, height: 30, text: "" + EnergyProductionModifiers.FuelGenerator * 2}
 	}
 });
 
@@ -84,7 +84,8 @@ namespace Machine {
 			const coords = StorageInterface.getRelativeCoords(this, side);
 			const tile = this.region.getTileEntity(coords) as IHeatConsumer;
 			if (tile && tile.canReceiveHeat && tile.canReceiveHeat(side ^ 1)) {
-				return this.data.output = tile.receiveHeat(20);
+				this.data.output = tile.receiveHeat(EnergyProductionModifiers.FuelGenerator * 2);
+				return this.data.output;
 			}
 			return 0;
 		}

@@ -10,7 +10,7 @@ Callback.addCallback("PreLoaded", function () {
 		"zcz",
 		"s#s",
 		"pap"
-	], ['#', BlockID.machineBlockBasic, 0, 'z', ItemID.circuitBasic, 0, 'c', 54, -1, 'a', ItemID.agriculturalAnalyzer, 0, 'p', ItemID.plateIron, 0, 's', 359, 0]);
+	], ['#', BlockID.machineBlockBasic, 0, 'z', ItemID.circuitBasic, 0, 'c', 54, -1, 'a', ItemID.agriculturalAnalyzer, -1, 'p', ItemID.plateIron, 0, 's', 359, 0]);
 });
 
 MachineRegistry.registerPrototype(BlockID.cropHarvester, new Machine.CropHarvester());

@@ -245,6 +245,7 @@ Translation.addTranslation("steel_plate", {en: "Steel Plate", ru: "Стальн�
 Translation.addTranslation("gold_plate", {en: "Gold Plate", ru: "Золотая пластина", es: "Placa de Oro", pt: "Placa de Ouro", zh: "金板"});
 Translation.addTranslation("lapis_plate", {en: "Lapis Plate", ru: "Лазуритовая пластина", es: "Placa de Lapislázuli", pt: "Placa de Lápis-Lazúli", zh: "青金石板"});
 Translation.addTranslation("lead_plate", {en: "Lead Plate", ru: "Свинцовая пластина", es: "Placa de Plomo", pt: "Placa de Chumbo", zh: "铅板"});
+Translation.addTranslation("silver_plate", {en: "Silver Plate", ru: "Серебряная пластина", es: "Placa de Plata", pt: "Placa de Prata", zh: "银板"});
 
 // Dense Plates
 Translation.addTranslation("dense_copper_plate", {en: "Dense Copper Plate", ru: "Плотная медная пластина", es: "Placa de Cobre Denso", pt: "Placa Densa de Cobre", zh: "致密铜板"});
@@ -254,6 +255,7 @@ Translation.addTranslation("dense_iron_plate", {en: "Dense Iron Plate", ru: "П�
 Translation.addTranslation("dense_steel_plate", {en: "Dense Steel Plate", ru: "Плотная стальная пластина", es: "Placa de Hierro Refinado Denso", pt: "Placa Densa de Aço", zh: "致密钢板"});
 Translation.addTranslation("dense_gold_plate", {en: "Dense Gold Plate", ru: "Плотная золотая пластина", es: "Placa Densa de Oro", pt: "Placa Densa de Ouro", zh: "致密金板"});
 Translation.addTranslation("dense_lead_plate", {en: "Dense Lead Plate", ru: "Плотная свинцовая пластина", es: "Placa Densa de Plomo", pt: "Placa Densa de Chumbo", zh: "致密铅板"});
+Translation.addTranslation("dense_silver_plate", {en: "Dense Silver Plate", ru: "Плотная серебряная пластина", es: "Placa Densa de Plata", pt: "Placa Densa de Prata", zh: "致密银板"});
 
 // Casings
 Translation.addTranslation("copper_casing", {en: "Copper Casing", ru: "Медная оболочка", es: "Carcasa para Objetos de Cobre", pt: "Invólucro de Cobre", zh: "铜质外壳"});
@@ -263,6 +265,7 @@ Translation.addTranslation("iron_casing", {en: "Iron Casing", ru: "Железн�
 Translation.addTranslation("steel_casing", {en: "Steel Casing", ru: "Стальная оболочка", es: "Carcasa para Objetos de Hierro", pt: "Invólucro de Aço", zh: "钢质外壳"});
 Translation.addTranslation("gold_casing", {en: "Gold Casing", ru: "Золотая оболочка", es: "Carcasa para Objetos de Oro", pt: "Invólucro de Ouro", zh: "黄金外壳"});
 Translation.addTranslation("lead_casing", {en: "Lead Casing", ru: "Свинцовая оболочка", es: "Carcasa para Objetos de Plomo", pt: "Invólucro de Chumbo", zh: "铅质外壳"});
+Translation.addTranslation("silver_casing", {en: "Silver Casing", ru: "Серебряная оболочка", es: "Carcasa para Objetos de Plata", pt: "Invólucro de Prata", zh: "银质外壳"});
 
 // Cans
 Translation.addTranslation("tin_can", {en: "Tin Can", ru: "Консервная банка", es: "Lata de Estaño", pt: "Lata de Estanho", zh: "锡罐(空)"});

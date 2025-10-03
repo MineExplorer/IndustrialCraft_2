@@ -12,10 +12,10 @@ ItemName.addTooltip(BlockID.transformerMV, "Low: 128 EU/t High: 512 EU/t");
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.transformerMV, count: 1, data: 0}, [
-		"b",
-		"x",
-		"b"
-	], ['x', BlockID.machineBlockBasic, 0, 'b', ItemID.cableCopper1, 0]);
+		" b ",
+		"oxo",
+		" b "
+	], ['x', BlockID.machineBlockBasic, 0, 'o', ItemID.coil, 0, 'b', ItemID.cableCopper1, 0]);
 });
 
 MachineRegistry.registerPrototype(BlockID.transformerMV, new Machine.Transformer(3, BlockID.machineBlockBasic));

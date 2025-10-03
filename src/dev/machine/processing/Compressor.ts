@@ -15,26 +15,31 @@ Callback.addCallback("PreLoaded", function() {
 	if (IC2Config.hardRecipes) {
 		Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
 			"p#p",
-			"xax"
-		], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1, 'p', VanillaBlockID.piston, -1]);
+			"mcm"
+		], ['#', BlockID.machineBlockBasic, -1, 'c', ItemID.circuitBasic, -1, 'm', ItemID.electricMotor, -1, 'p', VanillaBlockID.piston, -1]);
 	} else {
 		Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
 			"x x",
 			"x#x",
-			"xax"
-		], ['#', BlockID.machineBlockBasic, -1, 'x', 1, -1, 'a', ItemID.circuitBasic, -1]);
+			"xcx"
+		], ['#', BlockID.machineBlockBasic, -1, 'x', 1, -1, 'c', ItemID.circuitBasic, -1]);
 	}
 
 	MachineRecipeRegistry.registerRecipesFor("compressor", {
 		// Blocks
-		"minecraft:snow": {id: 79, count: 1, data: 0},
-		"minecraft:sand": {id: 24, count: 1, data: 0, sourceCount: 4},
+		"minecraft:sand:0": {id: 24, count: 1, data: 0, sourceCount: 4},
+		"minecraft:sand:1": {id: VanillaBlockID.red_sandstone, count: 1, data: 0, sourceCount: 4},
+		"minecraft:clay_ball": {id: VanillaBlockID.clay, count: 1, data: 0, sourceCount: 4},
 		"minecraft:brick": {id: 45, count: 1, data: 0, sourceCount: 4},
 		"minecraft:netherbrick": {id: 112, count: 1, data: 0, sourceCount: 4},
 		"minecraft:glowstone_dust": {id: 89, count: 1, data: 0, sourceCount: 4},
 		"minecraft:quartz": {id: 155, count: 1, data: 0, sourceCount: 4},
-		"minecraft:packed_ice": {id: VanillaBlockID.ice, count: 1, data: 0, sourceCount: 9},
-		"minecraft:blue_ice": {id: VanillaBlockID.packed_ice, count: 1, data: 0, sourceCount: 9},
+		"minecraft:snowball": {id: VanillaBlockID.snow, count: 1, data: 0},
+		"minecraft:snow": {id: 79, count: 1, data: 0},
+		"minecraft:ice": {id: VanillaBlockID.packed_ice, count: 1, data: 0, sourceCount: 9},
+		"minecraft:packed_ice": {id: VanillaBlockID.blue_ice, count: 1, data: 0, sourceCount: 9},
+		"minecraft:bone_meal": {id: VanillaBlockID.bone_block, count: 1, data: 0, sourceCount: 9},
+		"minecraft:dried_kelp": {id: VanillaBlockID.dried_kelp_block, count: 1, data: 0, sourceCount: 9},
 		// Items
 		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), sourceCount: 9},
 		"ItemID.ingotAlloy": {id: ItemID.plateAlloy, count: 1, data: 0},
@@ -43,6 +48,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.coalChunk": {id: 264, count: 1, data: 0},
 		"ItemID.cellEmpty": {id: ItemID.cellAir, count: 1, data: 0},
 		"ItemID.dustLapis": {id: ItemID.plateLapis, count: 1, data: 0},
+		"minecraft:blaze_powder": {id: VanillaItemID.blaze_rod, count: 1, data: 0, sourceCount: 5},
 		// Dense Plates
 		"ItemID.plateIron": {id: ItemID.densePlateIron, count: 1, data: 0, sourceCount: 9},
 		"ItemID.plateGold": {id: ItemID.densePlateGold, count: 1, data: 0, sourceCount: 9},
@@ -51,6 +57,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.plateBronze": {id: ItemID.densePlateBronze, count: 1, data: 0, sourceCount: 9},
 		"ItemID.plateSteel": {id: ItemID.densePlateSteel, count: 1, data: 0, sourceCount: 9},
 		"ItemID.plateLead": {id: ItemID.densePlateLead, count: 1, data: 0, sourceCount: 9},
+		"ItemID.plateSilver": {id: ItemID.densePlateSilver, count: 1, data: 0, sourceCount: 9},
 		// Compact
 		"minecraft:redstone": {id: 152, count: 1, data: 0, sourceCount: 9},
 		"minecraft:lapis_lazuli": {id: 22, count: 1, data: 0, sourceCount: 9},
@@ -72,6 +79,8 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.dustSmallCopper": {id: ItemID.dustCopper, count: 1, data: 0, sourceCount: 9},
 		"ItemID.dustSmallTin": {id: ItemID.dustTin, count: 1, data: 0, sourceCount: 9},
 		"ItemID.dustSmallLead": {id: ItemID.dustLead, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallSilver": {id: ItemID.dustSilver, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallSulfur": {id: ItemID.dustSulfur, count: 1, data: 0, sourceCount: 9},
 		"ItemID.smallUranium235": {id: ItemID.uranium235, count: 1, data: 0, sourceCount: 9},
 		"ItemID.smallPlutonium": {id: ItemID.plutonium, count: 1, data: 0, sourceCount: 9}
 	}, true);

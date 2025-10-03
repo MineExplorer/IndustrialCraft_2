@@ -44,14 +44,14 @@ namespace Machine {
 		}
 
 		calculateOutput(): number {
-			let output = 1;
+			let output = 0;
 			for (let i = 0; i < 6; i++) {
-				const slot = this.container.getSlot("slot"+i);
+				const slot = this.container.getSlot("slot" + i);
 				if (slot.id == ItemID.rtgPellet) {
-					output *= 2;
+					output = output > 0 ? output * 2 : EnergyProductionModifiers.RTGenerator * 2;
 				}
 			}
-			return output > 1 ? output : 0;
+			return output;
 		}
 
 		getOutputText(output: number): string {

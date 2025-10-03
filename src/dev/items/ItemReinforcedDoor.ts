@@ -31,6 +31,7 @@ implements ItemBehavior {
             if (Game.isItemSpendingAllowed(player)) {
                 Entity.setCarriedItem(player, item.id, item.count - 1, item.data, item.extra);
             }
+            region.playSound(coords.relative.x + 0.5, coords.relative.y + 0.5, coords.relative.z + 0.5, "dig.stone", 1, MathUtil.randomFloat(0.8, 1));
         }
 	}
 }

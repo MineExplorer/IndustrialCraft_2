@@ -80,10 +80,10 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', ItemID.cableCopper1, -1, 'b', ItemID.storageBattery, -1, 'c', ItemID.circuitBasic, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
 
 	Recipes.addShaped({id: ItemID.scannerAdvanced, count: 1, data: 27}, [
-		"gbg",
+		"pbp",
 		"dcd",
 		"xsx"
-	], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'g', ItemID.casingGold, -1], ChargeItemRegistry.transferEnergy);
+	], ['x', ItemID.cableGold2, -1, 's', ItemID.scanner, -1, 'b', ItemID.storageAdvBattery, -1, 'c', ItemID.circuitAdvanced, -1, 'd', 348, 0, 'p', ItemID.casingSilver, -1], ChargeItemRegistry.transferEnergy);
 
 	// Windmeter
 	Recipes.addShaped({id: ItemID.windMeter, count: 1, data: 27}, [

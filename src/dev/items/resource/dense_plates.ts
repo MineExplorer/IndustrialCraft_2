@@ -5,6 +5,7 @@ ItemRegistry.createItem("densePlateIron", {name: "dense_iron_plate", icon: "dens
 ItemRegistry.createItem("densePlateSteel", {name: "dense_steel_plate", icon: "dense_plate_steel"});
 ItemRegistry.createItem("densePlateGold", {name: "dense_gold_plate", icon: "dense_plate_gold"});
 ItemRegistry.createItem("densePlateLead", {name: "dense_lead_plate", icon: "dense_plate_lead"});
+ItemRegistry.createItem("densePlateSilver", {name: "dense_silver_plate", icon: "dense_plate_silver"});
 
 Item.addCreativeGroup("plateDense", Translation.translate("Desne Plates"), [
 	ItemID.densePlateCopper,
@@ -13,5 +14,6 @@ Item.addCreativeGroup("plateDense", Translation.translate("Desne Plates"), [
 	ItemID.densePlateIron,
 	ItemID.densePlateSteel,
 	ItemID.densePlateGold,
-	ItemID.densePlateLead
+	ItemID.densePlateLead,
+	ItemID.densePlateSilver
 ]);

@@ -22,7 +22,7 @@ IMPORT("SoundLib");
 IMPORT("BackpackAPI");
 
 const startTime = Debug.sysTime();
-ItemModel.setCurrentCacheGroup("industrial-craft", "1")
+ItemModel.setCurrentCacheGroup("industrial-craft", "2");
 
 // constants
 const GUI_SCALE = 3.2;

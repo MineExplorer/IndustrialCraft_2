@@ -171,12 +171,13 @@ namespace MachineRegistry {
 		header.contentProvider.drawing[2].text = Translation.translate(text);
 	}
 
-	export function createInventoryWindow(header: string, uiDescriptor: {drawing?: UI.DrawingSet, elements: UI.ElementSet}) {
+	export function createInventoryWindow(header: string, uiDescriptor: {drawing?: UI.DrawingSet, elements: UI.ElementSet}, minHeight?: number) {
 		const gui = new UI.StandartWindow({
 			standard: {
 				header: {text: {text: Translation.translate(header)}},
 				inventory: {standard: true},
-				background: {standard: true}
+				background: {standard: true},
+				minHeight: minHeight,
 			},
 
 			drawing: uiDescriptor.drawing || [],

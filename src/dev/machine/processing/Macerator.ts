@@ -63,6 +63,18 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.densePlateSteel": {id: ItemID.dustSteel, count: 9, data: 0},
 		"ItemID.densePlateLead": {id: ItemID.dustLead, count: 9, data: 0},
 		"ItemID.densePlateSilver": {id: ItemID.dustSilver, count: 9, data: 0},
+		// casings
+		"ItemID.casingIron": {id: ItemID.dustSmallIron, count: 4, data: 0},
+		"ItemID.casingGold": {id: ItemID.dustSmallGold, count: 4, data: 0},
+		"ItemID.casingCopper": {id: ItemID.dustSmallCopper, count: 4, data: 0},
+		"ItemID.casingTin": {id: ItemID.dustSmallTin, count: 4, data: 0},
+		"ItemID.casingBronze": {id: ItemID.dustSmallBronze, count: 4, data: 0},
+		"ItemID.casingSteel": {id: ItemID.dustSmallSteel, count: 4, data: 0},
+		"ItemID.casingLead": {id: ItemID.dustSmallLead, count: 4, data: 0},
+		"ItemID.casingSilver": {id: ItemID.dustSmallSilver, count: 4, data: 0},
+		// nuggets
+		"minecraft:iron_nugget": {id: ItemID.dustSmallIron, count: 1, data: 0},
+		"minecraft:gold_nugget": {id: ItemID.dustSmallGold, count: 1, data: 0},
 		// other resources
 		"minecraft:lapis_block": {id: ItemID.dustLapis, count: 9, data: 0},
 		"minecraft:coal_block": {id: ItemID.dustCoal, count: 9, data: 0},
@@ -108,7 +120,6 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.coffeeBeans": {id: ItemID.coffeePowder, count: 3, data: 0},
 	}, true);
 });
-
 
 const guiMacerator = MachineRegistry.createInventoryWindow("Macerator", {
 	drawing: [

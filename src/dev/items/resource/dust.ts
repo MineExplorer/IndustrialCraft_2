@@ -32,18 +32,22 @@ Item.addCreativeGroup("dust", Translation.translate("Dusts"), [
 ]);
 
 // Small Dust
-ItemRegistry.createItem("dustSmallCopper", {name: "small_copper_dust", icon: "dust_copper_small"});
-ItemRegistry.createItem("dustSmallTin", {name: "small_tin_dust", icon: "dust_tin_small"});
-ItemRegistry.createItem("dustSmallIron", {name: "small_iron_dust", icon: "dust_iron_small"});
-ItemRegistry.createItem("dustSmallLead", {name: "small_lead_dust", icon: "dust_lead_small"});
-ItemRegistry.createItem("dustSmallGold", {name: "small_gold_dust", icon: "dust_gold_small"});
-ItemRegistry.createItem("dustSmallSilver", {name: "small_silver_dust", icon: "dust_silver_small"});
-ItemRegistry.createItem("dustSmallSulfur", {name: "small_sulfur_dust", icon: "dust_sulfur_small"});
+ItemRegistry.createItem("dustSmallCopper", {name: "small_copper_dust", icon: "dust_small_copper"});
+ItemRegistry.createItem("dustSmallTin", {name: "small_tin_dust", icon: "dust_small_tin"});
+ItemRegistry.createItem("dustSmallBronze", {name: "small_bronze_dust", icon: "dust_small_bronze"});
+ItemRegistry.createItem("dustSmallIron", {name: "small_iron_dust", icon: "dust_small_iron"});
+ItemRegistry.createItem("dustSmallSteel", {name: "small_steel_dust", icon: "dust_small_steel"});
+ItemRegistry.createItem("dustSmallLead", {name: "small_lead_dust", icon: "dust_small_lead"});
+ItemRegistry.createItem("dustSmallGold", {name: "small_gold_dust", icon: "dust_small_gold"});
+ItemRegistry.createItem("dustSmallSilver", {name: "small_silver_dust", icon: "dust_small_silver"});
+ItemRegistry.createItem("dustSmallSulfur", {name: "small_sulfur_dust", icon: "dust_small_sulfur"});
 
 Item.addCreativeGroup("dustSmall", Translation.translate("Small Dusts"), [
 	ItemID.dustSmallCopper,
 	ItemID.dustSmallTin,
+	ItemID.dustSmallBronze,
 	ItemID.dustSmallIron,
+	ItemID.dustSmallSteel,
 	ItemID.dustSmallLead,
 	ItemID.dustSmallGold,
 	ItemID.dustSmallSilver,
@@ -78,47 +82,15 @@ Recipes.addShapeless({id: ItemID.dustBronze, count: 4, data: 0}, [
 	{id: ItemID.dustTin, data: 0}
 ]);
 
-Recipes.addShaped({id: ItemID.dustCopper, count: 1, data: 0}, [
-	"xxx",
-	"xxx",
-	"xxx",
-], ['x', ItemID.dustSmallCopper, 0]);
+const dustNames = ["Copper", "Tin", "Bronze", "Iron", "Steel", "Lead", "Gold", "Silver", "Sulfur"];
 
-Recipes.addShaped({id: ItemID.dustTin, count: 1, data: 0}, [
-	"xxx",
-	"xxx",
-	"xxx",
-], ['x', ItemID.dustSmallTin, 0]);
-
-Recipes.addShaped({id: ItemID.dustIron, count: 1, data: 0}, [
-	"xxx",
-	"xxx",
-	"xxx",
-], ['x', ItemID.dustSmallIron, 0]);
-
-Recipes.addShaped({id: ItemID.dustLead, count: 1, data: 0}, [
-	"xxx",
-	"xxx",
-	"xxx",
-], ['x', ItemID.dustSmallLead, 0]);
-
-Recipes.addShaped({id: ItemID.dustGold, count: 1, data: 0}, [
-	"xxx",
-	"xxx",
-	"xxx",
-], ['x', ItemID.dustSmallGold, 0]);
-
-Recipes.addShaped({id: ItemID.dustSilver, count: 1, data: 0}, [
-	"xxx",
-	"xxx",
-	"xxx",
-], ['x', ItemID.dustSmallSilver, 0]);
-
-Recipes.addShaped({id: ItemID.dustSulfur, count: 1, data: 0}, [
-	"xxx",
-	"xxx",
-	"xxx",
-], ['x', ItemID.dustSmallSulfur, 0]);
+for (const name of dustNames) {
+	Recipes.addShaped({id: ItemID["dust" + name], count: 4, data: 0}, [
+		"xxx",
+		"xxx",
+		"xxx",
+	], ['x', ItemID["dustSmall" + name], 0]);
+}
 
 // alternative
 Recipes.addShaped({id: 348, count: 1, data: 0}, [

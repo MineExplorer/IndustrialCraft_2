@@ -43,7 +43,7 @@ namespace Machine {
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
 				if (name == "slotLiquid1") return !!LiquidItemRegistry.getEmptyItem(id, data);
-				if (name == "slotLiquid2") return !!LiquidRegistry.getFullItem(id, data, "water");
+				if (name == "slotLiquid2") return !!LiquidItemRegistry.getFullItem(id, data, this.liquidTank.getLiquidStored() || "water");
 				if (name == "slotOutput") return false;
 				return UpgradeAPI.isValidUpgrade(id, this);
 			});

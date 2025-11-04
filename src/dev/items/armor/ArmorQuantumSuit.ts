@@ -102,11 +102,11 @@ class ArmorQuantumHelmet extends ArmorQuantumSuit {
 	}
 }
 
-class ArmorQuantumChestplate extends ArmorQuantumSuit {
+class ArmorQuantumChestplate extends ArmorQuantumSuit
+implements IJetpack {
 	constructor(stringID: string, name: string, texture: string) {
 		super(stringID, name, {type: "chestplate", defence: 8, texture: texture});
-		ToolHUD.setButtonFor(this.id, "button_fly");
-		ToolHUD.setButtonFor(this.id, "button_hover");
+		JetpackProvider.registerItem(this.id, this);
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
@@ -122,6 +122,10 @@ class ArmorQuantumChestplate extends ArmorQuantumSuit {
 			Entity.setFire(playerUid, 0, true);
 		}
 		return JetpackProvider.onTick(item, playerUid);
+	}
+
+	canFly(item: ItemInstance, playerPos: Vector): boolean {
+		return playerPos.y < 256 && ChargeItemRegistry.getEnergyStored(item) >= 8;
 	}
 }
 

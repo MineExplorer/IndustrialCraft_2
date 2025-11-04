@@ -91,12 +91,18 @@ Recipes.addShaped({id: ItemID.rubberBoots, count: 1, data: 0}, [
 	"xwx"
 ], ['x', ItemID.rubber, 0, 'w', 35, -1]);
 
-// Jetpack
+// Jetpacks
 Recipes.addShaped({id: ItemID.jetpack, count: 1, data: ELECTRIC_ITEM_MAX_DAMAGE}, [
 	"bcb",
 	"bab",
-	"d d"
-], ['a', BlockID.storageBatBox, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0, 'd', 348, 0]);
+	"g g"
+], ['a', BlockID.storageBatBox, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0, 'g', 348, 0]);
+
+Recipes.addShaped({id: ItemID.fuelJetpack, count: 1, data: ArmorFuelJetpack.LIQUID_STORAGE}, [
+	"bcb",
+	"bab",
+	"r r"
+], ['a', ItemID.cellEmpty, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitBasic, 0, 'r', VanillaItemID.redstone, 0]);
 
 // Batpacks
 Recipes.addShaped({id: ItemID.batpack, count: 1, data: ELECTRIC_ITEM_MAX_DAMAGE}, [

@@ -17,13 +17,7 @@ namespace Machine {
 		setupContainer(): void {}
 
 		addLiquidTank(name: string, limit: number, liquids?: string[]) {
-			const tank = new BlockEngine.LiquidTank(this, name, limit, liquids);
-			const liquid = this.liquidStorage.getLiquidStored();
-			if (liquid) {
-				const amount = this.liquidStorage.getLiquid(liquid, tank.getLimit() / 1000);
-				tank.addLiquid(liquid, Math.round(amount * 1000));
-			}
-			return tank;
+			return new BlockEngine.LiquidTank(this, name, limit, liquids);
 		}
 
 		canRotate(side: number): boolean {

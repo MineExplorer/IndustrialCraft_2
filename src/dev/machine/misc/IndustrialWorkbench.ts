@@ -90,7 +90,6 @@ namespace Machine {
         }
 
 		onTick(): void {
-			UpgradeAPI.useUpgrades(this);
 			StorageInterface.checkHoppers(this);
 
             if (!this.data.recipeChecked) {

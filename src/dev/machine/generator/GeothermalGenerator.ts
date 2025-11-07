@@ -47,8 +47,8 @@ namespace Machine {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
 			});
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				return LiquidItemRegistry.getItemLiquid(id, data) == "lava";
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data, extra) => {
+				return LiquidItemRegistry.getItemLiquid(id, data, extra) == "lava";
 			});
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
@@ -107,7 +107,7 @@ namespace Machine {
 			"slot2": {output: true}
 		},
 		isValidInput: (item: ItemInstance) => (
-			LiquidItemRegistry.getItemLiquid(item.id, item.data) == "lava"
+			LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra) == "lava"
 		),
 		canTransportLiquid: (liquid: string) => false
 	});

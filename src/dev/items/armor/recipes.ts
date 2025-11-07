@@ -98,7 +98,7 @@ Recipes.addShaped({id: ItemID.jetpack, count: 1, data: ELECTRIC_ITEM_MAX_DAMAGE}
 	"g g"
 ], ['a', BlockID.storageBatBox, -1, 'b', ItemID.casingIron, 0, 'c', ItemID.circuitAdvanced, 0, 'g', 348, 0]);
 
-Recipes.addShaped({id: ItemID.fuelJetpack, count: 1, data: ArmorFuelJetpack.LIQUID_STORAGE}, [
+Recipes.addShaped({id: ItemID.fuelJetpack, count: 1, data: Item.getMaxDamage(ItemID.fuelJetpack)}, [
 	"bcb",
 	"bab",
 	"r r"

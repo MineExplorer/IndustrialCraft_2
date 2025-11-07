@@ -1,5 +1,4 @@
-class ItemEmptyCell
-extends ItemCommon
+class ItemEmptyCell extends ItemCommon
 implements ItemBehavior {
 	constructor() {
 		super("cellEmpty", "empty_cell", "cell_empty");
@@ -21,16 +20,50 @@ implements ItemBehavior {
 	}
 }
 
-class ItemLiquidCell
-extends ItemCommon
-implements ItemBehavior {
+class ItemLiquidCell extends ItemCommon
+implements ItemBehavior, LiquidItem {
+	liquidType: string;
+	liquidStorage: number = 1000;
+
 	constructor(stringID: string, liquid: string) {
 		super(stringID, `${liquid}_cell`, `cell_${liquid}`);
-		LiquidItemRegistry.registerItem(liquid, ItemID.cellEmpty, this.id, 1000);
+		this.liquidType = liquid;
+		this.setMaxDamage(1000);
+		LiquidItemRegistry.registerItem(liquid, {id: ItemID.cellEmpty, data: 0}, {id: this.id, data: 0}, 1000);
+		LiquidItemRegistry.registerItemInterface(this.id, this);
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
 		return name + "\n§7" + (1000 - item.data) + " mB";
+	}
+
+	getLiquidType(): string {
+		return this.liquidType;
+	}
+
+	getAmount(itemData: number, itemExtra: ItemExtraData): number {
+		return this.liquidStorage - itemData;
+	}
+
+	getLiquid(item: ItemInstance, amount: number): number {
+		amount = Math.min(this.getAmount(item.data, item.extra), amount);
+		item.data += amount;
+		return amount;
+	}
+
+	addLiquid(item: ItemInstance, liquid: string, amount: number): number {
+		amount = Math.min(this.liquidStorage - this.getAmount(item.data, item.extra), amount);
+		item.id = this.id;
+		item.data -= amount;
+		return amount;
+	}
+
+	getEmptyItem(): ItemInstance {
+		return {id: ItemID.cellEmpty, count: 1, data: 0};
+	}
+
+	getFullItem(): ItemInstance {
+		return {id: this.id, count: 1, data: 0};
 	}
 }
 

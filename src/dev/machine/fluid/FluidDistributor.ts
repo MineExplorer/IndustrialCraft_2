@@ -61,8 +61,8 @@ namespace Machine {
 		setupContainer(): void {
 			this.liquidTank = this.addLiquidTank("fluid", 1000);
 
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, amount, data) => {
-				return !!LiquidItemRegistry.getFullItem(id, data, "water");
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, amount, data, extra) => {
+				return !!LiquidItemRegistry.getFullStack(id, data, extra, this.liquidTank.getLiquidStored() || "water");
 			});
 			this.container.setSlotAddTransferPolicy("slotLiquid2", () => 0);
 		}
@@ -111,8 +111,8 @@ namespace Machine {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => {
-			return !!LiquidItemRegistry.getFullItem(item.id, item.data, "water")
+		isValidInput:(item, side, tileEntity) => {
+			return !!LiquidItemRegistry.getFullStack(item, tileEntity.liquidTank.getLiquidStored() || "water")
 		},
 		canReceiveLiquid: function(liquid: string, side: number): boolean {
 			const data = this.tileEntity.data;

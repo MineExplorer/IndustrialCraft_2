@@ -2,15 +2,16 @@
 /// <reference path="./JetpackProvider.ts" />
 
 class ArmorFuelJetpack extends ArmorIC2
-implements IJetpack {
-	static LIQUID_STORAGE = 4000;
+implements IJetpack, LiquidItem {
+	liquidStorage = 4000;
 	static FUEL_BURN_TICKS = 10;
 
 	constructor() {
-		super("fuelJetpack", "fuel_jetpack", {type: "chestplate", defence: 3, texture: "fuel_jetpack"});
+		super("fuelJetpack", "fuel_jetpack", {type: "chestplate", defence: 3, texture: "fuel_jetpack"}, false);
 		JetpackProvider.registerItem(this.id, this);
-		this.setMaxDamage(ArmorFuelJetpack.LIQUID_STORAGE);
-		LiquidItemRegistry.registerItem("biogas", ItemID.fuelJetpack, ItemID.fuelJetpack, ArmorFuelJetpack.LIQUID_STORAGE);
+		this.setMaxDamage(this.liquidStorage + 1);
+		Item.addToCreative(this.id, 1, 1);
+		LiquidItemRegistry.registerItemInterface(this.id, this);
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
@@ -67,5 +68,33 @@ implements IJetpack {
 			item.extra.putInt("burnTime", 0);
 		}
 		return item;
+	}
+
+	getLiquidType(itemData: number, itemExtra: ItemExtraData): string {
+		return itemData < this.maxDamage ? "biogas" : null;
+	}
+
+	getAmount(itemData: number, itemExtra: ItemExtraData): number {
+		return this.maxDamage - itemData;
+	}
+
+	getEmptyItem(): ItemInstance {
+		return new ItemStack(this.id, 1, this.maxDamage);
+	}
+
+	getFullItem(liquid: string): ItemInstance {
+		return liquid == "biogas" ? new ItemStack(this.id, 1, 1) : null;
+	}
+
+	getLiquid(item: ItemInstance, amount: number): number {
+		amount = Math.min(this.getAmount(item.data, item.extra), amount);
+		item.data += amount;
+		return amount;
+	}
+
+	addLiquid(item: ItemInstance, liquid: string, amount: number): number {
+		amount = Math.min(this.liquidStorage - this.getAmount(item.data, item.extra), amount);
+		item.data -= amount;
+		return amount;
 	}
 }

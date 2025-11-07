@@ -183,5 +183,11 @@ namespace Machine {
 		playOnce(soundName: string, volume: number = 1, radius: number = 16) {
 			this.networkEntity.send("playSound", {name: soundName, vol: volume, rad: radius});
 		}
+
+		protected canStackBeMerged(inputStack: ItemInstance, outputStack: ItemInstance) {
+			return outputStack.id == 0 || (outputStack.id == inputStack.id && outputStack.data == inputStack.data && 
+				outputStack.count + inputStack.count <= Item.getMaxStack(outputStack.id, outputStack.data) &&
+				outputStack.extra == inputStack.extra)
+		}
 	}
 }

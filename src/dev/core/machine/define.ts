@@ -131,7 +131,7 @@ namespace MachineRegistry {
 
 	export function fillTankOnClick(tank: BlockEngine.LiquidTank, item: ItemInstance, playerUid: number): boolean {
 		const liquid = tank.getLiquidStored();
-		const empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
+		const empty = LiquidItemRegistry.getEmptyStack(item);
 		if (empty && (!liquid && tank.isValidLiquid(empty.liquid) || empty.liquid == liquid) && !tank.isFull()) {
 			const player = new PlayerEntity(playerUid);
 			const liquidLimit = tank.getLimit();
@@ -143,12 +143,13 @@ namespace MachineRegistry {
 				item.count -= count;
 				player.setCarriedItem(item);
 			}
-			else if (item.count == 1 && empty.storage) {
+			// TODO: rewrite
+			/*else if (item.count == 1 && empty.storage) {
 				const amount = Math.min(liquidLimit - storedAmount, empty.amount);
 				tank.addLiquid(empty.liquid, amount);
 				item.data += amount;
 				player.setCarriedItem(item);
-			}
+			}*/
 			return true;
 		}
 		return false;

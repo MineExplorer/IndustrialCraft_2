@@ -41,9 +41,9 @@ namespace Machine {
 		setupContainer(): void {
 			this.liquidTank = this.addLiquidTank("fluid", 16000);
 
-			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name == "slotLiquid1") return !!LiquidItemRegistry.getEmptyItem(id, data);
-				if (name == "slotLiquid2") return !!LiquidItemRegistry.getFullItem(id, data, this.liquidTank.getLiquidStored() || "water");
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
+				if (name == "slotLiquid1") return !!LiquidItemRegistry.getItemLiquid(id, data, extra);
+				if (name == "slotLiquid2") return !!LiquidItemRegistry.getFullStack(id, data, extra, this.liquidTank.getLiquidStored() || "water");
 				if (name == "slotOutput") return false;
 				return UpgradeAPI.isValidUpgrade(id, this);
 			});
@@ -79,11 +79,11 @@ namespace Machine {
 
 MachineRegistry.createStorageInterface(BlockID.tank, {
 	slots: {
-		"slotLiquid1": {input: true, isValid: (item: ItemInstance) => {
-			return !!LiquidItemRegistry.getEmptyItem(item.id, item.data);
+		"slotLiquid1": {input: true, isValid: (item) => {
+			return !!LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra);
 		}},
-		"slotLiquid2": {input: true, isValid: (item: ItemInstance) => {
-			return !!LiquidItemRegistry.getFullItem(item.id, item.data, "water");
+		"slotLiquid2": {input: true, isValid: (item, side, tileEntity) => {
+			return !!LiquidItemRegistry.getFullStack(item, tileEntity.liquidTank.getLiquidStored() || "water");
 		}},
 		"slotOutput": {output: true}
 	},

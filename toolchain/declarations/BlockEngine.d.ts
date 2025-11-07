@@ -1367,7 +1367,6 @@ declare abstract class ItemBase {
      * @param rarity one of `EnumRarity` values
      */
     setRarity(rarity: number): void;
-    addDefaultToCreative(): void;
 }
 declare class ItemCommon extends ItemBase {
     constructor(stringID: string, name?: string, icon?: string | Item.TextureData, inCreative?: boolean);
@@ -1685,6 +1684,14 @@ declare namespace ItemRegistry {
      * @returns item class instance
      */
     export function createTool(stringID: string, params: ToolDescription, toolData?: ToolParams): ItemTool;
+    /**
+     * Adds item to creative. If extra data is not specified and item with same id and data is already added, it will be skipped.
+     * @param id item id
+     * @param count item count
+     * @param data item data
+     * @param extra item extra data
+     */
+    export function addToCreative(id: string | number, count: number, data: number, extra?: ItemExtraData): void;
     export {};
 }
 /**
@@ -1962,74 +1969,164 @@ declare abstract class TileEntityBase implements TileEntity {
         amount: number;
     }): void;
 }
+interface LiquidItem {
+    /**
+     * Capacity of liquid in mB
+     */
+    liquidStorage: number;
+    /**
+     * Returns liquid type stored in the item.
+     * @param itemData item data
+     * @param itemExtra item extra data
+     */
+    getLiquidType(itemData: number, itemExtra: ItemExtraData): string;
+    /**
+     * Returns amount of liquid stored in the item.
+     * @param itemData item data
+     * @param itemExtra item extra data
+     */
+    getAmount(itemData: number, itemExtra: ItemExtraData): number;
+    /**
+     * Extracts liquid from the item.
+     * @param item item stack
+     * @param amount max amount of liquid to get
+     * @returns amount of extracted liquid
+     */
+    getLiquid(item: ItemInstance, amount: number): number;
+    /**
+     * Adds liquid to the item.
+     * @param item item stack partially filled with liquid or empty item stack
+     * @param liquid liquid type
+     * @param amount max amount of liquid to add
+     * @returns amount of added liquid
+     */
+    addLiquid(item: ItemInstance, liquid: string, amount: number): number;
+    /**
+     * Returns empty item stack without liquid.
+     */
+    getEmptyItem(): ItemInstance;
+    /**
+     * Returns full item stack for the specified liquid.
+     * @param liquid liquid type
+     */
+    getFullItem(liquid: string): ItemInstance;
+}
 /**
  * Registry for liquid storage items. Compatible with LiquidRegistry and extends it
  * by adding items that can contain partial amounts of liquid.
  */
 declare namespace LiquidItemRegistry {
     /**
-     * Object that contains empty liquid storage item and stored liquid data.
+     * Object that represents item id and data
      * @id item id
-     * @data item data
+     * @data item data, -1 for any data
+     */
+    type ItemIdData = {
+        id: number;
+        data: number;
+    };
+    /**
+     * Object that contains empty liquid storage item and stored liquid data.
      * @liquid liquid type
      * @amount liquid amount able to be extracted
-     * @storage liquid storage of items registered by BlockEngine.
      */
-    type EmptyData = {
+    interface EmptyItem extends ItemInstance {
+        liquid: string;
+        amount: number;
+    }
+    /**
+     * Object that contains full item and free liquid capacity.
+     * @amount free liquid capacity
+     */
+    interface FullItem extends ItemInstance {
+        amount: number;
+    }
+    type EmptyByFullMapping = {
         id: number;
         data: number;
         liquid: string;
         amount: number;
-        storage?: number;
     };
-    /**
-     * Object that contains full item and free liquid capacity.
-     * @id item id
-     * @data item data
-     * @liquid liquid type
-     * @amount free liquid capacity
-     * @storage liquid storage of items registered by BlockEngine.
-     */
-    type FullData = {
+    type FullByEmptyMapping = {
         id: number;
         data: number;
         amount: number;
-        storage?: number;
     };
-    export const EmptyByFull: {};
-    export const FullByEmpty: {};
+    export const EmptyByFull: {
+        [key: string]: EmptyByFullMapping;
+    };
+    export const FullByEmpty: {
+        [key: string]: FullByEmptyMapping;
+    };
+    export const LiquidItems: {
+        [key: number]: LiquidItem;
+    };
     /**
-     * Registers liquid storage item.
+     * Registers empty and full states of liquid storage item. If item liquid amount is 1000 mB,
+     * it will be also registered in Core Engine LiquidRegistry.
      * @param liquid liquid name
-     * @param emptyId empty item id
-     * @param fullId id of item with luquid
-     * @param storage capacity of liquid in mB
+     * @param empty empty item id and data
+     * @param full id and data of item with luquid
+     * @param amount amount of stored liquid in mB
      */
-    export function registerItem(liquid: string, emptyId: number, fullId: number, storage: number): void;
+    export function registerItem(liquid: string, empty: ItemIdData, full: ItemIdData, amount: number): void;
+    /** @deprecated */
+    export function registerItem(liquid: string, emptyId: number, full: number, amount: number): void;
+    /**
+     * Registers item with abstract interface to work with item liquid storage
+     * @param itemId item numeric id
+     * @param interface liquid item interface object
+     */
+    export function registerItemInterface(itemId: number, interface: LiquidItem): void;
+    export function getLiquidItem(itemId: number): LiquidItem;
     /**
      * Return liquid type stored in item
      * @param id item id
      * @param data item data
+     * @param extra item extra data
      * @returns liquid type
      */
+    export function getItemLiquid(id: number, data: number, extra: ItemExtraData): string;
+    /** @deprecated */
     export function getItemLiquid(id: number, data: number): string;
+    /** @deprecated */
+    export function getEmptyItem(id: number, data: number): EmptyItem;
+    /** @deprecated */
+    export function getFullItem(id: number, data: number, liquid: string): FullItem;
     /**
      * Returns empty item and stored liquid data for item that contains liquid,
      * null otherwise.
      * @param id item id
      * @param data item data
+     * @param extra item extra data
      * @returns object that contains empty item and stored liquid.
      */
-    export function getEmptyItem(id: number, data: number): EmptyData;
+    export function getEmptyStack(id: number, data: number, extra: ItemExtraData): EmptyItem;
+    /**
+     * Returns empty item and stored liquid data for item that contains liquid,
+     * null otherwise.
+     * @param item item stack
+     * @returns object that contains empty item and stored liquid.
+     */
+    export function getEmptyStack(item: ItemInstance): EmptyItem;
     /**
      * Returns full item and free liquid capacity for item that can be filled with liquid,
      * null otherwise.
      * @param id item id
      * @param data item data
+     * @param extra item extra data
      * @param liquid liquid type
      * @returns object that contains full item and free liquid capacity
      */
-    export function getFullItem(id: number, data: number, liquid: string): FullData;
+    export function getFullStack(id: number, data: number, extra: ItemExtraData, liquid: string): FullItem;
+    /**
+     * Returns full item and free liquid capacity for item that can be filled with liquid,
+     * null otherwise.
+     * @param item item stack
+     * @param liquid liquid type
+     * @returns object that contains full item and free liquid capacity
+     */
+    export function getFullStack(item: ItemInstance, liquid: string): FullItem;
     export {};
 }
 declare namespace BlockEngine {
@@ -2111,14 +2208,14 @@ declare namespace BlockEngine {
         /**
          * Gets liquid from tank.
          * @param amount max amount of liquid to get
-         * @returns amount of got liquid
+         * @returns amount of received liquid
          */
         getLiquid(amount: number): number;
         /**
          * Gets liquid from tank.
          * @param liquid liquid type
          * @param amount max amount of liquid to get
-         * @returns amount of got liquid
+         * @returns amount of received liquid
          */
         getLiquid(liquid: string, amount: number): number;
         /**
@@ -2149,5 +2246,6 @@ declare namespace BlockEngine {
          * @param scale name of liquid bar
          */
         updateUiScale(scale: string): void;
+        private canStackBeMerged;
     }
 }

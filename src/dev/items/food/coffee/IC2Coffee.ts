@@ -96,7 +96,7 @@ namespace IC2Coffee {
 	export function craftFunction(api: Recipes.WorkbenchFieldAPI, field: UI.Slot[], result: ItemInstance, player: number): void {
 		for (let i = 0; i < 9; i++) {
 			const item = field[i];
-			const emptyItem = LiquidItemRegistry.getEmptyItem(item.id, item.data);
+			const emptyItem = LiquidRegistry.getEmptyItem(item.id, item.data);
 			if (emptyItem) {
 				const playerEntity = new PlayerEntity(player);
 				playerEntity.addItemToInventory(emptyItem.id, 1, emptyItem.data);

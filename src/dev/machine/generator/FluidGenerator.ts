@@ -64,10 +64,9 @@ namespace Machine {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
 			});
 
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				const empty = LiquidItemRegistry.getEmptyItem(id, data);
-				if (!empty) return false;
-				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data, extra) => {
+				const liquid = LiquidItemRegistry.getItemLiquid(id, data, extra);
+				return liquid && MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid);
 			});
 
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
@@ -142,9 +141,8 @@ namespace Machine {
 			"slot2": {output: true}
 		},
 		isValidInput: function(item: ItemInstance) {
-			const empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
-			if (!empty) return false;
-			return this.canReceiveLiquid(empty.liquid);
+			const liquid = LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra);
+			return liquid && MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid);
 		},
 		canTransportLiquid: () => false
 	});

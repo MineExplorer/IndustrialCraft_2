@@ -94,7 +94,7 @@ namespace Machine {
 			return false;
 		}
 
-		isValidCan(id: number, data: number): boolean {
+		isValidCan(id: number, data: number, extra: ItemExtraData): boolean {
 			switch (this.data.mode) {
 			case 0: {
 				const recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
@@ -105,9 +105,9 @@ namespace Machine {
 			}
 			case 1:
 			case 3:
-				return !!LiquidItemRegistry.getEmptyItem(id, data);
+				return !!LiquidItemRegistry.getItemLiquid(id, data, extra);
 			case 2:
-				return !!LiquidItemRegistry.getFullItem(id, data, "water");
+				return !!LiquidItemRegistry.getFullStack(id, data, extra, this.inputTank.getLiquidStored() || "water");
 			}
 		}
 
@@ -115,9 +115,9 @@ namespace Machine {
 			this.inputTank = this.addLiquidTank("inputTank", 8000);
 			this.outputTank = this.addLiquidTank("outputTank", 8000);
 
-			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
 				if (name == "slotSource") return this.isValidSourceItem(id, data);
-				if (name == "slotCan") return this.isValidCan(id, data);
+				if (name == "slotCan") return this.isValidCan(id, data, extra);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
@@ -159,9 +159,9 @@ namespace Machine {
 			break;
 			case 1:
 				let liquid = this.outputTank.getLiquidStored();
-				let empty = LiquidItemRegistry.getEmptyItem(canSlot.id, canSlot.data);
-				if (empty && (!liquid || empty.liquid == liquid) && !this.outputTank.isFull()) {
-					if (this.data.energy >= this.energyDemand && (resultSlot.id == empty.id && resultSlot.data == empty.data && resultSlot.count < Item.getMaxStack(empty.id) || resultSlot.id == 0)) {
+				const emptyStack = LiquidItemRegistry.getEmptyStack(canSlot);
+				if (emptyStack && (!liquid || emptyStack.liquid == liquid) && !this.outputTank.isFull()) {
+					if (this.data.energy >= this.energyDemand && this.canStackBeMerged(emptyStack, resultSlot)) {
 						this.data.energy -= this.energyDemand;
 						this.updateProgress();
 						newActive = true;
@@ -179,10 +179,10 @@ namespace Machine {
 				let resetProgress = true;
 				liquid = this.inputTank.getLiquidStored();
 				if (liquid) {
-					let full = LiquidItemRegistry.getFullItem(canSlot.id, canSlot.data, liquid);
-					if (full) {
+					const fullStack = LiquidItemRegistry.getFullStack(canSlot, liquid);
+					if (fullStack) {
 						resetProgress = false;
-						if (this.data.energy >= this.energyDemand && (resultSlot.id == full.id && resultSlot.data == full.data && resultSlot.count < Item.getMaxStack(full.id) || resultSlot.id == 0)) {
+						if (this.data.energy >= this.energyDemand && this.canStackBeMerged(fullStack, resultSlot)) {
 							this.data.energy -= this.energyDemand;
 							this.updateProgress();
 							newActive = true;
@@ -287,7 +287,7 @@ namespace Machine {
 			},
 			"slotCan": {input: true,
 				isValid: (item: ItemInstance, side: number, tileEntity: Machine.Canner) => {
-					return tileEntity.isValidCan(item.id, item.data);
+					return tileEntity.isValidCan(item.id, item.data, item.extra);
 				}
 			},
 			"slotResult": {output: true}

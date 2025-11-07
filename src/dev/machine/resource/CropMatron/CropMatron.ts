@@ -26,7 +26,7 @@ MachineRegistry.createStorageInterface(BlockID.cropMatron, {
         "slotWeedEx^0-6": { input: true, isValid: (item: ItemInstance) => item.id == ItemID.weedEx },
         "slotWaterIn": {
             input: true, isValid: (item: ItemInstance) => {
-                return LiquidItemRegistry.getItemLiquid(item.id, item.data) == "water";
+                return LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra) == "water";
             }
         },
         "slotWaterOut": { output: true }

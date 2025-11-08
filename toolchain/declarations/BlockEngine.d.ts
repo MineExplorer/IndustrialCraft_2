@@ -2078,7 +2078,11 @@ declare namespace LiquidItemRegistry {
      * @param interface liquid item interface object
      */
     export function registerItemInterface(itemId: number, interface: LiquidItem): void;
-    export function getLiquidItem(itemId: number): LiquidItem;
+    /**
+     * Returns liquid item interface for the specified item id
+     * @param itemId item numeric id
+     */
+    export function getItemInterface(itemId: number): Nullable<LiquidItem>;
     /**
      * Return liquid type stored in item
      * @param id item id

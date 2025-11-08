@@ -3419,10 +3419,14 @@ var LiquidItemRegistry;
         LiquidItemRegistry.LiquidItems[itemId] = interface;
     }
     LiquidItemRegistry.registerItemInterface = registerItemInterface;
-    function getLiquidItem(itemId) {
-        return LiquidItemRegistry.LiquidItems[itemId];
+    /**
+     * Returns liquid item interface for the specified item id
+     * @param itemId item numeric id
+     */
+    function getItemInterface(itemId) {
+        return LiquidItemRegistry.LiquidItems[itemId] || null;
     }
-    LiquidItemRegistry.getLiquidItem = getLiquidItem;
+    LiquidItemRegistry.getItemInterface = getItemInterface;
     function getItemLiquid(id, data, extra) {
         var liquidItem = LiquidItemRegistry.LiquidItems[id];
         if (liquidItem) {
@@ -3501,6 +3505,7 @@ var LiquidItemRegistry;
         return getFullStackInternal(item.id, item.data, item.extra, data);
     }
     LiquidItemRegistry.getFullStack = getFullStack;
+    registerItem("water", { id: VanillaItemID.glass_bottle, data: 1 }, { id: VanillaItemID.potion, data: 0 }, 250);
 })(LiquidItemRegistry || (LiquidItemRegistry = {}));
 var BlockEngine;
 (function (BlockEngine) {
@@ -3660,7 +3665,7 @@ var BlockEngine;
                         outputSlot.setSlot(fullStack.id, outputSlot.count + 1, fullStack.data, fullStack.extra);
                         return true;
                     }
-                    var liquidItem = LiquidItemRegistry.getLiquidItem(fullStack.id);
+                    var liquidItem = LiquidItemRegistry.getItemInterface(fullStack.id);
                     if (liquidItem && inputSlot.count == 1) {
                         var addedAmount = liquidItem.addLiquid(inputSlot, liquid, amount);
                         this.getLiquid(addedAmount);
@@ -3689,7 +3694,7 @@ var BlockEngine;
                     outputSlot.setSlot(emptyStack.id, outputSlot.count + 1, emptyStack.data, emptyStack.extra);
                     return true;
                 }
-                var liquidItem = LiquidItemRegistry.getLiquidItem(inputSlot.id);
+                var liquidItem = LiquidItemRegistry.getItemInterface(inputSlot.id);
                 if (liquidItem && inputSlot.count == 1) {
                     var extractedAmount = liquidItem.getLiquid(inputSlot, freeAmount);
                     this.addLiquid(emptyStack.liquid, extractedAmount);

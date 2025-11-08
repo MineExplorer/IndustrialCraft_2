@@ -41,19 +41,25 @@ implements ItemBehavior, LiquidItem {
 		return this.liquidType;
 	}
 
-	getAmount(itemData: number, itemExtra: ItemExtraData): number {
+	getAmount(itemData: number): number {
 		return this.liquidStorage - itemData;
 	}
 
 	getLiquid(item: ItemInstance, amount: number): number {
-		amount = Math.min(this.getAmount(item.data, item.extra), amount);
+		amount = Math.min(this.getAmount(item.data), amount);
 		item.data += amount;
 		return amount;
 	}
 
 	addLiquid(item: ItemInstance, liquid: string, amount: number): number {
-		amount = Math.min(this.liquidStorage - this.getAmount(item.data, item.extra), amount);
-		item.id = this.id;
+		if (item.id == ItemID.cellEmpty) {
+			if (amount > this.liquidStorage) amount = this.liquidStorage;
+			item.id = this.id;
+			item.data = this.liquidStorage - amount;
+			return amount;
+		}
+
+		amount = Math.min(this.liquidStorage - this.getAmount(item.data), amount);
 		item.data -= amount;
 		return amount;
 	}

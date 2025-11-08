@@ -134,22 +134,30 @@ namespace MachineRegistry {
 		const empty = LiquidItemRegistry.getEmptyStack(item);
 		if (empty && (!liquid && tank.isValidLiquid(empty.liquid) || empty.liquid == liquid) && !tank.isFull()) {
 			const player = new PlayerEntity(playerUid);
-			const liquidLimit = tank.getLimit();
-			const storedAmount = tank.getAmount(liquid);
-			const count = Math.min(item.count, Math.floor((liquidLimit - storedAmount) / empty.amount));
-			if (count > 0) {
-				tank.addLiquid(empty.liquid, empty.amount * count);
-				player.addItemToInventory(new ItemStack(empty.id, count, empty.data));
-				item.count -= count;
-				player.setCarriedItem(item);
+			const freeAmount = tank.getLimit() - tank.getAmount(liquid);
+			let resultStack: ItemInstance;
+			if (freeAmount >= empty.amount) {
+				tank.addLiquid(empty.liquid, empty.amount);
+				resultStack = new ItemStack(empty.id, 1, empty.data, empty.extra);
 			}
-			// TODO: rewrite
-			/*else if (item.count == 1 && empty.storage) {
-				const amount = Math.min(liquidLimit - storedAmount, empty.amount);
-				tank.addLiquid(empty.liquid, amount);
-				item.data += amount;
-				player.setCarriedItem(item);
-			}*/
+			else {
+				const liquidItem = LiquidItemRegistry.getItemInterface(item.id);
+				if (liquidItem) {
+					resultStack = new ItemStack(item.id, 1, item.data, item.extra?.copy());
+					const extractedAmount = liquidItem.getLiquid(resultStack, freeAmount);
+					tank.addLiquid(empty.liquid, extractedAmount);
+				}
+			}
+			if (resultStack) {
+				if (item.count > 1) {
+					player.addItemToInventory(resultStack);
+					item.count--;
+					player.setCarriedItem(item);
+				}
+				else {
+					player.setCarriedItem(resultStack);
+				}
+			}
 			return true;
 		}
 		return false;

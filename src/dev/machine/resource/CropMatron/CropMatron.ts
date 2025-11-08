@@ -20,7 +20,7 @@ Callback.addCallback("PreLoaded", function () {
 
 MachineRegistry.registerPrototype(BlockID.cropMatron, new Machine.CropMatron());
 
-MachineRegistry.createStorageInterface(BlockID.cropMatron, {
+MachineRegistry.createFluidStorageInterface(BlockID.cropMatron, {
     slots: {
         "slotFertilizer^0-6": { input: true, isValid: (item: ItemInstance) => item.id == ItemID.fertilizer },
         "slotWeedEx^0-6": { input: true, isValid: (item: ItemInstance) => item.id == ItemID.weedEx },

@@ -79,7 +79,7 @@ namespace MachineRegistry {
 		this.registerElectricMachine(id, Prototype);
 	}
 
-	export function createStorageInterface(blockID: number, descriptor: StorageDescriptor) {
+	export function createFluidStorageInterface(blockID: number, descriptor: StorageDescriptor) {
 		descriptor.liquidUnitRatio = 0.001;
 		descriptor.getInputTank ??= function() {
 			return this.tileEntity.liquidTank;
@@ -127,6 +127,42 @@ namespace MachineRegistry {
 			}
 			return drop;
 		});
+	}
+
+	export function emptyTankOnClick(tank: BlockEngine.LiquidTank, item: ItemInstance, playerUid: number): boolean {
+		const liquid = tank.getLiquidStored();
+		if (!liquid) return false;
+
+		const full = LiquidItemRegistry.getFullStack(item, liquid);
+		if (full) {
+			const player = new PlayerEntity(playerUid);
+			const amount = tank.getAmount(liquid);
+			let resultStack: ItemInstance;
+			if (amount >= full.amount) {
+				tank.getLiquid(amount);
+				resultStack = new ItemStack(full.id, 1, full.data, full.extra);
+			}
+			else {
+				const liquidItem = LiquidItemRegistry.getItemInterface(full.id);
+				if (liquidItem) {
+					resultStack = new ItemStack(item.id, 1, item.data, item.extra?.copy());
+					const addedAmount = liquidItem.addLiquid(resultStack, liquid, amount);
+					tank.getLiquid(addedAmount);
+				}
+			}
+			if (resultStack) {
+				if (item.count > 1) {
+					player.addItemToInventory(resultStack);
+					item.count--;
+					player.setCarriedItem(item);
+				}
+				else {
+					player.setCarriedItem(resultStack);
+				}
+			}
+			return true;
+		}
+		return false;
 	}
 
 	export function fillTankOnClick(tank: BlockEngine.LiquidTank, item: ItemInstance, playerUid: number): boolean {

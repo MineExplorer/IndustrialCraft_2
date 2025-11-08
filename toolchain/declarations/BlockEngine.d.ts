@@ -1975,11 +1975,16 @@ interface LiquidItem {
      */
     liquidStorage: number;
     /**
+     * Returns true if the item supports specified liquid, false otherwise
+     * @param liquid liquid type
+     */
+    isValidLiquid(liquid: string): boolean;
+    /**
      * Returns liquid type stored in the item.
      * @param itemData item data
      * @param itemExtra item extra data
      */
-    getLiquidType(itemData: number, itemExtra: ItemExtraData): string;
+    getLiquidStored(itemData: number, itemExtra: ItemExtraData): string;
     /**
      * Returns amount of liquid stored in the item.
      * @param itemData item data
@@ -2006,10 +2011,10 @@ interface LiquidItem {
      */
     getEmptyItem(): ItemInstance;
     /**
-     * Returns full item stack for the specified liquid.
+     * Returns full item stack for the specified liquid or null if its not supported.
      * @param liquid liquid type
      */
-    getFullItem(liquid: string): ItemInstance;
+    getFullItem(liquid: string): Nullable<ItemInstance>;
 }
 /**
  * Registry for liquid storage items. Compatible with LiquidRegistry and extends it
@@ -2093,6 +2098,7 @@ declare namespace LiquidItemRegistry {
     export function getItemLiquid(id: number, data: number, extra: ItemExtraData): string;
     /** @deprecated */
     export function getItemLiquid(id: number, data: number): string;
+    export function canBeFilledWithLiquid(id: number, data: number, extra: ItemExtraData, liquid: string): boolean;
     /** @deprecated */
     export function getEmptyItem(id: number, data: number): EmptyItem;
     /** @deprecated */

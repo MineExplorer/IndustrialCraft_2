@@ -37,7 +37,11 @@ implements ItemBehavior, LiquidItem {
 		return name + "\n§7" + (1000 - item.data) + " mB";
 	}
 
-	getLiquidType(): string {
+	isValidLiquid(liquid: string): boolean {
+		return liquid == this.liquidType;
+	}
+
+	getLiquidStored(): string {
 		return this.liquidType;
 	}
 
@@ -53,7 +57,9 @@ implements ItemBehavior, LiquidItem {
 
 	addLiquid(item: ItemInstance, liquid: string, amount: number): number {
 		if (item.id == ItemID.cellEmpty) {
-			if (amount > this.liquidStorage) amount = this.liquidStorage;
+			if (amount > this.liquidStorage) {
+				amount = this.liquidStorage;
+			}
 			item.id = this.id;
 			item.data = this.liquidStorage - amount;
 			return amount;
@@ -65,11 +71,11 @@ implements ItemBehavior, LiquidItem {
 	}
 
 	getEmptyItem(): ItemInstance {
-		return {id: ItemID.cellEmpty, count: 1, data: 0};
+		return new ItemStack(ItemID.cellEmpty, 1, 0);
 	}
 
-	getFullItem(): ItemInstance {
-		return {id: this.id, count: 1, data: 0};
+	getFullItem(liquid: string): Nullable<ItemInstance> {
+		return this.isValidLiquid(liquid) ? new ItemStack(this.id, 1, 0) : null;
 	}
 }
 

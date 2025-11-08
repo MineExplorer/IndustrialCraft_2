@@ -101,7 +101,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.geothermalGenerator, new GeothermalGenerator());
 
-	MachineRegistry.createStorageInterface(BlockID.geothermalGenerator, {
+	MachineRegistry.createFluidStorageInterface(BlockID.geothermalGenerator, {
 		slots: {
 			"slot1": {input: true},
 			"slot2": {output: true}

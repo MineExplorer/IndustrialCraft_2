@@ -66,7 +66,7 @@ namespace Machine {
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, count, data, extra) => {
 				if (name == "slotBiomass0") return LiquidItemRegistry.getItemLiquid(id, data, extra) == "biomass";
-				if (name == "slotBiogas0") return !!LiquidItemRegistry.getFullStack(id, data, extra, "biogas");
+				if (name == "slotBiogas0") return LiquidItemRegistry.canBeFilledWithLiquid(id, data, extra, "biogas");
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
 			});
@@ -140,14 +140,14 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.icFermenter, new Fermenter());
 
-	MachineRegistry.createStorageInterface(BlockID.icFermenter, {
+	MachineRegistry.createFluidStorageInterface(BlockID.icFermenter, {
 		slots: {
 			"slotBiomass0": {input: true, isValid: (item: ItemInstance) => {
 				return LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra) == "biomass"
 			}},
 			"slotBiomass1": {output: true},
 			"slotBiogas0": {input: true, isValid: (item: ItemInstance) => {
-				return !!LiquidItemRegistry.getFullStack(item, "biogas")
+				return LiquidItemRegistry.canBeFilledWithLiquid(item.id, item.data, item.extra, "biogas")
 			}},
 			"slotBiogas1": {output: true},
 			"slotFertilizer": {output: true}

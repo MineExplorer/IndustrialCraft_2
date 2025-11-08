@@ -78,7 +78,7 @@ namespace Machine {
 			this.liquidTank = this.addLiquidTank("fluid", 8000);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
-				if (name == "slotLiquid1") return !!LiquidItemRegistry.getFullStack(id, data, extra, this.liquidTank.getLiquidStored() || "water");
+				if (name == "slotLiquid1") return LiquidItemRegistry.canBeFilledWithLiquid(id, data, extra, this.liquidTank.getLiquidStored() || "water");
 				if (name == "slotLiquid2") return false;
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				return UpgradeAPI.isValidUpgrade(id, this);
@@ -195,13 +195,13 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.pump, new Pump());
 
-	MachineRegistry.createStorageInterface(BlockID.pump, {
+	MachineRegistry.createFluidStorageInterface(BlockID.pump, {
 		slots: {
 			"slotLiquid1": {input: true},
 			"slotLiquid2": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => (
-			!!LiquidItemRegistry.getFullStack(item, "water")
+		isValidInput: (item: ItemInstance, side: number, tileEntity: Pump) => (
+			LiquidItemRegistry.canBeFilledWithLiquid(item.id, item.data, item.extra, tileEntity.liquidTank.getLiquidStored() || "water")
 		),
 		canReceiveLiquid: () => false
 	});

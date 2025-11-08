@@ -3430,7 +3430,7 @@ var LiquidItemRegistry;
     function getItemLiquid(id, data, extra) {
         var liquidItem = LiquidItemRegistry.LiquidItems[id];
         if (liquidItem) {
-            return liquidItem.getLiquidType(data, extra);
+            return liquidItem.getLiquidStored(data, extra);
         }
         var empty = getEmptyByFullMapping(id, data);
         if (empty) {
@@ -3439,6 +3439,16 @@ var LiquidItemRegistry;
         return LiquidRegistry.getItemLiquid(id, data);
     }
     LiquidItemRegistry.getItemLiquid = getItemLiquid;
+    function canBeFilledWithLiquid(id, data, extra, liquid) {
+        var liquidItem = LiquidItemRegistry.LiquidItems[id];
+        if (liquidItem) {
+            var liquidStored = liquidItem.getLiquidStored(data, extra);
+            return !liquidStored && liquidItem.isValidLiquid(liquid) ||
+                liquidStored == liquid && liquidItem.getAmount(data, extra) < liquidItem.liquidStorage;
+        }
+        return !!getFullByEmptyMapping(id, data, liquid) || !!LiquidRegistry.getFullItem(id, data, liquid);
+    }
+    LiquidItemRegistry.canBeFilledWithLiquid = canBeFilledWithLiquid;
     /** @deprecated */
     function getEmptyItem(id, data) {
         var emptyData = getEmptyByFullMapping(id, data);
@@ -3472,13 +3482,16 @@ var LiquidItemRegistry;
             if (amount == 0)
                 return null;
             var emptyItem = liquidItem.getEmptyItem();
-            return { id: emptyItem.id, count: 1, data: emptyItem.data, extra: emptyItem.extra || null, liquid: liquidItem.getLiquidType(data, extra), amount: amount };
+            return { id: emptyItem.id, count: 1, data: emptyItem.data, extra: emptyItem.extra || null, liquid: liquidItem.getLiquidStored(data, extra), amount: amount };
         }
         return getEmptyItem(id, data);
     }
     function getFullStackInternal(id, data, extra, liquid) {
         var liquidItem = LiquidItemRegistry.LiquidItems[id];
-        if (liquidItem) {
+        if (liquidItem && liquidItem.isValidLiquid(liquid)) {
+            var liquidStored = liquidItem.getLiquidStored(data, extra);
+            if (liquidStored && liquidStored != liquid)
+                return null;
             var fullItem = liquidItem.getFullItem(liquid);
             if (!fullItem)
                 return null;

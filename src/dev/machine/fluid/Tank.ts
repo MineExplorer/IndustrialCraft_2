@@ -43,7 +43,7 @@ namespace Machine {
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
 				if (name == "slotLiquid1") return !!LiquidItemRegistry.getItemLiquid(id, data, extra);
-				if (name == "slotLiquid2") return !!LiquidItemRegistry.getFullStack(id, data, extra, this.liquidTank.getLiquidStored() || "water");
+				if (name == "slotLiquid2") return LiquidItemRegistry.canBeFilledWithLiquid(id, data, extra, this.liquidTank.getLiquidStored() || "water");
 				if (name == "slotOutput") return false;
 				return UpgradeAPI.isValidUpgrade(id, this);
 			});
@@ -51,7 +51,8 @@ namespace Machine {
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
+				if (MachineRegistry.emptyTankOnClick(this.liquidTank, item, player) || 
+				  MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
 					this.preventClick();
 					return true;
 				}
@@ -77,13 +78,13 @@ namespace Machine {
 	MachineRegistry.registerPrototype(BlockID.tank, new FluidTank());
 }
 
-MachineRegistry.createStorageInterface(BlockID.tank, {
+MachineRegistry.createFluidStorageInterface(BlockID.tank, {
 	slots: {
 		"slotLiquid1": {input: true, isValid: (item) => {
 			return !!LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra);
 		}},
 		"slotLiquid2": {input: true, isValid: (item, side, tileEntity) => {
-			return !!LiquidItemRegistry.getFullStack(item, tileEntity.liquidTank.getLiquidStored() || "water");
+			return LiquidItemRegistry.canBeFilledWithLiquid(item.id, item.data, item.extra, tileEntity.liquidTank.getLiquidStored() || "water");
 		}},
 		"slotOutput": {output: true}
 	},

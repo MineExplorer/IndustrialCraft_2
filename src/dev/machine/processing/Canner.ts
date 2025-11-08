@@ -107,7 +107,7 @@ namespace Machine {
 			case 3:
 				return !!LiquidItemRegistry.getItemLiquid(id, data, extra);
 			case 2:
-				return !!LiquidItemRegistry.getFullStack(id, data, extra, this.inputTank.getLiquidStored() || "water");
+				return LiquidItemRegistry.canBeFilledWithLiquid(id, data, extra, this.inputTank.getLiquidStored() || "water");
 			}
 		}
 
@@ -240,6 +240,17 @@ namespace Machine {
 		canRotate(side: number): boolean {
 			return side > 1;
 		}
+
+		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
+			if (Entity.getSneaking(player)) {
+				if (MachineRegistry.emptyTankOnClick(this.outputTank, item, player) || 
+				  MachineRegistry.fillTankOnClick(this.inputTank, item, player)) {
+					this.preventClick();
+					return true;
+				}
+			}
+			return super.onItemUse(coords, item, player);
+		}
 		
 		/** @deprecated Container event, shouldn't be called */
 		@ContainerEvent(Side.Server)
@@ -278,15 +289,15 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.canner, new Canner());
 
-	MachineRegistry.createStorageInterface(BlockID.canner, {
+	MachineRegistry.createFluidStorageInterface(BlockID.canner, {
 		slots: {
 			"slotSource": {input: true,
-				isValid: (item: ItemInstance, side: number, tileEntity: Machine.Canner) => {
+				isValid: (item: ItemInstance, side: number, tileEntity: Canner) => {
 					return tileEntity.isValidSourceItem(item.id, item.data);
 				}
 			},
 			"slotCan": {input: true,
-				isValid: (item: ItemInstance, side: number, tileEntity: Machine.Canner) => {
+				isValid: (item: ItemInstance, side: number, tileEntity: Canner) => {
 					return tileEntity.isValidCan(item.id, item.data, item.extra);
 				}
 			},

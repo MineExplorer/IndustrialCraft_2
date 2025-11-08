@@ -135,7 +135,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.semifluidGenerator, new FluidGenerator());
 
-	MachineRegistry.createStorageInterface(BlockID.semifluidGenerator, {
+	MachineRegistry.createFluidStorageInterface(BlockID.semifluidGenerator, {
 		slots: {
 			"slot1": {input: true},
 			"slot2": {output: true}

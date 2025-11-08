@@ -159,7 +159,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.oreWasher, new OreWasher());
 
-	MachineRegistry.createStorageInterface(BlockID.oreWasher, {
+	MachineRegistry.createFluidStorageInterface(BlockID.oreWasher, {
 		slots: {
 			"slotSource": {input: true, isValid: (item: ItemInstance) => {
 				return MachineRecipeRegistry.hasRecipeFor("oreWasher", item.id, item.data);

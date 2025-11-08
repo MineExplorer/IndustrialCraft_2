@@ -139,7 +139,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, new FluidHeatGenerator());
 
-	MachineRegistry.createStorageInterface(BlockID.fluidHeatGenerator, {
+	MachineRegistry.createFluidStorageInterface(BlockID.fluidHeatGenerator, {
 		slots: {
 			"slot1": {input: true},
 			"slot2": {output: true}

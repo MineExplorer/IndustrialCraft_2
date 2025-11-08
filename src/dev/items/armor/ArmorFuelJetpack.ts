@@ -70,11 +70,15 @@ implements IJetpack, LiquidItem {
 		return item;
 	}
 
-	getLiquidType(itemData: number, itemExtra: ItemExtraData): string {
+	isValidLiquid(liquid: string): boolean {
+		return liquid == "biogas";
+	}
+
+	getLiquidStored(itemData: number): string {
 		return itemData < this.maxDamage ? "biogas" : null;
 	}
 
-	getAmount(itemData: number, itemExtra: ItemExtraData): number {
+	getAmount(itemData: number): number {
 		return this.maxDamage - itemData;
 	}
 
@@ -82,18 +86,18 @@ implements IJetpack, LiquidItem {
 		return new ItemStack(this.id, 1, this.maxDamage);
 	}
 
-	getFullItem(liquid: string): ItemInstance {
-		return liquid == "biogas" ? new ItemStack(this.id, 1, 1) : null;
+	getFullItem(liquid: string): Nullable<ItemInstance> {
+		return this.isValidLiquid(liquid) ? new ItemStack(this.id, 1, 1) : null;
 	}
 
 	getLiquid(item: ItemInstance, amount: number): number {
-		amount = Math.min(this.getAmount(item.data, item.extra), amount);
+		amount = Math.min(this.getAmount(item.data), amount);
 		item.data += amount;
 		return amount;
 	}
 
 	addLiquid(item: ItemInstance, liquid: string, amount: number): number {
-		amount = Math.min(this.liquidStorage - this.getAmount(item.data, item.extra), amount);
+		amount = Math.min(this.liquidStorage - this.getAmount(item.data), amount);
 		item.data -= amount;
 		return amount;
 	}

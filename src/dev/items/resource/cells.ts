@@ -28,13 +28,13 @@ implements ItemBehavior, LiquidItem {
 	constructor(stringID: string, liquid: string) {
 		super(stringID, `${liquid}_cell`, `cell_${liquid}`);
 		this.liquidType = liquid;
-		this.setMaxDamage(1000);
-		LiquidItemRegistry.registerItem(liquid, {id: ItemID.cellEmpty, data: 0}, {id: this.id, data: 0}, 1000);
+		this.setMaxDamage(this.liquidStorage);
+		LiquidItemRegistry.registerItem(liquid, {id: ItemID.cellEmpty, data: 0}, {id: this.id, data: 0}, this.liquidStorage);
 		LiquidItemRegistry.registerItemInterface(this.id, this);
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
-		return name + "\n§7" + (1000 - item.data) + " mB";
+		return name + "\n§7" + this.getAmount(item.data) + " mB";
 	}
 
 	isValidLiquid(liquid: string): boolean {

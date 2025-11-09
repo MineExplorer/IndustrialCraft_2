@@ -3,8 +3,9 @@
 
 class ArmorFuelJetpack extends ArmorIC2
 implements IJetpack, LiquidItem {
-	liquidStorage = 4000;
-	static FUEL_BURN_TICKS = 10;
+	liquidStorage = 3000;
+	/** Amount of ticks of active flying that 1 mB of fuel provides */
+	static FUEL_BURN_TICKS = 5;
 
 	constructor() {
 		super("fuelJetpack", "fuel_jetpack", {type: "chestplate", defence: 3, texture: "fuel_jetpack"}, false);
@@ -12,6 +13,14 @@ implements IJetpack, LiquidItem {
 		this.setMaxDamage(this.liquidStorage + 1);
 		Item.addToCreative(this.id, 1, 1);
 		LiquidItemRegistry.registerItemInterface(this.id, this);
+	}
+
+	onNameOverride(item: ItemInstance, name: string): string {
+		const amount = this.getAmount(item.data);
+		if (amount == 0) {
+			return name + "\n§7" + Translation.translate("generic.text.empty");
+		}
+		return `${name}\n§7${Translation.translate("biogas")} ${amount} mB`;
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
@@ -38,8 +47,8 @@ implements IJetpack, LiquidItem {
 				if (JetpackProvider.getFlying(playerUid)) {
 					return this.burnFuel(item, 2);
 				}
-				if (World.getThreadTime() % 5 == 0) {
-					return this.burnFuel(item, 5);
+				if (World.getThreadTime() % ArmorFuelJetpack.FUEL_BURN_TICKS == 0) {
+					return this.burnFuel(item, ArmorFuelJetpack.FUEL_BURN_TICKS);
 				}
 			}
 		}
@@ -62,7 +71,7 @@ implements IJetpack, LiquidItem {
 		if (burnTime > amount) {
 			item.extra.putInt("burnTime", burnTime - amount);
 		} else if (item.data < this.maxDamage) {
-			item.extra.putInt("burnTime", ArmorFuelJetpack.FUEL_BURN_TICKS);
+			item.extra.putInt("burnTime", ArmorFuelJetpack.FUEL_BURN_TICKS * 2);
 			item.data++;
 		} else {
 			item.extra.putInt("burnTime", 0);

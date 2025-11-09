@@ -86,6 +86,7 @@ Translation.addTranslation("Nuke", {ru: "Ядерная бомба", pt: "Bomba 
 Translation.addTranslation("Pump", {ru: "Помпа", es: "Bomba Extractora", pt: "Bomba", zh: "泵"});
 Translation.addTranslation("Fluid Distributor", {ru: "Жидкостный распределитель", es: "Distribuidor de Líquido", pt: "Distribuidor de Fluidos", zh: "流体分配机"});
 Translation.addTranslation("Tank", {ru: "Бак", es: "Tanque", pt: "Tanque", zh: "流体储存器"});
+Translation.addTranslation("biogas", {en: "Biogas", ru: "Биогаз", es: "Biogás", pt: "Biogás", zh: "沼气"});
 
 // ITEMS
 Translation.addTranslation("latex", {en: "Latex", ru: "Латекс", es: "Caucho", pt: "Resina Pegajosa", zh: "粘性树脂"});
@@ -426,6 +427,7 @@ Translation.addTranslation("beetroots", {en: "Beetroots", ru: "Свёкла", pt
 
 // TEXT
 Translation.addTranslation("Mode: %s", {ru: "Режим: %s", es: "Modo: %s", pt: "Modo: %s", zh: "模式: %s"});
+Translation.addTranslation("generic.text.empty", {en: "Empty", ru: "Пусто", es: "Vacio", pt: "Vazio", zh: "空"});
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
 // Fluid Distributor

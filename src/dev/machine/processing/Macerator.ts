@@ -9,7 +9,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.macerator, 2, [["machine_botto
 TileRenderer.registerModelWithRotation(BlockID.macerator, 2, [["machine_bottom", 0], ["macerator_top_active", 0], ["machine_side", 0], ["macerator_front_active", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.macerator);
 
-ItemName.addTierTooltip("macerator", 1);
+ItemName.addVoltageTooltip("macerator", 32);
 
 Callback.addCallback("PreLoaded", function() {
 	if (IC2Config.hardRecipes) {

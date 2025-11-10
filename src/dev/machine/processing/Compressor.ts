@@ -9,7 +9,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.compressor, 2, [["machine_bott
 TileRenderer.registerModelWithRotation(BlockID.compressor, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor_active", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.compressor);
 
-ItemName.addTierTooltip("compressor", 1);
+ItemName.addVoltageTooltip("compressor", 32);
 
 Callback.addCallback("PreLoaded", function() {
 	if (IC2Config.hardRecipes) {

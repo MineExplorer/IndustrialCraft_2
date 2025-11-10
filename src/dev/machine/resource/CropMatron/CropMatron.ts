@@ -8,7 +8,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.cropMatron, 2, [["machine_bott
 TileRenderer.registerModelWithRotation(BlockID.cropMatron, 2, [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 3], ["cropmatron_side", 1], ["cropmatron_side", 2], ["cropmatron_side", 2]]);
 TileRenderer.setRotationFunction(BlockID.cropMatron, true);
 
-ItemName.addTierTooltip("cropMatron", 1);
+ItemName.addVoltageTooltip("cropMatron", 32);
 
 Callback.addCallback("PreLoaded", function () {
     Recipes.addShaped({ id: BlockID.cropMatron, count: 1, data: 0 }, [

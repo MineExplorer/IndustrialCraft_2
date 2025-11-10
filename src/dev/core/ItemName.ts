@@ -19,6 +19,10 @@ namespace ItemName {
 		addTooltip(Block.getNumericId(blockID), getPowerTierText(tier));
 	}
 
+	export function addVoltageTooltip(blockID: string | number, maxVoltage: number): void {
+		addTooltip(Block.getNumericId(blockID), Translation.translate("tooltip.max_voltage").replace("%s", maxVoltage.toString()));
+	}
+
 	export function addStorageBlockTooltip(blockID: string | number, tier: number, capacity: string): void {
 		Item.registerNameOverrideFunction(Block.getNumericId(blockID), function(item: ItemInstance, name: string) {
 			const color = ItemRegistry.getItemRarityColor(item.id);

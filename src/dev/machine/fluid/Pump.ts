@@ -8,7 +8,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.pump, 0, [["machine_bottom", 0
 TileRenderer.registerModelWithRotation(BlockID.pump, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_bottom", 1], ["pump_side", 1], ["pump_side", 1]], true);
 TileRenderer.setRotationFunction(BlockID.pump, true);
 
-ItemName.addTierTooltip("pump", 1);
+ItemName.addVoltageTooltip("pump", 32);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.pump, count: 1, data: 0}, [

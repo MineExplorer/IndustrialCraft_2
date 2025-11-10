@@ -7,7 +7,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.solidCanner, 2, [["machine_bot
 TileRenderer.registerModelWithRotation(BlockID.solidCanner, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 1], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.solidCanner);
 
-ItemName.addTierTooltip("solidCanner", 1);
+ItemName.addVoltageTooltip("solidCanner", 32);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.solidCanner, count: 1, data: 0}, [

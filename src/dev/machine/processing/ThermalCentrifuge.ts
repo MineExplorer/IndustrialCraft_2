@@ -7,7 +7,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.thermalCentrifuge, 2, [["machi
 TileRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, 2, [["machine_advanced", 0], ["thermal_centrifuge_top_active", 0], ["machine_side", 0], ["thermal_centrifuge_front_active", 0], ["thermal_centrifuge_side_active", 0], ["thermal_centrifuge_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.thermalCentrifuge);
 
-ItemName.addTierTooltip("thermalCentrifuge", 2);
+ItemName.addVoltageTooltip("thermalCentrifuge", 128);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.thermalCentrifuge, count: 1, data: 0}, [

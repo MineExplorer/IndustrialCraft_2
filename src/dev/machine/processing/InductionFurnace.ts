@@ -10,7 +10,7 @@ TileRenderer.registerModelWithRotation(BlockID.inductionFurnace, 2, [["machine_a
 TileRenderer.setRotationFunction(BlockID.inductionFurnace);
 
 ItemRegistry.setRarity(BlockID.inductionFurnace, EnumRarity.UNCOMMON);
-ItemName.addTierTooltip("inductionFurnace", 2);
+ItemName.addVoltageTooltip("inductionFurnace", 128);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.inductionFurnace, count: 1, data: 0}, [

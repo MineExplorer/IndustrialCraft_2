@@ -9,7 +9,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.extractor, 2, [["machine_botto
 TileRenderer.registerModelWithRotation(BlockID.extractor, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 1], ["extractor_side", 1], ["extractor_side", 1]]);
 TileRenderer.setRotationFunction(BlockID.extractor);
 
-ItemName.addTierTooltip("extractor", 1);
+ItemName.addVoltageTooltip("extractor", 32);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.extractor, count: 1, data: 0}, [

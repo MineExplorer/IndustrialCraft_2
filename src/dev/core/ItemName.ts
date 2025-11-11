@@ -1,4 +1,6 @@
 namespace ItemName {
+	const tooltips: {[key: number]: string[]} = {};
+
 	/**@deprecated */
 	export function setRarity(id: number, rarity: number): void {
 		ItemRegistry.setRarity(id, rarity);
@@ -10,13 +12,25 @@ namespace ItemName {
 	}
 
 	export function addTooltip(id: number, tooltip: string): void {
+		if (!tooltips[id]) {
+			tooltips[id] = [tooltip];
+		} else {
+			tooltips[id].push(tooltip);
+		}
 		Item.registerNameOverrideFunction(id, function(item: ItemInstance, name: string) {
+			const tooltip = tooltips[item.id].join("\n");
 			return ItemRegistry.getItemRarityColor(item.id) + name + "\n§7" + tooltip;
 		});
 	}
 
+	/**@deprecated */
 	export function addTierTooltip(blockID: string | number, tier: number): void {
 		addTooltip(Block.getNumericId(blockID), getPowerTierText(tier));
+	}
+
+	export function addOutputTooltip(blockID: string | number, unit: string, minValue: number, maxValue?: number): void {
+		const outputText = maxValue ? `${minValue}-${maxValue} ${unit}/t` : `${minValue} ${unit}/t`;
+		addTooltip(Block.getNumericId(blockID), Translation.translate("tooltip.power_output").replace("%s", outputText));
 	}
 
 	export function addVoltageTooltip(blockID: string | number, maxVoltage: number): void {

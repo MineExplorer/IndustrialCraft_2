@@ -2,6 +2,7 @@ BlockRegistry.createBlock("solidHeatGenerator", [
 	{name: "Solid Fuel Firebox", texture: [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.solidHeatGenerator, "stone", 1);
+ItemName.addOutputTooltip(BlockID.solidHeatGenerator, "HU", EnergyProductionModifiers.FuelGenerator * 2);
 
 TileRenderer.setHandAndUiModel(BlockID.solidHeatGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["generator", 0], ["heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
 TileRenderer.setStandardModel(BlockID.solidHeatGenerator, 0, [["heat_pipe", 0], ["generator", 0], ["machine_bottom", 0], ["machine_top", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);

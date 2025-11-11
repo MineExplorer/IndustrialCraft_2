@@ -5,6 +5,7 @@ BlockRegistry.createBlock("nuclearReactor", [
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.nuclearReactor, "stone", 1);
 ItemRegistry.setRarity(BlockID.nuclearReactor, EnumRarity.UNCOMMON);
+ItemName.addOutputTooltip(BlockID.nuclearReactor, "EU", 1, 8192);
 
 TileRenderer.setStandardModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1]]);

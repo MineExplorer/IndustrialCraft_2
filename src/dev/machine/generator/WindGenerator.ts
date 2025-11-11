@@ -2,7 +2,7 @@ BlockRegistry.createBlock("genWindmill", [
 	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.genWindmill, "stone", 1);
-ItemName.addTierTooltip(BlockID.genWindmill, 1);
+ItemName.addOutputTooltip(BlockID.genWindmill, "EU", 0, EnergyProductionModifiers.Windmill);
 
 TileRenderer.setStandardModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill_rotating", 0], ["windmill_rotating", 0], ["machine_side", 0], ["machine_side", 0]]);

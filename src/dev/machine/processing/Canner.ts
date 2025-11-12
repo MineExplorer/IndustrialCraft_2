@@ -7,7 +7,8 @@ TileRenderer.setStandardModelWithRotation(BlockID.canner, 2, [["machine_bottom",
 TileRenderer.registerModelWithRotation(BlockID.canner, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 1], ["canner_side", 1], ["canner_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.canner);
 
-ItemName.addConsumptionTooltip("canner", 4, 32);
+ItemName.addTierTooltip("canner", 1);
+ItemName.addConsumptionTooltip("canner", "EU", 4);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.canner, count: 1, data: 0}, [

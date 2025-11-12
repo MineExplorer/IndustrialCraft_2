@@ -26,7 +26,6 @@ namespace ItemName {
 		});
 	}
 
-	/**@deprecated */
 	export function addTierTooltip(blockID: string | number, tier: number): void {
 		addTooltip(Block.getNumericId(blockID), getPowerTierText(tier));
 	}
@@ -36,8 +35,9 @@ namespace ItemName {
 		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_output", outputText));
 	}
 
-	export function addConsumptionTooltip(blockID: string | number, powerConsumption: number, maxVoltage: number): void {
-		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_consumption", powerConsumption, maxVoltage));
+	export function addConsumptionTooltip(blockID: string | number, unit: string, minValue: number, maxValue?: number): void {
+		const consumptionText = maxValue ? `${minValue}-${maxValue} ${unit}/t` : `${minValue} ${unit}/t`;
+		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_consumption", consumptionText));
 	}
 
 	export function addStorageBlockTooltip(blockID: string | number, tier: number, capacity: string): void {

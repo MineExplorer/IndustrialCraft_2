@@ -7,7 +7,7 @@ TileRenderer.registerModelWithRotation(BlockID.massFabricator, 2, [["machine_adv
 TileRenderer.setRotationFunction(BlockID.massFabricator);
 
 ItemRegistry.setRarity(BlockID.massFabricator, EnumRarity.RARE);
-ItemName.addTooltip(BlockID.massFabricator, "tooltip.max_voltage", 2048);
+ItemName.addTierTooltip(BlockID.massFabricator, 4);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.massFabricator, count: 1, data: 0}, [

@@ -7,7 +7,8 @@ TileRenderer.setStandardModelWithRotation(BlockID.oreWasher, 2, [["machine_botto
 TileRenderer.registerModelWithRotation(BlockID.oreWasher, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 1], ["ore_washer_side", 1], ["ore_washer_side", 1]]);
 TileRenderer.setRotationFunction(BlockID.oreWasher);
 
-ItemName.addConsumptionTooltip("oreWasher", 16, 32);
+ItemName.addTierTooltip("oreWasher", 1);
+ItemName.addConsumptionTooltip("oreWasher", "EU", 16);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.oreWasher, count: 1, data: 0}, [

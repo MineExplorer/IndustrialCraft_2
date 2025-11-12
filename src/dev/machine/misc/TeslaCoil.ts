@@ -2,7 +2,7 @@ BlockRegistry.createBlock("teslaCoil", [
 	{name: "Tesla Coil", texture: [["tesla_coil", 0], ["tesla_coil", 0], ["tesla_coil", 1], ["tesla_coil", 1], ["tesla_coil", 1], ["tesla_coil", 1]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.teslaCoil, "stone", 1);
-ItemName.addTooltip(BlockID.teslaCoil, "tooltip.max_voltage", 512);
+ItemName.addTierTooltip(BlockID.teslaCoil, 3);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.teslaCoil, count: 1, data: 0}, [

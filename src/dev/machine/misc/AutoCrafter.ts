@@ -2,7 +2,8 @@ BlockRegistry.createBlock("autoCrafter", [
 	{name: "Automatic Crafter", texture: [["autocrafter_bottom", 0], ["autocrafter_top", 0], ["autocrafter_back", 0], ["autocrafter_front", 0], ["autocrafter_left", 0], ["autocrafter_right", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.autoCrafter, "stone", 1);
-ItemName.addConsumptionTooltip(BlockID.autoCrafter, 16, 128);
+ItemName.addTierTooltip(BlockID.autoCrafter, 2);
+ItemName.addConsumptionTooltip(BlockID.autoCrafter, "EU", 16);
 
 TileRenderer.setStandardModelWithRotation(BlockID.autoCrafter, 2, [["autocrafter_bottom", 0], ["autocrafter_top", 0], ["autocrafter_back", 0], ["autocrafter_front", 0], ["autocrafter_left", 0], ["autocrafter_right", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.autoCrafter, 2, [["autocrafter_bottom", 0], ["autocrafter_top_active", 0], ["autocrafter_back", 0], ["autocrafter_front", 0], ["autocrafter_left", 0], ["autocrafter_right", 0]]);

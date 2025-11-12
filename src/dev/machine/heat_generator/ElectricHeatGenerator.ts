@@ -2,7 +2,7 @@ BlockRegistry.createBlock("electricHeatGenerator", [
 	{name: "Electric Heater", texture: [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.electricHeatGenerator, "stone", 1);
-ItemName.addTooltip(BlockID.electricHeatGenerator, "tooltip.max_voltage", 2048);
+ItemName.addTierTooltip(BlockID.electricHeatGenerator, 4);
 ItemName.addOutputTooltip(BlockID.electricHeatGenerator, "HU", 0, 100);
 
 TileRenderer.setStandardModelWithRotation(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);

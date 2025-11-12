@@ -482,8 +482,8 @@ Translation.addTranslation("tooltip.tin_can", {en: "This looks bad...", ru: "Э�
 Translation.addTranslation("tooltip.power_tier", {en: "Power Tier: %s", ru: "Энергоуровень: %s", pt: "Nível de Voltagem: %s", zh: "能量等级: %s"});
 Translation.addTranslation("tooltip.power_output", {en: "Power Output: %s", ru: "Генерация: %s"});
 Translation.addTranslation("tooltip.max_voltage", {en: "Max voltage: %s EU/t", ru: "Макс. напряжение: %s EU/t", pt: "Voltagem Máx: %s EU/t", zh: "最大电压: %s EU/t"});
-Translation.addTranslation("tooltip.upgrade.overclocker.time", {en: "Decrease process time to ", ru: "Уменьшает время работы до ", pt: "Diminui o tempo de processo para ", zh: "加工用时缩短为"});
-Translation.addTranslation("tooltip.upgrade.overclocker.power", {en: "Increase power to ", ru: "Увеличивает энергопотребление до ", pt: "Aumenta o Uso de Energia em ", zh: "能量增加到"});
+Translation.addTranslation("tooltip.upgrade.overclocker.time", {en: "Decrease process time to %s", ru: "Уменьшает время работы до %s", pt: "Diminui o tempo de processo para %s", zh: "加工用时缩短为%s"});
+Translation.addTranslation("tooltip.upgrade.overclocker.power", {en: "Increase power to %s", ru: "Увеличивает энергопотребление до %s", pt: "Aumenta o Uso de Energia em %s", zh: "能量增加到%s"});
 Translation.addTranslation("tooltip.upgrade.transformer", {en: "Increase energy tier by 1", ru: "Увеличивает энергоуровень на 1", pt: "Aumenta o nível da máquina em 1", zh: "增加一级输出电压"});
 Translation.addTranslation("tooltip.upgrade.storage", {en: "Increase energy storage by %s EU", ru: "Увеличивает энергоёмкость на %s EU", pt: "Aumenta o armazenamento de energia em %s EU", zh: "增加%s EU储能"});
 Translation.addTranslation("tooltip.upgrade.ejector", {en: "Automatically output to\nthe %s side", ru: "Автоматическое извлечение с %s стороны", pt: "Saída automática para o %s", zh: "自动输出到%s方向"});

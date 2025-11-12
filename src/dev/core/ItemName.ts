@@ -30,11 +30,11 @@ namespace ItemName {
 
 	export function addOutputTooltip(blockID: string | number, unit: string, minValue: number, maxValue?: number): void {
 		const outputText = maxValue ? `${minValue}-${maxValue} ${unit}/t` : `${minValue} ${unit}/t`;
-		addTooltip(Block.getNumericId(blockID), Translation.translate("tooltip.power_output").replace("%s", outputText));
+		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_output", outputText));
 	}
 
 	export function addVoltageTooltip(blockID: string | number, maxVoltage: number): void {
-		addTooltip(Block.getNumericId(blockID), Translation.translate("tooltip.max_voltage").replace("%s", maxVoltage.toString()));
+		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.max_voltage", maxVoltage));
 	}
 
 	export function addStorageBlockTooltip(blockID: string | number, tier: number, capacity: string): void {
@@ -44,13 +44,21 @@ namespace ItemName {
 		});
 	}
 
+	export function getTranslatedTextWithParams(key: string, ...params: any[]): string {
+		let text = Translation.translate(key);
+		for (let i = 0; i < params.length; i++) {
+			text = text.replace("%s", params[i].toString());
+		}
+		return text;
+	}
+
 	export function getBlockStorageText(item: ItemInstance, tier: number, capacity: string): string {
 		const energy = item.extra ? item.extra.getInt("energy") : 0;
 		return `${getPowerTierText(tier)}\n${displayEnergy(energy)}/${capacity} EU`;
 	}
 
 	export function getPowerTierText(tier: number): string {
-		return Translation.translate("tooltip.power_tier").replace("%s", tier.toString());
+		return getTranslatedTextWithParams("tooltip.power_tier", tier);
 	}
 
 	export function getItemStorageText(item: ItemInstance): string {

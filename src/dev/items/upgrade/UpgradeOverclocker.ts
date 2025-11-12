@@ -8,10 +8,10 @@ implements ItemBehavior {
         if (ToolHUD.currentUIscreen == "in_game_play_screen" || ToolHUD.currentUIscreen == "world_loading_progress_screen - local_world_load") {
             percent += percent; // this game is broken
         }
-        let energyDemandPercent = this.getEnergyDemandMultiplier(item) * 100  + percent;
-        let powerPercent = this.getProcessTimeMultiplier(item) * 100 + percent;
-        let timeTooltip = Translation.translate("tooltip.upgrade.overclocker.time") + energyDemandPercent;
-        let powerTooltip = Translation.translate("tooltip.upgrade.overclocker.power") + powerPercent;
+        const timePercent = this.getProcessTimeMultiplier(item) * 100 + percent;
+        const energyDemandPercent = this.getEnergyDemandMultiplier(item) * 100  + percent;
+        const timeTooltip = ItemName.getTranslatedTextWithParams("tooltip.upgrade.overclocker.time", timePercent);
+        const powerTooltip = ItemName.getTranslatedTextWithParams("tooltip.upgrade.overclocker.power", energyDemandPercent);
         return name + "§7\n" + timeTooltip + "\n" + powerTooltip;
     }
 

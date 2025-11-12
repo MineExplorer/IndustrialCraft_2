@@ -1,6 +1,6 @@
 class BlockRubberTreeSapling extends BlockBase
 implements BlockItemBehavior {
-	PLACEABLE_TILES = {
+	static PLACEABLE_TILES = {
 		2: true,
 		3: true,
 		60: true
@@ -26,13 +26,13 @@ implements BlockItemBehavior {
 	}
 
 	onNeighbourChange(coords: Vector, block: Tile, changeCoords: Vector, region: BlockSource): void {
-		if (changeCoords.y < coords.y && !this.PLACEABLE_TILES[region.getBlockId(coords.x, coords.y - 1, coords.z)]) {
+		if (changeCoords.y < coords.y && !BlockRubberTreeSapling.PLACEABLE_TILES[region.getBlockId(coords.x, coords.y - 1, coords.z)]) {
 			region.destroyBlock(coords.x, coords.y, coords.z, true);
 		}
 	}
 
 	onRandomTick(x: number, y: number, z: number, block: Tile, region: BlockSource): void {
-		if (!this.PLACEABLE_TILES[region.getBlockId(x, y-1, z)]) {
+		if (!BlockRubberTreeSapling.PLACEABLE_TILES[region.getBlockId(x, y-1, z)]) {
 			region.destroyBlock(x, y, z, true);
 		}
 		else if (Math.random() < 0.05 && region.getLightLevel(x, y, z) >= 9) {
@@ -62,7 +62,7 @@ implements BlockItemBehavior {
 		const tile1 = region.getBlock(place.x, place.y, place.z);
 		const tile2 = region.getBlock(place.x, place.y - 1, place.z);
 
-		if (!World.canTileBeReplaced(tile1.id, tile1.data) || !this.PLACEABLE_TILES[tile2.id]) {
+		if (!World.canTileBeReplaced(tile1.id, tile1.data) || !BlockRubberTreeSapling.PLACEABLE_TILES[tile2.id]) {
 			Game.prevent();
 		}
 	}

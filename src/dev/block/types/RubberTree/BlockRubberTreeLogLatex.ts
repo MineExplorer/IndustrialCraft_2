@@ -17,7 +17,19 @@ class BlockRubberTreeLogLatex extends BlockBase {
 
 	onRandomTick(x: number, y: number, z: number, block: Tile, region: BlockSource): void {
 		if (block.data < 4 && Math.random() < 1/7) {
-			region.setBlock(x, y, z, block.id, block.data + 4);
+			// check that block is part of a grown tree
+			let checkY = y - 1;
+			while (checkY > 0) {
+				const blockId = region.getBlockId(x, checkY, z);
+				if (BlockRubberTreeSapling.PLACEABLE_TILES[blockId]) {
+					region.setBlock(x, y, z, block.id, block.data + 4);
+					break;
+				}
+				else if (blockId != BlockID.rubberTreeLog || blockId != BlockID.rubberTreeLogLatex) {
+					break;
+				}
+				checkY--;
+			}
 		}
 	}
 }

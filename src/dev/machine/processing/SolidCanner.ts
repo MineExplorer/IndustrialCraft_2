@@ -7,7 +7,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.solidCanner, 2, [["machine_bot
 TileRenderer.registerModelWithRotation(BlockID.solidCanner, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 1], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.solidCanner);
 
-ItemName.addVoltageTooltip("solidCanner", 32);
+ItemName.addConsumptionTooltip("solidCanner", 2, 32);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.solidCanner, count: 1, data: 0}, [
@@ -83,7 +83,7 @@ const guiSolidCanner = MachineRegistry.createInventoryWindow("Solid Canning Mach
 namespace Machine {
 	export class SolidCanner extends ProcessingMachine {
 		defaultEnergyStorage = 800;
-		defaultEnergyDemand = 1;
+		defaultEnergyDemand = 2;
 		defaultProcessTime = 200;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
 

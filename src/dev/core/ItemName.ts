@@ -36,8 +36,8 @@ namespace ItemName {
 		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_output", outputText));
 	}
 
-	export function addVoltageTooltip(blockID: string | number, maxVoltage: number): void {
-		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.max_voltage", maxVoltage));
+	export function addConsumptionTooltip(blockID: string | number, powerConsumption: number, maxVoltage: number): void {
+		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_consumption", powerConsumption, maxVoltage));
 	}
 
 	export function addStorageBlockTooltip(blockID: string | number, tier: number, capacity: string): void {

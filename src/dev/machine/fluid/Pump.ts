@@ -8,7 +8,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.pump, 0, [["machine_bottom", 0
 TileRenderer.registerModelWithRotation(BlockID.pump, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_bottom", 1], ["pump_side", 1], ["pump_side", 1]], true);
 TileRenderer.setRotationFunction(BlockID.pump, true);
 
-ItemName.addVoltageTooltip("pump", 32);
+ItemName.addConsumptionTooltip("pump", 2, 32);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.pump, count: 1, data: 0}, [
@@ -52,7 +52,7 @@ namespace Machine {
 
 		defaultTier = 1;
 		defaultEnergyStorage = 800;
-		defaultEnergyDemand = 1;
+		defaultEnergyDemand = 2;
 		defaultProcessTime = 20;
 		defaultDrop = BlockID.machineBlockBasic;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector"];

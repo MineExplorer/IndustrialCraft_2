@@ -9,7 +9,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.electricFurnace, 2, [["machine
 TileRenderer.registerModelWithRotation(BlockID.electricFurnace, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 1], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.electricFurnace);
 
-ItemName.addVoltageTooltip("electricFurnace", 32);
+ItemName.addConsumptionTooltip("electricFurnace", 3, 32);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.electricFurnace, count: 1, data: 0}, [

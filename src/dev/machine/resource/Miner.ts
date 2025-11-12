@@ -6,7 +6,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.miner, 2, [["miner_bottom", 1]
 TileRenderer.registerModelWithRotation(BlockID.miner, 2, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 1], ["miner_side", 1], ["miner_side", 1]]);
 TileRenderer.setRotationFunction(BlockID.miner);
 
-ItemName.addVoltageTooltip("miner", 128);
+ItemName.addTooltip(BlockID.miner, "tooltip.max_voltage", 128);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.miner, count: 1, data: 0}, [
@@ -67,9 +67,9 @@ namespace Machine {
 			});
 		}
 
-		getMiningValues(tool: number) {
-			if (tool == ItemID.drill) return {energy: 6, time: 100};
-			if (tool == ItemID.diamondDrill) return {energy: 20, time: 50};
+		getMiningValues(toolId: number) {
+			if (toolId == ItemID.drill) return {energy: 6, time: 100};
+			if (toolId == ItemID.diamondDrill) return {energy: 20, time: 50};
 			return null;
 		}
 

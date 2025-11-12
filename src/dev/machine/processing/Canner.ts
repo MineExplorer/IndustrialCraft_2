@@ -7,7 +7,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.canner, 2, [["machine_bottom",
 TileRenderer.registerModelWithRotation(BlockID.canner, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 1], ["canner_side", 1], ["canner_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.canner);
 
-ItemName.addVoltageTooltip("canner", 32);
+ItemName.addConsumptionTooltip("canner", 4, 32);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.canner, count: 1, data: 0}, [
@@ -73,7 +73,7 @@ namespace Machine {
 		};
 
 		defaultEnergyStorage = 1600;
-		defaultEnergyDemand = 1;
+		defaultEnergyDemand = 4;
 		defaultProcessTime = 200;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector", "fluidPulling"];
 

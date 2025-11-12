@@ -11,7 +11,10 @@ namespace ItemName {
 		return ItemRegistry.getRarity(id);
 	}
 
-	export function addTooltip(id: number, tooltip: string): void {
+	export function addTooltip(id: number, tooltip: string, ...params: any[]): void {
+		if (params.length > 0) {
+			tooltip = getTranslatedTextWithParams(tooltip, ...params);
+		}
 		if (!tooltips[id]) {
 			tooltips[id] = [tooltip];
 		} else {
@@ -46,8 +49,8 @@ namespace ItemName {
 
 	export function getTranslatedTextWithParams(key: string, ...params: any[]): string {
 		let text = Translation.translate(key);
-		for (let i = 0; i < params.length; i++) {
-			text = text.replace("%s", params[i].toString());
+		for (let param of params) {
+			text = text.replace("%s", param.toString());
 		}
 		return text;
 	}

@@ -2,7 +2,7 @@ BlockRegistry.createBlock("genWatermill", [
 	{name: "Water Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["windmill", 0], ["watermill_left", 0], ["watermill_right", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.genWatermill, "stone", 1);
-ItemName.addOutputTooltip(BlockID.genWatermill, "EU", 0, EnergyProductionModifiers.Watermill);
+ItemName.addProductionTooltip(BlockID.genWatermill, "EU", 0, EnergyProductionModifiers.Watermill);
 
 TileRenderer.setStandardModelWithRotation(BlockID.genWatermill, 2, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["windmill", 0], ["watermill_left", 0], ["watermill_right", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.genWatermill, 2, [["machine_bottom", 0], ["machine_top", 0], ["watermill_back", 0], ["windmill_rotating", 0], ["watermill_left", 0], ["watermill_right", 0]]);

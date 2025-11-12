@@ -2,7 +2,7 @@ BlockRegistry.createBlock("semifluidGenerator", [
 	{name: "Semifluid Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.semifluidGenerator, "stone", 1);
-ItemName.addOutputTooltip(BlockID.semifluidGenerator, "EU", 8, 16);
+ItemName.addProductionTooltip(BlockID.semifluidGenerator, "EU", 8, 16);
 
 TileRenderer.setStandardModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);

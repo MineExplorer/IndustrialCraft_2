@@ -2,7 +2,7 @@ BlockRegistry.createBlock("rtGenerator", [
 	{name: "Radioisotope Thermoelectric Generator", texture: [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.rtGenerator, "stone", 1);
-ItemName.addOutputTooltip(BlockID.rtGenerator, "EU", EnergyProductionModifiers.RTGenerator, 32 * EnergyProductionModifiers.RTGenerator);
+ItemName.addProductionTooltip(BlockID.rtGenerator, "EU", EnergyProductionModifiers.RTGenerator, 32 * EnergyProductionModifiers.RTGenerator);
 
 TileRenderer.setStandardModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top_active", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);

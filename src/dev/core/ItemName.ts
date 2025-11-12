@@ -1,12 +1,12 @@
 namespace ItemName {
 	const tooltips: {[key: number]: string[]} = {};
 
-	/**@deprecated */
+	/**@deprecated use ItemRegistry.setRarity*/
 	export function setRarity(id: number, rarity: number): void {
 		ItemRegistry.setRarity(id, rarity);
 	}
 
-	/**@deprecated */
+	/**@deprecated use ItemRegistry.getRarity */
 	export function getRarity(id: number): number {
 		return ItemRegistry.getRarity(id);
 	}
@@ -30,9 +30,9 @@ namespace ItemName {
 		addTooltip(Block.getNumericId(blockID), getPowerTierText(tier));
 	}
 
-	export function addOutputTooltip(blockID: string | number, unit: string, minValue: number, maxValue?: number): void {
+	export function addProductionTooltip(blockID: string | number, unit: string, minValue: number, maxValue?: number): void {
 		const outputText = maxValue ? `${minValue}-${maxValue} ${unit}/t` : `${minValue} ${unit}/t`;
-		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_output", outputText));
+		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_production", outputText));
 	}
 
 	export function addConsumptionTooltip(blockID: string | number, unit: string, minValue: number, maxValue?: number): void {
@@ -40,10 +40,10 @@ namespace ItemName {
 		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_consumption", consumptionText));
 	}
 
-	export function addStorageBlockTooltip(blockID: string | number, tier: number, capacity: string): void {
+	export function addStorageBlockTooltip(blockID: string | number, tier: number, capacity: string, output?: number): void {
 		Item.registerNameOverrideFunction(Block.getNumericId(blockID), function(item: ItemInstance, name: string) {
 			const color = ItemRegistry.getItemRarityColor(item.id);
-			return color + name + "\n§7" + getBlockStorageText(item, tier, capacity);
+			return color + name + "\n§7" + getBlockStorageText(item, tier, capacity, output);
 		});
 	}
 
@@ -55,9 +55,14 @@ namespace ItemName {
 		return text;
 	}
 
-	export function getBlockStorageText(item: ItemInstance, tier: number, capacity: string): string {
+	export function getBlockStorageText(item: ItemInstance, tier: number, capacity: string, output?: number): string {
 		const energy = item.extra ? item.extra.getInt("energy") : 0;
-		return `${getPowerTierText(tier)}\n${displayEnergy(energy)}/${capacity} EU`;
+		let tooltip = getPowerTierText(tier) + '\n';
+		if (output) {
+			tooltip += `${getTranslatedTextWithParams("tooltip.power_output", output)} EU/t\n`;
+		}
+		tooltip += `${displayEnergy(energy)}/${capacity} EU`;
+		return tooltip;
 	}
 
 	export function getPowerTierText(tier: number): string {

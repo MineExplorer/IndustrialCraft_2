@@ -480,7 +480,8 @@ Translation.addTranslation("message.mining_laser.aiming", {en: "Mining laser aim
 // Tooltips
 Translation.addTranslation("tooltip.tin_can", {en: "This looks bad...", ru: "Это выглядит несъедобно…", pt: "Isso parece ruim...", zh: "这看起来很糟糕..."});
 Translation.addTranslation("tooltip.power_tier", {en: "Power Tier: %s", ru: "Энергоуровень: %s", pt: "Nível de Voltagem: %s", zh: "能量等级: %s"});
-Translation.addTranslation("tooltip.power_output", {en: "Power Output: %s", ru: "Генерация: %s"});
+Translation.addTranslation("tooltip.power_production", {en: "Power Production: %s", ru: "Генерация: %s"});
+Translation.addTranslation("tooltip.power_output", {en: "Output: %s", ru: "Выход: %s"});
 Translation.addTranslation("tooltip.power_consumption", {en: "Consumption: %s EU/t", ru: "Потребление: %s EU/t", pt: "Consumo: %s EU/t", zh: "消耗: %s EU/t"});
 Translation.addTranslation("tooltip.max_voltage", {en: "Max voltage: %s EU/t", ru: "Макс. напряжение: %s EU/t", pt: "Voltagem Máx: %s EU/t", zh: "最大电压: %s EU/t"});
 Translation.addTranslation("tooltip.transformer", {en: "Low: %s EU/t High: %s EU/t", ru: "Пониж.: %s EU/t Повыш.: %s EU/t", pt: "Baixa: %s EU/t Alta: %s EU/t", es: "Baja: %s EU/t Alta: %s EU/t", zh: "低压: %s EU/t 高压: %s EU/t"});

@@ -25,7 +25,7 @@ class BlockRubberTreeLogLatex extends BlockBase {
 					region.setBlock(x, y, z, block.id, block.data + 4);
 					break;
 				}
-				else if (blockId != BlockID.rubberTreeLog || blockId != BlockID.rubberTreeLogLatex) {
+				else if (blockId != BlockID.rubberTreeLog && blockId != BlockID.rubberTreeLogLatex) {
 					break;
 				}
 				checkY--;

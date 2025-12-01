@@ -81,7 +81,7 @@ namespace Machine {
 		defaultDrop = BlockID.machineBlockAdvanced;
 		upgrades = ["overclocker", "transformer"];
 
-		tier: number;
+		tier: number = this.defaultTier;
 		maxScanCount: number;
 
 		getScreenByName(): UI.IWindow {
@@ -105,6 +105,11 @@ namespace Machine {
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade1", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
 			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade2", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
+		}
+
+		onInit(): void {
+			super.onInit();
+			this.setUpgradeStats();
 		}
 
 		getScanRadius(itemID: number): number {

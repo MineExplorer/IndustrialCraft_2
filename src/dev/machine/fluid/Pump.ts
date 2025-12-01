@@ -58,7 +58,7 @@ namespace Machine {
 		defaultDrop = BlockID.machineBlockBasic;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector"];
 
-		tier: number;
+		tier: number = this.defaultTier;
 		energyStorage: number;
 		energyDemand: number;
 		processTime: number;
@@ -84,6 +84,11 @@ namespace Machine {
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				return UpgradeAPI.isValidUpgrade(id, this);
 			});
+		}
+
+		onInit(): void {
+			super.onInit();
+			this.useUpgrades();
 		}
 
 		useUpgrades(): void {

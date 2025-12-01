@@ -15,7 +15,7 @@ namespace Machine {
 		defaultEnergyDemand?: number;
 		defaultProcessTime?: number;
 
-		tier: number;
+		tier: number = this.defaultTier;
 		energyStorage: number;
 		energyDemand?: number;
 		processTime?: number;
@@ -35,6 +35,11 @@ namespace Machine {
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
 			});
+		}
+
+		onInit(): void {
+			super.onInit();
+			this.useUpgrades();
 		}
 
 		getRecipeResult(id: number, data: number): any {

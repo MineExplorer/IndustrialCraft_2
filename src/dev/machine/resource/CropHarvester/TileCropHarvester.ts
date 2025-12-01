@@ -16,7 +16,7 @@ namespace Machine {
 		defaultDrop = BlockID.machineBlockBasic;
 		upgrades = ["transformer", "energyStorage", "itemEjector"];
 
-		tier: number;
+		tier: number = this.defaultTier;
 		energyStorage: number;
 
 		getScreenByName(): UI.IWindow {
@@ -42,6 +42,11 @@ namespace Machine {
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				return UpgradeAPI.isValidUpgrade(id, this);
 			});
+		}
+
+		onInit(): void {
+			super.onInit();
+			this.useUpgrades();
 		}
 
 		onTick(): void {

@@ -1,5 +1,6 @@
 /// <reference path="./ArmorElectric.ts" />
 /// <reference path="./JetpackProvider.ts" />
+/// <reference path="./PowerArmorDamageAbsorption.ts" />
 
 class ArmorQuantumSuit extends ArmorElectric {
 	constructor(stringID: string, name: string, params: ArmorParams, inCreative?: boolean) {
@@ -19,8 +20,10 @@ class ArmorQuantumSuit extends ArmorElectric {
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {
 		const energyStored = ChargeItemRegistry.getEnergyStored(item);
 		const energyPerDamage = this.getEnergyPerDamage();
-		const type = params.type;
-		if (energyStored >= energyPerDamage && (type == 2 || type == 3 || type == 11)) {
+		if (energyStored >= energyPerDamage && EntityHelper.isPhysicalDamage(params.type)) {
+			if (params.type == EDamageCause.LAVA) { // fix lava damage being called each tick
+				Entity.addEffect(playerUid, EPotionEffect.FIRE_RESISTANCE, 1, 10);
+			}
 			const energy = params.damage * energyPerDamage;
 			ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - energy, 0));
 			return item;
@@ -186,49 +189,6 @@ class ArmorQuantumBoots extends ArmorQuantumSuit {
 		return super.onHurt(params, item, index, playerUid);
 	}
 }
-
-Callback.addCallback("EntityHurt", function(attacker: number, victim: number, damage: number, type: number) {
-	if (damage > 0 && EntityHelper.isPlayer(victim) && (type == 2 || type == 3 || type == 11)) {
-		let defencePoints = 0;
-		for (let i = 0; i < 4; i++) {
-			const item = Entity.getArmorSlot(victim, i);
-			const armor = ItemRegistry.getInstanceOf(item.id);
-			if (armor instanceof ArmorNanoSuit || armor instanceof ArmorQuantumSuit) {
-				if (ChargeItemRegistry.getEnergyStored(item) >= armor.getEnergyPerDamage() * damage) {
-					defencePoints += armor.getExtraDefence();
-				}
-			}
-		}
-		if (defencePoints > 0) {
-			let damageGot = damage / 5;
-			const damageReceived = damageGot * ( 20 - defencePoints) / 20;
-			if (damageGot > 1) {
-				damageGot = Math.floor(damageGot);
-			}
-			let damageAbsorbed = Math.ceil(damageGot - Math.floor(damageReceived));
-			const health = Math.min(Entity.getMaxHealth(victim), Entity.getHealth(victim));
-			if (damageReceived < 1) {
-				if (damageGot < 1) {
-					if (Math.random() >= damageReceived / damageGot) {
-						runOnMainThread(() => {
-							const curHealth = Entity.getHealth(victim);
-							if (curHealth < health) {
-								Entity.setHealth(victim, curHealth + 1);
-							}
-						});
-					}
-					return;
-				}
-				else if (Math.random() < damageReceived) {
-					damageAbsorbed--;
-				}
-			}
-			if (damageAbsorbed > 0) {
-				Entity.setHealth(victim, health + damageAbsorbed);
-			}
-		}
-	}
-})
 
 /** @deprecated */
 const QUANTUM_ARMOR_FUNCS = {

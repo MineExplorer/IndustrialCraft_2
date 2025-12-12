@@ -69,4 +69,9 @@ namespace EntityHelper {
 		}
 		return entities;
 	}
+
+	export function isPhysicalDamage(type: number): boolean {
+		return type == EDamageCause.MOB || type == EDamageCause.IMPACT ||
+			type == EDamageCause.MOB_EXPLOSION || type == EDamageCause.LAVA;
+	}
 }

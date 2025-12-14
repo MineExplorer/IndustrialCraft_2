@@ -659,15 +659,25 @@ var WorldRegion = /** @class */ (function () {
         }
         return entities;
     };
-    WorldRegion.prototype.playSound = function (x, y, z, name, volume, pitch) {
-        var _a, _b;
+    WorldRegion.prototype.playSound = function (x, y, z, name, volume, pitch, playerUids) {
         if (typeof (x) == "number") {
-            var soundPos = new Vector3(x, y, z);
-            this.playSound(soundPos, name, volume, pitch);
+            if (this.blockSource.playSound) {
+                this.blockSource.playSound(x, y, z, name, volume, pitch, playerUids);
+            }
+            else {
+                var packetData = { x: x, y: y, z: z, name: name, volume: volume !== null && volume !== void 0 ? volume : 1, pitch: pitch !== null && pitch !== void 0 ? pitch : 1 };
+                if (playerUids) {
+                    this.sendPacketToPlayers(playerUids, "WorldRegion.play_sound", packetData);
+                }
+                else {
+                    var radius = (volume > 1) ? 16 * volume : 16;
+                    this.sendPacketInRadius(packetData, radius, "WorldRegion.play_sound", packetData);
+                }
+            }
         }
         else {
             var coords = arguments[0];
-            this.sendPacketInRadius(coords, 100, "WorldRegion.play_sound", __assign(__assign({}, coords), { name: arguments[1], volume: (_a = arguments[2]) !== null && _a !== void 0 ? _a : 1, pitch: (_b = arguments[3]) !== null && _b !== void 0 ? _b : 1 }));
+            this.playSound(coords.x, coords.y, coords.z, arguments[1], arguments[2], arguments[3], arguments[4]);
         }
     };
     /**
@@ -676,12 +686,35 @@ var WorldRegion = /** @class */ (function () {
      * @param name sound name
      * @param volume sound volume from 0 to 1. Default is 1.
      * @param pitch sound pitch, from 0 to 1. Default is 1.
+     * @param playerUids if not set, players in radius multiplied by sound volume
+     * will be detected automatically
      */
-    WorldRegion.prototype.playSoundAtEntity = function (ent, name, volume, pitch) {
+    WorldRegion.prototype.playSoundAtEntity = function (ent, name, volume, pitch, playerUids) {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
-        var soundPos = Entity.getPosition(ent);
-        this.sendPacketInRadius(soundPos, 100, "WorldRegion.play_sound_at", { ent: ent, name: name, volume: volume, pitch: pitch });
+        if (this.blockSource.playSoundAtEntity) {
+            this.blockSource.playSoundAtEntity(ent, name, volume, pitch);
+        }
+        else {
+            var soundPos = Entity.getPosition(ent);
+            var packetData = { ent: ent, name: name, volume: volume, pitch: pitch };
+            if (playerUids) {
+                this.sendPacketToPlayers(playerUids, "WorldRegion.play_sound_at", packetData);
+            }
+            else {
+                var radius = (volume > 1) ? 16 * volume : 16;
+                this.sendPacketInRadius(soundPos, radius, "WorldRegion.play_sound_at", packetData);
+            }
+        }
+    };
+    /**
+     * Method to stop sound by name for defined player list.
+     * @param sound resource pack sound name
+     * @param playerUids list of player UIDs to stop sound for
+     * @since Inner Core 3.1.1b127
+     */
+    WorldRegion.prototype.stopSound = function (sound, playerUids) {
+        this.blockSource.stopSound(sound, playerUids);
     };
     /**
      * Sends network packet for players within a radius from specified coords.
@@ -701,6 +734,54 @@ var WorldRegion = /** @class */ (function () {
                 client.send(packetName, data);
             }
         }
+    };
+    /**
+     * Sends network packet to specified players.
+     * @param playerUids
+     * @param packetName
+     * @param data
+     */
+    WorldRegion.prototype.sendPacketToPlayers = function (playerUids, packetName, data) {
+        for (var _i = 0, playerUids_1 = playerUids; _i < playerUids_1.length; _i++) {
+            var uid = playerUids_1[_i];
+            var client = Network.getClientForPlayer(uid);
+            if (client) {
+                client.send(packetName, data);
+            }
+        }
+    };
+    /**
+     * Gets signal strength at specified coordinates
+     * that consumers can receive.
+     * @since Inner Core 3.1.0b125
+     */
+    WorldRegion.prototype.getRedstoneSignal = function (x, y, z) {
+        return this.blockSource.getRedstoneSignal(x, y, z);
+    };
+    /**
+     * Sets signal with specified strength to block, it is
+     * recommended to call {@link Block.setupAsRedstoneEmitter}
+     * to be able to add a source. Once block is destroyed,
+     * signal will be reset.
+     * @param strength level between 0-15 (inclusive)
+     * @param delay time in ticks after which signal strength
+     * will be reset, should be more than zero, updated depending
+     * on redstone tick (1 redstone tick = 2 regular ticks), default is `4`
+     * @param facing world side of {@link EBlockSide} to which signal
+     * from source will be applied, use -1 to apply it to all sides
+     * (as from redstone block), default is `-1`
+     * @since Inner Core 3.1.0b125
+     */
+    WorldRegion.prototype.setRedstoneSignal = function (x, y, z, strength, delay, facing) {
+        this.blockSource.setRedstoneSignal(x, y, z, strength, delay, facing);
+    };
+    /**
+     * Causes a random tick event, usually affecting rate of
+     * plant growth or grass spread and leaf disappearings.
+     * @since Inner Core 3.1.0b125
+     */
+    WorldRegion.prototype.randomTick = function (x, y, z) {
+        this.blockSource.randomTick(x, y, z);
     };
     return WorldRegion;
 }());
@@ -1654,6 +1735,18 @@ var BlockRegistry;
                     break;
                 case "colorSource":
                     type.color_source = properites[key];
+                    break;
+                case "canContainLiquid":
+                    type.can_contain_liquid = properites[key];
+                    break;
+                case "canBeExtraBlock":
+                    type.can_be_extra_block = properites[key];
+                    break;
+                case "flameOdds":
+                    type.flame_odds = properites[key];
+                    break;
+                case "burnOdds":
+                    type.burn_odds = properites[key];
                     break;
                 case "extends": continue;
                 default:

@@ -429,17 +429,28 @@ declare class WorldRegion {
      * @param name sound name
      * @param volume sound volume from 0 to 1. Default is 1.
      * @param pitch sound pitch, from 0 to 1. Default is 1.
+     * @param playerUids if not set, players players in radius multiplied by sound volume
+     * will be detected automatically
      */
-    playSound(x: number, y: number, z: number, name: string, volume?: number, pitch?: number): void;
-    playSound(coords: Vector, name: string, volume?: number, pitch?: number): void;
+    playSound(x: number, y: number, z: number, name: string, volume?: number, pitch?: number, playerUids?: number[]): void;
+    playSound(coords: Vector, name: string, volume?: number, pitch?: number, playerUids?: number[]): void;
     /**
      * Plays standard Minecraft sound from the specified entity.
      * @param ent entity id
      * @param name sound name
      * @param volume sound volume from 0 to 1. Default is 1.
      * @param pitch sound pitch, from 0 to 1. Default is 1.
+     * @param playerUids if not set, players in radius multiplied by sound volume
+     * will be detected automatically
      */
-    playSoundAtEntity(ent: number, name: string, volume?: number, pitch?: number): void;
+    playSoundAtEntity(ent: number, name: string, volume?: number, pitch?: number, playerUids?: number[]): void;
+    /**
+     * Method to stop sound by name for defined player list.
+     * @param sound resource pack sound name
+     * @param playerUids list of player UIDs to stop sound for
+     * @since Inner Core 3.1.1b127
+     */
+    stopSound(sound: string, playerUids: number[]): void;
     /**
      * Sends network packet for players within a radius from specified coords.
      * @param coords coordinates from which players will be searched
@@ -448,6 +459,40 @@ declare class WorldRegion {
      * @param data packet data object
      */
     sendPacketInRadius(coords: Vector, radius: number, packetName: string, data: object): void;
+    /**
+     * Sends network packet to specified players.
+     * @param playerUids
+     * @param packetName
+     * @param data
+     */
+    sendPacketToPlayers(playerUids: number[], packetName: string, data: object): void;
+    /**
+     * Gets signal strength at specified coordinates
+     * that consumers can receive.
+     * @since Inner Core 3.1.0b125
+     */
+    getRedstoneSignal(x: number, y: number, z: number): number;
+    /**
+     * Sets signal with specified strength to block, it is
+     * recommended to call {@link Block.setupAsRedstoneEmitter}
+     * to be able to add a source. Once block is destroyed,
+     * signal will be reset.
+     * @param strength level between 0-15 (inclusive)
+     * @param delay time in ticks after which signal strength
+     * will be reset, should be more than zero, updated depending
+     * on redstone tick (1 redstone tick = 2 regular ticks), default is `4`
+     * @param facing world side of {@link EBlockSide} to which signal
+     * from source will be applied, use -1 to apply it to all sides
+     * (as from redstone block), default is `-1`
+     * @since Inner Core 3.1.0b125
+     */
+    setRedstoneSignal(x: number, y: number, z: number, strength: number, delay?: number, facing?: number): void;
+    /**
+     * Causes a random tick event, usually affecting rate of
+     * plant growth or grass spread and leaf disappearings.
+     * @since Inner Core 3.1.0b125
+     */
+    randomTick(x: number, y: number, z: number): void;
 }
 /**
  * Class to manipulate player based on `PlayerActor`.
@@ -707,6 +752,44 @@ interface BlockType {
      * Specifies sounds of the block
      */
     sound?: Block.Sound;
+    /**
+     * Whether or not block may filled by water bucket or
+     * other custom fillable liquids.
+     * @default false
+     */
+    canContainLiquid?: boolean;
+    /**
+     * Whether or not block may overlay different block,
+     * like water overlapping fillable blocks.
+     * @default false
+     */
+    canBeExtraBlock?: boolean;
+    /**
+     * Adds ability to apply states to this block, preferably using
+     * vanilla ones from {@link EBlockStates}, but if they are not enough,
+     * you can always add your own using {@link BlockState.registerBlockState}.
+     * Inexistent states are ignored.
+     * @default ["color"] // this state always has been here
+     */
+    states?: [EBlockStates | number | string][];
+    /**
+     * Alternatively catch on fire chance modifier,
+     * values between 0 and 100, with a higher number
+     * meaning more likely to catch on fire.
+     * For a "flame_odds" greater than 0, the fire will
+     * continue to burn until the block is destroyed
+     * (or it will burn forever if the "burn_odds" is 0).
+     * @default 0 // 5 for planks
+     * @since 3.1.0b125
+     */
+    flameOdds?: number;
+    /**
+     * Alternatively destroy by fire chance modifier,
+     * values between 0 and 100, with a higher number
+     * meaning more likely to be destroyed by fire.
+     * @default 0 // 20 for planks
+     */
+    burnOdds?: number;
 }
 /**
  * Block functions

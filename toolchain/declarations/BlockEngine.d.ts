@@ -447,10 +447,11 @@ declare class WorldRegion {
     /**
      * Method to stop sound by name for defined player list.
      * @param sound resource pack sound name
-     * @param playerUids list of player UIDs to stop sound for
+     * @param playerUids list of player UIDs, if not set,
+     * action will be performed on all players within dimension
      * @since Inner Core 3.1.1b127
      */
-    stopSound(sound: string, playerUids: number[]): void;
+    stopSound(sound: string, playerUids?: number[]): void;
     /**
      * Sends network packet for players within a radius from specified coords.
      * @param coords coordinates from which players will be searched

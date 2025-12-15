@@ -1,6 +1,10 @@
 class BlockRubberTreeLog extends BlockBase {
 	constructor() {
-		super("rubberTreeLog", "wood");
+		super("rubberTreeLog", {
+			extends: "wood",
+			flameOdds: 5,
+			burnOdds: 5,
+		});
 		const name = "rubber_tree_log";
 		const texture_side: [string, number] = ["rubber_wood", 0];
 		const texture_side2: [string, number] = ["rubber_wood", 2];

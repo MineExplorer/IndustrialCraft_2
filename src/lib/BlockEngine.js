@@ -710,7 +710,8 @@ var WorldRegion = /** @class */ (function () {
     /**
      * Method to stop sound by name for defined player list.
      * @param sound resource pack sound name
-     * @param playerUids list of player UIDs to stop sound for
+     * @param playerUids list of player UIDs, if not set,
+     * action will be performed on all players within dimension
      * @since Inner Core 3.1.1b127
      */
     WorldRegion.prototype.stopSound = function (sound, playerUids) {
@@ -2227,6 +2228,8 @@ var BlockRegistry;
         baseBlock: 17,
         destroyTime: 2,
         explosionResistance: 10,
+        flameOdds: 5,
+        burnOdds: 20,
         sound: "wood"
     });
     createBlockType("leaves", {
@@ -2237,6 +2240,8 @@ var BlockRegistry;
         renderLayer: 1,
         lightOpacity: 1,
         translucency: 0.5,
+        flameOdds: 30,
+        burnOdds: 60,
         sound: "grass"
     });
     createBlockType("dirt", {

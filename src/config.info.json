@@ -40,6 +40,55 @@
                 "ru": "Размер кнопок брони"
             }
         },
+        "power_modifiers": {
+            "name": {
+                "en": "Power production modifiers",
+                "ru": "Модификаторы производства энергии"
+            },
+            "collapsible": true
+        },
+        "power_modifiers.fuel_generator": {
+            "name": {
+                "en": "Fuel Generator",
+                "ru": "Топливный генератор"
+            }
+        },
+        "power_modifiers.geothermal_generator": {
+            "name": {
+                "en": "Geothermal Generator",
+                "ru": "Геотермальный генератор"
+            }
+        },
+        "power_modifiers.solar_panel": {
+            "name": {
+                "en": "Solar Panel",
+                "ru": "Солнечная панель"
+            }
+        },
+        "power_modifiers.wind_generator": {
+            "name": {
+                "en": "Wind Mill",
+                "ru": "Ветрогенератор"
+            }
+        },
+        "power_modifiers.water_generator": {
+            "name": {
+                "en": "Water Mill",
+                "ru": "Гидрогенератор"
+            }
+        },
+        "power_modifiers.nuclear_reactor": {
+            "name": {
+                "en": "Nuclear Reactor",
+                "ru": "Ядерный реактор"
+            }
+        },
+        "power_modifiers.radioisotope_generator": {
+            "name": {
+                "en": "Radioisotope Thermoelectric Generator",
+                "ru": "Радиоизотопный термоэлектрический генератор"
+            }
+        },
         "rubber_tree_gen": {
             "name": {
                 "en": "Rubber tree generation",

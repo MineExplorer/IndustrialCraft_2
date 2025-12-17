@@ -21,6 +21,7 @@
 /// <reference path="./CropCards/BaseCards/CropColorFlowerCard.ts"/>
 /// <reference path="./CropCards/BaseCards/Metal/CropBaseMetalCommon.ts"/>
 /// <reference path="./CropCards/BaseCards/Metal/CropBaseMetalUncommon.ts"/>
+
 namespace Agriculture {
 	Callback.addCallback("PreLoaded", function() {
 		// Basic

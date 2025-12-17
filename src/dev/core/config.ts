@@ -18,6 +18,16 @@ namespace IC2Config {
 	}
 }
 
+const EnergyProductionModifiers = {
+	FuelGenerator: 10 * IC2Config.getFloat("power_modifiers.fuel_generator"),
+	GeothermalGenerator: 20 * IC2Config.getFloat("power_modifiers.geothermal_generator"),
+	SolarPanel: 1 * IC2Config.getFloat("power_modifiers.solar_panel"),
+	WindGenerator: 10 * IC2Config.getFloat("power_modifiers.wind_generator"),
+	WaterGenerator: 3 * IC2Config.getFloat("power_modifiers.water_generator"),
+	EUReactor: 5 * IC2Config.getFloat("power_modifiers.nuclear_reactor"),
+	RTGenerator: 1 * IC2Config.getFloat("power_modifiers.radioisotope_generator")
+}
+
 // show tps
 let lasttime = -1;
 let frame = 0;

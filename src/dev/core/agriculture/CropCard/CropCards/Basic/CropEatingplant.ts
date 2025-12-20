@@ -60,15 +60,17 @@ namespace Agriculture {
 				te.x + .5 + range, te.y + range * 2, te.z + .5 + range
 			);
 			for (let entity of entities) {
-				if (!(EntityHelper.isPlayer(entity) && new PlayerEntity(entity).getGameMode() == 0) 
-					&& !EntityHelper.isMob(entity)) continue;
-				
-				Entity.damageEntity(entity, te.data.currentSize * 2);
-				if (!this.hasMetalArmor(entity)) {
+				// entity is player in survival or mob without metal armor
+				if (((EntityHelper.isPlayer(entity) && new PlayerEntity(entity).getGameMode() != 1)
+					|| EntityHelper.isMob(entity)) && !this.hasMetalArmor(entity)) {
+					Entity.damageEntity(entity, te.data.currentSize * 2);
 					Entity.addEffect(entity, PotionEffect.poison, 1, 50);
+					if (te.crop.canGrow(te)) {
+						te.data.growthPoints += 100;
+					}
+					te.region.dropAtBlock(te.x, te.y, te.z, VanillaItemID.rotten_flesh, 1, 0);
+					break;
 				}
-				if (te.crop.canGrow(te)) te.data.growthPoints += 100;
-				te.region.dropAtBlock(te.x, te.y, te.z, 367, 1, 0);
 			}
 		}
 

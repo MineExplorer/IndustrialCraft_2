@@ -88,6 +88,10 @@ namespace Machine {
 			}
 		}
 
+		getDefaultDrop(): ItemInstance {
+			return new ItemStack(BlockID.luminator, 1, 1);
+		}
+
 		getDemontaged(): ItemInstance {
 			return new ItemStack(BlockID.luminator, 1, 1);
 		}

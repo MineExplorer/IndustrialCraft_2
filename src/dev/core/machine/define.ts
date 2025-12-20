@@ -100,11 +100,11 @@ namespace MachineRegistry {
 			const place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
 			const rotation = TileRenderer.getBlockRotation(player, hasVerticalRotation);
 			region.setBlock(place, item.id, rotation);
-			// region.playSound(place.x + .5, place.y + .5, place.z + .5, "dig.stone", 1, 0.8)
 			const tile = region.addTileEntity(place);
 			if (item.extra) {
 				tile.data.energy = item.extra.getInt("energy");
 			}
+			return place;
 		});
 	}
 

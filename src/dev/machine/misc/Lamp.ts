@@ -104,12 +104,11 @@ namespace Machine {
 	MachineRegistry.registerPrototype(BlockID.luminator_on, new LampOn());
 }
 
-Block.registerPlaceFunction("luminator", function(coords, item, block, player, region) {
-	const {x, y, z} = coords.relative;
-	const blockID = region.getBlockId(x, y, z)
-	if (GenerationUtils.isTransparentBlock(blockID)) {
-		region.setBlock(x, y, z, item.id, coords.side);
-		//World.playSound(x, y, z, "dig.stone", 1, 0.8)
-		World.addTileEntity(x, y, z, region);
+Block.registerPlaceFunction("luminator", function(coords, item, block, player, blockSource) {
+	const place = coords.relative;
+	const tile = blockSource.getBlock(place.x, place.y, place.z);
+	if (World.canTileBeReplaced(tile.id, tile.data)) {
+		blockSource.setBlock(place.x, place.y, place.z, item.id, coords.side);
+		return place;
 	}
 });

@@ -18,13 +18,12 @@ Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block
 		if (region.getBlockId(c.x, c.y, c.z) == BlockID.reactorChamber) {
 			const tileEnt = region.getTileEntity(c.x, c.y, c.z);
 			if (tileEnt.core) {
-				item.count++;
+				item.count++; // prevent item consumption if not placed
 				return;
 			}
 		}
 	}
 	region.setBlock(place, item.id, 0);
-	region.addTileEntity(place);
 	return place;
 });
 

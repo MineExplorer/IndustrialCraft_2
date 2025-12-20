@@ -3,6 +3,7 @@
 BlockRegistry.createBlock("cropHarvester", [
 	{ name: "Crop Harvester", texture: [["machine_bottom", 0], ["crop_harvester", 0]], inCreative: true }
 ], "machine");
+BlockRegistry.setBlockMaterial(BlockID.cropHarvester, "stone", 1);
 ItemName.addTierTooltip(BlockID.cropHarvester, 1);
 
 Callback.addCallback("PreLoaded", function () {

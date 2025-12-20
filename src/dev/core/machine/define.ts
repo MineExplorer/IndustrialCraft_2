@@ -16,7 +16,7 @@ namespace MachineRegistry {
 			const BasePrototype = Machine.MachineBase.prototype;
 			Prototype.id = id;
 			Prototype.getDefaultDrop ??= BasePrototype.getDefaultDrop;
-			Prototype.adjustDrop ??= BasePrototype.adjustDrop;
+			Prototype.getDemontaged ??= BasePrototype.getDemontaged;
 			Prototype.startPlaySound ??= BasePrototype.startPlaySound;
 			Prototype.stopPlaySound ??= BasePrototype.stopPlaySound;
 			Prototype.setActive ??= function(isActive: boolean) {
@@ -36,7 +36,9 @@ namespace MachineRegistry {
 		// register prototype
 		machineIDs[id] = true;
 		TileEntity.registerPrototype(id, Prototype);
-		setMachineDrop(id, Prototype.defaultDrop);
+		BlockRegistry.registerDrop(id, function(coords, blockID, blockData, level) {
+			return MachineRegistry.getMachineDrop(blockID, level);
+		});
 
 		if (Prototype instanceof Machine.ElectricMachine) {
 			// wire connection
@@ -108,16 +110,16 @@ namespace MachineRegistry {
 		});
 	}
 
-	/**@deprecated */
 	export function getMachineDrop(blockID: number, level: number): ItemInstanceArray[] {
 		const drop = [];
 		if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
-			const dropID = TileEntity.getPrototype(blockID).getDefaultDrop();
-			drop.push([dropID, 1, 0]);
+			const item = TileEntity.getPrototype(blockID).getDefaultDrop();
+			drop.push([item.id, item.count, item.data]);
 		}
 		return drop;
 	}
 
+	/** @deprecated */
 	export function setMachineDrop(blockID: string | number, dropID?: number) {
 		dropID ??= Block.getNumericId(blockID);
 		BlockRegistry.registerDrop(blockID, function(coords, blockID, blockData, level) {

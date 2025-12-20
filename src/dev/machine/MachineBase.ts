@@ -62,12 +62,12 @@ namespace Machine {
 			slot.validate();
 		}
 
-		getDefaultDrop(): number {
-			return this.defaultDrop ?? this.blockID;
+		getDefaultDrop(): ItemInstance {
+			return new ItemStack(this.defaultDrop ?? this.blockID, 1, 0);
 		}
 
-		adjustDrop(item: ItemInstance): ItemInstance {
-			return item;
+		getDemontaged(): ItemInstance {
+			return new ItemStack(this.blockID, 1, 0);
 		}
 
 		/* Client prototype */

@@ -17,7 +17,6 @@ Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block
 	}
 	if (connectedReactors == 1) {
 		region.setBlock(place, item.id, 0);
-		region.addTileEntity(place);
 		return place;
 	}
 	item.count++; // prevent item consumption if not placed

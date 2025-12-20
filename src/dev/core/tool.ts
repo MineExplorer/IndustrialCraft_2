@@ -115,7 +115,7 @@ namespace ICTool {
 				return;
 			}
 
-			const drop = tileEntity.adjustDrop(new ItemStack(tileEntity.blockID, 1, 0));
+			const drop = tileEntity.getDemontaged();
 			TileEntity.destroyTileEntity(tileEntity);
 			region.setBlock(coords, 0, 0);
 			region.dropAtBlock(coords.x, coords.y, coords.z, drop);

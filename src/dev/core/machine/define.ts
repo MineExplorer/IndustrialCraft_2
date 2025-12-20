@@ -113,8 +113,13 @@ namespace MachineRegistry {
 	export function getMachineDrop(blockID: number, level: number): ItemInstanceArray[] {
 		const drop = [];
 		if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
-			const item = TileEntity.getPrototype(blockID).getDefaultDrop();
-			drop.push([item.id, item.count, item.data]);
+			const prototype = TileEntity.getPrototype(blockID) as Machine.MachineBase;
+			if (prototype && prototype.getDefaultDrop) {
+				const item = prototype.getDefaultDrop();
+				drop.push([item.id, item.count, item.data, item.extra]);
+			} else {
+				drop.push([blockID, 1, 0]);
+			}
 		}
 		return drop;
 	}
@@ -239,6 +244,7 @@ namespace MachineRegistry {
 	}
 }
 
+/** @deprecated */
 const transferByTier = {
 	1: 32,
 	2: 256,

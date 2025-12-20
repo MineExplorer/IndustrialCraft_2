@@ -54,21 +54,29 @@ namespace Agriculture {
 		tick(te: ICropTileEntity): void {
 			if (te.data.currentSize == 1) return;
 
-			let entity = Entity.findNearest({ x: te.x + .5, y: te.y + .5, z: te.z + .5 }, null, 2);
-			if (!entity) return;
-
-			Entity.damageEntity(entity, te.data.currentSize * 2);
-			if (EntityHelper.isPlayer(entity) && !this.hasMetalArmor(entity)) {
-				Entity.addEffect(entity, PotionEffect.poison, 1, 50);
+			const range = 1;
+			const entities = te.region.listEntitiesInAABB(
+				te.x + .5 - range, te.y, te.z + .5 - range,
+				te.x + .5 + range, te.y + range * 2, te.z + .5 + range
+			);
+			for (let entity of entities) {
+				if (!(EntityHelper.isPlayer(entity) && new PlayerEntity(entity).getGameMode() == 0) 
+					&& !EntityHelper.isMob(entity)) continue;
+				
+				Entity.damageEntity(entity, te.data.currentSize * 2);
+				if (!this.hasMetalArmor(entity)) {
+					Entity.addEffect(entity, PotionEffect.poison, 1, 50);
+				}
+				if (te.crop.canGrow(te)) te.data.growthPoints += 100;
+				te.region.dropAtBlock(te.x, te.y, te.z, 367, 1, 0);
 			}
-			if (te.crop.canGrow(te)) te.data.growthPoints += 100;
-			World.drop(te.x + .5, te.y + .5, te.z + .5, 367, 1, 0);
 		}
 
-		hasMetalArmor(player: number): boolean {
+		hasMetalArmor(entity: number): boolean {
 			for (let i = 0; i < 4; i++) {
-				const armorSlot = new PlayerEntity(player).getArmor(i);
-				if (armorSlot.id > 297 && armorSlot.id < 302) return false;
+				const armorSlot = Entity.getArmorSlot(entity, i);
+				// break loop if no armor or leather armor
+				if (armorSlot.id == 0 || (armorSlot.id >= 298 && armorSlot.id <= 301)) return false;
 			}
 			return true;
 		}

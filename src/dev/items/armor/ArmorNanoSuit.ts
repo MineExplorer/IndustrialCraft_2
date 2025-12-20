@@ -45,7 +45,6 @@ class ArmorNanoHelmet extends ArmorNanoSuit {
 			} else {
 				Entity.addEffect(playerUid, PotionEffect.nightVision, 1, 225);
 			}
-			Entity.addEffect(playerUid, PotionEffect.nightVision, 1, 225);
 			if (World.getThreadTime()%20 == 0) {
 				ChargeItemRegistry.setEnergyStored(item, Math.max(energyStored - 20, 0));
 				return item;

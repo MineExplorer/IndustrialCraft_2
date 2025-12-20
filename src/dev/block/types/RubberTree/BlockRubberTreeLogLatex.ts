@@ -5,8 +5,8 @@ class BlockRubberTreeLogLatex extends BlockBase {
 			flameOdds: 5,
 			burnOdds: 5,
 		});
-		this.addVariation("tile.rubberTreeLogLatex.name", [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]]);
-		this.addVariation("tile.rubberTreeLogLatex.name", [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]]);
+		this.addVariation("rubber_tree_log_latex", [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]]);
+		this.addVariation("rubber_tree_log_latex", [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]]);
 		this.setBlockMaterial("wood");
 	}
 

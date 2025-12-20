@@ -1,5 +1,6 @@
 // BLOCKS
 Translation.addTranslation("rubber_tree_log", {en: "Rubber Tree Log", ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", pt: "Madeira da árvore de borracha", zh: "橡胶树原木"});
+Translation.addTranslation("rubber_tree_log_latex", {en: "Rubber Tree Log with Latex Drip", ru: "Древесина гевеи с подтёком латекса"});
 Translation.addTranslation("rubber_tree_leaves", {en: "Rubber Tree Leaves", ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", pt: "Folhas da árvore de borracha", zh: "橡胶树树叶"});
 Translation.addTranslation("rubber_tree_sapling", {en: "Rubber Tree Sapling", ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", pt: "Muda de árvore de borracha", zh: "橡胶树树苗"});
 Translation.addTranslation("copper_ore", {en: "Copper Ore", ru: "Медная руда", es: "Mineral de Cobre", pt: "Minério de Cobre", zh: "铜矿石"});

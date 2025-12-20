@@ -1,10 +1,10 @@
 BlockRegistry.createBlock("luminator", [
-	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
+	{name: "Luminator", texture: [["luminator", 0]], inCreative: false},
 	{name: "Luminator", texture: [["luminator", 0]], inCreative: true},
-	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
-	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
-	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false},
-	{name: "tile.luminator.name", texture: [["luminator", 0]], inCreative: false}
+	{name: "Luminator", texture: [["luminator", 0]], inCreative: false},
+	{name: "Luminator", texture: [["luminator", 0]], inCreative: false},
+	{name: "Luminator", texture: [["luminator", 0]], inCreative: false},
+	{name: "Luminator", texture: [["luminator", 0]], inCreative: false}
 ], {destroyTime: 2, explosionResistance: 0.5, renderLayer: 7});
 
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 15/16, z: 0}, {x: 1, y: 1, z: 1}, 0);
@@ -20,12 +20,12 @@ BlockRegistry.registerDrop("luminator", function(coords, blockID, blockData, lev
 
 
 BlockRegistry.createBlock("luminator_on", [
-	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
-	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
-	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
-	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
-	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false},
-	{name: "tile.luminator_on.name", texture: [["luminator", 1]], inCreative: false}
+	{name: "Luminator", texture: [["luminator", 1]], inCreative: false},
+	{name: "Luminator", texture: [["luminator", 1]], inCreative: false},
+	{name: "Luminator", texture: [["luminator", 1]], inCreative: false},
+	{name: "Luminator", texture: [["luminator", 1]], inCreative: false},
+	{name: "Luminator", texture: [["luminator", 1]], inCreative: false},
+	{name: "Luminator", texture: [["luminator", 1]], inCreative: false}
 ], {
 	destroyTime: 2,
 	explosionResistance: 0.5,

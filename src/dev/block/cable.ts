@@ -5,40 +5,40 @@ BlockRegistry.createBlockType("cable", {
 });
 
 BlockRegistry.createBlock("cableTin0", [
-	{name: "tile.cableTin.name", texture: [["cable_tin", 0]], inCreative: false}
+	{name: "tin_cable_0", texture: [["cable_tin", 0]], inCreative: false}
 ], "cable");
-CableRegistry.createBlock("cableTin1", {name: "tile.cableTin.name", texture: "cable_tin1"}, "cable");
+CableRegistry.createBlock("cableTin1", {name: "tin_cable_1", texture: "cable_tin1"}, "cable");
 BlockRegistry.setBlockMaterial(BlockID.cableTin0, "stone");
 BlockRegistry.setBlockMaterial(BlockID.cableTin1, "stone");
 
 BlockRegistry.createBlock("cableCopper0", [
-	{name: "tile.cableCopper.name", texture: [["cable_copper", 0]], inCreative: false},
+	{name: "copper_cable_0", texture: [["cable_copper", 0]], inCreative: false},
 ], "cable");
-CableRegistry.createBlock("cableCopper1", {name: "tile.cableCopper.name", texture: "cable_copper1"}, "cable");
+CableRegistry.createBlock("cableCopper1", {name: "copper_cable_1", texture: "cable_copper1"}, "cable");
 BlockRegistry.setBlockMaterial(BlockID.cableCopper0, "stone");
 BlockRegistry.setBlockMaterial(BlockID.cableCopper1, "stone");
 
 BlockRegistry.createBlock("cableGold0", [
-	{name: "tile.cableGold.name", texture: [["cable_gold", 0]], inCreative: false},
+	{name: "gold_cable_0", texture: [["cable_gold", 0]], inCreative: false},
 ], "cable");
-CableRegistry.createBlock("cableGold1", {name: "tile.cableGold.name", texture: "cable_gold1"}, "cable");
-CableRegistry.createBlock("cableGold2", {name: "tile.cableGold.name", texture: "cable_gold2"}, "cable");
+CableRegistry.createBlock("cableGold1", {name: "gold_cable_1", texture: "cable_gold1"}, "cable");
+CableRegistry.createBlock("cableGold2", {name: "gold_cable_2", texture: "cable_gold2"}, "cable");
 BlockRegistry.setBlockMaterial(BlockID.cableGold0, "stone");
 BlockRegistry.setBlockMaterial(BlockID.cableGold1, "stone");
 BlockRegistry.setBlockMaterial(BlockID.cableGold2, "stone");
 
 BlockRegistry.createBlock("cableIron0", [
-	{name: "tile.cableIron.name", texture: [["cable_iron", 0]], inCreative: false},
+	{name: "iron_cable_0", texture: [["cable_iron", 0]], inCreative: false},
 ], "cable");
-CableRegistry.createBlock("cableIron1", {name: "tile.cableIron.name", texture: "cable_iron1"}, "cable");
-CableRegistry.createBlock("cableIron2", {name: "tile.cableIron.name", texture: "cable_iron2"}, "cable");
-CableRegistry.createBlock("cableIron3", {name: "tile.cableIron.name", texture: "cable_iron3"}, "cable");
+CableRegistry.createBlock("cableIron1", {name: "iron_cable_1", texture: "cable_iron1"}, "cable");
+CableRegistry.createBlock("cableIron2", {name: "iron_cable_2", texture: "cable_iron2"}, "cable");
+CableRegistry.createBlock("cableIron3", {name: "iron_cable_3", texture: "cable_iron3"}, "cable");
 BlockRegistry.setBlockMaterial(BlockID.cableIron0, "stone");
 BlockRegistry.setBlockMaterial(BlockID.cableIron1, "stone");
 BlockRegistry.setBlockMaterial(BlockID.cableIron2, "stone");
 BlockRegistry.setBlockMaterial(BlockID.cableIron3, "stone");
 
-CableRegistry.createBlock("cableOptic", {name: "tile.cableOptic.name", texture: "cable_glass"}, "cable");
+CableRegistry.createBlock("cableOptic", {name: "glass_cable", texture: "cable_glass"}, "cable");
 BlockRegistry.setBlockMaterial(BlockID.cableOptic, "stone");
 
 // energy net

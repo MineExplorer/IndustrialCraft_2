@@ -216,17 +216,34 @@ def task_build_package():
 
 @task("launchHorizon")
 def task_launch_horizon():
-	from subprocess import call
-	call([make_config.get_adb(), "shell", "touch", "/storage/emulated/0/games/horizon/.flag_auto_launch"], stdout=devnull, stderr=devnull)
-	result = call([make_config.get_adb(), "shell", "monkey", "-p", "com.zheka.horizon64", "-c", "android.intent.category.LAUNCHER", "1"], stdout=devnull, stderr=devnull)
+	from subprocess import call, check_output
+	adb = make_config.get_adb()
+
+	output = check_output([adb, "devices"], stderr=devnull).decode()
+	lines = output.strip().splitlines()[1:]  # skip header line
+	devices = [line.split()[0] for line in lines if line.strip().endswith("device")]
+	if not devices:
+		print("\033[91mno devices/emulators found, try to use task \"Connect to ADB\"\033[0m")
+		return 1
+	
+	call([make_config.get_adb(), "-s", devices[0], "shell", "touch", "/storage/emulated/0/games/horizon/.flag_auto_launch"], stdout=devnull, stderr=devnull)
+	result = call([make_config.get_adb(), "-s", devices[0], "shell", "monkey", "-p", "com.zheka.horizon64", "-c", "android.intent.category.LAUNCHER", "1"], stdout=devnull, stderr=devnull)
 	if result != 0:
 		print("\033[91mno devices/emulators found, try to use task \"Connect to ADB\"\033[0m")
-	return 0
+	return result
 
 @task("stopHorizon")
 def stop_horizon():
-	from subprocess import call
-	result = call([make_config.get_adb(), "shell", "am", "force-stop", "com.zheka.horizon64"], stdout=devnull, stderr=devnull)
+	from subprocess import call, check_output
+	adb = make_config.get_adb()
+	output = check_output([adb, "devices"], stderr=devnull).decode()
+	lines = output.strip().splitlines()[1:]  # skip header line
+	devices = [line.split()[0] for line in lines if line.strip().endswith("device")]
+	if not devices:
+		print("\033[91mno devices/emulators found, try to use task \"Connect to ADB\"\033[0m")
+		return 1
+	
+	result = call([adb, "-s", devices[0], "shell", "am", "force-stop", "com.zheka.horizon64"], stdout=devnull, stderr=devnull)
 	if result != 0:
 		print("\033[91mno devices/emulators found, try to use task \"Connect to ADB\"\033[0m")
 	return result

@@ -121,13 +121,19 @@ const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial
 namespace Machine {
 	export class IndustrialWorkbench extends MachineBase {
         defaultValues = { 
-            recipeChecked: false
+            recipeChecked: false,
+            patterns: {}
         };
 		defaultDrop = BlockID.machineBlockBasic;
 
 		getScreenByName(): UI.IWindow {
 			return guiIndustrialWorkbench;
 		}
+
+        onInit(): void {
+            super.onInit();
+            this.data.patterns ??= {};
+        }
 
         setupContainer(): void {
             StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
@@ -165,9 +171,6 @@ namespace Machine {
             this.container.clearSlot("slotResult");
             for (let i = 0; i < 9; i++) {
                 this.container.clearSlot("slotPatternResult" + i);
-                for (let j = 0; j < 9; j++) {
-                    this.container.clearSlot("slotPatternEntry" + i + j);
-                }
             }
             return false;
         }
@@ -226,27 +229,7 @@ namespace Machine {
                 const inputSlot = this.container.getSlot("slotInput" + i);
                 if (inputSlot.id == 0) continue;
                 
-                // merge stacks first, than fill empty slots, than give to player
-                for (let j = 0; j < 18; j++) {
-                    const bufferSlot = this.container.getSlot("slot" + j);
-                    if (bufferSlot.id == inputSlot.id && bufferSlot.data == inputSlot.data) {
-                        StorageInterface.addItemToSlot(inputSlot, bufferSlot);
-                        bufferSlot.markDirty();
-                        if (inputSlot.count == 0)
-                            break;
-                    }
-                }
-                if (inputSlot.count > 0) {
-                    for (let j = 0; j < 18; j++) {
-                        const bufferSlot = this.container.getSlot("slot" + j);
-                        if (bufferSlot.id == 0) {
-                            StorageInterface.addItemToSlot(inputSlot, bufferSlot);
-                            bufferSlot.markDirty();
-                            if (inputSlot.count == 0)
-                                break;
-                        }
-                    }
-                }
+                this.addItemToBuffer(inputSlot);
                 if (inputSlot.count > 0) {
                     player ??= new PlayerActor(playerUid);
                     player.addItemToInventory(inputSlot.id, inputSlot.count, inputSlot.data, inputSlot.extra || null, true);
@@ -257,9 +240,7 @@ namespace Machine {
 
         clearPattern(index: number): void {
             this.container.getSlot("slotPatternResult" + index).clear();
-            for (let j = 0; j < 9; j++) {
-                this.container.clearSlot("slotPatternEntry" + index + j);
-            }
+            delete this.data.patterns[index];
         }
 
         savePattern(result: ItemInstance, index: number) {
@@ -268,14 +249,39 @@ namespace Machine {
                 return;
 
             this.container.setSlot("slotPatternResult" + index, result.id, result.count, result.data, result.extra);
+            this.data.patterns[index] = {};
             for (let j = 0; j < 9; j++) {
                 const inputSlot = this.container.getSlot("slotInput" + j);
                 const entry = entryArray.find(e => e.id == inputSlot.id && (e.data == inputSlot.data || e.data == -1));
                 if (entry) {
-                    this.container.setSlot("slotPatternEntry" + index + j, entry.id, 1, entry.data);
+                    this.data.patterns[index][j] = {id: entry.id, data: entry.data};
                 }
             }
             this.container.sendChanges();
+        }
+
+        addItemToBuffer(item: ItemInstance) {
+            // merge stacks first, than fill empty slots
+            for (let j = 0; j < 18; j++) {
+                const bufferSlot = this.container.getSlot("slot" + j);
+                if (bufferSlot.id == item.id && bufferSlot.data == item.data) {
+                    StorageInterface.addItemToSlot(item, bufferSlot);
+                    bufferSlot.markDirty();
+                    if (item.count == 0)
+                        break;
+                }
+            }
+            if (item.count == 0)
+                return;
+            for (let j = 0; j < 18; j++) {
+                const bufferSlot = this.container.getSlot("slot" + j);
+                if (bufferSlot.id == 0) {
+                    StorageInterface.addItemToSlot(item, bufferSlot);
+                    bufferSlot.markDirty();
+                    if (item.count == 0)
+                        break;
+                }
+            }
         }
 
         getRecipeEntries(): Nullable<Recipes.RecipeEntry[]> {
@@ -343,13 +349,11 @@ namespace Machine {
         /** @deprecated Container event, shouldn't be called directly */
         @ContainerEvent(Side.Server)
         usePattern({index}: {index: number}, client: NetworkClient) {
-            if (this.container.getSlot("slotPatternResult" + index).id != 0) {
+            const pattern = this.data.patterns[index];
+            if (pattern) {
                 this.clearGridForPlayer(client.getPlayerUid());
-                for (let j = 0; j < 9; j++) {
-                    const patternEntrySlot = this.container.getSlot("slotPatternEntry" + index + j);
-                    if (patternEntrySlot.id != 0) {
-                        this.container.setSlot("slotInput" + j, patternEntrySlot.id, 0, patternEntrySlot.data, patternEntrySlot.extra);
-                    }
+                for (let j of pattern) {
+                    this.container.setSlot("slotInput" + j, pattern[j].id, 0, pattern[j].data);
                 }
                 this.refillItems();
                 this.data.recipeChecked = false;

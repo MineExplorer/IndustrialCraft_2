@@ -190,7 +190,7 @@ namespace Machine {
 
 		receiveHeat(amount: number): number {
 			const slot = this.container.getSlot("slotSource");
-			if (this.data.isHeating || this.data.sourceID > 0 || this.getRecipeResult(slot.id)) {
+			if (this.isHeating || this.data.sourceID > 0 || this.getRecipeResult(slot.id)) {
 				amount = Math.min(this.getMaxHeat() - this.data.heat, amount);
 				this.data.heat += amount + 1;
 				return amount;

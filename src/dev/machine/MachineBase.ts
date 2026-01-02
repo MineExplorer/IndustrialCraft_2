@@ -8,6 +8,7 @@ namespace Machine {
 	implements IWrenchable {
 		upgrades?: string[];
 		defaultDrop?: number;
+		data: this["defaultValues"];
 
 		onInit(): void {
 			this.setupContainer();

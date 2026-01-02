@@ -14,26 +14,22 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial Workbench", {
-	drawing: [
-		{type: "bitmap", x: 691, y: 104, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-	],
-
 	elements: {
-		"progressScale": {type: "scale", x: 691, y: 104, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
+		"progressArrow": { type: "button", x: 565, y: 104, bitmap: "arrow_bar_background", scale: GUI_SCALE, clicker: {
 			onClick: () => {
 				RV?.RecipeTypeRegistry.openRecipePage("workbench");
 			}
 		}},
-		"slotInput0": {type: "slot", x: 491, y: 40},
-		"slotInput1": {type: "slot", x: 551, y: 40},
-		"slotInput2": {type: "slot", x: 611, y: 40},
-		"slotInput3": {type: "slot", x: 491, y: 100},
-		"slotInput4": {type: "slot", x: 551, y: 100},
-		"slotInput5": {type: "slot", x: 611, y: 100},
-		"slotInput6": {type: "slot", x: 491, y: 160},
-		"slotInput7": {type: "slot", x: 551, y: 160},
-		"slotInput8": {type: "slot", x: 611, y: 160},
-		"slotResult": {type: "slot", x: 781, y: 100, visual: true, clicker: {
+		"slotInput0": { type: "slot", x: 370, y: 40 },
+		"slotInput1": { type: "slot", x: 430, y: 40 },
+		"slotInput2": { type: "slot", x: 490, y: 40 },
+		"slotInput3": { type: "slot", x: 370, y: 100 },
+		"slotInput4": { type: "slot", x: 430, y: 100 },
+		"slotInput5": { type: "slot", x: 490, y: 100 },
+		"slotInput6": { type: "slot", x: 370, y: 160 },
+		"slotInput7": { type: "slot", x: 430, y: 160 },
+		"slotInput8": { type: "slot", x: 490, y: 160 },
+		"slotResult": { type: "slot", x: 650, y: 100, visual: true, clicker: {
             onClick: function(_, container: ItemContainer) {
                 container.sendEvent("craft", {allAtOnce: false});
             },
@@ -41,24 +37,84 @@ const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial
                 container.sendEvent("craft", {allAtOnce: true});
             }
         }},
-        "slot0": {type: "slot", x: 300 + 22*GUI_SCALE, y: 130 + 37*GUI_SCALE},
-		"slot1": {type: "slot", x: 300 + 41*GUI_SCALE, y: 130 + 37*GUI_SCALE},
-		"slot2": {type: "slot", x: 300 + 60*GUI_SCALE, y: 130 + 37*GUI_SCALE},
-		"slot3": {type: "slot", x: 300 + 79*GUI_SCALE, y: 130 + 37*GUI_SCALE},
-		"slot4": {type: "slot", x: 300 + 98*GUI_SCALE, y: 130 + 37*GUI_SCALE},
-		"slot5": {type: "slot", x: 300 + 117*GUI_SCALE, y: 130 + 37*GUI_SCALE},
-		"slot6": {type: "slot", x: 300 + 136*GUI_SCALE, y: 130 + 37*GUI_SCALE},
-		"slot7": {type: "slot", x: 300 + 155*GUI_SCALE, y: 130 + 37*GUI_SCALE},
-		"slot8": {type: "slot", x: 300 + 174*GUI_SCALE, y: 130 + 37*GUI_SCALE},
-		"slot9": {type: "slot", x: 300 + 22*GUI_SCALE, y: 130 + 56*GUI_SCALE},
-		"slot10": {type: "slot", x: 300 + 41*GUI_SCALE, y: 130 + 56*GUI_SCALE},
-		"slot11": {type: "slot", x: 300 + 60*GUI_SCALE, y: 130 + 56*GUI_SCALE},
-		"slot12": {type: "slot", x: 300 + 79*GUI_SCALE, y: 130 + 56*GUI_SCALE},
-		"slot13": {type: "slot", x: 300 + 98*GUI_SCALE, y: 130 + 56*GUI_SCALE},
-		"slot14": {type: "slot", x: 300 + 117*GUI_SCALE, y: 130 + 56*GUI_SCALE},
-		"slot15": {type: "slot", x: 300 + 136*GUI_SCALE, y: 130 + 56*GUI_SCALE},
-		"slot16": {type: "slot", x: 300 + 155*GUI_SCALE, y: 130 + 56*GUI_SCALE},
-		"slot17": {type: "slot", x: 300 + 174*GUI_SCALE, y: 130 + 56*GUI_SCALE}
+        "buttonClear": {type: "button", x: 555, y: 40, bitmap: "ic2.clear_button", bitmap2: "ic2.clear_button_touched", scale: GUI_SCALE, clicker: {
+			onClick: function(_, container: ItemContainer) {
+				container.sendEvent("clearGrid", {});
+			}
+		}},
+        "slot0": { type: 'slot', x: 370, y: 250 },
+        "slot1": { type: 'slot', x: 430, y: 250 },
+        "slot2": { type: 'slot', x: 490, y: 250 },
+        "slot3": { type: 'slot', x: 550, y: 250 },
+        "slot4": { type: 'slot', x: 610, y: 250 },
+        "slot5": { type: 'slot', x: 670, y: 250 },
+        "slot6": { type: 'slot', x: 730, y: 250 },
+        "slot7": { type: 'slot', x: 790, y: 250 },
+        "slot8": { type: 'slot', x: 850, y: 250 },
+        "slot9": { type: 'slot', x: 370, y: 310 },
+        "slot10": { type: 'slot', x: 430, y: 310 },
+        "slot11": { type: 'slot', x: 490, y: 310 },
+        "slot12": { type: 'slot', x: 550, y: 310 },
+        "slot13": { type: 'slot', x: 610, y: 310 },
+        "slot14": { type: 'slot', x: 670, y: 310 },
+        "slot15": { type: 'slot', x: 730, y: 310 },
+        "slot16": { type: 'slot', x: 790, y: 310 },
+        "slot17": { type: 'slot', x: 850, y: 310 },
+        "slotPatternResult0": { type: "slot", x: 730, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
+            onClick: function(_, container: ItemContainer) {
+				container.sendEvent("usePattern", {index: 0});
+			}
+        }},
+		"slotPatternResult1": { type: "slot", x: 790, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
+            onClick: function(_, container: ItemContainer) {
+				container.sendEvent("usePattern", {index: 1});
+			}
+        }},
+		"slotPatternResult2": { type: "slot", x: 850, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
+            onClick: function(_, container: ItemContainer) {
+				container.sendEvent("usePattern", {index: 2});
+			}
+        }},
+		"slotPatternResult3": { type: "slot", x: 730, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
+            onClick: function(_, container: ItemContainer) {
+				container.sendEvent("usePattern", {index: 3});
+			}
+        }},
+		"slotPatternResult4": { type: "slot", x: 790, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
+            onClick: function(_, container: ItemContainer) {
+				container.sendEvent("usePattern", {index: 4});
+			}
+        }},
+		"slotPatternResult5": { type: "slot", x: 850, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
+            onClick: function(_, container: ItemContainer) {
+				container.sendEvent("usePattern", {index: 5});
+			}
+        }},
+		"slotPatternResult6": { type: "slot", x: 730, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
+            onClick: function(_, container: ItemContainer) {
+				container.sendEvent("usePattern", {index: 6});
+			}
+        }},
+		"slotPatternResult7": { type: "slot", x: 790, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
+            onClick: function(_, container: ItemContainer) {
+				container.sendEvent("usePattern", {index: 7});
+			}
+        }},
+		"slotPatternResult8": { type: "slot", x: 850, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
+            onClick: function(_, container: ItemContainer) {
+				container.sendEvent("usePattern", {index: 8});
+			}
+        }},
+        "buttonPlus": {type: "button", x: 910, y: 40, bitmap: "ic2.plus_button", bitmap2: "ic2.plus_button_touched", scale: GUI_SCALE, clicker: {
+			onClick: function(_, container: ItemContainer) {
+				container.sendEvent("addPattern", {});
+			}
+		}},
+        "buttonMinus": {type: "button", x: 910, y: 75, bitmap: "ic2.minus_button", bitmap2: "ic2.minus_button_touched", scale: GUI_SCALE, clicker: {
+			onClick: function(_, container: ItemContainer) {
+				container.sendEvent("removePattern", {});
+			}
+		}}
 	}
 });
 
@@ -106,7 +162,13 @@ namespace Machine {
 		}
         
         destroy(): boolean {
-            this.container.setSlot("slotResult", 0, 0, 0);
+            this.container.clearSlot("slotResult");
+            for (let i = 0; i < 9; i++) {
+                this.container.clearSlot("slotPatternResult" + i);
+                for (let j = 0; j < 9; j++) {
+                    this.container.clearSlot("slotPatternEntry" + i + j);
+                }
+            }
             return false;
         }
 
@@ -142,7 +204,7 @@ namespace Machine {
                     for (let j = 0; j < 18; j++) {
                         const slot = this.container.getSlot("slot" + j);
                         if (slot.id == inputSlot.id && (slot.data == inputSlot.data || 
-                            inputSlot.count == 0 && inputSlot.data > 0 && Item.getMaxDamage(slot.id) > 0) // allow damaged items to be replaced
+                            inputSlot.count == 0 && (inputSlot.data == -1 || inputSlot.data > 0 && Item.getMaxDamage(slot.id) > 0)) // allow damaged items to be replaced
                         ) {
                             inputSlot.setSlot(slot.id, inputSlot.count + 1, slot.data, slot.extra);
                             slot.count--;
@@ -157,10 +219,142 @@ namespace Machine {
             }
         }
 
+        clearGridForPlayer(playerUid: number): void {
+            this.container.clearSlot("slotResult");
+            let player: PlayerActor;
+            for (let i = 0; i < 9; i++) {
+                const inputSlot = this.container.getSlot("slotInput" + i);
+                if (inputSlot.id == 0) continue;
+                
+                // merge stacks first, than fill empty slots, than give to player
+                for (let j = 0; j < 18; j++) {
+                    const bufferSlot = this.container.getSlot("slot" + j);
+                    if (bufferSlot.id == inputSlot.id && bufferSlot.data == inputSlot.data) {
+                        StorageInterface.addItemToSlot(inputSlot, bufferSlot);
+                        bufferSlot.markDirty();
+                        if (inputSlot.count == 0)
+                            break;
+                    }
+                }
+                if (inputSlot.count > 0) {
+                    for (let j = 0; j < 18; j++) {
+                        const bufferSlot = this.container.getSlot("slot" + j);
+                        if (bufferSlot.id == 0) {
+                            StorageInterface.addItemToSlot(inputSlot, bufferSlot);
+                            bufferSlot.markDirty();
+                            if (inputSlot.count == 0)
+                                break;
+                        }
+                    }
+                }
+                if (inputSlot.count > 0) {
+                    player ??= new PlayerActor(playerUid);
+                    player.addItemToInventory(inputSlot.id, inputSlot.count, inputSlot.data, inputSlot.extra || null, true);
+                }
+                inputSlot.clear();
+            }
+        }
+
+        clearPattern(index: number): void {
+            this.container.getSlot("slotPatternResult" + index).clear();
+            for (let j = 0; j < 9; j++) {
+                this.container.clearSlot("slotPatternEntry" + index + j);
+            }
+        }
+
+        savePattern(result: ItemInstance, index: number) {
+            const entryArray = this.getRecipeEntries();
+            if (!entryArray)
+                return;
+
+            this.container.setSlot("slotPatternResult" + index, result.id, result.count, result.data, result.extra);
+            for (let j = 0; j < 9; j++) {
+                const inputSlot = this.container.getSlot("slotInput" + j);
+                const entry = entryArray.find(e => e.id == inputSlot.id && (e.data == inputSlot.data || e.data == -1));
+                if (entry) {
+                    this.container.setSlot("slotPatternEntry" + index + j, entry.id, 1, entry.data);
+                }
+            }
+            this.container.sendChanges();
+        }
+
+        getRecipeEntries(): Nullable<Recipes.RecipeEntry[]> {
+            const recipe = Recipes.getRecipeByField(this.container, "");
+            if (!recipe)
+                return null;
+
+            const javaEntries = recipe.getEntryCollection().toArray();
+            const entryArray: Recipes.RecipeEntry[] = [];
+            for (let i = 0; i < javaEntries.length; i++) {
+                entryArray.push(javaEntries[i]);
+            }
+            return entryArray;
+        }
+
         /** @deprecated Container event, shouldn't be called directly */
         @ContainerEvent(Side.Server)
         craft(packetData: {allAtOnce: boolean}, client: NetworkClient) {
             this.provideRecipe(client.getPlayerUid(), packetData.allAtOnce);
+        }
+
+        /** @deprecated Container event, shouldn't be called directly */
+        @ContainerEvent(Side.Server)
+        clearGrid(packetData: {}, client: NetworkClient) {
+            this.clearGridForPlayer(client.getPlayerUid());
+            this.container.sendChanges();
+        }
+
+        /** @deprecated Container event, shouldn't be called directly */
+        @ContainerEvent(Side.Server)
+        addPattern(packetData: {}, client: NetworkClient) {
+            const resultSlot = this.container.getSlot("slotResult");
+            if (resultSlot.id == 0) return;
+
+            for (let i = 0; i < 9; i++) {
+                const patternResultSlot = this.container.getSlot("slotPatternResult" + i);
+                if (patternResultSlot.id == 0) {
+                    this.savePattern(resultSlot, i);
+                    break;
+                }
+            }
+        }
+
+        /** @deprecated Container event, shouldn't be called directly */
+        @ContainerEvent(Side.Server)
+        removePattern(packetData: {}, client: NetworkClient) {
+            const resultSlot = this.container.getSlot("slotResult");
+            let lastSeenIndex = -1;
+            // Remove the pattern matching the result slot, or the last one if none match
+            for (let i = 0; i < 9; i++) {
+                const patternResultSlot = this.container.getSlot("slotPatternResult" + i);
+                if (patternResultSlot.id != 0) {
+                    lastSeenIndex = i;
+                }
+                if (resultSlot.id != 0 && patternResultSlot.id == resultSlot.id && patternResultSlot.count == resultSlot.count && patternResultSlot.data == resultSlot.data) {
+                    this.clearPattern(i);
+                    return;
+                }
+            }
+            if (lastSeenIndex != -1) {
+                this.clearPattern(lastSeenIndex);
+            }
+        }
+
+        /** @deprecated Container event, shouldn't be called directly */
+        @ContainerEvent(Side.Server)
+        usePattern({index}: {index: number}, client: NetworkClient) {
+            if (this.container.getSlot("slotPatternResult" + index).id != 0) {
+                this.clearGridForPlayer(client.getPlayerUid());
+                for (let j = 0; j < 9; j++) {
+                    const patternEntrySlot = this.container.getSlot("slotPatternEntry" + index + j);
+                    if (patternEntrySlot.id != 0) {
+                        this.container.setSlot("slotInput" + j, patternEntrySlot.id, 0, patternEntrySlot.data, patternEntrySlot.extra);
+                    }
+                }
+                this.refillItems();
+                this.data.recipeChecked = false;
+                this.container.sendChanges();
+            }
         }
 	}
 

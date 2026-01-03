@@ -8,6 +8,7 @@ namespace Machine {
 	implements IWrenchable {
 		upgrades?: string[];
 		defaultDrop?: number;
+		data: this["defaultValues"];
 
 		onInit(): void {
 			this.setupContainer();
@@ -17,13 +18,7 @@ namespace Machine {
 		setupContainer(): void {}
 
 		addLiquidTank(name: string, limit: number, liquids?: string[]) {
-			const tank = new BlockEngine.LiquidTank(this, name, limit, liquids);
-			const liquid = this.liquidStorage.getLiquidStored();
-			if (liquid) {
-				const amount = this.liquidStorage.getLiquid(liquid, tank.getLimit() / 1000);
-				tank.addLiquid(liquid, Math.round(amount * 1000));
-			}
-			return tank;
+			return new BlockEngine.LiquidTank(this, name, limit, liquids);
 		}
 
 		canRotate(side: number): boolean {
@@ -68,12 +63,12 @@ namespace Machine {
 			slot.validate();
 		}
 
-		getDefaultDrop(): number {
-			return this.defaultDrop ?? this.blockID;
+		getDefaultDrop(): ItemInstance {
+			return new ItemStack(this.defaultDrop ?? this.blockID, 1, 0);
 		}
 
-		adjustDrop(item: ItemInstance): ItemInstance {
-			return item;
+		getDemontaged(): ItemInstance {
+			return new ItemStack(this.blockID, 1, 0);
 		}
 
 		/* Client prototype */
@@ -188,6 +183,12 @@ namespace Machine {
 
 		playOnce(soundName: string, volume: number = 1, radius: number = 16) {
 			this.networkEntity.send("playSound", {name: soundName, vol: volume, rad: radius});
+		}
+
+		protected canStackBeMerged(inputStack: ItemInstance, outputStack: ItemInstance) {
+			return outputStack.id == 0 || (outputStack.id == inputStack.id && outputStack.data == inputStack.data && 
+				outputStack.count + inputStack.count <= Item.getMaxStack(outputStack.id, outputStack.data) &&
+				outputStack.extra == inputStack.extra)
 		}
 	}
 }

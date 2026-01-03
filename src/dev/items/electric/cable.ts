@@ -8,7 +8,7 @@ implements ItemBehavior {
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
-		name += "\n§7" + Translation.translate("tooltip.max_voltage").replace("%s", this.maxVoltage.toString());
+		name += "\n§7" + ItemName.getTranslatedTextWithParams("tooltip.max_voltage", this.maxVoltage);
 		return name;
 	}
 

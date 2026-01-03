@@ -2,7 +2,7 @@ BlockRegistry.createBlock("semifluidGenerator", [
 	{name: "Semifluid Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.semifluidGenerator, "stone", 1);
-ItemName.addTierTooltip(BlockID.semifluidGenerator, 1);
+ItemName.addProductionTooltip(BlockID.semifluidGenerator, "EU", 8, 16);
 
 TileRenderer.setStandardModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
@@ -64,10 +64,9 @@ namespace Machine {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
 			});
 
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				const empty = LiquidItemRegistry.getEmptyItem(id, data);
-				if (!empty) return false;
-				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data, extra) => {
+				const liquid = LiquidItemRegistry.getItemLiquid(id, data, extra);
+				return liquid && MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid);
 			});
 
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
@@ -126,7 +125,7 @@ namespace Machine {
 		}
 
 		getEnergyStorage(): number {
-			return 1000
+			return 1000;
 		}
 
 		canRotate(side: number): boolean {
@@ -136,15 +135,14 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.semifluidGenerator, new FluidGenerator());
 
-	MachineRegistry.createStorageInterface(BlockID.semifluidGenerator, {
+	MachineRegistry.createFluidStorageInterface(BlockID.semifluidGenerator, {
 		slots: {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
 		isValidInput: function(item: ItemInstance) {
-			const empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
-			if (!empty) return false;
-			return this.canReceiveLiquid(empty.liquid);
+			const liquid = LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra);
+			return liquid && MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid);
 		},
 		canTransportLiquid: () => false
 	});

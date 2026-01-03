@@ -2,7 +2,7 @@ BlockRegistry.createBlock("geothermalGenerator", [
 	{name: "Geothermal Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.geothermalGenerator, "stone", 1);
-ItemName.addTierTooltip(BlockID.geothermalGenerator, 1);
+ItemName.addProductionTooltip(BlockID.geothermalGenerator, "EU", EnergyProductionModifiers.GeothermalGenerator);
 
 TileRenderer.setStandardModelWithRotation(BlockID.geothermalGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.geothermalGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]]);
@@ -47,8 +47,8 @@ namespace Machine {
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
 				return ChargeItemRegistry.isValidItem(id, "Eu", 1);
 			});
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				return LiquidItemRegistry.getItemLiquid(id, data) == "lava";
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data, extra) => {
+				return LiquidItemRegistry.getItemLiquid(id, data, extra) == "lava";
 			});
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
 		}
@@ -101,13 +101,13 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.geothermalGenerator, new GeothermalGenerator());
 
-	MachineRegistry.createStorageInterface(BlockID.geothermalGenerator, {
+	MachineRegistry.createFluidStorageInterface(BlockID.geothermalGenerator, {
 		slots: {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
 		isValidInput: (item: ItemInstance) => (
-			LiquidItemRegistry.getItemLiquid(item.id, item.data) == "lava"
+			LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra) == "lava"
 		),
 		canTransportLiquid: (liquid: string) => false
 	});

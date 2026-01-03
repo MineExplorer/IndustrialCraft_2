@@ -10,7 +10,7 @@ TileRenderer.setStandardModel(BlockID.storageCESU, 0, [["cesu_front", 0], ["cesu
 TileRenderer.setStandardModel(BlockID.storageCESU, 1, [["cesu_back", 0], ["cesu_front", 0], ["cesu_top", 0], ["cesu_top", 0], ["cesu_side", 1], ["cesu_side", 1]]);
 TileRenderer.setStandardModelWithRotation(BlockID.storageCESU, 2, [["cesu_top", 0], ["cesu_top", 0], ["cesu_back", 0], ["cesu_front", 0], ["cesu_side", 0], ["cesu_side", 0]]);
 
-ItemName.addStorageBlockTooltip("storageCESU", 2, "300K");
+ItemName.addStorageBlockTooltip("storageCESU", 2, "300K", 128);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.storageCESU, count: 1, data: 0}, [

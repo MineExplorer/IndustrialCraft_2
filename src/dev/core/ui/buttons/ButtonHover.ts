@@ -11,7 +11,7 @@ namespace ToolHUD {
 		}
 
 		onUpdate(element: UI.UIButtonElement): void {
-			let extra = Player.getArmorSlot(1).extra;
+			const extra = Player.getArmorSlot(1).extra;
 			if (extra?.getBoolean("hover")) {
 				element.bitmap = "button_hover_on";
 			} else {
@@ -20,10 +20,10 @@ namespace ToolHUD {
 		}
 
 		onClick(player: number): void {
-			let slot = Entity.getArmorSlot(player, 1);
-			if (!EntityHelper.isOnGround(player) && ChargeItemRegistry.getEnergyStored(slot) >= 8) {
-				let client = Network.getClientForPlayer(player);
-				let extra = slot.extra || new ItemExtraData();
+			const slot = Entity.getArmorSlot(player, 1);
+			if (!EntityHelper.isOnGround(player) && JetpackProvider.canBeFlying(slot, Entity.getPosition(player))) {
+				const client = Network.getClientForPlayer(player);
+				const extra = slot.extra || new ItemExtraData();
 				if (extra.getBoolean("hover")) {
 					extra.putBoolean("hover", false);
 					BlockEngine.sendMessage(client, "§4", "message.hover_mode.disabled");

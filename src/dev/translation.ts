@@ -1,5 +1,6 @@
 // BLOCKS
 Translation.addTranslation("rubber_tree_log", {en: "Rubber Tree Log", ru: "Древесина гевеи", es: "Madera de Árbol de Caucho", pt: "Madeira da árvore de borracha", zh: "橡胶树原木"});
+Translation.addTranslation("rubber_tree_log_latex", {en: "Rubber Tree Log with Latex Drip", ru: "Древесина гевеи с подтёком латекса"});
 Translation.addTranslation("rubber_tree_leaves", {en: "Rubber Tree Leaves", ru: "Листва гевеи", es: "Hojas de Arbol de Cáucho", pt: "Folhas da árvore de borracha", zh: "橡胶树树叶"});
 Translation.addTranslation("rubber_tree_sapling", {en: "Rubber Tree Sapling", ru: "Саженец гевеи", es: "Pimpollo de Árbol de Caucho", pt: "Muda de árvore de borracha", zh: "橡胶树树苗"});
 Translation.addTranslation("copper_ore", {en: "Copper Ore", ru: "Медная руда", es: "Mineral de Cobre", pt: "Minério de Cobre", zh: "铜矿石"});
@@ -86,6 +87,7 @@ Translation.addTranslation("Nuke", {ru: "Ядерная бомба", pt: "Bomba 
 Translation.addTranslation("Pump", {ru: "Помпа", es: "Bomba Extractora", pt: "Bomba", zh: "泵"});
 Translation.addTranslation("Fluid Distributor", {ru: "Жидкостный распределитель", es: "Distribuidor de Líquido", pt: "Distribuidor de Fluidos", zh: "流体分配机"});
 Translation.addTranslation("Tank", {ru: "Бак", es: "Tanque", pt: "Tanque", zh: "流体储存器"});
+Translation.addTranslation("biogas", {en: "Biogas", ru: "Биогаз", es: "Biogás", pt: "Biogás", zh: "沼气"});
 
 // ITEMS
 Translation.addTranslation("latex", {en: "Latex", ru: "Латекс", es: "Caucho", pt: "Resina Pegajosa", zh: "粘性树脂"});
@@ -221,7 +223,9 @@ Translation.addTranslation("energium_dust", {en: "Energium Dust", ru: "Энер�
 // Small Dusts
 Translation.addTranslation("small_copper_dust", {en: "Tiny Pile of Copper Dust", ru: "Небольшая кучка медной пыли", es: "Diminuta Pila de Polvo de Cobre", pt: "Pequena Pilha de Pó de Cobre", zh: "小撮铜粉"});
 Translation.addTranslation("small_tin_dust", {en: "Tiny Pile of Tin Dust", ru: "Небольшая кучка оловянной пыли", es: "Diminuta Pila de Polvo de Estaño", pt: "Pequena Pilha de Pó de Estanho", zh: "小撮锡粉"});
+Translation.addTranslation("small_bronze_dust", {en: "Tiny Pile of Bronze Dust", ru: "Небольшая кучка бронзовой пыли", es: "Diminuta Pila de Polvo de Bronce", pt: "Pequena Pilha de Pó de Bronze", zh: "小撮青铜粉"});
 Translation.addTranslation("small_iron_dust", {en: "Tiny Pile of Iron Dust", ru: "Небольшая кучка железной пыли", es: "Diminuta Pila de Polvo de Hierro", pt: "Pequena Pilha de Pó de Ferro", zh: "小撮铁粉"});
+Translation.addTranslation("small_steel_dust", {en: "Tiny Pile of Steel Dust", ru: "Небольшая кучка стальной пыли", es: "Diminuta Pila de Polvo de Acero", pt: "Pequena Pilha de Pó de Aço", zh: "小撮钢粉"});
 Translation.addTranslation("small_lead_dust", {en: "Tiny Pile of Lead Dust", ru: "Небольшая кучка свинцовой пыли", es: "Diminuta Pila de Polvo de Plomo", pt: "Pequena Pilha de Pó de Chumbo", zh: "小撮铅粉"});
 Translation.addTranslation("small_gold_dust", {en: "Tiny Pile of Gold Dust", ru: "Небольшая кучка золотой пыли", es: "Diminuta Pila de Polvo de Oro", pt: "Pequena Pilha de Pó de Ouro", zh: "小撮金粉"});
 Translation.addTranslation("small_silver_dust", {en: "Tiny Pile of Silver Dust", ru: "Небольшая кучка серебряной пыли", es: "Diminuta Pila de Polvo de Plata", pt: "Pequena Pilha de Pó de Prata", zh: "小撮银粉"});
@@ -317,7 +321,8 @@ Translation.addTranslation("hazmat_helmet", {en: "Scuba Helmet", ru: "Шлем-�
 Translation.addTranslation("hazmat_chestplate", {en: "Hazmat Suit", ru: "Защитная куртка", es: "Traje para Materiales Peligrosos", pt: "Roupa Anti-Radiação", zh: "防化服"});
 Translation.addTranslation("hazmat_leggings", {en: "Hazmat Suit Leggings", ru: "Защитные штаны", es: "Pantalones para Materiales Peligrosos", pt: "Calças Anti-Radiação", zh: "防化裤"});
 Translation.addTranslation("rubber_boots", {en: "Rubber Boots", ru: "Резиновые ботинки", es: "Botas de Goma", pt: "Botas de Borracha", zh: "橡胶靴"});
-Translation.addTranslation("electric_jetpack", {en: "Jetpack", ru: "Реактивный ранец", es: "Jetpack Eléctrico", pt: "Mochila à Jato Elétrica", zh: "电力喷气背包"});
+Translation.addTranslation("fuel_jetpack", {en: "Jetpack", ru: "Реактивный ранец", es: "Jetpack", pt: "Mochila à Jato", zh: "喷气背包"});
+Translation.addTranslation("electric_jetpack", {en: "Electric Jetpack", ru: "Электрический реактивный ранец", es: "Jetpack Eléctrico", pt: "Mochila à Jato Elétrica", zh: "电力喷气背包"});
 Translation.addTranslation("batpack", {en: "Batpack", ru: "Аккумуляторный ранец", es: "Mochila de Baterías", pt: "Mochila de Baterias", zh: "电池背包"});
 Translation.addTranslation("advanced_batpack", {en: "Advanced Batpack", ru: "Продвинутый аккумуляторный ранец", es: "Mochila de Baterías Avanzada", pt: "Mochila de Baterias Avançada", zh: "高级电池背包"});
 Translation.addTranslation("energypack", {en: "Energy Pack", ru: "Энергетический ранец", es: "Pack de Energía", pt: "Mochila de Energia", zh: "能量水晶储电背包"});
@@ -423,6 +428,7 @@ Translation.addTranslation("beetroots", {en: "Beetroots", ru: "Свёкла", pt
 
 // TEXT
 Translation.addTranslation("Mode: %s", {ru: "Режим: %s", es: "Modo: %s", pt: "Modo: %s", zh: "模式: %s"});
+Translation.addTranslation("generic.text.empty", {en: "Empty", ru: "Пусто", es: "Vacio", pt: "Vazio", zh: "空"});
 // Induction Furnace
 Translation.addTranslation("Heat:", {ru: "Нагрев:", es: "Calor:", pt: "Calor:", zh: "热量:"});
 // Fluid Distributor
@@ -475,9 +481,13 @@ Translation.addTranslation("message.mining_laser.aiming", {en: "Mining laser aim
 // Tooltips
 Translation.addTranslation("tooltip.tin_can", {en: "This looks bad...", ru: "Это выглядит несъедобно…", pt: "Isso parece ruim...", zh: "这看起来很糟糕..."});
 Translation.addTranslation("tooltip.power_tier", {en: "Power Tier: %s", ru: "Энергоуровень: %s", pt: "Nível de Voltagem: %s", zh: "能量等级: %s"});
+Translation.addTranslation("tooltip.power_production", {en: "Power Production: %s", ru: "Генерация: %s"});
+Translation.addTranslation("tooltip.power_output", {en: "Output: %s", ru: "Выход: %s"});
+Translation.addTranslation("tooltip.power_consumption", {en: "Consumption: %s", ru: "Потребление: %s", pt: "Consumo: %s", zh: "消耗: %s"});
 Translation.addTranslation("tooltip.max_voltage", {en: "Max voltage: %s EU/t", ru: "Макс. напряжение: %s EU/t", pt: "Voltagem Máx: %s EU/t", zh: "最大电压: %s EU/t"});
-Translation.addTranslation("tooltip.upgrade.overclocker.time", {en: "Decrease process time to ", ru: "Уменьшает время работы до ", pt: "Diminui o tempo de processo para ", zh: "加工用时缩短为"});
-Translation.addTranslation("tooltip.upgrade.overclocker.power", {en: "Increase power to ", ru: "Увеличивает энергопотребление до ", pt: "Aumenta o Uso de Energia em ", zh: "能量增加到"});
+Translation.addTranslation("tooltip.transformer", {en: "Low: %s EU/t High: %s EU/t", ru: "Пониж.: %s EU/t Повыш.: %s EU/t", pt: "Baixa: %s EU/t Alta: %s EU/t", es: "Baja: %s EU/t Alta: %s EU/t", zh: "低压: %s EU/t 高压: %s EU/t"});
+Translation.addTranslation("tooltip.upgrade.overclocker.time", {en: "Decrease process time to %s", ru: "Уменьшает время работы до %s", pt: "Diminui o tempo de processo para %s", zh: "加工用时缩短为%s"});
+Translation.addTranslation("tooltip.upgrade.overclocker.power", {en: "Increase power to %s", ru: "Увеличивает энергопотребление до %s", pt: "Aumenta o Uso de Energia em %s", zh: "能量增加到%s"});
 Translation.addTranslation("tooltip.upgrade.transformer", {en: "Increase energy tier by 1", ru: "Увеличивает энергоуровень на 1", pt: "Aumenta o nível da máquina em 1", zh: "增加一级输出电压"});
 Translation.addTranslation("tooltip.upgrade.storage", {en: "Increase energy storage by %s EU", ru: "Увеличивает энергоёмкость на %s EU", pt: "Aumenta o armazenamento de energia em %s EU", zh: "增加%s EU储能"});
 Translation.addTranslation("tooltip.upgrade.ejector", {en: "Automatically output to\nthe %s side", ru: "Автоматическое извлечение с %s стороны", pt: "Saída automática para o %s", zh: "自动输出到%s方向"});

@@ -8,6 +8,7 @@ TileRenderer.registerModelWithRotation(BlockID.recycler, 2, [["machine_bottom", 
 TileRenderer.setRotationFunction(BlockID.recycler);
 
 ItemName.addTierTooltip("recycler", 1);
+ItemName.addConsumptionTooltip("recycler", "EU", 1);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.recycler, count: 1, data: 0}, [

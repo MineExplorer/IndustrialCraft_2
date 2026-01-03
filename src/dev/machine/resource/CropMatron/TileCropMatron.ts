@@ -17,9 +17,9 @@ namespace Machine {
 		setupContainer(): void {
 			this.liquidTank = this.addLiquidTank("fluid", 2000, ["water"]);
 
-			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
-				if (name == "slotWaterIn") return LiquidItemRegistry.getItemLiquid(id, data) == "water";
+				if (name == "slotWaterIn") return LiquidItemRegistry.getItemLiquid(id, data, extra) == "water";
 				if (name.startsWith("slotFertilizer")) return id == ItemID.fertilizer;
 				if (name.startsWith("slotWeedEx")) return id == ItemID.weedEx;
 				return false;

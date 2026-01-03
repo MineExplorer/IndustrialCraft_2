@@ -5,25 +5,26 @@ BlockRegistry.createBlock("nuclearReactor", [
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.nuclearReactor, "stone", 1);
 ItemRegistry.setRarity(BlockID.nuclearReactor, EnumRarity.UNCOMMON);
+ItemName.addProductionTooltip(BlockID.nuclearReactor, "EU", 1, 8192);
 
 TileRenderer.setStandardModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1]]);
 
-Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block, player, region) {
-	const {x, y, z} = coords.relative;
+Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block, player, blockSource) {
+	const region = new WorldRegion(blockSource);
+	const place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
 	for (let i = 0; i < 6; i++) {
-		const c = World.getRelativeCoords(x, y, z, i);
+		const c = World.getRelativeCoords(place.x, place.y, place.z, i);
 		if (region.getBlockId(c.x, c.y, c.z) == BlockID.reactorChamber) {
-			const tileEnt = World.getTileEntity(c.x, c.y, c.z, region);
+			const tileEnt = region.getTileEntity(c.x, c.y, c.z);
 			if (tileEnt.core) {
-				item.count++;
+				item.count++; // prevent item consumption if not placed
 				return;
 			}
 		}
 	}
-	region.setBlock(x, y, z, item.id, 0);
-	//World.playSound(x, y, z, "dig.stone", 1, 0.8)
-	World.addTileEntity(x, y, z, region);
+	region.setBlock(place, item.id, 0);
+	return place;
 });
 
 Callback.addCallback("PreLoaded", function() {

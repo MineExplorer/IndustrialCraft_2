@@ -11,7 +11,7 @@ TileRenderer.setStandardModel(BlockID.storageMFSU, 1, [["mfsu_side", 0], ["mfsu_
 TileRenderer.setStandardModelWithRotation(BlockID.storageMFSU, 2, [["mfsu_top", 0], ["mfsu_top", 0], ["mfsu_side", 0], ["mfsu_front", 0], ["mfsu_side", 0], ["mfsu_side", 0]]);
 
 ItemRegistry.setRarity(BlockID.storageMFSU, EnumRarity.UNCOMMON);
-ItemName.addStorageBlockTooltip("storageMFSU", 4, "60M");
+ItemName.addStorageBlockTooltip("storageMFSU", 4, "60M", 2048);
 
 Item.addCreativeGroup("EUStorages", Translation.translate("Energy Storages"), [
 	BlockID.storageBatBox,

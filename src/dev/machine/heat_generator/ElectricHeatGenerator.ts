@@ -3,6 +3,7 @@ BlockRegistry.createBlock("electricHeatGenerator", [
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.electricHeatGenerator, "stone", 1);
 ItemName.addTierTooltip(BlockID.electricHeatGenerator, 4);
+ItemName.addProductionTooltip(BlockID.electricHeatGenerator, "HU", 0, 100);
 
 TileRenderer.setStandardModelWithRotation(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);
 TileRenderer.registerModelWithRotation(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 1], ["heat_generator_side", 1], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], true);

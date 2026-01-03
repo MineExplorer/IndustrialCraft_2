@@ -429,17 +429,29 @@ declare class WorldRegion {
      * @param name sound name
      * @param volume sound volume from 0 to 1. Default is 1.
      * @param pitch sound pitch, from 0 to 1. Default is 1.
+     * @param playerUids if not set, players players in radius multiplied by sound volume
+     * will be detected automatically
      */
-    playSound(x: number, y: number, z: number, name: string, volume?: number, pitch?: number): void;
-    playSound(coords: Vector, name: string, volume?: number, pitch?: number): void;
+    playSound(x: number, y: number, z: number, name: string, volume?: number, pitch?: number, playerUids?: number[]): void;
+    playSound(coords: Vector, name: string, volume?: number, pitch?: number, playerUids?: number[]): void;
     /**
      * Plays standard Minecraft sound from the specified entity.
      * @param ent entity id
      * @param name sound name
      * @param volume sound volume from 0 to 1. Default is 1.
      * @param pitch sound pitch, from 0 to 1. Default is 1.
+     * @param playerUids if not set, players in radius multiplied by sound volume
+     * will be detected automatically
      */
-    playSoundAtEntity(ent: number, name: string, volume?: number, pitch?: number): void;
+    playSoundAtEntity(ent: number, name: string, volume?: number, pitch?: number, playerUids?: number[]): void;
+    /**
+     * Method to stop sound by name for defined player list.
+     * @param sound resource pack sound name
+     * @param playerUids list of player UIDs, if not set,
+     * action will be performed on all players within dimension
+     * @since Inner Core 3.1.1b127
+     */
+    stopSound(sound: string, playerUids?: number[]): void;
     /**
      * Sends network packet for players within a radius from specified coords.
      * @param coords coordinates from which players will be searched
@@ -448,6 +460,40 @@ declare class WorldRegion {
      * @param data packet data object
      */
     sendPacketInRadius(coords: Vector, radius: number, packetName: string, data: object): void;
+    /**
+     * Sends network packet to specified players.
+     * @param playerUids
+     * @param packetName
+     * @param data
+     */
+    sendPacketToPlayers(playerUids: number[], packetName: string, data: object): void;
+    /**
+     * Gets signal strength at specified coordinates
+     * that consumers can receive.
+     * @since Inner Core 3.1.0b125
+     */
+    getRedstoneSignal(x: number, y: number, z: number): number;
+    /**
+     * Sets signal with specified strength to block, it is
+     * recommended to call {@link Block.setupAsRedstoneEmitter}
+     * to be able to add a source. Once block is destroyed,
+     * signal will be reset.
+     * @param strength level between 0-15 (inclusive)
+     * @param delay time in ticks after which signal strength
+     * will be reset, should be more than zero, updated depending
+     * on redstone tick (1 redstone tick = 2 regular ticks), default is `4`
+     * @param facing world side of {@link EBlockSide} to which signal
+     * from source will be applied, use -1 to apply it to all sides
+     * (as from redstone block), default is `-1`
+     * @since Inner Core 3.1.0b125
+     */
+    setRedstoneSignal(x: number, y: number, z: number, strength: number, delay?: number, facing?: number): void;
+    /**
+     * Causes a random tick event, usually affecting rate of
+     * plant growth or grass spread and leaf disappearings.
+     * @since Inner Core 3.1.0b125
+     */
+    randomTick(x: number, y: number, z: number): void;
 }
 /**
  * Class to manipulate player based on `PlayerActor`.
@@ -707,6 +753,44 @@ interface BlockType {
      * Specifies sounds of the block
      */
     sound?: Block.Sound;
+    /**
+     * Whether or not block may filled by water bucket or
+     * other custom fillable liquids.
+     * @default false
+     */
+    canContainLiquid?: boolean;
+    /**
+     * Whether or not block may overlay different block,
+     * like water overlapping fillable blocks.
+     * @default false
+     */
+    canBeExtraBlock?: boolean;
+    /**
+     * Adds ability to apply states to this block, preferably using
+     * vanilla ones from {@link EBlockStates}, but if they are not enough,
+     * you can always add your own using {@link BlockState.registerBlockState}.
+     * Inexistent states are ignored.
+     * @default ["color"] // this state always has been here
+     */
+    states?: [EBlockStates | number | string][];
+    /**
+     * Alternatively catch on fire chance modifier,
+     * values between 0 and 100, with a higher number
+     * meaning more likely to catch on fire.
+     * For a "flame_odds" greater than 0, the fire will
+     * continue to burn until the block is destroyed
+     * (or it will burn forever if the "burn_odds" is 0).
+     * @default 0 // 5 for planks
+     * @since 3.1.0b125
+     */
+    flameOdds?: number;
+    /**
+     * Alternatively destroy by fire chance modifier,
+     * values between 0 and 100, with a higher number
+     * meaning more likely to be destroyed by fire.
+     * @default 0 // 20 for planks
+     */
+    burnOdds?: number;
 }
 /**
  * Block functions
@@ -1367,7 +1451,6 @@ declare abstract class ItemBase {
      * @param rarity one of `EnumRarity` values
      */
     setRarity(rarity: number): void;
-    addDefaultToCreative(): void;
 }
 declare class ItemCommon extends ItemBase {
     constructor(stringID: string, name?: string, icon?: string | Item.TextureData, inCreative?: boolean);
@@ -1685,6 +1768,14 @@ declare namespace ItemRegistry {
      * @returns item class instance
      */
     export function createTool(stringID: string, params: ToolDescription, toolData?: ToolParams): ItemTool;
+    /**
+     * Adds item to creative. If extra data is not specified and item with same id and data is already added, it will be skipped.
+     * @param id item id
+     * @param count item count
+     * @param data item data
+     * @param extra item extra data
+     */
+    export function addToCreative(id: string | number, count: number, data: number, extra?: ItemExtraData): void;
     export {};
 }
 /**
@@ -1962,74 +2053,174 @@ declare abstract class TileEntityBase implements TileEntity {
         amount: number;
     }): void;
 }
+interface LiquidItem {
+    /**
+     * Capacity of liquid in mB
+     */
+    liquidStorage: number;
+    /**
+     * Returns true if the item supports specified liquid, false otherwise
+     * @param liquid liquid type
+     */
+    isValidLiquid(liquid: string): boolean;
+    /**
+     * Returns liquid type stored in the item.
+     * @param itemData item data
+     * @param itemExtra item extra data
+     */
+    getLiquidStored(itemData: number, itemExtra: ItemExtraData): string;
+    /**
+     * Returns amount of liquid stored in the item.
+     * @param itemData item data
+     * @param itemExtra item extra data
+     */
+    getAmount(itemData: number, itemExtra: ItemExtraData): number;
+    /**
+     * Extracts liquid from the item.
+     * @param item item stack
+     * @param amount max amount of liquid to get
+     * @returns amount of extracted liquid
+     */
+    getLiquid(item: ItemInstance, amount: number): number;
+    /**
+     * Adds liquid to the item.
+     * @param item item stack partially filled with liquid or empty item stack
+     * @param liquid liquid type
+     * @param amount max amount of liquid to add
+     * @returns amount of added liquid
+     */
+    addLiquid(item: ItemInstance, liquid: string, amount: number): number;
+    /**
+     * Returns empty item stack without liquid.
+     */
+    getEmptyItem(): ItemInstance;
+    /**
+     * Returns full item stack for the specified liquid or null if its not supported.
+     * @param liquid liquid type
+     */
+    getFullItem(liquid: string): Nullable<ItemInstance>;
+}
 /**
  * Registry for liquid storage items. Compatible with LiquidRegistry and extends it
  * by adding items that can contain partial amounts of liquid.
  */
 declare namespace LiquidItemRegistry {
     /**
-     * Object that contains empty liquid storage item and stored liquid data.
+     * Object that represents item id and data
      * @id item id
-     * @data item data
+     * @data item data, -1 for any data
+     */
+    type ItemIdData = {
+        id: number;
+        data: number;
+    };
+    /**
+     * Object that contains empty liquid storage item and stored liquid data.
      * @liquid liquid type
      * @amount liquid amount able to be extracted
-     * @storage liquid storage of items registered by BlockEngine.
      */
-    type EmptyData = {
+    interface EmptyItem extends ItemInstance {
+        liquid: string;
+        amount: number;
+    }
+    /**
+     * Object that contains full item and free liquid capacity.
+     * @amount free liquid capacity
+     */
+    interface FullItem extends ItemInstance {
+        amount: number;
+    }
+    type EmptyByFullMapping = {
         id: number;
         data: number;
         liquid: string;
         amount: number;
-        storage?: number;
     };
-    /**
-     * Object that contains full item and free liquid capacity.
-     * @id item id
-     * @data item data
-     * @liquid liquid type
-     * @amount free liquid capacity
-     * @storage liquid storage of items registered by BlockEngine.
-     */
-    type FullData = {
+    type FullByEmptyMapping = {
         id: number;
         data: number;
         amount: number;
-        storage?: number;
     };
-    export const EmptyByFull: {};
-    export const FullByEmpty: {};
+    export const EmptyByFull: {
+        [key: string]: EmptyByFullMapping;
+    };
+    export const FullByEmpty: {
+        [key: string]: FullByEmptyMapping;
+    };
+    export const LiquidItems: {
+        [key: number]: LiquidItem;
+    };
     /**
-     * Registers liquid storage item.
+     * Registers empty and full states of liquid storage item. If item liquid amount is 1000 mB,
+     * it will be also registered in Core Engine LiquidRegistry.
      * @param liquid liquid name
-     * @param emptyId empty item id
-     * @param fullId id of item with luquid
-     * @param storage capacity of liquid in mB
+     * @param empty empty item id and data
+     * @param full id and data of item with luquid
+     * @param amount amount of stored liquid in mB
      */
-    export function registerItem(liquid: string, emptyId: number, fullId: number, storage: number): void;
+    export function registerItem(liquid: string, empty: ItemIdData, full: ItemIdData, amount: number): void;
+    /** @deprecated */
+    export function registerItem(liquid: string, emptyId: number, full: number, amount: number): void;
+    /**
+     * Registers item with abstract interface to work with item liquid storage
+     * @param itemId item numeric id
+     * @param interface liquid item interface object
+     */
+    export function registerItemInterface(itemId: number, interface: LiquidItem): void;
+    /**
+     * Returns liquid item interface for the specified item id
+     * @param itemId item numeric id
+     */
+    export function getItemInterface(itemId: number): Nullable<LiquidItem>;
     /**
      * Return liquid type stored in item
      * @param id item id
      * @param data item data
+     * @param extra item extra data
      * @returns liquid type
      */
+    export function getItemLiquid(id: number, data: number, extra: ItemExtraData): string;
+    /** @deprecated */
     export function getItemLiquid(id: number, data: number): string;
+    export function canBeFilledWithLiquid(id: number, data: number, extra: ItemExtraData, liquid: string): boolean;
+    /** @deprecated */
+    export function getEmptyItem(id: number, data: number): EmptyItem;
+    /** @deprecated */
+    export function getFullItem(id: number, data: number, liquid: string): FullItem;
     /**
      * Returns empty item and stored liquid data for item that contains liquid,
      * null otherwise.
      * @param id item id
      * @param data item data
+     * @param extra item extra data
      * @returns object that contains empty item and stored liquid.
      */
-    export function getEmptyItem(id: number, data: number): EmptyData;
+    export function getEmptyStack(id: number, data: number, extra: ItemExtraData): EmptyItem;
+    /**
+     * Returns empty item and stored liquid data for item that contains liquid,
+     * null otherwise.
+     * @param item item stack
+     * @returns object that contains empty item and stored liquid.
+     */
+    export function getEmptyStack(item: ItemInstance): EmptyItem;
     /**
      * Returns full item and free liquid capacity for item that can be filled with liquid,
      * null otherwise.
      * @param id item id
      * @param data item data
+     * @param extra item extra data
      * @param liquid liquid type
      * @returns object that contains full item and free liquid capacity
      */
-    export function getFullItem(id: number, data: number, liquid: string): FullData;
+    export function getFullStack(id: number, data: number, extra: ItemExtraData, liquid: string): FullItem;
+    /**
+     * Returns full item and free liquid capacity for item that can be filled with liquid,
+     * null otherwise.
+     * @param item item stack
+     * @param liquid liquid type
+     * @returns object that contains full item and free liquid capacity
+     */
+    export function getFullStack(item: ItemInstance, liquid: string): FullItem;
     export {};
 }
 declare namespace BlockEngine {
@@ -2111,14 +2302,14 @@ declare namespace BlockEngine {
         /**
          * Gets liquid from tank.
          * @param amount max amount of liquid to get
-         * @returns amount of got liquid
+         * @returns amount of received liquid
          */
         getLiquid(amount: number): number;
         /**
          * Gets liquid from tank.
          * @param liquid liquid type
          * @param amount max amount of liquid to get
-         * @returns amount of got liquid
+         * @returns amount of received liquid
          */
         getLiquid(liquid: string, amount: number): number;
         /**
@@ -2149,5 +2340,6 @@ declare namespace BlockEngine {
          * @param scale name of liquid bar
          */
         updateUiScale(scale: string): void;
+        private canStackBeMerged;
     }
 }

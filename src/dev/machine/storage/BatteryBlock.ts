@@ -76,10 +76,10 @@ namespace Machine {
 			return side == this.getFacing();
 		}
 
-		adjustDrop(item: ItemInstance): ItemInstance {
-			if (item.id == this.blockID && this.data.energy > 0) {
-				let extra = new ItemExtraData();
-				item.extra = extra.putInt("energy", this.data.energy);
+		getDemontaged(): ItemInstance {
+			const item = new ItemStack(this.blockID, 1, 0);
+			if (this.data.energy > 0) {
+				item.extra = new ItemExtraData().putInt("energy", this.data.energy);
 			}
 			return item;
 		}

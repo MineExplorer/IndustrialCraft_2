@@ -16,7 +16,7 @@ namespace MachineRegistry {
 			const BasePrototype = Machine.MachineBase.prototype;
 			Prototype.id = id;
 			Prototype.getDefaultDrop ??= BasePrototype.getDefaultDrop;
-			Prototype.adjustDrop ??= BasePrototype.adjustDrop;
+			Prototype.getDemontaged ??= BasePrototype.getDemontaged;
 			Prototype.startPlaySound ??= BasePrototype.startPlaySound;
 			Prototype.stopPlaySound ??= BasePrototype.stopPlaySound;
 			Prototype.setActive ??= function(isActive: boolean) {
@@ -36,7 +36,9 @@ namespace MachineRegistry {
 		// register prototype
 		machineIDs[id] = true;
 		TileEntity.registerPrototype(id, Prototype);
-		setMachineDrop(id, Prototype.defaultDrop);
+		BlockRegistry.registerDrop(id, function(coords, blockID, blockData, level) {
+			return MachineRegistry.getMachineDrop(blockID, level);
+		});
 
 		if (Prototype instanceof Machine.ElectricMachine) {
 			// wire connection
@@ -79,7 +81,7 @@ namespace MachineRegistry {
 		this.registerElectricMachine(id, Prototype);
 	}
 
-	export function createStorageInterface(blockID: number, descriptor: StorageDescriptor) {
+	export function createFluidStorageInterface(blockID: number, descriptor: StorageDescriptor) {
 		descriptor.liquidUnitRatio = 0.001;
 		descriptor.getInputTank ??= function() {
 			return this.tileEntity.liquidTank;
@@ -100,24 +102,29 @@ namespace MachineRegistry {
 			const place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
 			const rotation = TileRenderer.getBlockRotation(player, hasVerticalRotation);
 			region.setBlock(place, item.id, rotation);
-			// region.playSound(place.x + .5, place.y + .5, place.z + .5, "dig.stone", 1, 0.8)
 			const tile = region.addTileEntity(place);
 			if (item.extra) {
 				tile.data.energy = item.extra.getInt("energy");
 			}
+			return place;
 		});
 	}
 
-	/**@deprecated */
 	export function getMachineDrop(blockID: number, level: number): ItemInstanceArray[] {
 		const drop = [];
 		if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
-			const dropID = TileEntity.getPrototype(blockID).getDefaultDrop();
-			drop.push([dropID, 1, 0]);
+			const prototype = TileEntity.getPrototype(blockID) as Machine.MachineBase;
+			if (prototype && prototype.getDefaultDrop) {
+				const item = prototype.getDefaultDrop();
+				drop.push([item.id, item.count, item.data, item.extra]);
+			} else {
+				drop.push([blockID, 1, 0]);
+			}
 		}
 		return drop;
 	}
 
+	/** @deprecated */
 	export function setMachineDrop(blockID: string | number, dropID?: number) {
 		dropID ??= Block.getNumericId(blockID);
 		BlockRegistry.registerDrop(blockID, function(coords, blockID, blockData, level) {
@@ -129,25 +136,70 @@ namespace MachineRegistry {
 		});
 	}
 
+	export function emptyTankOnClick(tank: BlockEngine.LiquidTank, item: ItemInstance, playerUid: number): boolean {
+		const liquid = tank.getLiquidStored();
+		if (!liquid) return false;
+
+		const full = LiquidItemRegistry.getFullStack(item, liquid);
+		if (full) {
+			const player = new PlayerEntity(playerUid);
+			const amount = tank.getAmount(liquid);
+			let resultStack: ItemInstance;
+			if (amount >= full.amount) {
+				tank.getLiquid(amount);
+				resultStack = new ItemStack(full.id, 1, full.data, full.extra);
+			}
+			else {
+				const liquidItem = LiquidItemRegistry.getItemInterface(full.id);
+				if (liquidItem) {
+					resultStack = new ItemStack(item.id, 1, item.data, item.extra?.copy());
+					const addedAmount = liquidItem.addLiquid(resultStack, liquid, amount);
+					tank.getLiquid(addedAmount);
+				}
+			}
+			if (resultStack) {
+				if (item.count > 1) {
+					player.addItemToInventory(resultStack);
+					item.count--;
+					player.setCarriedItem(item);
+				}
+				else {
+					player.setCarriedItem(resultStack);
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
 	export function fillTankOnClick(tank: BlockEngine.LiquidTank, item: ItemInstance, playerUid: number): boolean {
 		const liquid = tank.getLiquidStored();
-		const empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
+		const empty = LiquidItemRegistry.getEmptyStack(item);
 		if (empty && (!liquid && tank.isValidLiquid(empty.liquid) || empty.liquid == liquid) && !tank.isFull()) {
 			const player = new PlayerEntity(playerUid);
-			const liquidLimit = tank.getLimit();
-			const storedAmount = tank.getAmount(liquid);
-			const count = Math.min(item.count, Math.floor((liquidLimit - storedAmount) / empty.amount));
-			if (count > 0) {
-				tank.addLiquid(empty.liquid, empty.amount * count);
-				player.addItemToInventory(new ItemStack(empty.id, count, empty.data));
-				item.count -= count;
-				player.setCarriedItem(item);
+			const freeAmount = tank.getLimit() - tank.getAmount(liquid);
+			let resultStack: ItemInstance;
+			if (freeAmount >= empty.amount) {
+				tank.addLiquid(empty.liquid, empty.amount);
+				resultStack = new ItemStack(empty.id, 1, empty.data, empty.extra);
 			}
-			else if (item.count == 1 && empty.storage) {
-				const amount = Math.min(liquidLimit - storedAmount, empty.amount);
-				tank.addLiquid(empty.liquid, amount);
-				item.data += amount;
-				player.setCarriedItem(item);
+			else {
+				const liquidItem = LiquidItemRegistry.getItemInterface(item.id);
+				if (liquidItem) {
+					resultStack = new ItemStack(item.id, 1, item.data, item.extra?.copy());
+					const extractedAmount = liquidItem.getLiquid(resultStack, freeAmount);
+					tank.addLiquid(empty.liquid, extractedAmount);
+				}
+			}
+			if (resultStack) {
+				if (item.count > 1) {
+					player.addItemToInventory(resultStack);
+					item.count--;
+					player.setCarriedItem(item);
+				}
+				else {
+					player.setCarriedItem(resultStack);
+				}
 			}
 			return true;
 		}
@@ -192,6 +244,7 @@ namespace MachineRegistry {
 	}
 }
 
+/** @deprecated */
 const transferByTier = {
 	1: 32,
 	2: 256,

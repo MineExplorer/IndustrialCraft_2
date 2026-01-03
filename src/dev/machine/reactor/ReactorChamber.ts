@@ -4,23 +4,22 @@ BlockRegistry.createBlock("reactorChamber", [
 BlockRegistry.setBlockMaterial(BlockID.reactorChamber, "stone", 1);
 ItemRegistry.setRarity(BlockID.reactorChamber, EnumRarity.UNCOMMON);
 
-Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block, player, region) {
-	const {x, y, z} = coords.relative;
-	let reactorConnect = 0;
+Block.registerPlaceFunction(BlockID.reactorChamber, function(coords, item, block, player, blockSource) {
+	const region = new WorldRegion(blockSource);
+	const place = World.canTileBeReplaced(block.id, block.data) ? coords : coords.relative;
+	let connectedReactors = 0;
 	for (let i = 0; i < 6; i++) {
-		const c = World.getRelativeCoords(x, y, z, i);
+		const c = World.getRelativeCoords(place.x, place.y, place.z, i);
 		if (region.getBlockId(c.x, c.y, c.z) == BlockID.nuclearReactor) {
-			reactorConnect++;
-			if (reactorConnect > 1) break;
+			connectedReactors++;
+			if (connectedReactors > 1) break;
 		}
 	}
-	if (reactorConnect == 1) {
-		region.setBlock(x, y, z, item.id, 0);
-		//World.playSound(x, y, z, "dig.stone", 1, 0.8)
-		World.addTileEntity(x, y, z, region);
-	} else {
-		item.count++;
+	if (connectedReactors == 1) {
+		region.setBlock(place, item.id, 0);
+		return place;
 	}
+	item.count++; // prevent item consumption if not placed
 });
 
 Callback.addCallback("PreLoaded", function() {

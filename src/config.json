@@ -5,6 +5,15 @@
   "hard_recipes": false,
   "reactor_explosion_max_power": 45,
   "button_scale": 55,
+  "power_modifiers": {
+    "fuel_generator": 1,
+    "geothermal_generator": 1,
+    "solar_panel": 1,
+    "wind_generator": 1,
+    "water_generator": 1,
+    "nuclear_reactor": 1,
+    "radioisotope_generator": 1
+  },
   "rubber_tree_gen": {
     "plains": 0.5,
     "forest": 3,

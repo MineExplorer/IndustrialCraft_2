@@ -11,8 +11,6 @@ namespace Machine {
 			energy: 0
 		};
 
-		data: this["defaultValues"];
-
 		getTier(): number {
 			return 1;
 		}

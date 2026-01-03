@@ -1,13 +1,14 @@
 BlockRegistry.createBlock("massFabricator", [
 	{name: "Mass Fabricator", texture: [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]], inCreative: true}
 ], "machine");
+BlockRegistry.setBlockMaterial(BlockID.massFabricator, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.massFabricator, 2, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.massFabricator, 2, [["machine_advanced_bottom", 0], ["machine_advanced", 0], ["machine_advanced_side", 0], ["mass_fab_front", 1], ["machine_advanced_side", 0], ["machine_advanced_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.massFabricator);
 
 ItemRegistry.setRarity(BlockID.massFabricator, EnumRarity.RARE);
-ItemName.addTierTooltip("massFabricator", 4);
+ItemName.addTierTooltip(BlockID.massFabricator, 4);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.massFabricator, count: 1, data: 0}, [

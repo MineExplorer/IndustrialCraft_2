@@ -8,6 +8,7 @@ TileRenderer.registerModelWithRotation(BlockID.oreWasher, 2, [["machine_bottom",
 TileRenderer.setRotationFunction(BlockID.oreWasher);
 
 ItemName.addTierTooltip("oreWasher", 1);
+ItemName.addConsumptionTooltip("oreWasher", "EU", 16);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.oreWasher, count: 1, data: 0}, [
@@ -73,10 +74,10 @@ namespace Machine {
 		setupContainer(): void {
 			this.liquidTank = this.addLiquidTank("fluid", 8000, ["water"]);
 
-			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
 				if (name == "slotSource") return !!this.getRecipeResult(id);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
-				if (name == "slotLiquid1") return LiquidItemRegistry.getItemLiquid(id, data) == "water";
+				if (name == "slotLiquid1") return LiquidItemRegistry.getItemLiquid(id, data, extra) == "water";
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
 			});
@@ -159,13 +160,13 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.oreWasher, new OreWasher());
 
-	MachineRegistry.createStorageInterface(BlockID.oreWasher, {
+	MachineRegistry.createFluidStorageInterface(BlockID.oreWasher, {
 		slots: {
 			"slotSource": {input: true, isValid: (item: ItemInstance) => {
-					return MachineRecipeRegistry.hasRecipeFor("oreWasher", item.id, item.data);
+				return MachineRecipeRegistry.hasRecipeFor("oreWasher", item.id, item.data);
 			}},
 			"slotLiquid1": {input: true, isValid: (item: ItemInstance) => {
-				return LiquidItemRegistry.getItemLiquid(item.id, item.data) == "water";
+				return LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra) == "water";
 			}},
 			"slotLiquid2": {output: true},
 			"slotResult1": {output: true},

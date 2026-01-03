@@ -8,6 +8,7 @@ TileRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, 2, [["machine_
 TileRenderer.setRotationFunction(BlockID.thermalCentrifuge);
 
 ItemName.addTierTooltip("thermalCentrifuge", 2);
+ItemName.addConsumptionTooltip("thermalCentrifuge", "EU", 48);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.thermalCentrifuge, count: 1, data: 0}, [

@@ -3,12 +3,13 @@
 BlockRegistry.createBlock("cropMatron", [
     { name: "Crop Matron", texture: [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0]], inCreative: true }
 ], "machine");
+BlockRegistry.setBlockMaterial(BlockID.cropMatron, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.cropMatron, 2, [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0], ["cropmatron_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.cropMatron, 2, [["machine_bottom", 0], ["cropmatron_top", 0], ["cropmatron_side", 3], ["cropmatron_side", 1], ["cropmatron_side", 2], ["cropmatron_side", 2]]);
 TileRenderer.setRotationFunction(BlockID.cropMatron, true);
 
-ItemName.addTierTooltip("cropMatron", 1);
+ItemName.addTierTooltip(BlockID.cropMatron, 1);
 
 Callback.addCallback("PreLoaded", function () {
     Recipes.addShaped({ id: BlockID.cropMatron, count: 1, data: 0 }, [
@@ -20,13 +21,13 @@ Callback.addCallback("PreLoaded", function () {
 
 MachineRegistry.registerPrototype(BlockID.cropMatron, new Machine.CropMatron());
 
-MachineRegistry.createStorageInterface(BlockID.cropMatron, {
+MachineRegistry.createFluidStorageInterface(BlockID.cropMatron, {
     slots: {
         "slotFertilizer^0-6": { input: true, isValid: (item: ItemInstance) => item.id == ItemID.fertilizer },
         "slotWeedEx^0-6": { input: true, isValid: (item: ItemInstance) => item.id == ItemID.weedEx },
         "slotWaterIn": {
             input: true, isValid: (item: ItemInstance) => {
-                return LiquidItemRegistry.getItemLiquid(item.id, item.data) == "water";
+                return LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra) == "water";
             }
         },
         "slotWaterOut": { output: true }

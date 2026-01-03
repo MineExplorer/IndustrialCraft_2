@@ -32,7 +32,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 12,
+    version: 13,
     shared: true,
     api: "CoreEngine"
 });
@@ -659,15 +659,25 @@ var WorldRegion = /** @class */ (function () {
         }
         return entities;
     };
-    WorldRegion.prototype.playSound = function (x, y, z, name, volume, pitch) {
-        var _a, _b;
+    WorldRegion.prototype.playSound = function (x, y, z, name, volume, pitch, playerUids) {
         if (typeof (x) == "number") {
-            var soundPos = new Vector3(x, y, z);
-            this.playSound(soundPos, name, volume, pitch);
+            if (this.blockSource.playSound) {
+                this.blockSource.playSound(x, y, z, name, volume, pitch, playerUids);
+            }
+            else {
+                var packetData = { x: x, y: y, z: z, name: name, volume: volume !== null && volume !== void 0 ? volume : 1, pitch: pitch !== null && pitch !== void 0 ? pitch : 1 };
+                if (playerUids) {
+                    this.sendPacketToPlayers(playerUids, "WorldRegion.play_sound", packetData);
+                }
+                else {
+                    var radius = (volume > 1) ? 16 * volume : 16;
+                    this.sendPacketInRadius(packetData, radius, "WorldRegion.play_sound", packetData);
+                }
+            }
         }
         else {
             var coords = arguments[0];
-            this.sendPacketInRadius(coords, 100, "WorldRegion.play_sound", __assign(__assign({}, coords), { name: arguments[1], volume: (_a = arguments[2]) !== null && _a !== void 0 ? _a : 1, pitch: (_b = arguments[3]) !== null && _b !== void 0 ? _b : 1 }));
+            this.playSound(coords.x, coords.y, coords.z, arguments[1], arguments[2], arguments[3], arguments[4]);
         }
     };
     /**
@@ -676,12 +686,36 @@ var WorldRegion = /** @class */ (function () {
      * @param name sound name
      * @param volume sound volume from 0 to 1. Default is 1.
      * @param pitch sound pitch, from 0 to 1. Default is 1.
+     * @param playerUids if not set, players in radius multiplied by sound volume
+     * will be detected automatically
      */
-    WorldRegion.prototype.playSoundAtEntity = function (ent, name, volume, pitch) {
+    WorldRegion.prototype.playSoundAtEntity = function (ent, name, volume, pitch, playerUids) {
         if (volume === void 0) { volume = 1; }
         if (pitch === void 0) { pitch = 1; }
-        var soundPos = Entity.getPosition(ent);
-        this.sendPacketInRadius(soundPos, 100, "WorldRegion.play_sound_at", { ent: ent, name: name, volume: volume, pitch: pitch });
+        if (this.blockSource.playSoundAtEntity) {
+            this.blockSource.playSoundAtEntity(ent, name, volume, pitch);
+        }
+        else {
+            var soundPos = Entity.getPosition(ent);
+            var packetData = { ent: ent, name: name, volume: volume, pitch: pitch };
+            if (playerUids) {
+                this.sendPacketToPlayers(playerUids, "WorldRegion.play_sound_at", packetData);
+            }
+            else {
+                var radius = (volume > 1) ? 16 * volume : 16;
+                this.sendPacketInRadius(soundPos, radius, "WorldRegion.play_sound_at", packetData);
+            }
+        }
+    };
+    /**
+     * Method to stop sound by name for defined player list.
+     * @param sound resource pack sound name
+     * @param playerUids list of player UIDs, if not set,
+     * action will be performed on all players within dimension
+     * @since Inner Core 3.1.1b127
+     */
+    WorldRegion.prototype.stopSound = function (sound, playerUids) {
+        this.blockSource.stopSound(sound, playerUids);
     };
     /**
      * Sends network packet for players within a radius from specified coords.
@@ -701,6 +735,54 @@ var WorldRegion = /** @class */ (function () {
                 client.send(packetName, data);
             }
         }
+    };
+    /**
+     * Sends network packet to specified players.
+     * @param playerUids
+     * @param packetName
+     * @param data
+     */
+    WorldRegion.prototype.sendPacketToPlayers = function (playerUids, packetName, data) {
+        for (var _i = 0, playerUids_1 = playerUids; _i < playerUids_1.length; _i++) {
+            var uid = playerUids_1[_i];
+            var client = Network.getClientForPlayer(uid);
+            if (client) {
+                client.send(packetName, data);
+            }
+        }
+    };
+    /**
+     * Gets signal strength at specified coordinates
+     * that consumers can receive.
+     * @since Inner Core 3.1.0b125
+     */
+    WorldRegion.prototype.getRedstoneSignal = function (x, y, z) {
+        return this.blockSource.getRedstoneSignal(x, y, z);
+    };
+    /**
+     * Sets signal with specified strength to block, it is
+     * recommended to call {@link Block.setupAsRedstoneEmitter}
+     * to be able to add a source. Once block is destroyed,
+     * signal will be reset.
+     * @param strength level between 0-15 (inclusive)
+     * @param delay time in ticks after which signal strength
+     * will be reset, should be more than zero, updated depending
+     * on redstone tick (1 redstone tick = 2 regular ticks), default is `4`
+     * @param facing world side of {@link EBlockSide} to which signal
+     * from source will be applied, use -1 to apply it to all sides
+     * (as from redstone block), default is `-1`
+     * @since Inner Core 3.1.0b125
+     */
+    WorldRegion.prototype.setRedstoneSignal = function (x, y, z, strength, delay, facing) {
+        this.blockSource.setRedstoneSignal(x, y, z, strength, delay, facing);
+    };
+    /**
+     * Causes a random tick event, usually affecting rate of
+     * plant growth or grass spread and leaf disappearings.
+     * @since Inner Core 3.1.0b125
+     */
+    WorldRegion.prototype.randomTick = function (x, y, z) {
+        this.blockSource.randomTick(x, y, z);
     };
     return WorldRegion;
 }());
@@ -1152,19 +1234,16 @@ var BlockBase = /** @class */ (function () {
             this.addVariation(this.stringID + ".name", [["__missing", 0]]);
         }
         var blockType = this.blockType ? BlockRegistry.convertBlockTypeToSpecialType(this.blockType) : null;
-        // remove duplicated items in creative
-        var duplicatedInstance = BlockRegistry.getInstanceOf(this.id);
-        if (duplicatedInstance) {
-            var variations = duplicatedInstance.variations;
-            var checkedVariationsLength = Math.min(this.variations.length, variations.length);
-            for (var i = 0; i < checkedVariationsLength; i++) {
-                if (variations[i].inCreative) {
-                    this.variations[i].inCreative = false;
-                    Logger.Log("Skipped duplicated adding to creative for block ".concat(this.stringID, ":").concat(i), "BlockEngine");
-                }
+        var defineDataCopy = JSON.parse(JSON.stringify(this.variations));
+        for (var i = 0; i < defineDataCopy.length; i++) {
+            var variation = defineDataCopy[i];
+            if (variation.inCreative) {
+                // Use BlockEngine's addToCreative method to avoid duplicates
+                ItemRegistry.addToCreative(this.id, 1, i);
+                variation.inCreative = false;
             }
         }
-        Block.createBlock(this.stringID, this.variations, blockType);
+        Block.createBlock(this.stringID, defineDataCopy, blockType);
         this.isDefined = true;
         for (var data in this.shapes) {
             var box = this.shapes[data];
@@ -1658,6 +1737,18 @@ var BlockRegistry;
                 case "colorSource":
                     type.color_source = properites[key];
                     break;
+                case "canContainLiquid":
+                    type.can_contain_liquid = properites[key];
+                    break;
+                case "canBeExtraBlock":
+                    type.can_be_extra_block = properites[key];
+                    break;
+                case "flameOdds":
+                    type.flame_odds = properites[key];
+                    break;
+                case "burnOdds":
+                    type.burn_odds = properites[key];
+                    break;
                 case "extends": continue;
                 default:
                     type[key] = properites[key];
@@ -2137,6 +2228,8 @@ var BlockRegistry;
         baseBlock: 17,
         destroyTime: 2,
         explosionResistance: 10,
+        flameOdds: 5,
+        burnOdds: 20,
         sound: "wood"
     });
     createBlockType("leaves", {
@@ -2147,6 +2240,8 @@ var BlockRegistry;
         renderLayer: 1,
         lightOpacity: 1,
         translucency: 0.5,
+        flameOdds: 30,
+        burnOdds: 60,
         sound: "grass"
     });
     createBlockType("dirt", {
@@ -2283,17 +2378,6 @@ var ItemBase = /** @class */ (function () {
     ItemBase.prototype.setRarity = function (rarity) {
         ItemRegistry.setRarity(this.id, rarity);
     };
-    ItemBase.prototype.addDefaultToCreative = function () {
-        var _a;
-        var wasInCreative = (_a = ItemRegistry.getInstanceOf(this.id)) === null || _a === void 0 ? void 0 : _a.inCreative;
-        if (wasInCreative) {
-            Logger.Log("Skipped duplicated adding to creative for item ".concat(this.stringID), "BlockEngine");
-        }
-        else {
-            Item.addToCreative(this.id, 1, 0);
-            this.inCreative = true;
-        }
-    };
     return ItemBase;
 }());
 var ItemCommon = /** @class */ (function (_super) {
@@ -2304,7 +2388,7 @@ var ItemCommon = /** @class */ (function (_super) {
         _this.item = Item.createItem(_this.stringID, _this.name, _this.icon, { isTech: true });
         _this.setCategory(ItemCategory.ITEMS);
         if (inCreative)
-            _this.addDefaultToCreative();
+            ItemRegistry.addToCreative(_this.id, 1, 0);
         return _this;
     }
     return ItemCommon;
@@ -2363,7 +2447,7 @@ var ItemThrowable = /** @class */ (function (_super) {
         _this.item = Item.createThrowableItem(_this.stringID, _this.name, _this.icon, { isTech: true });
         _this.setCategory(ItemCategory.ITEMS);
         if (inCreative)
-            _this.addDefaultToCreative();
+            ItemRegistry.addToCreative(_this.id, 1, 0);
         Item.registerThrowableFunctionForID(_this.id, function (projectile, item, target) {
             _this.onProjectileHit(projectile, item, target);
         });
@@ -2393,7 +2477,7 @@ var ItemArmor = /** @class */ (function (_super) {
         if (params.material)
             _this.setMaterial(params.material);
         if (inCreative)
-            _this.addDefaultToCreative();
+            ItemRegistry.addToCreative(_this.id, 1, 0);
         ItemArmor.registerListeners(_this.id, _this);
         return _this;
     }
@@ -2509,6 +2593,10 @@ var ItemRegistry;
     var items = {};
     var itemsRarity = {};
     var armorMaterials = {};
+    /**
+     * Map items without extra data by "id:data" key.
+     */
+    var creativeTabItems = {};
     /**
      * @returns item type
      */
@@ -2782,6 +2870,26 @@ var ItemRegistry;
         return item;
     }
     ItemRegistry.createTool = createTool;
+    /**
+     * Adds item to creative. If extra data is not specified and item with same id and data is already added, it will be skipped.
+     * @param id item id
+     * @param count item count
+     * @param data item data
+     * @param extra item extra data
+     */
+    function addToCreative(id, count, data, extra) {
+        if (extra) {
+            Item.addToCreative(id, count, data, extra);
+        }
+        else {
+            var mappingKey = "".concat(id, ":").concat(data);
+            if (creativeTabItems[mappingKey])
+                return;
+            creativeTabItems[mappingKey] = true;
+            Item.addToCreative(id, count, data);
+        }
+    }
+    ItemRegistry.addToCreative = addToCreative;
 })(ItemRegistry || (ItemRegistry = {}));
 /**
  * Class representing item stack in the inventory.
@@ -3372,87 +3480,143 @@ var TileEntityBase = /** @class */ (function () {
     ], TileEntityBase.prototype, "setLiquidScale", null);
     return TileEntityBase;
 }());
+/// <reference path="./item/interfaces/LiquidItem.ts" />
 /**
  * Registry for liquid storage items. Compatible with LiquidRegistry and extends it
  * by adding items that can contain partial amounts of liquid.
  */
 var LiquidItemRegistry;
 (function (LiquidItemRegistry) {
+    ;
+    ;
     LiquidItemRegistry.EmptyByFull = {};
     LiquidItemRegistry.FullByEmpty = {};
-    /**
-     * Registers liquid storage item.
-     * @param liquid liquid name
-     * @param emptyId empty item id
-     * @param fullId id of item with luquid
-     * @param storage capacity of liquid in mB
-     */
-    function registerItem(liquid, emptyId, fullId, storage) {
-        LiquidItemRegistry.EmptyByFull[fullId] = { id: emptyId, liquid: liquid, storage: storage };
-        LiquidItemRegistry.FullByEmpty[emptyId + ":" + liquid] = { id: fullId, storage: storage };
-        Item.setMaxDamage(fullId, storage);
-        if (storage == 1000)
-            LiquidRegistry.registerItem(liquid, { id: emptyId, data: 0 }, { id: fullId, data: 0 });
+    LiquidItemRegistry.LiquidItems = {};
+    function getEmptyByFullMapping(id, data) {
+        return LiquidItemRegistry.EmptyByFull["".concat(id, ":").concat(data)] || LiquidItemRegistry.EmptyByFull["".concat(id, ":-1")];
+    }
+    function getFullByEmptyMapping(id, data, liquid) {
+        return LiquidItemRegistry.FullByEmpty["".concat(id, ":").concat(data, ":").concat(liquid)] || LiquidItemRegistry.FullByEmpty["".concat(id, ":-1:").concat(liquid)];
+    }
+    function registerItem(liquid, empty, full, amount) {
+        if (typeof empty == "number") { // reverse compatibility
+            return registerItem(liquid, { id: empty, data: 0 }, { id: full, data: 0 }, amount);
+        }
+        LiquidItemRegistry.EmptyByFull[full.id + ':' + full.data] = { id: empty.id, data: empty.data == -1 ? 0 : empty.data, liquid: liquid, amount: amount };
+        LiquidItemRegistry.FullByEmpty[empty.id + ':' + empty.data + ':' + liquid] = { id: full.id, data: full.data == -1 ? 0 : full.data, amount: amount };
+        if (amount == 1000)
+            LiquidRegistry.registerItem(liquid, empty, full);
     }
     LiquidItemRegistry.registerItem = registerItem;
     /**
-     * Return liquid type stored in item
-     * @param id item id
-     * @param data item data
-     * @returns liquid type
+     * Registers item with abstract interface to work with item liquid storage
+     * @param itemId item numeric id
+     * @param interface liquid item interface object
      */
-    function getItemLiquid(id, data) {
-        var empty = LiquidItemRegistry.EmptyByFull[id];
+    function registerItemInterface(itemId, interface) {
+        LiquidItemRegistry.LiquidItems[itemId] = interface;
+    }
+    LiquidItemRegistry.registerItemInterface = registerItemInterface;
+    /**
+     * Returns liquid item interface for the specified item id
+     * @param itemId item numeric id
+     */
+    function getItemInterface(itemId) {
+        return LiquidItemRegistry.LiquidItems[itemId] || null;
+    }
+    LiquidItemRegistry.getItemInterface = getItemInterface;
+    function getItemLiquid(id, data, extra) {
+        var liquidItem = LiquidItemRegistry.LiquidItems[id];
+        if (liquidItem) {
+            return liquidItem.getLiquidStored(data, extra);
+        }
+        var empty = getEmptyByFullMapping(id, data);
         if (empty) {
             return empty.liquid;
         }
         return LiquidRegistry.getItemLiquid(id, data);
     }
     LiquidItemRegistry.getItemLiquid = getItemLiquid;
-    /**
-     * Returns empty item and stored liquid data for item that contains liquid,
-     * null otherwise.
-     * @param id item id
-     * @param data item data
-     * @returns object that contains empty item and stored liquid.
-     */
-    function getEmptyItem(id, data) {
-        var emptyData = LiquidItemRegistry.EmptyByFull[id];
-        if (emptyData) {
-            var amount = emptyData.storage - data;
-            return { id: emptyData.id, data: 0, liquid: emptyData.liquid, amount: amount, storage: emptyData.storage };
+    function canBeFilledWithLiquid(id, data, extra, liquid) {
+        var liquidItem = LiquidItemRegistry.LiquidItems[id];
+        if (liquidItem) {
+            var liquidStored = liquidItem.getLiquidStored(data, extra);
+            return !liquidStored && liquidItem.isValidLiquid(liquid) ||
+                liquidStored == liquid && liquidItem.getAmount(data, extra) < liquidItem.liquidStorage;
         }
-        var empty = LiquidRegistry.getEmptyItem(id, data);
-        if (empty) {
-            return { id: empty.id, data: empty.data, liquid: empty.liquid, amount: 1000 };
+        return !!getFullByEmptyMapping(id, data, liquid) || !!LiquidRegistry.getFullItem(id, data, liquid);
+    }
+    LiquidItemRegistry.canBeFilledWithLiquid = canBeFilledWithLiquid;
+    /** @deprecated */
+    function getEmptyItem(id, data) {
+        var emptyData = getEmptyByFullMapping(id, data);
+        if (emptyData) {
+            return { id: emptyData.id, count: 1, data: emptyData.data, extra: null, liquid: emptyData.liquid, amount: emptyData.amount };
+        }
+        var externalEmpty = LiquidRegistry.getEmptyItem(id, data);
+        if (externalEmpty) {
+            return { id: externalEmpty.id, count: 1, data: externalEmpty.data, extra: null, liquid: externalEmpty.liquid, amount: 1000 };
         }
         return null;
     }
     LiquidItemRegistry.getEmptyItem = getEmptyItem;
-    /**
-     * Returns full item and free liquid capacity for item that can be filled with liquid,
-     * null otherwise.
-     * @param id item id
-     * @param data item data
-     * @param liquid liquid type
-     * @returns object that contains full item and free liquid capacity
-     */
+    /** @deprecated */
     function getFullItem(id, data, liquid) {
-        var emptyData = LiquidItemRegistry.EmptyByFull[id];
-        if (emptyData && emptyData.liquid == liquid && data > 0) {
-            return { id: id, data: 0, amount: data, storage: emptyData.storage };
-        }
-        var fullData = LiquidItemRegistry.FullByEmpty[id + ":" + liquid];
+        var fullData = getFullByEmptyMapping(id, data, liquid);
         if (fullData) {
-            return { id: fullData.id, data: 0, amount: fullData.storage, storage: fullData.storage };
+            return { id: fullData.id, count: 1, data: fullData.data, extra: null, amount: fullData.amount };
         }
-        var full = LiquidRegistry.getFullItem(id, data, liquid);
-        if (full) {
-            return { id: full.id, data: full.data, amount: 1000 };
+        var externalFull = LiquidRegistry.getFullItem(id, data, liquid);
+        if (externalFull) {
+            return { id: externalFull.id, count: 1, data: externalFull.data, extra: null, amount: 1000 };
         }
         return null;
     }
     LiquidItemRegistry.getFullItem = getFullItem;
+    function getEmptyStackInternal(id, data, extra) {
+        var liquidItem = LiquidItemRegistry.LiquidItems[id];
+        if (liquidItem) {
+            var amount = liquidItem.getAmount(data, extra);
+            if (amount == 0)
+                return null;
+            var emptyItem = liquidItem.getEmptyItem();
+            return { id: emptyItem.id, count: 1, data: emptyItem.data, extra: emptyItem.extra || null, liquid: liquidItem.getLiquidStored(data, extra), amount: amount };
+        }
+        return getEmptyItem(id, data);
+    }
+    function getFullStackInternal(id, data, extra, liquid) {
+        var liquidItem = LiquidItemRegistry.LiquidItems[id];
+        if (liquidItem && liquidItem.isValidLiquid(liquid)) {
+            var liquidStored = liquidItem.getLiquidStored(data, extra);
+            if (liquidStored && liquidStored != liquid)
+                return null;
+            var fullItem = liquidItem.getFullItem(liquid);
+            if (!fullItem)
+                return null;
+            var freeAmount = liquidItem.liquidStorage - liquidItem.getAmount(data, extra);
+            if (freeAmount == 0)
+                return null;
+            return { id: fullItem.id, count: 1, data: fullItem.data, extra: fullItem.extra || null, amount: freeAmount };
+        }
+        return getFullItem(id, data, liquid);
+    }
+    function getEmptyStack(id, data, extra) {
+        if (typeof id == "number") {
+            return getEmptyStackInternal(id, data, extra);
+        }
+        var item = id;
+        return getEmptyStackInternal(item.id, item.data, item.extra);
+    }
+    LiquidItemRegistry.getEmptyStack = getEmptyStack;
+    function getFullStack(id, data, extra, liquid) {
+        if (typeof id == "number") {
+            return getFullStackInternal(id, data, extra, liquid);
+        }
+        var item = id;
+        return getFullStackInternal(item.id, item.data, item.extra, data);
+    }
+    LiquidItemRegistry.getFullStack = getFullStack;
+    registerItem("water", { id: VanillaItemID.glass_bottle, data: 1 }, { id: VanillaItemID.potion, data: 0 }, 250);
 })(LiquidItemRegistry || (LiquidItemRegistry = {}));
 var BlockEngine;
 (function (BlockEngine) {
@@ -3565,7 +3729,7 @@ var BlockEngine;
             return 0;
         };
         LiquidTank.prototype.getLiquid = function (liquid, amount) {
-            if (amount == undefined) {
+            if (typeof liquid == "number") {
                 amount = liquid;
                 liquid = null;
             }
@@ -3603,24 +3767,20 @@ var BlockEngine;
                 return false;
             var amount = this.getAmount(liquid);
             if (amount > 0) {
-                var full = LiquidItemRegistry.getFullItem(inputSlot.id, inputSlot.data, liquid);
-                if (full && (outputSlot.id == full.id && outputSlot.data == full.data && outputSlot.count < Item.getMaxStack(full.id) || outputSlot.id == 0)) {
-                    if (amount >= full.amount) {
-                        this.getLiquid(full.amount);
-                        inputSlot.setSlot(inputSlot.id, inputSlot.count - 1, inputSlot.data);
+                var fullStack = LiquidItemRegistry.getFullStack(inputSlot, liquid);
+                if (fullStack && this.canStackBeMerged(fullStack, outputSlot)) {
+                    if (amount >= fullStack.amount) {
+                        this.getLiquid(fullStack.amount);
+                        inputSlot.setSlot(inputSlot.id, inputSlot.count - 1, inputSlot.data, inputSlot.extra);
                         inputSlot.validate();
-                        outputSlot.setSlot(full.id, outputSlot.count + 1, full.data);
+                        outputSlot.setSlot(fullStack.id, outputSlot.count + 1, fullStack.data, fullStack.extra);
                         return true;
                     }
-                    if (inputSlot.count == 1 && full.storage) {
-                        if (inputSlot.id == full.id) {
-                            amount = this.getLiquid(full.amount);
-                            inputSlot.setSlot(inputSlot.id, 1, inputSlot.data - amount);
-                        }
-                        else {
-                            amount = this.getLiquid(full.storage);
-                            inputSlot.setSlot(full.id, 1, full.storage - amount);
-                        }
+                    var liquidItem = LiquidItemRegistry.getItemInterface(fullStack.id);
+                    if (liquidItem && inputSlot.count == 1) {
+                        var addedAmount = liquidItem.addLiquid(inputSlot, liquid, amount);
+                        this.getLiquid(addedAmount);
+                        inputSlot.markDirty();
                         return true;
                     }
                 }
@@ -3635,23 +3795,22 @@ var BlockEngine;
          */
         LiquidTank.prototype.getLiquidFromItem = function (inputSlot, outputSlot) {
             var liquid = this.getLiquidStored();
-            var empty = LiquidItemRegistry.getEmptyItem(inputSlot.id, inputSlot.data);
-            if (empty && (!liquid && this.isValidLiquid(empty.liquid) || empty.liquid == liquid) && !this.isFull()) {
-                if (outputSlot.id == empty.id && outputSlot.data == empty.data && outputSlot.count < Item.getMaxStack(empty.id) || outputSlot.id == 0) {
-                    var freeAmount = this.getLimit() - this.getAmount();
-                    if (freeAmount >= empty.amount) {
-                        this.addLiquid(empty.liquid, empty.amount);
-                        inputSlot.setSlot(inputSlot.id, inputSlot.count - 1, inputSlot.data);
-                        inputSlot.validate();
-                        outputSlot.setSlot(empty.id, outputSlot.count + 1, empty.data);
-                        return true;
-                    }
-                    if (inputSlot.count == 1 && empty.storage) {
-                        var amount = Math.min(freeAmount, empty.amount);
-                        this.addLiquid(empty.liquid, amount);
-                        inputSlot.setSlot(inputSlot.id, 1, inputSlot.data + amount);
-                        return true;
-                    }
+            var emptyStack = LiquidItemRegistry.getEmptyStack(inputSlot);
+            if (emptyStack && (!liquid && this.isValidLiquid(emptyStack.liquid) || emptyStack.liquid == liquid) && !this.isFull() && this.canStackBeMerged(emptyStack, outputSlot)) {
+                var freeAmount = this.getLimit() - this.getAmount();
+                if (freeAmount >= emptyStack.amount) {
+                    this.addLiquid(emptyStack.liquid, emptyStack.amount);
+                    inputSlot.setSlot(inputSlot.id, inputSlot.count - 1, inputSlot.data, inputSlot.extra);
+                    inputSlot.validate();
+                    outputSlot.setSlot(emptyStack.id, outputSlot.count + 1, emptyStack.data, emptyStack.extra);
+                    return true;
+                }
+                var liquidItem = LiquidItemRegistry.getItemInterface(inputSlot.id);
+                if (liquidItem && inputSlot.count == 1) {
+                    var extractedAmount = liquidItem.getLiquid(inputSlot, freeAmount);
+                    this.addLiquid(emptyStack.liquid, extractedAmount);
+                    inputSlot.markDirty();
+                    return true;
                 }
             }
             return false;
@@ -3669,6 +3828,11 @@ var BlockEngine;
             else {
                 container.sendEvent("setLiquidScale", { scale: scale, liquid: this.data.liquid, amount: this.getRelativeAmount() });
             }
+        };
+        LiquidTank.prototype.canStackBeMerged = function (inputStack, outputStack) {
+            return outputStack.id == 0 || (outputStack.id == inputStack.id && outputStack.data == inputStack.data &&
+                outputStack.count + inputStack.count <= Item.getMaxStack(outputStack.id, outputStack.data) &&
+                outputStack.extra == inputStack.extra);
         };
         return LiquidTank;
     }());

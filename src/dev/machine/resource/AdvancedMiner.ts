@@ -1,6 +1,7 @@
 BlockRegistry.createBlock("advancedMiner", [
 	{name: "Advanced Miner", texture: [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "machine");
+BlockRegistry.setBlockMaterial(BlockID.advancedMiner, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
@@ -81,7 +82,7 @@ namespace Machine {
 		defaultDrop = BlockID.machineBlockAdvanced;
 		upgrades = ["overclocker", "transformer"];
 
-		tier: number;
+		tier: number = this.defaultTier;
 		maxScanCount: number;
 
 		getScreenByName(): UI.IWindow {
@@ -105,6 +106,11 @@ namespace Machine {
 			});
 			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade1", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
 			StorageInterface.setSlotValidatePolicy(this.container, "slotUpgrade2", (name, id) => UpgradeAPI.isValidUpgrade(id, this));
+		}
+
+		onInit(): void {
+			super.onInit();
+			this.setUpgradeStats();
 		}
 
 		getScanRadius(itemID: number): number {
@@ -230,10 +236,10 @@ namespace Machine {
 			}
 		}
 
-		adjustDrop(item: ItemInstance): ItemInstance {
-			if (item.id == this.blockID && this.data.energy > 0) {
-				const extra = new ItemExtraData();
-				item.extra = extra.putInt("energy", this.data.energy);
+		getDemontaged(): ItemInstance {
+			const item = new ItemStack(this.blockID, 1, 0);
+			if (this.data.energy > 0) {
+				item.extra = new ItemExtraData().putInt("energy", this.data.energy);
 			}
 			return item;
 		}

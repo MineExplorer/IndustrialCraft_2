@@ -10,6 +10,7 @@ TileRenderer.registerModelWithRotation(BlockID.electricFurnace, 2, [["machine_bo
 TileRenderer.setRotationFunction(BlockID.electricFurnace);
 
 ItemName.addTierTooltip("electricFurnace", 1);
+ItemName.addConsumptionTooltip("electricFurnace", "EU", 3);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.electricFurnace, count: 1, data: 0}, [

@@ -2,7 +2,8 @@
 
 BlockRegistry.createBlock("storageBatBox", [
 	{name: "BatBox", texture: [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_back", 0], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]], inCreative: true}
-], "machine");
+], "wood");
+Block.setDestroyTime(BlockID.storageBatBox, 3);
 BlockRegistry.setBlockMaterial(BlockID.storageBatBox, "wood");
 
 TileRenderer.setHandAndUiModel(BlockID.storageBatBox, 0, [["batbox_bottom", 0], ["batbox_top", 0], ["batbox_back", 0], ["batbox_front", 0], ["batbox_side", 0], ["batbox_side", 0]]);
@@ -13,7 +14,7 @@ TileRenderer.setStandardModel(BlockID.storageBatBox, 3, [["batbox_bottom", 0], [
 TileRenderer.setStandardModel(BlockID.storageBatBox, 4, [["batbox_bottom", 0], ["batbox_top", 1], ["batbox_side", 0], ["batbox_side", 0], ["batbox_front", 0], ["batbox_back", 0]]);
 TileRenderer.setStandardModel(BlockID.storageBatBox, 5, [["batbox_bottom", 0], ["batbox_top", 1], ["batbox_side", 0], ["batbox_side", 0], ["batbox_back", 0], ["batbox_front", 0]]);
 
-ItemName.addStorageBlockTooltip("storageBatBox", 1, "40K");
+ItemName.addStorageBlockTooltip("storageBatBox", 1, "40K", 32);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.storageBatBox, count: 1, data: 0}, [

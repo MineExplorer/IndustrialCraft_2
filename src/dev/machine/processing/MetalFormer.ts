@@ -16,6 +16,7 @@ TileRenderer.registerRenderModel(BlockID.metalFormer, 5, [["machine_bottom", 0],
 TileRenderer.setRotationFunction(BlockID.metalFormer);
 
 ItemName.addTierTooltip("metalFormer", 1);
+ItemName.addConsumptionTooltip("metalFormer", "EU", 10);
 
 Callback.addCallback("PreLoaded", function() {
 	function isToolboxEmpty(slot: ItemInstance) {

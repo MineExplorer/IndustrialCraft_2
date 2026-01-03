@@ -2,7 +2,7 @@ BlockRegistry.createBlock("rtGenerator", [
 	{name: "Radioisotope Thermoelectric Generator", texture: [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.rtGenerator, "stone", 1);
-ItemName.addTierTooltip(BlockID.rtGenerator, 1);
+ItemName.addProductionTooltip(BlockID.rtGenerator, "EU", EnergyProductionModifiers.RTGenerator, 32 * EnergyProductionModifiers.RTGenerator);
 
 TileRenderer.setStandardModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 TileRenderer.registerRenderModel(BlockID.rtGenerator, 0, [["machine_bottom", 0], ["rt_generator_top_active", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
@@ -45,15 +45,16 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			let output = 0;
+			let numberOfPellets = 0;
 			for (let i = 0; i < 6; i++) {
 				const slot = this.container.getSlot("slot" + i);
 				if (slot.id == ItemID.rtgPellet) {
-					output = output > 0 ? output * 2 : EnergyProductionModifiers.RTGenerator;
+					numberOfPellets++;
 				}
 			}
-			if (output > 0) {
+			if (numberOfPellets > 0) {
 				this.setActive(true);
+				const output = EnergyProductionModifiers.RTGenerator * 1 << (numberOfPellets - 1); // fast power of 2
 				this.data.energy = Math.min(this.data.energy + output, this.getEnergyStorage());
 			} else {
 				this.setActive(false);

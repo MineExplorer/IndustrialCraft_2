@@ -1,5 +1,4 @@
-class ItemEmptyCell
-extends ItemCommon
+class ItemEmptyCell extends ItemCommon
 implements ItemBehavior {
 	constructor() {
 		super("cellEmpty", "empty_cell", "cell_empty");
@@ -21,16 +20,62 @@ implements ItemBehavior {
 	}
 }
 
-class ItemLiquidCell
-extends ItemCommon
-implements ItemBehavior {
+class ItemLiquidCell extends ItemCommon
+implements ItemBehavior, LiquidItem {
+	liquidType: string;
+	liquidStorage: number = 1000;
+
 	constructor(stringID: string, liquid: string) {
 		super(stringID, `${liquid}_cell`, `cell_${liquid}`);
-		LiquidItemRegistry.registerItem(liquid, ItemID.cellEmpty, this.id, 1000);
+		this.liquidType = liquid;
+		this.setMaxDamage(this.liquidStorage);
+		LiquidItemRegistry.registerItem(liquid, {id: ItemID.cellEmpty, data: 0}, {id: this.id, data: 0}, this.liquidStorage);
+		LiquidItemRegistry.registerItemInterface(this.id, this);
 	}
 
 	onNameOverride(item: ItemInstance, name: string): string {
-		return name + "\n§7" + (1000 - item.data) + " mB";
+		return name + "\n§7" + this.getAmount(item.data) + " mB";
+	}
+
+	isValidLiquid(liquid: string): boolean {
+		return liquid == this.liquidType;
+	}
+
+	getLiquidStored(): string {
+		return this.liquidType;
+	}
+
+	getAmount(itemData: number): number {
+		return this.liquidStorage - itemData;
+	}
+
+	getLiquid(item: ItemInstance, amount: number): number {
+		amount = Math.min(this.getAmount(item.data), amount);
+		item.data += amount;
+		return amount;
+	}
+
+	addLiquid(item: ItemInstance, liquid: string, amount: number): number {
+		if (item.id == ItemID.cellEmpty) {
+			if (amount > this.liquidStorage) {
+				amount = this.liquidStorage;
+			}
+			item.id = this.id;
+			item.data = this.liquidStorage - amount;
+			return amount;
+		}
+
+		amount = Math.min(this.liquidStorage - this.getAmount(item.data), amount);
+		item.data -= amount;
+		return amount;
+	}
+
+	getEmptyItem(): ItemInstance {
+		return new ItemStack(ItemID.cellEmpty, 1, 0);
+	}
+
+	getFullItem(liquid: string): Nullable<ItemInstance> {
+		return this.isValidLiquid(liquid) ? new ItemStack(this.id, 1, 0) : null;
 	}
 }
 

@@ -2,6 +2,7 @@ BlockRegistry.createBlock("fluidHeatGenerator", [
 	{name: "Liquid Fuel Firebox", texture: [["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_back", 0], ["heat_pipe", 0], ["fluid_heat_generator_side", 0], ["fluid_heat_generator_side", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.fluidHeatGenerator, "stone", 1);
+ItemName.addProductionTooltip(BlockID.fluidHeatGenerator, "HU", 16, 32);
 
 TileRenderer.setHandAndUiModel(BlockID.fluidHeatGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_back", 0], ["heat_pipe", 0], ["fluid_heat_generator_side", 0], ["fluid_heat_generator_side", 0]]);
 TileRenderer.setStandardModel(BlockID.fluidHeatGenerator, 0, [["heat_pipe", 0], ["fluid_heat_generator_back", 0], ["machine_bottom", 0], ["machine_top", 0], ["fluid_heat_generator_side", 2], ["fluid_heat_generator_side", 2]]);
@@ -55,10 +56,9 @@ namespace Machine {
 			const liquidFuel = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
 			this.liquidTank = this.addLiquidTank("fluid", 10000, Object.keys(liquidFuel));
 
-			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data) => {
-				const empty = LiquidItemRegistry.getEmptyItem(id, data);
-				if (!empty) return false;
-				return MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid);
+			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data, extra) => {
+				const liquid = LiquidItemRegistry.getItemLiquid(id, data, extra);
+				return liquid && MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid);
 			});
 
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
@@ -140,14 +140,14 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.fluidHeatGenerator, new FluidHeatGenerator());
 
-	MachineRegistry.createStorageInterface(BlockID.fluidHeatGenerator, {
+	MachineRegistry.createFluidStorageInterface(BlockID.fluidHeatGenerator, {
 		slots: {
 			"slot1": {input: true},
 			"slot2": {output: true}
 		},
 		isValidInput: function(item: ItemInstance) {
-			const empty = LiquidItemRegistry.getEmptyItem(item.id, item.data);
-			return empty ? MachineRecipeRegistry.hasRecipeFor("fluidFuel", empty.liquid) : false;
+			const liquid = LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra);
+			return liquid && MachineRecipeRegistry.hasRecipeFor("fluidFuel", liquid);
 		},
 		canTransportLiquid: () => false
 	});

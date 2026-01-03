@@ -9,6 +9,7 @@ TileRenderer.registerModelWithRotation(BlockID.pump, 0, [["machine_bottom", 0], 
 TileRenderer.setRotationFunction(BlockID.pump, true);
 
 ItemName.addTierTooltip("pump", 1);
+ItemName.addConsumptionTooltip("pump", "EU", 2);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.pump, count: 1, data: 0}, [
@@ -52,12 +53,12 @@ namespace Machine {
 
 		defaultTier = 1;
 		defaultEnergyStorage = 800;
-		defaultEnergyDemand = 1;
+		defaultEnergyDemand = 2;
 		defaultProcessTime = 20;
 		defaultDrop = BlockID.machineBlockBasic;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling", "fluidEjector"];
 
-		tier: number;
+		tier: number = this.defaultTier;
 		energyStorage: number;
 		energyDemand: number;
 		processTime: number;
@@ -77,12 +78,17 @@ namespace Machine {
 		setupContainer(): void {
 			this.liquidTank = this.addLiquidTank("fluid", 8000);
 
-			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name == "slotLiquid1") return !!LiquidItemRegistry.getFullItem(id, data, "water");
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
+				if (name == "slotLiquid1") return LiquidItemRegistry.canBeFilledWithLiquid(id, data, extra, this.liquidTank.getLiquidStored() || "water");
 				if (name == "slotLiquid2") return false;
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				return UpgradeAPI.isValidUpgrade(id, this);
 			});
+		}
+
+		onInit(): void {
+			super.onInit();
+			this.useUpgrades();
 		}
 
 		useUpgrades(): void {
@@ -195,13 +201,13 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.pump, new Pump());
 
-	MachineRegistry.createStorageInterface(BlockID.pump, {
+	MachineRegistry.createFluidStorageInterface(BlockID.pump, {
 		slots: {
 			"slotLiquid1": {input: true},
 			"slotLiquid2": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => (
-			!!LiquidItemRegistry.getFullItem(item.id, item.data, "water")
+		isValidInput: (item: ItemInstance, side: number, tileEntity: Pump) => (
+			LiquidItemRegistry.canBeFilledWithLiquid(item.id, item.data, item.extra, tileEntity.liquidTank.getLiquidStored() || "water")
 		),
 		canReceiveLiquid: () => false
 	});

@@ -8,7 +8,7 @@ implements BlockBehavior {
             renderLayer: 1,
             sound: "stone"
         });
-        const name = `tile.${id}.name`;
+        const name = "reinforced_door";
         for (let i = 0; i < 8; i++) {
 		    this.addVariation(name, bottomTexture);
         }

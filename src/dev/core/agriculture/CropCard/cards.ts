@@ -21,73 +21,85 @@
 /// <reference path="./CropCards/BaseCards/CropColorFlowerCard.ts"/>
 /// <reference path="./CropCards/BaseCards/Metal/CropBaseMetalCommon.ts"/>
 /// <reference path="./CropCards/BaseCards/Metal/CropBaseMetalUncommon.ts"/>
-namespace Agriculture {
-	// Basic
-	CropCardManager.registerCropCard(new CropWeed());
-	CropCardManager.registerCropCard(new CropVenomilia());
-	CropCardManager.registerCropCard(new CropStickreed());
-	CropCardManager.registerCropCard(new CropTerraWart());
-	CropCardManager.registerCropCard(new CropRedWheat());
-	CropCardManager.registerCropCard(new CropCoffee());
-	CropCardManager.registerCropCard(new CropHops());
-	CropCardManager.registerCropCard(new CropEatingplant());
-	// Vanilla
-	CropCardManager.registerCropCard(new CropWheat());
-	CropCardManager.registerCropCard(new CropPotato());
-	CropCardManager.registerCropCard(new CropPumpkin());
-	CropCardManager.registerCropCard(new CropCarrots());
-	CropCardManager.registerCropCard(new CropBeetroots());
-	CropCardManager.registerCropCard(new CropMelon());
-	CropCardManager.registerCropCard(new CropReed());
-	CropCardManager.registerCropCard(new CropCocoa());
-	CropCardManager.registerCropCard(new CropNetherWart());
-	// Mushroom
-	CropCardManager.registerCropCard(new CropRedMushroom());
-	CropCardManager.registerCropCard(new CropBrownMushroom());
-	// Flowers
 
-	CropCardManager.registerCropCard(new CropColorFlowerCard("dandelion", ["Yellow", "Flower"], IDConverter.getStack("yellow_dye"), {
-		id: VanillaBlockID.yellow_flower,
-		size: 4,
-		growth: 1,
-		gain: 1,
-		resistance: 1,
-		addToCreative: true
-	}));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("rose", ["Red", "Flower", "Rose"], IDConverter.getStack("red_dye"), {
-		id: VanillaBlockID.red_flower,
-		size: 4,
-		growth: 1,
-		gain: 1,
-		resistance: 1,
-		addToCreative: true
-	}));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("blackthorn", ["Black", "Flower", "Rose"], IDConverter.getStack("black_dye")));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("tulip", ["Purple", "Flower", "Tulip"], IDConverter.getStack("purple_dye")));
-	CropCardManager.registerCropCard(new CropColorFlowerCard("cyazint", ["Blue", "Flower"], IDConverter.getStack("cyan_dye")));
-	// Metal common
-	CropCardManager.registerCropCard(new CropBaseMetalCommon("ferru",
-		["Gray", "Leaves", "Metal"],
-		[VanillaTileID.iron_ore, VanillaTileID.iron_block],
-		{ id: ItemID.dustSmallIron, count: 1, data: 0 }));
-	CropCardManager.registerCropCard(new CropBaseMetalCommon("cyprium",
-		["Orange", "Leaves", "Metal"],
-		[BlockID.blockCopper, BlockID.oreCopper],
-		{ id: ItemID.dustSmallCopper, count: 1, data: 0 }));
-	CropCardManager.registerCropCard(new CropBaseMetalCommon("stagnium",
-		["Shiny", "Leaves", "Metal"],
-		[BlockID.blockTin, BlockID.oreTin],
-		{ id: ItemID.dustSmallTin, count: 1, data: 0 }));
-	CropCardManager.registerCropCard(new CropBaseMetalCommon("plumbiscus",
-		["Shiny", "Leaves", "Metal"],
-		[BlockID.blockLead, BlockID.oreLead],
-		{ id: ItemID.dustSmallLead, count: 1, data: 0 }));
-	CropCardManager.registerCropCard(new CropBaseMetalUncommon("aurelia",
-		["Gold", "Leaves", "Metal"],
-		[VanillaTileID.gold_ore, VanillaTileID.gold_block],
-		{ id: VanillaItemID.gold_nugget, count: 1, data: 0 }));
-	CropCardManager.registerCropCard(new CropBaseMetalUncommon("shining",
-		["Silver", "Leaves", "Metal"],
-		[BlockID.blockSilver, BlockID.oreSilver],
-		{ id: ItemID.dustSmallSilver, count: 1, data: 0 }));
+namespace Agriculture {
+	Callback.addCallback("PreLoaded", function() {
+		// Basic
+		CropCardManager.registerCropCard(new CropWeed());
+		CropCardManager.registerCropCard(new CropVenomilia());
+		CropCardManager.registerCropCard(new CropStickreed());
+		CropCardManager.registerCropCard(new CropTerraWart());
+		CropCardManager.registerCropCard(new CropRedWheat());
+		CropCardManager.registerCropCard(new CropCoffee());
+		CropCardManager.registerCropCard(new CropHops());
+		CropCardManager.registerCropCard(new CropEatingplant());
+		
+		// Vanilla
+		CropCardManager.registerCropCard(new CropWheat());
+		CropCardManager.registerCropCard(new CropPotato());
+		CropCardManager.registerCropCard(new CropPumpkin());
+		CropCardManager.registerCropCard(new CropCarrots());
+		CropCardManager.registerCropCard(new CropBeetroots());
+		CropCardManager.registerCropCard(new CropMelon());
+		CropCardManager.registerCropCard(new CropReed());
+		CropCardManager.registerCropCard(new CropCocoa());
+		CropCardManager.registerCropCard(new CropNetherWart());
+		
+		// Mushroom
+		CropCardManager.registerCropCard(new CropRedMushroom());
+		CropCardManager.registerCropCard(new CropBrownMushroom());
+		
+		// Flowers
+		CropCardManager.registerCropCard(new CropColorFlowerCard("dandelion", ["Yellow", "Flower"], IDConverter.getStack("yellow_dye"), {
+			id: VanillaBlockID.yellow_flower,
+			size: 4,
+			growth: 1,
+			gain: 1,
+			resistance: 1,
+			addToCreative: true
+		}));
+		CropCardManager.registerCropCard(new CropColorFlowerCard("rose", ["Red", "Flower", "Rose"], IDConverter.getStack("red_dye"), {
+			id: VanillaBlockID.red_flower,
+			size: 4,
+			growth: 1,
+			gain: 1,
+			resistance: 1,
+			addToCreative: true
+		}));
+		CropCardManager.registerCropCard(new CropColorFlowerCard("blackthorn", ["Black", "Flower", "Rose"], IDConverter.getStack("black_dye")));
+		CropCardManager.registerCropCard(new CropColorFlowerCard("tulip", ["Purple", "Flower", "Tulip"], IDConverter.getStack("purple_dye")));
+		CropCardManager.registerCropCard(new CropColorFlowerCard("cyazint", ["Blue", "Flower"], IDConverter.getStack("cyan_dye")));
+		
+		// Metal common
+		CropCardManager.registerCropCard(new CropBaseMetalCommon("ferru",
+			["Gray", "Leaves", "Metal"],
+			[VanillaTileID.iron_ore, VanillaTileID.iron_block],
+			{ id: ItemID.dustSmallIron, count: 1, data: 0 }
+		));
+		CropCardManager.registerCropCard(new CropBaseMetalCommon("cyprium",
+			["Orange", "Leaves", "Metal"],
+			[BlockID.blockCopper, BlockID.oreCopper],
+			{ id: ItemID.dustSmallCopper, count: 1, data: 0 }
+		));
+		CropCardManager.registerCropCard(new CropBaseMetalCommon("stagnium",
+			["Shiny", "Leaves", "Metal"],
+			[BlockID.blockTin, BlockID.oreTin],
+			{ id: ItemID.dustSmallTin, count: 1, data: 0 }
+		));
+		CropCardManager.registerCropCard(new CropBaseMetalCommon("plumbiscus",
+			["Shiny", "Leaves", "Metal"],
+			[BlockID.blockLead, BlockID.oreLead],
+			{ id: ItemID.dustSmallLead, count: 1, data: 0 }
+		));
+		CropCardManager.registerCropCard(new CropBaseMetalUncommon("aurelia",
+			["Gold", "Leaves", "Metal"],
+			[VanillaTileID.gold_ore, VanillaTileID.gold_block],
+			{ id: VanillaItemID.gold_nugget, count: 1, data: 0 }
+		));
+		CropCardManager.registerCropCard(new CropBaseMetalUncommon("shining",
+			["Silver", "Leaves", "Metal"],
+			[BlockID.blockSilver, BlockID.oreSilver],
+			{ id: ItemID.dustSmallSilver, count: 1, data: 0 }
+		));
+	});
 }

@@ -32,7 +32,7 @@ implements ArmorListeners {
 				Entity.setHealth(playerUid, Entity.getHealth(playerUid) + params.damage - Dp);
 			}
 			item.data += Db;
-			if (item.data >= Item.getMaxDamage(this.id)) {
+			if (item.data >= this.maxDamage) {
 				item.id = item.count = 0;
 			}
 			return item;

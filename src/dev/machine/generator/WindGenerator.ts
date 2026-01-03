@@ -2,7 +2,7 @@ BlockRegistry.createBlock("genWindmill", [
 	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.genWindmill, "stone", 1);
-ItemName.addTierTooltip(BlockID.genWindmill, 1);
+ItemName.addProductionTooltip(BlockID.genWindmill, "EU", 0, EnergyProductionModifiers.WindGenerator);
 
 TileRenderer.setStandardModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
 TileRenderer.registerModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill_rotating", 0], ["windmill_rotating", 0], ["machine_side", 0], ["machine_side", 0]]);
@@ -50,7 +50,7 @@ namespace Machine {
 				}
 				let wind = WindSim.getWindAt(this.y) * (1 - this.data.blockCount/567);
 				if (wind < 0) wind = 0;
-				const rawOutput = wind / 30 * EnergyProductionModifiers.Windmill;
+				const rawOutput = wind / 30 * EnergyProductionModifiers.WindGenerator;
 				this.data.output = Math.round(rawOutput * 10)/10;
 			}
 			this.setActive(this.data.output > 0);

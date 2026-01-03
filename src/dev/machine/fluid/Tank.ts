@@ -41,9 +41,9 @@ namespace Machine {
 		setupContainer(): void {
 			this.liquidTank = this.addLiquidTank("fluid", 16000);
 
-			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name == "slotLiquid1") return !!LiquidItemRegistry.getEmptyItem(id, data);
-				if (name == "slotLiquid2") return !!LiquidRegistry.getFullItem(id, data, "water");
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
+				if (name == "slotLiquid1") return !!LiquidItemRegistry.getItemLiquid(id, data, extra);
+				if (name == "slotLiquid2") return LiquidItemRegistry.canBeFilledWithLiquid(id, data, extra, this.liquidTank.getLiquidStored() || "water");
 				if (name == "slotOutput") return false;
 				return UpgradeAPI.isValidUpgrade(id, this);
 			});
@@ -51,7 +51,8 @@ namespace Machine {
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number): boolean {
 			if (Entity.getSneaking(player)) {
-				if (MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
+				if (MachineRegistry.emptyTankOnClick(this.liquidTank, item, player) || 
+				  MachineRegistry.fillTankOnClick(this.liquidTank, item, player)) {
 					this.preventClick();
 					return true;
 				}
@@ -77,13 +78,13 @@ namespace Machine {
 	MachineRegistry.registerPrototype(BlockID.tank, new FluidTank());
 }
 
-MachineRegistry.createStorageInterface(BlockID.tank, {
+MachineRegistry.createFluidStorageInterface(BlockID.tank, {
 	slots: {
-		"slotLiquid1": {input: true, isValid: (item: ItemInstance) => {
-			return !!LiquidItemRegistry.getEmptyItem(item.id, item.data);
+		"slotLiquid1": {input: true, isValid: (item) => {
+			return !!LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra);
 		}},
-		"slotLiquid2": {input: true, isValid: (item: ItemInstance) => {
-			return !!LiquidItemRegistry.getFullItem(item.id, item.data, "water");
+		"slotLiquid2": {input: true, isValid: (item, side, tileEntity) => {
+			return LiquidItemRegistry.canBeFilledWithLiquid(item.id, item.data, item.extra, tileEntity.liquidTank.getLiquidStored() || "water");
 		}},
 		"slotOutput": {output: true}
 	},

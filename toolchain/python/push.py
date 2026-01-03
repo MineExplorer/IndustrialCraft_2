@@ -1,6 +1,7 @@
 import os
 import os.path
-import subprocess
+
+from subprocess import call, check_output
 
 from make_config import make_config
 from glob import glob
@@ -36,11 +37,16 @@ def push(directory, cleanup=False):
 	dst_root = get_push_pack_directory()
 	if dst_root is None:
 		return -1
-
-	result = subprocess.call([make_config.get_adb(), "devices"], stderr=ignore, stdout=ignore)
-	if result != 0:
+	
+	adb = make_config.get_adb()
+	output = check_output([adb, "devices"], stderr=ignore).decode()
+	lines = output.strip().splitlines()[1:]  # skip header line
+	devices = [line.split()[0] for line in lines if line.strip().endswith("device")]
+	if not devices:
 		print("\033[91mno devices/emulators found, try to use task \"Connect to ADB\"\033[0m")
-		return result
+		return 1
+	
+	serial = devices[0]
 
 	dst_root = dst_root.replace("\\", "/")
 	if not dst_root.startswith("/"):
@@ -53,8 +59,8 @@ def push(directory, cleanup=False):
 		src = src_root + "/" + filename
 		dst = dst_root + "/" + filename
 		print_progress_bar(progress, len(changed), suffix = f'Pushing {filename}' + (" " * 20), length = 50)
-		subprocess.call([make_config.get_adb(), "shell", "rm", "-r", dst], stderr=ignore, stdout=ignore)
-		result = subprocess.call([make_config.get_adb(), "push", src, dst], stderr=ignore, stdout=ignore)
+		call([adb, "-s", serial, "shell", "rm", "-r", dst], stderr=ignore, stdout=ignore)
+		result = call([adb, "-s", serial, "push", src, dst], stderr=ignore, stdout=ignore)
 		progress += 1
 
 		if result != 0:
@@ -73,7 +79,7 @@ def make_locks(*locks):
 
 	for lock in locks:
 		lock = os.path.join(dst, lock).replace("\\", "/")
-		result = subprocess.call([make_config.get_adb(), "shell", "touch", lock])
+		result = call([make_config.get_adb(), "shell", "touch", lock])
 		if result != 0:
 			return result
 	return 0

@@ -12,7 +12,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.transformerEV, 2, [["ev_transf
 TileRenderer.setRotationFunction(BlockID.transformerEV, true);
 
 ItemRegistry.setRarity(BlockID.transformerEV, EnumRarity.UNCOMMON);
-ItemName.addTooltip(BlockID.transformerEV, "Low: 2048 EU/t High: 8192 EU/t");
+ItemName.addTooltip(BlockID.transformerEV, "tooltip.transformer", 2048, 8192);
 
 Item.addCreativeGroup("EUTransformers", Translation.translate("Transformers"), [
 	BlockID.transformerLV,

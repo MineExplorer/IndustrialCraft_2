@@ -22,14 +22,13 @@ namespace ToolHUD {
 			}
 			const armor = Player.getArmorSlot(1);
 			const hoverMode = armor.extra?.getBoolean("hover") || false;
-			const energyStored = ChargeItemRegistry.getEnergyStored(armor);
-			const posY = Player.getPosition().y;
+			const pos = Player.getPosition();
 			let playSound = false;
-			if (energyStored >= 8 && posY < 256) {
+			if (JetpackProvider.canBeFlying(armor, pos)) {
 				const vy = Player.getVelocity().y;
 				if (isFlying) {
 					playSound = true;
-					const maxVel = Math.min(32, 265 - posY) / 160; // max 0.2
+					const maxVel = Math.min(32, 265 - pos.y) / 160; // max 0.2
 					if (hoverMode && vy < 0.2) {
 						Player.addVelocity(0, Math.min(maxVel, 0.2 - vy), 0);
 					}

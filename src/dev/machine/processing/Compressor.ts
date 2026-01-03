@@ -10,6 +10,7 @@ TileRenderer.registerModelWithRotation(BlockID.compressor, 2, [["machine_bottom"
 TileRenderer.setRotationFunction(BlockID.compressor);
 
 ItemName.addTierTooltip("compressor", 1);
+ItemName.addConsumptionTooltip("compressor", "EU", 2);
 
 Callback.addCallback("PreLoaded", function() {
 	if (IC2Config.hardRecipes) {
@@ -74,10 +75,11 @@ Callback.addCallback("PreLoaded", function() {
 		"ItemID.ingotBronze": {id: BlockID.blockBronze, count: 1, data: 0, sourceCount: 9},
 		"ItemID.ingotSilver": {id: BlockID.blockSilver, count: 1, data: 0, sourceCount: 9},
 		"ItemID.uranium238": {id: BlockID.blockUranium, count: 1, data: 0, sourceCount: 9},
-		"ItemID.dustSmallIron": {id: ItemID.dustIron, count: 1, data: 0, sourceCount: 9},
-		"ItemID.dustSmallGold": {id: ItemID.dustGold, count: 1, data: 0, sourceCount: 9},
 		"ItemID.dustSmallCopper": {id: ItemID.dustCopper, count: 1, data: 0, sourceCount: 9},
 		"ItemID.dustSmallTin": {id: ItemID.dustTin, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallBronze": {id: ItemID.dustBronze, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallIron": {id: ItemID.dustIron, count: 1, data: 0, sourceCount: 9},
+		"ItemID.dustSmallGold": {id: ItemID.dustGold, count: 1, data: 0, sourceCount: 9},
 		"ItemID.dustSmallLead": {id: ItemID.dustLead, count: 1, data: 0, sourceCount: 9},
 		"ItemID.dustSmallSilver": {id: ItemID.dustSilver, count: 1, data: 0, sourceCount: 9},
 		"ItemID.dustSmallSulfur": {id: ItemID.dustSulfur, count: 1, data: 0, sourceCount: 9},

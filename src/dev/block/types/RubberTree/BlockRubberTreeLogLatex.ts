@@ -1,8 +1,12 @@
 class BlockRubberTreeLogLatex extends BlockBase {
 	constructor() {
-		super("rubberTreeLogLatex", "wood");
-		this.addVariation("tile.rubberTreeLogLatex.name", [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]]);
-		this.addVariation("tile.rubberTreeLogLatex.name", [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]]);
+		super("rubberTreeLogLatex", {
+			extends: "wood",
+			flameOdds: 5,
+			burnOdds: 5,
+		});
+		this.addVariation("rubber_tree_log_latex", [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 0], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]]);
+		this.addVariation("rubber_tree_log_latex", [["rubber_wood", 1], ["rubber_wood", 1], ["rubber_wood_latex", 1], ["rubber_wood", 0], ["rubber_wood", 0], ["rubber_wood", 0]]);
 		this.setBlockMaterial("wood");
 	}
 
@@ -17,7 +21,19 @@ class BlockRubberTreeLogLatex extends BlockBase {
 
 	onRandomTick(x: number, y: number, z: number, block: Tile, region: BlockSource): void {
 		if (block.data < 4 && Math.random() < 1/7) {
-			region.setBlock(x, y, z, block.id, block.data + 4);
+			// check that block is part of a grown tree
+			let checkY = y - 1;
+			while (checkY > 0) {
+				const blockId = region.getBlockId(x, checkY, z);
+				if (BlockRubberTreeSapling.PLACEABLE_TILES[blockId]) {
+					region.setBlock(x, y, z, block.id, block.data + 4);
+					break;
+				}
+				else if (blockId != BlockID.rubberTreeLog && blockId != BlockID.rubberTreeLogLatex) {
+					break;
+				}
+				checkY--;
+			}
 		}
 	}
 }

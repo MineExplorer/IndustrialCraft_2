@@ -1,6 +1,7 @@
 /// <reference path="ArmorIC2.ts" />
 /// <reference path="ArmorHazmat.ts" />
-/// <reference path="ArmorJetpackElectric.ts" />
+/// <reference path="ArmorFuelJetpack.ts" />
+/// <reference path="ArmorElectricJetpack.ts" />
 /// <reference path="ArmorBatpack.ts" />
 /// <reference path="ArmorNightvisionGoggles.ts" />
 /// <reference path="ArmorNanoSuit.ts" />
@@ -26,7 +27,8 @@ ItemRegistry.registerItem(new ArmorHazmat("hazmatChestplate", "hazmat_chestplate
 ItemRegistry.registerItem(new ArmorHazmat("hazmatLeggings", "hazmat_leggings", {type: "leggings", defence: 1, texture: "hazmat"}));
 ItemRegistry.registerItem(new ArmorHazmat("rubberBoots", "rubber_boots", {type: "boots", defence: 1, texture: "rubber"}));
 
-ItemRegistry.registerItem(new ArmorJetpackElectric());
+ItemRegistry.registerItem(new ArmorFuelJetpack());
+ItemRegistry.registerItem(new ArmorElectricJetpack());
 
 ItemRegistry.registerItem(new ArmorBatpack("batpack", "batpack", 60000, 100, 1));
 ItemRegistry.registerItem(new ArmorBatpack("advBatpack", "advanced_batpack", 600000, 512, 2));

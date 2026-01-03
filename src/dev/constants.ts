@@ -11,13 +11,3 @@ const IC2NetworkPackets = {
   hudClick: "icpe.clickHUDButton",
   jetpackFlying: "icpe.setFlying"
 }
-
-const EnergyProductionModifiers = {
-	EUReactor: 5,
-	FuelGenerator: 10,
-  GeothermalGenerator: 20,
-	SolarPanel: 1,
-	Windmill: 10,
-	Watermill: 3,
-  RTGenerator: 1
-}

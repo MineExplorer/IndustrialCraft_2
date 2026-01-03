@@ -8,7 +8,7 @@ BlockRegistry.setBlockMaterial(BlockID.transformerLV, "stone", 1);
 TileRenderer.setStandardModelWithRotation(BlockID.transformerLV, 0, [["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0]], true);
 TileRenderer.setRotationFunction(BlockID.transformerLV, true);
 
-ItemName.addTooltip(BlockID.transformerLV, "Low: 32 EU/t High: 128 EU/t");
+ItemName.addTooltip(BlockID.transformerLV, "tooltip.transformer", 32, 128);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.transformerLV, count: 1, data: 0}, [

@@ -12,7 +12,7 @@ TileRenderer.setStandardModelWithRotation(BlockID.transformerHV, 2, [["hv_transf
 TileRenderer.setRotationFunction(BlockID.transformerHV, true);
 
 ItemRegistry.setRarity(BlockID.transformerHV, EnumRarity.UNCOMMON);
-ItemName.addTooltip(BlockID.transformerHV, "Low: 512 EU/t High: 2048 EU/t");
+ItemName.addTooltip(BlockID.transformerHV, "tooltip.transformer", 512, 2048);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.transformerHV, count: 1, data: 0}, [

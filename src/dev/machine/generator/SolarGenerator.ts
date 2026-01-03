@@ -2,7 +2,7 @@ BlockRegistry.createBlock("solarPanel", [
 	{name: "Solar Panel", texture: [["machine_bottom", 0], ["solar_panel", 0], ["machine", 0], ["machine", 0], ["machine", 0], ["machine", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.solarPanel, "stone", 1);
-ItemName.addTierTooltip(BlockID.solarPanel, 1);
+ItemName.addProductionTooltip(BlockID.solarPanel, "EU", EnergyProductionModifiers.SolarPanel);
 
 Callback.addCallback("PreLoaded", function() {
 	if (IC2Config.hardRecipes) {

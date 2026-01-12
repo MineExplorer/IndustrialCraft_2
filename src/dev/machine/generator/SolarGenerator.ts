@@ -5,20 +5,12 @@ BlockRegistry.setBlockMaterial(BlockID.solarPanel, "stone", 1);
 ItemName.addProductionTooltip(BlockID.solarPanel, "EU", EnergyProductionModifiers.SolarPanel);
 
 Callback.addCallback("PreLoaded", function() {
-	if (IC2Config.hardRecipes) {
-		Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
-			"aaa",
-			"xxx",
-			"b#b"
-		], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustLapis, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
-	}
-	else {
-		Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
-			"aaa",
-			"xxx",
-			"b#b"
-		], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
-	}
+	const dust = IC2Config.hardRecipes ? ItemID.dustLapis : ItemID.dustCoal;
+	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
+		"aaa",
+		"xxx",
+		"b#b"
+	], ['#', BlockID.machineBlockBasic, 0, 'x', dust, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
 });
 
 const guiSolarPanel = MachineRegistry.createInventoryWindow("Solar Panel", {

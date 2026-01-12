@@ -13,7 +13,7 @@ Callback.addCallback("PreLoaded", function() {
 		"x x",
 		" # ",
 		"xcx"
-	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0, 'c', ItemID.coil, 0]);
+	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateIron, 0, 'c', ItemID.coil, 0]);
 });
 
 namespace Machine {

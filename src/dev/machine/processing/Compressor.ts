@@ -13,18 +13,10 @@ ItemName.addTierTooltip("compressor", 1);
 ItemName.addConsumptionTooltip("compressor", "EU", 2);
 
 Callback.addCallback("PreLoaded", function() {
-	if (IC2Config.hardRecipes) {
-		Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
-			"p#p",
-			"mcm"
-		], ['#', BlockID.machineBlockBasic, -1, 'c', ItemID.circuitBasic, -1, 'm', ItemID.electricMotor, -1, 'p', VanillaBlockID.piston, -1]);
-	} else {
-		Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
-			"x x",
-			"x#x",
-			"xcx"
-		], ['#', BlockID.machineBlockBasic, -1, 'x', 1, -1, 'c', ItemID.circuitBasic, -1]);
-	}
+	Recipes.addShaped({id: BlockID.compressor, count: 1, data: 0}, [
+		"p#p",
+		"mcm"
+	], ['#', BlockID.machineBlockBasic, -1, 'c', ItemID.circuitBasic, -1, 'm', ItemID.electricMotor, -1, 'p', VanillaBlockID.piston, -1]);
 
 	MachineRecipeRegistry.registerRecipesFor("compressor", {
 		// Blocks

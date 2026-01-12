@@ -24,7 +24,7 @@ Callback.addCallback("PreLoaded", function() {
 			"xxx",
 			"b#b",
 			" a "
-		], ['#', BlockID.machineBlockBasic, -1, 'x', 318, -1, 'b', 4, -1, 'a', ItemID.circuitBasic, -1]);
+		], ['#', BlockID.machineBlockBasic, -1, 'x', 318, -1, 'b', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1]);
 	}
 
 	MachineRecipeRegistry.registerRecipesFor("macerator", {

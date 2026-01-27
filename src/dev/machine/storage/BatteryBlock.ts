@@ -33,7 +33,7 @@ namespace Machine {
 			});
 		}
 
-		canRotate(): boolean {
+		canRotate(side: number): boolean {
 			return true;
 		}
 

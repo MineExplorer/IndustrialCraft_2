@@ -1,14 +1,14 @@
 /// <reference path="./BatteryBlock.ts" />
 
 BlockRegistry.createBlock("storageMFE", [
-	{name: "MFE", texture: [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]], inCreative: true}
+	{name: "MFE", texture: [["mfe_bottomtop", 0], ["mfe_bottomtop", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.storageMFE, "stone", 1);
 
-TileRenderer.setHandAndUiModel(BlockID.storageMFE, 0, [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
-TileRenderer.setStandardModel(BlockID.storageMFE, 0, [["mfe_front", 0], ["mfe_back", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
-TileRenderer.setStandardModel(BlockID.storageMFE, 1, [["mfe_back", 0], ["mfe_front", 0], ["machine_top", 0], ["machine_top", 0], ["mfe_side", 1], ["mfe_side", 1]]);
-TileRenderer.setStandardModelWithRotation(BlockID.storageMFE, 2, [["machine_top", 0], ["machine_top", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
+TileRenderer.setHandAndUiModel(BlockID.storageMFE, 0, [["mfe_bottomtop", 0], ["mfe_bottomtop", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
+TileRenderer.setStandardModel(BlockID.storageMFE, 0, [["mfe_front", 0], ["mfe_back", 0], ["mfe_bottomtop", 0], ["mfe_bottomtop", 0], ["mfe_side", 1], ["mfe_side", 1]]);
+TileRenderer.setStandardModel(BlockID.storageMFE, 1, [["mfe_back", 0], ["mfe_front", 0], ["mfe_bottomtop", 0], ["mfe_bottomtop", 0], ["mfe_side", 1], ["mfe_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.storageMFE, 2, [["mfe_bottomtop", 0], ["mfe_bottomtop", 0], ["mfe_back", 0], ["mfe_front", 0], ["mfe_side", 0], ["mfe_side", 0]]);
 
 ItemName.addStorageBlockTooltip("storageMFE", 3, "4M", 512);
 
@@ -20,16 +20,16 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', BlockID.machineBlockBasic, 0, 'a', ItemID.storageCrystal, -1, 'b', ItemID.cableGold2, -1]);
 });
 
-const guiMFE = BatteryBlockWindow("MFE");
-
 namespace Machine {
-	class MFE extends BatteryBlock {
+	const guiMFE = BatteryBlockWindow("MFE");
+
+	export class StorageMFE extends BatteryBlock {
 		constructor() {
 			super(3, 4000000, BlockID.machineBlockBasic, guiMFE);
 		}
 	}
 
-	MachineRegistry.registerPrototype(BlockID.storageMFE, new MFE());
+	MachineRegistry.registerPrototype(BlockID.storageMFE, new StorageMFE());
 	MachineRegistry.setStoragePlaceFunction("storageMFE", true);
 
 	StorageInterface.createInterface(BlockID.storageMFE, BatteryBlockInterface);

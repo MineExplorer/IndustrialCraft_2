@@ -13,13 +13,6 @@ TileRenderer.setStandardModelWithRotation(BlockID.storageMFSU, 2, [["mfsu_top", 
 ItemRegistry.setRarity(BlockID.storageMFSU, EnumRarity.UNCOMMON);
 ItemName.addStorageBlockTooltip("storageMFSU", 4, "60M", 2048);
 
-Item.addCreativeGroup("EUStorages", Translation.translate("Energy Storages"), [
-	BlockID.storageBatBox,
-	BlockID.storageCESU,
-	BlockID.storageMFE,
-	BlockID.storageMFSU
-]);
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.storageMFSU, count: 1, data: 0}, [
 		"aca",
@@ -28,16 +21,16 @@ Callback.addCallback("PreLoaded", function() {
 	], ['b', BlockID.storageMFE, -1, 'a', ItemID.storageLapotronCrystal, -1, 'x', BlockID.machineBlockAdvanced, 0, 'c', ItemID.circuitAdvanced, 0]);
 });
 
-const guiMFSU = BatteryBlockWindow("MFSU");
-
 namespace Machine {
-	class MFSU extends BatteryBlock {
+	const guiMFSU = BatteryBlockWindow("MFSU");
+
+	export class StorageMFSU extends BatteryBlock {
 		constructor() {
 			super(4, 6e7, BlockID.machineBlockAdvanced, guiMFSU);
 		}
 	}
 
-	MachineRegistry.registerPrototype(BlockID.storageMFSU, new MFSU());
+	MachineRegistry.registerPrototype(BlockID.storageMFSU, new StorageMFSU());
 	MachineRegistry.setStoragePlaceFunction("storageMFSU", true);
 
 	StorageInterface.createInterface(BlockID.storageMFSU, BatteryBlockInterface);

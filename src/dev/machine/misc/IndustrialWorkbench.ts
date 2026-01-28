@@ -13,112 +13,111 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'a', ItemID.craftingHammer, 0, 'b', ItemID.cutter, 0, 'c', VanillaBlockID.crafting_table, 0]);
 });
 
-const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial Workbench", {
-	elements: {
-		"progressArrow": { type: "button", x: 565, y: 104, bitmap: "arrow_bar_background", scale: GUI_SCALE, clicker: {
-			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("workbench");
-			}
-		}},
-		"slotInput0": { type: "slot", x: 370, y: 40 },
-		"slotInput1": { type: "slot", x: 430, y: 40 },
-		"slotInput2": { type: "slot", x: 490, y: 40 },
-		"slotInput3": { type: "slot", x: 370, y: 100 },
-		"slotInput4": { type: "slot", x: 430, y: 100 },
-		"slotInput5": { type: "slot", x: 490, y: 100 },
-		"slotInput6": { type: "slot", x: 370, y: 160 },
-		"slotInput7": { type: "slot", x: 430, y: 160 },
-		"slotInput8": { type: "slot", x: 490, y: 160 },
-		"slotResult": { type: "slot", x: 650, y: 100, visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-                container.sendEvent("craft", {allAtOnce: false});
-            },
-            onLongClick: function(_, container: ItemContainer) {
-                container.sendEvent("craft", {allAtOnce: true});
-            }
-        }},
-        "buttonClear": {type: "button", x: 555, y: 40, bitmap: "ic2.clear_button", bitmap2: "ic2.clear_button_touched", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container: ItemContainer) {
-				container.sendEvent("clearGrid", {});
-			}
-		}},
-        "slot0": { type: 'slot', x: 370, y: 250 },
-        "slot1": { type: 'slot', x: 430, y: 250 },
-        "slot2": { type: 'slot', x: 490, y: 250 },
-        "slot3": { type: 'slot', x: 550, y: 250 },
-        "slot4": { type: 'slot', x: 610, y: 250 },
-        "slot5": { type: 'slot', x: 670, y: 250 },
-        "slot6": { type: 'slot', x: 730, y: 250 },
-        "slot7": { type: 'slot', x: 790, y: 250 },
-        "slot8": { type: 'slot', x: 850, y: 250 },
-        "slot9": { type: 'slot', x: 370, y: 310 },
-        "slot10": { type: 'slot', x: 430, y: 310 },
-        "slot11": { type: 'slot', x: 490, y: 310 },
-        "slot12": { type: 'slot', x: 550, y: 310 },
-        "slot13": { type: 'slot', x: 610, y: 310 },
-        "slot14": { type: 'slot', x: 670, y: 310 },
-        "slot15": { type: 'slot', x: 730, y: 310 },
-        "slot16": { type: 'slot', x: 790, y: 310 },
-        "slot17": { type: 'slot', x: 850, y: 310 },
-        "slotPatternResult0": { type: "slot", x: 730, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 0});
-			}
-        }},
-		"slotPatternResult1": { type: "slot", x: 790, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 1});
-			}
-        }},
-		"slotPatternResult2": { type: "slot", x: 850, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 2});
-			}
-        }},
-		"slotPatternResult3": { type: "slot", x: 730, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 3});
-			}
-        }},
-		"slotPatternResult4": { type: "slot", x: 790, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 4});
-			}
-        }},
-		"slotPatternResult5": { type: "slot", x: 850, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 5});
-			}
-        }},
-		"slotPatternResult6": { type: "slot", x: 730, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 6});
-			}
-        }},
-		"slotPatternResult7": { type: "slot", x: 790, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 7});
-			}
-        }},
-		"slotPatternResult8": { type: "slot", x: 850, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 8});
-			}
-        }},
-        "buttonPlus": {type: "button", x: 910, y: 40, bitmap: "ic2.plus_button", bitmap2: "ic2.plus_button_touched", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container: ItemContainer) {
-				container.sendEvent("addPattern", {});
-			}
-		}},
-        "buttonMinus": {type: "button", x: 910, y: 75, bitmap: "ic2.minus_button", bitmap2: "ic2.minus_button_touched", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container: ItemContainer) {
-				container.sendEvent("removePattern", {});
-			}
-		}}
-	}
-});
-
 namespace Machine {
+    const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial Workbench", {
+        elements: {
+            "progressArrow": { type: "button", x: 565, y: 104, bitmap: "arrow_bar_background", scale: GUI_SCALE, clicker: {
+                onClick: () => {
+                    RV?.RecipeTypeRegistry.openRecipePage("workbench");
+                }
+            }},
+            "slotInput0": { type: "slot", x: 370, y: 40 },
+            "slotInput1": { type: "slot", x: 430, y: 40 },
+            "slotInput2": { type: "slot", x: 490, y: 40 },
+            "slotInput3": { type: "slot", x: 370, y: 100 },
+            "slotInput4": { type: "slot", x: 430, y: 100 },
+            "slotInput5": { type: "slot", x: 490, y: 100 },
+            "slotInput6": { type: "slot", x: 370, y: 160 },
+            "slotInput7": { type: "slot", x: 430, y: 160 },
+            "slotInput8": { type: "slot", x: 490, y: 160 },
+            "slotResult": { type: "slot", x: 650, y: 100, visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("craft", {allAtOnce: false});
+                },
+                onLongClick: function(_, container: ItemContainer) {
+                    container.sendEvent("craft", {allAtOnce: true});
+                }
+            }},
+            "buttonClear": {type: "button", x: 555, y: 40, bitmap: "ic2.clear_button", bitmap2: "ic2.clear_button_touched", scale: GUI_SCALE, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("clearGrid", {});
+                }
+            }},
+            "slot0": { type: 'slot', x: 370, y: 250 },
+            "slot1": { type: 'slot', x: 430, y: 250 },
+            "slot2": { type: 'slot', x: 490, y: 250 },
+            "slot3": { type: 'slot', x: 550, y: 250 },
+            "slot4": { type: 'slot', x: 610, y: 250 },
+            "slot5": { type: 'slot', x: 670, y: 250 },
+            "slot6": { type: 'slot', x: 730, y: 250 },
+            "slot7": { type: 'slot', x: 790, y: 250 },
+            "slot8": { type: 'slot', x: 850, y: 250 },
+            "slot9": { type: 'slot', x: 370, y: 310 },
+            "slot10": { type: 'slot', x: 430, y: 310 },
+            "slot11": { type: 'slot', x: 490, y: 310 },
+            "slot12": { type: 'slot', x: 550, y: 310 },
+            "slot13": { type: 'slot', x: 610, y: 310 },
+            "slot14": { type: 'slot', x: 670, y: 310 },
+            "slot15": { type: 'slot', x: 730, y: 310 },
+            "slot16": { type: 'slot', x: 790, y: 310 },
+            "slot17": { type: 'slot', x: 850, y: 310 },
+            "slotPatternResult0": { type: "slot", x: 730, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 0});
+                }
+            }},
+            "slotPatternResult1": { type: "slot", x: 790, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 1});
+                }
+            }},
+            "slotPatternResult2": { type: "slot", x: 850, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 2});
+                }
+            }},
+            "slotPatternResult3": { type: "slot", x: 730, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 3});
+                }
+            }},
+            "slotPatternResult4": { type: "slot", x: 790, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 4});
+                }
+            }},
+            "slotPatternResult5": { type: "slot", x: 850, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 5});
+                }
+            }},
+            "slotPatternResult6": { type: "slot", x: 730, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 6});
+                }
+            }},
+            "slotPatternResult7": { type: "slot", x: 790, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 7});
+                }
+            }},
+            "slotPatternResult8": { type: "slot", x: 850, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 8});
+                }
+            }},
+            "buttonPlus": {type: "button", x: 910, y: 40, bitmap: "ic2.plus_button", bitmap2: "ic2.plus_button_touched", scale: GUI_SCALE, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("addPattern", {});
+                }
+            }},
+            "buttonMinus": {type: "button", x: 910, y: 75, bitmap: "ic2.minus_button", bitmap2: "ic2.minus_button_touched", scale: GUI_SCALE, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("removePattern", {});
+                }
+            }}
+        }
+    });
 	export class IndustrialWorkbench extends MachineBase {
         defaultValues = { 
             recipeChecked: false,

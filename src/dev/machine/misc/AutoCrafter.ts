@@ -17,47 +17,47 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockAdvanced, 0, 'w', BlockID.industrialCrafter, 0, 'x', ItemID.circuitAdvanced, 0, 'e', ItemID.electricWrench, -1]);
 });
 
-const guiAutoCrafter = MachineRegistry.createInventoryWindow("Automatic Crafter", {
-	drawing: [
-		{type: "bitmap", x: 691, y: 139, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 379, y: 135, bitmap: "energy_small_background", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"progressScale": {type: "scale", x: 691, y: 139, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
-			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("workbench");
-			}
-		}},
-		"energyScale": {type: "scale", x: 379, y: 135, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotGrid0": {type: "slot", x: 490, y: 75},
-		"slotGrid1": {type: "slot", x: 550, y: 75},
-		"slotGrid2": {type: "slot", x: 610, y: 75},
-		"slotGrid3": {type: "slot", x: 490, y: 135},
-		"slotGrid4": {type: "slot", x: 550, y: 135},
-		"slotGrid5": {type: "slot", x: 610, y: 135},
-		"slotGrid6": {type: "slot", x: 490, y: 195},
-		"slotGrid7": {type: "slot", x: 550, y: 195},
-		"slotGrid8": {type: "slot", x: 610, y: 195},
-		"slot0": {type: "slot", x: 370, y: 300},
-        "slot1": {type: "slot", x: 430, y: 300},
-        "slot2": {type: "slot", x: 490, y: 300},
-        "slot3": {type: "slot", x: 550, y: 300},
-        "slot4": {type: "slot", x: 610, y: 300},
-        "slot5": {type: "slot", x: 670, y: 300},
-        "slot6": {type: "slot", x: 730, y: 300},
-        "slot7": {type: "slot", x: 790, y: 300},
-        "slot8": {type: "slot", x: 850, y: 300},
-		"slotEnergy": {type: "slot", x: 370, y: 195},
-		"slotResult": {type: "slot", x: 780, y: 131, size: 68},
-		"slotUpgrade1": {type: "slot", x: 880, y: 75},
-		"slotUpgrade2": {type: "slot", x: 880, y: 135},
-		"slotUpgrade3": {type: "slot", x: 880, y: 195},
-        "slotPreviewResult": {type: "slot", x: 700, y: 75, bitmap: "transparent_slot", visual: true}
-	}
-});
-
 namespace Machine {
+    const guiAutoCrafter = MachineRegistry.createInventoryWindow("Automatic Crafter", {
+        drawing: [
+            {type: "bitmap", x: 691, y: 139, bitmap: "arrow_bar_background", scale: GUI_SCALE},
+            {type: "bitmap", x: 379, y: 135, bitmap: "energy_small_background", scale: GUI_SCALE}
+        ],
+
+        elements: {
+            "progressScale": {type: "scale", x: 691, y: 139, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
+                onClick: () => {
+                    RV?.RecipeTypeRegistry.openRecipePage("workbench");
+                }
+            }},
+            "energyScale": {type: "scale", x: 379, y: 135, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+            "slotGrid0": {type: "slot", x: 490, y: 75},
+            "slotGrid1": {type: "slot", x: 550, y: 75},
+            "slotGrid2": {type: "slot", x: 610, y: 75},
+            "slotGrid3": {type: "slot", x: 490, y: 135},
+            "slotGrid4": {type: "slot", x: 550, y: 135},
+            "slotGrid5": {type: "slot", x: 610, y: 135},
+            "slotGrid6": {type: "slot", x: 490, y: 195},
+            "slotGrid7": {type: "slot", x: 550, y: 195},
+            "slotGrid8": {type: "slot", x: 610, y: 195},
+            "slot0": {type: "slot", x: 370, y: 300},
+            "slot1": {type: "slot", x: 430, y: 300},
+            "slot2": {type: "slot", x: 490, y: 300},
+            "slot3": {type: "slot", x: 550, y: 300},
+            "slot4": {type: "slot", x: 610, y: 300},
+            "slot5": {type: "slot", x: 670, y: 300},
+            "slot6": {type: "slot", x: 730, y: 300},
+            "slot7": {type: "slot", x: 790, y: 300},
+            "slot8": {type: "slot", x: 850, y: 300},
+            "slotEnergy": {type: "slot", x: 370, y: 195},
+            "slotResult": {type: "slot", x: 780, y: 131, size: 68},
+            "slotUpgrade1": {type: "slot", x: 880, y: 75},
+            "slotUpgrade2": {type: "slot", x: 880, y: 135},
+            "slotUpgrade3": {type: "slot", x: 880, y: 195},
+            "slotPreviewResult": {type: "slot", x: 700, y: 75, bitmap: "transparent_slot", visual: true}
+        }
+    });
+
 	export class AutoCrafter extends ProcessingMachine {
         defaultValues = { 
             energy: 0,

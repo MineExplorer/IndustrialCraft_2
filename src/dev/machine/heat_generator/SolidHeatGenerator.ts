@@ -34,24 +34,23 @@ Callback.addCallback("PreLoaded", function() {
 	], ['a', ItemID.heatConductor, 0, 'p', ItemID.plateIron, 0, 'f', BlockID.ironFurnace, 0]);
 });
 
-
-const guiSolidHeatGenerator = MachineRegistry.createInventoryWindow("Solid Fuel Firebox", {
-	drawing: [
-		{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},
-		{type: "bitmap", x: 441, y: 330, bitmap: "heat_generator_info", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"slotFuel": {type: "slot", x: 441, y: 212},
-		"slotAshes": {type: "slot", x: 591, y: 212},
-		"burningScale": {type: "scale", x: 450, y: 160, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
-		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 600, y: 344, width: 300, height: 30, text: "" + EnergyProductionModifiers.FuelGenerator * 2}
-	}
-});
-
 namespace Machine {
+	const guiSolidHeatGenerator = MachineRegistry.createInventoryWindow("Solid Fuel Firebox", {
+		drawing: [
+			{type: "bitmap", x: 450, y: 160, bitmap: "fire_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 521, y: 212, bitmap: "shovel_image", scale: GUI_SCALE+1},
+			{type: "bitmap", x: 441, y: 330, bitmap: "heat_generator_info", scale: GUI_SCALE}
+		],
+
+		elements: {
+			"slotFuel": {type: "slot", x: 441, y: 212},
+			"slotAshes": {type: "slot", x: 591, y: 212},
+			"burningScale": {type: "scale", x: 450, y: 160, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
+			"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 500, y: 344, width: 300, height: 30, text: "0    /"},
+			"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 600, y: 344, width: 300, height: 30, text: "" + EnergyProductionModifiers.FuelGenerator * 2}
+		}
+	});
+
 	export class SolidHeatGenerator extends MachineBase {
 		defaultValues ={
 			burn: 0,

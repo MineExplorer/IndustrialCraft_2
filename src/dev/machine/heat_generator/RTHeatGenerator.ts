@@ -17,24 +17,24 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.reactorChamber, 0, 'x', ItemID.heatConductor, 0, 'c', ItemID.casingIron, 0]);
 });
 
-const guiRTHeatGenerator = MachineRegistry.createInventoryWindow("Radioisotope Heat Generator", {
-	drawing: [
-		{type: "bitmap", x: 380, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"slot0": {type: "slot", x: 420, y: 100},
-		"slot1": {type: "slot", x: 480, y: 100},
-		"slot2": {type: "slot", x: 540, y: 100},
-		"slot3": {type: "slot", x: 420, y: 160},
-		"slot4": {type: "slot", x: 480, y: 160},
-		"slot5": {type: "slot", x: 540, y: 160},
-		"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 450, y: 264, width: 300, height: 30, text: "0     /"},
-		"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 550, y: 264, width: 300, height: 30, text: "0"}
-	}
-});
-
 namespace Machine {
+	const guiRTHeatGenerator = MachineRegistry.createInventoryWindow("Radioisotope Heat Generator", {
+		drawing: [
+			{type: "bitmap", x: 380, y: 250, bitmap: "heat_generator_info", scale: GUI_SCALE}
+		],
+
+		elements: {
+			"slot0": {type: "slot", x: 420, y: 100},
+			"slot1": {type: "slot", x: 480, y: 100},
+			"slot2": {type: "slot", x: 540, y: 100},
+			"slot3": {type: "slot", x: 420, y: 160},
+			"slot4": {type: "slot", x: 480, y: 160},
+			"slot5": {type: "slot", x: 540, y: 160},
+			"textInfo1": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 450, y: 264, width: 300, height: 30, text: "0     /"},
+			"textInfo2": {type: "text", font: {size: 24, color: Color.parseColor("#57c4da")}, x: 550, y: 264, width: 300, height: 30, text: "0"}
+		}
+	});
+
 	export class RTHeatGenerator extends MachineBase {
 		getScreenByName(): UI.IWindow {
 			return guiRTHeatGenerator;

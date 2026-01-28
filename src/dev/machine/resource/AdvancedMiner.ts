@@ -18,55 +18,55 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockAdvanced, 0, 'a', BlockID.teleporter, 0, 'e', BlockID.storageMFE, -1, 'm', BlockID.miner, -1, 'p', ItemID.plateAlloy, 0]);
 });
 
-const guiAdvancedMiner = MachineRegistry.createInventoryWindow("Advanced Miner", {
-	drawing: [
-		{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},
-		{type: "bitmap", x: 400, y: 98*GUI_SCALE, bitmap: "miner_info", scale: GUI_SCALE},
-	],
-
-	elements: {
-		"energyScale": {type: "scale", x: 400 + 2*GUI_SCALE, y: 49*GUI_SCALE, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotScanner": {type: "slot", x: 400, y: 19*GUI_SCALE, bitmap: "slot_scanner"},
-		"slotEnergy": {type: "slot", x: 400, y: 75*GUI_SCALE},
-		"slot1": {type: "slot", x: 400 + 28*GUI_SCALE, y: 37*GUI_SCALE},
-		"slot2": {type: "slot", x: 400 + 47*GUI_SCALE, y: 37*GUI_SCALE},
-		"slot3": {type: "slot", x: 400 + 66*GUI_SCALE, y: 37*GUI_SCALE},
-		"slot4": {type: "slot", x: 400 + 85*GUI_SCALE, y: 37*GUI_SCALE},
-		"slot5": {type: "slot", x: 400 + 104*GUI_SCALE, y: 37*GUI_SCALE},
-		"slot6": {type: "slot", x: 400 + 28*GUI_SCALE, y: 56*GUI_SCALE},
-		"slot7": {type: "slot", x: 400 + 47*GUI_SCALE, y: 56*GUI_SCALE},
-		"slot8": {type: "slot", x: 400 + 66*GUI_SCALE, y: 56*GUI_SCALE},
-		"slot9": {type: "slot", x: 400 + 85*GUI_SCALE, y: 56*GUI_SCALE},
-		"slot10": {type: "slot", x: 400 + 104*GUI_SCALE, y: 56*GUI_SCALE},
-		"slot11": {type: "slot", x: 400 + 28*GUI_SCALE, y: 75*GUI_SCALE},
-		"slot12": {type: "slot", x: 400 + 47*GUI_SCALE, y: 75*GUI_SCALE},
-		"slot13": {type: "slot", x: 400 + 66*GUI_SCALE, y: 75*GUI_SCALE},
-		"slot14": {type: "slot", x: 400 + 85*GUI_SCALE, y: 75*GUI_SCALE},
-		"slot15": {type: "slot", x: 400 + 104*GUI_SCALE, y: 75*GUI_SCALE},
-		"slotUpgrade1": {type: "slot", x: 871, y: 37*GUI_SCALE},
-		"slotUpgrade2": {type: "slot", x: 871, y: 56*GUI_SCALE},
-		"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container: ItemContainer) {
-				container.sendEvent("switchWhitelist", {});
-			}
-		}},
-		"button_restart": {type: "button", x: 400 + 125*GUI_SCALE, y: 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container: ItemContainer) {
-				container.sendEvent("restart", {});
-			}
-		}},
-		"button_silk": {type: "button", x: 400 + 126*GUI_SCALE, y: 41*GUI_SCALE, bitmap: "miner_button_silk_0", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container: ItemContainer) {
-				container.sendEvent("switchSilktouch", {});
-			}
-		}},
-		"textInfoMode": {type: "text", font: {size: 24, color: Color.GREEN}, x: 400 + 32*GUI_SCALE, y: 24*GUI_SCALE, width: 256, height: 42, text: Translation.translate("Mode: Blacklist")},
-		"textInfoXYZ": {type: "text", font: {size: 24, color: Color.GREEN}, x: 400 + 4*GUI_SCALE, y: 101*GUI_SCALE, width: 100, height: 42, text: ""},
-	}
-});
-
 namespace Machine {
+	const guiAdvancedMiner = MachineRegistry.createInventoryWindow("Advanced Miner", {
+		drawing: [
+			{type: "bitmap", x: 400 + 2*GUI_SCALE, y: 49*GUI_SCALE, bitmap: "energy_small_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 400 + 28*GUI_SCALE, y: 21*GUI_SCALE, bitmap: "miner_mode", scale: GUI_SCALE},
+			{type: "bitmap", x: 400, y: 98*GUI_SCALE, bitmap: "miner_info", scale: GUI_SCALE},
+		],
+
+		elements: {
+			"energyScale": {type: "scale", x: 400 + 2*GUI_SCALE, y: 49*GUI_SCALE, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
+			"slotScanner": {type: "slot", x: 400, y: 19*GUI_SCALE, bitmap: "slot_scanner"},
+			"slotEnergy": {type: "slot", x: 400, y: 75*GUI_SCALE},
+			"slot1": {type: "slot", x: 400 + 28*GUI_SCALE, y: 37*GUI_SCALE},
+			"slot2": {type: "slot", x: 400 + 47*GUI_SCALE, y: 37*GUI_SCALE},
+			"slot3": {type: "slot", x: 400 + 66*GUI_SCALE, y: 37*GUI_SCALE},
+			"slot4": {type: "slot", x: 400 + 85*GUI_SCALE, y: 37*GUI_SCALE},
+			"slot5": {type: "slot", x: 400 + 104*GUI_SCALE, y: 37*GUI_SCALE},
+			"slot6": {type: "slot", x: 400 + 28*GUI_SCALE, y: 56*GUI_SCALE},
+			"slot7": {type: "slot", x: 400 + 47*GUI_SCALE, y: 56*GUI_SCALE},
+			"slot8": {type: "slot", x: 400 + 66*GUI_SCALE, y: 56*GUI_SCALE},
+			"slot9": {type: "slot", x: 400 + 85*GUI_SCALE, y: 56*GUI_SCALE},
+			"slot10": {type: "slot", x: 400 + 104*GUI_SCALE, y: 56*GUI_SCALE},
+			"slot11": {type: "slot", x: 400 + 28*GUI_SCALE, y: 75*GUI_SCALE},
+			"slot12": {type: "slot", x: 400 + 47*GUI_SCALE, y: 75*GUI_SCALE},
+			"slot13": {type: "slot", x: 400 + 66*GUI_SCALE, y: 75*GUI_SCALE},
+			"slot14": {type: "slot", x: 400 + 85*GUI_SCALE, y: 75*GUI_SCALE},
+			"slot15": {type: "slot", x: 400 + 104*GUI_SCALE, y: 75*GUI_SCALE},
+			"slotUpgrade1": {type: "slot", x: 871, y: 37*GUI_SCALE},
+			"slotUpgrade2": {type: "slot", x: 871, y: 56*GUI_SCALE},
+			"button_switch": {type: "button", x: 400 + 116*GUI_SCALE, y: 21*GUI_SCALE, bitmap: "miner_button_switch", scale: GUI_SCALE, clicker: {
+				onClick: function(_, container: ItemContainer) {
+					container.sendEvent("switchWhitelist", {});
+				}
+			}},
+			"button_restart": {type: "button", x: 400 + 125*GUI_SCALE, y: 98*GUI_SCALE, bitmap: "miner_button_restart", scale: GUI_SCALE, clicker: {
+				onClick: function(_, container: ItemContainer) {
+					container.sendEvent("restart", {});
+				}
+			}},
+			"button_silk": {type: "button", x: 400 + 126*GUI_SCALE, y: 41*GUI_SCALE, bitmap: "miner_button_silk_0", scale: GUI_SCALE, clicker: {
+				onClick: function(_, container: ItemContainer) {
+					container.sendEvent("switchSilktouch", {});
+				}
+			}},
+			"textInfoMode": {type: "text", font: {size: 24, color: Color.GREEN}, x: 400 + 32*GUI_SCALE, y: 24*GUI_SCALE, width: 256, height: 42, text: Translation.translate("Mode: Blacklist")},
+			"textInfoXYZ": {type: "text", font: {size: 24, color: Color.GREEN}, x: 400 + 4*GUI_SCALE, y: 101*GUI_SCALE, width: 100, height: 42, text: ""},
+		}
+	});
+
 	export class AdvancedMiner extends ElectricMachine {
 		defaultValues = {
 			energy: 0,

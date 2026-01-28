@@ -85,36 +85,35 @@ Callback.addCallback("PreLoaded", function() {
 	}, true);
 });
 
-
-const guiMetalFormer = MachineRegistry.createInventoryWindow("Metal Former", {
-	drawing: [
-		{type: "bitmap", x: 530, y: 164, bitmap: "metalformer_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},
-	],
-
-	elements: {
-		"progressScale": {type: "scale", x: 530, y: 164, direction: 0, bitmap: "metalformer_bar_scale", scale: GUI_SCALE, clicker: {
-			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("icpe_metalFormer");
-			}
-		}},
-		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotSource": {type: "slot", x: 441, y: 79},
-		"slotEnergy": {type: "slot", x: 441, y: 218},
-		"slotResult": {type: "slot", x: 717, y: 148},
-		"slotUpgrade1": {type: "slot", x: 870, y: 60},
-		"slotUpgrade2": {type: "slot", x: 870, y: 119},
-		"slotUpgrade3": {type: "slot", x: 870, y: 178},
-		"slotUpgrade4": {type: "slot", x: 870, y: 237},
-		"button": {type: "button", x: 572, y: 210, bitmap: "metal_former_button_0", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container: ItemContainer) {
-				container.sendEvent("switchMode", {});
-			}
-		}}
-	}
-});
-
 namespace Machine {
+	const guiMetalFormer = MachineRegistry.createInventoryWindow("Metal Former", {
+		drawing: [
+			{type: "bitmap", x: 530, y: 164, bitmap: "metalformer_bar_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE},
+		],
+
+		elements: {
+			"progressScale": {type: "scale", x: 530, y: 164, direction: 0, bitmap: "metalformer_bar_scale", scale: GUI_SCALE, clicker: {
+				onClick: () => {
+					RV?.RecipeTypeRegistry.openRecipePage("icpe_metalFormer");
+				}
+			}},
+			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+			"slotSource": {type: "slot", x: 441, y: 79},
+			"slotEnergy": {type: "slot", x: 441, y: 218},
+			"slotResult": {type: "slot", x: 717, y: 148},
+			"slotUpgrade1": {type: "slot", x: 870, y: 60},
+			"slotUpgrade2": {type: "slot", x: 870, y: 119},
+			"slotUpgrade3": {type: "slot", x: 870, y: 178},
+			"slotUpgrade4": {type: "slot", x: 870, y: 237},
+			"button": {type: "button", x: 572, y: 210, bitmap: "metal_former_button_0", scale: GUI_SCALE, clicker: {
+				onClick: function(_, container: ItemContainer) {
+					container.sendEvent("switchMode", {});
+				}
+			}}
+		}
+	});
+
 	export class MetalFormer extends ProcessingMachine {
 		defaultValues = {
 			energy: 0,

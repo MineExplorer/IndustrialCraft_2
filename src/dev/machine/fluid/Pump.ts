@@ -19,29 +19,29 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'a', ItemID.treetap, 0, 'b', BlockID.miningPipe, 0, 'c', ItemID.cellEmpty, 0]);
 });
 
-const guiPump = MachineRegistry.createInventoryWindow("Pump", {
-	drawing: [
-		{type: "bitmap", x: 493, y: 149, bitmap: "extractor_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 407, y: 127, bitmap: "energy_small_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 602, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
-		{type: "bitmap", x: 675, y: 152, bitmap: "pump_arrow", scale: GUI_SCALE},
-	],
-
-	elements: {
-		"progressScale": {type: "scale", x: 493, y: 149, direction: 0, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
-		"energyScale": {type: "scale", x: 407, y: 127, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"liquidScale": {type: "scale", x: 400 + 67*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"slotEnergy": {type: "slot", x: 400, y: 50 + 39*GUI_SCALE},
-		"slotLiquid1": {type: "slot", x: 400 + 91*GUI_SCALE, y: 50 + 12*GUI_SCALE},
-		"slotLiquid2": {type: "slot", x: 400 + 125*GUI_SCALE, y: 50 + 29*GUI_SCALE},
-		"slotUpgrade1": {type: "slot", x: 880, y: 50 + 2*GUI_SCALE},
-		"slotUpgrade2": {type: "slot", x: 880, y: 50 + 21*GUI_SCALE},
-		"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_SCALE},
-		"slotUpgrade4": {type: "slot", x: 880, y: 50 + 59*GUI_SCALE},
-	}
-});
-
 namespace Machine {
+	const guiPump = MachineRegistry.createInventoryWindow("Pump", {
+		drawing: [
+			{type: "bitmap", x: 493, y: 149, bitmap: "extractor_bar_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 407, y: 127, bitmap: "energy_small_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 602, y: 88, bitmap: "liquid_bar", scale: GUI_SCALE},
+			{type: "bitmap", x: 675, y: 152, bitmap: "pump_arrow", scale: GUI_SCALE},
+		],
+
+		elements: {
+			"progressScale": {type: "scale", x: 493, y: 149, direction: 0, bitmap: "extractor_bar_scale", scale: GUI_SCALE},
+			"energyScale": {type: "scale", x: 407, y: 127, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+			"liquidScale": {type: "scale", x: 400 + 67*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+			"slotEnergy": {type: "slot", x: 400, y: 50 + 39*GUI_SCALE},
+			"slotLiquid1": {type: "slot", x: 400 + 91*GUI_SCALE, y: 50 + 12*GUI_SCALE},
+			"slotLiquid2": {type: "slot", x: 400 + 125*GUI_SCALE, y: 50 + 29*GUI_SCALE},
+			"slotUpgrade1": {type: "slot", x: 880, y: 50 + 2*GUI_SCALE},
+			"slotUpgrade2": {type: "slot", x: 880, y: 50 + 21*GUI_SCALE},
+			"slotUpgrade3": {type: "slot", x: 880, y: 50 + 40*GUI_SCALE},
+			"slotUpgrade4": {type: "slot", x: 880, y: 50 + 59*GUI_SCALE},
+		}
+	});
+
 	export class Pump extends ElectricMachine {
 		liquidTank: BlockEngine.LiquidTank;
 

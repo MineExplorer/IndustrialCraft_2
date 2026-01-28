@@ -55,33 +55,32 @@ Callback.addCallback("PreLoaded", function() {
 	}, true);
 });
 
-
-const guiSolidCanner = MachineRegistry.createInventoryWindow("Solid Canning Machine", {
-	drawing: [
-		{type: "bitmap", x: 400 + 52*GUI_SCALE, y: 50 + 33*GUI_SCALE, bitmap: "solid_canner_arrow", scale: GUI_SCALE},
-		{type: "bitmap", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"progressScale": {type: "scale", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
-			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("icpe_solidCanner");
-			}
-		}},
-		"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE},
-		"slotSource": {type: "slot", x: 400 + 32*GUI_SCALE, y: 50 + 32*GUI_SCALE},
-		"slotCan": {type: "slot", x: 400 + 63*GUI_SCALE, y: 50 + 32*GUI_SCALE},
-		"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE, y: 50 + 32*GUI_SCALE},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE},
-		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE},
-		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE},
-	}
-});
-
 namespace Machine {
+	const guiSolidCanner = MachineRegistry.createInventoryWindow("Solid Canning Machine", {
+		drawing: [
+			{type: "bitmap", x: 400 + 52*GUI_SCALE, y: 50 + 33*GUI_SCALE, bitmap: "solid_canner_arrow", scale: GUI_SCALE},
+			{type: "bitmap", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, bitmap: "arrow_bar_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 416, y: 178, bitmap: "energy_small_background", scale: GUI_SCALE}
+		],
+
+		elements: {
+			"progressScale": {type: "scale", x: 400 + 86*GUI_SCALE, y: 50 + 34*GUI_SCALE, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
+				onClick: () => {
+					RV?.RecipeTypeRegistry.openRecipePage("icpe_solidCanner");
+				}
+			}},
+			"energyScale": {type: "scale", x: 416, y: 178, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+			"slotEnergy": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 58*GUI_SCALE},
+			"slotSource": {type: "slot", x: 400 + 32*GUI_SCALE, y: 50 + 32*GUI_SCALE},
+			"slotCan": {type: "slot", x: 400 + 63*GUI_SCALE, y: 50 + 32*GUI_SCALE},
+			"slotResult": {type: "slot", x: 400 + 111*GUI_SCALE, y: 50 + 32*GUI_SCALE},
+			"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE},
+			"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE},
+			"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE},
+			"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE},
+		}
+	});
+
 	export class SolidCanner extends ProcessingMachine {
 		defaultEnergyStorage = 800;
 		defaultEnergyDemand = 2;

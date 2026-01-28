@@ -16,33 +16,32 @@ Callback.addCallback("PreLoaded", function() {
 	], ['c', ItemID.cellEmpty, 0, 'a', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
 });
 
-
-const guiFermenter = MachineRegistry.createInventoryWindow("Fermenter", {
-	drawing: [
-		{type: "bitmap", x: 390, y: 80, bitmap: "fermenter_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 758, y: 95, bitmap: "liquid_bar", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"progressScale": {type: "scale", x: 492, y: 150, direction: 0, value: .5, bitmap: "fermenter_progress_scale", scale: GUI_SCALE, clicker: {
-			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("icpe_fermenter");
-			}
-		}},
-		"fertilizerScale": {type: "scale", x: 480, y: 301, direction: 0, value: .5, bitmap: "fertilizer_progress_scale", scale: GUI_SCALE},
-		"biogasScale": {type: "scale", x: 771, y: 108, direction: 1, bitmap: "liquid_biogas", scale: GUI_SCALE},
-		"biomassScale": {type: "scale", x: 483, y: 179, direction: 1, bitmap: "biomass_scale", scale: GUI_SCALE},
-		"slotBiomass0": {type: "slot", x: 400, y: 162},
-		"slotBiomass1": {type: "slot", x: 400, y: 222},
-		"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "slot_black"},
-		"slotBiogas0": {type: "slot", x: 832, y: 155},
-		"slotBiogas1": {type: "slot", x: 832, y: 215},
-		"slotUpgrade1": {type: "slot", x: 765, y: 290},
-		"slotUpgrade2": {type: "slot", x: 825, y: 290}
-	}
-});
-
 namespace Machine {
+	const guiFermenter = MachineRegistry.createInventoryWindow("Fermenter", {
+		drawing: [
+			{type: "bitmap", x: 390, y: 80, bitmap: "fermenter_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 758, y: 95, bitmap: "liquid_bar", scale: GUI_SCALE}
+		],
+
+		elements: {
+			"progressScale": {type: "scale", x: 492, y: 150, direction: 0, value: .5, bitmap: "fermenter_progress_scale", scale: GUI_SCALE, clicker: {
+				onClick: () => {
+					RV?.RecipeTypeRegistry.openRecipePage("icpe_fermenter");
+				}
+			}},
+			"fertilizerScale": {type: "scale", x: 480, y: 301, direction: 0, value: .5, bitmap: "fertilizer_progress_scale", scale: GUI_SCALE},
+			"biogasScale": {type: "scale", x: 771, y: 108, direction: 1, bitmap: "liquid_biogas", scale: GUI_SCALE},
+			"biomassScale": {type: "scale", x: 483, y: 179, direction: 1, bitmap: "biomass_scale", scale: GUI_SCALE},
+			"slotBiomass0": {type: "slot", x: 400, y: 162},
+			"slotBiomass1": {type: "slot", x: 400, y: 222},
+			"slotFertilizer": {type: "slot", x: 634, y: 282, bitmap: "slot_black"},
+			"slotBiogas0": {type: "slot", x: 832, y: 155},
+			"slotBiogas1": {type: "slot", x: 832, y: 215},
+			"slotUpgrade1": {type: "slot", x: 765, y: 290},
+			"slotUpgrade2": {type: "slot", x: 825, y: 290}
+		}
+	});
+
 	export class Fermenter extends MachineBase
 	implements IHeatConsumer {
 		inputTank: BlockEngine.LiquidTank;

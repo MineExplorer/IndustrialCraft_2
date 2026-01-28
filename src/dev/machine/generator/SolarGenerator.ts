@@ -13,14 +13,14 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'x', dust, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
 });
 
-const guiSolarPanel = MachineRegistry.createInventoryWindow("Solar Panel", {
-	elements: {
-		"slotEnergy": {type: "slot", x: 600, y: 130},
-		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
-	}
-});
-
 namespace Machine {
+	const guiSolarPanel = MachineRegistry.createInventoryWindow("Solar Panel", {
+		elements: {
+			"slotEnergy": {type: "slot", x: 600, y: 130},
+			"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
+		}
+	});
+
 	export class SolarGenerator extends Generator {
 		defaultValues = {
 			energy: 0,

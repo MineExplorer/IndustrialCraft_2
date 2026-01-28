@@ -33,26 +33,26 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', 61, -1, 'x', ItemID.plateIron, 0]);
 });
 
-const guiIronFurnace = MachineRegistry.createInventoryWindow("Iron Furnace", {
-	drawing: [
-		{type: "bitmap", x: 530, y: 155, bitmap: "arrow_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 450, y: 155, bitmap: "fire_background", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
-			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("furnace");
-			}
-		}},
-		"burningScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
-		"slotSource": {type: "slot", x: 441, y: 79},
-		"slotFuel": {type: "slot", x: 441, y: 218},
-		"slotResult": {type: "slot", x: 625, y: 148},
-	}
-});
-
 namespace Machine {
+	const guiIronFurnace = MachineRegistry.createInventoryWindow("Iron Furnace", {
+		drawing: [
+			{type: "bitmap", x: 530, y: 155, bitmap: "arrow_bar_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 450, y: 155, bitmap: "fire_background", scale: GUI_SCALE}
+		],
+
+		elements: {
+			"progressScale": {type: "scale", x: 530, y: 155, direction: 0, bitmap: "arrow_bar_scale", scale: GUI_SCALE, clicker: {
+				onClick: () => {
+					RV?.RecipeTypeRegistry.openRecipePage("furnace");
+				}
+			}},
+			"burningScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
+			"slotSource": {type: "slot", x: 441, y: 79},
+			"slotFuel": {type: "slot", x: 441, y: 218},
+			"slotResult": {type: "slot", x: 625, y: 148},
+		}
+	});
+
 	export class IronFurnace extends MachineBase {
 		defaultValues = {
 			progress: 0,

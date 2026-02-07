@@ -24,7 +24,7 @@ namespace Machine {
 
 	export class ChargePadBatbox extends ChargePad {
 		constructor() {
-			super(1, 40000, BlockID.chargepadBatBox, guiChargepadBatBox);
+			super(1, 40000, BlockID.chargepadBatBox, guiChargepadBatBox, true);
 		}
 	}
 

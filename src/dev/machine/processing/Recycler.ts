@@ -11,12 +11,11 @@ ItemName.addTierTooltip("recycler", 1);
 ItemName.addConsumptionTooltip("recycler", "EU", 1);
 
 Callback.addCallback("PreLoaded", function() {
-	const metalIngot = IC2Config.hardRecipes ? ItemID.ingotSteel : VanillaItemID.iron_ingot;
 	Recipes.addShaped({id: BlockID.recycler, count: 1, data: 0}, [
 		" a ",
 		"x#x",
 		"bxb"
-	], ['#', BlockID.compressor, -1, 'x', 3, -1, 'a', 348, 0, 'b', metalIngot, 0]);
+	], ['#', BlockID.compressor, -1, 'x', 3, -1, 'a', 348, 0, 'b', VanillaItemID.iron_ingot, 0]);
 });
 
 const recyclerBlacklist = [102, 280, 78, 80, 332];

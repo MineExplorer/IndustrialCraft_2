@@ -9,12 +9,11 @@ TileRenderer.registerModelWithRotation(BlockID.geothermalGenerator, 2, [["machin
 TileRenderer.setRotationFunction(BlockID.geothermalGenerator);
 
 Callback.addCallback("PreLoaded", function() {
-	const metalCasing = IC2Config.hardRecipes ? ItemID.casingSteel : ItemID.casingIron
 	Recipes.addShaped({id: BlockID.geothermalGenerator, count: 1, data: 0}, [
 		"xax",
 		"xax",
 		"b#b"
-	], ['#', BlockID.primalGenerator, -1, 'a', ItemID.cellEmpty, 0, 'b', metalCasing, 0, 'x', 20, -1]);
+	], ['#', BlockID.primalGenerator, -1, 'a', ItemID.cellEmpty, 0, 'b', ItemID.casingIron, 0, 'x', 20, -1]);
 });
 
 namespace Machine {

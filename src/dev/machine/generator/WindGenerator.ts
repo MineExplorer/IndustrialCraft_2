@@ -26,6 +26,8 @@ namespace Machine {
 			blockCount: 0
 		}
 
+		optimalHeight: number;
+
 		updateBlockCount(): void {
 			let blockCount = -1;
 			for (let x = -4; x <= 4; x++)
@@ -40,8 +42,10 @@ namespace Machine {
 
 		onInit(): void {
 			super.onInit();
-			if (this.dimension != 0)
+			if (this.dimension != 0) {
 				this.selfDestroy();
+			}
+			this.optimalHeight = WindSim.getWindStreamHeight(this.blockSource, this.x, this.z);
 		}
 
 		onTick(): void {
@@ -49,7 +53,7 @@ namespace Machine {
 				if (this.data.ticker % 1024 == 0) {
 					this.updateBlockCount();
 				}
-				let wind = WindSim.getWindAt(this.y) * (1 - this.data.blockCount/567);
+				let wind = WindSim.getWindByHeight(this.y, this.optimalHeight) * (1 - this.data.blockCount/567);
 				if (wind < 0) wind = 0;
 				const rawOutput = wind / 30 * EnergyProductionModifiers.WindGenerator;
 				this.data.output = Math.round(rawOutput * 10)/10;

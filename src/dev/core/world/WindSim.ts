@@ -140,11 +140,11 @@ namespace WindSim {
 	 * @param windStreamHeight height with maximal wind strenght, must be greater than 64
 	 */
 	export function getWindByHeight(height: number, windStreamHeight: number): number {
-		if (windStreamHeight <= 64) {
-			Debug.error(`windStreamHeight must be value greater than 64`);
+		if (windStreamHeight <= 62) {
+			Debug.error(`windStreamHeight value must be greater than 62`);
 			return 0;
 		}
-		let windMultiplier = Math.max(1 - Math.abs((windStreamHeight - height)/(windStreamHeight - 64)) ** 2, 0);
+		let windMultiplier = Math.max(1 - Math.abs((windStreamHeight - height)/(windStreamHeight - 62)) ** 2, 0);
 		const wether = World.getWeather();
 		if (wether.thunder)
 			windMultiplier *= 1.5;

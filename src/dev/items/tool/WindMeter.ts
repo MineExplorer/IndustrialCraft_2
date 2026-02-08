@@ -7,11 +7,19 @@ implements ItemBehavior {
 	}
 
 	onNoTargetUse(item: ItemStack, player: number): void {
+		const playerCoords = Entity.getPosition(player);
+		this.measureWindAt(playerCoords, item, player);
+	}
+
+	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
+		this.measureWindAt(coords, item, player);
+	}
+
+	measureWindAt(coords: Vector, item: ItemInstance, player: number): void {
 		const client = Network.getClientForPlayer(player);
 		if (client && ICTool.useElectricItem(item, this.energyPerUse, player)) {
 			const blockSource = BlockSource.getDefaultForActor(player);
-			const pos = Entity.getPosition(player);
-			let windStrength = WindSim.getWindAt(blockSource, Math.floor(pos.x), Math.floor(pos.y), Math.floor(pos.z));
+			let windStrength = WindSim.getWindAt(blockSource, Math.floor(coords.x), Math.floor(coords.y), Math.floor(coords.z));
 			windStrength = Math.round(windStrength * 100) / 100;
 			client.sendMessage(`Wind Strength: ${windStrength} MCW`);
 		}

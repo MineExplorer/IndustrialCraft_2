@@ -1,5 +1,5 @@
 BlockRegistry.createBlock("blastFurnace", [
-	{name: "Blast Furnace", texture: [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
+	{name: "Industrial Blast Furnace", texture: [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.blastFurnace, "stone", 1);
 
@@ -25,7 +25,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	const guiBlastFurnace = MachineRegistry.createInventoryWindow("Blast Furnace", {
+	const guiBlastFurnace = MachineRegistry.createInventoryWindow("Industrial Blast Furnace", {
 		drawing: [
 			{type: "bitmap", x: 450, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE_NEW}
 		],

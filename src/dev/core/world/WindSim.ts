@@ -87,69 +87,72 @@ namespace WindSim {
 		167, // mesa_plateau_mutated
 	]);
 
+	export let windStrength = MathUtil.randomInt(5, 25);
+
 	/**
 	 * Returns the height with maximum wind strength based on biome ID
-	 * @param biomeId - The biome ID from Bedrock Edition
-	 * @returns Height with maximum wind strength
+	 * @param biomeId - biome ID
 	 */
-	export function getMaxWindHeightByBiome(biomeId: number): number {
-		if (OCEAN_BIOMES.has(biomeId)) return 120;
-        if (FLAT_BIOMES.has(biomeId) || RIVER_BIOMES.has(biomeId)) return 140;
-        if (FOREST_BIOMES.has(biomeId)) return 160;
-        if (TALL_FOREST_BIOMES.has(biomeId)) return 180;
-        if (MOUNTAIN_BIOMES.has(biomeId)) return 200;
+	export function getWindStreamHeightByBiome(biomeId: number): number {
+		if (OCEAN_BIOMES.has(biomeId))
+			return 120;
+
+        if (FLAT_BIOMES.has(biomeId) || RIVER_BIOMES.has(biomeId))
+			return 140;
+
+        if (FOREST_BIOMES.has(biomeId))
+			return 160;
+
+        if (TALL_FOREST_BIOMES.has(biomeId))
+			return 180;
+
+        if (MOUNTAIN_BIOMES.has(biomeId))
+			return 200;
 		
-		// Default value
 		return 160;
 	}
 
-	export let windStrength = MathUtil.randomInt(5, 25);
-
-	export function getWindAt(blockSource: BlockSource, x: number, y: number, z: number): number {
-		if (blockSource.getDimension() != 0) return 0;
-		const windStreamHeight = getWindStreamHeight(blockSource, x, z);
-		return getWindByHeight(y, windStreamHeight);
-	}
-
+	/**
+	 * Returns height with maximum wind strength by coords
+	 */
 	export function getWindStreamHeight(blockSource: BlockSource, x: number, z: number): number {
-		// Chunk pos
-		const baseX = Math.floor(x / 16) * 16;
-		const baseZ = Math.floor(z / 16) * 16;
+		// Convert to block coords
+		x = Math.floor(x);
+		z = Math.floor(z);
 		
-		// Relative position within a chunk (0-1)
-		const tx = (x - baseX) / 16;
-		const ty = (z - baseZ) / 16;
+		// Calculate average of 5 points
+		const points = [
+			x, z,
+			x - 8, z - 8,
+			x + 7, z - 8,
+			x - 8, z + 7,
+			x + 7, z + 7
+		];
+		let heightSum = 0;
+		for (let i = 0; i < points.length - 1; i += 2) {
+			heightSum += getWindStreamHeightByBiome(blockSource.getBiome(points[i], points[i + 1]));
+		}
 		
-		// Get height for 4 corners
-		const h00 = getMaxWindHeightByBiome(blockSource.getBiome(baseX, baseZ));
-		const h10 = getMaxWindHeightByBiome(blockSource.getBiome(baseX + 15, baseZ));
-		const h01 = getMaxWindHeightByBiome(blockSource.getBiome(baseX, baseZ + 15));
-		const h11 = getMaxWindHeightByBiome(blockSource.getBiome(baseX + 15, baseZ + 15));
-		
-		// Bilinear interpolation
-		return h00 * (1 - tx) * (1 - ty) +
-			h10 * tx * (1 - ty) +
-			h01 * (1 - tx) * ty +
-			h11 * tx * ty;
+		return heightSum / 5
 	}
 
 	/**
-	 * Returns global wind strength, modified by height and wethear.
-	 * At heights below windStreamHeight returned value gradually declines towards 0 at sea level
-	 * @param height height where wind is measured
-	 * @param windStreamHeight height with maximal wind strenght, must be greater than 64
+	 * Returns wind strength at coords
 	 */
-	export function getWindByHeight(height: number, windStreamHeight: number): number {
-		if (windStreamHeight <= 62) {
-			Debug.error(`windStreamHeight value must be greater than 62`);
-			return 0;
-		}
-		let windMultiplier = Math.max(1 - Math.abs((windStreamHeight - height)/(windStreamHeight - 62)) ** 2, 0);
+	export function getWindAt(blockSource: BlockSource, x: number, y: number, z: number): number {
+		if (blockSource.getDimension() != 0) return 0;
+		
+		const windStreamHeight = getWindStreamHeight(blockSource, x, z);
+		const heightDiff = Math.abs(windStreamHeight - Math.floor(y));
+		const windAltitude = windStreamHeight - 62;
+		let windMultiplier = Math.max(1 - (heightDiff / windAltitude) ** 2, 0);
+
 		const wether = World.getWeather();
 		if (wether.thunder)
 			windMultiplier *= 1.5;
 		else if (wether.rain)
 			windMultiplier *= 1.25;
+
 		return windStrength * windMultiplier;
 	}
 

@@ -296,22 +296,19 @@ namespace Machine {
             return entryArray;
         }
 
-        /** @deprecated Container event, shouldn't be called directly */
-        @ContainerEvent(Side.Server)
-        craft(packetData: {allAtOnce: boolean}, client: NetworkClient) {
+        @ContainerEvent(Side.Server, "craft")
+        onCraft(packetData: {allAtOnce: boolean}, client: NetworkClient) {
             this.provideRecipe(client.getPlayerUid(), packetData.allAtOnce);
         }
 
-        /** @deprecated Container event, shouldn't be called directly */
-        @ContainerEvent(Side.Server)
-        clearGrid(packetData: {}, client: NetworkClient) {
+        @ContainerEvent(Side.Server, "clearGrid")
+        onClearGrid(packetData: {}, client: NetworkClient) {
             this.clearGridForPlayer(client.getPlayerUid());
             this.container.sendChanges();
         }
 
-        /** @deprecated Container event, shouldn't be called directly */
-        @ContainerEvent(Side.Server)
-        addPattern(packetData: {}, client: NetworkClient) {
+        @ContainerEvent(Side.Server, "addPattern")
+        onAddPattern(packetData: {}, client: NetworkClient) {
             const resultSlot = this.container.getSlot("slotResult");
             if (resultSlot.id == 0) return;
 
@@ -324,9 +321,8 @@ namespace Machine {
             }
         }
 
-        /** @deprecated Container event, shouldn't be called directly */
-        @ContainerEvent(Side.Server)
-        removePattern(packetData: {}, client: NetworkClient) {
+        @ContainerEvent(Side.Server, "removePattern")
+        onRemovePattern(packetData: {}, client: NetworkClient) {
             const resultSlot = this.container.getSlot("slotResult");
             let lastSeenIndex = -1;
             // Remove the pattern matching the result slot, or the last one if none match
@@ -345,9 +341,8 @@ namespace Machine {
             }
         }
 
-        /** @deprecated Container event, shouldn't be called directly */
-        @ContainerEvent(Side.Server)
-        usePattern({index}: {index: number}, client: NetworkClient) {
+        @ContainerEvent(Side.Server, "usePattern")
+        onUsePattern({index}: {index: number}, client: NetworkClient) {
             const pattern = this.data.patterns[index];
             if (pattern) {
                 this.clearGridForPlayer(client.getPlayerUid());

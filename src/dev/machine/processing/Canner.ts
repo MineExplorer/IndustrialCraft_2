@@ -252,18 +252,16 @@ namespace Machine {
 			return super.onItemUse(coords, item, player);
 		}
 		
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Server)
-		switchMode(): void {
+		@ContainerEvent(Side.Server, "switchMode")
+		onSwitchMode(): void {
 			if (this.data.progress == 0) {
 				this.data.mode = (this.data.mode + 1) % 4;
 				this.container.sendEvent("updateUI", {mode: this.data.mode});
 			}
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Server)
-		switchTanks(): void {
+		@ContainerEvent(Side.Server, "switchTanks")
+		onSwitchTanks(): void {
 			if (this.data.progress == 0) {
 				let liquidData = this.inputTank.data;
 				this.inputTank.data = this.outputTank.data;

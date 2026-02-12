@@ -252,21 +252,18 @@ namespace Machine {
 			return side > 1;
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Server)
-		switchWhitelist(): void {
+		@ContainerEvent(Side.Server, "switchWhitelist")
+		onSwitchWhitelist(): void {
 			this.data.whitelist = !this.data.whitelist;
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Server)
-		switchSilktouch(): void {
+		@ContainerEvent(Side.Server, "switchSilktouch")
+		onSwitchSilktouch(): void {
 			this.data.silk_touch = !this.data.silk_touch;
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Server)
-		restart(): void {
+		@ContainerEvent(Side.Server, "restart")
+		onRestart(): void {
 			this.data.x = this.data.y = this.data.z = 0;
 		}
 

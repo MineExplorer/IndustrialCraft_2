@@ -171,9 +171,8 @@ namespace Machine {
 			}
 		}
 
-		/** @deprecated Network event, shouldn't be called */
-		@NetworkEvent(Side.Client)
-		playSound(packetData: {name: string, vol: number, rad: number}, packetExtra: any): void {
+		@NetworkEvent(Side.Client, "playSound")
+		onPlaySound(packetData: {name: string, vol: number, rad: number}, packetExtra: any): void {
 			if (!this.audioSource) return;
 			const stream = this.audioSource.getStream(packetData.name);
 			if (!stream) {

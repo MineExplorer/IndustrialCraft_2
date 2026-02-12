@@ -96,9 +96,8 @@ namespace Machine {
 			}
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Server)
-		invertMode() {
+		@ContainerEvent(Side.Server, "invertMode")
+		onInvertMode() {
 			this.data.inverted = !this.data.inverted;
 			this.setActive(this.data.inverted);
 		}

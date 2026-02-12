@@ -167,9 +167,8 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Server)
-		switchMode(): void {
+		@ContainerEvent(Side.Server, "switchMode")
+		onSwitchMode(): void {
 			this.data.mode = (this.data.mode + 1) % 3;
 		}
 

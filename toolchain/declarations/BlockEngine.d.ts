@@ -35,9 +35,9 @@ declare namespace BlockEngine {
         /** Client side method decorator for TileEntity */
         function ClientSide(target: TileEntityBase, propertyName: string): void;
         /** Adds method as network event in TileEntity */
-        function NetworkEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
+        function NetworkEvent(side: Side, eventName?: string): (target: TileEntityBase, propertyName: string) => void;
         /** Adds method as container event in TileEntity */
-        function ContainerEvent(side: Side): (target: TileEntityBase, propertyName: string) => void;
+        function ContainerEvent(side: Side, eventName?: string): (target: TileEntityBase, propertyName: string) => void;
     }
 }
 declare enum Side {
@@ -1083,8 +1083,9 @@ declare namespace BlockRegistry {
      * variation corresponds to block data value, data values are assigned
      * according to variations order.
      * @param blockType BlockType object or block type name, if the type was previously registered.
+     * @returns instance of created block
      */
-    function createBlock(stringID: string, defineData: Block.BlockVariation[], blockType?: string | BlockType): void;
+    function createBlock(stringID: string, defineData: Block.BlockVariation[], blockType?: string | BlockType): BlockBase;
     /**
      * Creates new block with horizontal or all sides rotation.
      * @param stringID string id of the block
@@ -1092,15 +1093,17 @@ declare namespace BlockRegistry {
      * each occupying 6 data values for rotation.
      * @param blockType BlockType object or block type name, if the type was previously registered.
      * @param hasVerticalFacings true if the block has vertical facings, false otherwise.
+     * @returns instance of created block
      */
-    function createBlockWithRotation(stringID: string, defineData: Block.BlockVariation[], blockType?: string | BlockType, hasVerticalFacings?: boolean): void;
+    function createBlockWithRotation(stringID: string, defineData: Block.BlockVariation[], blockType?: string | BlockType, hasVerticalFacings?: boolean): BlockRotative;
     /**
      * Creates stairs using specified params
      * @param stringID string id of the block
      * @param defineData array containing one variation of the block (for similarity with other methods).
      * @param blockType BlockType object or block type name, if the type was previously registered.
+     * @returns instance of created stairs block
      */
-    function createStairs(stringID: string, defineData: Block.BlockVariation[], blockType?: string | BlockType): void;
+    function createStairs(stringID: string, defineData: Block.BlockVariation[], blockType?: string | BlockType): BlockStairs;
     /**
      * Creates slabs and its double slabs using specified params
      * @param slabID string id of the
@@ -1920,10 +1923,16 @@ declare abstract class TileEntityBase implements TileEntity {
         [key: string]: boolean;
     };
     __networkEvents: {
-        [key: string]: Side;
+        [key: string]: {
+            side: Side;
+            eventName: string;
+        };
     };
     __containerEvents: {
-        [key: string]: Side;
+        [key: string]: {
+            side: Side;
+            eventName: string;
+        };
     };
     readonly x: number;
     readonly y: number;

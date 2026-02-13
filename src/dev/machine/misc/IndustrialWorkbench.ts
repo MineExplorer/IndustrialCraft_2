@@ -239,7 +239,7 @@ namespace Machine {
 
         clearPattern(index: number): void {
             this.container.getSlot("slotPatternResult" + index).clear();
-            delete this.data.patterns[index];
+            delete this.data.patterns["_" + index];
         }
 
         savePattern(result: ItemInstance, index: number) {
@@ -248,14 +248,15 @@ namespace Machine {
                 return;
 
             this.container.setSlot("slotPatternResult" + index, result.id, result.count, result.data, result.extra);
-            this.data.patterns[index] = {};
+            const pattern = {};
             for (let j = 0; j < 9; j++) {
                 const inputSlot = this.container.getSlot("slotInput" + j);
                 const entry = entryArray.find(e => e.id == inputSlot.id && (e.data == inputSlot.data || e.data == -1));
                 if (entry) {
-                    this.data.patterns[index][j] = {id: entry.id, data: entry.data};
+                    pattern["_" + j] = {id: entry.id, data: entry.data};
                 }
             }
+            this.data.patterns["_" + index] = pattern;
             this.container.sendChanges();
         }
 
@@ -343,11 +344,11 @@ namespace Machine {
 
         @ContainerEvent(Side.Server, "usePattern")
         onUsePattern({index}: {index: number}, client: NetworkClient) {
-            const pattern = this.data.patterns[index];
+            const pattern = this.data.patterns["_" + index];
             if (pattern) {
                 this.clearGridForPlayer(client.getPlayerUid());
-                for (let j of pattern) {
-                    this.container.setSlot("slotInput" + j, pattern[j].id, 0, pattern[j].data);
+                for (let j in pattern) {
+                    this.container.setSlot("slotInput" + j[1], pattern[j].id, 0, pattern[j].data);
                 }
                 this.refillItems();
                 this.data.recipeChecked = false;

@@ -772,7 +772,7 @@ interface BlockType {
      * Inexistent states are ignored.
      * @default ["color"] // this state always has been here
      */
-    states?: [EBlockStates | number | string][];
+    states?: (EBlockStates | number | string)[];
     /**
      * Alternatively catch on fire chance modifier,
      * values between 0 and 100, with a higher number

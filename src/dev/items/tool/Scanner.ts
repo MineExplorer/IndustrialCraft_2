@@ -5,7 +5,7 @@ if (BlockEngine.getMainGameVersion() >= 16) {
 
 Callback.addCallback("PreLoaded", function() {
 	for (let id in BlockID) {
-		if (id.startsWith("ore") && !TileEntity.isTileEntityBlock(BlockID[id])) {
+		if ((id.startsWith("ore") || id.endsWith("_ore")) && !TileEntity.isTileEntityBlock(BlockID[id])) {
 			ore_blocks.push(BlockID[id]);
 		}
 	}

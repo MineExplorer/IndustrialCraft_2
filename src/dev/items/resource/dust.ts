@@ -86,7 +86,7 @@ Callback.addCallback("PreLoaded", function() {
 	const dustNames = ["Copper", "Tin", "Bronze", "Iron", "Steel", "Lead", "Gold", "Silver", "Sulfur"];
 
 	for (const name of dustNames) {
-		Recipes.addShaped({id: ItemID["dust" + name], count: 4, data: 0}, [
+		Recipes.addShaped({id: ItemID["dust" + name], count: 1, data: 0}, [
 			"xxx",
 			"xxx",
 			"xxx",

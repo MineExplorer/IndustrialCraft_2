@@ -17,21 +17,21 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'b', BlockID.miningPipe, 0]);
 });
 
-const guiMiner = MachineRegistry.createInventoryWindow("Miner", {
-	drawing: [
-		{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill"},
-		"slotPipe": {type: "slot", x: 541, y: 75},
-		"slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner"},
-		"slotEnergy": {type: "slot", x: 541, y: 212},
-	}
-});
-
 namespace Machine {
+	const guiMiner = MachineRegistry.createInventoryWindow("Miner", {
+		drawing: [
+			{type: "bitmap", x: 550, y: 150, bitmap: "energy_small_background", scale: GUI_SCALE}
+		],
+
+		elements: {
+			"energyScale": {type: "scale", x: 550, y: 150, direction: 1, value: 1, bitmap: "energy_small_scale", scale: GUI_SCALE},
+			"slotDrill": {type: "slot", x: 441, y: 75, bitmap: "slot_drill"},
+			"slotPipe": {type: "slot", x: 541, y: 75},
+			"slotScanner": {type: "slot", x: 641, y: 75, bitmap: "slot_scanner"},
+			"slotEnergy": {type: "slot", x: 541, y: 212},
+		}
+	});
+
 	export class Miner extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
@@ -83,7 +83,7 @@ namespace Machine {
 				}
 				if (this.data.z > this.z + r) break;
 				const blockID = this.region.getBlockId(this.data.x, this.data.scanY, this.data.z);
-				if (ore_blocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)) {
+				if (scannerOreBlocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)) {
 					return true;
 				}
 				this.data.x++;

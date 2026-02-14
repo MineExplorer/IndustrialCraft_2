@@ -16,24 +16,23 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.primalGenerator, -1, 'a', ItemID.cellEmpty, 0, 'b', ItemID.casingIron, 0, 'x', 20, -1]);
 });
 
-
-const guiGeothermalGenerator = MachineRegistry.createInventoryWindow("Geothermal Generator", {
-	drawing: [
-		{type: "bitmap", x: 702, y: 91, bitmap: "energy_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
-		{type: "bitmap", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-		"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"slot1": {type: "slot", x: 440, y: 75},
-		"slot2": {type: "slot", x: 440, y: 183},
-		"slotEnergy": {type: "slot", x: 725, y: 165}
-	}
-});
-
 namespace Machine {
+	const guiGeothermalGenerator = MachineRegistry.createInventoryWindow("Geothermal Generator", {
+		drawing: [
+			{type: "bitmap", x: 702, y: 91, bitmap: "energy_bar_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 581, y: 75, bitmap: "liquid_bar", scale: GUI_SCALE},
+			{type: "bitmap", x: 459, y: 139, bitmap: "liquid_bar_arrow", scale: GUI_SCALE}
+		],
+
+		elements: {
+			"energyScale": {type: "scale", x: 702 + 4*GUI_SCALE, y: 91, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+			"liquidScale": {type: "scale", x: 581 + 4*GUI_SCALE, y: 75 + 4*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+			"slot1": {type: "slot", x: 440, y: 75},
+			"slot2": {type: "slot", x: 440, y: 183},
+			"slotEnergy": {type: "slot", x: 725, y: 165}
+		}
+	});
+
 	export class GeothermalGenerator extends Generator {
 		liquidTank: BlockEngine.LiquidTank;
 

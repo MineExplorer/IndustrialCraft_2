@@ -37,7 +37,6 @@ Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 0, z: 0}, {x: 1, y: 1, z: 1/
 Block.setBlockShape(BlockID.luminator_on, {x: 15/16, y: 0, z: 0}, {x: 1, y: 1, z: 1}, 4);
 Block.setBlockShape(BlockID.luminator_on, {x: 0, y: 0, z: 0}, {x: 1/16, y: 1, z: 1}, 5);
 
-
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.luminator, count: 8, data: 1}, [
 		"cxc",

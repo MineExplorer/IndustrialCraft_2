@@ -32,7 +32,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 LIBRARY({
     name: "BlockEngine",
-    version: 13,
+    version: 14,
     shared: true,
     api: "CoreEngine"
 });
@@ -102,18 +102,18 @@ var BlockEngine;
         }
         Decorators.ClientSide = ClientSide;
         /** Adds method as network event in TileEntity */
-        function NetworkEvent(side) {
+        function NetworkEvent(side, eventName) {
             return function (target, propertyName) {
                 target.__networkEvents = __assign({}, target.__networkEvents);
-                target.__networkEvents[propertyName] = side;
+                target.__networkEvents[propertyName] = { side: side, eventName: eventName !== null && eventName !== void 0 ? eventName : propertyName };
             };
         }
         Decorators.NetworkEvent = NetworkEvent;
         /** Adds method as container event in TileEntity */
-        function ContainerEvent(side) {
+        function ContainerEvent(side, eventName) {
             return function (target, propertyName) {
                 target.__containerEvents = __assign({}, target.__containerEvents);
-                target.__containerEvents[propertyName] = side;
+                target.__containerEvents[propertyName] = { side: side, eventName: eventName !== null && eventName !== void 0 ? eventName : propertyName };
             };
         }
         Decorators.ContainerEvent = ContainerEvent;
@@ -1601,6 +1601,7 @@ var BlockRegistry;
      * variation corresponds to block data value, data values are assigned
      * according to variations order.
      * @param blockType BlockType object or block type name, if the type was previously registered.
+     * @returns instance of created block
      */
     function createBlock(stringID, defineData, blockType) {
         var block = new BlockBase(stringID, blockType);
@@ -1609,6 +1610,7 @@ var BlockRegistry;
             block.addVariation(variation.name, variation.texture, variation.inCreative);
         }
         registerBlock(block);
+        return block;
     }
     BlockRegistry.createBlock = createBlock;
     /**
@@ -1618,6 +1620,7 @@ var BlockRegistry;
      * each occupying 6 data values for rotation.
      * @param blockType BlockType object or block type name, if the type was previously registered.
      * @param hasVerticalFacings true if the block has vertical facings, false otherwise.
+     * @returns instance of created block
      */
     function createBlockWithRotation(stringID, defineData, blockType, hasVerticalFacings) {
         var block = new BlockRotative(stringID, blockType, hasVerticalFacings);
@@ -1626,6 +1629,7 @@ var BlockRegistry;
             block.addVariation(variation.name, variation.texture, variation.inCreative);
         }
         registerBlock(block);
+        return block;
     }
     BlockRegistry.createBlockWithRotation = createBlockWithRotation;
     /**
@@ -1633,9 +1637,12 @@ var BlockRegistry;
      * @param stringID string id of the block
      * @param defineData array containing one variation of the block (for similarity with other methods).
      * @param blockType BlockType object or block type name, if the type was previously registered.
+     * @returns instance of created stairs block
      */
     function createStairs(stringID, defineData, blockType) {
-        registerBlock(new BlockStairs(stringID, defineData[0], blockType));
+        var stairs = new BlockStairs(stringID, defineData[0], blockType);
+        registerBlock(stairs);
+        return stairs;
     }
     BlockRegistry.createStairs = createStairs;
     /**
@@ -3328,15 +3335,15 @@ var TileEntityBase = /** @class */ (function () {
         for (var propertyName in this.__clientMethods) {
             this.client[propertyName] = this[propertyName];
         }
-        for (var eventName in this.__networkEvents) {
-            var side = this.__networkEvents[eventName];
-            var target = (side == Side.Client) ? this.client.events : this.events;
-            target[eventName] = this[eventName];
+        for (var propertyName in this.__networkEvents) {
+            var event = this.__networkEvents[propertyName];
+            var target = (event.side == Side.Client) ? this.client.events : this.events;
+            target[event.eventName] = this[propertyName];
         }
-        for (var eventName in this.__containerEvents) {
-            var side = this.__containerEvents[eventName];
-            var target = (side == Side.Client) ? this.client.containerEvents : this.containerEvents;
-            target[eventName] = this[eventName];
+        for (var propertyName in this.__containerEvents) {
+            var event = this.__containerEvents[propertyName];
+            var target = (event.side == Side.Client) ? this.client.containerEvents : this.containerEvents;
+            target[event.eventName] = this[propertyName];
         }
         delete this.__clientMethods;
         delete this.__networkEvents;

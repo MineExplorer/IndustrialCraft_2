@@ -24,16 +24,16 @@ Callback.addCallback("PreLoaded", function() {
 	], ['a', ItemID.cableTin1, 0, 'x', 5, -1, 'b', ItemID.storageBattery, -1]);
 });
 
-const guiBatBox = BatteryBlockWindow("BatBox");
-
 namespace Machine {
-	class BatBox extends BatteryBlock {
+	const guiBatBox = BatteryBlockWindow("BatBox");
+
+	export class StorageBatBox extends BatteryBlock {
 		constructor() {
 			super(1, 40000, BlockID.storageBatBox, guiBatBox);
 		}
 	}
 
-	MachineRegistry.registerPrototype(BlockID.storageBatBox, new BatBox());
+	MachineRegistry.registerPrototype(BlockID.storageBatBox, new StorageBatBox());
 	MachineRegistry.setStoragePlaceFunction("storageBatBox", true);
 
 	StorageInterface.createInterface(BlockID.storageBatBox, BatteryBlockInterface);

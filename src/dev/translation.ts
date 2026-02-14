@@ -66,7 +66,7 @@ Translation.addTranslation("Recycler", {ru: "Утилизатор", es: "Recicla
 Translation.addTranslation("Metal Former", {ru: "Металлоформовщик", es: "Arqueador de Metal", pt: "Moldelador de Metais", zh: "金属成型机"});
 Translation.addTranslation("Ore Washing Plant", {ru: "Рудопромывочная машина", es: "Planta de Lavado de Minerales", pt: "Estação de Lavagem de Minérios", zh: "洗矿机"});
 Translation.addTranslation("Thermal Centrifuge", {ru: "Термальная центрифуга", es: "Centrífuga Térmica", pt: "Centrífuga Térmica", zh: "热能离心机"});
-Translation.addTranslation("Blast Furnace", {ru: "Доменная печь", es: "Alto Horno", pt: "Fornalha de Aquecimento", zh: "高炉"});
+Translation.addTranslation("Industrial Blast Furnace", {ru: "Доменная печь", es: "Alto Horno", pt: "Fornalha de Aquecimento", zh: "高炉"});
 Translation.addTranslation("Industrial Workbench", {ru: "Промышленный верстак", pt: "Mesa de Trabalho Industrial", zh: "工业工作台"});
 Translation.addTranslation("Automatic Crafter", {ru: "Автоматический верстак", pt: "Fabricador em Lotes", zh: "批量工作台"});
 Translation.addTranslation("Miner", {ru: "Буровая установка", es: "Perforadora", pt: "Minerador", zh: "采矿机"});

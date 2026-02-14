@@ -13,112 +13,111 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'a', ItemID.craftingHammer, 0, 'b', ItemID.cutter, 0, 'c', VanillaBlockID.crafting_table, 0]);
 });
 
-const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial Workbench", {
-	elements: {
-		"progressArrow": { type: "button", x: 565, y: 104, bitmap: "arrow_bar_background", scale: GUI_SCALE, clicker: {
-			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("workbench");
-			}
-		}},
-		"slotInput0": { type: "slot", x: 370, y: 40 },
-		"slotInput1": { type: "slot", x: 430, y: 40 },
-		"slotInput2": { type: "slot", x: 490, y: 40 },
-		"slotInput3": { type: "slot", x: 370, y: 100 },
-		"slotInput4": { type: "slot", x: 430, y: 100 },
-		"slotInput5": { type: "slot", x: 490, y: 100 },
-		"slotInput6": { type: "slot", x: 370, y: 160 },
-		"slotInput7": { type: "slot", x: 430, y: 160 },
-		"slotInput8": { type: "slot", x: 490, y: 160 },
-		"slotResult": { type: "slot", x: 650, y: 100, visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-                container.sendEvent("craft", {allAtOnce: false});
-            },
-            onLongClick: function(_, container: ItemContainer) {
-                container.sendEvent("craft", {allAtOnce: true});
-            }
-        }},
-        "buttonClear": {type: "button", x: 555, y: 40, bitmap: "ic2.clear_button", bitmap2: "ic2.clear_button_touched", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container: ItemContainer) {
-				container.sendEvent("clearGrid", {});
-			}
-		}},
-        "slot0": { type: 'slot', x: 370, y: 250 },
-        "slot1": { type: 'slot', x: 430, y: 250 },
-        "slot2": { type: 'slot', x: 490, y: 250 },
-        "slot3": { type: 'slot', x: 550, y: 250 },
-        "slot4": { type: 'slot', x: 610, y: 250 },
-        "slot5": { type: 'slot', x: 670, y: 250 },
-        "slot6": { type: 'slot', x: 730, y: 250 },
-        "slot7": { type: 'slot', x: 790, y: 250 },
-        "slot8": { type: 'slot', x: 850, y: 250 },
-        "slot9": { type: 'slot', x: 370, y: 310 },
-        "slot10": { type: 'slot', x: 430, y: 310 },
-        "slot11": { type: 'slot', x: 490, y: 310 },
-        "slot12": { type: 'slot', x: 550, y: 310 },
-        "slot13": { type: 'slot', x: 610, y: 310 },
-        "slot14": { type: 'slot', x: 670, y: 310 },
-        "slot15": { type: 'slot', x: 730, y: 310 },
-        "slot16": { type: 'slot', x: 790, y: 310 },
-        "slot17": { type: 'slot', x: 850, y: 310 },
-        "slotPatternResult0": { type: "slot", x: 730, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 0});
-			}
-        }},
-		"slotPatternResult1": { type: "slot", x: 790, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 1});
-			}
-        }},
-		"slotPatternResult2": { type: "slot", x: 850, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 2});
-			}
-        }},
-		"slotPatternResult3": { type: "slot", x: 730, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 3});
-			}
-        }},
-		"slotPatternResult4": { type: "slot", x: 790, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 4});
-			}
-        }},
-		"slotPatternResult5": { type: "slot", x: 850, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 5});
-			}
-        }},
-		"slotPatternResult6": { type: "slot", x: 730, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 6});
-			}
-        }},
-		"slotPatternResult7": { type: "slot", x: 790, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 7});
-			}
-        }},
-		"slotPatternResult8": { type: "slot", x: 850, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
-            onClick: function(_, container: ItemContainer) {
-				container.sendEvent("usePattern", {index: 8});
-			}
-        }},
-        "buttonPlus": {type: "button", x: 910, y: 40, bitmap: "ic2.plus_button", bitmap2: "ic2.plus_button_touched", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container: ItemContainer) {
-				container.sendEvent("addPattern", {});
-			}
-		}},
-        "buttonMinus": {type: "button", x: 910, y: 75, bitmap: "ic2.minus_button", bitmap2: "ic2.minus_button_touched", scale: GUI_SCALE, clicker: {
-			onClick: function(_, container: ItemContainer) {
-				container.sendEvent("removePattern", {});
-			}
-		}}
-	}
-});
-
 namespace Machine {
+    const guiIndustrialWorkbench = MachineRegistry.createInventoryWindow("Industrial Workbench", {
+        elements: {
+            "progressArrow": { type: "button", x: 565, y: 104, bitmap: "arrow_bar_background", scale: GUI_SCALE, clicker: {
+                onClick: () => {
+                    RV?.RecipeTypeRegistry.openRecipePage("workbench");
+                }
+            }},
+            "slotInput0": { type: "slot", x: 370, y: 40 },
+            "slotInput1": { type: "slot", x: 430, y: 40 },
+            "slotInput2": { type: "slot", x: 490, y: 40 },
+            "slotInput3": { type: "slot", x: 370, y: 100 },
+            "slotInput4": { type: "slot", x: 430, y: 100 },
+            "slotInput5": { type: "slot", x: 490, y: 100 },
+            "slotInput6": { type: "slot", x: 370, y: 160 },
+            "slotInput7": { type: "slot", x: 430, y: 160 },
+            "slotInput8": { type: "slot", x: 490, y: 160 },
+            "slotResult": { type: "slot", x: 650, y: 100, visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("craft", {allAtOnce: false});
+                },
+                onLongClick: function(_, container: ItemContainer) {
+                    container.sendEvent("craft", {allAtOnce: true});
+                }
+            }},
+            "buttonClear": {type: "button", x: 555, y: 40, bitmap: "ic2.clear_button", bitmap2: "ic2.clear_button_touched", scale: GUI_SCALE, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("clearGrid", {});
+                }
+            }},
+            "slot0": { type: 'slot', x: 370, y: 250 },
+            "slot1": { type: 'slot', x: 430, y: 250 },
+            "slot2": { type: 'slot', x: 490, y: 250 },
+            "slot3": { type: 'slot', x: 550, y: 250 },
+            "slot4": { type: 'slot', x: 610, y: 250 },
+            "slot5": { type: 'slot', x: 670, y: 250 },
+            "slot6": { type: 'slot', x: 730, y: 250 },
+            "slot7": { type: 'slot', x: 790, y: 250 },
+            "slot8": { type: 'slot', x: 850, y: 250 },
+            "slot9": { type: 'slot', x: 370, y: 310 },
+            "slot10": { type: 'slot', x: 430, y: 310 },
+            "slot11": { type: 'slot', x: 490, y: 310 },
+            "slot12": { type: 'slot', x: 550, y: 310 },
+            "slot13": { type: 'slot', x: 610, y: 310 },
+            "slot14": { type: 'slot', x: 670, y: 310 },
+            "slot15": { type: 'slot', x: 730, y: 310 },
+            "slot16": { type: 'slot', x: 790, y: 310 },
+            "slot17": { type: 'slot', x: 850, y: 310 },
+            "slotPatternResult0": { type: "slot", x: 730, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 0});
+                }
+            }},
+            "slotPatternResult1": { type: "slot", x: 790, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 1});
+                }
+            }},
+            "slotPatternResult2": { type: "slot", x: 850, y: 40, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 2});
+                }
+            }},
+            "slotPatternResult3": { type: "slot", x: 730, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 3});
+                }
+            }},
+            "slotPatternResult4": { type: "slot", x: 790, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 4});
+                }
+            }},
+            "slotPatternResult5": { type: "slot", x: 850, y: 100, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 5});
+                }
+            }},
+            "slotPatternResult6": { type: "slot", x: 730, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 6});
+                }
+            }},
+            "slotPatternResult7": { type: "slot", x: 790, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 7});
+                }
+            }},
+            "slotPatternResult8": { type: "slot", x: 850, y: 160, bitmap: "ic2.locked_slot", visual: true, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("usePattern", {index: 8});
+                }
+            }},
+            "buttonPlus": {type: "button", x: 910, y: 40, bitmap: "ic2.plus_button", bitmap2: "ic2.plus_button_touched", scale: GUI_SCALE, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("addPattern", {});
+                }
+            }},
+            "buttonMinus": {type: "button", x: 910, y: 75, bitmap: "ic2.minus_button", bitmap2: "ic2.minus_button_touched", scale: GUI_SCALE, clicker: {
+                onClick: function(_, container: ItemContainer) {
+                    container.sendEvent("removePattern", {});
+                }
+            }}
+        }
+    });
 	export class IndustrialWorkbench extends MachineBase {
         defaultValues = { 
             recipeChecked: false,
@@ -240,7 +239,7 @@ namespace Machine {
 
         clearPattern(index: number): void {
             this.container.getSlot("slotPatternResult" + index).clear();
-            delete this.data.patterns[index];
+            delete this.data.patterns["_" + index];
         }
 
         savePattern(result: ItemInstance, index: number) {
@@ -249,14 +248,15 @@ namespace Machine {
                 return;
 
             this.container.setSlot("slotPatternResult" + index, result.id, result.count, result.data, result.extra);
-            this.data.patterns[index] = {};
+            const pattern = {};
             for (let j = 0; j < 9; j++) {
                 const inputSlot = this.container.getSlot("slotInput" + j);
                 const entry = entryArray.find(e => e.id == inputSlot.id && (e.data == inputSlot.data || e.data == -1));
                 if (entry) {
-                    this.data.patterns[index][j] = {id: entry.id, data: entry.data};
+                    pattern["_" + j] = {id: entry.id, data: entry.data};
                 }
             }
+            this.data.patterns["_" + index] = pattern;
             this.container.sendChanges();
         }
 
@@ -297,22 +297,19 @@ namespace Machine {
             return entryArray;
         }
 
-        /** @deprecated Container event, shouldn't be called directly */
-        @ContainerEvent(Side.Server)
-        craft(packetData: {allAtOnce: boolean}, client: NetworkClient) {
+        @ContainerEvent(Side.Server, "craft")
+        onCraft(packetData: {allAtOnce: boolean}, client: NetworkClient) {
             this.provideRecipe(client.getPlayerUid(), packetData.allAtOnce);
         }
 
-        /** @deprecated Container event, shouldn't be called directly */
-        @ContainerEvent(Side.Server)
-        clearGrid(packetData: {}, client: NetworkClient) {
+        @ContainerEvent(Side.Server, "clearGrid")
+        onClearGrid(packetData: {}, client: NetworkClient) {
             this.clearGridForPlayer(client.getPlayerUid());
             this.container.sendChanges();
         }
 
-        /** @deprecated Container event, shouldn't be called directly */
-        @ContainerEvent(Side.Server)
-        addPattern(packetData: {}, client: NetworkClient) {
+        @ContainerEvent(Side.Server, "addPattern")
+        onAddPattern(packetData: {}, client: NetworkClient) {
             const resultSlot = this.container.getSlot("slotResult");
             if (resultSlot.id == 0) return;
 
@@ -325,9 +322,8 @@ namespace Machine {
             }
         }
 
-        /** @deprecated Container event, shouldn't be called directly */
-        @ContainerEvent(Side.Server)
-        removePattern(packetData: {}, client: NetworkClient) {
+        @ContainerEvent(Side.Server, "removePattern")
+        onRemovePattern(packetData: {}, client: NetworkClient) {
             const resultSlot = this.container.getSlot("slotResult");
             let lastSeenIndex = -1;
             // Remove the pattern matching the result slot, or the last one if none match
@@ -346,14 +342,13 @@ namespace Machine {
             }
         }
 
-        /** @deprecated Container event, shouldn't be called directly */
-        @ContainerEvent(Side.Server)
-        usePattern({index}: {index: number}, client: NetworkClient) {
-            const pattern = this.data.patterns[index];
+        @ContainerEvent(Side.Server, "usePattern")
+        onUsePattern({index}: {index: number}, client: NetworkClient) {
+            const pattern = this.data.patterns["_" + index];
             if (pattern) {
                 this.clearGridForPlayer(client.getPlayerUid());
-                for (let j of pattern) {
-                    this.container.setSlot("slotInput" + j, pattern[j].id, 0, pattern[j].data);
+                for (let j in pattern) {
+                    this.container.setSlot("slotInput" + j[1], pattern[j].id, 0, pattern[j].data);
                 }
                 this.refillItems();
                 this.data.recipeChecked = false;

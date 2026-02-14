@@ -9,11 +9,13 @@ TileRenderer.registerModelWithRotation(BlockID.genWatermill, 2, [["machine_botto
 TileRenderer.setRotationFunction(BlockID.genWatermill);
 
 Callback.addCallback("PreLoaded", function() {
+	const plate = IC2Config.hardRecipes ? ItemID.plateSteel : ItemID.plateIron;
+	const casing = IC2Config.hardRecipes ? ItemID.casingSteel : ItemID.casingIron;
 	Recipes.addShaped({id: BlockID.genWatermill, count: 1, data: 0}, [
 		"x x",
 		"a#a",
 		"xcx"
-	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0, 'a', ItemID.casingSteel, 0, 'c', ItemID.coil, 0]);
+	], ['#', BlockID.primalGenerator, -1, 'x', plate, 0, 'a', casing, 0, 'c', ItemID.coil, 0]);
 });
 
 namespace Machine {

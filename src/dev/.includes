@@ -37,6 +37,10 @@ machine/storage/BatBox.ts
 machine/storage/CESU.ts
 machine/storage/MFE.ts
 machine/storage/MFSU.ts
+machine/storage/ChargePadBatbox.ts
+machine/storage/ChargePadCESU.ts
+machine/storage/ChargePadMFE.ts
+machine/storage/ChargePadMFSU.ts
 
 machine/transformer/LV.ts
 machine/transformer/MV.ts

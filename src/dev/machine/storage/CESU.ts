@@ -20,16 +20,16 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', ItemID.cableCopper1, 0, 'a', ItemID.storageAdvBattery, -1, 'b', ItemID.plateBronze, 0]);
 });
 
-const guiCESU = BatteryBlockWindow("CESU");
-
 namespace Machine {
-	class CESU extends BatteryBlock {
+	const guiCESU = BatteryBlockWindow("CESU");
+
+	export class StorageCESU extends BatteryBlock {
 		constructor() {
 			super(2, 300000, BlockID.storageCESU, guiCESU);
 		}
 	}
 
-	MachineRegistry.registerPrototype(BlockID.storageCESU, new CESU());
+	MachineRegistry.registerPrototype(BlockID.storageCESU, new StorageCESU());
 	MachineRegistry.setStoragePlaceFunction("storageCESU", true);
 
 	StorageInterface.createInterface(BlockID.storageCESU, BatteryBlockInterface);

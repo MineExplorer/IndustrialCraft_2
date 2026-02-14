@@ -24,7 +24,7 @@ Callback.addCallback("PreLoaded", function() {
 			"xxx",
 			"b#b",
 			" a "
-		], ['#', BlockID.machineBlockBasic, -1, 'x', 318, -1, 'b', 4, -1, 'a', ItemID.circuitBasic, -1]);
+		], ['#', BlockID.machineBlockBasic, -1, 'x', 318, -1, 'b', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1]);
 	}
 
 	MachineRecipeRegistry.registerRecipesFor("macerator", {
@@ -122,30 +122,30 @@ Callback.addCallback("PreLoaded", function() {
 	}, true);
 });
 
-const guiMacerator = MachineRegistry.createInventoryWindow("Macerator", {
-	drawing: [
-		{type: "bitmap", x: 530, y: 155, bitmap: "macerator_bar_background", scale: GUI_SCALE},
-		{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"progressScale": {type: "scale", x: 530, y: 155, direction: 0, bitmap: "macerator_bar_scale", scale: GUI_SCALE, clicker: {
-			onClick: () => {
-				RV?.RecipeTypeRegistry.openRecipePage("icpe_macerator");
-			}
-		}},
-		"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
-		"slotSource": {type: "slot", x: 441, y: 79},
-		"slotEnergy": {type: "slot", x: 441, y: 218},
-		"slotResult": {type: "slot", x: 625, y: 148},
-		"slotUpgrade1": {type: "slot", x: 820, y: 60},
-		"slotUpgrade2": {type: "slot", x: 820, y: 119},
-		"slotUpgrade3": {type: "slot", x: 820, y: 178},
-		"slotUpgrade4": {type: "slot", x: 820, y: 237},
-	}
-});
-
 namespace Machine {
+	const guiMacerator = MachineRegistry.createInventoryWindow("Macerator", {
+		drawing: [
+			{type: "bitmap", x: 530, y: 155, bitmap: "macerator_bar_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 450, y: 155, bitmap: "energy_small_background", scale: GUI_SCALE}
+		],
+
+		elements: {
+			"progressScale": {type: "scale", x: 530, y: 155, direction: 0, bitmap: "macerator_bar_scale", scale: GUI_SCALE, clicker: {
+				onClick: () => {
+					RV?.RecipeTypeRegistry.openRecipePage("icpe_macerator");
+				}
+			}},
+			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},
+			"slotSource": {type: "slot", x: 441, y: 79},
+			"slotEnergy": {type: "slot", x: 441, y: 218},
+			"slotResult": {type: "slot", x: 625, y: 148},
+			"slotUpgrade1": {type: "slot", x: 820, y: 60},
+			"slotUpgrade2": {type: "slot", x: 820, y: 119},
+			"slotUpgrade3": {type: "slot", x: 820, y: 178},
+			"slotUpgrade4": {type: "slot", x: 820, y: 237},
+		}
+	});
+
 	export class Macerator extends ProcessingMachine {
 		defaultEnergyDemand = 2;
 		defaultProcessTime = 300;

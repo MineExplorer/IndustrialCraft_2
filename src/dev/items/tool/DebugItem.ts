@@ -7,7 +7,7 @@ class DebugItem extends ItemElectric {
 	}
 
 	onCharge(item: ItemInstance, amount: number, tier: number, addAll: boolean): number {
-		return amount;
+		return addAll ? 0 : amount;
 	}
 
 	onDischarge(item: ItemInstance, amount: number, tier: number, getAll: boolean): number {

@@ -5,30 +5,22 @@ BlockRegistry.setBlockMaterial(BlockID.solarPanel, "stone", 1);
 ItemName.addProductionTooltip(BlockID.solarPanel, "EU", EnergyProductionModifiers.SolarPanel);
 
 Callback.addCallback("PreLoaded", function() {
-	if (IC2Config.hardRecipes) {
-		Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
-			"aaa",
-			"xxx",
-			"b#b"
-		], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustLapis, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
-	}
-	else {
-		Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
-			"aaa",
-			"xxx",
-			"b#b"
-		], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.dustCoal, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
-	}
-});
-
-const guiSolarPanel = MachineRegistry.createInventoryWindow("Solar Panel", {
-	elements: {
-		"slotEnergy": {type: "slot", x: 600, y: 130},
-		"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
-	}
+	const dust = IC2Config.hardRecipes ? ItemID.dustLapis : ItemID.dustCoal;
+	Recipes.addShaped({id: BlockID.solarPanel, count: 1, data: 0}, [
+		"aaa",
+		"xxx",
+		"b#b"
+	], ['#', BlockID.machineBlockBasic, 0, 'x', dust, 0, 'b', ItemID.circuitBasic, 0, 'a', 20, -1]);
 });
 
 namespace Machine {
+	const guiSolarPanel = MachineRegistry.createInventoryWindow("Solar Panel", {
+		elements: {
+			"slotEnergy": {type: "slot", x: 600, y: 130},
+			"sun": {type: "image", x: 608, y: 194, bitmap: "sun_off", scale: GUI_SCALE}
+		}
+	});
+
 	export class SolarGenerator extends Generator {
 		defaultValues = {
 			energy: 0,

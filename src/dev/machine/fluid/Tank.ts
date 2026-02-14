@@ -11,25 +11,25 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'c', ItemID.cellEmpty, 0]);
 });
 
-const guiTank = MachineRegistry.createInventoryWindow("Tank", {
-	drawing: [
-		{type: "bitmap", x: 400 + 46*GUI_SCALE, y: 50 + 12*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE},
-		{type: "bitmap", x: 400 + 80*GUI_SCALE, y: 159, bitmap: "liquid_bar_arrow", scale: GUI_SCALE}
-	],
-
-	elements: {
-		"liquidScale": {type: "scale", x: 400 + 50*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
-		"slotLiquid1": {type: "slot", x: 400 + 74*GUI_SCALE, y: 95},
-		"slotLiquid2": {type: "slot", x: 400 + 74*GUI_SCALE, y: 203},
-		"slotOutput": {type: "slot", x: 400 + 106*GUI_SCALE, y: 149},
-		"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE},
-		"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE},
-		"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE},
-		"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE},
-	}
-});
-
 namespace Machine {
+	const guiTank = MachineRegistry.createInventoryWindow("Tank", {
+		drawing: [
+			{type: "bitmap", x: 400 + 46*GUI_SCALE, y: 50 + 12*GUI_SCALE, bitmap: "liquid_bar", scale: GUI_SCALE},
+			{type: "bitmap", x: 400 + 80*GUI_SCALE, y: 159, bitmap: "liquid_bar_arrow", scale: GUI_SCALE}
+		],
+
+		elements: {
+			"liquidScale": {type: "scale", x: 400 + 50*GUI_SCALE, y: 50 + 16*GUI_SCALE, direction: 1, bitmap: "gui_water_scale", overlay: "gui_liquid_storage_overlay", scale: GUI_SCALE},
+			"slotLiquid1": {type: "slot", x: 400 + 74*GUI_SCALE, y: 95},
+			"slotLiquid2": {type: "slot", x: 400 + 74*GUI_SCALE, y: 203},
+			"slotOutput": {type: "slot", x: 400 + 106*GUI_SCALE, y: 149},
+			"slotUpgrade1": {type: "slot", x: 870, y: 50 + 4*GUI_SCALE},
+			"slotUpgrade2": {type: "slot", x: 870, y: 50 + 22*GUI_SCALE},
+			"slotUpgrade3": {type: "slot", x: 870, y: 50 + 40*GUI_SCALE},
+			"slotUpgrade4": {type: "slot", x: 870, y: 50 + 58*GUI_SCALE},
+		}
+	});
+
 	export class FluidTank extends MachineBase {
 		liquidTank: BlockEngine.LiquidTank;
 		upgrades = ["fluidEjector", "fluidPulling"];

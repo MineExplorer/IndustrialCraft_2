@@ -15,26 +15,25 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.reactorChamber, 0, 'x', BlockID.primalGenerator, 0, 'c', ItemID.casingIron, 0]);
 });
 
-const guiRTGenerator = MachineRegistry.createInventoryWindow("Radioisotope Thermoelectric Generator", {
-	drawing: [
-		{type: "bitmap", x: 630, y: 150, bitmap: "energy_bar_background", scale: GUI_SCALE},
-	],
-
-	elements: {
-		"slot0": {type: "slot", x: 420, y: 120},
-		"slot1": {type: "slot", x: 480, y: 120},
-		"slot2": {type: "slot", x: 540, y: 120},
-		"slot3": {type: "slot", x: 420, y: 180},
-		"slot4": {type: "slot", x: 480, y: 180},
-		"slot5": {type: "slot", x: 540, y: 180},
-		"energyScale": {type: "scale", x: 630 + GUI_SCALE * 4, y: 150, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-		"textInfo1": {type: "text", x: 742, y: 148, width: 300, height: 30, text: "0/"},
-		"textInfo2": {type: "text", x: 742, y: 178, width: 300, height: 30, text: "10000"}
-	}
-});
-
-
 namespace Machine {
+	const guiRTGenerator = MachineRegistry.createInventoryWindow("Radioisotope Thermoelectric Generator", {
+		drawing: [
+			{type: "bitmap", x: 630, y: 150, bitmap: "energy_bar_background", scale: GUI_SCALE},
+		],
+
+		elements: {
+			"slot0": {type: "slot", x: 420, y: 120},
+			"slot1": {type: "slot", x: 480, y: 120},
+			"slot2": {type: "slot", x: 540, y: 120},
+			"slot3": {type: "slot", x: 420, y: 180},
+			"slot4": {type: "slot", x: 480, y: 180},
+			"slot5": {type: "slot", x: 540, y: 180},
+			"energyScale": {type: "scale", x: 630 + GUI_SCALE * 4, y: 150, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
+			"textInfo1": {type: "text", x: 742, y: 148, width: 300, height: 30, text: "0/"},
+			"textInfo2": {type: "text", x: 742, y: 178, width: 300, height: 30, text: "10000"}
+		}
+	});
+
 	export class RTGenerator extends Generator {
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id) => (id == ItemID.rtgPellet));

@@ -9,11 +9,12 @@ TileRenderer.registerModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom
 TileRenderer.setRotationFunction(BlockID.genWindmill);
 
 Callback.addCallback("PreLoaded", function() {
+	const plate = IC2Config.hardRecipes ? ItemID.carbonPlate : ItemID.plateIron;
 	Recipes.addShaped({id: BlockID.genWindmill, count: 1, data: 0}, [
 		"x x",
 		" # ",
 		"xcx"
-	], ['#', BlockID.primalGenerator, -1, 'x', ItemID.plateSteel, 0, 'c', ItemID.coil, 0]);
+	], ['#', BlockID.primalGenerator, -1, 'x', plate, 0, 'c', ItemID.coil, 0]);
 });
 
 namespace Machine {
@@ -39,8 +40,9 @@ namespace Machine {
 
 		onInit(): void {
 			super.onInit();
-			if (this.dimension != 0)
+			if (this.dimension != 0) {
 				this.selfDestroy();
+			}
 		}
 
 		onTick(): void {
@@ -48,8 +50,7 @@ namespace Machine {
 				if (this.data.ticker % 1024 == 0) {
 					this.updateBlockCount();
 				}
-				let wind = WindSim.getWindAt(this.y) * (1 - this.data.blockCount/567);
-				if (wind < 0) wind = 0;
+				let wind = WindSim.getWindAt(this.blockSource, this.x, this.y, this.z) * (1 - this.data.blockCount/567);
 				const rawOutput = wind / 30 * EnergyProductionModifiers.WindGenerator;
 				this.data.output = Math.round(rawOutput * 10)/10;
 			}

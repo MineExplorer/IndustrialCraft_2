@@ -6,12 +6,13 @@ implements ItemBehavior {
 	}
 
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number) {
-		if (block.id == BlockID.storageMFE) {
-			let region = WorldRegion.getForActor(player);
-			let tile = region.getTileEntity(coords);
+		if (block.id == BlockID.storageMFE || block.id == BlockID.chargepadMFE) {
+			const region = WorldRegion.getForActor(player);
+			const tile = region.getTileEntity(coords);
 			tile.selfDestroy();
-			region.setBlock(coords, BlockID.storageMFSU, tile.getFacing());
-			let newTile = region.addTileEntity(coords);
+			const newBlockId = block.id == BlockID.storageMFE ? BlockID.storageMFSU : BlockID.chargepadMFSU;
+			region.setBlock(coords, newBlockId, tile.getFacing());
+			const newTile = region.addTileEntity(coords);
 			newTile.data = tile.data;
 			Entity.setCarriedItem(player, item.id, item.count - 1, 0);
 		}

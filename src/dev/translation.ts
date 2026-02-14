@@ -47,6 +47,10 @@ Translation.addTranslation("BatBox", {ru: "Энергохранилище", es: 
 Translation.addTranslation("CESU", {ru: "МЭСН", es: "Unidad CESU", pt: "Unidade de Armazenamento de Energia (UAE)", zh: "CESU储电箱"});
 Translation.addTranslation("MFE", {ru: "МФЭ", es: "Unidad MFE", pt: "Transmissor de Energia Multi-funcional (TEMF)", zh: "MFE储电箱"});
 Translation.addTranslation("MFSU", {ru: "МФСУ", es: "Unidad MFSU", pt: "Unidade de Armazenamento Multi-funcional (UAMF)", zh: "MFSU储电箱"});
+Translation.addTranslation("Charge Pad (BatBox)", {ru: "Заряжающая плита (Эн.хр)", es: "Almohadilla de Carga (BatBox)", pt: "Bloco de Recarga (CB)", zh: "充电座 (BatBox)"});
+Translation.addTranslation("Charge Pad (CESU)", {ru: "Заряжающая плита (МЭСН)", es: "Almohadilla de Carga (CESU)", pt: "Bloco de Recarga (UAE)", zh: "充电座 (CESU)"});
+Translation.addTranslation("Charge Pad (MFE)", {ru: "Заряжающая плита (МФЭ)", es: "Almohadilla de Carga (MFE)", pt: "Bloco de Recarga (TEMF)", zh: "充电座 (MFE)"});
+Translation.addTranslation("Charge Pad (MFSU)", {ru: "Заряжающая плита (МФСУ)", es: "Almohadilla de Carga (MFSU)", pt: "Bloco de Recarga (UAMF)", zh: "充电座 (MFSU)"});
 
 // Transformer
 Translation.addTranslation("LV Transformer", {ru: "Трансформатор НН", es: "Transformador de Baja Tensión", pt: "Transformador de Baixa Voltagem", zh: "低压变压器"});

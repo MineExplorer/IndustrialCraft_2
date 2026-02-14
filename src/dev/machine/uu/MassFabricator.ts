@@ -18,9 +18,9 @@ Callback.addCallback("PreLoaded", function() {
 	], ['b', BlockID.machineBlockAdvanced, 0, 'x', 348, 0, 'a', ItemID.circuitAdvanced, 0, '#', ItemID.storageLapotronCrystal, -1]);
 });
 
-let ENERGY_PER_MATTER = 1000000;
-
 namespace Machine {
+	export let ENERGY_PER_MATTER = 1000000;
+
 	const guiMassFabricator = MachineRegistry.createInventoryWindow("Mass Fabricator", {
 		drawing: [
 			{type: "bitmap", x: 850, y: 190, bitmap: "energy_small_background", scale: GUI_SCALE}

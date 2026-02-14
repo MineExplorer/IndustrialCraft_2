@@ -83,7 +83,7 @@ namespace Machine {
 				}
 				if (this.data.z > this.z + r) break;
 				const blockID = this.region.getBlockId(this.data.x, this.data.scanY, this.data.z);
-				if (ore_blocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)) {
+				if (scannerOreBlocks.indexOf(blockID) != -1 && level >= ToolAPI.getBlockDestroyLevel(blockID)) {
 					return true;
 				}
 				this.data.x++;

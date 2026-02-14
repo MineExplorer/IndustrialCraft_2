@@ -1,12 +1,12 @@
-let ore_blocks = [14, 15, 16, 21, 73, 74, 56, 129, 153];
+const scannerOreBlocks = [14, 15, 16, 21, 73, 74, 56, 129, 153];
 if (BlockEngine.getMainGameVersion() >= 16) {
-	ore_blocks.push(VanillaTileID.nether_gold_ore, VanillaTileID.gilded_blackstone, VanillaTileID.ancient_debris);
+	scannerOreBlocks.push(VanillaTileID.nether_gold_ore, VanillaTileID.gilded_blackstone, VanillaTileID.ancient_debris);
 }
 
 Callback.addCallback("PreLoaded", function() {
 	for (let id in BlockID) {
 		if ((id.startsWith("ore") || id.endsWith("_ore")) && !TileEntity.isTileEntityBlock(BlockID[id])) {
-			ore_blocks.push(BlockID[id]);
+			scannerOreBlocks.push(BlockID[id]);
 		}
 	}
 });
@@ -36,7 +36,7 @@ class ItemScanner extends ItemElectric {
 				for (let y = coords.y - radius; y <= coords.y + radius; y++) {
 					for (let z = coords.z - radius; z <= coords.z + radius; z++) {
 						let blockID = region.getBlockId(x, y, z);
-						if (ore_blocks.indexOf(blockID) != -1) {
+						if (scannerOreBlocks.indexOf(blockID) != -1) {
 							if (!ores[blockID]) ores[blockID] = 0;
 							ores[blockID]++;
 						}

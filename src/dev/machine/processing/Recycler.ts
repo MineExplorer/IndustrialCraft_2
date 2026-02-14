@@ -18,9 +18,9 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.compressor, -1, 'x', 3, -1, 'a', 348, 0, 'b', VanillaItemID.iron_ingot, 0]);
 });
 
-const recyclerBlacklist = [102, 280, 78, 80, 332];
-
 namespace Machine {
+	export const recyclerBlacklist = [102, 280, 78, 80, 332];
+
 	const guiRecycler = MachineRegistry.createInventoryWindow("Recycler", {
 		drawing: [
 			{type: "bitmap", x: 530, y: 155, bitmap: "recycler_bar_background", scale: GUI_SCALE},

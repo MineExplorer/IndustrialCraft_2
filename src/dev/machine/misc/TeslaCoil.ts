@@ -6,10 +6,10 @@ ItemName.addTierTooltip(BlockID.teslaCoil, 3);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.teslaCoil, count: 1, data: 0}, [
-		"ror",
+		"rrr",
 		"r#r",
 		"cxc"
-	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.casingIron, 0, 'o', ItemID.coil, 0, 'r', 331, 0]);
+	], ['#', BlockID.transformerMV, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.casingIron, 0, 'o', ItemID.coil, 0, 'r', 331, 0]);
 });
 
 namespace Machine {

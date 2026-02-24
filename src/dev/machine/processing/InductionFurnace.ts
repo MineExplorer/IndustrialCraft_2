@@ -72,11 +72,11 @@ namespace Machine {
 			return Recipes.getFurnaceRecipeResult(id, data, "iron");
 		}
 
-		checkResult(result: MachineRecipeRegistry.RecipeData, slot: ItemContainerSlot): boolean {
-			return result && (slot.id == result.id && slot.data == result.data && slot.count < 64 || slot.id == 0);
+		checkResult(result: ItemInstance, slot: ItemContainerSlot): boolean {
+			return result && (slot.id == 0 || (slot.id == result.id && slot.data == result.data && slot.count < 64));
 		}
 
-		putResult(result: MachineRecipeRegistry.RecipeData, sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot): void {
+		putResult(result: ItemInstance, sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot): void {
 			if (this.checkResult(result, resultSlot)) {
 				this.decreaseSlot(sourceSlot, 1);
 				resultSlot.setSlot(result.id, resultSlot.count + 1, result.data);

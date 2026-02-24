@@ -61,7 +61,7 @@ namespace Machine {
 			return guiExtractor;
 		}
 
-		getRecipeResult(id: number): MachineRecipeRegistry.RecipeData {
+		getRecipeResult(id: number): ProcessingRecipe {
 			return MachineRecipeRegistry.getRecipeResult("extractor", id);
 		}
 

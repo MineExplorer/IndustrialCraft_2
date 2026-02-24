@@ -155,7 +155,7 @@ namespace Machine {
 			return guiMacerator;
 		}
 
-		getRecipeResult(id: number, data: number): MachineRecipeRegistry.RecipeData {
+		getRecipeResult(id: number, data: number): ProcessingRecipe {
 			return MachineRecipeRegistry.getRecipeResult("macerator", id, data);
 		}
 

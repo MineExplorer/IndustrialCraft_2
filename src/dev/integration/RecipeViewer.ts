@@ -36,7 +36,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: MachineRecipeRegistry.RecipeData} = MachineRecipeRegistry.requireRecipesFor(this.recipeKey);
+			const recipe: DataTable<Machine.ProcessingRecipe> = MachineRecipeRegistry.requireRecipesFor(this.recipeKey);
 			let input: string[];
 			for (let key in recipe) {
 				input = key.split(":");
@@ -193,7 +193,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			let recipe: {[key: string]: MachineRecipeRegistry.RecipeData};
+			let recipe: DataTable<Machine.ProcessingRecipe>;
 			let input: string[];
 			for (let mode = 0; mode < 3; mode++) {
 				recipe = MachineRecipeRegistry.requireRecipesFor("metalFormer" + mode);

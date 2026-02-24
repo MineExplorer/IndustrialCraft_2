@@ -113,7 +113,7 @@ namespace Machine {
 			return guiCompressor;
 		}
 
-		getRecipeResult(id: number, data: number): MachineRecipeRegistry.RecipeData {
+		getRecipeResult(id: number, data: number): ProcessingRecipe {
 			return MachineRecipeRegistry.getRecipeResult("compressor", id, data);
 		}
 

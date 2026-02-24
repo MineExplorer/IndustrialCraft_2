@@ -135,6 +135,23 @@ namespace Machine {
 				this.data.maxHeat = 5000;
 			}
 
+			const isActive = this.performRecipe();			
+			this.setActive(isActive);
+
+			this.dischargeSlot("slotEnergy");
+
+			if (this.data.heat >= this.data.maxHeat) {
+				this.container.sendEvent("setIndicator", "green");
+			} else {
+				this.container.sendEvent("setIndicator", "red");
+			}
+			this.container.setScale("progressScale", this.data.progress);
+			this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
+			this.container.setScale("energyScale", this.getRelativeEnergy());
+			this.container.sendChanges();
+		}
+
+		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
 			const recipe = this.getRecipeResult(sourceSlot.id);
@@ -166,19 +183,7 @@ namespace Machine {
 					this.data.heat--;
 				}
 			}
-			this.setActive(newActive);
-
-			this.dischargeSlot("slotEnergy");
-
-			if (this.data.heat >= this.data.maxHeat) {
-				this.container.sendEvent("setIndicator", "green");
-			} else {
-				this.container.sendEvent("setIndicator", "red");
-			}
-			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
-			this.container.setScale("energyScale", this.getRelativeEnergy());
-			this.container.sendChanges();
+			return newActive;
 		}
 
 		onRedstoneUpdate(signal: number): void {

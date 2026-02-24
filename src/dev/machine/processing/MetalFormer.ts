@@ -130,41 +130,13 @@ namespace Machine {
 			return guiMetalFormer;
 		}
 
-		getRecipeResult(id: number): MachineRecipeRegistry.RecipeData {
+		getRecipeResult(id: number): ProcessingRecipe {
 			return MachineRecipeRegistry.getRecipeResult("metalFormer" + this.data.mode, id);
 		}
 
 		onTick(): void {
-			this.useUpgrades();
-			StorageInterface.checkHoppers(this);
-
-			let newActive = false;
-			const sourceSlot = this.container.getSlot("slotSource");
-			const resultSlot = this.container.getSlot("slotResult");
-			const result = this.getRecipeResult(sourceSlot.id);
-			if (result && (resultSlot.id == result.id && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
-				if (this.data.energy >= this.energyDemand) {
-					this.data.energy -= this.energyDemand;
-					this.updateProgress();
-					newActive = true;
-				}
-				if (this.isCompletedProgress()) {
-					this.decreaseSlot(sourceSlot, 1);
-					resultSlot.setSlot(result.id, resultSlot.count + result.count, 0);
-					this.data.progress = 0;
-				}
-			}
-			else {
-				this.data.progress = 0;
-			}
-			this.setActive(newActive);
-
-			this.dischargeSlot("slotEnergy");
-
-			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.getRelativeEnergy());
-			this.container.sendEvent("setModeIcon", {mode: this.data.mode});
-			this.container.sendChanges();
+			this.container.sendEvent("setModeIcon", { mode: this.data.mode });
+			super.onTick();
 		}
 
 		@ContainerEvent(Side.Server, "switchMode")

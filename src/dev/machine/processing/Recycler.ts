@@ -57,37 +57,15 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slotResult", () => 0);
 		}
 
-		onTick(): void {
-			this.useUpgrades();
-			StorageInterface.checkHoppers(this);
+		getRecipeResult(id: number) {
+			return id != 0 ? { id: ItemID.scrap, data: 0 } : null;
+		}
 
-			let newActive = false;
-			const sourceSlot = this.container.getSlot("slotSource");
-			const resultSlot = this.container.getSlot("slotResult");
-			if (sourceSlot.id != 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)) {
-				if (this.data.energy >= this.energyDemand) {
-					this.data.energy -= this.energyDemand;
-					this.updateProgress();
-					newActive = true;
-				}
-				if (this.isCompletedProgress()) {
-					this.decreaseSlot(sourceSlot, 1);
-					if (Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1) {
-						resultSlot.setSlot(ItemID.scrap, resultSlot.count + 1, 0);
-					}
-					this.data.progress = 0;
-				}
+		modifyResult(sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot, recipeResult: MachineRecipeRegistry.ItemResult): ItemInstance {
+			if (Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1) {
+				return new ItemStack(recipeResult.id, recipeResult.count, recipeResult.data);
 			}
-			else {
-				this.data.progress = 0;
-			}
-			this.setActive(newActive);
-
-			this.dischargeSlot("slotEnergy");
-
-			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.getRelativeEnergy());
-			this.container.sendChanges();
+			return null;
 		}
 
 		getOperationSound(): string {

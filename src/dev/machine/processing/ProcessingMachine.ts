@@ -1,6 +1,14 @@
 /// <reference path="../ElectricMachine.ts" />
 
 namespace Machine {
+	export type ProcessingRecipe = {
+		id: number,
+		count: number,
+		data?: number,
+		sourceCount?: number,
+		processTime?: number
+	}
+
 	export abstract class ProcessingMachine
 	extends ElectricMachine {
 		defaultValues = {
@@ -18,7 +26,7 @@ namespace Machine {
 		tier: number = this.defaultTier;
 		energyStorage: number;
 		energyDemand?: number;
-		processTime?: number;
+		processTimeMultiplier?: number;
 
 		getTier(): number {
 			return this.tier;
@@ -51,7 +59,7 @@ namespace Machine {
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.energyDemand = upgrades.getEnergyDemand(this.defaultEnergyDemand);
-			this.processTime = upgrades.getProcessTime(this.defaultProcessTime);
+			this.processTimeMultiplier = upgrades.processTimeMultiplier;
 			return upgrades;
 		}
 
@@ -59,37 +67,8 @@ namespace Machine {
 			this.useUpgrades();
 			StorageInterface.checkHoppers(this);
 
-			let newActive = false;
-			const sourceSlot = this.container.getSlot("slotSource");
-			const result = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
-			if (result && (sourceSlot.count >= result.sourceCount || !result.sourceCount)) {
-				const resultSlot = this.container.getSlot("slotResult");
-				if (resultSlot.id == result.id && (!result.data || resultSlot.data == result.data) && resultSlot.count <= 64 - result.count || resultSlot.id == 0) {
-					if (this.data.energy >= this.energyDemand) {
-						this.data.energy -= this.energyDemand;
-						this.updateProgress();
-						newActive = true;
-					}
-					if (this.isCompletedProgress()) {
-						const sourceCount = result.sourceCount || 1;
-						this.decreaseSlot(sourceSlot, sourceCount);
-						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data || 0);
-						this.data.progress = 0;
-					}
-				}
-				if (this.networkData.getBoolean(NetworkDataKeys.isActive) && !newActive) {
-					if (this.getInterruptSound()) { // play interrupt sound if machine stopped working while processing item
-						this.playOnce(this.getInterruptSound());
-					}
-				}
-			}
-			else if (this.data.progress > 0) {
-				this.data.progress = 0;
-				if (this.getInterruptSound()) { // play interrupt sound if the source item was extracted
-					this.playOnce(this.getInterruptSound());
-				}
-			}
-			this.setActive(newActive);
+			const isActive = this.performRecipe();
+			this.setActive(isActive);
 
 			this.dischargeSlot("slotEnergy");
 
@@ -98,16 +77,61 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		updateProgress() {
-			this.data.progress += 1 / this.processTime;
+		performRecipe(): boolean {
+			let newActive = false;
+			const sourceSlot = this.container.getSlot("slotSource");
+			const recipeResult = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
+
+			if (recipeResult && (sourceSlot.count >= recipeResult.sourceCount || !recipeResult.sourceCount)) {
+				const resultSlot = this.container.getSlot("slotResult");
+				if (resultSlot.id == 0 || (resultSlot.id == recipeResult.id && (!recipeResult.data || resultSlot.data == recipeResult.data) && resultSlot.count <= 64 - recipeResult.count)) {
+					if (this.data.energy >= this.energyDemand) {
+						this.data.energy -= this.energyDemand;
+						this.updateProgress(recipeResult.processTime);
+						newActive = true;
+					}
+					if (this.isCompletedProgress()) {
+						const sourceCount = recipeResult.sourceCount || 1;
+						this.decreaseSlot(sourceSlot, sourceCount);
+						const itemResult = this.modifyResult(sourceSlot, resultSlot, recipeResult);
+						if (itemResult) {
+							resultSlot.setSlot(itemResult.id, resultSlot.count + itemResult.count, itemResult.data || 0);
+						}
+						this.data.progress = 0;
+					}
+				}
+				if (!newActive && this.networkData.getBoolean(NetworkDataKeys.isActive)) {
+					this.onInterrupt(); // interrupt if machine stopped working while processing item
+				}
+			}
+			else if (this.data.progress > 0) {
+				this.data.progress = 0;
+				this.onInterrupt(); // interrupt when the source item is extracted
+			}
+
+			return newActive;
+		}
+
+		updateProgress(recipeProcessTime: number = this.defaultProcessTime) {
+			this.data.progress += 1 / Math.round(recipeProcessTime * this.processTimeMultiplier);
 		}
 
 		isCompletedProgress() {
 			return +this.data.progress.toFixed(3) >= 1;
 		}
 
+		modifyResult(sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot, recipeResult: MachineRecipeRegistry.ItemResult): ItemInstance {
+			return new ItemStack(recipeResult.id, recipeResult.count, recipeResult.data);
+		}
+
 		canRotate(side: number): boolean {
 			return side > 1;
+		}
+
+		onInterrupt(): void {
+			if (this.getInterruptSound()) {
+				this.playOnce(this.getInterruptSound());
+			}
 		}
 
 		getInterruptSound(): string {

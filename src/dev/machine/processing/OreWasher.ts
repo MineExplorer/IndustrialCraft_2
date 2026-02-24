@@ -118,6 +118,18 @@ namespace Machine {
 			const slot2 = this.container.getSlot("slotLiquid2");
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
+			const isActive = this.performRecipe();
+			this.setActive(isActive);
+
+			this.dischargeSlot("slotEnergy");
+
+			this.liquidTank.updateUiScale("liquidScale");
+			this.container.setScale("progressScale", this.data.progress);
+			this.container.setScale("energyScale", this.getRelativeEnergy());
+			this.container.sendChanges();
+		}
+
+		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
 			const result = this.getRecipeResult(sourceSlot.id);
@@ -136,14 +148,7 @@ namespace Machine {
 			else {
 				this.data.progress = 0;
 			}
-			this.setActive(newActive);
-
-			this.dischargeSlot("slotEnergy");
-
-			this.liquidTank.updateUiScale("liquidScale");
-			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.getRelativeEnergy());
-			this.container.sendChanges();
+			return newActive;
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {

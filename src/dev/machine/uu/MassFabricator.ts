@@ -37,6 +37,8 @@ namespace Machine {
 		}
 	});
 
+	export type CatalyserData = {input: number, output: number}
+
 	export class MassFabricator extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
@@ -70,7 +72,7 @@ namespace Machine {
 				this.setActive(true);
 				if (this.data.catalyser < Math.max(1000, this.data.energy)) {
 					const catalyserSlot = this.container.getSlot("catalyserSlot");
-					const catalyserData = MachineRecipeRegistry.getRecipeResult("catalyser", catalyserSlot.id);
+					const catalyserData = MachineRecipeRegistry.getRecipeResult<CatalyserData>("catalyser", catalyserSlot.id);
 					if (catalyserData) {
 						this.data.catalyser += catalyserData.input;
 						this.decreaseSlot(catalyserSlot, 1);

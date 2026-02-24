@@ -43,17 +43,17 @@ namespace MachineRecipeRegistry {
 		}
 	}
 
-	export function requireRecipesFor(name: string, createIfNotFound?: boolean) {
+	export function requireRecipesFor<T>(name: string, createIfNotFound?: boolean): T {
 		if (!recipeData[name] && createIfNotFound) {
 			recipeData[name] = {};
 		}
 		return recipeData[name];
 	}
 
-	export function getRecipeResult(name: string, key1: string | number, key2?: string | number) {
+	export function getRecipeResult<T>(name: string, key1: string | number, key2?: string | number): T {
 		const data = this.requireRecipesFor(name);
 		if (data && key1) {
-			return data[key1] || data[key1+":"+key2];
+			return data[key1] || key2 && data[key1+":"+key2];
 		}
 		return null;
 	}
@@ -83,10 +83,10 @@ namespace MachineRecipeRegistry {
 		return recipes[liquid];
 	}
 
-	export type RecipeData = {
+	export type ItemResult = {
 		id: number,
 		count: number,
 		data?: number,
-		sourceCount?: number
+		extra?: ItemExtraData
 	}
 }

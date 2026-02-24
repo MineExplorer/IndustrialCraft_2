@@ -202,10 +202,12 @@ namespace Machine {
 		@ContainerEvent(Side.Client)
 		showAirImage(container: ItemContainer, window: any, content: any, data: {show: boolean}): void {
 			if (content) {
-				if (data.show && !content.elements["indicatorAir"])
+				if (!data.show) {
 					content.elements["indicatorAir"] = {type: "image", x: 344 + 128*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
-				else
+				}
+				else if (!content.elements["indicatorAir"]) {
 					content.elements["indicatorAir"] = null;
+				}
 			}
 		}
 

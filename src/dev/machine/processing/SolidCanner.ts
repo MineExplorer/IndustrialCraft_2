@@ -81,6 +81,11 @@ namespace Machine {
 		}
 	});
 
+	export type SolidCanningRecipe = {
+		can: number,
+		result: MachineRecipeRegistry.ItemResult
+	}
+
 	export class SolidCanner extends ProcessingMachine {
 		defaultEnergyStorage = 800;
 		defaultEnergyDemand = 2;
@@ -96,9 +101,9 @@ namespace Machine {
 				if (name == "slotSource") return !!this.getRecipeResult(id);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotCan") {
-					const recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-					for (let i in recipes) {
-						if (recipes[i].can == id) return true;
+					const recipes = MachineRecipeRegistry.requireRecipesFor<DataTable<SolidCanningRecipe>>("solidCanner");
+					for (let key in recipes) {
+						if (recipes[key].can == id) return true;
 					}
 					return false;
 				}
@@ -110,16 +115,14 @@ namespace Machine {
 		getRecipeResult(id: number): {can: number, result: ItemInstance} {
 			return MachineRecipeRegistry.getRecipeResult("solidCanner", id);
 		}
-
-		onTick(): void {
-			this.useUpgrades();
-			StorageInterface.checkHoppers(this);
+		
+		performRecipe(): boolean {
+			let newActive = false;
 
 			const sourceSlot = this.container.getSlot("slotSource");
 			const resultSlot = this.container.getSlot("slotResult");
 			const canSlot = this.container.getSlot("slotCan");
 
-			let newActive = false;
 			const recipe = this.getRecipeResult(sourceSlot.id);
 			if (recipe) {
 				const result = recipe.result;
@@ -141,13 +144,7 @@ namespace Machine {
 			else {
 				this.data.progress = 0;
 			}
-			this.setActive(newActive);
-
-			this.dischargeSlot("slotEnergy");
-
-			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.getRelativeEnergy());
-			this.container.sendChanges();
+			return newActive;
 		}
 	}
 
@@ -159,9 +156,9 @@ namespace Machine {
 				return MachineRecipeRegistry.hasRecipeFor("solidCanner", item.id);
 			}},
 			"slotCan": {input: true, isValid: (item: ItemInstance) => {
-				const recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-				for (let i in recipes) {
-					if (recipes[i].can == item.id) return true;
+				const recipes = MachineRecipeRegistry.requireRecipesFor<DataTable<SolidCanningRecipe>>("solidCanner");
+				for (let key in recipes) {
+					if (recipes[key].can == item.id) return true;
 				}
 				return false;
 			}},

@@ -2,44 +2,53 @@ namespace MachineRecipeRegistry {
 	export const recipeData = {};
 	export const fluidRecipeData = {};
 
-	export function registerRecipesFor(name: string, data: any, validateKeys?: boolean): void {
-		if (validateKeys) {
-			const newData = {};
-			for (let key in data) {
-				let newKey: any;
-				if (key.includes(":")) {
-					const keyArray = key.split(":");
-					if (keyArray[0] == "minecraft") {
-						const stringID = keyArray[1];
-						const numericID = VanillaBlockID[stringID] || VanillaItemID[stringID];
-						if (!numericID) {
-							const source = IDConverter.getIDData(stringID);
-							if (!source.id) continue;
-							newKey = source.id + ":" + source.data;
-						} else {
-							newKey = numericID;
-							if (keyArray[2]) newKey += ":" + keyArray[2];
-						}
-					} else {
-						newKey = eval(keyArray[0]) + ":" + keyArray[1];
-					}
-				} else {
-					newKey = eval(key);
-				}
-				if (newKey) newData[newKey] = data[key];
-			}
-			data = newData;
+	export function registerRecipesFor(name: string, data: any, parseKeys?: boolean): void {
+		if (!parseKeys) {
+			this.recipeData[name] = data;
+			return;
 		}
-		this.recipeData[name] = data;
+
+		const newData = {};
+		for (let key in data) {
+			let newKey: any;
+			if (key.includes(":")) {
+				const keyArray = key.split(":");
+				const stringID = keyArray[1];
+				switch (keyArray[0]) {
+					case "minecraft":
+						newKey = VanillaBlockID[stringID] || VanillaItemID[stringID];
+					break;
+					case "block":
+						newKey = Block.getNumericId(stringID);
+					break;
+					case "item":
+						newKey = Item.getNumericId(stringID);
+					break;
+					default:
+						newKey = eval(keyArray[0]) + ":" + keyArray[1];
+					break;
+				}
+				if (!newKey) continue;
+				if (keyArray.length > 2) {
+					newKey += ":" + keyArray[2];
+				}
+			} else {
+				newKey = eval(key);
+			}
+			if (newKey) {
+				newData[newKey] = data[key];
+			}
+		}
+		this.recipeData[name] = newData;
 	}
 
-	export function addRecipeFor(name: string, input: any, result: any): void {
+	export function addRecipeFor(name: string, input: any, result: any, props: any = {}): void {
 		const recipes = this.requireRecipesFor(name, true);
 		if (Array.isArray(recipes)) {
-			recipes.push({input: input, result: result});
+			recipes.push({input: input, result: result, ...props});
 		}
 		else {
-			recipes[input] = result;
+			recipes[input] = {...result, ...props};
 		}
 	}
 
@@ -53,7 +62,7 @@ namespace MachineRecipeRegistry {
 	export function getRecipeResult<T>(name: string, key1: string | number, key2?: string | number): T {
 		const data = this.requireRecipesFor(name);
 		if (data && key1) {
-			return data[key1] || key2 && data[key1+":"+key2];
+			return data[key1] || key2 !== undefined && data[key1+":"+key2];
 		}
 		return null;
 	}

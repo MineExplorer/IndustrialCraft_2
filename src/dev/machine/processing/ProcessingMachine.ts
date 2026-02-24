@@ -82,7 +82,7 @@ namespace Machine {
 			const sourceSlot = this.container.getSlot("slotSource");
 			const recipeResult = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
 
-			if (recipeResult && (sourceSlot.count >= recipeResult.sourceCount || !recipeResult.sourceCount)) {
+			if (recipeResult && (!recipeResult.sourceCount || sourceSlot.count >= recipeResult.sourceCount)) {
 				const resultSlot = this.container.getSlot("slotResult");
 				if (resultSlot.id == 0 || (resultSlot.id == recipeResult.id && (!recipeResult.data || resultSlot.data == recipeResult.data) && resultSlot.count <= 64 - recipeResult.count)) {
 					if (this.data.energy >= this.energyDemand) {
@@ -91,8 +91,7 @@ namespace Machine {
 						newActive = true;
 					}
 					if (this.isCompletedProgress()) {
-						const sourceCount = recipeResult.sourceCount || 1;
-						this.decreaseSlot(sourceSlot, sourceCount);
+						this.decreaseSlot(sourceSlot, recipeResult.sourceCount || 1);
 						const itemResult = this.modifyResult(sourceSlot, resultSlot, recipeResult);
 						if (itemResult) {
 							resultSlot.setSlot(itemResult.id, resultSlot.count + itemResult.count, itemResult.data || 0);

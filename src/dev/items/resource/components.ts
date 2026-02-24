@@ -8,6 +8,10 @@ ItemRegistry.createItem("powerUnitSmall", {name: "small_power_unit", icon: "powe
 
 ItemRegistry.createItem("heatConductor", {name: "heat_conductor", icon: "heat_conductor"});
 
+ItemRegistry.createItem("cuttingBladeIron", {name: "cutting_blade_iron", icon: "cutting_blade_iron", stack: 1});
+ItemRegistry.createItem("cuttingBladeSteel", {name: "cutting_blade_steel", icon: "cutting_blade_steel", stack: 1});
+ItemRegistry.createItem("cuttingBladeDiamond", {name: "cutting_blade_diamond", icon: "cutting_blade_diamond", stack: 1});
+
 Item.addCreativeGroup("ic2_component", Translation.translate("Crafting Components"), [
 	ItemID.circuitBasic,
 	ItemID.circuitAdvanced,
@@ -15,7 +19,10 @@ Item.addCreativeGroup("ic2_component", Translation.translate("Crafting Component
 	ItemID.electricMotor,
 	ItemID.powerUnit,
 	ItemID.powerUnitSmall,
-	ItemID.heatConductor
+	ItemID.heatConductor,
+	ItemID.cuttingBladeIron,
+	ItemID.cuttingBladeSteel,
+	ItemID.cuttingBladeDiamond
 ]);
 
 Callback.addCallback("PreLoaded", function() {
@@ -72,4 +79,22 @@ Callback.addCallback("PreLoaded", function() {
 		"aсa",
 		"aсa"
 	], ['с', ItemID.plateCopper, 0, 'a', ItemID.rubber, 0]);
+
+	Recipes.addShaped({id: ItemID.cuttingBladeIron, count: 1, data: 0}, [
+		"bbb",
+		"bab",
+		"bbb"
+	], ['a', ItemID.ingotBronze, 0, 'b', ItemID.plateIron, 0]);
+
+	Recipes.addShaped({id: ItemID.cuttingBladeSteel, count: 1, data: 0}, [
+		"bbb",
+		"bab",
+		"bbb"
+	], ['a', VanillaItemID.iron_ingot, 0, 'b', ItemID.plateSteel, 0]);
+
+	Recipes.addShaped({id: ItemID.cuttingBladeDiamond, count: 1, data: 0}, [
+		"cbc",
+		"bab",
+		"cbc"
+	], ['a', ItemID.ingotSteel, 0, 'b', ItemID.plateSteel, 0, 'c', VanillaItemID.diamond, 0]);
 });

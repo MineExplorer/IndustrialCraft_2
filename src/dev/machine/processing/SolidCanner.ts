@@ -18,8 +18,8 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.casingTin, 0]);
 
 	MachineRecipeRegistry.registerRecipesFor("solidCanner", {
-		"ItemID.uranium": {can: ItemID.fuelRod, result: {id: ItemID.fuelRodUranium, count: 1, data: 0}},
-		"ItemID.mox": {can: ItemID.fuelRod, result: {id: ItemID.fuelRodMOX, count: 1, data: 0}},
+		"item:uranium": {can: ItemID.fuelRod, result: {id: ItemID.fuelRodUranium, count: 1, data: 0}},
+		"item:mox": {can: ItemID.fuelRod, result: {id: ItemID.fuelRodMOX, count: 1, data: 0}},
 		"minecraft:cake": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 14, data: 0}},
 		"minecraft:rabbit_stew": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 10, data: 0}},
 		"minecraft:cooked_porkchop": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 8, data: 0}},

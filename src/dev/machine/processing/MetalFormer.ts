@@ -51,37 +51,37 @@ Callback.addCallback("PreLoaded", function() {
 		// ingots
 		"minecraft:iron_ingot": {id: ItemID.plateIron, count: 1},
 		"minecraft:gold_ingot": {id: ItemID.plateGold, count: 1},
-		"ItemID.ingotCopper": {id: ItemID.plateCopper, count: 1},
-		"ItemID.ingotTin": {id: ItemID.plateTin, count: 1},
-		"ItemID.ingotBronze": {id: ItemID.plateBronze, count: 1},
-		"ItemID.ingotSteel": {id: ItemID.plateSteel, count: 1},
-		"ItemID.ingotLead": {id: ItemID.plateLead, count: 1},
-		"ItemID.ingotSilver": {id: ItemID.plateSilver, count: 1},
+		"item:ingotCopper": {id: ItemID.plateCopper, count: 1},
+		"item:ingotTin": {id: ItemID.plateTin, count: 1},
+		"item:ingotBronze": {id: ItemID.plateBronze, count: 1},
+		"item:ingotSteel": {id: ItemID.plateSteel, count: 1},
+		"item:ingotLead": {id: ItemID.plateLead, count: 1},
+		"item:ingotSilver": {id: ItemID.plateSilver, count: 1},
 		// plates
-		"ItemID.plateIron": {id: ItemID.casingIron, count: 2},
-		"ItemID.plateGold": {id: ItemID.casingGold, count: 2},
-		"ItemID.plateTin": {id: ItemID.casingTin, count: 2},
-		"ItemID.plateCopper": {id: ItemID.casingCopper, count: 2},
-		"ItemID.plateBronze": {id: ItemID.casingBronze, count: 2},
-		"ItemID.plateSteel": {id: ItemID.casingSteel, count: 2},
-		"ItemID.plateLead": {id: ItemID.casingLead, count: 2},
-		"ItemID.plateSilver": {id: ItemID.casingSilver, count: 2}
+		"item:plateIron": {id: ItemID.casingIron, count: 2},
+		"item:plateGold": {id: ItemID.casingGold, count: 2},
+		"item:plateTin": {id: ItemID.casingTin, count: 2},
+		"item:plateCopper": {id: ItemID.casingCopper, count: 2},
+		"item:plateBronze": {id: ItemID.casingBronze, count: 2},
+		"item:plateSteel": {id: ItemID.casingSteel, count: 2},
+		"item:plateLead": {id: ItemID.casingLead, count: 2},
+		"item:plateSilver": {id: ItemID.casingSilver, count: 2}
 	}, true);
 	// cutting
 	MachineRecipeRegistry.registerRecipesFor("metalFormer1", {
-		"ItemID.plateTin": {id: ItemID.cableTin0, count: 3},
-		"ItemID.plateCopper": {id: ItemID.cableCopper0, count: 3},
-		"ItemID.plateGold": {id: ItemID.cableGold0, count: 4},
-		"ItemID.plateIron": {id: ItemID.cableIron0, count: 4},
+		"item:plateTin": {id: ItemID.cableTin0, count: 3},
+		"item:plateCopper": {id: ItemID.cableCopper0, count: 3},
+		"item:plateGold": {id: ItemID.cableGold0, count: 4},
+		"item:plateIron": {id: ItemID.cableIron0, count: 4},
 	}, true);
 	// extruding
 	MachineRecipeRegistry.registerRecipesFor("metalFormer2", {
-		"ItemID.ingotTin": {id: ItemID.cableTin0, count: 3},
-		"ItemID.ingotCopper": {id: ItemID.cableCopper0, count: 3},
+		"item:ingotTin": {id: ItemID.cableTin0, count: 3},
+		"item:ingotCopper": {id: ItemID.cableCopper0, count: 3},
 		"minecraft:iron_ingot": {id: ItemID.cableIron0, count: 4},
 		"minecraft:gold_ingot": {id: ItemID.cableGold0, count: 4},
-		"ItemID.casingTin": {id: ItemID.tinCanEmpty, count: 1},
-		"ItemID.plateIron": {id: ItemID.fuelRod, count: 1},
+		"item:casingTin": {id: ItemID.tinCanEmpty, count: 1},
+		"item:plateIron": {id: ItemID.fuelRod, count: 1},
 	}, true);
 });
 

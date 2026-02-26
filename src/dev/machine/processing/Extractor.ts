@@ -19,12 +19,12 @@ Callback.addCallback("PreLoaded", function() {
 	], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
 	
 	MachineRecipeRegistry.registerRecipesFor("extractor", {
-		"ItemID.latex": {id: ItemID.rubber, count: 3},
-		"BlockID.rubberTreeSapling": {id: ItemID.rubber, count: 1},
-		"BlockID.rubberTreeLog": {id: ItemID.rubber, count: 1},
+		"item:latex": {id: ItemID.rubber, count: 3},
+		"block:rubberTreeSapling": {id: ItemID.rubber, count: 1},
+		"block:rubberTreeLog": {id: ItemID.rubber, count: 1},
 		"minecraft:wool": {id: 35, count: 1},
 		"minecraft:gunpowder": {id: ItemID.dustSulfur, count: 1},
-		"ItemID.tinCanFull": {id: ItemID.tinCanEmpty, count: 1},
+		"item:tinCanFull": {id: ItemID.tinCanEmpty, count: 1},
 	}, true);
 });
 

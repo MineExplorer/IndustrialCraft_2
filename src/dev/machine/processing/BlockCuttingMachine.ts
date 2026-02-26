@@ -81,8 +81,10 @@ namespace Machine {
 
 		elements: {
 			"progressScale": {type: "scale", x: 530, y: 148, direction: 0, bitmap: "icpe.cutting_machine_bar_scale", scale: GUI_SCALE, clicker: {
-				onClick: () => {
-					RV?.RecipeTypeRegistry.openRecipePage("icpe_cutting_machine");
+				onClick: (_, container, tileEntity, position: any) => {
+					if (position.x < 14 / 46 || position.x > 32 / 46) {
+						RV?.RecipeTypeRegistry.openRecipePage("icpe_cutting_machine");
+					}
 				}
 			}},
 			"energyScale": {type: "scale", x: 450, y: 155, direction: 1, value: 0.5, bitmap: "energy_small_scale", scale: GUI_SCALE},

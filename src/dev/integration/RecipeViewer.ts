@@ -311,6 +311,70 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	api.RecipeTypeRegistry.register("icpe_thermalCentrifuge", new ThermalCentrifugeRecipe());
 
+	
+	class BlockCuttingMachineRecipe extends RecipeTypeForICPE {
+
+		constructor() {
+			super("Block Cutting Machine", BlockID.blockCuttingMachine, {
+				drawing: [
+					{type: "bitmap", x: 377, y: 229, scale: 6, bitmap: "icpe.cutting_machine_bar_background"}
+				],
+				elements: {
+					input0: {x: 210, y: 229, size: 18 * 6},
+					input1: {x: 458, y: 229, size: 18 * 6, bitmap: "transparent_slot"},
+					output0: {x: 709, y: 229, size: 18 * 6},
+					progressScale: {type: "scale", x: 377, y: 229, scale: 6, direction: 0, value: 1, bitmap: "icpe.cutting_machine_bar_scale"}
+				}
+			});
+		}
+
+		private getBladeByHardness(hardnessLevel: number): ItemInstance {
+			switch (hardnessLevel) {
+				case 1:
+					return {id: ItemID.cuttingBladeIron, count: 1, data: 0};
+				case 2:
+					return {id: ItemID.cuttingBladeSteel, count: 1, data: 0};
+				case 3:
+					return {id: ItemID.cuttingBladeDiamond, count: 1, data: 0};
+				default:
+					return {id: 0, count: 0, data: 0};
+			}
+		}
+
+		getAllList(): RecipePattern[] {
+			const list: RecipePattern[] = [];
+			const recipes: DataTable<Machine.CuttingRecipe> = MachineRecipeRegistry.requireRecipesFor("cuttingMachine");
+			const recipeEntries = Object.entries(recipes).sort(([key1, recipe1], [key2, recipe2]) =>
+				recipe1.hardnessLevel != recipe2.hardnessLevel ? recipe1.hardnessLevel - recipe2.hardnessLevel : 
+				recipe1.result.id != recipe2.result.id ? recipe1.result.id - recipe2.result.id :
+				key1.localeCompare(key2));
+			let input: string[];
+			let blade: ItemInstance;
+			for (let [key, recipe] of recipeEntries) {
+				input = key.split(":");
+				blade = this.getBladeByHardness(recipe.hardnessLevel);
+				if (blade.id == 0) {
+					continue;
+				}
+				list.push({
+					input: [
+						{id: +input[0], count: recipe.sourceCount || 1, data: +input[1] || 0},
+						blade
+					],
+					output: [{
+						id: recipe.result.id,
+						count: recipe.result.count || 0,
+						data: recipe.result.data || 0
+					}]
+				});
+			}
+			return list;
+		}
+
+	}
+
+	api.RecipeTypeRegistry.register("icpe_cutting_machine", new BlockCuttingMachineRecipe());
+
 
 	class BlastFurnaceRecipe extends RecipeTypeForICPE {
 

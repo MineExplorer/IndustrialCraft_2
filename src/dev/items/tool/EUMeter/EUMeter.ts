@@ -64,7 +64,7 @@ implements ItemBehavior {
 				}
 			}},
 			"arrowButton0": {type: "button", x: 576, y: 206, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-				onClick: function(pos: Vector, container: ItemContainer) {
+				onClick: function(_, container: ItemContainer) {
 					container.sendEvent("setMode", {mode: 0});
 					//@ts-ignore
 					const elements = container.getWindow().getContent().elements;
@@ -73,7 +73,7 @@ implements ItemBehavior {
 				}
 			}},
 			"arrowButton1": {type: "button", x: 640, y: 206, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-				onClick: function(pos: Vector, container: ItemContainer) {
+				onClick: function(_, container: ItemContainer) {
 					container.sendEvent("setMode", {mode: 1});
 					//@ts-ignore
 					const elements = container.getWindow().getContent().elements;
@@ -82,7 +82,7 @@ implements ItemBehavior {
 				}
 			}},
 			"arrowButton2": {type: "button", x: 576, y: 270, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-				onClick: function(pos: Vector, container: ItemContainer) {
+				onClick: function(_, container: ItemContainer) {
 					container.sendEvent("setMode", {mode: 2});
 					//@ts-ignore
 					const elements = container.getWindow().getContent().elements;
@@ -91,7 +91,7 @@ implements ItemBehavior {
 				}
 			}},
 			"arrowButton3": {type: "button", x: 640, y: 270, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
-				onClick: function(pos: Vector, container: ItemContainer) {
+				onClick: function(_, container: ItemContainer) {
 					container.sendEvent("setMode", {mode: 3});
 					//@ts-ignore
 					const elements = container.getWindow().getContent().elements;

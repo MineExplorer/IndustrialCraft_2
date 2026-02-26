@@ -36,28 +36,27 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 
-const reactorElements: UI.ElementSet = {
-	"heatScale": {type: "scale", x: 346, y: 376, direction: 0, value: 0.5, bitmap: "reactor_heat_scale", scale: 3},
-	"textInfo": {type: "text", font: {size: 24, color: Color.GREEN}, x: 685, y: 382, width: 256, height: 42, text: Translation.translate("Generating: ")},
-}
-
-for (let y = 0; y < 6; y++) {
-	for (let x = 0; x < 9; x++) {
-		const i = x*6 + y;
-		reactorElements["slot"+i] = {type: "slot", x: 400 + 54 * x, y: 40 + 54 * y, size: 54}
-	}
-}
-
-const guiNuclearReactor = MachineRegistry.createInventoryWindow("Nuclear Reactor", {
-	drawing: [
-		{type: "bitmap", x: 340, y: 370, bitmap: "reactor_info", scale: GUI_SCALE},
-	],
-
-	elements: reactorElements
-}, 450);
-
-
 namespace Machine {
+	const reactorElements: UI.ElementSet = {
+		"heatScale": {type: "scale", x: 346, y: 376, direction: 0, value: 0.5, bitmap: "reactor_heat_scale", scale: 3},
+		"textInfo": {type: "text", font: {size: 24, color: Color.GREEN}, x: 685, y: 382, width: 256, height: 42, text: Translation.translate("Generating: ")},
+	}
+
+	for (let y = 0; y < 6; y++) {
+		for (let x = 0; x < 9; x++) {
+			const i = x*6 + y;
+			reactorElements["slot"+i] = {type: "slot", x: 400 + 54 * x, y: 40 + 54 * y, size: 54}
+		}
+	}
+
+	const guiNuclearReactor = MachineRegistry.createInventoryWindow("Nuclear Reactor", {
+		drawing: [
+			{type: "bitmap", x: 340, y: 370, bitmap: "reactor_info", scale: GUI_SCALE},
+		],
+
+		elements: reactorElements
+	}, 450);
+
 	export class NuclearReactor extends Generator
 	implements IReactor {
 		defaultValues = {

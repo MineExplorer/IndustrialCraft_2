@@ -56,6 +56,8 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
+	export type SolidCanningRecipe = { can: number, result: ItemInstance }
+
 	const guiSolidCanner = MachineRegistry.createInventoryWindow("Solid Canning Machine", {
 		drawing: [
 			{type: "bitmap", x: 400 + 52*GUI_SCALE, y: 50 + 33*GUI_SCALE, bitmap: "solid_canner_arrow", scale: GUI_SCALE},
@@ -81,11 +83,6 @@ namespace Machine {
 		}
 	});
 
-	export type SolidCanningRecipe = {
-		can: number,
-		result: MachineRecipeRegistry.ItemResult
-	}
-
 	export class SolidCanner extends ProcessingMachine {
 		defaultEnergyStorage = 800;
 		defaultEnergyDemand = 2;
@@ -101,7 +98,7 @@ namespace Machine {
 				if (name == "slotSource") return !!this.getRecipeResult(id);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotCan") {
-					const recipes = MachineRecipeRegistry.requireRecipesFor<DataTable<SolidCanningRecipe>>("solidCanner");
+					const recipes = MachineRecipeRegistry.requireRecipesFor<DataMap<SolidCanningRecipe>>("solidCanner");
 					for (let key in recipes) {
 						if (recipes[key].can == id) return true;
 					}
@@ -126,17 +123,16 @@ namespace Machine {
 			const recipe = this.getRecipeResult(sourceSlot.id);
 			if (recipe) {
 				const result = recipe.result;
-				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
+				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == 0 || resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count)) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
 						this.updateProgress();
 						newActive = true;
 					}
 					if (this.isCompletedProgress()) {
-						sourceSlot.setSlot(sourceSlot.id, sourceSlot.count - 1, 0);
-						canSlot.setSlot(canSlot.id, canSlot.count - result.count, 0);
+						this.decreaseSlot(sourceSlot, 1);
+						this.decreaseSlot(canSlot, result.count);
 						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);
-						this.container.validateAll();
 						this.data.progress = 0;
 					}
 				}
@@ -156,7 +152,7 @@ namespace Machine {
 				return MachineRecipeRegistry.hasRecipeFor("solidCanner", item.id);
 			}},
 			"slotCan": {input: true, isValid: (item: ItemInstance) => {
-				const recipes = MachineRecipeRegistry.requireRecipesFor<DataTable<SolidCanningRecipe>>("solidCanner");
+				const recipes = MachineRecipeRegistry.requireRecipesFor<DataMap<SolidCanningRecipe>>("solidCanner");
 				for (let key in recipes) {
 					if (recipes[key].can == item.id) return true;
 				}

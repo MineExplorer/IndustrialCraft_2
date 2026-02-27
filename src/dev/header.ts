@@ -63,6 +63,6 @@ const EU = EnergyTypeRegistry.assureEnergyType("Eu", 1);
 Recipes.addFurnaceFuel(325, 10, 2000); // lava bucket
 ChargeItemRegistry.registerFlashItem(331, "Eu", 800, 0); // redstone
 
-type DataTable<T> = {
+type DataMap<T> = {
 	[key: string]: T
 }

@@ -73,6 +73,12 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
+	export type CuttingRecipe = {
+		result: MachineRecipeRegistry.ItemResult,
+		sourceCount: number,
+		hardnessLevel: number
+	}
+
 	const guiBlockCutter = MachineRegistry.createInventoryWindow("Block Cutting Machine", {
 		drawing: [
 			{type: "bitmap", x: 530, y: 148, bitmap: "icpe.cutting_machine_bar_background", scale: GUI_SCALE},
@@ -98,12 +104,6 @@ namespace Machine {
 			"slotUpgrade4": {type: "slot", x: 820, y: 237},
 		}
 	});
-
-	export type CuttingRecipe = {
-		result: MachineRecipeRegistry.ItemResult,
-		sourceCount: number,
-		hardnessLevel: number
-	}
 
 	export class BlockCutter extends ProcessingMachine {
 		defaultTier = 2;

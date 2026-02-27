@@ -25,6 +25,8 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
+	export type BlastFurnaceRecipe = { result: number[], duration: number }
+
 	const guiBlastFurnace = MachineRegistry.createInventoryWindow("Industrial Blast Furnace", {
 		drawing: [
 			{type: "bitmap", x: 450, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE_NEW}
@@ -80,7 +82,7 @@ namespace Machine {
 			return true;
 		}
 
-		getRecipeResult(id: number): {result: number[], duration: number} {
+		getRecipeResult(id: number): BlastFurnaceRecipe {
 			return MachineRecipeRegistry.getRecipeResult("blastFurnace", id);
 		}
 

@@ -36,7 +36,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: DataTable<Machine.ProcessingRecipe> = MachineRecipeRegistry.requireRecipesFor(this.recipeKey);
+			const recipe: DataMap<Machine.ProcessingRecipe> = MachineRecipeRegistry.requireRecipesFor(this.recipeKey);
 			let input: string[];
 			for (let key in recipe) {
 				input = key.split(":");
@@ -73,7 +73,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: {can: number, result: ItemInstance}} = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+			const recipe: DataMap<Machine.SolidCanningRecipe> = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 			let input: string[];
 			for (let key in recipe) {
 				input = key.split(":");
@@ -118,7 +118,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const solidRecipe: {[key: string]: {can: number, result: ItemInstance}} = MachineRecipeRegistry.requireRecipesFor("solidCanner");
+			const solidRecipe: DataMap<Machine.SolidCanningRecipe> = MachineRecipeRegistry.requireRecipesFor("solidCanner");
 			let item: string[];
 			for (let key in solidRecipe) {
 				item = key.split(":");
@@ -193,7 +193,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			let recipe: DataTable<Machine.ProcessingRecipe>;
+			let recipe: DataMap<Machine.ProcessingRecipe>;
 			let input: string[];
 			for (let mode = 0; mode < 3; mode++) {
 				recipe = MachineRecipeRegistry.requireRecipesFor("metalFormer" + mode);
@@ -250,7 +250,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: number[]} = MachineRecipeRegistry.requireRecipesFor("oreWasher");
+			const recipe: DataMap<number[]> = MachineRecipeRegistry.requireRecipesFor("oreWasher");
 			let input: string[];
 			for (let key in recipe) {
 				input = key.split(":");
@@ -290,7 +290,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: {result: number[], heat: number}} = MachineRecipeRegistry.requireRecipesFor("thermalCentrifuge");
+			const recipe: DataMap<Machine.ThermalCentrifugeRecipe> = MachineRecipeRegistry.requireRecipesFor("thermalCentrifuge");
 			let input: string[];
 			for (let key in recipe) {
 				input = key.split(":");
@@ -343,7 +343,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipes: DataTable<Machine.CuttingRecipe> = MachineRecipeRegistry.requireRecipesFor("cuttingMachine");
+			const recipes: DataMap<Machine.CuttingRecipe> = MachineRecipeRegistry.requireRecipesFor("cuttingMachine");
 			const recipeEntries = Object.entries(recipes).sort(([key1, recipe1], [key2, recipe2]) =>
 				recipe1.hardnessLevel != recipe2.hardnessLevel ? recipe1.hardnessLevel - recipe2.hardnessLevel : 
 				recipe1.result.id != recipe2.result.id ? recipe1.result.id - recipe2.result.id :
@@ -397,7 +397,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: {result: number[], duration: number}} = MachineRecipeRegistry.requireRecipesFor("blastFurnace");
+			const recipe: DataMap<Machine.BlastFurnaceRecipe> = MachineRecipeRegistry.requireRecipesFor("blastFurnace");
 			let input: string[];
 			for (let key in recipe) {
 				input = key.split(":");

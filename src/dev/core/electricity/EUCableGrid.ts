@@ -40,9 +40,9 @@ class EUCableGrid extends EnergyGrid {
 	}
 
 	dealElectrocuteDamage(damage: number): void {
-		let minX = 2e9, minY = 256, minZ = 2e9, maxX = -2e9, maxY = 0, maxZ = -2e9;
-		for (let key in this.blocksMap) {
-			const {x, y, z} = this.getCoordsFromString(key);
+		let minX = 2e9, minY = 2e9, minZ = 2e9, maxX = -2e9, maxY = -2e9, maxZ = -2e9;
+		const coordsArray = Object.keys(this.blocksMap).map(key => this.getCoordsFromString(key));
+		for (let {x, y, z} of coordsArray) {
 			if (x < minX) minX = x;
 			if (y < minY) minY = y;
 			if (z < minZ) minZ = z;
@@ -56,9 +56,7 @@ class EUCableGrid extends EnergyGrid {
 			if (!EntityHelper.canTakeDamage(ent, DamageSource.electricity)) continue;
 			const pos = Entity.getPosition(ent);
 			if (EntityHelper.isPlayer(ent)) pos.y -= 1.62;
-			for (let key in this.blocksMap) {
-				const keyArr = key.split(":");
-				const x = parseInt(keyArr[0]) + .5, y = parseInt(keyArr[1]) + .5, z = parseInt(keyArr[2]) + .5;
+			for (let {x, y, z} of coordsArray) {
 				if (Math.abs(pos.x - x) <= 1.5 && Math.abs(pos.y - y) <= 1.5 && Math.abs(pos.z - z) <= 1.5) {
 					Entity.damageEntity(ent, damage);
 					break;

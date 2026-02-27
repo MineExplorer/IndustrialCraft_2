@@ -23,6 +23,11 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
+	export type FluidCanningRecipe = {
+		input: [string, MachineRecipeRegistry.ItemResult],
+		output: string
+	};
+
 	const guiCanner = MachineRegistry.createInventoryWindow("Fluid/Solid Canning Machine", {
 		drawing: [
 			{type: "bitmap", x: 406, y: 50 + 58*GUI_SCALE_NEW, bitmap: "energy_small_background", scale: GUI_SCALE_NEW},
@@ -61,8 +66,6 @@ namespace Machine {
 			}}
 		}
 	});
-		
-	export type FluidCanningRecipe = {input: [string, MachineRecipeRegistry.ItemResult], output: string};
 
 	export class Canner extends ProcessingMachine {
 		inputTank: BlockEngine.LiquidTank;
@@ -89,7 +92,7 @@ namespace Machine {
 				return true;
 			}
 			if (this.data.mode == 3) {
-				const recipes = MachineRecipeRegistry.requireRecipesFor<DataTable<FluidCanningRecipe>>("fluidCanner");
+				const recipes = MachineRecipeRegistry.requireRecipesFor<DataMap<FluidCanningRecipe>>("fluidCanner");
 				for (let key in recipes) {
 					if (recipes[key].input[1].id == id) return true;
 				}
@@ -100,7 +103,7 @@ namespace Machine {
 		isValidCan(id: number, data: number, extra: ItemExtraData): boolean {
 			switch (this.data.mode) {
 			case 0: {
-				const recipes = MachineRecipeRegistry.requireRecipesFor<DataTable<SolidCanningRecipe>>("solidCanner");
+				const recipes = MachineRecipeRegistry.requireRecipesFor<DataMap<SolidCanningRecipe>>("solidCanner");
 				for (let key in recipes) {
 					if (recipes[key].can == id) return true;
 				}
@@ -169,7 +172,7 @@ namespace Machine {
 			const recipe = MachineRecipeRegistry.getRecipeResult<SolidCanningRecipe>("solidCanner", sourceSlot.id);
 			if (recipe) {
 				const result = recipe.result;
-				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
+				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == 0 || resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count)) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
 						this.updateProgress();

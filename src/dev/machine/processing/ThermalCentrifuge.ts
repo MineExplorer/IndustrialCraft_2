@@ -45,6 +45,8 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
+	export type ThermalCentrifugeRecipe = { result: number[], heat: number }
+
 	const guiCentrifuge = MachineRegistry.createInventoryWindow("Thermal Centrifuge", {
 		drawing: [
 			{type: "bitmap", x: 400 + 36*GUI_SCALE_NEW, y: 50 + 15*GUI_SCALE_NEW, bitmap: "thermal_centrifuge_background", scale: GUI_SCALE_NEW},
@@ -100,7 +102,7 @@ namespace Machine {
 			return upgrades;
 		}
 
-		getRecipeResult(id: number): {result: number[], heat: number} {
+		getRecipeResult(id: number): ThermalCentrifugeRecipe {
 			return MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", id);
 		}
 

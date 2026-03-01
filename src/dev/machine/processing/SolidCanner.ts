@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ccc"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.casingTin, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor("solidCanner", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.SolidCanningRecipe>>("solidCanner", {
 		"item:uranium": {can: ItemID.fuelRod, result: {id: ItemID.fuelRodUranium, count: 1, data: 0}},
 		"item:mox": {can: ItemID.fuelRod, result: {id: ItemID.fuelRodMOX, count: 1, data: 0}},
 		"minecraft:cake": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 14, data: 0}},

@@ -58,6 +58,7 @@ namespace Machine {
 		energyDemand = 16;
 		defaultTier = 2;
 		defaultEnergyStorage = 10000;
+		maxHeat = 10000;
 		defaultDrop = BlockID.machineBlockAdvanced;
 		upgrades = ["transformer", "energyStorage", "redstone", "itemEjector", "itemPulling"];
 
@@ -105,7 +106,7 @@ namespace Machine {
 			if (this.checkResult(result1, resultSlot1) || this.checkResult(result2, resultSlot2)) {
 				if (this.data.energy >= this.energyDemand && this.data.progress < 100) {
 					this.data.energy -= this.energyDemand;
-					if (this.data.heat < 10000) {this.data.heat++;}
+					if (this.data.heat < this.maxHeat) this.data.heat++;
 					this.data.progress += this.data.heat / 1200;
 					newActive = true;
 				}
@@ -118,7 +119,7 @@ namespace Machine {
 			else {
 				this.data.progress = 0;
 				if (this.isHeating && this.data.energy > 0) {
-					if (this.data.heat < 10000) {this.data.heat++;}
+					if (this.data.heat < this.maxHeat) this.data.heat++;
 					this.data.energy--;
 				}
 				else {

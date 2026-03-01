@@ -2,7 +2,7 @@ namespace MachineRecipeRegistry {
 	export const recipeData = {};
 	export const fluidRecipeData = {};
 
-	export function registerRecipesFor(name: string, data: any, parseKeys?: boolean): void {
+	export function registerRecipesFor<T>(name: string, data: T, parseKeys?: boolean): void {
 		if (!parseKeys) {
 			this.recipeData[name] = data;
 			return;

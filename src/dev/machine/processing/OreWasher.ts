@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function() {
 		"xcx"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.electricMotor, 0, 'a', ItemID.plateIron, 0, 'b', 325, 0, 'c', ItemID.circuitBasic, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor("oreWasher", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<number[]>>("oreWasher", {
 		"item:crushedCopper": [ItemID.crushedPurifiedCopper, 1, ItemID.dustSmallCopper, 2, ItemID.dustStone, 1],
 		"item:crushedTin": [ItemID.crushedPurifiedTin, 1, ItemID.dustSmallTin, 2, ItemID.dustStone, 1],
 		"item:crushedIron": [ItemID.crushedPurifiedIron, 1, ItemID.dustSmallIron, 2, ItemID.dustStone, 1],
@@ -83,11 +83,10 @@ namespace Machine {
 		}
 
 		checkResult(result: number[]) {
-			for (let i = 1; i < 4; i++) {
+			for (let i = 1; i <= result.length / 2; i++) {
 				const id = result[(i-1) * 2];
-				if (!id) return true;
 				const count = result[(i-1) * 2 + 1];
-				const resultSlot = this.container.getSlot("slotResult"+i);
+				const resultSlot = this.container.getSlot("slotResult" + i);
 				if (resultSlot.id != 0 && (resultSlot.id != id || resultSlot.count + count > 64)) {
 					return false;
 				}
@@ -97,11 +96,10 @@ namespace Machine {
 
 		putResult(result: number[]) {
 			this.liquidTank.getLiquid(1000);
-			for (let i = 1; i < 4; i++) {
+			for (let i = 1; i <= result.length / 2; i++) {
 				const id = result[(i-1) * 2];
-				if (!id) break;
 				const count = result[(i-1) * 2 + 1];
-				const resultSlot = this.container.getSlot("slotResult"+i);
+				const resultSlot = this.container.getSlot("slotResult" + i);
 				resultSlot.setSlot(id, resultSlot.count + count, 0);
 			}
 		}

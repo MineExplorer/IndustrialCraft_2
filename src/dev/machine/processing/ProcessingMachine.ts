@@ -54,6 +54,10 @@ namespace Machine {
 			return null;
 		}
 
+		getProcessingSpeed(): number {
+			return 1;
+		}
+
 		useUpgrades(): UpgradeAPI.UpgradeSet {
 			const upgrades = UpgradeAPI.useUpgrades(this);
 			this.tier = upgrades.getTier(this.defaultTier);
@@ -112,7 +116,7 @@ namespace Machine {
 		}
 
 		updateProgress(recipeProcessTime: number = this.defaultProcessTime) {
-			this.data.progress += 1 / Math.round(recipeProcessTime * this.processTimeMultiplier);
+			this.data.progress += this.getProcessingSpeed() / Math.ceil(recipeProcessTime * this.processTimeMultiplier);
 		}
 
 		isCompletedProgress() {

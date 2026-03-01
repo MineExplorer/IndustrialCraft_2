@@ -15,17 +15,17 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['s', BlockID.machineBlockBasic, 0, 'a', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor("blastFurnace", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.BlastFurnaceRecipe>>("blastFurnace", {
 		"minecraft:iron_ore": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"minecraft:iron_ingot": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"item:dustIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"item:crushedPurifiedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
-		"item:crushedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000}
+		"item:crushedIron": {result: [ItemID.ingotSteel, 1], duration: 6000}
 	}, true);
 });
 
 namespace Machine {
-	export type BlastFurnaceRecipe = { result: number[], duration: number }
+	export type BlastFurnaceRecipe = { result: [number, number] | [number, number, number, number], duration: number }
 
 	const guiBlastFurnace = MachineRegistry.createInventoryWindow("Industrial Blast Furnace", {
 		drawing: [
@@ -87,11 +87,10 @@ namespace Machine {
 		}
 
 		checkResult(result: number[]): boolean {
-			for (let i = 1; i < 3; i++) {
+			for (let i = 1; i <= result.length / 2; i++) {
 				const id = result[(i-1) * 2];
-				if (!id) break;
 				const count = result[(i-1) * 2 + 1];
-				const resultSlot = this.container.getSlot("slotResult"+i);
+				const resultSlot = this.container.getSlot("slotResult" + i);
 				if (resultSlot.id != 0 && (resultSlot.id != id || resultSlot.count + count > 64)) {
 					return false;
 				}
@@ -100,11 +99,10 @@ namespace Machine {
 		}
 
 		putResult(result: number[]): void {
-			for (let i = 1; i < 3; i++) {
+			for (let i = 1; i <= result.length / 2; i++) {
 				const id = result[(i-1) * 2];
-				if (!id) break;
 				const count = result[(i-1) * 2 + 1];
-				const resultSlot = this.container.getSlot("slotResult"+i);
+				const resultSlot = this.container.getSlot("slotResult" + i);
 				resultSlot.setSlot(id, resultSlot.count + count, 0);
 			}
 		}

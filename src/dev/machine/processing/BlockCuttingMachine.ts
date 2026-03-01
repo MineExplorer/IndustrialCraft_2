@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function() {
         "b"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'a', ItemID.circuitAdvanced, 0, 'b', ItemID.electricMotor, 0]);
 	
-	MachineRecipeRegistry.registerRecipesFor("cuttingMachine", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.CuttingRecipe>>("cuttingMachine", {
 		// Iron blade or higher
 		"minecraft:log:0": {result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1},
 		"minecraft:log:1": {result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1},
@@ -75,8 +75,8 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	export type CuttingRecipe = {
 		result: MachineRecipeRegistry.ItemResult,
-		sourceCount: number,
-		hardnessLevel: number
+		hardnessLevel: number,
+		sourceCount?: number
 	}
 
 	const guiBlockCutter = MachineRegistry.createInventoryWindow("Block Cutting Machine", {

@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 		"xax"
 	], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
 	
-	MachineRecipeRegistry.registerRecipesFor("extractor", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ProcessingRecipe>>("extractor", {
 		"item:latex": {id: ItemID.rubber, count: 3},
 		"block:rubberTreeSapling": {id: ItemID.rubber, count: 1},
 		"block:rubberTreeLog": {id: ItemID.rubber, count: 1},

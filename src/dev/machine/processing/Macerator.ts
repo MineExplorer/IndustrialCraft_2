@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function() {
 		], ['#', BlockID.machineBlockBasic, -1, 'x', 318, -1, 'b', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1]);
 	}
 
-	MachineRecipeRegistry.registerRecipesFor("macerator", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ProcessingRecipe>>("macerator", {
 		// ores
 		"minecraft:gold_ore": {id: ItemID.crushedGold, count: 2, data: 0},
 		"minecraft:iron_ore": {id: ItemID.crushedIron, count: 2, data: 0},

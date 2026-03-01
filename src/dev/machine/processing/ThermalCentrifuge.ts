@@ -17,7 +17,7 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.electricMotor, 0, 'a', 265, 0, 'm', ItemID.miningLaser, -1, 'c', ItemID.coil, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor("thermalCentrifuge", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ThermalCentrifugeRecipe>>("thermalCentrifuge", {
 		"minecraft:cobblestone": {result: [ItemID.dustStone, 1], heat: 100},
 		"item:crushedCopper": {result: [ItemID.dustSmallTin, 1, ItemID.dustCopper, 1, ItemID.dustStone, 1], heat: 500},
 		"item:crushedTin": {result: [ItemID.dustSmallIron, 1, ItemID.dustTin, 1, ItemID.dustStone, 1], heat: 1000},
@@ -107,11 +107,11 @@ namespace Machine {
 		}
 
 		checkResult(result: number[]): boolean {
-			for (let i = 1; i < 4; i++) {
+			for (let i = 1; i <= result.length / 2; i++) {
 				const id = result[(i-1) * 2];
 				const count = result[(i-1) * 2 + 1];
 				const resultSlot = this.container.getSlot("slotResult" + i);
-				if ((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0) {
+				if (resultSlot.id != 0 && (resultSlot.id != id || resultSlot.count + count > 64)) {
 					return false;
 				}
 			}
@@ -119,7 +119,7 @@ namespace Machine {
 		}
 
 		putResult(result: number[]): void {
-			for (let i = 1; i < 4; i++) {
+			for (let i = 1; i <= result.length / 2; i++) {
 				const id = result[(i-1) * 2];
 				const count = result[(i-1) * 2 + 1];
 				const resultSlot = this.container.getSlot("slotResult" + i);

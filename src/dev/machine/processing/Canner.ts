@@ -16,7 +16,7 @@ Callback.addCallback("PreLoaded", function() {
 		"cxc",
 	], ['#', BlockID.solidCanner, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor("fluidCanner", [
+	MachineRecipeRegistry.registerRecipesFor<Machine.FluidCanningRecipe[]>("fluidCanner", [
 		{input: ["water", {id: ItemID.bioChaff, count: 1}], output: "biomass"},
 		{input: ["water", {id: ItemID.dustLapis, count: 1}], output: "coolant"}
 	]);

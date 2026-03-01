@@ -47,7 +47,7 @@ Callback.addCallback("PreLoaded", function() {
 	});
 
 	// rolling
-	MachineRecipeRegistry.registerRecipesFor("metalFormer0", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ProcessingRecipe>>("metalFormer0", {
 		// ingots
 		"minecraft:iron_ingot": {id: ItemID.plateIron, count: 1},
 		"minecraft:gold_ingot": {id: ItemID.plateGold, count: 1},
@@ -68,14 +68,14 @@ Callback.addCallback("PreLoaded", function() {
 		"item:plateSilver": {id: ItemID.casingSilver, count: 2}
 	}, true);
 	// cutting
-	MachineRecipeRegistry.registerRecipesFor("metalFormer1", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ProcessingRecipe>>("metalFormer1", {
 		"item:plateTin": {id: ItemID.cableTin0, count: 3},
 		"item:plateCopper": {id: ItemID.cableCopper0, count: 3},
 		"item:plateGold": {id: ItemID.cableGold0, count: 4},
 		"item:plateIron": {id: ItemID.cableIron0, count: 4},
 	}, true);
 	// extruding
-	MachineRecipeRegistry.registerRecipesFor("metalFormer2", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ProcessingRecipe>>("metalFormer2", {
 		"item:ingotTin": {id: ItemID.cableTin0, count: 3},
 		"item:ingotCopper": {id: ItemID.cableCopper0, count: 3},
 		"minecraft:iron_ingot": {id: ItemID.cableIron0, count: 4},

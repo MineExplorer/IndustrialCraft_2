@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 		"mcm"
 	], ['#', BlockID.machineBlockBasic, -1, 'c', ItemID.circuitBasic, -1, 'm', ItemID.electricMotor, -1, 'p', VanillaBlockID.piston, -1]);
 
-	MachineRecipeRegistry.registerRecipesFor("compressor", {
+	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ProcessingRecipe>>("compressor", {
 		// Blocks
 		"minecraft:sand:0": {id: 24, count: 1, data: 0, sourceCount: 4},
 		"minecraft:sand:1": {id: VanillaBlockID.red_sandstone, count: 1, data: 0, sourceCount: 4},

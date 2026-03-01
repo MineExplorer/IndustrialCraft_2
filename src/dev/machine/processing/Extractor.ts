@@ -18,14 +18,16 @@ Callback.addCallback("PreLoaded", function() {
 		"xax"
 	], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
 	
-	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ProcessingRecipe>>("extractor", {
-		"item:latex": {id: ItemID.rubber, count: 3},
-		"block:rubberTreeSapling": {id: ItemID.rubber, count: 1},
-		"block:rubberTreeLog": {id: ItemID.rubber, count: 1},
-		"minecraft:wool": {id: 35, count: 1},
-		"minecraft:gunpowder": {id: ItemID.dustSulfur, count: 1},
-		"item:tinCanFull": {id: ItemID.tinCanEmpty, count: 1},
-	}, true);
+	const extractorDictionary = new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(400);
+	extractorDictionary.registerList([
+		{ input: { id: ItemID.latex }, result: { id: ItemID.rubber, count: 3 } },
+		{ input: { id: BlockID.rubberTreeSapling }, result: { id: ItemID.rubber, count: 1 } },
+		{ input: { id: BlockID.rubberTreeLog }, result: { id: ItemID.rubber, count: 1 } },
+		{ input: { id: VanillaBlockID.wool }, result: { id: 35, count: 1 } },
+		{ input: { id: VanillaItemID.gunpowder }, result: { id: ItemID.dustSulfur, count: 1 } },
+		{ input: { id: ItemID.tinCanFull }, result: { id: ItemID.tinCanEmpty, count: 1 } }
+	]);
+	MachineRecipeRegistry.registerDictionary("extractor", extractorDictionary);
 });
 
 namespace Machine {

@@ -2,10 +2,8 @@
 
 namespace Machine {
 	export type ProcessingRecipe = {
-		id: number,
-		count: number,
-		data?: number,
-		sourceCount?: number,
+		input: {id: number, count?: number, data?: number}
+		result: {id: number, count: number, data?: number, extra?: ItemExtraData},
 		processTime?: number
 	}
 
@@ -84,19 +82,19 @@ namespace Machine {
 		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
-			const recipeResult = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
+			const recipe = this.getRecipeResult(sourceSlot.id, sourceSlot.data) as ProcessingRecipe;
 
-			if (recipeResult && (!recipeResult.sourceCount || sourceSlot.count >= recipeResult.sourceCount)) {
+			if (recipe && (!recipe.input.count || sourceSlot.count >= recipe.input.count)) {
 				const resultSlot = this.container.getSlot("slotResult");
-				if (resultSlot.id == 0 || (resultSlot.id == recipeResult.id && (!recipeResult.data || resultSlot.data == recipeResult.data) && resultSlot.count <= 64 - recipeResult.count)) {
+				if (resultSlot.id == 0 || (resultSlot.id == recipe.result.id && (!recipe.result.data || resultSlot.data == recipe.result.data) && resultSlot.count <= 64 - recipe.result.count)) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
-						this.updateProgress(recipeResult.processTime);
+						this.updateProgress(recipe.processTime);
 						newActive = true;
 					}
 					if (this.isCompletedProgress()) {
-						this.decreaseSlot(sourceSlot, recipeResult.sourceCount || 1);
-						const itemResult = this.modifyResult(sourceSlot, resultSlot, recipeResult);
+						this.decreaseSlot(sourceSlot, recipe.input.count || 1);
+						const itemResult = this.modifyResult(sourceSlot, resultSlot, recipe.result);
 						if (itemResult) {
 							resultSlot.setSlot(itemResult.id, resultSlot.count + itemResult.count, itemResult.data || 0);
 						}
@@ -123,7 +121,7 @@ namespace Machine {
 			return +this.data.progress.toFixed(3) >= 1;
 		}
 
-		modifyResult(sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot, recipeResult: MachineRecipeRegistry.ItemResult): ItemInstance {
+		modifyResult(sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot, recipeResult: ProcessingRecipe["result"]): ItemInstance {
 			return new ItemStack(recipeResult.id, recipeResult.count, recipeResult.data);
 		}
 

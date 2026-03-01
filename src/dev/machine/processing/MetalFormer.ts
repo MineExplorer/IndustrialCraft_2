@@ -46,46 +46,65 @@ Callback.addCallback("PreLoaded", function() {
 		}
 	});
 
+	class MetalFormerRecipeDictionary extends ProcessingRecipeDictionary<Machine.MetalFormerRecipe> {
+		getCompoundKey(recipe: Machine.MetalFormerRecipe): string {
+			return recipe.mode + ":" + recipe.input.id;
+		}
+	}
+
+	const metalFormerDictionary = new MetalFormerRecipeDictionary(200);
 	// rolling
-	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ProcessingRecipe>>("metalFormer0", {
+	metalFormerDictionary.registerList([
 		// ingots
-		"minecraft:iron_ingot": {id: ItemID.plateIron, count: 1},
-		"minecraft:gold_ingot": {id: ItemID.plateGold, count: 1},
-		"item:ingotCopper": {id: ItemID.plateCopper, count: 1},
-		"item:ingotTin": {id: ItemID.plateTin, count: 1},
-		"item:ingotBronze": {id: ItemID.plateBronze, count: 1},
-		"item:ingotSteel": {id: ItemID.plateSteel, count: 1},
-		"item:ingotLead": {id: ItemID.plateLead, count: 1},
-		"item:ingotSilver": {id: ItemID.plateSilver, count: 1},
+		{ mode: 0, input: {id: VanillaItemID.iron_ingot}, result: {id: ItemID.plateIron, count: 1} },
+		{ mode: 0, input: {id: VanillaItemID.gold_ingot}, result: {id: ItemID.plateGold, count: 1} },
+		{ mode: 0, input: {id: ItemID.ingotCopper}, result: {id: ItemID.plateCopper, count: 1} },
+		{ mode: 0, input: {id: ItemID.ingotTin}, result: {id: ItemID.plateTin, count: 1} },
+		{ mode: 0, input: {id: ItemID.ingotBronze}, result: {id: ItemID.plateBronze, count: 1} },
+		{ mode: 0, input: {id: ItemID.ingotSteel}, result: {id: ItemID.plateSteel, count: 1} },
+		{ mode: 0, input: {id: ItemID.ingotLead}, result: {id: ItemID.plateLead, count: 1} },
+		{ mode: 0, input: {id: ItemID.ingotSilver}, result: {id: ItemID.plateSilver, count: 1} },
+
 		// plates
-		"item:plateIron": {id: ItemID.casingIron, count: 2},
-		"item:plateGold": {id: ItemID.casingGold, count: 2},
-		"item:plateTin": {id: ItemID.casingTin, count: 2},
-		"item:plateCopper": {id: ItemID.casingCopper, count: 2},
-		"item:plateBronze": {id: ItemID.casingBronze, count: 2},
-		"item:plateSteel": {id: ItemID.casingSteel, count: 2},
-		"item:plateLead": {id: ItemID.casingLead, count: 2},
-		"item:plateSilver": {id: ItemID.casingSilver, count: 2}
-	}, true);
+		{ mode: 0, input: {id: ItemID.plateIron}, result: {id: ItemID.casingIron, count: 2} },
+		{ mode: 0, input: {id: ItemID.plateGold}, result: {id: ItemID.casingGold, count: 2} },
+		{ mode: 0, input: {id: ItemID.plateTin}, result: {id: ItemID.casingTin, count: 2} },
+		{ mode: 0, input: {id: ItemID.plateCopper}, result: {id: ItemID.casingCopper, count: 2} },
+		{ mode: 0, input: {id: ItemID.plateBronze}, result: {id: ItemID.casingBronze, count: 2} },
+		{ mode: 0, input: {id: ItemID.plateSteel}, result: {id: ItemID.casingSteel, count: 2} },
+		{ mode: 0, input: {id: ItemID.plateLead}, result: {id: ItemID.casingLead, count: 2} },
+		{ mode: 0, input: {id: ItemID.plateSilver}, result: {id: ItemID.casingSilver, count: 2} }
+	]);
+
 	// cutting
-	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ProcessingRecipe>>("metalFormer1", {
-		"item:plateTin": {id: ItemID.cableTin0, count: 3},
-		"item:plateCopper": {id: ItemID.cableCopper0, count: 3},
-		"item:plateGold": {id: ItemID.cableGold0, count: 4},
-		"item:plateIron": {id: ItemID.cableIron0, count: 4},
-	}, true);
+	metalFormerDictionary.registerList([
+		{ mode: 1, input: {id: ItemID.plateTin}, result: {id: ItemID.cableTin0, count: 3} },
+		{ mode: 1, input: {id: ItemID.plateCopper}, result: {id: ItemID.cableCopper0, count: 3} },
+		{ mode: 1, input: {id: ItemID.plateGold}, result: {id: ItemID.cableGold0, count: 4} },
+		{ mode: 1, input: {id: ItemID.plateIron}, result: {id: ItemID.cableIron0, count: 4} }
+	]);
+
 	// extruding
-	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ProcessingRecipe>>("metalFormer2", {
-		"item:ingotTin": {id: ItemID.cableTin0, count: 3},
-		"item:ingotCopper": {id: ItemID.cableCopper0, count: 3},
-		"minecraft:iron_ingot": {id: ItemID.cableIron0, count: 4},
-		"minecraft:gold_ingot": {id: ItemID.cableGold0, count: 4},
-		"item:casingTin": {id: ItemID.tinCanEmpty, count: 1},
-		"item:plateIron": {id: ItemID.fuelRod, count: 1},
-	}, true);
+	metalFormerDictionary.registerList([
+		{ mode: 2, input: {id: ItemID.ingotTin}, result: {id: ItemID.cableTin0, count: 3} },
+		{ mode: 2, input: {id: ItemID.ingotCopper}, result: {id: ItemID.cableCopper0, count: 3} },
+		{ mode: 2, input: {id: VanillaItemID.iron_ingot}, result: {id: ItemID.cableIron0, count: 4} },
+		{ mode: 2, input: {id: VanillaItemID.gold_ingot}, result: {id: ItemID.cableGold0, count: 4} },
+		{ mode: 2, input: {id: ItemID.casingTin}, result: {id: ItemID.tinCanEmpty, count: 1} },
+		{ mode: 2, input: {id: ItemID.plateIron}, result: {id: ItemID.fuelRod, count: 1} }
+	]);
+
+	MachineRecipeRegistry.registerDictionary("metalFormer", metalFormerDictionary);
 });
 
 namespace Machine {
+	export type MetalFormerRecipe = {
+		input: {id: number, count?: number, data?: number}
+		result: {id: number, count: number, data?: number, extra?: ItemExtraData},
+		mode: number,
+		processTime?: number
+	}
+
 	const guiMetalFormer = MachineRegistry.createInventoryWindow("Metal Former", {
 		drawing: [
 			{type: "bitmap", x: 530, y: 164, bitmap: "metalformer_bar_background", scale: GUI_SCALE},
@@ -131,7 +150,7 @@ namespace Machine {
 		}
 
 		getRecipeResult(id: number): ProcessingRecipe {
-			return MachineRecipeRegistry.getRecipeResult("metalFormer" + this.data.mode, id);
+			return MachineRecipeRegistry.getRecipe("metalFormer", this.data.mode, id);
 		}
 
 		onTick(): void {

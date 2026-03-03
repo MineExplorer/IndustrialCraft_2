@@ -17,19 +17,27 @@ Callback.addCallback("PreLoaded", function() {
 		"xcx"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.electricMotor, 0, 'a', ItemID.plateIron, 0, 'b', 325, 0, 'c', ItemID.circuitBasic, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor<DataMap<number[]>>("oreWasher", {
-		"item:crushedCopper": [ItemID.crushedPurifiedCopper, 1, ItemID.dustSmallCopper, 2, ItemID.dustStone, 1],
-		"item:crushedTin": [ItemID.crushedPurifiedTin, 1, ItemID.dustSmallTin, 2, ItemID.dustStone, 1],
-		"item:crushedIron": [ItemID.crushedPurifiedIron, 1, ItemID.dustSmallIron, 2, ItemID.dustStone, 1],
-		"item:crushedGold": [ItemID.crushedPurifiedGold, 1, ItemID.dustSmallGold, 2, ItemID.dustStone, 1],
-		"item:crushedSilver": [ItemID.crushedPurifiedSilver, 1, ItemID.dustSmallSilver, 2, ItemID.dustStone, 1],
-		"item:crushedLead": [ItemID.crushedPurifiedLead, 1, ItemID.dustSmallSulfur, 3, ItemID.dustStone, 1],
-		"item:crushedUranium": [ItemID.crushedPurifiedUranium, 1, ItemID.dustSmallLead, 2, ItemID.dustStone, 1],
-		"minecraft:gravel": [318, 1, ItemID.dustStone, 1]
-	}, true);
+	const oreWasherDictionary = new ProcessingRecipeDictionary<Machine.OreWashingRecipe>(200);
+	oreWasherDictionary.registerList([
+		{ source: {id: ItemID.crushedCopper}, result: [ItemID.crushedPurifiedCopper, 1, ItemID.dustSmallCopper, 2, ItemID.dustStone, 1] },
+		{ source: {id: ItemID.crushedTin}, result: [ItemID.crushedPurifiedTin, 1, ItemID.dustSmallTin, 2, ItemID.dustStone, 1] },
+		{ source: {id: ItemID.crushedIron}, result: [ItemID.crushedPurifiedIron, 1, ItemID.dustSmallIron, 2, ItemID.dustStone, 1] },
+		{ source: {id: ItemID.crushedGold}, result: [ItemID.crushedPurifiedGold, 1, ItemID.dustSmallGold, 2, ItemID.dustStone, 1] },
+		{ source: {id: ItemID.crushedSilver}, result: [ItemID.crushedPurifiedSilver, 1, ItemID.dustSmallSilver, 2, ItemID.dustStone, 1] },
+		{ source: {id: ItemID.crushedLead}, result: [ItemID.crushedPurifiedLead, 1, ItemID.dustSmallSulfur, 3, ItemID.dustStone, 1] },
+		{ source: {id: ItemID.crushedUranium}, result: [ItemID.crushedPurifiedUranium, 1, ItemID.dustSmallLead, 2, ItemID.dustStone, 1] },
+		{ source: {id: VanillaBlockID.gravel}, result: [318, 1, ItemID.dustStone, 1] }
+	]);
+	MachineRecipeRegistry.registerDictionary("oreWasher", oreWasherDictionary);
 });
 
 namespace Machine {
+	export type OreWashingRecipe = {
+		source: {id: number, data?: number}
+		result: number[],
+		processTime?: number
+	}
+
 	const guiOreWasher = MachineRegistry.createInventoryWindow("Ore Washing Plant", {
 		drawing: [
 			{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_SCALE_NEW},
@@ -74,7 +82,7 @@ namespace Machine {
 			this.liquidTank = this.addLiquidTank("fluid", 8000, ["water"]);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
-				if (name == "slotSource") return !!this.getRecipeResult(id);
+				if (name == "slotSource") return !!this.getRecipe(new ItemStack(id, 64, data));
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotLiquid1") return LiquidItemRegistry.getItemLiquid(id, data, extra) == "water";
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
@@ -104,8 +112,8 @@ namespace Machine {
 			}
 		}
 
-		getRecipeResult(id: number): number[] {
-			return MachineRecipeRegistry.getRecipeResult("oreWasher", id);
+		getRecipe(item: ItemInstance): OreWashingRecipe {
+			return MachineRecipeRegistry.getRecipe("oreWasher", item);
 		}
 
 		onTick(): void {
@@ -130,16 +138,16 @@ namespace Machine {
 		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
-			const result = this.getRecipeResult(sourceSlot.id);
-			if (result && this.checkResult(result) && this.liquidTank.getAmount("water") >= 1000) {
+			const recipe = this.getRecipe(sourceSlot);
+			if (recipe && this.checkResult(recipe.result) && this.liquidTank.getAmount("water") >= 1000) {
 				if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;
-					this.updateProgress();
+					this.updateProgress(recipe.processTime);
 					newActive = true;
 				}
 				if (this.isCompletedProgress()) {
 					this.decreaseSlot(sourceSlot, 1);
-					this.putResult(result);
+					this.putResult(recipe.result);
 					this.data.progress = 0;
 				}
 			}
@@ -164,8 +172,8 @@ namespace Machine {
 
 	MachineRegistry.createFluidStorageInterface(BlockID.oreWasher, {
 		slots: {
-			"slotSource": {input: true, isValid: (item: ItemInstance) => {
-				return MachineRecipeRegistry.hasRecipeFor("oreWasher", item.id, item.data);
+			"slotSource": {input: true, isValid: (item: ItemInstance, side: number, tileEntity: OreWasher) => {
+				return !!tileEntity.getRecipe(item);
 			}},
 			"slotLiquid1": {input: true, isValid: (item: ItemInstance) => {
 				return LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra) == "water";

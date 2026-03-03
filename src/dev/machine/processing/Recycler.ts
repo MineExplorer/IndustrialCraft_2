@@ -57,8 +57,8 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slotResult", () => 0);
 		}
 
-		getRecipeResult(id: number) {
-			return id != 0 ? { id: ItemID.scrap, data: 0 } : null;
+		getRecipe(item: ItemInstance) {
+			return item.id != 0 ? { id: ItemID.scrap, data: 0 } : null;
 		}
 
 		modifyResult(sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot, recipeResult: MachineRecipeRegistry.ItemResult): ItemInstance {

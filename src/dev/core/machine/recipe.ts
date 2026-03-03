@@ -6,10 +6,10 @@ namespace MachineRecipeRegistry {
 	export const dictionaries = {};
 
 	export function registerDictionary<T>(name: string, dictionary: RecipeDictionary<T>): RecipeDictionary<T> {
-		if (this.dictionaries[name]) {
+		if (dictionaries[name]) {
 			Logger.Log(`Recipe dictionary for ${name} is overriden`, "ERROR");
 		}
-		this.dictionaries = dictionary;
+		dictionaries[name] = dictionary;
 		return dictionary;
 	}
 
@@ -20,7 +20,7 @@ namespace MachineRecipeRegistry {
 	/** @deprecated */
 	export function registerRecipesFor<T>(name: string, data: T, parseKeys?: boolean): void {
 		if (!parseKeys) {
-			this.recipeData[name] = data;
+			recipeData[name] = data;
 			return;
 		}
 
@@ -55,11 +55,11 @@ namespace MachineRecipeRegistry {
 				newData[newKey] = data[key];
 			}
 		}
-		this.recipeData[name] = newData;
+		recipeData[name] = newData;
 	}
 
 	export function addRecipeFor(name: string, input: any, result: any): void {
-		const recipes = this.requireRecipesFor(name, true);
+		const recipes = requireRecipesFor(name, true);
 		if (Array.isArray(recipes)) {
 			recipes.push({input: input, result: result});
 		}
@@ -68,31 +68,35 @@ namespace MachineRecipeRegistry {
 		}
 	}
 
-	export function requireRecipesFor<T>(name: string, createIfNotFound?: boolean): T {
+	export function requireRecipesFor(name: string, createIfNotFound?: boolean): any {
+		const dictionary = getDictionary(name);
+		if (dictionary) {
+			return dictionary.getAll();
+		}
 		if (!recipeData[name] && createIfNotFound) {
 			recipeData[name] = {};
 		}
 		return recipeData[name];
 	}
 
-	export function getRecipe<T>(dictionaryName: string, key1: string | number, key2?: string | number): T {
+	export function getRecipe<T>(dictionaryName: string, input1: any, input2?: any): T {
 		const dictionary = getDictionary<T>(dictionaryName);
 		if (dictionary) {
-			return dictionary.getRecipe(key1, key2);
+			return dictionary.getRecipe(input1, input2);
 		}
 	}
 
 	/** @deprecated */
 	export function getRecipeResult<T>(name: string, key1: string | number, key2?: string | number): T {
-		const data = this.requireRecipesFor(name);
+		const data = requireRecipesFor(name);
 		if (data && key1) {
 			return data[key1] || key2 !== undefined && data[key1+":"+key2];
 		}
 		return null;
 	}
 
-	export function hasRecipeFor(name: string, key1: string | number, key2?: string | number): boolean {
-		return !!this.getRecipeResult(name, key1, key2);
+	export function hasRecipeFor(name: string, key1: any, key2?: any): boolean {
+		return !!(getRecipe(name, key1, key2) || getRecipeResult(name, key1, key2));
 	}
 
 	export function registerFluidRecipes(name: string, data: any): void {

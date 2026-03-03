@@ -17,46 +17,66 @@ Callback.addCallback("PreLoaded", function() {
 		"ccc"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.casingTin, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.SolidCanningRecipe>>("solidCanner", {
-		"item:uranium": {can: ItemID.fuelRod, result: {id: ItemID.fuelRodUranium, count: 1, data: 0}},
-		"item:mox": {can: ItemID.fuelRod, result: {id: ItemID.fuelRodMOX, count: 1, data: 0}},
-		"minecraft:cake": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 14, data: 0}},
-		"minecraft:rabbit_stew": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 10, data: 0}},
-		"minecraft:cooked_porkchop": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 8, data: 0}},
-		"minecraft:cooked_beef": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 8, data: 0}},
-		"minecraft:pumpkin_pie": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 8, data: 0}},
-		"minecraft:mushroom_stew": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0}},
-		"minecraft:cooked_chicken": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0}},
-		"minecraft:golden_carrot": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0}},
-		"minecraft:muttoncooked": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0}},
-		"minecraft:beetroot_soup": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0}},
-		"minecraft:cooked_salmon": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0}},
-		"minecraft:bread": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 5, data: 0}},
-		"minecraft:cooked_cod": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 5, data: 0}},
-		"minecraft:baked_potato": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 5, data: 0}},
-		"minecraft:cooked_rabbit": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 5, data: 0}},
-		"minecraft:rotten_flesh": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 4, data: 1}},
-		"minecraft:apple": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 4, data: 0}},
-		"minecraft:porkchop": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0}},
-		"minecraft:beef": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0}},
-		"minecraft:carrot": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0}},
-		"minecraft:rabbit": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0}},
-		"minecraft:cookie": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
-		"minecraft:melon_slice": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
-		"minecraft:chicken": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 1}},
-		"minecraft:spider_eye": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 2}},
-		"minecraft:cod": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
-		"minecraft:poisonous_potato": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 2}},
-		"minecraft:muttonraw": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
-		"minecraft:salmon": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0}},
-		"minecraft:potato": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
-		"minecraft:beetroot": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
-		"minecraft:tropical_fish": {can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0}},
-	}, true);
+	const solidCannerDictionary = new SolidCanningRecipeDictionary(200);
+	solidCannerDictionary.registerList([
+		{ source: {id: ItemID.uranium}, can: ItemID.fuelRod, result: {id: ItemID.fuelRodUranium, count: 1, data: 0} },
+		{ source: {id: ItemID.mox}, can: ItemID.fuelRod, result: {id: ItemID.fuelRodMOX, count: 1, data: 0} },
+		{ source: {id: VanillaBlockID.cake}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 14, data: 0} },
+		{ source: {id: VanillaItemID.rabbit_stew}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 10, data: 0} },
+		{ source: {id: VanillaItemID.cooked_porkchop}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 8, data: 0} },
+		{ source: {id: VanillaItemID.cooked_beef}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 8, data: 0} },
+		{ source: {id: VanillaItemID.pumpkin_pie}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 8, data: 0} },
+		{ source: {id: VanillaItemID.mushroom_stew}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0} },
+		{ source: {id: VanillaItemID.cooked_chicken}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0} },
+		{ source: {id: VanillaItemID.golden_carrot}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0} },
+		{ source: {id: VanillaItemID.muttoncooked}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0} },
+		{ source: {id: VanillaItemID.beetroot_soup}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0} },
+		{ source: {id: VanillaItemID.cooked_salmon}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 6, data: 0} },
+		{ source: {id: VanillaItemID.bread}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 5, data: 0} },
+		{ source: {id: VanillaItemID.cooked_cod}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 5, data: 0} },
+		{ source: {id: VanillaItemID.baked_potato}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 5, data: 0} },
+		{ source: {id: VanillaItemID.cooked_rabbit}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 5, data: 0} },
+		{ source: {id: VanillaItemID.rotten_flesh}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 4, data: 1} },
+		{ source: {id: VanillaItemID.apple}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 4, data: 0} },
+		{ source: {id: VanillaItemID.porkchop}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0} },
+		{ source: {id: VanillaItemID.beef}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0} },
+		{ source: {id: VanillaItemID.carrot}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0} },
+		{ source: {id: VanillaItemID.rabbit}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 3, data: 0} },
+		{ source: {id: VanillaItemID.cookie}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0} },
+		{ source: {id: VanillaItemID.melon_slice}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0} },
+		{ source: {id: VanillaItemID.chicken}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 1} },
+		{ source: {id: VanillaItemID.spider_eye}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 2} },
+		{ source: {id: VanillaItemID.cod}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0} },
+		{ source: {id: VanillaItemID.poisonous_potato}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 2} },
+		{ source: {id: VanillaItemID.muttonraw}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0} },
+		{ source: {id: VanillaItemID.salmon}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 2, data: 0} },
+		{ source: {id: VanillaItemID.potato}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0} },
+		{ source: {id: VanillaBlockID.beetroot}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0} },
+		{ source: {id: VanillaItemID.tropical_fish}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0 } }
+	]);
 });
 
+class SolidCanningRecipeDictionary extends ProcessingRecipeDictionary<Machine.SolidCanningRecipe> {
+	canIds: number[] = [];
+
+	register(recipe: Machine.SolidCanningRecipe): void {
+		if (!this.canIds.includes(recipe.can)) {
+			this.canIds.push(recipe.can);
+		}
+		super.register(recipe);
+	}
+
+	isValidCan(canId: number): boolean {
+		return this.canIds.includes(canId);
+	}
+}
+
 namespace Machine {
-	export type SolidCanningRecipe = { can: number, result: ItemInstance }
+	export type SolidCanningRecipe = {
+		source: {id: number, data?: number}
+		can: number,
+		result: ItemInstance
+	}
 
 	const guiSolidCanner = MachineRegistry.createInventoryWindow("Solid Canning Machine", {
 		drawing: [
@@ -95,22 +115,19 @@ namespace Machine {
 
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name == "slotSource") return !!this.getRecipeResult(id);
+				if (name == "slotSource") return !!this.getRecipe(new ItemStack(id, amount, data));
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotCan") {
-					const recipes = MachineRecipeRegistry.requireRecipesFor<DataMap<SolidCanningRecipe>>("solidCanner");
-					for (let key in recipes) {
-						if (recipes[key].can == id) return true;
-					}
-					return false;
+					const dictionary = MachineRecipeRegistry.getDictionary("solidCanner") as SolidCanningRecipeDictionary;
+					return dictionary.isValidCan(id);
 				}
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
 			});
 		}
 
-		getRecipeResult(id: number): {can: number, result: ItemInstance} {
-			return MachineRecipeRegistry.getRecipeResult("solidCanner", id);
+		getRecipe(item: ItemInstance): SolidCanningRecipe {
+			return MachineRecipeRegistry.getRecipe("solidCanner", item);
 		}
 		
 		performRecipe(): boolean {
@@ -120,7 +137,7 @@ namespace Machine {
 			const resultSlot = this.container.getSlot("slotResult");
 			const canSlot = this.container.getSlot("slotCan");
 
-			const recipe = this.getRecipeResult(sourceSlot.id);
+			const recipe = this.getRecipe(sourceSlot);
 			if (recipe) {
 				const result = recipe.result;
 				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == 0 || resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count)) {
@@ -149,14 +166,11 @@ namespace Machine {
 	StorageInterface.createInterface(BlockID.solidCanner, {
 		slots: {
 			"slotSource": {input: true, isValid: (item: ItemInstance) => {
-				return MachineRecipeRegistry.hasRecipeFor("solidCanner", item.id);
+				return MachineRecipeRegistry.hasRecipeFor("solidCanner", item);
 			}},
 			"slotCan": {input: true, isValid: (item: ItemInstance) => {
-				const recipes = MachineRecipeRegistry.requireRecipesFor<DataMap<SolidCanningRecipe>>("solidCanner");
-				for (let key in recipes) {
-					if (recipes[key].can == item.id) return true;
-				}
-				return false;
+				const dictionary = MachineRecipeRegistry.getDictionary("solidCanner") as SolidCanningRecipeDictionary;
+				return dictionary.isValidCan(item.id);
 			}},
 			"slotResult": {output: true}
 		}

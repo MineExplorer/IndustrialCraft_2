@@ -53,8 +53,9 @@ namespace Machine {
 			return guiElectricFurnace;
 		}
 
-		getRecipeResult(id: number, data: number): ItemInstance {
-			return Recipes.getFurnaceRecipeResult(id, data, "iron");
+		getRecipe(item: ItemInstance): ProcessingRecipe {
+			const result = Recipes.getFurnaceRecipeResult(item.id, item.data, "iron");
+			return result && { source: item, result: result };
 		}
 
 		getStartingSound(): string {

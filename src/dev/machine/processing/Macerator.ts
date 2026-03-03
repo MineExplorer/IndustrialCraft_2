@@ -30,104 +30,104 @@ Callback.addCallback("PreLoaded", function() {
 	const maceratorDictionary = new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(300);
 	maceratorDictionary.registerList([
 		// ores
-		{ input: {id: VanillaBlockID.gold_ore}, result: {id: ItemID.crushedGold, count: 2, data: 0} },
-		{ input: {id: VanillaBlockID.iron_ore}, result: {id: ItemID.crushedIron, count: 2, data: 0} },
-		{ input: {id: BlockID.oreCopper}, result: {id: ItemID.crushedCopper, count: 2, data: 0} },
-		{ input: {id: BlockID.oreTin}, result: {id: ItemID.crushedTin, count: 2, data: 0} },
-		{ input: {id: BlockID.oreLead}, result: {id: ItemID.crushedLead, count: 2, data: 0} },
-		{ input: {id: BlockID.oreSilver}, result: {id: ItemID.crushedSilver, count: 2, data: 0} },
-		{ input: {id: BlockID.oreUranium}, result: {id: ItemID.crushedUranium, count: 2, data: 0} },
+		{ source: {id: VanillaBlockID.gold_ore}, result: {id: ItemID.crushedGold, count: 2, data: 0} },
+		{ source: {id: VanillaBlockID.iron_ore}, result: {id: ItemID.crushedIron, count: 2, data: 0} },
+		{ source: {id: BlockID.oreCopper}, result: {id: ItemID.crushedCopper, count: 2, data: 0} },
+		{ source: {id: BlockID.oreTin}, result: {id: ItemID.crushedTin, count: 2, data: 0} },
+		{ source: {id: BlockID.oreLead}, result: {id: ItemID.crushedLead, count: 2, data: 0} },
+		{ source: {id: BlockID.oreSilver}, result: {id: ItemID.crushedSilver, count: 2, data: 0} },
+		{ source: {id: BlockID.oreUranium}, result: {id: ItemID.crushedUranium, count: 2, data: 0} },
 
 		// ingots
-		{ input: {id: VanillaItemID.iron_ingot}, result: {id: ItemID.dustIron, count: 1, data: 0} },
-		{ input: {id: VanillaItemID.gold_ingot}, result: {id: ItemID.dustGold, count: 1, data: 0} },
-		{ input: {id: ItemID.ingotCopper}, result: {id: ItemID.dustCopper, count: 1, data: 0} },
-		{ input: {id: ItemID.ingotTin}, result: {id: ItemID.dustTin, count: 1, data: 0} },
-		{ input: {id: ItemID.ingotBronze}, result: {id: ItemID.dustBronze, count: 1, data: 0} },
-		{ input: {id: ItemID.ingotSteel}, result: {id: ItemID.dustSteel, count: 1, data: 0} },
-		{ input: {id: ItemID.ingotLead}, result: {id: ItemID.dustLead, count: 1, data: 0} },
-		{ input: {id: ItemID.ingotSilver}, result: {id: ItemID.dustSilver, count: 1, data: 0} },
+		{ source: {id: VanillaItemID.iron_ingot}, result: {id: ItemID.dustIron, count: 1, data: 0} },
+		{ source: {id: VanillaItemID.gold_ingot}, result: {id: ItemID.dustGold, count: 1, data: 0} },
+		{ source: {id: ItemID.ingotCopper}, result: {id: ItemID.dustCopper, count: 1, data: 0} },
+		{ source: {id: ItemID.ingotTin}, result: {id: ItemID.dustTin, count: 1, data: 0} },
+		{ source: {id: ItemID.ingotBronze}, result: {id: ItemID.dustBronze, count: 1, data: 0} },
+		{ source: {id: ItemID.ingotSteel}, result: {id: ItemID.dustSteel, count: 1, data: 0} },
+		{ source: {id: ItemID.ingotLead}, result: {id: ItemID.dustLead, count: 1, data: 0} },
+		{ source: {id: ItemID.ingotSilver}, result: {id: ItemID.dustSilver, count: 1, data: 0} },
 
 		// plates
-		{ input: {id: ItemID.plateIron}, result: {id: ItemID.dustIron, count: 1, data: 0} },
-		{ input: {id: ItemID.plateGold}, result: {id: ItemID.dustGold, count: 1, data: 0} },
-		{ input: {id: ItemID.plateCopper}, result: {id: ItemID.dustCopper, count: 1, data: 0} },
-		{ input: {id: ItemID.plateTin}, result: {id: ItemID.dustTin, count: 1, data: 0} },
-		{ input: {id: ItemID.plateBronze}, result: {id: ItemID.dustBronze, count: 1, data: 0} },
-		{ input: {id: ItemID.plateSteel}, result: {id: ItemID.dustSteel, count: 1, data: 0} },
-		{ input: {id: ItemID.plateLead}, result: {id: ItemID.dustLead, count: 1, data: 0} },
-		{ input: {id: ItemID.plateSilver}, result: {id: ItemID.dustSilver, count: 1, data: 0} },
-		{ input: {id: ItemID.plateLapis}, result: {id: ItemID.dustLapis, count: 1, data: 0} },
+		{ source: {id: ItemID.plateIron}, result: {id: ItemID.dustIron, count: 1, data: 0} },
+		{ source: {id: ItemID.plateGold}, result: {id: ItemID.dustGold, count: 1, data: 0} },
+		{ source: {id: ItemID.plateCopper}, result: {id: ItemID.dustCopper, count: 1, data: 0} },
+		{ source: {id: ItemID.plateTin}, result: {id: ItemID.dustTin, count: 1, data: 0} },
+		{ source: {id: ItemID.plateBronze}, result: {id: ItemID.dustBronze, count: 1, data: 0} },
+		{ source: {id: ItemID.plateSteel}, result: {id: ItemID.dustSteel, count: 1, data: 0} },
+		{ source: {id: ItemID.plateLead}, result: {id: ItemID.dustLead, count: 1, data: 0} },
+		{ source: {id: ItemID.plateSilver}, result: {id: ItemID.dustSilver, count: 1, data: 0} },
+		{ source: {id: ItemID.plateLapis}, result: {id: ItemID.dustLapis, count: 1, data: 0} },
 
 		// dense plates
-		{ input: {id: ItemID.densePlateIron}, result: {id: ItemID.dustIron, count: 9, data: 0} },
-		{ input: {id: ItemID.densePlateGold}, result: {id: ItemID.dustGold, count: 9, data: 0} },
-		{ input: {id: ItemID.densePlateCopper}, result: {id: ItemID.dustCopper, count: 9, data: 0} },
-		{ input: {id: ItemID.densePlateTin}, result: {id: ItemID.dustTin, count: 9, data: 0} },
-		{ input: {id: ItemID.densePlateBronze}, result: {id: ItemID.dustBronze, count: 9, data: 0} },
-		{ input: {id: ItemID.densePlateSteel}, result: {id: ItemID.dustSteel, count: 9, data: 0} },
-		{ input: {id: ItemID.densePlateLead}, result: {id: ItemID.dustLead, count: 9, data: 0} },
-		{ input: {id: ItemID.densePlateSilver}, result: {id: ItemID.dustSilver, count: 9, data: 0} },
+		{ source: {id: ItemID.densePlateIron}, result: {id: ItemID.dustIron, count: 9, data: 0} },
+		{ source: {id: ItemID.densePlateGold}, result: {id: ItemID.dustGold, count: 9, data: 0} },
+		{ source: {id: ItemID.densePlateCopper}, result: {id: ItemID.dustCopper, count: 9, data: 0} },
+		{ source: {id: ItemID.densePlateTin}, result: {id: ItemID.dustTin, count: 9, data: 0} },
+		{ source: {id: ItemID.densePlateBronze}, result: {id: ItemID.dustBronze, count: 9, data: 0} },
+		{ source: {id: ItemID.densePlateSteel}, result: {id: ItemID.dustSteel, count: 9, data: 0} },
+		{ source: {id: ItemID.densePlateLead}, result: {id: ItemID.dustLead, count: 9, data: 0} },
+		{ source: {id: ItemID.densePlateSilver}, result: {id: ItemID.dustSilver, count: 9, data: 0} },
 
 		// casings
-		{ input: {id: ItemID.casingIron}, result: {id: ItemID.dustSmallIron, count: 4, data: 0} },
-		{ input: {id: ItemID.casingGold}, result: {id: ItemID.dustSmallGold, count: 4, data: 0} },
-		{ input: {id: ItemID.casingCopper}, result: {id: ItemID.dustSmallCopper, count: 4, data: 0} },
-		{ input: {id: ItemID.casingTin}, result: {id: ItemID.dustSmallTin, count: 4, data: 0} },
-		{ input: {id: ItemID.casingBronze}, result: {id: ItemID.dustSmallBronze, count: 4, data: 0} },
-		{ input: {id: ItemID.casingSteel}, result: {id: ItemID.dustSmallSteel, count: 4, data: 0} },
-		{ input: {id: ItemID.casingLead}, result: {id: ItemID.dustSmallLead, count: 4, data: 0} },
-		{ input: {id: ItemID.casingSilver}, result: {id: ItemID.dustSmallSilver, count: 4, data: 0} },
+		{ source: {id: ItemID.casingIron}, result: {id: ItemID.dustSmallIron, count: 4, data: 0} },
+		{ source: {id: ItemID.casingGold}, result: {id: ItemID.dustSmallGold, count: 4, data: 0} },
+		{ source: {id: ItemID.casingCopper}, result: {id: ItemID.dustSmallCopper, count: 4, data: 0} },
+		{ source: {id: ItemID.casingTin}, result: {id: ItemID.dustSmallTin, count: 4, data: 0} },
+		{ source: {id: ItemID.casingBronze}, result: {id: ItemID.dustSmallBronze, count: 4, data: 0} },
+		{ source: {id: ItemID.casingSteel}, result: {id: ItemID.dustSmallSteel, count: 4, data: 0} },
+		{ source: {id: ItemID.casingLead}, result: {id: ItemID.dustSmallLead, count: 4, data: 0} },
+		{ source: {id: ItemID.casingSilver}, result: {id: ItemID.dustSmallSilver, count: 4, data: 0} },
 
 		// nuggets
-		{ input: {id: VanillaItemID.iron_nugget}, result: {id: ItemID.dustSmallIron, count: 1, data: 0} },
-		{ input: {id: VanillaItemID.gold_nugget}, result: {id: ItemID.dustSmallGold, count: 1, data: 0} },
+		{ source: {id: VanillaItemID.iron_nugget}, result: {id: ItemID.dustSmallIron, count: 1, data: 0} },
+		{ source: {id: VanillaItemID.gold_nugget}, result: {id: ItemID.dustSmallGold, count: 1, data: 0} },
 
 		// other resources
-		{ input: {id: VanillaBlockID.lapis_block}, result: {id: ItemID.dustLapis, count: 9, data: 0} },
-		{ input: {id: VanillaBlockID.coal_block}, result: {id: ItemID.dustCoal, count: 9, data: 0} },
-		{ input: {id: VanillaItemID.coal, data: 0}, result: {id: ItemID.dustCoal, count: 1, data: 0} },
-		{ input: {id: VanillaItemID.diamond}, result: {id: ItemID.dustDiamond, count: 1, data: 0} },
-		{ input: {id: VanillaItemID.lapis_lazuli}, result: {id: ItemID.dustLapis, count: 1, data: 0} },
-		{ input: {id: VanillaItemID.spider_eye}, result: {id: ItemID.grinPowder, count: 2, data: 0} },
-		{ input: {id: VanillaItemID.poisonous_potato}, result: {id: ItemID.grinPowder, count: 1, data: 0} },
+		{ source: {id: VanillaBlockID.lapis_block}, result: {id: ItemID.dustLapis, count: 9, data: 0} },
+		{ source: {id: VanillaBlockID.coal_block}, result: {id: ItemID.dustCoal, count: 9, data: 0} },
+		{ source: {id: VanillaItemID.coal, data: 0}, result: {id: ItemID.dustCoal, count: 1, data: 0} },
+		{ source: {id: VanillaItemID.diamond}, result: {id: ItemID.dustDiamond, count: 1, data: 0} },
+		{ source: {id: VanillaItemID.lapis_lazuli}, result: {id: ItemID.dustLapis, count: 1, data: 0} },
+		{ source: {id: VanillaItemID.spider_eye}, result: {id: ItemID.grinPowder, count: 2, data: 0} },
+		{ source: {id: VanillaItemID.poisonous_potato}, result: {id: ItemID.grinPowder, count: 1, data: 0} },
 
 		// other materials
-		{ input: {id: VanillaBlockID.stone, data: 0}, result: {id: 4, count: 1, data: 0} },
-		{ input: {id: VanillaBlockID.cobblestone}, result: {id: 12, count: 1, data: 0} },
-		{ input: {id: VanillaBlockID.gravel}, result: {id: 318, count: 1, data: 0} },
-		{ input: {id: VanillaBlockID.sandstone}, result: {id: 12, count: 2, data: 0} },
-		{ input: {id: VanillaBlockID.wool}, result: {id: 287, count: 2, data: 0} },
-		{ input: {id: VanillaBlockID.ice}, result: {id: 332, count: 4, data: 0} },
-		{ input: {id: VanillaBlockID.glowstone}, result: {id: 348, count: 4, data: 0} },
-		{ input: {id: VanillaBlockID.redstone_block}, result: {id: 331, count: 9, data: 0} },
-		{ input: {id: VanillaBlockID.quartz_block}, result: {id: 406, count: 4, data: 0} },
-		{ input: {id: VanillaBlockID.quartz_stairs}, result: {id: 406, count: 6, data: 0} },
-		{ input: {id: VanillaBlockID.sandstone_stairs}, result: {id: 12, count: 3, data: 0} },
-		{ input: {id: VanillaBlockID.red_sandstone}, result: {id: 12, count: 2, data: 1} },
-		{ input: {id: VanillaBlockID.red_sandstone_stairs}, result: {id: 12, count: 3, data: 1} },
-		{ input: {id: VanillaItemID.bone}, result: {id: VanillaItemID.bone_meal, count: 5, data: 0} },
-		{ input: {id: VanillaItemID.blaze_rod}, result: {id: 377, count: 5, data: 0} },
+		{ source: {id: VanillaBlockID.stone, data: 0}, result: {id: 4, count: 1, data: 0} },
+		{ source: {id: VanillaBlockID.cobblestone}, result: {id: 12, count: 1, data: 0} },
+		{ source: {id: VanillaBlockID.gravel}, result: {id: 318, count: 1, data: 0} },
+		{ source: {id: VanillaBlockID.sandstone}, result: {id: 12, count: 2, data: 0} },
+		{ source: {id: VanillaBlockID.wool}, result: {id: 287, count: 2, data: 0} },
+		{ source: {id: VanillaBlockID.ice}, result: {id: 332, count: 4, data: 0} },
+		{ source: {id: VanillaBlockID.glowstone}, result: {id: 348, count: 4, data: 0} },
+		{ source: {id: VanillaBlockID.redstone_block}, result: {id: 331, count: 9, data: 0} },
+		{ source: {id: VanillaBlockID.quartz_block}, result: {id: 406, count: 4, data: 0} },
+		{ source: {id: VanillaBlockID.quartz_stairs}, result: {id: 406, count: 6, data: 0} },
+		{ source: {id: VanillaBlockID.sandstone_stairs}, result: {id: 12, count: 3, data: 0} },
+		{ source: {id: VanillaBlockID.red_sandstone}, result: {id: 12, count: 2, data: 1} },
+		{ source: {id: VanillaBlockID.red_sandstone_stairs}, result: {id: 12, count: 3, data: 1} },
+		{ source: {id: VanillaItemID.bone}, result: {id: VanillaItemID.bone_meal, count: 5, data: 0} },
+		{ source: {id: VanillaItemID.blaze_rod}, result: {id: 377, count: 5, data: 0} },
 
 		// plants
-		{ input: {id: VanillaBlockID.planks, count: 4}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: BlockID.rubberTreeSapling, count: 4}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: BlockID.rubberTreeLeaves, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaBlockID.leaves, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaBlockID.leaves2, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaBlockID.deadbush, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaBlockID.cactus, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaBlockID.pumpkin, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaBlockID.wheat, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaBlockID.reeds, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaItemID.melon_slice, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaItemID.carrot, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaItemID.potato, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaItemID.pumpkin_seeds, count: 16}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: VanillaItemID.melon_seeds, count: 16}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: ItemID.weed, count: 32}, result: {id: ItemID.bioChaff, count: 1} },
-		{ input: {id: ItemID.bioChaff}, result: {id: 3, count: 1, data: 0} },
-		{ input: {id: ItemID.coffeeBeans}, result: {id: ItemID.coffeePowder, count: 3, data: 0} }
+		{ source: {id: VanillaBlockID.planks, count: 4}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: BlockID.rubberTreeSapling, count: 4}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: BlockID.rubberTreeLeaves, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaBlockID.leaves, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaBlockID.leaves2, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaBlockID.deadbush, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaBlockID.cactus, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaBlockID.pumpkin, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaBlockID.wheat, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaBlockID.reeds, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaItemID.melon_slice, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaItemID.carrot, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaItemID.potato, count: 8}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaItemID.pumpkin_seeds, count: 16}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: VanillaItemID.melon_seeds, count: 16}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: ItemID.weed, count: 32}, result: {id: ItemID.bioChaff, count: 1} },
+		{ source: {id: ItemID.bioChaff}, result: {id: 3, count: 1, data: 0} },
+		{ source: {id: ItemID.coffeeBeans}, result: {id: ItemID.coffeePowder, count: 3, data: 0} }
 	]);
 	MachineRecipeRegistry.registerDictionary("macerator", maceratorDictionary);
 });
@@ -165,8 +165,8 @@ namespace Machine {
 			return guiMacerator;
 		}
 
-		getRecipeResult(id: number, data: number): ProcessingRecipe {
-			return MachineRecipeRegistry.getRecipe("macerator", id, data);
+		getRecipe(item: ItemInstance): ProcessingRecipe {
+			return MachineRecipeRegistry.getRecipe("macerator", item);
 		}
 
 		getOperationSound(): string {
@@ -185,8 +185,8 @@ namespace Machine {
 			"slotSource": {input: true},
 			"slotResult": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => {
-			return MachineRecipeRegistry.hasRecipeFor("macerator", item.id, item.data);
+		isValidInput: (item: ItemInstance, side: number, tileEntity: Macerator) => {
+			return !!tileEntity.getRecipe(item);
 		}
 	});
 }

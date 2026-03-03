@@ -2,7 +2,7 @@
 
 namespace Machine {
 	export type ProcessingRecipe = {
-		input: {id: number, count?: number, data?: number}
+		source: {id: number, count?: number, data?: number}
 		result: {id: number, count: number, data?: number, extra?: ItemExtraData},
 		processTime?: number
 	}
@@ -36,7 +36,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name.startsWith("slotSource")) return !!this.getRecipeResult(id, data);
+				if (name.startsWith("slotSource")) return !!this.getRecipe(new ItemStack(id, amount, data));
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
@@ -48,7 +48,7 @@ namespace Machine {
 			this.useUpgrades();
 		}
 
-		getRecipeResult(id: number, data: number): any {
+		getRecipe(item: ItemInstance): ProcessingRecipeBase {
 			return null;
 		}
 
@@ -82,9 +82,9 @@ namespace Machine {
 		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipeResult(sourceSlot.id, sourceSlot.data) as ProcessingRecipe;
+			const recipe = this.getRecipe(sourceSlot) as ProcessingRecipe;
 
-			if (recipe && (!recipe.input.count || sourceSlot.count >= recipe.input.count)) {
+			if (recipe && sourceSlot.count >= recipe.source.count) {
 				const resultSlot = this.container.getSlot("slotResult");
 				if (resultSlot.id == 0 || (resultSlot.id == recipe.result.id && (!recipe.result.data || resultSlot.data == recipe.result.data) && resultSlot.count <= 64 - recipe.result.count)) {
 					if (this.data.energy >= this.energyDemand) {
@@ -93,7 +93,7 @@ namespace Machine {
 						newActive = true;
 					}
 					if (this.isCompletedProgress()) {
-						this.decreaseSlot(sourceSlot, recipe.input.count || 1);
+						this.decreaseSlot(sourceSlot, recipe.source.count);
 						const itemResult = this.modifyResult(sourceSlot, resultSlot, recipe.result);
 						if (itemResult) {
 							resultSlot.setSlot(itemResult.id, resultSlot.count + itemResult.count, itemResult.data || 0);

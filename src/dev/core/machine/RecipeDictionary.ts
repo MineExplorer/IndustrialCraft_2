@@ -1,17 +1,15 @@
 interface RecipeDictionary<T> {
     register(recipe: T): void;
-
+    
     registerList(recipeList: T[]): void;
-
-    getRecipe(key1: string | number, key2?: string | number): T;
+    
+    getRecipe(input1: T[keyof T], input2?: T[keyof T]): Nullable<T>;
 
     getAll(): T[];
-
-    getCompoundKey(recipe: T): string;
 }
 
 interface ProcessingRecipeBase {
-	input: { id: number, count?: number, data?: number}
+	source: { id: number, count?: number, data?: number}
     processTime?: number
 }
 
@@ -21,24 +19,26 @@ class ProcessingRecipeDictionary<T extends ProcessingRecipeBase> implements Reci
 	constructor(public defaultProccessTime: number) { }
 
 	register(recipe: T): void {
-        recipe.input.count ??= 1;
+        recipe.source.data ??= -1;
+        recipe.source.count ??= 1;
         recipe.processTime ??= this.defaultProccessTime;
-		this.recipes[this.getCompoundKey(recipe)] = recipe;
+		const recipeKey = this.getRecipeKey(recipe.source.id, recipe.source.data);
+		this.recipes[recipeKey] = recipe;
 	}
 
 	registerList(recipeList: T[]): void {
 		recipeList.forEach(r => this.register(r));
 	}
 
-	getRecipe(inputId: number, inputData: number): T {
-		return this.recipes[inputId + ":" + inputData] || this.recipes[inputId + ":-1"];
+	getRecipe(input: T["source"]): Nullable<T> {
+		return this.recipes[this.getRecipeKey(input.id, input.data)] || this.recipes[this.getRecipeKey(input.id, -1)];
 	}
 
     getAll(): T[] {
         return Object.values(this.recipes);
     }
 
-	getCompoundKey(recipe: T): string {
-		return recipe.input.id + ":" + (recipe.input.data ?? -1);
+	getRecipeKey(sourceId: number, sourceData: number): string {
+		return sourceId + ":" + sourceData;
 	}
 }

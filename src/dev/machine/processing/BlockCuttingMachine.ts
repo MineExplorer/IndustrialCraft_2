@@ -119,7 +119,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name.startsWith("slotSource")) return !!this.getRecipeResult(id, data);
+				if (name.startsWith("slotSource")) return !!this.getRecipe(id, data);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				if (name == "slotBlade") return this.getBladeLevel(id) > 0;
@@ -140,7 +140,7 @@ namespace Machine {
 			}
 		}
 
-		getRecipeResult(id: number, data: number): CuttingRecipe {
+		getRecipe(id: number, data: number): CuttingRecipe {
 			return MachineRecipeRegistry.getRecipeResult("cuttingMachine", id, data);
 		}
 
@@ -155,7 +155,7 @@ namespace Machine {
 			let newActive = false;
 
 			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipeResult(sourceSlot.id, sourceSlot.data);
+			const recipe = this.getRecipe(sourceSlot.id, sourceSlot.data);
 
 			const bladeSlot = this.container.getSlot("slotBlade");
 			const bladeLevel = this.getBladeLevel(bladeSlot.id);

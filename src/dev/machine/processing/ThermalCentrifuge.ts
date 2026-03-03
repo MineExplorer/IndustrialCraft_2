@@ -17,35 +17,42 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.electricMotor, 0, 'a', 265, 0, 'm', ItemID.miningLaser, -1, 'c', ItemID.coil, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.ThermalCentrifugeRecipe>>("thermalCentrifuge", {
-		"minecraft:cobblestone": {result: [ItemID.dustStone, 1], heat: 100},
-		"item:crushedCopper": {result: [ItemID.dustSmallTin, 1, ItemID.dustCopper, 1, ItemID.dustStone, 1], heat: 500},
-		"item:crushedTin": {result: [ItemID.dustSmallIron, 1, ItemID.dustTin, 1, ItemID.dustStone, 1], heat: 1000},
-		"item:crushedIron": {result: [ItemID.dustSmallGold, 1, ItemID.dustIron, 1, ItemID.dustStone, 1], heat: 1500},
-		"item:crushedSilver": {result: [ItemID.dustSmallLead, 1, ItemID.dustSilver, 1, ItemID.dustStone, 1], heat: 2000},
-		"item:crushedGold": {result: [ItemID.dustSmallSilver, 1, ItemID.dustGold, 1, ItemID.dustStone, 1], heat: 2000},
-		"item:crushedLead": {result: [ItemID.dustSmallSilver, 1, ItemID.dustLead, 1, ItemID.dustStone, 1], heat: 2000},
-		"item:crushedUranium": {result: [ItemID.smallUranium235, 1, ItemID.uranium238, 4, ItemID.dustStone, 1], heat: 3000},
-		"item:crushedPurifiedCopper": {result: [ItemID.dustSmallTin, 1, ItemID.dustCopper, 1], heat: 500},
-		"item:crushedPurifiedTin": {result: [ItemID.dustSmallIron, 1, ItemID.dustTin, 1], heat: 1000},
-		"item:crushedPurifiedIron": {result: [ItemID.dustSmallGold, 1, ItemID.dustIron, 1], heat: 1500},
-		"item:crushedPurifiedSilver": {result: [ItemID.dustSmallLead, 1, ItemID.dustSilver, 1], heat: 2000},
-		"item:crushedPurifiedGold": {result: [ItemID.dustSmallSilver, 1, ItemID.dustGold, 1], heat: 2000},
-		"item:crushedPurifiedLead": {result: [ItemID.dustSmallSilver, 1, ItemID.dustLead, 1], heat: 2000},
-		"item:crushedPurifiedUranium": {result: [ItemID.smallUranium235, 2, ItemID.uranium238, 5], heat: 3000},
-		"item:slag": {result: [ItemID.dustSmallGold, 1, ItemID.dustCoal, 1], heat: 1500},
-		"item:fuelRodDepletedUranium": {result: [ItemID.smallPlutonium, 1, ItemID.uranium238, 4, ItemID.dustIron, 1], heat: 4000},
-		"item:fuelRodDepletedUranium2": {result: [ItemID.smallPlutonium, 2, ItemID.uranium238, 8, ItemID.dustIron, 3], heat: 4000},
-		"item:fuelRodDepletedUranium4": {result: [ItemID.smallPlutonium, 4, ItemID.uranium238, 16, ItemID.dustIron, 6], heat: 4000},
-		"item:fuelRodDepletedMOX": {result: [ItemID.smallPlutonium, 1, ItemID.plutonium, 3, ItemID.dustIron, 1], heat: 5000},
-		"item:fuelRodDepletedMOX2": {result: [ItemID.smallPlutonium, 2, ItemID.plutonium, 6, ItemID.dustIron, 3], heat: 5000},
-		"item:fuelRodDepletedMOX4": {result: [ItemID.smallPlutonium, 4, ItemID.plutonium, 12, ItemID.dustIron, 6], heat: 5000},
-		"item:rtgPellet": {result: [ItemID.plutonium, 3, ItemID.dustIron, 54], heat: 5000},
-	}, true);
+	const thermalCentrifugeDictionary = new ProcessingRecipeDictionary<Machine.ThermalCentrifugeRecipe>(500);
+	thermalCentrifugeDictionary.registerList([
+		{ source: {id: VanillaBlockID.cobblestone}, result: [ItemID.dustStone, 1], heat: 100 },
+		{ source: {id: ItemID.crushedCopper}, result: [ItemID.dustSmallTin, 1, ItemID.dustCopper, 1, ItemID.dustStone, 1], heat: 500 },
+		{ source: {id: ItemID.crushedTin}, result: [ItemID.dustSmallIron, 1, ItemID.dustTin, 1, ItemID.dustStone, 1], heat: 1000 },
+		{ source: {id: ItemID.crushedIron}, result: [ItemID.dustSmallGold, 1, ItemID.dustIron, 1, ItemID.dustStone, 1], heat: 1500 },
+		{ source: {id: ItemID.crushedSilver}, result: [ItemID.dustSmallLead, 1, ItemID.dustSilver, 1, ItemID.dustStone, 1], heat: 2000 },
+		{ source: {id: ItemID.crushedGold}, result: [ItemID.dustSmallSilver, 1, ItemID.dustGold, 1, ItemID.dustStone, 1], heat: 2000 },
+		{ source: {id: ItemID.crushedLead}, result: [ItemID.dustSmallSilver, 1, ItemID.dustLead, 1, ItemID.dustStone, 1], heat: 2000 },
+		{ source: {id: ItemID.crushedUranium}, result: [ItemID.smallUranium235, 1, ItemID.uranium238, 4, ItemID.dustStone, 1], heat: 3000 },
+		{ source: {id: ItemID.crushedPurifiedCopper}, result: [ItemID.dustSmallTin, 1, ItemID.dustCopper, 1], heat: 500 },
+		{ source: {id: ItemID.crushedPurifiedTin}, result: [ItemID.dustSmallIron, 1, ItemID.dustTin, 1], heat: 1000 },
+		{ source: {id: ItemID.crushedPurifiedIron}, result: [ItemID.dustSmallGold, 1, ItemID.dustIron, 1], heat: 1500 },
+		{ source: {id: ItemID.crushedPurifiedSilver}, result: [ItemID.dustSmallLead, 1, ItemID.dustSilver, 1], heat: 2000 },
+		{ source: {id: ItemID.crushedPurifiedGold}, result: [ItemID.dustSmallSilver, 1, ItemID.dustGold, 1], heat: 2000 },
+		{ source: {id: ItemID.crushedPurifiedLead}, result: [ItemID.dustSmallSilver, 1, ItemID.dustLead, 1], heat: 2000 },
+		{ source: {id: ItemID.crushedPurifiedUranium}, result: [ItemID.smallUranium235, 2, ItemID.uranium238, 5], heat: 3000 },
+		{ source: {id: ItemID.slag}, result: [ItemID.dustSmallGold, 1, ItemID.dustCoal, 1], heat: 1500 },
+		{ source: {id: ItemID.fuelRodDepletedUranium}, result: [ItemID.smallPlutonium, 1, ItemID.uranium238, 4, ItemID.dustIron, 1], heat: 4000 },
+		{ source: {id: ItemID.fuelRodDepletedUranium2}, result: [ItemID.smallPlutonium, 2, ItemID.uranium238, 8, ItemID.dustIron, 3], heat: 4000 },
+		{ source: {id: ItemID.fuelRodDepletedUranium4}, result: [ItemID.smallPlutonium, 4, ItemID.uranium238, 16, ItemID.dustIron, 6], heat: 4000 },
+		{ source: {id: ItemID.fuelRodDepletedMOX}, result: [ItemID.smallPlutonium, 1, ItemID.plutonium, 3, ItemID.dustIron, 1], heat: 5000 },
+		{ source: {id: ItemID.fuelRodDepletedMOX2}, result: [ItemID.smallPlutonium, 2, ItemID.plutonium, 6, ItemID.dustIron, 3], heat: 5000 },
+		{ source: {id: ItemID.fuelRodDepletedMOX4}, result: [ItemID.smallPlutonium, 4, ItemID.plutonium, 12, ItemID.dustIron, 6], heat: 5000 },
+		{ source: {id: ItemID.rtgPellet}, result: [ItemID.plutonium, 3, ItemID.dustIron, 54], heat: 5000 }
+	]);
+	MachineRecipeRegistry.registerDictionary("thermalCentrifuge", thermalCentrifugeDictionary);
 });
 
 namespace Machine {
-	export type ThermalCentrifugeRecipe = { result: number[], heat: number }
+	export type ThermalCentrifugeRecipe = {
+		source: {id: number, data?: number},
+		result: number[],
+		heat: number,
+		processTime?: number
+	}
 
 	const guiCentrifuge = MachineRegistry.createInventoryWindow("Thermal Centrifuge", {
 		drawing: [
@@ -102,8 +109,8 @@ namespace Machine {
 			return upgrades;
 		}
 
-		getRecipeResult(id: number): ThermalCentrifugeRecipe {
-			return MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", id);
+		getRecipe(item: ItemInstance): ThermalCentrifugeRecipe {
+			return MachineRecipeRegistry.getRecipe("thermalCentrifuge", item);
 		}
 
 		checkResult(result: number[]): boolean {
@@ -142,11 +149,7 @@ namespace Machine {
 
 			this.dischargeSlot("slotEnergy");
 
-			if (this.data.heat >= this.data.maxHeat) {
-				this.container.sendEvent("setIndicator", "green");
-			} else {
-				this.container.sendEvent("setIndicator", "red");
-			}
+			this.container.sendEvent("setIndicator", this.data.heat >= this.data.maxHeat ? "green" : "red");
 			this.container.setScale("progressScale", this.data.progress);
 			this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
 			this.container.setScale("energyScale", this.getRelativeEnergy());
@@ -156,7 +159,7 @@ namespace Machine {
 		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipeResult(sourceSlot.id);
+			const recipe = this.getRecipe(sourceSlot);
 			if (recipe && this.checkResult(recipe.result) && this.data.energy > 0) {
 				this.data.maxHeat = recipe.heat;
 				if (this.data.heat < recipe.heat) {
@@ -165,7 +168,7 @@ namespace Machine {
 				}
 				else if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;
-					this.updateProgress();
+					this.updateProgress(recipe.processTime);
 					newActive = true;
 				}
 				if (this.isCompletedProgress()) {

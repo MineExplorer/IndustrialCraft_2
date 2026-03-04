@@ -184,10 +184,13 @@ namespace Machine {
 			this.networkEntity.send("playSound", {name: soundName, vol: volume, rad: radius});
 		}
 
-		protected canStackBeMerged(inputStack: ItemInstance, outputStack: ItemInstance) {
-			return outputStack.id == 0 || (outputStack.id == inputStack.id && outputStack.data == inputStack.data && 
-				outputStack.count + inputStack.count <= Item.getMaxStack(outputStack.id, outputStack.data) &&
-				outputStack.extra == inputStack.extra)
+		protected canStackBeMerged(inputStack: ItemInstance, outputStack: ItemInstance, ignoreItemMaxStack?: boolean) {
+			if (outputStack.id == 0) return true;
+
+			const newOutputCount = outputStack.count + inputStack.count;
+			return outputStack.id == inputStack.id && outputStack.data == inputStack.data && 
+				newOutputCount <= (ignoreItemMaxStack ? 64 : Item.getMaxStack(outputStack.id, outputStack.data)) &&
+				outputStack.extra == inputStack.extra
 		}
 	}
 }

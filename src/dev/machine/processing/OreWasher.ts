@@ -78,11 +78,15 @@ namespace Machine {
 			return guiOreWasher;
 		}
 
+		getRecipeDictionary(): ProcessingRecipeDictionary<OreWashingRecipe> {
+			return MachineRecipeRegistry.getDictionary("oreWasher");
+		}
+
 		setupContainer(): void {
 			this.liquidTank = this.addLiquidTank("fluid", 8000, ["water"]);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
-				if (name == "slotSource") return !!this.getRecipe(new ItemStack(id, 64, data));
+				if (name == "slotSource") return this.isValidSource(id, data);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotLiquid1") return LiquidItemRegistry.getItemLiquid(id, data, extra) == "water";
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
@@ -112,10 +116,6 @@ namespace Machine {
 			}
 		}
 
-		getRecipe(item: ItemInstance): OreWashingRecipe {
-			return MachineRecipeRegistry.getRecipe("oreWasher", item);
-		}
-
 		onTick(): void {
 			this.useUpgrades();
 			StorageInterface.checkHoppers(this);
@@ -138,7 +138,8 @@ namespace Machine {
 		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipe(sourceSlot);
+			const dictionary = this.getRecipeDictionary();
+			const recipe = dictionary.getRecipe(sourceSlot);
 			if (recipe && this.checkResult(recipe.result) && this.liquidTank.getAmount("water") >= 1000) {
 				if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;
@@ -173,7 +174,7 @@ namespace Machine {
 	MachineRegistry.createFluidStorageInterface(BlockID.oreWasher, {
 		slots: {
 			"slotSource": {input: true, isValid: (item: ItemInstance, side: number, tileEntity: OreWasher) => {
-				return !!tileEntity.getRecipe(item);
+				return tileEntity.isValidSource(item.id, item.data);
 			}},
 			"slotLiquid1": {input: true, isValid: (item: ItemInstance) => {
 				return LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra) == "water";

@@ -13,7 +13,7 @@ namespace MachineRecipeRegistry {
 		return dictionary;
 	}
 
-	export function getDictionary<T>(name: string): RecipeDictionary<T> {
+	export function getDictionary<T>(name: string): T {
 		return dictionaries[name];
 	}
 

@@ -58,7 +58,11 @@ namespace Machine {
 		}
 
 		getRecipe(item: ItemInstance) {
-			return item.id != 0 ? { id: ItemID.scrap, data: 0 } : null;
+			return item.id != 0 ? { source: item, result: { id: ItemID.scrap, data: 0 }} : null;
+		}
+
+		isValidSource(id: number, data: number): boolean {
+			return true;
 		}
 
 		modifyResult(sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot, recipeResult: MachineRecipeRegistry.ItemResult): ItemInstance {

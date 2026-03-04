@@ -20,12 +20,12 @@ Callback.addCallback("PreLoaded", function() {
 	
 	const extractorDictionary = new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(400);
 	extractorDictionary.registerList([
-		{ source: {id: ItemID.latex}, result: { id: ItemID.rubber, count: 3 } },
-		{ source: {id: BlockID.rubberTreeSapling}, result: { id: ItemID.rubber, count: 1 } },
-		{ source: {id: BlockID.rubberTreeLog}, result: { id: ItemID.rubber, count: 1 } },
-		{ source: {id: VanillaBlockID.wool}, result: { id: 35, count: 1 } },
-		{ source: {id: VanillaItemID.gunpowder}, result: { id: ItemID.dustSulfur, count: 1 } },
-		{ source: {id: ItemID.tinCanFull}, result: { id: ItemID.tinCanEmpty, count: 1 } }
+		{ source: {id: ItemID.latex}, result: { id: ItemID.rubber, count: 3} },
+		{ source: {id: BlockID.rubberTreeSapling}, result: { id: ItemID.rubber, count: 1} },
+		{ source: {id: BlockID.rubberTreeLog}, result: { id: ItemID.rubber, count: 1} },
+		{ source: {id: VanillaBlockID.wool}, result: { id: 35, count: 1} },
+		{ source: {id: VanillaItemID.gunpowder}, result: { id: ItemID.dustSulfur, count: 1} },
+		{ source: {id: ItemID.tinCanFull}, result: { id: ItemID.tinCanEmpty, count: 1} }
 	]);
 	MachineRecipeRegistry.registerDictionary("extractor", extractorDictionary);
 });
@@ -63,8 +63,8 @@ namespace Machine {
 			return guiExtractor;
 		}
 
-		getRecipe(item: ItemInstance): ProcessingRecipe {
-			return MachineRecipeRegistry.getRecipe("extractor", item);
+		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipe> {
+			return MachineRecipeRegistry.getDictionary("extractor");
 		}
 
 		getOperationSound(): string {
@@ -84,7 +84,7 @@ namespace Machine {
 			"slotResult": {output: true}
 		},
 		isValidInput: (item: ItemInstance, side: number, tileEntity: Extractor) => {
-			return !!tileEntity.getRecipe(item);
+			return tileEntity.isValidSource(item.id, item.data);
 		}
 	});
 }

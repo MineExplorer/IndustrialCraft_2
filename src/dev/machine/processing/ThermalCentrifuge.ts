@@ -103,14 +103,14 @@ namespace Machine {
 			return guiCentrifuge;
 		}
 
+		getRecipeDictionary(): ProcessingRecipeDictionary<ThermalCentrifugeRecipe> {
+			return MachineRecipeRegistry.getDictionary("thermalCentrifuge");
+		}
+
 		useUpgrades(): UpgradeAPI.UpgradeSet {
 			const upgrades = super.useUpgrades();
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
 			return upgrades;
-		}
-
-		getRecipe(item: ItemInstance): ThermalCentrifugeRecipe {
-			return MachineRecipeRegistry.getRecipe("thermalCentrifuge", item);
 		}
 
 		checkResult(result: number[]): boolean {
@@ -159,7 +159,8 @@ namespace Machine {
 		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipe(sourceSlot);
+			const dictionary = this.getRecipeDictionary();
+			const recipe = dictionary.getRecipe(sourceSlot);
 			if (recipe && this.checkResult(recipe.result) && this.data.energy > 0) {
 				this.data.maxHeat = recipe.heat;
 				if (this.data.heat < recipe.heat) {

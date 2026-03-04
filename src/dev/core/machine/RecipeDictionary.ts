@@ -5,6 +5,9 @@ interface RecipeDictionary<T> {
     
     getRecipe(input1: T[keyof T], input2?: T[keyof T]): Nullable<T>;
 
+	/** @returns true if the recipe was deleted, false otherwise */
+	removeRecipe(input1: T[keyof T], input2?: T[keyof T]): boolean;
+
     getAll(): T[];
 }
 
@@ -31,14 +34,31 @@ class ProcessingRecipeDictionary<T extends ProcessingRecipeBase> implements Reci
 	}
 
 	getRecipe(input: T["source"]): Nullable<T> {
-		return this.recipes[this.getRecipeKey(input.id, input.data)] || this.recipes[this.getRecipeKey(input.id, -1)];
+		const recipe = this.getRecipeBySource(input.id, input.data);
+		if (recipe && recipe.source.count <= input.count) {
+			return recipe;
+		}
+		return null;
+	}
+
+	removeRecipe(input: T["source"]): boolean {
+		const recipeKey = this.getRecipeKey(input.id, input.data)
+		if (this.recipes[recipeKey]) {
+			delete this.recipes[recipeKey];
+			return true;
+		}
+		return false;
 	}
 
     getAll(): T[] {
         return Object.values(this.recipes);
     }
 
-	getRecipeKey(sourceId: number, sourceData: number): string {
+	getRecipeBySource(sourceId: number, sourceData: number) {
+		return this.recipes[this.getRecipeKey(sourceId, sourceData)] || this.recipes[this.getRecipeKey(sourceId, -1)];
+	}
+
+	private getRecipeKey(sourceId: number, sourceData: number): string {
 		return sourceId + ":" + sourceData;
 	}
 }

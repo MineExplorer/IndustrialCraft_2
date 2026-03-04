@@ -88,16 +88,14 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: ItemID.casingTin}, result: {id: ItemID.tinCanEmpty, count: 1} },
 		{ source: {id: ItemID.plateIron}, result: {id: ItemID.fuelRod, count: 1} }
 	]);
-
 	MachineRecipeRegistry.registerDictionary("metalExtruding", extrudingDictionary);
 });
 
 namespace Machine {
-	export type MetalFormerRecipe = {
-		input: {id: number, count?: number, data?: number}
-		result: {id: number, count: number, data?: number, extra?: ItemExtraData},
-		mode: number,
-		processTime?: number
+	enum MetalFormerMode {
+		Rolling,
+		Cutting,
+		Extruding
 	}
 
 	const guiMetalFormer = MachineRegistry.createInventoryWindow("Metal Former", {
@@ -132,7 +130,7 @@ namespace Machine {
 		defaultValues = {
 			energy: 0,
 			progress: 0,
-			mode: 0
+			mode: MetalFormerMode.Rolling
 		}
 
 		defaultEnergyStorage = 4000;
@@ -144,17 +142,17 @@ namespace Machine {
 			return guiMetalFormer;
 		}
 
-		getRecipe(item: ItemInstance): ProcessingRecipe {
-			return MachineRecipeRegistry.getRecipe(this.getRecipeCategory(), item);
+		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipe> {
+			return MachineRecipeRegistry.getDictionary(this.getRecipeCategory());
 		}
 
 		getRecipeCategory() {
 			switch (this.data.mode) {
-				case 0:
+				case MetalFormerMode.Rolling:
 					return "metalRolling";
-				case 1:
+				case MetalFormerMode.Cutting:
 					return "metalCutting";
-				case 2:
+				case MetalFormerMode.Extruding:
 					return "metalExtruding"
 			}
 		}
@@ -186,7 +184,7 @@ namespace Machine {
 			"slotResult": {output: true}
 		},
 		isValidInput: (item: ItemInstance, side: number, tileEntity: MetalFormer) => {
-			return !!tileEntity.getRecipe(item);
+			return tileEntity.isValidSource(item.id, item.data);
 		}
 	});
 }

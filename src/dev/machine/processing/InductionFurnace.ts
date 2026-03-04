@@ -69,6 +69,10 @@ namespace Machine {
 			return guiInductionFurnace;
 		}
 
+		isValidSource(id: number, data: number): boolean {
+			return !!this.getRecipeResult(id, data);
+		}
+
 		getRecipeResult(id: number, data: number): ItemInstance {
 			return Recipes.getFurnaceRecipeResult(id, data, "iron");
 		}

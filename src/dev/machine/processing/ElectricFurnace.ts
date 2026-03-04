@@ -58,6 +58,10 @@ namespace Machine {
 			return result && { source: item, result: result };
 		}
 
+		isValidSource(id: number, data: number): boolean {
+			return !!Recipes.getFurnaceRecipeResult(id, data, "iron");
+		}
+
 		getStartingSound(): string {
 			return "ElectroFurnaceStart.ogg";
 		}
@@ -76,8 +80,8 @@ namespace Machine {
 			"slotSource": {input: true},
 			"slotResult": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => {
-			return !!Recipes.getFurnaceRecipeResult(item.id, item.data, "iron");
+		isValidInput: (item: ItemInstance, side: number, tileEntity: ElectricFurnace) => {
+			return tileEntity.isValidSource(item.id, item.data);
 		}
 	});
 }

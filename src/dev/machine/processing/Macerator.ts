@@ -165,8 +165,8 @@ namespace Machine {
 			return guiMacerator;
 		}
 
-		getRecipe(item: ItemInstance): ProcessingRecipe {
-			return MachineRecipeRegistry.getRecipe("macerator", item);
+		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipe> {
+			return MachineRecipeRegistry.getDictionary("macerator");
 		}
 
 		getOperationSound(): string {
@@ -186,7 +186,7 @@ namespace Machine {
 			"slotResult": {output: true}
 		},
 		isValidInput: (item: ItemInstance, side: number, tileEntity: Macerator) => {
-			return !!tileEntity.getRecipe(item);
+			return tileEntity.isValidSource(item.id, item.data);;
 		}
 	});
 }

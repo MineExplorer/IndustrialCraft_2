@@ -118,8 +118,8 @@ namespace Machine {
 			return guiCompressor;
 		}
 
-		getRecipe(item: ItemInstance): ProcessingRecipe {
-			return MachineRecipeRegistry.getRecipe("compressor", item);
+		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipe> {
+			return MachineRecipeRegistry.getDictionary("compressor");
 		}
 
 		getOperationSound(): string {
@@ -139,7 +139,7 @@ namespace Machine {
 			"slotResult": {output: true}
 		},
 		isValidInput: (item: ItemInstance, side: number, tileEntity: Compressor) => {
-			return !!tileEntity.getRecipe(item);
+			return tileEntity.isValidSource(item.id, item.data);
 		}
 	});
 }

@@ -17,64 +17,69 @@ Callback.addCallback("PreLoaded", function() {
         "b"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'a', ItemID.circuitAdvanced, 0, 'b', ItemID.electricMotor, 0]);
 	
-	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.CuttingRecipe>>("cuttingMachine", {
-		// Iron blade or higher
-		"minecraft:log:0": {result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1},
-		"minecraft:log:1": {result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1},
-		"minecraft:log:2": {result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1},
-		"minecraft:log:3": {result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1},
-		"minecraft:log2:0": {result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1},
-		"minecraft:log2:1": {result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1},
-		"minecraft:crimson_stem": {result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1},
-		"minecraft:warped_stem": {result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1},
-		"minecraft:stripped_oak_log": {result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1},
-		"minecraft:stripped_spruce_log": {result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1},
-		"minecraft:stripped_birch_log": {result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1},
-		"minecraft:stripped_jungle_log": {result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1},
-		"minecraft:stripped_acacia_log": {result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1},
-		"minecraft:stripped_dark_oak_log": {result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1},
-		"minecraft:stripped_crimson_stem": {result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1},
-		"minecraft:stripped_warped_stem": {result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1},
+	const cuttingDictionary = new ProcessingRecipeDictionary<Machine.CuttingRecipe>(450);
+	cuttingDictionary.registerList([
+		// -- Iron blade or higher --
+		// Logs
+		{ source: {id: VanillaBlockID.log, data: 0}, result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log, data: 1}, result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log, data: 2}, result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log, data: 3}, result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log2, data: 0}, result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log2, data: 1}, result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.crimson_stem}, result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.warped_stem}, result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_oak_log}, result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_spruce_log}, result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_birch_log}, result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_jungle_log}, result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_acacia_log}, result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_dark_oak_log}, result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_crimson_stem}, result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_warped_stem}, result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: BlockID.rubberTreeLog}, result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1 },
 		// Wood
-		"minecraft:wood:0": {result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1},
-		"minecraft:wood:1": {result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1},
-		"minecraft:wood:2": {result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1},
-		"minecraft:wood:3": {result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1},
-		"minecraft:wood:4": {result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1},
-		"minecraft:wood:5": {result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1},
+		{ source: {id: VanillaBlockID.wood, data: 0}, result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 1}, result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 2}, result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 3}, result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 4}, result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 5}, result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1 },
 		// Stripped wood
-		"minecraft:wood:8": {result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1},
-		"minecraft:wood:9": {result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1},
-		"minecraft:wood:10": {result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1},
-		"minecraft:wood:11": {result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1},
-		"minecraft:wood:12": {result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1},
-		"minecraft:wood:13": {result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1},
-		"minecraft:crimson_hyphae": {result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1},
-		"minecraft:warped_hyphae": {result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1},
-		"minecraft:stripped_crimson_hyphae": {result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1},
-		"minecraft:stripped_warped_hyphae": {result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1},
-		"block:rubberTreeLog": {result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1},
-		
-		"minecraft:planks": {result: {id: VanillaItemID.stick, count: 6}, sourceCount: 2, hardnessLevel: 1},
-		"minecraft:crimson_planks": {result: {id: VanillaItemID.stick, count: 6}, sourceCount: 2, hardnessLevel: 1},
-		"minecraft:warped_planks": {result: {id: VanillaItemID.stick, count: 6}, sourceCount: 2, hardnessLevel: 1},
-		
-		"block:blockCopper": {result: {id: ItemID.plateCopper, count: 9}, hardnessLevel: 1},
-		"block:blockTin": {result: {id: ItemID.plateTin, count: 9}, hardnessLevel: 1},
-		"block:blockBronze": {result: {id: ItemID.plateBronze, count: 9}, hardnessLevel: 1},
-		"block:blockLead": {result: {id: ItemID.plateLead, count: 9}, hardnessLevel: 1},
-		"minecraft:gold_block": {result: {id: ItemID.plateGold, count: 9}, hardnessLevel: 1},
-		"minecraft:lapis_block": {result: {id: ItemID.plateLapis, count: 9}, hardnessLevel: 1},
-		// Steel blade or higher
-		"minecraft:iron_block": {result: {id: ItemID.plateIron, count: 9}, hardnessLevel: 2},
-		// Diamond blade
-		"block:blockSteel": {result: {id: ItemID.plateSteel, count: 9}, hardnessLevel: 3},
-	}, true);
+		{ source: {id: VanillaBlockID.wood, data: 8}, result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 9}, result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 10}, result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 11}, result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 12}, result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 13}, result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1 },
+		// Other wood
+		{ source: {id: VanillaBlockID.crimson_hyphae}, result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.warped_hyphae}, result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_crimson_hyphae}, result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_warped_hyphae}, result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1 },
+		// Planks
+		{ source: {id: VanillaBlockID.planks}, result: {id: VanillaItemID.stick, count: 6 }, sourceCount: 2, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.crimson_planks}, result: {id: VanillaItemID.stick, count: 6 }, sourceCount: 2, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.warped_planks}, result: {id: VanillaItemID.stick, count: 6 }, sourceCount: 2, hardnessLevel: 1 },
+		// Resource blocks
+		{ source: {id: BlockID.blockCopper}, result: {id: ItemID.plateCopper, count: 9}, hardnessLevel: 1 },
+		{ source: {id: BlockID.blockTin}, result: {id: ItemID.plateTin, count: 9}, hardnessLevel: 1 },
+		{ source: {id: BlockID.blockBronze}, result: {id: ItemID.plateBronze, count: 9}, hardnessLevel: 1 },
+		{ source: {id: BlockID.blockLead}, result: {id: ItemID.plateLead, count: 9}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.gold_block}, result: {id: ItemID.plateGold, count: 9}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.lapis_block}, result: {id: ItemID.plateLapis, count: 9}, hardnessLevel: 1 },
+		// -- Steel blade or higher --
+		{ source: {id: VanillaBlockID.iron_block}, result: {id: ItemID.plateIron, count: 9}, hardnessLevel: 2 },
+		// -- Diamond blade --
+		{ source: {id: BlockID.blockSteel}, result: {id: ItemID.plateSteel, count: 9}, hardnessLevel: 3 }
+	]);
+	MachineRecipeRegistry.registerDictionary("cuttingMachine", cuttingDictionary);
 });
 
 namespace Machine {
 	export type CuttingRecipe = {
-		result: MachineRecipeRegistry.ItemResult,
+		source: {id: number, count?: number, data?: number}
+		result: {id: number, count: number, data?: number, extra?: ItemExtraData},
 		hardnessLevel: number,
 		sourceCount?: number
 	}
@@ -117,9 +122,13 @@ namespace Machine {
 			return guiBlockCutter;
 		}
 
+		getRecipeDictionary(): ProcessingRecipeDictionary<CuttingRecipe> {
+			return MachineRecipeRegistry.getDictionary("cuttingMachine");
+		}
+
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name.startsWith("slotSource")) return !!this.getRecipe(id, data);
+				if (name.startsWith("slotSource")) return this.isValidSource(id, data);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				if (name == "slotBlade") return this.getBladeLevel(id) > 0;
@@ -140,10 +149,6 @@ namespace Machine {
 			}
 		}
 
-		getRecipe(id: number, data: number): CuttingRecipe {
-			return MachineRecipeRegistry.getRecipeResult("cuttingMachine", id, data);
-		}
-
 		onTick() {
 			const bladeSlot = this.container.getSlot("slotBlade");
 			this.container.sendEvent("showWarning", { show: bladeSlot.id == 0 });
@@ -155,14 +160,15 @@ namespace Machine {
 			let newActive = false;
 
 			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipe(sourceSlot.id, sourceSlot.data);
+			const dictionary = this.getRecipeDictionary();
+			const recipe = dictionary.getRecipe(sourceSlot);
 
 			const bladeSlot = this.container.getSlot("slotBlade");
 			const bladeLevel = this.getBladeLevel(bladeSlot.id);
 
-			if (recipe && bladeLevel >= recipe.hardnessLevel && (!recipe.sourceCount || sourceSlot.count >= recipe.sourceCount)) {
+			if (recipe && bladeLevel >= recipe.hardnessLevel) {
 				const resultSlot = this.container.getSlot("slotResult");
-				if (resultSlot.id == 0 || (resultSlot.id == recipe.result.id && (!recipe.result.data || resultSlot.data == recipe.result.data) && resultSlot.count <= 64 - recipe.result.count)) {
+				if (this.canStackBeMerged(sourceSlot, resultSlot, true)) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
 						// apply 50% speed increase for each hardness level exceeding required
@@ -212,8 +218,8 @@ namespace Machine {
 			"slotSource": {input: true},
 			"slotResult": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => {
-			return MachineRecipeRegistry.hasRecipeFor("cuttingMachine", item.id, item.data);
+		isValidInput: (item: ItemInstance, side: number, tileEntity: BlockCutter) => {
+			return tileEntity.isValidSource(item.id, item.data);
 		}
 	});
 }

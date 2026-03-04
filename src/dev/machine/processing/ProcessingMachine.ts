@@ -36,7 +36,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name.startsWith("slotSource")) return !!this.getRecipe(new ItemStack(id, amount, data));
+				if (name.startsWith("slotSource")) return this.isValidSource(id, data);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
@@ -48,8 +48,17 @@ namespace Machine {
 			this.useUpgrades();
 		}
 
-		getRecipe(item: ItemInstance): ProcessingRecipeBase {
+		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipeBase> {
 			return null;
+		}
+
+		getRecipe(item: ItemInstance): ProcessingRecipeBase {
+			const dictionary = this.getRecipeDictionary();
+			return dictionary.getRecipe(item)
+		}
+
+		isValidSource(id: number, data: number): boolean {
+			return !!this.getRecipeDictionary().getRecipeBySource(id, data);
 		}
 
 		getProcessingSpeed(): number {
@@ -84,9 +93,9 @@ namespace Machine {
 			const sourceSlot = this.container.getSlot("slotSource");
 			const recipe = this.getRecipe(sourceSlot) as ProcessingRecipe;
 
-			if (recipe && sourceSlot.count >= recipe.source.count) {
+			if (recipe) {
 				const resultSlot = this.container.getSlot("slotResult");
-				if (resultSlot.id == 0 || (resultSlot.id == recipe.result.id && (!recipe.result.data || resultSlot.data == recipe.result.data) && resultSlot.count <= 64 - recipe.result.count)) {
+				if (this.canStackBeMerged(sourceSlot, resultSlot, true)) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
 						this.updateProgress(recipe.processTime);

@@ -1,3 +1,5 @@
+/// <reference path="./BasicProcessingMachine.ts" />
+
 BlockRegistry.createBlock("thermalCentrifuge", [
 	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
 ], "machine");
@@ -81,7 +83,7 @@ namespace Machine {
 		}
 	});
 
-	export class ThermalCentrifuge extends ProcessingMachine {
+	export class ThermalCentrifuge extends BasicProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			progress: 0,
@@ -160,7 +162,7 @@ namespace Machine {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
 			const dictionary = this.getRecipeDictionary();
-			const recipe = dictionary.getRecipe(sourceSlot);
+			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
 			if (recipe && this.checkResult(recipe.result) && this.data.energy > 0) {
 				this.data.maxHeat = recipe.heat;
 				if (this.data.heat < recipe.heat) {
@@ -214,8 +216,8 @@ namespace Machine {
 			"slotResult2": {output: true},
 			"slotResult3": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => {
-			return MachineRecipeRegistry.hasRecipeFor("thermalCentrifuge", item.id);
+		isValidInput: (item: ItemInstance, side: number, tileEntity: ThermalCentrifuge) => {
+			return tileEntity.isValidSource(item.id, item.data);
 		}
 	});
 }

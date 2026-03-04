@@ -69,24 +69,19 @@ namespace MachineRecipeRegistry {
 	}
 
 	export function requireRecipesFor(name: string, createIfNotFound?: boolean): any {
-		const dictionary = getDictionary(name);
-		if (dictionary) {
-			return dictionary.getAll();
-		}
 		if (!recipeData[name] && createIfNotFound) {
 			recipeData[name] = {};
 		}
 		return recipeData[name];
 	}
 
-	export function getRecipe<T>(dictionaryName: string, input1: any, input2?: any): T {
+	/*export function getRecipe<T>(dictionaryName: string, input1: any, input2?: any): T {
 		const dictionary = getDictionary<T>(dictionaryName);
 		if (dictionary) {
 			return dictionary.getRecipe(input1, input2);
 		}
-	}
+	}*/
 
-	/** @deprecated */
 	export function getRecipeResult<T>(name: string, key1: string | number, key2?: string | number): T {
 		const data = requireRecipesFor(name);
 		if (data && key1) {
@@ -96,7 +91,7 @@ namespace MachineRecipeRegistry {
 	}
 
 	export function hasRecipeFor(name: string, key1: any, key2?: any): boolean {
-		return !!(getRecipe(name, key1, key2) || getRecipeResult(name, key1, key2));
+		return getRecipeResult(name, key1, key2);
 	}
 
 	export function registerFluidRecipes(name: string, data: any): void {

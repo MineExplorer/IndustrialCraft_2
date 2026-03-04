@@ -1,3 +1,5 @@
+/// <reference path="./BasicProcessingMachine.ts" />
+
 BlockRegistry.createBlock("blockCuttingMachine", [
 	{name: "Block Cutting Machine", texture: [["block_cutter_bottomtop", 0], ["block_cutter_bottomtop", 0], ["block_cutter_side", 0], ["block_cutter_back", 0], ["block_cutter_side", 0], ["block_cutter_side", 0]], inCreative: true}
 ], "machine");
@@ -58,9 +60,9 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: VanillaBlockID.stripped_crimson_hyphae}, result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1 },
 		{ source: {id: VanillaBlockID.stripped_warped_hyphae}, result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1 },
 		// Planks
-		{ source: {id: VanillaBlockID.planks}, result: {id: VanillaItemID.stick, count: 6 }, sourceCount: 2, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.crimson_planks}, result: {id: VanillaItemID.stick, count: 6 }, sourceCount: 2, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.warped_planks}, result: {id: VanillaItemID.stick, count: 6 }, sourceCount: 2, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.planks, count: 2}, result: {id: VanillaItemID.stick, count: 6 }, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.crimson_planks, count: 2}, result: {id: VanillaItemID.stick, count: 6 }, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.warped_planks, count: 2}, result: {id: VanillaItemID.stick, count: 6 }, hardnessLevel: 1 },
 		// Resource blocks
 		{ source: {id: BlockID.blockCopper}, result: {id: ItemID.plateCopper, count: 9}, hardnessLevel: 1 },
 		{ source: {id: BlockID.blockTin}, result: {id: ItemID.plateTin, count: 9}, hardnessLevel: 1 },
@@ -80,8 +82,7 @@ namespace Machine {
 	export type CuttingRecipe = {
 		source: {id: number, count?: number, data?: number}
 		result: {id: number, count: number, data?: number, extra?: ItemExtraData},
-		hardnessLevel: number,
-		sourceCount?: number
+		hardnessLevel: number
 	}
 
 	const guiBlockCutter = MachineRegistry.createInventoryWindow("Block Cutting Machine", {
@@ -110,7 +111,7 @@ namespace Machine {
 		}
 	});
 
-	export class BlockCutter extends ProcessingMachine {
+	export class BlockCutter extends BasicProcessingMachine {
 		defaultTier = 2;
 		defaultEnergyDemand = 8;
 		defaultEnergyStorage = 3600;
@@ -161,12 +162,12 @@ namespace Machine {
 
 			const sourceSlot = this.container.getSlot("slotSource");
 			const dictionary = this.getRecipeDictionary();
-			const recipe = dictionary.getRecipe(sourceSlot);
+			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
 
 			const bladeSlot = this.container.getSlot("slotBlade");
 			const bladeLevel = this.getBladeLevel(bladeSlot.id);
 
-			if (recipe && bladeLevel >= recipe.hardnessLevel) {
+			if (recipe && sourceSlot.count >= recipe.source.count && bladeLevel >= recipe.hardnessLevel) {
 				const resultSlot = this.container.getSlot("slotResult");
 				if (this.canStackBeMerged(sourceSlot, resultSlot, true)) {
 					if (this.data.energy >= this.energyDemand) {
@@ -177,7 +178,7 @@ namespace Machine {
 						newActive = true;
 					}
 					if (this.isCompletedProgress()) {
-						this.decreaseSlot(sourceSlot, recipe.sourceCount || 1);
+						this.decreaseSlot(sourceSlot, recipe.source.count);
 						resultSlot.setSlot(recipe.result.id, resultSlot.count + recipe.result.count, recipe.result.data || 0);
 						this.data.progress = 0;
 					}

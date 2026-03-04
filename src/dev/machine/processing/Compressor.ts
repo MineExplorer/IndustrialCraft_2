@@ -1,4 +1,4 @@
-/// <reference path="ProcessingMachine.ts" />
+/// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("compressor", [
 	{name: "Compressor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
@@ -109,7 +109,7 @@ namespace Machine {
 		}
 	});
 
-	export class Compressor extends ProcessingMachine {
+	export class Compressor extends BasicProcessingMachine {
 		defaultEnergyDemand = 2;
 		defaultProcessTime = 400;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];

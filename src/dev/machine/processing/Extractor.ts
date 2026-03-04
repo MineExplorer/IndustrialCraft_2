@@ -1,4 +1,4 @@
-/// <reference path="ProcessingMachine.ts" />
+/// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("extractor", [
 	{name: "Extractor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], inCreative: true}
@@ -54,7 +54,7 @@ namespace Machine {
 		}
 	});
 
-	export class Extractor extends ProcessingMachine {
+	export class Extractor extends BasicProcessingMachine {
 		defaultEnergyDemand = 2;
 		defaultProcessTime = 400;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];

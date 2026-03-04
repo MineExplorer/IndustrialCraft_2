@@ -1,4 +1,4 @@
-﻿/// <reference path="ProcessingMachine.ts" />
+﻿/// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("macerator", [
 {name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
@@ -156,7 +156,7 @@ namespace Machine {
 		}
 	});
 
-	export class Macerator extends ProcessingMachine {
+	export class Macerator extends BasicProcessingMachine {
 		defaultEnergyDemand = 2;
 		defaultProcessTime = 300;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];

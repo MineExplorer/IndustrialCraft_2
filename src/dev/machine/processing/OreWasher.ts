@@ -1,3 +1,5 @@
+/// <reference path="./ProcessingMachine.ts" />
+
 BlockRegistry.createBlock("oreWasher", [
 	{name: "Ore Washing Plant", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], inCreative: true}
 ], "machine");
@@ -82,6 +84,10 @@ namespace Machine {
 			return MachineRecipeRegistry.getDictionary("oreWasher");
 		}
 
+		isValidSource(id: number, data: number): boolean {
+			return !!this.getRecipeDictionary().getRecipe(id, data);
+		}
+
 		setupContainer(): void {
 			this.liquidTank = this.addLiquidTank("fluid", 8000, ["water"]);
 
@@ -139,7 +145,7 @@ namespace Machine {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
 			const dictionary = this.getRecipeDictionary();
-			const recipe = dictionary.getRecipe(sourceSlot);
+			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
 			if (recipe && this.checkResult(recipe.result) && this.liquidTank.getAmount("water") >= 1000) {
 				if (this.data.energy >= this.energyDemand) {
 					this.data.energy -= this.energyDemand;

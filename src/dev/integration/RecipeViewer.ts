@@ -36,15 +36,14 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: DataMap<Machine.ProcessingRecipe> = MachineRecipeRegistry.requireRecipesFor(this.recipeKey);
-			let input: string[];
-			for (let key in recipe) {
-				input = key.split(":");
+			const dictionary: RecipeDictionary<Machine.ProcessingRecipe> = MachineRecipeRegistry.getDictionary(this.recipeKey);
+			const recipes = dictionary.getAll();
+			recipes.forEach(recipe => {
 				list.push({
-					input: [{id: +input[0], count: recipe[key].sourceCount || 1, data: +input[1] || 0}],
-					output: [{id: recipe[key].id, count: recipe[key].count || 0, data: recipe[key].data || 0}]
+					input: [{id: recipe.source.id, count: recipe.source.count, data: recipe.source.data}],
+					output: [{id: recipe.result.id, count: recipe.result.count, data: recipe.result.data}]
 				});
-			}
+			});
 			return list;
 		}
 

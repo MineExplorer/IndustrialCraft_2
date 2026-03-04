@@ -1,20 +1,12 @@
 /// <reference path="../ElectricMachine.ts" />
 
 namespace Machine {
-	export type ProcessingRecipe = {
-		source: {id: number, count?: number, data?: number}
-		result: {id: number, count: number, data?: number, extra?: ItemExtraData},
-		processTime?: number
-	}
-
 	export abstract class ProcessingMachine
 	extends ElectricMachine {
 		defaultValues = {
 			energy: 0,
 			progress: 0
 		}
-
-		defaultDrop = BlockID.machineBlockBasic;
 
 		defaultTier = 1;
 		defaultEnergyStorage = 1200;
@@ -33,33 +25,11 @@ namespace Machine {
 		getEnergyStorage(): number {
 			return this.energyStorage;
 		}
-
-		setupContainer(): void {
-			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name.startsWith("slotSource")) return this.isValidSource(id, data);
-				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
-				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
-				return false;
-			});
-		}
-
-		onInit(): void {
+		
+		/*onInit(): void {
 			super.onInit();
 			this.useUpgrades();
-		}
-
-		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipeBase> {
-			return null;
-		}
-
-		getRecipe(item: ItemInstance): ProcessingRecipeBase {
-			const dictionary = this.getRecipeDictionary();
-			return dictionary.getRecipe(item)
-		}
-
-		isValidSource(id: number, data: number): boolean {
-			return !!this.getRecipeDictionary().getRecipeBySource(id, data);
-		}
+		}*/
 
 		getProcessingSpeed(): number {
 			return 1;
@@ -89,37 +59,7 @@ namespace Machine {
 		}
 
 		performRecipe(): boolean {
-			let newActive = false;
-			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipe(sourceSlot) as ProcessingRecipe;
-
-			if (recipe) {
-				const resultSlot = this.container.getSlot("slotResult");
-				if (this.canStackBeMerged(sourceSlot, resultSlot, true)) {
-					if (this.data.energy >= this.energyDemand) {
-						this.data.energy -= this.energyDemand;
-						this.updateProgress(recipe.processTime);
-						newActive = true;
-					}
-					if (this.isCompletedProgress()) {
-						this.decreaseSlot(sourceSlot, recipe.source.count);
-						const itemResult = this.modifyResult(sourceSlot, resultSlot, recipe.result);
-						if (itemResult) {
-							resultSlot.setSlot(itemResult.id, resultSlot.count + itemResult.count, itemResult.data || 0);
-						}
-						this.data.progress = 0;
-					}
-				}
-				if (!newActive && this.networkData.getBoolean(NetworkDataKeys.isActive)) {
-					this.onInterrupt(); // interrupt if machine stopped working while processing item
-				}
-			}
-			else if (this.data.progress > 0) {
-				this.data.progress = 0;
-				this.onInterrupt(); // interrupt when the source item is extracted
-			}
-
-			return newActive;
+			return false;
 		}
 
 		updateProgress(recipeProcessTime: number = this.defaultProcessTime) {
@@ -128,10 +68,6 @@ namespace Machine {
 
 		isCompletedProgress() {
 			return +this.data.progress.toFixed(3) >= 1;
-		}
-
-		modifyResult(sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot, recipeResult: ProcessingRecipe["result"]): ItemInstance {
-			return new ItemStack(recipeResult.id, recipeResult.count, recipeResult.data);
 		}
 
 		canRotate(side: number): boolean {

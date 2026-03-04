@@ -1,3 +1,5 @@
+/// <reference path="./ProcessingMachine.ts" />
+
 BlockRegistry.createBlock("canner", [
 	{name: "Fluid/Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
 ], "machine");
@@ -16,18 +18,15 @@ Callback.addCallback("PreLoaded", function() {
 		"cxc",
 	], ['#', BlockID.solidCanner, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
 
-	const fluidCannerDictionary = new Machine.FluidCanningRecipeDictionary(200);
+	const fluidCannerDictionary = new FluidMixingRecipeDictionary();
 	fluidCannerDictionary.registerList([
-		{source: {id: ItemID.bioChaff, count: 1}, inputFluid: "water", outputFluid: "biomass"},
-		{source: {id: ItemID.dustLapis, count: 1}, inputFluid: "water", outputFluid: "coolant"}
+		{ source: {id: ItemID.bioChaff, count: 1}, inputFluid: {name: "water", amount: 1000}, outputFluid: {name: "biomass", amount: 1000} },
+		{ source: {id: ItemID.dustLapis, count: 1}, inputFluid: {name: "water", amount: 1000}, outputFluid: {name: "coolant", amount: 1000} }
 	]);
 	MachineRecipeRegistry.registerDictionary("fluidCanner", fluidCannerDictionary);
 });
 
 namespace Machine {
-	export class FluidCanningRecipeDictionary extends ProcessingRecipeDictionary<FluidCanningRecipe> {
-
-	}
 
 	enum CannerMode {
 		SolidCanning,
@@ -100,32 +99,35 @@ namespace Machine {
 			return guiCanner;
 		}
 
-		getRecipeDictionary(mode: number = this.data.mode): any {
-			if (mode == CannerMode.SolidCanning) {
-				return MachineRecipeRegistry.getDictionary("solidCanner");
-			}
-			if (mode == CannerMode.FluidCanning) {
-				return MachineRecipeRegistry.getDictionary("fluidCanner");
-			}
-			return null;
+		getSolidRecipeDictionary(): ProcessingRecipeDictionary<SolidCanningRecipe> {
+			return MachineRecipeRegistry.getDictionary("solidCanner");
+		}
+
+		getFluidRecipeDictionary(): FluidMixingRecipeDictionary {
+			return MachineRecipeRegistry.getDictionary("fluidCanner");
 		}
 
 		isValidSource(id: number, data: number): boolean {
-			const dictionary = this.getRecipeDictionary();
-			return !!dictionary?.getRecipeBySource(id, data);
+			if (this.data.mode == CannerMode.SolidCanning) {
+				return !!this.getSolidRecipeDictionary().getRecipe(id, data);
+			}
+			if (this.data.mode == CannerMode.FluidCanning) {
+				return !!this.getFluidRecipeDictionary().findRecipe(recipe => recipe.source.id == id && (recipe.source.data == -1 || recipe.source.data == data));
+			}
+			return false;
 		}
 
 		isValidCan(id: number, data: number, extra: ItemExtraData): boolean {
 			switch (this.data.mode) {
-			case CannerMode.SolidCanning: {
-				const dictionary = this.getRecipeDictionary(this.data.mode) as SolidCanningRecipeDictionary;
-				return dictionary.isValidCan(id);
-			}
-			case CannerMode.EmptyItem:
-			case CannerMode.FluidCanning:
-				return !!LiquidItemRegistry.getItemLiquid(id, data, extra);
-			case CannerMode.FillItem:
-				return LiquidItemRegistry.canBeFilledWithLiquid(id, data, extra, this.inputTank.getLiquidStored() || "water");
+				case CannerMode.SolidCanning: {
+					const dictionary = this.getSolidRecipeDictionary();
+					return !!dictionary.findRecipe(recipe => recipe.can == id);
+				}
+				case CannerMode.EmptyItem:
+				case CannerMode.FluidCanning:
+					return !!LiquidItemRegistry.getItemLiquid(id, data, extra);
+				case CannerMode.FillItem:
+					return LiquidItemRegistry.canBeFilledWithLiquid(id, data, extra, this.inputTank.getLiquidStored() || "water");
 			}
 		}
 
@@ -181,8 +183,8 @@ namespace Machine {
 		performSolidRecipe(sourceSlot: ItemContainerSlot, canSlot: ItemContainerSlot, resultSlot: ItemContainerSlot): boolean {
 			let newActive = false;
 
-			const dictionary = this.getRecipeDictionary() as SolidCanningRecipeDictionary;
-			const recipe = dictionary.getRecipe(sourceSlot);
+			const dictionary = this.getSolidRecipeDictionary();
+			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
 			if (recipe) {
 				const result = recipe.result;
 				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == 0 || resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count)) {
@@ -253,25 +255,29 @@ namespace Machine {
 
 		performFluidRecipe(sourceSlot: ItemContainerSlot): boolean {
 			let newActive = false;
+			let resetProgress = true;
 
-			const dictionary = this.getRecipeDictionary() as FluidCanningRecipeDictionary;
-			const recipe = dictionary.getRecipe(sourceSlot);
-			if (recipe && this.inputTank.getAmount(recipe.inputFluid) >= 1000 && 
-			  sourceSlot.id == recipe.source.id && sourceSlot.count >= recipe.source.count && (!recipe.source.data || sourceSlot.data == recipe.source.data)) {
-				const outputLiquid = this.outputTank.getLiquidStored()
-				if ((!outputLiquid || recipe.outputFluid == outputLiquid && this.outputTank.getAmount() <= 7000) && this.data.energy >= this.energyDemand) {
-					this.data.energy -= this.energyDemand;
-					this.updateProgress();
-					newActive = true;
-				}
-				if (this.isCompletedProgress()) {
-					this.inputTank.getLiquid(1000);
-					this.decreaseSlot(sourceSlot, recipe.source.count);
-					this.outputTank.addLiquid(recipe.outputFluid, 1000);
-					this.data.progress = 0;
+			const inputLiquid = this.inputTank.getLiquidStored();
+			if (sourceSlot.id != 0 && inputLiquid) {
+				const dictionary = this.getFluidRecipeDictionary();
+				const recipe = dictionary.getRecipe(sourceSlot, inputLiquid);
+				if (recipe && sourceSlot.count >= recipe.source.count && this.inputTank.getAmount() >= recipe.inputFluid.amount) {
+					const outputLiquid = this.outputTank.getLiquidStored()
+					if ((!outputLiquid || recipe.outputFluid.name == outputLiquid) && this.outputTank.getLimit() - this.outputTank.getAmount() >= recipe.outputFluid.amount && this.data.energy >= this.energyDemand) {
+						this.data.energy -= this.energyDemand;
+						this.updateProgress();
+						newActive = true;
+						resetProgress = false;
+					}
+					if (this.isCompletedProgress()) {
+						this.inputTank.getLiquid(1000);
+						this.decreaseSlot(sourceSlot, recipe.source.count);
+						this.outputTank.addLiquid(recipe.outputFluid.name, recipe.outputFluid.amount);
+						this.data.progress = 0;
+					}
 				}
 			}
-			else {
+			if (resetProgress) {
 				this.data.progress = 0;
 			}
 			return newActive;

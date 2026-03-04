@@ -1,3 +1,5 @@
+/// <reference path="./BasicProcessingMachine.ts" />
+
 BlockRegistry.createBlock("solidCanner", [
 	{name: "Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
@@ -17,7 +19,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ccc"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.casingTin, 0]);
 
-	const solidCannerDictionary = new SolidCanningRecipeDictionary(200);
+	const solidCannerDictionary = new ProcessingRecipeDictionary<Machine.SolidCanningRecipe>(200);
 	solidCannerDictionary.registerList([
 		{ source: {id: ItemID.uranium}, can: ItemID.fuelRod, result: {id: ItemID.fuelRodUranium, count: 1, data: 0} },
 		{ source: {id: ItemID.mox}, can: ItemID.fuelRod, result: {id: ItemID.fuelRodMOX, count: 1, data: 0} },
@@ -57,30 +59,6 @@ Callback.addCallback("PreLoaded", function() {
 	MachineRecipeRegistry.registerDictionary("solidCanner", solidCannerDictionary)
 });
 
-class SolidCanningRecipeDictionary extends ProcessingRecipeDictionary<Machine.SolidCanningRecipe> {
-	canEntries: DataMap<number> = {};
-
-	register(recipe: Machine.SolidCanningRecipe): void {
-		const canCount = this.canEntries[recipe.can] || 0;
-		this.canEntries[recipe.can] = canCount + 1;
-		super.register(recipe);
-	}
-
-	removeRecipe(source: { id: number; data?: number; }): boolean {
-		const recipe = this.getRecipeBySource(source.id, source.data);
-		if (recipe) {
-			super.removeRecipe(source);
-			this.canEntries[recipe.can]--;
-			return true;
-		}
-		return false;
-	}
-
-	isValidCan(canId: number): boolean {
-		return this.canEntries[canId] > 0;
-	}
-}
-
 namespace Machine {
 	export type SolidCanningRecipe = {
 		source: {id: number, data?: number}
@@ -113,7 +91,7 @@ namespace Machine {
 		}
 	});
 
-	export class SolidCanner extends ProcessingMachine {
+	export class SolidCanner extends BasicProcessingMachine {
 		defaultEnergyStorage = 800;
 		defaultEnergyDemand = 2;
 		defaultProcessTime = 200;
@@ -132,8 +110,8 @@ namespace Machine {
 				if (name == "slotSource") return this.isValidSource(id, data);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name == "slotCan") {
-					const dictionary = MachineRecipeRegistry.getDictionary("solidCanner") as SolidCanningRecipeDictionary;
-					return dictionary.isValidCan(id);
+					const dictionary = this.getRecipeDictionary();
+					return !!dictionary.findRecipe(recipe => recipe.can == id);
 				}
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
@@ -148,7 +126,7 @@ namespace Machine {
 			const canSlot = this.container.getSlot("slotCan");
 
 			const dictionary = this.getRecipeDictionary();
-			const recipe = dictionary.getRecipe(sourceSlot);
+			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
 			if (recipe) {
 				const result = recipe.result;
 				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == 0 || resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count)) {
@@ -179,9 +157,9 @@ namespace Machine {
 			"slotSource": {input: true, isValid: (item: ItemInstance, side: number, tileEntity: SolidCanner) => {
 				return tileEntity.isValidSource(item.id, item.data);
 			}},
-			"slotCan": {input: true, isValid: (item: ItemInstance) => {
-				const dictionary = MachineRecipeRegistry.getDictionary("solidCanner") as SolidCanningRecipeDictionary;
-				return dictionary.isValidCan(item.id);
+			"slotCan": {input: true, isValid: (item: ItemInstance, side: number, tileEntity: SolidCanner) => {
+				const dictionary = tileEntity.getRecipeDictionary();
+				return !!dictionary.findRecipe(recipe => recipe.can == item.id);
 			}},
 			"slotResult": {output: true}
 		}

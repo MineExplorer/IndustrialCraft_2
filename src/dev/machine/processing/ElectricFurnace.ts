@@ -1,4 +1,4 @@
-/// <reference path="ProcessingMachine.ts" />
+/// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("electricFurnace", [
 	{name: "Electric Furnace", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
@@ -43,7 +43,7 @@ namespace Machine {
 		}
 	});
 
-	export class ElectricFurnace extends ProcessingMachine {
+	export class ElectricFurnace extends BasicProcessingMachine {
 		defaultEnergyDemand = 3;
 		defaultProcessTime = 130;
 		defaultDrop = BlockID.ironFurnace;

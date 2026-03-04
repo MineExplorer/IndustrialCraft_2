@@ -1,3 +1,5 @@
+/// <reference path="./BasicProcessingMachine.ts" />
+
 BlockRegistry.createBlock("recycler", [
 	{name: "Recycler", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
@@ -40,7 +42,7 @@ namespace Machine {
 		}
 	});
 
-	export class Recycler extends ProcessingMachine {
+	export class Recycler extends BasicProcessingMachine {
 		defaultEnergyStorage = 800;
 		defaultEnergyDemand = 1;
 		defaultProcessTime = 45;

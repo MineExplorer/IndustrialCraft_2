@@ -1,4 +1,4 @@
-/// <reference path="ProcessingMachine.ts" />
+/// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("metalFormer", [
 	{name: "Metal Former", texture: [["machine_bottom", 0], ["metal_former_top", 0], ["machine_side", 0], ["metal_former_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
@@ -126,7 +126,7 @@ namespace Machine {
 		}
 	});
 
-	export class MetalFormer extends ProcessingMachine {
+	export class MetalFormer extends BasicProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			progress: 0,

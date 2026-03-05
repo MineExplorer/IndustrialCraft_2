@@ -197,7 +197,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, new ThermalCentrifuge());
 	
-	MachineRecipeRegistry.registerDictionary("thermalCentrifuge", new ProcessingRecipeDictionary<ThermalCentrifugeRecipe>(500));
+	MachineRecipeRegistry.registerDictionary<ThermalCentrifugeRecipe>("thermalCentrifuge", new ProcessingRecipeDictionary(500));
 
 	StorageInterface.createInterface(BlockID.thermalCentrifuge, {
 		slots: {

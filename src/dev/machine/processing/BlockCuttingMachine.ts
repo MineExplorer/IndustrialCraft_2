@@ -210,7 +210,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.blockCuttingMachine, new BlockCutter());
 
-	MachineRecipeRegistry.registerDictionary("cuttingMachine", new ProcessingRecipeDictionary<CuttingRecipe>(450));
+	MachineRecipeRegistry.registerDictionary<CuttingRecipe>("cuttingMachine", new ProcessingRecipeDictionary(450));
 
 	StorageInterface.createInterface(BlockID.blockCuttingMachine, {
 		slots: {

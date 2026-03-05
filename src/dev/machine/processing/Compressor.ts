@@ -131,7 +131,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.compressor, new Compressor());
 
-	MachineRecipeRegistry.registerDictionary("compressor", new ProcessingRecipeDictionary<ProcessingRecipe>(400));
+	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("compressor", new ProcessingRecipeDictionary(400));
 
 	StorageInterface.createInterface(BlockID.compressor, {
 		slots: {

@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 		"cxc",
 	], ['#', BlockID.solidCanner, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
 
-	MachineRecipeRegistry.registerRecipes<FluidMixingRecipe>("fluidCanner", [
+	MachineRecipeRegistry.registerRecipes<Machine.FluidCannerRecipe>("fluidCanner", [
 		{ source: {id: ItemID.bioChaff, count: 1}, inputFluid: {name: "water", amount: 1000}, outputFluid: {name: "biomass", amount: 1000} },
 		{ source: {id: ItemID.dustLapis, count: 1}, inputFluid: {name: "water", amount: 1000}, outputFluid: {name: "coolant", amount: 1000} }
 	]);
@@ -33,10 +33,10 @@ namespace Machine {
 		FluidCanning
 	}
 
-	export type FluidCanningRecipe = {
+	export type FluidCannerRecipe = {
 		source: {id: number, count?: number, data?: number}
-		inputFluid: string,
-		outputFluid: string
+		inputFluid: {name: string, amount: number}
+		outputFluid: {name: string, amount: number}
 	};
 
 	const guiCanner = MachineRegistry.createInventoryWindow("Fluid/Solid Canning Machine", {
@@ -97,11 +97,11 @@ namespace Machine {
 			return guiCanner;
 		}
 
-		getSolidRecipeDictionary(): ProcessingRecipeDictionary<SolidCanningRecipe> {
+		getSolidRecipeDictionary(): ProcessingRecipeDictionary<SolidCannerRecipe> {
 			return MachineRecipeRegistry.getDictionary("solidCanner");
 		}
 
-		getFluidRecipeDictionary(): FluidMixingRecipeDictionary {
+		getFluidRecipeDictionary(): FluidItemMixingRecipeDictionary<FluidCannerRecipe> {
 			return MachineRecipeRegistry.getDictionary("fluidCanner");
 		}
 
@@ -258,7 +258,7 @@ namespace Machine {
 			const inputLiquid = this.inputTank.getLiquidStored();
 			if (sourceSlot.id != 0 && inputLiquid) {
 				const dictionary = this.getFluidRecipeDictionary();
-				const recipe = dictionary.getRecipe(sourceSlot, inputLiquid);
+				const recipe = dictionary.getRecipe(inputLiquid, sourceSlot);
 				if (recipe && sourceSlot.count >= recipe.source.count && this.inputTank.getAmount() >= recipe.inputFluid.amount) {
 					const outputLiquid = this.outputTank.getLiquidStored()
 					if ((!outputLiquid || recipe.outputFluid.name == outputLiquid) && this.outputTank.getLimit() - this.outputTank.getAmount() >= recipe.outputFluid.amount && this.data.energy >= this.energyDemand) {
@@ -331,7 +331,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.canner, new Canner());
 
-	MachineRecipeRegistry.registerDictionary("fluidCanner", new FluidMixingRecipeDictionary());
+	MachineRecipeRegistry.registerDictionary<FluidCannerRecipe>("fluidCanner", new FluidItemMixingRecipeDictionary());
 
 	MachineRegistry.createFluidStorageInterface(BlockID.canner, {
 		slots: {

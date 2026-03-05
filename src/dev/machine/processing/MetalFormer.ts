@@ -172,9 +172,9 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.metalFormer, new MetalFormer());
 
-	MachineRecipeRegistry.registerDictionary("metalRolling", new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(200));
-	MachineRecipeRegistry.registerDictionary("metalCutting", new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(200));
-	MachineRecipeRegistry.registerDictionary("metalExtruding", new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(200));
+	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("metalRolling", new ProcessingRecipeDictionary(200));
+	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("metalCutting", new ProcessingRecipeDictionary(200));
+	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("metalExtruding", new ProcessingRecipeDictionary(200));
 
 	StorageInterface.createInterface(BlockID.metalFormer, {
 		slots: {

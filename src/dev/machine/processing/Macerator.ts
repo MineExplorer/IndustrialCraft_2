@@ -178,7 +178,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.macerator, new Macerator());
 
-	MachineRecipeRegistry.registerDictionary("macerator", new ProcessingRecipeDictionary<ProcessingRecipe>(300));
+	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("macerator", new ProcessingRecipeDictionary(300));
 
 	StorageInterface.createInterface(BlockID.macerator, {
 		slots: {

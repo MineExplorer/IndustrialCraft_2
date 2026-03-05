@@ -72,16 +72,15 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: DataMap<Machine.SolidCanningRecipe> = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-			let input: string[];
-			for (let key in recipe) {
-				input = key.split(":");
+			const dictionary: RecipeDictionary<Machine.SolidCannerRecipe> = MachineRecipeRegistry.getDictionary("solidCanner");
+			const recipes = dictionary.getAll();
+			for (let recipe of recipes) {
 				list.push({
 					input: [
-						{id: +input[0], count: 1, data: +input[1] || 0},
-						{id: recipe[key].can, count: 1, data: 0}
+						{id: recipe.source.id, count: 1, data: recipe.source.data},
+						{id: recipe.can, count: 1, data: 0},
 					],
-					output: [recipe[key].result]
+					output: [recipe.result],
 				});
 			}
 			return list;
@@ -117,10 +116,9 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const solidDictionary: RecipeDictionary<Machine.SolidCanningRecipe> = MachineRecipeRegistry.getDictionary("solidCanner");
+			const solidDictionary: RecipeDictionary<Machine.SolidCannerRecipe> = MachineRecipeRegistry.getDictionary("solidCanner");
 			const solidRecipes = solidDictionary.getAll();
-			for (let i = 0; i < solidRecipes.length; i++) {
-				const recipe = solidRecipes[i];
+			for (let recipe of solidRecipes) {
 				list.push({
 					input: [
 						{id: recipe.can, count: 1, data: 0},
@@ -130,10 +128,9 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 					mode: 0
 				});
 			}
-			const fluidDictionary: FluidMixingRecipeDictionary = MachineRecipeRegistry.getDictionary("fluidCanner");
+			const fluidDictionary: RecipeDictionary<Machine.FluidCannerRecipe> = MachineRecipeRegistry.getDictionary("fluidCanner");
 			const fluidRecipes = fluidDictionary.getAll();
-			for (let i = 0; i < fluidRecipes.length; i++) {
-				const recipe = fluidRecipes[i];
+			for (let recipe of fluidRecipes) {
 				list.push({
 					input: [
 						null,
@@ -266,7 +263,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 				const recipe = recipes[i];
 				list.push({
 					input: [{id: recipe.source.id, count: recipe.source.count || 1, data: recipe.source.data || 0}],
-					output: recipe.result.map(item => ({id: recipe.source.id, count: recipe.source.count, data: recipe.source.data || 0})),
+					output: recipe.result.map(item => ({id: item.id, count: item.count, data: item.data || 0})),
 					inputLiq: [{liquid: "water", amount: 1000}]
 				});
 			}
@@ -306,7 +303,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 				const recipe = recipes[i];
 				list.push({
 					input: [{id: recipe.source.id, count: recipe.source.count || 1, data: recipe.source.data || 0}],
-					output: recipe.result.map(item => ({id: recipe.source.id, count: recipe.source.count, data: recipe.source.data || 0})),
+					output: recipe.result.map(item => ({id: item.id, count: item.count, data: item.data || 0})),
 					heat: recipe.heat
 				});
 			}

@@ -76,7 +76,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.extractor, new Extractor());
 
-	MachineRecipeRegistry.registerDictionary("extractor", new ProcessingRecipeDictionary<ProcessingRecipe>(400));
+	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("extractor", new ProcessingRecipeDictionary(400));
 
 	StorageInterface.createInterface(BlockID.extractor, {
 		slots: {

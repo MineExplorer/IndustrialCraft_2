@@ -4,20 +4,16 @@ interface IRecipeDictionary<T> {
     registerList(recipeList: T[]): void;
 
 	findRecipe(predicate: (recipe: T) => boolean): Nullable<T>;
-    
-	/** @returns true if the recipe was deleted, false otherwise */
-	//removeRecipe(input1: T[keyof T], input2?: T[keyof T]): boolean;
 
     getAll(): T[];
+
+	clear(): void;
 }
 
 abstract class RecipeDictionary<T> implements IRecipeDictionary<T> {
 	recipes: DataMap<T> = {};
 
-	register(recipe: T): void {
-		const recipeKey = this.getRecipeKey(recipe);
-		this.recipes[recipeKey] = recipe;
-	}
+	abstract register(recipe: T): void;
 
 	registerList(recipeList: T[]): void {
 		recipeList.forEach(r => this.register(r));
@@ -37,15 +33,21 @@ abstract class RecipeDictionary<T> implements IRecipeDictionary<T> {
         return Object.values(this.recipes);
     }
 
+	clear(): void {
+		this.recipes = {};
+	}
+
+	protected putRecipe(key: string, recipe: T): void {
+		this.recipes[key] = recipe;
+	}
+
 	protected removeByKey(recipeKey: string): boolean {
-		if (this.recipes[recipeKey]) {
+		if (recipeKey in this.recipes) {
 			delete this.recipes[recipeKey];
 			return true;
 		}
 		return false;
 	}
-
-	protected abstract getRecipeKey(recipe: T): string;
 }
 
 interface ProcessingRecipeBase {
@@ -64,58 +66,49 @@ class ProcessingRecipeDictionary<T extends ProcessingRecipeBase> extends RecipeD
         recipe.source.data ??= -1;
         recipe.source.count ??= 1;
         recipe.processTime ??= this.defaultProccessTime;
-		super.register(recipe);
+		const recipeKey = this.getInputKey(recipe.source.id, recipe.source.data);
+		this.putRecipe(recipeKey, recipe);
 	}
 
 	getRecipe(sourceId: number, sourceData: number): Nullable<T> {
-		return this.getRecipeBySource(sourceId, sourceData) || this.getRecipeBySource(sourceId, -1);
+		return this.recipes[this.getInputKey(sourceId, sourceData)] ||
+			this.recipes[this.getInputKey(sourceId, -1)] || null;
 	}
 
 	removeRecipe(sourceId: number, sourceData: number): boolean {
-		const recipeKey = this.getLookupKey(sourceId, sourceData);
+		const recipeKey = this.getInputKey(sourceId, sourceData);
 		return this.removeByKey(recipeKey);
 	}
 
-	protected getRecipeBySource(sourceId: number, sourceData: number): T {
-		return this.recipes[this.getLookupKey(sourceId, sourceData)];
-	}
-
-	protected getRecipeKey(recipe: T): string {
-		return this.getLookupKey(recipe.source.id, recipe.source.data);
-	}
-
-	protected getLookupKey(sourceId: number, sourceData: number): string {
+	getInputKey(sourceId: number, sourceData: number): string {
  		return sourceId + ":" + sourceData;
 	}
 }
 
-type FluidMixingRecipe = {
+type FluidItemMixingRecipeBase = {
 	source: {id: number, count?: number, data?: number}
-	inputFluid: {name: string, amount: number},
-	outputFluid: {name: string, amount: number}
+	inputFluid: {name: string, amount: number}
 };
 
-class FluidMixingRecipeDictionary extends RecipeDictionary<FluidMixingRecipe> {
-	register(recipe: FluidMixingRecipe): void {
+class FluidItemMixingRecipeDictionary<T extends FluidItemMixingRecipeBase> extends RecipeDictionary<T> {
+	register(recipe: T): void {
         recipe.source.data ??= -1;
         recipe.source.count ??= 1;
-		super.register(recipe);
+		const recipeKey = this.getInputKey(recipe.inputFluid.name, recipe.source.id, recipe.source.data);
+		this.putRecipe(recipeKey, recipe);
 	}
 
-	getRecipe(source: ItemInstance, fluid: string) {
-		return this.findRecipe(recipe => recipe.inputFluid.name == fluid && recipe.source.id == source.id && (recipe.source.data == -1 || recipe.source.data == source.data));
+	getRecipe(fluid: string, source: {id: number, data: number}): Nullable<T> {
+		return this.recipes[this.getInputKey(fluid, source.id, source.data)] ||
+			this.recipes[this.getInputKey(fluid, source.id, -1)] || null;
 	}
 
-	removeRecipe(source: ItemInstance, fluid: string): boolean {
-		const recipeKey = this.getLookupKey(fluid, source.id, source.data);
+	removeRecipe(fluid: string, source: ItemInstance): boolean {
+		const recipeKey = this.getInputKey(fluid, source.id, source.data);
 		return this.removeByKey(recipeKey);
 	}
 
-	protected getRecipeKey(recipe: FluidMixingRecipe): string {
-		return this.getLookupKey(recipe.inputFluid.name, recipe.source.id, recipe.source.data);
-	}
-
-	protected getLookupKey(fluid: string, sourceId: number, sourceData: number): string {
+	getInputKey(fluid: string, sourceId: number, sourceData: number): string {
  		return fluid + ":" + sourceId + ":" + sourceData;
 	}
 }

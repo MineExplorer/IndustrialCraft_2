@@ -157,7 +157,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.oreWasher, new OreWasher());
 
-	MachineRecipeRegistry.registerDictionary("oreWasher", new ProcessingRecipeDictionary<OreWashingRecipe>(200));
+	MachineRecipeRegistry.registerDictionary<OreWashingRecipe>("oreWasher", new ProcessingRecipeDictionary(200));
 
 	MachineRegistry.createFluidStorageInterface(BlockID.oreWasher, {
 		slots: {

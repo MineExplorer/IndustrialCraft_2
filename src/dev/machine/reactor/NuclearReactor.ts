@@ -389,9 +389,8 @@ namespace Machine {
 			return "GeigerHighEU.ogg";
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Client)
-		setFieldSize(container: ItemContainer, window: any, content: any, data: {size: number}): void {
+		@ContainerEvent(Side.Client, "setFieldSize")
+		onSetFieldSize(container: ItemContainer, window: any, content: any, data: {size: number}): void {
 			if (content) {
 				for (let y = 0; y < 6; y++) {
 					for (let x = 0; x < 9; x++) {

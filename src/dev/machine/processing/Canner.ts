@@ -146,7 +146,7 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.container.sendEvent("updateUI", {mode: this.data.mode});
+			this.container.sendEvent("updateUiMode", {mode: this.data.mode});
 			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
@@ -303,7 +303,7 @@ namespace Machine {
 		onSwitchMode(): void {
 			if (this.data.progress == 0) {
 				this.data.mode = (this.data.mode + 1) % 4;
-				this.container.sendEvent("updateUI", {mode: this.data.mode});
+				this.container.sendEvent("updateUiMode", {mode: this.data.mode});
 			}
 		}
 
@@ -316,9 +316,8 @@ namespace Machine {
 			}
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Client)
-		updateUI(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
+		@ContainerEvent(Side.Client, "updateUiMode")
+		onUpdateUiMode(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
 			if (content) {
 				let element = content.elements["slotSource"];
 				let texture = "canner_slot_source_" + data.mode;

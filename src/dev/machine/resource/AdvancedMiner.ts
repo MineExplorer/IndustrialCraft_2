@@ -267,9 +267,8 @@ namespace Machine {
 			this.data.x = this.data.y = this.data.z = 0;
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Client)
-		setSilktouchIcon(container: ItemContainer, window: any, content: any, data: {mode: boolean}): void {
+		@ContainerEvent(Side.Client, "setSilktouchIcon")
+		onSetSilktouchIcon(container: ItemContainer, window: any, content: any, data: {mode: boolean}): void {
 			if (content) {
 				const iconIndex = data.mode? 1 : 0;
 				content.elements.button_silk.bitmap = "miner_button_silk_" + iconIndex;

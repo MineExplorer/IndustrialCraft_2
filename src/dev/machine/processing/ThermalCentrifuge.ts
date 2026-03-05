@@ -192,9 +192,8 @@ namespace Machine {
 			this.isPowered = signal > 0;
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Client)
-		setIndicator(container: ItemContainer, window: any, content: any, data: string): void {
+		@ContainerEvent(Side.Client, "setIndicator")
+		onSetIndicator(container: ItemContainer, window: any, content: any, data: string): void {
 			if (content) {
 				content.elements["indicator"].bitmap = "indicator_" + data;
 			}

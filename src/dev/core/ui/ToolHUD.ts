@@ -37,12 +37,7 @@ namespace ToolHUD {
 	export function setButtonFor(id: number, name: string): void {
 		getButton(name).bindItem(id);
 	}
-
-	/** @deprecated */
-	export function setArmorButton(id: number, name: string) {
-		setButtonFor(id, name);
-	}
-
+	
 	export function onClick(name: string): void {
 		Network.sendToServer(IC2NetworkPackets.hudClick, {name: name});
 	}

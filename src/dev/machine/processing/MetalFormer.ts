@@ -161,9 +161,8 @@ namespace Machine {
 			this.data.mode = (this.data.mode + 1) % 3;
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Client)
-		setModeIcon(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
+		@ContainerEvent(Side.Client, "setModeIcon")
+		onSetModeIcon(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
 			if (content) {
 				content.elements.button.bitmap = "metal_former_button_" + data.mode;
 			}

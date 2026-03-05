@@ -49,11 +49,11 @@ namespace Machine {
 			if (this.data.canSeeSky && this.region.getLightLevel(this.x, this.y + 1, this.z) == 15) {
 				this.data.energy = EnergyProductionModifiers.SolarPanel;
 				this.chargeSlot("slotEnergy");
-				this.container.sendEvent("setSolarElement", "on");
+				this.container.sendEvent("setSunElement", "on");
 				this.container.sendChanges();
 			} else {
 				this.data.energy = 0;
-				this.container.sendEvent("setSolarElement", "off")
+				this.container.sendEvent("setSunElement", "off")
 			}
 		}
 
@@ -61,9 +61,8 @@ namespace Machine {
 			return 32;
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Client)
-		setSolarElement(container: ItemContainer, window: any, content: any, data: string): void {
+		@ContainerEvent(Side.Client, "setSunElement")
+		onSetSunElement(container: ItemContainer, window: any, content: any, data: string): void {
 			if (content) {
 				content.elements["sun"].bitmap = "sun_" + data;
 			}

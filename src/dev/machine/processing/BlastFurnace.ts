@@ -151,7 +151,7 @@ namespace Machine {
 				const recipe = this.getRecipeResult(source);
 				if (recipe && this.checkResult(recipe.result)) {
 					if (this.controlAir()) {
-						this.container.sendEvent("showAirImage", {show: false});
+						this.container.sendEvent("setAirImage", {show: false});
 						this.data.progress++;
 						this.container.setScale("progressScale", this.data.progress / recipe.duration);
 						this.setActive(true);
@@ -167,7 +167,7 @@ namespace Machine {
 							this.data.sourceID = 0;
 						}
 					} else {
-						this.container.sendEvent("showAirImage", {show: true});
+						this.container.sendEvent("setAirImage", {show: true});
 					}
 				}
 			} else {
@@ -204,9 +204,8 @@ namespace Machine {
 			return 0;
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Client)
-		showAirImage(container: ItemContainer, window: any, content: any, data: {show: boolean}): void {
+		@ContainerEvent(Side.Client, "setAirImage")
+		onSetAirImage(container: ItemContainer, window: any, content: any, data: {show: boolean}): void {
 			if (content) {
 				if (!data.show) {
 					content.elements["indicatorAir"] = {type: "image", x: 344 + 128*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
@@ -217,9 +216,8 @@ namespace Machine {
 			}
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Client)
-		setIndicator(container: ItemContainer, window: any, content: any, data: string): void {
+		@ContainerEvent(Side.Client, "setIndicator")
+		onSetIndicator(container: ItemContainer, window: any, content: any, data: string): void {
 			if (content) {
 				content.elements["indicator"].bitmap = "indicator_" + data;
 			}

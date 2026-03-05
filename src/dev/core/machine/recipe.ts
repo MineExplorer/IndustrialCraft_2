@@ -5,7 +5,7 @@ namespace MachineRecipeRegistry {
 	export const fluidRecipeData = {};
 	export const dictionaries = {};
 
-	export function registerDictionary<T>(name: string, dictionary: RecipeDictionary<T>): RecipeDictionary<T> {
+	export function registerDictionary<T>(name: string, dictionary: IRecipeDictionary<T>): IRecipeDictionary<T> {
 		if (dictionaries[name]) {
 			Logger.Log(`Recipe dictionary for ${name} is overriden`, "ERROR");
 		}

@@ -1,16 +1,6 @@
 namespace ItemName {
 	const tooltips: {[key: number]: string[]} = {};
 
-	/**@deprecated use ItemRegistry.setRarity*/
-	export function setRarity(id: number, rarity: number): void {
-		ItemRegistry.setRarity(id, rarity);
-	}
-
-	/**@deprecated use ItemRegistry.getRarity */
-	export function getRarity(id: number): number {
-		return ItemRegistry.getRarity(id);
-	}
-
 	export function addTooltip(id: number, tooltip: string, ...params: any[]): void {
 		if (params.length > 0) {
 			tooltip = getTranslatedTextWithParams(tooltip, ...params);

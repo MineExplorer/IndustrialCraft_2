@@ -20,6 +20,8 @@ namespace Machine {
 		energyDemand?: number;
 		processTimeMultiplier?: number;
 
+		upgradeSet?: UpgradeAPI.UpgradeSet;
+
 		getTier(): number {
 			return this.tier;
 		}
@@ -28,13 +30,10 @@ namespace Machine {
 			return this.energyStorage;
 		}
 		
-		/*onInit(): void {
+		onInit(): void {
 			super.onInit();
-			this.useUpgrades();
-		}*/
-
-		getProcessingSpeed(): number {
-			return 1 / this.processTimeMultiplier;
+			this.upgradeSet = UpgradeAPI.getUpgradeSet(this);
+			this.useUpgrades(true);
 		}
 
 		isValidSource(id: number, data: number): boolean {
@@ -50,8 +49,8 @@ namespace Machine {
 			});
 		}
 
-		useUpgrades(): UpgradeAPI.UpgradeSet {
-			const upgrades = UpgradeAPI.useUpgrades(this);
+		useUpgrades(isInit: boolean): UpgradeAPI.UpgradeSet {
+			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet, isInit);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.energyDemand = upgrades.getEnergyDemand(this.defaultEnergyDemand);
@@ -60,7 +59,7 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.useUpgrades();
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
 			const isActive = this.performRecipe();
@@ -78,7 +77,8 @@ namespace Machine {
 		}
 
 		updateProgress(recipeProcessTime: number = this.defaultProcessTime) {
-			this.data.progress += this.getProcessingSpeed() / recipeProcessTime;
+			const processTime = Math.max(Math.round(recipeProcessTime * this.processTimeMultiplier), 1);
+			this.data.progress += 1 / processTime;
 		}
 
 		isCompletedProgress() {

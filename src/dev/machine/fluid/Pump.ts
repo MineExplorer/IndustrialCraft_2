@@ -63,6 +63,8 @@ namespace Machine {
 		energyDemand: number;
 		processTime: number;
 
+		upgradeSet?: UpgradeAPI.UpgradeSet;
+
 		getScreenByName(): UI.IWindow {
 			return guiPump;
 		}
@@ -88,11 +90,12 @@ namespace Machine {
 
 		onInit(): void {
 			super.onInit();
-			this.useUpgrades();
+			this.upgradeSet = UpgradeAPI.getUpgradeSet(this);
+			this.useUpgrades(true);
 		}
 
-		useUpgrades(): void {
-			const upgrades = UpgradeAPI.useUpgrades(this);
+		useUpgrades(isInit: boolean) {
+			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet, isInit);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.energyDemand = upgrades.getEnergyDemand(this.defaultEnergyDemand);
@@ -100,7 +103,7 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.useUpgrades();
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
 			this.extractLiquid();

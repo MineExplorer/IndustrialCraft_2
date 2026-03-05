@@ -120,7 +120,7 @@ namespace Machine {
 		}
 
 		setUpgradeStats(): void {
-			const upgrades = UpgradeAPI.useUpgrades(this);
+			const upgrades = UpgradeAPI.getUpgradeSet(this);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.maxScanCount = 5 * upgrades.speedModifier;
 		}

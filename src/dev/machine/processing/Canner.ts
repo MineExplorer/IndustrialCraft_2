@@ -146,7 +146,7 @@ namespace Machine {
 
 		onTick(): void {
 			this.container.sendEvent("updateUI", {mode: this.data.mode});
-			this.useUpgrades();
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
 			const isActive = this.performRecipe();

@@ -109,7 +109,7 @@ namespace Machine {
         // Buffer slots accept only items presented in the grid, up to the number of slots in the grid that can hold them
         // This way we ensure that the buffer will not fill up with useless items or only one type of item
 		onTick(): void {
-			this.useUpgrades();
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
             if (!this.data.recipeChecked) {
                 const result = Recipes.getRecipeResult(this.container);

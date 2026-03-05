@@ -88,8 +88,8 @@ namespace Machine {
 			}
 		}
 
-		useUpgrades(): UpgradeAPI.UpgradeSet {
-			const upgrades = UpgradeAPI.useUpgrades(this);
+		useUpgrades(isInit: boolean): UpgradeAPI.UpgradeSet {
+			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet, isInit);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
@@ -97,7 +97,7 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.useUpgrades();
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;

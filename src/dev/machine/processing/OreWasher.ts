@@ -101,7 +101,7 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.useUpgrades();
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
 			const slot1 = this.container.getSlot("slotLiquid1");

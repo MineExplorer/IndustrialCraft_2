@@ -21,6 +21,7 @@ Callback.addCallback("PreLoaded", function() {
 		BlockID.metalFormer,
 		BlockID.oreWasher,
 		BlockID.thermalCentrifuge,
+		BlockID.blockCuttingMachine,
 		BlockID.blastFurnace,
 		BlockID.icFermenter,
 		BlockID.massFabricator

@@ -60,10 +60,11 @@ namespace Machine {
 		}
 
 		defaultDrop = BlockID.machineBlockBasic;
-		upgrades = ["redstone", "itemEjector", "itemPulling"]
+		upgrades = ["redstone", "itemEjector", "itemPulling"];
 
 		isHeating: boolean = false;
 		isPowered: boolean;
+		upgradeSet?: UpgradeAPI.UpgradeSet;
 
 		getScreenByName(): UI.IWindow {
 		   return guiBlastFurnace;
@@ -126,8 +127,13 @@ namespace Machine {
 		}
 
 		useUpgrades(): void {
-			const upgrades = UpgradeAPI.useUpgrades(this);
+			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet);
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
+		}
+
+		onInit(): void {
+			super.onInit();
+			this.upgradeSet = UpgradeAPI.getUpgradeSet(this);
 		}
 
 		onTick(): void {

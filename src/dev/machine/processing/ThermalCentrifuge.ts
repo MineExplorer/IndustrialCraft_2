@@ -111,14 +111,14 @@ namespace Machine {
 			return 3;
 		}
 
-		useUpgrades(): UpgradeAPI.UpgradeSet {
-			const upgrades = super.useUpgrades();
+		useUpgrades(isInit: boolean): UpgradeAPI.UpgradeSet {
+			const upgrades = super.useUpgrades(isInit);
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
 			return upgrades;
 		}
 
 		onTick(): void {
-			this.useUpgrades();
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
 			if (this.isHeating) {

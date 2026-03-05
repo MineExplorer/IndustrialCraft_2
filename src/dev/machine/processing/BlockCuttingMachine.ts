@@ -19,8 +19,7 @@ Callback.addCallback("PreLoaded", function() {
         "b"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'a', ItemID.circuitAdvanced, 0, 'b', ItemID.electricMotor, 0]);
 	
-	const cuttingDictionary = new ProcessingRecipeDictionary<Machine.CuttingRecipe>(450);
-	cuttingDictionary.registerList([
+	MachineRecipeRegistry.registerRecipes<Machine.CuttingRecipe>("cuttingMachine", [
 		// -- Iron blade or higher --
 		// Logs
 		{ source: {id: VanillaBlockID.log, data: 0}, result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1 },
@@ -75,7 +74,6 @@ Callback.addCallback("PreLoaded", function() {
 		// -- Diamond blade --
 		{ source: {id: BlockID.blockSteel}, result: {id: ItemID.plateSteel, count: 9}, hardnessLevel: 3 }
 	]);
-	MachineRecipeRegistry.registerDictionary("cuttingMachine", cuttingDictionary);
 });
 
 namespace Machine {
@@ -211,6 +209,8 @@ namespace Machine {
 	}
 
 	MachineRegistry.registerPrototype(BlockID.blockCuttingMachine, new BlockCutter());
+
+	MachineRecipeRegistry.registerDictionary("cuttingMachine", new ProcessingRecipeDictionary<CuttingRecipe>(450));
 
 	StorageInterface.createInterface(BlockID.blockCuttingMachine, {
 		slots: {

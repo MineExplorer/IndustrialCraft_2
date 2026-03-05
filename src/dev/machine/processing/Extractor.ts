@@ -18,8 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 		"xax"
 	], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
 	
-	const extractorDictionary = new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(400);
-	extractorDictionary.registerList([
+	MachineRecipeRegistry.registerRecipes<Machine.ProcessingRecipe>("extractor", [
 		{ source: {id: ItemID.latex}, result: {id: ItemID.rubber, count: 3} },
 		{ source: {id: BlockID.rubberTreeSapling}, result: {id: ItemID.rubber, count: 1} },
 		{ source: {id: BlockID.rubberTreeLog}, result: {id: ItemID.rubber, count: 1} },
@@ -27,7 +26,6 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: VanillaItemID.gunpowder}, result: {id: ItemID.dustSulfur, count: 1} },
 		{ source: {id: ItemID.tinCanFull}, result: {id: ItemID.tinCanEmpty, count: 1} }
 	]);
-	MachineRecipeRegistry.registerDictionary("extractor", extractorDictionary);
 });
 
 namespace Machine {
@@ -77,6 +75,8 @@ namespace Machine {
 	}
 
 	MachineRegistry.registerPrototype(BlockID.extractor, new Extractor());
+
+	MachineRecipeRegistry.registerDictionary("extractor", new ProcessingRecipeDictionary<ProcessingRecipe>(400));
 
 	StorageInterface.createInterface(BlockID.extractor, {
 		slots: {

@@ -19,8 +19,7 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.electricMotor, 0, 'a', 265, 0, 'm', ItemID.miningLaser, -1, 'c', ItemID.coil, 0]);
 
-	const thermalCentrifugeDictionary = new ProcessingRecipeDictionary<Machine.ThermalCentrifugeRecipe>(500);
-	thermalCentrifugeDictionary.registerList([
+	MachineRecipeRegistry.registerRecipes<Machine.ThermalCentrifugeRecipe>("thermalCentrifuge", [
 		{ source: {id: VanillaBlockID.cobblestone}, result: [{id: ItemID.dustStone, count: 1}], heat: 100 },
 		{ source: {id: ItemID.crushedCopper}, result: [{id: ItemID.dustSmallTin, count: 1}, {id: ItemID.dustCopper, count: 1}, {id: ItemID.dustStone, count: 1}], heat: 500 },
 		{ source: {id: ItemID.crushedTin}, result: [{id: ItemID.dustSmallIron, count: 1}, {id: ItemID.dustTin, count: 1}, {id: ItemID.dustStone, count: 1}], heat: 1000 },
@@ -45,7 +44,6 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: ItemID.fuelRodDepletedMOX4}, result: [{id: ItemID.smallPlutonium, count: 4}, {id: ItemID.plutonium, count: 12}, {id: ItemID.dustIron, count: 6}], heat: 5000 },
 		{ source: {id: ItemID.rtgPellet}, result: [{id: ItemID.plutonium, count: 3}, {id: ItemID.dustIron, count: 54}], heat: 5000 }
 	]);
-	MachineRecipeRegistry.registerDictionary("thermalCentrifuge", thermalCentrifugeDictionary);
 });
 
 namespace Machine {
@@ -198,6 +196,8 @@ namespace Machine {
 	}
 
 	MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, new ThermalCentrifuge());
+	
+	MachineRecipeRegistry.registerDictionary("thermalCentrifuge", new ProcessingRecipeDictionary<ThermalCentrifugeRecipe>(500));
 
 	StorageInterface.createInterface(BlockID.thermalCentrifuge, {
 		slots: {

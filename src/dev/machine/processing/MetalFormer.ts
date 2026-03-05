@@ -46,8 +46,7 @@ Callback.addCallback("PreLoaded", function() {
 		}
 	});
 
-	const rollingDictionary = new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(200);
-	rollingDictionary.registerList([
+	MachineRecipeRegistry.registerRecipes<Machine.ProcessingRecipe>("metalRolling", [
 		// ingots
 		{ source: {id: VanillaItemID.iron_ingot}, result: {id: ItemID.plateIron, count: 1} },
 		{ source: {id: VanillaItemID.gold_ingot}, result: {id: ItemID.plateGold, count: 1} },
@@ -68,19 +67,15 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: ItemID.plateLead}, result: {id: ItemID.casingLead, count: 2} },
 		{ source: {id: ItemID.plateSilver}, result: {id: ItemID.casingSilver, count: 2} }
 	]);
-	MachineRecipeRegistry.registerDictionary("metalRolling", rollingDictionary);
 
-	const cuttingDictionary = new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(200);
-	cuttingDictionary.registerList([
+	MachineRecipeRegistry.registerRecipes<Machine.ProcessingRecipe>("metalCutting", [
 		{ source: {id: ItemID.plateTin}, result: {id: ItemID.cableTin0, count: 3} },
 		{ source: {id: ItemID.plateCopper}, result: {id: ItemID.cableCopper0, count: 3} },
 		{ source: {id: ItemID.plateGold}, result: {id: ItemID.cableGold0, count: 4} },
 		{ source: {id: ItemID.plateIron}, result: {id: ItemID.cableIron0, count: 4} }
 	]);
-	MachineRecipeRegistry.registerDictionary("metalCutting", cuttingDictionary);
 
-	const extrudingDictionary = new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(200);
-	extrudingDictionary.registerList([
+	MachineRecipeRegistry.registerRecipes<Machine.ProcessingRecipe>("metalExtruding", [
 		{ source: {id: ItemID.ingotTin}, result: {id: ItemID.cableTin0, count: 3} },
 		{ source: {id: ItemID.ingotCopper}, result: {id: ItemID.cableCopper0, count: 3} },
 		{ source: {id: VanillaItemID.iron_ingot}, result: {id: ItemID.cableIron0, count: 4} },
@@ -88,7 +83,6 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: ItemID.casingTin}, result: {id: ItemID.tinCanEmpty, count: 1} },
 		{ source: {id: ItemID.plateIron}, result: {id: ItemID.fuelRod, count: 1} }
 	]);
-	MachineRecipeRegistry.registerDictionary("metalExtruding", extrudingDictionary);
 });
 
 namespace Machine {
@@ -177,6 +171,10 @@ namespace Machine {
 	}
 
 	MachineRegistry.registerPrototype(BlockID.metalFormer, new MetalFormer());
+
+	MachineRecipeRegistry.registerDictionary("metalRolling", new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(200));
+	MachineRecipeRegistry.registerDictionary("metalCutting", new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(200));
+	MachineRecipeRegistry.registerDictionary("metalExtruding", new ProcessingRecipeDictionary<Machine.ProcessingRecipe>(200));
 
 	StorageInterface.createInterface(BlockID.metalFormer, {
 		slots: {

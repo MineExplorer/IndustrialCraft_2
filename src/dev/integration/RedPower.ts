@@ -12,8 +12,16 @@ ModAPI.addAPICallback("RedCore", (api: typeof RedCore) => {
 	api.Integration.addDeployerItem(ItemID.cableIron3);
 	api.Integration.addDeployerItem(ItemID.cableOptic);
 
-	MachineRecipeRegistry.addRecipeFor("compressor", ItemID.nikolite, {id: BlockID.blockNikolite, count: 1, data: 0, sourceCount: 9});
-	MachineRecipeRegistry.addRecipeFor("compressor", ItemID.gemRuby, {id: BlockID.blockRuby, count: 1, data: 0, sourceCount: 9});
-	MachineRecipeRegistry.addRecipeFor("compressor", ItemID.gemSapphire, {id: BlockID.blockSapphire, count: 1, data: 0, sourceCount: 9});
-	MachineRecipeRegistry.addRecipeFor("compressor", ItemID.gemGreenSapphire, {id: BlockID.blockGreenSapphire, count: 1, data: 0, sourceCount: 9});
+	MachineRecipeRegistry.addRecipe<Machine.ProcessingRecipe>("compressor", {
+		source: {id: ItemID.nikolite, count: 9}, result: {id: BlockID.blockNikolite, count: 1}
+	});
+	MachineRecipeRegistry.addRecipe<Machine.ProcessingRecipe>("compressor", {
+		source: {id: ItemID.gemRuby, count: 9}, result: {id: BlockID.blockRuby, count: 1}
+	}); 
+	MachineRecipeRegistry.addRecipe<Machine.ProcessingRecipe>("compressor", {
+		source: {id: ItemID.gemSapphire, count: 9}, result: {id: BlockID.blockSapphire, count: 1}
+	});
+	MachineRecipeRegistry.addRecipe<Machine.ProcessingRecipe>("compressor", {
+		source: {id: ItemID.gemGreenSapphire, count: 9}, result: {id: BlockID.blockGreenSapphire, count: 1}
+	});
 });

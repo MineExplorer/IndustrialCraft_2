@@ -18,12 +18,10 @@ Callback.addCallback("PreLoaded", function() {
 		"cxc",
 	], ['#', BlockID.solidCanner, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
 
-	const fluidCannerDictionary = new FluidMixingRecipeDictionary();
-	fluidCannerDictionary.registerList([
+	MachineRecipeRegistry.registerRecipes<FluidMixingRecipe>("fluidCanner", [
 		{ source: {id: ItemID.bioChaff, count: 1}, inputFluid: {name: "water", amount: 1000}, outputFluid: {name: "biomass", amount: 1000} },
 		{ source: {id: ItemID.dustLapis, count: 1}, inputFluid: {name: "water", amount: 1000}, outputFluid: {name: "coolant", amount: 1000} }
 	]);
-	MachineRecipeRegistry.registerDictionary("fluidCanner", fluidCannerDictionary);
 });
 
 namespace Machine {
@@ -332,6 +330,8 @@ namespace Machine {
 	}
 
 	MachineRegistry.registerPrototype(BlockID.canner, new Canner());
+
+	MachineRecipeRegistry.registerDictionary("fluidCanner", new FluidMixingRecipeDictionary());
 
 	MachineRegistry.createFluidStorageInterface(BlockID.canner, {
 		slots: {

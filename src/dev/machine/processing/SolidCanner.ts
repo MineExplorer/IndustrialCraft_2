@@ -19,8 +19,7 @@ Callback.addCallback("PreLoaded", function() {
 		"ccc"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.casingTin, 0]);
 
-	const solidCannerDictionary = new ProcessingRecipeDictionary<Machine.SolidCanningRecipe>(200);
-	solidCannerDictionary.registerList([
+	MachineRecipeRegistry.registerRecipes<Machine.SolidCanningRecipe>("solidCanner", [
 		{ source: {id: ItemID.uranium}, can: ItemID.fuelRod, result: {id: ItemID.fuelRodUranium, count: 1, data: 0} },
 		{ source: {id: ItemID.mox}, can: ItemID.fuelRod, result: {id: ItemID.fuelRodMOX, count: 1, data: 0} },
 		{ source: {id: VanillaBlockID.cake}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 14, data: 0} },
@@ -56,7 +55,6 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: VanillaBlockID.beetroot}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0} },
 		{ source: {id: VanillaItemID.tropical_fish}, can: ItemID.tinCanEmpty, result: {id: ItemID.tinCanFull, count: 1, data: 0 } }
 	]);
-	MachineRecipeRegistry.registerDictionary("solidCanner", solidCannerDictionary)
 });
 
 namespace Machine {
@@ -151,6 +149,8 @@ namespace Machine {
 	}
 
 	MachineRegistry.registerPrototype(BlockID.solidCanner, new SolidCanner());
+
+	MachineRecipeRegistry.registerDictionary("solidCanner", new ProcessingRecipeDictionary<Machine.SolidCanningRecipe>(200));
 
 	StorageInterface.createInterface(BlockID.solidCanner, {
 		slots: {

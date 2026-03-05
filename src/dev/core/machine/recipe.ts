@@ -75,6 +75,24 @@ namespace MachineRecipeRegistry {
 		return recipeData[name];
 	}
 
+	export function addRecipe<T>(name: string, recipe: T): void {
+		const dictionary = getDictionary<IRecipeDictionary<T>>(name);
+		if (!dictionary) {
+			Logger.Log(`Recipe dictionary "${name}" not found, skipped adding recipe"`, "ERROR");
+			return;
+		}
+		dictionary.register(recipe);
+	}
+
+	export function registerRecipes<T>(name: string, recipes: T[]) {
+		const dictionary = getDictionary<IRecipeDictionary<T>>(name);
+		if (!dictionary) {
+			Logger.Log(`Recipe dictionary "${name}" not found, skipped adding recipe"`, "ERROR");
+			return;
+		}
+		dictionary.registerList(recipes);
+	}
+
 	/*export function getRecipe<T>(dictionaryName: string, input1: any, input2?: any): T {
 		const dictionary = getDictionary<T>(dictionaryName);
 		if (dictionary) {
@@ -113,12 +131,5 @@ namespace MachineRecipeRegistry {
 	export function getFluidRecipe(name: string, liquid: string) {
 		const recipes = requireFluidRecipes(name);
 		return recipes[liquid];
-	}
-
-	export type ItemResult = {
-		id: number,
-		count: number,
-		data?: number,
-		extra?: ItemExtraData
 	}
 }

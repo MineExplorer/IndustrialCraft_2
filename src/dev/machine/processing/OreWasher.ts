@@ -19,8 +19,7 @@ Callback.addCallback("PreLoaded", function() {
 		"xcx"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.electricMotor, 0, 'a', ItemID.plateIron, 0, 'b', 325, 0, 'c', ItemID.circuitBasic, 0]);
 
-	const oreWasherDictionary = new ProcessingRecipeDictionary<Machine.OreWashingRecipe>(200);
-	oreWasherDictionary.registerList([
+	MachineRecipeRegistry.registerRecipes<Machine.OreWashingRecipe>("oreWasher", [
 		{ source: {id: ItemID.crushedCopper}, result: [{id: ItemID.crushedPurifiedCopper, count: 1}, {id: ItemID.dustSmallCopper, count: 2}, {id: ItemID.dustStone, count: 1}] },
 		{ source: {id: ItemID.crushedTin}, result: [{id: ItemID.crushedPurifiedTin, count: 1}, {id: ItemID.dustSmallTin, count: 2}, {id: ItemID.dustStone, count: 1}] },
 		{ source: {id: ItemID.crushedIron}, result: [{id: ItemID.crushedPurifiedIron, count: 1}, {id: ItemID.dustSmallIron, count: 2}, {id: ItemID.dustStone, count: 1}] },
@@ -30,7 +29,6 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: ItemID.crushedUranium}, result: [{id: ItemID.crushedPurifiedUranium, count: 1}, {id: ItemID.dustSmallLead, count: 2}, {id: ItemID.dustStone, count: 1}] },
 		{ source: {id: VanillaBlockID.gravel}, result: [{id: 318, count: 1}, {id: ItemID.dustStone, count: 1}] }
 	]);
-	MachineRecipeRegistry.registerDictionary("oreWasher", oreWasherDictionary);
 });
 
 namespace Machine {
@@ -158,6 +156,8 @@ namespace Machine {
 	}
 
 	MachineRegistry.registerPrototype(BlockID.oreWasher, new OreWasher());
+
+	MachineRecipeRegistry.registerDictionary("oreWasher", new ProcessingRecipeDictionary<OreWashingRecipe>(200));
 
 	MachineRegistry.createFluidStorageInterface(BlockID.oreWasher, {
 		slots: {

@@ -59,13 +59,13 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slotResult", () => 0);
 		}
 
-		getRecipe(item: ItemInstance) {
-			if (item.id == 0) return null
+		getRecipe(id: number, data: number) {
+			if (id == 0) return null
 
-			const isBlackListed = recyclerBlacklist.indexOf(item.id) != -1;
+			const isBlackListed = recyclerBlacklist.indexOf(id) != -1;
 			return {
-				source: item,
-				result: {id: ItemID.scrap, data: 0, chance: isBlackListed ? 0 : 0.125}
+				source: {id: id, count: 1, data: data},
+				result: {id: ItemID.scrap, count: 1, chance: isBlackListed ? 0 : 0.125}
 			};
 		}
 

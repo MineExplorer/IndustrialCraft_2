@@ -1,4 +1,4 @@
-/// <reference path="./AdvancedProcessingMachine.ts" />
+/// <reference path="./MultiResultProcessingMachine.ts" />
 
 BlockRegistry.createBlock("thermalCentrifuge", [
 	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
@@ -49,7 +49,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export type ThermalCentrifugeRecipe = AdvancedProcessingRecipe & {
+	export type ThermalCentrifugeRecipe = MultiResultProcessingRecipe & {
 		heat: number
 	}
 
@@ -80,7 +80,7 @@ namespace Machine {
 		}
 	});
 
-	export class ThermalCentrifuge extends AdvancedProcessingMachine {
+	export class ThermalCentrifuge extends MultiResultProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			progress: 0,

@@ -1,4 +1,4 @@
-/// <reference path="./AdvancedProcessingMachine.ts" />
+/// <reference path="./MultiResultProcessingMachine.ts" />
 
 BlockRegistry.createBlock("oreWasher", [
 	{name: "Ore Washing Plant", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], inCreative: true}
@@ -34,7 +34,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export type OreWashingRecipe = AdvancedProcessingRecipe;
+	export type OreWashingRecipe = MultiResultProcessingRecipe;
 
 	const guiOreWasher = MachineRegistry.createInventoryWindow("Ore Washing Plant", {
 		drawing: [
@@ -64,7 +64,7 @@ namespace Machine {
 		}
 	});
 
-	export class OreWasher extends AdvancedProcessingMachine {
+	export class OreWasher extends MultiResultProcessingMachine {
 		liquidTank: BlockEngine.LiquidTank;
 
 		defaultEnergyStorage = 10000;

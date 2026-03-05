@@ -1,30 +1,21 @@
 /// <reference path="./ProcessingMachine.ts" />
 
 namespace Machine {
-	export type AdvancedProcessingRecipe = {
+	export type MultiResultProcessingRecipe = {
 		source: {id: number, count?: number, data?: number}
 		result: ProcessingRecipeResult[],
 		processTime?: number
 	}
 
-	export abstract class AdvancedProcessingMachine
+	export abstract class MultiResultProcessingMachine
 	extends ProcessingMachine {
-		setupContainer(): void {
-			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
-				if (name.startsWith("slotSource")) return this.isValidSource(id, data);
-				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
-				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
-				return false;
-			});
-		}
-
-		getRecipeDictionary(): ProcessingRecipeDictionary<AdvancedProcessingRecipe> {
+		getRecipeDictionary(): ProcessingRecipeDictionary<MultiResultProcessingRecipe> {
 			return null;
 		}
 
-		getRecipe(item: ItemInstance): AdvancedProcessingRecipe {
+		getRecipe(id: number, data: number): MultiResultProcessingRecipe {
 			const dictionary = this.getRecipeDictionary();
-			return dictionary.getRecipe(item.id, item.data)
+			return dictionary.getRecipe(id, data);
 		}
 
 		isValidSource(id: number, data: number): boolean {
@@ -38,7 +29,7 @@ namespace Machine {
 		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipe(sourceSlot);
+			const recipe = this.getRecipe(sourceSlot.id, sourceSlot.data);
 
 			if (recipe && recipe.source.count <= sourceSlot.count) {
 				const resultSize = this.getResultSlotsCount();
@@ -82,7 +73,7 @@ namespace Machine {
 			return true;
 		}
 
-		modifyResult(recipe: AdvancedProcessingRecipe, resultSize: number): ItemInstance[] {
+		modifyResult(recipe: MultiResultProcessingRecipe, resultSize: number): ItemInstance[] {
 			const result: ItemInstance[] = [];
 			for (let i = 0; i < Math.min(recipe.result.length, resultSize); i++) {
 				const item = recipe.result[i];

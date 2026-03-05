@@ -34,7 +34,20 @@ namespace Machine {
 		}*/
 
 		getProcessingSpeed(): number {
-			return 1;
+			return 1 / this.processTimeMultiplier;
+		}
+
+		isValidSource(id: number, data: number): boolean {
+			return true;
+		}
+
+		setupContainer(): void {
+			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data) => {
+				if (name.startsWith("slotSource")) return this.isValidSource(id, data);
+				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
+				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
+				return false;
+			});
 		}
 
 		useUpgrades(): UpgradeAPI.UpgradeSet {
@@ -65,7 +78,7 @@ namespace Machine {
 		}
 
 		updateProgress(recipeProcessTime: number = this.defaultProcessTime) {
-			this.data.progress += this.getProcessingSpeed() / Math.ceil(recipeProcessTime * this.processTimeMultiplier);
+			this.data.progress += this.getProcessingSpeed() / recipeProcessTime;
 		}
 
 		isCompletedProgress() {

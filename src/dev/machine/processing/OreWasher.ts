@@ -1,4 +1,4 @@
-/// <reference path="./ProcessingMachine.ts" />
+/// <reference path="./AdvancedProcessingMachine.ts" />
 
 BlockRegistry.createBlock("oreWasher", [
 	{name: "Ore Washing Plant", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], inCreative: true}
@@ -21,24 +21,20 @@ Callback.addCallback("PreLoaded", function() {
 
 	const oreWasherDictionary = new ProcessingRecipeDictionary<Machine.OreWashingRecipe>(200);
 	oreWasherDictionary.registerList([
-		{ source: {id: ItemID.crushedCopper}, result: [ItemID.crushedPurifiedCopper, 1, ItemID.dustSmallCopper, 2, ItemID.dustStone, 1] },
-		{ source: {id: ItemID.crushedTin}, result: [ItemID.crushedPurifiedTin, 1, ItemID.dustSmallTin, 2, ItemID.dustStone, 1] },
-		{ source: {id: ItemID.crushedIron}, result: [ItemID.crushedPurifiedIron, 1, ItemID.dustSmallIron, 2, ItemID.dustStone, 1] },
-		{ source: {id: ItemID.crushedGold}, result: [ItemID.crushedPurifiedGold, 1, ItemID.dustSmallGold, 2, ItemID.dustStone, 1] },
-		{ source: {id: ItemID.crushedSilver}, result: [ItemID.crushedPurifiedSilver, 1, ItemID.dustSmallSilver, 2, ItemID.dustStone, 1] },
-		{ source: {id: ItemID.crushedLead}, result: [ItemID.crushedPurifiedLead, 1, ItemID.dustSmallSulfur, 3, ItemID.dustStone, 1] },
-		{ source: {id: ItemID.crushedUranium}, result: [ItemID.crushedPurifiedUranium, 1, ItemID.dustSmallLead, 2, ItemID.dustStone, 1] },
-		{ source: {id: VanillaBlockID.gravel}, result: [318, 1, ItemID.dustStone, 1] }
+		{ source: {id: ItemID.crushedCopper}, result: [{id: ItemID.crushedPurifiedCopper, count: 1}, {id: ItemID.dustSmallCopper, count: 2}, {id: ItemID.dustStone, count: 1}] },
+		{ source: {id: ItemID.crushedTin}, result: [{id: ItemID.crushedPurifiedTin, count: 1}, {id: ItemID.dustSmallTin, count: 2}, {id: ItemID.dustStone, count: 1}] },
+		{ source: {id: ItemID.crushedIron}, result: [{id: ItemID.crushedPurifiedIron, count: 1}, {id: ItemID.dustSmallIron, count: 2}, {id: ItemID.dustStone, count: 1}] },
+		{ source: {id: ItemID.crushedGold}, result: [{id: ItemID.crushedPurifiedGold, count: 1}, {id: ItemID.dustSmallGold, count: 2}, {id: ItemID.dustStone, count: 1}] },
+		{ source: {id: ItemID.crushedSilver}, result: [{id: ItemID.crushedPurifiedSilver, count: 1}, {id: ItemID.dustSmallSilver, count: 2}, {id: ItemID.dustStone, count: 1}] },
+		{ source: {id: ItemID.crushedLead}, result: [{id: ItemID.crushedPurifiedLead, count: 1}, {id: ItemID.dustSmallSulfur, count: 3}, {id: ItemID.dustStone, count: 1}] },
+		{ source: {id: ItemID.crushedUranium}, result: [{id: ItemID.crushedPurifiedUranium, count: 1}, {id: ItemID.dustSmallLead, count: 2}, {id: ItemID.dustStone, count: 1}] },
+		{ source: {id: VanillaBlockID.gravel}, result: [{id: 318, count: 1}, {id: ItemID.dustStone, count: 1}] }
 	]);
 	MachineRecipeRegistry.registerDictionary("oreWasher", oreWasherDictionary);
 });
 
 namespace Machine {
-	export type OreWashingRecipe = {
-		source: {id: number, data?: number}
-		result: number[],
-		processTime?: number
-	}
+	export type OreWashingRecipe = AdvancedProcessingRecipe;
 
 	const guiOreWasher = MachineRegistry.createInventoryWindow("Ore Washing Plant", {
 		drawing: [
@@ -68,7 +64,7 @@ namespace Machine {
 		}
 	});
 
-	export class OreWasher extends ProcessingMachine {
+	export class OreWasher extends AdvancedProcessingMachine {
 		liquidTank: BlockEngine.LiquidTank;
 
 		defaultEnergyStorage = 10000;
@@ -82,6 +78,10 @@ namespace Machine {
 
 		getRecipeDictionary(): ProcessingRecipeDictionary<OreWashingRecipe> {
 			return MachineRecipeRegistry.getDictionary("oreWasher");
+		}
+
+		getResultSlotsCount(): number {
+			return 3;
 		}
 
 		isValidSource(id: number, data: number): boolean {
@@ -98,28 +98,6 @@ namespace Machine {
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
 			});
-		}
-
-		checkResult(result: number[]) {
-			for (let i = 1; i <= result.length / 2; i++) {
-				const id = result[(i-1) * 2];
-				const count = result[(i-1) * 2 + 1];
-				const resultSlot = this.container.getSlot("slotResult" + i);
-				if (resultSlot.id != 0 && (resultSlot.id != id || resultSlot.count + count > 64)) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		putResult(result: number[]) {
-			this.liquidTank.getLiquid(1000);
-			for (let i = 1; i <= result.length / 2; i++) {
-				const id = result[(i-1) * 2];
-				const count = result[(i-1) * 2 + 1];
-				const resultSlot = this.container.getSlot("slotResult" + i);
-				resultSlot.setSlot(id, resultSlot.count + count, 0);
-			}
 		}
 
 		onTick(): void {
@@ -142,26 +120,26 @@ namespace Machine {
 		}
 
 		performRecipe(): boolean {
-			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
 			const dictionary = this.getRecipeDictionary();
 			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
-			if (recipe && this.checkResult(recipe.result) && this.liquidTank.getAmount("water") >= 1000) {
-				if (this.data.energy >= this.energyDemand) {
-					this.data.energy -= this.energyDemand;
-					this.updateProgress(recipe.processTime);
-					newActive = true;
-				}
+			const resultSize = this.getResultSlotsCount();
+			if (recipe && this.data.energy >= this.energyDemand && this.liquidTank.getAmount("water") >= 1000 && this.canPutResult(recipe.result, resultSize)) {
+				this.data.energy -= this.energyDemand;
+				this.updateProgress(recipe.processTime);
 				if (this.isCompletedProgress()) {
 					this.decreaseSlot(sourceSlot, 1);
-					this.putResult(recipe.result);
+					this.liquidTank.getLiquid(1000);
+					const result = this.modifyResult(recipe, resultSize);
+					this.putResult(result, resultSize);
 					this.data.progress = 0;
 				}
+				return true;
 			}
-			else {
-				this.data.progress = 0;
-			}
-			return newActive;
+
+			this.data.progress = 0;
+			
+			return false;
 		}
 
 		onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, player: number) {

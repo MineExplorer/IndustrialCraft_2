@@ -81,7 +81,7 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	export type CuttingRecipe = {
 		source: {id: number, count?: number, data?: number}
-		result: {id: number, count: number, data?: number, extra?: ItemExtraData},
+		result: {id: number, count: number, data?: number},
 		hardnessLevel: number
 	}
 
@@ -168,17 +168,15 @@ namespace Machine {
 			const bladeLevel = this.getBladeLevel(bladeSlot.id);
 
 			if (recipe && sourceSlot.count >= recipe.source.count && bladeLevel >= recipe.hardnessLevel) {
-				const resultSlot = this.container.getSlot("slotResult");
-				if (this.canStackBeMerged(sourceSlot, resultSlot, true)) {
-					if (this.data.energy >= this.energyDemand) {
-						this.data.energy -= this.energyDemand;
-						// apply 50% speed increase for each hardness level exceeding required
-						const processTime = this.defaultProcessTime / (1 + (bladeLevel - recipe.hardnessLevel) * 0.5);
-						this.updateProgress(processTime);
-						newActive = true;
-					}
+				if (this.data.energy >= this.energyDemand && this.canPutResult(recipe.result)) {
+					this.data.energy -= this.energyDemand;
+					// apply 50% speed increase for each hardness level exceeding required
+					const processTime = this.defaultProcessTime / (1 + (bladeLevel - recipe.hardnessLevel) * 0.5);
+					this.updateProgress(processTime);
+					newActive = true;
 					if (this.isCompletedProgress()) {
 						this.decreaseSlot(sourceSlot, recipe.source.count);
+						const resultSlot = this.container.getSlot("slotResult");
 						resultSlot.setSlot(recipe.result.id, resultSlot.count + recipe.result.count, recipe.result.data || 0);
 						this.data.progress = 0;
 					}

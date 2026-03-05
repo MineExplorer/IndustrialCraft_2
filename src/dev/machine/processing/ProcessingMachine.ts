@@ -7,6 +7,8 @@ namespace Machine {
 			energy: 0,
 			progress: 0
 		}
+		
+		defaultDrop = BlockID.machineBlockBasic;
 
 		defaultTier = 1;
 		defaultEnergyStorage = 1200;

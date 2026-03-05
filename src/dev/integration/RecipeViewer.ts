@@ -117,31 +117,34 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const solidRecipe: DataMap<Machine.SolidCanningRecipe> = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-			let item: string[];
-			for (let key in solidRecipe) {
-				item = key.split(":");
+			const solidDictionary: RecipeDictionary<Machine.SolidCanningRecipe> = MachineRecipeRegistry.getDictionary("solidCanner");
+			const solidRecipes = solidDictionary.getAll();
+			for (let i = 0; i < solidRecipes.length; i++) {
+				const recipe = solidRecipes[i];
 				list.push({
 					input: [
-						{id: solidRecipe[key].can, count: 1, data: 0},
-						{id: +item[0], count: 1, data: +item[1] || 0}
+						{id: recipe.can, count: 1, data: 0},
+						{id: recipe.source.id, count: 1, data: recipe.source.data}
 					],
-					output: [solidRecipe[key].result],
+					output: [recipe.result],
 					mode: 0
 				});
 			}
-			const fluidRecipe: {input: [string, {id: number, count: number}], output: string}[] = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
-			for (let i = 0; i < fluidRecipe.length; i++) {
+			const fluidDictionary: FluidMixingRecipeDictionary = MachineRecipeRegistry.getDictionary("fluidCanner");
+			const fluidRecipes = fluidDictionary.getAll();
+			for (let i = 0; i < fluidRecipes.length; i++) {
+				const recipe = fluidRecipes[i];
 				list.push({
 					input: [
 						null,
-						{id: fluidRecipe[i].input[1].id, count: fluidRecipe[i].input[1].count, data: 0}
+						{id: recipe.source.id, count: recipe.source.count, data: recipe.source.data}
 					],
-					inputLiq: [{liquid: fluidRecipe[i].input[0], amount: 1000}],
-					outputLiq: [{liquid: fluidRecipe[i].output, amount: 1000}],
+					inputLiq: [{liquid: recipe.inputFluid.name, amount: recipe.inputFluid.amount}],
+					outputLiq: [{liquid: recipe.outputFluid.name, amount: recipe.outputFluid.amount}],
 					mode: 3
 				});
 			}
+			let item: string[];
 			let full: ItemInstance;
 			let empty: ItemInstance;
 			for (let key in LiquidRegistry.EmptyByFull) {
@@ -192,16 +195,24 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			let recipe: DataMap<Machine.ProcessingRecipe>;
-			let input: string[];
-			for (let mode = 0; mode < 3; mode++) {
-				recipe = MachineRecipeRegistry.requireRecipesFor("metalFormer" + mode);
-				for (let key in recipe) {
-					input = key.split(":");
+			const dictionaryData = [
+				{mode: 0, key: "metalRolling"},
+				{mode: 1, key: "metalCutting"},
+				{mode: 2, key: "metalExtruding"}
+			];
+			for (let i = 0; i < dictionaryData.length; i++) {
+				const modeData = dictionaryData[i];
+				const dictionary: RecipeDictionary<Machine.ProcessingRecipe> = MachineRecipeRegistry.getDictionary(modeData.key);
+				if (!dictionary) {
+					continue;
+				}
+				const recipes = dictionary.getAll();
+				for (let j = 0; j < recipes.length; j++) {
+					const recipe = recipes[j];
 					list.push({
-						input: [{id: +input[0], count: recipe[key].sourceCount || 1, data: +input[1] || 0}],
-						output: [{id: recipe[key].id, count: recipe[key].count || 0, data: recipe[key].data || 0}],
-						mode: mode
+						input: [{id: recipe.source.id, count: recipe.source.count, data: recipe.source.data}],
+						output: [{id: recipe.result.id, count: recipe.result.count, data: recipe.result.data}],
+						mode: modeData.mode
 					});
 				}
 			}
@@ -249,13 +260,13 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: DataMap<number[]> = MachineRecipeRegistry.requireRecipesFor("oreWasher");
-			let input: string[];
-			for (let key in recipe) {
-				input = key.split(":");
+			const dictionary: RecipeDictionary<Machine.OreWashingRecipe> = MachineRecipeRegistry.getDictionary("oreWasher");
+			const recipes = dictionary.getAll();
+			for (let i = 0; i < recipes.length; i++) {
+				const recipe = recipes[i];
 				list.push({
-					input: [{id: +input[0], count: 1, data: +input[1] || 0}],
-					output: numArray2Output(recipe[key]),
+					input: [{id: recipe.source.id, count: recipe.source.count || 1, data: recipe.source.data || 0}],
+					output: recipe.result.map(item => ({id: recipe.source.id, count: recipe.source.count, data: recipe.source.data || 0})),
 					inputLiq: [{liquid: "water", amount: 1000}]
 				});
 			}
@@ -289,14 +300,14 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: DataMap<Machine.ThermalCentrifugeRecipe> = MachineRecipeRegistry.requireRecipesFor("thermalCentrifuge");
-			let input: string[];
-			for (let key in recipe) {
-				input = key.split(":");
+			const dictionary: RecipeDictionary<Machine.ThermalCentrifugeRecipe> = MachineRecipeRegistry.getDictionary("thermalCentrifuge");
+			const recipes = dictionary.getAll();
+			for (let i = 0; i < recipes.length; i++) {
+				const recipe = recipes[i];
 				list.push({
-					input: [{id: +input[0], count: 1, data: +input[1] || 0}],
-					output: numArray2Output(recipe[key].result),
-					heat: recipe[key].heat
+					input: [{id: recipe.source.id, count: recipe.source.count || 1, data: recipe.source.data || 0}],
+					output: recipe.result.map(item => ({id: recipe.source.id, count: recipe.source.count, data: recipe.source.data || 0})),
+					heat: recipe.heat
 				});
 			}
 			return list;
@@ -336,33 +347,36 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 				case 3:
 					return {id: ItemID.cuttingBladeDiamond, count: 1, data: 0};
 				default:
-					return {id: 0, count: 0, data: 0};
+					return null;
 			}
 		}
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipes: DataMap<Machine.CuttingRecipe> = MachineRecipeRegistry.requireRecipesFor("cuttingMachine");
-			const recipeEntries = Object.entries(recipes).sort(([key1, recipe1], [key2, recipe2]) =>
-				recipe1.hardnessLevel != recipe2.hardnessLevel ? recipe1.hardnessLevel - recipe2.hardnessLevel : 
+			const dictionary: RecipeDictionary<Machine.CuttingRecipe> = MachineRecipeRegistry.getDictionary("cuttingMachine");
+			if (!dictionary) {
+				return list;
+			}
+			const recipes = dictionary.getAll().sort((recipe1, recipe2) =>
+				recipe1.hardnessLevel != recipe2.hardnessLevel ? recipe1.hardnessLevel - recipe2.hardnessLevel :
 				recipe1.result.id != recipe2.result.id ? recipe1.result.id - recipe2.result.id :
-				key1.localeCompare(key2));
-			let input: string[];
+				recipe1.source.id != recipe2.source.id ? recipe1.source.id - recipe2.source.id :
+				recipe1.source.data - recipe2.source.data
+			);
 			let blade: ItemInstance;
-			for (let [key, recipe] of recipeEntries) {
-				input = key.split(":");
+			for (let recipe of recipes) {
 				blade = this.getBladeByHardness(recipe.hardnessLevel);
-				if (blade.id == 0) {
+				if (!blade) {
 					continue;
 				}
 				list.push({
 					input: [
-						{id: +input[0], count: recipe.sourceCount || 1, data: +input[1] || 0},
+						{id: recipe.source.id, count: recipe.source.count, data: recipe.source.data},
 						blade
 					],
 					output: [{
 						id: recipe.result.id,
-						count: recipe.result.count || 0,
+						count: recipe.result.count,
 						data: recipe.result.data || 0
 					}]
 				});

@@ -60,20 +60,19 @@ namespace Machine {
 		}
 
 		getRecipe(item: ItemInstance) {
-			return item.id != 0 ? { source: item, result: { id: ItemID.scrap, data: 0 }} : null;
+			if (item.id == 0) return null
+
+			const isBlackListed = recyclerBlacklist.indexOf(item.id) != -1;
+			return {
+				source: item,
+				result: {id: ItemID.scrap, data: 0, chance: isBlackListed ? 0 : 0.125}
+			};
 		}
 
 		isValidSource(id: number, data: number): boolean {
 			return true;
 		}
-
-		modifyResult(sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot, recipeResult: MachineRecipeRegistry.ItemResult): ItemInstance {
-			if (Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1) {
-				return new ItemStack(recipeResult.id, recipeResult.count, recipeResult.data);
-			}
-			return null;
-		}
-
+		
 		getOperationSound(): string {
 			return "RecyclerOp.ogg";
 		}

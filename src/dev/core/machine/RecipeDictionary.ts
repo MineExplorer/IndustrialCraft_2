@@ -68,11 +68,7 @@ class ProcessingRecipeDictionary<T extends ProcessingRecipeBase> extends RecipeD
 	}
 
 	getRecipe(sourceId: number, sourceData: number): Nullable<T> {
-		const recipe = this.getRecipeBySource(sourceId, sourceData);
-		if (recipe) {
-			return recipe;
-		}
-		return null;
+		return this.getRecipeBySource(sourceId, sourceData) || this.getRecipeBySource(sourceId, -1);
 	}
 
 	removeRecipe(sourceId: number, sourceData: number): boolean {
@@ -81,7 +77,7 @@ class ProcessingRecipeDictionary<T extends ProcessingRecipeBase> extends RecipeD
 	}
 
 	protected getRecipeBySource(sourceId: number, sourceData: number): T {
-		return this.recipes[this.getLookupKey(sourceId, sourceData)] || this.recipes[this.getLookupKey(sourceId, -1)];
+		return this.recipes[this.getLookupKey(sourceId, sourceData)];
 	}
 
 	protected getRecipeKey(recipe: T): string {

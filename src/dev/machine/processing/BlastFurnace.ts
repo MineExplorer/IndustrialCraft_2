@@ -20,7 +20,7 @@ Callback.addCallback("PreLoaded", function() {
 		"minecraft:iron_ingot": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"item:dustIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"item:crushedPurifiedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
-		"item:crushedIron": {result: [ItemID.ingotSteel, 1], duration: 6000}
+		"item:crushedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000}
 	}, true);
 });
 

@@ -49,7 +49,10 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export type ThermalCentrifugeRecipe = MultiResultProcessingRecipe & {
+	export type ThermalCentrifugeRecipe = {
+		source: {id: number, count?: number, data?: number}
+		result: [ProcessingRecipeResult, ProcessingRecipeResult?, ProcessingRecipeResult?],
+		processTime?: number
 		heat: number
 	}
 

@@ -34,7 +34,11 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export type OreWashingRecipe = MultiResultProcessingRecipe;
+	export type OreWashingRecipe = {
+		source: {id: number, count?: number, data?: number}
+		result: [ProcessingRecipeResult, ProcessingRecipeResult?, ProcessingRecipeResult?],
+		processTime?: number
+	};
 
 	const guiOreWasher = MachineRegistry.createInventoryWindow("Ore Washing Plant", {
 		drawing: [

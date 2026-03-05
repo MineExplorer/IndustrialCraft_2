@@ -47,13 +47,6 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export type ThermalCentrifugeRecipe = {
-		source: {id: number, count?: number, data?: number}
-		result: [ProcessingRecipeResult, ProcessingRecipeResult?, ProcessingRecipeResult?],
-		processTime?: number
-		heat: number
-	}
-
 	const guiCentrifuge = MachineRegistry.createInventoryWindow("Thermal Centrifuge", {
 		drawing: [
 			{type: "bitmap", x: 400 + 36*GUI_SCALE_NEW, y: 50 + 15*GUI_SCALE_NEW, bitmap: "thermal_centrifuge_background", scale: GUI_SCALE_NEW},
@@ -81,6 +74,19 @@ namespace Machine {
 		}
 	});
 
+	export type ThermalCentrifugeRecipe = {
+		source: {id: number, count?: number, data?: number}
+		result: [ProcessingRecipeResult, ProcessingRecipeResult?, ProcessingRecipeResult?],
+		processTime?: number
+		heat: number
+	}
+
+	export class ThermalCentrifugeRecipeDictionary extends ProcessingRecipeDictionary<ThermalCentrifugeRecipe> {
+		constructor() {
+			super(500);
+		}
+	}
+
 	export class ThermalCentrifuge extends MultiResultProcessingMachine {
 		defaultValues = {
 			energy: 0,
@@ -104,7 +110,7 @@ namespace Machine {
 			return guiCentrifuge;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary<ThermalCentrifugeRecipe> {
+		getRecipeDictionary(): ThermalCentrifugeRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("thermalCentrifuge");
 		}
 
@@ -197,7 +203,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, new ThermalCentrifuge());
 	
-	MachineRecipeRegistry.registerDictionary<ThermalCentrifugeRecipe>("thermalCentrifuge", new ProcessingRecipeDictionary(500));
+	MachineRecipeRegistry.registerDictionary("thermalCentrifuge", new ThermalCentrifugeRecipeDictionary());
 
 	StorageInterface.createInterface(BlockID.thermalCentrifuge, {
 		slots: {

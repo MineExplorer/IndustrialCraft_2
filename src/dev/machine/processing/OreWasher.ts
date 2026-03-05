@@ -32,12 +32,6 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export type OreWashingRecipe = {
-		source: {id: number, count?: number, data?: number}
-		result: [ProcessingRecipeResult, ProcessingRecipeResult?, ProcessingRecipeResult?],
-		processTime?: number
-	};
-
 	const guiOreWasher = MachineRegistry.createInventoryWindow("Ore Washing Plant", {
 		drawing: [
 			{type: "bitmap", x: 400, y: 50, bitmap: "ore_washer_background", scale: GUI_SCALE_NEW},
@@ -66,6 +60,18 @@ namespace Machine {
 		}
 	});
 
+	export type OreWashingRecipe = {
+		source: {id: number, count?: number, data?: number}
+		result: [ProcessingRecipeResult, ProcessingRecipeResult?, ProcessingRecipeResult?],
+		processTime?: number
+	};
+
+	export class OreWasherRecipeDictionary extends ProcessingRecipeDictionary<OreWashingRecipe> {
+		constructor() {
+			super(200);
+		}
+	}
+
 	export class OreWasher extends MultiResultProcessingMachine {
 		liquidTank: BlockEngine.LiquidTank;
 
@@ -78,7 +84,7 @@ namespace Machine {
 			return guiOreWasher;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary<OreWashingRecipe> {
+		getRecipeDictionary(): OreWasherRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("oreWasher");
 		}
 
@@ -157,7 +163,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.oreWasher, new OreWasher());
 
-	MachineRecipeRegistry.registerDictionary<OreWashingRecipe>("oreWasher", new ProcessingRecipeDictionary(200));
+	MachineRecipeRegistry.registerDictionary("oreWasher", new OreWasherRecipeDictionary());
 
 	MachineRegistry.createFluidStorageInterface(BlockID.oreWasher, {
 		slots: {

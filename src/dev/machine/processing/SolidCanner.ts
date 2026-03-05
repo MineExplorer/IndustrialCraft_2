@@ -64,6 +64,12 @@ namespace Machine {
 		result: ItemInstance
 	}
 
+	export class SolidCannerRecipeDictionary extends ProcessingRecipeDictionary<SolidCannerRecipe> {
+		constructor() {
+			super(200);
+		}
+	}
+
 	const guiSolidCanner = MachineRegistry.createInventoryWindow("Solid Canning Machine", {
 		drawing: [
 			{type: "bitmap", x: 400 + 52*GUI_SCALE, y: 50 + 33*GUI_SCALE, bitmap: "solid_canner_arrow", scale: GUI_SCALE},
@@ -99,7 +105,7 @@ namespace Machine {
 			return guiSolidCanner;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary<SolidCannerRecipe> {
+		getRecipeDictionary(): SolidCannerRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("solidCanner");
 		}
 
@@ -150,7 +156,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.solidCanner, new SolidCanner());
 
-	MachineRecipeRegistry.registerDictionary("solidCanner", new ProcessingRecipeDictionary<Machine.SolidCannerRecipe>(200));
+	MachineRecipeRegistry.registerDictionary("solidCanner", new SolidCannerRecipeDictionary());
 
 	StorageInterface.createInterface(BlockID.solidCanner, {
 		slots: {

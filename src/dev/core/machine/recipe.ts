@@ -17,6 +17,24 @@ namespace MachineRecipeRegistry {
 		return dictionaries[name];
 	}
 
+	export function addRecipe<T>(name: string, recipe: T): void {
+		const dictionary = getDictionary<IRecipeDictionary<T>>(name);
+		if (!dictionary) {
+			Logger.Log(`Recipe dictionary "${name}" not found, skipped adding recipe"`, "ERROR");
+			return;
+		}
+		dictionary.register(recipe);
+	}
+
+	export function registerRecipes<T>(name: string, recipes: T[]) {
+		const dictionary = getDictionary<IRecipeDictionary<T>>(name);
+		if (!dictionary) {
+			Logger.Log(`Recipe dictionary "${name}" not found, skipped adding ${recipes.length} recipes"`, "ERROR");
+			return;
+		}
+		dictionary.registerList(recipes);
+	}
+
 	/** @deprecated */
 	export function registerRecipesFor<T>(name: string, data: T, parseKeys?: boolean): void {
 		if (!parseKeys) {
@@ -58,6 +76,7 @@ namespace MachineRecipeRegistry {
 		recipeData[name] = newData;
 	}
 
+	/** @deprecated */
 	export function addRecipeFor(name: string, input: any, result: any): void {
 		const recipes = requireRecipesFor(name, true);
 		if (Array.isArray(recipes)) {
@@ -68,6 +87,7 @@ namespace MachineRecipeRegistry {
 		}
 	}
 
+	/** @deprecated */
 	export function requireRecipesFor(name: string, createIfNotFound?: boolean): any {
 		if (!recipeData[name] && createIfNotFound) {
 			recipeData[name] = {};
@@ -75,31 +95,7 @@ namespace MachineRecipeRegistry {
 		return recipeData[name];
 	}
 
-	export function addRecipe<T>(name: string, recipe: T): void {
-		const dictionary = getDictionary<IRecipeDictionary<T>>(name);
-		if (!dictionary) {
-			Logger.Log(`Recipe dictionary "${name}" not found, skipped adding recipe"`, "ERROR");
-			return;
-		}
-		dictionary.register(recipe);
-	}
-
-	export function registerRecipes<T>(name: string, recipes: T[]) {
-		const dictionary = getDictionary<IRecipeDictionary<T>>(name);
-		if (!dictionary) {
-			Logger.Log(`Recipe dictionary "${name}" not found, skipped adding recipe"`, "ERROR");
-			return;
-		}
-		dictionary.registerList(recipes);
-	}
-
-	/*export function getRecipe<T>(dictionaryName: string, input1: any, input2?: any): T {
-		const dictionary = getDictionary<T>(dictionaryName);
-		if (dictionary) {
-			return dictionary.getRecipe(input1, input2);
-		}
-	}*/
-
+	/** @deprecated */
 	export function getRecipeResult<T>(name: string, key1: string | number, key2?: string | number): T {
 		const data = requireRecipesFor(name);
 		if (data && key1) {
@@ -108,6 +104,7 @@ namespace MachineRecipeRegistry {
 		return null;
 	}
 
+	/** @deprecated */
 	export function hasRecipeFor(name: string, key1: any, key2?: any): boolean {
 		return getRecipeResult(name, key1, key2);
 	}

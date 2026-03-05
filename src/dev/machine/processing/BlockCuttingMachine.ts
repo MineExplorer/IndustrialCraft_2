@@ -77,12 +77,6 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	export type CuttingRecipe = {
-		source: {id: number, count?: number, data?: number}
-		result: {id: number, count: number, data?: number},
-		hardnessLevel: number
-	}
-
 	const guiBlockCutter = MachineRegistry.createInventoryWindow("Block Cutting Machine", {
 		drawing: [
 			{type: "bitmap", x: 530, y: 148, bitmap: "icpe.cutting_machine_bar_background", scale: GUI_SCALE},
@@ -109,6 +103,18 @@ namespace Machine {
 		}
 	});
 
+	export type CuttingRecipe = {
+		source: {id: number, count?: number, data?: number}
+		result: {id: number, count: number, data?: number},
+		hardnessLevel: number
+	}
+
+	export class BlockCutterRecipeDictionary extends ProcessingRecipeDictionary<CuttingRecipe> {
+		constructor() {
+			super(450);
+		}
+	}
+
 	export class BlockCutter extends BasicProcessingMachine {
 		defaultTier = 2;
 		defaultEnergyDemand = 8;
@@ -121,7 +127,7 @@ namespace Machine {
 			return guiBlockCutter;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary<CuttingRecipe> {
+		getRecipeDictionary(): BlockCutterRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("cuttingMachine");
 		}
 
@@ -210,7 +216,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.blockCuttingMachine, new BlockCutter());
 
-	MachineRecipeRegistry.registerDictionary<CuttingRecipe>("cuttingMachine", new ProcessingRecipeDictionary(450));
+	MachineRecipeRegistry.registerDictionary("cuttingMachine", new BlockCutterRecipeDictionary());
 
 	StorageInterface.createInterface(BlockID.blockCuttingMachine, {
 		slots: {

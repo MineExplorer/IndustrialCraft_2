@@ -25,20 +25,6 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-
-	enum CannerMode {
-		SolidCanning,
-		EmptyItem,
-		FillItem,
-		FluidCanning
-	}
-
-	export type FluidCannerRecipe = {
-		source: {id: number, count?: number, data?: number}
-		inputFluid: {name: string, amount: number}
-		outputFluid: {name: string, amount: number}
-	};
-
 	const guiCanner = MachineRegistry.createInventoryWindow("Fluid/Solid Canning Machine", {
 		drawing: [
 			{type: "bitmap", x: 406, y: 50 + 58*GUI_SCALE_NEW, bitmap: "energy_small_background", scale: GUI_SCALE_NEW},
@@ -78,6 +64,23 @@ namespace Machine {
 		}
 	});
 
+	enum CannerMode {
+		SolidCanning,
+		EmptyItem,
+		FillItem,
+		FluidCanning
+	}
+
+	export type FluidCannerRecipe = {
+		source: {id: number, count?: number, data?: number}
+		inputFluid: {name: string, amount: number}
+		outputFluid: {name: string, amount: number}
+	};
+
+	export class FluidCannerRecipeDictionary extends FluidItemMixingRecipeDictionary<FluidCannerRecipe> {
+
+	}
+
 	export class Canner extends ProcessingMachine {
 		inputTank: BlockEngine.LiquidTank;
 		outputTank: BlockEngine.LiquidTank;
@@ -97,11 +100,11 @@ namespace Machine {
 			return guiCanner;
 		}
 
-		getSolidRecipeDictionary(): ProcessingRecipeDictionary<SolidCannerRecipe> {
+		getSolidRecipeDictionary(): SolidCannerRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("solidCanner");
 		}
 
-		getFluidRecipeDictionary(): FluidItemMixingRecipeDictionary<FluidCannerRecipe> {
+		getFluidRecipeDictionary(): FluidCannerRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("fluidCanner");
 		}
 
@@ -331,7 +334,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.canner, new Canner());
 
-	MachineRecipeRegistry.registerDictionary<FluidCannerRecipe>("fluidCanner", new FluidItemMixingRecipeDictionary());
+	MachineRecipeRegistry.registerDictionary("fluidCanner", new FluidCannerRecipeDictionary());
 
 	MachineRegistry.createFluidStorageInterface(BlockID.canner, {
 		slots: {

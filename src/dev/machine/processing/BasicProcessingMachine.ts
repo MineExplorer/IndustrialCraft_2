@@ -67,7 +67,7 @@ namespace Machine {
 			const outputSlots = this.getOutputSlots();
 			for (let i = 0; i < Math.min(result.length, outputSlots.length); i++) {
 				const entry = result[i];
-				if (entry.chance != null && Math.random() < entry.chance) {
+				if (entry.chance != null && Math.random() >= entry.chance) {
 					continue;
 				}
 				const resultSlot = this.container.getSlot(outputSlots[i]);

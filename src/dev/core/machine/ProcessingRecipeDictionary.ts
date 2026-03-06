@@ -15,12 +15,12 @@ type ProcessingRecipeOutput = {
 }
 
 type ProcessingRecipeBase = {
-	source?: ProcessingRecipeInput,
+	source: ProcessingRecipeInput,
 	processTime?: number
 }
 
 type ItemProcessingRecipe = ProcessingRecipeBase & {
-	result: ProcessingRecipeOutput[],
+	result: ProcessingRecipeOutput[]
 }
 
 interface IProcessingRecipeDictionary<T> extends IRecipeDictionary<T> {
@@ -35,10 +35,6 @@ implements IProcessingRecipeDictionary<T> {
 	}
 
 	register(recipe: T): void {
-		if (!recipe.source) {
-			throw new Error("Recipe source is required");
-		}
-
         recipe.source.data ??= -1;
         recipe.source.count ??= 1;
         recipe.processTime ??= this.defaultProccessTime;

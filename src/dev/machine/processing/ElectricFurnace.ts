@@ -55,7 +55,7 @@ namespace Machine {
 
 		getRecipe(id: number, data: number): Nullable<ItemProcessingRecipe> {
 			const result = Recipes.getFurnaceRecipeResult(id, data, "iron");
-			return result && { result: [result] };
+			return result && { source: null, result: [result] };
 		}
 
 		isValidSource(id: number, data: number): boolean {

@@ -64,7 +64,7 @@ namespace Machine {
 
 			const isBlackListed = recyclerBlacklist.indexOf(id) != -1;
 			const resultItem = {id: ItemID.scrap, count: 1, chance: isBlackListed ? 0 : 0.125};
-			return { result: [resultItem] };
+			return { source: null, result: [resultItem] };
 		}
 
 		isValidSource(id: number, data: number): boolean {

@@ -36,12 +36,13 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: RecipeDictionary<Machine.ProcessingRecipe> = MachineRecipeRegistry.getDictionary(this.recipeKey);
+			const dictionary: RecipeDictionary<ProcessingRecipe> = MachineRecipeRegistry.getDictionary(this.recipeKey);
 			const recipes = dictionary.getAll();
 			recipes.forEach(recipe => {
+				const resultEntry = recipe.result[0];
 				list.push({
 					input: [{id: recipe.source.id, count: recipe.source.count, data: recipe.source.data}],
-					output: [{id: recipe.result.id, count: recipe.result.count, data: recipe.result.data}]
+					output: [{id: resultEntry.id, count: resultEntry.count, data: resultEntry.data || 0}]
 				});
 			});
 			return list;
@@ -199,19 +200,18 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 			];
 			for (let i = 0; i < dictionaryData.length; i++) {
 				const modeData = dictionaryData[i];
-				const dictionary: RecipeDictionary<Machine.ProcessingRecipe> = MachineRecipeRegistry.getDictionary(modeData.key);
+				const dictionary: RecipeDictionary<ProcessingRecipe> = MachineRecipeRegistry.getDictionary(modeData.key);
 				if (!dictionary) {
 					continue;
 				}
 				const recipes = dictionary.getAll();
-				for (let j = 0; j < recipes.length; j++) {
-					const recipe = recipes[j];
+				recipes.forEach(recipe => {
+					const resultEntry = recipe.result[0];
 					list.push({
 						input: [{id: recipe.source.id, count: recipe.source.count, data: recipe.source.data}],
-						output: [{id: recipe.result.id, count: recipe.result.count, data: recipe.result.data}],
-						mode: modeData.mode
+						output: [{id: resultEntry.id, count: resultEntry.count, data: resultEntry.data || 0}]
 					});
-				}
+				});
 			}
 			return list;
 		}

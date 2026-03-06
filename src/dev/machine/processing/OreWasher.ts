@@ -1,4 +1,4 @@
-/// <reference path="./MultiResultProcessingMachine.ts" />
+/// <reference path="./BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("oreWasher", [
 	{name: "Ore Washing Plant", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], inCreative: true}
@@ -61,8 +61,8 @@ namespace Machine {
 	});
 
 	export type OreWashingRecipe = {
-		source: {id: number, count?: number, data?: number}
-		result: [ProcessingRecipeResult, ProcessingRecipeResult?, ProcessingRecipeResult?],
+		source: ProcessingRecipeInput,
+		result: [ProcessingRecipeOutput, ProcessingRecipeOutput?, ProcessingRecipeOutput?],
 		processTime?: number
 	};
 
@@ -72,7 +72,7 @@ namespace Machine {
 		}
 	}
 
-	export class OreWasher extends MultiResultProcessingMachine {
+	export class OreWasher extends BasicProcessingMachine {
 		liquidTank: BlockEngine.LiquidTank;
 
 		defaultEnergyStorage = 10000;
@@ -88,8 +88,8 @@ namespace Machine {
 			return MachineRecipeRegistry.getDictionary("oreWasher");
 		}
 
-		getResultSlotsCount(): number {
-			return 3;
+		getOutputSlots(): string[] {
+			return ["slotResult1", "slotResult2", "slotResult3"];
 		}
 
 		isValidSource(id: number, data: number): boolean {
@@ -131,15 +131,13 @@ namespace Machine {
 			const sourceSlot = this.container.getSlot("slotSource");
 			const dictionary = this.getRecipeDictionary();
 			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
-			const resultSize = this.getResultSlotsCount();
-			if (recipe && this.data.energy >= this.energyDemand && this.liquidTank.getAmount("water") >= 1000 && this.canPutResult(recipe.result, resultSize)) {
+			if (recipe && this.data.energy >= this.energyDemand && this.liquidTank.getAmount("water") >= 1000 && this.canPutResult(recipe.result)) {
 				this.data.energy -= this.energyDemand;
 				this.updateProgress(recipe.processTime);
 				if (this.isCompletedProgress()) {
 					this.decreaseSlot(sourceSlot, 1);
 					this.liquidTank.getLiquid(1000);
-					const result = this.modifyResult(recipe, resultSize);
-					this.putResult(result, resultSize);
+					this.putResult(recipe.result);
 					this.data.progress = 0;
 				}
 				return true;

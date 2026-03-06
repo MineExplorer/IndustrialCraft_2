@@ -104,8 +104,8 @@ namespace Machine {
 	});
 
 	export type CuttingRecipe = {
-		source: {id: number, count?: number, data?: number}
-		result: {id: number, count: number, data?: number},
+		source: ProcessingRecipeInput,
+		result: ProcessingRecipeOutput,
 		hardnessLevel: number
 	}
 
@@ -172,7 +172,7 @@ namespace Machine {
 			const bladeLevel = this.getBladeLevel(bladeSlot.id);
 
 			if (recipe && sourceSlot.count >= recipe.source.count && bladeLevel >= recipe.hardnessLevel) {
-				if (this.data.energy >= this.energyDemand && this.canPutResult(recipe.result)) {
+				if (this.data.energy >= this.energyDemand && this.canPutResult([recipe.result])) {
 					this.data.energy -= this.energyDemand;
 					// apply 50% speed increase for each hardness level exceeding required
 					const processTime = this.defaultProcessTime / (1 + (bladeLevel - recipe.hardnessLevel) * 0.5);
@@ -180,8 +180,7 @@ namespace Machine {
 					newActive = true;
 					if (this.isCompletedProgress()) {
 						this.decreaseSlot(sourceSlot, recipe.source.count);
-						const resultSlot = this.container.getSlot("slotResult");
-						resultSlot.setSlot(recipe.result.id, resultSlot.count + recipe.result.count, recipe.result.data || 0);
+						this.putResult([recipe.result]);
 						this.data.progress = 0;
 					}
 				}

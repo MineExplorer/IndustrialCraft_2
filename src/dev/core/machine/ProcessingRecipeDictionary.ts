@@ -1,8 +1,28 @@
 /// <reference path="./RecipeDictionary.ts" />
 
-interface ProcessingRecipeBase {
-	source: { id: number, count?: number, data?: number}
-    processTime?: number
+type ProcessingRecipeInput = {
+	id: number,
+	count?: number,
+	data?: number
+}
+
+type ProcessingRecipeOutput = {
+	id: number,
+	count: number,
+	data?: number,
+	extra?: ItemExtraData,
+	chance?: number
+}
+
+type ProcessingRecipeBase = {
+	source: ProcessingRecipeInput
+	processTime?: number
+}
+
+type ProcessingRecipe = {
+	source: ProcessingRecipeInput
+	result: ProcessingRecipeOutput[],
+	processTime?: number
 }
 
 class ProcessingRecipeDictionary<T extends ProcessingRecipeBase> extends RecipeDictionary<T> {

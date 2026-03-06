@@ -1,4 +1,4 @@
-/// <reference path="./MultiResultProcessingMachine.ts" />
+/// <reference path="./BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("thermalCentrifuge", [
 	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
@@ -75,9 +75,9 @@ namespace Machine {
 	});
 
 	export type ThermalCentrifugeRecipe = {
-		source: {id: number, count?: number, data?: number}
-		result: [ProcessingRecipeResult, ProcessingRecipeResult?, ProcessingRecipeResult?],
-		processTime?: number
+		source: ProcessingRecipeInput,
+		result: [ProcessingRecipeOutput, ProcessingRecipeOutput?, ProcessingRecipeOutput?],
+		processTime?: number,
 		heat: number
 	}
 
@@ -87,7 +87,7 @@ namespace Machine {
 		}
 	}
 
-	export class ThermalCentrifuge extends MultiResultProcessingMachine {
+	export class ThermalCentrifuge extends BasicProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			progress: 0,
@@ -114,8 +114,8 @@ namespace Machine {
 			return MachineRecipeRegistry.getDictionary("thermalCentrifuge");
 		}
 
-		getResultSlotsCount(): number {
-			return 3;
+		getOutputSlots(): string[] {
+			return ["slotResult1", "slotResult2", "slotResult3"];
 		}
 
 		useUpgrades(isInit: boolean): UpgradeAPI.UpgradeSet {
@@ -165,8 +165,7 @@ namespace Machine {
 
 			this.data.maxHeat = recipe.heat;
 
-			const resultSize = this.getResultSlotsCount();
-			if (this.data.energy >= this.heatingEnergyDemand && this.canPutResult(recipe.result, resultSize)) {
+			if (this.data.energy >= this.heatingEnergyDemand && this.canPutResult(recipe.result)) {
 				if (this.data.heat < recipe.heat) {
 					this.data.energy -= this.heatingEnergyDemand;
 					this.data.heat++;
@@ -177,8 +176,7 @@ namespace Machine {
 					this.updateProgress(recipe.processTime);
 					if (this.isCompletedProgress()) {
 						this.decreaseSlot(sourceSlot, 1);
-						const result = this.modifyResult(recipe, resultSize);
-						this.putResult(result, resultSize);
+						this.putResult(recipe.result);
 						this.data.progress = 0;
 					}
 					return true;

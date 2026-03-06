@@ -131,20 +131,18 @@ namespace Machine {
 
 			const dictionary = this.getRecipeDictionary();
 			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
-			if (recipe) {
-				const result = recipe.result;
-				if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == 0 || resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count)) {
-					if (this.data.energy >= this.energyDemand) {
-						this.data.energy -= this.energyDemand;
-						this.updateProgress();
-						newActive = true;
-					}
-					if (this.isCompletedProgress()) {
-						this.decreaseSlot(sourceSlot, 1);
-						this.decreaseSlot(canSlot, result.count);
-						resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);
-						this.data.progress = 0;
-					}
+			if (recipe && canSlot.id == recipe.can && canSlot.count >= recipe.result.count &&
+				(resultSlot.id == 0 || resultSlot.id == recipe.result.id && resultSlot.data == recipe.result.data && resultSlot.count <= 64 - recipe.result.count)) {
+				if (this.data.energy >= this.energyDemand) {
+					this.data.energy -= this.energyDemand;
+					this.updateProgress();
+					newActive = true;
+				}
+				if (this.isCompletedProgress()) {
+					this.decreaseSlot(sourceSlot, 1);
+					this.decreaseSlot(canSlot, recipe.result.count);
+					resultSlot.setSlot(recipe.result.id, resultSlot.count + recipe.result.count, recipe.result.data);
+					this.data.progress = 0;
 				}
 			}
 			else {

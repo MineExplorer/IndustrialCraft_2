@@ -17,7 +17,14 @@ namespace MachineRecipeRegistry {
 		return dictionaries[name];
 	}
 
-	export function addRecipe<T>(name: string, recipe: T): void {
+	export function addProcessingRecipe(name: string, input: ProcessingRecipeInput, output: ProcessingRecipeOutput | ProcessingRecipeOutput[], recipeProps: any = {}): void {
+		if (!Array.isArray(output)) {
+			output = [output];
+		}
+		registerRecipe<ProcessingRecipe>(name, { source: input, result: output, ...recipeProps });
+	}
+
+	export function registerRecipe<T>(name: string, recipe: T): void {
 		const dictionary = getDictionary<IRecipeDictionary<T>>(name);
 		if (!dictionary) {
 			Logger.Log(`Recipe dictionary "${name}" not found, skipped adding recipe"`, "ERROR");

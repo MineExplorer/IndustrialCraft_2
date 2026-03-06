@@ -55,7 +55,10 @@ namespace Machine {
 
 		getRecipe(id: number, data: number): ProcessingRecipe {
 			const result = Recipes.getFurnaceRecipeResult(id, data, "iron");
-			return result && { source: {id: id, count: 1, data: data}, result: result };
+			return result && {
+				source: {id: id, count: 1, data: data},
+				result: [result]
+			};
 		}
 
 		isValidSource(id: number, data: number): boolean {

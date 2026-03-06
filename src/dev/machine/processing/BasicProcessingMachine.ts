@@ -1,27 +1,13 @@
 /// <reference path="./ProcessingMachine.ts" />
 
 namespace Machine {
-	export type ProcessingRecipeResult = {
-		id: number,
-		count: number,
-		data?: number,
-		extra?: ItemExtraData,
-		chance?: number
-	}
-
-	export type ProcessingRecipe = {
-		source: {id: number, count?: number, data?: number}
-		result: ProcessingRecipeResult,
-		processTime?: number
-	}
-
 	export abstract class BasicProcessingMachine
 	extends ProcessingMachine {
-		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipe> {
+		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipeBase> {
 			return null;
 		}
 
-		getRecipe(id: number, data: number): ProcessingRecipe {
+		getRecipe(id: number, data: number): ProcessingRecipeBase {
 			const dictionary = this.getRecipeDictionary();
 			return dictionary.getRecipe(id, data);
 		}
@@ -30,12 +16,16 @@ namespace Machine {
 			return !!this.getRecipe(id, data);
 		}
 
+		getOutputSlots(): string[] {
+			return ["slotResult"];
+		}
+
 		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipe(sourceSlot.id, sourceSlot.data);
+			const recipe = this.getRecipe(sourceSlot.id, sourceSlot.data) as ProcessingRecipe;
 
-			if (recipe && (!recipe.source || recipe.source.count <= sourceSlot.count)) {
+			if (recipe && recipe.source.count <= sourceSlot.count) {
 				if (this.canPutResult(recipe.result)) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
@@ -43,11 +33,8 @@ namespace Machine {
 						newActive = true;
 					}
 					if (newActive && this.isCompletedProgress()) {
-						this.decreaseSlot(sourceSlot, recipe.source?.count || 1);
-						const itemResult = this.modifyResult(recipe.result);
-						if (itemResult) {
-							this.putResult(itemResult);
-						}
+						this.decreaseSlot(sourceSlot, recipe.source.count);
+						this.putResult(recipe.result);
 						this.data.progress = 0;
 					}
 				}
@@ -63,25 +50,29 @@ namespace Machine {
 			return newActive;
 		}
 
-		canPutResult(result: ProcessingRecipeResult): boolean {
-			const resultSlot = this.container.getSlot("slotResult");
-			const itemData = result.data || 0;
-			if (resultSlot.id != 0 && (resultSlot.id != result.id || resultSlot.data != itemData || resultSlot.count + result.count > 64)) {
-				return false;
+		canPutResult(result: ProcessingRecipeOutput[]): boolean {
+			const outputSlots = this.getOutputSlots();
+			for (let i = 0; i < Math.min(result.length, outputSlots.length); i++) {
+				const item = result[i];
+				const itemData = item.data || 0;
+				const resultSlot = this.container.getSlot(outputSlots[i]);
+				if (resultSlot.id != 0 && (resultSlot.id != item.id || resultSlot.data != itemData || resultSlot.count + item.count > 64)) {
+					return false;
+				}
 			}
 			return true;
 		}
 
-		modifyResult(recipeResult: ProcessingRecipeResult): ItemInstance {
-			if (recipeResult.chance == null || Math.random() < recipeResult.chance) {
-				return new ItemStack(recipeResult.id, recipeResult.count, recipeResult.data, recipeResult.extra);
+		putResult(result: ProcessingRecipeOutput[]): void {
+			const outputSlots = this.getOutputSlots();
+			for (let i = 0; i < Math.min(result.length, outputSlots.length); i++) {
+				const entry = result[i];
+				if (entry.chance != null && Math.random() < entry.chance) {
+					continue;
+				}
+				const resultSlot = this.container.getSlot(outputSlots[i]);
+				resultSlot.setSlot(entry.id, resultSlot.count + entry.count, entry.data || 0, entry.extra || null);
 			}
-			return null;
-		}
-
-		putResult(result: ItemInstance): void {
-			const resultSlot = this.container.getSlot("slotResult");
-			resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);
 		}
 	}
 }

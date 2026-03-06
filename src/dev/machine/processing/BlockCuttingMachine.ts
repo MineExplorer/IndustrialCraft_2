@@ -10,7 +10,7 @@ TileRenderer.registerModelWithRotation(BlockID.blockCuttingMachine, 2, [["block_
 TileRenderer.setRotationFunction(BlockID.blockCuttingMachine);
 
 ItemName.addTierTooltip("blockCuttingMachine", 2);
-ItemName.addConsumptionTooltip("blockCuttingMachine", "EU", 8);
+ItemName.addConsumptionTooltip("blockCuttingMachine", "EU", 12);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.blockCuttingMachine, count: 1, data: 0}, [
@@ -117,7 +117,7 @@ namespace Machine {
 
 	export class BlockCutter extends ProcessingMachine {
 		defaultTier = 2;
-		defaultEnergyDemand = 8;
+		defaultEnergyDemand = 12;
 		defaultEnergyStorage = 3600;
 		defaultProcessTime = 450;
 		speedModifier = 1;

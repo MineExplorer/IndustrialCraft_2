@@ -30,7 +30,7 @@ namespace OreGenerator {
 		maxHeight: IC2Config.getInt("uranium_ore.maxHeight")
 	}
 	export let iridium = {
-		chance: IC2Config.getInt("iridium_ore.chance"),
+		chance: IC2Config.getFloat("iridium_ore.chance"),
 		minHeight: IC2Config.getInt("iridium_ore.minHeight"),
 		maxHeight: IC2Config.getInt("iridium_ore.maxHeight")
 	}

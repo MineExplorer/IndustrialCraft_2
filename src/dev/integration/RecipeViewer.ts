@@ -407,7 +407,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: DataMap<Machine.BlastFurnaceRecipe> = MachineRecipeRegistry.requireRecipesFor("blastFurnace");
+			const recipe: KeyValueMap<Machine.BlastFurnaceRecipe> = MachineRecipeRegistry.requireRecipesFor("blastFurnace");
 			let input: string[];
 			for (let key in recipe) {
 				input = key.split(":");

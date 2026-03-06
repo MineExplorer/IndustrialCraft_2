@@ -15,7 +15,7 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['s', BlockID.machineBlockBasic, 0, 'a', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor<DataMap<Machine.BlastFurnaceRecipe>>("blastFurnace", {
+	MachineRecipeRegistry.registerRecipesFor<KeyValueMap<Machine.BlastFurnaceRecipe>>("blastFurnace", {
 		"minecraft:iron_ore": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"minecraft:iron_ingot": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
 		"item:dustIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},

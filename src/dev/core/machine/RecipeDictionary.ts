@@ -11,7 +11,7 @@ interface IRecipeDictionary<T> {
 }
 
 abstract class RecipeDictionary<T> implements IRecipeDictionary<T> {
-	recipes: DataMap<T> = {};
+	recipes: KeyValueMap<T> = {};
 
 	abstract register(recipe: T): void;
 

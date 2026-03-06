@@ -18,7 +18,7 @@ namespace RadiationAPI {
 		radioactiveItems[itemId] = {duration: duration, stack: stack};
 	}
 
-	export function getRadioactivity(itemId: number): {duration: number, stack: number} {
+	export function getRadioactivity(itemId: number): {duration: number, stack: boolean} {
 		return radioactiveItems[itemId];
 	}
 
@@ -38,6 +38,7 @@ namespace RadiationAPI {
 				return true;
 			}
 		}
+		return false;
 	}
 
 	export function registerHazmatArmor(itemId: number): void {

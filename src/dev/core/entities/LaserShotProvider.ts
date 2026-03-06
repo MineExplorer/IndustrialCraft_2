@@ -36,7 +36,7 @@ namespace LaserShotProvider {
 		}
 	}
 
-	export function onProjectileHit(projectile: number, target) {
+	export function onProjectileHit(projectile: number, target: Callback.ProjectileHitTarget) {
 		for (let laser of laserShots) {
 			if (laser.entity == projectile) {
 				laser.onProjectileHit(target);

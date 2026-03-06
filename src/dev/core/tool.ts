@@ -148,7 +148,7 @@ namespace ICTool {
 	}
 
 	export function stopPlaySound(soundName: string): boolean {
-		if (!IC2Config.soundEnabled) return;
+		if (!IC2Config.soundEnabled) return false;
 
 		const wasPlaying = playerAudioSource.isPlaying(soundName);
 		playerAudioSource.stop(soundName);

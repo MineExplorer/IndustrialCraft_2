@@ -46,7 +46,7 @@ namespace ItemName {
 	}
 
 	export function getBlockStorageText(item: ItemInstance, tier: number, capacity: string, output?: number): string {
-		const energy = item.extra ? item.extra.getInt("energy") : 0;
+		const energy = item.extra?.getInt("energy") || 0;
 		let tooltip = getPowerTierText(tier) + '\n';
 		if (output) {
 			tooltip += `${getTranslatedTextWithParams("tooltip.power_output", output)} EU/t\n`;

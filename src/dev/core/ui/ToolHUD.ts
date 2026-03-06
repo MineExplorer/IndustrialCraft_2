@@ -9,7 +9,7 @@ namespace ToolHUD {
 
 	const buttonScale = IC2Config.getInt("button_scale");
 	let isEnabled = false;
-	export let container = null;
+	export let container: UI.Container = null;
 	export const Window = new UI.Window({
 		location: {
 			x: 1000 - buttonScale,

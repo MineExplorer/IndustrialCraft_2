@@ -4,12 +4,12 @@ class ItemBatteryCharging
 extends ItemBattery {
 	readMode(extra: ItemExtraData): number {
 		if (!extra) return 0;
-		return extra.getInt("mode");
+		return extra.getInt("mode", 0);
 	}
 
 	onNoTargetUse(item: ItemStack, player: number) {
 		const extra = item.extra || new ItemExtraData();
-		const mode = (extra.getInt("mode") + 1) % 3;
+		const mode = (extra.getInt("mode", 0) + 1) % 3;
 		extra.putInt("mode", mode);
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 

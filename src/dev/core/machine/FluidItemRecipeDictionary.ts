@@ -1,11 +1,11 @@
 /// <reference path="./RecipeDictionary.ts" />
 
-interface FluidItemMixingRecipeBase {
+interface FluidItemRecipeBase {
 	source: {id: number, count?: number, data?: number}
 	inputFluid: {name: string, amount: number}
 };
 
-class FluidItemMixingRecipeDictionary<T extends FluidItemMixingRecipeBase> extends RecipeDictionary<T> {
+class FluidItemRecipeDictionary<T extends FluidItemRecipeBase> extends RecipeDictionary<T> {
 	register(recipe: T): void {
         recipe.source.data ??= -1;
         recipe.source.count ??= 1;

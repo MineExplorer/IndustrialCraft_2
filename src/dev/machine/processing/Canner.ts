@@ -77,7 +77,7 @@ namespace Machine {
 		outputFluid: {name: string, amount: number}
 	};
 
-	export class FluidCannerRecipeDictionary extends FluidItemMixingRecipeDictionary<FluidCannerRecipe> {
+	export class FluidCannerRecipeDictionary extends FluidItemRecipeDictionary<FluidCannerRecipe> {
 
 	}
 
@@ -213,7 +213,7 @@ namespace Machine {
 			if (emptyStack && (!liquid || emptyStack.liquid == liquid) && !this.outputTank.isFull()) {
 				if (this.data.energy >= this.energyDemand && this.canStackBeMerged(emptyStack, resultSlot)) {
 					this.data.energy -= this.energyDemand;
-					this.updateProgress();
+					this.updateProgress(this.defaultProcessTime / 5);
 					newActive = true;
 				}
 				if (this.isCompletedProgress()) {
@@ -237,7 +237,7 @@ namespace Machine {
 					resetProgress = false;
 					if (this.data.energy >= this.energyDemand && this.canStackBeMerged(fullStack, resultSlot)) {
 						this.data.energy -= this.energyDemand;
-						this.updateProgress();
+						this.updateProgress(this.defaultProcessTime / 5);
 						newActive = true;
 					}
 					if (this.isCompletedProgress()) {
@@ -311,6 +311,8 @@ namespace Machine {
 				let liquidData = this.inputTank.data;
 				this.inputTank.data = this.outputTank.data;
 				this.outputTank.data = liquidData;
+				this.data[this.inputTank.name] = this.inputTank.data;
+				this.data[this.outputTank.name] = this.outputTank.data;
 			}
 		}
 

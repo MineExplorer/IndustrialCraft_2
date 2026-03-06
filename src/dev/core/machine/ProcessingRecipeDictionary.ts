@@ -14,7 +14,7 @@ type ProcessingRecipeOutput = {
 	chance?: number
 }
 
-type ProcessingRecipeBase = {
+interface ProcessingRecipeBase {
 	source: ProcessingRecipeInput,
 	processTime?: number
 }

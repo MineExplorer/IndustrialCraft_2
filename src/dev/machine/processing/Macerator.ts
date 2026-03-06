@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function() {
 		], ['#', BlockID.machineBlockBasic, -1, 'x', 318, -1, 'b', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1]);
 	}
 
-	MachineRecipeRegistry.registerRecipes<ProcessingRecipe>("macerator", [
+	MachineRecipeRegistry.registerRecipes<ItemProcessingRecipe>("macerator", [
 		// ores
 		{ source: {id: VanillaBlockID.gold_ore}, result: [{id: ItemID.crushedGold, count: 2}] },
 		{ source: {id: VanillaBlockID.iron_ore}, result: [{id: ItemID.crushedIron, count: 2}] },
@@ -163,7 +163,7 @@ namespace Machine {
 			return guiMacerator;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipe> {
+		getRecipeDictionary(): ProcessingRecipeDictionary<ItemProcessingRecipe> {
 			return MachineRecipeRegistry.getDictionary("macerator");
 		}
 
@@ -178,7 +178,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.macerator, new Macerator());
 
-	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("macerator", new ProcessingRecipeDictionary(300));
+	MachineRecipeRegistry.registerDictionary<ItemProcessingRecipe>("macerator", new ProcessingRecipeDictionary(300));
 
 	StorageInterface.createInterface(BlockID.macerator, {
 		slots: {

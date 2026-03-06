@@ -53,12 +53,9 @@ namespace Machine {
 			return guiElectricFurnace;
 		}
 
-		getRecipe(id: number, data: number): ProcessingRecipe {
+		getRecipe(id: number, data: number): Nullable<ItemProcessingRecipe> {
 			const result = Recipes.getFurnaceRecipeResult(id, data, "iron");
-			return result && {
-				source: {id: id, count: 1, data: data},
-				result: [result]
-			};
+			return result && { result: [result] };
 		}
 
 		isValidSource(id: number, data: number): boolean {

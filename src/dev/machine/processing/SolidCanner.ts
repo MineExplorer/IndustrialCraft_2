@@ -1,4 +1,4 @@
-/// <reference path="./BasicProcessingMachine.ts" />
+/// <reference path="./ProcessingMachine.ts" />
 
 BlockRegistry.createBlock("solidCanner", [
 	{name: "Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
@@ -95,7 +95,7 @@ namespace Machine {
 		}
 	});
 
-	export class SolidCanner extends BasicProcessingMachine {
+	export class SolidCanner extends ProcessingMachine {
 		defaultEnergyStorage = 800;
 		defaultEnergyDemand = 2;
 		defaultProcessTime = 200;
@@ -107,6 +107,10 @@ namespace Machine {
 
 		getRecipeDictionary(): SolidCannerRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("solidCanner");
+		}
+
+		isValidSource(id: number, data: number): boolean {
+			return this.getRecipeDictionary().getRecipe(id, data) != null;
 		}
 
 		setupContainer(): void {

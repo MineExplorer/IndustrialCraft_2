@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 		"mcm"
 	], ['#', BlockID.machineBlockBasic, -1, 'c', ItemID.circuitBasic, -1, 'm', ItemID.electricMotor, -1, 'p', VanillaBlockID.piston, -1]);
 
-	MachineRecipeRegistry.registerRecipes<ProcessingRecipe>("compressor", [
+	MachineRecipeRegistry.registerRecipes<ItemProcessingRecipe>("compressor", [
 		// Blocks
 		{ source: {id: VanillaBlockID.sand, count: 4, data: 0}, result: [{id: 24, count: 1, data: 0}] },
 		{ source: {id: VanillaBlockID.sand, count: 4, data: 1}, result: [{id: VanillaBlockID.red_sandstone, count: 1, data: 0}] },
@@ -116,7 +116,7 @@ namespace Machine {
 			return guiCompressor;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipe> {
+		getRecipeDictionary(): ProcessingRecipeDictionary<ItemProcessingRecipe> {
 			return MachineRecipeRegistry.getDictionary("compressor");
 		}
 
@@ -131,7 +131,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.compressor, new Compressor());
 
-	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("compressor", new ProcessingRecipeDictionary(400));
+	MachineRecipeRegistry.registerDictionary<ItemProcessingRecipe>("compressor", new ProcessingRecipeDictionary(400));
 
 	StorageInterface.createInterface(BlockID.compressor, {
 		slots: {

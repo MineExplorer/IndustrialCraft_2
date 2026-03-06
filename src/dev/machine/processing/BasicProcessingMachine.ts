@@ -3,11 +3,11 @@
 namespace Machine {
 	export abstract class BasicProcessingMachine
 	extends ProcessingMachine {
-		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipeBase> {
+		getRecipeDictionary(): IProcessingRecipeDictionary<ItemProcessingRecipe> {
 			return null;
 		}
 
-		getRecipe(id: number, data: number): ProcessingRecipeBase {
+		getRecipe(id: number, data: number): Nullable<ItemProcessingRecipe> {
 			const dictionary = this.getRecipeDictionary();
 			return dictionary.getRecipe(id, data);
 		}
@@ -23,9 +23,9 @@ namespace Machine {
 		performRecipe(): boolean {
 			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipe(sourceSlot.id, sourceSlot.data) as ProcessingRecipe;
+			const recipe = this.getRecipe(sourceSlot.id, sourceSlot.data);
 
-			if (recipe && recipe.source.count <= sourceSlot.count) {
+			if (recipe && (!recipe.source || recipe.source.count <= sourceSlot.count)) {
 				if (this.canPutResult(recipe.result)) {
 					if (this.data.energy >= this.energyDemand) {
 						this.data.energy -= this.energyDemand;
@@ -33,7 +33,7 @@ namespace Machine {
 						newActive = true;
 					}
 					if (newActive && this.isCompletedProgress()) {
-						this.decreaseSlot(sourceSlot, recipe.source.count);
+						this.decreaseSlot(sourceSlot, recipe.source?.count || 1);
 						this.putResult(recipe.result);
 						this.data.progress = 0;
 					}

@@ -36,7 +36,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: RecipeDictionary<ProcessingRecipe> = MachineRecipeRegistry.getDictionary(this.recipeKey);
+			const dictionary: RecipeDictionary<ItemProcessingRecipe> = MachineRecipeRegistry.getDictionary(this.recipeKey);
 			const recipes = dictionary.getAll();
 			recipes.forEach(recipe => {
 				const resultEntry = recipe.result[0];
@@ -200,7 +200,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 			];
 			for (let i = 0; i < dictionaryData.length; i++) {
 				const modeData = dictionaryData[i];
-				const dictionary: RecipeDictionary<ProcessingRecipe> = MachineRecipeRegistry.getDictionary(modeData.key);
+				const dictionary: RecipeDictionary<ItemProcessingRecipe> = MachineRecipeRegistry.getDictionary(modeData.key);
 				if (!dictionary) {
 					continue;
 				}

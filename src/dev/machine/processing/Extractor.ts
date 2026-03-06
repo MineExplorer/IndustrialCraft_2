@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 		"xax"
 	], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
 	
-	MachineRecipeRegistry.registerRecipes<ProcessingRecipe>("extractor", [
+	MachineRecipeRegistry.registerRecipes<ItemProcessingRecipe>("extractor", [
 		{ source: {id: ItemID.latex}, result: [{id: ItemID.rubber, count: 3}] },
 		{ source: {id: BlockID.rubberTreeSapling}, result: [{id: ItemID.rubber, count: 1}] },
 		{ source: {id: BlockID.rubberTreeLog}, result: [{id: ItemID.rubber, count: 1}] },
@@ -61,7 +61,7 @@ namespace Machine {
 			return guiExtractor;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipe> {
+		getRecipeDictionary(): ProcessingRecipeDictionary<ItemProcessingRecipe> {
 			return MachineRecipeRegistry.getDictionary("extractor");
 		}
 
@@ -76,7 +76,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.extractor, new Extractor());
 
-	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("extractor", new ProcessingRecipeDictionary(400));
+	MachineRecipeRegistry.registerDictionary<ItemProcessingRecipe>("extractor", new ProcessingRecipeDictionary(400));
 
 	StorageInterface.createInterface(BlockID.extractor, {
 		slots: {

@@ -21,7 +21,16 @@ namespace MachineRecipeRegistry {
 		if (!Array.isArray(output)) {
 			output = [output];
 		}
-		registerRecipe<ProcessingRecipe>(name, { source: input, result: output, ...recipeProps });
+		registerRecipe<ItemProcessingRecipe>(name, { source: input, result: output, ...recipeProps });
+	}
+
+	export function removeProcessingRecipe(name: string, input: ProcessingRecipeInput) {
+		const dictionary = getDictionary<IProcessingRecipeDictionary<any>>(name);
+		if (!dictionary) {
+			Logger.Log(`Recipe dictionary "${name}" not found, cannot remove recipe"`, "ERROR");
+			return;
+		}
+		dictionary.removeRecipe(input.id, input.data || 1);
 	}
 
 	export function registerRecipe<T>(name: string, recipe: T): void {

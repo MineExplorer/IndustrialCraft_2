@@ -15,24 +15,30 @@ type ProcessingRecipeOutput = {
 }
 
 type ProcessingRecipeBase = {
-	source: ProcessingRecipeInput
+	source?: ProcessingRecipeInput,
 	processTime?: number
 }
 
-type ProcessingRecipe = {
-	source: ProcessingRecipeInput
+type ItemProcessingRecipe = ProcessingRecipeBase & {
 	result: ProcessingRecipeOutput[],
-	processTime?: number
 }
 
-class ProcessingRecipeDictionary<T extends ProcessingRecipeBase> extends RecipeDictionary<T> {
-	recipes: DataMap<T> = {};
+interface IProcessingRecipeDictionary<T> extends IRecipeDictionary<T> {
+	getRecipe(sourceId: number, sourceData: number): Nullable<T>;
+	removeRecipe(sourceId: number, sourceData: number): boolean;
+}
 
+class ProcessingRecipeDictionary<T extends ProcessingRecipeBase> extends RecipeDictionary<T>
+implements IProcessingRecipeDictionary<T> {
 	constructor(public defaultProccessTime: number) {
 		super();
 	}
 
 	register(recipe: T): void {
+		if (!recipe.source) {
+			throw new Error("Recipe source is required");
+		}
+
         recipe.source.data ??= -1;
         recipe.source.count ??= 1;
         recipe.processTime ??= this.defaultProccessTime;

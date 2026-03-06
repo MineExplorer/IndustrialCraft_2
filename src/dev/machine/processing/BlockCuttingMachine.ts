@@ -1,4 +1,4 @@
-/// <reference path="./BasicProcessingMachine.ts" />
+/// <reference path="./ProcessingMachine.ts" />
 
 BlockRegistry.createBlock("blockCuttingMachine", [
 	{name: "Block Cutting Machine", texture: [["block_cutter_bottomtop", 0], ["block_cutter_bottomtop", 0], ["block_cutter_side", 0], ["block_cutter_back", 0], ["block_cutter_side", 0], ["block_cutter_side", 0]], inCreative: true}
@@ -115,7 +115,7 @@ namespace Machine {
 		}
 	}
 
-	export class BlockCutter extends BasicProcessingMachine {
+	export class BlockCutter extends ProcessingMachine {
 		defaultTier = 2;
 		defaultEnergyDemand = 8;
 		defaultEnergyStorage = 3600;
@@ -129,6 +129,10 @@ namespace Machine {
 
 		getRecipeDictionary(): BlockCutterRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("cuttingMachine");
+		}
+
+		isValidSource(id: number, data: number): boolean {
+			return this.getRecipeDictionary().getRecipe(id, data) != null;
 		}
 
 		setupContainer(): void {
@@ -172,7 +176,9 @@ namespace Machine {
 			const bladeLevel = this.getBladeLevel(bladeSlot.id);
 
 			if (recipe && sourceSlot.count >= recipe.source.count && bladeLevel >= recipe.hardnessLevel) {
-				if (this.data.energy >= this.energyDemand && this.canPutResult([recipe.result])) {
+				const resultSlot = this.container.getSlot("slotResult");
+				if (this.data.energy >= this.energyDemand &&
+				  (resultSlot.id == 0 || resultSlot.id == recipe.result.id && resultSlot.data == (recipe.result.data || 0) && resultSlot.count <= 64 - recipe.result.count)) {
 					this.data.energy -= this.energyDemand;
 					// apply 50% speed increase for each hardness level exceeding required
 					const processTime = this.defaultProcessTime / (1 + (bladeLevel - recipe.hardnessLevel) * 0.5);
@@ -180,7 +186,7 @@ namespace Machine {
 					newActive = true;
 					if (this.isCompletedProgress()) {
 						this.decreaseSlot(sourceSlot, recipe.source.count);
-						this.putResult([recipe.result]);
+						resultSlot.setSlot(recipe.result.id, resultSlot.count + recipe.result.count, recipe.result.data || 0);
 						this.data.progress = 0;
 					}
 				}

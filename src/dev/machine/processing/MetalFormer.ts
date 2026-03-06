@@ -46,7 +46,7 @@ Callback.addCallback("PreLoaded", function() {
 		}
 	});
 
-	MachineRecipeRegistry.registerRecipes<ProcessingRecipe>("metalRolling", [
+	MachineRecipeRegistry.registerRecipes<ItemProcessingRecipe>("metalRolling", [
 		// ingots
 		{ source: {id: VanillaItemID.iron_ingot}, result: [{id: ItemID.plateIron, count: 1}] },
 		{ source: {id: VanillaItemID.gold_ingot}, result: [{id: ItemID.plateGold, count: 1}] },
@@ -68,14 +68,14 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: ItemID.plateSilver}, result: [{id: ItemID.casingSilver, count: 2}] }
 	]);
 
-	MachineRecipeRegistry.registerRecipes<ProcessingRecipe>("metalCutting", [
+	MachineRecipeRegistry.registerRecipes<ItemProcessingRecipe>("metalCutting", [
 		{ source: {id: ItemID.plateTin}, result: [{id: ItemID.cableTin0, count: 3}] },
 		{ source: {id: ItemID.plateCopper}, result: [{id: ItemID.cableCopper0, count: 3}] },
 		{ source: {id: ItemID.plateGold}, result: [{id: ItemID.cableGold0, count: 4}] },
 		{ source: {id: ItemID.plateIron}, result: [{id: ItemID.cableIron0, count: 4}] }
 	]);
 
-	MachineRecipeRegistry.registerRecipes<ProcessingRecipe>("metalExtruding", [
+	MachineRecipeRegistry.registerRecipes<ItemProcessingRecipe>("metalExtruding", [
 		{ source: {id: ItemID.ingotTin}, result: [{id: ItemID.cableTin0, count: 3}] },
 		{ source: {id: ItemID.ingotCopper}, result: [{id: ItemID.cableCopper0, count: 3}] },
 		{ source: {id: VanillaItemID.iron_ingot}, result: [{id: ItemID.cableIron0, count: 4}] },
@@ -136,7 +136,7 @@ namespace Machine {
 			return guiMetalFormer;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary<ProcessingRecipe> {
+		getRecipeDictionary(): ProcessingRecipeDictionary<ItemProcessingRecipe> {
 			return MachineRecipeRegistry.getDictionary(this.getRecipeCategory());
 		}
 
@@ -171,9 +171,9 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.metalFormer, new MetalFormer());
 
-	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("metalRolling", new ProcessingRecipeDictionary(200));
-	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("metalCutting", new ProcessingRecipeDictionary(200));
-	MachineRecipeRegistry.registerDictionary<ProcessingRecipe>("metalExtruding", new ProcessingRecipeDictionary(200));
+	MachineRecipeRegistry.registerDictionary<ItemProcessingRecipe>("metalRolling", new ProcessingRecipeDictionary(200));
+	MachineRecipeRegistry.registerDictionary<ItemProcessingRecipe>("metalCutting", new ProcessingRecipeDictionary(200));
+	MachineRecipeRegistry.registerDictionary<ItemProcessingRecipe>("metalExtruding", new ProcessingRecipeDictionary(200));
 
 	StorageInterface.createInterface(BlockID.metalFormer, {
 		slots: {

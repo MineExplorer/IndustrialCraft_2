@@ -21,24 +21,22 @@ namespace Machine {
 		}
 
 		performRecipe(): boolean {
-			let newActive = false;
 			const sourceSlot = this.container.getSlot("slotSource");
 			const recipe = this.getRecipe(sourceSlot.id, sourceSlot.data);
 
+			// treat recipe.source as nullable for electric furnace and recycler recipes
 			if (recipe && (!recipe.source || recipe.source.count <= sourceSlot.count)) {
-				if (this.canPutResult(recipe.result)) {
-					if (this.data.energy >= this.energyDemand) {
-						this.data.energy -= this.energyDemand;
-						this.updateProgress(recipe.processTime);
-						newActive = true;
-					}
-					if (newActive && this.isCompletedProgress()) {
+				if (this.data.energy >= this.energyDemand && this.canPutResult(recipe.result)) {
+					this.data.energy -= this.energyDemand;
+					this.updateProgress(recipe.processTime);
+					if (this.isCompletedProgress()) {
 						this.decreaseSlot(sourceSlot, recipe.source?.count || 1);
 						this.putResult(recipe.result);
 						this.data.progress = 0;
 					}
+					return true;
 				}
-				if (!newActive && this.networkData.getBoolean(NetworkDataKeys.isActive)) {
+				if (this.data.progress > 0 && this.networkData.getBoolean(NetworkDataKeys.isActive)) {
 					this.onInterrupt(); // interrupt if machine stopped working while processing item
 				}
 			}
@@ -47,7 +45,7 @@ namespace Machine {
 				this.onInterrupt(); // interrupt when the source item is extracted
 			}
 
-			return newActive;
+			return false;
 		}
 
 		canPutResult(result: ProcessingRecipeOutput[]): boolean {

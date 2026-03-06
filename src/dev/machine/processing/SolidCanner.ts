@@ -127,32 +127,30 @@ namespace Machine {
 		}
 
 		performRecipe(): boolean {
-			let newActive = false;
-
 			const sourceSlot = this.container.getSlot("slotSource");
-			const resultSlot = this.container.getSlot("slotResult");
 			const canSlot = this.container.getSlot("slotCan");
 
 			const dictionary = this.getRecipeDictionary();
 			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
-			if (recipe && canSlot.id == recipe.can && canSlot.count >= recipe.result.count &&
-				(resultSlot.id == 0 || resultSlot.id == recipe.result.id && resultSlot.data == recipe.result.data && resultSlot.count <= 64 - recipe.result.count)) {
-				if (this.data.energy >= this.energyDemand) {
+			if (recipe && canSlot.id == recipe.can && canSlot.count >= recipe.result.count) {
+				const resultSlot = this.container.getSlot("slotResult");
+				if (this.data.energy >= this.energyDemand && this.canStackBeMerged(recipe.result, resultSlot, 64)) {
 					this.data.energy -= this.energyDemand;
 					this.updateProgress();
-					newActive = true;
-				}
-				if (this.isCompletedProgress()) {
-					this.decreaseSlot(sourceSlot, 1);
-					this.decreaseSlot(canSlot, recipe.result.count);
-					resultSlot.setSlot(recipe.result.id, resultSlot.count + recipe.result.count, recipe.result.data);
-					this.data.progress = 0;
+					if (this.isCompletedProgress()) {
+						this.decreaseSlot(sourceSlot, 1);
+						this.decreaseSlot(canSlot, recipe.result.count);
+						resultSlot.setSlot(recipe.result.id, resultSlot.count + recipe.result.count, recipe.result.data);
+						this.data.progress = 0;
+					}
+					return true;
 				}
 			}
 			else {
 				this.data.progress = 0;
 			}
-			return newActive;
+
+			return false;
 		}
 	}
 

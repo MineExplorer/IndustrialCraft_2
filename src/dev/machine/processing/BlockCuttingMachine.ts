@@ -22,42 +22,42 @@ Callback.addCallback("PreLoaded", function() {
 	MachineRecipeRegistry.registerRecipes<Machine.CuttingRecipe>("cuttingMachine", [
 		// -- Iron blade or higher --
 		// Logs
-		{ source: {id: VanillaBlockID.log, data: 0}, result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.log, data: 1}, result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.log, data: 2}, result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.log, data: 3}, result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.log2, data: 0}, result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.log2, data: 1}, result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.crimson_stem}, result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.warped_stem}, result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.stripped_oak_log}, result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.stripped_spruce_log}, result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.stripped_birch_log}, result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.stripped_jungle_log}, result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.stripped_acacia_log}, result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.stripped_dark_oak_log}, result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.stripped_crimson_stem}, result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.stripped_warped_stem}, result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: BlockID.rubberTreeLog}, result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log, data: 0}, result: {id: VanillaBlockID.planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log, data: 1}, result: {id: VanillaBlockID.planks, count: 6, data: 1}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log, data: 2}, result: {id: VanillaBlockID.planks, count: 6, data: 2}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log, data: 3}, result: {id: VanillaBlockID.planks, count: 6, data: 3}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log2, data: 0}, result: {id: VanillaBlockID.planks, count: 6, data: 4}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.log2, data: 1}, result: {id: VanillaBlockID.planks, count: 6, data: 5}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.crimson_stem}, result: {id: VanillaBlockID.crimson_planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.warped_stem}, result: {id: VanillaBlockID.warped_planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_oak_log}, result: {id: VanillaBlockID.planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_spruce_log}, result: {id: VanillaBlockID.planks, count: 6, data: 1}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_birch_log}, result: {id: VanillaBlockID.planks, count: 6, data: 2}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_jungle_log}, result: {id: VanillaBlockID.planks, count: 6, data: 3}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_acacia_log}, result: {id: VanillaBlockID.planks, count: 6, data: 4}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_dark_oak_log}, result: {id: VanillaBlockID.planks, count: 6, data: 5}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_crimson_stem}, result: {id: VanillaBlockID.crimson_planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_warped_stem}, result: {id: VanillaBlockID.warped_planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: BlockID.rubberTreeLog}, result: {id: VanillaBlockID.planks, count: 6, data: 3}, hardnessLevel: 1 },
 		// Wood
-		{ source: {id: VanillaBlockID.wood, data: 0}, result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.wood, data: 1}, result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.wood, data: 2}, result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.wood, data: 3}, result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.wood, data: 4}, result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.wood, data: 5}, result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 0}, result: {id: VanillaBlockID.planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 1}, result: {id: VanillaBlockID.planks, count: 6, data: 1}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 2}, result: {id: VanillaBlockID.planks, count: 6, data: 2}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 3}, result: {id: VanillaBlockID.planks, count: 6, data: 3}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 4}, result: {id: VanillaBlockID.planks, count: 6, data: 4}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 5}, result: {id: VanillaBlockID.planks, count: 6, data: 5}, hardnessLevel: 1 },
 		// Stripped wood
-		{ source: {id: VanillaBlockID.wood, data: 8}, result: {id: VanillaBlockID.planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.wood, data: 9}, result: {id: VanillaBlockID.planks, data: 1, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.wood, data: 10}, result: {id: VanillaBlockID.planks, data: 2, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.wood, data: 11}, result: {id: VanillaBlockID.planks, data: 3, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.wood, data: 12}, result: {id: VanillaBlockID.planks, data: 4, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.wood, data: 13}, result: {id: VanillaBlockID.planks, data: 5, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 8}, result: {id: VanillaBlockID.planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 9}, result: {id: VanillaBlockID.planks, count: 6, data: 1}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 10}, result: {id: VanillaBlockID.planks, count: 6, data: 2}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 11}, result: {id: VanillaBlockID.planks, count: 6, data: 3}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 12}, result: {id: VanillaBlockID.planks, count: 6, data: 4}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.wood, data: 13}, result: {id: VanillaBlockID.planks, count: 6, data: 5}, hardnessLevel: 1 },
 		// Other wood
-		{ source: {id: VanillaBlockID.crimson_hyphae}, result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.warped_hyphae}, result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.stripped_crimson_hyphae}, result: {id: VanillaBlockID.crimson_planks, data: 0, count: 6}, hardnessLevel: 1 },
-		{ source: {id: VanillaBlockID.stripped_warped_hyphae}, result: {id: VanillaBlockID.warped_planks, data: 0, count: 6}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.crimson_hyphae}, result: {id: VanillaBlockID.crimson_planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.warped_hyphae}, result: {id: VanillaBlockID.warped_planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_crimson_hyphae}, result: {id: VanillaBlockID.crimson_planks, count: 6, data: 0}, hardnessLevel: 1 },
+		{ source: {id: VanillaBlockID.stripped_warped_hyphae}, result: {id: VanillaBlockID.warped_planks, count: 6, data: 0}, hardnessLevel: 1 },
 		// Planks
 		{ source: {id: VanillaBlockID.planks, count: 2}, result: {id: VanillaItemID.stick, count: 6 }, hardnessLevel: 1 },
 		{ source: {id: VanillaBlockID.crimson_planks, count: 2}, result: {id: VanillaItemID.stick, count: 6 }, hardnessLevel: 1 },
@@ -166,8 +166,6 @@ namespace Machine {
 		}
 
 		performRecipe(): boolean {
-			let newActive = false;
-
 			const sourceSlot = this.container.getSlot("slotSource");
 			const dictionary = this.getRecipeDictionary();
 			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
@@ -183,14 +181,14 @@ namespace Machine {
 					// apply 50% speed increase for each hardness level exceeding required
 					const processTime = this.defaultProcessTime / (1 + (bladeLevel - recipe.hardnessLevel) * 0.5);
 					this.updateProgress(processTime);
-					newActive = true;
 					if (this.isCompletedProgress()) {
 						this.decreaseSlot(sourceSlot, recipe.source.count);
 						resultSlot.setSlot(recipe.result.id, resultSlot.count + recipe.result.count, recipe.result.data || 0);
 						this.data.progress = 0;
 					}
+					return true;
 				}
-				if (!newActive && this.networkData.getBoolean(NetworkDataKeys.isActive)) {
+				if (this.data.progress > 0 && this.networkData.getBoolean(NetworkDataKeys.isActive)) {
 					this.onInterrupt(); // interrupt if machine stopped working while processing item
 				}
 			}
@@ -199,7 +197,7 @@ namespace Machine {
 				this.onInterrupt(); // interrupt when the source item is extracted
 			}
 
-			return newActive;
+			return false;
 		}
 
 		getInterruptSound(): string {

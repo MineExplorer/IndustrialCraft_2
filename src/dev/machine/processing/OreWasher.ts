@@ -131,20 +131,23 @@ namespace Machine {
 			const sourceSlot = this.container.getSlot("slotSource");
 			const dictionary = this.getRecipeDictionary();
 			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
-			if (recipe && this.data.energy >= this.energyDemand && this.liquidTank.getAmount("water") >= 1000 && this.canPutResult(recipe.result)) {
-				this.data.energy -= this.energyDemand;
-				this.updateProgress(recipe.processTime);
-				if (this.isCompletedProgress()) {
-					this.decreaseSlot(sourceSlot, 1);
-					this.liquidTank.getLiquid(1000);
-					this.putResult(recipe.result);
-					this.data.progress = 0;
+			if (recipe && this.liquidTank.getAmount("water") >= 1000) {
+				if (this.data.energy >= this.energyDemand && this.canPutResult(recipe.result)) {
+					this.data.energy -= this.energyDemand;
+					this.updateProgress(recipe.processTime);
+					if (this.isCompletedProgress()) {
+						this.decreaseSlot(sourceSlot, 1);
+						this.liquidTank.getLiquid(1000);
+						this.putResult(recipe.result);
+						this.data.progress = 0;
+					}
+					return true;
 				}
-				return true;
+			}
+			else {
+				this.data.progress = 0;
 			}
 
-			this.data.progress = 0;
-			
 			return false;
 		}
 

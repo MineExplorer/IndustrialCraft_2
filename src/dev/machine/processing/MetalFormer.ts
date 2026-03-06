@@ -159,6 +159,7 @@ namespace Machine {
 		@ContainerEvent(Side.Server, "switchMode")
 		onSwitchMode(): void {
 			this.data.mode = (this.data.mode + 1) % 3;
+			this.data.progress = 0;
 		}
 
 		@ContainerEvent(Side.Client, "setModeIcon")

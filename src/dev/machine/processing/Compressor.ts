@@ -70,16 +70,16 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: ItemID.ingotBronze, count: 9}, result: [{id: BlockID.blockBronze, count: 1}] },
 		{ source: {id: ItemID.ingotSilver, count: 9}, result: [{id: BlockID.blockSilver, count: 1}] },
 		{ source: {id: ItemID.uranium238, count: 9}, result: [{id: BlockID.blockUranium, count: 1}] },
-		{ source: {id: ItemID.dustSmallCopper, count: 9}, result: [{id: ItemID.dustCopper, count: 1}] },
-		{ source: {id: ItemID.dustSmallTin, count: 9}, result: [{id: ItemID.dustTin, count: 1}] },
-		{ source: {id: ItemID.dustSmallBronze, count: 9}, result: [{id: ItemID.dustBronze, count: 1}] },
-		{ source: {id: ItemID.dustSmallIron, count: 9}, result: [{id: ItemID.dustIron, count: 1}] },
-		{ source: {id: ItemID.dustSmallGold, count: 9}, result: [{id: ItemID.dustGold, count: 1}] },
-		{ source: {id: ItemID.dustSmallLead, count: 9}, result: [{id: ItemID.dustLead, count: 1}] },
-		{ source: {id: ItemID.dustSmallSilver, count: 9}, result: [{id: ItemID.dustSilver, count: 1}] },
-		{ source: {id: ItemID.dustSmallSulfur, count: 9}, result: [{id: ItemID.dustSulfur, count: 1}] },
-		{ source: {id: ItemID.smallUranium235, count: 9}, result: [{id: ItemID.uranium235, count: 1}] },
-		{ source: {id: ItemID.smallPlutonium, count: 9}, result: [{id: ItemID.plutonium, count: 1}] }
+		{ source: {id: ItemID.dustSmallCopper, count: 9}, result: [{id: ItemID.dustCopper, count: 1}], processTime: 50 },
+		{ source: {id: ItemID.dustSmallTin, count: 9}, result: [{id: ItemID.dustTin, count: 1}], processTime: 50 },
+		{ source: {id: ItemID.dustSmallBronze, count: 9}, result: [{id: ItemID.dustBronze, count: 1}], processTime: 50 },
+		{ source: {id: ItemID.dustSmallIron, count: 9}, result: [{id: ItemID.dustIron, count: 1}], processTime: 50 },
+		{ source: {id: ItemID.dustSmallGold, count: 9}, result: [{id: ItemID.dustGold, count: 1}], processTime: 50 },
+		{ source: {id: ItemID.dustSmallLead, count: 9}, result: [{id: ItemID.dustLead, count: 1}], processTime: 50 },
+		{ source: {id: ItemID.dustSmallSilver, count: 9}, result: [{id: ItemID.dustSilver, count: 1}], processTime: 50 },
+		{ source: {id: ItemID.dustSmallSulfur, count: 9}, result: [{id: ItemID.dustSulfur, count: 1}], processTime: 50 },
+		{ source: {id: ItemID.smallUranium235, count: 9}, result: [{id: ItemID.uranium235, count: 1}], processTime: 50 },
+		{ source: {id: ItemID.smallPlutonium, count: 9}, result: [{id: ItemID.plutonium, count: 1}], processTime: 50 }
 	]);
 });
 

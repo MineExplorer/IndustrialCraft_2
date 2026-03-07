@@ -113,6 +113,10 @@ namespace Machine {
 		constructor() {
 			super(450);
 		}
+
+		register(recipe: CuttingRecipe): void {
+			recipe.result.data ??= 0;
+		}
 	}
 
 	export class BlockCutter extends ProcessingMachine {
@@ -175,8 +179,7 @@ namespace Machine {
 
 			if (recipe && sourceSlot.count >= recipe.source.count && bladeLevel >= recipe.hardnessLevel) {
 				const resultSlot = this.container.getSlot("slotResult");
-				if (this.data.energy >= this.energyDemand &&
-				  (resultSlot.id == 0 || resultSlot.id == recipe.result.id && resultSlot.data == (recipe.result.data || 0) && resultSlot.count <= 64 - recipe.result.count)) {
+				if (this.data.energy >= this.energyDemand  && this.canStackBeMerged(recipe.result as ItemInstance, resultSlot, 64)) {
 					this.data.energy -= this.energyDemand;
 					// apply 50% speed increase for each hardness level exceeding required
 					const processTime = this.defaultProcessTime / (1 + (bladeLevel - recipe.hardnessLevel) * 0.5);

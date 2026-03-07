@@ -105,8 +105,8 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: VanillaBlockID.sandstone_stairs}, result: [{id: 12, count: 2, data: 0}] },
 		{ source: {id: VanillaBlockID.red_sandstone}, result: [{id: 12, count: 2, data: 1}] },
 		{ source: {id: VanillaBlockID.red_sandstone_stairs}, result: [{id: 12, count: 2, data: 1}] },
-		{ source: {id: VanillaItemID.bone}, result: [{id: VanillaItemID.bone_meal, count: 5}] },
-		{ source: {id: VanillaItemID.blaze_rod}, result: [{id: 377, count: 5}] },
+		{ source: {id: VanillaItemID.bone}, result: [{id: VanillaItemID.bone_meal, count: 5}], processTime: 200 },
+		{ source: {id: VanillaItemID.blaze_rod}, result: [{id: 377, count: 5}], processTime: 200 },
 
 		// plants
 		{ source: {id: VanillaBlockID.planks, count: 4}, result: [{id: ItemID.bioChaff, count: 1}] },
@@ -126,7 +126,7 @@ Callback.addCallback("PreLoaded", function() {
 		{ source: {id: VanillaItemID.melon_seeds, count: 16}, result: [{id: ItemID.bioChaff, count: 1}] },
 		{ source: {id: ItemID.weed, count: 32}, result: [{id: ItemID.bioChaff, count: 1}] },
 		{ source: {id: ItemID.bioChaff}, result: [{id: 3, count: 1}] },
-		{ source: {id: ItemID.coffeeBeans}, result: [{id: ItemID.coffeePowder, count: 3, data: 0}] }
+		{ source: {id: ItemID.coffeeBeans}, result: [{id: ItemID.coffeePowder, count: 3, data: 0}], processTime: 200 }
 	]);
 });
 

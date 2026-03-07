@@ -84,8 +84,10 @@ Callback.addCallback("GenerateChunk", function(chunkX, chunkZ, random) {
 	if (random.nextDouble() < OreGenerator.iridium.chance) {
 		const coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.iridium.minHeight, OreGenerator.iridium.maxHeight);
 		OreGenerator.replaceWithOre(coords, BlockID.oreIridium);
-		if (random.nextDouble() < 0.5) {
-			const coords2 = {x: coords.x + random.nextInt(2), y: coords.y + random.nextInt(2), z: coords.z + random.nextInt(2)};
+		const side = random.nextInt(12);
+		if (side < 6) {
+			const dir = World.getVectorByBlockSide(side);
+			const coords2 = {x: coords.x + dir.x, y: coords.y + dir.y, z: coords.z + dir.z};
 			OreGenerator.replaceWithOre(coords2, BlockID.oreIridium);
 		}
 	}

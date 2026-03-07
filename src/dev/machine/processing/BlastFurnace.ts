@@ -15,18 +15,16 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['s', BlockID.machineBlockBasic, 0, 'a', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor<KeyValueMap<Machine.BlastFurnaceRecipe>>("blastFurnace", {
-		"minecraft:iron_ore": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
-		"minecraft:iron_ingot": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
-		"item:dustIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
-		"item:crushedPurifiedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000},
-		"item:crushedIron": {result: [ItemID.ingotSteel, 1, ItemID.slag, 1], duration: 6000}
-	}, true);
+	MachineRecipeRegistry.registerRecipes<Machine.BlastFurnaceRecipe>("blastFurnace", [
+		{ source: {id: VanillaBlockID.iron_ore}, result: [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}] },
+		{ source: {id: VanillaItemID.iron_ingot}, result: [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}] },
+		{ source: {id: ItemID.dustIron}, result: [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}] },
+		{ source: {id: ItemID.crushedPurifiedIron}, result: [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}] },
+		{ source: {id: ItemID.crushedIron}, result: [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}] }
+	]);
 });
 
 namespace Machine {
-	export type BlastFurnaceRecipe = { result: [number, number] | [number, number, number, number], duration: number }
-
 	const guiBlastFurnace = MachineRegistry.createInventoryWindow("Industrial Blast Furnace", {
 		drawing: [
 			{type: "bitmap", x: 450, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE_NEW}
@@ -50,6 +48,18 @@ namespace Machine {
 		}
 	});
 
+	export type BlastFurnaceRecipe = {
+		source: { id: number, count?: number},
+		result: [ProcessingRecipeOutput, ProcessingRecipeOutput?],
+		processTime?: number
+	}
+
+	export class BlastFurnaceRecipeDictionary extends ProcessingRecipeDictionary<BlastFurnaceRecipe> {
+		constructor() {
+			super(6000);
+		}
+	}
+
 	export class BlastFurnace extends MachineBase
 	implements IHeatConsumer {
 		defaultValues = {
@@ -72,7 +82,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, count, data) => {
-				if (name == "slotSource") return !!this.getRecipeResult(id);
+				if (name == "slotSource") return !!this.getRecipe(id, data);
 				if (name == "slotAir1") return id == ItemID.cellAir;
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
@@ -83,28 +93,34 @@ namespace Machine {
 			return true;
 		}
 
-		getRecipeResult(id: number): BlastFurnaceRecipe {
-			return MachineRecipeRegistry.getRecipeResult("blastFurnace", id);
+		getRecipeDictionary(): BlastFurnaceRecipeDictionary {
+			return MachineRecipeRegistry.getDictionary("blastFurnace");
 		}
 
-		checkResult(result: number[]): boolean {
-			for (let i = 1; i <= result.length / 2; i++) {
-				const id = result[(i-1) * 2];
-				const count = result[(i-1) * 2 + 1];
-				const resultSlot = this.container.getSlot("slotResult" + i);
-				if (resultSlot.id != 0 && (resultSlot.id != id || resultSlot.count + count > 64)) {
+		getRecipe(id: number, data: number): Nullable<BlastFurnaceRecipe> {
+			return this.getRecipeDictionary().getRecipe(id, data);
+		}
+		
+		checkResult(result: ProcessingRecipeOutput[]): boolean {
+			for (let i = 0; i < result.length; i++) {
+				const entry = result[i - 1];
+				const resultSlot = this.container.getSlot("slotResult" + (i + 1));
+				const itemData = entry.data || 0;
+				if (resultSlot.id != 0 && (resultSlot.id != entry.id || resultSlot.data != itemData || resultSlot.count + entry.count > 64)) {
 					return false;
 				}
 			}
 			return true;
 		}
 
-		putResult(result: number[]): void {
-			for (let i = 1; i <= result.length / 2; i++) {
-				const id = result[(i-1) * 2];
-				const count = result[(i-1) * 2 + 1];
-				const resultSlot = this.container.getSlot("slotResult" + i);
-				resultSlot.setSlot(id, resultSlot.count + count, 0);
+		putResult(result: ProcessingRecipeOutput[]): void {
+			for (let i = 0; i < result.length; i++) {
+				const entry = result[i];
+				if (entry.chance != null && Math.random() >= entry.chance) {
+					continue;
+				}
+				const resultSlot = this.container.getSlot("slotResult" + (i + 1));
+				resultSlot.setSlot(entry.id, resultSlot.count + entry.count, entry.data || 0, entry.extra || null);
 			}
 		}
 
@@ -147,21 +163,21 @@ namespace Machine {
 			if (this.data.heat >= maxHeat) {
 				this.container.sendEvent("setIndicator", "green");
 				const sourceSlot = this.container.getSlot("slotSource");
-				const source = this.data.sourceID || sourceSlot.id;
-				const recipe = this.getRecipeResult(source);
-				if (recipe && this.checkResult(recipe.result)) {
+				const sourceID = this.data.sourceID || sourceSlot.id;
+				const recipe = this.getRecipe(sourceID, 0);
+				if (recipe && (this.data.sourceID || recipe.source.count <= sourceSlot.count) && this.checkResult(recipe.result)) {
 					if (this.controlAir()) {
 						this.container.sendEvent("setAirImage", {show: false});
 						this.data.progress++;
-						this.container.setScale("progressScale", this.data.progress / recipe.duration);
+						this.container.setScale("progressScale", this.data.progress / recipe.processTime);
 						this.setActive(true);
 
 						if (!this.data.sourceID) {
-							this.data.sourceID = source;
-							this.decreaseSlot(sourceSlot, 1);
+							this.data.sourceID = sourceID;
+							this.decreaseSlot(sourceSlot, recipe.source.count);
 						}
 
-						if (this.data.progress >= recipe.duration) {
+						if (this.data.progress >= recipe.processTime) {
 							this.putResult(recipe.result);
 							this.data.progress = 0;
 							this.data.sourceID = 0;
@@ -196,7 +212,7 @@ namespace Machine {
 
 		receiveHeat(amount: number): number {
 			const slot = this.container.getSlot("slotSource");
-			if (this.isHeating || this.data.sourceID > 0 || this.getRecipeResult(slot.id)) {
+			if (this.isHeating || this.data.sourceID > 0 || this.getRecipe(slot.id, slot.data)) {
 				amount = Math.min(this.getMaxHeat() - this.data.heat, amount);
 				this.data.heat += amount + 1;
 				return amount;
@@ -226,10 +242,12 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.blastFurnace, new BlastFurnace());
 
+	MachineRecipeRegistry.registerDictionary("blastFurnace", new BlastFurnaceRecipeDictionary());
+
 	StorageInterface.createInterface(BlockID.blastFurnace, {
 		slots: {
-			"slotSource": {input: true, isValid: (item: ItemInstance) => {
-				return MachineRecipeRegistry.hasRecipeFor("blastFurnace", item.id);
+			"slotSource": {input: true, isValid: (item: ItemInstance, side: number, tileEntity: BlastFurnace) => {
+				return !!tileEntity.getRecipe(item.id, item.data);
 			}},
 			"slotAir1": {input: true, isValid: (item: ItemInstance) => item.id == ItemID.cellAir},
 			"slotAir2": {output: true},

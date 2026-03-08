@@ -15,7 +15,7 @@ type ItemOutputEntry = {
 }
 
 interface ItemSourceRecipe {
-	source: ItemInputEntry,
+	source: ItemInputEntry
 }
 
 namespace MachineRecipe {

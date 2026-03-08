@@ -7,7 +7,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 	const Bitmap = android.graphics.Bitmap;
 
 
-	abstract class RecipeTypeForICPE extends api.RecipeType {
+	abstract class RecipeViewForICPE extends api.RecipeType {
 
 		constructor(name: string, icon: number, content: {params?: UI.BindingSet, drawing?: UI.DrawingSet, elements: {[key: string]: object}}) {
 			content.params ??= {};
@@ -20,7 +20,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 	}
 
 
-	class BasicMachineRecipe extends RecipeTypeForICPE {
+	class BasicMachineRecipeView extends RecipeViewForICPE {
 
 		constructor(private recipeKey: string, name: string, icon: number, scaleBmp: string) {
 			super(name, icon, {
@@ -50,12 +50,12 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_macerator", new BasicMachineRecipe("macerator", "Macerator", BlockID.macerator, "macerator_bar_scale"));
-	api.RecipeTypeRegistry.register("icpe_compressor", new BasicMachineRecipe("compressor", "Compressor", BlockID.compressor, "compressor_bar_scale"));
-	api.RecipeTypeRegistry.register("icpe_extractor", new BasicMachineRecipe("extractor", "Extractor", BlockID.extractor, "extractor_bar_scale"));
+	api.RecipeTypeRegistry.register("icpe_macerator", new BasicMachineRecipeView("macerator", "Macerator", BlockID.macerator, "macerator_bar_scale"));
+	api.RecipeTypeRegistry.register("icpe_compressor", new BasicMachineRecipeView("compressor", "Compressor", BlockID.compressor, "compressor_bar_scale"));
+	api.RecipeTypeRegistry.register("icpe_extractor", new BasicMachineRecipeView("extractor", "Extractor", BlockID.extractor, "extractor_bar_scale"));
 
 
-	class SolidCannerRecipe extends RecipeTypeForICPE {
+	class SolidCannerRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Solid Canning", BlockID.solidCanner, {
@@ -89,10 +89,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_solidCanner", new SolidCannerRecipe());
+	api.RecipeTypeRegistry.register("icpe_solidCanner", new SolidCannerRecipeView());
 
 
-	class CannerRecipe extends RecipeTypeForICPE {
+	class CannerRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Canning", BlockID.canner, {
@@ -173,10 +173,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_canner", new CannerRecipe());
+	api.RecipeTypeRegistry.register("icpe_canner", new CannerRecipeView());
 
 
-	class MetalFormerRecipe extends RecipeTypeForICPE {
+	class MetalFormerRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Metal Former", BlockID.metalFormer, {
@@ -222,12 +222,12 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_metalFormer", new MetalFormerRecipe());
+	api.RecipeTypeRegistry.register("icpe_metalFormer", new MetalFormerRecipeView());
 
 
 	UI.TextureSource.put("ore_washer_background_trim", Bitmap.createBitmap(UI.TextureSource.get("ore_washer_background"), 56, 17, 63, 55, null, true));
 
-	class OreWasherRecipe extends RecipeTypeForICPE {
+	class OreWasherRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Ore Washing", BlockID.oreWasher, {
@@ -263,10 +263,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_oreWasher", new OreWasherRecipe());
+	api.RecipeTypeRegistry.register("icpe_oreWasher", new OreWasherRecipeView());
 
 
-	class ThermalCentrifugeRecipe extends RecipeTypeForICPE {
+	class ThermalCentrifugeRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Thermal Centrifuge", BlockID.thermalCentrifuge, {
@@ -306,10 +306,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_thermalCentrifuge", new ThermalCentrifugeRecipe());
+	api.RecipeTypeRegistry.register("icpe_thermalCentrifuge", new ThermalCentrifugeRecipeView());
 
 	
-	class BlockCuttingMachineRecipe extends RecipeTypeForICPE {
+	class BlockCuttingMachineRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Block Cutting Machine", BlockID.blockCuttingMachine, {
@@ -373,10 +373,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_cutting_machine", new BlockCuttingMachineRecipe());
+	api.RecipeTypeRegistry.register("icpe_cutting_machine", new BlockCuttingMachineRecipeView());
 
 
-	class BlastFurnaceRecipe extends RecipeTypeForICPE {
+	class BlastFurnaceRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Blast Furnace", BlockID.blastFurnace, {
@@ -410,10 +410,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_blastFurnace", new BlastFurnaceRecipe());
+	api.RecipeTypeRegistry.register("icpe_blastFurnace", new BlastFurnaceRecipeView());
 
 
-	class FermenterRecipe extends RecipeTypeForICPE {
+	class FermenterRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Fermenter", BlockID.icFermenter, {
@@ -440,10 +440,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_fermenter", new FermenterRecipe());
+	api.RecipeTypeRegistry.register("icpe_fermenter", new FermenterRecipeView());
 
 
-	class FluidFuelRecipe extends RecipeTypeForICPE {
+	class FluidFuelRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Fluid Fuel", ItemID.cellEmpty, {
@@ -478,7 +478,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_fluidFuel", new FluidFuelRecipe());
+	api.RecipeTypeRegistry.register("icpe_fluidFuel", new FluidFuelRecipeView());
 
 });
 

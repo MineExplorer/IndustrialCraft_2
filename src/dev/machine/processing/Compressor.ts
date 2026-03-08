@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 		"mcm"
 	], ['#', BlockID.machineBlockBasic, -1, 'c', ItemID.circuitBasic, -1, 'm', ItemID.electricMotor, -1, 'p', VanillaBlockID.piston, -1]);
 
-	const dictionary: ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("compressor");
+	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipe.Registry.getDictionary("compressor");
 	// Blocks
 	dictionary.addRecipe({id: VanillaBlockID.sand, count: 4, data: 0}, {id: 24, count: 1, data: 0});
 	dictionary.addRecipe({id: VanillaBlockID.sand, count: 4, data: 1}, {id: VanillaBlockID.red_sandstone, count: 1, data: 0});
@@ -115,8 +115,8 @@ namespace Machine {
 			return guiCompressor;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary {
-			return MachineRecipeRegistry.getDictionary("compressor");
+		getRecipeDictionary(): MachineRecipe.ProcessingRecipeDictionary {
+			return MachineRecipe.Registry.getDictionary("compressor");
 		}
 
 		getOperationSound(): string {
@@ -130,7 +130,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.compressor, new Compressor());
 
-	MachineRecipeRegistry.registerDictionary("compressor", new ProcessingRecipeDictionary(400));
+	MachineRecipe.Registry.registerDictionary("compressor", new MachineRecipe.ProcessingRecipeDictionary(400));
 
 	StorageInterface.createInterface(BlockID.compressor, {
 		slots: {

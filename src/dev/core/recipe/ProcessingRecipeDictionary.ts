@@ -6,15 +6,17 @@ type ItemProcessingRecipe = {
 	processTime?: number
 }
 
-class ProcessingRecipeDictionary extends SourceRecipeDictionary<ItemProcessingRecipe> {
-    constructor(public defaultProccessTime: number) {
-        super();
-    }
-
-    addRecipe(input: ItemInputEntry, output: ItemOutputEntry | ItemOutputEntry[], processTime: number = this.defaultProccessTime): void {
-        if (!Array.isArray(output)) {
-            output = [output];
+namespace MachineRecipe {
+    export class ProcessingRecipeDictionary extends SourceRecipeDictionary<ItemProcessingRecipe> {
+        constructor(public defaultProccessTime: number) {
+            super();
         }
-        this.register({ source: input, result: output, processTime: processTime});
+
+        addRecipe(input: ItemInputEntry, output: ItemOutputEntry | ItemOutputEntry[], processTime: number = this.defaultProccessTime): void {
+            if (!Array.isArray(output)) {
+                output = [output];
+            }
+            this.register({ source: input, result: output, processTime: processTime});
+        }
     }
 }

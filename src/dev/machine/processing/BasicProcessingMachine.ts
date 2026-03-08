@@ -3,7 +3,7 @@
 namespace Machine {
 	export abstract class BasicProcessingMachine
 	extends ProcessingMachine {
-		getRecipeDictionary(): SourceRecipeDictionary<ItemProcessingRecipe> {
+		getRecipeDictionary(): MachineRecipe.SourceRecipeDictionary<ItemProcessingRecipe> {
 			return null;
 		}
 
@@ -74,3 +74,4 @@ namespace Machine {
 		}
 	}
 }
+

@@ -1,4 +1,4 @@
-﻿/// <reference path="BasicProcessingMachine.ts" />
+/// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("macerator", [
 {name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function() {
 		], ['#', BlockID.machineBlockBasic, -1, 'x', 318, -1, 'b', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1]);
 	}
 
-	const dictionary: ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("macerator");
+	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipe.Registry.getDictionary("macerator");
 	// ores
 	dictionary.addRecipe({id: VanillaBlockID.gold_ore}, {id: ItemID.crushedGold, count: 2});
 	dictionary.addRecipe({id: VanillaBlockID.iron_ore}, {id: ItemID.crushedIron, count: 2});
@@ -162,8 +162,8 @@ namespace Machine {
 			return guiMacerator;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary {
-			return MachineRecipeRegistry.getDictionary("macerator");
+		getRecipeDictionary(): MachineRecipe.ProcessingRecipeDictionary {
+			return MachineRecipe.Registry.getDictionary("macerator");
 		}
 
 		getOperationSound(): string {
@@ -177,7 +177,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.macerator, new Macerator());
 
-	MachineRecipeRegistry.registerDictionary("macerator", new ProcessingRecipeDictionary(300));
+	MachineRecipe.Registry.registerDictionary("macerator", new MachineRecipe.ProcessingRecipeDictionary(300));
 
 	StorageInterface.createInterface(BlockID.macerator, {
 		slots: {
@@ -189,3 +189,4 @@ namespace Machine {
 		}
 	});
 }
+

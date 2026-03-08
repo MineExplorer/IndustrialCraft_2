@@ -8,38 +8,40 @@ interface IRecipeDictionary<T> {
 	clear(): void;
 }
 
-abstract class RecipeDictionary<T> implements IRecipeDictionary<T> {
-	recipes: KeyValueMap<T> = {};
+namespace MachineRecipe {
+	export abstract class RecipeDictionary<T> implements IRecipeDictionary<T> {
+		recipes: KeyValueMap<T> = {};
 
-	abstract register(recipe: T): void;
+		abstract register(recipe: T): void;
 
-	findRecipe(predicate: (recipe: T) => boolean): Nullable<T> {
-		for (let key in this.recipes) {
-			const recipe = this.recipes[key];
-			if (predicate(recipe)) {
-				return recipe;
+		findRecipe(predicate: (recipe: T) => boolean): Nullable<T> {
+			for (let key in this.recipes) {
+				const recipe = this.recipes[key];
+				if (predicate(recipe)) {
+					return recipe;
+				}
 			}
+			return null;
 		}
-		return null;
-	}
 
-    getAll(): T[] {
-        return Object.values(this.recipes);
-    }
-
-	clear(): void {
-		this.recipes = {};
-	}
-
-	protected putRecipe(key: string, recipe: T): void {
-		this.recipes[key] = recipe;
-	}
-
-	protected removeByKey(recipeKey: string): boolean {
-		if (recipeKey in this.recipes) {
-			delete this.recipes[recipeKey];
-			return true;
+		getAll(): T[] {
+			return Object.values(this.recipes);
 		}
-		return false;
+
+		clear(): void {
+			this.recipes = {};
+		}
+
+		protected putRecipe(key: string, recipe: T): void {
+			this.recipes[key] = recipe;
+		}
+
+		protected removeByKey(recipeKey: string): boolean {
+			if (recipeKey in this.recipes) {
+				delete this.recipes[recipeKey];
+				return true;
+			}
+			return false;
+		}
 	}
 }

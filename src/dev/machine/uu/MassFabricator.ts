@@ -59,7 +59,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			StorageInterface.setSlotValidatePolicy(this.container, "catalyserSlot", (name, id) => {
-				return MachineRecipeRegistry.hasRecipeFor("catalyser", id);
+				return MachineRecipe.Registry.hasRecipeFor("catalyser", id);
 			});
 			this.container.setSlotAddTransferPolicy("matterSlot", () => 0);
 		}
@@ -72,7 +72,7 @@ namespace Machine {
 				this.setActive(true);
 				if (this.data.catalyser < Math.max(1000, this.data.energy)) {
 					const catalyserSlot = this.container.getSlot("catalyserSlot");
-					const catalyserData = MachineRecipeRegistry.getRecipeResult<CatalyserData>("catalyser", catalyserSlot.id);
+					const catalyserData = MachineRecipe.Registry.getRecipeResult<CatalyserData>("catalyser", catalyserSlot.id);
 					if (catalyserData) {
 						this.data.catalyser += catalyserData.input;
 						this.decreaseSlot(catalyserSlot, 1);
@@ -169,7 +169,7 @@ namespace Machine {
 			"matterSlot": {output: true}
 		},
 		isValidInput: function(item) {
-			return MachineRecipeRegistry.hasRecipeFor("catalyser", item.id);
+			return MachineRecipe.Registry.hasRecipeFor("catalyser", item.id);
 		}
 	});
 }

@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 		"cxc",
 	], ['#', BlockID.solidCanner, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
 
-	const dictionary = MachineRecipeRegistry.getDictionary<FluidEnrichRecipeDictionary>("fluidCanner");
+	const dictionary: MachineRecipe.FluidEnrichRecipeDictionary = MachineRecipe.Registry.getDictionary("fluidCanner");
 	dictionary.addRecipe({id: ItemID.bioChaff, count: 1}, {name: "water", amount: 1000}, {name: "biomass", amount: 1000});
 	dictionary.addRecipe({id: ItemID.dustLapis, count: 1}, {name: "water", amount: 1000}, {name: "coolant", amount: 1000});
 });
@@ -90,11 +90,11 @@ namespace Machine {
 		}
 
 		getSolidRecipeDictionary(): SolidCannerRecipeDictionary {
-			return MachineRecipeRegistry.getDictionary("solidCanner");
+			return MachineRecipe.Registry.getDictionary("solidCanner");
 		}
 
-		getFluidRecipeDictionary(): FluidEnrichRecipeDictionary {
-			return MachineRecipeRegistry.getDictionary("fluidCanner");
+		getFluidRecipeDictionary(): MachineRecipe.FluidEnrichRecipeDictionary {
+			return MachineRecipe.Registry.getDictionary("fluidCanner");
 		}
 
 		isValidSource(id: number, data: number): boolean {
@@ -319,7 +319,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.canner, new Canner());
 
-	MachineRecipeRegistry.registerDictionary("fluidCanner", new FluidEnrichRecipeDictionary());
+	MachineRecipe.Registry.registerDictionary("fluidCanner", new MachineRecipe.FluidEnrichRecipeDictionary());
 
 	MachineRegistry.createFluidStorageInterface(BlockID.canner, {
 		slots: {

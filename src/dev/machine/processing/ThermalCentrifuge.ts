@@ -19,7 +19,7 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.electricMotor, 0, 'a', 265, 0, 'm', ItemID.miningLaser, -1, 'c', ItemID.coil, 0]);
 
-	const dictionary = MachineRecipeRegistry.getDictionary<ThermalCentrifugeRecipeDictionary>("thermalCentrifuge");
+	const dictionary: MachineRecipe.ThermalCentrifugeRecipeDictionary = MachineRecipe.Registry.getDictionary("thermalCentrifuge");
 	dictionary.addRecipe({id: VanillaBlockID.cobblestone}, [{id: ItemID.dustStone, count: 1}], 100);
 	dictionary.addRecipe({id: ItemID.crushedCopper}, [{id: ItemID.dustSmallTin, count: 1}, {id: ItemID.dustCopper, count: 1}, {id: ItemID.dustStone, count: 1}], 500);
 	dictionary.addRecipe({id: ItemID.crushedTin}, [{id: ItemID.dustSmallIron, count: 1}, {id: ItemID.dustTin, count: 1}, {id: ItemID.dustStone, count: 1}], 1000);
@@ -96,8 +96,8 @@ namespace Machine {
 			return guiCentrifuge;
 		}
 
-		getRecipeDictionary(): ThermalCentrifugeRecipeDictionary {
-			return MachineRecipeRegistry.getDictionary("thermalCentrifuge");
+		getRecipeDictionary(): MachineRecipe.ThermalCentrifugeRecipeDictionary {
+			return MachineRecipe.Registry.getDictionary("thermalCentrifuge");
 		}
 
 		getOutputSlots(): string[] {
@@ -186,7 +186,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, new ThermalCentrifuge());
 	
-	MachineRecipeRegistry.registerDictionary("thermalCentrifuge", new ThermalCentrifugeRecipeDictionary());
+	MachineRecipe.Registry.registerDictionary("thermalCentrifuge", new MachineRecipe.ThermalCentrifugeRecipeDictionary());
 
 	StorageInterface.createInterface(BlockID.thermalCentrifuge, {
 		slots: {
@@ -200,3 +200,4 @@ namespace Machine {
 		}
 	});
 }
+

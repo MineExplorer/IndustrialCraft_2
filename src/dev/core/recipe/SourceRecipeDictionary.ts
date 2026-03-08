@@ -1,12 +1,12 @@
 /// <reference path="./RecipeDictionary.ts" />
 
-type ProcessingRecipeInput = {
+type ItemInputEntry = {
 	id: number,
 	count?: number,
 	data?: number
 }
 
-type ProcessingRecipeOutput = {
+type ItemOutputEntry = {
 	id: number,
 	count: number,
 	data?: number,
@@ -14,30 +14,18 @@ type ProcessingRecipeOutput = {
 	chance?: number
 }
 
-interface ProcessingRecipeBase {
-	source: ProcessingRecipeInput,
-	processTime?: number
+/*type RecipeOutputEntry = ItemInstance & {
+	chance?: number
+}*/
+
+interface ItemSourceRecipe {
+	source: ItemInputEntry,
 }
 
-type ItemProcessingRecipe = ProcessingRecipeBase & {
-	result: ProcessingRecipeOutput[]
-}
-
-interface IProcessingRecipeDictionary<T> extends IRecipeDictionary<T> {
-	getRecipe(sourceId: number, sourceData: number): Nullable<T>;
-	removeRecipe(sourceId: number, sourceData: number): boolean;
-}
-
-class ProcessingRecipeDictionary<T extends ProcessingRecipeBase> extends RecipeDictionary<T>
-implements IProcessingRecipeDictionary<T> {
-	constructor(public defaultProccessTime: number) {
-		super();
-	}
-
+class SourceRecipeDictionary<T extends ItemSourceRecipe> extends RecipeDictionary<T> {
 	register(recipe: T): void {
+		recipe.source.count ??= 1;
         recipe.source.data ??= -1;
-        recipe.source.count ??= 1;
-        recipe.processTime ??= this.defaultProccessTime;
 		const recipeKey = this.getInputKey(recipe.source.id, recipe.source.data);
 		this.putRecipe(recipeKey, recipe);
 	}

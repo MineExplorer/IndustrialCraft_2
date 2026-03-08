@@ -1,8 +1,6 @@
 interface IRecipeDictionary<T> {
     register(recipe: T): void;
     
-    registerList(recipeList: T[]): void;
-
 	findRecipe(predicate: (recipe: T) => boolean): Nullable<T>;
 
     getAll(): T[];
@@ -14,10 +12,6 @@ abstract class RecipeDictionary<T> implements IRecipeDictionary<T> {
 	recipes: KeyValueMap<T> = {};
 
 	abstract register(recipe: T): void;
-
-	registerList(recipeList: T[]): void {
-		recipeList.forEach(r => this.register(r));
-	}
 
 	findRecipe(predicate: (recipe: T) => boolean): Nullable<T> {
 		for (let key in this.recipes) {

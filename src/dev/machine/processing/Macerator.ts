@@ -27,107 +27,106 @@ Callback.addCallback("PreLoaded", function() {
 		], ['#', BlockID.machineBlockBasic, -1, 'x', 318, -1, 'b', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1]);
 	}
 
-	MachineRecipeRegistry.registerRecipes<ItemProcessingRecipe>("macerator", [
-		// ores
-		{ source: {id: VanillaBlockID.gold_ore}, result: [{id: ItemID.crushedGold, count: 2}] },
-		{ source: {id: VanillaBlockID.iron_ore}, result: [{id: ItemID.crushedIron, count: 2}] },
-		{ source: {id: BlockID.oreCopper}, result: [{id: ItemID.crushedCopper, count: 2}] },
-		{ source: {id: BlockID.oreTin}, result: [{id: ItemID.crushedTin, count: 2}] },
-		{ source: {id: BlockID.oreLead}, result: [{id: ItemID.crushedLead, count: 2}] },
-		{ source: {id: BlockID.oreSilver}, result: [{id: ItemID.crushedSilver, count: 2}] },
-		{ source: {id: BlockID.oreUranium}, result: [{id: ItemID.crushedUranium, count: 2}] },
+	const dictionary: ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("macerator");
+	// ores
+	dictionary.addRecipe({id: VanillaBlockID.gold_ore}, {id: ItemID.crushedGold, count: 2});
+	dictionary.addRecipe({id: VanillaBlockID.iron_ore}, {id: ItemID.crushedIron, count: 2});
+	dictionary.addRecipe({id: BlockID.oreCopper}, {id: ItemID.crushedCopper, count: 2});
+	dictionary.addRecipe({id: BlockID.oreTin}, {id: ItemID.crushedTin, count: 2});
+	dictionary.addRecipe({id: BlockID.oreLead}, {id: ItemID.crushedLead, count: 2});
+	dictionary.addRecipe({id: BlockID.oreSilver}, {id: ItemID.crushedSilver, count: 2});
+	dictionary.addRecipe({id: BlockID.oreUranium}, {id: ItemID.crushedUranium, count: 2});
+	
+	// ingots
+	dictionary.addRecipe({id: VanillaItemID.iron_ingot}, {id: ItemID.dustIron, count: 1}, 200);
+	dictionary.addRecipe({id: VanillaItemID.gold_ingot}, {id: ItemID.dustGold, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.ingotCopper}, {id: ItemID.dustCopper, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.ingotTin}, {id: ItemID.dustTin, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.ingotBronze}, {id: ItemID.dustBronze, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.ingotSteel}, {id: ItemID.dustSteel, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.ingotLead}, {id: ItemID.dustLead, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.ingotSilver}, {id: ItemID.dustSilver, count: 1}, 200);
 
-		// ingots
-		{ source: {id: VanillaItemID.iron_ingot}, result: [{id: ItemID.dustIron, count: 1}], processTime: 200 },
-		{ source: {id: VanillaItemID.gold_ingot}, result: [{id: ItemID.dustGold, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.ingotCopper}, result: [{id: ItemID.dustCopper, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.ingotTin}, result: [{id: ItemID.dustTin, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.ingotBronze}, result: [{id: ItemID.dustBronze, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.ingotSteel}, result: [{id: ItemID.dustSteel, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.ingotLead}, result: [{id: ItemID.dustLead, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.ingotSilver}, result: [{id: ItemID.dustSilver, count: 1}], processTime: 200 },
+	// plates
+	dictionary.addRecipe({id: ItemID.plateIron}, {id: ItemID.dustIron, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.plateGold}, {id: ItemID.dustGold, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.plateCopper}, {id: ItemID.dustCopper, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.plateTin}, {id: ItemID.dustTin, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.plateBronze}, {id: ItemID.dustBronze, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.plateSteel}, {id: ItemID.dustSteel, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.plateLead}, {id: ItemID.dustLead, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.plateSilver}, {id: ItemID.dustSilver, count: 1}, 200);
+	dictionary.addRecipe({id: ItemID.plateLapis}, {id: ItemID.dustLapis, count: 1}, 200);
 
-		// plates
-		{ source: {id: ItemID.plateIron}, result: [{id: ItemID.dustIron, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.plateGold}, result: [{id: ItemID.dustGold, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.plateCopper}, result: [{id: ItemID.dustCopper, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.plateTin}, result: [{id: ItemID.dustTin, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.plateBronze}, result: [{id: ItemID.dustBronze, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.plateSteel}, result: [{id: ItemID.dustSteel, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.plateLead}, result: [{id: ItemID.dustLead, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.plateSilver}, result: [{id: ItemID.dustSilver, count: 1}], processTime: 200 },
-		{ source: {id: ItemID.plateLapis}, result: [{id: ItemID.dustLapis, count: 1}], processTime: 200 },
+	// dense plates
+	dictionary.addRecipe({id: ItemID.densePlateIron}, {id: ItemID.dustIron, count: 9}, 400);
+	dictionary.addRecipe({id: ItemID.densePlateGold}, {id: ItemID.dustGold, count: 9}, 400);
+	dictionary.addRecipe({id: ItemID.densePlateCopper}, {id: ItemID.dustCopper, count: 9}, 400);
+	dictionary.addRecipe({id: ItemID.densePlateTin}, {id: ItemID.dustTin, count: 9}, 400);
+	dictionary.addRecipe({id: ItemID.densePlateBronze}, {id: ItemID.dustBronze, count: 9}, 400);
+	dictionary.addRecipe({id: ItemID.densePlateSteel}, {id: ItemID.dustSteel, count: 9}, 400);
+	dictionary.addRecipe({id: ItemID.densePlateLead}, {id: ItemID.dustLead, count: 9}, 400);
+	dictionary.addRecipe({id: ItemID.densePlateSilver}, {id: ItemID.dustSilver, count: 9}, 400);
 
-		// dense plates
-		{ source: {id: ItemID.densePlateIron}, result: [{id: ItemID.dustIron, count: 9}], processTime: 400 },
-		{ source: {id: ItemID.densePlateGold}, result: [{id: ItemID.dustGold, count: 9}], processTime: 400 },
-		{ source: {id: ItemID.densePlateCopper}, result: [{id: ItemID.dustCopper, count: 9}], processTime: 400 },
-		{ source: {id: ItemID.densePlateTin}, result: [{id: ItemID.dustTin, count: 9}], processTime: 400 },
-		{ source: {id: ItemID.densePlateBronze}, result: [{id: ItemID.dustBronze, count: 9}], processTime: 400 },
-		{ source: {id: ItemID.densePlateSteel}, result: [{id: ItemID.dustSteel, count: 9}], processTime: 400 },
-		{ source: {id: ItemID.densePlateLead}, result: [{id: ItemID.dustLead, count: 9}], processTime: 400 },
-		{ source: {id: ItemID.densePlateSilver}, result: [{id: ItemID.dustSilver, count: 9}], processTime: 400 },
+	// casings
+	dictionary.addRecipe({id: ItemID.casingIron}, {id: ItemID.dustSmallIron, count: 4}, 100);
+	dictionary.addRecipe({id: ItemID.casingGold}, {id: ItemID.dustSmallGold, count: 4}, 100);
+	dictionary.addRecipe({id: ItemID.casingCopper}, {id: ItemID.dustSmallCopper, count: 4}, 100);
+	dictionary.addRecipe({id: ItemID.casingTin}, {id: ItemID.dustSmallTin, count: 4}, 100);
+	dictionary.addRecipe({id: ItemID.casingBronze}, {id: ItemID.dustSmallBronze, count: 4}, 100);
+	dictionary.addRecipe({id: ItemID.casingSteel}, {id: ItemID.dustSmallSteel, count: 4}, 100);
+	dictionary.addRecipe({id: ItemID.casingLead}, {id: ItemID.dustSmallLead, count: 4}, 100);
+	dictionary.addRecipe({id: ItemID.casingSilver}, {id: ItemID.dustSmallSilver, count: 4}, 100);
 
-		// casings
-		{ source: {id: ItemID.casingIron}, result: [{id: ItemID.dustSmallIron, count: 4}], processTime: 100 },
-		{ source: {id: ItemID.casingGold}, result: [{id: ItemID.dustSmallGold, count: 4}], processTime: 100 },
-		{ source: {id: ItemID.casingCopper}, result: [{id: ItemID.dustSmallCopper, count: 4}], processTime: 100 },
-		{ source: {id: ItemID.casingTin}, result: [{id: ItemID.dustSmallTin, count: 4}], processTime: 100 },
-		{ source: {id: ItemID.casingBronze}, result: [{id: ItemID.dustSmallBronze, count: 4}], processTime: 100 },
-		{ source: {id: ItemID.casingSteel}, result: [{id: ItemID.dustSmallSteel, count: 4}], processTime: 100 },
-		{ source: {id: ItemID.casingLead}, result: [{id: ItemID.dustSmallLead, count: 4}], processTime: 100 },
-		{ source: {id: ItemID.casingSilver}, result: [{id: ItemID.dustSmallSilver, count: 4}], processTime: 100 },
+	// nuggets
+	dictionary.addRecipe({id: VanillaItemID.iron_nugget}, {id: ItemID.dustSmallIron, count: 1}, 25);
+	dictionary.addRecipe({id: VanillaItemID.gold_nugget}, {id: ItemID.dustSmallGold, count: 1}, 25);
 
-		// nuggets
-		{ source: {id: VanillaItemID.iron_nugget}, result: [{id: ItemID.dustSmallIron, count: 1}], processTime: 25 },
-		{ source: {id: VanillaItemID.gold_nugget}, result: [{id: ItemID.dustSmallGold, count: 1}], processTime: 25 },
+	// other resources
+	dictionary.addRecipe({id: VanillaBlockID.lapis_block}, {id: ItemID.dustLapis, count: 9}, 400);
+	dictionary.addRecipe({id: VanillaBlockID.coal_block}, {id: ItemID.dustCoal, count: 9}, 400);
+	dictionary.addRecipe({id: VanillaItemID.coal, data: 0}, {id: ItemID.dustCoal, count: 1}, 200);
+	dictionary.addRecipe({id: VanillaItemID.diamond}, {id: ItemID.dustDiamond, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.lapis_lazuli}, {id: ItemID.dustLapis, count: 1}, 200);
+	dictionary.addRecipe({id: VanillaItemID.spider_eye}, {id: ItemID.grinPowder, count: 2}, 200);
+	dictionary.addRecipe({id: VanillaItemID.poisonous_potato}, {id: ItemID.grinPowder, count: 1}, 200);
 
-		// other resources
-		{ source: {id: VanillaBlockID.lapis_block}, result: [{id: ItemID.dustLapis, count: 9}], processTime: 400 },
-		{ source: {id: VanillaBlockID.coal_block}, result: [{id: ItemID.dustCoal, count: 9}], processTime: 400 },
-		{ source: {id: VanillaItemID.coal, data: 0}, result: [{id: ItemID.dustCoal, count: 1}], processTime: 200 },
-		{ source: {id: VanillaItemID.diamond}, result: [{id: ItemID.dustDiamond, count: 1}] },
-		{ source: {id: VanillaItemID.lapis_lazuli}, result: [{id: ItemID.dustLapis, count: 1}], processTime: 200 },
-		{ source: {id: VanillaItemID.spider_eye}, result: [{id: ItemID.grinPowder, count: 2}], processTime: 200 },
-		{ source: {id: VanillaItemID.poisonous_potato}, result: [{id: ItemID.grinPowder, count: 1}], processTime: 200 },
+	// other materials
+	dictionary.addRecipe({id: VanillaBlockID.stone, data: 0}, {id: 4, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.cobblestone}, {id: 12, count: 1, data: 0});
+	dictionary.addRecipe({id: VanillaBlockID.gravel}, {id: 318, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.wool}, {id: 287, count: 2});
+	dictionary.addRecipe({id: VanillaBlockID.ice}, {id: 332, count: 4});
+	dictionary.addRecipe({id: VanillaBlockID.glowstone}, {id: 348, count: 4});
+	dictionary.addRecipe({id: VanillaBlockID.redstone_block}, {id: 331, count: 9});
+	dictionary.addRecipe({id: VanillaBlockID.quartz_block}, {id: 406, count: 4});
+	dictionary.addRecipe({id: VanillaBlockID.quartz_stairs}, {id: 406, count: 4});
+	dictionary.addRecipe({id: VanillaBlockID.sandstone}, {id: 12, count: 2, data: 0});
+	dictionary.addRecipe({id: VanillaBlockID.sandstone_stairs}, {id: 12, count: 2, data: 0});
+	dictionary.addRecipe({id: VanillaBlockID.red_sandstone}, {id: 12, count: 2, data: 1});
+	dictionary.addRecipe({id: VanillaBlockID.red_sandstone_stairs}, {id: 12, count: 2, data: 1});
+	dictionary.addRecipe({id: VanillaItemID.bone}, {id: VanillaItemID.bone_meal, count: 5}, 200);
+	dictionary.addRecipe({id: VanillaItemID.blaze_rod}, {id: 377, count: 5}, 200);
 
-		// other materials
-		{ source: {id: VanillaBlockID.stone, data: 0}, result: [{id: 4, count: 1}] },
-		{ source: {id: VanillaBlockID.cobblestone}, result: [{id: 12, count: 1, data: 0}] },
-		{ source: {id: VanillaBlockID.gravel}, result: [{id: 318, count: 1}] },
-		{ source: {id: VanillaBlockID.wool}, result: [{id: 287, count: 2}] },
-		{ source: {id: VanillaBlockID.ice}, result: [{id: 332, count: 4}] },
-		{ source: {id: VanillaBlockID.glowstone}, result: [{id: 348, count: 4}] },
-		{ source: {id: VanillaBlockID.redstone_block}, result: [{id: 331, count: 9}] },
-		{ source: {id: VanillaBlockID.quartz_block}, result: [{id: 406, count: 4}] },
-		{ source: {id: VanillaBlockID.quartz_stairs}, result: [{id: 406, count: 4}] },
-		{ source: {id: VanillaBlockID.sandstone}, result: [{id: 12, count: 2, data: 0}] },
-		{ source: {id: VanillaBlockID.sandstone_stairs}, result: [{id: 12, count: 2, data: 0}] },
-		{ source: {id: VanillaBlockID.red_sandstone}, result: [{id: 12, count: 2, data: 1}] },
-		{ source: {id: VanillaBlockID.red_sandstone_stairs}, result: [{id: 12, count: 2, data: 1}] },
-		{ source: {id: VanillaItemID.bone}, result: [{id: VanillaItemID.bone_meal, count: 5}], processTime: 200 },
-		{ source: {id: VanillaItemID.blaze_rod}, result: [{id: 377, count: 5}], processTime: 200 },
-
-		// plants
-		{ source: {id: VanillaBlockID.planks, count: 4}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: BlockID.rubberTreeSapling, count: 4}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: BlockID.rubberTreeLeaves, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaBlockID.leaves, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaBlockID.leaves2, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaBlockID.deadbush, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaBlockID.cactus, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaBlockID.pumpkin, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaBlockID.wheat, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaBlockID.reeds, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaItemID.melon_slice, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaItemID.carrot, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaItemID.potato, count: 8}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaItemID.pumpkin_seeds, count: 16}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: VanillaItemID.melon_seeds, count: 16}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: ItemID.weed, count: 32}, result: [{id: ItemID.bioChaff, count: 1}] },
-		{ source: {id: ItemID.bioChaff}, result: [{id: 3, count: 1}] },
-		{ source: {id: ItemID.coffeeBeans}, result: [{id: ItemID.coffeePowder, count: 3, data: 0}], processTime: 200 }
-	]);
+	// plants
+	dictionary.addRecipe({id: VanillaBlockID.planks, count: 4}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: BlockID.rubberTreeSapling, count: 4}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: BlockID.rubberTreeLeaves, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.leaves, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.leaves2, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.deadbush, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.cactus, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.pumpkin, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.wheat, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.reeds, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.melon_slice, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.carrot, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.potato, count: 8}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.pumpkin_seeds, count: 16}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.melon_seeds, count: 16}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: ItemID.weed, count: 32}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: ItemID.bioChaff}, {id: 3, count: 1});
+	dictionary.addRecipe({id: ItemID.coffeeBeans}, {id: ItemID.coffeePowder, count: 3, data: 0});
 });
 
 namespace Machine {
@@ -163,7 +162,7 @@ namespace Machine {
 			return guiMacerator;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary<ItemProcessingRecipe> {
+		getRecipeDictionary(): ProcessingRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("macerator");
 		}
 
@@ -178,7 +177,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.macerator, new Macerator());
 
-	MachineRecipeRegistry.registerDictionary<ItemProcessingRecipe>("macerator", new ProcessingRecipeDictionary(300));
+	MachineRecipeRegistry.registerDictionary("macerator", new ProcessingRecipeDictionary(300));
 
 	StorageInterface.createInterface(BlockID.macerator, {
 		slots: {

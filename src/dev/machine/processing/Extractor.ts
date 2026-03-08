@@ -18,14 +18,13 @@ Callback.addCallback("PreLoaded", function() {
 		"xax"
 	], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
 	
-	MachineRecipeRegistry.registerRecipes<ItemProcessingRecipe>("extractor", [
-		{ source: {id: ItemID.latex}, result: [{id: ItemID.rubber, count: 3}] },
-		{ source: {id: BlockID.rubberTreeSapling}, result: [{id: ItemID.rubber, count: 1}] },
-		{ source: {id: BlockID.rubberTreeLog}, result: [{id: ItemID.rubber, count: 1}] },
-		{ source: {id: VanillaBlockID.wool}, result: [{id: 35, count: 1}] },
-		{ source: {id: VanillaItemID.gunpowder}, result: [{id: ItemID.dustSulfur, count: 1}] },
-		{ source: {id: ItemID.tinCanFull}, result: [{id: ItemID.tinCanEmpty, count: 1}], processTime: 100 }
-	]);
+	const dictionary: ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("extractor");
+	dictionary.addRecipe({id: ItemID.latex}, {id: ItemID.rubber, count: 3});
+	dictionary.addRecipe({id: BlockID.rubberTreeSapling}, {id: ItemID.rubber, count: 1});
+	dictionary.addRecipe({id: BlockID.rubberTreeLog}, {id: ItemID.rubber, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.wool}, {id: 35, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.gunpowder}, {id: ItemID.dustSulfur, count: 1});
+	dictionary.addRecipe({id: ItemID.tinCanFull}, {id: ItemID.tinCanEmpty, count: 1}, 100);
 });
 
 namespace Machine {
@@ -61,7 +60,7 @@ namespace Machine {
 			return guiExtractor;
 		}
 
-		getRecipeDictionary(): ProcessingRecipeDictionary<ItemProcessingRecipe> {
+		getRecipeDictionary(): ProcessingRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("extractor");
 		}
 
@@ -76,7 +75,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.extractor, new Extractor());
 
-	MachineRecipeRegistry.registerDictionary<ItemProcessingRecipe>("extractor", new ProcessingRecipeDictionary(400));
+	MachineRecipeRegistry.registerDictionary("extractor", new ProcessingRecipeDictionary(400));
 
 	StorageInterface.createInterface(BlockID.extractor, {
 		slots: {

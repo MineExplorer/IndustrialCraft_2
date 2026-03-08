@@ -19,16 +19,15 @@ Callback.addCallback("PreLoaded", function() {
 		"xcx"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.electricMotor, 0, 'a', ItemID.plateIron, 0, 'b', 325, 0, 'c', ItemID.circuitBasic, 0]);
 
-	MachineRecipeRegistry.registerRecipes<Machine.OreWashingRecipe>("oreWasher", [
-		{ source: {id: ItemID.crushedCopper}, result: [{id: ItemID.crushedPurifiedCopper, count: 1}, {id: ItemID.dustSmallCopper, count: 2}, {id: ItemID.dustStone, count: 1}] },
-		{ source: {id: ItemID.crushedTin}, result: [{id: ItemID.crushedPurifiedTin, count: 1}, {id: ItemID.dustSmallTin, count: 2}, {id: ItemID.dustStone, count: 1}] },
-		{ source: {id: ItemID.crushedIron}, result: [{id: ItemID.crushedPurifiedIron, count: 1}, {id: ItemID.dustSmallIron, count: 2}, {id: ItemID.dustStone, count: 1}] },
-		{ source: {id: ItemID.crushedGold}, result: [{id: ItemID.crushedPurifiedGold, count: 1}, {id: ItemID.dustSmallGold, count: 2}, {id: ItemID.dustStone, count: 1}] },
-		{ source: {id: ItemID.crushedSilver}, result: [{id: ItemID.crushedPurifiedSilver, count: 1}, {id: ItemID.dustSmallSilver, count: 2}, {id: ItemID.dustStone, count: 1}] },
-		{ source: {id: ItemID.crushedLead}, result: [{id: ItemID.crushedPurifiedLead, count: 1}, {id: ItemID.dustSmallSulfur, count: 3}, {id: ItemID.dustStone, count: 1}] },
-		{ source: {id: ItemID.crushedUranium}, result: [{id: ItemID.crushedPurifiedUranium, count: 1}, {id: ItemID.dustSmallLead, count: 2}, {id: ItemID.dustStone, count: 1}] },
-		{ source: {id: VanillaBlockID.gravel}, result: [{id: 318, count: 1}, {id: ItemID.dustStone, count: 1}] }
-	]);
+	const dictionary: ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("oreWasher");
+	dictionary.addRecipe({id: ItemID.crushedCopper}, [{id: ItemID.crushedPurifiedCopper, count: 1}, {id: ItemID.dustSmallCopper, count: 2}, {id: ItemID.dustStone, count: 1}]);
+	dictionary.addRecipe({id: ItemID.crushedTin}, [{id: ItemID.crushedPurifiedTin, count: 1}, {id: ItemID.dustSmallTin, count: 2}, {id: ItemID.dustStone, count: 1}]);
+	dictionary.addRecipe({id: ItemID.crushedIron}, [{id: ItemID.crushedPurifiedIron, count: 1}, {id: ItemID.dustSmallIron, count: 2}, {id: ItemID.dustStone, count: 1}]);
+	dictionary.addRecipe({id: ItemID.crushedGold}, [{id: ItemID.crushedPurifiedGold, count: 1}, {id: ItemID.dustSmallGold, count: 2}, {id: ItemID.dustStone, count: 1}]);
+	dictionary.addRecipe({id: ItemID.crushedSilver}, [{id: ItemID.crushedPurifiedSilver, count: 1}, {id: ItemID.dustSmallSilver, count: 2}, {id: ItemID.dustStone, count: 1}]);
+	dictionary.addRecipe({id: ItemID.crushedLead}, [{id: ItemID.crushedPurifiedLead, count: 1}, {id: ItemID.dustSmallSulfur, count: 3}, {id: ItemID.dustStone, count: 1}]);
+	dictionary.addRecipe({id: ItemID.crushedUranium}, [{id: ItemID.crushedPurifiedUranium, count: 1}, {id: ItemID.dustSmallLead, count: 2}, {id: ItemID.dustStone, count: 1}]);
+	dictionary.addRecipe({id: VanillaBlockID.gravel}, [{id: 318, count: 1}, {id: ItemID.dustStone, count: 1}]);
 });
 
 namespace Machine {
@@ -61,16 +60,10 @@ namespace Machine {
 	});
 
 	export type OreWashingRecipe = {
-		source: ProcessingRecipeInput,
-		result: [ProcessingRecipeOutput, ProcessingRecipeOutput?, ProcessingRecipeOutput?],
+		source: ItemInputEntry,
+		result: [ItemOutputEntry, ItemOutputEntry?, ItemOutputEntry?],
 		processTime?: number
 	};
-
-	export class OreWasherRecipeDictionary extends ProcessingRecipeDictionary<OreWashingRecipe> {
-		constructor() {
-			super(200);
-		}
-	}
 
 	export class OreWasher extends BasicProcessingMachine {
 		liquidTank: BlockEngine.LiquidTank;
@@ -84,7 +77,7 @@ namespace Machine {
 			return guiOreWasher;
 		}
 
-		getRecipeDictionary(): OreWasherRecipeDictionary {
+		getRecipeDictionary(): ProcessingRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("oreWasher");
 		}
 
@@ -164,7 +157,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.oreWasher, new OreWasher());
 
-	MachineRecipeRegistry.registerDictionary("oreWasher", new OreWasherRecipeDictionary());
+	MachineRecipeRegistry.registerDictionary("oreWasher", new ProcessingRecipeDictionary(200));
 
 	MachineRegistry.createFluidStorageInterface(BlockID.oreWasher, {
 		slots: {

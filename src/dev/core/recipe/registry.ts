@@ -1,4 +1,4 @@
-/// <reference path="RecipeDictionary.ts" />
+/// <reference path="./RecipeDictionary.ts" />
 
 namespace MachineRecipeRegistry {
 	export const recipeData = {};
@@ -17,22 +17,6 @@ namespace MachineRecipeRegistry {
 		return dictionaries[name];
 	}
 
-	export function addProcessingRecipe(name: string, input: ProcessingRecipeInput, output: ProcessingRecipeOutput | ProcessingRecipeOutput[], recipeProps: any = {}): void {
-		if (!Array.isArray(output)) {
-			output = [output];
-		}
-		registerRecipe<ItemProcessingRecipe>(name, { source: input, result: output, ...recipeProps });
-	}
-
-	export function removeProcessingRecipe(name: string, input: ProcessingRecipeInput) {
-		const dictionary = getDictionary<IProcessingRecipeDictionary<any>>(name);
-		if (!dictionary) {
-			Logger.Log(`Recipe dictionary "${name}" not found, cannot remove recipe"`, "ERROR");
-			return;
-		}
-		dictionary.removeRecipe(input.id, input.data || 1);
-	}
-
 	export function registerRecipe<T>(name: string, recipe: T): void {
 		const dictionary = getDictionary<IRecipeDictionary<T>>(name);
 		if (!dictionary) {
@@ -48,7 +32,7 @@ namespace MachineRecipeRegistry {
 			Logger.Log(`Recipe dictionary "${name}" not found, skipped adding ${recipes.length} recipes"`, "ERROR");
 			return;
 		}
-		dictionary.registerList(recipes);
+		recipes.forEach(recipe => dictionary.register(recipe));
 	}
 
 	/** @deprecated */

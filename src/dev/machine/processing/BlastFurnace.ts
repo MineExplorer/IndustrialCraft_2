@@ -15,13 +15,12 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['s', BlockID.machineBlockBasic, 0, 'a', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
 
-	MachineRecipeRegistry.registerRecipes<Machine.BlastFurnaceRecipe>("blastFurnace", [
-		{ source: {id: VanillaBlockID.iron_ore}, result: [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}] },
-		{ source: {id: VanillaItemID.iron_ingot}, result: [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}] },
-		{ source: {id: ItemID.dustIron}, result: [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}] },
-		{ source: {id: ItemID.crushedPurifiedIron}, result: [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}] },
-		{ source: {id: ItemID.crushedIron}, result: [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}] }
-	]);
+	const dictionary = MachineRecipeRegistry.getDictionary<ProcessingRecipeDictionary>("blastFurnace");
+	dictionary.addRecipe({id: VanillaBlockID.iron_ore}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 6000);
+	dictionary.addRecipe({id: VanillaItemID.iron_ingot}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 6000);
+	dictionary.addRecipe({id: ItemID.dustIron}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 6000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedIron}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 6000);
+	dictionary.addRecipe({id: ItemID.crushedIron}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 6000);
 });
 
 namespace Machine {
@@ -47,18 +46,6 @@ namespace Machine {
 			"indicator": {type: "image", x: 450 + 71*GUI_SCALE_NEW, y: 50 + 59*GUI_SCALE_NEW, bitmap: "indicator_red", scale: GUI_SCALE_NEW}
 		}
 	});
-
-	export type BlastFurnaceRecipe = {
-		source: { id: number, count?: number},
-		result: [ProcessingRecipeOutput, ProcessingRecipeOutput?],
-		processTime?: number
-	}
-
-	export class BlastFurnaceRecipeDictionary extends ProcessingRecipeDictionary<BlastFurnaceRecipe> {
-		constructor() {
-			super(6000);
-		}
-	}
 
 	export class BlastFurnace extends MachineBase
 	implements IHeatConsumer {
@@ -93,15 +80,15 @@ namespace Machine {
 			return true;
 		}
 
-		getRecipeDictionary(): BlastFurnaceRecipeDictionary {
+		getRecipeDictionary(): ProcessingRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("blastFurnace");
 		}
 
-		getRecipe(id: number, data: number): Nullable<BlastFurnaceRecipe> {
+		getRecipe(id: number, data: number): Nullable<ItemProcessingRecipe> {
 			return this.getRecipeDictionary().getRecipe(id, data);
 		}
 		
-		checkResult(result: ProcessingRecipeOutput[]): boolean {
+		checkResult(result: ItemOutputEntry[]): boolean {
 			for (let i = 0; i < result.length; i++) {
 				const entry = result[i - 1];
 				const resultSlot = this.container.getSlot("slotResult" + (i + 1));
@@ -113,7 +100,7 @@ namespace Machine {
 			return true;
 		}
 
-		putResult(result: ProcessingRecipeOutput[]): void {
+		putResult(result: ItemOutputEntry[]): void {
 			for (let i = 0; i < result.length; i++) {
 				const entry = result[i];
 				if (entry.chance != null && Math.random() >= entry.chance) {
@@ -242,7 +229,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.blastFurnace, new BlastFurnace());
 
-	MachineRecipeRegistry.registerDictionary("blastFurnace", new BlastFurnaceRecipeDictionary());
+	MachineRecipeRegistry.registerDictionary("blastFurnace", new ProcessingRecipeDictionary(6000));
 
 	StorageInterface.createInterface(BlockID.blastFurnace, {
 		slots: {

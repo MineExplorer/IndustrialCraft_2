@@ -3,7 +3,7 @@
 namespace Machine {
 	export abstract class BasicProcessingMachine
 	extends ProcessingMachine {
-		getRecipeDictionary(): IProcessingRecipeDictionary<ItemProcessingRecipe> {
+		getRecipeDictionary(): SourceRecipeDictionary<ItemProcessingRecipe> {
 			return null;
 		}
 
@@ -48,7 +48,7 @@ namespace Machine {
 			return false;
 		}
 
-		canPutResult(result: ProcessingRecipeOutput[]): boolean {
+		canPutResult(result: ItemOutputEntry[]): boolean {
 			const outputSlots = this.getOutputSlots();
 			for (let i = 0; i < Math.min(result.length, outputSlots.length); i++) {
 				const item = result[i];
@@ -61,7 +61,7 @@ namespace Machine {
 			return true;
 		}
 
-		putResult(result: ProcessingRecipeOutput[]): void {
+		putResult(result: ItemOutputEntry[]): void {
 			const outputSlots = this.getOutputSlots();
 			for (let i = 0; i < Math.min(result.length, outputSlots.length); i++) {
 				const entry = result[i];

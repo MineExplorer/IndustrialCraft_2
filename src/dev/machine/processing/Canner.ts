@@ -18,10 +18,9 @@ Callback.addCallback("PreLoaded", function() {
 		"cxc",
 	], ['#', BlockID.solidCanner, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
 
-	MachineRecipeRegistry.registerRecipes<Machine.FluidCannerRecipe>("fluidCanner", [
-		{ source: {id: ItemID.bioChaff, count: 1}, inputFluid: {name: "water", amount: 1000}, outputFluid: {name: "biomass", amount: 1000} },
-		{ source: {id: ItemID.dustLapis, count: 1}, inputFluid: {name: "water", amount: 1000}, outputFluid: {name: "coolant", amount: 1000} }
-	]);
+	const dictionary = MachineRecipeRegistry.getDictionary<FluidEnrichRecipeDictionary>("fluidCanner");
+	dictionary.addRecipe({id: ItemID.bioChaff, count: 1}, {name: "water", amount: 1000}, {name: "biomass", amount: 1000});
+	dictionary.addRecipe({id: ItemID.dustLapis, count: 1}, {name: "water", amount: 1000}, {name: "coolant", amount: 1000});
 });
 
 namespace Machine {
@@ -71,16 +70,6 @@ namespace Machine {
 		FluidCanning
 	}
 
-	export type FluidCannerRecipe = {
-		source: {id: number, count?: number, data?: number}
-		inputFluid: {name: string, amount: number}
-		outputFluid: {name: string, amount: number}
-	};
-
-	export class FluidCannerRecipeDictionary extends FluidItemRecipeDictionary<FluidCannerRecipe> {
-
-	}
-
 	export class Canner extends ProcessingMachine {
 		inputTank: BlockEngine.LiquidTank;
 		outputTank: BlockEngine.LiquidTank;
@@ -104,7 +93,7 @@ namespace Machine {
 			return MachineRecipeRegistry.getDictionary("solidCanner");
 		}
 
-		getFluidRecipeDictionary(): FluidCannerRecipeDictionary {
+		getFluidRecipeDictionary(): FluidEnrichRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("fluidCanner");
 		}
 
@@ -330,7 +319,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.canner, new Canner());
 
-	MachineRecipeRegistry.registerDictionary("fluidCanner", new FluidCannerRecipeDictionary());
+	MachineRecipeRegistry.registerDictionary("fluidCanner", new FluidEnrichRecipeDictionary());
 
 	MachineRegistry.createFluidStorageInterface(BlockID.canner, {
 		slots: {

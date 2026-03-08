@@ -129,7 +129,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 					mode: 0
 				});
 			}
-			const fluidDictionary: Machine.FluidCannerRecipeDictionary = MachineRecipeRegistry.getDictionary("fluidCanner");
+			const fluidDictionary: FluidEnrichRecipeDictionary = MachineRecipeRegistry.getDictionary("fluidCanner");
 			const fluidRecipes = fluidDictionary.getAll();
 			for (let recipe of fluidRecipes) {
 				list.push({
@@ -248,7 +248,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: Machine.OreWasherRecipeDictionary = MachineRecipeRegistry.getDictionary("oreWasher");
+			const dictionary: ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("oreWasher");
 			const recipes = dictionary.getAll();
 			for (let i = 0; i < recipes.length; i++) {
 				const recipe = recipes[i];
@@ -288,7 +288,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: Machine.ThermalCentrifugeRecipeDictionary = MachineRecipeRegistry.getDictionary("thermalCentrifuge");
+			const dictionary: ThermalCentrifugeRecipeDictionary = MachineRecipeRegistry.getDictionary("thermalCentrifuge");
 			const recipes = dictionary.getAll();
 			recipes.forEach(recipe => {
 				list.push({
@@ -340,7 +340,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: Machine.BlockCutterRecipeDictionary = MachineRecipeRegistry.getDictionary("cuttingMachine");
+			const dictionary: BlockCutterRecipeDictionary = MachineRecipeRegistry.getDictionary("cuttingMachine");
 			if (!dictionary) {
 				return list;
 			}
@@ -397,7 +397,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: Machine.BlastFurnaceRecipeDictionary = MachineRecipeRegistry.getDictionary("blastFurnace");
+			const dictionary: ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("blastFurnace");
 			const recipes = dictionary.getAll();
 			recipes.forEach(recipe => {
 				list.push({

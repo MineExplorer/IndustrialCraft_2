@@ -19,31 +19,30 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.electricMotor, 0, 'a', 265, 0, 'm', ItemID.miningLaser, -1, 'c', ItemID.coil, 0]);
 
-	MachineRecipeRegistry.registerRecipes<Machine.ThermalCentrifugeRecipe>("thermalCentrifuge", [
-		{ source: {id: VanillaBlockID.cobblestone}, result: [{id: ItemID.dustStone, count: 1}], heat: 100 },
-		{ source: {id: ItemID.crushedCopper}, result: [{id: ItemID.dustSmallTin, count: 1}, {id: ItemID.dustCopper, count: 1}, {id: ItemID.dustStone, count: 1}], heat: 500 },
-		{ source: {id: ItemID.crushedTin}, result: [{id: ItemID.dustSmallIron, count: 1}, {id: ItemID.dustTin, count: 1}, {id: ItemID.dustStone, count: 1}], heat: 1000 },
-		{ source: {id: ItemID.crushedIron}, result: [{id: ItemID.dustSmallGold, count: 1}, {id: ItemID.dustIron, count: 1}, {id: ItemID.dustStone, count: 1}], heat: 1500 },
-		{ source: {id: ItemID.crushedSilver}, result: [{id: ItemID.dustSmallLead, count: 1}, {id: ItemID.dustSilver, count: 1}, {id: ItemID.dustStone, count: 1}], heat: 2000 },
-		{ source: {id: ItemID.crushedGold}, result: [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustGold, count: 1}, {id: ItemID.dustStone, count: 1}], heat: 2000 },
-		{ source: {id: ItemID.crushedLead}, result: [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustLead, count: 1}, {id: ItemID.dustStone, count: 1}], heat: 2000 },
-		{ source: {id: ItemID.crushedUranium}, result: [{id: ItemID.smallUranium235, count: 1}, {id: ItemID.uranium238, count: 4}, {id: ItemID.dustStone, count: 1}], heat: 3000 },
-		{ source: {id: ItemID.crushedPurifiedCopper}, result: [{id: ItemID.dustSmallTin, count: 1}, {id: ItemID.dustCopper, count: 1}], heat: 500 },
-		{ source: {id: ItemID.crushedPurifiedTin}, result: [{id: ItemID.dustSmallIron, count: 1}, {id: ItemID.dustTin, count: 1}], heat: 1000 },
-		{ source: {id: ItemID.crushedPurifiedIron}, result: [{id: ItemID.dustSmallGold, count: 1}, {id: ItemID.dustIron, count: 1}], heat: 1500 },
-		{ source: {id: ItemID.crushedPurifiedSilver}, result: [{id: ItemID.dustSmallLead, count: 1}, {id: ItemID.dustSilver, count: 1}], heat: 2000 },
-		{ source: {id: ItemID.crushedPurifiedGold}, result: [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustGold, count: 1}], heat: 2000 },
-		{ source: {id: ItemID.crushedPurifiedLead}, result: [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustLead, count: 1}], heat: 2000 },
-		{ source: {id: ItemID.crushedPurifiedUranium}, result: [{id: ItemID.smallUranium235, count: 2}, {id: ItemID.uranium238, count: 5}], heat: 3000 },
-		{ source: {id: ItemID.slag}, result: [{id: ItemID.dustSmallGold, count: 1}, {id: ItemID.dustCoal, count: 1}], heat: 1500 },
-		{ source: {id: ItemID.fuelRodDepletedUranium}, result: [{id: ItemID.smallPlutonium, count: 1}, {id: ItemID.uranium238, count: 4}, {id: ItemID.dustIron, count: 1}], heat: 4000 },
-		{ source: {id: ItemID.fuelRodDepletedUranium2}, result: [{id: ItemID.smallPlutonium, count: 2}, {id: ItemID.uranium238, count: 8}, {id: ItemID.dustIron, count: 3}], heat: 4000 },
-		{ source: {id: ItemID.fuelRodDepletedUranium4}, result: [{id: ItemID.smallPlutonium, count: 4}, {id: ItemID.uranium238, count: 16}, {id: ItemID.dustIron, count: 6}], heat: 4000 },
-		{ source: {id: ItemID.fuelRodDepletedMOX}, result: [{id: ItemID.smallPlutonium, count: 1}, {id: ItemID.plutonium, count: 3}, {id: ItemID.dustIron, count: 1}], heat: 5000 },
-		{ source: {id: ItemID.fuelRodDepletedMOX2}, result: [{id: ItemID.smallPlutonium, count: 2}, {id: ItemID.plutonium, count: 6}, {id: ItemID.dustIron, count: 3}], heat: 5000 },
-		{ source: {id: ItemID.fuelRodDepletedMOX4}, result: [{id: ItemID.smallPlutonium, count: 4}, {id: ItemID.plutonium, count: 12}, {id: ItemID.dustIron, count: 6}], heat: 5000 },
-		{ source: {id: ItemID.rtgPellet}, result: [{id: ItemID.plutonium, count: 3}, {id: ItemID.dustIron, count: 54}], heat: 5000 }
-	]);
+	const dictionary = MachineRecipeRegistry.getDictionary<ThermalCentrifugeRecipeDictionary>("thermalCentrifuge");
+	dictionary.addRecipe({id: VanillaBlockID.cobblestone}, [{id: ItemID.dustStone, count: 1}], 100);
+	dictionary.addRecipe({id: ItemID.crushedCopper}, [{id: ItemID.dustSmallTin, count: 1}, {id: ItemID.dustCopper, count: 1}, {id: ItemID.dustStone, count: 1}], 500);
+	dictionary.addRecipe({id: ItemID.crushedTin}, [{id: ItemID.dustSmallIron, count: 1}, {id: ItemID.dustTin, count: 1}, {id: ItemID.dustStone, count: 1}], 1000);
+	dictionary.addRecipe({id: ItemID.crushedIron}, [{id: ItemID.dustSmallGold, count: 1}, {id: ItemID.dustIron, count: 1}, {id: ItemID.dustStone, count: 1}], 1500);
+	dictionary.addRecipe({id: ItemID.crushedSilver}, [{id: ItemID.dustSmallLead, count: 1}, {id: ItemID.dustSilver, count: 1}, {id: ItemID.dustStone, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedGold}, [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustGold, count: 1}, {id: ItemID.dustStone, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedLead}, [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustLead, count: 1}, {id: ItemID.dustStone, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedUranium}, [{id: ItemID.smallUranium235, count: 1}, {id: ItemID.uranium238, count: 4}, {id: ItemID.dustStone, count: 1}], 3000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedCopper}, [{id: ItemID.dustSmallTin, count: 1}, {id: ItemID.dustCopper, count: 1}], 500);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedTin}, [{id: ItemID.dustSmallIron, count: 1}, {id: ItemID.dustTin, count: 1}], 1000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedIron}, [{id: ItemID.dustSmallGold, count: 1}, {id: ItemID.dustIron, count: 1}], 1500);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedSilver}, [{id: ItemID.dustSmallLead, count: 1}, {id: ItemID.dustSilver, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedGold}, [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustGold, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedLead}, [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustLead, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedUranium}, [{id: ItemID.smallUranium235, count: 2}, {id: ItemID.uranium238, count: 5}], 3000);
+	dictionary.addRecipe({id: ItemID.slag}, [{id: ItemID.dustSmallGold, count: 1}, {id: ItemID.dustCoal, count: 1}], 1500);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedUranium}, [{id: ItemID.smallPlutonium, count: 1}, {id: ItemID.uranium238, count: 4}, {id: ItemID.dustIron, count: 1}], 4000);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedUranium2}, [{id: ItemID.smallPlutonium, count: 2}, {id: ItemID.uranium238, count: 8}, {id: ItemID.dustIron, count: 3}], 4000);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedUranium4}, [{id: ItemID.smallPlutonium, count: 4}, {id: ItemID.uranium238, count: 16}, {id: ItemID.dustIron, count: 6}], 4000);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedMOX}, [{id: ItemID.smallPlutonium, count: 1}, {id: ItemID.plutonium, count: 3}, {id: ItemID.dustIron, count: 1}], 5000);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedMOX2}, [{id: ItemID.smallPlutonium, count: 2}, {id: ItemID.plutonium, count: 6}, {id: ItemID.dustIron, count: 3}], 5000);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedMOX4}, [{id: ItemID.smallPlutonium, count: 4}, {id: ItemID.plutonium, count: 12}, {id: ItemID.dustIron, count: 6}], 5000);
+	dictionary.addRecipe({id: ItemID.rtgPellet}, [{id: ItemID.plutonium, count: 3}, {id: ItemID.dustIron, count: 54}], 5000);
 });
 
 namespace Machine {
@@ -73,19 +72,6 @@ namespace Machine {
 			"indicator": {type: "image", x: 400 + 88*GUI_SCALE_NEW, y: 50 + 59*GUI_SCALE_NEW, bitmap: "indicator_red", scale: GUI_SCALE_NEW}
 		}
 	});
-
-	export type ThermalCentrifugeRecipe = {
-		source: ProcessingRecipeInput,
-		result: [ProcessingRecipeOutput, ProcessingRecipeOutput?, ProcessingRecipeOutput?],
-		processTime?: number,
-		heat: number
-	}
-
-	export class ThermalCentrifugeRecipeDictionary extends ProcessingRecipeDictionary<ThermalCentrifugeRecipe> {
-		constructor() {
-			super(500);
-		}
-	}
 
 	export class ThermalCentrifuge extends BasicProcessingMachine {
 		defaultValues = {

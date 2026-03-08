@@ -64,10 +64,8 @@ namespace Machine {
 		result: ItemInstance
 	}
 
-	export class SolidCannerRecipeDictionary extends ProcessingRecipeDictionary<SolidCannerRecipe> {
-		constructor() {
-			super(200);
-		}
+	export class SolidCannerRecipeDictionary extends SourceRecipeDictionary<SolidCannerRecipe> {
+
 	}
 
 	const guiSolidCanner = MachineRegistry.createInventoryWindow("Solid Canning Machine", {

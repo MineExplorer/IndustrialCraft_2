@@ -18,7 +18,7 @@ Callback.addCallback("PreLoaded", function() {
 		"xax"
 	], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
 	
-	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipe.Registry.getDictionary("extractor");
+	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("extractor");
 	dictionary.addRecipe({id: ItemID.latex}, {id: ItemID.rubber, count: 3});
 	dictionary.addRecipe({id: BlockID.rubberTreeSapling}, {id: ItemID.rubber, count: 1});
 	dictionary.addRecipe({id: BlockID.rubberTreeLog}, {id: ItemID.rubber, count: 1});
@@ -61,7 +61,7 @@ namespace Machine {
 		}
 
 		getRecipeDictionary(): MachineRecipe.ProcessingRecipeDictionary {
-			return MachineRecipe.Registry.getDictionary("extractor");
+			return MachineRecipeRegistry.getDictionary("extractor");
 		}
 
 		getOperationSound(): string {
@@ -75,7 +75,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.extractor, new Extractor());
 
-	MachineRecipe.Registry.registerDictionary("extractor", new MachineRecipe.ProcessingRecipeDictionary(400));
+	MachineRecipeRegistry.registerDictionary("extractor", new MachineRecipe.ProcessingRecipeDictionary(400));
 
 	StorageInterface.createInterface(BlockID.extractor, {
 		slots: {

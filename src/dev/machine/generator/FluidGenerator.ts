@@ -16,7 +16,7 @@ Callback.addCallback("PreLoaded", function() {
 	], ['x', BlockID.machineBlockBasic, 0, 'c', ItemID.cellEmpty, 0, 'p', ItemID.casingIron, 0]);
 });
 
-MachineRecipe.Registry.registerFluidRecipes("fluidFuel", {
+MachineRecipeRegistry.registerFluidRecipes("fluidFuel", {
 	"biomass": {power: 8, amount: 20},
 	"oil": {power: 8, amount: 10},
 	"biogas": {power: 16, amount: 10},
@@ -57,7 +57,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			const liquidFuel = MachineRecipe.Registry.requireFluidRecipes("fluidFuel");
+			const liquidFuel = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
 			this.liquidTank = this.addLiquidTank("fluid", 10000, Object.keys(liquidFuel));
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slotEnergy", (name, id) => {
@@ -66,7 +66,7 @@ namespace Machine {
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data, extra) => {
 				const liquid = LiquidItemRegistry.getItemLiquid(id, data, extra);
-				return liquid && !!MachineRecipe.Registry.getFluidRecipe("fluidFuel", liquid);
+				return liquid && !!MachineRecipeRegistry.getFluidRecipe("fluidFuel", liquid);
 			});
 
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
@@ -83,7 +83,7 @@ namespace Machine {
 		}
 
 		getFuel(liquid: string): {power: number, amount: number} {
-			return MachineRecipe.Registry.getFluidRecipe("fluidFuel", liquid);
+			return MachineRecipeRegistry.getFluidRecipe("fluidFuel", liquid);
 		}
 
 		onTick(): void {
@@ -142,7 +142,7 @@ namespace Machine {
 		},
 		isValidInput: function(item: ItemInstance) {
 			const liquid = LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra);
-			return liquid && !!MachineRecipe.Registry.getFluidRecipe("fluidFuel", liquid);
+			return liquid && !!MachineRecipeRegistry.getFluidRecipe("fluidFuel", liquid);
 		},
 		canTransportLiquid: () => false
 	});

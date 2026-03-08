@@ -12,7 +12,7 @@ ModAPI.addAPICallback("RedCore", (api: typeof RedCore) => {
 	api.Integration.addDeployerItem(ItemID.cableIron3);
 	api.Integration.addDeployerItem(ItemID.cableOptic);
 
-	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipe.Registry.getDictionary("compressor");
+	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("compressor");
 	dictionary.addRecipe({id: ItemID.nikolite, count: 9}, {id: BlockID.blockNikolite, count: 1});
 	dictionary.addRecipe({id: ItemID.gemRuby, count: 9}, {id: BlockID.blockRuby, count: 1});
 	dictionary.addRecipe({id: ItemID.gemSapphire, count: 9}, {id: BlockID.blockSapphire, count: 1});

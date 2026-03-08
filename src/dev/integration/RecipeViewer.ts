@@ -36,7 +36,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipe.Registry.getDictionary(this.recipeKey);
+			const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary(this.recipeKey);
 			const recipes = dictionary.getAll();
 			recipes.forEach(recipe => {
 				const resultEntry = recipe.result[0];
@@ -73,7 +73,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: Machine.SolidCannerRecipeDictionary = MachineRecipe.Registry.getDictionary("solidCanner");
+			const dictionary: Machine.SolidCannerRecipeDictionary = MachineRecipeRegistry.getDictionary("solidCanner");
 			const recipes = dictionary.getAll();
 			for (let recipe of recipes) {
 				list.push({
@@ -117,7 +117,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const solidDictionary: Machine.SolidCannerRecipeDictionary = MachineRecipe.Registry.getDictionary("solidCanner");
+			const solidDictionary: Machine.SolidCannerRecipeDictionary = MachineRecipeRegistry.getDictionary("solidCanner");
 			const solidRecipes = solidDictionary.getAll();
 			for (let recipe of solidRecipes) {
 				list.push({
@@ -129,7 +129,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 					mode: 0
 				});
 			}
-			const fluidDictionary: MachineRecipe.FluidEnrichRecipeDictionary = MachineRecipe.Registry.getDictionary("fluidCanner");
+			const fluidDictionary: MachineRecipe.FluidEnrichRecipeDictionary = MachineRecipeRegistry.getDictionary("fluidCanner");
 			const fluidRecipes = fluidDictionary.getAll();
 			for (let recipe of fluidRecipes) {
 				list.push({
@@ -200,7 +200,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 			];
 			for (let i = 0; i < dictionaryData.length; i++) {
 				const modeData = dictionaryData[i];
-				const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipe.Registry.getDictionary(modeData.key);
+				const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary(modeData.key);
 				if (!dictionary) {
 					continue;
 				}
@@ -248,7 +248,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipe.Registry.getDictionary("oreWasher");
+			const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("oreWasher");
 			const recipes = dictionary.getAll();
 			for (let i = 0; i < recipes.length; i++) {
 				const recipe = recipes[i];
@@ -288,7 +288,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: MachineRecipe.ThermalCentrifugeRecipeDictionary = MachineRecipe.Registry.getDictionary("thermalCentrifuge");
+			const dictionary: MachineRecipe.ThermalCentrifugeRecipeDictionary = MachineRecipeRegistry.getDictionary("thermalCentrifuge");
 			const recipes = dictionary.getAll();
 			recipes.forEach(recipe => {
 				list.push({
@@ -340,7 +340,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: MachineRecipe.BlockCutterRecipeDictionary = MachineRecipe.Registry.getDictionary("cuttingMachine");
+			const dictionary: MachineRecipe.BlockCutterRecipeDictionary = MachineRecipeRegistry.getDictionary("cuttingMachine");
 			if (!dictionary) {
 				return list;
 			}
@@ -397,7 +397,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipe.Registry.getDictionary("blastFurnace");
+			const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("blastFurnace");
 			const recipes = dictionary.getAll();
 			recipes.forEach(recipe => {
 				list.push({
@@ -462,7 +462,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: {power: number, amount: number}} = MachineRecipe.Registry.requireFluidRecipes("fluidFuel");
+			const recipe: {[key: string]: {power: number, amount: number}} = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
 			for (let liq in recipe) {
 				list.push({
 					inputLiq: [{liquid: liq, amount: recipe[liq].amount}],

@@ -81,6 +81,6 @@ Recipes.addShaped({id: ItemID.scrapBox, count: 1, data: 0}, [
 	"xxx"
 ], ['x', ItemID.scrap, 0]);
 
-MachineRecipe.Registry.addRecipeFor("catalyser", ItemID.scrap, {input: 5000, output: 30000});
-MachineRecipe.Registry.addRecipeFor("catalyser", ItemID.scrapBox, {input: 45000, output: 270000});
+MachineRecipeRegistry.addRecipeFor("catalyser", ItemID.scrap, {input: 5000, output: 30000});
+MachineRecipeRegistry.addRecipeFor("catalyser", ItemID.scrapBox, {input: 45000, output: 270000});
 

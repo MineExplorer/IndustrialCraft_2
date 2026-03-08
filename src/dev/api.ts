@@ -1,6 +1,6 @@
 const ICore = {
 	Machine: MachineRegistry,
-	Recipe: MachineRecipe.Registry,
+	Recipe: MachineRecipeRegistry,
 	Render: TileRenderer,
 	ChargeRegistry: ChargeItemRegistry,
 	Cable: CableRegistry,

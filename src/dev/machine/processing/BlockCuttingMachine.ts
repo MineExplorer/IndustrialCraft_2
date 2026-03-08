@@ -19,7 +19,7 @@ Callback.addCallback("PreLoaded", function() {
         "b"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'a', ItemID.circuitAdvanced, 0, 'b', ItemID.electricMotor, 0]);
 	
-	const dictionary: MachineRecipe.BlockCutterRecipeDictionary = MachineRecipe.Registry.getDictionary("cuttingMachine");
+	const dictionary: MachineRecipe.BlockCutterRecipeDictionary = MachineRecipeRegistry.getDictionary("cuttingMachine");
 	// -- Iron blade or higher --
 	// Logs
 	dictionary.addRecipe({id: VanillaBlockID.log, data: 0}, {id: VanillaBlockID.planks, count: 6, data: 0}, 1);
@@ -115,7 +115,7 @@ namespace Machine {
 		}
 
 		getRecipeDictionary(): MachineRecipe.BlockCutterRecipeDictionary {
-			return MachineRecipe.Registry.getDictionary("cuttingMachine");
+			return MachineRecipeRegistry.getDictionary("cuttingMachine");
 		}
 
 		isValidSource(id: number, data: number): boolean {
@@ -205,7 +205,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.blockCuttingMachine, new BlockCutter());
 
-	MachineRecipe.Registry.registerDictionary("cuttingMachine", new MachineRecipe.BlockCutterRecipeDictionary());
+	MachineRecipeRegistry.registerDictionary("cuttingMachine", new MachineRecipe.BlockCutterRecipeDictionary());
 
 	StorageInterface.createInterface(BlockID.blockCuttingMachine, {
 		slots: {

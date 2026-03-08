@@ -55,12 +55,12 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			const liquidFuel = MachineRecipe.Registry.requireFluidRecipes("fluidFuel");
+			const liquidFuel = MachineRecipeRegistry.requireFluidRecipes("fluidFuel");
 			this.liquidTank = this.addLiquidTank("fluid", 10000, Object.keys(liquidFuel));
 
 			StorageInterface.setSlotValidatePolicy(this.container, "slot1", (name, id, count, data, extra) => {
 				const liquid = LiquidItemRegistry.getItemLiquid(id, data, extra);
-				return liquid && !!MachineRecipe.Registry.getFluidRecipe("fluidFuel", liquid);
+				return liquid && !!MachineRecipeRegistry.getFluidRecipe("fluidFuel", liquid);
 			});
 
 			this.container.setSlotAddTransferPolicy("slot2", () => 0);
@@ -81,7 +81,7 @@ namespace Machine {
 		}
 
 		getFuel(liquid: string): {power: number, amount: number} {
-			return MachineRecipe.Registry.getFluidRecipe("fluidFuel", liquid);
+			return MachineRecipeRegistry.getFluidRecipe("fluidFuel", liquid);
 		}
 
 		onTick(): void {
@@ -149,7 +149,7 @@ namespace Machine {
 		},
 		isValidInput: function(item: ItemInstance) {
 			const liquid = LiquidItemRegistry.getItemLiquid(item.id, item.data, item.extra);
-			return liquid && !!MachineRecipe.Registry.getFluidRecipe("fluidFuel", liquid);
+			return liquid && !!MachineRecipeRegistry.getFluidRecipe("fluidFuel", liquid);
 		},
 		canTransportLiquid: () => false
 	});

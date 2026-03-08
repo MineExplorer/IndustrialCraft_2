@@ -27,7 +27,7 @@ Callback.addCallback("PreLoaded", function() {
 		], ['#', BlockID.machineBlockBasic, -1, 'x', 318, -1, 'b', ItemID.circuitBasic, -1, 'a', ItemID.electricMotor, -1]);
 	}
 
-	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipe.Registry.getDictionary("macerator");
+	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("macerator");
 	// ores
 	dictionary.addRecipe({id: VanillaBlockID.gold_ore}, {id: ItemID.crushedGold, count: 2});
 	dictionary.addRecipe({id: VanillaBlockID.iron_ore}, {id: ItemID.crushedIron, count: 2});
@@ -163,7 +163,7 @@ namespace Machine {
 		}
 
 		getRecipeDictionary(): MachineRecipe.ProcessingRecipeDictionary {
-			return MachineRecipe.Registry.getDictionary("macerator");
+			return MachineRecipeRegistry.getDictionary("macerator");
 		}
 
 		getOperationSound(): string {
@@ -177,7 +177,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.macerator, new Macerator());
 
-	MachineRecipe.Registry.registerDictionary("macerator", new MachineRecipe.ProcessingRecipeDictionary(300));
+	MachineRecipeRegistry.registerDictionary("macerator", new MachineRecipe.ProcessingRecipeDictionary(300));
 
 	StorageInterface.createInterface(BlockID.macerator, {
 		slots: {

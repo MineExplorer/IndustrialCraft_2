@@ -19,7 +19,7 @@ Callback.addCallback("PreLoaded", function() {
 		"xcx"
 	], ['#', BlockID.machineBlockBasic, 0, 'x', ItemID.electricMotor, 0, 'a', ItemID.plateIron, 0, 'b', 325, 0, 'c', ItemID.circuitBasic, 0]);
 
-	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipe.Registry.getDictionary("oreWasher");
+	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("oreWasher");
 	dictionary.addRecipe({id: ItemID.crushedCopper}, [{id: ItemID.crushedPurifiedCopper, count: 1}, {id: ItemID.dustSmallCopper, count: 2}, {id: ItemID.dustStone, count: 1}]);
 	dictionary.addRecipe({id: ItemID.crushedTin}, [{id: ItemID.crushedPurifiedTin, count: 1}, {id: ItemID.dustSmallTin, count: 2}, {id: ItemID.dustStone, count: 1}]);
 	dictionary.addRecipe({id: ItemID.crushedIron}, [{id: ItemID.crushedPurifiedIron, count: 1}, {id: ItemID.dustSmallIron, count: 2}, {id: ItemID.dustStone, count: 1}]);
@@ -78,7 +78,7 @@ namespace Machine {
 		}
 
 		getRecipeDictionary():  MachineRecipe.ProcessingRecipeDictionary {
-			return MachineRecipe.Registry.getDictionary("oreWasher");
+			return MachineRecipeRegistry.getDictionary("oreWasher");
 		}
 
 		getOutputSlots(): string[] {
@@ -157,7 +157,7 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.oreWasher, new OreWasher());
 
-	MachineRecipe.Registry.registerDictionary("oreWasher", new MachineRecipe.ProcessingRecipeDictionary(200));
+	MachineRecipeRegistry.registerDictionary("oreWasher", new MachineRecipe.ProcessingRecipeDictionary(200));
 
 	MachineRegistry.createFluidStorageInterface(BlockID.oreWasher, {
 		slots: {

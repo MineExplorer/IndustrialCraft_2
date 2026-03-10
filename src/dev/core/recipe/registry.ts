@@ -10,6 +10,7 @@ namespace MachineRecipeRegistry {
 			Logger.Log(`Recipe dictionary for ${name} is overriden`, "ERROR");
 		}
 		dictionaries[name] = dictionary;
+		dictionary.name = name;
 		return dictionary;
 	}
 
@@ -20,7 +21,7 @@ namespace MachineRecipeRegistry {
 	export function registerRecipe<T>(name: string, recipe: T): void {
 		const dictionary = getDictionary<IRecipeDictionary<T>>(name);
 		if (!dictionary) {
-			Logger.Log(`Recipe dictionary "${name}" not found, skipped adding recipe"`, "ERROR");
+			Logger.Log(`Cannot register recipe for "${name}", dictionary not found"`, "ERROR");
 			return;
 		}
 		dictionary.register(recipe);
@@ -29,7 +30,7 @@ namespace MachineRecipeRegistry {
 	export function registerRecipes<T>(name: string, recipes: T[]) {
 		const dictionary = getDictionary<IRecipeDictionary<T>>(name);
 		if (!dictionary) {
-			Logger.Log(`Recipe dictionary "${name}" not found, skipped adding ${recipes.length} recipes"`, "ERROR");
+			Logger.Log(`Cannot register recipes for "${name}", dictionary not found"`, "ERROR");
 			return;
 		}
 		recipes.forEach(recipe => dictionary.register(recipe));

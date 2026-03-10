@@ -11,6 +11,10 @@ type FluidEnrichRecipe = {
 namespace MachineRecipe {
 	export class FluidEnrichRecipeDictionary extends RecipeDictionary<FluidEnrichRecipe> {
 		register(recipe: FluidEnrichRecipe): void {
+			if (!recipe.source.id || !recipe.inputFluid.name) {
+				Logger.Log(`Invalid input for ${this.name} recipe`, "ERROR");
+				return;
+			}
 			recipe.source.data ??= -1;
 			recipe.source.count ??= 1;
 			const recipeKey = this.getInputKey(recipe.inputFluid.name, recipe.source.id, recipe.source.data);

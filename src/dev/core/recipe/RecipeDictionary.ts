@@ -1,4 +1,6 @@
 interface IRecipeDictionary<T> {
+	name: string;
+
     register(recipe: T): void;
     
 	findRecipe(predicate: (recipe: T) => boolean): Nullable<T>;
@@ -10,6 +12,7 @@ interface IRecipeDictionary<T> {
 
 namespace MachineRecipe {
 	export abstract class RecipeDictionary<T> implements IRecipeDictionary<T> {
+		name: string;
 		recipes: KeyValueMap<T> = {};
 
 		abstract register(recipe: T): void;

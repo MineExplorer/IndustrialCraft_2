@@ -21,6 +21,10 @@ interface ItemSourceRecipe {
 namespace MachineRecipe {
 	export class SourceRecipeDictionary<T extends ItemSourceRecipe> extends RecipeDictionary<T> {
 		register(recipe: T): void {
+			if (!recipe.source.id) {
+				Logger.Log(`Invalid source id for ${this.name} recipe`, "ERROR");
+				return;
+			}
 			recipe.source.count ??= 1;
 			recipe.source.data ??= -1;
 			const recipeKey = this.getInputKey(recipe.source.id, recipe.source.data);

@@ -11,6 +11,14 @@ namespace MachineRecipe {
         constructor(public defaultProccessTime: number) {
             super();
         }
+        
+        register(recipe: ItemProcessingRecipe): void {
+            if (recipe.result.some(o => !o.id)) {
+                Logger.Log(`Invalid result id for ${this.name} recipe`, "ERROR");
+                return;
+            }
+            super.register(recipe);
+        }
 
         addRecipe(input: ItemInputEntry, output: ItemOutputEntry | ItemOutputEntry[], processTime: number = this.defaultProccessTime): void {
             if (!Array.isArray(output)) {

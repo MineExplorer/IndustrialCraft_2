@@ -8,6 +8,8 @@ TileRenderer.setStandardModelWithRotation(BlockID.blastFurnace, 0, [["machine_ad
 TileRenderer.registerModelWithRotation(BlockID.blastFurnace, 0, [["machine_advanced", 0], ["ind_furnace_side", 1], ["machine_back", 0], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], true);
 TileRenderer.setRotationFunction(BlockID.blastFurnace, true);
 
+ItemName.addConsumptionTooltip("blastFurnace", "HU", 1, 100);
+
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.blastFurnace, count: 1, data: 0}, [
 		"aaa",
@@ -15,12 +17,12 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['s', BlockID.machineBlockBasic, 0, 'a', ItemID.casingIron, 0, 'x', ItemID.heatConductor, 0]);
 
-	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("blastFurnace");
-	dictionary.addRecipe({id: VanillaBlockID.iron_ore}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 6000);
-	dictionary.addRecipe({id: VanillaItemID.iron_ingot}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 6000);
-	dictionary.addRecipe({id: ItemID.dustIron}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 6000);
-	dictionary.addRecipe({id: ItemID.crushedPurifiedIron}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 6000);
-	dictionary.addRecipe({id: ItemID.crushedIron}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 6000);
+	const dictionary: MachineRecipe.BlastFurnaceRecipeDictionary = MachineRecipeRegistry.getDictionary("blastFurnace");
+	dictionary.addRecipe({id: VanillaBlockID.iron_ore}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 120_000);
+	dictionary.addRecipe({id: VanillaItemID.iron_ingot}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 120_000);
+	dictionary.addRecipe({id: ItemID.dustIron}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 120_000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedIron}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 120_000);
+	dictionary.addRecipe({id: ItemID.crushedIron}, [{id: ItemID.ingotSteel, count: 1}, {id: ItemID.slag, count: 1}], 120_000);
 });
 
 namespace Machine {
@@ -51,11 +53,13 @@ namespace Machine {
 	implements IHeatConsumer {
 		defaultValues = {
 			progress: 0,
+			maxProgress: 0,
 			air: 0,
 			sourceID: 0,
 			heat: 0,
 		}
 
+		maxHeatConsumption = 100;
 		defaultDrop = BlockID.machineBlockBasic;
 		upgrades = ["redstone", "itemEjector", "itemPulling"];
 
@@ -69,7 +73,7 @@ namespace Machine {
 
 		setupContainer(): void {
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, count, data) => {
-				if (name == "slotSource") return !!this.getRecipe(id, data);
+				if (name == "slotSource") return !!this.getRecipe(id);
 				if (name == "slotAir1") return id == ItemID.cellAir;
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
 				return false;
@@ -80,12 +84,12 @@ namespace Machine {
 			return true;
 		}
 
-		getRecipeDictionary(): MachineRecipe.ProcessingRecipeDictionary {
+		getRecipeDictionary(): MachineRecipe.BlastFurnaceRecipeDictionary {
 			return MachineRecipeRegistry.getDictionary("blastFurnace");
 		}
 
-		getRecipe(id: number, data: number): Nullable<ItemProcessingRecipe> {
-			return this.getRecipeDictionary().getRecipe(id, data);
+		getRecipe(id: number): Nullable<BlastFurnaceRecipe> {
+			return this.getRecipeDictionary().getRecipe(id, 0);
 		}
 		
 		checkResult(result: ItemOutputEntry[]): boolean {
@@ -131,7 +135,7 @@ namespace Machine {
 
 		useUpgrades(): void {
 			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet);
-			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
+			this.isHeating = upgrades.getRedstoneInput(this.isPowered) || this.data.sourceID > 0;
 		}
 
 		onInit(): void {
@@ -149,39 +153,17 @@ namespace Machine {
 
 			if (this.data.heat >= maxHeat) {
 				this.container.sendEvent("setIndicator", "green");
-				const sourceSlot = this.container.getSlot("slotSource");
-				const sourceID = this.data.sourceID || sourceSlot.id;
-				const recipe = this.getRecipe(sourceID, 0);
-				if (recipe && (this.data.sourceID || recipe.source.count <= sourceSlot.count) && this.checkResult(recipe.result)) {
-					if (this.controlAir()) {
-						this.container.sendEvent("setAirImage", {show: false});
-						this.data.progress++;
-						this.container.setScale("progressScale", this.data.progress / recipe.processTime);
-						this.setActive(true);
-
-						if (!this.data.sourceID) {
-							this.data.sourceID = sourceID;
-							this.decreaseSlot(sourceSlot, recipe.source.count);
-						}
-
-						if (this.data.progress >= recipe.processTime) {
-							this.putResult(recipe.result);
-							this.data.progress = 0;
-							this.data.sourceID = 0;
-						}
-					} else {
-						this.container.sendEvent("setAirImage", {show: true});
-					}
-				}
 			} else {
 				this.container.sendEvent("setIndicator", "red");
 				this.setActive(false);
 			}
 
-			if (this.data.heat > 0) this.data.heat--;
-			if (this.data.sourceID == 0) {
-				this.container.setScale("progressScale", 0);
+			if (this.data.heat > 0 && !this.isHeating) {
+				this.data.heat--;
 			}
+			
+			const relativeProgress = this.data.maxProgress > 0 ? this.data.progress / this.data.maxProgress : 0;
+			this.container.setScale("progressScale", relativeProgress);
 			this.container.sendChanges();
 		}
 
@@ -199,11 +181,52 @@ namespace Machine {
 
 		receiveHeat(amount: number): number {
 			const slot = this.container.getSlot("slotSource");
-			if (this.isHeating || this.data.sourceID > 0 || this.getRecipe(slot.id, slot.data)) {
-				amount = Math.min(this.getMaxHeat() - this.data.heat, amount);
-				this.data.heat += amount + 1;
-				return amount;
+			if (this.isHeating || this.getRecipe(slot.id)) {
+				amount = Math.min(this.maxHeatConsumption, amount);
+				const maxHeat = this.getMaxHeat();
+				const heatingAmount = Math.min(maxHeat - this.data.heat, amount);
+				if (heatingAmount > 0) {
+					this.data.heat += heatingAmount;
+					amount -= heatingAmount;
+				}
+				if (amount > 0 && this.data.heat >= maxHeat) {
+					const progressAmount = this.performRecipe(amount);
+					return heatingAmount + progressAmount;
+				}
+				return heatingAmount;
 			}
+			return 0;
+		}
+
+		performRecipe(receivedHeat: number): number {
+			const sourceSlot = this.container.getSlot("slotSource");
+			const sourceID = this.data.sourceID || sourceSlot.id;
+			const recipe = this.getRecipe(sourceID);
+			if (recipe && (this.data.sourceID || recipe.source.count <= sourceSlot.count) && this.checkResult(recipe.result)) {
+				if (this.controlAir()) {
+					this.container.sendEvent("setAirImage", {show: false});
+					this.data.progress += receivedHeat;
+					this.data.maxProgress = recipe.heatCost;
+					this.setActive(true);
+
+					if (!this.data.sourceID) {
+						this.data.sourceID = sourceID;
+						this.isHeating = true;
+						this.decreaseSlot(sourceSlot, recipe.source.count);
+					}
+
+					if (this.data.progress >= recipe.heatCost) {
+						this.putResult(recipe.result);
+						this.data.progress = 0;
+						this.data.maxProgress = 0;
+						this.data.sourceID = 0;
+					}
+
+					return receivedHeat;
+				}
+				this.container.sendEvent("setAirImage", {show: true});
+			}
+			this.setActive(false);
 			return 0;
 		}
 
@@ -229,12 +252,12 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.blastFurnace, new BlastFurnace());
 
-	MachineRecipeRegistry.registerDictionary("blastFurnace", new MachineRecipe.ProcessingRecipeDictionary(6000));
+	MachineRecipeRegistry.registerDictionary("blastFurnace", new MachineRecipe.BlastFurnaceRecipeDictionary());
 
 	StorageInterface.createInterface(BlockID.blastFurnace, {
 		slots: {
 			"slotSource": {input: true, isValid: (item: ItemInstance, side: number, tileEntity: BlastFurnace) => {
-				return !!tileEntity.getRecipe(item.id, item.data);
+				return !!tileEntity.getRecipe(item.id);
 			}},
 			"slotAir1": {input: true, isValid: (item: ItemInstance) => item.id == ItemID.cellAir},
 			"slotAir2": {output: true},

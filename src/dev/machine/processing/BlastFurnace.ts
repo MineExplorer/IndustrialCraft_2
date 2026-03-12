@@ -59,11 +59,12 @@ namespace Machine {
 			heat: 0,
 		}
 
-		maxHeatConsumption = 100;
-		defaultDrop = BlockID.machineBlockBasic;
-		upgrades = ["redstone", "itemEjector", "itemPulling"];
+		readonly maxHeatConsumption = 100;
+		readonly defaultDrop = BlockID.machineBlockBasic;
+		readonly upgrades = ["redstone", "itemEjector", "itemPulling"];
 
 		isHeating: boolean = false;
+		lastReceivedHeat: number = 0;
 		isPowered: boolean;
 		upgradeSet?: UpgradeAPI.UpgradeSet;
 
@@ -94,7 +95,7 @@ namespace Machine {
 		
 		checkResult(result: ItemOutputEntry[]): boolean {
 			for (let i = 0; i < result.length; i++) {
-				const entry = result[i - 1];
+				const entry = result[i];
 				const resultSlot = this.container.getSlot("slotResult" + (i + 1));
 				const itemData = entry.data || 0;
 				if (resultSlot.id != 0 && (resultSlot.id != entry.id || resultSlot.data != itemData || resultSlot.count + entry.count > 64)) {
@@ -115,19 +116,19 @@ namespace Machine {
 			}
 		}
 
-		controlAir(): boolean {
+		controlAir(receivedHeat: number): boolean {
 			const slot1 = this.container.getSlot("slotAir1");
 			const slot2 = this.container.getSlot("slotAir2");
-			if (this.data.air == 0) {
+			if (this.data.air < receivedHeat) {
 				if (slot1.id == ItemID.cellAir && (slot2.id == 0 || slot2.id == ItemID.cellEmpty && slot2.count < 64)) {
 					slot1.setSlot(slot1.id, slot1.count - 1, 0);
 					slot1.validate();
 					slot2.setSlot(ItemID.cellEmpty, slot2.count + 1, 0);
-					this.data.air = 1000;
+					this.data.air += 20000;
 				}
 			}
-			if (this.data.air > 0) {
-				this.data.air--;
+			if (this.data.air >= receivedHeat) {
+				this.data.air -= receivedHeat;
 				return true;
 			}
 			return false;
@@ -147,6 +148,13 @@ namespace Machine {
 			this.useUpgrades();
 			StorageInterface.checkHoppers(this);
 
+			if (this.lastReceivedHeat > 0) {
+				this.lastReceivedHeat = 0;
+			}
+			else if (this.data.heat > 0) {
+				this.data.heat--;
+			}
+
 			const maxHeat = this.getMaxHeat();
 			this.data.heat = Math.min(this.data.heat, maxHeat);
 			this.container.setScale("heatScale", this.data.heat / maxHeat);
@@ -158,10 +166,6 @@ namespace Machine {
 				this.setActive(false);
 			}
 
-			if (this.data.heat > 0 && !this.isHeating) {
-				this.data.heat--;
-			}
-			
 			const relativeProgress = this.data.maxProgress > 0 ? this.data.progress / this.data.maxProgress : 0;
 			this.container.setScale("progressScale", relativeProgress);
 			this.container.sendChanges();
@@ -180,6 +184,7 @@ namespace Machine {
 		}
 
 		receiveHeat(amount: number): number {
+			let receivedHeat = 0;
 			const slot = this.container.getSlot("slotSource");
 			if (this.isHeating || this.getRecipe(slot.id)) {
 				amount = Math.min(this.maxHeatConsumption, amount);
@@ -187,23 +192,25 @@ namespace Machine {
 				const heatingAmount = Math.min(maxHeat - this.data.heat, amount);
 				if (heatingAmount > 0) {
 					this.data.heat += heatingAmount;
+					receivedHeat += heatingAmount;
 					amount -= heatingAmount;
 				}
 				if (amount > 0 && this.data.heat >= maxHeat) {
 					const progressAmount = this.performRecipe(amount);
-					return heatingAmount + progressAmount;
+					receivedHeat += progressAmount;
 				}
-				return heatingAmount;
 			}
-			return 0;
+			this.lastReceivedHeat += receivedHeat;
+			return receivedHeat;
 		}
 
 		performRecipe(receivedHeat: number): number {
 			const sourceSlot = this.container.getSlot("slotSource");
 			const sourceID = this.data.sourceID || sourceSlot.id;
 			const recipe = this.getRecipe(sourceID);
-			if (recipe && (this.data.sourceID || recipe.source.count <= sourceSlot.count) && this.checkResult(recipe.result)) {
-				if (this.controlAir()) {
+			receivedHeat = Math.min(recipe.heatCost - this.data.progress, receivedHeat);
+			if (recipe && (this.data.sourceID || recipe.source.count <= sourceSlot.count && this.checkResult(recipe.result))) {
+				if (this.controlAir(receivedHeat)) {
 					this.container.sendEvent("setAirImage", {show: false});
 					this.data.progress += receivedHeat;
 					this.data.maxProgress = recipe.heatCost;
@@ -215,7 +222,7 @@ namespace Machine {
 						this.decreaseSlot(sourceSlot, recipe.source.count);
 					}
 
-					if (this.data.progress >= recipe.heatCost) {
+					if (this.data.progress >= recipe.heatCost && this.checkResult(recipe.result)) {
 						this.putResult(recipe.result);
 						this.data.progress = 0;
 						this.data.maxProgress = 0;
@@ -233,7 +240,7 @@ namespace Machine {
 		@ContainerEvent(Side.Client, "setAirImage")
 		onSetAirImage(container: ItemContainer, window: any, content: any, data: {show: boolean}): void {
 			if (content) {
-				if (!data.show) {
+				if (data.show) {
 					content.elements["indicatorAir"] = {type: "image", x: 344 + 128*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
 				}
 				else if (!content.elements["indicatorAir"]) {

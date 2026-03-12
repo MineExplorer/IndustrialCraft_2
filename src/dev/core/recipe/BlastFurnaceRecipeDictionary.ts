@@ -1,7 +1,7 @@
 /// <reference path="./SourceRecipeDictionary.ts" />
 
 type BlastFurnaceRecipe = {
-    source: { id: number, count?: number },
+    source: {id: number, count?: number},
     result:  ItemOutputEntry[],
     heatCost: number
 }
@@ -16,7 +16,7 @@ namespace MachineRecipe {
             super.register(recipe);
         }
 
-        addRecipe(input: ItemInputEntry, output: ItemOutputEntry[], heatCost: number): void {
+        addRecipe(input: {id: number, count?: number}, output: ItemOutputEntry[], heatCost: number): void {
             this.register({ source: input, result: output, heatCost: heatCost });
         }
     }

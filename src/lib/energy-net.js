@@ -34,7 +34,7 @@ var __extends = (this && this.__extends) || (function () {
 */
 LIBRARY({
     name: "EnergyNet",
-    version: 10,
+    version: 11,
     shared: true,
     api: "CoreEngine"
 });
@@ -147,13 +147,57 @@ var EnergyPacket = /** @class */ (function () {
     };
     return EnergyPacket;
 }());
+var BlockCoordsData = /** @class */ (function () {
+    function BlockCoordsData() {
+        this.data = {};
+    }
+    BlockCoordsData.prototype.getCoordKey = function (x, y, z) {
+        return "".concat(x, ":").concat(y, ":").concat(z);
+    };
+    BlockCoordsData.prototype.has = function (x, y, z) {
+        var coordKey = this.getCoordKey(x, y, z);
+        return !!this.data[coordKey];
+    };
+    BlockCoordsData.prototype.add = function (x, y, z) {
+        var coordKey = this.getCoordKey(x, y, z);
+        this.data[coordKey] = true;
+    };
+    BlockCoordsData.prototype.remove = function (x, y, z) {
+        var coordKey = this.getCoordKey(x, y, z);
+        if (!this.data[coordKey])
+            return false;
+        delete this.data[coordKey];
+        return true;
+    };
+    BlockCoordsData.prototype.mergeFrom = function (other) {
+        for (var coordKey in other.data) {
+            this.data[coordKey] = true;
+        }
+    };
+    BlockCoordsData.prototype.forEachCoord = function (func) {
+        for (var coordKey in this.data) {
+            var keyArr = coordKey.split(":");
+            var x = parseInt(keyArr[0]);
+            var y = parseInt(keyArr[1]);
+            var z = parseInt(keyArr[2]);
+            func(x, y, z);
+        }
+    };
+    BlockCoordsData.prototype.clear = function () {
+        this.data = {};
+    };
+    return BlockCoordsData;
+}());
+/// <reference path="./BlockCoordsData.ts" />
 var GLOBAL_NODE_ID = 0;
 var EnergyNode = /** @class */ (function () {
     function EnergyNode(energyType, dimension) {
         this.energyTypes = {};
         this.maxValue = 2e9;
         this.removed = false;
-        this.blocksMap = {};
+        this.blockCoords = new BlockCoordsData();
+        /** @deprecated */
+        this.blocksMap = this.blockCoords.data;
         this.entries = [];
         this.receivers = [];
         this.energyIn = 0;
@@ -171,10 +215,10 @@ var EnergyNode = /** @class */ (function () {
         this.energyTypes[energyType.name] = energyType;
     };
     EnergyNode.prototype.addCoords = function (x, y, z) {
-        this.blocksMap[x + ":" + y + ":" + z] = true;
+        this.blockCoords.add(x, y, z);
     };
     EnergyNode.prototype.removeCoords = function (x, y, z) {
-        this.blocksMap[x + ":" + y + ":" + z] = false;
+        this.blockCoords.remove(x, y, z);
     };
     EnergyNode.prototype.addEntry = function (node) {
         if (this.entries.indexOf(node) == -1) {
@@ -348,7 +392,7 @@ var EnergyGrid = /** @class */ (function (_super) {
     __extends(EnergyGrid, _super);
     function EnergyGrid(energyType, maxValue, wireID, region) {
         var _this = _super.call(this, energyType, region.getDimension()) || this;
-        _this.rebuild = false;
+        _this.removedCoords = [];
         _this.maxValue = maxValue;
         _this.blockID = wireID;
         _this.region = region;
@@ -362,9 +406,7 @@ var EnergyGrid = /** @class */ (function (_super) {
         return false;
     };
     EnergyGrid.prototype.mergeGrid = function (grid) {
-        for (var key in grid.blocksMap) {
-            this.blocksMap[key] = true;
-        }
+        this.blockCoords.mergeFrom(grid.blockCoords);
         for (var _i = 0, _a = grid.entries; _i < _a.length; _i++) {
             var node = _a[_i];
             node.addConnection(this);
@@ -378,21 +420,17 @@ var EnergyGrid = /** @class */ (function (_super) {
     };
     EnergyGrid.prototype.rebuildGrid = function () {
         this.destroy();
-        for (var key in this.blocksMap) {
-            if (!this.blocksMap[key]) {
-                var keyArr = key.split(":");
-                var x = parseInt(keyArr[0]), y = parseInt(keyArr[1]), z = parseInt(keyArr[2]);
-                EnergyGridBuilder.onWireDestroyed(this.region, x, y, z, this.blockID);
-            }
+        for (var _i = 0, _a = this.removedCoords; _i < _a.length; _i++) {
+            var coords = _a[_i];
+            EnergyGridBuilder.onWireDestroyed(this.region, coords.x, coords.y, coords.z, this.blockID);
         }
+        this.removedCoords = [];
     };
     EnergyGrid.prototype.rebuildRecursive = function (x, y, z, side) {
         if (this.removed)
             return;
-        var coordKey = "".concat(x, ":").concat(y, ":").concat(z);
-        if (this.blocksMap[coordKey]) {
+        if (this.blockCoords.has(x, y, z))
             return;
-        }
         var node = EnergyNet.getNodeOnCoords(this.region, x, y, z);
         if (node && !this.isCompatible(node))
             return;
@@ -411,7 +449,7 @@ var EnergyGrid = /** @class */ (function (_super) {
                     this.mergeGrid(node);
                 }
                 else {
-                    this.blocksMap[coordKey] = true;
+                    this.addCoords(x, y, z);
                     this.rebuildFor6Sides(x, y, z);
                 }
             }
@@ -421,6 +459,11 @@ var EnergyGrid = /** @class */ (function (_super) {
             else if (EnergyRegistry.isWire(blockID, this.baseEnergy)) {
                 EnergyGridBuilder.buildWireGrid(this.region, x, y, z);
             }
+        }
+    };
+    EnergyGrid.prototype.removeCoords = function (x, y, z) {
+        if (this.blockCoords.remove(x, y, z)) {
+            this.removedCoords.push({ x: x, y: y, z: z });
         }
     };
     EnergyGrid.prototype.rebuildFor6Sides = function (x, y, z) {
@@ -433,7 +476,7 @@ var EnergyGrid = /** @class */ (function (_super) {
         }
     };
     EnergyGrid.prototype.tick = function () {
-        if (this.rebuild) {
+        if (this.removedCoords.length > 0) {
             this.rebuildGrid();
         }
         else {
@@ -650,7 +693,6 @@ var EnergyGridBuilder;
             var node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
             if (node) {
                 node.removeCoords(coords.x, coords.y, coords.z);
-                node.rebuild = true;
             }
         }
     });
@@ -684,10 +726,9 @@ var EnergyNet;
             return tileEntity.energyNode;
         }
         var nodes = getNodesByDimension(region.getDimension());
-        var coordKey = "".concat(x, ":").concat(y, ":").concat(z);
         for (var _i = 0, nodes_1 = nodes; _i < nodes_1.length; _i++) {
             var node = nodes_1[_i];
-            if (node.blocksMap[coordKey])
+            if (node.blockCoords.has(x, y, z))
                 return node;
         }
         return null;

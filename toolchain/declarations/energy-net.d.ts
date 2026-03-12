@@ -1,20 +1,18 @@
-/// <reference path="./core-engine.d.ts" />
-
 declare namespace EnergyTypeRegistry {
     type WireData = {
         type: EnergyType;
         maxValue: number;
         class: typeof EnergyGrid;
     };
-    let energyTypes: {
+    const energyTypes: {
         [key: number]: EnergyType;
     };
-    let wireData: {
+    const wireData: {
         [key: number]: WireData;
     };
     /**
-     * name - name of this energy type,
-     * value - value of one unit in [Eu] (IC2 Energy)
+     * @param name - name of this energy type
+     * @param value - value of one unit in [Eu] (IC2 Energy)
     */
     function createEnergyType(name: string, value: number): EnergyType;
     function assureEnergyType(name: string, value: number): EnergyType;
@@ -39,6 +37,18 @@ declare class EnergyPacket {
     validateNode(nodeId: number): boolean;
     setNodePassed(nodeId: number): void;
 }
+declare class BlockCoordsData {
+    data: {
+        [coordKey: string]: true;
+    };
+    getCoordKey(x: number, y: number, z: number): string;
+    has(x: number, y: number, z: number): boolean;
+    add(x: number, y: number, z: number): void;
+    remove(x: number, y: number, z: number): boolean;
+    mergeFrom(other: BlockCoordsData): void;
+    forEachCoord(func: (x: number, y: number, z: number) => void): void;
+    clear(): void;
+}
 declare class EnergyNode {
     id: number;
     baseEnergy: string;
@@ -46,7 +56,11 @@ declare class EnergyNode {
     dimension: number;
     maxValue: number;
     removed: boolean;
-    blocksMap: object;
+    blockCoords: BlockCoordsData;
+    /** @deprecated */
+    blocksMap: {
+        [coordKey: string]: true;
+    };
     entries: EnergyNode[];
     receivers: EnergyNode[];
     energyIn: number;
@@ -101,12 +115,13 @@ declare class EnergyNode {
 declare class EnergyGrid extends EnergyNode {
     blockID: number;
     region: BlockSource;
-    rebuild: boolean;
+    removedCoords: Vector[];
     constructor(energyType: EnergyType, maxValue: number, wireID: number, region: BlockSource);
     isCompatible(node: EnergyNode): boolean;
     mergeGrid(grid: EnergyNode): EnergyNode;
     rebuildGrid(): void;
     rebuildRecursive(x: number, y: number, z: number, side?: number): void;
+    removeCoords(x: number, y: number, z: number): void;
     rebuildFor6Sides(x: number, y: number, z: number): void;
     tick(): void;
 }
@@ -136,7 +151,7 @@ declare namespace EnergyTileRegistry {
     function addEnergyType(Prototype: EnergyTile, energyType: EnergyType): void;
     function addEnergyTypeForId(id: number, energyType: EnergyType): void;
     function setupAsEnergyTile(Prototype: EnergyTile): void;
-    let machineIDs: {};
+    const machineIDs: {};
     function isMachine(id: number): boolean;
 }
 declare namespace EnergyGridBuilder {

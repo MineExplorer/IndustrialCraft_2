@@ -74,7 +74,7 @@ class EUCableGrid extends EnergyGrid {
 				const coords = this.blockCoords.data[key];
 				const cx = coords.x + .5, cy = coords.y + .5, cz = coords.z + .5;
 				if (Math.abs(pos.x - cx) <= 1.5 && Math.abs(pos.y - cy) <= 1.5 && Math.abs(pos.z - cz) <= 1.5) {
-					if (damage > 10) Entity.setFire(ent, 20, true);
+					if (damage > 16) Entity.setFire(ent, 20, true);
 					Entity.damageEntity(ent, damage);
 					break;
 				}

@@ -328,10 +328,11 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 		private getBladeByHardness(hardnessLevel: number): ItemInstance {
 			switch (hardnessLevel) {
 				case 1:
-					return {id: ItemID.cuttingBladeIron, count: 1, data: 0};
 				case 2:
-					return {id: ItemID.cuttingBladeSteel, count: 1, data: 0};
+					return {id: ItemID.cuttingBladeIron, count: 1, data: 0};
 				case 3:
+					return {id: ItemID.cuttingBladeSteel, count: 1, data: 0};
+				case 4:
 					return {id: ItemID.cuttingBladeDiamond, count: 1, data: 0};
 				default:
 					return null;

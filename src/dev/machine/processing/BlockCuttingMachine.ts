@@ -63,16 +63,16 @@ Callback.addCallback("PreLoaded", function() {
 	dictionary.addRecipe({id: VanillaBlockID.crimson_planks, count: 2}, {id: VanillaItemID.stick, count: 6 }, 1);
 	dictionary.addRecipe({id: VanillaBlockID.warped_planks, count: 2}, {id: VanillaItemID.stick, count: 6 }, 1);
 	// Resource blocks
-	dictionary.addRecipe({id: BlockID.blockCopper}, {id: ItemID.plateCopper, count: 9}, 1);
-	dictionary.addRecipe({id: BlockID.blockTin}, {id: ItemID.plateTin, count: 9}, 1);
-	dictionary.addRecipe({id: BlockID.blockBronze}, {id: ItemID.plateBronze, count: 9}, 1);
-	dictionary.addRecipe({id: BlockID.blockLead}, {id: ItemID.plateLead, count: 9}, 1);
-	dictionary.addRecipe({id: VanillaBlockID.gold_block}, {id: ItemID.plateGold, count: 9}, 1);
-	dictionary.addRecipe({id: VanillaBlockID.lapis_block}, {id: ItemID.plateLapis, count: 9}, 1);
+	dictionary.addRecipe({id: BlockID.blockCopper}, {id: ItemID.plateCopper, count: 9}, 2);
+	dictionary.addRecipe({id: BlockID.blockTin}, {id: ItemID.plateTin, count: 9}, 2);
+	dictionary.addRecipe({id: BlockID.blockBronze}, {id: ItemID.plateBronze, count: 9}, 2);
+	dictionary.addRecipe({id: BlockID.blockLead}, {id: ItemID.plateLead, count: 9}, 2);
+	dictionary.addRecipe({id: VanillaBlockID.gold_block}, {id: ItemID.plateGold, count: 9}, 2);
+	dictionary.addRecipe({id: VanillaBlockID.lapis_block}, {id: ItemID.plateLapis, count: 9}, 2);
 	// -- Steel blade or higher --
-	dictionary.addRecipe({id: VanillaBlockID.iron_block}, {id: ItemID.plateIron, count: 9}, 2);
+	dictionary.addRecipe({id: VanillaBlockID.iron_block}, {id: ItemID.plateIron, count: 9}, 3);
 	// -- Diamond blade --
-	dictionary.addRecipe({id: BlockID.blockSteel}, {id: ItemID.plateSteel, count: 9}, 3);
+	dictionary.addRecipe({id: BlockID.blockSteel}, {id: ItemID.plateSteel, count: 9}, 4);
 });
 
 namespace Machine {
@@ -135,11 +135,11 @@ namespace Machine {
 		getBladeLevel(bladeId: number): number {
 			switch (bladeId) {
 				case ItemID.cuttingBladeIron:
-					return 1;
-				case ItemID.cuttingBladeSteel:
 					return 2;
-				case ItemID.cuttingBladeDiamond:
+				case ItemID.cuttingBladeSteel:
 					return 3;
+				case ItemID.cuttingBladeDiamond:
+					return 4;
 				default:
 					return 0;
 			}

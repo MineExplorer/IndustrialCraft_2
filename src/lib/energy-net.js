@@ -160,7 +160,7 @@ var BlockCoordsData = /** @class */ (function () {
     };
     BlockCoordsData.prototype.add = function (x, y, z) {
         var coordKey = this.getCoordKey(x, y, z);
-        this.data[coordKey] = true;
+        this.data[coordKey] = { x: x, y: y, z: z };
     };
     BlockCoordsData.prototype.remove = function (x, y, z) {
         var coordKey = this.getCoordKey(x, y, z);
@@ -171,16 +171,12 @@ var BlockCoordsData = /** @class */ (function () {
     };
     BlockCoordsData.prototype.mergeFrom = function (other) {
         for (var coordKey in other.data) {
-            this.data[coordKey] = true;
+            this.data[coordKey] = other.data[coordKey];
         }
     };
     BlockCoordsData.prototype.forEachCoord = function (func) {
         for (var coordKey in this.data) {
-            var keyArr = coordKey.split(":");
-            var x = parseInt(keyArr[0]);
-            var y = parseInt(keyArr[1]);
-            var z = parseInt(keyArr[2]);
-            func(x, y, z);
+            func(this.data[coordKey]);
         }
     };
     BlockCoordsData.prototype.clear = function () {
@@ -384,7 +380,8 @@ var EnergyNode = /** @class */ (function () {
         EnergyNet.removeEnergyNode(this);
     };
     EnergyNode.prototype.toString = function () {
-        return "[EnergyNode id=".concat(this.id, ", type=").concat(this.baseEnergy, ", entries=").concat(this.entries.length, ", receivers=").concat(this.receivers.length, ", energyIn=").concat(this.energyIn, ", energyOut=").concat(this.energyOut, ", power=").concat(this.energyPower, "]");
+        var blockCount = Object.keys(this.blockCoords.data).length;
+        return "[EnergyNode id=".concat(this.id, ", type=").concat(this.baseEnergy, ", blocks=").concat(blockCount, ", entries=").concat(this.entries.length, ", receivers=").concat(this.receivers.length, ", energyIn=").concat(this.energyIn, ", energyOut=").concat(this.energyOut, ", power=").concat(this.energyPower, "]");
     };
     return EnergyNode;
 }());

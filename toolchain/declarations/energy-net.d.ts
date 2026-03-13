@@ -39,14 +39,14 @@ declare class EnergyPacket {
 }
 declare class BlockCoordsData {
     data: {
-        [coordKey: string]: true;
+        [coordKey: string]: Vector;
     };
     getCoordKey(x: number, y: number, z: number): string;
     has(x: number, y: number, z: number): boolean;
     add(x: number, y: number, z: number): void;
     remove(x: number, y: number, z: number): boolean;
     mergeFrom(other: BlockCoordsData): void;
-    forEachCoord(func: (x: number, y: number, z: number) => void): void;
+    forEachCoord(func: (coords: Vector) => void): void;
     clear(): void;
 }
 declare class EnergyNode {
@@ -59,7 +59,7 @@ declare class EnergyNode {
     blockCoords: BlockCoordsData;
     /** @deprecated */
     blocksMap: {
-        [coordKey: string]: true;
+        [coordKey: string]: Vector;
     };
     entries: EnergyNode[];
     receivers: EnergyNode[];

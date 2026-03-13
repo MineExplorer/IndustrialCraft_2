@@ -33,8 +33,7 @@ class EUCableGrid extends EnergyGrid {
 	onOverload(voltage: number): void {
 		if (IC2Config.voltageEnabled) {
 			const region = new WorldRegion(this.region);
-			this.blockCoords.forEachCoord((x, y, z) => {
-				const coords = {x: x, y: y, z: z};
+			this.blockCoords.forEachCoord(coords => {
 				region.setBlock(coords, 0, 0);
 				region.sendPacketInRadius(coords, 64, "ic2.cableBurnParticles", coords);
 			});
@@ -65,16 +64,17 @@ class EUCableGrid extends EnergyGrid {
 		const entities = this.region.listEntitiesInAABB(minX - 1, minY - 1, minZ - 1, maxX + 2, maxY + 2, maxZ + 2);
 		if (entities.length == 0) return;
 
-		const coordsArray: Vector[] = [];
-		this.blockCoords.forEachCoord((x, y, z) => coordsArray.push({x: x + .5, y: y + .5, z: z + .5}));
 		for (let ent of entities) {
 			if (!EntityHelper.canTakeDamage(ent, DamageSource.electricity)) {
 				continue;
 			}
 			const pos = Entity.getPosition(ent);
 			if (EntityHelper.isPlayer(ent)) pos.y -= 1.62;
-			for (let {x, y, z} of coordsArray) {
-				if (Math.abs(pos.x - x) <= 1.5 && Math.abs(pos.y - y) <= 1.5 && Math.abs(pos.z - z) <= 1.5) {
+			for (let key in this.blockCoords.data) {
+				const coords = this.blockCoords.data[key];
+				const cx = coords.x + .5, cy = coords.y + .5, cz = coords.z + .5;
+				if (Math.abs(pos.x - cx) <= 1.5 && Math.abs(pos.y - cy) <= 1.5 && Math.abs(pos.z - cz) <= 1.5) {
+					if (damage > 10) Entity.setFire(ent, 20, true);
 					Entity.damageEntity(ent, damage);
 					break;
 				}
@@ -92,8 +92,8 @@ class EUCableGrid extends EnergyGrid {
 
 	private recalculateCubeArea(): void {
 		this.cubeArea = { minX: 1e9, minY: 1e9, minZ: 1e9, maxX: -1e9, maxY: -1e9, maxZ: -1e9 };
-		this.blockCoords.forEachCoord((x, y, z) => {
-			this.updateCubeArea(x, y, z);
+		this.blockCoords.forEachCoord(coords => {
+			this.updateCubeArea(coords.x, coords.y, coords.z);
 		});
 	}
 }

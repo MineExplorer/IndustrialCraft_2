@@ -208,8 +208,8 @@ namespace Machine {
 			const sourceSlot = this.container.getSlot("slotSource");
 			const sourceID = this.data.sourceID || sourceSlot.id;
 			const recipe = this.getRecipe(sourceID);
-			receivedHeat = Math.min(recipe.heatCost - this.data.progress, receivedHeat);
 			if (recipe && (this.data.sourceID || recipe.source.count <= sourceSlot.count && this.checkResult(recipe.result))) {
+				receivedHeat = Math.min(recipe.heatCost - this.data.progress, receivedHeat);
 				if (this.controlAir(receivedHeat)) {
 					this.container.sendEvent("setAirImage", {show: false});
 					this.data.progress += receivedHeat;
@@ -234,7 +234,7 @@ namespace Machine {
 				this.container.sendEvent("setAirImage", {show: true});
 			}
 			this.setActive(false);
-			return 0;
+			return 1;
 		}
 
 		@ContainerEvent(Side.Client, "setAirImage")
@@ -243,7 +243,7 @@ namespace Machine {
 				if (data.show) {
 					content.elements["indicatorAir"] = {type: "image", x: 344 + 128*GUI_SCALE_NEW, y: 53 + 20*GUI_SCALE_NEW, bitmap: "no_air_image", scale: GUI_SCALE_NEW};
 				}
-				else if (!content.elements["indicatorAir"]) {
+				else if (content.elements["indicatorAir"]) {
 					content.elements["indicatorAir"] = null;
 				}
 			}

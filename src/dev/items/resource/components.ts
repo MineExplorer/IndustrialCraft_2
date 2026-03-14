@@ -12,6 +12,10 @@ ItemRegistry.createItem("cuttingBladeIron", {name: "cutting_blade_iron", icon: "
 ItemRegistry.createItem("cuttingBladeSteel", {name: "cutting_blade_steel", icon: "cutting_blade_steel", stack: 1});
 ItemRegistry.createItem("cuttingBladeDiamond", {name: "cutting_blade_diamond", icon: "cutting_blade_diamond", stack: 1});
 
+ItemName.addTooltip(ItemID.cuttingBladeIron, "tooltip.blade.hardness", 2);
+ItemName.addTooltip(ItemID.cuttingBladeSteel, "tooltip.blade.hardness", 3);
+ItemName.addTooltip(ItemID.cuttingBladeDiamond, "tooltip.blade.hardness", 4);
+
 Item.addCreativeGroup("ic2_component", Translation.translate("Crafting Components"), [
 	ItemID.circuitBasic,
 	ItemID.circuitAdvanced,

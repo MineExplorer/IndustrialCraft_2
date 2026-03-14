@@ -501,6 +501,7 @@ Translation.addTranslation("tooltip.upgrade.storage", {en: "Increase energy stor
 Translation.addTranslation("tooltip.upgrade.ejector", {en: "Automatically output to\nthe %s side", ru: "Автоматическое извлечение с %s стороны", pt: "Saída automática para o %s", zh: "自动输出到%s方向"});
 Translation.addTranslation("tooltip.upgrade.pulling", {en: "Automatically input from\nthe %s side", ru: "Автоматический ввод с %s стороны", pt: "Entrada automática para o %s", zh: "自动从%s抽入物品"});
 Translation.addTranslation("tooltip.upgrade.anyside", {en: "first valid", ru: "первой подходящей", es: "Primera vez efectivo", pt: "Primeira vez eficaz", zh: "初次生效"});
+Translation.addTranslation("tooltip.blade.hardness", {en: "Hardness: %s", ru: "Твёрдость: %s", pt: "Dureza: %s", zh: "硬度: %s"});
 Translation.addTranslation("tooltip.radioactive", {en: "Radioactive", ru: "Радиоактивный"});
 Translation.addTranslation("ic2.dir.bottom", {en: "bottom", ru: "нижней", es: "abajo", pt: "lado de baixo", zh: "底部"});
 Translation.addTranslation("ic2.dir.top", {en: "top", ru: "верхней", es: "arriba", pt: "lado de cima", zh: "顶部"});

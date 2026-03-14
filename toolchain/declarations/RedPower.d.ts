@@ -29,7 +29,6 @@ declare namespace RedCore {
             default: BlockTexture;
             active: BlockTexture;
         }, blockType?: string | Block.SpecialType): void;
-        export {};
     }
 
     export namespace SmelterRecipes {

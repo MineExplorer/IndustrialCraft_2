@@ -1,4 +1,4 @@
-/// <reference path="ProcessingMachine.ts" />
+/// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("extractor", [
 	{name: "Extractor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]], inCreative: true}
@@ -18,14 +18,13 @@ Callback.addCallback("PreLoaded", function() {
 		"xax"
 	], ['#', BlockID.machineBlockBasic, -1, 'x', ItemID.treetap, 0, 'a', ItemID.circuitBasic, -1]);
 	
-	MachineRecipeRegistry.registerRecipesFor("extractor", {
-		"ItemID.latex": {id: ItemID.rubber, count: 3},
-		"BlockID.rubberTreeSapling": {id: ItemID.rubber, count: 1},
-		"BlockID.rubberTreeLog": {id: ItemID.rubber, count: 1},
-		"minecraft:wool": {id: 35, count: 1},
-		"minecraft:gunpowder": {id: ItemID.dustSulfur, count: 1},
-		"ItemID.tinCanFull": {id: ItemID.tinCanEmpty, count: 1},
-	}, true);
+	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("extractor");
+	dictionary.addRecipe({id: ItemID.latex}, {id: ItemID.rubber, count: 3});
+	dictionary.addRecipe({id: BlockID.rubberTreeSapling}, {id: ItemID.rubber, count: 1});
+	dictionary.addRecipe({id: BlockID.rubberTreeLog}, {id: ItemID.rubber, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.wool}, {id: 35, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.gunpowder}, {id: ItemID.dustSulfur, count: 1});
+	dictionary.addRecipe({id: ItemID.tinCanFull}, {id: ItemID.tinCanEmpty, count: 1}, 100);
 });
 
 namespace Machine {
@@ -52,7 +51,7 @@ namespace Machine {
 		}
 	});
 
-	export class Extractor extends ProcessingMachine {
+	export class Extractor extends BasicProcessingMachine {
 		defaultEnergyDemand = 2;
 		defaultProcessTime = 400;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
@@ -61,8 +60,8 @@ namespace Machine {
 			return guiExtractor;
 		}
 
-		getRecipeResult(id: number): MachineRecipeRegistry.RecipeData {
-			return MachineRecipeRegistry.getRecipeResult("extractor", id);
+		getRecipeDictionary(): MachineRecipe.ProcessingRecipeDictionary {
+			return MachineRecipeRegistry.getDictionary("extractor");
 		}
 
 		getOperationSound(): string {
@@ -76,13 +75,15 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.extractor, new Extractor());
 
+	MachineRecipeRegistry.registerDictionary("extractor", new MachineRecipe.ProcessingRecipeDictionary(400));
+
 	StorageInterface.createInterface(BlockID.extractor, {
 		slots: {
 			"slotSource": {input: true},
 			"slotResult": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => {
-			return MachineRecipeRegistry.hasRecipeFor("extractor", item.id);
+		isValidInput: (item: ItemInstance, side: number, tileEntity: Extractor) => {
+			return tileEntity.isValidSource(item.id, item.data);
 		}
 	});
 }

@@ -11,7 +11,7 @@ namespace ReactorItem {
 		}
 
 		getCustomDamage(item: ItemContainerSlot): number {
-			return item.extra ? item.extra.getInt("damage") : 0;
+			return item.extra?.getInt("damage") || 0;
 		}
 
 		setCustomDamage(item: ItemContainerSlot, damage: number): void {

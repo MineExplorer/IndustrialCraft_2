@@ -11,7 +11,7 @@ implements IModeSwitchable {
 
 	readMode(extra: ItemExtraData): number {
 		if (!extra) return 0;
-		return extra.getInt("mode");
+		return extra.getInt("mode", 0);
 	}
 
 	getModeName(mode: number): string {
@@ -35,7 +35,7 @@ implements IModeSwitchable {
 
 	onModeSwitch(item: ItemInstance, player: number): void {
 		const extra = item.extra || new ItemExtraData();
-		const mode = (extra.getInt("mode") + 1) % 4;
+		const mode = (extra.getInt("mode", 0) + 1) % 4;
 		extra.putInt("mode", mode);
 		Entity.setCarriedItem(player, item.id, 1, item.data, extra);
 		const client = Network.getClientForPlayer(player);

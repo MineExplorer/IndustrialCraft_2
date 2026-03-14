@@ -1,4 +1,4 @@
-/// <reference path="ProcessingMachine.ts" />
+/// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("compressor", [
 	{name: "Compressor", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["compressor", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
@@ -18,66 +18,68 @@ Callback.addCallback("PreLoaded", function() {
 		"mcm"
 	], ['#', BlockID.machineBlockBasic, -1, 'c', ItemID.circuitBasic, -1, 'm', ItemID.electricMotor, -1, 'p', VanillaBlockID.piston, -1]);
 
-	MachineRecipeRegistry.registerRecipesFor("compressor", {
-		// Blocks
-		"minecraft:sand:0": {id: 24, count: 1, data: 0, sourceCount: 4},
-		"minecraft:sand:1": {id: VanillaBlockID.red_sandstone, count: 1, data: 0, sourceCount: 4},
-		"minecraft:clay_ball": {id: VanillaBlockID.clay, count: 1, data: 0, sourceCount: 4},
-		"minecraft:brick": {id: 45, count: 1, data: 0, sourceCount: 4},
-		"minecraft:netherbrick": {id: 112, count: 1, data: 0, sourceCount: 4},
-		"minecraft:glowstone_dust": {id: 89, count: 1, data: 0, sourceCount: 4},
-		"minecraft:quartz": {id: 155, count: 1, data: 0, sourceCount: 4},
-		"minecraft:snowball": {id: VanillaBlockID.snow, count: 1, data: 0},
-		"minecraft:snow": {id: 79, count: 1, data: 0},
-		"minecraft:ice": {id: VanillaBlockID.packed_ice, count: 1, data: 0, sourceCount: 9},
-		"minecraft:packed_ice": {id: VanillaBlockID.blue_ice, count: 1, data: 0, sourceCount: 9},
-		"minecraft:bone_meal": {id: VanillaBlockID.bone_block, count: 1, data: 0, sourceCount: 9},
-		"minecraft:dried_kelp": {id: VanillaBlockID.dried_kelp_block, count: 1, data: 0, sourceCount: 9},
-		// Items
-		"ItemID.dustEnergium": {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal), sourceCount: 9},
-		"ItemID.ingotAlloy": {id: ItemID.plateAlloy, count: 1, data: 0},
-		"ItemID.carbonMesh": {id: ItemID.carbonPlate, count: 1, data: 0},
-		"ItemID.coalBall": {id: ItemID.coalBlock, count: 1, data: 0},
-		"ItemID.coalChunk": {id: 264, count: 1, data: 0},
-		"ItemID.cellEmpty": {id: ItemID.cellAir, count: 1, data: 0},
-		"ItemID.dustLapis": {id: ItemID.plateLapis, count: 1, data: 0},
-		"minecraft:blaze_powder": {id: VanillaItemID.blaze_rod, count: 1, data: 0, sourceCount: 5},
-		// Dense Plates
-		"ItemID.plateIron": {id: ItemID.densePlateIron, count: 1, data: 0, sourceCount: 9},
-		"ItemID.plateGold": {id: ItemID.densePlateGold, count: 1, data: 0, sourceCount: 9},
-		"ItemID.plateTin": {id: ItemID.densePlateTin, count: 1, data: 0, sourceCount: 9},
-		"ItemID.plateCopper": {id: ItemID.densePlateCopper, count: 1, data: 0, sourceCount: 9},
-		"ItemID.plateBronze": {id: ItemID.densePlateBronze, count: 1, data: 0, sourceCount: 9},
-		"ItemID.plateSteel": {id: ItemID.densePlateSteel, count: 1, data: 0, sourceCount: 9},
-		"ItemID.plateLead": {id: ItemID.densePlateLead, count: 1, data: 0, sourceCount: 9},
-		"ItemID.plateSilver": {id: ItemID.densePlateSilver, count: 1, data: 0, sourceCount: 9},
-		// Compact
-		"minecraft:redstone": {id: 152, count: 1, data: 0, sourceCount: 9},
-		"minecraft:lapis_lazuli": {id: 22, count: 1, data: 0, sourceCount: 9},
-		"minecraft:coal": {id: VanillaBlockID.coal_block, count: 1, data: 0, sourceCount: 9},
-		"minecraft:diamond": {id: 57, count: 1, data: 0, sourceCount: 9},
-		"minecraft:emerald": {id: 133, count: 1, data: 0, sourceCount: 9},
-		"minecraft:iron_ingot": {id: 42, count: 1, data: 0, sourceCount: 9},
-		"minecraft:gold_ingot": {id: 41, count: 1, data: 0, sourceCount: 9},
-		"minecraft:netherite_ingot": {id: VanillaBlockID.netherite_block, count: 1, data: 0, sourceCount: 9},
-		"ItemID.ingotCopper": {id: BlockID.blockCopper, count: 1, data: 0, sourceCount: 9},
-		"ItemID.ingotTin": {id: BlockID.blockTin, count: 1, data: 0, sourceCount: 9},
-		"ItemID.ingotLead": {id: BlockID.blockLead, count: 1, data: 0, sourceCount: 9},
-		"ItemID.ingotSteel": {id: BlockID.blockSteel, count: 1, data: 0, sourceCount: 9},
-		"ItemID.ingotBronze": {id: BlockID.blockBronze, count: 1, data: 0, sourceCount: 9},
-		"ItemID.ingotSilver": {id: BlockID.blockSilver, count: 1, data: 0, sourceCount: 9},
-		"ItemID.uranium238": {id: BlockID.blockUranium, count: 1, data: 0, sourceCount: 9},
-		"ItemID.dustSmallCopper": {id: ItemID.dustCopper, count: 1, data: 0, sourceCount: 9},
-		"ItemID.dustSmallTin": {id: ItemID.dustTin, count: 1, data: 0, sourceCount: 9},
-		"ItemID.dustSmallBronze": {id: ItemID.dustBronze, count: 1, data: 0, sourceCount: 9},
-		"ItemID.dustSmallIron": {id: ItemID.dustIron, count: 1, data: 0, sourceCount: 9},
-		"ItemID.dustSmallGold": {id: ItemID.dustGold, count: 1, data: 0, sourceCount: 9},
-		"ItemID.dustSmallLead": {id: ItemID.dustLead, count: 1, data: 0, sourceCount: 9},
-		"ItemID.dustSmallSilver": {id: ItemID.dustSilver, count: 1, data: 0, sourceCount: 9},
-		"ItemID.dustSmallSulfur": {id: ItemID.dustSulfur, count: 1, data: 0, sourceCount: 9},
-		"ItemID.smallUranium235": {id: ItemID.uranium235, count: 1, data: 0, sourceCount: 9},
-		"ItemID.smallPlutonium": {id: ItemID.plutonium, count: 1, data: 0, sourceCount: 9}
-	}, true);
+	const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("compressor");
+	// Blocks
+	dictionary.addRecipe({id: VanillaBlockID.sand, count: 4, data: 0}, {id: 24, count: 1, data: 0});
+	dictionary.addRecipe({id: VanillaBlockID.sand, count: 4, data: 1}, {id: VanillaBlockID.red_sandstone, count: 1, data: 0});
+	dictionary.addRecipe({id: VanillaItemID.clay_ball, count: 4}, {id: VanillaBlockID.clay, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.brick, count: 4}, {id: 45, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.netherbrick, count: 4}, {id: 112, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.glowstone_dust, count: 4}, {id: 89, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.quartz, count: 4}, {id: 155, count: 1, data: 0});
+	dictionary.addRecipe({id: VanillaItemID.snowball}, {id: VanillaBlockID.snow, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.snow}, {id: 79, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.ice, count: 9}, {id: VanillaBlockID.packed_ice, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.packed_ice, count: 9}, {id: VanillaBlockID.blue_ice, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.bone_meal, count: 9}, {id: VanillaBlockID.bone_block, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.dried_kelp, count: 9}, {id: VanillaBlockID.dried_kelp_block, count: 1});
+	
+	// Items
+	dictionary.addRecipe({id: ItemID.dustEnergium, count: 9}, {id: ItemID.storageCrystal, count: 1, data: Item.getMaxDamage(ItemID.storageCrystal)});
+	dictionary.addRecipe({id: ItemID.ingotAlloy}, {id: ItemID.plateAlloy, count: 1});
+	dictionary.addRecipe({id: ItemID.carbonMesh}, {id: ItemID.carbonPlate, count: 1});
+	dictionary.addRecipe({id: ItemID.coalBall}, {id: ItemID.coalBlock, count: 1});
+	dictionary.addRecipe({id: ItemID.coalChunk}, {id: 264, count: 1});
+	dictionary.addRecipe({id: ItemID.cellEmpty}, {id: ItemID.cellAir, count: 1});
+	dictionary.addRecipe({id: ItemID.dustLapis}, {id: ItemID.plateLapis, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.blaze_powder, count: 5}, {id: VanillaItemID.blaze_rod, count: 1});
+
+	// Dense Plates
+	dictionary.addRecipe({id: ItemID.plateIron, count: 9}, {id: ItemID.densePlateIron, count: 1});
+	dictionary.addRecipe({id: ItemID.plateGold, count: 9}, {id: ItemID.densePlateGold, count: 1});
+	dictionary.addRecipe({id: ItemID.plateTin, count: 9}, {id: ItemID.densePlateTin, count: 1});
+	dictionary.addRecipe({id: ItemID.plateCopper, count: 9}, {id: ItemID.densePlateCopper, count: 1});
+	dictionary.addRecipe({id: ItemID.plateBronze, count: 9}, {id: ItemID.densePlateBronze, count: 1});
+	dictionary.addRecipe({id: ItemID.plateSteel, count: 9}, {id: ItemID.densePlateSteel, count: 1});
+	dictionary.addRecipe({id: ItemID.plateLead, count: 9}, {id: ItemID.densePlateLead, count: 1});
+	dictionary.addRecipe({id: ItemID.plateSilver, count: 9}, {id: ItemID.densePlateSilver, count: 1});
+
+	// Compact
+	dictionary.addRecipe({id: VanillaItemID.redstone, count: 9}, {id: 152, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.lapis_lazuli, count: 9}, {id: 22, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.coal, count: 9}, {id: VanillaBlockID.coal_block, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.diamond, count: 9}, {id: 57, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.emerald, count: 9}, {id: 133, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.iron_ingot, count: 9}, {id: 42, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.gold_ingot, count: 9}, {id: 41, count: 1});
+	dictionary.addRecipe({id: VanillaItemID.netherite_ingot, count: 9}, {id: VanillaBlockID.netherite_block, count: 1});
+	dictionary.addRecipe({id: ItemID.ingotCopper, count: 9}, {id: BlockID.blockCopper, count: 1});
+	dictionary.addRecipe({id: ItemID.ingotTin, count: 9}, {id: BlockID.blockTin, count: 1});
+	dictionary.addRecipe({id: ItemID.ingotLead, count: 9}, {id: BlockID.blockLead, count: 1});
+	dictionary.addRecipe({id: ItemID.ingotSteel, count: 9}, {id: BlockID.blockSteel, count: 1});
+	dictionary.addRecipe({id: ItemID.ingotBronze, count: 9}, {id: BlockID.blockBronze, count: 1});
+	dictionary.addRecipe({id: ItemID.ingotSilver, count: 9}, {id: BlockID.blockSilver, count: 1});
+	dictionary.addRecipe({id: ItemID.uranium238, count: 9}, {id: BlockID.blockUranium, count: 1});
+	dictionary.addRecipe({id: ItemID.dustSmallCopper, count: 9}, {id: ItemID.dustCopper, count: 1}, 50);
+	dictionary.addRecipe({id: ItemID.dustSmallTin, count: 9}, {id: ItemID.dustTin, count: 1}, 50);
+	dictionary.addRecipe({id: ItemID.dustSmallBronze, count: 9}, {id: ItemID.dustBronze, count: 1}, 50);
+	dictionary.addRecipe({id: ItemID.dustSmallIron, count: 9}, {id: ItemID.dustIron, count: 1}, 50);
+	dictionary.addRecipe({id: ItemID.dustSmallGold, count: 9}, {id: ItemID.dustGold, count: 1}, 50);
+	dictionary.addRecipe({id: ItemID.dustSmallLead, count: 9}, {id: ItemID.dustLead, count: 1}, 50);
+	dictionary.addRecipe({id: ItemID.dustSmallSilver, count: 9}, {id: ItemID.dustSilver, count: 1}, 50);
+	dictionary.addRecipe({id: ItemID.dustSmallSulfur, count: 9}, {id: ItemID.dustSulfur, count: 1}, 50);
+	dictionary.addRecipe({id: ItemID.smallUranium235, count: 9}, {id: ItemID.uranium235, count: 1}, 50);
+	dictionary.addRecipe({id: ItemID.smallPlutonium, count: 9}, {id: ItemID.plutonium, count: 1}, 50);
 });
 
 namespace Machine {
@@ -104,7 +106,7 @@ namespace Machine {
 		}
 	});
 
-	export class Compressor extends ProcessingMachine {
+	export class Compressor extends BasicProcessingMachine {
 		defaultEnergyDemand = 2;
 		defaultProcessTime = 400;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];
@@ -113,8 +115,8 @@ namespace Machine {
 			return guiCompressor;
 		}
 
-		getRecipeResult(id: number, data: number): MachineRecipeRegistry.RecipeData {
-			return MachineRecipeRegistry.getRecipeResult("compressor", id, data);
+		getRecipeDictionary(): MachineRecipe.ProcessingRecipeDictionary {
+			return MachineRecipeRegistry.getDictionary("compressor");
 		}
 
 		getOperationSound(): string {
@@ -128,13 +130,15 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.compressor, new Compressor());
 
+	MachineRecipeRegistry.registerDictionary("compressor", new MachineRecipe.ProcessingRecipeDictionary(400));
+
 	StorageInterface.createInterface(BlockID.compressor, {
 		slots: {
 			"slotSource": {input: true},
 			"slotResult": {output: true}
 		},
-		isValidInput: function(item: ItemInstance) {
-			return MachineRecipeRegistry.hasRecipeFor("compressor", item.id, item.data);
+		isValidInput: (item: ItemInstance, side: number, tileEntity: Compressor) => {
+			return tileEntity.isValidSource(item.id, item.data);
 		}
 	});
 }

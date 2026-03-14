@@ -1,3 +1,5 @@
+/// <reference path="./BasicProcessingMachine.ts" />
+
 BlockRegistry.createBlock("thermalCentrifuge", [
 	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
 ], "machine");
@@ -17,31 +19,30 @@ Callback.addCallback("PreLoaded", function() {
 		"axa"
 	], ['#', BlockID.machineBlockAdvanced, 0, 'x', ItemID.electricMotor, 0, 'a', 265, 0, 'm', ItemID.miningLaser, -1, 'c', ItemID.coil, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor("thermalCentrifuge", {
-		"minecraft:cobblestone": {result: [ItemID.dustStone, 1], heat: 100},
-		"ItemID.crushedCopper": {result: [ItemID.dustSmallTin, 1, ItemID.dustCopper, 1, ItemID.dustStone, 1], heat: 500},
-		"ItemID.crushedTin": {result: [ItemID.dustSmallIron, 1, ItemID.dustTin, 1, ItemID.dustStone, 1], heat: 1000},
-		"ItemID.crushedIron": {result: [ItemID.dustSmallGold, 1, ItemID.dustIron, 1, ItemID.dustStone, 1], heat: 1500},
-		"ItemID.crushedSilver": {result: [ItemID.dustSmallLead, 1, ItemID.dustSilver, 1, ItemID.dustStone, 1], heat: 2000},
-		"ItemID.crushedGold": {result: [ItemID.dustSmallSilver, 1, ItemID.dustGold, 1, ItemID.dustStone, 1], heat: 2000},
-		"ItemID.crushedLead": {result: [ItemID.dustSmallSilver, 1, ItemID.dustLead, 1, ItemID.dustStone, 1], heat: 2000},
-		"ItemID.crushedUranium": {result: [ItemID.smallUranium235, 1, ItemID.uranium238, 4, ItemID.dustStone, 1], heat: 3000},
-		"ItemID.crushedPurifiedCopper": {result: [ItemID.dustSmallTin, 1, ItemID.dustCopper, 1], heat: 500},
-		"ItemID.crushedPurifiedTin": {result: [ItemID.dustSmallIron, 1, ItemID.dustTin, 1], heat: 1000},
-		"ItemID.crushedPurifiedIron": {result: [ItemID.dustSmallGold, 1, ItemID.dustIron, 1], heat: 1500},
-		"ItemID.crushedPurifiedSilver": {result: [ItemID.dustSmallLead, 1, ItemID.dustSilver, 1], heat: 2000},
-		"ItemID.crushedPurifiedGold": {result: [ItemID.dustSmallSilver, 1, ItemID.dustGold, 1], heat: 2000},
-		"ItemID.crushedPurifiedLead": {result: [ItemID.dustSmallSilver, 1, ItemID.dustLead, 1], heat: 2000},
-		"ItemID.crushedPurifiedUranium": {result: [ItemID.smallUranium235, 2, ItemID.uranium238, 5], heat: 3000},
-		"ItemID.slag": {result: [ItemID.dustSmallGold, 1, ItemID.dustCoal, 1], heat: 1500},
-		"ItemID.fuelRodDepletedUranium": {result: [ItemID.smallPlutonium, 1, ItemID.uranium238, 4, ItemID.dustIron, 1], heat: 4000},
-		"ItemID.fuelRodDepletedUranium2": {result: [ItemID.smallPlutonium, 2, ItemID.uranium238, 8, ItemID.dustIron, 3], heat: 4000},
-		"ItemID.fuelRodDepletedUranium4": {result: [ItemID.smallPlutonium, 4, ItemID.uranium238, 16, ItemID.dustIron, 6], heat: 4000},
-		"ItemID.fuelRodDepletedMOX": {result: [ItemID.smallPlutonium, 1, ItemID.plutonium, 3, ItemID.dustIron, 1], heat: 5000},
-		"ItemID.fuelRodDepletedMOX2": {result: [ItemID.smallPlutonium, 2, ItemID.plutonium, 6, ItemID.dustIron, 3], heat: 5000},
-		"ItemID.fuelRodDepletedMOX4": {result: [ItemID.smallPlutonium, 4, ItemID.plutonium, 12, ItemID.dustIron, 6], heat: 5000},
-		"ItemID.rtgPellet": {result: [ItemID.plutonium, 3, ItemID.dustIron, 54], heat: 5000},
-	}, true);
+	const dictionary: MachineRecipe.ThermalCentrifugeRecipeDictionary = MachineRecipeRegistry.getDictionary("thermalCentrifuge");
+	dictionary.addRecipe({id: VanillaBlockID.cobblestone}, [{id: ItemID.dustStone, count: 1}], 100);
+	dictionary.addRecipe({id: ItemID.crushedCopper}, [{id: ItemID.dustSmallTin, count: 1}, {id: ItemID.dustCopper, count: 1}, {id: ItemID.dustStone, count: 1}], 500);
+	dictionary.addRecipe({id: ItemID.crushedTin}, [{id: ItemID.dustSmallIron, count: 1}, {id: ItemID.dustTin, count: 1}, {id: ItemID.dustStone, count: 1}], 1000);
+	dictionary.addRecipe({id: ItemID.crushedIron}, [{id: ItemID.dustSmallGold, count: 1}, {id: ItemID.dustIron, count: 1}, {id: ItemID.dustStone, count: 1}], 1500);
+	dictionary.addRecipe({id: ItemID.crushedSilver}, [{id: ItemID.dustSmallLead, count: 1}, {id: ItemID.dustSilver, count: 1}, {id: ItemID.dustStone, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedGold}, [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustGold, count: 1}, {id: ItemID.dustStone, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedLead}, [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustLead, count: 1}, {id: ItemID.dustStone, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedUranium}, [{id: ItemID.smallUranium235, count: 1}, {id: ItemID.uranium238, count: 4}, {id: ItemID.dustStone, count: 1}], 3000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedCopper}, [{id: ItemID.dustSmallTin, count: 1}, {id: ItemID.dustCopper, count: 1}], 500);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedTin}, [{id: ItemID.dustSmallIron, count: 1}, {id: ItemID.dustTin, count: 1}], 1000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedIron}, [{id: ItemID.dustSmallGold, count: 1}, {id: ItemID.dustIron, count: 1}], 1500);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedSilver}, [{id: ItemID.dustSmallLead, count: 1}, {id: ItemID.dustSilver, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedGold}, [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustGold, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedLead}, [{id: ItemID.dustSmallSilver, count: 1}, {id: ItemID.dustLead, count: 1}], 2000);
+	dictionary.addRecipe({id: ItemID.crushedPurifiedUranium}, [{id: ItemID.smallUranium235, count: 2}, {id: ItemID.uranium238, count: 5}], 3000);
+	dictionary.addRecipe({id: ItemID.slag}, [{id: ItemID.dustSmallGold, count: 1}, {id: ItemID.dustCoal, count: 1}], 1500);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedUranium}, [{id: ItemID.smallPlutonium, count: 1}, {id: ItemID.uranium238, count: 4}, {id: ItemID.dustIron, count: 1}], 4000);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedUranium2}, [{id: ItemID.smallPlutonium, count: 2}, {id: ItemID.uranium238, count: 8}, {id: ItemID.dustIron, count: 3}], 4000);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedUranium4}, [{id: ItemID.smallPlutonium, count: 4}, {id: ItemID.uranium238, count: 16}, {id: ItemID.dustIron, count: 6}], 4000);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedMOX}, [{id: ItemID.smallPlutonium, count: 1}, {id: ItemID.plutonium, count: 3}, {id: ItemID.dustIron, count: 1}], 5000);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedMOX2}, [{id: ItemID.smallPlutonium, count: 2}, {id: ItemID.plutonium, count: 6}, {id: ItemID.dustIron, count: 3}], 5000);
+	dictionary.addRecipe({id: ItemID.fuelRodDepletedMOX4}, [{id: ItemID.smallPlutonium, count: 4}, {id: ItemID.plutonium, count: 12}, {id: ItemID.dustIron, count: 6}], 5000);
+	dictionary.addRecipe({id: ItemID.rtgPellet}, [{id: ItemID.plutonium, count: 3}, {id: ItemID.dustIron, count: 54}], 5000);
 });
 
 namespace Machine {
@@ -72,7 +73,7 @@ namespace Machine {
 		}
 	});
 
-	export class ThermalCentrifuge extends ProcessingMachine {
+	export class ThermalCentrifuge extends BasicProcessingMachine {
 		defaultValues = {
 			energy: 0,
 			progress: 0,
@@ -87,6 +88,7 @@ namespace Machine {
 		defaultDrop = BlockID.machineBlockAdvanced;
 		upgrades = ["overclocker", "transformer", "energyStorage", "redstone", "itemEjector", "itemPulling"];
 
+		heatingEnergyDemand = 2;
 		isHeating: boolean = false;
 		isPowered: boolean;
 
@@ -94,100 +96,88 @@ namespace Machine {
 			return guiCentrifuge;
 		}
 
-		useUpgrades(): UpgradeAPI.UpgradeSet {
-			const upgrades = super.useUpgrades();
+		getRecipeDictionary(): MachineRecipe.ThermalCentrifugeRecipeDictionary {
+			return MachineRecipeRegistry.getDictionary("thermalCentrifuge");
+		}
+
+		getOutputSlots(): string[] {
+			return ["slotResult1", "slotResult2", "slotResult3"];
+		}
+
+		useUpgrades(isInit: boolean): UpgradeAPI.UpgradeSet {
+			const upgrades = super.useUpgrades(isInit);
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
 			return upgrades;
 		}
 
-		getRecipeResult(id: number): {result: number[], heat: number} {
-			return MachineRecipeRegistry.getRecipeResult("thermalCentrifuge", id);
-		}
-
-		checkResult(result: number[]): boolean {
-			for (let i = 1; i < 4; i++) {
-				const id = result[(i-1) * 2];
-				const count = result[(i-1) * 2 + 1];
-				const resultSlot = this.container.getSlot("slotResult" + i);
-				if ((resultSlot.id != id || resultSlot.count + count > 64) && resultSlot.id != 0) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		putResult(result: number[]): void {
-			for (let i = 1; i < 4; i++) {
-				const id = result[(i-1) * 2];
-				const count = result[(i-1) * 2 + 1];
-				const resultSlot = this.container.getSlot("slotResult" + i);
-				if (id) {
-					resultSlot.setSlot(id, resultSlot.count + count, 0);
-				}
-			}
-		}
-
 		onTick(): void {
-			this.useUpgrades();
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
 			if (this.isHeating) {
 				this.data.maxHeat = 5000;
 			}
 
-			let newActive = false;
-			const sourceSlot = this.container.getSlot("slotSource");
-			const recipe = this.getRecipeResult(sourceSlot.id);
-			if (recipe && this.checkResult(recipe.result) && this.data.energy > 0) {
-				this.data.maxHeat = recipe.heat;
-				if (this.data.heat < recipe.heat) {
-					this.data.energy--;
-					this.data.heat++;
-				}
-				else if (this.data.energy >= this.energyDemand) {
-					this.data.energy -= this.energyDemand;
-					this.updateProgress();
-					newActive = true;
-				}
-				if (this.isCompletedProgress()) {
-					this.decreaseSlot(sourceSlot, 1);
-					this.putResult(recipe.result);
-					this.data.progress = 0;
-				}
-			}
-			else {
-				this.data.maxHeat = 5000;
+			const isActive = this.performRecipe();
+			if (!isActive) {
 				this.data.progress = 0;
-				if (this.isHeating && this.data.energy > 1) {
-					if (this.data.heat < 5000) {this.data.heat++;}
-					this.data.energy -= 2;
+				this.data.maxHeat = 5000;
+				if (this.isHeating && this.data.energy >= this.heatingEnergyDemand) {
+					if (this.data.heat < 5000) {
+						this.data.heat++;
+					}
+					this.data.energy -= this.heatingEnergyDemand;
 				}
 				else if (this.data.heat > 0) {
 					this.data.heat--;
 				}
 			}
-			this.setActive(newActive);
+			this.setActive(isActive);
 
 			this.dischargeSlot("slotEnergy");
 
-			if (this.data.heat >= this.data.maxHeat) {
-				this.container.sendEvent("setIndicator", "green");
-			} else {
-				this.container.sendEvent("setIndicator", "red");
-			}
+			this.container.sendEvent("setIndicator", this.data.heat >= this.data.maxHeat ? "green" : "red");
 			this.container.setScale("progressScale", this.data.progress);
 			this.container.setScale("heatScale", this.data.heat / this.data.maxHeat);
 			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendChanges();
 		}
 
+		performRecipe(): boolean {
+			const sourceSlot = this.container.getSlot("slotSource");
+			const dictionary = this.getRecipeDictionary();
+			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
+			if (!recipe) return false;
+
+			this.data.maxHeat = recipe.heat;
+
+			if (this.data.energy >= this.heatingEnergyDemand && this.canPutResult(recipe.result)) {
+				if (this.data.heat < recipe.heat) {
+					this.data.energy -= this.heatingEnergyDemand;
+					this.data.heat++;
+					return true;
+				}
+				if (this.data.energy >= this.energyDemand) {
+					this.data.energy -= this.energyDemand;
+					this.updateProgress(recipe.processTime);
+					if (this.isCompletedProgress()) {
+						this.decreaseSlot(sourceSlot, 1);
+						this.putResult(recipe.result);
+						this.data.progress = 0;
+					}
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		onRedstoneUpdate(signal: number): void {
 			this.isPowered = signal > 0;
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Client)
-		setIndicator(container: ItemContainer, window: any, content: any, data: string): void {
+		@ContainerEvent(Side.Client, "setIndicator")
+		onSetIndicator(container: ItemContainer, window: any, content: any, data: string): void {
 			if (content) {
 				content.elements["indicator"].bitmap = "indicator_" + data;
 			}
@@ -195,6 +185,8 @@ namespace Machine {
 	}
 
 	MachineRegistry.registerPrototype(BlockID.thermalCentrifuge, new ThermalCentrifuge());
+	
+	MachineRecipeRegistry.registerDictionary("thermalCentrifuge", new MachineRecipe.ThermalCentrifugeRecipeDictionary());
 
 	StorageInterface.createInterface(BlockID.thermalCentrifuge, {
 		slots: {
@@ -203,8 +195,9 @@ namespace Machine {
 			"slotResult2": {output: true},
 			"slotResult3": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => {
-			return MachineRecipeRegistry.hasRecipeFor("thermalCentrifuge", item.id);
+		isValidInput: (item: ItemInstance, side: number, tileEntity: ThermalCentrifuge) => {
+			return tileEntity.isValidSource(item.id, item.data);
 		}
 	});
 }
+

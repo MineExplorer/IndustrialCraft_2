@@ -189,13 +189,3 @@ class ArmorQuantumBoots extends ArmorQuantumSuit {
 		return super.onHurt(params, item, index, playerUid);
 	}
 }
-
-/** @deprecated */
-const QUANTUM_ARMOR_FUNCS = {
-	hurt: function(params: {attacker: number, damage: number, type: number, b1: boolean, b2: boolean}, item: ItemInstance, index: number) {
-		return !!ArmorQuantumSuit.prototype.onHurt(params, item, index, Player.get());
-	},
-	tick: function(item: ItemInstance, index: number) {
-		return !!ArmorQuantumSuit.prototype.onTick(item, index, Player.get());
-	}
-}

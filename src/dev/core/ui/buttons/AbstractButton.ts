@@ -10,7 +10,7 @@ namespace ToolHUD {
 	export abstract class AbstractButton
 	implements IHUDButton {
 		uiElement: UI.UIButtonElement;
-		bindedItems = [];
+		bindedItems: number[] = [];
 
 		constructor(public name: string, public type: "armor" | "tool", public uiData: ButtonUIData) {
 			this.uiElement = {

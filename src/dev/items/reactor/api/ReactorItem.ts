@@ -1,15 +1,15 @@
 namespace ReactorItem {
-	let reactor_components = {};
+	let reactorComponents = {};
 
 	export function registerComponent(id: number, component: ReactorComponent): void {
 		if (component instanceof DamageableReactorComponent) {
 			Item.setMaxDamage(id, 27);
 		}
-		reactor_components[id] = component;
+		reactorComponents[id] = component;
 	}
 
 	export function getComponent(id: number): ReactorComponent {
-		return reactor_components[id];
+		return reactorComponents[id];
 	}
 
 	export function isReactorItem(id: number): boolean {

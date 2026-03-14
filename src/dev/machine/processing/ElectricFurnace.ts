@@ -1,4 +1,4 @@
-/// <reference path="ProcessingMachine.ts" />
+/// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("electricFurnace", [
 	{name: "Electric Furnace", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["electric_furnace", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
@@ -43,7 +43,7 @@ namespace Machine {
 		}
 	});
 
-	export class ElectricFurnace extends ProcessingMachine {
+	export class ElectricFurnace extends BasicProcessingMachine {
 		defaultEnergyDemand = 3;
 		defaultProcessTime = 130;
 		defaultDrop = BlockID.ironFurnace;
@@ -53,8 +53,13 @@ namespace Machine {
 			return guiElectricFurnace;
 		}
 
-		getRecipeResult(id: number, data: number): ItemInstance {
-			return Recipes.getFurnaceRecipeResult(id, data, "iron");
+		getRecipe(id: number, data: number): Nullable<ItemProcessingRecipe> {
+			const result = Recipes.getFurnaceRecipeResult(id, data, "iron");
+			return result && { source: null, result: [result] };
+		}
+
+		isValidSource(id: number, data: number): boolean {
+			return !!Recipes.getFurnaceRecipeResult(id, data, "iron");
 		}
 
 		getStartingSound(): string {
@@ -75,8 +80,8 @@ namespace Machine {
 			"slotSource": {input: true},
 			"slotResult": {output: true}
 		},
-		isValidInput: (item: ItemInstance) => {
-			return !!Recipes.getFurnaceRecipeResult(item.id, item.data, "iron");
+		isValidInput: (item: ItemInstance, side: number, tileEntity: ElectricFurnace) => {
+			return tileEntity.isValidSource(item.id, item.data);
 		}
 	});
 }

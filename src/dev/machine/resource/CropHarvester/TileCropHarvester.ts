@@ -18,6 +18,7 @@ namespace Machine {
 
 		tier: number = this.defaultTier;
 		energyStorage: number;
+		upgradeSet?: UpgradeAPI.UpgradeSet;
 
 		getScreenByName(): UI.IWindow {
 			return guiCropHarvester;
@@ -31,8 +32,8 @@ namespace Machine {
 			return this.energyStorage;
 		}
 
-		useUpgrades(): void {
-			const upgrades = UpgradeAPI.useUpgrades(this);
+		useUpgrades(isInit: boolean) {
+			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet, isInit);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 		}
@@ -46,11 +47,12 @@ namespace Machine {
 
 		onInit(): void {
 			super.onInit();
-			this.useUpgrades();
+			this.upgradeSet = UpgradeAPI.getUpgradeSet(this);
+			this.useUpgrades(true);
 		}
 
 		onTick(): void {
-			this.useUpgrades();
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
 			if (this.data.energy > 100) this.scan();

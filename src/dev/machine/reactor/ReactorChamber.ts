@@ -51,6 +51,8 @@ namespace Machine {
 			return 5;
 		}
 
+		noupdate: boolean = true;
+
 		onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean {
 			if (this.core) {
 				return this.core.onItemClick(id, count, data, coords, player, extra);

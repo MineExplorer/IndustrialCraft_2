@@ -1779,7 +1779,6 @@ declare namespace ItemRegistry {
      * @param extra item extra data
      */
     export function addToCreative(id: string | number, count: number, data: number, extra?: ItemExtraData): void;
-    export {};
 }
 /**
  * Class representing item stack in the inventory.
@@ -1915,7 +1914,6 @@ declare namespace IDConverter {
      * @returns converted data
      */
     export function getData(stringId: string): number;
-    export {};
 }
 declare abstract class TileEntityBase implements TileEntity {
     constructor();
@@ -2230,7 +2228,6 @@ declare namespace LiquidItemRegistry {
      * @returns object that contains full item and free liquid capacity
      */
     export function getFullStack(item: ItemInstance, liquid: string): FullItem;
-    export {};
 }
 declare namespace BlockEngine {
     /**

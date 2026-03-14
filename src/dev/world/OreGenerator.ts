@@ -30,7 +30,7 @@ namespace OreGenerator {
 		maxHeight: IC2Config.getInt("uranium_ore.maxHeight")
 	}
 	export let iridium = {
-		chance: IC2Config.getInt("iridium_ore.chance"),
+		chance: IC2Config.getFloat("iridium_ore.chance"),
 		minHeight: IC2Config.getInt("iridium_ore.minHeight"),
 		maxHeight: IC2Config.getInt("iridium_ore.maxHeight")
 	}
@@ -49,10 +49,16 @@ namespace OreGenerator {
 		return {x: x, y: y, z: z};
 	}
 
-	export function generateOre(chunkX: number, chunkZ: number, blockID: number, properties: OreProperties, random: java.util.Random): void {
+	export function generateOre(chunkX: number, chunkZ: number, blockId: number, properties: OreProperties, random: java.util.Random): void {
 		for (let i = 0; i < properties.count; i++) {
 			const coords = randomCoords(random, chunkX, chunkZ, properties.minHeight, properties.maxHeight);
-			GenerationUtils.generateOre(coords.x, coords.y, coords.z, blockID, 0, properties.size, false);
+			GenerationUtils.generateOre(coords.x, coords.y, coords.z, blockId, 0, properties.size, false);
+		}
+	}
+
+	export function replaceWithOre(coords: Vector, blockId: number, replaceId: number = 1) {
+		if (World.getBlockID(coords.x, coords.y, coords.z) == replaceId) {
+			World.setBlock(coords.x, coords.y, coords.z, blockId, 0);
 		}
 	}
 }
@@ -77,7 +83,12 @@ Callback.addCallback("GenerateChunk", function(chunkX, chunkZ, random) {
 	}
 	if (random.nextDouble() < OreGenerator.iridium.chance) {
 		const coords = OreGenerator.randomCoords(random, chunkX, chunkZ, OreGenerator.iridium.minHeight, OreGenerator.iridium.maxHeight);
-		if (World.getBlockID(coords.x, coords.y, coords.z) == 1)
-			World.setBlock(coords.x, coords.y, coords.z, BlockID.oreIridium, 0);
+		OreGenerator.replaceWithOre(coords, BlockID.oreIridium);
+		const side = random.nextInt(12);
+		if (side < 6) {
+			const dir = World.getVectorByBlockSide(side);
+			const coords2 = {x: coords.x + dir.x, y: coords.y + dir.y, z: coords.z + dir.z};
+			OreGenerator.replaceWithOre(coords2, BlockID.oreIridium);
+		}
 	}
 });

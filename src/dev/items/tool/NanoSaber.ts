@@ -56,7 +56,7 @@ implements IHandEquippedFuncs {
 	}
 
 	canEmitSound(item: ItemInstance): boolean {
-		return item.extra.getBoolean("active");
+		return item.extra?.getBoolean("active") || false;
 	}
 
 	static onTick(playerUid: number): void {

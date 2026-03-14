@@ -13,7 +13,7 @@ class BlockRubberTreeLeaves extends BlockBase {
 		if (enchant.silk || item?.id == 359) {
 			return [[block.id, 1, 2]];
 		}
-		const drop = [];
+		const drop: ItemInstanceArray[] = [];
 		if (Math.random() < .04) {
 			drop.push([BlockID.rubberTreeSapling, 1, 0]);
 		}

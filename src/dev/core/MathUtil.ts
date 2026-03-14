@@ -13,6 +13,3 @@ namespace MathUtil {
 		return value;
 	}
 }
-
-/** @deprecated */
-const randomInt = MathUtil.randomInt

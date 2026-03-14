@@ -58,6 +58,7 @@ namespace Machine {
 		energyDemand = 16;
 		defaultTier = 2;
 		defaultEnergyStorage = 10000;
+		maxHeat = 10000;
 		defaultDrop = BlockID.machineBlockAdvanced;
 		upgrades = ["transformer", "energyStorage", "redstone", "itemEjector", "itemPulling"];
 
@@ -68,23 +69,27 @@ namespace Machine {
 			return guiInductionFurnace;
 		}
 
+		isValidSource(id: number, data: number): boolean {
+			return !!this.getRecipeResult(id, data);
+		}
+
 		getRecipeResult(id: number, data: number): ItemInstance {
 			return Recipes.getFurnaceRecipeResult(id, data, "iron");
 		}
 
-		checkResult(result: MachineRecipeRegistry.RecipeData, slot: ItemContainerSlot): boolean {
-			return result && (slot.id == result.id && slot.data == result.data && slot.count < 64 || slot.id == 0);
+		checkResult(result: ItemInstance, slot: ItemContainerSlot): boolean {
+			return result && (slot.id == 0 || (slot.id == result.id && slot.data == result.data && slot.count < 64));
 		}
 
-		putResult(result: MachineRecipeRegistry.RecipeData, sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot): void {
+		putResult(result: ItemInstance, sourceSlot: ItemContainerSlot, resultSlot: ItemContainerSlot): void {
 			if (this.checkResult(result, resultSlot)) {
 				this.decreaseSlot(sourceSlot, 1);
 				resultSlot.setSlot(result.id, resultSlot.count + 1, result.data);
 			}
 		}
 
-		useUpgrades(): UpgradeAPI.UpgradeSet {
-			const upgrades = UpgradeAPI.useUpgrades(this);
+		useUpgrades(isInit: boolean): UpgradeAPI.UpgradeSet {
+			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet, isInit);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
@@ -92,7 +97,7 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.useUpgrades();
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
@@ -105,7 +110,7 @@ namespace Machine {
 			if (this.checkResult(result1, resultSlot1) || this.checkResult(result2, resultSlot2)) {
 				if (this.data.energy >= this.energyDemand && this.data.progress < 100) {
 					this.data.energy -= this.energyDemand;
-					if (this.data.heat < 10000) {this.data.heat++;}
+					if (this.data.heat < this.maxHeat) this.data.heat++;
 					this.data.progress += this.data.heat / 1200;
 					newActive = true;
 				}
@@ -118,7 +123,7 @@ namespace Machine {
 			else {
 				this.data.progress = 0;
 				if (this.isHeating && this.data.energy > 0) {
-					if (this.data.heat < 10000) {this.data.heat++;}
+					if (this.data.heat < this.maxHeat) this.data.heat++;
 					this.data.energy--;
 				}
 				else {

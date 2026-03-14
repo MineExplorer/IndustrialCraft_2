@@ -59,6 +59,7 @@ machine/processing/Recycler.ts
 machine/processing/MetalFormer.ts
 machine/processing/OreWasher.ts
 machine/processing/ThermalCentrifuge.ts
+machine/processing/BlockCuttingMachine.ts
 machine/processing/BlastFurnace.ts
 machine/processing/Fermenter.ts
 
@@ -91,6 +92,7 @@ items/resource/nuclear.ts
 items/resource/scrap.ts
 items/resource/matter.ts
 items/resource/material.ts
+items/resource/components.ts
 items/resource/liquid.ts
 items/resource/cells.ts
 items/resource/waste.ts
@@ -108,7 +110,6 @@ items/food/coffee/IC2Coffee.ts
 items/food/coffee/CoffeeMugs.ts
 
 items/electric/cable.ts
-items/electric/components.ts
 items/electric/battery.ts
 items/electric/charging.ts
 

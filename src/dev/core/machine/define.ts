@@ -5,7 +5,7 @@
 namespace MachineRegistry {
 	const machineIDs = {}
 
-	export function isMachine(id: number) {
+	export function isMachine(id: number): boolean {
 		return machineIDs[id];
 	}
 
@@ -68,7 +68,7 @@ namespace MachineRegistry {
 		Prototype.getExplosionPower ??= BasePrototype.getExplosionPower;
 		Prototype.energyReceive ??= BasePrototype.energyReceive;
 
-		this.registerPrototype(id, Prototype);
+		registerPrototype(id, Prototype);
 		// register for energy net
 		EnergyTileRegistry.addEnergyTypeForId(id, EU);
 	}
@@ -78,7 +78,7 @@ namespace MachineRegistry {
 		Prototype.energyTick ??= BasePrototype.energyTick;
 		Prototype.canReceiveEnergy ??= BasePrototype.canReceiveEnergy;
 		Prototype.canExtractEnergy ??= BasePrototype.canExtractEnergy;
-		this.registerElectricMachine(id, Prototype);
+		registerElectricMachine(id, Prototype);
 	}
 
 	export function createFluidStorageInterface(blockID: number, descriptor: StorageDescriptor) {
@@ -111,7 +111,7 @@ namespace MachineRegistry {
 	}
 
 	export function getMachineDrop(blockID: number, level: number): ItemInstanceArray[] {
-		const drop = [];
+		const drop: ItemInstanceArray[] = [];
 		if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
 			const prototype = TileEntity.getPrototype(blockID) as Machine.MachineBase;
 			if (prototype && prototype.getDefaultDrop) {
@@ -128,7 +128,7 @@ namespace MachineRegistry {
 	export function setMachineDrop(blockID: string | number, dropID?: number) {
 		dropID ??= Block.getNumericId(blockID);
 		BlockRegistry.registerDrop(blockID, function(coords, blockID, blockData, level) {
-			const drop = [];
+			const drop: ItemInstanceArray[] = [];
 			if (level >= ToolAPI.getBlockDestroyLevel(blockID)) {
 				drop.push([dropID, 1, 0]);
 			}

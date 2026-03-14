@@ -1,3 +1,5 @@
+/// <reference path="./ProcessingMachine.ts" />
+
 BlockRegistry.createBlock("canner", [
 	{name: "Fluid/Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]], inCreative: true}
 ], "machine");
@@ -16,10 +18,9 @@ Callback.addCallback("PreLoaded", function() {
 		"cxc",
 	], ['#', BlockID.solidCanner, 0, 'x', ItemID.circuitBasic, 0, 'c', ItemID.cellEmpty, 0]);
 
-	MachineRecipeRegistry.registerRecipesFor("fluidCanner", [
-		{input: ["water", {id: ItemID.bioChaff, count: 1}], output: "biomass"},
-		{input: ["water", {id: ItemID.dustLapis, count: 1}], output: "coolant"}
-	]);
+	const dictionary: MachineRecipe.FluidEnrichRecipeDictionary = MachineRecipeRegistry.getDictionary("fluidCanner");
+	dictionary.addRecipe({id: ItemID.bioChaff, count: 1}, {name: "water", amount: 1000}, {name: "biomass", amount: 1000});
+	dictionary.addRecipe({id: ItemID.dustLapis, count: 1}, {name: "water", amount: 1000}, {name: "coolant", amount: 1000});
 });
 
 namespace Machine {
@@ -62,6 +63,13 @@ namespace Machine {
 		}
 	});
 
+	enum CannerMode {
+		SolidCanning,
+		EmptyItem,
+		FillItem,
+		FluidCanning
+	}
+
 	export class Canner extends ProcessingMachine {
 		inputTank: BlockEngine.LiquidTank;
 		outputTank: BlockEngine.LiquidTank;
@@ -69,7 +77,7 @@ namespace Machine {
 		defaultValues = {
 			energy: 0,
 			progress: 0,
-			mode: 0
+			mode: CannerMode.SolidCanning
 		};
 
 		defaultEnergyStorage = 1600;
@@ -81,33 +89,35 @@ namespace Machine {
 			return guiCanner;
 		}
 
-		isValidSourceItem(id: number, data: number): boolean {
-			if (this.data.mode == 0 && MachineRecipeRegistry.hasRecipeFor("solidCanner", id)) {
-				return true;
+		getSolidRecipeDictionary(): SolidCannerRecipeDictionary {
+			return MachineRecipeRegistry.getDictionary("solidCanner");
+		}
+
+		getFluidRecipeDictionary(): MachineRecipe.FluidEnrichRecipeDictionary {
+			return MachineRecipeRegistry.getDictionary("fluidCanner");
+		}
+
+		isValidSource(id: number, data: number): boolean {
+			if (this.data.mode == CannerMode.SolidCanning) {
+				return !!this.getSolidRecipeDictionary().getRecipe(id, data);
 			}
-			if (this.data.mode == 3) {
-				const recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
-				for (let i in recipes) {
-					if (recipes[i].input[1].id == id) return true;
-				}
+			if (this.data.mode == CannerMode.FluidCanning) {
+				return !!this.getFluidRecipeDictionary().findRecipe(recipe => recipe.source.id == id && (recipe.source.data == -1 || recipe.source.data == data));
 			}
 			return false;
 		}
 
 		isValidCan(id: number, data: number, extra: ItemExtraData): boolean {
 			switch (this.data.mode) {
-			case 0: {
-				const recipes = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-				for (let i in recipes) {
-					if (recipes[i].can == id) return true;
+				case CannerMode.SolidCanning: {
+					const dictionary = this.getSolidRecipeDictionary();
+					return !!dictionary.findRecipe(recipe => recipe.can == id);
 				}
-				return false;
-			}
-			case 1:
-			case 3:
-				return !!LiquidItemRegistry.getItemLiquid(id, data, extra);
-			case 2:
-				return LiquidItemRegistry.canBeFilledWithLiquid(id, data, extra, this.inputTank.getLiquidStored() || "water");
+				case CannerMode.EmptyItem:
+				case CannerMode.FluidCanning:
+					return !!LiquidItemRegistry.getItemLiquid(id, data, extra);
+				case CannerMode.FillItem:
+					return LiquidItemRegistry.canBeFilledWithLiquid(id, data, extra, this.inputTank.getLiquidStored() || "water");
 			}
 		}
 
@@ -116,7 +126,7 @@ namespace Machine {
 			this.outputTank = this.addLiquidTank("outputTank", 8000);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
-				if (name == "slotSource") return this.isValidSourceItem(id, data);
+				if (name == "slotSource") return this.isValidSource(id, data);
 				if (name == "slotCan") return this.isValidCan(id, data, extra);
 				if (name == "slotEnergy") return ChargeItemRegistry.isValidStorage(id, "Eu", this.getTier());
 				if (name.startsWith("slotUpgrade")) return UpgradeAPI.isValidUpgrade(id, this);
@@ -125,108 +135,12 @@ namespace Machine {
 		}
 
 		onTick(): void {
-			this.container.sendEvent("updateUI", {mode: this.data.mode});
-			this.useUpgrades();
+			this.container.sendEvent("updateUiMode", {mode: this.data.mode});
+			this.useUpgrades(false);
 			StorageInterface.checkHoppers(this);
 
-			let sourceSlot = this.container.getSlot("slotSource");
-			let resultSlot = this.container.getSlot("slotResult");
-			let canSlot = this.container.getSlot("slotCan");
-
-			let newActive = false;
-			switch (this.data.mode) {
-			case 0:
-				let recipe = MachineRecipeRegistry.getRecipeResult("solidCanner", sourceSlot.id);
-				if (recipe) {
-					let result = recipe.result;
-					if (canSlot.id == recipe.can && canSlot.count >= result.count && (resultSlot.id == result.id && resultSlot.data == result.data && resultSlot.count <= 64 - result.count || resultSlot.id == 0)) {
-						if (this.data.energy >= this.energyDemand) {
-							this.data.energy -= this.energyDemand;
-							this.updateProgress();
-							newActive = true;
-						}
-						if (this.isCompletedProgress()) {
-							this.decreaseSlot(sourceSlot, 1);
-							this.decreaseSlot(canSlot, result.count);
-							resultSlot.setSlot(result.id, resultSlot.count + result.count, result.data);
-							this.data.progress = 0;
-						}
-					}
-				}
-				else {
-					this.data.progress = 0;
-				}
-			break;
-			case 1:
-				let liquid = this.outputTank.getLiquidStored();
-				const emptyStack = LiquidItemRegistry.getEmptyStack(canSlot);
-				if (emptyStack && (!liquid || emptyStack.liquid == liquid) && !this.outputTank.isFull()) {
-					if (this.data.energy >= this.energyDemand && this.canStackBeMerged(emptyStack, resultSlot)) {
-						this.data.energy -= this.energyDemand;
-						this.updateProgress();
-						newActive = true;
-					}
-					if (this.isCompletedProgress()) {
-						this.outputTank.getLiquidFromItem(canSlot, resultSlot);
-						this.data.progress = 0;
-					}
-				}
-				else {
-					this.data.progress = 0;
-				}
-			break;
-			case 2:
-				let resetProgress = true;
-				liquid = this.inputTank.getLiquidStored();
-				if (liquid) {
-					const fullStack = LiquidItemRegistry.getFullStack(canSlot, liquid);
-					if (fullStack) {
-						resetProgress = false;
-						if (this.data.energy >= this.energyDemand && this.canStackBeMerged(fullStack, resultSlot)) {
-							this.data.energy -= this.energyDemand;
-							this.updateProgress();
-							newActive = true;
-						}
-						if (this.isCompletedProgress()) {
-							this.inputTank.addLiquidToItem(canSlot, resultSlot);
-							this.data.progress = 0;
-						}
-					}
-				}
-				if (resetProgress) {
-					this.data.progress = 0;
-				}
-			break;
-			case 3:
-				let recipes = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
-				resetProgress = true;
-				for (let i in recipes) {
-					let recipe = recipes[i];
-					let liquid = recipe.input[0];
-					let source = recipe.input[1];
-					if (this.inputTank.getAmount(liquid) >= 1000 && sourceSlot.id == source.id && sourceSlot.count >= source.count) {
-						resetProgress = false;
-						let outputLiquid = this.outputTank.getLiquidStored()
-						if ((!outputLiquid || recipe.output == outputLiquid && this.outputTank.getAmount() <= 7000) && this.data.energy >= this.energyDemand) {
-							this.data.energy -= this.energyDemand;
-							this.updateProgress();
-							newActive = true;
-						}
-						if (this.isCompletedProgress()) {
-							this.inputTank.getLiquid(1000);
-							this.decreaseSlot(sourceSlot, source.count);
-							this.outputTank.addLiquid(recipe.output, 1000);
-							this.data.progress = 0;
-						}
-						break;
-					}
-				}
-				if (resetProgress) {
-					this.data.progress = 0;
-				}
-			break;
-			}
-			this.setActive(newActive);
+			const isActive = this.performRecipe();
+			this.setActive(isActive);
 
 			this.dischargeSlot("slotEnergy");
 
@@ -235,6 +149,123 @@ namespace Machine {
 			this.container.setScale("progressScale", this.data.progress);
 			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.sendChanges();
+		}
+
+		performRecipe(): boolean {
+			const sourceSlot = this.container.getSlot("slotSource");
+			const resultSlot = this.container.getSlot("slotResult");
+			const canSlot = this.container.getSlot("slotCan");
+
+			switch (this.data.mode) {
+				case CannerMode.SolidCanning:
+					return this.performSolidRecipe(sourceSlot, canSlot, resultSlot);
+				case CannerMode.EmptyItem:
+					return this.emptyLiquidItem(canSlot, resultSlot);
+				case CannerMode.FillItem:
+					return this.fillLiquidItem(canSlot, resultSlot);
+				case CannerMode.FluidCanning:
+					return this.performFluidRecipe(sourceSlot);
+				default:
+					return false;
+			}
+		}
+
+		performSolidRecipe(sourceSlot: ItemContainerSlot, canSlot: ItemContainerSlot, resultSlot: ItemContainerSlot): boolean {
+			const dictionary = this.getSolidRecipeDictionary();
+			const recipe = dictionary.getRecipe(sourceSlot.id, sourceSlot.data);
+			if (recipe && canSlot.id == recipe.can && canSlot.count >= recipe.result.count) {
+				if (this.data.energy >= this.energyDemand && this.canStackBeMerged(recipe.result, resultSlot, 64)) {
+					this.data.energy -= this.energyDemand;
+					this.updateProgress();
+					if (this.isCompletedProgress()) {
+						this.decreaseSlot(sourceSlot, 1);
+						this.decreaseSlot(canSlot, recipe.result.count);
+						resultSlot.setSlot(recipe.result.id, resultSlot.count + recipe.result.count, recipe.result.data);
+						this.data.progress = 0;
+					}
+					return true;
+				}
+			}
+			else {
+				this.data.progress = 0;
+			}
+			return false;
+		}
+
+		emptyLiquidItem(canSlot: ItemContainerSlot, resultSlot: ItemContainerSlot): boolean {
+			let newActive = false;
+			const liquid = this.outputTank.getLiquidStored();
+			const emptyStack = LiquidItemRegistry.getEmptyStack(canSlot);
+			if (emptyStack && (!liquid || emptyStack.liquid == liquid) && !this.outputTank.isFull()) {
+				if (this.data.energy >= this.energyDemand && this.canStackBeMerged(emptyStack, resultSlot)) {
+					this.data.energy -= this.energyDemand;
+					this.updateProgress(this.defaultProcessTime / 5);
+					newActive = true;
+				}
+				if (this.isCompletedProgress()) {
+					this.outputTank.getLiquidFromItem(canSlot, resultSlot);
+					this.data.progress = 0;
+				}
+			}
+			else {
+				this.data.progress = 0;
+			}
+			return newActive;
+		}
+
+		fillLiquidItem(canSlot: ItemContainerSlot, resultSlot: ItemContainerSlot): boolean {
+			let newActive = false;
+			let resetProgress = true;
+			const liquid = this.inputTank.getLiquidStored();
+			if (liquid) {
+				const fullStack = LiquidItemRegistry.getFullStack(canSlot, liquid);
+				if (fullStack) {
+					resetProgress = false;
+					if (this.data.energy >= this.energyDemand && this.canStackBeMerged(fullStack, resultSlot)) {
+						this.data.energy -= this.energyDemand;
+						this.updateProgress(this.defaultProcessTime / 5);
+						newActive = true;
+					}
+					if (this.isCompletedProgress()) {
+						this.inputTank.addLiquidToItem(canSlot, resultSlot);
+						this.data.progress = 0;
+					}
+				}
+			}
+			if (resetProgress) {
+				this.data.progress = 0;
+			}
+			return newActive;
+		}
+
+		performFluidRecipe(sourceSlot: ItemContainerSlot): boolean {
+			let newActive = false;
+			let resetProgress = true;
+
+			const inputLiquid = this.inputTank.getLiquidStored();
+			if (sourceSlot.id != 0 && inputLiquid) {
+				const dictionary = this.getFluidRecipeDictionary();
+				const recipe = dictionary.getRecipe(inputLiquid, sourceSlot);
+				if (recipe && sourceSlot.count >= recipe.source.count && this.inputTank.getAmount() >= recipe.inputFluid.amount) {
+					const outputLiquid = this.outputTank.getLiquidStored()
+					if ((!outputLiquid || recipe.outputFluid.name == outputLiquid) && this.outputTank.getLimit() - this.outputTank.getAmount() >= recipe.outputFluid.amount && this.data.energy >= this.energyDemand) {
+						this.data.energy -= this.energyDemand;
+						this.updateProgress();
+						newActive = true;
+						resetProgress = false;
+					}
+					if (this.isCompletedProgress()) {
+						this.inputTank.getLiquid(1000);
+						this.decreaseSlot(sourceSlot, recipe.source.count);
+						this.outputTank.addLiquid(recipe.outputFluid.name, recipe.outputFluid.amount);
+						this.data.progress = 0;
+					}
+				}
+			}
+			if (resetProgress) {
+				this.data.progress = 0;
+			}
+			return newActive;
 		}
 
 		canRotate(side: number): boolean {
@@ -256,7 +287,7 @@ namespace Machine {
 		onSwitchMode(): void {
 			if (this.data.progress == 0) {
 				this.data.mode = (this.data.mode + 1) % 4;
-				this.container.sendEvent("updateUI", {mode: this.data.mode});
+				this.container.sendEvent("updateUiMode", {mode: this.data.mode});
 			}
 		}
 
@@ -266,12 +297,13 @@ namespace Machine {
 				let liquidData = this.inputTank.data;
 				this.inputTank.data = this.outputTank.data;
 				this.outputTank.data = liquidData;
+				this.data[this.inputTank.name] = this.inputTank.data;
+				this.data[this.outputTank.name] = this.outputTank.data;
 			}
 		}
 
-		/** @deprecated Container event, shouldn't be called */
-		@ContainerEvent(Side.Client)
-		updateUI(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
+		@ContainerEvent(Side.Client, "updateUiMode")
+		onUpdateUiMode(container: ItemContainer, window: any, content: any, data: {mode: number}): void {
 			if (content) {
 				let element = content.elements["slotSource"];
 				let texture = "canner_slot_source_" + data.mode;
@@ -287,11 +319,13 @@ namespace Machine {
 
 	MachineRegistry.registerPrototype(BlockID.canner, new Canner());
 
+	MachineRecipeRegistry.registerDictionary("fluidCanner", new MachineRecipe.FluidEnrichRecipeDictionary());
+
 	MachineRegistry.createFluidStorageInterface(BlockID.canner, {
 		slots: {
 			"slotSource": {input: true,
 				isValid: (item: ItemInstance, side: number, tileEntity: Canner) => {
-					return tileEntity.isValidSourceItem(item.id, item.data);
+					return tileEntity.isValidSource(item.id, item.data);
 				}
 			},
 			"slotCan": {input: true,

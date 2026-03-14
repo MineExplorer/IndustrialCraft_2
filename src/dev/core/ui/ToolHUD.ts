@@ -9,7 +9,7 @@ namespace ToolHUD {
 
 	const buttonScale = IC2Config.getInt("button_scale");
 	let isEnabled = false;
-	export let container = null;
+	export let container: UI.Container = null;
 	export const Window = new UI.Window({
 		location: {
 			x: 1000 - buttonScale,
@@ -37,12 +37,7 @@ namespace ToolHUD {
 	export function setButtonFor(id: number, name: string): void {
 		getButton(name).bindItem(id);
 	}
-
-	/** @deprecated */
-	export function setArmorButton(id: number, name: string) {
-		setButtonFor(id, name);
-	}
-
+	
 	export function onClick(name: string): void {
 		Network.sendToServer(IC2NetworkPackets.hudClick, {name: name});
 	}

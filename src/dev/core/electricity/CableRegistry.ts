@@ -25,7 +25,7 @@ namespace CableRegistry {
 	}
 
 	export function createBlock(stringID: string, properties: {name: string, texture: string}, blockType?: string | Block.SpecialType): void {
-		const variations = [];
+		const variations: Block.BlockVariation[] = [];
 		for (let i = 0; i < 16; i++) {
 			variations.push({name: properties.name, texture: [[properties.texture, i]]});
 		}

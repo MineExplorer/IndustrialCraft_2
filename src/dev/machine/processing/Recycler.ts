@@ -1,3 +1,5 @@
+/// <reference path="./BasicProcessingMachine.ts" />
+
 BlockRegistry.createBlock("recycler", [
 	{name: "Recycler", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
 ], "machine");
@@ -40,7 +42,7 @@ namespace Machine {
 		}
 	});
 
-	export class Recycler extends ProcessingMachine {
+	export class Recycler extends BasicProcessingMachine {
 		defaultEnergyStorage = 800;
 		defaultEnergyDemand = 1;
 		defaultProcessTime = 45;
@@ -57,39 +59,18 @@ namespace Machine {
 			this.container.setSlotAddTransferPolicy("slotResult", () => 0);
 		}
 
-		onTick(): void {
-			this.useUpgrades();
-			StorageInterface.checkHoppers(this);
+		getRecipe(id: number, data: number): Nullable<ItemProcessingRecipe> {
+			if (id == 0) return null
 
-			let newActive = false;
-			const sourceSlot = this.container.getSlot("slotSource");
-			const resultSlot = this.container.getSlot("slotResult");
-			if (sourceSlot.id != 0 && (resultSlot.id == ItemID.scrap && resultSlot.count < 64 || resultSlot.id == 0)) {
-				if (this.data.energy >= this.energyDemand) {
-					this.data.energy -= this.energyDemand;
-					this.updateProgress();
-					newActive = true;
-				}
-				if (this.isCompletedProgress()) {
-					this.decreaseSlot(sourceSlot, 1);
-					if (Math.random() < 0.125 && recyclerBlacklist.indexOf(sourceSlot.id) == -1) {
-						resultSlot.setSlot(ItemID.scrap, resultSlot.count + 1, 0);
-					}
-					this.data.progress = 0;
-				}
-			}
-			else {
-				this.data.progress = 0;
-			}
-			this.setActive(newActive);
-
-			this.dischargeSlot("slotEnergy");
-
-			this.container.setScale("progressScale", this.data.progress);
-			this.container.setScale("energyScale", this.getRelativeEnergy());
-			this.container.sendChanges();
+			const isBlackListed = recyclerBlacklist.indexOf(id) != -1;
+			const resultItem = {id: ItemID.scrap, count: 1, chance: isBlackListed ? 0 : 0.125};
+			return { source: null, result: [resultItem] };
 		}
 
+		isValidSource(id: number, data: number): boolean {
+			return true;
+		}
+		
 		getOperationSound(): string {
 			return "RecyclerOp.ogg";
 		}

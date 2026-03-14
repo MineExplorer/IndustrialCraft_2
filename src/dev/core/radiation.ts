@@ -13,20 +13,21 @@ namespace RadiationAPI {
 	export let sources: RadiationSource[] = [];
 	export let effectDuration = {};
 
-	export function setRadioactivity(itemID: number, duration: number, stack: boolean = false): void {
-		radioactiveItems[itemID] = {duration: duration, stack: stack};
+	export function setRadioactivity(itemId: number, duration: number, stack: boolean = false): void {
+		ItemName.addTooltip(itemId, "tooltip.radioactive");
+		radioactiveItems[itemId] = {duration: duration, stack: stack};
 	}
 
-	export function getRadioactivity(itemID: number): {duration: number, stack: number} {
-		return radioactiveItems[itemID];
+	export function getRadioactivity(itemId: number): {duration: number, stack: boolean} {
+		return radioactiveItems[itemId];
 	}
 
-	export function isRadioactiveItem(itemID: number): boolean {
-		return !!radioactiveItems[itemID];
+	export function isRadioactiveItem(itemId: number): boolean {
+		return !!radioactiveItems[itemId];
 	}
 
-	export function emitItemRadiation(entity: number, itemID: number): boolean {
-		const radiation = getRadioactivity(itemID);
+	export function emitItemRadiation(entity: number, itemId: number): boolean {
+		const radiation = getRadioactivity(itemId);
 		if (radiation) {
 			if (radiation.stack) {
 				addRadiation(entity, radiation.duration);
@@ -37,20 +38,21 @@ namespace RadiationAPI {
 				return true;
 			}
 		}
+		return false;
 	}
 
-	export function registerHazmatArmor(itemID: number): void {
-		hazmatArmor[itemID] = true;
+	export function registerHazmatArmor(itemId: number): void {
+		hazmatArmor[itemId] = true;
 	}
 
-	export function isHazmatArmor(itemID: number): boolean {
-		return hazmatArmor[itemID];
+	export function isHazmatArmor(itemId: number): boolean {
+		return hazmatArmor[itemId];
 	}
 
 	export function hasHazmatSuit(playerUid: number): boolean {
 		for (let i = 0; i < 4; i++) {
-			const itemID = Entity.getArmorSlot(playerUid, i).id;
-			if (!isHazmatArmor(itemID)) return false;
+			const itemId = Entity.getArmorSlot(playerUid, i).id;
+			if (!isHazmatArmor(itemId)) return false;
 		}
 		return true;
 	}
@@ -141,8 +143,8 @@ namespace RadiationAPI {
 			if (!hasHazmatSuit(playerUid)) {
 				const player = new PlayerActor(playerUid);
 				for (let i = 0; i < 36; i++) {
-					const itemID = player.getInventorySlot(i).id;
-					emitItemRadiation(playerUid, itemID);
+					const itemId = player.getInventorySlot(i).id;
+					emitItemRadiation(playerUid, itemId);
 				}
 			}
 			const duration = effectDuration[playerUid];

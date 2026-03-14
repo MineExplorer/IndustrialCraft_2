@@ -7,7 +7,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 	const Bitmap = android.graphics.Bitmap;
 
 
-	abstract class RecipeTypeForICPE extends api.RecipeType {
+	abstract class RecipeViewForICPE extends api.RecipeType {
 
 		constructor(name: string, icon: number, content: {params?: UI.BindingSet, drawing?: UI.DrawingSet, elements: {[key: string]: object}}) {
 			content.params ??= {};
@@ -20,7 +20,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 	}
 
 
-	class BasicMachineRecipe extends RecipeTypeForICPE {
+	class BasicMachineRecipeView extends RecipeViewForICPE {
 
 		constructor(private recipeKey: string, name: string, icon: number, scaleBmp: string) {
 			super(name, icon, {
@@ -36,26 +36,26 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: MachineRecipeRegistry.RecipeData} = MachineRecipeRegistry.requireRecipesFor(this.recipeKey);
-			let input: string[];
-			for (let key in recipe) {
-				input = key.split(":");
+			const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary(this.recipeKey);
+			const recipes = dictionary.getAll();
+			recipes.forEach(recipe => {
+				const resultEntry = recipe.result[0];
 				list.push({
-					input: [{id: +input[0], count: recipe[key].sourceCount || 1, data: +input[1] || 0}],
-					output: [{id: recipe[key].id, count: recipe[key].count || 0, data: recipe[key].data || 0}]
+					input: [{id: recipe.source.id, count: recipe.source.count, data: recipe.source.data}],
+					output: [{id: resultEntry.id, count: resultEntry.count, data: resultEntry.data || 0}]
 				});
-			}
+			});
 			return list;
 		}
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_macerator", new BasicMachineRecipe("macerator", "Macerator", BlockID.macerator, "macerator_bar_scale"));
-	api.RecipeTypeRegistry.register("icpe_compressor", new BasicMachineRecipe("compressor", "Compressor", BlockID.compressor, "compressor_bar_scale"));
-	api.RecipeTypeRegistry.register("icpe_extractor", new BasicMachineRecipe("extractor", "Extractor", BlockID.extractor, "extractor_bar_scale"));
+	api.RecipeTypeRegistry.register("icpe_macerator", new BasicMachineRecipeView("macerator", "Macerator", BlockID.macerator, "macerator_bar_scale"));
+	api.RecipeTypeRegistry.register("icpe_compressor", new BasicMachineRecipeView("compressor", "Compressor", BlockID.compressor, "compressor_bar_scale"));
+	api.RecipeTypeRegistry.register("icpe_extractor", new BasicMachineRecipeView("extractor", "Extractor", BlockID.extractor, "extractor_bar_scale"));
 
 
-	class SolidCannerRecipe extends RecipeTypeForICPE {
+	class SolidCannerRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Solid Canning", BlockID.solidCanner, {
@@ -73,16 +73,15 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: {can: number, result: ItemInstance}} = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-			let input: string[];
-			for (let key in recipe) {
-				input = key.split(":");
+			const dictionary: Machine.SolidCannerRecipeDictionary = MachineRecipeRegistry.getDictionary("solidCanner");
+			const recipes = dictionary.getAll();
+			for (let recipe of recipes) {
 				list.push({
 					input: [
-						{id: +input[0], count: 1, data: +input[1] || 0},
-						{id: recipe[key].can, count: 1, data: 0}
+						{id: recipe.source.id, count: 1, data: recipe.source.data},
+						{id: recipe.can, count: 1, data: 0},
 					],
-					output: [recipe[key].result]
+					output: [recipe.result],
 				});
 			}
 			return list;
@@ -90,10 +89,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_solidCanner", new SolidCannerRecipe());
+	api.RecipeTypeRegistry.register("icpe_solidCanner", new SolidCannerRecipeView());
 
 
-	class CannerRecipe extends RecipeTypeForICPE {
+	class CannerRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Canning", BlockID.canner, {
@@ -118,31 +117,32 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const solidRecipe: {[key: string]: {can: number, result: ItemInstance}} = MachineRecipeRegistry.requireRecipesFor("solidCanner");
-			let item: string[];
-			for (let key in solidRecipe) {
-				item = key.split(":");
+			const solidDictionary: Machine.SolidCannerRecipeDictionary = MachineRecipeRegistry.getDictionary("solidCanner");
+			const solidRecipes = solidDictionary.getAll();
+			for (let recipe of solidRecipes) {
 				list.push({
 					input: [
-						{id: solidRecipe[key].can, count: 1, data: 0},
-						{id: +item[0], count: 1, data: +item[1] || 0}
+						{id: recipe.can, count: 1, data: 0},
+						{id: recipe.source.id, count: 1, data: recipe.source.data}
 					],
-					output: [solidRecipe[key].result],
+					output: [recipe.result],
 					mode: 0
 				});
 			}
-			const fluidRecipe: {input: [string, {id: number, count: number}], output: string}[] = MachineRecipeRegistry.requireRecipesFor("fluidCanner");
-			for (let i = 0; i < fluidRecipe.length; i++) {
+			const fluidDictionary: MachineRecipe.FluidEnrichRecipeDictionary = MachineRecipeRegistry.getDictionary("fluidCanner");
+			const fluidRecipes = fluidDictionary.getAll();
+			for (let recipe of fluidRecipes) {
 				list.push({
 					input: [
 						null,
-						{id: fluidRecipe[i].input[1].id, count: fluidRecipe[i].input[1].count, data: 0}
+						{id: recipe.source.id, count: recipe.source.count, data: recipe.source.data}
 					],
-					inputLiq: [{liquid: fluidRecipe[i].input[0], amount: 1000}],
-					outputLiq: [{liquid: fluidRecipe[i].output, amount: 1000}],
+					inputLiq: [{liquid: recipe.inputFluid.name, amount: recipe.inputFluid.amount}],
+					outputLiq: [{liquid: recipe.outputFluid.name, amount: recipe.outputFluid.amount}],
 					mode: 3
 				});
 			}
+			let item: string[];
 			let full: ItemInstance;
 			let empty: ItemInstance;
 			for (let key in LiquidRegistry.EmptyByFull) {
@@ -173,10 +173,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_canner", new CannerRecipe());
+	api.RecipeTypeRegistry.register("icpe_canner", new CannerRecipeView());
 
 
-	class MetalFormerRecipe extends RecipeTypeForICPE {
+	class MetalFormerRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Metal Former", BlockID.metalFormer, {
@@ -193,18 +193,25 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			let recipe: {[key: string]: MachineRecipeRegistry.RecipeData};
-			let input: string[];
-			for (let mode = 0; mode < 3; mode++) {
-				recipe = MachineRecipeRegistry.requireRecipesFor("metalFormer" + mode);
-				for (let key in recipe) {
-					input = key.split(":");
-					list.push({
-						input: [{id: +input[0], count: recipe[key].sourceCount || 1, data: +input[1] || 0}],
-						output: [{id: recipe[key].id, count: recipe[key].count || 0, data: recipe[key].data || 0}],
-						mode: mode
-					});
+			const dictionaryData = [
+				{mode: 0, key: "metalRolling"},
+				{mode: 1, key: "metalCutting"},
+				{mode: 2, key: "metalExtruding"}
+			];
+			for (let i = 0; i < dictionaryData.length; i++) {
+				const modeData = dictionaryData[i];
+				const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary(modeData.key);
+				if (!dictionary) {
+					continue;
 				}
+				const recipes = dictionary.getAll();
+				recipes.forEach(recipe => {
+					const resultEntry = recipe.result[0];
+					list.push({
+						input: [{id: recipe.source.id, count: recipe.source.count, data: recipe.source.data}],
+						output: [{id: resultEntry.id, count: resultEntry.count, data: resultEntry.data || 0}]
+					});
+				});
 			}
 			return list;
 		}
@@ -215,21 +222,12 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_metalFormer", new MetalFormerRecipe());
-
-
-	const numArray2Output = (arr: number[]): ItemInstance[] => {
-		const output: ItemInstance[] = [];
-		for (let i = 0; i < arr.length; i += 2) {
-			output.push({id: arr[i], count: arr[i + 1], data: 0});
-		}
-		return output;
-	};
+	api.RecipeTypeRegistry.register("icpe_metalFormer", new MetalFormerRecipeView());
 
 
 	UI.TextureSource.put("ore_washer_background_trim", Bitmap.createBitmap(UI.TextureSource.get("ore_washer_background"), 56, 17, 63, 55, null, true));
 
-	class OreWasherRecipe extends RecipeTypeForICPE {
+	class OreWasherRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Ore Washing", BlockID.oreWasher, {
@@ -250,13 +248,13 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: number[]} = MachineRecipeRegistry.requireRecipesFor("oreWasher");
-			let input: string[];
-			for (let key in recipe) {
-				input = key.split(":");
+			const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("oreWasher");
+			const recipes = dictionary.getAll();
+			for (let i = 0; i < recipes.length; i++) {
+				const recipe = recipes[i];
 				list.push({
-					input: [{id: +input[0], count: 1, data: +input[1] || 0}],
-					output: numArray2Output(recipe[key]),
+					input: [{id: recipe.source.id, count: recipe.source.count || 1, data: recipe.source.data || 0}],
+					output: recipe.result.map(item => ({id: item.id, count: item.count, data: item.data || 0})),
 					inputLiq: [{liquid: "water", amount: 1000}]
 				});
 			}
@@ -265,10 +263,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_oreWasher", new OreWasherRecipe());
+	api.RecipeTypeRegistry.register("icpe_oreWasher", new OreWasherRecipeView());
 
 
-	class ThermalCentrifugeRecipe extends RecipeTypeForICPE {
+	class ThermalCentrifugeRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Thermal Centrifuge", BlockID.thermalCentrifuge, {
@@ -290,16 +288,15 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: {result: number[], heat: number}} = MachineRecipeRegistry.requireRecipesFor("thermalCentrifuge");
-			let input: string[];
-			for (let key in recipe) {
-				input = key.split(":");
+			const dictionary: MachineRecipe.ThermalCentrifugeRecipeDictionary = MachineRecipeRegistry.getDictionary("thermalCentrifuge");
+			const recipes = dictionary.getAll();
+			recipes.forEach(recipe => {
 				list.push({
-					input: [{id: +input[0], count: 1, data: +input[1] || 0}],
-					output: numArray2Output(recipe[key].result),
-					heat: recipe[key].heat
+					input: [{id: recipe.source.id, count: recipe.source.count || 1, data: recipe.source.data || 0}],
+					output: recipe.result.map(item => ({id: item.id, count: item.count, data: item.data || 0})),
+					heat: recipe.heat
 				});
-			}
+			});
 			return list;
 		}
 
@@ -309,10 +306,78 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_thermalCentrifuge", new ThermalCentrifugeRecipe());
+	api.RecipeTypeRegistry.register("icpe_thermalCentrifuge", new ThermalCentrifugeRecipeView());
+
+	
+	class BlockCuttingMachineRecipeView extends RecipeViewForICPE {
+
+		constructor() {
+			super("Block Cutting Machine", BlockID.blockCuttingMachine, {
+				drawing: [
+					{type: "bitmap", x: 377, y: 229, scale: 6, bitmap: "icpe.cutting_machine_bar_background"}
+				],
+				elements: {
+					input0: {x: 210, y: 229, size: 18 * 6},
+					input1: {x: 458, y: 229, size: 18 * 6, bitmap: "transparent_slot"},
+					output0: {x: 709, y: 229, size: 18 * 6},
+					progressScale: {type: "scale", x: 377, y: 229, scale: 6, direction: 0, value: 1, bitmap: "icpe.cutting_machine_bar_scale"}
+				}
+			});
+		}
+
+		private getBladeByHardness(hardnessLevel: number): ItemInstance {
+			switch (hardnessLevel) {
+				case 1:
+				case 2:
+					return {id: ItemID.cuttingBladeIron, count: 1, data: 0};
+				case 3:
+					return {id: ItemID.cuttingBladeSteel, count: 1, data: 0};
+				case 4:
+					return {id: ItemID.cuttingBladeDiamond, count: 1, data: 0};
+				default:
+					return null;
+			}
+		}
+
+		getAllList(): RecipePattern[] {
+			const list: RecipePattern[] = [];
+			const dictionary: MachineRecipe.BlockCutterRecipeDictionary = MachineRecipeRegistry.getDictionary("cuttingMachine");
+			if (!dictionary) {
+				return list;
+			}
+			const recipes = dictionary.getAll().sort((recipe1, recipe2) =>
+				recipe1.hardnessLevel != recipe2.hardnessLevel ? recipe1.hardnessLevel - recipe2.hardnessLevel :
+				recipe1.result.id != recipe2.result.id ? recipe1.result.id - recipe2.result.id :
+				recipe1.source.id != recipe2.source.id ? recipe1.source.id - recipe2.source.id :
+				recipe1.source.data - recipe2.source.data
+			);
+			let blade: ItemInstance;
+			for (let recipe of recipes) {
+				blade = this.getBladeByHardness(recipe.hardnessLevel);
+				if (!blade) {
+					continue;
+				}
+				list.push({
+					input: [
+						{id: recipe.source.id, count: recipe.source.count, data: recipe.source.data},
+						blade
+					],
+					output: [{
+						id: recipe.result.id,
+						count: recipe.result.count,
+						data: recipe.result.data || 0
+					}]
+				});
+			}
+			return list;
+		}
+
+	}
+
+	api.RecipeTypeRegistry.register("icpe_cutting_machine", new BlockCuttingMachineRecipeView());
 
 
-	class BlastFurnaceRecipe extends RecipeTypeForICPE {
+	class BlastFurnaceRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Blast Furnace", BlockID.blastFurnace, {
@@ -333,27 +398,23 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
-			const recipe: {[key: string]: {result: number[], duration: number}} = MachineRecipeRegistry.requireRecipesFor("blastFurnace");
-			let input: string[];
-			for (let key in recipe) {
-				input = key.split(":");
+			const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary("blastFurnace");
+			const recipes = dictionary.getAll();
+			recipes.forEach(recipe => {
 				list.push({
-					input: [
-						{id: +input[0], count: 1, data: +input[1] || 0},
-						{id: ItemID.cellAir, count: 1, data: 0}
-					],
-					output: numArray2Output(recipe[key].result),
+					input: [{id: recipe.source.id, count: recipe.source.count || 1, data: 0}],
+					output: recipe.result.map(item => ({id: item.id, count: item.count, data: item.data || 0}))
 				});
-			}
+			});
 			return list;
 		}
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_blastFurnace", new BlastFurnaceRecipe());
+	api.RecipeTypeRegistry.register("icpe_blastFurnace", new BlastFurnaceRecipeView());
 
 
-	class FermenterRecipe extends RecipeTypeForICPE {
+	class FermenterRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Fermenter", BlockID.icFermenter, {
@@ -380,10 +441,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_fermenter", new FermenterRecipe());
+	api.RecipeTypeRegistry.register("icpe_fermenter", new FermenterRecipeView());
 
 
-	class FluidFuelRecipe extends RecipeTypeForICPE {
+	class FluidFuelRecipeView extends RecipeViewForICPE {
 
 		constructor() {
 			super("Fluid Fuel", ItemID.cellEmpty, {
@@ -418,6 +479,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	}
 
-	api.RecipeTypeRegistry.register("icpe_fluidFuel", new FluidFuelRecipe());
+	api.RecipeTypeRegistry.register("icpe_fluidFuel", new FluidFuelRecipeView());
 
 });
+

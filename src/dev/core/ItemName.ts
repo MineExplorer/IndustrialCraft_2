@@ -1,43 +1,29 @@
 namespace ItemName {
-	const tooltips: {[key: number]: string[]} = {};
+	type ItemTooltip = {text: string, params: (string | number)[]}
+	const tooltips: KeyValueMap<ItemTooltip[]> = {};
 
-	/**@deprecated use ItemRegistry.setRarity*/
-	export function setRarity(id: number, rarity: number): void {
-		ItemRegistry.setRarity(id, rarity);
-	}
-
-	/**@deprecated use ItemRegistry.getRarity */
-	export function getRarity(id: number): number {
-		return ItemRegistry.getRarity(id);
-	}
-
-	export function addTooltip(id: number, tooltip: string, ...params: any[]): void {
-		if (params.length > 0) {
-			tooltip = getTranslatedTextWithParams(tooltip, ...params);
-		}
+	export function addTooltip(id: number, text: string, ...params: (string | number)[]): void {
+		const tooltip: ItemTooltip = {text: text, params: params};
 		if (!tooltips[id]) {
 			tooltips[id] = [tooltip];
 		} else {
 			tooltips[id].push(tooltip);
 		}
-		Item.registerNameOverrideFunction(id, function(item: ItemInstance, name: string) {
-			const tooltip = tooltips[item.id].join("\n");
-			return ItemRegistry.getItemRarityColor(item.id) + name + "\n§7" + tooltip;
-		});
+		Item.registerNameOverrideFunction(id, tooltipNameOverrideFunc);
 	}
 
 	export function addTierTooltip(blockID: string | number, tier: number): void {
-		addTooltip(Block.getNumericId(blockID), getPowerTierText(tier));
+		addTooltip(Block.getNumericId(blockID), "tooltip.power_tier", tier);
 	}
 
 	export function addProductionTooltip(blockID: string | number, unit: string, minValue: number, maxValue?: number): void {
 		const outputText = maxValue ? `${minValue}-${maxValue} ${unit}/t` : `${minValue} ${unit}/t`;
-		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_production", outputText));
+		addTooltip(Block.getNumericId(blockID), "tooltip.power_production", outputText);
 	}
 
 	export function addConsumptionTooltip(blockID: string | number, unit: string, minValue: number, maxValue?: number): void {
 		const consumptionText = maxValue ? `${minValue}-${maxValue} ${unit}/t` : `${minValue} ${unit}/t`;
-		addTooltip(Block.getNumericId(blockID), getTranslatedTextWithParams("tooltip.power_consumption", consumptionText));
+		addTooltip(Block.getNumericId(blockID), "tooltip.power_consumption", consumptionText);
 	}
 
 	export function addStorageBlockTooltip(blockID: string | number, tier: number, capacity: string, output?: number): void {
@@ -47,7 +33,7 @@ namespace ItemName {
 		});
 	}
 
-	export function getTranslatedTextWithParams(key: string, ...params: any[]): string {
+	export function getTranslatedTextWithParams(key: string, ...params: (string | number)[]): string {
 		let text = Translation.translate(key);
 		for (let param of params) {
 			text = text.replace("%s", param.toString());
@@ -56,7 +42,7 @@ namespace ItemName {
 	}
 
 	export function getBlockStorageText(item: ItemInstance, tier: number, capacity: string, output?: number): string {
-		const energy = item.extra ? item.extra.getInt("energy") : 0;
+		const energy = item.extra?.getInt("energy") || 0;
 		let tooltip = getPowerTierText(tier) + '\n';
 		if (output) {
 			tooltip += `${getTranslatedTextWithParams("tooltip.power_output", output)} EU/t\n`;
@@ -88,5 +74,12 @@ namespace ItemName {
 			}
 		}
 		return energy.toString();
+	}
+
+	const tooltipNameOverrideFunc = function(item: ItemInstance, name: string) {
+		const tooltip = tooltips[item.id]
+			.map(tooltip => getTranslatedTextWithParams(tooltip.text, ...tooltip.params))
+			.join("\n");
+		return ItemRegistry.getItemRarityColor(item.id) + name + "\n§7" + tooltip;
 	}
 }

@@ -1,11 +1,11 @@
 namespace IC2Coffee {
 
-	export type CofeeEffect = {
+	export type CoffeeEffect = {
 		amplifier: number;
 		effectTimer: number;
 	};
 
-	let entityEffects = {};
+	let entityEffects: KeyValueMap<CoffeeEffect> = {};
 
 	export function amplifyEffect(entity: number, potionId: number, maxAmplifier: number, extraDuration: number): number {
 		const effect = entityEffects[entity];

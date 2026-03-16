@@ -3,7 +3,7 @@
 namespace CableRegistry {
 	type CableData = {name: string, insulation: number, maxInsulation: number};
 
-	const insulationData = {};
+	const insulationData: KeyValueMap<CableData> = {};
 	const paintableBlocks: number[] = [];
 
 	export const maxSafetyVoltage = {

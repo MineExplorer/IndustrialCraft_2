@@ -63,7 +63,7 @@ namespace Machine {
 		}
 	});
 
-	enum CannerMode {
+	const enum CannerMode {
 		SolidCanning,
 		EmptyItem,
 		FillItem,

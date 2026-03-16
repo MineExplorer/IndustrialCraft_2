@@ -3,7 +3,7 @@
 /// <reference path="../../machine/Generator.ts" />
 
 namespace MachineRegistry {
-	const machineIDs = {}
+	const machineIDs: KeyValueMap<boolean> = {}
 
 	export function isMachine(id: number): boolean {
 		return machineIDs[id];

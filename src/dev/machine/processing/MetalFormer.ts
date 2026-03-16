@@ -82,7 +82,7 @@ Callback.addCallback("PreLoaded", function() {
 });
 
 namespace Machine {
-	enum MetalFormerMode {
+	const enum MetalFormerMode {
 		Rolling,
 		Cutting,
 		Extruding

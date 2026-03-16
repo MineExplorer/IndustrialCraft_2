@@ -1,5 +1,6 @@
 #downlevelIteration: false
 #declaration: true
+#skipLibCheck: true
 
 header.ts
 constants.ts

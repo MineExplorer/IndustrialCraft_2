@@ -2,7 +2,7 @@
 
 namespace JetpackProvider {
 	const jetpacks: {[key: number]: IJetpack} = {};
-	let playerData = {};
+	let playerData: KeyValueMap<boolean> = {};
 
 	export function registerItem(itemId: number, instance: IJetpack): void {
 		ToolHUD.setButtonFor(itemId, "button_fly");

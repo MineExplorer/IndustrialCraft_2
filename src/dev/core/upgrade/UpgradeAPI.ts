@@ -1,5 +1,5 @@
 namespace UpgradeAPI {
-	const data = {};
+	const data: KeyValueMap<IUpgrade> = {};
 
 	export function getUpgrade(id: number): IUpgrade {
 		return data[id];

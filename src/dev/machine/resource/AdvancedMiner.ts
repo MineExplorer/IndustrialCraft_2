@@ -85,6 +85,8 @@ namespace Machine {
 		tier: number = this.defaultTier;
 		maxScanCount: number;
 
+		upgradeSet?: UpgradeAPI.UpgradeSet;
+
 		getScreenByName(): UI.IWindow {
 			return guiAdvancedMiner;
 		}
@@ -110,6 +112,7 @@ namespace Machine {
 
 		onInit(): void {
 			super.onInit();
+			this.upgradeSet = UpgradeAPI.getUpgradeSet(this);
 			this.setUpgradeStats();
 		}
 
@@ -120,7 +123,7 @@ namespace Machine {
 		}
 
 		setUpgradeStats(): void {
-			const upgrades = UpgradeAPI.getUpgradeSet(this);
+			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.maxScanCount = 5 * upgrades.speedModifier;
 		}

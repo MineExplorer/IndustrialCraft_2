@@ -28,38 +28,67 @@ declare class EnergyType {
     constructor(name: string, value?: number);
     registerWire(id: number, maxValue: number, energyGridClass?: typeof EnergyGrid): void;
 }
+declare const enum TransferMode {
+    Split = 1,
+    Full = 2
+}
 declare class EnergyPacket {
     energyName: string;
     size: number;
     source: EnergyNode;
-    nodeList: object;
-    constructor(energyName: string, size: number, source: EnergyNode);
+    transferMode: TransferMode;
+    nodeList: {
+        [key: number]: TransferMode;
+    };
+    constructor(energyName: string, size: number, source: EnergyNode, transferMode?: TransferMode);
     validateNode(nodeId: number): boolean;
-    setNodePassed(nodeId: number): void;
+    setNodePassed(nodeId: number, mode?: TransferMode): void;
 }
-declare class BlockCoordsData {
+declare class BlockNode {
+    x: number;
+    y: number;
+    z: number;
+    adjacentBlocks: BlockNode[];
+    adjacentTileEntityNodes: EnergyTileNode[];
+    constructor(x: number, y: number, z: number);
+    static getCoordKey(x: number, y: number, z: number): string;
+    getCoordKey(): string;
+    private addAdjacentBlock;
+    private removeAdjacentBlock;
+    linkBlock(blockNode: BlockNode): void;
+    unlinkBlock(blockNode: BlockNode): void;
+    unlinkAllBlocks(): void;
+    addAdjacentTileEntityNode(node: EnergyTileNode): boolean;
+    removeAdjacentTileEntityNode(node: EnergyTileNode): boolean;
+    clearAdjacentTileEntityNodes(): void;
+}
+declare class BlockNodesData {
     data: {
-        [coordKey: string]: Vector;
+        [coordKey: string]: BlockNode;
     };
     getCoordKey(x: number, y: number, z: number): string;
     has(x: number, y: number, z: number): boolean;
-    add(x: number, y: number, z: number): void;
-    remove(x: number, y: number, z: number): boolean;
-    mergeFrom(other: BlockCoordsData): void;
-    forEachCoord(func: (coords: Vector) => void): void;
+    get(x: number, y: number, z: number): BlockNode;
+    add(x: number, y: number, z: number): BlockNode;
+    addNode(blockNode: BlockNode): BlockNode;
+    remove(x: number, y: number, z: number): BlockNode;
+    removeNode(blockNode: BlockNode): BlockNode;
+    containsNode(blockNode: BlockNode): boolean;
+    mergeFrom(other: BlockNodesData): void;
+    forEachNode(func: (blockNode: BlockNode) => void): void;
     clear(): void;
 }
-declare class EnergyNode {
+declare abstract class EnergyNode {
     id: number;
     baseEnergy: string;
     energyTypes: object;
     dimension: number;
     maxValue: number;
     removed: boolean;
-    blockCoords: BlockCoordsData;
+    blockNodes: BlockNodesData;
     /** @deprecated */
     blocksMap: {
-        [coordKey: string]: Vector;
+        [coordKey: string]: BlockNode;
     };
     entries: EnergyNode[];
     receivers: EnergyNode[];
@@ -71,8 +100,8 @@ declare class EnergyNode {
     currentPower: number;
     constructor(energyType: EnergyType, dimension: number);
     addEnergyType(energyType: EnergyType): void;
-    addCoords(x: number, y: number, z: number): void;
-    removeCoords(x: number, y: number, z: number): void;
+    addCoords(x: number, y: number, z: number): BlockNode;
+    removeCoords(x: number, y: number, z: number): BlockNode;
     private addEntry;
     private removeEntry;
     /**
@@ -115,14 +144,18 @@ declare class EnergyNode {
 declare class EnergyGrid extends EnergyNode {
     blockID: number;
     region: BlockSource;
-    removedCoords: Vector[];
     constructor(energyType: EnergyType, maxValue: number, wireID: number, region: BlockSource);
     isCompatible(node: EnergyNode): boolean;
     mergeGrid(grid: EnergyNode): EnergyNode;
-    rebuildGrid(): void;
+    private getSideForTileNode;
+    private collectConnectedBlocks;
+    private createGridComponent;
+    private rebuildConnectionsFromBlockGraph;
+    private splitByComponents;
     rebuildRecursive(x: number, y: number, z: number, side?: number): void;
-    removeCoords(x: number, y: number, z: number): void;
-    rebuildFor6Sides(x: number, y: number, z: number): void;
+    removeCoords(x: number, y: number, z: number): BlockNode;
+    private connectBlockToNeighbor;
+    rebuildFor6Sides(blockNode: BlockNode): void;
     tick(): void;
 }
 declare class EnergyTileNode extends EnergyNode {
@@ -167,5 +200,7 @@ declare namespace EnergyNet {
     function getNodesByDimension(dimension: number): EnergyNode[];
     function addEnergyNode(node: EnergyNode): void;
     function removeEnergyNode(node: EnergyNode): void;
+    function enqueueRemoval(node: EnergyNode): void;
+    function flushRemovals(): void;
     function getNodeOnCoords(region: BlockSource, x: number, y: number, z: number): EnergyNode;
 }

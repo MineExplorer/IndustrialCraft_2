@@ -10,15 +10,16 @@ class EUCableGrid extends EnergyGrid {
 		}
 	}
 
-	mergeGrid(grid: EUCableGrid) {
+	mergeGrid(grid: EnergyNode): EnergyNode {
 		super.mergeGrid(grid);
 		this.recalculateCubeArea();
 		return this;
 	}
 
-	addCoords(x: number, y: number, z: number): void {
-		super.addCoords(x, y, z);
+	addCoords(x: number, y: number, z: number): BlockNode {
+		const blockNode = super.addCoords(x, y, z);
 		this.updateCubeArea(x, y, z);
+		return blockNode;
 	}
 
 	updateCubeArea(x: number, y: number, z: number) {
@@ -30,10 +31,11 @@ class EUCableGrid extends EnergyGrid {
 		if (z > this.cubeArea.maxZ) this.cubeArea.maxZ = z;
 	}
 
-	onOverload(voltage: number): void {
+	onOverload(packetSize: number): void {
 		if (IC2Config.voltageEnabled) {
 			const region = new WorldRegion(this.region);
-			this.blockCoords.forEachCoord(coords => {
+			this.blockNodes.forEachNode(blockNode => {
+				const coords = { x: blockNode.x, y: blockNode.y, z: blockNode.z };
 				region.setBlock(coords, 0, 0);
 				region.sendPacketInRadius(coords, 64, "ic2.cableBurnParticles", coords);
 			});
@@ -70,9 +72,9 @@ class EUCableGrid extends EnergyGrid {
 			}
 			const pos = Entity.getPosition(ent);
 			if (EntityHelper.isPlayer(ent)) pos.y -= 1.62;
-			for (let key in this.blockCoords.data) {
-				const coords = this.blockCoords.data[key];
-				const cx = coords.x + .5, cy = coords.y + .5, cz = coords.z + .5;
+			for (const key in this.blockNodes.data) {
+				const blockNode = this.blockNodes.data[key];
+				const cx = blockNode.x + .5, cy = blockNode.y + .5, cz = blockNode.z + .5;
 				if (Math.abs(pos.x - cx) <= 1.5 && Math.abs(pos.y - cy) <= 1.5 && Math.abs(pos.z - cz) <= 1.5) {
 					if (damage > 16) Entity.setFire(ent, 20, true);
 					Entity.damageEntity(ent, damage);
@@ -92,8 +94,8 @@ class EUCableGrid extends EnergyGrid {
 
 	private recalculateCubeArea(): void {
 		this.cubeArea = { minX: 1e9, minY: 1e9, minZ: 1e9, maxX: -1e9, maxY: -1e9, maxZ: -1e9 };
-		this.blockCoords.forEachCoord(coords => {
-			this.updateCubeArea(coords.x, coords.y, coords.z);
+		this.blockNodes.forEachNode(blockNode => {
+			this.updateCubeArea(blockNode.x, blockNode.y, blockNode.z);
 		});
 	}
 }

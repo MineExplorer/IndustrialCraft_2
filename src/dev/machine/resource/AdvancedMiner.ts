@@ -113,7 +113,7 @@ namespace Machine {
 		onInit(): void {
 			super.onInit();
 			this.upgradeSet = UpgradeAPI.getUpgradeSet(this);
-			this.setUpgradeStats();
+			this.applyUpgradeModifiers();
 		}
 
 		getScanRadius(itemID: number): number {
@@ -122,14 +122,14 @@ namespace Machine {
 			return 0;
 		}
 
-		setUpgradeStats(): void {
+		applyUpgradeModifiers(): void {
 			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.maxScanCount = 5 * upgrades.speedModifier;
 		}
 
 		onTick(): void {
-			this.setUpgradeStats();
+			this.applyUpgradeModifiers();
 			this.operate();
 			this.chargeSlot("slotScanner");
 			this.dischargeSlot("slotEnergy");

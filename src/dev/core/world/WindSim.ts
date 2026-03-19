@@ -130,7 +130,8 @@ namespace WindSim {
 		];
 		let heightSum = 0;
 		for (let i = 0; i < points.length - 1; i += 2) {
-			heightSum += getWindStreamHeightByBiome(blockSource.getBiome(points[i], points[i + 1]));
+			const biomeId = blockSource.getBiome(points[i], points[i + 1]);
+			heightSum += getWindStreamHeightByBiome(biomeId);
 		}
 		
 		return heightSum / 5

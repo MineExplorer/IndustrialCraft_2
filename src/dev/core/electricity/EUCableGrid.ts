@@ -10,25 +10,24 @@ class EUCableGrid extends EnergyGrid {
 		}
 	}
 
-	mergeGrid(grid: EnergyNode): EnergyNode {
+	mergeGrid(grid: EUCableGrid): EUCableGrid {
 		super.mergeGrid(grid);
 		this.recalculateCubeArea();
 		return this;
 	}
 
-	addCoords(x: number, y: number, z: number): BlockNode {
-		const blockNode = super.addCoords(x, y, z);
-		this.updateCubeArea(x, y, z);
+	addCoords(x: number, y: number, z: number, tile: Tile): BlockNode {
+		const blockNode = super.addCoords(x, y, z, tile);
+		this.cubeArea = null;
 		return blockNode;
 	}
 
-	updateCubeArea(x: number, y: number, z: number) {
-		if (x < this.cubeArea.minX) this.cubeArea.minX = x;
-		if (y < this.cubeArea.minY) this.cubeArea.minY = y;
-		if (z < this.cubeArea.minZ) this.cubeArea.minZ = z;
-		if (x > this.cubeArea.maxX) this.cubeArea.maxX = x;
-		if (y > this.cubeArea.maxY) this.cubeArea.maxY = y;
-		if (z > this.cubeArea.maxZ) this.cubeArea.maxZ = z;
+	removeCoords(x: number, y: number, z: number): BlockNode {
+		const blockNode = super.removeCoords(x, y, z);
+		if (blockNode) {
+			this.cubeArea = null;
+		}
+		return blockNode;
 	}
 
 	onOverload(packetSize: number): void {
@@ -62,6 +61,9 @@ class EUCableGrid extends EnergyGrid {
 	}
 
 	dealElectrocuteDamage(damage: number): void {
+		if (!this.cubeArea) {
+			this.recalculateCubeArea();
+		}
 		const { minX, minY, minZ, maxX, maxY, maxZ } = this.cubeArea;
 		const entities = this.region.listEntitiesInAABB(minX - 1, minY - 1, minZ - 1, maxX + 2, maxY + 2, maxZ + 2);
 		if (entities.length == 0) return;
@@ -95,7 +97,13 @@ class EUCableGrid extends EnergyGrid {
 	private recalculateCubeArea(): void {
 		this.cubeArea = { minX: 1e9, minY: 1e9, minZ: 1e9, maxX: -1e9, maxY: -1e9, maxZ: -1e9 };
 		this.blockNodes.forEachNode(blockNode => {
-			this.updateCubeArea(blockNode.x, blockNode.y, blockNode.z);
+			const { x, y, z } = blockNode;
+			if (x < this.cubeArea.minX) this.cubeArea.minX = x;
+			if (y < this.cubeArea.minY) this.cubeArea.minY = y;
+			if (z < this.cubeArea.minZ) this.cubeArea.minZ = z;
+			if (x > this.cubeArea.maxX) this.cubeArea.maxX = x;
+			if (y > this.cubeArea.maxY) this.cubeArea.maxY = y;
+			if (z > this.cubeArea.maxZ) this.cubeArea.maxZ = z;
 		});
 	}
 }

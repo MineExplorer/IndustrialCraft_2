@@ -19,7 +19,8 @@ declare namespace EnergyTypeRegistry {
     function getEnergyType(name: string): EnergyType;
     function getValueRatio(name1: string, name2: string): number;
     function registerWire(blockID: number, type: EnergyType, maxValue: number, energyGridClass?: typeof EnergyGrid): void;
-    function getWireData(blockID: number): WireData;
+    function getWireData(blockID: number): Nullable<WireData>;
+    function createWireGrid(blockID: number, blockSource: BlockSource): EnergyGrid;
     function isWire(blockID: number, type?: string): boolean;
 }
 declare class EnergyType {
@@ -48,9 +49,10 @@ declare class BlockNode {
     x: number;
     y: number;
     z: number;
+    tile: Tile;
     adjacentBlocks: BlockNode[];
     adjacentTileEntityNodes: EnergyTileNode[];
-    constructor(x: number, y: number, z: number);
+    constructor(x: number, y: number, z: number, tile: Tile);
     static getCoordKey(x: number, y: number, z: number): string;
     getCoordKey(): string;
     private addAdjacentBlock;
@@ -62,34 +64,31 @@ declare class BlockNode {
     removeAdjacentTileEntityNode(node: EnergyTileNode): boolean;
     clearAdjacentTileEntityNodes(): void;
 }
-declare class BlockNodesData {
+declare class BlockNodesSet {
     data: {
         [coordKey: string]: BlockNode;
     };
     getCoordKey(x: number, y: number, z: number): string;
     has(x: number, y: number, z: number): boolean;
     get(x: number, y: number, z: number): BlockNode;
-    add(x: number, y: number, z: number): BlockNode;
+    add(x: number, y: number, z: number, tile: Tile): BlockNode;
     addNode(blockNode: BlockNode): BlockNode;
     remove(x: number, y: number, z: number): BlockNode;
     removeNode(blockNode: BlockNode): BlockNode;
     containsNode(blockNode: BlockNode): boolean;
-    mergeFrom(other: BlockNodesData): void;
+    mergeFrom(other: BlockNodesSet): void;
     forEachNode(func: (blockNode: BlockNode) => void): void;
     clear(): void;
 }
+declare type EnergyNodeKind = "grid" | "tile";
 declare abstract class EnergyNode {
     id: number;
     baseEnergy: string;
+    abstract readonly kind: EnergyNodeKind;
     energyTypes: object;
     dimension: number;
     maxValue: number;
     removed: boolean;
-    blockNodes: BlockNodesData;
-    /** @deprecated */
-    blocksMap: {
-        [coordKey: string]: BlockNode;
-    };
     entries: EnergyNode[];
     receivers: EnergyNode[];
     energyIn: number;
@@ -100,8 +99,7 @@ declare abstract class EnergyNode {
     currentPower: number;
     constructor(energyType: EnergyType, dimension: number);
     addEnergyType(energyType: EnergyType): void;
-    addCoords(x: number, y: number, z: number): BlockNode;
-    removeCoords(x: number, y: number, z: number): BlockNode;
+    abstract hasCoords(x: number, y: number, z: number): boolean;
     private addEntry;
     private removeEntry;
     /**
@@ -142,11 +140,24 @@ declare abstract class EnergyNode {
     toString(): string;
 }
 declare class EnergyGrid extends EnergyNode {
+    readonly kind: EnergyNodeKind;
+    blockNodes: BlockNodesSet;
+    /** @deprecated */
+    blocksMap: {
+        [coordKey: string]: BlockNode;
+    };
     blockID: number;
     region: BlockSource;
+    idleTicks: number;
     constructor(energyType: EnergyType, maxValue: number, wireID: number, region: BlockSource);
     isCompatible(node: EnergyNode): boolean;
-    mergeGrid(grid: EnergyNode): EnergyNode;
+    addCoords(x: number, y: number, z: number, tile: Tile): BlockNode;
+    hasCoords(x: number, y: number, z: number): boolean;
+    /**
+     * Determines whether the specified wire block can be absorbed into this grid.
+     */
+    isValidWire(tile: Tile): boolean;
+    mergeGrid(grid: EnergyGrid): EnergyGrid;
     private getSideForTileNode;
     private collectConnectedBlocks;
     private createGridComponent;
@@ -157,12 +168,15 @@ declare class EnergyGrid extends EnergyNode {
     private connectBlockToNeighbor;
     rebuildFor6Sides(blockNode: BlockNode): void;
     tick(): void;
+    toString(): string;
 }
 declare class EnergyTileNode extends EnergyNode {
+    readonly kind: EnergyNodeKind;
     tileEntity: EnergyTile;
     initialized: boolean;
     constructor(energyType: EnergyType, parent: EnergyTile);
     getParent(): EnergyTile;
+    hasCoords(x: number, y: number, z: number): boolean;
     receiveEnergy(amount: number, packet: EnergyPacket): number;
     isConductor(type: string): boolean;
     canReceiveEnergy(side: number, type: string): boolean;
@@ -194,10 +208,9 @@ declare namespace EnergyGridBuilder {
     function rebuildWireGrid(region: BlockSource, x: number, y: number, z: number): void;
     function rebuildForWire(region: BlockSource, x: number, y: number, z: number, wireID: number): EnergyGrid;
     function onWirePlaced(region: BlockSource, x: number, y: number, z: number): void;
-    function onWireDestroyed(region: BlockSource, x: number, y: number, z: number, id: number): void;
 }
 declare namespace EnergyNet {
-    function getNodesByDimension(dimension: number): EnergyNode[];
+    let globalNodeID: number;
     function addEnergyNode(node: EnergyNode): void;
     function removeEnergyNode(node: EnergyNode): void;
     function enqueueRemoval(node: EnergyNode): void;

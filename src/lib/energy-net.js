@@ -135,8 +135,10 @@ var EnergyPacket = /** @class */ (function () {
         this.setNodePassed(source.id, transferMode);
     }
     EnergyPacket.prototype.validateNode = function (nodeId) {
+        if (nodeId == this.source.id)
+            return false;
         var passedMode = this.nodeList[nodeId];
-        if (passedMode == undefined || passedMode < this.transferMode) {
+        if (!passedMode || passedMode != this.transferMode) {
             this.setNodePassed(nodeId, this.transferMode);
             return true;
         }
@@ -149,9 +151,10 @@ var EnergyPacket = /** @class */ (function () {
     return EnergyPacket;
 }());
 var BlockNode = /** @class */ (function () {
-    function BlockNode(x, y, z, tile) {
-        this.adjacentBlocks = [];
-        this.adjacentTileEntityNodes = [];
+    function BlockNode(parent, x, y, z, tile) {
+        this.parent = null;
+        this.adjacentLinks = [];
+        this.parent = parent;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -163,57 +166,59 @@ var BlockNode = /** @class */ (function () {
     BlockNode.prototype.getCoordKey = function () {
         return BlockNode.getCoordKey(this.x, this.y, this.z);
     };
-    BlockNode.prototype.addAdjacentBlock = function (blockNode) {
-        if (blockNode == this || this.adjacentBlocks.indexOf(blockNode) != -1)
-            return false;
-        this.adjacentBlocks.push(blockNode);
-        return true;
-    };
-    BlockNode.prototype.removeAdjacentBlock = function (blockNode) {
-        var index = this.adjacentBlocks.indexOf(blockNode);
-        if (index == -1)
-            return false;
-        this.adjacentBlocks.splice(index, 1);
-        return true;
-    };
     BlockNode.prototype.linkBlock = function (blockNode) {
-        if (this.addAdjacentBlock(blockNode)) {
-            blockNode.addAdjacentBlock(this);
+        if (this.addAdjacentLink(blockNode, true, true)) {
+            blockNode.addAdjacentLink(this, true, true);
         }
     };
     BlockNode.prototype.unlinkBlock = function (blockNode) {
-        if (this.removeAdjacentBlock(blockNode)) {
-            blockNode.removeAdjacentBlock(this);
+        if (this.removeAdjacentLink(blockNode)) {
+            blockNode.removeAdjacentLink(this);
         }
     };
-    BlockNode.prototype.unlinkAllBlocks = function () {
-        var adjacentBlocks = this.adjacentBlocks.slice();
-        for (var _i = 0, adjacentBlocks_1 = adjacentBlocks; _i < adjacentBlocks_1.length; _i++) {
-            var blockNode = adjacentBlocks_1[_i];
-            this.unlinkBlock(blockNode);
+    BlockNode.prototype.linkTile = function (tileNode, canInput, canOutput) {
+        if (this.addAdjacentLink(tileNode, canInput, canOutput)) {
+            tileNode.addAdjacentLink(this, canOutput, canInput);
         }
     };
-    BlockNode.prototype.addAdjacentTileEntityNode = function (node) {
-        if (this.adjacentTileEntityNodes.indexOf(node) != -1)
-            return false;
-        this.adjacentTileEntityNodes.push(node);
+    BlockNode.prototype.unlinkTile = function (tileNode) {
+        if (this.removeAdjacentLink(tileNode)) {
+            tileNode.removeAdjacentLink(this);
+        }
+    };
+    BlockNode.prototype.addAdjacentLink = function (node, canInput, canOutput) {
+        for (var _i = 0, _a = this.adjacentLinks; _i < _a.length; _i++) {
+            var link = _a[_i];
+            if (link.node == node)
+                return false;
+        }
+        this.adjacentLinks.push({
+            node: node,
+            canInput: canInput,
+            canOutput: canOutput
+        });
         return true;
     };
-    BlockNode.prototype.removeAdjacentTileEntityNode = function (node) {
-        var index = this.adjacentTileEntityNodes.indexOf(node);
+    BlockNode.prototype.removeAdjacentLink = function (node) {
+        var index = this.adjacentLinks.findIndex(function (link) { return link.node == node; });
         if (index == -1)
             return false;
-        this.adjacentTileEntityNodes.splice(index, 1);
+        this.adjacentLinks.splice(index, 1);
         return true;
     };
-    BlockNode.prototype.clearAdjacentTileEntityNodes = function () {
-        this.adjacentTileEntityNodes = [];
+    BlockNode.prototype.resetAdjacentLinks = function () {
+        for (var _i = 0, _a = this.adjacentLinks; _i < _a.length; _i++) {
+            var link = _a[_i];
+            link.node.removeAdjacentLink(this);
+        }
+        this.adjacentLinks = [];
     };
     return BlockNode;
 }());
 var BlockNodesSet = /** @class */ (function () {
-    function BlockNodesSet() {
+    function BlockNodesSet(parent) {
         this.data = {};
+        this.parent = parent;
     }
     BlockNodesSet.prototype.getCoordKey = function (x, y, z) {
         return BlockNode.getCoordKey(x, y, z);
@@ -226,9 +231,12 @@ var BlockNodesSet = /** @class */ (function () {
     };
     BlockNodesSet.prototype.add = function (x, y, z, tile) {
         var coordKey = this.getCoordKey(x, y, z);
-        return this.data[coordKey] = this.data[coordKey] || new BlockNode(x, y, z, tile);
+        var blockNode = this.data[coordKey] || new BlockNode(this.parent, x, y, z, tile);
+        blockNode.parent = this.parent;
+        return this.data[coordKey] = blockNode;
     };
     BlockNodesSet.prototype.addNode = function (blockNode) {
+        blockNode.parent = this.parent;
         return this.data[blockNode.getCoordKey()] = blockNode;
     };
     BlockNodesSet.prototype.remove = function (x, y, z) {
@@ -237,6 +245,7 @@ var BlockNodesSet = /** @class */ (function () {
         if (!blockNode)
             return null;
         delete this.data[coordKey];
+        blockNode.parent = null;
         return blockNode;
     };
     BlockNodesSet.prototype.removeNode = function (blockNode) {
@@ -247,7 +256,9 @@ var BlockNodesSet = /** @class */ (function () {
     };
     BlockNodesSet.prototype.mergeFrom = function (other) {
         for (var coordKey in other.data) {
-            this.data[coordKey] = other.data[coordKey];
+            var blockNode = other.data[coordKey];
+            blockNode.parent = this.parent;
+            this.data[coordKey] = blockNode;
         }
     };
     BlockNodesSet.prototype.forEachNode = function (func) {
@@ -256,6 +267,9 @@ var BlockNodesSet = /** @class */ (function () {
         }
     };
     BlockNodesSet.prototype.clear = function () {
+        this.forEachNode(function (blockNode) {
+            blockNode.parent = null;
+        });
         this.data = {};
     };
     return BlockNodesSet;
@@ -462,10 +476,9 @@ var EnergyGrid = /** @class */ (function (_super) {
     function EnergyGrid(energyType, maxValue, wireID, region) {
         var _this = _super.call(this, energyType, region.getDimension()) || this;
         _this.kind = "grid";
-        _this.blockNodes = new BlockNodesSet();
-        /** @deprecated */
-        _this.blocksMap = _this.blockNodes.data;
         _this.idleTicks = 0;
+        _this.blockNodes = new BlockNodesSet(_this);
+        _this.blocksMap = _this.blockNodes.data;
         _this.maxValue = maxValue;
         _this.blockID = wireID;
         _this.region = region;
@@ -502,110 +515,6 @@ var EnergyGrid = /** @class */ (function (_super) {
         }
         grid.destroy();
         return this;
-    };
-    EnergyGrid.prototype.getSideForTileNode = function (blockNode, tileNode) {
-        var tileEntity = tileNode.getParent();
-        for (var side = 0; side < 6; side++) {
-            var coords = World.getRelativeCoords(blockNode.x, blockNode.y, blockNode.z, side);
-            if (coords.x == tileEntity.x && coords.y == tileEntity.y && coords.z == tileEntity.z) {
-                return side;
-            }
-        }
-        return -1;
-    };
-    EnergyGrid.prototype.collectConnectedBlocks = function (startNode, visited) {
-        var component = [];
-        var stack = [startNode];
-        while (stack.length > 0) {
-            var blockNode = stack.pop();
-            var coordKey = blockNode.getCoordKey();
-            if (visited[coordKey] || !this.blockNodes.containsNode(blockNode))
-                continue;
-            visited[coordKey] = true;
-            component.push(blockNode);
-            for (var _i = 0, _a = blockNode.adjacentBlocks; _i < _a.length; _i++) {
-                var adjacentBlock = _a[_i];
-                if (!this.blockNodes.containsNode(adjacentBlock))
-                    continue;
-                stack.push(adjacentBlock);
-            }
-        }
-        return component;
-    };
-    EnergyGrid.prototype.createGridComponent = function (component) {
-        var grid = EnergyRegistry.createWireGrid(this.blockID, this.region);
-        for (var _i = 0, component_1 = component; _i < component_1.length; _i++) {
-            var blockNode = component_1[_i];
-            this.blockNodes.removeNode(blockNode);
-            grid.blockNodes.addNode(blockNode);
-        }
-        EnergyNet.addEnergyNode(grid);
-        return grid;
-    };
-    EnergyGrid.prototype.rebuildConnectionsFromBlockGraph = function () {
-        var _this = this;
-        this.resetConnections();
-        this.blockNodes.forEachNode(function (blockNode) {
-            for (var _i = 0, _a = blockNode.adjacentTileEntityNodes; _i < _a.length; _i++) {
-                var tileNode = _a[_i];
-                if (tileNode.removed)
-                    continue;
-                var side = _this.getSideForTileNode(blockNode, tileNode);
-                if (side == -1)
-                    continue;
-                var tileSide = side ^ 1;
-                if (tileNode.canReceiveEnergy(tileSide, _this.baseEnergy)) {
-                    _this.addConnection(tileNode);
-                }
-                if (tileNode.canExtractEnergy(tileSide, _this.baseEnergy)) {
-                    tileNode.addConnection(_this);
-                }
-            }
-            for (var _b = 0, _c = blockNode.adjacentBlocks; _b < _c.length; _b++) {
-                var adjacentBlock = _c[_b];
-                if (_this.blockNodes.containsNode(adjacentBlock))
-                    continue;
-                var adjacentNode = EnergyNet.getNodeOnCoords(_this.region, adjacentBlock.x, adjacentBlock.y, adjacentBlock.z);
-                if (adjacentNode && !adjacentNode.removed && _this.isCompatible(adjacentNode)) {
-                    EnergyGridBuilder.connectNodes(_this, adjacentNode);
-                }
-            }
-        });
-    };
-    EnergyGrid.prototype.splitByComponents = function (seedNodes) {
-        var _this = this;
-        var visited = {};
-        var components = [];
-        for (var _i = 0, seedNodes_1 = seedNodes; _i < seedNodes_1.length; _i++) {
-            var blockNode = seedNodes_1[_i];
-            if (!this.blockNodes.containsNode(blockNode))
-                continue;
-            var coordKey = blockNode.getCoordKey();
-            if (visited[coordKey])
-                continue;
-            var component = this.collectConnectedBlocks(blockNode, visited);
-            if (component.length > 0) {
-                components.push(component);
-            }
-        }
-        this.blockNodes.forEachNode(function (blockNode) {
-            if (visited[blockNode.getCoordKey()])
-                return;
-            var component = _this.collectConnectedBlocks(blockNode, visited);
-            if (component.length > 0) {
-                components.push(component);
-            }
-        });
-        if (components.length <= 1) {
-            return [this];
-        }
-        components.sort(function (a, b) { return b.length - a.length; });
-        var splitGrids = [this];
-        for (var i = 1; i < components.length; i++) {
-            var createdGrid = this.createGridComponent(components[i]);
-            splitGrids.push(createdGrid);
-        }
-        return splitGrids;
     };
     EnergyGrid.prototype.rebuildRecursive = function (x, y, z, side) {
         if (this.removed)
@@ -648,35 +557,27 @@ var EnergyGrid = /** @class */ (function (_super) {
         var blockNode = this.blockNodes.remove(x, y, z);
         if (!blockNode)
             return null;
-        var adjacentBlocks = blockNode.adjacentBlocks.slice();
-        blockNode.unlinkAllBlocks();
-        blockNode.clearAdjacentTileEntityNodes();
+        blockNode.resetAdjacentLinks();
         if (Object.keys(this.blockNodes.data).length == 0) {
             this.resetConnections();
             this.destroy();
             return blockNode;
         }
-        var splitGrids = this.splitByComponents(adjacentBlocks);
+        var splitGrids = this.splitByComponents();
         for (var _i = 0, splitGrids_1 = splitGrids; _i < splitGrids_1.length; _i++) {
             var grid = splitGrids_1[_i];
             grid.rebuildConnectionsFromBlockGraph();
         }
         return blockNode;
     };
-    EnergyGrid.prototype.connectBlockToNeighbor = function (blockNode, x, y, z) {
-        var node = EnergyNet.getNodeOnCoords(this.region, x, y, z);
-        if (!node || !this.isCompatible(node))
-            return;
-        if (node instanceof EnergyTileNode) {
-            blockNode.addAdjacentTileEntityNode(node);
-            return;
-        }
-        if (node instanceof EnergyGrid) {
-            var adjacentBlockNode = node.blockNodes.get(x, y, z);
-            if (adjacentBlockNode) {
-                blockNode.linkBlock(adjacentBlockNode);
+    EnergyGrid.prototype.removeTileNodeLinks = function (tileNode) {
+        var removed = false;
+        this.blockNodes.forEachNode(function (blockNode) {
+            if (blockNode.removeAdjacentLink(tileNode)) {
+                removed = true;
             }
-        }
+        });
+        return removed;
     };
     EnergyGrid.prototype.rebuildFor6Sides = function (blockNode) {
         var coord1 = { x: blockNode.x, y: blockNode.y, z: blockNode.z };
@@ -684,7 +585,7 @@ var EnergyGrid = /** @class */ (function (_super) {
             var coord2 = World.getRelativeCoords(blockNode.x, blockNode.y, blockNode.z, side);
             if (this.canConductEnergy(coord1, coord2, side)) {
                 this.rebuildRecursive(coord2.x, coord2.y, coord2.z, side ^ 1);
-                this.connectBlockToNeighbor(blockNode, coord2.x, coord2.y, coord2.z);
+                this.connectBlockToNeighbor(blockNode, coord2.x, coord2.y, coord2.z, side);
             }
         }
     };
@@ -705,6 +606,104 @@ var EnergyGrid = /** @class */ (function (_super) {
         var blockCount = Object.keys(this.blockNodes.data).length;
         return "[EnergyGrid id=".concat(this.id, ", type=").concat(this.baseEnergy, ", blocks=").concat(blockCount, ", entries=").concat(this.entries.length, ", receivers=").concat(this.receivers.length, ", energyIn=").concat(this.energyIn, ", energyOut=").concat(this.energyOut, ", power=").concat(this.energyPower, "]");
     };
+    EnergyGrid.prototype.connectBlockToNeighbor = function (blockNode, x, y, z, side) {
+        var node = EnergyNet.getNodeOnCoords(this.region, x, y, z);
+        if (!node || !this.isCompatible(node))
+            return;
+        if (node instanceof EnergyTileNode) {
+            var tileSide = side ^ 1;
+            blockNode.linkTile(node, node.canExtractEnergy(tileSide, this.baseEnergy), node.canReceiveEnergy(tileSide, this.baseEnergy));
+            return;
+        }
+        if (node instanceof EnergyGrid) {
+            var adjacentBlockNode = node.blockNodes.get(x, y, z);
+            if (adjacentBlockNode) {
+                blockNode.linkBlock(adjacentBlockNode);
+            }
+        }
+    };
+    EnergyGrid.prototype.collectConnectedBlocks = function (startNode, visited) {
+        var component = [];
+        var stack = [startNode];
+        while (stack.length > 0) {
+            var blockNode = stack.pop();
+            var coordKey = blockNode.getCoordKey();
+            if (visited[coordKey] || !this.blockNodes.containsNode(blockNode))
+                continue;
+            visited[coordKey] = true;
+            component.push(blockNode);
+            for (var _i = 0, _a = blockNode.adjacentLinks; _i < _a.length; _i++) {
+                var link = _a[_i];
+                if (!(link.node instanceof BlockNode))
+                    continue;
+                var adjacentBlock = link.node;
+                if (!this.blockNodes.containsNode(adjacentBlock))
+                    continue;
+                stack.push(adjacentBlock);
+            }
+        }
+        return component;
+    };
+    EnergyGrid.prototype.createGridComponent = function (component) {
+        var grid = EnergyRegistry.createWireGrid(this.blockID, this.region);
+        for (var _i = 0, component_1 = component; _i < component_1.length; _i++) {
+            var blockNode = component_1[_i];
+            this.blockNodes.removeNode(blockNode);
+            grid.blockNodes.addNode(blockNode);
+        }
+        EnergyNet.addEnergyNode(grid);
+        return grid;
+    };
+    EnergyGrid.prototype.splitByComponents = function () {
+        var _this = this;
+        var visited = {};
+        var components = [];
+        this.blockNodes.forEachNode(function (blockNode) {
+            if (visited[blockNode.getCoordKey()])
+                return;
+            var component = _this.collectConnectedBlocks(blockNode, visited);
+            if (component.length > 0) {
+                components.push(component);
+            }
+        });
+        if (components.length <= 1) {
+            return [this];
+        }
+        components.sort(function (a, b) { return b.length - a.length; });
+        var splitGrids = [this];
+        for (var i = 1; i < components.length; i++) {
+            var createdGrid = this.createGridComponent(components[i]);
+            splitGrids.push(createdGrid);
+        }
+        return splitGrids;
+    };
+    EnergyGrid.prototype.rebuildConnectionsFromBlockGraph = function () {
+        var _this = this;
+        this.resetConnections();
+        this.blockNodes.forEachNode(function (blockNode) {
+            for (var _i = 0, _a = blockNode.adjacentLinks; _i < _a.length; _i++) {
+                var link = _a[_i];
+                if (link.node instanceof EnergyTileNode) {
+                    var tileNode = link.node;
+                    if (tileNode.removed)
+                        continue;
+                    if (link.canOutput) {
+                        _this.addConnection(tileNode);
+                    }
+                    if (link.canInput) {
+                        tileNode.addConnection(_this);
+                    }
+                    continue;
+                }
+                else if (link.node instanceof BlockNode) {
+                    var adjacentGrid = link.node.parent;
+                    if (adjacentGrid != _this && !adjacentGrid.removed && _this.isCompatible(adjacentGrid)) {
+                        EnergyGridBuilder.connectNodes(_this, adjacentGrid);
+                    }
+                }
+            }
+        });
+    };
     return EnergyGrid;
 }(EnergyNode));
 var EnergyTileNode = /** @class */ (function (_super) {
@@ -713,6 +712,7 @@ var EnergyTileNode = /** @class */ (function (_super) {
         var _this = _super.call(this, energyType, parent.dimension) || this;
         _this.kind = "tile";
         _this.initialized = false;
+        _this.adjacentLinks = [];
         _this.tileEntity = parent;
         return _this;
     }
@@ -721,6 +721,43 @@ var EnergyTileNode = /** @class */ (function (_super) {
     };
     EnergyTileNode.prototype.hasCoords = function (x, y, z) {
         return this.tileEntity.x == x && this.tileEntity.y == y && this.tileEntity.z == z;
+    };
+    EnergyTileNode.prototype.linkTile = function (tileNode, canInput, canOutput) {
+        if (this.addAdjacentLink(tileNode, canInput, canOutput)) {
+            tileNode.addAdjacentLink(this, canOutput, canInput);
+        }
+    };
+    EnergyTileNode.prototype.unlinkTile = function (tileNode) {
+        if (this.removeAdjacentLink(tileNode)) {
+            tileNode.removeAdjacentLink(this);
+        }
+    };
+    EnergyTileNode.prototype.addAdjacentLink = function (node, canInput, canOutput) {
+        for (var _i = 0, _a = this.adjacentLinks; _i < _a.length; _i++) {
+            var link = _a[_i];
+            if (link.node == node)
+                return false;
+        }
+        this.adjacentLinks.push({
+            node: node,
+            canInput: canInput,
+            canOutput: canOutput
+        });
+        return true;
+    };
+    EnergyTileNode.prototype.removeAdjacentLink = function (node) {
+        var index = this.adjacentLinks.findIndex(function (link) { return link.node == node; });
+        if (index == -1)
+            return false;
+        this.adjacentLinks.splice(index, 1);
+        return true;
+    };
+    EnergyTileNode.prototype.resetAdjacentLinks = function () {
+        for (var _i = 0, _a = this.adjacentLinks; _i < _a.length; _i++) {
+            var link = _a[_i];
+            link.node.removeAdjacentLink(this);
+        }
+        this.adjacentLinks = [];
     };
     EnergyTileNode.prototype.receiveEnergy = function (amount, packet) {
         var energyIn = this.tileEntity.energyReceive(packet.energyName, amount, packet.size);
@@ -741,6 +778,10 @@ var EnergyTileNode = /** @class */ (function (_super) {
     };
     EnergyTileNode.prototype.canExtractEnergy = function (side, type) {
         return this.tileEntity.canExtractEnergy(side, type);
+    };
+    EnergyTileNode.prototype.resetConnections = function () {
+        this.resetAdjacentLinks();
+        _super.prototype.resetConnections.call(this);
     };
     EnergyTileNode.prototype.init = function () {
         EnergyGridBuilder.buildGridForTile(this.tileEntity);
@@ -832,10 +873,11 @@ var EnergyGridBuilder;
         node2.addConnection(node1);
     }
     EnergyGridBuilder.connectNodes = connectNodes;
-    function connectTileToGridBlock(grid, x, y, z, tileNode) {
+    function connectTileToGridBlock(grid, x, y, z, side, tileNode) {
         var blockNode = grid.blockNodes.get(x, y, z);
         if (blockNode) {
-            blockNode.addAdjacentTileEntityNode(tileNode);
+            var energyType = grid.baseEnergy;
+            blockNode.linkTile(tileNode, tileNode.canExtractEnergy(side, energyType), tileNode.canReceiveEnergy(side, energyType));
         }
     }
     function buildGridForTile(te) {
@@ -845,13 +887,18 @@ var EnergyGridBuilder;
             var node = EnergyNet.getNodeOnCoords(te.blockSource, coords.x, coords.y, coords.z);
             if (node && tileNode.isCompatible(node)) {
                 if (node instanceof EnergyGrid) {
-                    connectTileToGridBlock(node, coords.x, coords.y, coords.z, tileNode);
+                    connectTileToGridBlock(node, coords.x, coords.y, coords.z, side, tileNode);
                 }
                 var energyType = node.baseEnergy;
-                if (tileNode.canExtractEnergy(side, energyType) && node.canReceiveEnergy(side ^ 1, energyType)) {
+                var canOutput = tileNode.canExtractEnergy(side, energyType) && node.canReceiveEnergy(side ^ 1, energyType);
+                var canInput = tileNode.canReceiveEnergy(side, energyType) && node.canExtractEnergy(side ^ 1, energyType);
+                if (node instanceof EnergyTileNode && (canInput || canOutput)) {
+                    tileNode.linkTile(node, canInput, canOutput);
+                }
+                if (canOutput) {
                     tileNode.addConnection(node);
                 }
-                if (tileNode.canReceiveEnergy(side, energyType) && node.canExtractEnergy(side ^ 1, energyType)) {
+                if (canInput) {
                     node.addConnection(tileNode);
                 }
             }
@@ -1017,6 +1064,7 @@ EXPORT("EnergyTypeRegistry", EnergyRegistry);
 EXPORT("EnergyTileRegistry", EnergyTileRegistry);
 EXPORT("BlockNode", BlockNode);
 EXPORT("EnergyNode", EnergyNode);
+EXPORT("EnergyTileNode", EnergyTileNode);
 EXPORT("EnergyGrid", EnergyGrid);
 EXPORT("EnergyGridBuilder", EnergyGridBuilder);
 EXPORT("EnergyNet", EnergyNet);

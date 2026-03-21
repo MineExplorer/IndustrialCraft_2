@@ -1,5 +1,12 @@
 /// <reference path="EUMeterUpdatable.ts" />
 
+const enum EuMeterMode {
+	EnergyIn = 0,
+	EnergyOut = 1,
+	EnergyGain = 2,
+	Voltage = 3
+}
+
 class EUMeter extends ItemCommon
 implements ItemBehavior {
 	constructor() {
@@ -65,7 +72,7 @@ implements ItemBehavior {
 			}},
 			"arrowButton0": {type: "button", x: 576, y: 206, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(_, container: ItemContainer) {
-					container.sendEvent("setMode", {mode: 0});
+					container.sendEvent("setMode", {mode: EuMeterMode.EnergyIn});
 					//@ts-ignore
 					const elements = container.getWindow().getContent().elements;
 					elements.arrow.bitmap = "eu_meter_arrow_0";
@@ -74,7 +81,7 @@ implements ItemBehavior {
 			}},
 			"arrowButton1": {type: "button", x: 640, y: 206, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(_, container: ItemContainer) {
-					container.sendEvent("setMode", {mode: 1});
+					container.sendEvent("setMode", {mode: EuMeterMode.EnergyOut});
 					//@ts-ignore
 					const elements = container.getWindow().getContent().elements;
 					elements.arrow.bitmap = "eu_meter_arrow_1";
@@ -83,7 +90,7 @@ implements ItemBehavior {
 			}},
 			"arrowButton2": {type: "button", x: 576, y: 270, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(_, container: ItemContainer) {
-					container.sendEvent("setMode", {mode: 2});
+					container.sendEvent("setMode", {mode: EuMeterMode.EnergyGain});
 					//@ts-ignore
 					const elements = container.getWindow().getContent().elements;
 					elements.arrow.bitmap = "eu_meter_arrow_2";
@@ -92,7 +99,7 @@ implements ItemBehavior {
 			}},
 			"arrowButton3": {type: "button", x: 640, y: 270, bitmap: "eu_meter_switch_button", scale: GUI_SCALE, clicker: {
 				onClick: function(_, container: ItemContainer) {
-					container.sendEvent("setMode", {mode: 3});
+					container.sendEvent("setMode", {mode: EuMeterMode.Voltage});
 					//@ts-ignore
 					const elements = container.getWindow().getContent().elements;
 					elements.arrow.bitmap = "eu_meter_arrow_3";

@@ -60,7 +60,8 @@ namespace Machine {
 		energyTick(type: string, src: EnergyTileNode): void {
 			let output = this.getMaxPacketSize();
 			if (this.data.energy >= output) {
-				this.data.energy += src.add(output) - output;
+				const accepted = output - src.add(output);
+				this.data.energy -= accepted;
 			}
 		}
 

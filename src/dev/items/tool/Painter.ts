@@ -14,13 +14,12 @@ class ItemPainter extends ItemCommon {
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		if (CableRegistry.canBePainted(block.id) && block.data != this.color) {
 			const region = BlockSource.getDefaultForActor(player);
-			region.setBlock(coords.x, coords.y, coords.z, 0, 0);
 			region.setBlock(coords.x, coords.y, coords.z, block.id, this.color);
-			const node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
-			if (node) {
-				node.destroy();
-				EnergyGridBuilder.rebuildForWire(region, coords.x, coords.y, coords.z, block.id);
+			const grid = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
+			if (grid && grid instanceof EUCableGrid) {
+				grid.removeCoords(coords.x, coords.y, coords.z);
 			}
+			EnergyGridBuilder.onWirePlaced(region, coords.x, coords.y, coords.z);
 			if (Game.isItemSpendingAllowed(player)) {
 				if (++item.data >= Item.getMaxDamage(item.id))
 					item.id = ItemID.icPainter;

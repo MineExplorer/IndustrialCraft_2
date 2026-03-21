@@ -45,29 +45,41 @@ declare class EnergyPacket {
     validateNode(nodeId: number): boolean;
     setNodePassed(nodeId: number, mode?: TransferMode): void;
 }
-declare class BlockNode {
+interface AdjacentNodeLink {
+    node: EnergyGraphNode;
+    canInput: boolean;
+    canOutput: boolean;
+}
+interface EnergyGraphNode {
+    adjacentLinks: AdjacentNodeLink[];
+    addAdjacentLink(node: EnergyGraphNode, canInput: boolean, canOutput: boolean): boolean;
+    removeAdjacentLink(node: EnergyGraphNode): boolean;
+    resetAdjacentLinks(): void;
+}
+declare class BlockNode implements EnergyGraphNode {
     x: number;
     y: number;
     z: number;
     tile: Tile;
-    adjacentBlocks: BlockNode[];
-    adjacentTileEntityNodes: EnergyTileNode[];
-    constructor(x: number, y: number, z: number, tile: Tile);
+    parent: EnergyGrid;
+    adjacentLinks: AdjacentNodeLink[];
+    constructor(parent: EnergyGrid, x: number, y: number, z: number, tile: Tile);
     static getCoordKey(x: number, y: number, z: number): string;
     getCoordKey(): string;
-    private addAdjacentBlock;
-    private removeAdjacentBlock;
     linkBlock(blockNode: BlockNode): void;
     unlinkBlock(blockNode: BlockNode): void;
-    unlinkAllBlocks(): void;
-    addAdjacentTileEntityNode(node: EnergyTileNode): boolean;
-    removeAdjacentTileEntityNode(node: EnergyTileNode): boolean;
-    clearAdjacentTileEntityNodes(): void;
+    linkTile(tileNode: EnergyTileNode, canInput: boolean, canOutput: boolean): void;
+    unlinkTile(tileNode: EnergyTileNode): void;
+    addAdjacentLink(node: BlockNode | EnergyTileNode, canInput: boolean, canOutput: boolean): boolean;
+    removeAdjacentLink(node: EnergyGraphNode): boolean;
+    resetAdjacentLinks(): void;
 }
 declare class BlockNodesSet {
+    parent: EnergyGrid;
     data: {
         [coordKey: string]: BlockNode;
     };
+    constructor(parent: EnergyGrid);
     getCoordKey(x: number, y: number, z: number): string;
     has(x: number, y: number, z: number): boolean;
     get(x: number, y: number, z: number): BlockNode;
@@ -158,29 +170,36 @@ declare class EnergyGrid extends EnergyNode {
      */
     isValidWire(tile: Tile): boolean;
     mergeGrid(grid: EnergyGrid): EnergyGrid;
-    private getSideForTileNode;
-    private collectConnectedBlocks;
-    private createGridComponent;
-    private rebuildConnectionsFromBlockGraph;
-    private splitByComponents;
     rebuildRecursive(x: number, y: number, z: number, side?: number): void;
     removeCoords(x: number, y: number, z: number): BlockNode;
-    private connectBlockToNeighbor;
+    removeTileNodeLinks(tileNode: EnergyTileNode): boolean;
     rebuildFor6Sides(blockNode: BlockNode): void;
     tick(): void;
     toString(): string;
+    private connectBlockToNeighbor;
+    private collectConnectedBlocks;
+    private createGridComponent;
+    private splitByComponents;
+    private rebuildConnectionsFromBlockGraph;
 }
-declare class EnergyTileNode extends EnergyNode {
+declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     readonly kind: EnergyNodeKind;
     tileEntity: EnergyTile;
     initialized: boolean;
+    adjacentLinks: AdjacentNodeLink[];
     constructor(energyType: EnergyType, parent: EnergyTile);
     getParent(): EnergyTile;
     hasCoords(x: number, y: number, z: number): boolean;
+    linkTile(tileNode: EnergyTileNode, canInput: boolean, canOutput: boolean): void;
+    unlinkTile(tileNode: EnergyTileNode): void;
+    addAdjacentLink(node: EnergyGraphNode, canInput: boolean, canOutput: boolean): boolean;
+    removeAdjacentLink(node: EnergyGraphNode): boolean;
+    resetAdjacentLinks(): void;
     receiveEnergy(amount: number, packet: EnergyPacket): number;
     isConductor(type: string): boolean;
     canReceiveEnergy(side: number, type: string): boolean;
     canExtractEnergy(side: number, type: string): boolean;
+    resetConnections(): void;
     init(): void;
     tick(): void;
 }

@@ -110,6 +110,8 @@ Callback.addCallback("PreLoaded", function() {
 
 	// plants
 	dictionary.addRecipe({id: VanillaBlockID.planks, count: 4}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.warped_planks, count: 4}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.crimson_planks, count: 4}, {id: ItemID.bioChaff, count: 1});
 	dictionary.addRecipe({id: BlockID.rubberTreeSapling, count: 4}, {id: ItemID.bioChaff, count: 1});
 	dictionary.addRecipe({id: BlockID.rubberTreeLeaves, count: 8}, {id: ItemID.bioChaff, count: 1});
 	dictionary.addRecipe({id: VanillaBlockID.leaves, count: 8}, {id: ItemID.bioChaff, count: 1});

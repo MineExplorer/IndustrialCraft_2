@@ -516,6 +516,8 @@ var EnergyGrid = /** @class */ (function (_super) {
             this.addConnection(node);
         }
         grid.destroy();
+        // Create connections for merge boundary
+        this.reconnectBlockGraph();
         return this;
     };
     EnergyGrid.prototype.rebuildRecursive = function (x, y, z, side) {
@@ -621,6 +623,11 @@ var EnergyGrid = /** @class */ (function (_super) {
         return "[EnergyGrid id=".concat(this.id, ", type=").concat(this.baseEnergy, ", blocks=").concat(blockCount, ", entries=").concat(this.entries.length, ", receivers=").concat(this.receivers.length, ", energyIn=").concat(this.energyIn, ", energyOut=").concat(this.energyOut, ", power=").concat(this.energyPower, "]");
     };
     EnergyGrid.prototype.connectBlockToNeighbor = function (blockNode, x, y, z, side) {
+        var adjacentBlockNode = this.blockNodes.get(x, y, z);
+        if (adjacentBlockNode) {
+            blockNode.linkBlock(adjacentBlockNode);
+            return;
+        }
         var node = EnergyNet.getNodeOnCoords(this.region, x, y, z);
         if (!node || !this.isCompatible(node))
             return;
@@ -630,9 +637,9 @@ var EnergyGrid = /** @class */ (function (_super) {
             return;
         }
         if (node instanceof EnergyGrid) {
-            var adjacentBlockNode = node.blockNodes.get(x, y, z);
-            if (adjacentBlockNode) {
-                blockNode.linkBlock(adjacentBlockNode);
+            var adjacentBlockNode_1 = node.blockNodes.get(x, y, z);
+            if (adjacentBlockNode_1) {
+                blockNode.linkBlock(adjacentBlockNode_1);
             }
         }
     };
@@ -691,6 +698,19 @@ var EnergyGrid = /** @class */ (function (_super) {
             splitGrids.push(createdGrid);
         }
         return splitGrids;
+    };
+    EnergyGrid.prototype.reconnectBlockGraph = function () {
+        var _this = this;
+        this.blockNodes.forEachNode(function (blockNode) {
+            var coord1 = { x: blockNode.x, y: blockNode.y, z: blockNode.z };
+            for (var side = 0; side < 6; side++) {
+                var coord2 = World.getRelativeCoords(blockNode.x, blockNode.y, blockNode.z, side);
+                var adjacentBlockNode = _this.blockNodes.get(coord2.x, coord2.y, coord2.z);
+                if (adjacentBlockNode && _this.canConductEnergy(coord1, coord2, side)) {
+                    blockNode.linkBlock(adjacentBlockNode);
+                }
+            }
+        });
     };
     EnergyGrid.prototype.rebuildConnectionsFromBlockGraph = function () {
         var _this = this;

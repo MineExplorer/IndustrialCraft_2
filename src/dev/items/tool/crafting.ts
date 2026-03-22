@@ -13,9 +13,12 @@ Item.registerUseFunction("cutter", function(coords, item, block, playerUid) {
 				region.setBlock(coords.x, coords.y, coords.z, blockID, 0);
 				stack.decrease(1);
 				player.setInventorySlot(i, stack);
-				if (block.data > 0) {
-					EnergyGridBuilder.rebuildWireGrid(region, coords.x, coords.y, coords.z)
+				const grid = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
+				if (grid && grid instanceof EUCableGrid) {
+					grid.removeCoords(coords.x, coords.y, coords.z);
+					grid.checkAndRebuild();
 				}
+				EnergyGridBuilder.onWirePlaced(region, coords.x, coords.y, coords.z);
 				break;
 			}
 		}
@@ -46,9 +49,12 @@ Network.addServerPacket(IC2NetworkPackets.cutterLongClick, function (client: Net
 			const blockID = CableRegistry.getBlockID(cableData.name, cableData.insulation - 1);
 			region.setBlock(coords.x, coords.y, coords.z, blockID, 0);
 			region.spawnDroppedItem(coords.x + .5, coords.y + 1, coords.z + .5, ItemID.rubber, 1, 0);
-			if (block.data > 0) {
-				EnergyGridBuilder.rebuildWireGrid(region, coords.x, coords.y, coords.z)
+			const grid = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
+			if (grid && grid instanceof EUCableGrid) {
+				grid.removeCoords(coords.x, coords.y, coords.z);
+				grid.checkAndRebuild();
 			}
+			EnergyGridBuilder.onWirePlaced(region, coords.x, coords.y, coords.z);
 		}
 	}
 });

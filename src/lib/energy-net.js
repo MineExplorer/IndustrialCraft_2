@@ -154,6 +154,7 @@ var BlockNode = /** @class */ (function () {
     function BlockNode(parent, x, y, z, tile) {
         this.parent = null;
         this.adjacentLinks = [];
+        this.extraData = {};
         this.parent = parent;
         this.x = x;
         this.y = y;
@@ -641,7 +642,7 @@ var EnergyGrid = /** @class */ (function (_super) {
         while (stack.length > 0) {
             var blockNode = stack.pop();
             var coordKey = blockNode.getCoordKey();
-            if (visited[coordKey] || !this.blockNodes.containsNode(blockNode))
+            if (visited[coordKey] || blockNode.parent != this)
                 continue;
             visited[coordKey] = true;
             component.push(blockNode);
@@ -650,7 +651,7 @@ var EnergyGrid = /** @class */ (function (_super) {
                 if (!(link.node instanceof BlockNode))
                     continue;
                 var adjacentBlock = link.node;
-                if (!this.blockNodes.containsNode(adjacentBlock))
+                if (adjacentBlock.parent != this)
                     continue;
                 stack.push(adjacentBlock);
             }
@@ -658,7 +659,8 @@ var EnergyGrid = /** @class */ (function (_super) {
         return component;
     };
     EnergyGrid.prototype.createGridComponent = function (component) {
-        var grid = EnergyRegistry.createWireGrid(this.blockID, this.region);
+        var wireID = component[0].tile.id;
+        var grid = EnergyRegistry.createWireGrid(wireID, this.region);
         for (var _i = 0, component_1 = component; _i < component_1.length; _i++) {
             var blockNode = component_1[_i];
             this.blockNodes.removeNode(blockNode);
@@ -925,8 +927,8 @@ var EnergyGridBuilder;
         var blockID = region.getBlockId(x, y, z);
         if (EnergyRegistry.isWire(blockID)) {
             var grid = EnergyRegistry.createWireGrid(blockID, region);
-            EnergyNet.addEnergyNode(grid);
             grid.rebuildRecursive(x, y, z);
+            EnergyNet.addEnergyNode(grid);
             return grid;
         }
         return null;
@@ -940,22 +942,13 @@ var EnergyGridBuilder;
         }
     }
     EnergyGridBuilder.rebuildWireGrid = rebuildWireGrid;
-    function rebuildForWire(region, x, y, z, wireID) {
-        if (region.getBlockId(x, y, z) == wireID && !EnergyNet.getNodeOnCoords(region, x, y, z)) {
-            return buildWireGrid(region, x, y, z);
-        }
-        return null;
-    }
-    EnergyGridBuilder.rebuildForWire = rebuildForWire;
     function onWirePlaced(region, x, y, z) {
-        var blockId = region.getBlockId(x, y, z);
+        var tile = region.getBlock(x, y, z);
         var coord1 = { x: x, y: y, z: z };
         for (var side = 0; side < 6; side++) {
             var coord2 = World.getRelativeCoords(x, y, z, side);
-            if (region.getBlockId(coord2.x, coord2.y, coord2.z) != blockId)
-                continue;
             var node = EnergyNet.getNodeOnCoords(region, coord2.x, coord2.y, coord2.z);
-            if (node && node instanceof EnergyGrid && node.canConductEnergy(coord2, coord1, side ^ 1)) {
+            if (node && node instanceof EnergyGrid && node.isValidWire(tile) && node.canConductEnergy(coord2, coord1, side ^ 1)) {
                 node.rebuildRecursive(x, y, z, side ^ 1);
                 return;
             }

@@ -1,33 +1,54 @@
 class EUCableGrid extends EnergyGrid {
-	maxSafetyVoltage?: number;
-	cubeArea = { minX: 1e9, minY: 1e9, minZ: 1e9, maxX: -1e9, maxY: -1e9, maxZ: -1e9 };
+	maxSafetyVoltage: number = -1;
+	// TODO: rewrite to DamageArea class and divide area into chunks
+	damageArea = { minX: 1e9, minY: 1e9, minZ: 1e9, maxX: -1e9, maxY: -1e9, maxZ: -1e9 };
 
 	constructor(energyType: EnergyType, maxValue: number, blockID: number, region: BlockSource) {
 		super(energyType, maxValue, blockID, region);
-		const cableData = CableRegistry.getCableData(blockID);
-		if (cableData && cableData.insulation < cableData.maxInsulation) {
-			this.maxSafetyVoltage = CableRegistry.maxSafetyVoltage[cableData.insulation];
-		}
+	}
+
+	isValidWire(tile: Tile): boolean {
+		if (super.isValidWire(tile)) return true;
+
+		const cableData = CableRegistry.getCableData(this.blockID);
+		const otherData = CableRegistry.getCableData(tile.id);
+		return cableData && otherData && cableData.name == otherData.name;
 	}
 
 	mergeGrid(grid: EUCableGrid): EUCableGrid {
 		super.mergeGrid(grid);
-		this.recalculateCubeArea();
+		this.damageArea = null;
 		return this;
 	}
 
 	addCoords(x: number, y: number, z: number, tile: Tile): BlockNode {
 		const blockNode = super.addCoords(x, y, z, tile);
-		this.cubeArea = null;
+		const cableData = CableRegistry.getCableData(tile.id);
+		if (cableData && cableData.insulation < cableData.maxInsulation) {
+			blockNode.extraData.maxSafetyVoltage = cableData.maxSafetyVoltage;
+			this.damageArea = null;
+			this.maxSafetyVoltage = this.maxSafetyVoltage > 0 ?
+				Math.min(this.maxSafetyVoltage, cableData.maxSafetyVoltage) : cableData.maxSafetyVoltage;
+		}
 		return blockNode;
 	}
 
-	removeCoords(x: number, y: number, z: number): BlockNode {
-		const blockNode = super.removeCoords(x, y, z);
-		if (blockNode) {
-			this.cubeArea = null;
+	checkAndRebuild(): void {
+		super.checkAndRebuild();
+		if (this.removed) return;
+
+		this.damageArea = null;
+		this.maxSafetyVoltage = -1;
+		this.blockNodes.forEachNode(blockNode => {
+			const cableMaxSafetyVoltage = blockNode.extraData.maxSafetyVoltage;
+			if (cableMaxSafetyVoltage) {
+				this.maxSafetyVoltage = this.maxSafetyVoltage > 0 ?
+					Math.min(this.maxSafetyVoltage, cableMaxSafetyVoltage) : cableMaxSafetyVoltage;
+			}
+		});
+		if (this.maxSafetyVoltage > 0) {
+			this.recalculateDamageArea();
 		}
-		return blockNode;
 	}
 
 	onOverload(packetSize: number): void {
@@ -60,14 +81,16 @@ class EUCableGrid extends EnergyGrid {
 		return false;
 	}
 
-	dealElectrocuteDamage(damage: number): void {
-		if (!this.cubeArea) {
-			this.recalculateCubeArea();
+	dealElectrocuteDamage(voltage: number): void {
+		if (!this.damageArea) {
+			this.recalculateDamageArea();
 		}
-		const { minX, minY, minZ, maxX, maxY, maxZ } = this.cubeArea;
+
+		const { minX, minY, minZ, maxX, maxY, maxZ } = this.damageArea;
 		const entities = this.region.listEntitiesInAABB(minX - 1, minY - 1, minZ - 1, maxX + 2, maxY + 2, maxZ + 2);
 		if (entities.length == 0) return;
 
+		const damage = Math.ceil(voltage / 32);
 		for (let ent of entities) {
 			if (!EntityHelper.canTakeDamage(ent, DamageSource.electricity)) {
 				continue;
@@ -76,6 +99,8 @@ class EUCableGrid extends EnergyGrid {
 			if (EntityHelper.isPlayer(ent)) pos.y -= 1.62;
 			for (const key in this.blockNodes.data) {
 				const blockNode = this.blockNodes.data[key];
+				if (!blockNode.extraData.maxSafetyVoltage || voltage <= blockNode.extraData.maxSafetyVoltage) continue;
+				
 				const cx = blockNode.x + .5, cy = blockNode.y + .5, cz = blockNode.z + .5;
 				if (Math.abs(pos.x - cx) <= 1.5 && Math.abs(pos.y - cy) <= 1.5 && Math.abs(pos.z - cz) <= 1.5) {
 					if (damage > 16) Entity.setFire(ent, 20, true);
@@ -88,22 +113,22 @@ class EUCableGrid extends EnergyGrid {
 
 	tick(): void {
 		super.tick();
-		if (IC2Config.voltageEnabled && this.energyPower > this.maxSafetyVoltage && World.getThreadTime()%20 == 0) {
-			const damage = Math.ceil(this.energyPower / 32);
-			this.dealElectrocuteDamage(damage);
+		// TODO: use new DamageArea class and execute checks for different chunks on different ticks
+		if (IC2Config.voltageEnabled && this.maxSafetyVoltage > 0 && this.energyPower > this.maxSafetyVoltage && World.getThreadTime() % 20 == 0) {
+			this.dealElectrocuteDamage(this.energyPower);
 		}
 	}
 
-	private recalculateCubeArea(): void {
-		this.cubeArea = { minX: 1e9, minY: 1e9, minZ: 1e9, maxX: -1e9, maxY: -1e9, maxZ: -1e9 };
+	private recalculateDamageArea(): void {
+		this.damageArea = { minX: 1e9, minY: 1e9, minZ: 1e9, maxX: -1e9, maxY: -1e9, maxZ: -1e9 };
 		this.blockNodes.forEachNode(blockNode => {
 			const { x, y, z } = blockNode;
-			if (x < this.cubeArea.minX) this.cubeArea.minX = x;
-			if (y < this.cubeArea.minY) this.cubeArea.minY = y;
-			if (z < this.cubeArea.minZ) this.cubeArea.minZ = z;
-			if (x > this.cubeArea.maxX) this.cubeArea.maxX = x;
-			if (y > this.cubeArea.maxY) this.cubeArea.maxY = y;
-			if (z > this.cubeArea.maxZ) this.cubeArea.maxZ = z;
+			if (x < this.damageArea.minX) this.damageArea.minX = x;
+			if (y < this.damageArea.minY) this.damageArea.minY = y;
+			if (z < this.damageArea.minZ) this.damageArea.minZ = z;
+			if (x > this.damageArea.maxX) this.damageArea.maxX = x;
+			if (y > this.damageArea.maxY) this.damageArea.maxY = y;
+			if (z > this.damageArea.maxZ) this.damageArea.maxZ = z;
 		});
 	}
 }

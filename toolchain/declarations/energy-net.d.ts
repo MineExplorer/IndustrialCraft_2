@@ -63,6 +63,9 @@ declare class BlockNode implements EnergyGraphNode {
     tile: Tile;
     parent: EnergyGrid;
     adjacentLinks: AdjacentNodeLink[];
+    extraData: {
+        [key: string]: any;
+    };
     constructor(parent: EnergyGrid, x: number, y: number, z: number, tile: Tile);
     static getCoordKey(x: number, y: number, z: number): string;
     getCoordKey(): string;

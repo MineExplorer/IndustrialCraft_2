@@ -347,6 +347,8 @@ namespace Machine {
 		// Client Prototype
 		clientTick(): void {
 			super.clientTick();
+			if (!this.audioSource) return;
+			
 			const output = this.networkData.getDouble(NetworkDataKeys.powerOutput);
 			if (output > 0) {
 				this.audioSource.playSingle(this.getLoopSound(), true);

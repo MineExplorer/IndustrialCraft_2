@@ -184,11 +184,13 @@ declare class EnergyGrid extends EnergyNode {
     checkAndRebuild(): void;
     tick(): void;
     toString(): string;
-    private connectBlockToNeighbor;
-    private collectConnectedBlocks;
-    private createGridComponent;
-    private splitByComponents;
-    private rebuildConnectionsFromBlockGraph;
+    protected connectBlockToNeighbor(blockNode: BlockNode, x: number, y: number, z: number, side: number): void;
+    protected collectConnectedBlocks(startNode: BlockNode, visited: {
+        [coordKey: string]: boolean;
+    }): BlockNode[];
+    protected createGridComponent(component: BlockNode[]): EnergyGrid;
+    protected splitByComponents(): EnergyGrid[];
+    protected rebuildConnectionsFromBlockGraph(): void;
 }
 declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     readonly kind: EnergyNodeKind;
@@ -233,7 +235,6 @@ declare namespace EnergyGridBuilder {
     function buildGridForTile(te: EnergyTile): void;
     function buildWireGrid(region: BlockSource, x: number, y: number, z: number): EnergyGrid;
     function rebuildWireGrid(region: BlockSource, x: number, y: number, z: number): void;
-    function rebuildForWire(region: BlockSource, x: number, y: number, z: number, wireID: number): EnergyGrid;
     function onWirePlaced(region: BlockSource, x: number, y: number, z: number): void;
 }
 declare namespace EnergyNet {

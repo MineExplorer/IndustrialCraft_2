@@ -33,10 +33,8 @@ class EUCableGrid extends EnergyGrid {
 		return blockNode;
 	}
 
-	checkAndRebuild(): void {
-		super.checkAndRebuild();
-		if (this.removed) return;
-
+	protected rebuildConnectionsFromBlockGraph(): void {
+		super.rebuildConnectionsFromBlockGraph();
 		this.damageArea = null;
 		this.maxSafetyVoltage = -1;
 		this.blockNodes.forEachNode(blockNode => {
@@ -46,9 +44,6 @@ class EUCableGrid extends EnergyGrid {
 					Math.min(this.maxSafetyVoltage, cableMaxSafetyVoltage) : cableMaxSafetyVoltage;
 			}
 		});
-		if (this.maxSafetyVoltage > 0) {
-			this.recalculateDamageArea();
-		}
 	}
 
 	onOverload(packetSize: number): void {
@@ -122,6 +117,8 @@ class EUCableGrid extends EnergyGrid {
 	private recalculateDamageArea(): void {
 		this.damageArea = { minX: 1e9, minY: 1e9, minZ: 1e9, maxX: -1e9, maxY: -1e9, maxZ: -1e9 };
 		this.blockNodes.forEachNode(blockNode => {
+			if (!blockNode.extraData.maxSafetyVoltage) return;
+			
 			const { x, y, z } = blockNode;
 			if (x < this.damageArea.minX) this.damageArea.minX = x;
 			if (y < this.damageArea.minY) this.damageArea.minY = y;

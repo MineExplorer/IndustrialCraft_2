@@ -160,6 +160,7 @@ declare class EnergyGrid extends EnergyNode {
     };
     blockID: number;
     region: BlockSource;
+    rebuild: boolean;
     idleTicks: number;
     constructor(energyType: EnergyType, maxValue: number, wireID: number, region: BlockSource);
     isCompatible(node: EnergyNode): boolean;
@@ -174,6 +175,10 @@ declare class EnergyGrid extends EnergyNode {
     removeCoords(x: number, y: number, z: number): BlockNode;
     removeTileNodeLinks(tileNode: EnergyTileNode): boolean;
     rebuildFor6Sides(blockNode: BlockNode): void;
+    /**
+     * Validates integrity of the grid's structure and splits or removes it if necessary.
+     */
+    checkAndRebuild(): void;
     tick(): void;
     toString(): string;
     private connectBlockToNeighbor;

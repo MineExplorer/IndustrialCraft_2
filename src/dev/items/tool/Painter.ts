@@ -18,6 +18,7 @@ class ItemPainter extends ItemCommon {
 			const grid = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
 			if (grid && grid instanceof EUCableGrid) {
 				grid.removeCoords(coords.x, coords.y, coords.z);
+				grid.checkAndRebuild();
 			}
 			EnergyGridBuilder.onWirePlaced(region, coords.x, coords.y, coords.z);
 			if (Game.isItemSpendingAllowed(player)) {

@@ -476,6 +476,7 @@ var EnergyGrid = /** @class */ (function (_super) {
     function EnergyGrid(energyType, maxValue, wireID, region) {
         var _this = _super.call(this, energyType, region.getDimension()) || this;
         _this.kind = "grid";
+        _this.rebuild = false;
         _this.idleTicks = 0;
         _this.blockNodes = new BlockNodesSet(_this);
         _this.blocksMap = _this.blockNodes.data;
@@ -558,16 +559,7 @@ var EnergyGrid = /** @class */ (function (_super) {
         if (!blockNode)
             return null;
         blockNode.resetAdjacentLinks();
-        if (Object.keys(this.blockNodes.data).length == 0) {
-            this.resetConnections();
-            this.destroy();
-            return blockNode;
-        }
-        var splitGrids = this.splitByComponents();
-        for (var _i = 0, splitGrids_1 = splitGrids; _i < splitGrids_1.length; _i++) {
-            var grid = splitGrids_1[_i];
-            grid.rebuildConnectionsFromBlockGraph();
-        }
+        this.rebuild = true;
         return blockNode;
     };
     EnergyGrid.prototype.removeTileNodeLinks = function (tileNode) {
@@ -589,7 +581,28 @@ var EnergyGrid = /** @class */ (function (_super) {
             }
         }
     };
+    /**
+     * Validates integrity of the grid's structure and splits or removes it if necessary.
+     */
+    EnergyGrid.prototype.checkAndRebuild = function () {
+        this.rebuild = false;
+        if (Object.keys(this.blockNodes.data).length == 0) {
+            this.resetConnections();
+            this.destroy();
+            return;
+        }
+        var splitGrids = this.splitByComponents();
+        for (var _i = 0, splitGrids_1 = splitGrids; _i < splitGrids_1.length; _i++) {
+            var grid = splitGrids_1[_i];
+            grid.rebuildConnectionsFromBlockGraph();
+        }
+    };
     EnergyGrid.prototype.tick = function () {
+        if (this.rebuild) {
+            this.checkAndRebuild();
+            if (this.removed)
+                return;
+        }
         if (this.entries.length == 0 && this.receivers.length == 0) {
             this.idleTicks++;
             if (this.idleTicks > 200) { // destroy after 10 seconds of inactivity

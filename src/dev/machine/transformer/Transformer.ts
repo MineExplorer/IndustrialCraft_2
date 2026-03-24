@@ -3,6 +3,7 @@
 namespace Machine {
 	export class Transformer extends ElectricMachine {
 		readonly tier: number
+		readonly enableEnergyBuffer = false;
 
 		constructor(tier: number, defaultDrop?: number) {
 			super();
@@ -42,6 +43,10 @@ namespace Machine {
 			}
 		}
 
+		canProduceEnergy(): boolean {
+			return true;
+		}
+
 		onRedstoneUpdate(signal: number): void {
 			const newMode = signal > 0;
 			if (this.data.increaseMode != newMode) {
@@ -57,7 +62,7 @@ namespace Machine {
 			return this.data.increaseMode;
 		}
 
-		canExtractEnergy(side: number): boolean {
+		canEmitEnergy(side: number): boolean {
 			if (side == this.getFacing()) {
 				return this.data.increaseMode;
 			}

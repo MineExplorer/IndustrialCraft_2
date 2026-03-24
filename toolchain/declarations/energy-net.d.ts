@@ -100,7 +100,9 @@ declare abstract class EnergyNode {
     id: number;
     baseEnergy: string;
     abstract readonly kind: EnergyNodeKind;
-    energyTypes: object;
+    energyTypes: {
+        [key: string]: EnergyType;
+    };
     dimension: number;
     maxValue: number;
     removed: boolean;
@@ -112,6 +114,7 @@ declare abstract class EnergyNode {
     currentOut: number;
     energyPower: number;
     currentPower: number;
+    isFull: boolean;
     constructor(energyType: EnergyType, dimension: number);
     addEnergyType(energyType: EnergyType): void;
     abstract hasCoords(x: number, y: number, z: number): boolean;
@@ -130,24 +133,27 @@ declare abstract class EnergyNode {
     /**
      * Adds output connection to specified node
      * @param node receiver node
+     * @returns — true if connection was added, false if it already exists
      */
-    addConnection(node: EnergyNode): void;
+    addConnection(node: EnergyNode): boolean;
     /**
      * Removes output connection to specified node
      * @param node receiver node
+     * @returns true if connection was removed, false if it's already removed
      */
-    removeConnection(node: EnergyNode): void;
+    removeConnection(node: EnergyNode): boolean;
     resetConnections(): void;
     receiveEnergy(amount: number, packet: EnergyPacket): number;
     add(amount: number, power?: number): number;
-    addPacket(energyName: string, amount: number, size?: number): number;
-    transferEnergy(amount: number, packet: EnergyPacket): number;
+    addPacket(energyName: string, amount: number, size?: number, receivers?: EnergyNode[]): number;
+    transferEnergy(amount: number, packet: EnergyPacket, receivers?: EnergyNode[]): number;
     /** @deprecated */
     addAll(amount: number, power?: number): void;
     onOverload(packetSize: number): void;
+    canProduceEnergy(): boolean;
     isConductor(type: string): boolean;
     canReceiveEnergy(side: number, type: string): boolean;
-    canExtractEnergy(side: number, type: string): boolean;
+    canEmitEnergy(side: number, type: string): boolean;
     canConductEnergy(coord1: Vector, coord2: Vector, side: number): boolean;
     isCompatible(node: EnergyNode): boolean;
     tick(): void;
@@ -165,6 +171,7 @@ declare class EnergyGrid extends EnergyNode {
     region: BlockSource;
     rebuild: boolean;
     idleTicks: number;
+    energyPotential: number;
     constructor(energyType: EnergyType, maxValue: number, wireID: number, region: BlockSource);
     isCompatible(node: EnergyNode): boolean;
     addCoords(x: number, y: number, z: number, tile: Tile): BlockNode;
@@ -182,6 +189,7 @@ declare class EnergyGrid extends EnergyNode {
      * Validates integrity of the grid's structure and splits or removes it if necessary.
      */
     checkAndRebuild(): void;
+    transferBuffer(energyName: string): void;
     tick(): void;
     toString(): string;
     protected connectBlockToNeighbor(blockNode: BlockNode, x: number, y: number, z: number, side: number): void;
@@ -190,45 +198,113 @@ declare class EnergyGrid extends EnergyNode {
     }): BlockNode[];
     protected createGridComponent(component: BlockNode[]): EnergyGrid;
     protected splitByComponents(): EnergyGrid[];
+    protected reconnectBlockGraph(): void;
     protected rebuildConnectionsFromBlockGraph(): void;
 }
 declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     readonly kind: EnergyNodeKind;
     tileEntity: EnergyTile;
     initialized: boolean;
+    tileReceivers: EnergyNode[];
     adjacentLinks: AdjacentNodeLink[];
+    energyAmounts: EnergyBuffer;
     constructor(energyType: EnergyType, parent: EnergyTile);
+    static createFor(tileEntity: EnergyTile, energyTypes: {
+        [key: string]: EnergyType;
+    }): EnergyTileNode;
     getParent(): EnergyTile;
     hasCoords(x: number, y: number, z: number): boolean;
+    addConnection(node: EnergyNode): boolean;
+    /**
+     * Removes output connection to specified node
+     * @param node receiver node
+     */
+    removeConnection(node: EnergyNode): boolean;
     linkTile(tileNode: EnergyTileNode, canInput: boolean, canOutput: boolean): void;
     unlinkTile(tileNode: EnergyTileNode): void;
     addAdjacentLink(node: EnergyGraphNode, canInput: boolean, canOutput: boolean): boolean;
     removeAdjacentLink(node: EnergyGraphNode): boolean;
     resetAdjacentLinks(): void;
     receiveEnergy(amount: number, packet: EnergyPacket): number;
+    canProduceEnergy(): boolean;
     isConductor(type: string): boolean;
     canReceiveEnergy(side: number, type: string): boolean;
-    canExtractEnergy(side: number, type: string): boolean;
+    canEmitEnergy(side: number, type: string): boolean;
     resetConnections(): void;
+    addPacket(energyName: string, amount: number, power?: number): number;
+    addToBuffer(energyType: string, amount: number, cap: number, power?: number): number;
     init(): void;
     tick(): void;
 }
+declare type EnergyBuffer = {
+    [energyName: string]: {
+        amount: number;
+        power: number;
+    };
+};
 interface EnergyTile extends TileEntity {
     isEnergyTile?: boolean;
-    energyTypes?: object;
+    /**
+     * Allows energy-net to accumulate outcoming energy packets in the buffer for optimization. True by default.
+     */
+    enableEnergyBuffer?: boolean;
+    /**
+     * Dictionary of energy types registered for tile entity.
+     */
+    energyTypes?: {
+        [energyName: string]: EnergyType;
+    };
+    /**
+     * Tile entity energy node.
+     */
     energyNode: EnergyTileNode;
+    /**
+     * This method is called during energy net tick and allows to send energy packets from the tile entity node.
+     * @param type main energy type of the node
+     * @param node energy node reference
+     */
     energyTick(type: string, node: EnergyTileNode): void;
-    energyReceive(type: string, amount: number, voltage: number): number;
+    /**
+     * This method is called when the tile entity receives an energy packet.
+     * @param type energy type
+     * @param amount received energy amount
+     * @param power energy power, indicates original packet energy or the energy of an individual packet if the received amount is a sum of multiple packets.
+     */
+    energyReceive(type: string, amount: number, power: number): number;
+    /**
+     * @returns true if tile can produce energy, false otherwise
+     */
+    canProduceEnergy(): boolean;
+    /**
+     * If returns true, the tile node can transfer incoming energy packets to other nodes.
+     * @param type energy type name
+     */
     isConductor(type: string): boolean;
+    /**
+     * Specifies from which sides the tile entity can receive energy. The tile entity must recreate its connections if this value changes.
+     * @param side block side
+     * @param type energy type name
+     */
     canReceiveEnergy(side: number, type: string): boolean;
-    canExtractEnergy(side: number, type: string): boolean;
+    /**
+     * Specifies from which sides the tile entity can emit energy. The tile entity must recreate its connections if this value changes.
+     * @param side block side
+     * @param type energy type name
+     */
+    canEmitEnergy(side: number, type: string): boolean;
+    /** @deprecated use canEmitEnergy instead */
+    canExtractEnergy?(side: number, type: string): boolean;
 }
 declare namespace EnergyTileRegistry {
+    /** Adds energy type for tile entity prototype */
     function addEnergyType(Prototype: EnergyTile, energyType: EnergyType): void;
+    /** Same as addEnergyType, but works on already created prototypes, accessing them by id */
     function addEnergyTypeForId(id: number, energyType: EnergyType): void;
+    /**
+     * Adds default EnergyTile interface implementation for tile entity prototype.
+     * @param Prototype tile entity prototype
+     */
     function setupAsEnergyTile(Prototype: EnergyTile): void;
-    const machineIDs: {};
-    function isMachine(id: number): boolean;
 }
 declare namespace EnergyGridBuilder {
     function connectNodes(node1: EnergyNode, node2: EnergyNode): void;
@@ -244,4 +320,5 @@ declare namespace EnergyNet {
     function enqueueRemoval(node: EnergyNode): void;
     function flushRemovals(): void;
     function getNodeOnCoords(region: BlockSource, x: number, y: number, z: number): EnergyNode;
+    let debugEnabled: boolean;
 }

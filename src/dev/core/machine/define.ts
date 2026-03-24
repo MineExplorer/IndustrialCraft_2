@@ -77,7 +77,7 @@ namespace MachineRegistry {
 		const BasePrototype = Machine.Generator.prototype;
 		Prototype.energyTick ??= BasePrototype.energyTick;
 		Prototype.canReceiveEnergy ??= BasePrototype.canReceiveEnergy;
-		Prototype.canExtractEnergy ??= BasePrototype.canExtractEnergy;
+		Prototype.canEmitEnergy ??= BasePrototype.canEmitEnergy;
 		registerElectricMachine(id, Prototype);
 	}
 

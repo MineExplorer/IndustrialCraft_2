@@ -5,11 +5,15 @@ namespace Machine {
 	extends ElectricMachine {
 		defaultDrop = BlockID.primalGenerator;
 
+		canProduceEnergy(): boolean {
+			return true;
+		}
+
 		canReceiveEnergy(): boolean {
 			return false;
 		}
 
-		canExtractEnergy(): boolean {
+		canEmitEnergy(): boolean {
 			return true;
 		}
 

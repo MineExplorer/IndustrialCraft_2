@@ -4,8 +4,8 @@ namespace Machine {
 	export abstract class ElectricMachine
 	extends MachineBase
 	implements EnergyTile {
+		readonly energyTypes: {[energyName: string]: EnergyType};
 		energyNode: EnergyTileNode;
-		energyTypes: object;
 
 		defaultValues = {
 			energy: 0
@@ -64,6 +64,10 @@ namespace Machine {
 			return 1.2;
 		}
 
+		canProduceEnergy(): boolean {
+			return false;
+		}
+
 		isConductor(type: string): boolean {
 			return false;
 		}
@@ -72,7 +76,7 @@ namespace Machine {
 			return true;
 		}
 
-		canExtractEnergy(side: number, type: string): boolean {
+		canEmitEnergy(side: number, type: string): boolean {
 			return false;
 		}
 

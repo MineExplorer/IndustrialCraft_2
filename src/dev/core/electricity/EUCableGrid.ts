@@ -86,21 +86,19 @@ class EUCableGrid extends EnergyGrid {
 		const chunks = damageArea.getChunkBatch(threadTime);
 		const damage = Math.ceil(voltage / 32);
 		const affectedEntities: {[key: number]: boolean} = {};
-		for (let i = 0; i < chunks.length; i++) {
-			const chunk = chunks[i];
+		for (let chunk of chunks) {
 			if (voltage <= chunk.maxSafetyVoltage) continue;
 
 			const entities = this.region.listEntitiesInAABB(chunk.minX - 1, chunk.minY - 1, chunk.minZ - 1, chunk.maxX + 2, chunk.maxY + 2, chunk.maxZ + 2);
-			for (let j = 0; j < entities.length; j++) {
-				const ent = entities[j];
+			for (let ent of entities) {
 				if (affectedEntities[ent] || !EntityHelper.canTakeDamage(ent, DamageSource.electricity)) {
 					continue;
 				}
 
 				const pos = Entity.getPosition(ent);
 				if (EntityHelper.isPlayer(ent)) pos.y -= 1.62;
-				for (let k = 0; k < chunk.nodes.length; k++) {
-					const blockNode = chunk.nodes[k];
+
+				for (let blockNode of chunk.nodes) {
 					if (voltage <= blockNode.extraData.maxSafetyVoltage) continue;
 
 					const cx = blockNode.x + .5, cy = blockNode.y + .5, cz = blockNode.z + .5;

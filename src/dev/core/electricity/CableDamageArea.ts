@@ -1,4 +1,7 @@
 type DamageChunk = {
+	chunkX: number;
+	chunkY: number;
+	chunkZ: number;
 	minX: number;
 	minY: number;
 	minZ: number;
@@ -10,7 +13,7 @@ type DamageChunk = {
 };
 
 class CableDamageArea {
-	static readonly CHUNK_SIZE = 16;
+	static readonly CHUNK_SIZE = 8;
 
 	maxSafetyVoltage: number = -1;
 	readonly chunks: DamageChunk[] = [];
@@ -27,11 +30,15 @@ class CableDamageArea {
 
 			const {x, y, z} = blockNode;
 			const chunkX = Math.floor(x / CableDamageArea.CHUNK_SIZE);
+			const chunkY = Math.floor(y / CableDamageArea.CHUNK_SIZE);
 			const chunkZ = Math.floor(z / CableDamageArea.CHUNK_SIZE);
-			const chunkKey = chunkX + ":" + chunkZ;
+			const chunkKey = chunkX + ":" + chunkY + ":" + chunkZ;
 			let chunk = chunkMap[chunkKey];
 			if (!chunk) {
 				chunk = chunkMap[chunkKey] = {
+					chunkX,
+					chunkY,
+					chunkZ,
 					minX: Number.MAX_SAFE_INTEGER,
 					minY: Number.MAX_SAFE_INTEGER,
 					minZ: Number.MAX_SAFE_INTEGER,
@@ -63,6 +70,16 @@ class CableDamageArea {
 	/** Returns true when there are no hazardous cable chunks to process. */
 	isEmpty(): boolean {
 		return this.chunks.length == 0;
+	}
+
+	/**
+	 * Returns the damage chunk by its coords or null if it's not found.
+	 * @param chunkX chunk X coord
+	 * @param chunkY chunk Y coord
+	 * @param chunkZ chunk Z coord
+	 */
+	getChunk(chunkX: number, chunkY: number, chunkZ: number): DamageChunk {
+		return this.chunks.find(chunk => chunk.chunkX == chunkX && chunk.chunkY == chunkY && chunk.chunkZ == chunkZ) || null;
 	}
 
 	/**

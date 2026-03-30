@@ -69,7 +69,7 @@ namespace Machine {
 			return this.capacity;
 		}
 
-		canProduceEnergy(): boolean {
+		isEnergyProducer(): boolean {
 			return true;
 		}
 

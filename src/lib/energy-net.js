@@ -275,6 +275,7 @@ var EnergyNode = /** @class */ (function () {
         this.removed = false;
         this.entries = [];
         this.receivers = [];
+        this.activeReceivers = null;
         this.energyIn = 0;
         this.currentIn = 0;
         this.energyOut = 0;
@@ -282,6 +283,7 @@ var EnergyNode = /** @class */ (function () {
         this.energyPower = 0;
         this.currentPower = 0;
         this.isFull = false;
+        this.freeCapacity = -1;
         this.id = EnergyNet.globalNodeID++;
         this.baseEnergy = energyType.name;
         this.addEnergyType(energyType);
@@ -381,7 +383,8 @@ var EnergyNode = /** @class */ (function () {
     };
     EnergyNode.prototype.addPacket = function (energyName, amount, size, receivers) {
         if (size === void 0) { size = amount; }
-        if (receivers === void 0) { receivers = this.receivers; }
+        if (amount == 0)
+            return 0;
         var packet = new EnergyPacket(energyName, size, this, 1 /* TransferMode.Split */);
         var leftAmount = amount;
         var energyOut = this.transferEnergy(leftAmount, packet, receivers);
@@ -394,18 +397,19 @@ var EnergyNode = /** @class */ (function () {
         return energyOut;
     };
     EnergyNode.prototype.transferEnergy = function (amount, packet, receivers) {
-        if (receivers === void 0) { receivers = this.receivers; }
-        if (this.removed || this.receivers.length == 0 || !packet.validateNode(this.id))
+        if (receivers === void 0) { receivers = this.getActiveReceivers(); }
+        if (this.removed || receivers.length == 0 || !packet.validateNode(this.id))
             return 0;
         var leftAmount = amount;
         if (packet.size > this.maxValue) {
-            leftAmount = Math.min(leftAmount, packet.size);
+            // Shrink energy packet proportional to size ratio
+            leftAmount = amount = Math.floor(amount * this.maxValue / packet.size);
             this.onOverload(packet.size);
         }
         if (packet.transferMode == 1 /* TransferMode.Split */) {
             for (var i = 0; i < receivers.length; i++) {
                 var node = receivers[i];
-                if (node.removed || !node.energyTypes[packet.energyName])
+                if (node.removed)
                     continue;
                 var receiveAmount = leftAmount;
                 if (receiveAmount > 1 && receivers.length - i > 1) {
@@ -419,7 +423,7 @@ var EnergyNode = /** @class */ (function () {
         else {
             for (var _i = 0, receivers_1 = receivers; _i < receivers_1.length; _i++) {
                 var node = receivers_1[_i];
-                if (node.removed || !node.energyTypes[packet.energyName])
+                if (node.removed)
                     continue;
                 leftAmount -= node.receiveEnergy(leftAmount, packet);
                 if (leftAmount <= 0)
@@ -442,13 +446,13 @@ var EnergyNode = /** @class */ (function () {
     EnergyNode.prototype.canProduceEnergy = function () {
         return false;
     };
-    EnergyNode.prototype.isConductor = function (type) {
+    EnergyNode.prototype.isConductor = function (energyName) {
         return true;
     };
-    EnergyNode.prototype.canReceiveEnergy = function (side, type) {
+    EnergyNode.prototype.canReceiveEnergy = function (side, energyName) {
         return true;
     };
-    EnergyNode.prototype.canEmitEnergy = function (side, type) {
+    EnergyNode.prototype.canEmitEnergy = function (side, energyName) {
         return true;
     };
     EnergyNode.prototype.canConductEnergy = function (coord1, coord2, side) {
@@ -461,6 +465,21 @@ var EnergyNode = /** @class */ (function () {
         }
         return false;
     };
+    EnergyNode.prototype.getActiveReceivers = function () {
+        if (this.activeReceivers)
+            return this.activeReceivers;
+        var activeReceivers = [];
+        for (var _i = 0, _a = this.receivers; _i < _a.length; _i++) {
+            var node = _a[_i];
+            var freeAmount = node.getFreeCapacity(this.baseEnergy);
+            if (freeAmount == -1 || freeAmount >= 1) {
+                activeReceivers.push(node);
+            }
+        }
+        // Sorting makes energy spread more evenly by distributing leftovers from the first receivers to the next
+        this.activeReceivers = activeReceivers.sort(function (a, b) { return a.freeCapacity - b.freeCapacity; });
+        return activeReceivers;
+    };
     EnergyNode.prototype.tick = function () {
         this.energyIn = this.currentIn;
         this.currentIn = 0;
@@ -469,6 +488,7 @@ var EnergyNode = /** @class */ (function () {
         this.energyPower = this.currentPower;
         this.currentPower = 0;
         this.isFull = false;
+        this.activeReceivers = null;
     };
     EnergyNode.prototype.destroy = function () {
         this.removed = true;
@@ -540,7 +560,7 @@ var EnergyGrid = /** @class */ (function (_super) {
             if (node.canReceiveEnergy(side, this.baseEnergy)) {
                 this.addConnection(node);
             }
-            if (node.canEmitEnergy(side, this.baseEnergy)) {
+            if ((node.canProduceEnergy() || node.isConductor(this.baseEnergy)) && node.canEmitEnergy(side, this.baseEnergy)) {
                 node.addConnection(this);
             }
         }
@@ -608,8 +628,12 @@ var EnergyGrid = /** @class */ (function (_super) {
             grid.rebuildConnectionsFromBlockGraph();
         }
     };
+    EnergyGrid.prototype.getFreeCapacity = function (energyName) {
+        var freeEnergy = (this.isFull || this.receivers.length == 0) ? 0 : -1;
+        return this.freeCapacity = freeEnergy;
+    };
     EnergyGrid.prototype.transferBuffer = function (energyName) {
-        if (this.entries.length == 0 || this.receivers.length == 0)
+        if (this.isFull || this.entries.length == 0 || this.receivers.length == 0)
             return;
         var energyPotential = 0;
         var maxPower = 0;
@@ -795,11 +819,10 @@ var EnergyTileNode = /** @class */ (function (_super) {
         _this = _super.call(this, energyType, parent.dimension) || this;
         _this.kind = "tile";
         _this.initialized = false;
-        _this.tileReceivers = [];
         _this.adjacentLinks = [];
         _this.energyAmounts = {};
         _this.tileEntity = parent;
-        if (parent.canProduceEnergy() && parent.enableEnergyBuffer) {
+        if (parent.isEnergyProducer()) {
             (_a = (_b = parent.data).energyNetBuffer) !== null && _a !== void 0 ? _a : (_b.energyNetBuffer = {});
             _this.energyAmounts = parent.data.energyNetBuffer;
         }
@@ -817,7 +840,7 @@ var EnergyTileNode = /** @class */ (function (_super) {
             else {
                 node.addEnergyType(type);
             }
-            if (tileEntity.enableEnergyBuffer) {
+            if (tileEntity.isEnergyProducer()) {
                 (_a = (_b = node.energyAmounts)[name]) !== null && _a !== void 0 ? _a : (_b[name] = { amount: 0, power: 0 });
             }
         }
@@ -828,24 +851,6 @@ var EnergyTileNode = /** @class */ (function (_super) {
     };
     EnergyTileNode.prototype.hasCoords = function (x, y, z) {
         return this.tileEntity.x == x && this.tileEntity.y == y && this.tileEntity.z == z;
-    };
-    EnergyTileNode.prototype.addConnection = function (node) {
-        if (_super.prototype.addConnection.call(this, node)) {
-            this.tileReceivers = this.receivers.filter(function (n) { return n.kind == "tile"; });
-            return true;
-        }
-        return false;
-    };
-    /**
-     * Removes output connection to specified node
-     * @param node receiver node
-     */
-    EnergyTileNode.prototype.removeConnection = function (node) {
-        if (_super.prototype.removeConnection.call(this, node)) {
-            this.tileReceivers = this.receivers.filter(function (n) { return n.kind == "tile"; });
-            return true;
-        }
-        return false;
     };
     EnergyTileNode.prototype.linkTile = function (tileNode, canInput, canOutput) {
         if (this.addAdjacentLink(tileNode, canInput, canOutput)) {
@@ -900,39 +905,50 @@ var EnergyTileNode = /** @class */ (function (_super) {
         }
         return energyIn;
     };
+    EnergyTileNode.prototype.getFreeCapacity = function (energyName) {
+        var freeEnergy = this.isFull ? 0 : this.tileEntity.getFreeEnergyAmount(energyName);
+        return this.freeCapacity = freeEnergy;
+    };
     EnergyTileNode.prototype.canProduceEnergy = function () {
-        return this.tileEntity.canProduceEnergy();
+        return this.tileEntity.isEnergyProducer();
     };
-    EnergyTileNode.prototype.isConductor = function (type) {
-        return this.tileEntity.isConductor(type);
+    EnergyTileNode.prototype.isConductor = function (energyName) {
+        return this.tileEntity.isConductor(energyName);
     };
-    EnergyTileNode.prototype.canReceiveEnergy = function (side, type) {
-        return this.tileEntity.canReceiveEnergy(side, type);
+    EnergyTileNode.prototype.canReceiveEnergy = function (side, energyName) {
+        return this.tileEntity.canReceiveEnergy(side, energyName);
     };
-    EnergyTileNode.prototype.canEmitEnergy = function (side, type) {
-        return this.tileEntity.canEmitEnergy(side, type);
+    EnergyTileNode.prototype.canEmitEnergy = function (side, energyName) {
+        return this.tileEntity.canEmitEnergy(side, energyName);
     };
     EnergyTileNode.prototype.resetConnections = function () {
         this.resetAdjacentLinks();
-        this.tileReceivers = [];
         _super.prototype.resetConnections.call(this);
     };
-    EnergyTileNode.prototype.addPacket = function (energyName, amount, power) {
-        if (power === void 0) { power = amount; }
-        if (!this.tileEntity.enableEnergyBuffer) {
-            return _super.prototype.addPacket.call(this, energyName, amount, power);
-        }
+    EnergyTileNode.prototype.add = function (amount, power) {
+        if (amount == 0)
+            return 0;
         var energyOut = 0;
         var leftAmount = amount;
-        if (this.tileReceivers.length > 0) {
-            energyOut = _super.prototype.addPacket.call(this, energyName, leftAmount, power, this.tileReceivers);
-            leftAmount -= energyOut;
-            if (leftAmount <= 0) {
-                return energyOut;
+        var activeReceivers = this.getActiveReceivers();
+        var tileReceivers = activeReceivers.filter(function (n) { return n.kind == "tile"; });
+        var gridConnectionsCount = activeReceivers.length - tileReceivers.length;
+        // try to split energy evenly between grids and direct connections
+        if (gridConnectionsCount > 0 && tileReceivers.length > 0) {
+            var energyAdd = Math.floor(leftAmount * gridConnectionsCount / activeReceivers.length);
+            if (energyAdd > 0) {
+                energyOut = this.addToBuffer(this.baseEnergy, energyAdd, amount, power);
+                leftAmount -= energyOut;
             }
         }
-        energyOut += this.addToBuffer(energyName, leftAmount, amount, power);
-        return energyOut;
+        if (tileReceivers.length > 0) {
+            energyOut += this.addPacket(this.baseEnergy, leftAmount, power, tileReceivers);
+            leftAmount -= energyOut;
+        }
+        if (gridConnectionsCount > 0 && leftAmount > 0) {
+            energyOut += this.addToBuffer(this.baseEnergy, leftAmount, amount, power);
+        }
+        return amount - energyOut;
     };
     EnergyTileNode.prototype.addToBuffer = function (energyType, amount, cap, power) {
         if (power === void 0) { power = amount; }
@@ -988,25 +1004,39 @@ var EnergyTileRegistry;
      * @param Prototype tile entity prototype
      */
     function setupAsEnergyTile(Prototype) {
-        var _a, _b, _c, _d, _e, _f, _g;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
         Prototype.isEnergyTile = true;
-        (_a = Prototype.enableEnergyBuffer) !== null && _a !== void 0 ? _a : (Prototype.enableEnergyBuffer = true);
         Prototype.energyTypes = {};
-        (_b = Prototype.energyTick) !== null && _b !== void 0 ? _b : (Prototype.energyTick = function () { });
-        (_c = Prototype.energyReceive) !== null && _c !== void 0 ? _c : (Prototype.energyReceive = function () {
+        (_a = Prototype.energyTick) !== null && _a !== void 0 ? _a : (Prototype.energyTick = function () { });
+        (_b = Prototype.energyReceive) !== null && _b !== void 0 ? _b : (Prototype.energyReceive = function () {
             return 0;
         });
+        // if prototype has energy buffer add method to get free amount
+        if (Prototype.defaultValues && typeof Prototype.defaultValues.energy == "number" && Prototype.getEnergyStorage) {
+            (_c = Prototype.getFreeEnergyAmount) !== null && _c !== void 0 ? _c : (Prototype.getFreeEnergyAmount = function () {
+                var storage = this.getEnergyStorage();
+                if (storage > this.data.energy) {
+                    return storage - this.data.energy;
+                }
+                return 0;
+            });
+        }
+        else {
+            (_d = Prototype.getFreeEnergyAmount) !== null && _d !== void 0 ? _d : (Prototype.getFreeEnergyAmount = function () {
+                return -1;
+            });
+        }
         // Returns true for reverse compatibility
-        (_d = Prototype.canProduceEnergy) !== null && _d !== void 0 ? _d : (Prototype.canProduceEnergy = function () {
+        (_e = Prototype.isEnergyProducer) !== null && _e !== void 0 ? _e : (Prototype.isEnergyProducer = function () {
             return true;
         });
-        (_e = Prototype.isConductor) !== null && _e !== void 0 ? _e : (Prototype.isConductor = function () {
+        (_f = Prototype.isConductor) !== null && _f !== void 0 ? _f : (Prototype.isConductor = function () {
             return false;
         });
-        (_f = Prototype.canReceiveEnergy) !== null && _f !== void 0 ? _f : (Prototype.canReceiveEnergy = function () {
+        (_g = Prototype.canReceiveEnergy) !== null && _g !== void 0 ? _g : (Prototype.canReceiveEnergy = function () {
             return true;
         });
-        (_g = Prototype.canEmitEnergy) !== null && _g !== void 0 ? _g : (Prototype.canEmitEnergy = Prototype.canExtractEnergy || function () {
+        (_h = Prototype.canEmitEnergy) !== null && _h !== void 0 ? _h : (Prototype.canEmitEnergy = Prototype.canExtractEnergy || function () {
             return true;
         });
     }

@@ -64,7 +64,7 @@ namespace Machine {
 			return 1.2;
 		}
 
-		canProduceEnergy(): boolean {
+		isEnergyProducer(): boolean {
 			return false;
 		}
 

@@ -118,7 +118,7 @@ namespace Machine {
 		}
 
 		getEnergyStorage(): number {
-			return ENERGY_PER_MATTER - this.data.progress;
+			return Math.max(ENERGY_PER_MATTER - this.data.progress, 32768);
 		}
 
 		getExplosionPower(): number {

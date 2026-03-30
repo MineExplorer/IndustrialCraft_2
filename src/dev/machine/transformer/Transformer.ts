@@ -3,7 +3,6 @@
 namespace Machine {
 	export class Transformer extends ElectricMachine {
 		readonly tier: number
-		readonly enableEnergyBuffer = false;
 
 		constructor(tier: number, defaultDrop?: number) {
 			super();
@@ -43,7 +42,7 @@ namespace Machine {
 			}
 		}
 
-		canProduceEnergy(): boolean {
+		isEnergyProducer(): boolean {
 			return true;
 		}
 

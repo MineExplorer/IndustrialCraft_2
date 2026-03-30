@@ -5,7 +5,7 @@ namespace Machine {
 	extends ElectricMachine {
 		defaultDrop = BlockID.primalGenerator;
 
-		canProduceEnergy(): boolean {
+		isEnergyProducer(): boolean {
 			return true;
 		}
 

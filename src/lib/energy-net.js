@@ -643,10 +643,11 @@ var EnergyGrid = /** @class */ (function (_super) {
             if (!node.canProduceEnergy())
                 continue;
             var buffer = node.getBuffer(energyName);
-            if (buffer && buffer.amount > 0) {
-                energyPotential += buffer.amount;
-                if (buffer.power > maxPower)
+            if (buffer && buffer.packetSize > 0) {
+                energyPotential += buffer.packetSize;
+                if (buffer.power > maxPower) {
                     maxPower = buffer.power;
+                }
                 inputBuffers.push(buffer);
             }
         }
@@ -660,12 +661,13 @@ var EnergyGrid = /** @class */ (function (_super) {
         this.currentIn += energyAdd;
         for (var _b = 0, inputBuffers_1 = inputBuffers; _b < inputBuffers_1.length; _b++) {
             var buffer = inputBuffers_1[_b];
-            if (buffer.amount > energyAdd) {
-                buffer.amount -= energyAdd;
+            var energyGot = Math.min(buffer.packetSize, energyAdd);
+            buffer.amount -= energyGot;
+            energyAdd -= energyGot;
+            if (buffer.amount < buffer.packetSize) {
+                buffer.packetSize = buffer.amount;
             }
-            else {
-                energyAdd -= buffer.amount;
-                buffer.amount = 0;
+            if (buffer.amount == 0) {
                 buffer.power = 0;
             }
             if (energyAdd <= 0)
@@ -824,6 +826,7 @@ var EnergyTileNode = /** @class */ (function (_super) {
         _this.kind = "tile";
         _this.initialized = false;
         _this.adjacentLinks = [];
+        _this.gridConnectionsCount = 0;
         _this.energyAmounts = {};
         _this.tileEntity = parent;
         if (parent.isEnergyProducer()) {
@@ -850,6 +853,24 @@ var EnergyTileNode = /** @class */ (function (_super) {
     };
     EnergyTileNode.prototype.hasCoords = function (x, y, z) {
         return this.tileEntity.x == x && this.tileEntity.y == y && this.tileEntity.z == z;
+    };
+    EnergyTileNode.prototype.addConnection = function (node) {
+        if (_super.prototype.addConnection.call(this, node)) {
+            this.gridConnectionsCount = this.receivers.filter(function (n) { return n.kind == "grid"; }).length;
+            return true;
+        }
+        return false;
+    };
+    /**
+     * Removes output connection to specified node
+     * @param node receiver node
+     */
+    EnergyTileNode.prototype.removeConnection = function (node) {
+        if (_super.prototype.removeConnection.call(this, node)) {
+            this.gridConnectionsCount = this.receivers.filter(function (n) { return n.kind == "grid"; }).length;
+            return true;
+        }
+        return false;
     };
     EnergyTileNode.prototype.linkTile = function (tileNode, canInput, canOutput) {
         if (this.addAdjacentLink(tileNode, canInput, canOutput)) {
@@ -953,10 +974,12 @@ var EnergyTileNode = /** @class */ (function (_super) {
     EnergyTileNode.prototype.addToBuffer = function (energyName, amount, size, power) {
         if (power === void 0) { power = amount; }
         var energyBuffer = this.getBuffer(energyName, true);
+        size *= this.gridConnectionsCount; // reserve space for 1 packet per connected grid
         if (energyBuffer.amount < size) {
             var energyAdd = Math.min(size - energyBuffer.amount, amount);
             energyBuffer.amount += energyAdd;
             energyBuffer.power = power;
+            energyBuffer.packetSize = Math.ceil(energyBuffer.amount / this.gridConnectionsCount);
             this.currentPower = Math.max(this.currentPower, power);
             this.currentOut += energyAdd;
             return energyAdd;
@@ -967,7 +990,7 @@ var EnergyTileNode = /** @class */ (function (_super) {
         var _a;
         var _b;
         if (createIfNotFound) {
-            (_a = (_b = this.energyAmounts)[energyName]) !== null && _a !== void 0 ? _a : (_b[energyName] = { amount: 0, power: 0 });
+            (_a = (_b = this.energyAmounts)[energyName]) !== null && _a !== void 0 ? _a : (_b[energyName] = { amount: 0, power: 0, packetSize: 0 });
         }
         return this.energyAmounts[energyName] || null;
     };

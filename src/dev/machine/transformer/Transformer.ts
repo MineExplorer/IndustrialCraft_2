@@ -28,16 +28,18 @@ namespace Machine {
 		}
 
 		energyTick(type: string, src: EnergyTileNode): void {
-			const maxVoltage = this.getMaxPacketSize();
+			const maxPacketSize = this.getMaxPacketSize();
 			if (this.data.increaseMode) {
-				if (this.data.energy >= maxVoltage) {
-					this.data.energy += src.add(maxVoltage, maxVoltage) - maxVoltage;
+				if (this.data.energy >= maxPacketSize) {
+					// Use addPacket to ignore buffer
+					const energyAdd = src.addPacket("Eu", maxPacketSize);
+					this.data.energy -= energyAdd;
 				}
 			}
 			else {
-				if (this.data.energy >= maxVoltage/4) {
-					const output = this.data.energy;
-					this.data.energy += src.add(output, maxVoltage/4) - output;
+				if (this.data.energy >= maxPacketSize/4) {
+					const energyAdd = src.addPacket("Eu", this.data.energy);
+					this.data.energy -= energyAdd;
 				}
 			}
 		}

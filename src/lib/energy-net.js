@@ -381,11 +381,11 @@ var EnergyNode = /** @class */ (function () {
         var add = this.addPacket(this.baseEnergy, amount, power);
         return amount - add;
     };
-    EnergyNode.prototype.addPacket = function (energyName, amount, size, receivers) {
-        if (size === void 0) { size = amount; }
+    EnergyNode.prototype.addPacket = function (energyName, amount, power, receivers) {
+        if (power === void 0) { power = amount; }
         if (amount == 0)
             return 0;
-        var packet = new EnergyPacket(energyName, size, this, 1 /* TransferMode.Split */);
+        var packet = new EnergyPacket(energyName, power, this, 1 /* TransferMode.Split */);
         var leftAmount = amount;
         var energyOut = this.transferEnergy(leftAmount, packet, receivers);
         leftAmount -= energyOut;
@@ -642,22 +642,24 @@ var EnergyGrid = /** @class */ (function (_super) {
             var node = _a[_i];
             if (!node.canProduceEnergy())
                 continue;
-            var buffer = node.energyAmounts[energyName];
-            if (buffer) {
+            var buffer = node.getBuffer(energyName);
+            if (buffer && buffer.amount > 0) {
                 energyPotential += buffer.amount;
                 if (buffer.power > maxPower)
                     maxPower = buffer.power;
                 inputBuffers.push(buffer);
             }
         }
-        var energyAdd = this.addPacket(energyName, energyPotential, maxPower);
         this.energyPotential = energyPotential;
+        if (energyPotential <= 0)
+            return;
+        var energyAdd = this.addPacket(energyName, energyPotential, maxPower);
+        if (energyAdd <= 0)
+            return;
         this.currentPower = Math.max(this.currentPower, maxPower);
         this.currentIn += energyAdd;
         for (var _b = 0, inputBuffers_1 = inputBuffers; _b < inputBuffers_1.length; _b++) {
             var buffer = inputBuffers_1[_b];
-            if (energyAdd <= 0)
-                break;
             if (buffer.amount > energyAdd) {
                 buffer.amount -= energyAdd;
             }
@@ -666,6 +668,8 @@ var EnergyGrid = /** @class */ (function (_super) {
                 buffer.amount = 0;
                 buffer.power = 0;
             }
+            if (energyAdd <= 0)
+                break;
         }
     };
     EnergyGrid.prototype.tick = function () {
@@ -829,8 +833,6 @@ var EnergyTileNode = /** @class */ (function (_super) {
         return _this;
     }
     EnergyTileNode.createFor = function (tileEntity, energyTypes) {
-        var _a;
-        var _b;
         var node;
         for (var name in energyTypes) {
             var type = energyTypes[name];
@@ -839,9 +841,6 @@ var EnergyTileNode = /** @class */ (function (_super) {
             }
             else {
                 node.addEnergyType(type);
-            }
-            if (tileEntity.isEnergyProducer()) {
-                (_a = (_b = node.energyAmounts)[name]) !== null && _a !== void 0 ? _a : (_b[name] = { amount: 0, power: 0 });
             }
         }
         return node;
@@ -926,6 +925,7 @@ var EnergyTileNode = /** @class */ (function (_super) {
         _super.prototype.resetConnections.call(this);
     };
     EnergyTileNode.prototype.add = function (amount, power) {
+        if (power === void 0) { power = amount; }
         if (amount == 0)
             return 0;
         var energyOut = 0;
@@ -950,11 +950,11 @@ var EnergyTileNode = /** @class */ (function (_super) {
         }
         return amount - energyOut;
     };
-    EnergyTileNode.prototype.addToBuffer = function (energyType, amount, cap, power) {
+    EnergyTileNode.prototype.addToBuffer = function (energyName, amount, size, power) {
         if (power === void 0) { power = amount; }
-        var energyBuffer = this.energyAmounts[energyType];
-        if (energyBuffer && energyBuffer.amount < cap) {
-            var energyAdd = Math.min(cap - energyBuffer.amount, amount);
+        var energyBuffer = this.getBuffer(energyName, true);
+        if (energyBuffer.amount < size) {
+            var energyAdd = Math.min(size - energyBuffer.amount, amount);
             energyBuffer.amount += energyAdd;
             energyBuffer.power = power;
             this.currentPower = Math.max(this.currentPower, power);
@@ -962,6 +962,14 @@ var EnergyTileNode = /** @class */ (function (_super) {
             return energyAdd;
         }
         return 0;
+    };
+    EnergyTileNode.prototype.getBuffer = function (energyName, createIfNotFound) {
+        var _a;
+        var _b;
+        if (createIfNotFound) {
+            (_a = (_b = this.energyAmounts)[energyName]) !== null && _a !== void 0 ? _a : (_b[energyName] = { amount: 0, power: 0 });
+        }
+        return this.energyAmounts[energyName] || null;
     };
     EnergyTileNode.prototype.init = function () {
         EnergyGridBuilder.buildGridForTile(this.tileEntity);

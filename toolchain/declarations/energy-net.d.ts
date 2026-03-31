@@ -147,7 +147,7 @@ declare abstract class EnergyNode {
     resetConnections(): void;
     receiveEnergy(amount: number, packet: EnergyPacket): number;
     add(amount: number, power?: number): number;
-    addPacket(energyName: string, amount: number, size?: number, receivers?: EnergyNode[]): number;
+    addPacket(energyName: string, amount: number, power?: number, receivers?: EnergyNode[]): number;
     transferEnergy(amount: number, packet: EnergyPacket, receivers?: EnergyNode[]): number;
     /** @deprecated */
     addAll(amount: number, power?: number): void;
@@ -231,7 +231,11 @@ declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     canEmitEnergy(side: number, energyName: string): boolean;
     resetConnections(): void;
     add(amount: number, power?: number): number;
-    addToBuffer(energyType: string, amount: number, cap: number, power?: number): number;
+    addToBuffer(energyName: string, amount: number, size: number, power?: number): number;
+    getBuffer(energyName: string, createIfNotFound?: boolean): {
+        amount: number;
+        power: number;
+    };
     init(): void;
     tick(): void;
 }

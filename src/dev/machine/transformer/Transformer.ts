@@ -23,7 +23,7 @@ namespace Machine {
 			return this.tier;
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return this.getMaxPacketSize();
 		}
 

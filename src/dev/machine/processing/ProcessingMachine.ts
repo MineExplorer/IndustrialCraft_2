@@ -16,7 +16,7 @@ namespace Machine {
 		defaultProcessTime?: number;
 
 		tier: number = this.defaultTier;
-		energyStorage: number;
+		energyCapacity: number;
 		energyDemand?: number;
 		processTimeMultiplier?: number;
 
@@ -26,8 +26,8 @@ namespace Machine {
 			return this.tier;
 		}
 
-		getEnergyStorage(): number {
-			return this.energyStorage;
+		getEnergyCapacity(): number {
+			return this.energyCapacity;
 		}
 		
 		onInit(): void {
@@ -52,7 +52,7 @@ namespace Machine {
 		useUpgrades(isInit: boolean): UpgradeAPI.UpgradeSet {
 			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet, isInit);
 			this.tier = upgrades.getTier(this.defaultTier);
-			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
+			this.energyCapacity = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.energyDemand = upgrades.getEnergyDemand(this.defaultEnergyDemand);
 			this.processTimeMultiplier = upgrades.processTimeMultiplier;
 			return upgrades;

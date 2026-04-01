@@ -70,7 +70,7 @@ namespace Machine {
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			const energyOutput = EnergyProductionModifiers.GeothermalGenerator;
-			if (this.liquidTank.getAmount("lava") >= 1 && this.data.energy + energyOutput <= this.getEnergyStorage()) {
+			if (this.liquidTank.getAmount("lava") >= 1 && this.data.energy + energyOutput <= this.getEnergyCapacity()) {
 				this.data.energy += energyOutput;
 				this.liquidTank.getLiquid(1);
 				this.setActive(true);
@@ -89,7 +89,7 @@ namespace Machine {
 			return "GeothermalLoop.ogg";
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 10000;
 		}
 

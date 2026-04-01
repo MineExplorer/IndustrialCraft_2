@@ -107,7 +107,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 2000;
 		}
 

@@ -91,7 +91,7 @@ namespace Machine {
 		useUpgrades(isInit: boolean): UpgradeAPI.UpgradeSet {
 			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet, isInit);
 			this.tier = upgrades.getTier(this.defaultTier);
-			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
+			this.energyCapacity = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
 			return upgrades;
 		}

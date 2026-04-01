@@ -95,7 +95,7 @@ namespace Machine {
 			return this.tier;
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 4000000;
 		}
 

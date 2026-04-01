@@ -33,7 +33,11 @@ class DebugItem extends ItemElectric {
 			for (let key in tile.data) {
 				const value = tile.data[key];
 				if (key == "energy") {
-					client.sendMessage(`energy: ${value}/${tile.getEnergyStorage()}`);
+					if (tile.getEnergyStorage) {
+						client.sendMessage(`energy: ${value}/${tile.getEnergyStorage()}`);
+					} else if (tile.getEnergyCapacity) {
+						client.sendMessage(`energy: ${value}/${tile.getEnergyCapacity()}`);
+					}
 				}
 				else try {
 					if (typeof value == "object") {

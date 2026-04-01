@@ -90,14 +90,14 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
-			const energyStorage = this.getEnergyStorage();
+			const energyCapacity = this.getEnergyCapacity();
 			const energyOutput = EnergyProductionModifiers.FuelGenerator;
-			if (this.data.energy + energyOutput <= energyStorage) {
+			if (this.data.energy + energyOutput <= energyCapacity) {
 				if (this.data.burn <= 0) {
 					this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel") / 4;
 				}
 				if (this.data.burn > 0) {
-					this.data.energy = Math.min(this.data.energy + energyOutput, energyStorage);
+					this.data.energy = Math.min(this.data.energy + energyOutput, energyCapacity);
 					this.data.burn--;
 					newActive = true;
 				}
@@ -115,7 +115,7 @@ namespace Machine {
 			return "GeneratorLoop.ogg";
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 10000;
 		}
 

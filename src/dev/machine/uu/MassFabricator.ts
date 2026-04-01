@@ -117,7 +117,7 @@ namespace Machine {
 			this.data.isEnabled = (signal == 0);
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return Math.max(ENERGY_PER_MATTER - this.data.progress, 32768);
 		}
 

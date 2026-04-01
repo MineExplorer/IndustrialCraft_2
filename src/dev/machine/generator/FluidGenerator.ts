@@ -96,7 +96,7 @@ namespace Machine {
 			if (this.data.fuel <= 0) {
 				const liquid = this.liquidTank.getLiquidStored();
 				const fuel = this.getFuel(liquid);
-				const freeCapacity = this.getEnergyStorage() - this.data.energy;
+				const freeCapacity = this.getEnergyCapacity() - this.data.energy;
 				if (fuel && this.liquidTank.getAmount() >= fuel.amount && fuel.power * fuel.amount <= freeCapacity) {
 					this.liquidTank.getLiquid(fuel.amount);
 					this.data.fuel = fuel.amount;
@@ -124,7 +124,7 @@ namespace Machine {
 			return "GeothermalLoop.ogg";
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 1000;
 		}
 

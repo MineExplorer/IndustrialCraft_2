@@ -50,7 +50,7 @@ namespace Machine {
 			this.data.isEnabled = signal > 0;
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 10000;
 		}
 	}

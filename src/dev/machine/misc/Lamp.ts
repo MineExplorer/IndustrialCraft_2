@@ -52,7 +52,7 @@ namespace Machine {
 			energy: 0
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 100;
 		}
 

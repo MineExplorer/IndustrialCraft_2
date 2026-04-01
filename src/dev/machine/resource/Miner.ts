@@ -270,7 +270,7 @@ namespace Machine {
 			return "MinerOp.ogg";
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 10000;
 		}
 

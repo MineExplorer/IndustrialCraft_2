@@ -54,7 +54,7 @@ namespace Machine {
 			if (numberOfPellets > 0) {
 				this.setActive(true);
 				const output = EnergyProductionModifiers.RTGenerator * 1 << (numberOfPellets - 1); // fast power of 2
-				this.data.energy = Math.min(this.data.energy + output, this.getEnergyStorage());
+				this.data.energy = Math.min(this.data.energy + output, this.getEnergyCapacity());
 			} else {
 				this.setActive(false);
 			}
@@ -64,7 +64,7 @@ namespace Machine {
 			this.container.sendChanges();
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 10000;
 		}
 	}

@@ -105,7 +105,7 @@ namespace Machine {
 			return null;
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 10000;
 		}
 

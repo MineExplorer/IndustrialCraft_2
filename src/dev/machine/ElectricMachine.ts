@@ -15,12 +15,12 @@ namespace Machine {
 			return 1;
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 0;
 		}
 
 		getRelativeEnergy(): number {
-			return this.data.energy / this.getEnergyStorage();
+			return this.data.energy / this.getEnergyCapacity();
 		}
 
 		getMaxPacketSize(): number {
@@ -37,7 +37,7 @@ namespace Machine {
 		}
 
 		dischargeSlot(slotName: string) {
-			const amount = this.getEnergyStorage() - this.data.energy;
+			const amount = this.getEnergyCapacity() - this.data.energy;
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot(slotName), "Eu", amount, this.getTier());
 		}
 
@@ -55,13 +55,13 @@ namespace Machine {
 					return amount;
 				}
 			}
-			const add = Math.min(amount, Math.floor(this.getEnergyStorage() - this.data.energy));
+			const add = Math.min(amount, Math.floor(this.getEnergyCapacity() - this.data.energy));
 			this.data.energy += add;
 			return add;
 		}
 
 		getFreeEnergyAmount(): number {
-			const storage = this.getEnergyStorage();
+			const storage = this.getEnergyCapacity();
 			if (storage > this.data.energy) {
 				return Math.floor(storage - this.data.energy);
 			}

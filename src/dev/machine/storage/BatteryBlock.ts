@@ -53,7 +53,7 @@ namespace Machine {
 
 			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.setText("textInfo1", Math.floor(this.data.energy) + "/");
-			this.container.setText("textInfo2", this.getEnergyStorage());
+			this.container.setText("textInfo2", this.getEnergyCapacity());
 			this.container.sendChanges();
 		}
 
@@ -65,7 +65,7 @@ namespace Machine {
 			}
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return this.capacity;
 		}
 

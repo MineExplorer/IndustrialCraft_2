@@ -129,17 +129,19 @@ var EnergyPacket = /** @class */ (function () {
         this.source = source;
         this.transferMode = transferMode;
     }
+    /**
+     * Returns true if the node has not yet been passed by this packet.
+     * @param nodeId node id
+     */
     EnergyPacket.prototype.validateNode = function (nodeId) {
-        var passedMode = this.nodeList[nodeId];
-        if (!passedMode || passedMode != this.transferMode) {
-            this.setNodePassed(nodeId, this.transferMode);
-            return true;
-        }
-        return false;
+        return !this.nodeList[nodeId];
     };
-    EnergyPacket.prototype.setNodePassed = function (nodeId, mode) {
-        if (mode === void 0) { mode = this.transferMode; }
-        this.nodeList[nodeId] = mode;
+    /**
+     * Marks node as passed by this packet.
+     * @param nodeId node id.
+     */
+    EnergyPacket.prototype.setNodePassed = function (nodeId) {
+        this.nodeList[nodeId] = true;
     };
     return EnergyPacket;
 }());
@@ -381,24 +383,18 @@ var EnergyNode = /** @class */ (function () {
         var add = this.addPacket(this.baseEnergy, amount, power);
         return amount - add;
     };
-    EnergyNode.prototype.addPacket = function (energyName, amount, power, receivers) {
+    EnergyNode.prototype.addPacket = function (energyName, amount, power, transferMode, receivers) {
         if (power === void 0) { power = amount; }
         if (amount == 0)
             return 0;
-        var packet = new EnergyPacket(energyName, power, this, 1 /* TransferMode.Split */);
-        var leftAmount = amount;
-        var energyOut = this.transferEnergy(leftAmount, packet, receivers);
-        leftAmount -= energyOut;
-        if (leftAmount <= 0 || energyOut == 0) { // early exit if fully transferred or not transferred at all
-            return energyOut;
-        }
-        packet.transferMode = 2 /* TransferMode.Full */;
-        energyOut += this.transferEnergy(leftAmount, packet, receivers);
+        var packet = new EnergyPacket(energyName, power, this, transferMode);
+        var energyOut = this.transferEnergy(amount, packet, receivers);
         return energyOut;
     };
     EnergyNode.prototype.transferEnergy = function (amount, packet, receivers) {
-        if (receivers === void 0) { receivers = this.getActiveReceivers(); }
-        if (this.removed || receivers.length == 0 || !packet.validateNode(this.id))
+        receivers !== null && receivers !== void 0 ? receivers : (receivers = packet.transferMode == 1 /* TransferMode.Split */ ? this.getActiveReceivers() : this.receivers);
+        packet.setNodePassed(this.id);
+        if (receivers.length == 0)
             return 0;
         var leftAmount = amount;
         if (packet.size > this.maxValue) {
@@ -408,13 +404,14 @@ var EnergyNode = /** @class */ (function () {
             this.onOverload(packet.size);
         }
         if (packet.transferMode == 1 /* TransferMode.Split */) {
-            for (var i = 0; i < receivers.length; i++) {
-                var node = receivers[i];
+            var leftReceivers = receivers.filter(function (n) { return packet.validateNode(n.id); });
+            for (var i = 0; i < leftReceivers.length; i++) {
+                var node = leftReceivers[i];
                 if (node.removed)
                     continue;
                 var receiveAmount = leftAmount;
-                if (receiveAmount > 1 && receivers.length - i > 1) {
-                    receiveAmount = Math.ceil(receiveAmount / (receivers.length - i));
+                if (receiveAmount > 1 && leftReceivers.length - i > 1) {
+                    receiveAmount = Math.ceil(receiveAmount / (leftReceivers.length - i));
                 }
                 leftAmount -= node.receiveEnergy(receiveAmount, packet);
                 if (leftAmount <= 0)
@@ -424,7 +421,7 @@ var EnergyNode = /** @class */ (function () {
         else {
             for (var _i = 0, receivers_1 = receivers; _i < receivers_1.length; _i++) {
                 var node = receivers_1[_i];
-                if (node.removed)
+                if (node.removed || !packet.validateNode(node.id))
                     continue;
                 leftAmount -= node.receiveEnergy(leftAmount, packet);
                 if (leftAmount <= 0)
@@ -473,7 +470,7 @@ var EnergyNode = /** @class */ (function () {
         for (var _i = 0, _a = this.receivers; _i < _a.length; _i++) {
             var node = _a[_i];
             var freeAmount = node.getFreeCapacity(this.baseEnergy);
-            if (freeAmount == -1 || freeAmount >= 1) {
+            if (freeAmount >= 1) {
                 activeReceivers.push(node);
             }
         }
@@ -630,7 +627,7 @@ var EnergyGrid = /** @class */ (function (_super) {
         }
     };
     EnergyGrid.prototype.getFreeCapacity = function (energyName) {
-        var freeEnergy = (this.isFull || this.receivers.length == 0) ? 0 : -1;
+        var freeEnergy = (this.isFull || this.receivers.length == 0) ? 0 : this.energyIn || 1;
         return this.freeCapacity = freeEnergy;
     };
     EnergyGrid.prototype.transferBuffer = function (energyName) {
@@ -964,7 +961,7 @@ var EnergyTileNode = /** @class */ (function (_super) {
             }
         }
         if (tileReceivers.length > 0) {
-            energyOut += this.addPacket(this.baseEnergy, leftAmount, power, tileReceivers);
+            energyOut += this.addPacket(this.baseEnergy, leftAmount, power, 1 /* TransferMode.Split */, tileReceivers);
             leftAmount -= energyOut;
         }
         if (gridConnectionsCount > 0 && leftAmount > 0) {
@@ -1055,7 +1052,7 @@ var EnergyTileRegistry;
         }
         else {
             (_d = Prototype.getFreeEnergyAmount) !== null && _d !== void 0 ? _d : (Prototype.getFreeEnergyAmount = function () {
-                return -1;
+                return this.energyNode.energyIn || 1;
             });
         }
         // Returns true for reverse compatibility

@@ -30,7 +30,13 @@ declare class EnergyType {
     registerWire(id: number, maxValue: number, energyGridClass?: typeof EnergyGrid): void;
 }
 declare const enum TransferMode {
+    /**
+     * Fetches free amount for all receivers and tries to split energy evenly between them
+     */
     Split = 1,
+    /**
+     * Dumps energy into the first available receiver
+     */
     Full = 2
 }
 declare class EnergyPacket {
@@ -39,11 +45,19 @@ declare class EnergyPacket {
     source: EnergyNode;
     transferMode: TransferMode;
     nodeList: {
-        [key: number]: TransferMode;
+        [key: number]: true;
     };
     constructor(energyName: string, size: number, source: EnergyNode, transferMode?: TransferMode);
+    /**
+     * Returns true if the node has not yet been passed by this packet.
+     * @param nodeId node id
+     */
     validateNode(nodeId: number): boolean;
-    setNodePassed(nodeId: number, mode?: TransferMode): void;
+    /**
+     * Marks node as passed by this packet.
+     * @param nodeId node id.
+     */
+    setNodePassed(nodeId: number): void;
 }
 interface AdjacentNodeLink {
     node: EnergyGraphNode;
@@ -147,7 +161,7 @@ declare abstract class EnergyNode {
     resetConnections(): void;
     receiveEnergy(amount: number, packet: EnergyPacket): number;
     add(amount: number, power?: number): number;
-    addPacket(energyName: string, amount: number, power?: number, receivers?: EnergyNode[]): number;
+    addPacket(energyName: string, amount: number, power?: number, transferMode?: TransferMode, receivers?: EnergyNode[]): number;
     transferEnergy(amount: number, packet: EnergyPacket, receivers?: EnergyNode[]): number;
     /** @deprecated */
     addAll(amount: number, power?: number): void;

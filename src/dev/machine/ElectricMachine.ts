@@ -55,9 +55,17 @@ namespace Machine {
 					return amount;
 				}
 			}
-			const add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
+			const add = Math.min(amount, Math.floor(this.getEnergyStorage() - this.data.energy));
 			this.data.energy += add;
 			return add;
+		}
+
+		getFreeEnergyAmount(): number {
+			const storage = this.getEnergyStorage();
+			if (storage > this.data.energy) {
+				return Math.floor(storage - this.data.energy);
+			}
+			return 0;
 		}
 
 		getExplosionPower(): number {

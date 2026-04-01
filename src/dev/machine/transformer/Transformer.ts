@@ -37,8 +37,8 @@ namespace Machine {
 				}
 			}
 			else {
-				if (this.data.energy >= maxPacketSize/4) {
-					const energyAdd = src.addPacket("Eu", this.data.energy);
+				if (this.data.energy >= maxPacketSize / 4) {
+					const energyAdd = src.addPacket("Eu", this.data.energy, maxPacketSize / 4);
 					this.data.energy -= energyAdd;
 				}
 			}

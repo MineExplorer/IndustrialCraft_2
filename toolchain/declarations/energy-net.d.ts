@@ -211,6 +211,7 @@ declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     tileEntity: EnergyTile;
     initialized: boolean;
     adjacentLinks: AdjacentNodeLink[];
+    gridConnectionsCount: number;
     energyAmounts: EnergyBuffer;
     constructor(energyType: EnergyType, parent: EnergyTile);
     static createFor(tileEntity: EnergyTile, energyTypes: {
@@ -218,6 +219,12 @@ declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     }): EnergyTileNode;
     getParent(): EnergyTile;
     hasCoords(x: number, y: number, z: number): boolean;
+    addConnection(node: EnergyNode): boolean;
+    /**
+     * Removes output connection to specified node
+     * @param node receiver node
+     */
+    removeConnection(node: EnergyNode): boolean;
     linkTile(tileNode: EnergyTileNode, canInput: boolean, canOutput: boolean): void;
     unlinkTile(tileNode: EnergyTileNode): void;
     addAdjacentLink(node: EnergyGraphNode, canInput: boolean, canOutput: boolean): boolean;
@@ -235,6 +242,7 @@ declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     getBuffer(energyName: string, createIfNotFound?: boolean): {
         amount: number;
         power: number;
+        packetSize: number;
     };
     init(): void;
     tick(): void;
@@ -243,6 +251,7 @@ declare type EnergyBuffer = {
     [energyName: string]: {
         amount: number;
         power: number;
+        packetSize: number;
     };
 };
 interface EnergyTile extends TileEntity {

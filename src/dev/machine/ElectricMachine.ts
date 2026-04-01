@@ -46,14 +46,14 @@ namespace Machine {
 		energyReceive(type: string, amount: number, voltage: number): number {
 			const maxVoltage = this.getMaxPacketSize();
 			if (voltage > maxVoltage) {
+				amount = Math.min(amount, maxVoltage);
 				if (IC2Config.voltageEnabled) {
 					this.blockSource.setBlock(this.x, this.y, this.z, 0, 0);
 					this.blockSource.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.getExplosionPower(), true);
 					SoundLib.playSoundAtBlock(this, this.dimension, "MachineOverload.ogg", 1, 1, 32);
 					this.selfDestroy();
-					return 1;
+					return amount;
 				}
-				amount = Math.min(amount, maxVoltage);
 			}
 			const add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
 			this.data.energy += add;

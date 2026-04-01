@@ -402,8 +402,9 @@ var EnergyNode = /** @class */ (function () {
             return 0;
         var leftAmount = amount;
         if (packet.size > this.maxValue) {
-            // Shrink energy packet proportional to size ratio
-            leftAmount = amount = Math.floor(amount * this.maxValue / packet.size);
+            // Shrink energy packet proportional to the size ratio if its amount is bigger than its size
+            amount = amount > packet.size ? Math.floor(amount * this.maxValue / packet.size) : this.maxValue;
+            leftAmount = amount;
             this.onOverload(packet.size);
         }
         if (packet.transferMode == 1 /* TransferMode.Split */) {
@@ -972,7 +973,7 @@ var EnergyTileNode = /** @class */ (function (_super) {
         return amount - energyOut;
     };
     EnergyTileNode.prototype.addToBuffer = function (energyName, amount, size, power) {
-        if (power === void 0) { power = amount; }
+        if (power === void 0) { power = size; }
         var energyBuffer = this.getBuffer(energyName, true);
         size *= this.gridConnectionsCount; // reserve space for 1 packet per connected grid
         if (energyBuffer.amount < size) {

@@ -19,6 +19,11 @@ namespace Machine {
 			return 0;
 		}
 
+		/** @deprecated use getEnergyCapacity instead */
+		getEnergyStorage(): number {
+			return this.getEnergyCapacity();
+		}
+
 		getRelativeEnergy(): number {
 			return this.data.energy / this.getEnergyCapacity();
 		}

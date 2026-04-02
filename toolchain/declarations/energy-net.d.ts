@@ -119,6 +119,7 @@ declare abstract class EnergyNode {
     };
     dimension: number;
     maxValue: number;
+    defaultTransferMode: TransferMode;
     removed: boolean;
     entries: EnergyNode[];
     receivers: EnergyNode[];
@@ -129,8 +130,8 @@ declare abstract class EnergyNode {
     currentOut: number;
     energyPower: number;
     currentPower: number;
-    isFull: boolean;
     freeCapacity: number;
+    enableEnergyBuffer: boolean;
     constructor(energyType: EnergyType, dimension: number);
     addEnergyType(energyType: EnergyType): void;
     abstract hasCoords(x: number, y: number, z: number): boolean;
@@ -167,7 +168,6 @@ declare abstract class EnergyNode {
     addAll(amount: number, power?: number): void;
     onOverload(packetSize: number): void;
     abstract getFreeCapacity(energyName: string): number;
-    canProduceEnergy(): boolean;
     isConductor(energyName: string): boolean;
     canReceiveEnergy(side: number, energyName: string): boolean;
     canEmitEnergy(side: number, energyName: string): boolean;
@@ -179,7 +179,7 @@ declare abstract class EnergyNode {
     toString(): string;
 }
 declare class EnergyGrid extends EnergyNode {
-    readonly kind: EnergyNodeKind;
+    readonly kind = "grid";
     blockNodes: BlockNodesSet;
     /** @deprecated */
     blocksMap: {
@@ -221,7 +221,7 @@ declare class EnergyGrid extends EnergyNode {
     protected rebuildConnectionsFromBlockGraph(): void;
 }
 declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
-    readonly kind: EnergyNodeKind;
+    readonly kind = "tile";
     tileEntity: EnergyTile;
     initialized: boolean;
     adjacentLinks: AdjacentNodeLink[];
@@ -246,7 +246,6 @@ declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     resetAdjacentLinks(): void;
     receiveEnergy(amount: number, packet: EnergyPacket): number;
     getFreeCapacity(energyName: string): number;
-    canProduceEnergy(): boolean;
     isConductor(energyName: string): boolean;
     canReceiveEnergy(side: number, energyName: string): boolean;
     canEmitEnergy(side: number, energyName: string): boolean;
@@ -294,31 +293,31 @@ interface EnergyTile extends TileEntity {
      */
     energyReceive(energyName: string, amount: number, power: number): number;
     /**
-     * @returns available capacity in the tile's energy buffer or -1 if not supported
+     * @returns available capacity in the tile's energy buffer
      * @param energyName energy type name
      */
-    getFreeEnergyAmount?(energyName?: string): number;
+    getFreeEnergyAmount(energyName?: string): number;
     /**
-     * @returns true if tile can produce energy, false otherwise
+     * Determines whether the tile is an energy generator and enables output buffer for tile.
      */
-    isEnergyProducer(): boolean;
+    isGenerator(): boolean;
     /**
      * If returns true, the tile node can transfer incoming energy packets to other nodes.
      * @param energyName energy type name
      */
-    isConductor(energyName: string): boolean;
+    isConductor?(energyName: string): boolean;
     /**
      * Specifies from which sides the tile entity can receive energy. The tile entity must recreate its connections if this value changes.
      * @param side block side
      * @param energyName energy type name
      */
-    canReceiveEnergy(side: number, energyName: string): boolean;
+    canReceiveEnergy?(side: number, energyName: string): boolean;
     /**
      * Specifies from which sides the tile entity can emit energy. The tile entity must recreate its connections if this value changes.
      * @param side block side
      * @param energyName energy type name
      */
-    canEmitEnergy(side: number, energyName: string): boolean;
+    canEmitEnergy?(side: number, energyName: string): boolean;
     /** @deprecated use canEmitEnergy instead */
     canExtractEnergy?(side: number, energyName: string): boolean;
 }

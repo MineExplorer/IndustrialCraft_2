@@ -72,7 +72,7 @@ namespace Machine {
 			return 1.2;
 		}
 
-		isEnergyProducer(): boolean {
+		isGenerator(): boolean {
 			return false;
 		}
 

@@ -31,21 +31,16 @@ namespace Machine {
 			const maxPacketSize = this.getMaxPacketSize();
 			if (this.data.increaseMode) {
 				if (this.data.energy >= maxPacketSize) {
-					// Use addPacket to ignore buffer
-					const energyAdd = src.addPacket("Eu", maxPacketSize);
+					const energyAdd = src.add(maxPacketSize);
 					this.data.energy -= energyAdd;
 				}
 			}
 			else {
 				if (this.data.energy >= maxPacketSize / 4) {
-					const energyAdd = src.addPacket("Eu", this.data.energy, maxPacketSize / 4);
+					const energyAdd = src.add(this.data.energy, maxPacketSize / 4);
 					this.data.energy -= energyAdd;
 				}
 			}
-		}
-
-		isEnergyProducer(): boolean {
-			return true;
 		}
 
 		onRedstoneUpdate(signal: number): void {

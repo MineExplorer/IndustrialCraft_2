@@ -10,6 +10,8 @@ ItemRegistry.createItem("dustSilver", {name: "silver_dust", icon: "dust_silver"}
 ItemRegistry.createItem("dustStone", {name: "stone_dust", icon: "dust_stone"});
 ItemRegistry.createItem("dustCoal", {name: "coal_dust", icon: "dust_coal"});
 ItemRegistry.createItem("dustSulfur", {name: "sulfur_dust", icon: "dust_sulfur"});
+ItemRegistry.createItem("dustClay", {name: "clay_dust", icon: "dust_clay"});
+ItemRegistry.createItem("dustSiliconDioxide", {name: "silicon_dioxide_dust", icon: "dust_silicon_dioxide"});
 ItemRegistry.createItem("dustLapis", {name: "lapis_dust", icon: "dust_lapis"});
 ItemRegistry.createItem("dustDiamond", {name: "diamond_dust", icon: "dust_diamond"});
 ItemRegistry.createItem("dustEnergium", {name: "energium_dust", icon: "dust_energium"});
@@ -26,6 +28,8 @@ Item.addCreativeGroup("dust", Translation.translate("Dusts"), [
 	ItemID.dustStone,
 	ItemID.dustCoal,
 	ItemID.dustSulfur,
+	ItemID.dustClay,
+	ItemID.dustSiliconDioxide,
 	ItemID.dustLapis,
 	ItemID.dustDiamond,
 	ItemID.dustEnergium

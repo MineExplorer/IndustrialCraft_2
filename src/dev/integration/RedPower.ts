@@ -17,4 +17,7 @@ ModAPI.addAPICallback("RedCore", (api: typeof RedCore) => {
 	dictionary.addRecipe({id: ItemID.gemRuby, count: 9}, {id: BlockID.blockRuby, count: 1});
 	dictionary.addRecipe({id: ItemID.gemSapphire, count: 9}, {id: BlockID.blockSapphire, count: 1});
 	dictionary.addRecipe({id: ItemID.gemGreenSapphire, count: 9}, {id: BlockID.blockGreenSapphire, count: 1});
+
+	const cuttingRecipes: MachineRecipe.BlockCutterRecipeDictionary = MachineRecipeRegistry.getDictionary("cuttingMachine");
+    cuttingRecipes.addRecipe({id: ItemID.siliconBoule}, {id: ItemID.waferSilicon, count: 16}, 4);
 });

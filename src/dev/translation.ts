@@ -227,6 +227,7 @@ Translation.addTranslation("sulfur_dust", {en: "Sulfur Dust", ru: "Серная 
 Translation.addTranslation("clay_dust", {en: "Clay Dust", ru: "Глиняная пыль", es: "Polvo de Arcilla", pt: "Pó de Argila", zh: "粘土粉"});
 Translation.addTranslation("silicon_dioxide_dust", {en: "Silicon Dioxide", ru: "Диоксид кремния", es: "Dioxido de Silicona", pt: "Dióxido de Silício", zh: "二氧化硅粉"});
 Translation.addTranslation("lapis_dust", {en: "Lapis Dust", ru: "Лазуритовая пыль", es: "Polvo de Lapislázuli", pt: "Pó de Lápis-Lazúli", zh: "青金石粉"});
+Translation.addTranslation("obsidian_dust", {en: "Obsidian Dust", ru: "Обсидиановая пыль", es: "Polvo de Obsidiana", pt: "Pó de Obsidiana", zh: "黑曜石粉"});
 Translation.addTranslation("diamond_dust", {en: "Diamond Dust", ru: "Алмазная пыль", es: "Polvo de Diamante", pt: "Pó de Diamante", zh: "钻石粉"});
 Translation.addTranslation("energium_dust", {en: "Energium Dust", ru: "Энергетическая пыль", es: "Polvo de Energium", pt: "Pó de Enérgio", zh: "能量水晶粉"});
 

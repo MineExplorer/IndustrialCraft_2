@@ -90,6 +90,7 @@ Callback.addCallback("PreLoaded", function() {
 	dictionary.addRecipe({id: VanillaItemID.lapis_lazuli}, {id: ItemID.dustLapis, count: 1}, 200);
 	dictionary.addRecipe({id: VanillaBlockID.hardened_clay}, {id: ItemID.dustClay, count: 4}, 300);
 	dictionary.addRecipe({id: VanillaBlockID.stained_hardened_clay}, {id: ItemID.dustClay, count: 4}, 300);
+	dictionary.addRecipe({id: VanillaBlockID.obsidian}, {id: ItemID.dustObsidian, count: 4}, 500);
 	dictionary.addRecipe({id: VanillaItemID.spider_eye}, {id: ItemID.grinPowder, count: 2}, 200);
 	dictionary.addRecipe({id: VanillaItemID.poisonous_potato}, {id: ItemID.grinPowder, count: 1}, 200);
 

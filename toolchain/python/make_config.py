@@ -54,6 +54,4 @@ if make_config is None:
 	raise RuntimeError("failed to find make.json")
 
 
-if __name__ == '__main__':
-	print(make_config.get_value("native"))
 

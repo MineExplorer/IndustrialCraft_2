@@ -19,9 +19,7 @@ BUILD_TARGETS = {
 	"minecraft_behavior_pack": BuildTargetType(directory="minecraft_packs/behavior", list_property="resources"),
 
 	"script_source": BuildTargetType(directory="source", list_property="compile"),
-	"script_library": BuildTargetType(directory="library", list_property="compile"),
-	"native": BuildTargetType(directory="native", list_property="nativeDirs"),
-	"java": BuildTargetType(directory="java", list_property="javaDirs")
+	"script_library": BuildTargetType(directory="library", list_property="compile")
 }
 
 

@@ -85,37 +85,6 @@ def task(name, lock=None):
 	return decorator
 
 
-@task("compileNativeDebug", lock=["native", "cleanup", "push"])
-def task_compile_native_debug():
-	abi = get_make_config().get_value("make.debugAbi", None)
-	if abi is None:
-		abi = "armeabi-v7a"
-		print(f"WARNING: no make.debugAbi value in config, using {abi} as default")
-	from native.native_build import compile_all_using_make_config
-	return compile_all_using_make_config([abi])
-
-
-@task("compileNativeRelease", lock=["native", "cleanup", "push"])
-def task_compile_native_release():
-	abis = get_make_config().get_value("make.abis", [])
-	if abis is None or not isinstance(abis, list) or len(abis) == 0:
-		error(f"ERROR: no make.abis value in config")
-	from native.native_build import compile_all_using_make_config
-	return compile_all_using_make_config(abis)
-
-
-@task("compileJavaDebug", lock=["java", "cleanup", "push"])
-def task_compile_java_debug():
-	from java.java_build import compile_all_using_make_config
-	return compile_all_using_make_config()
-
-
-@task("compileJavaRelease", lock=["java", "cleanup", "push"])
-def task_compile_java_release():
-	from java.java_build import compile_all_using_make_config
-	return compile_all_using_make_config()
-
-
 @task("buildScripts", lock=["script", "cleanup", "push"])
 def task_build_scripts():
 	from script_build import build_all_scripts
@@ -173,13 +142,13 @@ def task_push_everything():
 	return push(get_make_config().get_path("output"))
 
 
-@task("clearOutput", lock=["assemble", "push", "native", "java"])
+@task("clearOutput", lock=["assemble", "push"])
 def task_clear_output():
 	clear_directory(get_make_config().get_path("output"))
 	return 0
 
 
-@task("excludeDirectories", lock=["push", "assemble", "native", "java"])
+@task("excludeDirectories", lock=["push", "assemble"])
 def task_exclude_directories():
 	config = get_make_config()
 	for path in config.get_value("make.excludeFromRelease", []):
@@ -191,7 +160,7 @@ def task_exclude_directories():
 	return 0
 
 
-@task("buildPackage", lock=["push", "assemble", "native", "java"])
+@task("buildPackage", lock=["push", "assemble"])
 def task_build_package():
 	import shutil
 	config = get_make_config()
@@ -296,13 +265,7 @@ def task_connect_to_adb():
 @task("cleanup")
 def task_cleanup():
 	config = get_make_config()
-	clear_directory(config.get_path("toolchain/build/gcc"))
-	clear_directory(config.get_path("toolchain/build/gradle"))
 	clear_directory(config.get_path("toolchain/build/project"))
-
-#                               not working
-#     import java.java_build
-#     java.java_build.cleanup_gradle_scripts()
 	return 0
 
 

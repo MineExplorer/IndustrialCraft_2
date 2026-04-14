@@ -21,12 +21,21 @@ class ItemPainter extends ItemCommon {
 				grid.checkAndRebuild();
 			}
 			EnergyGridBuilder.onWirePlaced(region, coords.x, coords.y, coords.z);
-			if (Game.isItemSpendingAllowed(player)) {
-				if (++item.data >= Item.getMaxDamage(item.id))
-					item.id = ItemID.icPainter;
-				Entity.setCarriedItem(player, item.id, 1, item.data);
-			}
-			SoundLib.playSoundAtBlock(coords, region.getDimension(), "Painter.ogg");
+			this.useItem(coords, item, player);
+		} else if (block.id == 35 && block.data != 15 - this.color){
+			const region = BlockSource.getDefaultForActor(player);
+			region.setBlock(coords.x, coords.y, coords.z, 35, 15 - this.color);
+			this.useItem(coords, item, player);
 		}
+	}
+	
+	useItem(coords: Callback.ItemUseCoordinates, item: ItemInstance, player: number) {
+		SoundLib.playSoundAtBlock(coords, Entity.getDimension(player), "Painter.ogg", 0.5);
+		if (!Game.isItemSpendingAllowed(player)) return;
+
+		if (++item.data >= Item.getMaxDamage(item.id)) {
+			item.id = ItemID.icPainter;
+		}
+		Entity.setCarriedItem(player, item.id, 1, item.data);
 	}
 }

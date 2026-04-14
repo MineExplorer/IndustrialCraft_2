@@ -78,7 +78,12 @@ machine/resource/AdvancedMiner.ts
 machine/resource/CropHarvester/**
 machine/resource/CropMatron/**
 
-machine/misc/**
+machine/misc/IndustrialWorkbench.ts
+machine/misc/AutoCrafter.ts
+machine/misc/Teleporter.ts
+machine/misc/Nuke.ts
+machine/misc/TeslaCoil.ts
+machine/misc/Lamp.ts
 
 items/ItemReinforcedDoor.ts
 

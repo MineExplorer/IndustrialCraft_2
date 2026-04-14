@@ -201,9 +201,6 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 			for (let i = 0; i < dictionaryData.length; i++) {
 				const modeData = dictionaryData[i];
 				const dictionary: MachineRecipe.ProcessingRecipeDictionary = MachineRecipeRegistry.getDictionary(modeData.key);
-				if (!dictionary) {
-					continue;
-				}
 				const recipes = dictionary.getAll();
 				recipes.forEach(recipe => {
 					const resultEntry = recipe.result[0];
@@ -320,7 +317,8 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 					input0: {x: 210, y: 229, size: 18 * 6},
 					input1: {x: 458, y: 229, size: 18 * 6, bitmap: "transparent_slot"},
 					output0: {x: 709, y: 229, size: 18 * 6},
-					progressScale: {type: "scale", x: 377, y: 229, scale: 6, direction: 0, value: 1, bitmap: "icpe.cutting_machine_bar_scale"}
+					progressScale: {type: "scale", x: 377, y: 229, scale: 6, direction: 0, value: 1, bitmap: "icpe.cutting_machine_bar_scale"},
+					textHardness: {type: "text", x: 377, y: 395, font: {size: 40, color: Color.WHITE, shadow: 0.5}}
 				}
 			});
 		}
@@ -342,18 +340,13 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 		getAllList(): RecipePattern[] {
 			const list: RecipePattern[] = [];
 			const dictionary: MachineRecipe.BlockCutterRecipeDictionary = MachineRecipeRegistry.getDictionary("cuttingMachine");
-			if (!dictionary) {
-				return list;
-			}
 			const recipes = dictionary.getAll().sort((recipe1, recipe2) =>
 				recipe1.hardnessLevel != recipe2.hardnessLevel ? recipe1.hardnessLevel - recipe2.hardnessLevel :
 				recipe1.result.id != recipe2.result.id ? recipe1.result.id - recipe2.result.id :
-				recipe1.source.id != recipe2.source.id ? recipe1.source.id - recipe2.source.id :
-				recipe1.source.data - recipe2.source.data
+				recipe1.result.data - recipe2.result.data
 			);
-			let blade: ItemInstance;
 			for (let recipe of recipes) {
-				blade = this.getBladeByHardness(recipe.hardnessLevel);
+				const blade = this.getBladeByHardness(recipe.hardnessLevel);
 				if (!blade) {
 					continue;
 				}
@@ -366,12 +359,16 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 						id: recipe.result.id,
 						count: recipe.result.count,
 						data: recipe.result.data || 0
-					}]
+					}],
+					hardness: recipe.hardnessLevel
 				});
 			}
 			return list;
 		}
 
+		onOpen(elements: java.util.HashMap<string, UI.Element>, recipe: RecipePattern): void {
+			elements.get("textHardness").setBinding("text", Translation.translate("description.blade_hardness").replace("%s", recipe.hardness));
+		}
 	}
 
 	api.RecipeTypeRegistry.register("icpe_cutting_machine", new BlockCuttingMachineRecipeView());

@@ -515,6 +515,7 @@ Translation.addTranslation("ic2.dir.west", {en: "west", ru: "западной", 
 
 // Recipe Viewer
 Translation.addTranslation("Heat: ", {ru: "Нагрев: ", es: "Calor: ", pt: "Calor: ", zh: "热量: "});
+Translation.addTranslation("description.blade_hardness", {en: "Blade hardness: %s", ru: "Твёрдость лезвия: %s", pt: "Dureza: %s", zh: "硬度: %s"});
 
 // Creative Groups
 Translation.addTranslation("Ores", {ru: "Руды", pt: "Minérios", zh: "矿石"});

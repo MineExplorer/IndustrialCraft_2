@@ -51,7 +51,7 @@ ItemRegistry.registerItem(new EUMeter());
 
 ItemRegistry.registerItem(new ElectricChainsaw("chainsaw", "chainsaw", { energyPerUse: 100, level: 3, efficiency: 12, damage: 6 }, 30000, 100, 1));
 
-ItemRegistry.registerItem(new ToolDrill("drill", "drill", { energyPerUse: 50, level: 3, efficiency: 8, damage: 3 }, 30000, 100, 1));
+ItemRegistry.registerItem(new ToolDrill("drill", "mining_drill", { energyPerUse: 50, level: 3, efficiency: 8, damage: 3 }, 30000, 100, 1));
 ItemRegistry.registerItem(new ToolDrill("diamondDrill", "diamond_drill", { energyPerUse: 80, level: 4, efficiency: 16, damage: 4 }, 30000, 100, 1));
 ItemRegistry.registerItem(new ToolDrillIridium());
 

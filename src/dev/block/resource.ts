@@ -1,12 +1,12 @@
 /// <reference path="./types/BlockResource.ts" />
 
-BlockRegistry.registerBlock(new BlockResource("blockCopper", "copper", 2));
-BlockRegistry.registerBlock(new BlockResource("blockTin", "tin", 2));
-BlockRegistry.registerBlock(new BlockResource("blockBronze", "bronze", 2));
-BlockRegistry.registerBlock(new BlockResource("blockLead", "lead", 2));
-BlockRegistry.registerBlock(new BlockResource("blockSteel", "steel", 2));
-BlockRegistry.registerBlock(new BlockResource("blockSilver", "silver", 3));
-BlockRegistry.registerBlock(new BlockResource("blockUranium", "uranium", 3));
+BlockRegistry.registerBlock(new BlockResource("blockCopper", "copper", ["block_copper"], 2));
+BlockRegistry.registerBlock(new BlockResource("blockTin", "tin", ["block_tin"], 2));
+BlockRegistry.registerBlock(new BlockResource("blockBronze", "bronze", ["block_bronze"], 2));
+BlockRegistry.registerBlock(new BlockResource("blockLead", "lead", ["block_lead"], 2));
+BlockRegistry.registerBlock(new BlockResource("blockSteel", "steel", ["block_steel"], 2));
+BlockRegistry.registerBlock(new BlockResource("blockSilver", "silver", ["block_silver"], 3));
+BlockRegistry.registerBlock(new BlockResource("blockUranium", "uranium", ["block_uranium_top", "block_uranium_top", "block_uranium_side"], 3));
 
 Item.addCreativeGroup("blockResource", Translation.translate("Resource Blocks"), [
 	BlockID.blockCopper,

@@ -43,6 +43,7 @@ Callback.addCallback("PreLoaded", function() {
 	dictionary.addRecipe({id: ItemID.fuelRodDepletedMOX2}, [{id: ItemID.smallPlutonium, count: 2}, {id: ItemID.plutonium, count: 6}, {id: ItemID.dustIron, count: 3}], 5000);
 	dictionary.addRecipe({id: ItemID.fuelRodDepletedMOX4}, [{id: ItemID.smallPlutonium, count: 4}, {id: ItemID.plutonium, count: 12}, {id: ItemID.dustIron, count: 6}], 5000);
 	dictionary.addRecipe({id: ItemID.rtgPellet}, [{id: ItemID.plutonium, count: 3}, {id: ItemID.dustIron, count: 54}], 5000);
+	dictionary.addRecipe({id: ItemID.dustBronze, count: 4}, [{id: ItemID.dustCopper, count: 3}, {id: ItemID.dustTin, count: 1}], 500);
 	dictionary.addRecipe({id: ItemID.dustClay, count: 4}, [{id: ItemID.dustSiliconDioxide, count: 1}], 250);
 });
 

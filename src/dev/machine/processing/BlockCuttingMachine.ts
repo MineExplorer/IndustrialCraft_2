@@ -105,7 +105,7 @@ namespace Machine {
 	export class BlockCutter extends ProcessingMachine {
 		defaultTier = 2;
 		defaultEnergyDemand = 12;
-		defaultEnergyStorage = 3600;
+		defaultEnergyStorage = 10000;
 		defaultProcessTime = 450;
 		speedModifier = 1;
 		upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];

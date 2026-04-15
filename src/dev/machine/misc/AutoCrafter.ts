@@ -67,7 +67,7 @@ namespace Machine {
         };
         defaultEnergyDemand = 16;
 		defaultTier = 2;
-		defaultEnergyStorage = 20000;
+		defaultEnergyStorage = 10000;
         defaultProcessTime = 40;
 		defaultDrop = BlockID.machineBlockAdvanced;
         upgrades = ["overclocker", "transformer", "energyStorage", "itemEjector", "itemPulling"];

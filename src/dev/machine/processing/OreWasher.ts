@@ -1,12 +1,12 @@
 /// <reference path="./BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("oreWasher", [
-	{name: "Ore Washing Plant", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], inCreative: true}
+	{name: "Ore Washing Plant", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.oreWasher, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.oreWasher, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.oreWasher, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front_active", 0], ["ore_washer_side_active", 0], ["ore_washer_side_active", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.oreWasher, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.oreWasher, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["ore_washer_front_active", 0], ["ore_washer_side_active", 0], ["ore_washer_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.oreWasher);
 
 ItemName.addTierTooltip("oreWasher", 1);

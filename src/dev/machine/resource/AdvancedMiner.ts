@@ -1,10 +1,10 @@
 BlockRegistry.createBlock("advancedMiner", [
-	{name: "Advanced Miner", texture: [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
+	{name: "Advanced Miner", texture: [["teleporter_top", 0], ["ic_machine_advanced_top", 0], ["ic_machine_advanced_side", 0], ["ic_machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.advancedMiner, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 0], ["ic_machine_advanced_top", 0], ["ic_machine_advanced_side", 0], ["ic_machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 1], ["ic_machine_advanced_top", 0], ["ic_machine_advanced_side", 0], ["ic_machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
 MachineRegistry.setStoragePlaceFunction("advancedMiner");
 
 ItemRegistry.setRarity(BlockID.advancedMiner, EnumRarity.RARE);

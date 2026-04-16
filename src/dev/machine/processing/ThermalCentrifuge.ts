@@ -1,12 +1,12 @@
 /// <reference path="./BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("thermalCentrifuge", [
-	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
+	{name: "Thermal Centrifuge", texture: [["ic_machine_advanced_bottom", 0], ["thermal_centrifuge_top", 0], ["ic_machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.thermalCentrifuge, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.thermalCentrifuge, 2, [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, 2, [["machine_advanced", 0], ["thermal_centrifuge_top_active", 0], ["machine_side", 0], ["thermal_centrifuge_front_active", 0], ["thermal_centrifuge_side_active", 0], ["thermal_centrifuge_side_active", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.thermalCentrifuge, 2, [["ic_machine_advanced_bottom", 0], ["thermal_centrifuge_top", 0], ["ic_machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, 2, [["ic_machine_advanced_bottom", 0], ["thermal_centrifuge_top_active", 0], ["ic_machine_back", 0], ["thermal_centrifuge_front_active", 0], ["thermal_centrifuge_side_active", 0], ["thermal_centrifuge_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.thermalCentrifuge);
 
 ItemName.addTierTooltip("thermalCentrifuge", 2);

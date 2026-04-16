@@ -1,12 +1,12 @@
 /// <reference path="../IHeatConsumer.ts" />
 
 BlockRegistry.createBlock("stirlingGenerator", [
-	{name: "Stirling Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator_back", 0], ["machine_heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+	{name: "Stirling Generator", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["stirling_generator_back", 0], ["machine_heat_pipe", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.stirlingGenerator, "stone", 1);
 
-TileRenderer.setHandAndUiModel(BlockID.stirlingGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator_back", 0], ["machine_heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.setStandardModelWithRotation(BlockID.stirlingGenerator, 0, [["machine_bottom", 0], ["machine_top", 0], ["stirling_generator_back", 0], ["machine_heat_pipe", 0], ["machine_side", 0], ["machine_side", 0]], true);
+TileRenderer.setHandAndUiModel(BlockID.stirlingGenerator, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["stirling_generator_back", 0], ["machine_heat_pipe", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.stirlingGenerator, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["stirling_generator_back", 0], ["machine_heat_pipe", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]], true);
 TileRenderer.setRotationFunction(BlockID.stirlingGenerator, true);
 
 Callback.addCallback("PreLoaded", function() {

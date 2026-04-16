@@ -1,5 +1,5 @@
 BlockRegistry.createBlock("reactorChamber", [
-	{name: "Reactor Chamber", texture: [["machine_bottom", 0], ["machine_top", 0], ["reactor_chamber", 0]], inCreative: true},
+	{name: "Reactor Chamber", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["reactor_chamber", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.reactorChamber, "stone", 1);
 ItemRegistry.setRarity(BlockID.reactorChamber, EnumRarity.UNCOMMON);

@@ -1,11 +1,11 @@
 BlockRegistry.createBlock("genWindmill", [
-	{name: "Wind Mill", texture: [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+	{name: "Wind Mill", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["windmill", 0], ["windmill", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.genWindmill, "stone", 1);
 ItemName.addProductionTooltip(BlockID.genWindmill, "EU", 0, EnergyProductionModifiers.WindGenerator);
 
-TileRenderer.setStandardModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill", 0], ["windmill", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.genWindmill, 2, [["machine_bottom", 0], ["machine_top", 0], ["windmill_rotating", 0], ["windmill_rotating", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.genWindmill, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["windmill", 0], ["windmill", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.genWindmill, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["windmill_rotating", 0], ["windmill_rotating", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.genWindmill);
 
 Callback.addCallback("PreLoaded", function() {

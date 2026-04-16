@@ -1,11 +1,11 @@
 BlockRegistry.createBlock("blastFurnace", [
-	{name: "Industrial Blast Furnace", texture: [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["machine_heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
+	{name: "Industrial Blast Furnace", texture: [["blast_furnace_bottom", 0], ["blast_furnace_side", 0], ["ic_machine_back", 0], ["machine_heat_pipe", 0], ["blast_furnace_side", 0], ["blast_furnace_side", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.blastFurnace, "stone", 1);
 
-TileRenderer.setHandAndUiModel(BlockID.blastFurnace, 0, [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["machine_heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
-TileRenderer.setStandardModelWithRotation(BlockID.blastFurnace, 0, [["machine_advanced", 0], ["ind_furnace_side", 0], ["machine_back", 0], ["machine_heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);
-TileRenderer.registerModelWithRotation(BlockID.blastFurnace, 0, [["machine_advanced", 0], ["ind_furnace_side", 1], ["machine_back", 0], ["machine_heat_pipe_active", 0], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], true);
+TileRenderer.setHandAndUiModel(BlockID.blastFurnace, 0, [["blast_furnace_bottom", 0], ["blast_furnace_side", 0], ["ic_machine_back", 0], ["machine_heat_pipe", 0], ["blast_furnace_side", 0], ["blast_furnace_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.blastFurnace, 0, [["blast_furnace_bottom", 0], ["blast_furnace_side", 0], ["ic_machine_back", 0], ["machine_heat_pipe", 0], ["blast_furnace_side", 0], ["blast_furnace_side", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.blastFurnace, 0, [["blast_furnace_bottom", 0], ["blast_furnace_side", 1], ["ic_machine_back", 0], ["machine_heat_pipe_active", 0], ["blast_furnace_side_active", 0], ["blast_furnace_side_active", 0]], true);
 TileRenderer.setRotationFunction(BlockID.blastFurnace, true);
 
 ItemName.addConsumptionTooltip("blastFurnace", "HU", 1, 100);

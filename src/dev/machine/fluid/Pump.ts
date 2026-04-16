@@ -1,11 +1,11 @@
 BlockRegistry.createBlock("pump", [
-	{name: "Pump", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_bottom", 0], ["pump_side", 0], ["pump_side", 0]], inCreative: true}
+	{name: "Pump", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["pump_bottom", 0], ["pump_side", 0], ["pump_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.pump, "stone", 1);
 
-TileRenderer.setHandAndUiModel(BlockID.pump, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_bottom", 0], ["pump_side", 0], ["pump_side", 0]]);
-TileRenderer.setStandardModelWithRotation(BlockID.pump, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_bottom", 0], ["pump_side", 0], ["pump_side", 0]], true);
-TileRenderer.registerModelWithRotation(BlockID.pump, 0, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["pump_bottom", 1], ["pump_side", 1], ["pump_side", 1]], true);
+TileRenderer.setHandAndUiModel(BlockID.pump, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["pump_bottom", 0], ["pump_side", 0], ["pump_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.pump, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["pump_bottom", 0], ["pump_side", 0], ["pump_side", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.pump, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["pump_bottom", 1], ["pump_side", 1], ["pump_side", 1]], true);
 TileRenderer.setRotationFunction(BlockID.pump, true);
 
 ItemName.addTierTooltip("pump", 1);

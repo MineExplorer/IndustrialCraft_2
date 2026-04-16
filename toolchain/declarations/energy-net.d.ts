@@ -169,8 +169,8 @@ declare abstract class EnergyNode {
     onOverload(packetSize: number): void;
     abstract getFreeCapacity(energyName: string): number;
     isConductor(energyName: string): boolean;
-    canReceiveEnergy(side: number, energyName: string): boolean;
-    canEmitEnergy(side: number, energyName: string): boolean;
+    canReceiveEnergy(side: number, energyName: string, node: EnergyNode): boolean;
+    canEmitEnergy(side: number, energyName: string, node: EnergyNode): boolean;
     canConductEnergy(coord1: Vector, coord2: Vector, side: number): boolean;
     isCompatible(node: EnergyNode): boolean;
     getActiveReceivers(): EnergyNode[];
@@ -247,8 +247,8 @@ declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     receiveEnergy(amount: number, packet: EnergyPacket): number;
     getFreeCapacity(energyName: string): number;
     isConductor(energyName: string): boolean;
-    canReceiveEnergy(side: number, energyName: string): boolean;
-    canEmitEnergy(side: number, energyName: string): boolean;
+    canReceiveEnergy(side: number, energyName: string, node: EnergyNode): boolean;
+    canEmitEnergy(side: number, energyName: string, node: EnergyNode): boolean;
     resetConnections(): void;
     add(amount: number, power?: number): number;
     addToBuffer(energyName: string, amount: number, size: number, power?: number): number;
@@ -311,13 +311,13 @@ interface EnergyTile extends TileEntity {
      * @param side block side
      * @param energyName energy type name
      */
-    canReceiveEnergy?(side: number, energyName: string): boolean;
+    canReceiveEnergy?(side: number, energyName: string, node: EnergyNode): boolean;
     /**
      * Specifies from which sides the tile entity can emit energy. The tile entity must recreate its connections if this value changes.
      * @param side block side
      * @param energyName energy type name
      */
-    canEmitEnergy?(side: number, energyName: string): boolean;
+    canEmitEnergy?(side: number, energyName: string, node: EnergyNode): boolean;
     /** @deprecated use canEmitEnergy instead */
     canExtractEnergy?(side: number, energyName: string): boolean;
 }

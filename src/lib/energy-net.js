@@ -441,10 +441,10 @@ var EnergyNode = /** @class */ (function () {
     EnergyNode.prototype.isConductor = function (energyName) {
         return true;
     };
-    EnergyNode.prototype.canReceiveEnergy = function (side, energyName) {
+    EnergyNode.prototype.canReceiveEnergy = function (side, energyName, node) {
         return true;
     };
-    EnergyNode.prototype.canEmitEnergy = function (side, energyName) {
+    EnergyNode.prototype.canEmitEnergy = function (side, energyName, node) {
         return true;
     };
     EnergyNode.prototype.canConductEnergy = function (coord1, coord2, side) {
@@ -548,10 +548,10 @@ var EnergyGrid = /** @class */ (function (_super) {
         if (node && !this.isCompatible(node))
             return;
         if (node instanceof EnergyTileNode) {
-            if (node.canReceiveEnergy(side, this.baseEnergy)) {
+            if (node.canReceiveEnergy(side, this.baseEnergy, this)) {
                 this.addConnection(node);
             }
-            if (node.canEmitEnergy(side, this.baseEnergy)) {
+            if (node.canEmitEnergy(side, this.baseEnergy, this)) {
                 node.addConnection(this);
             }
         }
@@ -699,7 +699,7 @@ var EnergyGrid = /** @class */ (function (_super) {
             return;
         if (node instanceof EnergyTileNode) {
             var tileSide = side ^ 1;
-            blockNode.linkTile(node, node.canEmitEnergy(tileSide, this.baseEnergy), node.canReceiveEnergy(tileSide, this.baseEnergy));
+            blockNode.linkTile(node, node.canEmitEnergy(tileSide, this.baseEnergy, this), node.canReceiveEnergy(tileSide, this.baseEnergy, this));
             return;
         }
         if (node instanceof EnergyGrid) {
@@ -921,11 +921,11 @@ var EnergyTileNode = /** @class */ (function (_super) {
     EnergyTileNode.prototype.isConductor = function (energyName) {
         return this.tileEntity.isConductor(energyName);
     };
-    EnergyTileNode.prototype.canReceiveEnergy = function (side, energyName) {
-        return this.tileEntity.canReceiveEnergy(side, energyName);
+    EnergyTileNode.prototype.canReceiveEnergy = function (side, energyName, node) {
+        return this.tileEntity.canReceiveEnergy(side, energyName, node);
     };
-    EnergyTileNode.prototype.canEmitEnergy = function (side, energyName) {
-        return this.tileEntity.canEmitEnergy(side, energyName);
+    EnergyTileNode.prototype.canEmitEnergy = function (side, energyName, node) {
+        return this.tileEntity.canEmitEnergy(side, energyName, node);
     };
     EnergyTileNode.prototype.resetConnections = function () {
         this.resetAdjacentLinks();
@@ -1085,7 +1085,7 @@ var EnergyGridBuilder;
         var blockNode = grid.blockNodes.get(x, y, z);
         if (blockNode) {
             var energyType = grid.baseEnergy;
-            blockNode.linkTile(tileNode, tileNode.canEmitEnergy(side, energyType), tileNode.canReceiveEnergy(side, energyType));
+            blockNode.linkTile(tileNode, tileNode.canEmitEnergy(side, energyType, grid), tileNode.canReceiveEnergy(side, energyType, grid));
         }
     }
     function buildGridForTile(te) {
@@ -1098,8 +1098,8 @@ var EnergyGridBuilder;
                     connectTileToGridBlock(node, coords.x, coords.y, coords.z, side, tileNode);
                 }
                 var energyType = node.baseEnergy;
-                var canOutput = tileNode.canEmitEnergy(side, energyType) && node.canReceiveEnergy(side ^ 1, energyType);
-                var canInput = tileNode.canReceiveEnergy(side, energyType) && node.canEmitEnergy(side ^ 1, energyType);
+                var canOutput = tileNode.canEmitEnergy(side, energyType, node) && node.canReceiveEnergy(side ^ 1, energyType, tileNode);
+                var canInput = tileNode.canReceiveEnergy(side, energyType, node) && node.canEmitEnergy(side ^ 1, energyType, tileNode);
                 if (node instanceof EnergyTileNode && (canInput || canOutput)) {
                     tileNode.linkTile(node, canInput, canOutput);
                 }

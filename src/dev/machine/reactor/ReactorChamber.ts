@@ -32,7 +32,7 @@ Callback.addCallback("PreLoaded", function() {
 
 
 namespace Machine {
-	export class ReactorChamber extends Generator {
+	export class ReactorChamber extends ElectricMachine {
 		data: {
 			energy: number,
 			corePos: Vector,
@@ -93,8 +93,12 @@ namespace Machine {
 			}
 			return false;
 		}
-
+		
 		isConductor(): boolean {
+			return true;
+		}
+
+		canEmitEnergy(): boolean {
 			return true;
 		}
 	}

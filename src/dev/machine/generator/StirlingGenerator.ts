@@ -48,6 +48,10 @@ namespace Machine {
 			}
 			return 0;
 		}
+		
+		getEnergyCapacity(): number {
+			return this.data.energy;
+		}
 
 		energyTick(type: string, src: EnergyTileNode): void {
 			if (src.add(this.data.energy) < this.data.energy) {

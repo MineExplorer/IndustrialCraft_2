@@ -6,7 +6,7 @@ BlockRegistry.createBlock("inductionFurnace", [
 BlockRegistry.setBlockMaterial(BlockID.inductionFurnace, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.inductionFurnace, 2, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.inductionFurnace, 2, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
+TileRenderer.registerModelWithRotation(BlockID.inductionFurnace, 2, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front_active", 0], ["ind_furnace_side_active", 0], ["ind_furnace_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.inductionFurnace);
 
 ItemRegistry.setRarity(BlockID.inductionFurnace, EnumRarity.UNCOMMON);

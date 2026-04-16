@@ -6,7 +6,7 @@ BlockRegistry.createBlock("extractor", [
 BlockRegistry.setBlockMaterial(BlockID.extractor, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.extractor, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 0], ["extractor_side", 0], ["extractor_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.extractor, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front", 1], ["extractor_side", 1], ["extractor_side", 1]]);
+TileRenderer.registerModelWithRotation(BlockID.extractor, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["extractor_front_active", 0], ["extractor_side_active", 0], ["extractor_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.extractor);
 
 ItemName.addTierTooltip("extractor", 1);

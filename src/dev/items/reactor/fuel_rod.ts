@@ -44,7 +44,6 @@ RadiationAPI.setRadioactivity(ItemID.fuelRodDepletedMOX2, 10);
 RadiationAPI.setRadioactivity(ItemID.fuelRodDepletedMOX4, 10);
 
 Item.addCreativeGroup("ic2_fuelRod", Translation.translate("Nuclear Fuel Rods"), [
-	ItemID.fuelRod,
 	ItemID.fuelRodUranium,
 	ItemID.fuelRodUranium2,
 	ItemID.fuelRodUranium4,
@@ -56,7 +55,8 @@ Item.addCreativeGroup("ic2_fuelRod", Translation.translate("Nuclear Fuel Rods"),
 	ItemID.fuelRodDepletedUranium4,
 	ItemID.fuelRodDepletedMOX,
 	ItemID.fuelRodDepletedMOX2,
-	ItemID.fuelRodDepletedMOX4
+	ItemID.fuelRodDepletedMOX4,
+	ItemID.fuelRod
 ]);
 
 Recipes.addShaped({id: ItemID.fuelRodUranium2, count: 1, data: 0}, [

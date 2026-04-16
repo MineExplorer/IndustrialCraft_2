@@ -1,10 +1,10 @@
 BlockRegistry.createBlock("luminator", [
-	{name: "Luminator", texture: [["luminator", 0]], inCreative: false},
-	{name: "Luminator", texture: [["luminator", 0]], inCreative: true},
-	{name: "Luminator", texture: [["luminator", 0]], inCreative: false},
-	{name: "Luminator", texture: [["luminator", 0]], inCreative: false},
-	{name: "Luminator", texture: [["luminator", 0]], inCreative: false},
-	{name: "Luminator", texture: [["luminator", 0]], inCreative: false}
+	{name: "Luminator", texture: [["ic_luminator", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator", 0]], inCreative: true},
+	{name: "Luminator", texture: [["ic_luminator", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator", 0]], inCreative: false}
 ], {destroyTime: 2, explosionResistance: 0.5, renderLayer: 7});
 Block.setBlockMaterial(BlockID.luminator, "stone", 1);
 
@@ -16,12 +16,12 @@ Block.setBlockShape(BlockID.luminator, {x: 15/16, y: 0, z: 0}, {x: 1, y: 1, z: 1
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1/16, y: 1, z: 1}, 5);
 
 BlockRegistry.createBlock("luminator_on", [
-	{name: "Luminator", texture: [["luminator", 1]], inCreative: false},
-	{name: "Luminator", texture: [["luminator", 1]], inCreative: false},
-	{name: "Luminator", texture: [["luminator", 1]], inCreative: false},
-	{name: "Luminator", texture: [["luminator", 1]], inCreative: false},
-	{name: "Luminator", texture: [["luminator", 1]], inCreative: false},
-	{name: "Luminator", texture: [["luminator", 1]], inCreative: false}
+	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false}
 ], {
 	destroyTime: 2,
 	explosionResistance: 0.5,

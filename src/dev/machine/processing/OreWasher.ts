@@ -6,7 +6,7 @@ BlockRegistry.createBlock("oreWasher", [
 BlockRegistry.setBlockMaterial(BlockID.oreWasher, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.oreWasher, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 0], ["ore_washer_side", 0], ["ore_washer_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.oreWasher, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front", 1], ["ore_washer_side", 1], ["ore_washer_side", 1]]);
+TileRenderer.registerModelWithRotation(BlockID.oreWasher, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["ore_washer_front_active", 0], ["ore_washer_side_active", 0], ["ore_washer_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.oreWasher);
 
 ItemName.addTierTooltip("oreWasher", 1);

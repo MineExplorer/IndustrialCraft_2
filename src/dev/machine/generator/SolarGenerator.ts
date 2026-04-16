@@ -1,5 +1,5 @@
 BlockRegistry.createBlock("solarPanel", [
-	{name: "Solar Panel", texture: [["machine_bottom", 0], ["solar_panel", 0], ["machine", 0], ["machine", 0], ["machine", 0], ["machine", 0]], inCreative: true}
+	{name: "Solar Panel", texture: [["machine_bottom", 0], ["solar_panel_top", 0], ["machine", 0], ["machine", 0], ["machine", 0], ["machine", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.solarPanel, "stone", 1);
 ItemName.addProductionTooltip(BlockID.solarPanel, "EU", EnergyProductionModifiers.SolarPanel);

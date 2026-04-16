@@ -5,7 +5,7 @@ BlockRegistry.setBlockMaterial(BlockID.semifluidGenerator, "stone", 1);
 ItemName.addProductionTooltip(BlockID.semifluidGenerator, "EU", 8, 16);
 
 TileRenderer.setStandardModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
+TileRenderer.registerModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front_active", 0], ["semifluid_generator_side_active", 0], ["semifluid_generator_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.semifluidGenerator);
 
 Callback.addCallback("PreLoaded", function() {

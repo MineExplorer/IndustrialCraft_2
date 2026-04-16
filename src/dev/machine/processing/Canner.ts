@@ -6,7 +6,7 @@ BlockRegistry.createBlock("canner", [
 BlockRegistry.setBlockMaterial(BlockID.canner, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.canner, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 0], ["canner_side", 0], ["canner_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.canner, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front", 1], ["canner_side", 1], ["canner_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.canner, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["canner_front_active", 0], ["canner_left_active", 0], ["canner_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.canner);
 
 ItemName.addTierTooltip("canner", 1);

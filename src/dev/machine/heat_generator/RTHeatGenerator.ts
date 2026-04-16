@@ -1,12 +1,12 @@
 BlockRegistry.createBlock("rtHeatGenerator", [
-	{name: "Radioisotope Heat Generator", texture: [["machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], inCreative: true},
+	{name: "Radioisotope Heat Generator", texture: [["machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["machine_heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.rtHeatGenerator, "stone", 1);
 ItemName.addProductionTooltip(BlockID.rtHeatGenerator, "HU", 2 * EnergyProductionModifiers.RTGenerator, 64 * EnergyProductionModifiers.RTGenerator);
 
-TileRenderer.setHandAndUiModel(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
-TileRenderer.setStandardModelWithRotation(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], true);
-TileRenderer.registerModelWithRotation(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top_active", 0], ["rt_generator_side", 0], ["heat_pipe", 1], ["rt_generator_side", 0], ["rt_generator_side", 0]], true);
+TileRenderer.setHandAndUiModel(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["machine_heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["machine_heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.rtHeatGenerator, 0, [["machine_bottom", 0], ["rt_heat_generator_top_active", 0], ["rt_generator_side", 0], ["machine_heat_pipe_active", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], true);
 TileRenderer.setRotationFunction(BlockID.rtHeatGenerator, true);
 
 Callback.addCallback("PreLoaded", function() {

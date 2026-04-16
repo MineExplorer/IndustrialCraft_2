@@ -1,12 +1,12 @@
 BlockRegistry.createBlock("electricHeatGenerator", [
-	{name: "Electric Heater", texture: [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true},
+	{name: "Electric Heater", texture: [["machine_bottom", 0], ["electric_heat_generator", 0], ["heat_generator_side", 0], ["machine_heat_pipe", 0], ["electric_heat_generator", 0], ["electric_heat_generator", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.electricHeatGenerator, "stone", 1);
 ItemName.addTierTooltip(BlockID.electricHeatGenerator, 4);
 ItemName.addProductionTooltip(BlockID.electricHeatGenerator, "HU", 1, 100);
 
-TileRenderer.setStandardModelWithRotation(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 0], ["heat_generator_side", 0], ["heat_pipe", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], true);
-TileRenderer.registerModelWithRotation(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["ind_furnace_side", 1], ["heat_generator_side", 1], ["heat_pipe", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]], true);
+TileRenderer.setStandardModelWithRotation(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["electric_heat_generator", 0], ["heat_generator_side", 0], ["machine_heat_pipe", 0], ["electric_heat_generator", 0], ["electric_heat_generator", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.electricHeatGenerator, 0, [["machine_bottom", 0], ["electric_heat_generator_active", 0], ["heat_generator_side", 1], ["machine_heat_pipe_active", 0], ["electric_heat_generator_active", 0], ["electric_heat_generator_active", 0]], true);
 TileRenderer.setRotationFunction(BlockID.electricHeatGenerator, true);
 
 Callback.addCallback("PreLoaded", function() {

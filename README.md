@@ -1,10 +1,10 @@
 # IndustrialCraft2 PE
-Port of IC2 Experimental from MC Java Edition to Inner Core modloader for Minecraft on Android
+A port of IC2 Experimental from Minecraft Java to the Inner Core modloader for Minecraft on Android.
 
 ## How to play?
-1. Install Horizon app in Play Market: https://play.google.com/store/apps/details?id=com.zheka.horizon
-2. Open app and install Inner Core
-3. Install mod in Mod manager or download it from the [github release](https://github.com/MineExplorer/IndustrialCraft_2/releases) and extract it to Inner Core mod folder
+1. Install Horizon app from the [apk](https://gitlab.com/zhekasmirnov/horizon-cloud-config/-/raw/master/horizon/app-x64-release.apk?inline=false)
+2. Open app and install the Inner Core pack
+3. Install the mod via the Mod Manager, or download it from the [GitHub release](https://github.com/MineExplorer/IndustrialCraft_2/releases) and extract it into the Inner Core mods folder.
 
 ## Discord server
 Join our [Discord server](https://discord.gg/jPFntnP)!
@@ -22,15 +22,15 @@ IndustrialCraft PE uses a lightweight modding toolchain optimized for TypeScript
 
 ### Building
 1. Clone repository
-2. Download declarations using `Download Declarations` task in VS Code (Ctrl+Shift+B)
-3. Build project using `Build Everything` task
-4. You're ready to work! Use `Build and Push Everything` task to test your changes in the game.
+2. Execute the `Download Declarations` task in VS Code (Ctrl+Shift+B)
+3. Build project using the `Build Everything` task
+4. You're ready to work! Use the `Build and Push Everything` task to test your changes on a phone or emulator.
 
 ## Note
-I'm not associated with IC2 developer team which develops original mod for MC Java Edition, this is unofficial port of the mod to Inner Core modloader.
-All rights for textures from original IC2 are reserved by IC2 developer team.
+I'm not associated with the IC2 developer team which develops the original mod for Minecraft Java, this is an unofficial port of the mod to the Inner Core modloader.
+All rights for textures from the original IC2 are reserved by the IC2 developer team.
 
 ## Credits
 Thanks to:
-* Zheka Smirnov for Inner Core modloader and the first version of this mod.
-* all [contributors](https://github.com/MineExplorer/IndustrialCraft_2/graphs/contributors)
+* Zheka Smirnov for the Inner Core modloader and the first version of this mod.
+* All [contributors](https://github.com/MineExplorer/IndustrialCraft_2/graphs/contributors)

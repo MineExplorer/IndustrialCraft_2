@@ -31,14 +31,14 @@ namespace Machine {
 			const maxPacketSize = this.getMaxPacketSize();
 			if (this.data.increaseMode) {
 				if (this.data.energy >= maxPacketSize) {
-					const energyAdd = src.add(maxPacketSize);
-					this.data.energy -= energyAdd;
+					const energyOut = maxPacketSize - src.add(maxPacketSize);
+					this.data.energy -= energyOut;
 				}
 			}
 			else {
 				if (this.data.energy >= maxPacketSize / 4) {
-					const energyAdd = src.add(this.data.energy, maxPacketSize / 4);
-					this.data.energy -= energyAdd;
+					const energyOut = this.data.energy - src.add(this.data.energy, maxPacketSize / 4);
+					this.data.energy -= energyOut;
 				}
 			}
 		}

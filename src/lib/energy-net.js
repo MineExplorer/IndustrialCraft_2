@@ -376,8 +376,8 @@ var EnergyNode = /** @class */ (function () {
     EnergyNode.prototype.add = function (amount, power) {
         if (amount == 0)
             return 0;
-        var add = this.addPacket(this.baseEnergy, amount, power);
-        return amount - add;
+        var added = this.addPacket(this.baseEnergy, amount, power);
+        return amount - added;
     };
     EnergyNode.prototype.addPacket = function (energyName, amount, power, transferMode, receivers) {
         if (power === void 0) { power = amount; }
@@ -505,13 +505,6 @@ var EnergyGrid = /** @class */ (function (_super) {
         _this.region = region;
         return _this;
     }
-    EnergyGrid.prototype.isCompatible = function (node) {
-        for (var energyType in this.energyTypes) {
-            if (node.energyTypes[energyType])
-                return true;
-        }
-        return false;
-    };
     EnergyGrid.prototype.addCoords = function (x, y, z, tile) {
         return this.blockNodes.add(x, y, z, tile);
     };
@@ -622,6 +615,16 @@ var EnergyGrid = /** @class */ (function (_super) {
     EnergyGrid.prototype.getFreeCapacity = function (energyName) {
         var freeEnergy = this.receivers.length == 0 ? 0 : this.energyIn || 1;
         return this.freeCapacity = freeEnergy;
+    };
+    EnergyGrid.prototype.receiveEnergy = function (amount, packet) {
+        // If the packet is of different energy type, convert it to this grid's energy type
+        if (packet.energyName != this.baseEnergy) {
+            var energyRatio = EnergyRegistry.getValueRatio(packet.energyName, this.baseEnergy);
+            var newPacket = new EnergyPacket(this.baseEnergy, packet.size * energyRatio, packet.source, packet.transferMode);
+            newPacket.nodeList = packet.nodeList;
+            return _super.prototype.receiveEnergy.call(this, amount * energyRatio, newPacket);
+        }
+        return _super.prototype.receiveEnergy.call(this, amount, packet);
     };
     EnergyGrid.prototype.transferBuffer = function (energyName) {
         if (this.entries.length == 0 || this.receivers.length == 0)
@@ -817,7 +820,6 @@ var EnergyTileNode = /** @class */ (function (_super) {
         _this.kind = "tile";
         _this.initialized = false;
         _this.adjacentLinks = [];
-        _this.gridConnectionsCount = 0;
         _this.energyAmounts = {};
         _this.tileEntity = parent;
         if (parent.isGenerator()) {
@@ -845,24 +847,6 @@ var EnergyTileNode = /** @class */ (function (_super) {
     };
     EnergyTileNode.prototype.hasCoords = function (x, y, z) {
         return this.tileEntity.x == x && this.tileEntity.y == y && this.tileEntity.z == z;
-    };
-    EnergyTileNode.prototype.addConnection = function (node) {
-        if (_super.prototype.addConnection.call(this, node)) {
-            this.gridConnectionsCount = this.receivers.filter(function (n) { return n.kind == "grid"; }).length;
-            return true;
-        }
-        return false;
-    };
-    /**
-     * Removes output connection to specified node
-     * @param node receiver node
-     */
-    EnergyTileNode.prototype.removeConnection = function (node) {
-        if (_super.prototype.removeConnection.call(this, node)) {
-            this.gridConnectionsCount = this.receivers.filter(function (n) { return n.kind == "grid"; }).length;
-            return true;
-        }
-        return false;
     };
     EnergyTileNode.prototype.linkTile = function (tileNode, canInput, canOutput) {
         if (this.addAdjacentLink(tileNode, canInput, canOutput)) {
@@ -942,33 +926,61 @@ var EnergyTileNode = /** @class */ (function (_super) {
         var leftAmount = amount;
         var activeReceivers = this.getActiveReceivers();
         var tileReceivers = activeReceivers.filter(function (n) { return n.kind == "tile"; });
-        var gridConnectionsCount = activeReceivers.length - tileReceivers.length;
+        var gridReceivers = activeReceivers.filter(function (n) { return n.kind == "grid"; });
         // try to split energy evenly between grids and direct connections
-        if (gridConnectionsCount > 0 && tileReceivers.length > 0) {
-            var energyAdd = Math.floor(leftAmount * gridConnectionsCount / activeReceivers.length);
-            if (energyAdd > 0) {
-                energyOut = this.addToBuffer(this.baseEnergy, energyAdd, amount, power);
-                leftAmount -= energyOut;
-            }
+        if (gridReceivers.length > 0 && tileReceivers.length > 0) {
+            var gridEnergy = Math.floor(leftAmount * gridReceivers.length / activeReceivers.length);
+            var energyAdded = this.addToGridBuffers(gridEnergy, amount, power, gridReceivers);
+            energyOut += energyAdded;
+            leftAmount -= energyAdded;
         }
         if (tileReceivers.length > 0) {
-            energyOut += this.addPacket(this.baseEnergy, leftAmount, power, this.defaultTransferMode, tileReceivers);
-            leftAmount -= energyOut;
+            var energyAdded = this.addPacket(this.baseEnergy, leftAmount, power, this.defaultTransferMode, tileReceivers);
+            energyOut += energyAdded;
+            leftAmount -= energyAdded;
         }
-        if (gridConnectionsCount > 0 && leftAmount > 0) {
-            energyOut += this.addToBuffer(this.baseEnergy, leftAmount, amount, power);
+        if (gridReceivers.length > 0 && leftAmount > 0) {
+            energyOut += this.addToGridBuffers(leftAmount, amount, power, gridReceivers);
         }
         return amount - energyOut;
     };
-    EnergyTileNode.prototype.addToBuffer = function (energyName, amount, size, power) {
-        if (power === void 0) { power = size; }
+    EnergyTileNode.prototype.addToGridBuffers = function (amount, size, power, gridReceivers) {
+        var energyOut = 0;
+        var _loop_1 = function (energyName) {
+            var gridReceiversCount = gridReceivers.reduce(function (count, n) {
+                return n.baseEnergy == energyName ? count + 1 : count;
+            }, 0);
+            if (gridReceiversCount == 0)
+                return "continue";
+            var energyAdded = void 0;
+            if (energyName != this_1.baseEnergy) {
+                var energyRatio = EnergyRegistry.getValueRatio(this_1.baseEnergy, energyName);
+                energyAdded = this_1.addToBuffer(energyName, amount * energyRatio, size * energyRatio, power * energyRatio, gridReceiversCount);
+            }
+            else {
+                energyAdded = this_1.addToBuffer(energyName, amount, size, power, gridReceiversCount);
+            }
+            energyOut += energyAdded;
+            amount -= energyAdded;
+            if (amount <= 0)
+                return "break";
+        };
+        var this_1 = this;
+        for (var energyName in this.energyTypes) {
+            var state_1 = _loop_1(energyName);
+            if (state_1 === "break")
+                break;
+        }
+        return energyOut;
+    };
+    EnergyTileNode.prototype.addToBuffer = function (energyName, amount, size, power, sizeMultiplier) {
         var energyBuffer = this.getBuffer(energyName, true);
-        size *= this.gridConnectionsCount; // reserve space for 1 packet per connected grid
+        size *= sizeMultiplier; // reserve space for 1 packet per connected grid
         if (energyBuffer.amount < size) {
             var energyAdd = Math.min(size - energyBuffer.amount, amount);
             energyBuffer.amount += energyAdd;
             energyBuffer.power = power;
-            energyBuffer.packetSize = Math.ceil(energyBuffer.amount / this.gridConnectionsCount);
+            energyBuffer.packetSize = Math.ceil(energyBuffer.amount / sizeMultiplier);
             this.currentPower = Math.max(this.currentPower, power);
             this.currentOut += energyAdd;
             return energyAdd;

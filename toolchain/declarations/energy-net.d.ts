@@ -191,7 +191,6 @@ declare class EnergyGrid extends EnergyNode {
     idleTicks: number;
     energyPotential: number;
     constructor(energyType: EnergyType, maxValue: number, wireID: number, region: BlockSource);
-    isCompatible(node: EnergyNode): boolean;
     addCoords(x: number, y: number, z: number, tile: Tile): BlockNode;
     hasCoords(x: number, y: number, z: number): boolean;
     /**
@@ -208,6 +207,7 @@ declare class EnergyGrid extends EnergyNode {
      */
     checkAndRebuild(): void;
     getFreeCapacity(energyName: string): number;
+    receiveEnergy(amount: number, packet: EnergyPacket): number;
     transferBuffer(energyName: string): void;
     tick(): void;
     toString(): string;
@@ -225,7 +225,6 @@ declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     tileEntity: EnergyTile;
     initialized: boolean;
     adjacentLinks: AdjacentNodeLink[];
-    gridConnectionsCount: number;
     energyAmounts: EnergyBuffer;
     constructor(energyType: EnergyType, parent: EnergyTile);
     static createFor(tileEntity: EnergyTile, energyTypes: {
@@ -233,12 +232,6 @@ declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     }): EnergyTileNode;
     getParent(): EnergyTile;
     hasCoords(x: number, y: number, z: number): boolean;
-    addConnection(node: EnergyNode): boolean;
-    /**
-     * Removes output connection to specified node
-     * @param node receiver node
-     */
-    removeConnection(node: EnergyNode): boolean;
     linkTile(tileNode: EnergyTileNode, canInput: boolean, canOutput: boolean): void;
     unlinkTile(tileNode: EnergyTileNode): void;
     addAdjacentLink(node: EnergyGraphNode, canInput: boolean, canOutput: boolean): boolean;
@@ -251,7 +244,8 @@ declare class EnergyTileNode extends EnergyNode implements EnergyGraphNode {
     canEmitEnergy(side: number, energyName: string, node: EnergyNode): boolean;
     resetConnections(): void;
     add(amount: number, power?: number): number;
-    addToBuffer(energyName: string, amount: number, size: number, power?: number): number;
+    addToGridBuffers(amount: number, size: number, power: number, gridReceivers: EnergyNode[]): number;
+    addToBuffer(energyName: string, amount: number, size: number, power: number, sizeMultiplier: number): number;
     getBuffer(energyName: string, createIfNotFound?: boolean): {
         amount: number;
         power: number;

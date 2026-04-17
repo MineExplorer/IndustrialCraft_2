@@ -622,7 +622,7 @@ var EnergyGrid = /** @class */ (function (_super) {
             var energyRatio = EnergyRegistry.getValueRatio(packet.energyName, this.baseEnergy);
             var newPacket = new EnergyPacket(this.baseEnergy, packet.size * energyRatio, packet.source, packet.transferMode);
             newPacket.nodeList = packet.nodeList;
-            return _super.prototype.receiveEnergy.call(this, amount * energyRatio, newPacket);
+            return _super.prototype.receiveEnergy.call(this, amount * energyRatio, newPacket) / energyRatio;
         }
         return _super.prototype.receiveEnergy.call(this, amount, packet);
     };
@@ -925,22 +925,19 @@ var EnergyTileNode = /** @class */ (function (_super) {
         var energyOut = 0;
         var leftAmount = amount;
         var activeReceivers = this.getActiveReceivers();
+        // Send energy to nearby tiles
         var tileReceivers = activeReceivers.filter(function (n) { return n.kind == "tile"; });
-        var gridReceivers = activeReceivers.filter(function (n) { return n.kind == "grid"; });
-        // try to split energy evenly between grids and direct connections
-        if (gridReceivers.length > 0 && tileReceivers.length > 0) {
-            var gridEnergy = Math.floor(leftAmount * gridReceivers.length / activeReceivers.length);
-            var energyAdded = this.addToGridBuffers(gridEnergy, amount, power, gridReceivers);
-            energyOut += energyAdded;
-            leftAmount -= energyAdded;
-        }
         if (tileReceivers.length > 0) {
             var energyAdded = this.addPacket(this.baseEnergy, leftAmount, power, this.defaultTransferMode, tileReceivers);
             energyOut += energyAdded;
             leftAmount -= energyAdded;
         }
-        if (gridReceivers.length > 0 && leftAmount > 0) {
-            energyOut += this.addToGridBuffers(leftAmount, amount, power, gridReceivers);
+        // Add energy to active grid buffers
+        if (leftAmount > 0) {
+            var gridReceivers = activeReceivers.filter(function (n) { return n.kind == "grid"; });
+            if (gridReceivers.length > 0) {
+                energyOut += this.addToGridBuffers(leftAmount, amount, power, gridReceivers);
+            }
         }
         return amount - energyOut;
     };
@@ -956,6 +953,7 @@ var EnergyTileNode = /** @class */ (function (_super) {
             if (energyName != this_1.baseEnergy) {
                 var energyRatio = EnergyRegistry.getValueRatio(this_1.baseEnergy, energyName);
                 energyAdded = this_1.addToBuffer(energyName, amount * energyRatio, size * energyRatio, power * energyRatio, gridReceiversCount);
+                energyAdded /= energyRatio;
             }
             else {
                 energyAdded = this_1.addToBuffer(energyName, amount, size, power, gridReceiversCount);

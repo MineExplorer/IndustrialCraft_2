@@ -65,9 +65,11 @@ namespace Machine {
 			heat: 0,
 			maxHeat: 10000,
 			hem: 1,
-			output: 0
+			output: 0,
+			updateTicker: 0
 		}
 
+		tickRate = 20;
 		chambers: ReactorChamber[] = [];
 
 		getScreenByName(): UI.IWindow {
@@ -79,6 +81,9 @@ namespace Machine {
 			this.chambers = [];
 			this.rebuildGrid();
 			this.__initialized = true;
+			if (!this.data.updateTicker) {
+				this.data.updateTicker = MathUtil.randomInt(1, this.tickRate);
+			}
 			for (let i = 0; i < 6; i++) {
 				const coords = StorageInterface.getRelativeCoords(this, i);
 				if (this.region.getBlockId(coords) == BlockID.reactorChamber) {
@@ -144,9 +149,9 @@ namespace Machine {
 		onTick(): void {
 			const reactorSize = this.getReactorSize();
 			this.container.sendEvent("setFieldSize", {size: reactorSize});
-			if (World.getThreadTime() % 20 == 0) {
+			if (this.data.updateTicker++ % this.tickRate == 0) {
 				if (this.data.isEnabled) {
-					this.data.maxHeat = 10000;
+					this.data.maxHeat = this.defaultValues.maxHeat;
 					this.data.hem = 1;
 					this.data.output = 0;
 					this.processChambers();

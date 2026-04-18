@@ -1,10 +1,10 @@
 BlockRegistry.createBlock("miner", [
-	{name: "Miner", texture: [["miner_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
+	{name: "Miner", texture: [["miner_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.miner, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.miner, 2, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.miner, 2, [["miner_bottom", 1], ["machine_top", 0], ["machine_side", 0], ["miner_front", 1], ["miner_side", 1], ["miner_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.miner, 2, [["miner_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["miner_front", 0], ["miner_side", 0], ["miner_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.miner, 2, [["miner_bottom_active", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["miner_front_active", 0], ["miner_side_active", 0], ["miner_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.miner);
 
 ItemName.addTierTooltip(BlockID.miner, 2);
@@ -270,7 +270,7 @@ namespace Machine {
 			return "MinerOp.ogg";
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 10000;
 		}
 

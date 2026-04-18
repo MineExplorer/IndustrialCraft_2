@@ -1,12 +1,14 @@
 BlockRegistry.createBlock("icFermenter", [
-	{name: "Fermenter", texture: [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], inCreative: true},
+	{name: "Fermenter", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_fermenter_back", 0], ["machine_heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.icFermenter, "stone", 1);
 
-TileRenderer.setHandAndUiModel(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
-TileRenderer.setStandardModelWithRotation(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 0], ["heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], true);
-TileRenderer.registerModelWithRotation(BlockID.icFermenter, 0, [["machine_bottom", 0], ["machine_top", 0], ["ic_fermenter_back", 1], ["heat_pipe", 1], ["ic_fermenter_side", 1], ["ic_fermenter_side", 1]], true);
+TileRenderer.setHandAndUiModel(BlockID.icFermenter, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_fermenter_back", 0], ["machine_heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.icFermenter, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_fermenter_back", 0], ["machine_heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.icFermenter, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_fermenter_back_active", 0], ["machine_heat_pipe_active", 0], ["ic_fermenter_side_active", 0], ["ic_fermenter_side_active", 0]], true);
 TileRenderer.setRotationFunction(BlockID.icFermenter, true);
+
+ItemName.addConsumptionTooltip("icFermenter", "HU", 1, 100);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.icFermenter, count: 1, data: 0}, [

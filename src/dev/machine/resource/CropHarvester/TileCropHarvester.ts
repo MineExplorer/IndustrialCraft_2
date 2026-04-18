@@ -17,7 +17,7 @@ namespace Machine {
 		upgrades = ["transformer", "energyStorage", "itemEjector"];
 
 		tier: number = this.defaultTier;
-		energyStorage: number;
+		energyCapacity: number;
 		upgradeSet?: UpgradeAPI.UpgradeSet;
 
 		getScreenByName(): UI.IWindow {
@@ -28,14 +28,14 @@ namespace Machine {
 			return this.tier;
 		}
 
-		getEnergyStorage(): number {
-			return this.energyStorage;
+		getEnergyCapacity(): number {
+			return this.energyCapacity;
 		}
 
 		useUpgrades(isInit: boolean) {
 			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet, isInit);
 			this.tier = upgrades.getTier(this.defaultTier);
-			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
+			this.energyCapacity = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 		}
 
 		setupContainer(): void {

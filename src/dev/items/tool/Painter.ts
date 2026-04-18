@@ -14,19 +14,28 @@ class ItemPainter extends ItemCommon {
 	onItemUse(coords: Callback.ItemUseCoordinates, item: ItemStack, block: Tile, player: number): void {
 		if (CableRegistry.canBePainted(block.id) && block.data != this.color) {
 			const region = BlockSource.getDefaultForActor(player);
-			region.setBlock(coords.x, coords.y, coords.z, 0, 0);
 			region.setBlock(coords.x, coords.y, coords.z, block.id, this.color);
-			const node = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
-			if (node) {
-				node.destroy();
-				EnergyGridBuilder.rebuildForWire(region, coords.x, coords.y, coords.z, block.id);
+			const grid = EnergyNet.getNodeOnCoords(region, coords.x, coords.y, coords.z);
+			if (grid && grid instanceof EUCableGrid) {
+				grid.removeCoords(coords.x, coords.y, coords.z);
+				grid.checkAndRebuild();
 			}
-			if (Game.isItemSpendingAllowed(player)) {
-				if (++item.data >= Item.getMaxDamage(item.id))
-					item.id = ItemID.icPainter;
-				Entity.setCarriedItem(player, item.id, 1, item.data);
-			}
-			SoundLib.playSoundAtBlock(coords, region.getDimension(), "Painters.ogg");
+			EnergyGridBuilder.onWirePlaced(region, coords.x, coords.y, coords.z);
+			this.useItem(coords, item, player);
+		} else if (block.id == 35 && block.data != 15 - this.color){
+			const region = BlockSource.getDefaultForActor(player);
+			region.setBlock(coords.x, coords.y, coords.z, 35, 15 - this.color);
+			this.useItem(coords, item, player);
 		}
+	}
+	
+	useItem(coords: Callback.ItemUseCoordinates, item: ItemInstance, player: number) {
+		SoundLib.playSoundAtBlock(coords, Entity.getDimension(player), "Painter.ogg", 0.5);
+		if (!Game.isItemSpendingAllowed(player)) return;
+
+		if (++item.data >= Item.getMaxDamage(item.id)) {
+			item.id = ItemID.icPainter;
+		}
+		Entity.setCarriedItem(player, item.id, 1, item.data);
 	}
 }

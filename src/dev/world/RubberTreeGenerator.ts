@@ -1,5 +1,5 @@
 namespace RubberTreeGenerator {
-	export let biomeData = {};
+	export let biomeData: KeyValueMap<number> = {};
 
 	export function getBiomeChance(biomeID: number): number {
 		const chance = biomeData[biomeID] || 0;

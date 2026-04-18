@@ -4,7 +4,7 @@ BlockRegistry.createBlock("ironFurnace", [
 BlockRegistry.setBlockMaterial(BlockID.ironFurnace, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.ironFurnace, 2, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.ironFurnace, 2, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 1], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.ironFurnace, 2, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front_active", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.ironFurnace);
 
 Callback.addCallback("PreLoaded", function() {

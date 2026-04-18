@@ -4,8 +4,8 @@ namespace Machine {
 	export abstract class ElectricMachine
 	extends MachineBase
 	implements EnergyTile {
+		readonly energyTypes: {[energyName: string]: EnergyType};
 		energyNode: EnergyTileNode;
-		energyTypes: object;
 
 		defaultValues = {
 			energy: 0
@@ -15,12 +15,17 @@ namespace Machine {
 			return 1;
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 0;
 		}
 
+		/** @deprecated use getEnergyCapacity instead */
+		getEnergyStorage(): number {
+			return this.getEnergyCapacity();
+		}
+
 		getRelativeEnergy(): number {
-			return this.data.energy / this.getEnergyStorage();
+			return this.data.energy / this.getEnergyCapacity();
 		}
 
 		getMaxPacketSize(): number {
@@ -37,7 +42,7 @@ namespace Machine {
 		}
 
 		dischargeSlot(slotName: string) {
-			const amount = this.getEnergyStorage() - this.data.energy;
+			const amount = this.getEnergyCapacity() - this.data.energy;
 			this.data.energy += ChargeItemRegistry.getEnergyFromSlot(this.container.getSlot(slotName), "Eu", amount, this.getTier());
 		}
 
@@ -46,22 +51,34 @@ namespace Machine {
 		energyReceive(type: string, amount: number, voltage: number): number {
 			const maxVoltage = this.getMaxPacketSize();
 			if (voltage > maxVoltage) {
+				amount = Math.min(amount, maxVoltage);
 				if (IC2Config.voltageEnabled) {
 					this.blockSource.setBlock(this.x, this.y, this.z, 0, 0);
 					this.blockSource.explode(this.x + 0.5, this.y + 0.5, this.z + 0.5, this.getExplosionPower(), true);
 					SoundLib.playSoundAtBlock(this, this.dimension, "MachineOverload.ogg", 1, 1, 32);
 					this.selfDestroy();
-					return 1;
+					return amount;
 				}
-				amount = Math.min(amount, maxVoltage);
 			}
-			const add = Math.min(amount, this.getEnergyStorage() - this.data.energy);
+			const add = Math.min(amount, Math.floor(this.getEnergyCapacity() - this.data.energy));
 			this.data.energy += add;
 			return add;
 		}
 
+		getFreeEnergyAmount(): number {
+			const storage = this.getEnergyCapacity();
+			if (storage > this.data.energy) {
+				return Math.floor(storage - this.data.energy);
+			}
+			return 0;
+		}
+
 		getExplosionPower(): number {
 			return 1.2;
+		}
+
+		isGenerator(): boolean {
+			return false;
 		}
 
 		isConductor(type: string): boolean {
@@ -72,7 +89,7 @@ namespace Machine {
 			return true;
 		}
 
-		canExtractEnergy(side: number, type: string): boolean {
+		canEmitEnergy(side: number, type: string): boolean {
 			return false;
 		}
 

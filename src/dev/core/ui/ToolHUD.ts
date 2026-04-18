@@ -22,7 +22,7 @@ namespace ToolHUD {
 	});
 	Window.setAsGameOverlay(true);
 
-	const buttonMap = {};
+	const buttonMap: KeyValueMap<boolean> = {};
 	export const buttons: {[key: string]: IHUDButton} = {};
 
 	export function registerButton(button: IHUDButton): void {

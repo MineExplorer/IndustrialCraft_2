@@ -1,12 +1,12 @@
 /// <reference path="./ProcessingMachine.ts" />
 
 BlockRegistry.createBlock("solidCanner", [
-	{name: "Solid Canning Machine", texture: [["machine_bottom", 0], ["machine_bottom", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+	{name: "Solid Canning Machine", texture: [["ic_machine_bottom", 0], ["ic_machine_bottom", 0], ["ic_machine_side", 0], ["solid_canner_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.solidCanner, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.solidCanner, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.solidCanner, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["solid_canner", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.solidCanner, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["solid_canner_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.solidCanner, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["solid_canner_front_active", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.solidCanner);
 
 ItemName.addTierTooltip("solidCanner", 1);

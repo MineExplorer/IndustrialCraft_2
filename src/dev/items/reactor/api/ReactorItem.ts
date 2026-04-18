@@ -1,5 +1,5 @@
 namespace ReactorItem {
-	let reactorComponents = {};
+	let reactorComponents: KeyValueMap<ReactorComponent> = {};
 
 	export function registerComponent(id: number, component: ReactorComponent): void {
 		if (component instanceof DamageableReactorComponent) {

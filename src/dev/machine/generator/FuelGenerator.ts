@@ -1,13 +1,13 @@
 /// <reference path="../Generator.ts" />
 
 BlockRegistry.createBlock("primalGenerator", [
-	{name: "Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+	{name: "Generator", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["generator_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.primalGenerator, "stone", 1);
 ItemName.addProductionTooltip(BlockID.primalGenerator, "EU", EnergyProductionModifiers.FuelGenerator);
 
-TileRenderer.setStandardModelWithRotation(BlockID.primalGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.primalGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["generator", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.primalGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["generator_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.primalGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["generator_front_active", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.primalGenerator);
 
 Callback.addCallback("PreLoaded", function() {
@@ -90,14 +90,14 @@ namespace Machine {
 			StorageInterface.checkHoppers(this);
 
 			let newActive = false;
-			const energyStorage = this.getEnergyStorage();
+			const energyCapacity = this.getEnergyCapacity();
 			const energyOutput = EnergyProductionModifiers.FuelGenerator;
-			if (this.data.energy + energyOutput <= energyStorage) {
+			if (this.data.energy + energyOutput <= energyCapacity) {
 				if (this.data.burn <= 0) {
 					this.data.burn = this.data.burnMax = this.consumeFuel("slotFuel") / 4;
 				}
 				if (this.data.burn > 0) {
-					this.data.energy = Math.min(this.data.energy + energyOutput, energyStorage);
+					this.data.energy = Math.min(this.data.energy + energyOutput, energyCapacity);
 					this.data.burn--;
 					newActive = true;
 				}
@@ -115,7 +115,7 @@ namespace Machine {
 			return "GeneratorLoop.ogg";
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 10000;
 		}
 

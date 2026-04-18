@@ -1,5 +1,5 @@
 BlockRegistry.createBlock("teslaCoil", [
-	{name: "Tesla Coil", texture: [["tesla_coil", 0], ["tesla_coil", 0], ["tesla_coil", 1], ["tesla_coil", 1], ["tesla_coil", 1], ["tesla_coil", 1]], inCreative: true},
+	{name: "Tesla Coil", texture: [["tesla_coil_top", 0], ["tesla_coil_top", 0], ["tesla_coil_side", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.teslaCoil, "stone", 1);
 ItemName.addTierTooltip(BlockID.teslaCoil, 3);
@@ -50,7 +50,7 @@ namespace Machine {
 			this.data.isEnabled = signal > 0;
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 10000;
 		}
 	}

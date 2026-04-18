@@ -8,10 +8,10 @@ namespace RadiationAPI {
 		timer: number
 	}
 
-	export const radioactiveItems = {};
-	export const hazmatArmor = {};
+	export const radioactiveItems: KeyValueMap<{duration: number, stack: boolean}> = {};
+	export const hazmatArmor: KeyValueMap<boolean> = {};
 	export let sources: RadiationSource[] = [];
-	export let effectDuration = {};
+	export let effectDuration: KeyValueMap<number> = {};
 
 	export function setRadioactivity(itemId: number, duration: number, stack: boolean = false): void {
 		ItemName.addTooltip(itemId, "tooltip.radioactive");
@@ -111,7 +111,7 @@ namespace RadiationAPI {
 	}
 
 	Saver.addSavesScope("radiation",
-		function read(scope: {source: RadiationSource[], effects: object}) {
+		function read(scope: {source: RadiationSource[], effects: KeyValueMap<number>}) {
 			sources = scope.source || [];
 			effectDuration = scope.effects || {};
 		},

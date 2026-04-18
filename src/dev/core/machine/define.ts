@@ -3,7 +3,7 @@
 /// <reference path="../../machine/Generator.ts" />
 
 namespace MachineRegistry {
-	const machineIDs = {}
+	const machineIDs: KeyValueMap<boolean> = {}
 
 	export function isMachine(id: number): boolean {
 		return machineIDs[id];
@@ -77,7 +77,7 @@ namespace MachineRegistry {
 		const BasePrototype = Machine.Generator.prototype;
 		Prototype.energyTick ??= BasePrototype.energyTick;
 		Prototype.canReceiveEnergy ??= BasePrototype.canReceiveEnergy;
-		Prototype.canExtractEnergy ??= BasePrototype.canExtractEnergy;
+		Prototype.canEmitEnergy ??= BasePrototype.canEmitEnergy;
 		registerElectricMachine(id, Prototype);
 	}
 

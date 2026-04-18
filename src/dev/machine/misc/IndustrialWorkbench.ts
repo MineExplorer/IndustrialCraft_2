@@ -1,10 +1,7 @@
-BlockRegistry.createBlock("industrialCrafter", [
+BlockRegistry.createBlockWithRotation("industrialCrafter", [
 	{name: "Industrial Workbench", texture: [["industrial_workbench_bottom", 0], ["industrial_workbench_top", 0], ["industrial_workbench_back", 0], ["industrial_workbench_front", 0], ["industrial_workbench_left", 0], ["industrial_workbench_right", 0]], inCreative: true},
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.industrialCrafter, "stone", 1);
-
-TileRenderer.setStandardModelWithRotation(BlockID.industrialCrafter, 2, [["industrial_workbench_bottom", 0], ["industrial_workbench_top", 0], ["industrial_workbench_back", 0], ["industrial_workbench_front", 0], ["industrial_workbench_left", 0], ["industrial_workbench_right", 0]]);
-TileRenderer.setRotationFunction(BlockID.industrialCrafter);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.industrialCrafter, count: 1, data: 0}, [

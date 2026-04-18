@@ -2,6 +2,7 @@ class EUMeterUpdatable {
 	container: ItemContainer;
 	mode = 0;
 	time: number;
+	voltageTime: number;
 	sum: number;
 	minValue: number;
 	maxValue: number;
@@ -34,6 +35,7 @@ class EUMeterUpdatable {
 
 	resetValues(): void {
 		this.time = 0;
+		this.voltageTime = 0;
 		this.sum = 0;
 		this.minValue = 2e9;
 		this.maxValue = -2e9;
@@ -47,14 +49,22 @@ class EUMeterUpdatable {
 		}
 		this.time++;
 		const value = this.getValue();
+		const recordedTime = this.mode === EuMeterMode.Voltage ? this.getVoltageTime(value) : this.time;
 		this.minValue = Math.min(this.minValue, value);
 		this.maxValue = Math.max(this.maxValue, value);
 		this.sum += value;
 		this.container.setText("textMinValue", this.displayValue(this.minValue));
 		this.container.setText("textMaxValue", this.displayValue(this.maxValue));
-		this.container.setText("textAvgValue", this.displayValue(this.sum / this.time));
+		this.container.setText("textAvgValue", this.displayValue(recordedTime > 0 ? this.sum / recordedTime : 0));
 		this.container.setText("textTime", Translation.translate("Cycle: ") + Math.floor(this.time / 20) + " " + Translation.translate("sec"));
 		this.container.sendChanges();
+	}
+
+	getVoltageTime(value: number): number {
+		if (value !== 0) {
+			this.voltageTime++;
+		}
+		return this.voltageTime;
 	}
 
 	getUnit(): string {
@@ -63,13 +73,13 @@ class EUMeterUpdatable {
 
 	getValue(): number {
 		switch (this.mode) {
-			case 0:
+			case EuMeterMode.EnergyIn:
 				return this.node.energyIn;
-			case 1:
+			case EuMeterMode.EnergyOut:
 				return this.node.energyOut;
-			case 2:
+			case EuMeterMode.EnergyGain:
 				return this.node.energyIn - this.node.energyOut;
-			case 3:
+			case EuMeterMode.Voltage:
 				return this.node.energyPower;
 		}
 	}

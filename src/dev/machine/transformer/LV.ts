@@ -5,7 +5,10 @@ BlockRegistry.createBlock("transformerLV", [
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.transformerLV, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.transformerLV, 0, [["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0]], true);
+TileRenderer.setHandAndUiModel(BlockID.transformerLV, 0, [["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0]]);
+TileRenderer.setStandardModel(BlockID.transformerLV, 0, [["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 1], ["lv_transformer_side", 1], ["lv_transformer_side", 1], ["lv_transformer_side", 1]]);
+TileRenderer.setStandardModel(BlockID.transformerLV, 1, [["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 1], ["lv_transformer_side", 1], ["lv_transformer_side", 1], ["lv_transformer_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.transformerLV, 2, [["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0], ["lv_transformer_front", 0], ["lv_transformer_side", 0], ["lv_transformer_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.transformerLV, true);
 
 ItemName.addTooltip(BlockID.transformerLV, "tooltip.transformer", 32, 128);

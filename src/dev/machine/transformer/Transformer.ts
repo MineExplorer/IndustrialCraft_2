@@ -23,21 +23,22 @@ namespace Machine {
 			return this.tier;
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return this.getMaxPacketSize();
 		}
 
 		energyTick(type: string, src: EnergyTileNode): void {
-			const maxVoltage = this.getMaxPacketSize();
+			const maxPacketSize = this.getMaxPacketSize();
 			if (this.data.increaseMode) {
-				if (this.data.energy >= maxVoltage) {
-					this.data.energy += src.add(maxVoltage, maxVoltage) - maxVoltage;
+				if (this.data.energy >= maxPacketSize) {
+					const energyOut = maxPacketSize - src.add(maxPacketSize);
+					this.data.energy -= energyOut;
 				}
 			}
 			else {
-				if (this.data.energy >= maxVoltage/4) {
-					const output = this.data.energy;
-					this.data.energy += src.add(output, maxVoltage/4) - output;
+				if (this.data.energy >= maxPacketSize / 4) {
+					const energyOut = this.data.energy - src.add(this.data.energy, maxPacketSize / 4);
+					this.data.energy -= energyOut;
 				}
 			}
 		}
@@ -57,7 +58,7 @@ namespace Machine {
 			return this.data.increaseMode;
 		}
 
-		canExtractEnergy(side: number): boolean {
+		canEmitEnergy(side: number): boolean {
 			if (side == this.getFacing()) {
 				return this.data.increaseMode;
 			}

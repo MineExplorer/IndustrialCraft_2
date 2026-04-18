@@ -19,7 +19,11 @@ class MakeConfig(BaseConfig):
 		return os.path.abspath(os.path.join(self.root_dir, relative_path))
 
 	def get_adb(self):
-		return self.get_path("toolchain/adb/adb.exe")
+		# Prefer the local adb, then fall back to adb from the system PATH.
+		adb_path = self.get_path("toolchain/adb/adb.exe")
+		if os.path.isfile(adb_path):
+			return adb_path
+		return "adb"
 
 	def get_paths(self, relative_path, filter=None, paths=None):
 		if paths is None:
@@ -50,6 +54,4 @@ if make_config is None:
 	raise RuntimeError("failed to find make.json")
 
 
-if __name__ == '__main__':
-	print(make_config.get_value("native"))
 

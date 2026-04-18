@@ -1,12 +1,12 @@
 /// <reference path="./BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("recycler", [
-	{name: "Recycler", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+	{name: "Recycler", texture: [["ic_machine_bottom", 0], ["macerator_top", 0], ["ic_machine_side", 0], ["recycler_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.recycler, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.recycler, 2, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["recycler_front", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.recycler, 2, [["machine_bottom", 0], ["macerator_top_active", 0], ["machine_side", 0], ["recycler_front_active", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.recycler, 2, [["ic_machine_bottom", 0], ["macerator_top", 0], ["ic_machine_side", 0], ["recycler_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.recycler, 2, [["ic_machine_bottom", 0], ["macerator_top_active", 0], ["ic_machine_side", 0], ["recycler_front_active", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.recycler);
 
 ItemName.addTierTooltip("recycler", 1);

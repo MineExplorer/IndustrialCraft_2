@@ -30,6 +30,7 @@ params_list = {
 	"noEmitOnError": False,
 	"noErrorTruncation": False,
 	"noFallthroughCasesInSwitch": False,
+	"noImplicitAny": False,
 	"noLib": False,
 	"noResolve": False,
 	"noStrictGenericChecks": False,

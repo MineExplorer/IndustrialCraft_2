@@ -1,11 +1,11 @@
 BlockRegistry.createBlock("geothermalGenerator", [
-	{name: "Geothermal Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+	{name: "Geothermal Generator", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["geo_generator_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.geothermalGenerator, "stone", 1);
 ItemName.addProductionTooltip(BlockID.geothermalGenerator, "EU", EnergyProductionModifiers.GeothermalGenerator);
 
-TileRenderer.setStandardModelWithRotation(BlockID.geothermalGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.geothermalGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["geothermal_generator", 1], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.geothermalGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["geo_generator_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.geothermalGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["geo_generator_front_active", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.geothermalGenerator);
 
 Callback.addCallback("PreLoaded", function() {
@@ -70,7 +70,7 @@ namespace Machine {
 			this.liquidTank.getLiquidFromItem(slot1, slot2);
 
 			const energyOutput = EnergyProductionModifiers.GeothermalGenerator;
-			if (this.liquidTank.getAmount("lava") >= 1 && this.data.energy + energyOutput <= this.getEnergyStorage()) {
+			if (this.liquidTank.getAmount("lava") >= 1 && this.data.energy + energyOutput <= this.getEnergyCapacity()) {
 				this.data.energy += energyOutput;
 				this.liquidTank.getLiquid(1);
 				this.setActive(true);
@@ -89,7 +89,7 @@ namespace Machine {
 			return "GeothermalLoop.ogg";
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 10000;
 		}
 

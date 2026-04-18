@@ -1,10 +1,10 @@
 BlockRegistry.createBlock("advancedMiner", [
-	{name: "Advanced Miner", texture: [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
+	{name: "Advanced Miner", texture: [["teleporter_top", 0], ["ic_machine_advanced_top", 0], ["ic_machine_advanced_side", 0], ["ic_machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.advancedMiner, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 0], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 1], ["machine_advanced_top", 0], ["machine_advanced_side", 0], ["machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 0], ["ic_machine_advanced_top", 0], ["ic_machine_advanced_side", 0], ["ic_machine_advanced_side", 0], ["miner_side", 0], ["miner_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.advancedMiner, 2, [["teleporter_top", 1], ["ic_machine_advanced_top", 0], ["ic_machine_advanced_side", 0], ["ic_machine_advanced_side", 0], ["miner_side", 1], ["miner_side", 1]]);
 MachineRegistry.setStoragePlaceFunction("advancedMiner");
 
 ItemRegistry.setRarity(BlockID.advancedMiner, EnumRarity.RARE);
@@ -85,6 +85,8 @@ namespace Machine {
 		tier: number = this.defaultTier;
 		maxScanCount: number;
 
+		upgradeSet?: UpgradeAPI.UpgradeSet;
+
 		getScreenByName(): UI.IWindow {
 			return guiAdvancedMiner;
 		}
@@ -93,7 +95,7 @@ namespace Machine {
 			return this.tier;
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 4000000;
 		}
 
@@ -110,7 +112,8 @@ namespace Machine {
 
 		onInit(): void {
 			super.onInit();
-			this.setUpgradeStats();
+			this.upgradeSet = UpgradeAPI.getUpgradeSet(this);
+			this.applyUpgradeModifiers();
 		}
 
 		getScanRadius(itemID: number): number {
@@ -119,14 +122,14 @@ namespace Machine {
 			return 0;
 		}
 
-		setUpgradeStats(): void {
-			const upgrades = UpgradeAPI.getUpgradeSet(this);
+		applyUpgradeModifiers(): void {
+			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet);
 			this.tier = upgrades.getTier(this.defaultTier);
 			this.maxScanCount = 5 * upgrades.speedModifier;
 		}
 
 		onTick(): void {
-			this.setUpgradeStats();
+			this.applyUpgradeModifiers();
 			this.operate();
 			this.chargeSlot("slotScanner");
 			this.dischargeSlot("slotEnergy");

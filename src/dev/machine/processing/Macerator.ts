@@ -1,12 +1,12 @@
 /// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("macerator", [
-{name: "Macerator", texture: [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]], inCreative: true}
+{name: "Macerator", texture: [["ic_machine_bottom", 0], ["macerator_top", 0], ["ic_machine_side", 0], ["macerator_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.macerator, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.macerator, 2, [["machine_bottom", 0], ["macerator_top", 0], ["machine_side", 0], ["macerator_front", 0], ["machine_side", 0], ["machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.macerator, 2, [["machine_bottom", 0], ["macerator_top_active", 0], ["machine_side", 0], ["macerator_front_active", 0], ["machine_side", 0], ["machine_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.macerator, 2, [["ic_machine_bottom", 0], ["macerator_top", 0], ["ic_machine_side", 0], ["macerator_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.macerator, 2, [["ic_machine_bottom", 0], ["macerator_top_active", 0], ["ic_machine_side", 0], ["macerator_front_active", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.macerator);
 
 ItemName.addTierTooltip("macerator", 1);
@@ -88,6 +88,9 @@ Callback.addCallback("PreLoaded", function() {
 	dictionary.addRecipe({id: VanillaItemID.coal, data: 0}, {id: ItemID.dustCoal, count: 1}, 200);
 	dictionary.addRecipe({id: VanillaItemID.diamond}, {id: ItemID.dustDiamond, count: 1});
 	dictionary.addRecipe({id: VanillaItemID.lapis_lazuli}, {id: ItemID.dustLapis, count: 1}, 200);
+	dictionary.addRecipe({id: VanillaBlockID.hardened_clay}, {id: ItemID.dustClay, count: 4}, 300);
+	dictionary.addRecipe({id: VanillaBlockID.stained_hardened_clay}, {id: ItemID.dustClay, count: 4}, 300);
+	dictionary.addRecipe({id: VanillaBlockID.obsidian}, {id: ItemID.dustObsidian, count: 4}, 500);
 	dictionary.addRecipe({id: VanillaItemID.spider_eye}, {id: ItemID.grinPowder, count: 2}, 200);
 	dictionary.addRecipe({id: VanillaItemID.poisonous_potato}, {id: ItemID.grinPowder, count: 1}, 200);
 
@@ -110,6 +113,8 @@ Callback.addCallback("PreLoaded", function() {
 
 	// plants
 	dictionary.addRecipe({id: VanillaBlockID.planks, count: 4}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.warped_planks, count: 4}, {id: ItemID.bioChaff, count: 1});
+	dictionary.addRecipe({id: VanillaBlockID.crimson_planks, count: 4}, {id: ItemID.bioChaff, count: 1});
 	dictionary.addRecipe({id: BlockID.rubberTreeSapling, count: 4}, {id: ItemID.bioChaff, count: 1});
 	dictionary.addRecipe({id: BlockID.rubberTreeLeaves, count: 8}, {id: ItemID.bioChaff, count: 1});
 	dictionary.addRecipe({id: VanillaBlockID.leaves, count: 8}, {id: ItemID.bioChaff, count: 1});

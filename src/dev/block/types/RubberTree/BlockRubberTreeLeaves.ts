@@ -23,7 +23,7 @@ class BlockRubberTreeLeaves extends BlockBase {
 		return drop;
 	}
 
-	checkLeaves(x: number, y: number, z: number, region: BlockSource, explored: {}): boolean {
+	checkLeaves(x: number, y: number, z: number, region: BlockSource, explored: KeyValueMap<true>): boolean {
 		const blockID = region.getBlockId(x, y, z);
 		if (blockID == BlockID.rubberTreeLog || blockID == BlockID.rubberTreeLogLatex) {
 			return true;
@@ -34,7 +34,7 @@ class BlockRubberTreeLeaves extends BlockBase {
 		return false;
 	}
 
-	checkLeavesFor6Sides(x: number, y: number, z: number, region: BlockSource, explored: {}): boolean {
+	checkLeavesFor6Sides(x: number, y: number, z: number, region: BlockSource, explored: KeyValueMap<true>): boolean {
 		return this.checkLeaves(x-1, y, z, region, explored) ||
 			this.checkLeaves(x+1, y, z, region, explored) ||
 			this.checkLeaves(x, y, z-1, region, explored) ||
@@ -58,7 +58,7 @@ class BlockRubberTreeLeaves extends BlockBase {
 
 	onRandomTick(x: number, y: number, z: number, block: Tile, region: BlockSource): void {
 		if (block.data == 1) {
-			let explored = {};
+			let explored: KeyValueMap<true> = {};
 			explored[x+':'+y+':'+z] = true;
 			for (let i = 0; i < 4; i++) {
 				const checkingLeaves = explored;

@@ -5,7 +5,7 @@ namespace Agriculture {
         /**
          * Register new card
          * @param {CropCard} cropCard
-         * @returns {number} registred card ID
+         * @returns {number} registered card ID
          */
         static registerCropCard(cropCard: CropCard): void {
             const cardID = this.cropCards.push(cropCard) - 1;

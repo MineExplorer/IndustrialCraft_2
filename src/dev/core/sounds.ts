@@ -36,6 +36,7 @@ SoundLib.Registry.registerSound("BatteryUse.ogg", "Tools/BatteryUse.ogg");
 SoundLib.Registry.registerSound("dynamiteomote.ogg", "Tools/dynamiteomote.ogg");
 SoundLib.Registry.registerSound("eat.ogg", "Tools/eat.ogg");
 SoundLib.Registry.registerSound("InsulationCutters.ogg", "Tools/InsulationCutters.ogg");
+SoundLib.Registry.registerSound("Painter.ogg", "Tools/Painter.ogg");
 SoundLib.Registry.registerSound("JetpackLoop.ogg", "Tools/JetpackLoop.ogg");
 SoundLib.Registry.registerSound("NukeExplosion.ogg", "Tools/NukeExplosion.ogg");
 SoundLib.Registry.registerSound("ODScanner.ogg", "Tools/ODScanner.ogg");

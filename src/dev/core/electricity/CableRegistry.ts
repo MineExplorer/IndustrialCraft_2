@@ -1,18 +1,23 @@
 /// <reference path="EUCableGrid.ts" />
 
 namespace CableRegistry {
-	type CableData = {name: string, insulation: number, maxInsulation: number};
+	type CableData = {name: string, insulation: number, maxInsulation: number, maxSafetyVoltage: number};
 
-	const insulationData = {};
+	const insulationData: KeyValueMap<CableData> = {};
 	const paintableBlocks: number[] = [];
 
 	export const maxSafetyVoltage = {
 		0: 5,
 		1: 128,
-		2: 512
+		2: 512,
+		3: 2048
 	}
 
-	export function getCableData(id: number): CableData {
+	export function getMaxSafetyVoltage(insulation: number): number {
+		return maxSafetyVoltage[insulation] || -1;
+	}
+
+	export function getCableData(id: number): Nullable<CableData> {
 		return insulationData[id];
 	}
 
@@ -37,7 +42,12 @@ namespace CableRegistry {
 		if (maxInsulationLevel) {
 			for (let index = 0; index <= maxInsulationLevel; index++) {
 				const blockID = Block.getNumericId(stringID + index);
-				insulationData[blockID] = {name: stringID, insulation: index, maxInsulation: maxInsulationLevel};
+				insulationData[blockID] = {
+					name: stringID,
+					insulation: index,
+					maxInsulation: maxInsulationLevel,
+					maxSafetyVoltage: getMaxSafetyVoltage(index)
+				};
 				EU.registerWire(blockID, maxVoltage, EUCableGrid);
 				setupDrop(stringID + index);
 			}

@@ -1,12 +1,12 @@
 /// <reference path="ProcessingMachine.ts" />
 
 BlockRegistry.createBlock("inductionFurnace", [
-	{name: "Induction Furnace", texture: [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true}
+	{name: "Induction Furnace", texture: [["ic_machine_advanced_bottom", 0], ["ic_machine_advanced_top", 0], ["ic_machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.inductionFurnace, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.inductionFurnace, 2, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.inductionFurnace, 2, [["machine_advanced", 0], ["machine_advanced", 0], ["machine_back", 0], ["ind_furnace_front", 1], ["ind_furnace_side", 1], ["ind_furnace_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.inductionFurnace, 2, [["ic_machine_advanced_bottom", 0], ["ic_machine_advanced_top", 0], ["ic_machine_back", 0], ["ind_furnace_front", 0], ["ind_furnace_side", 0], ["ind_furnace_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.inductionFurnace, 2, [["ic_machine_advanced_bottom", 0], ["ic_machine_advanced_top", 0], ["ic_machine_back", 0], ["ind_furnace_front_active", 0], ["ind_furnace_side_active", 0], ["ind_furnace_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.inductionFurnace);
 
 ItemRegistry.setRarity(BlockID.inductionFurnace, EnumRarity.UNCOMMON);
@@ -91,7 +91,7 @@ namespace Machine {
 		useUpgrades(isInit: boolean): UpgradeAPI.UpgradeSet {
 			const upgrades = UpgradeAPI.performUpgrades(this.upgradeSet, isInit);
 			this.tier = upgrades.getTier(this.defaultTier);
-			this.energyStorage = upgrades.getEnergyStorage(this.defaultEnergyStorage);
+			this.energyCapacity = upgrades.getEnergyStorage(this.defaultEnergyStorage);
 			this.isHeating = upgrades.getRedstoneInput(this.isPowered);
 			return upgrades;
 		}

@@ -1,11 +1,11 @@
 BlockRegistry.createBlock("semifluidGenerator", [
-	{name: "Semifluid Generator", texture: [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]], inCreative: true}
+	{name: "Semifluid Generator", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.semifluidGenerator, "stone", 1);
 ItemName.addProductionTooltip(BlockID.semifluidGenerator, "EU", 8, 16);
 
-TileRenderer.setStandardModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.semifluidGenerator, 2, [["machine_bottom", 0], ["machine_top", 0], ["machine_side", 0], ["semifluid_generator_front", 1], ["semifluid_generator_side", 1], ["semifluid_generator_side", 1]]);
+TileRenderer.setStandardModelWithRotation(BlockID.semifluidGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["semifluid_generator_front", 0], ["semifluid_generator_side", 0], ["semifluid_generator_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.semifluidGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["semifluid_generator_front_active", 0], ["semifluid_generator_side_active", 0], ["semifluid_generator_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.semifluidGenerator);
 
 Callback.addCallback("PreLoaded", function() {
@@ -96,7 +96,7 @@ namespace Machine {
 			if (this.data.fuel <= 0) {
 				const liquid = this.liquidTank.getLiquidStored();
 				const fuel = this.getFuel(liquid);
-				const freeCapacity = this.getEnergyStorage() - this.data.energy;
+				const freeCapacity = this.getEnergyCapacity() - this.data.energy;
 				if (fuel && this.liquidTank.getAmount() >= fuel.amount && fuel.power * fuel.amount <= freeCapacity) {
 					this.liquidTank.getLiquid(fuel.amount);
 					this.data.fuel = fuel.amount;
@@ -124,7 +124,7 @@ namespace Machine {
 			return "GeothermalLoop.ogg";
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return 1000;
 		}
 

@@ -1,12 +1,12 @@
 /// <reference path="./BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("thermalCentrifuge", [
-	{name: "Thermal Centrifuge", texture: [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
+	{name: "Thermal Centrifuge", texture: [["ic_machine_advanced_bottom", 0], ["thermal_centrifuge_top", 0], ["ic_machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.thermalCentrifuge, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.thermalCentrifuge, 2, [["machine_advanced", 0], ["thermal_centrifuge_top", 0], ["machine_side", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, 2, [["machine_advanced", 0], ["thermal_centrifuge_top_active", 0], ["machine_side", 0], ["thermal_centrifuge_front_active", 0], ["thermal_centrifuge_side_active", 0], ["thermal_centrifuge_side_active", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.thermalCentrifuge, 2, [["ic_machine_advanced_bottom", 0], ["thermal_centrifuge_top", 0], ["ic_machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, 2, [["ic_machine_advanced_bottom", 0], ["thermal_centrifuge_top_active", 0], ["ic_machine_back", 0], ["thermal_centrifuge_front_active", 0], ["thermal_centrifuge_side_active", 0], ["thermal_centrifuge_side_active", 0]]);
 TileRenderer.setRotationFunction(BlockID.thermalCentrifuge);
 
 ItemName.addTierTooltip("thermalCentrifuge", 2);
@@ -43,6 +43,8 @@ Callback.addCallback("PreLoaded", function() {
 	dictionary.addRecipe({id: ItemID.fuelRodDepletedMOX2}, [{id: ItemID.smallPlutonium, count: 2}, {id: ItemID.plutonium, count: 6}, {id: ItemID.dustIron, count: 3}], 5000);
 	dictionary.addRecipe({id: ItemID.fuelRodDepletedMOX4}, [{id: ItemID.smallPlutonium, count: 4}, {id: ItemID.plutonium, count: 12}, {id: ItemID.dustIron, count: 6}], 5000);
 	dictionary.addRecipe({id: ItemID.rtgPellet}, [{id: ItemID.plutonium, count: 3}, {id: ItemID.dustIron, count: 54}], 5000);
+	dictionary.addRecipe({id: ItemID.dustBronze, count: 4}, [{id: ItemID.dustCopper, count: 3}, {id: ItemID.dustTin, count: 1}], 500);
+	dictionary.addRecipe({id: ItemID.dustClay, count: 4}, [{id: ItemID.dustSiliconDioxide, count: 1}], 250);
 });
 
 namespace Machine {

@@ -1,36 +1,68 @@
+/**
+ * API to manage machine upgrades.
+ */
 namespace UpgradeAPI {
-	const data = {};
+	const data: KeyValueMap<IUpgrade> = {};
 
-	export function getUpgrade(id: number): IUpgrade {
+	/** Returns upgrade instance by item id. */
+	export function getUpgrade(id: number): Nullable<IUpgrade> {
 		return data[id];
 	}
 
+	/** Checks if an item is an upgrade. */
 	export function isUpgrade(id: number): boolean {
 		return !!data[id];
 	}
 
+	/**
+	 * Registers an upgrade.
+	 * @param id item id
+	 * @param upgrade upgrade data
+	 */
+	export function registerUpgrade(id: number, upgrade: IUpgrade): void {
+		data[id] = upgrade;
+	}
+
+	/**
+	 * Checks if an upgrade is valid for a tile entity.
+	 * @param id item id
+	 * @param machine tile entity
+	 */
 	export function isValidUpgrade(id: number, machine: TileEntity): boolean {
 		const upgrade = getUpgrade(id);
-		const validUpgrades = machine["upgrades"];
+		const validUpgrades: string[] = machine["upgrades"];
 		if (upgrade && (!validUpgrades || validUpgrades.indexOf(upgrade.type) != -1)) {
 			return true;
 		}
 		return false;
 	}
 
-	export function registerUpgrade(id: number, upgrade: IUpgrade): void {
-		data[id] = upgrade;
-	}
-
+	/**
+	 * Creates an UpgradeSet for provided tile entity.
+	 * @param machine tile entity
+	 * @returns empty UpgradeSet
+	 */
 	export function getUpgradeSet(machine: TileEntity): UpgradeSet {
 		return new UpgradeSet(machine);
 	}
 
-	export function useUpgrades(machine: TileEntity) {
+	/**
+	 * Creates an UpgradeSet and performs upgrades for provided tile entity.
+	 * @param machine tile entity
+	 * @returns UpgradeSet with applied modifiers
+	 */
+	export function useUpgrades(machine: TileEntity): UpgradeSet {
 		const upgrades = getUpgradeSet(machine);
 		performUpgrades(upgrades);
+		return upgrades;
 	}
 
+	/**
+	 * Fetches upgrades from tile entity container and performs them.
+	 * @param upgrades upgrade set
+	 * @param isInit if true, upgrades tick won't be called
+	 * @returns UpgradeSet with applied modifiers
+	 */
 	export function performUpgrades(upgrades: UpgradeSet, isInit?: boolean): UpgradeSet {
 		upgrades.reset();
 		upgrades.getUpgrades();
@@ -38,24 +70,6 @@ namespace UpgradeAPI {
 		if (!isInit) {
 			upgrades.onTick();
 		}
-		return upgrades;
-	}
-
-	/** @deprecated */
-	export function executeUpgrades(machine: TileEntity): UpgradeSet {
-		const upgrades = getUpgradeSet(machine);
-		// reverse compatibility with Advanced Machines
-		const data = machine.data;
-		if ("power_tier" in data) {
-			data.power_tier = upgrades.getTier(data.power_tier);
-		}
-		if ("energy_storage" in data) {
-			data.energy_storage = upgrades.getEnergyStorage(data.energy_storage);
-		}
-		if ("isHeating" in data) {
-			data.isHeating = upgrades.getRedstoneInput(data.isHeating);
-		}
-		StorageInterface.checkHoppers(machine);
 		return upgrades;
 	}
 
@@ -104,7 +118,7 @@ namespace UpgradeAPI {
 		updateModifiers(): void {
 			for (let i = 0; i < this.upgrades.length; i++) {
 				const upgradeData = this.upgrades[i];
-				this.performUpgradeModifiers(upgradeData.upgrade, upgradeData.stack);
+				this.applyUpgradeModifiers(upgradeData.upgrade, upgradeData.stack);
 			}
 		}
 
@@ -123,7 +137,7 @@ namespace UpgradeAPI {
 			return (!validUpgrades || validUpgrades.indexOf(upgrade.type) != -1);
 		}
 
-		performUpgradeModifiers(upgrade: IUpgrade, stack: ItemInstance) {
+		applyUpgradeModifiers(upgrade: IUpgrade, stack: ItemInstance) {
 			if (upgrade.type == "overclocker") {
 				this.speedModifier += upgrade.getSpeedModifier(stack, this.tileEntity) * stack.count;
 				this.processTimeMultiplier *= Math.pow(upgrade.getProcessTimeMultiplier(stack, this.tileEntity), stack.count);

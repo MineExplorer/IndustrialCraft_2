@@ -40,19 +40,6 @@
 			"problemMatcher": []
 		},
 		{
-			"label": "Build Scripts and Resources",
-			"type": "shell",
-			"options": {
-				"cwd": ".\\toolchain\\python"
-			},
-			"command": "..\\build-scripts-and-resources.bat",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"problemMatcher": []
-		},
-		{
 			"label": "Cleanup",
 			"type": "shell",
 			"options": {

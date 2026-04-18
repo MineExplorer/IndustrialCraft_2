@@ -53,18 +53,19 @@ namespace Machine {
 
 			this.container.setScale("energyScale", this.getRelativeEnergy());
 			this.container.setText("textInfo1", Math.floor(this.data.energy) + "/");
-			this.container.setText("textInfo2", this.getEnergyStorage());
+			this.container.setText("textInfo2", this.getEnergyCapacity());
 			this.container.sendChanges();
 		}
 
 		energyTick(type: string, src: EnergyTileNode): void {
 			let output = this.getMaxPacketSize();
 			if (this.data.energy >= output) {
-				this.data.energy += src.add(output) - output;
+				const accepted = output - src.add(output);
+				this.data.energy -= accepted;
 			}
 		}
 
-		getEnergyStorage(): number {
+		getEnergyCapacity(): number {
 			return this.capacity;
 		}
 
@@ -72,7 +73,7 @@ namespace Machine {
 			return side != this.getFacing();
 		}
 
-		canExtractEnergy(side: number): boolean {
+		canEmitEnergy(side: number): boolean {
 			return side == this.getFacing();
 		}
 

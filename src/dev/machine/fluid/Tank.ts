@@ -1,5 +1,5 @@
 BlockRegistry.createBlock("tank", [
-	{name: "Tank", texture: [["machine_bottom", 0], ["machine_top", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0]], inCreative: true}
+	{name: "Tank", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0], ["tank_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.tank, "stone", 1);
 
@@ -39,7 +39,7 @@ namespace Machine {
 		}
 
 		setupContainer(): void {
-			this.liquidTank = this.addLiquidTank("fluid", 16000);
+			this.liquidTank = this.addLiquidTank("fluid", 24000);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
 				if (name == "slotLiquid1") return !!LiquidItemRegistry.getItemLiquid(id, data, extra);

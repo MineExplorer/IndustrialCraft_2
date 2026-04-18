@@ -1,14 +1,13 @@
 /// <reference path="IReactor.ts" />
 
 BlockRegistry.createBlock("nuclearReactor", [
-	{name: "Nuclear Reactor", texture: [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]], inCreative: true}
+	{name: "Nuclear Reactor", texture: [["ic_machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.nuclearReactor, "stone", 1);
 ItemRegistry.setRarity(BlockID.nuclearReactor, EnumRarity.UNCOMMON);
-ItemName.addProductionTooltip(BlockID.nuclearReactor, "EU", 1, 8192);
 
-TileRenderer.setStandardModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]]);
-TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1], ["nuclear_reactor_side", 1]]);
+TileRenderer.setStandardModel(BlockID.nuclearReactor, 0, [["ic_machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0], ["nuclear_reactor_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.nuclearReactor, 0, [["ic_machine_bottom", 0], ["nuclear_reactor_top", 0], ["nuclear_reactor_side_active", 0], ["nuclear_reactor_side_active", 0], ["nuclear_reactor_side_active", 0], ["nuclear_reactor_side_active", 0]]);
 
 Block.registerPlaceFunction(BlockID.nuclearReactor, function(coords, item, block, player, blockSource) {
 	const region = new WorldRegion(blockSource);
@@ -347,6 +346,8 @@ namespace Machine {
 		// Client Prototype
 		clientTick(): void {
 			super.clientTick();
+			if (!this.audioSource) return;
+			
 			const output = this.networkData.getDouble(NetworkDataKeys.powerOutput);
 			if (output > 0) {
 				this.audioSource.playSingle(this.getLoopSound(), true);

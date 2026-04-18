@@ -29,7 +29,7 @@ class ItemScanner extends ItemElectric {
 		if (client && ICTool.useElectricItem(item, this.getEnergyPerUse(), player)) {
 			SoundLib.playSoundAtEntity(player, "ODScanner.ogg");
 			BlockEngine.sendMessage(client, "message.scan_result", `${coords.x}, ${coords.y}, ${coords.z}`);
-			let ores = {};
+			let ores: KeyValueMap<number> = {};
 			let radius = this.getScanRadius();
 			let region = BlockSource.getDefaultForActor(player);
 			for (let x = coords.x - radius; x <= coords.x + radius; x++) {

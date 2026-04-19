@@ -6,7 +6,7 @@ BlockRegistry.createBlock("blockCuttingMachine", [
 BlockRegistry.setBlockMaterial(BlockID.blockCuttingMachine, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.blockCuttingMachine, 2, [["block_cutter_bottomtop", 0], ["block_cutter_bottomtop", 0], ["block_cutter_back", 0], ["block_cutter_side", 0], ["block_cutter_side", 0], ["block_cutter_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.blockCuttingMachine, 2, [["block_cutter_bottomtop", 0], ["block_cutter_bottomtop", 0], ["block_cutter_back", 0], ["block_cutter_side_active", 0], ["block_cutter_side_active", 0], ["block_cutter_side_active", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.blockCuttingMachine, 2, [["block_cutter_bottomtop", 0], ["block_cutter_bottomtop", 0], ["block_cutter_back", 0], ["block_cutter_side_on", 0], ["block_cutter_side_on", 0], ["block_cutter_side_on", 0]]);
 TileRenderer.setRotationFunction(BlockID.blockCuttingMachine);
 
 ItemName.addTierTooltip("blockCuttingMachine", 2);

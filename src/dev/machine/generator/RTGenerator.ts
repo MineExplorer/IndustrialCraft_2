@@ -5,7 +5,7 @@ BlockRegistry.setBlockMaterial(BlockID.rtGenerator, "stone", 1);
 ItemName.addProductionTooltip(BlockID.rtGenerator, "EU", EnergyProductionModifiers.RTGenerator, 32 * EnergyProductionModifiers.RTGenerator);
 
 TileRenderer.setStandardModel(BlockID.rtGenerator, 0, [["ic_machine_bottom", 0], ["rt_generator_top", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
-TileRenderer.registerRenderModel(BlockID.rtGenerator, 0, [["ic_machine_bottom", 0], ["rt_generator_top_active", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
+TileRenderer.registerRenderModel(BlockID.rtGenerator, 0, [["ic_machine_bottom", 0], ["rt_generator_top_on", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.rtGenerator, count: 1, data: 0}, [

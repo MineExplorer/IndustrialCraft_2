@@ -16,12 +16,12 @@ Block.setBlockShape(BlockID.luminator, {x: 15/16, y: 0, z: 0}, {x: 1, y: 1, z: 1
 Block.setBlockShape(BlockID.luminator, {x: 0, y: 0, z: 0}, {x: 1/16, y: 1, z: 1}, 5);
 
 BlockRegistry.createBlock("luminator_on", [
-	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false},
-	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false},
-	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false},
-	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false},
-	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false},
-	{name: "Luminator", texture: [["ic_luminator_active", 0]], inCreative: false}
+	{name: "Luminator", texture: [["ic_luminator_on", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator_on", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator_on", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator_on", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator_on", 0]], inCreative: false},
+	{name: "Luminator", texture: [["ic_luminator_on", 0]], inCreative: false}
 ], {
 	destroyTime: 2,
 	explosionResistance: 0.5,

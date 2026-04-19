@@ -6,7 +6,7 @@ BlockRegistry.createBlock("solidCanner", [
 BlockRegistry.setBlockMaterial(BlockID.solidCanner, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.solidCanner, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["solid_canner_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.solidCanner, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["solid_canner_front_active", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.solidCanner, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["solid_canner_front_on", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.solidCanner);
 
 ItemName.addTierTooltip("solidCanner", 1);

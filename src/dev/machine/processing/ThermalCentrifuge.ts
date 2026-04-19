@@ -6,7 +6,7 @@ BlockRegistry.createBlock("thermalCentrifuge", [
 BlockRegistry.setBlockMaterial(BlockID.thermalCentrifuge, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.thermalCentrifuge, 2, [["ic_machine_advanced_bottom", 0], ["thermal_centrifuge_top", 0], ["ic_machine_back", 0], ["thermal_centrifuge_front", 0], ["thermal_centrifuge_side", 0], ["thermal_centrifuge_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, 2, [["ic_machine_advanced_bottom", 0], ["thermal_centrifuge_top_active", 0], ["ic_machine_back", 0], ["thermal_centrifuge_front_active", 0], ["thermal_centrifuge_side_active", 0], ["thermal_centrifuge_side_active", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.thermalCentrifuge, 2, [["ic_machine_advanced_bottom", 0], ["thermal_centrifuge_top_on", 0], ["ic_machine_back", 0], ["thermal_centrifuge_front_on", 0], ["thermal_centrifuge_side_on", 0], ["thermal_centrifuge_side_on", 0]]);
 TileRenderer.setRotationFunction(BlockID.thermalCentrifuge);
 
 ItemName.addTierTooltip("thermalCentrifuge", 2);

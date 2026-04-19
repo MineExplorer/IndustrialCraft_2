@@ -5,7 +5,7 @@ BlockRegistry.setBlockMaterial(BlockID.icFermenter, "stone", 1);
 
 TileRenderer.setHandAndUiModel(BlockID.icFermenter, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_fermenter_back", 0], ["machine_heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]]);
 TileRenderer.setStandardModelWithRotation(BlockID.icFermenter, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_fermenter_back", 0], ["machine_heat_pipe", 0], ["ic_fermenter_side", 0], ["ic_fermenter_side", 0]], true);
-TileRenderer.registerModelWithRotation(BlockID.icFermenter, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_fermenter_back_active", 0], ["machine_heat_pipe_active", 0], ["ic_fermenter_side_active", 0], ["ic_fermenter_side_active", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.icFermenter, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_fermenter_back_on", 0], ["machine_heat_pipe_on", 0], ["ic_fermenter_side_on", 0], ["ic_fermenter_side_on", 0]], true);
 TileRenderer.setRotationFunction(BlockID.icFermenter, true);
 
 ItemName.addConsumptionTooltip("icFermenter", "HU", 1, 100);

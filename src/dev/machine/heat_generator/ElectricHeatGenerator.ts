@@ -6,7 +6,7 @@ ItemName.addTierTooltip(BlockID.electricHeatGenerator, 4);
 ItemName.addProductionTooltip(BlockID.electricHeatGenerator, "HU", 1, 100);
 
 TileRenderer.setStandardModelWithRotation(BlockID.electricHeatGenerator, 0, [["ic_machine_bottom", 0], ["electric_heat_generator", 0], ["heat_generator_side", 0], ["machine_heat_pipe", 0], ["electric_heat_generator", 0], ["electric_heat_generator", 0]], true);
-TileRenderer.registerModelWithRotation(BlockID.electricHeatGenerator, 0, [["ic_machine_bottom", 0], ["electric_heat_generator_active", 0], ["heat_generator_side", 1], ["machine_heat_pipe_active", 0], ["electric_heat_generator_active", 0], ["electric_heat_generator_active", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.electricHeatGenerator, 0, [["ic_machine_bottom", 0], ["electric_heat_generator_on", 0], ["heat_generator_side_on", 0], ["machine_heat_pipe_on", 0], ["electric_heat_generator_on", 0], ["electric_heat_generator_on", 0]], true);
 TileRenderer.setRotationFunction(BlockID.electricHeatGenerator, true);
 
 Callback.addCallback("PreLoaded", function() {

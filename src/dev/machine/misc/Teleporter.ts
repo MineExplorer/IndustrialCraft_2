@@ -5,7 +5,7 @@ BlockRegistry.setBlockMaterial(BlockID.teleporter, "stone", 1);
 ItemRegistry.setRarity(BlockID.teleporter, EnumRarity.RARE);
 
 TileRenderer.setStandardModel(BlockID.teleporter, 0, [["ic_machine_advanced_bottom", 0], ["teleporter_top", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0], ["teleporter_side", 0]]);
-TileRenderer.registerRenderModel(BlockID.teleporter, 0, [["ic_machine_advanced_bottom", 0], ["teleporter_top_active", 0], ["teleporter_side_active", 0], ["teleporter_side_active", 0], ["teleporter_side_active", 0], ["teleporter_side_active", 0]]);
+TileRenderer.registerRenderModel(BlockID.teleporter, 0, [["ic_machine_advanced_bottom", 0], ["teleporter_top_on", 0], ["teleporter_side_on", 0], ["teleporter_side_on", 0], ["teleporter_side_on", 0], ["teleporter_side_on", 0]]);
 
 Callback.addCallback("PreLoaded", function() {
 	Recipes.addShaped({id: BlockID.teleporter, count: 1, data: 0}, [

@@ -5,13 +5,13 @@ BlockRegistry.setBlockMaterial(BlockID.fluidHeatGenerator, "stone", 1);
 ItemName.addProductionTooltip(BlockID.fluidHeatGenerator, "HU", 16, 32);
 
 TileRenderer.setHandAndUiModel(BlockID.fluidHeatGenerator, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["fluid_heat_generator_back", 0], ["machine_heat_pipe", 0], ["fluid_heat_generator_side", 0], ["fluid_heat_generator_side", 0]]);
-TileRenderer.setStandardModel(BlockID.fluidHeatGenerator, 0, [["machine_heat_pipe", 0], ["fluid_heat_generator_back", 0], ["ic_machine_bottom", 0], ["ic_machine_top", 0], ["fluid_heat_generator_side", 2], ["fluid_heat_generator_side", 2]]);
-TileRenderer.setStandardModel(BlockID.fluidHeatGenerator, 1, [["fluid_heat_generator_back", 0], ["machine_heat_pipe", 0], ["ic_machine_top", 0], ["ic_machine_bottom", 0], ["fluid_heat_generator_side", 2], ["fluid_heat_generator_side", 2]]);
+TileRenderer.setStandardModel(BlockID.fluidHeatGenerator, 0, [["machine_heat_pipe", 0], ["fluid_heat_generator_back", 0], ["ic_machine_bottom", 0], ["ic_machine_top", 0], ["fluid_heat_generator_side", 1], ["fluid_heat_generator_side", 1]]);
+TileRenderer.setStandardModel(BlockID.fluidHeatGenerator, 1, [["fluid_heat_generator_back", 0], ["machine_heat_pipe", 0], ["ic_machine_top", 0], ["ic_machine_bottom", 0], ["fluid_heat_generator_side", 1], ["fluid_heat_generator_side", 1]]);
 TileRenderer.setStandardModelWithRotation(BlockID.fluidHeatGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["fluid_heat_generator_back", 0], ["machine_heat_pipe", 0], ["fluid_heat_generator_side", 0], ["fluid_heat_generator_side", 0]]);
 
-TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 0, [["machine_heat_pipe_active", 0], ["fluid_heat_generator_back", 0], ["ic_machine_bottom", 0], ["ic_machine_top", 0], ["fluid_heat_generator_side", 3], ["fluid_heat_generator_side", 3]]);
-TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 1, [["fluid_heat_generator_back", 0], ["machine_heat_pipe_active", 0], ["ic_machine_top", 0], ["ic_machine_bottom", 0], ["fluid_heat_generator_side", 3], ["fluid_heat_generator_side", 3]]);
-TileRenderer.registerModelWithRotation(BlockID.fluidHeatGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["fluid_heat_generator_back", 1], ["machine_heat_pipe_active", 0], ["fluid_heat_generator_side", 1], ["fluid_heat_generator_side", 1]]);
+TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 0, [["machine_heat_pipe_on", 0], ["fluid_heat_generator_back_on", 0], ["ic_machine_bottom", 0], ["ic_machine_top", 0], ["fluid_heat_generator_side_on", 1], ["fluid_heat_generator_side_on", 1]]);
+TileRenderer.registerRenderModel(BlockID.fluidHeatGenerator, 1, [["fluid_heat_generator_back_on", 0], ["machine_heat_pipe_on", 0], ["ic_machine_top", 0], ["ic_machine_bottom", 0], ["fluid_heat_generator_side_on", 1], ["fluid_heat_generator_side_on", 1]]);
+TileRenderer.registerModelWithRotation(BlockID.fluidHeatGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["fluid_heat_generator_back_on", 0], ["machine_heat_pipe_on", 0], ["fluid_heat_generator_side_on", 0], ["fluid_heat_generator_side_on", 0]]);
 
 TileRenderer.setRotationFunction(BlockID.fluidHeatGenerator, true);
 

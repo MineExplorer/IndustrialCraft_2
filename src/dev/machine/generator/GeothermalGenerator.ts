@@ -5,7 +5,7 @@ BlockRegistry.setBlockMaterial(BlockID.geothermalGenerator, "stone", 1);
 ItemName.addProductionTooltip(BlockID.geothermalGenerator, "EU", EnergyProductionModifiers.GeothermalGenerator);
 
 TileRenderer.setStandardModelWithRotation(BlockID.geothermalGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["geo_generator_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.geothermalGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["geo_generator_front_active", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.geothermalGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["geo_generator_front_on", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.geothermalGenerator);
 
 Callback.addCallback("PreLoaded", function() {

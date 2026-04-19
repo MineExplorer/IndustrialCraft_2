@@ -6,7 +6,7 @@ ItemName.addTierTooltip(BlockID.autoCrafter, 2);
 ItemName.addConsumptionTooltip(BlockID.autoCrafter, "EU", 16);
 
 TileRenderer.setStandardModelWithRotation(BlockID.autoCrafter, 2, [["autocrafter_bottom", 0], ["autocrafter_top", 0], ["autocrafter_back", 0], ["autocrafter_front", 0], ["autocrafter_left", 0], ["autocrafter_right", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.autoCrafter, 2, [["autocrafter_bottom", 0], ["autocrafter_top_active", 0], ["autocrafter_back", 0], ["autocrafter_front", 0], ["autocrafter_left", 0], ["autocrafter_right", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.autoCrafter, 2, [["autocrafter_bottom", 0], ["autocrafter_top_on", 0], ["autocrafter_back", 0], ["autocrafter_front", 0], ["autocrafter_left", 0], ["autocrafter_right", 0]]);
 TileRenderer.setRotationFunction(BlockID.autoCrafter);
 
 Callback.addCallback("PreLoaded", function() {

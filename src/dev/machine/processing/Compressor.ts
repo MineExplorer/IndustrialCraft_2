@@ -1,12 +1,12 @@
 /// <reference path="BasicProcessingMachine.ts" />
 
 BlockRegistry.createBlock("compressor", [
-	{name: "Compressor", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["compressor", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]], inCreative: true}
+	{name: "Compressor", texture: [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["compressor_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.compressor, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.compressor, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["compressor", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.compressor, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["compressor_active", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.compressor, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["compressor_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.compressor, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["compressor_front_on", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.compressor);
 
 ItemName.addTierTooltip("compressor", 1);

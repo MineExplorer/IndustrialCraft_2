@@ -7,7 +7,7 @@ BlockRegistry.setBlockMaterial(BlockID.primalGenerator, "stone", 1);
 ItemName.addProductionTooltip(BlockID.primalGenerator, "EU", EnergyProductionModifiers.FuelGenerator);
 
 TileRenderer.setStandardModelWithRotation(BlockID.primalGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["generator_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.primalGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["generator_front_active", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.primalGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["ic_machine_side", 0], ["generator_front_on", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.primalGenerator);
 
 Callback.addCallback("PreLoaded", function() {

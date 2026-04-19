@@ -5,12 +5,12 @@ BlockRegistry.setBlockMaterial(BlockID.solidHeatGenerator, "stone", 1);
 ItemName.addProductionTooltip(BlockID.solidHeatGenerator, "HU", EnergyProductionModifiers.FuelGenerator * 2);
 
 TileRenderer.setHandAndUiModel(BlockID.solidHeatGenerator, 0, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["solid_heat_generator_back", 0], ["machine_heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
-TileRenderer.setStandardModel(BlockID.solidHeatGenerator, 0, [["machine_heat_pipe", 0], ["solid_heat_generator_back", 0], ["ic_machine_bottom", 0], ["ic_machine_top", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
-TileRenderer.setStandardModel(BlockID.solidHeatGenerator, 1, [["solid_heat_generator_back", 0], ["machine_heat_pipe", 0], ["ic_machine_top", 0], ["ic_machine_bottom", 0], ["heat_generator_side", 2], ["heat_generator_side", 2]]);
+TileRenderer.setStandardModel(BlockID.solidHeatGenerator, 0, [["machine_heat_pipe", 0], ["solid_heat_generator_back", 0], ["ic_machine_bottom", 0], ["ic_machine_top", 0], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
+TileRenderer.setStandardModel(BlockID.solidHeatGenerator, 1, [["solid_heat_generator_back", 0], ["machine_heat_pipe", 0], ["ic_machine_top", 0], ["ic_machine_bottom", 0], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
 TileRenderer.setStandardModelWithRotation(BlockID.solidHeatGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["solid_heat_generator_back", 0], ["machine_heat_pipe", 0], ["heat_generator_side", 0], ["heat_generator_side", 0]]);
-TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 0, [["machine_heat_pipe_active", 0], ["solid_heat_generator_back_active", 0], ["ic_machine_bottom", 0], ["ic_machine_top", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
-TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 1, [["solid_heat_generator_back_active", 0], ["machine_heat_pipe_active", 0], ["ic_machine_top", 0], ["ic_machine_bottom", 0], ["heat_generator_side", 3], ["heat_generator_side", 3]]);
-TileRenderer.registerModelWithRotation(BlockID.solidHeatGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["solid_heat_generator_back_active", 0], ["machine_heat_pipe_active", 0], ["heat_generator_side", 1], ["heat_generator_side", 1]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 0, [["machine_heat_pipe_on", 0], ["solid_heat_generator_back_on", 0], ["ic_machine_bottom", 0], ["ic_machine_top", 0], ["heat_generator_side_on", 1], ["heat_generator_side_on", 1]]);
+TileRenderer.registerRenderModel(BlockID.solidHeatGenerator, 1, [["solid_heat_generator_back_on", 0], ["machine_heat_pipe_on", 0], ["ic_machine_top", 0], ["ic_machine_bottom", 0], ["heat_generator_side_on", 1], ["heat_generator_side_on", 1]]);
+TileRenderer.registerModelWithRotation(BlockID.solidHeatGenerator, 2, [["ic_machine_bottom", 0], ["ic_machine_top", 0], ["solid_heat_generator_back_on", 0], ["machine_heat_pipe_on", 0], ["heat_generator_side_on", 0], ["heat_generator_side_on", 0]]);
 TileRenderer.setRotationFunction(BlockID.solidHeatGenerator, true);
 
 Callback.addCallback("PreLoaded", function() {

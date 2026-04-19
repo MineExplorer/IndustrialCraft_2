@@ -6,7 +6,7 @@ BlockRegistry.createBlock("recycler", [
 BlockRegistry.setBlockMaterial(BlockID.recycler, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.recycler, 2, [["ic_machine_bottom", 0], ["macerator_top", 0], ["ic_machine_side", 0], ["recycler_front", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.recycler, 2, [["ic_machine_bottom", 0], ["macerator_top_active", 0], ["ic_machine_side", 0], ["recycler_front_active", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.recycler, 2, [["ic_machine_bottom", 0], ["macerator_top_on", 0], ["ic_machine_side", 0], ["recycler_front_on", 0], ["ic_machine_side", 0], ["ic_machine_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.recycler);
 
 ItemName.addTierTooltip("recycler", 1);

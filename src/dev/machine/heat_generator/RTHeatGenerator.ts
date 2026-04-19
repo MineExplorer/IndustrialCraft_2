@@ -6,7 +6,7 @@ ItemName.addProductionTooltip(BlockID.rtHeatGenerator, "HU", 2 * EnergyProductio
 
 TileRenderer.setHandAndUiModel(BlockID.rtHeatGenerator, 0, [["ic_machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["machine_heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]]);
 TileRenderer.setStandardModelWithRotation(BlockID.rtHeatGenerator, 0, [["ic_machine_bottom", 0], ["rt_heat_generator_top", 0], ["rt_generator_side", 0], ["machine_heat_pipe", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], true);
-TileRenderer.registerModelWithRotation(BlockID.rtHeatGenerator, 0, [["ic_machine_bottom", 0], ["rt_heat_generator_top_active", 0], ["rt_generator_side", 0], ["machine_heat_pipe_active", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.rtHeatGenerator, 0, [["ic_machine_bottom", 0], ["rt_heat_generator_top_on", 0], ["rt_generator_side", 0], ["machine_heat_pipe_on", 0], ["rt_generator_side", 0], ["rt_generator_side", 0]], true);
 TileRenderer.setRotationFunction(BlockID.rtHeatGenerator, true);
 
 Callback.addCallback("PreLoaded", function() {

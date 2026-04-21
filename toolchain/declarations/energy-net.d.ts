@@ -150,7 +150,7 @@ declare abstract class EnergyNode {
     /**
      * Adds output connection to specified node
      * @param node receiver node
-     * @returns — true if connection was added, false if it already exists
+     * @returns true if connection was added, false if it already exists
      */
     addConnection(node: EnergyNode): boolean;
     /**

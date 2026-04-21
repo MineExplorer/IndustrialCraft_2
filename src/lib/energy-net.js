@@ -23,7 +23,7 @@ var __extends = (this && this.__extends) || (function () {
 */
 LIBRARY({
     name: "EnergyNet",
-    version: 12,
+    version: 13,
     shared: true,
     api: "CoreEngine"
 });
@@ -332,7 +332,7 @@ var EnergyNode = /** @class */ (function () {
     /**
      * Adds output connection to specified node
      * @param node receiver node
-     * @returns — true if connection was added, false if it already exists
+     * @returns true if connection was added, false if it already exists
      */
     EnergyNode.prototype.addConnection = function (node) {
         if (this.addReceiver(node)) {
@@ -899,7 +899,13 @@ var EnergyTileNode = /** @class */ (function (_super) {
         return energyIn;
     };
     EnergyTileNode.prototype.getFreeCapacity = function (energyName) {
-        var freeEnergy = this.tileEntity.getFreeEnergyAmount(energyName);
+        var freeEnergy;
+        if (this.isConductor(energyName)) {
+            freeEnergy = this.energyIn || 1;
+        }
+        else {
+            freeEnergy = this.tileEntity.getFreeEnergyAmount(energyName);
+        }
         return this.freeCapacity = freeEnergy;
     };
     EnergyTileNode.prototype.isConductor = function (energyName) {

@@ -1,10 +1,10 @@
 BlockRegistry.createBlock("ironFurnace", [
-	{name: "Iron Furnace", texture: [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]], inCreative: true}
+	{name: "Iron Furnace", texture: [["ic_iron_furnace_bottom", 0], ["ic_iron_furnace_top", 0], ["ic_iron_furnace_side", 0], ["ic_iron_furnace_front", 0], ["ic_iron_furnace_side", 0], ["ic_iron_furnace_side", 0]], inCreative: true}
 ], "machine");
 BlockRegistry.setBlockMaterial(BlockID.ironFurnace, "stone", 1);
 
-TileRenderer.setStandardModelWithRotation(BlockID.ironFurnace, 2, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.ironFurnace, 2, [["iron_furnace_bottom", 0], ["iron_furnace_top", 0], ["iron_furnace_side", 0], ["iron_furnace_front_on", 0], ["iron_furnace_side", 0], ["iron_furnace_side", 0]]);
+TileRenderer.setStandardModelWithRotation(BlockID.ironFurnace, 2, [["ic_iron_furnace_bottom", 0], ["ic_iron_furnace_top", 0], ["ic_iron_furnace_side", 0], ["ic_iron_furnace_front", 0], ["ic_iron_furnace_side", 0], ["ic_iron_furnace_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.ironFurnace, 2, [["ic_iron_furnace_bottom", 0], ["ic_iron_furnace_top", 0], ["ic_iron_furnace_side", 0], ["ic_iron_furnace_front_on", 0], ["ic_iron_furnace_side", 0], ["ic_iron_furnace_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.ironFurnace);
 
 Callback.addCallback("PreLoaded", function() {

@@ -32,8 +32,8 @@ Recipes.addShaped({id: ItemID.compositeHelmet, count: 1, data: 0}, [
 Recipes.addShaped({id: ItemID.compositeChestplate, count: 1, data: 0}, [
 	"x x",
 	"xax",
-	"xxx"
-], ['x', ItemID.plateAlloy, 0, 'a', VanillaItemID.iron_chestplate, 0]);
+	"xbx"
+], ['x', ItemID.plateAlloy, 0, 'a', VanillaItemID.iron_chestplate, 0, 'b', VanillaItemID.leather_chestplate, 0]);
 
 Recipes.addShaped({id: ItemID.compositeLeggings, count: 1, data: 0}, [
 	"xax",

@@ -7,7 +7,7 @@ BlockRegistry.setBlockMaterial(BlockID.chargepadMFSU, "stone", 1);
 
 TileRenderer.setHandAndUiModel(BlockID.chargepadMFSU, 0, [["chargepad_mfsu_bottom", 0], ["chargepad_mfsu_top", 0], ["chargepad_mfsu_side", 0], ["chargepad_mfsu_front", 0], ["chargepad_mfsu_side", 0], ["chargepad_mfsu_side", 0]]);
 TileRenderer.setStandardModelWithRotation(BlockID.chargepadMFSU, 2, [["chargepad_mfsu_bottom", 0], ["chargepad_mfsu_top", 0], ["chargepad_mfsu_side", 0], ["chargepad_mfsu_front", 0], ["chargepad_mfsu_side", 0], ["chargepad_mfsu_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.chargepadMFSU, 2, [["chargepad_mfsu_bottom", 0], ["chargepad_mfsu_top_active", 0], ["chargepad_mfsu_side", 0], ["chargepad_mfsu_front", 0], ["chargepad_mfsu_side", 0], ["chargepad_mfsu_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.chargepadMFSU, 2, [["chargepad_mfsu_bottom", 0], ["chargepad_mfsu_top_on", 0], ["chargepad_mfsu_side", 0], ["chargepad_mfsu_front", 0], ["chargepad_mfsu_side", 0], ["chargepad_mfsu_side", 0]]);
 
 ItemRegistry.setRarity(BlockID.chargepadMFSU, EnumRarity.UNCOMMON);
 ItemName.addStorageBlockTooltip("chargepadMFSU", 4, "60M", 2048);

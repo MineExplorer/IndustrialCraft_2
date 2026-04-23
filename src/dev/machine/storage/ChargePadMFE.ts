@@ -7,7 +7,7 @@ BlockRegistry.setBlockMaterial(BlockID.chargepadMFE, "stone", 1);
 
 TileRenderer.setHandAndUiModel(BlockID.chargepadMFE, 0, [["chargepad_mfe_bottom", 0], ["chargepad_mfe_top", 0], ["chargepad_mfe_back", 0], ["chargepad_mfe_front", 0], ["chargepad_mfe_side", 0], ["chargepad_mfe_side", 0]]);
 TileRenderer.setStandardModelWithRotation(BlockID.chargepadMFE, 2, [["chargepad_mfe_bottom", 0], ["chargepad_mfe_top", 0], ["chargepad_mfe_back", 0], ["chargepad_mfe_front", 0], ["chargepad_mfe_side", 0], ["chargepad_mfe_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.chargepadMFE, 2, [["chargepad_mfe_bottom", 0], ["chargepad_mfe_top_active", 0], ["chargepad_mfe_back", 0], ["chargepad_mfe_front", 0], ["chargepad_mfe_side", 0], ["chargepad_mfe_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.chargepadMFE, 2, [["chargepad_mfe_bottom", 0], ["chargepad_mfe_top_on", 0], ["chargepad_mfe_back", 0], ["chargepad_mfe_front", 0], ["chargepad_mfe_side", 0], ["chargepad_mfe_side", 0]]);
 
 ItemName.addStorageBlockTooltip("chargepadMFE", 3, "4M", 512);
 

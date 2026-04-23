@@ -8,7 +8,7 @@ BlockRegistry.setBlockMaterial(BlockID.chargepadBatBox, "wood");
 
 TileRenderer.setHandAndUiModel(BlockID.chargepadBatBox, 0, [["chargepad_batbox_bottom", 0], ["chargepad_batbox_top", 0], ["chargepad_batbox_back", 0], ["chargepad_batbox_front", 0], ["chargepad_batbox_side", 0], ["chargepad_batbox_side", 0]]);
 TileRenderer.setStandardModelWithRotation(BlockID.chargepadBatBox, 2, [["chargepad_batbox_bottom", 0], ["chargepad_batbox_top", 0], ["chargepad_batbox_back", 0], ["chargepad_batbox_front", 0], ["chargepad_batbox_side", 0], ["chargepad_batbox_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.chargepadBatBox, 2, [["chargepad_batbox_bottom", 0], ["chargepad_batbox_top_active", 0], ["chargepad_batbox_back", 0], ["chargepad_batbox_front", 0], ["chargepad_batbox_side", 0], ["chargepad_batbox_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.chargepadBatBox, 2, [["chargepad_batbox_bottom", 0], ["chargepad_batbox_top_on", 0], ["chargepad_batbox_back", 0], ["chargepad_batbox_front", 0], ["chargepad_batbox_side", 0], ["chargepad_batbox_side", 0]]);
 
 ItemName.addStorageBlockTooltip("chargepadBatBox", 1, "40K", 32);
 

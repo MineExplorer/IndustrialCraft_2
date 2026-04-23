@@ -4,7 +4,7 @@ BlockRegistry.createBlock("massFabricator", [
 BlockRegistry.setBlockMaterial(BlockID.massFabricator, "stone", 1);
 
 TileRenderer.setStandardModelWithRotation(BlockID.massFabricator, 2, [["ic_machine_advanced_bottom", 0], ["ic_machine_advanced_top", 0], ["ic_machine_advanced_side", 0], ["mass_fab_front", 0], ["ic_machine_advanced_side", 0], ["ic_machine_advanced_side", 0]]);
-TileRenderer.registerModelWithRotation(BlockID.massFabricator, 2, [["ic_machine_advanced_bottom", 0], ["ic_machine_advanced_top", 0], ["ic_machine_advanced_side", 0], ["mass_fab_front_active", 0], ["ic_machine_advanced_side", 0], ["ic_machine_advanced_side", 0]]);
+TileRenderer.registerModelWithRotation(BlockID.massFabricator, 2, [["ic_machine_advanced_bottom", 0], ["ic_machine_advanced_top", 0], ["ic_machine_advanced_side", 0], ["mass_fab_front_on", 0], ["ic_machine_advanced_side", 0], ["ic_machine_advanced_side", 0]]);
 TileRenderer.setRotationFunction(BlockID.massFabricator);
 
 ItemRegistry.setRarity(BlockID.massFabricator, EnumRarity.RARE);

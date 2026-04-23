@@ -4,7 +4,7 @@
 class ArmorFuelJetpack extends ArmorIC2
 implements IJetpack, LiquidItem {
 	liquidStorage = 3000;
-	/** Amount of ticks of active flying that 1 mB of fuel provides */
+	/** Amount of ticks of active flying that 1 mB of fuel provides divided by 2 */
 	static FUEL_BURN_TICKS = 5;
 
 	constructor() {

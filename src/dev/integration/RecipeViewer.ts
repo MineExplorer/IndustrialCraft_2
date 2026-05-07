@@ -478,5 +478,39 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 
 	api.RecipeTypeRegistry.register("icpe_fluidFuel", new FluidFuelRecipeView());
 
+	class GeneratorFuelRecipeView extends api.RecipeType {
+
+		constructor(){
+			super("Generator Fuel", BlockID.primalGenerator, {
+				drawing: [
+					{type: "bitmap", x: 500 - 104, y: 300 - 240, scale: 16, bitmap: "fire_scale"}
+				],
+				elements: {
+					input0: {x: 500 - 120, y: 300, size: 240},
+					text: {type: "text", x: 500, y: 600, multiline: true, font: {size: 80, color: Color.WHITE, shadow: 0.5, align: UI.Font.ALIGN_CENTER}}
+				}
+			});
+			this.setGridView(2, 3, true);
+			this.setDescription("Fuel");
+		}
+
+		getAllList(): RecipePattern[] {
+			return api.RecipeTypeRegistry.get("fuel").getAllList();
+		}
+
+		getList(id: number, data: number, isUsage: boolean): RecipePattern[] {
+			return isUsage && Recipes.getFuelBurnDuration(id, data) > 0 ? [{input: [{id: id, count: 1, data: data}]}] : [];
+		}
+
+		onOpen(elements: java.util.HashMap<string, UI.Element>, recipe: RecipePattern): void {
+			const item = recipe.input[0];
+			const time = Recipes.getFuelBurnDuration(item.id, item.data);
+			elements.get("text").setBinding("text", `${time / 4 * EnergyProductionModifiers.FuelGenerator} EU`);
+		}
+
+	}
+
+	api.RecipeTypeRegistry.register("icpe_generatorFuel", new GeneratorFuelRecipeView());
+
 });
 

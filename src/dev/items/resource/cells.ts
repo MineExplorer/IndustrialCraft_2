@@ -96,7 +96,7 @@ Item.addCreativeGroup("cells", Translation.translate("Cells"), [
 	ItemID.cellBiomass,
 	ItemID.cellBiogas,
 	ItemID.cellCoolant,
-	ItemID.cellMatter,
+	//ItemID.cellMatter,
 	ItemID.cellAir
 ]);
 

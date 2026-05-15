@@ -29,7 +29,7 @@ namespace CableRegistry {
 		return Block.getNumericId(stringID + insulation);
 	}
 
-	export function createBlock(stringID: string, properties: {name: string, texture: string}, blockType?: string | Block.SpecialType): void {
+	export function createBlock(stringID: string, properties: {name: string, texture: string}, blockType?: string | BlockType): void {
 		const variations: Block.BlockVariation[] = [];
 		for (let i = 0; i < 16; i++) {
 			variations.push({name: properties.name, texture: [[properties.texture, i]]});

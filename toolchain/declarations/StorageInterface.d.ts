@@ -104,7 +104,7 @@ declare namespace StorageInterface {
     interface StorageInterfacePrototype extends StorageDescriptor {
         classType?: typeof TileEntityInterface;
     }
-    export var data: {
+    export const data: {
         [key: number]: StorageInterfacePrototype;
     };
     /** @returns TileEntity StorageInterface prototype by block id */

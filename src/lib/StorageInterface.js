@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
 };
 LIBRARY({
     name: "StorageInterface",
-    version: 14,
+    version: 15,
     shared: true,
     api: "CoreEngine"
 });
@@ -59,7 +59,7 @@ var StorageInterface;
                 var name = slots_1[_i];
                 var slot = this.getSlot(name);
                 if (slot.id == 0 || slot.id == item.id && slot.data == item.data) {
-                    count += Item.getMaxStack(item.id) - slot.count;
+                    count += Item.getMaxStack(item.id, item.data) - slot.count;
                     if (count >= item.count)
                         break;
                 }
@@ -188,7 +188,7 @@ var StorageInterface;
                     continue;
                 var slot = this.getSlot(name);
                 if (slot.id == 0 || slot.id == item.id && slot.data == item.data) {
-                    var maxStack = Math.min(Item.getMaxStack(item.id), this.getSlotMaxStack(name));
+                    var maxStack = Math.min(Item.getMaxStack(item.id, item.data), this.getSlotMaxStack(name));
                     count += maxStack - slot.count;
                     if (count >= item.count)
                         break;
@@ -349,21 +349,21 @@ var StorageInterface;
     StorageInterface.getRelativeCoords = getRelativeCoords;
     function setSlotMaxStackPolicy(container, slotName, maxCount) {
         container.setSlotAddTransferPolicy(slotName, function (container, name, id, amount, data) {
-            var maxStack = Math.min(maxCount, Item.getMaxStack(id));
+            var maxStack = Math.min(maxCount, Item.getMaxStack(id, data));
             return Math.max(0, Math.min(amount, maxStack - container.getSlot(name).count));
         });
     }
     StorageInterface.setSlotMaxStackPolicy = setSlotMaxStackPolicy;
     function setSlotValidatePolicy(container, slotName, func) {
         container.setSlotAddTransferPolicy(slotName, function (container, name, id, amount, data, extra, playerUid) {
-            amount = Math.min(amount, Item.getMaxStack(id) - container.getSlot(name).count);
+            amount = Math.min(amount, Item.getMaxStack(id, data) - container.getSlot(name).count);
             return func(name, id, amount, data, extra, container, playerUid) ? amount : 0;
         });
     }
     StorageInterface.setSlotValidatePolicy = setSlotValidatePolicy;
     function setGlobalValidatePolicy(container, func) {
         container.setGlobalAddTransferPolicy(function (container, name, id, amount, data, extra, playerUid) {
-            amount = Math.min(amount, Item.getMaxStack(id) - container.getSlot(name).count);
+            amount = Math.min(amount, Item.getMaxStack(id, data) - container.getSlot(name).count);
             return func(name, id, amount, data, extra, container, playerUid) ? amount : 0;
         });
     }
@@ -634,6 +634,13 @@ var StorageInterface;
     Callback.addCallback("TileEntityAdded", function (tileEntity, created) {
         if (created) { // fix of TileEntity access from ItemContainer
             tileEntity.container.setParent(tileEntity);
+        }
+        if (StorageInterface.getPrototype(tileEntity.blockID)) { // reverse compatibility
+            Object.defineProperty(tileEntity, "interface", {
+                get: function () {
+                    return StorageInterfaceFactory.getTileEntityInterface(tileEntity);
+                }
+            });
         }
     });
 })(StorageInterface || (StorageInterface = {}));

@@ -81,6 +81,7 @@ implements ItemBehavior, LiquidItem {
 
 ItemRegistry.registerItem(new ItemEmptyCell());
 ItemRegistry.registerItem(new ItemLiquidCell("cellWater", "water"));
+ItemRegistry.registerItem(new ItemLiquidCell("cellDistilledWater", "distilled_water"));
 ItemRegistry.registerItem(new ItemLiquidCell("cellLava", "lava"));
 ItemRegistry.registerItem(new ItemLiquidCell("cellBiomass", "biomass"));
 ItemRegistry.registerItem(new ItemLiquidCell("cellBiogas", "biogas"));

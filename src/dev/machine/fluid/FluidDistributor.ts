@@ -19,14 +19,14 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	const guiFluidDistributor = MachineRegistry.createInventoryWindow("Fluid Distributor", {
 		drawing: [
-			{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "fluid_distributor_background", scale: GUI_SCALE}
+			{type: "bitmap", x: 400 + 3*GUI_SCALE, y: 146, bitmap: "icpe.fluid_distributor_background", scale: GUI_SCALE}
 		],
 
 		elements: {
 			"liquidScale": {type: "scale", x: 480, y: 50 + 34*GUI_SCALE, direction: 1, bitmap: "fluid_dustributor_bar", scale: GUI_SCALE},
 			"slot1": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 47*GUI_SCALE},
 			"slot2": {type: "slot", x: 400 + 3*GUI_SCALE, y: 50 + 66*GUI_SCALE},
-			"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "fluid_distributor_button", scale: GUI_SCALE, clicker: {
+			"button_switch": {type: "button", x: 400 + 112*GUI_SCALE, y: 50 + 53*GUI_SCALE, bitmap: "icpe.fluid_distributor_button", scale: GUI_SCALE, clicker: {
 				onClick: function(_, container: ItemContainer) {
 					container.sendEvent("invertMode", {});
 				}

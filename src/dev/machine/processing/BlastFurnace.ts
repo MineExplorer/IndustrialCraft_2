@@ -28,11 +28,11 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	const guiBlastFurnace = MachineRegistry.createInventoryWindow("Industrial Blast Furnace", {
 		drawing: [
-			{type: "bitmap", x: 450, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE_NEW}
+			{type: "bitmap", x: 450, y: 50, bitmap: "icpe.blast_furnace_background", scale: GUI_SCALE_NEW}
 		],
 
 		elements: {
-			"progressScale": {type: "scale", x: 450 + 50*GUI_SCALE_NEW, y: 50 + 27*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "blast_furnace_scale", scale: GUI_SCALE_NEW, clicker: {
+			"progressScale": {type: "scale", x: 450 + 50*GUI_SCALE_NEW, y: 50 + 27*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "icpe.blast_furnace_scale", scale: GUI_SCALE_NEW, clicker: {
 				onClick: () => {
 					RV?.RecipeTypeRegistry.openRecipePage("icpe_blastFurnace");
 				}

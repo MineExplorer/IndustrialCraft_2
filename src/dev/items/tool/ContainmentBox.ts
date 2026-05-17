@@ -9,10 +9,10 @@ const guiContainmentBox = new UI.StandartWindow({
 
 	drawing: [
 		{type: "background", color: Color.parseColor("#d5d9b9")},
-		{type: "bitmap", x: 415, y: 112, bitmap: "containment_box_image", scale: GUI_SCALE},
-		{type: "bitmap", x: 805, y: 112, bitmap: "containment_box_image", scale: GUI_SCALE},
-		{type: "bitmap", x: 415, y: 232, bitmap: "containment_box_image", scale: GUI_SCALE},
-		{type: "bitmap", x: 805, y: 232, bitmap: "containment_box_image", scale: GUI_SCALE},
+		{type: "bitmap", x: 415, y: 112, bitmap: "icpe.containment_box_image", scale: GUI_SCALE},
+		{type: "bitmap", x: 805, y: 112, bitmap: "icpe.containment_box_image", scale: GUI_SCALE},
+		{type: "bitmap", x: 415, y: 232, bitmap: "icpe.containment_box_image", scale: GUI_SCALE},
+		{type: "bitmap", x: 805, y: 232, bitmap: "icpe.containment_box_image", scale: GUI_SCALE},
 	],
 
 	elements: {

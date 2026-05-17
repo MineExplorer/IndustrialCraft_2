@@ -181,10 +181,10 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 		constructor() {
 			super("Metal Former", BlockID.metalFormer, {
 				drawing: [
-					{type: "bitmap", x: 360, y: 220, scale: 6, bitmap: "metalformer_bar_scale"}
+					{type: "bitmap", x: 360, y: 220, scale: 6, bitmap: "icpe.metalformer_bar_scale"}
 				],
 				elements: {
-					mode: {type: "scale", x: 445, y: 320, bitmap: "metal_former_button_0", scale: 6, value: 1},
+					mode: {type: "scale", x: 445, y: 320, bitmap: "icpe.metal_former_button_0", scale: 6, value: 1},
 					input0: {x: 220, y: 190, size: 120},
 					output0: {x: 660, y: 190, size: 120}
 				}
@@ -214,7 +214,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 		}
 
 		onOpen(elements: java.util.HashMap<string, UI.Element>, recipe: RecipePattern): void {
-			elements.get("mode").setBinding("texture", "metal_former_button_" + recipe.mode);
+			elements.get("mode").setBinding("texture", "icpe.metal_former_button_" + recipe.mode);
 		}
 
 	}
@@ -379,8 +379,8 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 		constructor() {
 			super("Blast Furnace", BlockID.blastFurnace, {
 				drawing: [
-					{type: "bitmap", x: 200, y: 100 - 11 * 5, scale: 5, bitmap: "blast_furnace_background"},
-					{type: "bitmap", x: 200 + 50 * 5, y: 100 + 16 * 5, scale: 5, bitmap: "blast_furnace_scale"},
+					{type: "bitmap", x: 200, y: 100 - 11 * 5, scale: 5, bitmap: "icpe.blast_furnace_background"},
+					{type: "bitmap", x: 200 + 50 * 5, y: 100 + 16 * 5, scale: 5, bitmap: "icpe.blast_furnace_scale"},
 					{type: "bitmap", x: 200 + 46 * 5, y: 100 + 52 * 5, scale: 5, bitmap: "heat_scale"},
 					{type: "bitmap", x: 200 + 70 * 5, y: 100 + 48 * 5, scale: 5, bitmap: "indicator_green"}
 				],
@@ -416,7 +416,7 @@ ModAPI.addAPICallback("RecipeViewer", (api: typeof RV) => {
 		constructor() {
 			super("Fermenter", BlockID.icFermenter, {
 				drawing: [
-					{type: "bitmap", x: 20, y: 20, scale: 6, bitmap: "fermenter_background"},
+					{type: "bitmap", x: 20, y: 20, scale: 6, bitmap: "icpe.fermenter_background"},
 					{type: "bitmap", x: 20 + 118 * 6, y: 20 + 4 * 6, scale: 6, bitmap: "liquid_bar"}
 				],
 				elements: {

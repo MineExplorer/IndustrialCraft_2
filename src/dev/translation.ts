@@ -293,6 +293,7 @@ Translation.addTranslation("lava_cell", {en: "Lava Cell", ru: "Капсула с
 Translation.addTranslation("biomass_cell", {en: "Biomass Cell", ru: "Капсула биомассы", es: "Celda de Biomasa", pt: "Célula com Biomassa", zh: "生物质单元"});
 Translation.addTranslation("biogas_cell", {en: "Biogas Cell", ru: "Капсула биогаза", pt: "Célula com Biogás", zh: "沼气单元"});
 Translation.addTranslation("coolant_cell", {en: "Coolant Cell", ru: "Капсула хладагента", es: "Celda de Refrigerante", pt: "Célula com Líquido Refrigerante", zh: "冷却液单元"});
+Translation.addTranslation("distilled_water_cell", {en: "Distilled Water Cell", ru: "Капсула дистиллированной воды", es: "Celda de Agua Destilada", pt: "Célula com Água Destilada", zh: "蒸馏水单元"});
 Translation.addTranslation("uu_matter_cell", {en: "UU-Matter Cell", ru: "Капсула жидкой материи", es: "Celda de Materia UU", pt: "Célula com Matéria UU", zh: "UU物质单元"});
 Translation.addTranslation("air_cell", {en: "Compressed Air Cell", ru: "Капсула со сжатым воздухом", es: "Celda de Aire Comprimida", pt: "Célula com Ar Comprimido", zh: "压缩空气单元"});
 

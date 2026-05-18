@@ -126,6 +126,7 @@
         carbonPlate: number,
         casingBronze: number,
         casingCopper: number,
+        cellDistilledWater: number,
         casingGold: number,
         casingIron: number,
         casingLead: number,

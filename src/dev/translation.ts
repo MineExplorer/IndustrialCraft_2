@@ -85,14 +85,18 @@ Translation.addTranslation("Block Cutting Machine", {ru: "Режущая маш�
 Translation.addTranslation("Crop Matron", {ru: "Автосадовник", es: "Máquina Cosechadora", pt: "Fazendeiro", zh: "作物监管机"});
 Translation.addTranslation("Crop Harvester", {ru: "Сборщик урожая", es: "Cocechador de Cultivo", pt: "Colheitadeira", zh: "作物收割机"});
 
-// Explosive
-Translation.addTranslation("Nuke", {ru: "Ядерная бомба", pt: "Bomba Nuke", zh: "核弹"});
-
-// Fluid
+// Fluid Machines
 Translation.addTranslation("Pump", {ru: "Помпа", es: "Bomba Extractora", pt: "Bomba", zh: "泵"});
 Translation.addTranslation("Fluid Distributor", {ru: "Жидкостный распределитель", es: "Distribuidor de Líquido", pt: "Distribuidor de Fluidos", zh: "流体分配机"});
 Translation.addTranslation("Tank", {ru: "Бак", es: "Tanque", pt: "Tanque", zh: "流体储存器"});
-Translation.addTranslation("biogas", {en: "Biogas", ru: "Биогаз", es: "Biogás", pt: "Biogás", zh: "沼气"});
+Translation.addTranslation("Solar Distiller", {ru: "Солнечный опреснитель", es: "Destilador Solar", pt: "Destilador Solar", zh: "太阳能蒸馏机"});
+
+// Fluids
+Translation.addTranslation("Biogas", {ru: "Биогаз", es: "Biogás", pt: "Biogás", zh: "沼气"});
+Translation.addTranslation("Distilled Water", {ru: "Дистиллированная вода", es: "Agua Destilada", pt: "Água Destilada", zh: "蒸馏水"});
+
+// Explosive
+Translation.addTranslation("Nuke", {ru: "Ядерная бомба", pt: "Bomba Nuke", zh: "核弹"});
 
 // ITEMS
 Translation.addTranslation("latex", {en: "Latex", ru: "Латекс", es: "Caucho", pt: "Resina Pegajosa", zh: "粘性树脂"});

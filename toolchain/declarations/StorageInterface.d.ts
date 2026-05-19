@@ -8,12 +8,12 @@ interface StorageDescriptor {
     addItem?(item: ItemInstance, side?: number, maxCount?: number): number;
     getInputSlots?(side?: number): string[] | number[];
     getOutputSlots?(side?: number): string[] | number[];
-    canReceiveLiquid?(liquid: string, side: number): boolean;
-    canTransportLiquid?(liquid: string, side: number): boolean;
+    canReceiveLiquid?(liquid: string, side: number, tileEntity?: TileEntity): boolean;
+    canTransportLiquid?(liquid: string, side: number, tileEntity?: TileEntity): boolean;
     receiveLiquid?(liquidStorage: ILiquidStorage, liquid: string, amount: number): number;
     extractLiquid?(liquidStorage: ILiquidStorage, liquid: string, amount: number): number;
-    getInputTank?(side: number): ILiquidStorage;
-    getOutputTank?(side: number): ILiquidStorage;
+    getInputTank?(side: number, tileEntity?: TileEntity): ILiquidStorage;
+    getOutputTank?(side: number, tileEntity?: TileEntity): ILiquidStorage;
 }
 interface Storage extends StorageDescriptor {
     container: Container;
@@ -86,20 +86,20 @@ declare namespace StorageInterface {
         addItem(item: ItemInstance, side?: number, maxCount?: number): number;
         getOutputSlots(side?: number): string[];
         clearContainer(): void;
-        canReceiveLiquid(liquid: string, side: number): boolean;
-        canTransportLiquid(liquid: string, side: number): boolean;
+        canReceiveLiquid(liquid: string, side: number, tileEntity?: TileEntity): boolean;
+        canTransportLiquid(liquid: string, side: number, tileEntity?: TileEntity): boolean;
         receiveLiquid(liquidStorage: ILiquidStorage, liquid: string, amount: number): number;
         extractLiquid(liquidStorage: ILiquidStorage, liquid: string, amount: number): number;
-        getInputTank(side: number): ILiquidStorage;
-        getOutputTank(side: number): ILiquidStorage;
+        getInputTank(side: number, tileEntity?: TileEntity): ILiquidStorage;
+        getOutputTank(side: number, tileEntity?: TileEntity): ILiquidStorage;
     }
 }
 declare namespace StorageInterface {
     type ContainersMap = {
         [key: number]: Container;
     };
-    type StoragesMap = {
-        [key: number]: Storage;
+    type TileStoragesMap = {
+        [key: number]: TileEntityInterface;
     };
     interface StorageInterfacePrototype extends StorageDescriptor {
         classType?: typeof TileEntityInterface;
@@ -122,6 +122,8 @@ declare namespace StorageInterface {
     export function setGlobalValidatePolicy(container: ItemContainer, func: (name: string, id: number, amount: number, data: number, extra: ItemExtraData, container: ItemContainer, playerUid: number) => boolean): void;
     /** Creates new interface instance for TileEntity or Container */
     export function getInterface(storage: TileEntity | Container): Storage;
+    export function getTileEntityInterface(tileEntity: TileEntity): TileEntityInterface;
+    export function getNativeContainerInterface(container: NativeTileEntity): NativeContainerInterface;
     /** Trasfers item to slot
      * @count amount to transfer. Default is 64.
      * @returns transfered amount
@@ -144,7 +146,7 @@ declare namespace StorageInterface {
      * Returns object containing neigbour liquid storages where keys are block side numbers
      * @coords position from which check neighbour blocks
     */
-    export function getNearestLiquidStorages(coords: Vector, region: BlockSource): StoragesMap;
+    export function getNearestLiquidStorages(coords: Vector, region: BlockSource): TileStoragesMap;
     /**
      * Returns array of slot indexes for vanilla container or array of slot names for mod container
     */
@@ -183,12 +185,13 @@ declare namespace StorageInterface {
      * @inputSide block side of input storage which is receiving
      * @returns left liquid amount
     */
-    export function extractLiquid(liquid: Nullable<string>, maxAmount: number, inputStorage: TileEntity | Storage, outputStorage: Storage, inputSide: number): number;
+    export function extractLiquid(liquid: Nullable<string>, maxAmount: number, inputStorage: TileEntity | TileEntityInterface, outputStorage: TileEntityInterface, inputSide: number): number;
     /** Similar to StorageInterface.extractLiquid, but liquid must be specified */
-    export function transportLiquid(liquid: string, maxAmount: number, outputStorage: TileEntity | Storage, inputStorage: Storage, outputSide: number): number;
+    export function transportLiquid(liquid: string, maxAmount: number, outputStorage: TileEntity | TileEntityInterface, inputStorage: TileEntityInterface, outputSide: number): number;
     /**
      * Every 8 ticks checks neigbour hoppers and transfers items.
      * Use it in tick function of TileEntity
     */
     export function checkHoppers(tile: TileEntity): void;
+    export {};
 }

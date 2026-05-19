@@ -75,6 +75,7 @@
         rubberTreeLogLatex: number,
         rubberTreeSapling: number,
         semifluidGenerator: number,
+        solarDistiller: number,
         solarPanel: number,
         solidCanner: number,
         solidHeatGenerator: number,

@@ -20,7 +20,7 @@ implements IJetpack, LiquidItem {
 		if (amount == 0) {
 			return name + "\n§7" + Translation.translate("generic.text.empty");
 		}
-		return `${name}\n§7${Translation.translate("biogas")} ${amount} mB`;
+		return `${name}\n§7${Translation.translate("Biogas")} ${amount} mB`;
 	}
 
 	onHurt(params: {attacker: number, damage: number, type: number}, item: ItemInstance, index: number, playerUid: number): ItemInstance {

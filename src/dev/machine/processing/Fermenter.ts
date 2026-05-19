@@ -153,11 +153,11 @@ namespace Machine {
 			"slotBiogas1": {output: true},
 			"slotFertilizer": {output: true}
 		},
-		getInputTank: function() {
-			return this.tileEntity.inputTank;
+		getInputTank(side, tileEntity: Fermenter = this.tileEntity) {
+			return tileEntity.inputTank
 		},
-		getOutputTank: function() {
-			return this.tileEntity.outputTank;
+		getOutputTank(side, tileEntity: Fermenter = this.tileEntity) {
+			return tileEntity.outputTank;
 		}
 	});
 }

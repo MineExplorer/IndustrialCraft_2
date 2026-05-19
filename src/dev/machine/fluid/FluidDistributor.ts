@@ -113,9 +113,8 @@ namespace Machine {
 		isValidInput:(item: ItemInstance, side: number, tileEntity: FluidDistributor) => {
 			return LiquidItemRegistry.canBeFilledWithLiquid(item.id, item.data, item.extra, tileEntity.liquidTank.getLiquidStored() || "water")
 		},
-		canReceiveLiquid: function(liquid: string, side: number): boolean {
-			const data = this.tileEntity.data;
-			return (side == this.tileEntity.getFacing()) != data.inverted;
+		canReceiveLiquid: function(liquid: string, side: number, tileEntity: FluidDistributor): boolean {
+			return (side == tileEntity.getFacing()) != tileEntity.data.inverted;
 		}
 	});
 }

@@ -72,6 +72,7 @@ machine/uu/Replicator.ts
 machine/fluid/Pump.ts
 machine/fluid/FluidDistributor.ts
 machine/fluid/Tank.ts
+machine/fluid/SolarDistiller.ts
 
 machine/resource/Miner.ts
 machine/resource/AdvancedMiner.ts

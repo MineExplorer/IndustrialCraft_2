@@ -25,7 +25,7 @@ namespace Machine {
 			"slotInput2": {type: "slot", x: 360 + 135*GUI_SCALE_NEW, y: 50 + 63*GUI_SCALE_NEW, size: 54},
 			"slotOutput2": {type: "slot", x: 360 + 135*GUI_SCALE_NEW, y: 50 + 81*GUI_SCALE_NEW, size: 54},
 			"slotUpgrade1": {type: "slot", x: 360 + 151*GUI_SCALE_NEW, y: 50 + 7*GUI_SCALE_NEW, size: 54},
-			"slotUpgrade2": {type: "slot", x: 360 + 151*GUI_SCALE_NEW, y: 50 + 25*GUI_SCALE_NEW, size: 54},
+			"slotUpgrade2": {type: "slot", x: 360 + 151*GUI_SCALE_NEW, y: 50 + 25*GUI_SCALE_NEW, size: 54}
 		}
 	});
 
@@ -34,7 +34,9 @@ namespace Machine {
 		outputTank: BlockEngine.LiquidTank;
 
 		defaultValues = {
-			canSeeSky: false
+			updateTicker: 0,
+			progress: 0,
+			tickRate: 72 // default (normal biome)
 		}
 
 		defaultDrop = BlockID.machineBlockBasic;
@@ -48,13 +50,17 @@ namespace Machine {
 
 		onInit(): void {
 			super.onInit();
+
 			this.upgradeSet = UpgradeAPI.getUpgradeSet(this);
-			this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
+
+			// Randomize initial progress
+			this.data.tickRate = this.getTickRate();
+			this.data.updateTicker = Math.floor(Math.random() * this.data.tickRate);
 		}
 
 		setupContainer(): void {
-			this.inputTank = this.addLiquidTank("inputTank", 10000);
-			this.outputTank = this.addLiquidTank("outputTank", 10000);
+			this.inputTank = this.addLiquidTank("inputTank", 10000, ["water"]);
+			this.outputTank = this.addLiquidTank("outputTank", 10000, ["distilled_water"]);
 
 			StorageInterface.setGlobalValidatePolicy(this.container, (name, id, amount, data, extra) => {
 				if (name == "slotInput1") return LiquidItemRegistry.getItemLiquid(id, data, extra) == "water";
@@ -64,16 +70,24 @@ namespace Machine {
 			});
 		}
 
+		getTickRate(): number {
+			const biomeTemp = this.region.getBiomeTemperatureAt(this.x, this.y, this.z);
+
+			if (biomeTemp > 0.9) return 36;
+			if (biomeTemp < 0.15) return 144;
+			return 72;
+		}
+
+		canWork(): boolean {
+			return this.region.canSeeSky(this.x, this.y + 1, this.z) &&
+				this.region.getLightLevel(this.x, this.y + 1, this.z) == 15 &&
+				this.inputTank.getAmount() >= 1 &&
+				this.outputTank.getAmount() <= this.outputTank.getLimit() - 1;
+		}
+
 		onTick(): void {
 			UpgradeAPI.performUpgrades(this.upgradeSet);
 			StorageInterface.checkHoppers(this);
-			
-			if (World.getThreadTime() % 100 == 0) {
-				this.data.canSeeSky = this.region.canSeeSky(this.x, this.y + 1, this.z);
-			}
-			if (this.data.canSeeSky && this.region.getLightLevel(this.x, this.y + 1, this.z) == 15) {
-				// TODO
-			}
 
 			const slotInput1 = this.container.getSlot("slotInput1");
 			const slotOutput1 = this.container.getSlot("slotOutput1");
@@ -82,6 +96,22 @@ namespace Machine {
 			const slotInput2 = this.container.getSlot("slotInput2");
 			const slotOutput2 = this.container.getSlot("slotOutput2");
 			this.outputTank.addLiquidToItem(slotInput2, slotOutput2);
+
+			if (++this.data.updateTicker >= this.data.tickRate) {
+				if (this.canWork()) {
+					this.inputTank.getLiquid("water", 1);
+					this.outputTank.addLiquid("distilled_water", 1);
+					this.data.progress++;
+					if (this.data.progress >= 1000) {
+						this.data.progress = 0;
+					}
+				}
+
+				this.data.updateTicker = 0;
+			}
+
+			// Progress bar
+			this.container.setScale("progressScale", this.data.progress / 1000);
 
 			this.inputTank.updateUiScale("liquidInputScale");
 			this.outputTank.updateUiScale("liquidOutputScale");

@@ -1,0 +1,30 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "Behavior pack for ICPE",
+        "name": "ICPE Behavior Pack",
+        "uuid": "cda52b89-33da-459a-b8c6-8ea795c5a715",
+        "version": [
+            0,
+            0,
+            1
+        ],
+        "min_engine_version": [
+            1,
+            16,
+            200
+        ]
+    },
+    "modules": [
+        {
+            "description": "ICPE Behavior Pack",
+            "type": "data",
+            "uuid": "e835d9b0-fcec-4acf-b364-a86172b2024a",
+            "version": [
+                0,
+                0,
+                1
+            ]
+        }
+    ]
+}

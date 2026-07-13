@@ -3,7 +3,7 @@
     {
       "rolls": {
         "min": 2,
-        "max": 6
+        "max": 4
       },
       "entries": [
         {
@@ -18,7 +18,7 @@
               }
             }
           ],
-          "weight": 15
+          "weight": 5
         },
         {
           "type": "item",
@@ -32,25 +32,11 @@
               }
             }
           ],
-          "weight": 50
+          "weight": 5
         },
         {
           "type": "item",
           "name": "minecraft:gold_ingot",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 2,
-                "max": 7
-              }
-            }
-          ],
-          "weight": 75
-        },
-        {
-          "type": "item",
-          "name": "minecraft:emerald",
           "functions": [
             {
               "function": "set_count",
@@ -60,25 +46,26 @@
               }
             }
           ],
-          "weight": 10
+          "weight": 15
         },
         {
           "type": "item",
-          "name": "minecraft:bone",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 4,
-                "max": 6
-              }
-            }
-          ],
-          "weight": 100
+          "name": "minecraft:golden_sword",
+          "weight": 5
         },
         {
           "type": "item",
-          "name": "minecraft:rotten_flesh",
+          "name": "minecraft:golden_chestplate",
+          "weight": 5
+        },
+        {
+          "type": "item",
+          "name": "minecraft:flint_and_steel",
+          "weight": 5
+        },
+        {
+          "type": "item",
+          "name": "minecraft:nether_wart",
           "functions": [
             {
               "function": "set_count",
@@ -88,26 +75,17 @@
               }
             }
           ],
-          "weight": 80
-        },
-        {
-          "type": "item",
-          "name": "minecraft:bamboo",
-          "functions": [
-            {
-              "function": "set_count",
-              "count": {
-                "min": 1,
-                "max": 3
-              }
-            }
-          ],
-          "weight": 75
+          "weight": 5
         },
         {
           "type": "item",
           "name": "minecraft:saddle",
-          "weight": 15
+          "weight": 10
+        },
+        {
+          "type": "item",
+          "name": "minecraft:horsearmorgold",
+          "weight": 8
         },
         {
           "type": "item",
@@ -116,25 +94,22 @@
         },
         {
           "type": "item",
-          "name": "minecraft:horsearmorgold",
-          "weight": 5
-        },
-        {
-          "type": "item",
           "name": "minecraft:horsearmordiamond",
-          "weight": 5
+          "weight": 3
         },
         {
           "type": "item",
-          "name": "minecraft:book",
-          "weight": 6,
+          "name": "minecraft:obsidian",
           "functions": [
             {
-              "function": "enchant_with_levels",
-              "levels": 30,
-              "treasure": true
+              "function": "set_count",
+              "count": {
+                "min": 2,
+                "max": 4
+              }
             }
-          ]
+          ],
+          "weight": 2
         }
       ]
     },
@@ -147,22 +122,8 @@
 			"entries": [
 				{
 					"type": "item",
-					"name": "minecraft:item_ingot_copper",
-					"weight": 9,
-					"functions": [
-						{
-							"function": "set_count",
-							"count": {
-								"min": 2,
-								"max": 6
-							}
-						}
-					]
-				},
-				{
-					"type": "item",
-					"name": "minecraft:item_ingot_tin",
-					"weight": 8,
+					"name": "minecraft:item_ingot_bronze",
+					"weight": 5,
 					"functions": [
 						{
 							"function": "set_count",
@@ -176,26 +137,13 @@
 				{
 					"type": "item",
 					"name": "minecraft:item_ingot_silver",
-					"weight": 4,
+					"weight": 2,
 					"functions": [
 						{
 							"function": "set_count",
 							"count": {
 								"min": 1,
-								"max": 2
-							}
-						}
-					]
-				},
-        {
-					"type": "item",
-					"name": "minecraft:item_iridium_chunk",
-					"functions": [
-						{
-							"function": "set_count",
-							"count": {
-								"min": 1,
-								"max": 2
+								"max": 3
 							}
 						}
 					]
@@ -203,36 +151,21 @@
 				{
 					"type": "item",
 					"name": "minecraft:item_bronze_pickaxe",
-					"weight": 3
+					"weight": 5
 				},
 				{
 					"type": "item",
 					"name": "minecraft:item_bronze_sword",
-					"weight": 3
-				},
-				{
-					"type": "item",
-					"name": "minecraft:item_bronze_helmet",
-					"weight": 3
+					"weight": 5
 				},
 				{
 					"type": "item",
 					"name": "minecraft:item_bronze_chestplate",
-					"weight": 3
-				},
-				{
-					"type": "item",
-					"name": "minecraft:item_bronze_leggings",
-					"weight": 3
-				},
-				{
-					"type": "item",
-					"name": "minecraft:item_bronze_boots",
-					"weight": 3
+					"weight": 5
 				},
 				{
 					"type": "empty",
-					"weight": 40
+					"weight": 22
 				}
 			]
 		}

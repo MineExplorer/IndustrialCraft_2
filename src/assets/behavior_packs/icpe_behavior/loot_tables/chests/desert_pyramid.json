@@ -274,6 +274,19 @@
 						}
 					]
 				},
+        {
+					"type": "item",
+					"name": "minecraft:item_iridium_chunk",
+					"functions": [
+						{
+							"function": "set_count",
+							"count": {
+								"min": 1,
+								"max": 2
+							}
+						}
+					]
+				},
 				{
 					"type": "item",
 					"name": "minecraft:item_bronze_pickaxe",
@@ -306,7 +319,7 @@
 				},
 				{
 					"type": "empty",
-					"weight": 39
+					"weight": 40
 				}
 			]
 		}

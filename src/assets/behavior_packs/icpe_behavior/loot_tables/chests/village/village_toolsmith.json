@@ -150,7 +150,8 @@
 				},
         {
 					"type": "item",
-					"name": "minecraft:item_ingot_silver",
+					"name": "minecraft:item_ingot_steel",
+          "weight": 2,
 					"functions": [
 						{
 							"function": "set_count",
@@ -168,12 +169,22 @@
 				},
 				{
 					"type": "item",
+					"name": "minecraft:item_bronze_axe",
+					"weight": 5
+				},
+				{
+					"type": "item",
 					"name": "minecraft:item_bronze_shovel",
 					"weight": 5
 				},
 				{
+					"type": "item",
+					"name": "minecraft:item_crafting_hammer",
+					"weight": 5
+				},
+				{
 					"type": "empty",
-					"weight": 28
+					"weight": 39
 				}
 			]
     }

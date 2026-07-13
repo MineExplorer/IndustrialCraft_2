@@ -178,51 +178,11 @@
 				},
 				{
 					"type": "item",
-					"name": "minecraft:item_iridium_chunk",
-					"weight": 1,
-					"functions": [
-						{
-							"function": "set_count",
-							"count": {
-								"min": 1,
-								"max": 2
-							}
-						}
-					]
-				},
-				{
-					"type": "item",
-					"name": "minecraft:item_bronze_pickaxe",
-					"weight": 3
-				},
-				{
-					"type": "item",
-					"name": "minecraft:item_bronze_sword",
-					"weight": 3
-				},
-				{
-					"type": "item",
-					"name": "minecraft:item_bronze_helmet",
-					"weight": 3
-				},
-				{
-					"type": "item",
-					"name": "minecraft:item_bronze_chestplate",
-					"weight": 3
-				},
-				{
-					"type": "item",
-					"name": "minecraft:item_bronze_leggings",
-					"weight": 3
-				},
-				{
-					"type": "item",
-					"name": "minecraft:item_bronze_boots",
-					"weight": 3
+					"name": "minecraft:item_bronze_pickaxe"
 				},
 				{
 					"type": "empty",
-					"weight": 40
+					"weight": 22
 				}
 			]
 		}

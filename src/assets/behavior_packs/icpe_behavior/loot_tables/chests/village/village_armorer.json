@@ -69,9 +69,21 @@
 					"type": "item",
 					"name": "minecraft:item_bronze_helmet"
 				},
+        {
+					"type": "item",
+					"name": "minecraft:item_bronze_leggings"
+				},
+				{
+					"type": "item",
+					"name": "minecraft:item_bronze_boots"
+				},
+				{
+					"type": "item",
+					"name": "minecraft:item_crafting_hammer"
+				},
 				{
 					"type": "empty",
-					"weight": 3
+					"weight": 6
 				}
 			]
     }

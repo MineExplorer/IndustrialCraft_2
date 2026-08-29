@@ -36,6 +36,7 @@ namespace Machine {
 		defaultValues = {
 			updateTicker: 0,
 			progress: 0,
+			isActive: false,
 			tickRate: 72 // default (normal biome)
 		}
 
@@ -98,20 +99,23 @@ namespace Machine {
 			this.outputTank.addLiquidToItem(slotInput2, slotOutput2);
 
 			if (++this.data.updateTicker >= this.data.tickRate) {
+				let isActive = false;
 				if (this.canWork()) {
 					this.inputTank.getLiquid("water", 1);
 					this.outputTank.addLiquid("distilled_water", 1);
+					isActive = true;
 					this.data.progress++;
 					if (this.data.progress >= 1000) {
 						this.data.progress = 0;
 					}
 				}
 
+				this.data.isActive = isActive;
 				this.data.updateTicker = 0;
 			}
 
 			// Progress bar
-			this.container.setScale("progressScale", this.data.progress / 1000);
+			this.container.setScale("progressScale", this.data.isActive ? 1 : 0);
 
 			this.inputTank.updateUiScale("liquidInputScale");
 			this.outputTank.updateUiScale("liquidOutputScale");

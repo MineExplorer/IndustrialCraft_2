@@ -1,4 +1,5 @@
 #downlevelIteration: false
+#strict: false
 #declaration: true
 #skipLibCheck: true
 
@@ -7,7 +8,9 @@ constants.ts
 translation.ts
 
 core/**/*
-world/**
+
+world/OreGenerator.ts
+world/RubberTreeGenerator.ts
 
 block/rubber_tree.ts
 block/ore.ts

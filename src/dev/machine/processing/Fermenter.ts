@@ -153,10 +153,10 @@ namespace Machine {
 			"slotBiogas1": {output: true},
 			"slotFertilizer": {output: true}
 		},
-		getInputTank(side, tileEntity: Fermenter = this.tileEntity) {
+		getInputTank(side, tileEntity: Fermenter) {
 			return tileEntity.inputTank
 		},
-		getOutputTank(side, tileEntity: Fermenter = this.tileEntity) {
+		getOutputTank(side, tileEntity: Fermenter) {
 			return tileEntity.outputTank;
 		}
 	});

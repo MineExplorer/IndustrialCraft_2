@@ -132,10 +132,10 @@ namespace Machine {
 			"slotOutput1": {output: true},
 			"slotOutput2": {output: true}
 		},
-		getInputTank(side, tileEntity: SolarDistiller = this.tileEntity) {
+		getInputTank(side, tileEntity: SolarDistiller) {
 			return tileEntity.inputTank
 		},
-		getOutputTank(side, tileEntity: SolarDistiller = this.tileEntity) {
+		getOutputTank(side, tileEntity: SolarDistiller) {
 			return tileEntity.outputTank;
 		},
 		canReceiveLiquid(liquid) {

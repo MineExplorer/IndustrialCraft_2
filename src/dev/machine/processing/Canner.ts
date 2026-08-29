@@ -20,7 +20,8 @@ Callback.addCallback("PreLoaded", function() {
 
 	const dictionary: MachineRecipe.FluidEnrichRecipeDictionary = MachineRecipeRegistry.getDictionary("fluidCanner");
 	dictionary.addRecipe({id: ItemID.bioChaff, count: 1}, {name: "water", amount: 1000}, {name: "biomass", amount: 1000});
-	dictionary.addRecipe({id: ItemID.dustLapis, count: 1}, {name: "water", amount: 1000}, {name: "coolant", amount: 1000});
+	dictionary.addRecipe({id: ItemID.dustLapis, count: 4}, {name: "water", amount: 1000}, {name: "coolant", amount: 1000});
+	dictionary.addRecipe({id: ItemID.dustLapis, count: 1}, {name: "distilled_water", amount: 1000}, {name: "coolant", amount: 1000});
 });
 
 namespace Machine {
@@ -336,11 +337,11 @@ namespace Machine {
 			"slotResult": {output: true}
 		},
 		canReceiveLiquid: () => true,
-		getInputTank: function() {
-			return this.tileEntity.inputTank
+		getInputTank(side, tileEntity: Canner = this.tileEntity) {
+			return tileEntity.inputTank
 		},
-		getOutputTank: function() {
-			return this.tileEntity.outputTank;
+		getOutputTank(side, tileEntity: Canner = this.tileEntity) {
+			return tileEntity.outputTank;
 		}
 	});
 }

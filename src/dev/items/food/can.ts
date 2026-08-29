@@ -1,3 +1,4 @@
+// Item data: 0 - normal, 1 - rotten, 2 - poisoned
 class ItemTinCanFull
 extends ItemCommon
 implements ItemBehavior {

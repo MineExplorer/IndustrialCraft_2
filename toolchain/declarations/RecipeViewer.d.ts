@@ -14,20 +14,49 @@ declare interface RecipePattern {
 
 
 declare abstract class RecipeType {
-
-    constructor(name: string, icon: number | Tile, content: {params?: UI.BindingSet, drawing?: UI.DrawingSet, elements: {[key: string]: object}});
-
-    setDescription(text: string): this;
-    setTankLimit(limit: number | {[key: string]: number}): this;
-
+    readonly window: UI.Window;
+    readonly icon: ItemInstance;
+    constructor(name: string, icon: Tile | number, content: {
+        params?: UI.BindingSet;
+        drawing?: UI.DrawingElements[];
+        elements: {
+            [key: string]: Partial<UI.UIElement>;
+        };
+    });
+    setGridView(row: number, col: number, border?: boolean | number): RecipeType;
+    setDescription(text: string): RecipeType;
+    setTankLimit(limit: number): RecipeType;
+    getName(): string;
+    getIcon(): ItemInstance;
+    getDescription(): string;
+    getWindow(): UI.Window;
+    getRecipeCountPerPage(): number;
     abstract getAllList(): RecipePattern[];
     getList(id: number, data: number, isUsage: boolean): RecipePattern[];
+    getListByLiquid(liquid: string, isUsage: boolean): RecipePattern[];
+    hasAnyRecipe(id: number, data: number, isUsage: boolean): boolean;
+    hasAnyRecipeByLiquid(liquid: string, isUsage: boolean): boolean;
     onOpen(elements: java.util.HashMap<string, UI.Element>, recipe: RecipePattern): void;
-
+    showRecipe(recipes: RecipePattern[]): void;
+    slotTooltip(name: string, item: ItemInstance, tips: {
+        [key: string]: any;
+    }): string;
+    tankTooltip(name: string, liquid: LiquidInstance, tips: {
+        [key: string]: any;
+    }): string;
 }
 
-
 declare class RecipeTypeRegistry {
-    public register(key: string, recipeType: RecipeType): void;
-    public openRecipePage(key: string): void;
+    register(key: string, recipeType: RecipeType): void;
+    get(key: string): RecipeType;
+    isExist(key: string): boolean;
+    delete(key: string): void;
+    getAllKeys(): string[];
+    getLength(): number;
+    getActiveType(id: number, data: number, isUsage: boolean): string[];
+    getActiveTypeByLiquid(liquid: string, isUsage: boolean): string[];
+    openRecipePage(recipeKey: string | string[]): void;
+    openRecipePageByItem(id: number, data: number, isUsage: boolean): boolean;
+    openRecipePageByLiquid(liquid: string, isUsage: boolean): boolean;
+    getLiquidByTex(texture: string): string;
 }

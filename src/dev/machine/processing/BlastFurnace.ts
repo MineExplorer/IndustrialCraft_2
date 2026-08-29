@@ -5,7 +5,7 @@ BlockRegistry.setBlockMaterial(BlockID.blastFurnace, "stone", 1);
 
 TileRenderer.setHandAndUiModel(BlockID.blastFurnace, 0, [["ic_blast_furnace_bottom", 0], ["ic_blast_furnace_side", 0], ["ic_machine_back", 0], ["machine_heat_pipe", 0], ["ic_blast_furnace_side", 0], ["ic_blast_furnace_side", 0]]);
 TileRenderer.setStandardModelWithRotation(BlockID.blastFurnace, 0, [["ic_blast_furnace_bottom", 0], ["ic_blast_furnace_side", 0], ["ic_machine_back", 0], ["machine_heat_pipe", 0], ["ic_blast_furnace_side", 0], ["ic_blast_furnace_side", 0]], true);
-TileRenderer.registerModelWithRotation(BlockID.blastFurnace, 0, [["ic_blast_furnace_bottom", 0], ["ic_blast_furnace_side", 1], ["ic_machine_back", 0], ["machine_heat_pipe_on", 0], ["ic_blast_furnace_side_on", 0], ["ic_blast_furnace_side_on", 0]], true);
+TileRenderer.registerModelWithRotation(BlockID.blastFurnace, 0, [["ic_blast_furnace_bottom", 0], ["ic_blast_furnace_side_on", 0], ["ic_machine_back", 0], ["machine_heat_pipe_on", 0], ["ic_blast_furnace_side_on", 0], ["ic_blast_furnace_side_on", 0]], true);
 TileRenderer.setRotationFunction(BlockID.blastFurnace, true);
 
 ItemName.addConsumptionTooltip("blastFurnace", "HU", 1, 100);
@@ -28,11 +28,11 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	const guiBlastFurnace = MachineRegistry.createInventoryWindow("Industrial Blast Furnace", {
 		drawing: [
-			{type: "bitmap", x: 450, y: 50, bitmap: "blast_furnace_background", scale: GUI_SCALE_NEW}
+			{type: "bitmap", x: 450, y: 50, bitmap: "icpe.blast_furnace_background", scale: GUI_SCALE_NEW}
 		],
 
 		elements: {
-			"progressScale": {type: "scale", x: 450 + 50*GUI_SCALE_NEW, y: 50 + 27*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "blast_furnace_scale", scale: GUI_SCALE_NEW, clicker: {
+			"progressScale": {type: "scale", x: 450 + 50*GUI_SCALE_NEW, y: 50 + 27*GUI_SCALE_NEW, direction: 1, value: 0.5, bitmap: "icpe.blast_furnace_scale", scale: GUI_SCALE_NEW, clicker: {
 				onClick: () => {
 					RV?.RecipeTypeRegistry.openRecipePage("icpe_blastFurnace");
 				}

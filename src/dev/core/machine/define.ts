@@ -89,8 +89,8 @@ namespace MachineRegistry {
 		descriptor.getOutputTank ??= function() {
 			return this.tileEntity.liquidTank;
 		}
-		descriptor.canReceiveLiquid ??= function(liquid: string) {
-			return this.getInputTank().isValidLiquid(liquid);
+		descriptor.canReceiveLiquid ??= function(liquid: string, side: number) {
+			return (this.getInputTank(side, this.tileEntity) as BlockEngine.LiquidTank).isValidLiquid(liquid);
 		}
 		descriptor.canTransportLiquid ??= () => true;
 		StorageInterface.createInterface(blockID, descriptor);

@@ -2034,7 +2034,7 @@ declare abstract class TileEntityBase implements TileEntity {
      * Prevents all actions on click
      */
     preventClick(): void;
-    onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: ItemExtraData): boolean;
+    onItemClick(id: number, count: number, data: number, coords: Callback.ItemUseCoordinates, player: number, extra: Nullable<ItemExtraData>): boolean;
     destroyBlock(coords: Callback.ItemUseCoordinates, player: number): void;
     /** @deprecated */
     redstone(params: {

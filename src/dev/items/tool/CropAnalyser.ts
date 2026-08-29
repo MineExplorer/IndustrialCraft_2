@@ -268,7 +268,7 @@ namespace CropAnalyserGUI {
 
 		drawing: [
 			{ type: "background", color: 0 },
-			{ type: "bitmap", x: 250, y: 27, bitmap: "agricultural_analyser", scale: GUI_SCALE / 2.3 },
+			{ type: "bitmap", x: 250, y: 27, bitmap: "icpe.agricultural_analyser", scale: GUI_SCALE / 2.3 },
 		],
 
 		elements: {

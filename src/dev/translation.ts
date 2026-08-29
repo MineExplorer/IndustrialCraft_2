@@ -85,14 +85,18 @@ Translation.addTranslation("Block Cutting Machine", {ru: "Режущая маш�
 Translation.addTranslation("Crop Matron", {ru: "Автосадовник", es: "Máquina Cosechadora", pt: "Fazendeiro", zh: "作物监管机"});
 Translation.addTranslation("Crop Harvester", {ru: "Сборщик урожая", es: "Cocechador de Cultivo", pt: "Colheitadeira", zh: "作物收割机"});
 
-// Explosive
-Translation.addTranslation("Nuke", {ru: "Ядерная бомба", pt: "Bomba Nuke", zh: "核弹"});
-
-// Fluid
+// Fluid Machines
 Translation.addTranslation("Pump", {ru: "Помпа", es: "Bomba Extractora", pt: "Bomba", zh: "泵"});
 Translation.addTranslation("Fluid Distributor", {ru: "Жидкостный распределитель", es: "Distribuidor de Líquido", pt: "Distribuidor de Fluidos", zh: "流体分配机"});
 Translation.addTranslation("Tank", {ru: "Бак", es: "Tanque", pt: "Tanque", zh: "流体储存器"});
-Translation.addTranslation("biogas", {en: "Biogas", ru: "Биогаз", es: "Biogás", pt: "Biogás", zh: "沼气"});
+Translation.addTranslation("Solar Distiller", {ru: "Солнечный опреснитель", es: "Destilador Solar", pt: "Destilador Solar", zh: "太阳能蒸馏机"});
+
+// Fluids
+Translation.addTranslation("Biogas", {ru: "Биогаз", es: "Biogás", pt: "Biogás", zh: "沼气"});
+Translation.addTranslation("Distilled Water", {ru: "Дистиллированная вода", es: "Agua Destilada", pt: "Água Destilada", zh: "蒸馏水"});
+
+// Explosive
+Translation.addTranslation("Nuke", {ru: "Ядерная бомба", pt: "Bomba Nuke", zh: "核弹"});
 
 // ITEMS
 Translation.addTranslation("latex", {en: "Latex", ru: "Латекс", es: "Caucho", pt: "Resina Pegajosa", zh: "粘性树脂"});
@@ -293,6 +297,7 @@ Translation.addTranslation("lava_cell", {en: "Lava Cell", ru: "Капсула с
 Translation.addTranslation("biomass_cell", {en: "Biomass Cell", ru: "Капсула биомассы", es: "Celda de Biomasa", pt: "Célula com Biomassa", zh: "生物质单元"});
 Translation.addTranslation("biogas_cell", {en: "Biogas Cell", ru: "Капсула биогаза", pt: "Célula com Biogás", zh: "沼气单元"});
 Translation.addTranslation("coolant_cell", {en: "Coolant Cell", ru: "Капсула хладагента", es: "Celda de Refrigerante", pt: "Célula com Líquido Refrigerante", zh: "冷却液单元"});
+Translation.addTranslation("distilled_water_cell", {en: "Distilled Water Cell", ru: "Капсула дистиллированной воды", es: "Celda de Agua Destilada", pt: "Célula com Água Destilada", zh: "蒸馏水单元"});
 Translation.addTranslation("uu_matter_cell", {en: "UU-Matter Cell", ru: "Капсула жидкой материи", es: "Celda de Materia UU", pt: "Célula com Matéria UU", zh: "UU物质单元"});
 Translation.addTranslation("air_cell", {en: "Compressed Air Cell", ru: "Капсула со сжатым воздухом", es: "Celda de Aire Comprimida", pt: "Célula com Ar Comprimido", zh: "压缩空气单元"});
 

@@ -46,7 +46,11 @@ namespace Machine {
 
 		elements: {
 			"energyScale": {type: "scale", x: 530 + GUI_SCALE * 4, y: 144, direction: 0, value: 0.5, bitmap: "energy_bar_scale", scale: GUI_SCALE},
-			"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE},
+			"burningScale": {type: "scale", x: 450, y: 150, direction: 1, value: 0.5, bitmap: "fire_scale", scale: GUI_SCALE, clicker: {
+				onClick: () => {
+					RV?.RecipeTypeRegistry.openRecipePage("icpe_generatorFuel");
+				}
+			}},
 			"slotEnergy": {type: "slot", x: 441, y: 75},
 			"slotFuel": {type: "slot", x: 441, y: 212},
 			"textInfo1": {type: "text", x: 642, y: 142, width: 300, height: 30, text: "0/"},

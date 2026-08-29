@@ -21,17 +21,17 @@ Callback.addCallback("PreLoaded", function() {
 namespace Machine {
 	const guiFermenter = MachineRegistry.createInventoryWindow("Fermenter", {
 		drawing: [
-			{type: "bitmap", x: 390, y: 80, bitmap: "fermenter_background", scale: GUI_SCALE},
+			{type: "bitmap", x: 390, y: 80, bitmap: "icpe.fermenter_background", scale: GUI_SCALE},
 			{type: "bitmap", x: 758, y: 95, bitmap: "liquid_bar", scale: GUI_SCALE}
 		],
 
 		elements: {
-			"progressScale": {type: "scale", x: 492, y: 150, direction: 0, value: .5, bitmap: "fermenter_progress_scale", scale: GUI_SCALE, clicker: {
+			"progressScale": {type: "scale", x: 492, y: 150, direction: 0, value: .5, bitmap: "icpe.fermenter_progress_scale", scale: GUI_SCALE, clicker: {
 				onClick: () => {
 					RV?.RecipeTypeRegistry.openRecipePage("icpe_fermenter");
 				}
 			}},
-			"fertilizerScale": {type: "scale", x: 480, y: 301, direction: 0, value: .5, bitmap: "fertilizer_progress_scale", scale: GUI_SCALE},
+			"fertilizerScale": {type: "scale", x: 480, y: 301, direction: 0, value: .5, bitmap: "icpe.fertilizer_progress_scale", scale: GUI_SCALE},
 			"biogasScale": {type: "scale", x: 771, y: 108, direction: 1, bitmap: "liquid_biogas", scale: GUI_SCALE},
 			"biomassScale": {type: "scale", x: 483, y: 179, direction: 1, bitmap: "biomass_scale", scale: GUI_SCALE},
 			"slotBiomass0": {type: "slot", x: 400, y: 162},
@@ -153,11 +153,11 @@ namespace Machine {
 			"slotBiogas1": {output: true},
 			"slotFertilizer": {output: true}
 		},
-		getInputTank: function() {
-			return this.tileEntity.inputTank;
+		getInputTank(side, tileEntity: Fermenter = this.tileEntity) {
+			return tileEntity.inputTank
 		},
-		getOutputTank: function() {
-			return this.tileEntity.outputTank;
+		getOutputTank(side, tileEntity: Fermenter = this.tileEntity) {
+			return tileEntity.outputTank;
 		}
 	});
 }

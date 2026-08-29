@@ -31,6 +31,7 @@ params_list = {
 	"noErrorTruncation": False,
 	"noFallthroughCasesInSwitch": False,
 	"noImplicitAny": False,
+	"noImplicitThis": False,
 	"noLib": False,
 	"noResolve": False,
 	"noStrictGenericChecks": False,

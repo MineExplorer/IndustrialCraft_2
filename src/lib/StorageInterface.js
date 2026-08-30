@@ -285,20 +285,53 @@ var StorageInterfaceFactory;
             return tileEntity.__storageInterface;
         }
         var storagePrototype = StorageInterface.getPrototype(tileEntity.blockID);
-        var interface;
+        var tileInterface;
         if (storagePrototype) {
-            interface = new storagePrototype.classType(tileEntity);
+            tileInterface = new storagePrototype.classType(tileEntity);
             for (var key in storagePrototype) {
                 if (key == "classType")
                     continue;
-                interface[key] = storagePrototype[key];
+                // Reverse compatibility with callers who do not pass tileEntity arg.
+                if (key == "canReceiveLiquid") {
+                    tileInterface["__canReceiveLiquid"] = storagePrototype[key];
+                    tileInterface[key] = function (liquid, side, tileEntity) {
+                        if (tileEntity === void 0) { tileEntity = this.tileEntity; }
+                        return this.__canReceiveLiquid(liquid, side, tileEntity);
+                    };
+                    continue;
+                }
+                if (key == "canTransportLiquid") {
+                    tileInterface["__canTransportLiquid"] = storagePrototype[key];
+                    tileInterface[key] = function (liquid, side, tileEntity) {
+                        if (tileEntity === void 0) { tileEntity = this.tileEntity; }
+                        return this.__canTransportLiquid(liquid, side, tileEntity);
+                    };
+                    continue;
+                }
+                if (key == "getInputTank") {
+                    tileInterface["__getInputTank"] = storagePrototype[key];
+                    tileInterface[key] = function (side, tileEntity) {
+                        if (tileEntity === void 0) { tileEntity = this.tileEntity; }
+                        return this.__getInputTank(side, tileEntity);
+                    };
+                    continue;
+                }
+                if (key == "getOutputTank") {
+                    tileInterface["__getOutputTank"] = storagePrototype[key];
+                    tileInterface[key] = function (side, tileEntity) {
+                        if (tileEntity === void 0) { tileEntity = this.tileEntity; }
+                        return this.__getOutputTank(side, tileEntity);
+                    };
+                    continue;
+                }
+                tileInterface[key] = storagePrototype[key];
             }
         }
         else {
-            interface = new StorageInterface.TileEntityInterface(tileEntity);
+            tileInterface = new StorageInterface.TileEntityInterface(tileEntity);
         }
-        tileEntity.__storageInterface = interface;
-        return interface;
+        tileEntity.__storageInterface = tileInterface;
+        return tileInterface;
     }
     StorageInterfaceFactory.getTileEntityInterface = getTileEntityInterface;
 })(StorageInterfaceFactory || (StorageInterfaceFactory = {}));

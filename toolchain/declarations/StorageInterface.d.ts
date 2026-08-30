@@ -8,12 +8,12 @@ interface StorageDescriptor {
     addItem?(item: ItemInstance, side?: number, maxCount?: number): number;
     getInputSlots?(side?: number): string[] | number[];
     getOutputSlots?(side?: number): string[] | number[];
-    canReceiveLiquid?(liquid: string, side: number, tileEntity?: TileEntity): boolean;
-    canTransportLiquid?(liquid: string, side: number, tileEntity?: TileEntity): boolean;
+    canReceiveLiquid?(liquid: string, side: number, tileEntity: TileEntity): boolean;
+    canTransportLiquid?(liquid: string, side: number, tileEntity: TileEntity): boolean;
     receiveLiquid?(liquidStorage: ILiquidStorage, liquid: string, amount: number): number;
     extractLiquid?(liquidStorage: ILiquidStorage, liquid: string, amount: number): number;
-    getInputTank?(side: number, tileEntity?: TileEntity): ILiquidStorage;
-    getOutputTank?(side: number, tileEntity?: TileEntity): ILiquidStorage;
+    getInputTank?(side: number, tileEntity: TileEntity): ILiquidStorage;
+    getOutputTank?(side: number, tileEntity: TileEntity): ILiquidStorage;
 }
 interface Storage extends StorageDescriptor {
     container: Container;

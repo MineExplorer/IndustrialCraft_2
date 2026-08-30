@@ -337,10 +337,10 @@ namespace Machine {
 			"slotResult": {output: true}
 		},
 		canReceiveLiquid: () => true,
-		getInputTank(side, tileEntity: Canner = this.tileEntity) {
+		getInputTank(side, tileEntity: Canner) {
 			return tileEntity.inputTank
 		},
-		getOutputTank(side, tileEntity: Canner = this.tileEntity) {
+		getOutputTank(side, tileEntity: Canner) {
 			return tileEntity.outputTank;
 		}
 	});

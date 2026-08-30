@@ -35,7 +35,6 @@ namespace Machine {
 
 		defaultValues = {
 			updateTicker: 0,
-			progress: 0,
 			isActive: false,
 			tickRate: 72 // default (normal biome)
 		}
@@ -104,10 +103,6 @@ namespace Machine {
 					this.inputTank.getLiquid("water", 1);
 					this.outputTank.addLiquid("distilled_water", 1);
 					isActive = true;
-					this.data.progress++;
-					if (this.data.progress >= 1000) {
-						this.data.progress = 0;
-					}
 				}
 
 				this.data.isActive = isActive;

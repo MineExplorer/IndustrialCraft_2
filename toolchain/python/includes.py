@@ -203,7 +203,8 @@ class Includes:
 				"outFile": temp_path,
 				"experimentalDecorators": True,
 				"downlevelIteration": True,
-				"allowJs": True
+				"allowJs": True,
+				"strict": False
 			},
 			"exclude": [
 				"**/node_modules/*",

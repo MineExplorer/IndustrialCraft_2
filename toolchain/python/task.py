@@ -222,7 +222,7 @@ def task_load_docs():
 	import urllib.request
 	print("downloading...")
 	files = [
-		("android.d.ts", "https://raw.githubusercontent.com/MineExplorer/innercore-docs/master/headers/android.d.ts"), 
+		("android.d.ts", "https://nernar.github.io/declarations/android.d.ts"), 
 		("core-engine.d.ts", "https://nernar.github.io/declarations/core-engine.d.ts")
 	]
 	for file in files:

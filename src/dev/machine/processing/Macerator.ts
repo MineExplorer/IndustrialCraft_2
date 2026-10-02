@@ -34,7 +34,9 @@ Callback.addCallback("PreLoaded", function() {
 	dictionary.addRecipe({id: BlockID.oreCopper}, {id: ItemID.crushedCopper, count: 2});
 	dictionary.addRecipe({id: BlockID.oreTin}, {id: ItemID.crushedTin, count: 2});
 	dictionary.addRecipe({id: BlockID.oreLead}, {id: ItemID.crushedLead, count: 2});
-	dictionary.addRecipe({id: BlockID.oreSilver}, {id: ItemID.crushedSilver, count: 2});
+	if (BlockID.oreSilver) { // Check for silver ore from external mods
+		dictionary.addRecipe({id: BlockID.oreSilver}, {id: ItemID.crushedSilver, count: 2});
+	}
 	dictionary.addRecipe({id: BlockID.oreUranium}, {id: ItemID.crushedUranium, count: 2});
 	
 	// ingots

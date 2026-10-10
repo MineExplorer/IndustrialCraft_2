@@ -30,11 +30,11 @@ def move_file(src, dst):
 
 
 def copy_directory(src, dst, clear_dst=False):
+	import shutil
 	ensure_directory(dst)
 	if clear_dst:
 		clear_directory(dst)
-	from distutils.dir_util import copy_tree
-	copy_tree(src, dst)
+	shutil.copytree(src, dst, dirs_exist_ok=True)
 
 
 def get_all_files(directory, extensions=()):

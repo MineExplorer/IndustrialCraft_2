@@ -14,7 +14,7 @@ The project uses a built-in modding toolchain optimized for TypeScript developme
 
 ### Requirements
 1. [Visual Studio Code IDE](https://code.visualstudio.com/)
-2. [Python 3.7](https://www.python.org/downloads/) or higher
+2. [Python 3.8](https://www.python.org/downloads/) or higher
 3. [Node.js 14.17](https://nodejs.org/en/download/current) or higher
 4. TypeScript compiler v5 (run `npm install -g typescript@5`), v6 and v7 are not supported!
 5. [Android Debug Bridge (adb)](https://developer.android.com/tools/releases/platform-tools)
